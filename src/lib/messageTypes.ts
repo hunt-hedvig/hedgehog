@@ -1,0 +1,13 @@
+export const TEXT = 'text';
+export const NUMBER = 'number';
+export const SINGLE_SELECT = 'single_select';
+export const MULTIPLE_SELECT = 'multiple_select';
+export const DATE = 'date_picker';
+export const ACTIVATION_DATE = 'activation_date_picker';
+export const CANCELLATION_DATE = 'cancellation_date_picker';
+export const PARAGRAPH = 'paragraph';
+export const AUDIO = 'audio';
+export const VIDEO = 'video';
+export const HERO = 'hero';
+export const PHOTO = 'photo_upload';
+export const BANK_ID_COLLECT = 'bankid_collect';
