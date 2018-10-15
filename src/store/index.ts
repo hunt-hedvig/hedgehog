@@ -2,13 +2,13 @@
 /* global Raven, process*/
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
-import createBrowserHistory from 'history/createBrowserHistory';
+import createMemoryHistory from 'history/createMemoryHistory';
 import { reducer as reduxFormReducer } from 'redux-form';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './sagas';
 import reducers from './reducers';
 
-export const history = createBrowserHistory();
+export const history = createMemoryHistory();
 
 const rootReducer = combineReducers({
     ...reducers,

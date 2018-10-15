@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import styled from "styled-components";
 import { Tab, Header } from "semantic-ui-react";
 import { subscribe, reconnect } from "lib/sockets/chat";
-import { disconnect } from "sockets";
+import { disconnect } from "lib/sockets";
 import memberPagePanes from "./tabs";
 
 const ChatPageContainer = styled.div`

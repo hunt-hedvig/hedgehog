@@ -9,6 +9,7 @@ import * as Koa from 'koa'
 import * as path from 'path'
 import * as React from 'react'
 import { renderToString } from 'react-dom/server'
+import { StaticRouter } from 'react-router'
 
 import App from 'App'
 
@@ -34,10 +35,14 @@ const template = (body: string) => `
 `
 
 const getPage: Koa.Middleware = async (ctx) => {
-  const reactBody = renderStylesToString(renderToString(<App />))
+  const context = {}
+  const reactBody = renderStylesToString(renderToString(
+  <StaticRouter location={ctx.url} context={context}>
+    <App />
+  </StaticRouter>))
   ctx.body = template(reactBody)
 }
-const getPort = () => (process.env.PORT ? Number(process.env.PORT) : 8080)
+const getPort = () => (process.env.PORT ? Number(process.env.PORT) : 9000)
 
 console.log(`Booting server on ${getPort()} 👢`) // tslint:disable-line no-console
 

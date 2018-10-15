@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { List, Label } from 'semantic-ui-react';
 import { history } from 'store';
-import * as sockets from 'sockets';
+import * as sockets from 'lib/sockets';
 import { routesList } from 'lib/selectOptions';
 import { ItemContent } from 'components/shared';
 

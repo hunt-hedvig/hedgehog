@@ -10,9 +10,9 @@ const BreadcrumbsContainer = styled.div`
     margin: 20px;
 `;
 
-const Breadcrumbs = ({ state }) => {
+const Breadcrumbs = ({ state, history }) => {
     // eslint-disable-next-line no-undef
-    const pathname = window.location.pathname;
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : history.location.pathname;
     const paths = pathname.split('/').map((path, i, arr) => {
         if (i === 0) {
             return {
@@ -52,7 +52,8 @@ const Breadcrumbs = ({ state }) => {
 };
 
 Breadcrumbs.propTypes = {
-    state: PropTypes.object
+    state: PropTypes.object,
+    history: PropTypes.object
 };
 
 export default Breadcrumbs;

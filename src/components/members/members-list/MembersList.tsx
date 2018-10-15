@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import * as moment from "moment";
 import { Table } from "semantic-ui-react";
 import PaginatorList from "components/shared/paginator-list/PaginatorList";
-import * as sockets from "sockets";
+import * as sockets from "lib/sockets";
 import { history } from "store";
 import { LinkRow } from "components/shared";
 
