@@ -1,14 +1,14 @@
-import initialState from "../initialState";
-import { sortMemberInsList } from "lib/helpers";
+import { sortMemberInsList } from 'lib/helpers'
 import {
-  MEMBER_INS_REQUESTING,
-  MEMBER_INS_SUCCESS,
   MEMBER_INS_ERROR,
+  MEMBER_INS_REQUESTING,
   MEMBER_INS_SEARCH_REQUESTING,
   MEMBER_INS_SEARCH_SUCCESS,
+  MEMBER_INS_SUCCESS,
   SET_MEMBER_INS_FILTER,
-  SORT_MEMBER_INS_LIST
-} from "../constants/memberInsurance";
+  SORT_MEMBER_INS_LIST,
+} from '../constants/memberInsurance'
+import initialState from '../initialState'
 
 export default function(state = initialState.memberInsurance, action) {
   switch (action.type) {
@@ -17,8 +17,8 @@ export default function(state = initialState.memberInsurance, action) {
       return {
         ...state,
         requesting: true,
-        query: action.query.query
-      };
+        query: action.query.query,
+      }
 
     case MEMBER_INS_SUCCESS:
     case MEMBER_INS_SEARCH_SUCCESS:
@@ -27,23 +27,23 @@ export default function(state = initialState.memberInsurance, action) {
         list: sortMemberInsList(
           action.members,
           action.fieldName,
-          action.isDescendingOrder
+          action.isDescendingOrder,
         ),
-        requesting: false
-      };
+        requesting: false,
+      }
 
     case MEMBER_INS_ERROR:
       return {
         ...state,
-        requesting: false
-      };
+        requesting: false,
+      }
 
     case SET_MEMBER_INS_FILTER:
       return {
         ...state,
         filter: action.query.filter,
-        requesting: true
-      };
+        requesting: true,
+      }
 
     case SORT_MEMBER_INS_LIST:
       return {
@@ -51,10 +51,10 @@ export default function(state = initialState.memberInsurance, action) {
         list: sortMemberInsList(
           [...state.list],
           action.fieldName,
-          action.isReverse
-        )
-      };
+          action.isReverse,
+        ),
+      }
     default:
-      return state;
+      return state
   }
 }

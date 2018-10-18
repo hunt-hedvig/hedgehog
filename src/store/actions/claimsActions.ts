@@ -1,58 +1,58 @@
 import {
-  CLAIMS_REQUESTING,
-  CLAIMS_REQUEST_SUCCESS,
-  CLAIM_UPDATE_SUCCESS,
   CLAIM_TYPES,
   CLAIM_TYPES_SUCCESS,
+  CLAIM_UPDATE_SUCCESS,
   CLAIMS_BY_MEMBER,
   CLAIMS_BY_MEMBER_SUCCESS,
   CLAIMS_ERROR,
-  SORT_CLAIMS_LIST
-} from "../constants/claims";
+  CLAIMS_REQUEST_SUCCESS,
+  CLAIMS_REQUESTING,
+  SORT_CLAIMS_LIST,
+} from '../constants/claims'
 
 export const claimsRequest = () => ({
-  type: CLAIMS_REQUESTING
-});
+  type: CLAIMS_REQUESTING,
+})
 
 export const claimsRequestSuccess = (claims, fieldName, isDescendingOrder) => ({
   type: CLAIMS_REQUEST_SUCCESS,
   claims,
   fieldName,
-  isDescendingOrder
-});
+  isDescendingOrder,
+})
 
 export const claimUpdateSuccess = (reqType, data) => ({
   type: CLAIM_UPDATE_SUCCESS,
   reqType,
-  data
-});
+  data,
+})
 
 export const claimTypes = () => ({
-  type: CLAIM_TYPES
-});
+  type: CLAIM_TYPES,
+})
 
-export const claimsTypesSuccess = types => ({
+export const claimsTypesSuccess = (types) => ({
   type: CLAIM_TYPES_SUCCESS,
-  types
-});
+  types,
+})
 
-export const claimsByMember = id => ({
+export const claimsByMember = (id) => ({
   type: CLAIMS_BY_MEMBER,
-  id
-});
+  id,
+})
 
-export const claimsByMemberSuccess = claims => ({
+export const claimsByMemberSuccess = (claims) => ({
   type: CLAIMS_BY_MEMBER_SUCCESS,
-  claims
-});
+  claims,
+})
 
-export const claimsError = error => ({
+export const claimsError = (error) => ({
   type: CLAIMS_ERROR,
-  error
-});
+  error,
+})
 
 export const sortClaimsList = (fieldName, isReverse) => ({
   type: SORT_CLAIMS_LIST,
   fieldName,
-  isReverse
-});
+  isReverse,
+})

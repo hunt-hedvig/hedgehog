@@ -1,15 +1,15 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import { Header } from "semantic-ui-react";
-import InsuranceList from "components/chat/insurance-list/InsuranceList";
+import InsuranceList from 'components/chat/insurance-list/InsuranceList'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Header } from 'semantic-ui-react'
 
 export default class InsuranceListTab extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
-  render() {
-    const { insurance } = this.props;
+  public render() {
+    const { insurance } = this.props
 
     return insurance.list ? (
       <React.Fragment>
@@ -17,10 +17,10 @@ export default class InsuranceListTab extends React.Component {
       </React.Fragment>
     ) : (
       <Header>No insurance info </Header>
-    );
+    )
   }
 }
 
 InsuranceListTab.propTypes = {
-  insurance: PropTypes.object.isRequired
-};
+  insurance: PropTypes.object.isRequired,
+}

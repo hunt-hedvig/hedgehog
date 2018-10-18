@@ -1,6 +1,6 @@
-import * as React from 'react';
-import LoginPage from 'containers/login-page/LoginPage';
+import LoginPage from 'containers/login-page/LoginPage'
+import * as React from 'react'
 
-const LoginPageRouter = () => <LoginPage />;
+const LoginPageRouter = () => <LoginPage />
 
-export default LoginPageRouter;
+export default LoginPageRouter

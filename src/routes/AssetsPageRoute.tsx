@@ -1,6 +1,6 @@
-import * as React from 'react';
-import AssetsPage from 'containers/assets-page/AssetsPage';
+import AssetsPage from 'containers/assets-page/AssetsPage'
+import * as React from 'react'
 
-const AssetsPageRoute = () => <AssetsPage />;
+const AssetsPageRoute = () => <AssetsPage />
 
-export default AssetsPageRoute;
+export default AssetsPageRoute

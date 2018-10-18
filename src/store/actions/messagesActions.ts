@@ -1,63 +1,63 @@
 import {
   ADD_MESSAGE,
-  MESSAGE_RECEIVED,
   CLEAR_MESSAGES_LIST,
-  SET_ACTIVE_CONNECTION,
-  ERROR_RECEIVED,
-  MEMBER_REQUESTING,
-  MEMBER_REQUEST_SUCCESS,
-  MEMBER_REQUEST_ERROR,
   EDIT_MEMBER_DETAILS,
-  EDIT_MEMBER_DETAILS_SUCCESS
-} from "../constants/members";
+  EDIT_MEMBER_DETAILS_SUCCESS,
+  ERROR_RECEIVED,
+  MEMBER_REQUEST_ERROR,
+  MEMBER_REQUEST_SUCCESS,
+  MEMBER_REQUESTING,
+  MESSAGE_RECEIVED,
+  SET_ACTIVE_CONNECTION,
+} from '../constants/members'
 
 export const addMessage = (message, id, socket) => ({
   type: ADD_MESSAGE,
   message,
   id,
-  socket
-});
+  socket,
+})
 
-export const messageReceived = message => ({
+export const messageReceived = (message) => ({
   type: MESSAGE_RECEIVED,
-  message
-});
+  message,
+})
 
-export const errorReceived = error => ({
+export const errorReceived = (error) => ({
   type: ERROR_RECEIVED,
-  error
-});
+  error,
+})
 
 export const clearMessagesList = () => ({
-  type: CLEAR_MESSAGES_LIST
-});
+  type: CLEAR_MESSAGES_LIST,
+})
 
-export const setActiveConnection = connection => ({
+export const setActiveConnection = (connection) => ({
   type: SET_ACTIVE_CONNECTION,
-  connection
-});
+  connection,
+})
 
-export const memberRequest = id => ({
+export const memberRequest = (id) => ({
   type: MEMBER_REQUESTING,
-  id
-});
+  id,
+})
 
-export const memberRequestSuccess = member => ({
+export const memberRequestSuccess = (member) => ({
   type: MEMBER_REQUEST_SUCCESS,
-  member
-});
+  member,
+})
 
-export const memberRequestError = error => ({
+export const memberRequestError = (error) => ({
   type: MEMBER_REQUEST_ERROR,
-  error
-});
+  error,
+})
 
-export const editMemberDetails = member => ({
+export const editMemberDetails = (member) => ({
   type: EDIT_MEMBER_DETAILS,
-  member
-});
+  member,
+})
 
-export const editMemberDetailsSuccess = member => ({
+export const editMemberDetailsSuccess = (member) => ({
   type: EDIT_MEMBER_DETAILS_SUCCESS,
-  member
-});
+  member,
+})

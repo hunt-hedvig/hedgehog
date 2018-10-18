@@ -1,6 +1,6 @@
-import * as React from 'react';
-import MemberInsurancePage from 'containers/member-insurance-page/MemberInsurancePage';
+import MemberInsurancePage from 'containers/member-insurance-page/MemberInsurancePage'
+import * as React from 'react'
 
-const MemberInsurancePageRoute = () => <MemberInsurancePage />;
+const MemberInsurancePageRoute = () => <MemberInsurancePage />
 
-export default MemberInsurancePageRoute;
+export default MemberInsurancePageRoute

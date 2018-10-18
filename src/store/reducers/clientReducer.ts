@@ -1,24 +1,20 @@
-import initialState from '../initialState';
-import {
-    CLIENT_SET,
-    CLIENT_UNSET,
-    CLIENT_CHECK_AUTH,
-} from '../constants/login';
+import { CLIENT_CHECK_AUTH, CLIENT_SET, CLIENT_UNSET } from '../constants/login'
+import initialState from '../initialState'
 
 export default function clientReducer(state = initialState.client, action) {
-    switch (action.type) {
-        case CLIENT_SET:
-            return {
-                ...action.creditals
-            };
+  switch (action.type) {
+    case CLIENT_SET:
+      return {
+        ...action.creditals,
+      }
 
-        case CLIENT_UNSET:
-            return {};
+    case CLIENT_UNSET:
+      return {}
 
-        case CLIENT_CHECK_AUTH:
-            return state;
+    case CLIENT_CHECK_AUTH:
+      return state
 
-        default:
-            return state;
-    }
+    default:
+      return state
+  }
 }

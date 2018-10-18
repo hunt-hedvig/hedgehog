@@ -1,119 +1,119 @@
 import {
-  INSURANCE_REQUESTING,
-  INSURANCE_REQUEST_SUCCESS,
   INSURANCE_ERROR,
-  INSURANCES_LIST_REQUESTING,
+  INSURANCE_REQUEST_SUCCESS,
+  INSURANCE_REQUESTING,
   INSURANCES_LIST_REQUEST_SUCCESS,
-  SAVE_INSURANCE_DATE,
-  SAVE_ACTIVATION_DATE_SUCCESS,
-  SAVE_CANCELLATION_DATE_SUCCESS,
-  SEND_CANCEL_REQUEST,
-  SEND_CANCEL_REQUEST_SUCCESS,
-  SEND_CERTIFICATE,
-  SEND_CERTIFICATE_SUCCESS,
+  INSURANCES_LIST_REQUESTING,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
-  SEND_CERTIFICATE_ERROR,
   MEMBER_CREATE_MODIFIED_INSURANCE,
   MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
   MODIFY_INSURANCE,
-  MODIFY_INSURANCE_SUCCESS
-} from "../constants/members";
+  MODIFY_INSURANCE_SUCCESS,
+  SAVE_ACTIVATION_DATE_SUCCESS,
+  SAVE_CANCELLATION_DATE_SUCCESS,
+  SAVE_INSURANCE_DATE,
+  SEND_CANCEL_REQUEST,
+  SEND_CANCEL_REQUEST_SUCCESS,
+  SEND_CERTIFICATE,
+  SEND_CERTIFICATE_ERROR,
+  SEND_CERTIFICATE_SUCCESS,
+} from '../constants/members'
 
-export const insuranceRequest = id => ({
+export const insuranceRequest = (id) => ({
   type: INSURANCE_REQUESTING,
-  id
-});
+  id,
+})
 
-export const insurancesListRequest = id => ({
+export const insurancesListRequest = (id) => ({
   type: INSURANCES_LIST_REQUESTING,
-  id
-});
+  id,
+})
 
-export const insuranceGetSuccess = insurance => ({
+export const insuranceGetSuccess = (insurance) => ({
   type: INSURANCE_REQUEST_SUCCESS,
-  insurance
-});
+  insurance,
+})
 
-export const insurancesListGetSuccess = list => ({
+export const insurancesListGetSuccess = (list) => ({
   type: INSURANCES_LIST_REQUEST_SUCCESS,
-  list
-});
+  list,
+})
 
-export const insuranceGetError = error => ({
+export const insuranceGetError = (error) => ({
   type: INSURANCE_ERROR,
-  error
-});
+  error,
+})
 
 export const saveInsuranceDate = (date, changeType, memberId, insuranceId) => ({
   type: SAVE_INSURANCE_DATE,
   date,
   changeType,
   memberId,
-  insuranceId
-});
+  insuranceId,
+})
 
-export const saveActivationDateSuccess = activationDate => ({
+export const saveActivationDateSuccess = (activationDate) => ({
   type: SAVE_ACTIVATION_DATE_SUCCESS,
-  activationDate
-});
+  activationDate,
+})
 
-export const saveCancellationDateSuccess = cancellationDate => ({
+export const saveCancellationDateSuccess = (cancellationDate) => ({
   type: SAVE_CANCELLATION_DATE_SUCCESS,
-  cancellationDate
-});
+  cancellationDate,
+})
 
-export const sendCancelRequest = id => ({
+export const sendCancelRequest = (id) => ({
   type: SEND_CANCEL_REQUEST,
-  id
-});
+  id,
+})
 
 export const sendCancelRequestSuccess = () => ({
-  type: SEND_CANCEL_REQUEST_SUCCESS
-});
+  type: SEND_CANCEL_REQUEST_SUCCESS,
+})
 
 export const sendCertificate = (data, memberId) => ({
   type: SEND_CERTIFICATE,
   data,
-  memberId
-});
+  memberId,
+})
 
 export const sendCertificateSuccess = () => ({
-  type: SEND_CERTIFICATE_SUCCESS
-});
+  type: SEND_CERTIFICATE_SUCCESS,
+})
 
 export const insuranceError = () => ({
-  type: SEND_CERTIFICATE_ERROR
-});
+  type: SEND_CERTIFICATE_ERROR,
+})
 
 export const changeCompanyStatus = (value, memberId) => ({
   type: MEMBER_COMPANY_STATUS,
   value,
-  memberId
-});
+  memberId,
+})
 
-export const changeCompanyStatusSuccess = value => ({
+export const changeCompanyStatusSuccess = (value) => ({
   type: MEMBER_COMPANY_STATUS_SUCCESS,
-  value
-});
+  value,
+})
 
 export const createModifiedInsurance = (memberId, modifiedDetails) => ({
   type: MEMBER_CREATE_MODIFIED_INSURANCE,
   modifiedDetails,
-  memberId
-});
+  memberId,
+})
 
-export const createModifiedInsuranceSuccess = updatedProduct => ({
+export const createModifiedInsuranceSuccess = (updatedProduct) => ({
   type: MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
-  updatedProduct
-});
+  updatedProduct,
+})
 
 export const modifyInsurance = (memberId, request) => ({
   type: MODIFY_INSURANCE,
   memberId,
-  request
-});
+  request,
+})
 
 export const modifyInsuranceSuccess = () => ({
-  type: MODIFY_INSURANCE_SUCCESS
-});
+  type: MODIFY_INSURANCE_SUCCESS,
+})

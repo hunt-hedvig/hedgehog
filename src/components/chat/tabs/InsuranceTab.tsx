@@ -1,102 +1,102 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import { Header, Table, Button, Modal, Icon, Form } from "semantic-ui-react";
-import TableFields from "components/shared/table-fields/TableFields";
-import InsuranceTableRows from "components/chat/insurance-table-rows/InsuranceTableRows";
-import { getFieldName, getFieldValue } from "lib/helpers";
+import InsuranceTableRows from 'components/chat/insurance-table-rows/InsuranceTableRows'
+import TableFields from 'components/shared/table-fields/TableFields'
+import { getFieldName, getFieldValue } from 'lib/helpers'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 
 export default class InsuranceTab extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       modalOpen: false,
       insurance: [],
       availableSafetyIncreasers: {
-        SMOKE_ALARM: "Smoke alarm",
-        FIRE_EXTINGUISHER: "Fire extinguisher",
-        SAFETY_DOOR: "Safety door",
-        GATE: "Gate",
-        BURGLAR_ALARM: "Burglar alarm",
-        NONE: "None"
+        SMOKE_ALARM: 'Smoke alarm',
+        FIRE_EXTINGUISHER: 'Fire extinguisher',
+        SAFETY_DOOR: 'Safety door',
+        GATE: 'Gate',
+        BURGLAR_ALARM: 'Burglar alarm',
+        NONE: 'None',
       },
       safetyIncreasers: [],
-      isStudent: true
-    };
+      isStudent: true,
+    }
   }
 
-  handleOpen = () => this.setState({ modalOpen: true });
+  public handleOpen = () => this.setState({ modalOpen: true })
 
-  handleClose = () => {
-    this.setState({ modalOpen: false });
-    this.setState({ insurance: [] });
-    this.setState({ safetyIncreasers: [] });
-  };
+  public handleClose = () => {
+    this.setState({ modalOpen: false })
+    this.setState({ insurance: [] })
+    this.setState({ safetyIncreasers: [] })
+  }
 
-  shouldBeDisplayed = field => {
+  public shouldBeDisplayed = (field) => {
     switch (field.toLowerCase()) {
-      case "personsinhousehold":
-      case "insurancetype":
-      case "street":
-      case "city":
-      case "zipcode":
-      case "floor":
-      case "livingspace":
-        return true;
+      case 'personsinhousehold':
+      case 'insurancetype':
+      case 'street':
+      case 'city':
+      case 'zipcode':
+      case 'floor':
+      case 'livingspace':
+        return true
       default:
-        return false;
+        return false
     }
-  };
+  }
 
-  handleChange = field => e => {
-    let { insurance, safetyIncreasers } = this.state;
+  public handleChange = (field) => (e) => {
+    const { insurance, safetyIncreasers } = this.state
 
     switch (field) {
-      case "SMOKE_ALARM":
-      case "FIRE_EXTINGUISHER":
-      case "SAFETY_DOOR":
-      case "GATE":
-      case "BURGLAR_ALARM":
-      case "NONE":
+      case 'SMOKE_ALARM':
+      case 'FIRE_EXTINGUISHER':
+      case 'SAFETY_DOOR':
+      case 'GATE':
+      case 'BURGLAR_ALARM':
+      case 'NONE':
         safetyIncreasers.indexOf(field) === -1
           ? safetyIncreasers.push(field)
-          : safetyIncreasers.splice(safetyIncreasers.indexOf(field), 1);
-        insurance.safetyIncreasers = safetyIncreasers;
-        break;
-      case "isStudent":
-        this.setState({ isStudent: !this.state.isStudent });
-        insurance[field] = this.state.isStudent;
-        break;
+          : safetyIncreasers.splice(safetyIncreasers.indexOf(field), 1)
+        insurance.safetyIncreasers = safetyIncreasers
+        break
+      case 'isStudent':
+        this.setState({ isStudent: !this.state.isStudent })
+        insurance[field] = this.state.isStudent
+        break
       default:
-        insurance[field] = e.target.value;
-        break;
+        insurance[field] = e.target.value
+        break
     }
-    this.setState({ insurance });
-  };
+    this.setState({ insurance })
+  }
 
-  handleCancel = () => {
-    this.handleClose();
-  };
+  public handleCancel = () => {
+    this.handleClose()
+  }
 
-  handleSubmissionButton = () => {
-    const { createModifiedInsurance, insurance } = this.props;
-    let submittedInsurance = { ...insurance.data, ...this.state.insurance };
-    createModifiedInsurance(insurance.data.memberId, submittedInsurance);
-    this.handleClose();
-  };
+  public handleSubmissionButton = () => {
+    const { createModifiedInsurance, insurance } = this.props
+    const submittedInsurance = { ...insurance.data, ...this.state.insurance }
+    createModifiedInsurance(insurance.data.memberId, submittedInsurance)
+    this.handleClose()
+  }
 
-  render() {
+  public render() {
     const {
-      insurance: { data }
-    } = this.props;
-    let activeDate;
-    let cancellationDate;
-    let fields;
+      insurance: { data },
+    } = this.props
+    let activeDate
+    let cancellationDate
+    let fields
 
     if (data) {
-      activeDate = activeDate ? activeDate : data.insuranceActiveFrom;
+      activeDate = activeDate ? activeDate : data.insuranceActiveFrom
       cancellationDate = cancellationDate
         ? cancellationDate
-        : data.insuranceActiveTo;
+        : data.insuranceActiveTo
       /* eslint-disable no-unused-vars */
       const {
         insuranceActiveFrom,
@@ -106,10 +106,10 @@ export default class InsuranceTab extends React.Component {
         certificateUploaded,
         certificateUrl,
         ...filteredFields
-      } = data;
+      } = data
       /* eslint-enable */
 
-      fields = filteredFields;
+      fields = filteredFields
     }
 
     return fields ? (
@@ -161,18 +161,18 @@ export default class InsuranceTab extends React.Component {
                                 onChange={this.handleChange(field)}
                               />
                             ) : (
-                              ""
-                            )
+                              ''
+                            ),
                         )}
                         <Form.Group inverted grouped>
                           <label>Safety Items</label>
                           {Object.keys(
-                            this.state.availableSafetyIncreasers
-                          ).map(field => (
+                            this.state.availableSafetyIncreasers,
+                          ).map((field) => (
                             <Form.Checkbox
                               key={field}
                               label={getFieldValue(
-                                this.state.availableSafetyIncreasers[field]
+                                this.state.availableSafetyIncreasers[field],
                               )}
                               onChange={this.handleChange(field)}
                             />
@@ -183,7 +183,7 @@ export default class InsuranceTab extends React.Component {
                           <Form.Checkbox
                             key="isStudent"
                             label="Is Student?"
-                            onChange={this.handleChange("isStudent")}
+                            onChange={this.handleChange('isStudent')}
                           />
                         </Form.Group>
                       </React.Fragment>
@@ -210,7 +210,7 @@ export default class InsuranceTab extends React.Component {
       </React.Fragment>
     ) : (
       <Header>No insurance info </Header>
-    );
+    )
   }
 }
 
@@ -219,5 +219,5 @@ InsuranceTab.propTypes = {
   messages: PropTypes.object.isRequired,
   saveInsuranceDate: PropTypes.func.isRequired,
   sendCancelRequest: PropTypes.func.isRequired,
-  createModifiedInsurance: PropTypes.func.isRequired
-};
+  createModifiedInsurance: PropTypes.func.isRequired,
+}

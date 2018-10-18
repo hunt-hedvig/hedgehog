@@ -1,63 +1,63 @@
 import {
-  MEMBERS_REQUESTING,
-  MEMBERS_REQUEST_SUCCESS,
-  MEMBERS_ERROR,
   MEMBER_SEARCH_REQUESTING,
+  MEMBERS_ERROR,
+  MEMBERS_REQUEST_SUCCESS,
+  MEMBERS_REQUESTING,
+  MEMBERS_SEARCH_SUCCESS,
   NEW_MESSAGES_RECEIVED,
   SET_MEMBER_FILTER,
-  MEMBERS_SEARCH_SUCCESS,
-  SORT_MEMBERS_LIST
-} from "../constants/members";
+  SORT_MEMBERS_LIST,
+} from '../constants/members'
 
-export const membersRequest = client => ({
+export const membersRequest = (client) => ({
   type: MEMBERS_REQUESTING,
-  client
-});
+  client,
+})
 
 export const membersRequestSuccess = (
   members,
   fieldName,
-  isDescendingOrder
+  isDescendingOrder,
 ) => ({
   type: MEMBERS_REQUEST_SUCCESS,
   members,
   fieldName,
-  isDescendingOrder
-});
+  isDescendingOrder,
+})
 
-export const membersRequestError = error => ({
+export const membersRequestError = (error) => ({
   type: MEMBERS_ERROR,
-  error
-});
+  error,
+})
 
-export const searchMemberRequest = query => ({
+export const searchMemberRequest = (query) => ({
   type: MEMBER_SEARCH_REQUESTING,
-  query
-});
+  query,
+})
 
 export const searchMembersSuccess = (
   members,
   fieldName,
-  isDescendingOrder
+  isDescendingOrder,
 ) => ({
   type: MEMBERS_SEARCH_SUCCESS,
   members,
   fieldName,
-  isDescendingOrder
-});
+  isDescendingOrder,
+})
 
-export const newMessagesReceived = messagesCounters => ({
+export const newMessagesReceived = (messagesCounters) => ({
   type: NEW_MESSAGES_RECEIVED,
-  messagesCounters
-});
+  messagesCounters,
+})
 
-export const setFilter = query => ({
+export const setFilter = (query) => ({
   type: SET_MEMBER_FILTER,
-  query
-});
+  query,
+})
 
 export const sortMembersList = (fieldName, isReverse) => ({
   type: SORT_MEMBERS_LIST,
   fieldName,
-  isReverse
-});
+  isReverse,
+})

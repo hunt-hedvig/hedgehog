@@ -1,62 +1,64 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import styled from "styled-components";
-import { Grid, Segment, Form, Card } from "semantic-ui-react";
-import * as moment from "moment";
-import { claimStatus } from "lib/selectOptions";
-import ClaimTypeFields from "components/claims/claim-info/ClaimTypeFields";
-import { getMemberFullName } from "lib/helpers";
+import ClaimTypeFields from 'components/claims/claim-info/ClaimTypeFields'
+import { getMemberFullName } from 'lib/helpers'
+import { claimStatus } from 'lib/selectOptions'
+import * as moment from 'moment'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Card, Form, Grid, Segment } from 'semantic-ui-react'
+import styled from 'styled-components'
 
 const DetailsSegment = styled(Segment)`
   &&& {
     padding: 30px;
   }
-`;
+`
 
 export const FormSelect = styled(Form.Select)`
   &&& {
     width: 196px;
   }
-`;
+`
 
 export default class ClaimInfo extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      status: "OPEN"
-    };
+      status: 'OPEN',
+    }
   }
 
-  getRegistrationDate = date => {
-    return `Registration date: ${moment(date).local().format("DD MMMM YYYY HH:mm")}`;
-  };
+  public getRegistrationDate = (date) => {
+    return `Registration date: ${moment(date)
+      .local()
+      .format('DD MMMM YYYY HH:mm')}`
+  }
 
-  statusChangeHandler = (e, { value }) => {
+  public statusChangeHandler = (e, { value }) => {
     const {
       match: { params },
-      claimUpdate
-    } = this.props;
-    this.setState({ status: value });
-    claimUpdate(params.id, { state: value }, "state");
-  };
-
-  componentDidMount() {
-    const {
-      claimDetails: { data }
-    } = this.props;
-    this.setState({ status: data.state });
+      claimUpdate,
+    } = this.props
+    this.setState({ status: value })
+    claimUpdate(params.id, { state: value }, 'state')
   }
 
-  render() {
+  public componentDidMount() {
+    const {
+      claimDetails: { data },
+    } = this.props
+    this.setState({ status: data.state })
+  }
+
+  public render() {
     const {
       member,
       types,
       match,
       claimDetails: { data },
       claimUpdate,
-      claimDetailsUpdate
-    } = this.props;
-    const { status } = this.state;
+      claimDetailsUpdate,
+    } = this.props
+    const { status } = this.state
     return (
       <React.Fragment>
         <DetailsSegment>
@@ -64,7 +66,7 @@ export default class ClaimInfo extends React.Component {
             <Grid.Row>
               <Card
                 fluid={true}
-                header={member ? getMemberFullName(member) : "Member Name"}
+                header={member ? getMemberFullName(member) : 'Member Name'}
                 description={this.getRegistrationDate(data.date)}
               />
             </Grid.Row>
@@ -99,7 +101,7 @@ export default class ClaimInfo extends React.Component {
           )}
         </Segment>
       </React.Fragment>
-    );
+    )
   }
 }
 
@@ -109,5 +111,5 @@ ClaimInfo.propTypes = {
   match: PropTypes.object.isRequired,
   types: PropTypes.array.isRequired,
   claimDetails: PropTypes.object.isRequired,
-  claimDetailsUpdate: PropTypes.func.isRequired
-};
+  claimDetailsUpdate: PropTypes.func.isRequired,
+}

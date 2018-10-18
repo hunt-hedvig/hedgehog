@@ -1,6 +1,6 @@
-import * as React from 'react';
-import DashboardPage from 'containers/dashboard-page/DashboardPage';
+import DashboardPage from 'containers/dashboard-page/DashboardPage'
+import * as React from 'react'
 
-const DashboardPageRoute = () => <DashboardPage />;
+const DashboardPageRoute = () => <DashboardPage />
 
-export default DashboardPageRoute;
+export default DashboardPageRoute

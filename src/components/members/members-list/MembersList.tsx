@@ -1,40 +1,40 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import * as moment from "moment";
-import { Table } from "semantic-ui-react";
-import PaginatorList from "components/shared/paginator-list/PaginatorList";
-import * as sockets from "lib/sockets";
-import { history } from "store";
-import { LinkRow } from "components/shared";
+import { LinkRow } from 'components/shared'
+import PaginatorList from 'components/shared/paginator-list/PaginatorList'
+import * as sockets from 'lib/sockets'
+import * as moment from 'moment'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Table } from 'semantic-ui-react'
+import { history } from 'store'
 
 export default class MembersList extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       socket: null,
       subscription: null,
       column: null,
-      direction: null
-    };
+      direction: null,
+    }
   }
 
-  getMemberName = member =>
+  public getMemberName = (member) =>
     member.firstName
-      ? `${member.firstName} ${member.lastName || ""}`
-      : `Member-${member.memberId}`;
+      ? `${member.firstName} ${member.lastName || ''}`
+      : `Member-${member.memberId}`
 
-  linkClickHandler = id => history.push(`/members/${id}`);
+  public linkClickHandler = (id) => history.push(`/members/${id}`)
 
-  getTableRow = item => {
-    const signedOn = moment(item.signedOn).local();
+  public getTableRow = (item) => {
+    const signedOn = moment(item.signedOn).local()
     const formattedsignedOn = signedOn.isValid()
-      ? signedOn.format("DD MMMM YYYY HH:mm")
-      : "-";
+      ? signedOn.format('DD MMMM YYYY HH:mm')
+      : '-'
 
-    const createdOn = moment(item.createdOn).local();
+    const createdOn = moment(item.createdOn).local()
     const formattedCreatedOn = createdOn.isValid()
-      ? createdOn.format("DD MMMM YYYY HH:mm")
-      : "-";
+      ? createdOn.format('DD MMMM YYYY HH:mm')
+      : '-'
 
     return (
       <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>
@@ -42,79 +42,79 @@ export default class MembersList extends React.Component {
         <Table.Cell>{formattedCreatedOn}</Table.Cell>
         <Table.Cell>{formattedsignedOn}</Table.Cell>
       </LinkRow>
-    );
-  };
+    )
+  }
 
-  sortTable = clickedColumn => {
-    const { column, direction } = this.state;
+  public sortTable = (clickedColumn) => {
+    const { column, direction } = this.state
 
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
-        direction: "ascending"
-      });
-      this.props.sortMembersList(clickedColumn, false);
-      return;
+        direction: 'ascending',
+      })
+      this.props.sortMembersList(clickedColumn, false)
+      return
     }
 
     this.setState(
       {
-        direction: direction === "ascending" ? "descending" : "ascending"
+        direction: direction === 'ascending' ? 'descending' : 'ascending',
       },
       () => {
         this.props.sortMembersList(
           clickedColumn,
-          this.state.direction === "descending"
-        );
-      }
-    );
-  };
+          this.state.direction === 'descending',
+        )
+      },
+    )
+  }
 
-  getTableHeader = () => {
-    const { column, direction } = this.state;
+  public getTableHeader = () => {
+    const { column, direction } = this.state
     return (
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell
-            sorted={column === "name" ? direction : null}
-            onClick={this.sortTable.bind(this, "name")}
+            sorted={column === 'name' ? direction : null}
+            onClick={this.sortTable.bind(this, 'name')}
           >
             Name
           </Table.HeaderCell>
           <Table.HeaderCell
-            sorted={column === "createdOn" ? direction : null}
-            onClick={this.sortTable.bind(this, "createdOn")}
+            sorted={column === 'createdOn' ? direction : null}
+            onClick={this.sortTable.bind(this, 'createdOn')}
           >
             Created
           </Table.HeaderCell>
           <Table.HeaderCell
-            sorted={column === "signedOn" ? direction : null}
-            onClick={this.sortTable.bind(this, "signedOn")}
+            sorted={column === 'signedOn' ? direction : null}
+            onClick={this.sortTable.bind(this, 'signedOn')}
           >
             Sign up
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
-    );
-  };
+    )
+  }
 
-  subscribeSocket = connection => {
+  public subscribeSocket = (connection) => {
     const {
       newMessagesReceived,
-      client: { name }
-    } = this.props;
+      client: { name },
+    } = this.props
     const { stompClient, subscription } = sockets.membersListSubscribe(
       { newMessagesReceived },
       name,
-      connection
-    );
+      connection,
+    )
     this.setState({
       socket: stompClient,
-      subscription
-    });
-  };
+      subscription,
+    })
+  }
 
-  componentDidMount() {
+  public componentDidMount() {
     // TODO uncomment when ready method to count the number of unread messages
     /* const { setActiveConnection, messages } = this.props;
         if (!messages.activeConnection) {
@@ -127,20 +127,20 @@ export default class MembersList extends React.Component {
         } */
   }
 
-  render() {
+  public render() {
     const {
-      members: { list }
-    } = this.props;
+      members: { list },
+    } = this.props
     return (
       <PaginatorList
         list={list}
-        itemContent={item => this.getTableRow(item)}
+        itemContent={(item) => this.getTableRow(item)}
         tableHeader={this.getTableHeader()}
         pageSize={25}
         isSortable={true}
         keyName="memberId"
       />
-    );
+    )
   }
 }
 
@@ -148,5 +148,5 @@ MembersList.propTypes = {
   members: PropTypes.object.isRequired,
   newMessagesReceived: PropTypes.func.isRequired,
   client: PropTypes.object.isRequired,
-  sortMembersList: PropTypes.func.isRequired
-};
+  sortMembersList: PropTypes.func.isRequired,
+}

@@ -1,17 +1,17 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import * as moment from "moment";
-import styled from "styled-components";
-import { Button, Radio, Table } from "semantic-ui-react";
-import DateInput from "components/shared/inputs/DateInput";
-import { ACTIVATION_DATE, CANCELLATION_DATE } from "lib/messageTypes";
+import DateInput from 'components/shared/inputs/DateInput'
+import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
+import * as moment from 'moment'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Button, Radio, Table } from 'semantic-ui-react'
+import styled from 'styled-components'
 
 const DateCell = styled(Table.Cell)`
   &&& {
     display: flex;
     align-items: center;
   }
-`;
+`
 
 const FileButton = styled.label`
   display: flex;
@@ -29,36 +29,36 @@ const FileButton = styled.label`
     background-color: #cacbcd;
     color: #000000cc !important;
   }
-`;
+`
 
 const FlexCell = styled(Table.Cell)`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-`;
+`
 
 const RowValue = styled.span`
   margin-right: 10px;
-`;
+`
 
 export default class InsuranceTableRows extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       activationDatePickerDisabled: true,
       cancellationDatePickerDisabled: true,
       activationDateValue: null,
-      cancellationDateValue: null
-    };
+      cancellationDateValue: null,
+    }
   }
 
-  saveNewDate = () => {
+  public saveNewDate = () => {
     const {
       messages: { member },
       insurance,
-      saveInsuranceDate
-    } = this.props;
+      saveInsuranceDate,
+    } = this.props
     if (
       this.state.activationDateValue &&
       !this.state.activationDatePickerDisabled
@@ -67,9 +67,9 @@ export default class InsuranceTableRows extends React.Component {
         this.state.activationDateValue,
         ACTIVATION_DATE,
         member.memberId,
-        insurance.data.productId
-      );
-      this.setState({ activationDatePickerDisabled: true });
+        insurance.data.productId,
+      )
+      this.setState({ activationDatePickerDisabled: true })
     }
     if (
       this.state.cancellationDateValue &&
@@ -79,97 +79,98 @@ export default class InsuranceTableRows extends React.Component {
         this.state.cancellationDateValue,
         CANCELLATION_DATE,
         member.memberId,
-        insurance.data.productId
-      );
-      this.setState({ cancellationDatePickerDisabled: true });
+        insurance.data.productId,
+      )
+      this.setState({ cancellationDatePickerDisabled: true })
     }
-  };
+  }
 
-  cancelInsuranceClick = () => {
+  public cancelInsuranceClick = () => {
     const {
       insurance: { data },
-      sendCancelRequest
-    } = this.props;
-    sendCancelRequest(data.memberId);
-  };
+      sendCancelRequest,
+    } = this.props
+    sendCancelRequest(data.memberId)
+  }
 
-  dateChangeHandler = (type, e, { value }) => {
+  public dateChangeHandler = (type, e, { value }) => {
     switch (type) {
       case ACTIVATION_DATE:
         this.setState({
-          activationDateValue: moment(value).format("YYYY-MM-DD")
-        });
-        break;
+          activationDateValue: moment(value).format('YYYY-MM-DD'),
+        })
+        break
       case CANCELLATION_DATE:
         this.setState({
-          cancellationDateValue: moment(value).format("YYYY-MM-DD")
-        });
-        break;
+          cancellationDateValue: moment(value).format('YYYY-MM-DD'),
+        })
+        break
       default:
-        console.warn(
-          "Class: InsuranceTableRows Function: dateChangeHandler Message: Not avaialable case"
-        );
+        console.warn( // tslint:disable-line
+          'Class: InsuranceTableRows Function: dateChangeHandler Message: Not avaialable case', // tslint:disable-line
+        ) // tslint:disable-line
     }
-  };
+  }
 
-  toggleEdit = changeType => {
+  public toggleEdit = (changeType) => {
     switch (changeType) {
       case ACTIVATION_DATE:
         this.setState({
-          activationDatePickerDisabled: !this.state.activationDatePickerDisabled
-        });
-        break;
+          activationDatePickerDisabled: !this.state
+            .activationDatePickerDisabled,
+        })
+        break
       case CANCELLATION_DATE:
         this.setState({
           cancellationDatePickerDisabled: !this.state
-            .cancellationDatePickerDisabled
-        });
-        break;
+            .cancellationDatePickerDisabled,
+        })
+        break
       default:
-        console.warn(
-          "Class: InsuranceTableRows Function: toggleEdit Message: Not avaialable case"
-        );
+        console.warn( // tslint:disable-line
+          'Class: InsuranceTableRows Function: toggleEdit Message: Not avaialable case', // tslint:disable-line
+        ) // tslint:disable-line
     }
-  };
+  }
 
-  downloadClick = () => {
-    const {
-      messages: { member }
-    } = this.props;
-    //eslint-disable-next-line no-undef
-    window.open(`/api/member/mandate/${member.memberId}`);
-  };
-
-  changeHandler = e => {
+  public downloadClick = () => {
     const {
       messages: { member },
-      sendCertificate
-    } = this.props;
+    } = this.props
     // eslint-disable-next-line no-undef
-    const formData = new FormData();
-    formData.set("file", e.target.files[0]);
-    sendCertificate(formData, member.memberId);
-  };
+    window.open(`/api/member/mandate/${member.memberId}`)
+  }
 
-  changeCompanyStatus = (e, { checked }) => {
+  public changeHandler = (e) => {
     const {
       messages: { member },
-      changeCompanyStatus
-    } = this.props;
-    changeCompanyStatus(checked, member.memberId);
-  };
+      sendCertificate,
+    } = this.props
+    // eslint-disable-next-line no-undef
+    const formData = new FormData()
+    formData.set('file', e.target.files[0])
+    sendCertificate(formData, member.memberId)
+  }
 
-  getFormattedDate = date => {
-    //FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
-    const dateToBeFormated = moment(date + "Z").local();
+  public changeCompanyStatus = (e, { checked }) => {
+    const {
+      messages: { member },
+      changeCompanyStatus,
+    } = this.props
+    changeCompanyStatus(checked, member.memberId)
+  }
+
+  public getFormattedDate = (date) => {
+    // FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
+    const dateToBeFormated = moment(date + 'Z').local()
     return dateToBeFormated.isValid()
-      ? dateToBeFormated.format("DD MMMM YYYY")
-      : "-";
-  };
+      ? dateToBeFormated.format('DD MMMM YYYY')
+      : '-'
+  }
 
-  render() {
-    const { activeDate, cancellationDate, insurance } = this.props;
-    const certIsExist = insurance.data.certificateUploaded;
+  public render() {
+    const { activeDate, cancellationDate, insurance } = this.props
+    const certIsExist = insurance.data.certificateUploaded
     return (
       <React.Fragment>
         <Table.Row>
@@ -196,9 +197,9 @@ export default class InsuranceTableRows extends React.Component {
               <React.Fragment>
                 <Button
                   content="View existing"
-                  onClick={e => {
-                    e.preventDefault();
-                    window.location.assign(insurance.data.certificateUrl);
+                  onClick={(e) => {
+                    e.preventDefault()
+                    window.location.assign(insurance.data.certificateUrl)
                   }}
                 />
                 <input
@@ -207,9 +208,9 @@ export default class InsuranceTableRows extends React.Component {
                   id="certFile"
                   multiple={false}
                   onChange={this.changeHandler}
-                  style={{ display: "none" }}
-                  ref={input => {
-                    this.fileInput = input;
+                  style={{ display: 'none' }}
+                  ref={(input) => {
+                    this.fileInput = input
                   }}
                 />
                 <FileButton htmlFor="certFile">Upload new</FileButton>
@@ -222,9 +223,9 @@ export default class InsuranceTableRows extends React.Component {
                   id="certFile"
                   multiple={false}
                   onChange={this.changeHandler}
-                  style={{ display: "none" }}
-                  ref={input => {
-                    this.fileInput = input;
+                  style={{ display: 'none' }}
+                  ref={(input) => {
+                    this.fileInput = input
                   }}
                 />
                 <FileButton htmlFor="certFile">Upload file</FileButton>
@@ -251,7 +252,7 @@ export default class InsuranceTableRows extends React.Component {
                 {activeDate && (
                   <RowValue>{this.getFormattedDate(activeDate)}</RowValue>
                 )}
-                <Button onClick={e => this.toggleEdit(ACTIVATION_DATE)}>
+                <Button onClick={(e) => this.toggleEdit(ACTIVATION_DATE)}>
                   Edit
                 </Button>
               </React.Fragment>
@@ -264,7 +265,7 @@ export default class InsuranceTableRows extends React.Component {
                 <Button onClick={this.saveNewDate} primary>
                   Save
                 </Button>
-                <Button onClick={e => this.toggleEdit(ACTIVATION_DATE)}>
+                <Button onClick={(e) => this.toggleEdit(ACTIVATION_DATE)}>
                   Close
                 </Button>
               </React.Fragment>
@@ -279,7 +280,7 @@ export default class InsuranceTableRows extends React.Component {
                 {cancellationDate && (
                   <RowValue>{this.getFormattedDate(cancellationDate)}</RowValue>
                 )}
-                <Button onClick={e => this.toggleEdit(CANCELLATION_DATE)}>
+                <Button onClick={(e) => this.toggleEdit(CANCELLATION_DATE)}>
                   Edit
                 </Button>
               </React.Fragment>
@@ -292,7 +293,7 @@ export default class InsuranceTableRows extends React.Component {
                 <Button onClick={this.saveNewDate} primary>
                   Save
                 </Button>
-                <Button onClick={e => this.toggleEdit(CANCELLATION_DATE)}>
+                <Button onClick={(e) => this.toggleEdit(CANCELLATION_DATE)}>
                   Close
                 </Button>
               </React.Fragment>
@@ -300,7 +301,7 @@ export default class InsuranceTableRows extends React.Component {
           </DateCell>
         </Table.Row>
       </React.Fragment>
-    );
+    )
   }
 }
 
@@ -313,5 +314,5 @@ InsuranceTableRows.propTypes = {
   changeCompanyStatus: PropTypes.func.isRequired,
   fields: PropTypes.object.isRequired,
   activeDate: PropTypes.string,
-  cancellationDate: PropTypes.string
-};
+  cancellationDate: PropTypes.string,
+}

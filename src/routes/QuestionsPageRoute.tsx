@@ -1,6 +1,6 @@
-import * as React from 'react';
-import QuestionsPage from 'containers/questions-page/QuestionsPage';
+import QuestionsPage from 'containers/questions-page/QuestionsPage'
+import * as React from 'react'
 
-const QuestionsPageRoute = () => <QuestionsPage />;
+const QuestionsPageRoute = () => <QuestionsPage />
 
-export default QuestionsPageRoute;
+export default QuestionsPageRoute

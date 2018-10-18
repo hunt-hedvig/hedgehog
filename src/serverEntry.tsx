@@ -1,15 +1,17 @@
-import 'source-map-support/register'
 import {
   // tslint:disable-line ordered-imports
   createKoaServer,
   getScriptLocation,
 } from '@hedviginsurance/web-survival-kit'
+import { createServerApolloClient } from 'api/apollo-server'
 import { renderStylesToString } from 'emotion-server'
 import * as Koa from 'koa'
 import * as path from 'path'
 import * as React from 'react'
+import { ApolloProvider } from 'react-apollo'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router'
+import 'source-map-support/register'
 
 import App from 'App'
 
@@ -36,10 +38,16 @@ const template = (body: string) => `
 
 const getPage: Koa.Middleware = async (ctx) => {
   const context = {}
-  const reactBody = renderStylesToString(renderToString(
-  <StaticRouter location={ctx.url} context={context}>
-    <App />
-  </StaticRouter>))
+  const apolloClient = createServerApolloClient(ctx.state.requestUuid)
+  const reactBody = renderStylesToString(
+    renderToString(
+      <StaticRouter location={ctx.url} context={context}>
+        <ApolloProvider client={apolloClient}>
+          <App />
+        </ApolloProvider>
+      </StaticRouter>,
+    ),
+  )
   ctx.body = template(reactBody)
 }
 const getPort = () => (process.env.PORT ? Number(process.env.PORT) : 9000)

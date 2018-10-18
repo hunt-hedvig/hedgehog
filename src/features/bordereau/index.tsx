@@ -1,79 +1,81 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import { Button, Icon, Header, Dropdown } from "semantic-ui-react";
-import MonthPickerInput from "react-month-picker-input";
-import styled from "styled-components";
-import * as moment from "moment";
-import config from "api/config";
+import config from 'api/config'
+import * as moment from 'moment'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import MonthPickerInput from 'react-month-picker-input'
+import { Button, Dropdown, Header, Icon } from 'semantic-ui-react'
+import styled from 'styled-components'
 
 const DatePickerContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 2em;
-`;
+`
 
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 2em;
-`;
+`
 
 const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 2em;
-`;
+`
 
 const DropdownContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 2em;
-`;
+`
 
 const bdxOptions = [
   {
-    text: "Regular",
-    value: "Regular"
+    text: 'Regular',
+    value: 'Regular',
   },
   {
-    text: "Student",
-    value: "Student"
-  }
-];
+    text: 'Student',
+    value: 'Student',
+  },
+]
 
 export default class Bordereau extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      date: moment().format("YYYY-MM"),
-      defaultYear: Number(moment().format("YYYY")),
-      defaultMonth: Number(moment().format("MM")) - 1,
-      isStudent: false
-    };
+      date: moment().format('YYYY-MM'),
+      defaultYear: Number(moment().format('YYYY')),
+      defaultMonth: Number(moment().format('MM')) - 1,
+      isStudent: false,
+    }
   }
 
-  onDateChange = (maskedValue, selectedYear, selectedMonth) => {
-    //The range of the selectedMonth from MonthPickerInput is 0-11
-    let month = (+selectedMonth + 1).toString();
+  public onDateChange = (maskedValue, selectedYear, selectedMonth) => {
+    // The range of the selectedMonth from MonthPickerInput is 0-11
+    const month = (+selectedMonth + 1).toString()
 
     if (month.length === 1) {
-      this.setState({ date: `${selectedYear}-0${month}` });
-    } else this.setState({ date: `${selectedYear}-${month}` });
-  };
-
-  handleClick = (e, data) => {
-    if (data.value === "Student") {
-      this.setState({ isStudent: true });
+      this.setState({ date: `${selectedYear}-0${month}` })
     } else {
-      this.setState({ isStudent: false });
+      this.setState({ date: `${selectedYear}-${month}` })
     }
-  };
+  }
 
-  render() {
+  public handleClick = (e, data) => {
+    if (data.value === 'Student') {
+      this.setState({ isStudent: true })
+    } else {
+      this.setState({ isStudent: false })
+    }
+  }
+
+  public render() {
     return (
       <React.Fragment>
         <HeaderContainer>
@@ -114,7 +116,7 @@ export default class Bordereau extends React.Component {
                   config.reports.getBDX.url
                 }?year=${this.state.date.substr(
                   0,
-                  4
+                  4,
                 )}&month=${this.state.date.substr(5, 2)}&isStudent=${
                   this.state.isStudent
                 }`}
@@ -129,10 +131,10 @@ export default class Bordereau extends React.Component {
           </React.Fragment>
         )}
       </React.Fragment>
-    );
+    )
   }
 }
 
 Bordereau.propTypes = {
-  bdxRequest: PropTypes.func.isRequired
-};
+  bdxRequest: PropTypes.func.isRequired,
+}

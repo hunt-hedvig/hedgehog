@@ -1,11 +1,15 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
+import { apolloClient } from 'api/apollo-client'
 import { HotApp } from 'App'
+import * as React from 'react'
+import { ApolloProvider } from 'react-apollo'
+import * as ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.hydrate(
-    <BrowserRouter>
-        <HotApp />
-    </BrowserRouter>, 
-    document.getElementById('react-root')
+  <BrowserRouter>
+    <ApolloProvider client={apolloClient!}>
+      <HotApp />
+    </ApolloProvider>
+  </BrowserRouter>,
+  document.getElementById('react-root'),
 )
