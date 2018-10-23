@@ -1,57 +1,57 @@
 import {
-  MEMBER_INS_REQUESTING,
-  MEMBER_INS_SUCCESS,
   MEMBER_INS_ERROR,
+  MEMBER_INS_REQUESTING,
   MEMBER_INS_SEARCH_REQUESTING,
   MEMBER_INS_SEARCH_SUCCESS,
+  MEMBER_INS_SUCCESS,
   SET_MEMBER_INS_FILTER,
-  SORT_MEMBER_INS_LIST
-} from "../constants/memberInsurance";
+  SORT_MEMBER_INS_LIST,
+} from '../constants/memberInsurance'
 
-export const memberInsRequest = client => ({
+export const memberInsRequest = (client) => ({
   type: MEMBER_INS_REQUESTING,
-  client
-});
+  client,
+})
 
 export const memberInsRequestSuccess = (
   members,
   fieldName,
-  isDescendingOrder
+  isDescendingOrder,
 ) => ({
   type: MEMBER_INS_SUCCESS,
   members,
   fieldName,
-  isDescendingOrder
-});
+  isDescendingOrder,
+})
 
-export const memberInsRequestError = error => ({
+export const memberInsRequestError = (error) => ({
   type: MEMBER_INS_ERROR,
-  error
-});
+  error,
+})
 
-export const searchMemberInsRequest = query => ({
+export const searchMemberInsRequest = (query) => ({
   type: MEMBER_INS_SEARCH_REQUESTING,
-  query
-});
+  query,
+})
 
 export const searchMemberInsSuccess = (
   members,
   fieldName,
-  isDescendingOrder
+  isDescendingOrder,
 ) => ({
   type: MEMBER_INS_SEARCH_SUCCESS,
   members,
   fieldName,
-  isDescendingOrder
-});
+  isDescendingOrder,
+})
 
-export const setMemberInsFilter = query => ({
+export const setMemberInsFilter = (query) => ({
   type: SET_MEMBER_INS_FILTER,
-  query
-});
+  query,
+})
 
 export const sortMemberInsList = (fieldName, isReverse) => ({
   type: SORT_MEMBER_INS_LIST,
   fieldName,
-  isReverse
-});
+  isReverse,
+})

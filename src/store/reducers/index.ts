@@ -1,29 +1,29 @@
-import login from './loginReducer';
-import assets from './assetsReducer';
-import poll from './pollReducer';
-import client from './clientReducer';
-import messages from './messagesReducer';
-import members from './membersReducer';
-import dashboard from './dashboardReducer';
-import claims from './claimsReducer';
-import claimDetails from './claimDetailsReducer';
-import questions from './questionsReducer';
-import insurance from './insuranceReducer';
-import notifications from './notificationsReducer';
-import memberInsurance from './memberInsuranceReducer';
+import assets from './assetsReducer'
+import claimDetails from './claimDetailsReducer'
+import claims from './claimsReducer'
+import client from './clientReducer'
+import dashboard from './dashboardReducer'
+import insurance from './insuranceReducer'
+import login from './loginReducer'
+import memberInsurance from './memberInsuranceReducer'
+import members from './membersReducer'
+import messages from './messagesReducer'
+import notifications from './notificationsReducer'
+import poll from './pollReducer'
+import questions from './questionsReducer'
 
 export default {
-    login,
-    assets,
-    poll,
-    client,
-    messages,
-    members,
-    dashboard,
-    claims,
-    claimDetails,
-    questions,
-    insurance,
-    notifications,
-    memberInsurance
-};
+  login,
+  assets,
+  poll,
+  client,
+  messages,
+  members,
+  dashboard,
+  claims,
+  claimDetails,
+  questions,
+  insurance,
+  notifications,
+  memberInsurance,
+}

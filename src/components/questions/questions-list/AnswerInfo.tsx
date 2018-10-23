@@ -1,20 +1,20 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import styled from "styled-components";
-import * as moment from "moment";
-import { Button, Header, Label, Segment } from "semantic-ui-react";
+import * as moment from 'moment'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Button, Header, Label, Segment } from 'semantic-ui-react'
+import styled from 'styled-components'
 
 const ChatLinkButton = styled(Button)`
   &&& {
     float: right;
   }
-`;
+`
 
 const AnswerInfo = ({ member, redirectClick }) => (
   <Segment>
     <Label ribbon>
       <Label.Detail>
-        {moment(member.date).format("Do MM YYYY HH:mm")}
+        {moment(member.date).format('Do MM YYYY HH:mm')}
       </Label.Detail>
     </Label>
     <ChatLinkButton
@@ -30,11 +30,11 @@ const AnswerInfo = ({ member, redirectClick }) => (
       </React.Fragment>
     )}
   </Segment>
-);
+)
 
 AnswerInfo.propTypes = {
   member: PropTypes.object.isRequired,
-  redirectClick: PropTypes.func.isRequired
-};
+  redirectClick: PropTypes.func.isRequired,
+}
 
-export default AnswerInfo;
+export default AnswerInfo

@@ -1,28 +1,28 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import { Header } from "semantic-ui-react";
-import { getMemberInfo } from "lib/helpers";
-import Message from "components/chat/messages/Message";
-import { history } from "store";
+import Message from 'components/chat/messages/Message'
+import { getMemberInfo } from 'lib/helpers'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Header } from 'semantic-ui-react'
+import { history } from 'store'
 
 const Question = ({ activeList, question, membersList }) => {
-  const memberInfo = getMemberInfo(membersList, question.memberId);
+  const memberInfo = getMemberInfo(membersList, question.memberId)
 
   return (
     <React.Fragment>
       <Header>
-        Questions from:{" "}
+        Questions from:{' '}
         <a
           href="#"
           onClick={() =>
-            history.push(`/members/${question.memberId}`, { to: "details" })
+            history.push(`/members/${question.memberId}`, { to: 'details' })
           }
         >
           {memberInfo}
         </a>
       </Header>
       {activeList[question.memberId] &&
-        activeList[question.memberId].map(data => (
+        activeList[question.memberId].map((data) => (
           <div key={data.id}>
             <Message
               content={data.message.body}
@@ -43,13 +43,13 @@ const Question = ({ activeList, question, membersList }) => {
           </div>
         ))}
     </React.Fragment>
-  );
-};
+  )
+}
 
 Question.propTypes = {
   question: PropTypes.object.isRequired,
   membersList: PropTypes.array,
-  activeList: PropTypes.object
-};
+  activeList: PropTypes.object,
+}
 
-export default Question;
+export default Question

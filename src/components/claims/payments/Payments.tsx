@@ -1,93 +1,82 @@
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Button, Form, Segment } from 'semantic-ui-react';
-import PaymentsList from './PaymentsList';
-import { getSum } from 'lib/helpers';
+import { getSum } from 'lib/helpers'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Button, Form, Segment } from 'semantic-ui-react'
+import styled from 'styled-components'
+import PaymentsList from './PaymentsList'
 
 const Label = styled.label`
-    display: flex;
-    align-items: center;
-    font-weight: 700;
-    font-size: 13px;
-`;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 13px;
+`
 export default class Payments extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            reserve: '',
-            editDisabled: true
-        };
+  constructor(props) {
+    super(props)
+    this.state = {
+      reserve: '',
+      editDisabled: true,
     }
+  }
 
-    editClickHandler = () => {
-        this.setState({ editDisabled: false });
-    };
+  public editClickHandler = () => {
+    this.setState({ editDisabled: false })
+  }
 
-    updateReserve = () => {
-        const { id, updateReserve, claimDetails } = this.props;
+  public updateReserve = () => {
+    const { id, updateReserve, claimDetails } = this.props
 
-        updateReserve(id, { amount: this.state.reserve }, claimDetails.userId);
-        this.setState({
-            editDisabled: true
-        });
-    };
+    updateReserve(id, { amount: this.state.reserve }, claimDetails.userId)
+    this.setState({
+      editDisabled: true,
+    })
+  }
 
-    reserveChangeHandler = (e, { value }) => {
-        this.setState({ reserve: value });
-    };
+  public reserveChangeHandler = (e, { value }) => {
+    this.setState({ reserve: value })
+  }
 
-    componentWillReceiveProps({ claimDetails: { data } }) {
-        if (data && data.reserve) {
-            this.setState({ reserve: data.reserve });
-        }
+  public componentWillReceiveProps({ claimDetails: { data } }) {
+    if (data && data.reserve) {
+      this.setState({ reserve: data.reserve })
     }
+  }
 
-    render() {
-        const { claimDetails } = this.props;
-        const { reserve, editDisabled } = this.state;
-        const sum = getSum(claimDetails.payments);
-        return (
-            <Segment>
-                <Form>
-                    <Form.Group>
-                        <Label>Reserves: </Label>
-                        <Form.Input
-                            type="number"
-                            value={reserve}
-                            disabled={editDisabled}
-                            onChange={this.reserveChangeHandler}
-                        />
+  public render() {
+    const { claimDetails } = this.props
+    const { reserve, editDisabled } = this.state
+    const sum = getSum(claimDetails.payments)
+    return (
+      <Segment>
+        <Form>
+          <Form.Group>
+            <Label>Reserves: </Label>
+            <Form.Input
+              type="number"
+              value={reserve}
+              disabled={editDisabled}
+              onChange={this.reserveChangeHandler}
+            />
 
-                        {editDisabled ? (
-                            <Button
-                                onClick={this.editClickHandler}
-                                content="Edit"
-                            />
-                        ) : (
-                            <Button
-                                primary
-                                onClick={this.updateReserve}
-                                content="Save"
-                            />
-                        )}
-                    </Form.Group>
-                </Form>
+            {editDisabled ? (
+              <Button onClick={this.editClickHandler} content="Edit" />
+            ) : (
+              <Button primary onClick={this.updateReserve} content="Save" />
+            )}
+          </Form.Group>
+        </Form>
 
-                <PaymentsList
-                    {...this.props}
-                    list={claimDetails.payments}
-                    sum={sum}
-                />
-            </Segment>
-        );
-    }
+        <PaymentsList {...this.props} list={claimDetails.payments} sum={sum} />
+      </Segment>
+    )
+  }
 }
 
 Payments.propTypes = {
-    claimDetails: PropTypes.object.isRequired,
-    updateReserve: PropTypes.func.isRequired,
-    createPayment: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired,
-    notes: PropTypes.array
-};
+  claimDetails: PropTypes.object.isRequired,
+  updateReserve: PropTypes.func.isRequired,
+  createPayment: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+  notes: PropTypes.array,
+}

@@ -1,38 +1,38 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import * as moment from "moment";
-import { Table } from "semantic-ui-react";
-import PaginatorList from "components/shared/paginator-list/PaginatorList";
-import { history } from "store";
-import { LinkRow } from "components/shared";
+import { LinkRow } from 'components/shared'
+import PaginatorList from 'components/shared/paginator-list/PaginatorList'
+import * as moment from 'moment'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Table } from 'semantic-ui-react'
+import { history } from 'store'
 
 export default class MemberInsuranceList extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       column: null,
-      direction: null
-    };
+      direction: null,
+    }
   }
 
-  getMemberName = member =>
+  public getMemberName = (member) =>
     member.memberFirstName
-      ? `${member.memberFirstName} ${member.memberLastName || ""}`
-      : `${member.memberId ? "Member-" + member.memberId : "No id"}`;
+      ? `${member.memberFirstName} ${member.memberLastName || ''}`
+      : `${member.memberId ? 'Member-' + member.memberId : 'No id'}`
 
-  linkClickHandler = id => {
-    history.push(`/members/${id}`, { to: "insurance" });
-  };
+  public linkClickHandler = (id) => {
+    history.push(`/members/${id}`, { to: 'insurance' })
+  }
 
-  getFormattedDate = date => {
-    return date.isValid() ? date.format("DD MMMM YYYY") : "-";
-  };
+  public getFormattedDate = (date) => {
+    return date.isValid() ? date.format('DD MMMM YYYY') : '-'
+  }
 
-  getTableRow = item => {
-    //FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
-    const activationDate = moment(item.insuranceActiveFrom + "Z").local();
-    const cancellationDate = moment(item.insuranceActiveTo + "Z").local();
-    const signedOnDate = moment(item.signedOn).local();
+  public getTableRow = (item) => {
+    // FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
+    const activationDate = moment(item.insuranceActiveFrom + 'Z').local()
+    const cancellationDate = moment(item.insuranceActiveTo + 'Z').local()
+    const signedOnDate = moment(item.signedOn).local()
 
     return (
       <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>
@@ -45,133 +45,139 @@ export default class MemberInsuranceList extends React.Component {
         <Table.Cell>
           {item.cancellationEmailSent
             ? item.cancellationEmailSent.toString()
-            : "-"}
+            : '-'}
         </Table.Cell>
         <Table.Cell>
-          {item.certificateUploaded ? item.certificateUploaded.toString() : "-"}
+          {item.certificateUploaded ? item.certificateUploaded.toString() : '-'}
         </Table.Cell>
         <Table.Cell>
-          {item.personsInHouseHold ? item.personsInHouseHold.toString() : "-"}
+          {item.personsInHouseHold ? item.personsInHouseHold.toString() : '-'}
         </Table.Cell>
       </LinkRow>
-    );
-  };
+    )
+  }
 
-  sortTable = clickedColumn => {
-    const { column, direction } = this.state;
+  public sortTable = (clickedColumn) => {
+    const { column, direction } = this.state
 
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
-        direction: "ascending"
-      });
-      this.props.sortMemberInsList(clickedColumn, false);
-      return;
+        direction: 'ascending',
+      })
+      this.props.sortMemberInsList(clickedColumn, false)
+      return
     }
     this.setState(
       {
-        direction: direction === "ascending" ? "descending" : "ascending"
+        direction: direction === 'ascending' ? 'descending' : 'ascending',
       },
       () => {
         this.props.sortMemberInsList(
           clickedColumn,
-          this.state.direction === "descending"
-        );
-      }
-    );
-  };
+          this.state.direction === 'descending',
+        )
+      },
+    )
+  }
 
-  getTableHeader = () => {
-    const { column, direction } = this.state;
+  public getTableHeader = () => {
+    const { column, direction } = this.state
     return (
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell
             width={4}
-            sorted={column === "name" ? direction : null}
-            onClick={this.sortTable.bind(this, "name")}
+            sorted={column === 'name' ? direction : null}
+            onClick={this.sortTable.bind(this, 'name')}
           >
             Member fullname
           </Table.HeaderCell>
           <Table.HeaderCell
             width={2}
-            sorted={column === "insuranceType" ? direction : null}
-            onClick={this.sortTable.bind(this, "insuranceType")}
+            sorted={column === 'insuranceType' ? direction : null}
+            onClick={this.sortTable.bind(this, 'insuranceType')}
           >
             Type
           </Table.HeaderCell>
           <Table.HeaderCell
             width={3}
-            sorted={column === "signedOn" ? direction : null}
-            onClick={this.sortTable.bind(this, "signedOn")}
+            sorted={column === 'signedOn' ? direction : null}
+            onClick={this.sortTable.bind(this, 'signedOn')}
           >
             Sign up
           </Table.HeaderCell>
           <Table.HeaderCell
             width={3}
-            sorted={column === "insuranceActiveFrom" ? direction : null}
-            onClick={this.sortTable.bind(this, "insuranceActiveFrom")}
+            sorted={column === 'insuranceActiveFrom' ? direction : null}
+            onClick={this.sortTable.bind(this, 'insuranceActiveFrom')}
           >
             Active from
           </Table.HeaderCell>
           <Table.HeaderCell
             width={3}
-            sorted={column === "insuranceActiveTo" ? direction : null}
-            onClick={this.sortTable.bind(this, "insuranceActiveTo")}
+            sorted={column === 'insuranceActiveTo' ? direction : null}
+            onClick={this.sortTable.bind(this, 'insuranceActiveTo')}
           >
             Active to
           </Table.HeaderCell>
           <Table.HeaderCell
             width={2}
-            sorted={column === "insuranceStatus" ? direction : null}
-            onClick={this.sortTable.bind(this, "insuranceStatus")}
+            sorted={column === 'insuranceStatus' ? direction : null}
+            onClick={this.sortTable.bind(this, 'insuranceStatus')}
           >
             Status
           </Table.HeaderCell>
           <Table.HeaderCell
             width={1}
-            sorted={column === "cancellationEmailSent" ? direction : null}
-            onClick={this.sortTable.bind(this, "cancellationEmailSent")}
+            sorted={column === 'cancellationEmailSent' ? direction : null}
+            onClick={this.sortTable.bind(this, 'cancellationEmailSent')}
           >
-            Cancellation<br />email sent
+            Cancellation
+            <br />
+            email sent
           </Table.HeaderCell>
           <Table.HeaderCell
             width={1}
-            sorted={column === "certificateUploaded" ? direction : null}
-            onClick={this.sortTable.bind(this, "certificateUploaded")}
+            sorted={column === 'certificateUploaded' ? direction : null}
+            onClick={this.sortTable.bind(this, 'certificateUploaded')}
           >
-            Certificate<br />uploaded
+            Certificate
+            <br />
+            uploaded
           </Table.HeaderCell>
           <Table.HeaderCell
             width={1}
-            sorted={column === "personsInHouseHold" ? direction : null}
-            onClick={this.sortTable.bind(this, "personsInHouseHold")}
+            sorted={column === 'personsInHouseHold' ? direction : null}
+            onClick={this.sortTable.bind(this, 'personsInHouseHold')}
           >
-            Household<br />size
+            Household
+            <br />
+            size
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
-    );
-  };
-  render() {
+    )
+  }
+  public render() {
     const {
-      memberInsurance: { list }
-    } = this.props;
+      memberInsurance: { list },
+    } = this.props
 
     return (
       <PaginatorList
         list={list}
-        itemContent={item => this.getTableRow(item)}
+        itemContent={(item) => this.getTableRow(item)}
         tableHeader={this.getTableHeader()}
         pageSize={20}
         isSortable={true}
         keyName="productId"
       />
-    );
+    )
   }
 }
 
 MemberInsuranceList.propTypes = {
   memberInsurance: PropTypes.object.isRequired,
-  sortMemberInsList: PropTypes.func.isRequired
-};
+  sortMemberInsList: PropTypes.func.isRequired,
+}

@@ -1,14 +1,14 @@
-import AssetsPageRoute from "routes/AssetsPageRoute";
-import LoginPageRoute from "routes/LoginPageRoute";
-import LoginProcessPageRoute from "routes/LoginProcessPageRoute";
-import MembersPageRoute from "routes/MembersPageRoute";
-import DashboardPageRoute from "routes/DashboardPageRoute";
-import ClaimsPageRoute from "routes/ClaimsPageRoute";
-import QuestionsPageRoute from "routes/QuestionsPageRoute";
-import MemberInsurancePageRoute from "routes/MemberInsurancePageRoute";
-import PaymentsPageRoute from "routes/PaymentsPageRoute";
-import BourdereauPageRoute from "routes/BourdereauPageRoute";
-import PrivateRoute from "routes/PrivateRoute";
+import AssetsPageRoute from 'routes/AssetsPageRoute'
+import BourdereauPageRoute from 'routes/BourdereauPageRoute'
+import ClaimsPageRoute from 'routes/ClaimsPageRoute'
+import DashboardPageRoute from 'routes/DashboardPageRoute'
+import LoginPageRoute from 'routes/LoginPageRoute'
+import LoginProcessPageRoute from 'routes/LoginProcessPageRoute'
+import MemberInsurancePageRoute from 'routes/MemberInsurancePageRoute'
+import MembersPageRoute from 'routes/MembersPageRoute'
+import PaymentsPageRoute from 'routes/PaymentsPageRoute'
+import PrivateRoute from 'routes/PrivateRoute'
+import QuestionsPageRoute from 'routes/QuestionsPageRoute'
 
 export default {
   AssetsPageRoute,
@@ -21,5 +21,5 @@ export default {
   MemberInsurancePageRoute,
   PaymentsPageRoute,
   BourdereauPageRoute,
-  PrivateRoute
-};
+  PrivateRoute,
+}

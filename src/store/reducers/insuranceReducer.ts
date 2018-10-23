@@ -1,25 +1,25 @@
-import initialState from "../initialState";
 import {
-  INSURANCE_REQUESTING,
-  INSURANCE_REQUEST_SUCCESS,
   INSURANCE_ERROR,
-  INSURANCES_LIST_REQUESTING,
+  INSURANCE_REQUEST_SUCCESS,
+  INSURANCE_REQUESTING,
   INSURANCES_LIST_REQUEST_SUCCESS,
-  SAVE_INSURANCE_DATE,
-  SAVE_ACTIVATION_DATE_SUCCESS,
-  SAVE_CANCELLATION_DATE_SUCCESS,
-  SEND_CANCEL_REQUEST,
-  SEND_CANCEL_REQUEST_SUCCESS,
-  SEND_CERTIFICATE,
-  SEND_CERTIFICATE_SUCCESS,
-  SEND_CERTIFICATE_ERROR,
+  INSURANCES_LIST_REQUESTING,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
   MEMBER_CREATE_MODIFIED_INSURANCE,
   MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
   MODIFY_INSURANCE,
-  MODIFY_INSURANCE_SUCCESS
-} from "../constants/members";
+  MODIFY_INSURANCE_SUCCESS,
+  SAVE_ACTIVATION_DATE_SUCCESS,
+  SAVE_CANCELLATION_DATE_SUCCESS,
+  SAVE_INSURANCE_DATE,
+  SEND_CANCEL_REQUEST,
+  SEND_CANCEL_REQUEST_SUCCESS,
+  SEND_CERTIFICATE,
+  SEND_CERTIFICATE_ERROR,
+  SEND_CERTIFICATE_SUCCESS,
+} from '../constants/members'
+import initialState from '../initialState'
 
 export default function(state = initialState.insurance, action) {
   switch (action.type) {
@@ -34,8 +34,8 @@ export default function(state = initialState.insurance, action) {
       return {
         ...state,
         requesting: true,
-        error: []
-      };
+        error: [],
+      }
 
     case INSURANCES_LIST_REQUEST_SUCCESS:
       return {
@@ -43,8 +43,8 @@ export default function(state = initialState.insurance, action) {
         requesting: false,
         successful: true,
         list: action.list,
-        error: []
-      };
+        error: [],
+      }
 
     case INSURANCE_REQUEST_SUCCESS:
       return {
@@ -52,8 +52,8 @@ export default function(state = initialState.insurance, action) {
         requesting: false,
         successful: true,
         data: action.insurance,
-        error: []
-      };
+        error: [],
+      }
 
     case MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS:
       return {
@@ -61,60 +61,60 @@ export default function(state = initialState.insurance, action) {
         requesting: false,
         successful: true,
         list: [...state.list, action.updatedProduct],
-        error: []
-      };
+        error: [],
+      }
 
     case INSURANCE_ERROR:
       return {
         ...state,
         requesting: false,
         data: null,
-        error: [...state.error, action.error]
-      };
+        error: [...state.error, action.error],
+      }
 
     case SAVE_ACTIVATION_DATE_SUCCESS:
       return {
         ...state,
         requesting: false,
-        data: { ...state.data, insuranceActiveFrom: action.activationDate }
-      };
+        data: { ...state.data, insuranceActiveFrom: action.activationDate },
+      }
 
     case SAVE_CANCELLATION_DATE_SUCCESS:
       return {
         ...state,
         requesting: false,
-        data: { ...state.data, insuranceActiveTo: action.cancellationDate }
-      };
+        data: { ...state.data, insuranceActiveTo: action.cancellationDate },
+      }
 
     case SEND_CANCEL_REQUEST_SUCCESS:
       return {
         ...state,
         requesting: false,
-        data: { ...state.data, cancellationEmailSent: true }
-      };
+        data: { ...state.data, cancellationEmailSent: true },
+      }
 
     case SEND_CERTIFICATE_SUCCESS:
       return {
         ...state,
         requesting: false,
-        data: { ...state.data, certificateUploaded: true }
-      };
+        data: { ...state.data, certificateUploaded: true },
+      }
 
     case MEMBER_COMPANY_STATUS_SUCCESS:
       return {
         ...state,
         requesting: false,
-        data: { ...state.data, insuredAtOtherCompany: action.value }
-      };
+        data: { ...state.data, insuredAtOtherCompany: action.value },
+      }
 
     case SEND_CERTIFICATE_ERROR:
       return {
         ...state,
-        requesting: false
-      };
+        requesting: false,
+      }
 
     case MODIFY_INSURANCE_SUCCESS:
     default:
-      return state;
+      return state
   }
 }

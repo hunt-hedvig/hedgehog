@@ -1,58 +1,58 @@
 export default {
   login: {
-    requesting: false
+    requesting: false,
   },
   assets: {
     list: [],
-    requesting: false
+    requesting: false,
   },
   client: {},
   poll: {
-    polling: false
+    polling: false,
   },
   messages: {
     list: [],
     activeConnection: null,
-    member: null
+    member: null,
   },
   members: {
     list: [],
     requesting: false,
-    filter: "",
-    query: ""
+    filter: '',
+    query: '',
   },
   dashboard: {
-    data: null
+    data: null,
   },
   claims: {
     list: [],
     requesting: false,
     types: [],
-    memberClaims: []
+    memberClaims: [],
   },
   claimDetails: {
     data: null,
     notes: [],
-    payments: []
+    payments: [],
   },
   questions: {
     list: {
       answered: [],
-      notAnswered: []
+      notAnswered: [],
     },
-    requesting: false
+    requesting: false,
   },
   insurance: {
     requesting: false,
     data: null,
     list: [],
-    error: []
+    error: [],
   },
   notifications: [],
   memberInsurance: {
     requesting: false,
     list: [],
-    filter: "",
-    query: ""
-  }
-};
+    filter: '',
+    query: '',
+  },
+}

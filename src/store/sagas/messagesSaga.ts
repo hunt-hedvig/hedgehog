@@ -1,40 +1,40 @@
-import { call, takeEvery, put, takeLatest } from "redux-saga/effects";
+import api from 'api'
+import config from 'api/config'
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import {
-  MEMBER_REQUESTING,
-  ADD_MESSAGE,
-  EDIT_MEMBER_DETAILS
-} from "../constants/members";
-import api from "api";
-import config from "api/config";
-import {
-  memberRequestSuccess,
+  editMemberDetailsSuccess,
   memberRequestError,
-  editMemberDetailsSuccess
-} from "../actions/messagesActions";
-import { showNotification } from "../actions/notificationsActions";
+  memberRequestSuccess,
+} from '../actions/messagesActions'
+import { showNotification } from '../actions/notificationsActions'
+import {
+  ADD_MESSAGE,
+  EDIT_MEMBER_DETAILS,
+  MEMBER_REQUESTING,
+} from '../constants/members'
 
 function* memberRequestFlow({ id }) {
   try {
-    const member = yield call(api, config.members.findOne, null, id);
-    yield put(memberRequestSuccess(member.data));
+    const member = yield call(api, config.members.findOne, null, id)
+    yield put(memberRequestSuccess(member.data))
   } catch (error) {
     yield [
-      put(showNotification({ message: error.message, header: "Members" })),
-      put(memberRequestError(error))
-    ];
+      put(showNotification({ message: error.message, header: 'Members' })),
+      put(memberRequestError(error)),
+    ]
   }
 }
 
 function* editMemberDetailsFlow({ member }) {
   try {
-    const path = `${member.memberId}/edit`;
-    yield call(api, config.members.edit, member, path);
-    yield put(editMemberDetailsSuccess(member));
+    const path = `${member.memberId}/edit`
+    yield call(api, config.members.edit, member, path)
+    yield put(editMemberDetailsSuccess(member))
   } catch (error) {
     yield [
       put(memberRequestError(error)),
-      put(showNotification({ message: error.message, header: "Member" }))
-    ];
+      put(showNotification({ message: error.message, header: 'Member' })),
+    ]
   }
 }
 
@@ -46,13 +46,13 @@ function* messagesWatcher() {
         {},
         JSON.stringify({
           memberId: id,
-          msg: message
-        })
-      );
+          msg: message,
+        }),
+      )
     }),
     takeLatest(MEMBER_REQUESTING, memberRequestFlow),
-    takeLatest(EDIT_MEMBER_DETAILS, editMemberDetailsFlow)
-  ];
+    takeLatest(EDIT_MEMBER_DETAILS, editMemberDetailsFlow),
+  ]
 }
 
-export default messagesWatcher;
+export default messagesWatcher

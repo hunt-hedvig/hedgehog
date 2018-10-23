@@ -1,10 +1,10 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import styled from "styled-components";
-import { Tab, Header } from "semantic-ui-react";
-import { subscribe, reconnect } from "lib/sockets/chat";
-import { disconnect } from "sockets";
-import memberPagePanes from "./tabs";
+import { disconnect } from 'lib/sockets'
+import { reconnect, subscribe } from 'lib/sockets/chat'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Header, Tab } from 'semantic-ui-react'
+import styled from 'styled-components'
+import memberPagePanes from './tabs'
 
 const ChatPageContainer = styled.div`
   display: flex;
@@ -12,131 +12,131 @@ const ChatPageContainer = styled.div`
   justify-content: flex-start;
   width: 700px;
   height: 100%;
-`;
+`
 
 export default class Chat extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       socket: null,
-      subscription: null
-    };
+      subscription: null,
+    }
   }
 
-  addMessageHandler(message) {
-    const { socket } = this.state;
-    const { addMessage, match } = this.props;
+  public addMessageHandler(message) {
+    const { socket } = this.state
+    const { addMessage, match } = this.props
     if (socket) {
-      addMessage(message, match.params.id, socket);
+      addMessage(message, match.params.id, socket)
     }
-  };
+  }
 
-  subscribeSocket = () => {
+  public subscribeSocket = () => {
     const {
       messageReceived,
       match: {
-        params: { id }
+        params: { id },
       },
       messages,
       showNotification,
-      client
-    } = this.props;
+      client,
+    } = this.props
 
     const { stompClient, subscription } = subscribe(
       { messageReceived, showNotification },
       id,
       client.id,
-      messages.activeConnection
-    );
-    return { stompClient, subscription };
-  };
+      messages.activeConnection,
+    )
+    return { stompClient, subscription }
+  }
 
-  reconnectSocket = () => {
+  public reconnectSocket = () => {
     const {
       messageReceived,
       match: {
-        params: { id }
+        params: { id },
       },
       setActiveConnection,
       showNotification,
-      client
-    } = this.props;
+      client,
+    } = this.props
 
     reconnect({ messageReceived, showNotification }, id, client.id).then(
-      reslut => {
-        const { stompClient, subscription } = reslut;
-        this.setState({ socket: stompClient, subscription });
-        setActiveConnection(stompClient);
-      }
-    );
-  };
+      (reslut) => {
+        const { stompClient, subscription } = reslut
+        this.setState({ socket: stompClient, subscription })
+        setActiveConnection(stompClient)
+      },
+    )
+  }
 
-  getChatTitle = member =>
+  public getChatTitle = (member) =>
     `Member: ${
       member && (member.firstName || member.lastName)
-        ? member.firstName + " " + (member.lastName || "")
-        : ""
-    }`;
+        ? member.firstName + ' ' + (member.lastName || '')
+        : ''
+    }`
 
-  componentDidMount() {
+  public componentDidMount() {
     const {
       match: {
-        params: { id }
+        params: { id },
       },
       memberRequest,
       insuranceRequest,
       insurancesListRequest,
-      claimsByMember
-    } = this.props;
+      claimsByMember,
+    } = this.props
 
-    const { stompClient, subscription } = this.subscribeSocket();
+    const { stompClient, subscription } = this.subscribeSocket()
     if (!stompClient) {
-      this.reconnectSocket();
+      this.reconnectSocket()
     }
-    this.setState({ socket: stompClient, subscription });
+    this.setState({ socket: stompClient, subscription })
 
-    memberRequest(id);
-    insuranceRequest(id);
-    claimsByMember(id);
-    insurancesListRequest(id);
+    memberRequest(id)
+    insuranceRequest(id)
+    claimsByMember(id)
+    insurancesListRequest(id)
   }
 
-  componentWillUnmount() {
-    const { subscription } = this.state;
-    disconnect(null, subscription);
-    this.props.clearMessagesList();
+  public componentWillUnmount() {
+    const { subscription } = this.state
+    disconnect(null, subscription)
+    this.props.clearMessagesList()
   }
 
-  render() {
+  public render() {
     const {
       messages,
-      history: { location }
-    } = this.props;
+      history: { location },
+    } = this.props
     const panes = memberPagePanes(
       this.props,
       this.addMessageHandler,
-      this.state.socket
-    );
-    const routeData = location.state ? location.state.to : null;
+      this.state.socket,
+    )
+    const routeData = location.state ? location.state.to : null
     return (
       <ChatPageContainer>
         <Header size="huge">{this.getChatTitle(messages.member)}</Header>
         <Tab
-          style={{ height: "100%" }}
+          style={{ height: '100%' }}
           panes={panes}
           renderActiveOnly={true}
           defaultActiveIndex={
-            routeData === "insurance"
+            routeData === 'insurance'
               ? 3
-              : routeData === "payments"
+              : routeData === 'payments'
                 ? 5
-                : routeData === "details"
+                : routeData === 'details'
                   ? 0
                   : 1
           }
         />
       </ChatPageContainer>
-    );
+    )
   }
 }
 
@@ -153,5 +153,5 @@ Chat.propTypes = {
   claimsByMember: PropTypes.func.isRequired,
   insuranceRequest: PropTypes.func.isRequired,
   insurancesListRequest: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
-};
+  history: PropTypes.object.isRequired,
+}

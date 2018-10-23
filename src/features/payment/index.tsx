@@ -1,18 +1,18 @@
-import * as React from "react";
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
-import { Table } from "semantic-ui-react";
-import MonthPickerInput from "react-month-picker-input";
-import styled from "styled-components";
-import { history } from "store";
-import { Checkmark, Cross } from "components/icons";
-import * as moment from "moment";
+import { Checkmark, Cross } from 'components/icons'
+import gql from 'graphql-tag'
+import * as moment from 'moment'
+import * as React from 'react'
+import { Query } from 'react-apollo'
+import MonthPickerInput from 'react-month-picker-input'
+import { Table } from 'semantic-ui-react'
+import { history } from 'store'
+import styled from 'styled-components'
 
 const DatePickerContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+`
 
 const query = gql`
   query MonthlyPaymentsQuery($month: YearMonth!) {
@@ -28,10 +28,10 @@ const query = gql`
       }
     }
   }
-`;
+`
 
-const goToMember = memberId => () =>
-  history.push(`/members/${memberId}`, { to: "payments" });
+const goToMember = (memberId) => () =>
+  history.push(`/members/${memberId}`, { to: 'payments' })
 
 const MonthlyPaymentsTable = ({ monthlyPayments }) => (
   <Table celled selectable compact>
@@ -44,7 +44,7 @@ const MonthlyPaymentsTable = ({ monthlyPayments }) => (
       </Table.Row>
     </Table.Header>
     <Table.Body>
-      {monthlyPayments.map(monthlyPayment => (
+      {monthlyPayments.map((monthlyPayment) => (
         <Table.Row
           key={`${monthlyPayment.member.memberId}:${
             monthlyPayment.amount.amount
@@ -73,28 +73,30 @@ const MonthlyPaymentsTable = ({ monthlyPayments }) => (
       ))}
     </Table.Body>
   </Table>
-);
+)
 
 class Payment extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      date: moment().format("YYYY-MM"),
-      defaultYear: Number(moment().format("YYYY")),
-      defaultMonth: Number(moment().format("MM")) - 1
-    };
+      date: moment().format('YYYY-MM'),
+      defaultYear: Number(moment().format('YYYY')),
+      defaultMonth: Number(moment().format('MM')) - 1,
+    }
   }
 
-  onDateChange = (maskedValue, selectedYear, selectedMonth) => {
-    //The range of the selectedMonth from MonthPickerInput is 0-11
-    let month = (+selectedMonth + 1).toString();
+  public onDateChange = (maskedValue, selectedYear, selectedMonth) => {
+    // The range of the selectedMonth from MonthPickerInput is 0-11
+    const month = (+selectedMonth + 1).toString()
 
     if (month.length === 1) {
-      this.setState({ date: `${selectedYear}-0${month}` });
-    } else this.setState({ date: `${selectedYear}-${month}` });
-  };
+      this.setState({ date: `${selectedYear}-0${month}` })
+    } else {
+      this.setState({ date: `${selectedYear}-${month}` })
+    }
+  }
 
-  render() {
+  public render() {
     return (
       <React.Fragment>
         <DatePickerContainer>
@@ -110,24 +112,24 @@ class Payment extends React.Component {
             <Query query={query} variables={{ month: this.state.date }}>
               {({ loading, error, data }) => {
                 if (error) {
-                  return <div>Error!</div>;
+                  return <div>Error!</div>
                 }
                 if (loading || !data) {
-                  return <div>Loading...</div>;
+                  return <div>Loading...</div>
                 }
 
                 return (
                   <MonthlyPaymentsTable
                     monthlyPayments={data.getMonthlyPayments}
                   />
-                );
+                )
               }}
             </Query>
           </React.Fragment>
         )}
       </React.Fragment>
-    );
+    )
   }
 }
 
-export default Payment;
+export default Payment

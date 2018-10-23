@@ -1,57 +1,57 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import { Header, Table, Modal, Button, Form, Icon } from "semantic-ui-react";
-import TableFields from "components/shared/table-fields/TableFields";
-import { getFieldName, getFieldValue } from "lib/helpers";
+import TableFields from 'components/shared/table-fields/TableFields'
+import { getFieldName, getFieldValue } from 'lib/helpers'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 
 export default class DetailsTab extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       modalOpen: false,
-      member: []
-    };
+      member: [],
+    }
   }
 
-  handleOpen = () => this.setState({ modalOpen: true });
+  public handleOpen = () => this.setState({ modalOpen: true })
 
-  handleClose = () => this.setState({ modalOpen: false });
+  public handleClose = () => this.setState({ modalOpen: false })
 
-  isDisabled = field => {
+  public isDisabled = (field) => {
     switch (field.toLowerCase()) {
-      case "memberid":
-      case "status":
-      case "ssn":
-      case "birthdate":
-      case "signedOn":
-        return true;
+      case 'memberid':
+      case 'status':
+      case 'ssn':
+      case 'birthdate':
+      case 'signedOn':
+        return true
       default:
-        return false;
+        return false
     }
-  };
+  }
 
-  handleChange = field => e => {
-    let { member } = this.state;
-    member[field] = e.target.value;
-    this.setState({ member });
-  };
+  public handleChange = (field) => (e) => {
+    const { member } = this.state
+    member[field] = e.target.value
+    this.setState({ member })
+  }
 
-  handleCancel = () => {
-    this.setState({ member: [] });
-    this.handleClose();
-  };
+  public handleCancel = () => {
+    this.setState({ member: [] })
+    this.handleClose()
+  }
 
-  handleSubmissionButton = () => {
-    const { editMemberDetails, messages } = this.props;
-    let submittedMember = { ...messages.member, ...this.state.member };
-    editMemberDetails(submittedMember);
-    this.handleClose();
-  };
+  public handleSubmissionButton = () => {
+    const { editMemberDetails, messages } = this.props
+    const submittedMember = { ...messages.member, ...this.state.member }
+    editMemberDetails(submittedMember)
+    this.handleClose()
+  }
 
-  render() {
+  public render() {
     const {
-      messages: { member }
-    } = this.props;
+      messages: { member },
+    } = this.props
 
     return member ? (
       <Table selectable>
@@ -117,11 +117,11 @@ export default class DetailsTab extends React.Component {
       </Table>
     ) : (
       <Header>No member info</Header>
-    );
+    )
   }
 }
 
 DetailsTab.propTypes = {
   messages: PropTypes.object.isRequired,
-  editMemberDetails: PropTypes.func.isRequired
-};
+  editMemberDetails: PropTypes.func.isRequired,
+}

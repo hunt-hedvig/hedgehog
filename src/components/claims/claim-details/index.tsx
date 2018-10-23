@@ -1,38 +1,38 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import styled from "styled-components";
-import { Header } from "semantic-ui-react";
-import ClaimInfo from "components/claims/claim-info/ClaimInfo";
-import Notes from "../notes/Notes";
-import Payments from "../payments/Payments";
-import EventsLog from "../events-log/EventsLog";
+import ClaimInfo from 'components/claims/claim-info/ClaimInfo'
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Header } from 'semantic-ui-react'
+import styled from 'styled-components'
+import EventsLog from '../events-log/EventsLog'
+import Notes from '../notes/Notes'
+import Payments from '../payments/Payments'
 
 const ClaimDetailsContainer = styled.div`
   max-width: 600px;
   margin: 0 auto 50px;
-`;
+`
 export default class ClaimDetails extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
-  componentDidMount() {
-    const { match, memberRequest, claimRequest, claimTypes } = this.props;
-    const id = match.params.id;
-    const userId = match.params.userId;
-    claimRequest(id);
-    memberRequest(userId);
-    claimTypes();
+  public componentDidMount() {
+    const { match, memberRequest, claimRequest, claimTypes } = this.props
+    const id = match.params.id
+    const userId = match.params.userId
+    claimRequest(id)
+    memberRequest(userId)
+    claimTypes()
   }
 
-  render() {
+  public render() {
     const {
       claimDetails: { data },
       createNote,
       updateReserve,
       createPayment,
-      match
-    } = this.props;
+      match,
+    } = this.props
     return (
       <ClaimDetailsContainer>
         <Header size="huge">Claim Details</Header>
@@ -55,7 +55,7 @@ export default class ClaimDetails extends React.Component {
           </React.Fragment>
         ) : null}
       </ClaimDetailsContainer>
-    );
+    )
   }
 }
 
@@ -67,5 +67,5 @@ ClaimDetails.propTypes = {
   claimRequest: PropTypes.func.isRequired,
   claimTypes: PropTypes.func.isRequired,
   createPayment: PropTypes.func.isRequired,
-  memberRequest: PropTypes.func.isRequired
-};
+  memberRequest: PropTypes.func.isRequired,
+}

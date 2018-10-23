@@ -1,6 +1,6 @@
-import * as React from 'react';
-import LoginProcessPage from 'containers/login-process-page/LoginProcessPage';
+import LoginProcessPage from 'containers/login-process-page/LoginProcessPage'
+import * as React from 'react'
 
-const LoginProcessPageRouter = () => <LoginProcessPage />;
+const LoginProcessPageRouter = () => <LoginProcessPage />
 
-export default LoginProcessPageRouter;
+export default LoginProcessPageRouter

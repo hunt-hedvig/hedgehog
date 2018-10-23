@@ -1,15 +1,15 @@
-import initialState from "../initialState";
+import { sortClaimsList } from 'lib/helpers'
 import {
-  CLAIMS_REQUESTING,
-  CLAIMS_REQUEST_SUCCESS,
   CLAIM_TYPES,
   CLAIM_TYPES_SUCCESS,
   CLAIMS_BY_MEMBER,
   CLAIMS_BY_MEMBER_SUCCESS,
   CLAIMS_ERROR,
-  SORT_CLAIMS_LIST
-} from "../constants/claims";
-import { sortClaimsList } from "lib/helpers";
+  CLAIMS_REQUEST_SUCCESS,
+  CLAIMS_REQUESTING,
+  SORT_CLAIMS_LIST,
+} from '../constants/claims'
+import initialState from '../initialState'
 
 export default function(state = initialState.claims, action) {
   switch (action.type) {
@@ -18,8 +18,8 @@ export default function(state = initialState.claims, action) {
     case CLAIMS_BY_MEMBER:
       return {
         ...state,
-        requesting: true
-      };
+        requesting: true,
+      }
 
     case CLAIMS_REQUEST_SUCCESS:
       return {
@@ -27,10 +27,10 @@ export default function(state = initialState.claims, action) {
         list: sortClaimsList(
           action.claims,
           action.fieldName,
-          action.isDescendingOrder
+          action.isDescendingOrder,
         ),
-        requesting: false
-      };
+        requesting: false,
+      }
 
     case CLAIM_TYPES_SUCCESS:
       return {
@@ -39,32 +39,32 @@ export default function(state = initialState.claims, action) {
           ...type,
           key: id,
           value: type.name,
-          text: type.title
-        }))
-      };
+          text: type.title,
+        })),
+      }
 
     case CLAIMS_BY_MEMBER_SUCCESS:
       return {
         ...state,
         memberClaims: action.claims,
-        requesting: false
-      };
+        requesting: false,
+      }
 
     case CLAIMS_ERROR:
       return {
         ...state,
-        requesting: false
-      };
+        requesting: false,
+      }
     case SORT_CLAIMS_LIST:
       return {
         ...state,
         list: sortClaimsList(
           [...state.list],
           action.fieldName,
-          action.isReverse
-        )
-      };
+          action.isReverse,
+        ),
+      }
     default:
-      return state;
+      return state
   }
 }
