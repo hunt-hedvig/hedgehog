@@ -12,9 +12,11 @@ import { ApolloProvider } from 'react-apollo'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router'
 import 'source-map-support/register'
+import { reactPageRoutes } from 'routes/routes'
 
 import App from 'App'
 
+const proxy = require('koa-server-http-proxy')
 const scriptLocation = getScriptLocation({
   statsLocation: path.resolve(__dirname, 'assets'),
   webpackPublicPath: process.env.WEBPACK_PUBLIC_PATH || '',
@@ -24,9 +26,15 @@ const template = (body: string) => `
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Example web app</title>
+  <title>Hedvig's Asset Management Application</title>
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+        integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+        crossorigin="anonymous">
+  <script src="https://cdn.ravenjs.com/3.22.3/raven.min.js"
+          crossorigin="anonymous"></script>
 </head>
 <body>
   <div id="react-root">${body}</div>
@@ -60,6 +68,14 @@ const server = createKoaServer({
 })
 
 server.router.get('/', getPage)
+reactPageRoutes.forEach((route) => {
+  server.router.get(route.path, getPage)
+})
+
+server.app.use(proxy({
+  target: 'http://localhost:8443',
+  changeOrigin: false
+}))
 
 server.app.listen(getPort(), () => {
   console.log(`Server started 🚀 listening on port ${getPort()}`) // tslint:disable-line no-console

@@ -24,7 +24,7 @@ export const createServerApolloClient = (requestId?: string) =>
     link: concat(
       requestIdMiddleware(requestId),
       new BatchHttpLink({
-        uri: 'https://graphql.dev.hedvigit.com/graphql',
+        uri: '/api/graphql',
         fetch: require('node-fetch'),
       }),
     ),

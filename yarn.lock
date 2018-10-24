@@ -3786,7 +3786,7 @@ http-parser-js@>=0.4.0:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.4.13.tgz#3bd6d6fde6e3172c9334c3b33b6c193d80fe1137"
 
-http-proxy-middleware@~0.18.0:
+http-proxy-middleware@^0.18.0, http-proxy-middleware@~0.18.0:
   version "0.18.0"
   resolved "http://registry.npmjs.org/http-proxy-middleware/-/http-proxy-middleware-0.18.0.tgz#0987e6bb5a5606e5a69168d8f967a87f15dd8aab"
   dependencies:
@@ -4821,12 +4821,23 @@ koa-send@^5.0.0:
     mz "^2.7.0"
     resolve-path "^1.4.0"
 
+koa-server-http-proxy@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/koa-server-http-proxy/-/koa-server-http-proxy-0.1.0.tgz#91ea40a288bd3285b768983f971c5da121140ce8"
+  dependencies:
+    http-proxy-middleware "^0.18.0"
+    koa2-connect "^1.0.2"
+
 koa-static@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/koa-static/-/koa-static-5.0.0.tgz#5e92fc96b537ad5219f425319c95b64772776943"
   dependencies:
     debug "^3.1.0"
     koa-send "^5.0.0"
+
+koa2-connect@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/koa2-connect/-/koa2-connect-1.0.2.tgz#cf196d70a4e6a055f717522768d26cdfc5396f7b"
 
 koa@^2.5.3:
   version "2.5.3"
