@@ -10,7 +10,7 @@ export const apolloClient = (() => {
   return new ApolloClient({
     cache: new InMemoryCache().restore((window as any).__INITIAL_STATE__),
     link: createHttpLink({
-      uri: 'https://graphql.dev.hedvigit.com/graphql',
+      uri: '/api/graphql',
     }),
   })
 })()

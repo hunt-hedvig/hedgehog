@@ -1,9 +1,6 @@
-'use strict'
-
 import Navigation from 'components/shared/navigation'
 import Notifications from 'containers/notification-service/NotificationService'
 import * as React from 'react'
-import styled from 'react-emotion'
 import { hot } from 'react-hot-loader'
 import { Provider } from 'react-redux'
 import { Redirect, Route, Router, Switch } from 'react-router'

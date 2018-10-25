@@ -9,5 +9,5 @@ module.exports = {
   port: 9083, // The WDS port
   developmentPublicPath: "http://0.0.0.0:9083/", // Client public path during development, i.e. "http://0.0.0.0:8081/". Port must match the port directive
   productionPublicPath: undefined, //  Client public path in production, i.e. "/assets/"
-  envVars: ['BROWSER'], // Array of environment variables to pass through webpack. I.e. ['FOO', 'BAR']
+  envVars: ['BROWSER', 'API_URL'], // Array of environment variables to pass through webpack. I.e. ['FOO', 'BAR']
 }
