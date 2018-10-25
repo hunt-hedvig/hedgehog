@@ -4,19 +4,18 @@ import {
   getScriptLocation,
 } from '@hedviginsurance/web-survival-kit'
 import { createServerApolloClient } from 'api/apollo-server'
+import App from 'App'
 import { renderStylesToString } from 'emotion-server'
 import * as Koa from 'koa'
+import * as proxy from 'koa-server-http-proxy'
 import * as path from 'path'
 import * as React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router'
-import 'source-map-support/register'
 import { reactPageRoutes } from 'routes/routes'
+import 'source-map-support/register'
 
-import App from 'App'
-
-const proxy = require('koa-server-http-proxy')
 const scriptLocation = getScriptLocation({
   statsLocation: path.resolve(__dirname, 'assets'),
   webpackPublicPath: process.env.WEBPACK_PUBLIC_PATH || '',
@@ -72,10 +71,12 @@ reactPageRoutes.forEach((route) => {
   server.router.get(route.path, getPage)
 })
 
-server.app.use(proxy({
-  target: 'http://localhost:8443',
-  changeOrigin: false
-}))
+server.app.use(
+  proxy({
+    target: process.env.API_URL,
+    changeOrigin: false,
+  }),
+)
 
 server.app.listen(getPort(), () => {
   console.log(`Server started 🚀 listening on port ${getPort()}`) // tslint:disable-line no-console
