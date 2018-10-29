@@ -4,7 +4,7 @@ export interface BackofficeStore {
   client: any
   poll: any
   messages: any
-  members: any
+  members: MembersStore
   dashboard: any
   claims: any
   claimDetails: any
@@ -14,9 +14,52 @@ export interface BackofficeStore {
   memberInsurance: any
 }
 
+type MembersSortBy = 'NAME' | 'CREATED' | 'SIGN_UP'
+type SortDirection = 'ASC' | 'DESC'
+type MemberStatus =
+  | 'INITIATED'
+  | 'ONBOARDING'
+  | 'SIGNED'
+  | 'INACTIVATED'
+  | 'TERMINATED'
+
+export interface Member {
+  memberId: number
+  status: MemberStatus
+  ssn: string
+  firstName: string
+  lastName: string
+  street: string
+  floor: number
+  apartment: string
+  city: string
+  zipCode: string
+  country: string
+  email: string
+  phoneNumber: string
+  birthDate: string
+  signedOn: string
+  createdOn: string
+}
+
+export interface MemberSearchFilter {
+  status: MemberStatus | undefined
+  query: string
+  sortBy: MembersSortBy
+  sortDirection: SortDirection
+  page: number
+  pageSize: number
+}
+
+export interface MembersSearchResult {
+  members: Member[]
+  totalPages: number
+  page: number
+}
 
 export interface MembersStore {
-  list: any[]
+  list: Member[]
+  searchResult: MembersSearchResult
   requesting: boolean
-  filter: string
+  searchFilter: MemberSearchFilter
 }

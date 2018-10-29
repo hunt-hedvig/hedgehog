@@ -4,6 +4,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import {
   membersRequestError,
   membersRequestSuccess,
+  SearchMemberRequestAction,
   searchMembersSuccess,
 } from '../actions/membersActions'
 import { showNotification } from '../actions/notificationsActions'
@@ -12,6 +13,7 @@ import {
   MEMBERS_REQUESTING,
   SET_MEMBER_FILTER,
 } from '../constants/members'
+import { MembersSearchResult } from '../storeTypes'
 
 const fieldName = 'createdOn'
 const isDescendingOrder = true
@@ -28,18 +30,15 @@ function* membersRequestFlow() {
   }
 }
 
-function* membersSearchFlow({ query }) {
+function* membersSearchFlow(action: SearchMemberRequestAction) {
+  const queryFilter = action.searchFilter
   try {
-    const queryParams = {
-      query: query.query,
-      status: query.filter === 'ALL' ? '' : query.filter,
-    }
-    const searchResult = yield call(
+    const searchResult: MembersSearchResult = yield call(
       api,
       config.members.search,
       null,
       '',
-      queryParams,
+      queryFilter,
     )
     yield put(
       searchMembersSuccess(searchResult.data, fieldName, isDescendingOrder),

@@ -66,7 +66,8 @@ export const memberStatus = [
   { key: 1, text: 'ONBOARDING', value: 'ONBOARDING' },
   { key: 2, text: 'SIGNED', value: 'SIGNED' },
   { key: 3, text: 'INACTIVATED', value: 'INACTIVATED' },
-  { key: 6, text: 'ALL', value: 'ALL' },
+  { key: 4, text: 'TERMINATED', value: 'TERMINATED' },
+  { key: 6, text: 'ALL', value: null },
 ]
 
 export const memberState = [

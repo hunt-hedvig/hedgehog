@@ -1,6 +1,6 @@
 import { BackofficeStore } from './storeTypes'
 
-const state: BackofficeStore = {
+const initialState: BackofficeStore = {
   login: {
     requesting: false,
   },
@@ -19,9 +19,20 @@ const state: BackofficeStore = {
   },
   members: {
     list: [],
+    searchResult: {
+      members: [],
+      page: 0,
+      totalPages: 1,
+    },
     requesting: false,
-    filter: '',
-    query: '',
+    searchFilter: {
+      status: undefined,
+      query: '',
+      sortBy: 'CREATED',
+      sortDirection: 'DESC',
+      page: 0,
+      pageSize: 25,
+    },
   },
   dashboard: {
     data: null,
@@ -59,4 +70,4 @@ const state: BackofficeStore = {
   },
 }
 
-export default state
+export default initialState

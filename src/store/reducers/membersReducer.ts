@@ -18,15 +18,19 @@ import initialState from '../initialState'
 export default function(state = initialState.members, action) {
   switch (action.type) {
     case MEMBER_SEARCH_REQUESTING:
+      return {
+        ...state,
+        requesting: true,
+        searchFilter: action.searchFilter,
+      }
+
     case MEMBERS_REQUESTING:
       return {
         ...state,
         requesting: true,
-        query: action.query ? action.query.query : state.query,
       }
 
     case MEMBERS_REQUEST_SUCCESS:
-    case MEMBERS_SEARCH_SUCCESS:
       return {
         ...state,
         list: sortMembersList(
@@ -34,6 +38,12 @@ export default function(state = initialState.members, action) {
           action.fieldName,
           action.isDescendingOrder,
         ),
+        requesting: false,
+      }
+    case MEMBERS_SEARCH_SUCCESS:
+      return {
+        ...state,
+        searchResult: action.searchResult,
         requesting: false,
       }
 

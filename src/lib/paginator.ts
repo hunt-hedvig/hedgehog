@@ -39,3 +39,36 @@ export const getPageState = (totalItems, currentPage, pageSize) => {
     pages,
   }
 }
+
+interface BackendPageState {
+  startPage: number
+  endPage: number
+  currentPage: number
+  totalPages: number
+}
+
+export function getBackendPageState(
+  totalPages: number,
+  currentPage: number,
+): BackendPageState {
+  let start = currentPage - 3
+  let end = currentPage + 4
+
+  if (start < 0) {
+    end += -start
+  }
+
+  if (end > totalPages) {
+    start -= end - totalPages
+  }
+
+  start = Math.max(start, 0)
+  end = Math.min(end, totalPages)
+
+  return {
+    currentPage,
+    totalPages,
+    startPage: start,
+    endPage: end,
+  }
+}

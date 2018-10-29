@@ -8,6 +8,12 @@ import {
   SET_MEMBER_FILTER,
   SORT_MEMBERS_LIST,
 } from '../constants/members'
+import { MemberSearchFilter, MembersSearchResult } from '../storeTypes'
+
+export interface SearchMemberRequestAction {
+  type: 'MEMBER_SEARCH_REQUESTING'
+  searchFilter: MemberSearchFilter
+}
 
 export const membersRequest = (client) => ({
   type: MEMBERS_REQUESTING,
@@ -30,20 +36,16 @@ export const membersRequestError = (error) => ({
   error,
 })
 
-export const searchMemberRequest = (query) => ({
+export const searchMemberRequest = (
+  searchFilter: MemberSearchFilter,
+): SearchMemberRequestAction => ({
   type: MEMBER_SEARCH_REQUESTING,
-  query,
+  searchFilter,
 })
 
-export const searchMembersSuccess = (
-  members,
-  fieldName,
-  isDescendingOrder,
-) => ({
+export const searchMembersSuccess = (searchResult: MembersSearchResult) => ({
   type: MEMBERS_SEARCH_SUCCESS,
-  members,
-  fieldName,
-  isDescendingOrder,
+  searchResult,
 })
 
 export const newMessagesReceived = (messagesCounters) => ({
@@ -51,7 +53,7 @@ export const newMessagesReceived = (messagesCounters) => ({
   messagesCounters,
 })
 
-export const setFilter = (query) => ({
+export const setFilter = (query: MemberSearchFilter) => ({
   type: SET_MEMBER_FILTER,
   query,
 })

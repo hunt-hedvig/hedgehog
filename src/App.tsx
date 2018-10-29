@@ -9,6 +9,13 @@ import Store, { history } from 'store'
 
 const store = Store.configureStore()
 
+declare var window: any
+if (process.env.NODE_ENV !== 'production') {
+  if (typeof window !== 'undefined') {
+    window.__store = store
+  }
+}
+
 const App: React.SFC = () => (
   <Provider store={store}>
     <Router history={history}>
