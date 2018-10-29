@@ -1,4 +1,6 @@
-export default {
+import { BackofficeStore } from './storeTypes'
+
+const state: BackofficeStore = {
   login: {
     requesting: false,
   },
@@ -56,3 +58,5 @@ export default {
     query: '',
   },
 }
+
+export default state
