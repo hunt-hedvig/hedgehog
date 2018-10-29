@@ -1,42 +1,44 @@
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Header } from 'semantic-ui-react'
-import MembersFilter from './members-filter/MembersFilter'
+import initialState from '../../store/initialState'
+import { MemberSearchFilter, MembersStore } from '../../store/storeTypes'
+import MembersBackendFilter from './members-filter/MembersBackendFilter'
 import MembersList from './members-list/MembersList'
 
-export default class Members extends React.Component {
-  constructor(props) {
+export interface MembersProps {
+  members: MembersStore
+  searchMemberRequest: (q: MemberSearchFilter) => void
+}
+
+export default class Members extends React.Component<MembersProps, {}> {
+  constructor(props: MembersProps) {
     super(props)
   }
 
   public componentDidMount() {
     const {
-      members: { filter, query },
+      members: { searchFilter },
       searchMemberRequest,
     } = this.props
-    searchMemberRequest({ query, filter })
+    searchMemberRequest(searchFilter)
   }
 
   public render() {
-    const { members, setFilter, searchMemberRequest } = this.props
+    const { members, searchMemberRequest } = this.props
     return (
       <React.Fragment>
         <Header size="huge">Members</Header>
-        <MembersFilter
-          data={members}
-          setFilter={setFilter}
+        <MembersBackendFilter
+          members={members}
           search={searchMemberRequest}
-          filterName="Status"
+          resetSearch={this.resetSearch}
         />
         <MembersList {...this.props} />
       </React.Fragment>
     )
   }
-}
 
-Members.propTypes = {
-  members: PropTypes.object.isRequired,
-  membersRequest: PropTypes.func.isRequired,
-  setFilter: PropTypes.func.isRequired,
-  searchMemberRequest: PropTypes.func.isRequired,
+  private resetSearch = () => {
+    this.props.searchMemberRequest(initialState.members.searchFilter)
+  }
 }

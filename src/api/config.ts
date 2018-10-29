@@ -27,7 +27,7 @@ export default {
     },
     search: {
       method: 'get',
-      url: 'member/search',
+      url: 'member/searchPaged',
     },
     findOne: {
       method: 'get',

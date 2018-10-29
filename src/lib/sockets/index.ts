@@ -1,4 +1,4 @@
-import Stomp from '@stomp/stompjs/esm5'
+import * as StompModule from '@stomp/stompjs/esm5'
 import config from 'api/config'
 import SockJS from 'sockjs-client'
 import * as chat from './chat'
@@ -9,7 +9,7 @@ import * as membersList from './members'
 export const connect = () => {
   return new Promise((resolve, reject) => {
     const socket = new SockJS(`${config.ws.endpoint}`)
-    const stompClient = Stomp.over(socket)
+    const stompClient = StompModule.Stomp.over(socket)
     stompClient.connect(
       {},
       () => {

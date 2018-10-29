@@ -1,4 +1,6 @@
-export default {
+import { BackofficeStore } from './storeTypes'
+
+const initialState: BackofficeStore = {
   login: {
     requesting: false,
   },
@@ -17,9 +19,20 @@ export default {
   },
   members: {
     list: [],
+    searchResult: {
+      members: [],
+      page: 0,
+      totalPages: 1,
+    },
     requesting: false,
-    filter: '',
-    query: '',
+    searchFilter: {
+      status: undefined,
+      query: '',
+      sortBy: 'CREATED',
+      sortDirection: 'DESC',
+      page: 0,
+      pageSize: 25,
+    },
   },
   dashboard: {
     data: null,
@@ -56,3 +69,5 @@ export default {
     query: '',
   },
 }
+
+export default initialState

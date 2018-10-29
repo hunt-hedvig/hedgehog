@@ -338,6 +338,23 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
   return isReverse ? sortedList.reverse() : sortedList
 }
 
+export const range = (
+  startInclusive: number,
+  endExclusive: number,
+): number[] => {
+  const len = endExclusive - startInclusive
+  if (len <= 0) {
+    return []
+  }
+
+  const res: number[] = new Array<number>(len)
+  for (let i = 0; i < len; i++) {
+    res[i] = i + startInclusive
+  }
+
+  return res
+}
+
 function sortMembersByBool(list, fieldName, isReverse) {
   const withoutVal = []
   const filteredList = list.filter((item) => {

@@ -1,31 +1,35 @@
 import { LinkRow } from 'components/shared'
-import PaginatorList from 'components/shared/paginator-list/PaginatorList'
 import * as sockets from 'lib/sockets'
 import * as moment from 'moment'
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
+import {
+  Member,
+  MemberSearchFilter,
+  MembersSortBy,
+  MembersStore,
+} from '../../../store/storeTypes'
+import BackendPaginatorList from '../../shared/paginator-list/BackendPaginatorList'
 
-export default class MembersList extends React.Component {
-  constructor(props) {
+export interface MembersListProps {
+  members: MembersStore
+  searchMemberRequest: (q: MemberSearchFilter) => void
+}
+
+export default class MembersList extends React.Component<MembersListProps, {}> {
+  constructor(props: MembersListProps) {
     super(props)
-    this.state = {
-      socket: null,
-      subscription: null,
-      column: null,
-      direction: null,
-    }
   }
 
-  public getMemberName = (member) =>
+  public getMemberName = (member: Member) =>
     member.firstName
       ? `${member.firstName} ${member.lastName || ''}`
       : `Member-${member.memberId}`
 
-  public linkClickHandler = (id) => history.push(`/members/${id}`)
+  public linkClickHandler = (id: string) => history.push(`/members/${id}`)
 
-  public getTableRow = (item) => {
+  public getTableRow = (item: Member) => {
     const signedOn = moment(item.signedOn).local()
     const formattedsignedOn = signedOn.isValid()
       ? signedOn.format('DD MMMM YYYY HH:mm')
@@ -45,51 +49,53 @@ export default class MembersList extends React.Component {
     )
   }
 
-  public sortTable = (clickedColumn) => {
-    const { column, direction } = this.state
+  public sortTable = (sortBy: MembersSortBy) => {
+    const {
+      searchMemberRequest,
+      members: { searchFilter },
+    } = this.props
 
-    if (column !== clickedColumn) {
-      this.setState({
-        column: clickedColumn,
-        direction: 'ascending',
+    if (searchFilter.sortBy !== sortBy) {
+      searchMemberRequest({ ...searchFilter, sortBy, sortDirection: 'DESC' })
+    } else {
+      searchMemberRequest({
+        ...searchFilter,
+        sortDirection: searchFilter.sortDirection === 'DESC' ? 'ASC' : 'DESC',
       })
-      this.props.sortMembersList(clickedColumn, false)
-      return
     }
+  }
 
-    this.setState(
-      {
-        direction: direction === 'ascending' ? 'descending' : 'ascending',
-      },
-      () => {
-        this.props.sortMembersList(
-          clickedColumn,
-          this.state.direction === 'descending',
-        )
-      },
-    )
+  public changePage = (page: number) => {
+    const {
+      searchMemberRequest,
+      members: { searchFilter },
+    } = this.props
+    searchMemberRequest({ ...searchFilter, page })
   }
 
   public getTableHeader = () => {
-    const { column, direction } = this.state
+    const searchFilter = this.props.members.searchFilter
+    const { sortBy, sortDirection } = searchFilter
+    const direction = sortDirection === 'DESC' ? 'descending' : 'ascending'
+
     return (
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell
-            sorted={column === 'name' ? direction : null}
-            onClick={this.sortTable.bind(this, 'name')}
+            sorted={sortBy === 'NAME' ? direction : undefined}
+            onClick={this.sortTable.bind(this, 'NAME')}
           >
             Name
           </Table.HeaderCell>
           <Table.HeaderCell
-            sorted={column === 'createdOn' ? direction : null}
-            onClick={this.sortTable.bind(this, 'createdOn')}
+            sorted={sortBy === 'CREATED' ? direction : undefined}
+            onClick={this.sortTable.bind(this, 'CREATED')}
           >
             Created
           </Table.HeaderCell>
           <Table.HeaderCell
-            sorted={column === 'signedOn' ? direction : null}
-            onClick={this.sortTable.bind(this, 'signedOn')}
+            sorted={sortBy === 'SIGN_UP' ? direction : undefined}
+            onClick={this.sortTable.bind(this, 'SIGN_UP')}
           >
             Sign up
           </Table.HeaderCell>
@@ -129,24 +135,19 @@ export default class MembersList extends React.Component {
 
   public render() {
     const {
-      members: { list },
+      members: { searchResult },
     } = this.props
     return (
-      <PaginatorList
-        list={list}
-        itemContent={(item) => this.getTableRow(item)}
-        tableHeader={this.getTableHeader()}
-        pageSize={25}
+      <BackendPaginatorList
+        pagedItems={searchResult.members}
+        currentPage={searchResult.page}
+        totalPages={searchResult.totalPages}
+        itemContent={this.getTableRow}
+        changePage={this.changePage}
         isSortable={true}
+        tableHeader={this.getTableHeader()}
         keyName="memberId"
       />
     )
   }
-}
-
-MembersList.propTypes = {
-  members: PropTypes.object.isRequired,
-  newMessagesReceived: PropTypes.func.isRequired,
-  client: PropTypes.object.isRequired,
-  sortMembersList: PropTypes.func.isRequired,
 }
