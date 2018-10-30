@@ -16,23 +16,15 @@ export interface BackendServedClaimsListProps {
   claimsRequest: (filter: ClaimSearchFilter) => void
 }
 
-export default class BackendServedClaimsList extends React.Component<
-  BackendServedClaimsListProps
-> {
-  constructor(props: BackendServedClaimsListProps) {
-    super(props)
-  }
-
-  public linkClickHandler = (id: string, userId: string) => {
+const BackendServedClaimsList = ({
+  claims: { searchResult, searchFilter },
+  claimsRequest,
+}: BackendServedClaimsListProps) => {
+  const linkClickHandler = (id: string, userId: string) => {
     history.push(`/claims/${id}/members/${userId}`)
   }
 
-  public sortTable = (clickedColumn: ClaimSortColumn) => {
-    const {
-      claims: { searchFilter },
-      claimsRequest,
-    } = this.props
-
+  const sortTable = (clickedColumn: ClaimSortColumn) => {
     if (searchFilter.sortBy !== clickedColumn) {
       claimsRequest({ ...searchFilter, sortBy: clickedColumn, page: 0 })
     } else {
@@ -44,12 +36,8 @@ export default class BackendServedClaimsList extends React.Component<
     }
   }
 
-  public getTableHeader = () => {
-    const {
-      claims: {
-        searchFilter: { sortBy, sortDirection },
-      },
-    } = this.props
+  const getTableHeader = () => {
+    const { sortDirection, sortBy } = searchFilter
     const direction = sortDirection === 'DESC' ? 'descending' : 'ascending'
     return (
       <Table.Header>
@@ -57,28 +45,28 @@ export default class BackendServedClaimsList extends React.Component<
           <Table.HeaderCell
             width={6}
             sorted={sortBy === 'DATE' ? direction : undefined}
-            onClick={this.sortTable.bind(this, 'DATE')}
+            onClick={() => sortTable('DATE')}
           >
             Date
           </Table.HeaderCell>
           <Table.HeaderCell
             width={6}
             sorted={sortBy === 'TYPE' ? direction : undefined}
-            onClick={this.sortTable.bind(this, 'TYPE')}
+            onClick={() => sortTable('TYPE')}
           >
             Type
           </Table.HeaderCell>
           <Table.HeaderCell
             width={6}
             sorted={sortBy === 'STATE' ? direction : undefined}
-            onClick={this.sortTable.bind(this, 'STATE')}
+            onClick={() => sortTable('STATE')}
           >
             State
           </Table.HeaderCell>
           <Table.HeaderCell
             width={6}
             sorted={sortBy === 'RESERVES' ? direction : undefined}
-            onClick={this.sortTable.bind(this, 'RESERVES')}
+            onClick={() => sortTable('RESERVES')}
           >
             Reserves
           </Table.HeaderCell>
@@ -87,13 +75,13 @@ export default class BackendServedClaimsList extends React.Component<
     )
   }
 
-  public getTableRow = (item: Claim) => {
+  const getTableRow = (item: Claim) => {
     const date = moment(item.date).local()
     const formattedDate = date.isValid()
       ? date.format('DD MMMM YYYY HH:mm')
       : '-'
     return (
-      <LinkRow onClick={this.linkClickHandler.bind(this, item.id, item.userId)}>
+      <LinkRow onClick={() => linkClickHandler.bind(item.id, item.userId)}>
         <Table.Cell>{formattedDate}</Table.Cell>
         <Table.Cell>{item.type}</Table.Cell>
         <Table.Cell>{item.state}</Table.Cell>
@@ -102,29 +90,22 @@ export default class BackendServedClaimsList extends React.Component<
     )
   }
 
-  public changePage = (page: number) => {
-    const {
-      claimsRequest,
-      claims: { searchFilter },
-    } = this.props
+  const changePage = (page: number) => {
     claimsRequest({ ...searchFilter, page })
   }
 
-  public render() {
-    const {
-      claims: { searchResult },
-    } = this.props
-    return (
-      <BackendPaginatorList<Claim>
-        pagedItems={searchResult.claims}
-        itemContent={this.getTableRow}
-        tableHeader={this.getTableHeader()}
-        currentPage={searchResult.page}
-        totalPages={searchResult.totalPages}
-        isSortable={true}
-        keyName="id"
-        changePage={this.changePage}
-      />
-    )
-  }
+  return (
+    <BackendPaginatorList<Claim>
+      pagedItems={searchResult.claims}
+      itemContent={getTableRow}
+      tableHeader={getTableHeader()}
+      currentPage={searchResult.page}
+      totalPages={searchResult.totalPages}
+      isSortable={true}
+      keyName="id"
+      changePage={changePage}
+    />
+  )
 }
+
+export default BackendServedClaimsList
