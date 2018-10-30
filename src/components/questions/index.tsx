@@ -1,49 +1,48 @@
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import { Mount } from 'react-lifecycle-components'
 import { Header } from 'semantic-ui-react'
+import { MembersStore } from '../../store/storeTypes'
+import {
+  QuestionListKind,
+  QuestionsStore,
+} from '../../store/types/questionsTypes'
 import QuestionsList from './questions-list/QuestionsList'
 
-export default class Questions extends React.Component {
-  constructor(props) {
-    super(props)
+export interface QuestionsProps {
+  questions: QuestionsStore
+  members: MembersStore
+  sendAnswer: (answer: any) => void
+  sendDoneMsg: (id: string) => void
+  questionsRequest: (listId: QuestionListKind) => void
+}
+
+const Questions = ({
+  questions,
+  members,
+  sendAnswer,
+  sendDoneMsg,
+  questionsRequest,
+}: QuestionsProps) => {
+  const tabChange = (e, data) => {
+    questionsRequest(data.panes[data.activeIndex].id)
   }
 
-  public tabChange = () => {
-    this.props.questionsRequest()
-  }
+  const init = () => questionsRequest('NOT_ANSWERED')
 
-  public componentDidMount() {
-    this.props.questionsRequest()
-    this.props.membersRequest()
-  }
-
-  public render() {
-    const {
-      questions,
-      members: { list },
-      sendAnswer,
-      sendDoneMsg,
-    } = this.props
-    return (
+  return (
+    <Mount on={init}>
       <React.Fragment>
         <Header size="huge">Questions</Header>
         <QuestionsList
-          questions={questions.list}
+          questions={questions}
           sendAnswer={sendAnswer}
           sendDoneMsg={sendDoneMsg}
-          tabChange={this.tabChange}
-          members={list}
+          tabChange={tabChange}
+          members={members.list}
         />
       </React.Fragment>
-    )
-  }
+    </Mount>
+  )
 }
 
-Questions.propTypes = {
-  members: PropTypes.object.isRequired,
-  questions: PropTypes.object.isRequired,
-  membersRequest: PropTypes.func.isRequired,
-  questionsRequest: PropTypes.func.isRequired,
-  sendAnswer: PropTypes.func.isRequired,
-  sendDoneMsg: PropTypes.func.isRequired,
-}
+export default Questions

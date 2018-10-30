@@ -17,11 +17,11 @@ const QuestionsList = ({
   sendAnswer,
   tabChange,
   sendDoneMsg,
-}) => {
+}: any) => {
   const notAnswered = () => (
     <Tab.Pane>
       <SortedList
-        list={questions.notAnswered}
+        list={questions.notAnswered.questions}
         members={members}
         sendAnswer={sendAnswer}
         sendDoneMsg={sendDoneMsg}
@@ -32,7 +32,7 @@ const QuestionsList = ({
   const answered = () => (
     <Tab.Pane>
       <SortedList
-        list={questions.answered}
+        list={questions.answered.questions}
         members={members}
         sendAnswer={sendAnswer}
         sendDoneMsg={sendDoneMsg}
@@ -41,8 +41,8 @@ const QuestionsList = ({
   )
 
   const panes = [
-    { menuItem: 'Not Answered', render: notAnswered },
-    { menuItem: 'Answered', render: answered },
+    { id: 'NOT_ANSWERED', menuItem: 'Not Answered', render: notAnswered },
+    { id: 'ANSWERED', menuItem: 'Answered', render: answered },
   ]
 
   return (
