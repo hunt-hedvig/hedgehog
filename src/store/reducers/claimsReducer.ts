@@ -13,8 +13,12 @@ import initialState from '../initialState'
 
 export default function(state = initialState.claims, action) {
   switch (action.type) {
-    case CLAIM_TYPES:
     case CLAIMS_REQUESTING:
+      return {
+        ...state,
+        searchFilter: action.searchFilter,
+      }
+    case CLAIM_TYPES:
     case CLAIMS_BY_MEMBER:
       return {
         ...state,
@@ -24,11 +28,7 @@ export default function(state = initialState.claims, action) {
     case CLAIMS_REQUEST_SUCCESS:
       return {
         ...state,
-        list: sortClaimsList(
-          action.claims,
-          action.fieldName,
-          action.isDescendingOrder,
-        ),
+        searchResult: action.searchResult,
         requesting: false,
       }
 

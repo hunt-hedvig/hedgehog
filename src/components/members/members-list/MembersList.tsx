@@ -56,11 +56,17 @@ export default class MembersList extends React.Component<MembersListProps, {}> {
     } = this.props
 
     if (searchFilter.sortBy !== sortBy) {
-      searchMemberRequest({ ...searchFilter, sortBy, sortDirection: 'DESC' })
+      searchMemberRequest({
+        ...searchFilter,
+        sortBy,
+        sortDirection: 'DESC',
+        page: 0,
+      })
     } else {
       searchMemberRequest({
         ...searchFilter,
         sortDirection: searchFilter.sortDirection === 'DESC' ? 'ASC' : 'DESC',
+        page: 0,
       })
     }
   }
@@ -138,7 +144,7 @@ export default class MembersList extends React.Component<MembersListProps, {}> {
       members: { searchResult },
     } = this.props
     return (
-      <BackendPaginatorList
+      <BackendPaginatorList<Member>
         pagedItems={searchResult.members}
         currentPage={searchResult.page}
         totalPages={searchResult.totalPages}

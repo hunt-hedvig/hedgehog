@@ -43,6 +43,10 @@ export default {
       url: 'claims',
       method: 'get',
     },
+    search: {
+      url: 'claims/search',
+      method: 'get',
+    },
     getListByMemberId: {
       url: 'claims/user',
       method: 'get',
