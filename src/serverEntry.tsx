@@ -3,16 +3,9 @@ import {
   createKoaServer,
   getScriptLocation,
 } from '@hedviginsurance/web-survival-kit'
-import { createServerApolloClient } from 'api/apollo-server'
-import App from 'App'
-import { renderStylesToString } from 'emotion-server'
 import * as Koa from 'koa'
 import * as proxy from 'koa-server-http-proxy'
 import * as path from 'path'
-import * as React from 'react'
-import { ApolloProvider } from 'react-apollo'
-import { renderToString } from 'react-dom/server'
-import { StaticRouter } from 'react-router'
 import { reactPageRoutes } from 'routes/routes'
 import 'source-map-support/register'
 
@@ -20,7 +13,7 @@ const scriptLocation = getScriptLocation({
   statsLocation: path.resolve(__dirname, 'assets'),
   webpackPublicPath: process.env.WEBPACK_PUBLIC_PATH || '',
 })
-const template = (body: string) => `
+const template = () => `
 <!doctype html>
 <html lang="en">
 <head>
@@ -36,26 +29,15 @@ const template = (body: string) => `
           crossorigin="anonymous"></script>
 </head>
 <body>
-  <div id="react-root">${body}</div>
-  
+  <div id="react-root"></div>
+
   <script src="${scriptLocation}"></script>
 </body>
 </html>
 `
 
 const getPage: Koa.Middleware = async (ctx) => {
-  const context = {}
-  const apolloClient = createServerApolloClient(ctx.state.requestUuid)
-  const reactBody = renderStylesToString(
-    renderToString(
-      <StaticRouter location={ctx.url} context={context}>
-        <ApolloProvider client={apolloClient}>
-          <App />
-        </ApolloProvider>
-      </StaticRouter>,
-    ),
-  )
-  ctx.body = template(reactBody)
+  ctx.body = template()
 }
 const getPort = () => (process.env.PORT ? Number(process.env.PORT) : 9000)
 
