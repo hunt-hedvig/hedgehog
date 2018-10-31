@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Mount } from 'react-lifecycle-components/dist'
 import { Header } from 'semantic-ui-react'
 import { ClaimSearchFilter, ClaimsStore } from '../../store/types/claimsTypes'
 import BackendServedClaimsList from './claims-list/BackendServedClaimsList'
@@ -8,22 +9,19 @@ export interface ClaimsProps {
   claimsRequest: (filter: ClaimSearchFilter) => void
 }
 
-export default class Claims extends React.Component<ClaimsProps> {
-  constructor(props: ClaimsProps) {
-    super(props)
-  }
+const Claims: React.SFC<ClaimsProps> = (props) => {
+  const { claimsRequest, claims } = props
 
-  public componentDidMount() {
-    const { claimsRequest, claims } = this.props
-    claimsRequest(claims.searchFilter)
-  }
+  const initClaims = () => claimsRequest(claims.searchFilter)
 
-  public render() {
-    return (
+  return (
+    <Mount on={initClaims}>
       <React.Fragment>
         <Header size="huge">Claims List</Header>
-        <BackendServedClaimsList {...this.props} />
+        <BackendServedClaimsList {...props} />
       </React.Fragment>
-    )
-  }
+    </Mount>
+  )
 }
+
+export default Claims

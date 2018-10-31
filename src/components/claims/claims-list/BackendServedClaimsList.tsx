@@ -1,5 +1,7 @@
 import { LinkRow } from 'components/shared'
-import * as moment from 'moment'
+import * as formatDate from 'date-fns/format'
+import * as isValidDate from 'date-fns/is_valid'
+import * as parseDate from 'date-fns/parse'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
@@ -16,14 +18,29 @@ export interface BackendServedClaimsListProps {
   claimsRequest: (filter: ClaimSearchFilter) => void
 }
 
-const BackendServedClaimsList = ({
+const linkClickHandler = (id: string, userId: string) => {
+  history.push(`/claims/${id}/members/${userId}`)
+}
+
+const getTableRow = (item: Claim) => {
+  const date = parseDate(item.date)
+  const formattedDate = isValidDate(date)
+    ? formatDate(date, 'DD MMMM YYYY HH:mm')
+    : '-'
+  return (
+    <LinkRow onClick={() => linkClickHandler.bind(item.id, item.userId)}>
+      <Table.Cell>{formattedDate}</Table.Cell>
+      <Table.Cell>{item.type}</Table.Cell>
+      <Table.Cell>{item.state}</Table.Cell>
+      <Table.Cell>{item.reserve}</Table.Cell>
+    </LinkRow>
+  )
+}
+
+const BackendServedClaimsList: React.SFC<BackendServedClaimsListProps> = ({
   claims: { searchResult, searchFilter },
   claimsRequest,
-}: BackendServedClaimsListProps) => {
-  const linkClickHandler = (id: string, userId: string) => {
-    history.push(`/claims/${id}/members/${userId}`)
-  }
-
+}) => {
   const sortTable = (clickedColumn: ClaimSortColumn) => {
     if (searchFilter.sortBy !== clickedColumn) {
       claimsRequest({ ...searchFilter, sortBy: clickedColumn, page: 0 })
@@ -72,21 +89,6 @@ const BackendServedClaimsList = ({
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
-    )
-  }
-
-  const getTableRow = (item: Claim) => {
-    const date = moment(item.date).local()
-    const formattedDate = date.isValid()
-      ? date.format('DD MMMM YYYY HH:mm')
-      : '-'
-    return (
-      <LinkRow onClick={() => linkClickHandler.bind(item.id, item.userId)}>
-        <Table.Cell>{formattedDate}</Table.Cell>
-        <Table.Cell>{item.type}</Table.Cell>
-        <Table.Cell>{item.state}</Table.Cell>
-        <Table.Cell>{item.reserve}</Table.Cell>
-      </LinkRow>
     )
   }
 
