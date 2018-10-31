@@ -10,9 +10,7 @@ import reducers from './reducers'
 import rootSaga from './sagas'
 
 export const history =
-  process.env.BROWSER !== 'false'
-    ? createBrowserHistory()
-    : createMemoryHistory()
+  typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
 
 const rootReducer = combineReducers({
   ...reducers,
