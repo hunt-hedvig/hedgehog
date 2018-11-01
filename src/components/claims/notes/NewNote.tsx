@@ -52,7 +52,7 @@ export default class NewNote extends React.Component {
           changeHandler={this.fileChangeHandler}
           cleanupForm={cleanupForm}
         />
-        <Form.Button primary content="Add" />
+        <Form.Button disabled={!text} primary content="Add" />
       </Form>
     )
   }

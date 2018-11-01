@@ -1,6 +1,6 @@
 import * as StompModule from '@stomp/stompjs/esm5'
 import config from 'api/config'
-import SockJS from 'sockjs-client'
+import * as SockJS from 'sockjs-client'
 import * as chat from './chat'
 import * as dashboard from './dashboard'
 import * as membersList from './members'

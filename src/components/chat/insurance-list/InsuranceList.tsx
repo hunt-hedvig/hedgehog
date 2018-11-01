@@ -204,11 +204,13 @@ export default class InsuranceList extends React.Component {
                   </Table.HeaderCell>
                   <Table.HeaderCell>
                     <Modal
+                      style={{height: window.innerHeight + 100}}
+                      className="scrolling"
                       trigger={
                         <Button
                           floated="right"
                           icon
-                          labelPosition="left"
+                          labelposition="left"
                           primary
                           size="medium"
                           onClick={this.handleOpen}
@@ -242,7 +244,7 @@ export default class InsuranceList extends React.Component {
                             )}
                             defaultValue={moment().format('YYYY-MM-DD')}
                           />
-                          <Button.Group floated="right" labelPosition="left">
+                          <Button.Group floated="right" labelposition="left">
                             <Button type="button" onClick={this.handleClose}>
                               Cancel
                             </Button>

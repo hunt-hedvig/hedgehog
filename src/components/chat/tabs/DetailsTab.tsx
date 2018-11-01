@@ -63,11 +63,13 @@ export default class DetailsTab extends React.Component {
             <Table.HeaderCell />
             <Table.HeaderCell colSpan="2">
               <Modal
+                style={{height: window.innerHeight + 100}}
+                className="scrolling"
                 trigger={
                   <Button
                     floated="right"
                     icon
-                    labelPosition="left"
+                    labelposition="left"
                     primary
                     size="medium"
                     onClick={this.handleOpen}
@@ -95,7 +97,7 @@ export default class DetailsTab extends React.Component {
                         />
                       ))}
                     </React.Fragment>
-                    <Button.Group floated="right" labelPosition="left">
+                    <Button.Group floated="right" labelposition="left">
                       <Button type="button" onClick={this.handleCancel}>
                         Cancel
                       </Button>
