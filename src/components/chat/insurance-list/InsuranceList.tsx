@@ -204,7 +204,7 @@ export default class InsuranceList extends React.Component {
                   </Table.HeaderCell>
                   <Table.HeaderCell>
                     <Modal
-                      style={{height: window.innerHeight + 100}}
+                      style={{ height: window.innerHeight + 100 }}
                       className="scrolling"
                       trigger={
                         <Button
