@@ -57,6 +57,11 @@ server.app.use(
   proxy({
     target: process.env.API_URL,
     changeOrigin: false,
+    ssl: {
+      checkServerIdentity(host, cert) {
+        // TODO: implement certificate checking
+      },
+    },
   }),
 )
 
