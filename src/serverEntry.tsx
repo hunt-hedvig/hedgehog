@@ -8,6 +8,8 @@ import * as proxy from 'koa-server-http-proxy'
 import * as path from 'path'
 import { reactPageRoutes } from 'routes/routes'
 import 'source-map-support/register'
+import * as tls from 'tls'
+import * as url from 'url'
 
 const scriptLocation = getScriptLocation({
   statsLocation: path.resolve(__dirname, 'assets'),
@@ -59,7 +61,7 @@ server.app.use(
     changeOrigin: false,
     ssl: {
       checkServerIdentity(host, cert) {
-        // TODO: implement certificate checking
+        tls.checkServerIdentity(url.parse(process.env.API_URL).hostname, cert)
       },
     },
   }),
