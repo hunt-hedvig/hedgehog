@@ -122,7 +122,7 @@ export default class Bordereau extends React.Component {
                 }`}
                 target="_blank"
               >
-                <Button icon disabled={!this.state.date} labelPosition="left">
+                <Button icon disabled={!this.state.date} labelposition="left">
                   <Icon name="download" />
                   Get BDX now!
                 </Button>

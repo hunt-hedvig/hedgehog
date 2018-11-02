@@ -1,3 +1,4 @@
+import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
 import { getFieldName, getFieldValue } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
@@ -62,12 +63,13 @@ export default class DetailsTab extends React.Component {
           <Table.Row>
             <Table.HeaderCell />
             <Table.HeaderCell colSpan="2">
-              <Modal
+              <WideModal
+                className="scrolling"
                 trigger={
                   <Button
                     floated="right"
                     icon
-                    labelPosition="left"
+                    labelposition="left"
                     primary
                     size="medium"
                     onClick={this.handleOpen}
@@ -95,7 +97,7 @@ export default class DetailsTab extends React.Component {
                         />
                       ))}
                     </React.Fragment>
-                    <Button.Group floated="right" labelPosition="left">
+                    <Button.Group floated="right" labelposition="left">
                       <Button type="button" onClick={this.handleCancel}>
                         Cancel
                       </Button>
@@ -110,7 +112,7 @@ export default class DetailsTab extends React.Component {
                     </Button.Group>
                   </Form>
                 </Modal.Content>
-              </Modal>
+              </WideModal>
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>

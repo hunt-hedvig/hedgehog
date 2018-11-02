@@ -1,4 +1,5 @@
 import { LinkRow } from 'components/shared'
+import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
 import TableFields from 'components/shared/table-fields/TableFields'
 import * as moment from 'moment'
@@ -203,12 +204,13 @@ export default class InsuranceList extends React.Component {
                     {this.state.item.currentTotalPrice} ?
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <Modal
+                    <WideModal
+                      className="scrolling"
                       trigger={
                         <Button
                           floated="right"
                           icon
-                          labelPosition="left"
+                          labelposition="left"
                           primary
                           size="medium"
                           onClick={this.handleOpen}
@@ -242,7 +244,7 @@ export default class InsuranceList extends React.Component {
                             )}
                             defaultValue={moment().format('YYYY-MM-DD')}
                           />
-                          <Button.Group floated="right" labelPosition="left">
+                          <Button.Group floated="right" labelposition="left">
                             <Button type="button" onClick={this.handleClose}>
                               Cancel
                             </Button>
@@ -257,7 +259,7 @@ export default class InsuranceList extends React.Component {
                           </Button.Group>
                         </Form>
                       </Modal.Content>
-                    </Modal>
+                    </WideModal>
                   </Table.HeaderCell>
                 </Table.Row>
               </Table.Footer>
