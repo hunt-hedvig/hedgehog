@@ -1,5 +1,6 @@
 import Navigation from 'components/shared/navigation'
 import Notifications from 'containers/notification-service/NotificationService'
+import { injectGlobal } from 'emotion'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
 import { Provider } from 'react-redux'
@@ -16,65 +17,78 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
+const GlobalCss: React.SFC = ({ children }) => {
+  // tslint:disable-next-line no-unused-expression
+  injectGlobal`
+    #react-root {
+      height: 100%
+    }
+  `
+  return <>{children}</>
+}
+
 const App: React.SFC = () => (
-  <Provider store={store}>
-    <Router history={history}>
-      <React.Fragment>
-        <Navigation history={history} store={store} />
-        <Switch>
-          <Route path="/login/oauth" component={Routes.LoginPageRoute} />
-          <Route
-            path="/login/process"
-            component={Routes.LoginProcessPageRoute}
-          />
-          <Routes.PrivateRoute
-            path="/assets"
-            store={store}
-            component={Routes.AssetsPageRoute}
-          />
-          <Routes.PrivateRoute
-            path="/dashboard"
-            store={store}
-            component={Routes.DashboardPageRoute}
-          />
-          <Routes.PrivateRoute
-            path="/questions"
-            store={store}
-            component={Routes.QuestionsPageRoute}
-          />
-          <Route
-            path="/claims"
-            render={(routeProps) => (
-              <Routes.ClaimsPageRoute {...routeProps} store={store} />
-            )}
-          />
-          <Route
-            path="/members"
-            render={(routeProps) => (
-              <Routes.MembersPageRoute {...routeProps} store={store} />
-            )}
-          />
-          <Routes.PrivateRoute
-            path="/member_insurance"
-            store={store}
-            component={Routes.MemberInsurancePageRoute}
-          />
-          <Routes.PrivateRoute
-            path="/payments"
-            store={store}
-            component={Routes.PaymentsPageRoute}
-          />
-          <Routes.PrivateRoute
-            path="/BDX"
-            store={store}
-            component={Routes.BourdereauPageRoute}
-          />
-          <Redirect from="*" to="/dashboard" />
-        </Switch>
-        <Notifications />
-      </React.Fragment>
-    </Router>
-  </Provider>
+  <>
+    <GlobalCss />
+    <Provider store={store}>
+      <Router history={history}>
+        <React.Fragment>
+          <Navigation history={history} store={store} />
+          <Switch>
+            <Route path="/login/oauth" component={Routes.LoginPageRoute} />
+            <Route
+              path="/login/process"
+              component={Routes.LoginProcessPageRoute}
+            />
+            <Routes.PrivateRoute
+              path="/assets"
+              store={store}
+              component={Routes.AssetsPageRoute}
+            />
+            <Routes.PrivateRoute
+              path="/dashboard"
+              store={store}
+              component={Routes.DashboardPageRoute}
+            />
+            <Routes.PrivateRoute
+              path="/questions"
+              store={store}
+              component={Routes.QuestionsPageRoute}
+            />
+            <Route
+              path="/claims"
+              render={(routeProps) => (
+                <Routes.ClaimsPageRoute {...routeProps} store={store} />
+              )}
+            />
+            <Route
+              path="/members"
+              render={(routeProps) => (
+                <Routes.MembersPageRoute {...routeProps} store={store} />
+              )}
+            />
+            <Routes.PrivateRoute
+              path="/member_insurance"
+              store={store}
+              component={Routes.MemberInsurancePageRoute}
+            />
+            <Routes.PrivateRoute
+              path="/payments"
+              store={store}
+              component={Routes.PaymentsPageRoute}
+            />
+            <Routes.PrivateRoute
+              path="/BDX"
+              store={store}
+              component={Routes.BourdereauPageRoute}
+            />
+            <Redirect from="*" to="/dashboard" />
+          </Switch>
+          <Notifications />
+        </React.Fragment>
+      </Router>
+    </Provider>
+  </>
 )
 
 export default App

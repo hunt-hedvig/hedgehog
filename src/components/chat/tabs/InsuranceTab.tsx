@@ -1,4 +1,5 @@
 import InsuranceTableRows from 'components/chat/insurance-table-rows/InsuranceTableRows'
+import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
 import { getFieldName, getFieldValue } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
@@ -128,8 +129,7 @@ export default class InsuranceTab extends React.Component {
             <Table.Row>
               <Table.HeaderCell />
               <Table.HeaderCell colSpan="2">
-                <Modal
-                  style={{ height: window.innerHeight + 100 }}
+                <WideModal
                   className="scrolling"
                   trigger={
                     <Button
@@ -204,7 +204,7 @@ export default class InsuranceTab extends React.Component {
                       </Button.Group>
                     </Form>
                   </Modal.Content>
-                </Modal>
+                </WideModal>
               </Table.HeaderCell>
             </Table.Row>
           </Table.Footer>

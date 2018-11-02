@@ -1,4 +1,5 @@
 import { LinkRow } from 'components/shared'
+import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
 import TableFields from 'components/shared/table-fields/TableFields'
 import * as moment from 'moment'
@@ -203,8 +204,7 @@ export default class InsuranceList extends React.Component {
                     {this.state.item.currentTotalPrice} ?
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <Modal
-                      style={{ height: window.innerHeight + 100 }}
+                    <WideModal
                       className="scrolling"
                       trigger={
                         <Button
@@ -259,7 +259,7 @@ export default class InsuranceList extends React.Component {
                           </Button.Group>
                         </Form>
                       </Modal.Content>
-                    </Modal>
+                    </WideModal>
                   </Table.HeaderCell>
                 </Table.Row>
               </Table.Footer>
