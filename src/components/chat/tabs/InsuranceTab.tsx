@@ -4,6 +4,7 @@ import { getFieldName, getFieldValue } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 export default class InsuranceTab extends React.Component {
   constructor(props) {
@@ -91,6 +92,7 @@ export default class InsuranceTab extends React.Component {
     let activeDate
     let cancellationDate
     let fields
+    let traceData
 
     if (data) {
       activeDate = activeDate ? activeDate : data.insuranceActiveFrom
@@ -105,11 +107,13 @@ export default class InsuranceTab extends React.Component {
         cancellationEmailSent,
         certificateUploaded,
         certificateUrl,
+        traceProduct,
         ...filteredFields
       } = data
       /* eslint-enable */
 
       fields = filteredFields
+      traceData = traceProduct
     }
 
     return fields ? (
@@ -207,6 +211,7 @@ export default class InsuranceTab extends React.Component {
             </Table.Row>
           </Table.Footer>
         </Table>
+        <InsuranceTrace traceData={traceData} />
       </React.Fragment>
     ) : (
       <Header>No insurance info </Header>
