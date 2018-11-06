@@ -6,10 +6,11 @@ import * as React from 'react'
 import { SingleDatePicker } from 'react-dates'
 import { OPEN_UP } from 'react-dates/constants'
 import 'react-dates/initialize'
+import styled from 'react-emotion'
 import { Form } from 'semantic-ui-react'
-import styled from 'styled-components'
+import { styles } from './_dateinput'
 
-const WidgetContainer = styled.div`
+const WidgetContainer = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -21,7 +22,7 @@ const WidgetContainer = styled.div`
   }
 `
 
-const DatePickerContainer = styled.div`
+const DatePickerContainer = styled('div')`
   font-family: 'Circular Std Book' !important;
   .SingleDatePickerInput {
     border: 1px solid #ccc;
@@ -69,7 +70,7 @@ export default class DateInput extends React.Component {
       <React.Fragment>
         <Form.Field disabled={this.props.disabled}>
           {this.props.label ? <label>Date</label> : null}
-          <WidgetContainer>
+          <WidgetContainer className={styles}>
             <DatePickerContainer>
               <SingleDatePicker
                 date={this.state.date}

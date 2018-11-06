@@ -54,7 +54,7 @@
     "nodemon": "^1.18.4",
     "react": "^16.5.2",
     "react-apollo": "^2.2.4",
-    "react-dates": "^18.1.0",
+    "react-dates": "^16.0.2",
     "react-dom": "^16.5.2",
     "react-emotion": "^9.2.10",
     "react-google-button": "^0.5.3",
