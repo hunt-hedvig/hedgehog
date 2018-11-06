@@ -38,7 +38,17 @@ const initialState: BackofficeStore = {
     data: null,
   },
   claims: {
-    list: [],
+    searchFilter: {
+      page: 0,
+      pageSize: 20,
+      sortBy: 'DATE',
+      sortDirection: 'DESC',
+    },
+    searchResult: {
+      claims: [],
+      page: 0,
+      totalPages: 1,
+    },
     requesting: false,
     types: [],
     memberClaims: [],

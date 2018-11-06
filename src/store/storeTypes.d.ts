@@ -1,3 +1,5 @@
+import { ClaimsStore } from './types/claimsTypes'
+
 export interface BackofficeStore {
   login: any
   assets: any
@@ -6,7 +8,7 @@ export interface BackofficeStore {
   messages: any
   members: MembersStore
   dashboard: any
-  claims: any
+  claims: ClaimsStore
   claimDetails: any
   questions: any
   insurance: any

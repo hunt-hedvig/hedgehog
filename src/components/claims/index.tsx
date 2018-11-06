@@ -1,28 +1,27 @@
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import { Mount } from 'react-lifecycle-components/dist'
 import { Header } from 'semantic-ui-react'
-import ClaimsList from './claims-list/ClaimsList'
-export default class Claims extends React.Component {
-  constructor(props) {
-    super(props)
-  }
+import { ClaimSearchFilter, ClaimsStore } from '../../store/types/claimsTypes'
+import BackendServedClaimsList from './claims-list/BackendServedClaimsList'
 
-  public componentDidMount() {
-    const { claimsRequest } = this.props
-    claimsRequest()
-  }
+export interface ClaimsProps {
+  claims: ClaimsStore
+  claimsRequest: (filter: ClaimSearchFilter) => void
+}
 
-  public render() {
-    return (
+const Claims: React.SFC<ClaimsProps> = (props) => {
+  const { claimsRequest, claims } = props
+
+  const initClaims = () => claimsRequest(claims.searchFilter)
+
+  return (
+    <Mount on={initClaims}>
       <React.Fragment>
         <Header size="huge">Claims List</Header>
-        <ClaimsList {...this.props} />
+        <BackendServedClaimsList {...props} />
       </React.Fragment>
-    )
-  }
+    </Mount>
+  )
 }
 
-Claims.propTypes = {
-  claimsRequest: PropTypes.func.isRequired,
-  claims: PropTypes.object.isRequired,
-}
+export default Claims
