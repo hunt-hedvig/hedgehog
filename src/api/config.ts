@@ -139,6 +139,10 @@ export default {
       method: 'get',
       url: 'member/insurance/search',
     },
+    searchPaged: {
+      method: 'get',
+      url: 'member/insurance/searchPaged',
+    },
   },
   reports: {
     getBDX: {

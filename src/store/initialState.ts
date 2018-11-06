@@ -77,10 +77,20 @@ const initialState: BackofficeStore = {
   },
   notifications: [],
   memberInsurance: {
+    searchFilter: {
+      state: undefined,
+      query: '',
+      page: 0,
+      pageSize: 25,
+      sortBy: 'CONTRACT_SIGNED_DATE',
+      sortDirection: 'DESC',
+    },
+    searchResult: {
+      products: [],
+      page: 0,
+      totalPages: 1,
+    },
     requesting: false,
-    list: [],
-    filter: '',
-    query: '',
   },
 }
 
