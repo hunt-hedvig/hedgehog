@@ -1,49 +1,44 @@
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import { Mount } from 'react-lifecycle-components'
 import { Header } from 'semantic-ui-react'
+import { MembersStore } from '../../store/storeTypes'
+import {
+  QuestionListKind,
+  QuestionsStore,
+} from '../../store/types/questionsTypes'
 import QuestionsList from './questions-list/QuestionsList'
 
-export default class Questions extends React.Component {
-  constructor(props) {
-    super(props)
-  }
+export interface QuestionsProps {
+  questions: QuestionsStore
+  members: MembersStore
+  sendAnswer: (answer: any) => void
+  sendDoneMsg: (id: string) => void
+  questionsRequest: (listId: QuestionListKind) => void
+}
 
-  public tabChange = () => {
-    this.props.questionsRequest()
-  }
-
-  public componentDidMount() {
-    this.props.questionsRequest()
-    this.props.membersRequest()
-  }
-
-  public render() {
-    const {
-      questions,
-      members: { list },
-      sendAnswer,
-      sendDoneMsg,
-    } = this.props
-    return (
+const Questions: React.SFC<QuestionsProps> = ({
+  questions,
+  members,
+  sendAnswer,
+  sendDoneMsg,
+  questionsRequest,
+}) => {
+  return (
+    <Mount on={() => questionsRequest('NOT_ANSWERED')}>
       <React.Fragment>
         <Header size="huge">Questions</Header>
         <QuestionsList
-          questions={questions.list}
+          questions={questions}
           sendAnswer={sendAnswer}
           sendDoneMsg={sendDoneMsg}
-          tabChange={this.tabChange}
-          members={list}
+          tabChange={(e, data) =>
+            questionsRequest(data.panes[data.activeIndex].id)
+          }
+          members={members.list}
         />
       </React.Fragment>
-    )
-  }
+    </Mount>
+  )
 }
 
-Questions.propTypes = {
-  members: PropTypes.object.isRequired,
-  questions: PropTypes.object.isRequired,
-  membersRequest: PropTypes.func.isRequired,
-  questionsRequest: PropTypes.func.isRequired,
-  sendAnswer: PropTypes.func.isRequired,
-  sendDoneMsg: PropTypes.func.isRequired,
-}
+export default Questions

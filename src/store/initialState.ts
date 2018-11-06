@@ -59,9 +59,13 @@ const initialState: BackofficeStore = {
     payments: [],
   },
   questions: {
-    list: {
-      answered: [],
-      notAnswered: [],
+    answered: {
+      questions: [],
+      requesting: false,
+    },
+    notAnswered: {
+      questions: [],
+      requesting: false,
     },
     requesting: false,
   },

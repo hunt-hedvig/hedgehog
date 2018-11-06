@@ -1,4 +1,5 @@
 import { ClaimsStore } from './types/claimsTypes'
+import { QuestionsStore } from './types/questionsTypes'
 
 export interface BackofficeStore {
   login: any
@@ -10,7 +11,7 @@ export interface BackofficeStore {
   dashboard: any
   claims: ClaimsStore
   claimDetails: any
-  questions: any
+  questions: QuestionsStore
   insurance: any
   notifications: any
   memberInsurance: any

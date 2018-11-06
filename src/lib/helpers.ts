@@ -1,4 +1,7 @@
+import * as dateCompareAsc from 'date-fns/compare_asc'
+import * as parseDate from 'date-fns/parse'
 import moment from 'moment'
+import { QuestionGroup, QuestionsStore } from '../store/types/questionsTypes'
 
 /**
  * Filter array of objects by obj field
@@ -150,23 +153,20 @@ export const getClaimFieldsData = (
  * Sort array of questions by dates and answers
  * @param {object} questions arrays of answered/not answered questions
  */
-export const sortQuestions = (questions) => ({
-  answered: questions.answered.sort((a, b) =>
-    moment(a.date).diff(moment(b.date)),
-  ),
-  notAnswered: questions.notAnswered.sort((a, b) =>
-    moment(a.date).diff(moment(b.date)),
-  ),
-})
+export const sortQuestions = (questions: QuestionGroup[]): QuestionGroup[] =>
+  questions.sort((a, b) => dateCompareAsc(parseDate(a.date), parseDate(b.date)))
 
 /**
  * Replacing question from not answered to answered array
  * @param {object} questions arrays of answered/not answered questions
  * @param {object} data answered question
  */
-export const replaceAnswer = (questions, data) => {
+export const replaceAnswer = (
+  questions: QuestionsStore,
+  data,
+): QuestionsStore => {
   let newAnswered
-  const notAnswered = questions.notAnswered.filter((item) => {
+  const newNotAnswered = questions.notAnswered.questions.filter((item) => {
     if (item.memberId !== data.id) {
       return true
     } else {
@@ -175,10 +175,17 @@ export const replaceAnswer = (questions, data) => {
     }
   })
   return {
-    notAnswered,
-    answered: newAnswered
-      ? [...questions.answered, newAnswered]
-      : questions.answered,
+    ...questions,
+    answered: {
+      ...questions.answered,
+      questions: newAnswered
+        ? [...questions.answered.questions, newAnswered]
+        : questions.answered.questions,
+    },
+    notAnswered: {
+      ...questions.notAnswered,
+      questions: newNotAnswered,
+    },
   }
 }
 

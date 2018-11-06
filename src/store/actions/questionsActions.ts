@@ -7,14 +7,20 @@ import {
   QUESTIONS_REQUEST_SUCCESS,
   QUESTIONS_REQUESTING,
 } from '../constants/questions'
+import { QuestionGroup, QuestionListKind } from '../types/questionsTypes'
 
-export const questionsRequest = () => ({
+export const questionsRequest = (listType: QuestionListKind) => ({
   type: QUESTIONS_REQUESTING,
+  listType,
 })
 
-export const questionsReqSuccess = (questions) => ({
+export const questionsReqSuccess = (
+  questions: QuestionGroup[],
+  listType: QuestionListKind,
+) => ({
   type: QUESTIONS_REQUEST_SUCCESS,
   questions,
+  listType,
 })
 
 export const questionsReqError = (error) => ({

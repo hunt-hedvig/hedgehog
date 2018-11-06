@@ -12,6 +12,27 @@ import initialState from '../initialState'
 export default function(state = initialState.questions, action) {
   switch (action.type) {
     case QUESTIONS_REQUESTING:
+      switch (action.listType) {
+        case 'ANSWERED':
+          return {
+            ...state,
+            answered: {
+              ...state.answered,
+              requesting: true,
+            },
+          }
+        case 'NOT_ANSWERED':
+          return {
+            ...state,
+            notAnswered: {
+              ...state.notAnswered,
+              requesting: true,
+            },
+          }
+        default:
+          return state
+      }
+
     case QUESTION_ANSWERING:
       return {
         ...state,
@@ -19,16 +40,36 @@ export default function(state = initialState.questions, action) {
       }
 
     case QUESTIONS_REQUEST_SUCCESS:
-      return {
-        requesting: false,
-        list: sortQuestions({ ...action.questions }),
+      switch (action.listType) {
+        case 'ANSWERED':
+          return {
+            ...state,
+            answered: {
+              ...state.answered,
+              questions: sortQuestions(action.questions),
+              requesting: false,
+            },
+          }
+
+        case 'NOT_ANSWERED':
+          return {
+            ...state,
+            notAnswered: {
+              ...state.notAnswered,
+              requesting: false,
+              questions: sortQuestions(action.questions),
+            },
+          }
+
+        default:
+          return state
       }
 
     case QUESTION_ANSWER_SUCCESS:
       return {
         ...state,
+        ...replaceAnswer(state, action.data),
         requesting: false,
-        list: replaceAnswer({ ...state.list }, action.data),
       }
 
     case QUESTION_ERROR:
