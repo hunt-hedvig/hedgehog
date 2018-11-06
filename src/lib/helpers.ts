@@ -1,3 +1,5 @@
+import * as dateCompareAsc from 'date-fns/compare_asc'
+import * as parseDate from 'date-fns/parse'
 import moment from 'moment'
 import { QuestionGroup, QuestionsStore } from '../store/types/questionsTypes'
 
@@ -152,7 +154,7 @@ export const getClaimFieldsData = (
  * @param {object} questions arrays of answered/not answered questions
  */
 export const sortQuestions = (questions: QuestionGroup[]): QuestionGroup[] =>
-  questions.sort((a, b) => moment(a.date).diff(moment(b.date)))
+  questions.sort((a, b) => dateCompareAsc(parseDate(a.date), parseDate(b.date)))
 
 /**
  * Replacing question from not answered to answered array

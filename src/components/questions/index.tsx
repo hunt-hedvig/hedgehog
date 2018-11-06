@@ -16,28 +16,24 @@ export interface QuestionsProps {
   questionsRequest: (listId: QuestionListKind) => void
 }
 
-const Questions = ({
+const Questions: React.SFC<QuestionsProps> = ({
   questions,
   members,
   sendAnswer,
   sendDoneMsg,
   questionsRequest,
-}: QuestionsProps) => {
-  const tabChange = (e, data) => {
-    questionsRequest(data.panes[data.activeIndex].id)
-  }
-
-  const init = () => questionsRequest('NOT_ANSWERED')
-
+}) => {
   return (
-    <Mount on={init}>
+    <Mount on={() => questionsRequest('NOT_ANSWERED')}>
       <React.Fragment>
         <Header size="huge">Questions</Header>
         <QuestionsList
           questions={questions}
           sendAnswer={sendAnswer}
           sendDoneMsg={sendDoneMsg}
-          tabChange={tabChange}
+          tabChange={(e, data) =>
+            questionsRequest(data.panes[data.activeIndex].id)
+          }
           members={members.list}
         />
       </React.Fragment>

@@ -1,5 +1,5 @@
-import { QuestionsStore } from './types/questionsTypes'
 import { ClaimsStore } from './types/claimsTypes'
+import { QuestionsStore } from './types/questionsTypes'
 
 export interface BackofficeStore {
   login: any

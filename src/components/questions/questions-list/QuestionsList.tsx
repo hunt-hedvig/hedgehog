@@ -1,7 +1,8 @@
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
+import { MembersStore } from '../../../store/storeTypes'
+import { QuestionsStore } from '../../../store/types/questionsTypes'
 import SortedList from './SortedList'
 
 const ListContainer = styled.div`
@@ -11,13 +12,21 @@ const ListContainer = styled.div`
   margin: 0 auto 50px;
 `
 
-const QuestionsList = ({
+export interface QuestionsListProps {
+  questions: QuestionsStore
+  members: MembersStore
+  sendAnswer: (answer: any) => void
+  sendDoneMsg: (id: string) => void
+  tabChange: (event, data) => void
+}
+
+const QuestionsList: React.SFC<QuestionsListProps> = ({
   questions,
   members,
   sendAnswer,
   tabChange,
   sendDoneMsg,
-}: any) => {
+}) => {
   const notAnswered = () => (
     <Tab.Pane>
       <SortedList
@@ -50,14 +59,6 @@ const QuestionsList = ({
       <Tab renderActiveOnly={true} panes={panes} onTabChange={tabChange} />
     </ListContainer>
   )
-}
-
-QuestionsList.propTypes = {
-  questions: PropTypes.object.isRequired,
-  sendAnswer: PropTypes.func.isRequired,
-  sendDoneMsg: PropTypes.func.isRequired,
-  tabChange: PropTypes.func.isRequired,
-  members: PropTypes.array,
 }
 
 export default QuestionsList
