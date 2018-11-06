@@ -2,11 +2,10 @@ import { getFieldName } from 'lib/helpers'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 
-const InsuranceTrace = ({ traceData }) => {
-  if (!traceData || traceData.length === 0) {
-    return ''
-  }
-  return (
+const InsuranceTrace = ({ traceData }) =>
+  !traceData || traceData.length === 0 ? (
+    ''
+  ) : (
     <React.Fragment>
       <h4>List of changes</h4>
       <Table celled>
@@ -19,23 +18,17 @@ const InsuranceTrace = ({ traceData }) => {
             <Table.HeaderCell width={1}>Author</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <TraceTableBody traceData={traceData} />
+        {traceData.map((trace) => (
+          <Table.Row key={trace.id}>
+            <Table.Cell>{getFieldName(trace.fieldName)}</Table.Cell>
+            <Table.Cell>{trace.date}</Table.Cell>
+            <Table.Cell>{trace.oldValue}</Table.Cell>
+            <Table.Cell>{trace.newValue}</Table.Cell>
+            <Table.Cell>{trace.userId}</Table.Cell>
+          </Table.Row>
+        ))}
       </Table>
     </React.Fragment>
   )
-}
-
-const TraceTableBody = ({ traceData }) =>
-  traceData.map((trace) => (
-    <React.Fragment>
-      <Table.Row key={trace.id}>
-        <Table.Cell>{getFieldName(trace.fieldName)}</Table.Cell>
-        <Table.Cell>{trace.date}</Table.Cell>
-        <Table.Cell>{trace.oldValue}</Table.Cell>
-        <Table.Cell>{trace.newValue}</Table.Cell>
-        <Table.Cell>{trace.userId}</Table.Cell>
-      </Table.Row>
-    </React.Fragment>
-  ))
 
 export default InsuranceTrace
