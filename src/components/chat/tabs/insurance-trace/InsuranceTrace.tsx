@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 
 const InsuranceTrace = ({ traceData }) =>
   !traceData || traceData.length === 0 ? (
-    <></>
+    null
   ) : (
     <>
       <h4>List of changes</h4>
