@@ -37,7 +37,7 @@ export default class MessagesList extends React.Component {
     const { messages, error } = this.props
     const id = parseInt(this.props.id, 10)
 
-    function getAuthor(author: any) {
+    function getAuthor(author: string) {
       return author ? author : 'bot'
     }
 
