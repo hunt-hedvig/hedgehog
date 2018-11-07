@@ -28,13 +28,25 @@ const linkClickHandler = (id) => {
 }
 
 const getFormattedDate = (date) => {
-  return isValidDate(date) ? formatDate(date, 'DD MMMM YYYY') : '-'
+  return date && isValidDate(date) ? formatDate(date, 'DD MMMM YYYY') : '-'
 }
 
 const getTableRow = (item: MemberInsurance) => {
   // FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
-  const activationDate = parse(item.insuranceActiveFrom + 'Z')
-  const cancellationDate = parse(item.insuranceActiveTo + 'Z')
+  const activationDate =
+    item.insuranceActiveFrom &&
+    parse(
+      item.insuranceActiveFrom.endsWith('Z')
+        ? item.insuranceActiveFrom
+        : `${item.insuranceActiveFrom}Z`,
+    )
+  const cancellationDate =
+    item.insuranceActiveTo &&
+    parse(
+      item.insuranceActiveTo.endsWith('Z')
+        ? item.insuranceActiveFrom
+        : `${item.insuranceActiveFrom}Z`,
+    )
   const signedOnDate = parse(item.signedOn)
 
   return (
@@ -75,10 +87,15 @@ const sortTable = (
   }
 }
 
-const getTableHeader = (
-  searchFilter: MemberInsuranceSearchRequest,
-  doSearch: (req: Partial<MemberInsuranceSearchRequest>) => void,
-) => {
+interface TableHeaderProps {
+  searchFilter: MemberInsuranceSearchRequest
+  doSearch: (req: Partial<MemberInsuranceSearchRequest>) => void
+}
+
+const TableHeader: React.SFC<TableHeaderProps> = ({
+  searchFilter,
+  doSearch,
+}) => {
   const { sortBy, sortDirection } = searchFilter
   const direction = sortDirection === 'ASC' ? 'ascending' : 'descending'
   return (
@@ -176,7 +193,12 @@ const MemberInsuranceList: React.SFC<MemberInsuranceListProps> = ({
     totalPages={searchResult.totalPages}
     changePage={(page: number) => searchMemberInsRequest({ page })}
     itemContent={getTableRow}
-    tableHeader={getTableHeader(searchFilter, searchMemberInsRequest)}
+    tableHeader={
+      <TableHeader
+        searchFilter={searchFilter}
+        doSearch={searchMemberInsRequest}
+      />
+    }
     isSortable={true}
     keyName="productId"
   />

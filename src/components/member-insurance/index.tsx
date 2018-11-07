@@ -18,7 +18,7 @@ const MemberInsurance: React.SFC<MemberInsuranceProps> = ({
   searchMemberInsRequest,
 }) => (
   <Mount on={() => searchMemberInsRequest({})}>
-    <React.Fragment>
+    <>
       <Header size="huge"> Member Insurance </Header>
       <MemberInsuranceFilter
         memberInsurance={memberInsurance}
@@ -28,7 +28,7 @@ const MemberInsurance: React.SFC<MemberInsuranceProps> = ({
         memberInsurance={memberInsurance}
         searchMemberInsRequest={searchMemberInsRequest}
       />
-    </React.Fragment>
+    </>
   </Mount>
 )
 

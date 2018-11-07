@@ -1,14 +1,12 @@
+import { ActionMap, Container } from 'constate'
 import { memberState } from 'lib/selectOptions'
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Button, Dropdown, Form, Input } from 'semantic-ui-react'
 import styled from 'styled-components'
-import { searchMemberInsRequest } from '../../../store/actions/memberInsuranceActions'
-import { MemberStatus } from '../../../store/storeTypes'
+import initialStoreState from '../../../store/initialState'
 import {
   MemberInsuranceSearchRequest,
   MemberInsuranceStore,
-  ProductState,
 } from '../../../store/types/memberInsuranceTypes'
 
 const MembersFilterContainer = styled.div`
@@ -30,82 +28,68 @@ export interface MemberInsuranceFilterProps {
   searchMemberInsRequest: (req: Partial<MemberInsuranceSearchRequest>) => void
 }
 
-export interface MemberInsuranceFilterState {
+interface State {
   searchQuery: string
 }
 
-export default class MemberInsuranceFilter extends React.Component<
-  MemberInsuranceFilterProps,
-  MemberInsuranceFilterState
-> {
-  constructor(props: MemberInsuranceFilterProps) {
-    super(props)
-    this.state = {
-      searchQuery: '',
-    }
-  }
-
-  public doSearch = () => {
-    const { searchQuery } = this.state
-    searchMemberInsRequest({ query: searchQuery, page: 0 })
-  }
-
-  public keyPressHandler = (e) => {
-    if (e.key === 'Enter') {
-      this.doSearch()
-    }
-  }
-
-  public inputChangeHandler = (e, { value }) => {
-    this.setState({ searchQuery: value })
-  }
-
-  public proudctStateChangeHandler = (e, { value }) => {
-    searchMemberInsRequest({ state: value, page: 0 })
-  }
-
-  public resetSearch = () => {
-    this.setState({
-      searchQuery: '',
-    })
-    this.doSearch()
-  }
-
-  public componentDidMount() {
-    const { searchFilter } = this.props.memberInsurance
-    this.setState({
-      searchQuery: searchFilter.query,
-    })
-  }
-
-  public render() {
-    const {
-      memberInsurance: { requesting, searchFilter },
-    } = this.props
-    return (
-      <React.Fragment>
-        <MembersFilterContainer>
-          <Input
-            loading={requesting}
-            placeholder="Search..."
-            iconPosition="left"
-            onChange={this.inputChangeHandler}
-            onKeyPress={this.keyPressHandler}
-            action={{ icon: 'search', onClick: this.doSearch() }}
-            value={this.state.searchQuery}
-          />
-          <Form.Group>
-            <label>State: </label>
-            <Dropdown
-              onChange={this.proudctStateChangeHandler}
-              options={memberState}
-              selection
-              value={searchFilter.state}
-            />
-          </Form.Group>
-        </MembersFilterContainer>
-        <ResetButton onClick={this.resetSearch}>reset</ResetButton>
-      </React.Fragment>
-    )
-  }
+interface Actions {
+  updateQuery: (e, data) => void
+  resetQuery: () => void
 }
+
+const actions: ActionMap<State, Actions> = {
+  updateQuery: (e, { value }) => () => ({ searchQuery: value }),
+  resetQuery: () => () => ({
+    searchQuery: initialStoreState.memberInsurance.searchFilter.query,
+  }),
+}
+
+const MemberInsuranceFilter: React.SFC<MemberInsuranceFilterProps> = ({
+  memberInsurance,
+  searchMemberInsRequest,
+}) => (
+  <Container<State, Actions>
+    initialState={{ searchQuery: memberInsurance.searchFilter.query }}
+    actions={actions}
+  >
+    {({ updateQuery, resetQuery, searchQuery }) => {
+      const doSearch = () =>
+        searchMemberInsRequest({ query: searchQuery, page: 0 })
+
+      const doResetQuery = () => {
+        resetQuery()
+        searchMemberInsRequest(initialStoreState.memberInsurance.searchFilter)
+      }
+
+      return (
+        <>
+          <MembersFilterContainer>
+            <Input
+              loading={memberInsurance.requesting}
+              placeholder="Search..."
+              iconPosition="left"
+              onChange={updateQuery}
+              onKeyPress={(e) => e.key === 'Enter' && doSearch()}
+              action={{ icon: 'search', onClick: doSearch }}
+              value={searchQuery}
+            />
+            <Form.Group>
+              <label>State: </label>
+              <Dropdown
+                onChange={(e, { value }) =>
+                  searchMemberInsRequest({ state: value, page: 0 })
+                }
+                options={memberState}
+                selection
+                value={memberInsurance.searchFilter.state}
+              />
+            </Form.Group>
+          </MembersFilterContainer>
+          <ResetButton onClick={doResetQuery}>reset</ResetButton>
+        </>
+      )
+    }}
+  </Container>
+)
+
+export default MemberInsuranceFilter
