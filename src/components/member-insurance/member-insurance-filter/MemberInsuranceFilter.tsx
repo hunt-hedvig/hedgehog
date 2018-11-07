@@ -44,7 +44,7 @@ const actions: ActionMap<State, Actions> = {
   }),
 }
 
-const MemberInsuranceFilter: React.SFC<MemberInsuranceFilterProps> = ({
+export const MemberInsuranceFilter: React.SFC<MemberInsuranceFilterProps> = ({
   memberInsurance,
   searchMemberInsRequest,
 }) => (
@@ -91,5 +91,3 @@ const MemberInsuranceFilter: React.SFC<MemberInsuranceFilterProps> = ({
     }}
   </Container>
 )
-
-export default MemberInsuranceFilter

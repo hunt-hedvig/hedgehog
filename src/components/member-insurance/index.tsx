@@ -5,15 +5,15 @@ import {
   MemberInsuranceSearchRequest,
   MemberInsuranceStore,
 } from '../../store/types/memberInsuranceTypes'
-import MemberInsuranceFilter from './member-insurance-filter/MemberInsuranceFilter'
-import MemberInsuranceList from './member-insurance-list/MemberInsuranceList'
+import { MemberInsuranceFilter } from './member-insurance-filter/MemberInsuranceFilter'
+import { MemberInsuranceList } from './member-insurance-list/MemberInsuranceList'
 
 export interface MemberInsuranceProps {
   memberInsurance: MemberInsuranceStore
   searchMemberInsRequest: (req: Partial<MemberInsuranceSearchRequest>) => void
 }
 
-const MemberInsurance: React.SFC<MemberInsuranceProps> = ({
+export const MemberInsurance: React.SFC<MemberInsuranceProps> = ({
   memberInsurance,
   searchMemberInsRequest,
 }) => (
@@ -31,5 +31,3 @@ const MemberInsurance: React.SFC<MemberInsuranceProps> = ({
     </>
   </Mount>
 )
-
-export default MemberInsurance

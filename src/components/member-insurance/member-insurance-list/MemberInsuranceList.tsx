@@ -183,7 +183,7 @@ const TableHeader: React.SFC<TableHeaderProps> = ({
   )
 }
 
-const MemberInsuranceList: React.SFC<MemberInsuranceListProps> = ({
+export const MemberInsuranceList: React.SFC<MemberInsuranceListProps> = ({
   memberInsurance: { searchFilter, searchResult },
   searchMemberInsRequest,
 }) => (
@@ -203,5 +203,3 @@ const MemberInsuranceList: React.SFC<MemberInsuranceListProps> = ({
     keyName="productId"
   />
 )
-
-export default MemberInsuranceList
