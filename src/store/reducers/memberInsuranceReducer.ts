@@ -1,10 +1,8 @@
 import { sortMemberInsList } from 'lib/helpers'
 import {
   MEMBER_INS_ERROR,
-  MEMBER_INS_REQUESTING,
   MEMBER_INS_SEARCH_REQUESTING,
   MEMBER_INS_SEARCH_SUCCESS,
-  MEMBER_INS_SUCCESS,
   SET_MEMBER_INS_FILTER,
   SORT_MEMBER_INS_LIST,
 } from '../constants/memberInsurance'
@@ -12,23 +10,20 @@ import initialState from '../initialState'
 
 export default function(state = initialState.memberInsurance, action) {
   switch (action.type) {
-    case MEMBER_INS_REQUESTING:
     case MEMBER_INS_SEARCH_REQUESTING:
       return {
         ...state,
         requesting: true,
-        query: action.query.query,
+        searchFilter: {
+          ...state.searchFilter,
+          ...action.searchFilter,
+        },
       }
 
-    case MEMBER_INS_SUCCESS:
     case MEMBER_INS_SEARCH_SUCCESS:
       return {
         ...state,
-        list: sortMemberInsList(
-          action.members,
-          action.fieldName,
-          action.isDescendingOrder,
-        ),
+        searchResult: action.searchResult,
         requesting: false,
       }
 

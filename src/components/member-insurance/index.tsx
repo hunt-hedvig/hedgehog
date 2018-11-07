@@ -1,45 +1,33 @@
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import { Mount } from 'react-lifecycle-components/dist'
 import { Header } from 'semantic-ui-react'
-import MembersFilter from '../members/members-filter/MembersFilter'
-import MemberInsuranceList from './member-insurance-list/MemberInsuranceList'
+import {
+  MemberInsuranceSearchRequest,
+  MemberInsuranceStore,
+} from '../../store/types/memberInsuranceTypes'
+import { MemberInsuranceFilter } from './member-insurance-filter/MemberInsuranceFilter'
+import { MemberInsuranceList } from './member-insurance-list/MemberInsuranceList'
 
-export default class MemberInsurance extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  public componentDidMount() {
-    const {
-      memberInsurance: { filter, query },
-      searchMemberInsRequest,
-    } = this.props
-    searchMemberInsRequest({ query, filter })
-  }
-
-  public render() {
-    const {
-      setMemberInsFilter,
-      searchMemberInsRequest,
-      memberInsurance,
-    } = this.props
-    return (
-      <React.Fragment>
-        <Header size="huge"> Member Insurance </Header>
-        <MembersFilter
-          data={memberInsurance}
-          setFilter={setMemberInsFilter}
-          search={searchMemberInsRequest}
-          filterName="State"
-        />
-        <MemberInsuranceList {...this.props} />
-      </React.Fragment>
-    )
-  }
+export interface MemberInsuranceProps {
+  memberInsurance: MemberInsuranceStore
+  searchMemberInsRequest: (req: Partial<MemberInsuranceSearchRequest>) => void
 }
-MemberInsurance.propTypes = {
-  memberInsurance: PropTypes.object.isRequired,
-  memberInsRequest: PropTypes.func.isRequired,
-  searchMemberInsRequest: PropTypes.func.isRequired,
-  setMemberInsFilter: PropTypes.func.isRequired,
-}
+
+export const MemberInsurance: React.SFC<MemberInsuranceProps> = ({
+  memberInsurance,
+  searchMemberInsRequest,
+}) => (
+  <Mount on={() => searchMemberInsRequest({})}>
+    <>
+      <Header size="huge"> Member Insurance </Header>
+      <MemberInsuranceFilter
+        memberInsurance={memberInsurance}
+        searchMemberInsRequest={searchMemberInsRequest}
+      />
+      <MemberInsuranceList
+        memberInsurance={memberInsurance}
+        searchMemberInsRequest={searchMemberInsRequest}
+      />
+    </>
+  </Mount>
+)

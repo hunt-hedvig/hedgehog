@@ -1,48 +1,42 @@
 import {
   MEMBER_INS_ERROR,
-  MEMBER_INS_REQUESTING,
   MEMBER_INS_SEARCH_REQUESTING,
   MEMBER_INS_SEARCH_SUCCESS,
-  MEMBER_INS_SUCCESS,
   SET_MEMBER_INS_FILTER,
   SORT_MEMBER_INS_LIST,
 } from '../constants/memberInsurance'
+import {
+  MemberInsuranceSearchRequest,
+  MemberInsuranceSearchResult,
+} from '../types/memberInsuranceTypes'
 
-export const memberInsRequest = (client) => ({
-  type: MEMBER_INS_REQUESTING,
-  client,
-})
+export interface SearchMemberInsRequestAction {
+  type: 'MEMBER_INS_SEARCH_REQUESTING'
+  searchFilter: Partial<MemberInsuranceSearchRequest>
+}
 
-export const memberInsRequestSuccess = (
-  members,
-  fieldName,
-  isDescendingOrder,
-) => ({
-  type: MEMBER_INS_SUCCESS,
-  members,
-  fieldName,
-  isDescendingOrder,
-})
+export interface SearchMemberInsSuccessAction {
+  type: 'MEMBER_INS_SEARCH_REQUESTING'
+  searchResponse: MemberInsuranceSearchResult
+}
 
 export const memberInsRequestError = (error) => ({
   type: MEMBER_INS_ERROR,
   error,
 })
 
-export const searchMemberInsRequest = (query) => ({
+export const searchMemberInsRequest = (
+  searchFilter: Partial<MemberInsuranceSearchRequest>,
+): SearchMemberInsRequestAction => ({
   type: MEMBER_INS_SEARCH_REQUESTING,
-  query,
+  searchFilter,
 })
 
 export const searchMemberInsSuccess = (
-  members,
-  fieldName,
-  isDescendingOrder,
+  searchResult: MemberInsuranceSearchResult,
 ) => ({
   type: MEMBER_INS_SEARCH_SUCCESS,
-  members,
-  fieldName,
-  isDescendingOrder,
+  searchResult,
 })
 
 export const setMemberInsFilter = (query) => ({
