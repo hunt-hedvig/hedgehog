@@ -36,6 +36,11 @@ export default class MessagesList extends React.Component {
   public render() {
     const { messages, error } = this.props
     const id = parseInt(this.props.id, 10)
+
+    function getAuthor(author: any) {
+      return author ? author : 'bot'
+    }
+
     return (
       <MessagesListContainer innerRef={(el) => (this.messagesList = el)}>
         {messages.length ? (
@@ -46,7 +51,9 @@ export default class MessagesList extends React.Component {
               left={item.header.fromId !== id}
               msgId={item.globalId}
               timestamp={item.timestamp}
-              from={item.header.fromId !== id ? (item.author ? item.author : 'bot') : 'member'}
+              from={
+                item.header.fromId !== id ? getAuthor(item.author) : 'member'
+              }
             />
           ))
         ) : (
