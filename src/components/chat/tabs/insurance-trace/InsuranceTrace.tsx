@@ -4,9 +4,9 @@ import { Table } from 'semantic-ui-react'
 
 const InsuranceTrace = ({ traceData }) =>
   !traceData || traceData.length === 0 ? (
-    <div />
+    <></>
   ) : (
-    <React.Fragment>
+    <>
       <h4>List of changes</h4>
       <Table celled>
         <Table.Header>
@@ -28,7 +28,7 @@ const InsuranceTrace = ({ traceData }) =>
           </Table.Row>
         ))}
       </Table>
-    </React.Fragment>
+    </>
   )
 
 export default InsuranceTrace
