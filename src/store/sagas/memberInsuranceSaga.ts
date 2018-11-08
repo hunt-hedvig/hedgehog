@@ -1,57 +1,35 @@
 import api from 'api'
 import config from 'api/config'
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { call, put, select, takeLatest } from 'redux-saga/effects'
 import {
-  MEMBER_INS_REQUESTING,
   MEMBER_INS_SEARCH_REQUESTING,
   SET_MEMBER_INS_FILTER,
 } from '../constants/memberInsurance'
 
+import { AxiosResponse } from 'axios'
 import {
   memberInsRequestError,
-  memberInsRequestSuccess,
+  SearchMemberInsRequestAction,
   searchMemberInsSuccess,
 } from '../actions/memberInsuranceActions'
 import { showNotification } from '../actions/notificationsActions'
+import { BackofficeStore } from '../storeTypes'
+import { MemberInsuranceSearchResult } from '../types/memberInsuranceTypes'
 
-const fieldName = 'signedOn'
-const isDescendingOrder = true
-
-function* requestFlow() {
+function* searchFlow(action: SearchMemberInsRequestAction) {
+  const state: BackofficeStore = yield select()
   try {
-    const members = yield call(api, config.insMembers.get)
-    yield put(
-      memberInsRequestSuccess(members.data, fieldName, isDescendingOrder),
-    )
-  } catch (error) {
-    yield [
-      yield put(memberInsRequestError(error)),
-      yield put(
-        showNotification({
-          mesage: error.message,
-          header: 'Member insurance',
-        }),
-      ),
-    ]
-  }
-}
-
-function* searchFlow({ query }) {
-  try {
-    const queryParams = {
-      query: query.query,
-      state: query.filter === 'ALL' ? '' : query.filter,
-    }
-    const searchResult = yield call(
+    const searchResult: AxiosResponse<MemberInsuranceSearchResult> = yield call(
       api,
-      config.insMembers.get,
+      config.insMembers.searchPaged,
       null,
       '',
-      queryParams,
+      {
+        ...state.memberInsurance.searchFilter,
+        ...action.searchFilter,
+      },
     )
-    yield put(
-      searchMemberInsSuccess(searchResult.data, fieldName, isDescendingOrder),
-    )
+    yield put(searchMemberInsSuccess(searchResult.data))
   } catch (error) {
     yield [
       put(memberInsRequestError(error)),
@@ -62,7 +40,6 @@ function* searchFlow({ query }) {
 
 function* membersInsuranceWatcher() {
   yield [
-    takeLatest(MEMBER_INS_REQUESTING, requestFlow),
     takeLatest(MEMBER_INS_SEARCH_REQUESTING, searchFlow),
     takeLatest(SET_MEMBER_INS_FILTER, searchFlow),
   ]

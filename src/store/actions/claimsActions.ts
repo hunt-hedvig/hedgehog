@@ -9,16 +9,23 @@ import {
   CLAIMS_REQUESTING,
   SORT_CLAIMS_LIST,
 } from '../constants/claims'
+import { ClaimSearchFilter, ClaimSearchResult } from '../types/claimsTypes'
 
-export const claimsRequest = () => ({
+export interface ClaimsRequestAction {
+  type: 'CLAIMS_REQUESTING'
+  searchFilter: ClaimSearchFilter
+}
+
+export const claimsRequest = (
+  searchFilter: ClaimSearchFilter,
+): ClaimsRequestAction => ({
   type: CLAIMS_REQUESTING,
+  searchFilter,
 })
 
-export const claimsRequestSuccess = (claims, fieldName, isDescendingOrder) => ({
+export const claimsRequestSuccess = (searchResult: ClaimSearchResult) => ({
   type: CLAIMS_REQUEST_SUCCESS,
-  claims,
-  fieldName,
-  isDescendingOrder,
+  searchResult,
 })
 
 export const claimUpdateSuccess = (reqType, data) => ({

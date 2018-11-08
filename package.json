@@ -39,6 +39,7 @@
     "babel-loader": "^8.0.2",
     "constate": "^0.8.2",
     "copy-webpack-plugin": "^4.5.2",
+    "date-fns": "^1.29.0",
     "emotion": "^9.2.10",
     "emotion-server": "^9.2.10",
     "es6-promise": "^4.2.5",

@@ -1,5 +1,6 @@
 import api from 'api'
 import config from 'api/config'
+import { AxiosResponse } from 'axios'
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as actions from '../actions/claimsActions'
 import { showNotification } from '../actions/notificationsActions'
@@ -9,14 +10,18 @@ import {
   CLAIMS_BY_MEMBER,
   CLAIMS_REQUESTING,
 } from '../constants/claims'
+import { ClaimSearchResult } from '../types/claimsTypes'
 
-const fieldName = 'date'
-const isDescendingOrder = true
-
-function* requestFlow() {
+function* requestFlow({ searchFilter }: actions.ClaimsRequestAction) {
   try {
-    const { data } = yield call(api, config.claims.getList)
-    yield put(actions.claimsRequestSuccess(data, fieldName, isDescendingOrder))
+    const { data }: AxiosResponse<ClaimSearchResult> = yield call(
+      api,
+      config.claims.search,
+      null,
+      null,
+      searchFilter,
+    )
+    yield put(actions.claimsRequestSuccess(data))
   } catch (error) {
     yield [
       put(showNotification({ message: error.message, header: 'Claims' })),

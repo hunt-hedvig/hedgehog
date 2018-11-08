@@ -43,6 +43,10 @@ export default {
       url: 'claims',
       method: 'get',
     },
+    search: {
+      url: 'claims/search',
+      method: 'get',
+    },
     getListByMemberId: {
       url: 'claims/user',
       method: 'get',
@@ -134,6 +138,10 @@ export default {
     get: {
       method: 'get',
       url: 'member/insurance/search',
+    },
+    searchPaged: {
+      method: 'get',
+      url: 'member/insurance/searchPaged',
     },
   },
   reports: {

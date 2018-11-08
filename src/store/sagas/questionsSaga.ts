@@ -14,16 +14,15 @@ import {
   QUESTIONS_REQUESTING,
 } from '../constants/questions'
 
-function* requestFlow() {
+function* requestFlow(action) {
   try {
-    const answered = yield call(api, config.questions.answered)
-    const notAnswered = yield call(api, config.questions.notAnsewred)
-    yield put(
-      questionsReqSuccess({
-        answered: answered.data,
-        notAnswered: notAnswered.data,
-      }),
-    )
+    const endpoint =
+      action.listType === 'ANSWERED'
+        ? config.questions.answered
+        : config.questions.notAnsewred
+
+    const questions = yield call(api, endpoint)
+    yield put(questionsReqSuccess(questions.data, action.listType))
   } catch (error) {
     yield [
       put(

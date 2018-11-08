@@ -1,3 +1,7 @@
+import { ClaimsStore } from './types/claimsTypes'
+import { MemberInsuranceStore } from './types/memberInsuranceTypes'
+import { QuestionsStore } from './types/questionsTypes'
+
 export interface BackofficeStore {
   login: any
   assets: any
@@ -6,12 +10,12 @@ export interface BackofficeStore {
   messages: any
   members: MembersStore
   dashboard: any
-  claims: any
+  claims: ClaimsStore
   claimDetails: any
-  questions: any
+  questions: QuestionsStore
   insurance: any
   notifications: any
-  memberInsurance: any
+  memberInsurance: MemberInsuranceStore
 }
 
 type MembersSortBy = 'NAME' | 'CREATED' | 'SIGN_UP'

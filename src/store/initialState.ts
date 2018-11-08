@@ -38,7 +38,17 @@ const initialState: BackofficeStore = {
     data: null,
   },
   claims: {
-    list: [],
+    searchFilter: {
+      page: 0,
+      pageSize: 20,
+      sortBy: 'DATE',
+      sortDirection: 'DESC',
+    },
+    searchResult: {
+      claims: [],
+      page: 0,
+      totalPages: 1,
+    },
     requesting: false,
     types: [],
     memberClaims: [],
@@ -49,9 +59,13 @@ const initialState: BackofficeStore = {
     payments: [],
   },
   questions: {
-    list: {
-      answered: [],
-      notAnswered: [],
+    answered: {
+      questions: [],
+      requesting: false,
+    },
+    notAnswered: {
+      questions: [],
+      requesting: false,
     },
     requesting: false,
   },
@@ -63,10 +77,20 @@ const initialState: BackofficeStore = {
   },
   notifications: [],
   memberInsurance: {
+    searchFilter: {
+      state: undefined,
+      query: '',
+      page: 0,
+      pageSize: 25,
+      sortBy: 'CONTRACT_SIGNED_DATE',
+      sortDirection: 'DESC',
+    },
+    searchResult: {
+      products: [],
+      page: 0,
+      totalPages: 1,
+    },
     requesting: false,
-    list: [],
-    filter: '',
-    query: '',
   },
 }
 
