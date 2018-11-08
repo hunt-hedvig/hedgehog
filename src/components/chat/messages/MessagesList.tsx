@@ -14,6 +14,10 @@ const EmptyList = styled.h3`
   text-align: center;
 `
 
+const getAuthor = (author: string) => {
+  return author ? author : 'bot'
+}
+
 export default class MessagesList extends React.Component {
   constructor(props) {
     super(props)
@@ -36,10 +40,6 @@ export default class MessagesList extends React.Component {
   public render() {
     const { messages, error } = this.props
     const id = parseInt(this.props.id, 10)
-
-    function getAuthor(author: string) {
-      return author ? author : 'bot'
-    }
 
     return (
       <MessagesListContainer innerRef={(el) => (this.messagesList = el)}>
