@@ -14,6 +14,10 @@ const EmptyList = styled.h3`
   text-align: center;
 `
 
+const getAuthor = (author: string) => {
+  return author ? author : 'bot'
+}
+
 export default class MessagesList extends React.Component {
   constructor(props) {
     super(props)
@@ -36,6 +40,7 @@ export default class MessagesList extends React.Component {
   public render() {
     const { messages, error } = this.props
     const id = parseInt(this.props.id, 10)
+
     return (
       <MessagesListContainer innerRef={(el) => (this.messagesList = el)}>
         {messages.length ? (
@@ -46,7 +51,9 @@ export default class MessagesList extends React.Component {
               left={item.header.fromId !== id}
               msgId={item.globalId}
               timestamp={item.timestamp}
-              from={item.header.fromId !== id ? 'bot' : 'member'}
+              from={
+                item.header.fromId !== id ? getAuthor(item.author) : 'member'
+              }
             />
           ))
         ) : (
