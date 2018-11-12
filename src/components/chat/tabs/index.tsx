@@ -20,7 +20,7 @@ const TabContainer = styled(Tab.Pane)`
 `
 
 const TabItem = ({ props, TabContent, isChatTab }) => (
-  <TabContainer ischattab={isChatTab}>
+  <TabContainer isChatTab={isChatTab}>
     <TabContent {...props} />
   </TabContainer>
 )
@@ -45,7 +45,7 @@ const memberPagePanes = (props, addMessage, socket) => {
         <TabItem
           TabContent={ChatTab}
           props={{ ...props, addMessage, socket }}
-          ischattab={true}
+          isChatTab={true}
         />
       ),
     },
