@@ -35,12 +35,14 @@ export default function(state = initialState.claims, action) {
     case CLAIM_TYPES_SUCCESS:
       return {
         ...state,
-        types: action.types.map((type, id) => ({
-          ...type,
-          key: id,
-          value: type.name,
-          text: type.title,
-        })),
+        types: action.types
+          .map((type, id) => ({
+            ...type,
+            key: id,
+            value: type.name,
+            text: type.title,
+          }))
+          .sort((a, b) => a.value.localeCompare(b.value)),
       }
 
     case CLAIMS_BY_MEMBER_SUCCESS:
