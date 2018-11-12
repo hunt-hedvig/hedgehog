@@ -26,10 +26,24 @@ export interface ClaimSearchFilter {
   sortDirection: SortDirection
 }
 
+export interface ClaimField {
+  name: string
+  title: string
+  type: string
+}
+
+export interface ClaimType {
+  key: number
+  value: string
+  text: string
+  requiredData: ClaimField[]
+  optionalData: ClaimField[]
+}
+
 export interface ClaimsStore {
   searchFilter: ClaimSearchFilter
   searchResult: ClaimSearchResult
   requesting: boolean
-  types: any[]
+  types: ClaimType[]
   memberClaims: Claim[]
 }
