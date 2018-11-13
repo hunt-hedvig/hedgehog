@@ -1,4 +1,5 @@
 import { ActionMap, Container } from 'constate'
+import * as parse from 'date-fns/parse'
 import { DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import 'moment/locale/sv'
@@ -11,36 +12,36 @@ import { Mount } from 'react-lifecycle-components'
 import { Form } from 'semantic-ui-react'
 import { dateInputStyles } from './_dateinput'
 
-const WidgetContainer = styled('div')`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  > * {
-    margin-top: 10px;
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-`
+const WidgetContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  '> *': {
+    marginTop: '10px',
+    '&:first-child': {
+      marginTop: 0,
+    },
+  },
+})
 
-const DatePickerContainer = styled('div')`
-  font-family: 'Circular Std Book' !important;
-  .SingleDatePickerInput {
-    border: 1px solid #ccc;
-    .DateInput {
-      background-color: transparent;
-      input {
-        background-color: transparent;
-        box-sizing: border-box !important;
-        border: 24px;
-        text-align: center;
-        font-size: 16px;
-        line-height: 24px;
-        padding: 7px 20px;
-      }
-    }
-  }
-`
+const DatePickerContainer = styled('div')({
+  fontFamily: 'Circular Std Book !important',
+  '.SingleDatePickerInput': {
+    border: '1px solid #ccc',
+    '.DateInput': {
+      backgroundColor: 'transparent',
+      input: {
+        backgroundColor: 'transparent',
+        boxSizing: 'border-box',
+        border: '24px',
+        textAlign: 'center',
+        fontSize: '16px',
+        lineHeight: '24px',
+        padding: '7px 20px',
+      },
+    },
+  },
+})
 
 interface DateInputProps {
   changeHandler: (type: string, e: any, value: object) => void
@@ -60,22 +61,23 @@ interface Actions {
 }
 
 const DateInput: React.SFC<DateInputProps> = (props) => {
-  const initialState: State = {
-    focused: false,
-  }
-
-  const actions: ActionMap<State, Actions> = {
-    dateChangeHandler: (newDate: any) => (state) => {
-      props.changeHandler(props.changeType || DATE, null, {
-        value: moment(newDate).toISOString(),
-      })
-      return { date: moment(newDate) }
-    },
-    focusHandler: (result: any) => (state) => ({ focused: result.focused }),
-  }
-
   return (
-    <Container<State, Actions> initialState={initialState} actions={actions}>
+    <Container<State, ActionMap<State, Actions>>
+      initialState={{
+        focused: false,
+      }}
+      actions={{
+        dateChangeHandler: (newDate: any) => (state) => {
+          const parsed = parse(newDate)
+          const isoString = parsed.toISOString()
+          props.changeHandler(props.changeType || DATE, null, {
+            value: isoString,
+          })
+          return { date: moment(newDate) }
+        },
+        focusHandler: (result: any) => (state) => ({ focused: result.focused }),
+      }}
+    >
       {({ dateChangeHandler, focusHandler, focused, date }) => (
         <Mount
           on={() => {
