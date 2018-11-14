@@ -3,16 +3,17 @@ import gql from 'graphql-tag'
 import * as moment from 'moment'
 import * as React from 'react'
 import { Query } from 'react-apollo'
+import styled from 'react-emotion'
 import MonthPickerInput from 'react-month-picker-input'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
-import styled from 'styled-components'
+import { monthPickerStyles } from './_payment'
 
-const DatePickerContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+const DatePickerContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+})
 
 const query = gql`
   query MonthlyPaymentsQuery($month: YearMonth!) {
@@ -99,7 +100,7 @@ class Payment extends React.Component {
   public render() {
     return (
       <React.Fragment>
-        <DatePickerContainer>
+        <DatePickerContainer className={monthPickerStyles}>
           <MonthPickerInput
             onChange={this.onDateChange}
             year={this.state.defaultYear}

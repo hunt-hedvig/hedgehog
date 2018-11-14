@@ -5,6 +5,7 @@ import {
 } from '@hedviginsurance/web-survival-kit'
 import * as Koa from 'koa'
 import * as proxy from 'koa-server-http-proxy'
+import * as enforceHttps from 'koa-sslify'
 import * as path from 'path'
 import { reactPageRoutes } from 'routes/routes'
 import 'source-map-support/register'
@@ -50,6 +51,14 @@ const server = createKoaServer({
   publicPath: '/assets',
   assetLocation: __dirname + '/assets',
 })
+
+if (process.env.NODE_ENV === 'production') {
+  server.app.use(
+    enforceHttps({
+      trustProtoHeader: true,
+    }),
+  )
+}
 
 server.router.get('/', getPage)
 reactPageRoutes.forEach((route) => {
