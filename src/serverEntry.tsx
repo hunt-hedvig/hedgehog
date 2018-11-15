@@ -5,6 +5,7 @@ import {
 } from '@hedviginsurance/web-survival-kit'
 import * as Koa from 'koa'
 import * as proxy from 'koa-server-http-proxy'
+import * as KoaReqLogger from 'koa-req-logger'
 import * as enforceHttps from 'koa-sslify'
 import * as path from 'path'
 import { reactPageRoutes } from 'routes/routes'
@@ -52,6 +53,9 @@ const server = createKoaServer({
   assetLocation: __dirname + '/assets',
 })
 
+const logger = new KoaReqLogger.KoaReqLogger();
+server.app.use(logger.getMiddleware());
+
 if (process.env.NODE_ENV === 'production') {
   server.app.use(
     enforceHttps({
@@ -64,6 +68,8 @@ server.router.get('/', getPage)
 reactPageRoutes.forEach((route) => {
   server.router.get(route.path, getPage)
 })
+
+
 
 server.app.use(
   proxy({
