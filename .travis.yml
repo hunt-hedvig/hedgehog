@@ -17,5 +17,12 @@ script:
 - yarn typecheck
 - yarn build
 
+sudo: required
+services:
+  - docker
+after_success:
+  - bin/docker_push.sh
+  - bin/kubernetes_deploy.sh
+
 notifications:
   email: false
