@@ -21,8 +21,8 @@ sudo: required
 services:
   - docker
 after_success:
-  - bin/docker_push.sh
-  - bin/kubernetes_deploy.sh
+  - docker_push.sh
+  - kubernetes_deploy.sh
 
 notifications:
   email: false
