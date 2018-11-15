@@ -16,6 +16,6 @@ COPY package.json .
 COPY yarn.lock .
 COPY --from=0 /usr/src/app/build build
 
-RUN yarn install --production
+RUN yarn install --production && yarn cache clean
 
 ENTRYPOINT ["yarn", "start"]
