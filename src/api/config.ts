@@ -133,6 +133,10 @@ export default {
       url: 'member/insurance',
       method: 'post',
     },
+    fraudulentStatus: {
+      url: 'member/insurance',
+      method: 'post',
+    },
   },
   insMembers: {
     get: {

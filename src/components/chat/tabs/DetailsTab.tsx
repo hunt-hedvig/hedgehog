@@ -1,9 +1,11 @@
 import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
+import { FraudulentStatusEdit } from 'lib/fraudulentStatus'
 import { getFieldName, getFieldValue } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 export default class DetailsTab extends React.Component {
   constructor(props) {
@@ -11,6 +13,9 @@ export default class DetailsTab extends React.Component {
     this.state = {
       modalOpen: false,
       member: [],
+      editFraud: false,
+      fraudStatus: '',
+      fraudDescription: '',
     }
   }
 
@@ -50,73 +55,105 @@ export default class DetailsTab extends React.Component {
   }
 
   public render() {
+    let traceData
     const {
       messages: { member },
+      saveFraudulentStatus,
     } = this.props
 
-    return member ? (
-      <Table selectable>
-        <Table.Body>
-          <TableFields fields={member} />
-        </Table.Body>
-        <Table.Footer fullWidth>
-          <Table.Row>
-            <Table.HeaderCell />
-            <Table.HeaderCell colSpan="2">
-              <WideModal
-                className="scrolling"
-                trigger={
-                  <Button
-                    floated="right"
-                    icon
-                    labelposition="left"
-                    primary
-                    size="medium"
-                    onClick={this.handleOpen}
-                  >
-                    <Icon name="edit" /> Edit Member
-                  </Button>
-                }
-                open={this.state.modalOpen}
-                onClose={this.handleClose}
-                basic
-                size="small"
-                dimmer="blurring"
-              >
-                <Header icon="edit" content="Edit Member" />
-                <Modal.Content>
-                  <Form inverted size="small">
-                    <React.Fragment>
-                      {Object.keys(member).map((field, id) => (
-                        <Form.Input
-                          key={id}
-                          label={getFieldName(field)}
-                          disabled={this.isDisabled(field)}
-                          defaultValue={getFieldValue(member[field])}
-                          onChange={this.handleChange(field)}
-                        />
-                      ))}
-                    </React.Fragment>
-                    <Button.Group floated="right" labelposition="left">
-                      <Button type="button" onClick={this.handleCancel}>
-                        Cancel
-                      </Button>
-                      <Button.Or />
-                      <Button
-                        type="button"
-                        onClick={this.handleSubmissionButton}
-                        positive
-                      >
-                        Submit
-                      </Button>
-                    </Button.Group>
-                  </Form>
-                </Modal.Content>
-              </WideModal>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
-      </Table>
+    const {
+      traceMemberInfo,
+      fraudulentDescription,
+      fraudulentStatus,
+      ...memberInfo
+    } = member
+
+    traceData = traceMemberInfo
+
+    return memberInfo ? (
+      <>
+        <Table selectable>
+          <Table.Body>
+            <TableFields fields={memberInfo} />
+            <FraudulentStatusEdit
+              getFraudStatusInfo={() => ({
+                status: this.state.fraudStatus || fraudulentStatus,
+                description:
+                  this.state.fraudDescription || fraudulentDescription,
+              })}
+              setState={(val, fs, desc) => {
+                this.setState({
+                  editFraud: val,
+                  fraudStatus: fs,
+                  fraudDescription: desc,
+                })
+              }}
+              getState={() => this.state.editFraud}
+              action={(fs, desc) => {
+                saveFraudulentStatus(fs, desc, memberInfo.memberId)
+              }}
+            />
+          </Table.Body>
+          <Table.Footer fullWidth>
+            <Table.Row>
+              <Table.HeaderCell />
+              <Table.HeaderCell colSpan="2">
+                <WideModal
+                  className="scrolling"
+                  trigger={
+                    <Button
+                      floated="right"
+                      icon
+                      labelposition="left"
+                      primary
+                      size="medium"
+                      onClick={this.handleOpen}
+                    >
+                      <Icon name="edit" /> Edit Member
+                    </Button>
+                  }
+                  open={this.state.modalOpen}
+                  onClose={this.handleClose}
+                  basic
+                  size="small"
+                  dimmer="blurring"
+                >
+                  <Header icon="edit" content="Edit Member" />
+                  <Modal.Content>
+                    <Form inverted size="small">
+                      <React.Fragment>
+                        {Object.keys(memberInfo).map((field, id) => (
+                          <Form.Input
+                            key={id}
+                            label={getFieldName(field)}
+                            disabled={this.isDisabled(field)}
+                            defaultValue={getFieldValue(member[field])}
+                            onChange={this.handleChange(field)}
+                          />
+                        ))}
+                      </React.Fragment>
+                      <Button.Group floated="right" labelposition="left">
+                        <Button type="button" onClick={this.handleCancel}>
+                          Cancel
+                        </Button>
+                        <Button.Or />
+                        <Button
+                          type="button"
+                          onClick={this.handleSubmissionButton}
+                          positive
+                        >
+                          Submit
+                        </Button>
+                      </Button.Group>
+                    </Form>
+                  </Modal.Content>
+                </WideModal>
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Footer>
+        </Table>
+        <InsuranceTrace traceData={traceData} />
+      </>
     ) : (
       <Header>No member info</Header>
     )
@@ -126,4 +163,5 @@ export default class DetailsTab extends React.Component {
 DetailsTab.propTypes = {
   messages: PropTypes.object.isRequired,
   editMemberDetails: PropTypes.func.isRequired,
+  saveFraudulentStatus: PropTypes.func.isRequired,
 }

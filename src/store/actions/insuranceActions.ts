@@ -18,6 +18,8 @@ import {
   SEND_CERTIFICATE,
   SEND_CERTIFICATE_ERROR,
   SEND_CERTIFICATE_SUCCESS,
+  SET_FRAUDULENT_STATUS,
+  SET_FRAUDULENT_STATUS_SUCCESS,
 } from '../constants/members'
 
 export const insuranceRequest = (id) => ({
@@ -56,6 +58,21 @@ export const saveInsuranceDate = (date, changeType, memberId, insuranceId) => ({
 export const saveActivationDateSuccess = (activationDate) => ({
   type: SAVE_ACTIVATION_DATE_SUCCESS,
   activationDate,
+})
+
+export const saveFraudulentStatus = (
+  fraudulentStatus,
+  fraudulentStatusDescription,
+  memberId,
+) => ({
+  type: SET_FRAUDULENT_STATUS,
+  fraudulentStatus,
+  fraudulentStatusDescription,
+  memberId,
+})
+
+export const saveFraudulentStatusSuccess = () => ({
+  type: SET_FRAUDULENT_STATUS_SUCCESS,
 })
 
 export const saveCancellationDateSuccess = (cancellationDate) => ({
