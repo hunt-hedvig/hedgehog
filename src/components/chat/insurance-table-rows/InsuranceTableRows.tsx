@@ -3,44 +3,48 @@ import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Button, Radio, Table } from 'semantic-ui-react'
-import styled from 'styled-components'
 
-const DateCell = styled(Table.Cell)`
-  &&& {
-    display: flex;
-    align-items: center;
-  }
-`
+const DateCell = styled(Table.Cell)({
+  '&&&': {
+    display: 'flex',
+    alignItems: 'center',
+  },
+})
 
-const FileButton = styled.label`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  width: 100px;
-  cursor: pointer;
-  background-color: #e0e1e2;
-  color: #00000099 !important;
-  font-weight: 700;
-  border-radius: 0.28571429rem;
+const FileButton = styled('label')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '36px',
+  width: '100px',
+  cursor: 'pointer',
+  backgroundColor: '#e0e1e2',
+  color: '#00000099 !important',
+  fontWeight: 700,
+  borderRadius: '0.28571429rem',
 
-  &:hover {
-    background-color: #cacbcd;
-    color: #000000cc !important;
-  }
-`
+  '&:hover': {
+    backgroundColor: '#cacbcd',
+    color: '#000000cc !important',
+  },
+})
 
-const FlexCell = styled(Table.Cell)`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-`
+const FlexCell = styled(Table.Cell)({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+})
 
-const RowValue = styled.span`
-  margin-right: 10px;
-`
+const RadioFixed = styled(Radio)({
+  zIndex: 1,
+})
+
+const RowValue = styled('span')({
+  marginRight: '10px',
+})
 
 export default class InsuranceTableRows extends React.Component {
   constructor(props) {
@@ -176,7 +180,7 @@ export default class InsuranceTableRows extends React.Component {
         <Table.Row>
           <Table.Cell>Insured at other company</Table.Cell>
           <Table.Cell>
-            <Radio
+            <RadioFixed
               toggle
               checked={insurance.data.insuredAtOtherCompany}
               onChange={this.changeCompanyStatus}
