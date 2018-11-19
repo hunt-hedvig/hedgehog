@@ -13,23 +13,23 @@ const DateCell = styled(Table.Cell)({
   },
 })
 
-const FileButton = styled('label')`
-  display: flex,
-  align-items: center,
-  justify-content: center,
-  height: 36px,
-  width: 100px,
-  cursor: pointer,
-  background-color: #e0e1e2,
-  color: #00000099 !important,
+const FileButton = styled('label')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '36px',
+  width: '100px',
+  cursor: 'pointer',
+  backgroundColor: '#e0e1e2',
+  color: '#00000099 !important',
   fontWeight: 700,
-  borderRadius: 0.28571429rem,
+  borderRadius: '0.28571429rem',
 
-  &:hover: {
-    backgroundColor: #cacbcd,
-    color: #000000cc !important,
+  '&:hover': {
+    backgroundColor: '#cacbcd',
+    color: '#000000cc !important',
   }
-`
+})
 
 const FlexCell = styled(Table.Cell)({
   display: 'flex',
