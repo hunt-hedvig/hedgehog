@@ -3,7 +3,7 @@ import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import styled, { css } from 'react-emotion'
+import styled from 'react-emotion'
 import { Button, Radio, Table } from 'semantic-ui-react'
 
 const DateCell = styled(Table.Cell)({
