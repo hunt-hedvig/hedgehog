@@ -3,14 +3,14 @@ import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { Button, Radio, Table } from 'semantic-ui-react'
 import styled, { css } from 'react-emotion'
+import { Button, Radio, Table } from 'semantic-ui-react'
 
 const DateCell = styled(Table.Cell)({
   '&&&': {
     display: 'flex',
     alignItems: 'center',
-  }
+  },
 })
 
 const FileButton = styled('label')`
@@ -38,13 +38,12 @@ const FlexCell = styled(Table.Cell)({
   alignItems: 'center',
 })
 
-
 const RadioFixed = styled(Radio)({
   zIndex: 1,
 })
 
 const RowValue = styled('span')({
-  marginRight: '10px'
+  marginRight: '10px',
 })
 
 export default class InsuranceTableRows extends React.Component {
