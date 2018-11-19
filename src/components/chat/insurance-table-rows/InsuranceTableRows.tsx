@@ -28,7 +28,7 @@ const FileButton = styled('label')({
   '&:hover': {
     backgroundColor: '#cacbcd',
     color: '#000000cc !important',
-  }
+  },
 })
 
 const FlexCell = styled(Table.Cell)({
