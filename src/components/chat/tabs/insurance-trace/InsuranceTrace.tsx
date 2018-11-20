@@ -1,9 +1,16 @@
 import { getFieldName } from 'lib/helpers'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
+import styled from 'styled-components'
 
-const TextWrapper = ({ text, width }) => (
-  <div style={{ wordWrap: 'break-word', width: width || '150px' }}>{text}</div>
+const TextWrapper = styled('div')(
+  (
+    { width = '200px' }: { width?: string },
+  ) => ({
+    wordWrap: 'break-word',
+    width,
+    fontSize: '80%',
+  }),
 )
 
 const InsuranceTrace = ({ traceData }) =>
@@ -13,28 +20,20 @@ const InsuranceTrace = ({ traceData }) =>
       <Table celled compact={'very'}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell width={1}>Field</Table.HeaderCell>
-            <Table.HeaderCell width={1}>Date of change</Table.HeaderCell>
-            <Table.HeaderCell width={1}>Old value</Table.HeaderCell>
+            <Table.HeaderCell width={1}>Date, field, author</Table.HeaderCell>
             <Table.HeaderCell width={1}>New value</Table.HeaderCell>
-            <Table.HeaderCell width={1}>Author</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {traceData.map((trace) => (
             <Table.Row key={trace.id}>
-              <Table.Cell>{getFieldName(trace.fieldName)}</Table.Cell>
               <Table.Cell>
-                <TextWrapper text={trace.date} width={'70px'} />
+                <TextWrapper width={'300px'}>
+                  {trace.date}. {getFieldName(trace.fieldName)}. {trace.userId}
+                </TextWrapper>
               </Table.Cell>
               <Table.Cell>
-                <TextWrapper text={trace.oldValue} />
-              </Table.Cell>
-              <Table.Cell>
-                <TextWrapper text={trace.newValue} />
-              </Table.Cell>
-              <Table.Cell>
-                <TextWrapper text={trace.userId} width={'100px'} />
+                <TextWrapper width={'300px'}>{trace.newValue}</TextWrapper>
               </Table.Cell>
             </Table.Row>
           ))}
