@@ -47,7 +47,7 @@ const getTableRow = (item: MemberInsurance) => {
         ? item.insuranceActiveFrom
         : `${item.insuranceActiveFrom}Z`,
     )
-  const signedOnDate = parse(item.signedOn)
+  const signedOnDate = item.signedOn && parse(item.signedOn)
 
   return (
     <LinkRow onClick={() => linkClickHandler(item.memberId)}>
