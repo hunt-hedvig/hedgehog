@@ -126,13 +126,12 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({
   <CustomPaper>
     <Formik<{ selectedType?: ClaimTypes | '' }>
       initialValues={{ selectedType: (type && type.__typename) || '' }}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
+      onSubmit={(values, { setSubmitting }) => {
         if (!values.selectedType) {
           return
         }
         setClaimType(values.selectedType)
         setSubmitting(false)
-        resetForm()
       }}
     >
       <Form>
