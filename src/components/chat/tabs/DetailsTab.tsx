@@ -89,8 +89,12 @@ export default class DetailsTab extends React.Component {
                 })
               }}
               getState={() => this.state.editFraud}
-              action={(fs, desc) => {
-                saveFraudulentStatus(fs, desc, memberInfo.memberId)
+              action={(fraudStatus, fraudDescription) => {
+                saveFraudulentStatus(
+                  fraudStatus,
+                  fraudDescription,
+                  memberInfo.memberId,
+                )
               }}
             />
           </Table.Body>
@@ -122,9 +126,9 @@ export default class DetailsTab extends React.Component {
                   <Modal.Content>
                     <Form inverted size="small">
                       <React.Fragment>
-                        {Object.keys(memberInfo).map((field, id) => (
+                        {Object.keys(memberInfo).map((field) => (
                           <Form.Input
-                            key={id}
+                            key={field}
                             label={getFieldName(field)}
                             disabled={this.isDisabled(field)}
                             defaultValue={getFieldValue(member[field])}
