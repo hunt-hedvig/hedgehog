@@ -5,35 +5,19 @@ import { Mutation, Query } from 'react-apollo'
 
 import { ClaimInformation } from './components/ClaimInformation'
 import { ClaimPayments } from './components/ClaimPayments'
-import { ClaimType } from './components/ClaimType'
+import { ClaimType, ClaimTypes } from './components/ClaimType'
 import { Events } from './components/Events'
 import { MemberInformation } from './components/MemberInformation'
 import { Notes } from './components/Notes'
 
-const CLAIM_PAGE_QUERY = gql`
-  query ClaimPage($id: ID!) {
-    claim(id: $id) {
-      member {
-        firstName
-        lastName
-        personalNumber
-        address
-        postalNumber
-        city
-        directDebitStatus {
-          activated
-        }
-      }
-      registrationDate
-      recordingUrl
-      state
-      type {
+const TYPE_FRAGMENT = `
         __typename
         ... on TheftClaim {
           location
           date
           item
           policeReport
+          receipt
         }
         ... on AccidentalDamageClaim {
           location
@@ -61,6 +45,27 @@ const CLAIM_PAGE_QUERY = gql`
           date
           ticket
         }
+`
+
+const CLAIM_PAGE_QUERY = gql`
+  query ClaimPage($id: ID!) {
+    claim(id: $id) {
+      member {
+        firstName
+        lastName
+        personalNumber
+        address
+        postalNumber
+        city
+        directDebitStatus {
+          activated
+        }
+      }
+      registrationDate
+      recordingUrl
+      state
+      type {
+        ${TYPE_FRAGMENT}
       }
       notes {
         text
@@ -97,6 +102,46 @@ const UPDATE_CLAIM_STATE_MUTATION = gql`
   mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
     updateClaimState(id: $id, state: $state) {
       state
+    }
+  }
+`
+
+const SET_CLAIM_TYPE_QUERY = gql`
+  query SetClaimType($id: ID!) {
+    claim(id: $id) {
+      type {
+        ${TYPE_FRAGMENT}
+      }
+    }
+  }
+`
+
+const SET_CLAIM_TYPE_MUTATION = gql`
+  mutation SetClaimType($id: ID!, $type: ClaimTypes!) {
+    setClaimType(id: $id, type: $type) {
+      type {
+        ${TYPE_FRAGMENT}
+      }
+    }
+  }
+`
+
+const SET_CLAIM_INFORMATION = gql`
+  mutation SetClaimInformation($id: ID!, $claimInformation: ClaimInformationInput!) {
+    setClaimInformation(id: $id, information: $claimInformation) {
+      type {
+        ${TYPE_FRAGMENT}
+      }
+    }
+  }
+`
+
+const SET_CLAIM_INFORMATION_QUERY = gql`
+  query SetClaimInformation($id: ID!) {
+    claim(id: $id) {
+      type {
+        ${TYPE_FRAGMENT}
+      }
     }
   }
 `
@@ -202,6 +247,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         notes,
         events,
         payments,
+        type,
       } = data.claim
 
       return (
@@ -245,9 +291,63 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               )}
             </Mutation>
           </Grid>
-          {/* <Grid item>
-            <ClaimType type={type} />
-          </Grid> */}
+          <Mutation
+            mutation={SET_CLAIM_TYPE_MUTATION}
+            update={(cache, { data: updateData }) => {
+              cache.writeQuery({
+                query: SET_CLAIM_TYPE_QUERY,
+                variables: { id: match.params.id },
+                data: {
+                  claim: {
+                    type: updateData.setClaimType.type,
+                    __typename: data.claim.__typename,
+                  },
+                },
+              })
+            }}
+          >
+            {(setClaimType) => (
+              <Mutation
+                mutation={SET_CLAIM_INFORMATION}
+                update={(cache, { data: updateData }) => {
+                  cache.writeQuery({
+                    query: SET_CLAIM_INFORMATION_QUERY,
+                    variables: { id: match.params.id },
+                    data: {
+                      claim: {
+                        type: updateData.setClaimInformation.type,
+                        __typename: data.claim.__typename,
+                      },
+                    },
+                  })
+                }}
+              >
+                {(setClaimInformation) => (
+                  <Grid item>
+                    <ClaimType
+                      type={type}
+                      setClaimInformation={(i: any) => {
+                        setClaimInformation({
+                          variables: {
+                            id: match.params.id,
+                            claimInformation: i,
+                          },
+                        })
+                      }}
+                      setClaimType={(t: ClaimTypes) => {
+                        setClaimType({
+                          variables: {
+                            id: match.params.id,
+                            type: t,
+                          },
+                        })
+                      }}
+                    />
+                  </Grid>
+                )}
+              </Mutation>
+            )}
+          </Mutation>
           <Grid item>
             <Mutation
               mutation={CREATE_PAYMENT_MUTATION}
@@ -301,7 +401,9 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
                 <Notes
                   notes={notes}
                   addClaimNote={(note) =>
-                    addClaimNote({ variables: { id: match.params.id, note } })
+                    addClaimNote({
+                      variables: { id: match.params.id, note: { text: note } },
+                    })
                   }
                 />
               )}

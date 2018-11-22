@@ -1,29 +1,14 @@
-import * as dateCompareAsc from 'date-fns/compare_asc'
-import * as parseDate from 'date-fns/parse'
+import dateCompareAsc from 'date-fns/compareAsc'
+import toDate from 'date-fns/toDate'
 import moment from 'moment'
 import { QuestionGroup, QuestionsStore } from '../store/types/questionsTypes'
 
-/**
- * Filter array of objects by obj field
- * @param {string} filter filter name
- * @param {array} list
- * @param {string} fieldName
- */
-export const filterList = (filter, list, fieldName) =>
+export const filterList = (filter: string, list: any[], fieldName: string) =>
   list.filter((item) => item[fieldName] === filter)
 
-/**
- * Sort arary by field name
- * @param {string} key
- */
-export const sortByKey = (key) => (a, b) => a[key] - b[key]
+export const sortByKey = (key: string) => (a, b) => a[key] - b[key]
 
-/**
- * Updating message in array of messages by global id
- * @param {array} list
- * @param {array} msg
- */
-export const updateList = (list, msg) => {
+export const updateList = (list: any[], msg: any[]) => {
   if (msg.length > 1) {
     return [...list, ...msg].sort(sortByKey('globalId'))
   } else {
@@ -40,21 +25,14 @@ export const updateList = (list, msg) => {
   }
 }
 
-/**
- * Slice array
- * @param {array} list array
- * @param {number} size slice size
- */
-export const sliceList = (list, size = 100) =>
+export const sliceList = (list: any[], size = 100) =>
   list.length > size ? list.slice(-size) : list
 
-/**
- * Refreshing array of messages in chat
- * @param {array} list
- * @param {object} message
- * @param {number} size slice size
- */
-export const refreshMessagesList = (list, message, size) => {
+export const refreshMessagesList = (
+  list: any[],
+  message: any,
+  size: number,
+) => {
   const slicedList = sliceList(list, size)
   const sorted = slicedList.sort(sortByKey('globalId'))
   return updateList(sorted, message)
@@ -63,11 +41,7 @@ export const refreshMessagesList = (list, message, size) => {
 // TODO append field "newMessagesCounter" to each member
 export const setNewMessagesCounter = (members /* counters */) => members
 
-/**
- * Updating array of claims types
- * @param {array} list
- */
-export const updateTypesList = (list) =>
+export const updateTypesList = (list: any[]) =>
   list.map((item) => {
     const updated = { ...item }
     delete updated.requiredData
@@ -75,11 +49,7 @@ export const updateTypesList = (list) =>
     return updated
   })
 
-/**
- * Calc sum of claim payments
- * @param {array} list
- */
-export const getSum = (list) =>
+export const getSum = (list: any[]) =>
   list.reduce((sum, payment) => sum + parseFloat(payment.amount), 0)
 
 const setFieldsValues = (fields, data) =>
@@ -154,7 +124,7 @@ export const getClaimFieldsData = (
  * @param {object} questions arrays of answered/not answered questions
  */
 export const sortQuestions = (questions: QuestionGroup[]): QuestionGroup[] =>
-  questions.sort((a, b) => dateCompareAsc(parseDate(a.date), parseDate(b.date)))
+  questions.sort((a, b) => dateCompareAsc(toDate(a.date), toDate(b.date)))
 
 /**
  * Replacing question from not answered to answered array

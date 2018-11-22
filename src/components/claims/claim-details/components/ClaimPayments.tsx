@@ -1,14 +1,27 @@
+import {
+  Button,
+  Checkbox as MuiCheckbox,
+  FormControlLabel,
+  MenuItem,
+  Select as MuiSelect,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField as MuiTextField,
+} from '@material-ui/core'
+import format from 'date-fns/format'
+import toDate from 'date-fns/toDate'
+import { Field, FieldProps, Form, Formik } from 'formik'
 import * as React from 'react'
-import { Table, TableHead, TableRow, TableCell, TableBody, Button, Checkbox as MuiCheckbox, TextField as MuiTextField, Select as MuiSelect, FormControlLabel } from '@material-ui/core';
-import { parse, format } from 'date-fns'
-import { CustomPaper } from './Styles'
+import styled from 'react-emotion'
 import { Checkmark, Cross } from '../../../icons'
-import { Formik, Form, Field, FieldProps } from 'formik';
-import styled from 'react-emotion';
+import { CustomPaper } from './Styles'
 
 interface Props {
-  payments: Array<Payment>
-  createPayment: (any) => void
+  payments: Payment[]
+  createPayment: (val: any) => void
 }
 
 interface Payment {
@@ -26,7 +39,9 @@ interface TextFieldProps {
   placeholder: string
 }
 
-const Checbox: React.SFC<FieldProps> = ({ field: { onChange, onBlur, name, value } }) => (
+const Checbox: React.SFC<FieldProps> = ({
+  field: { onChange, onBlur, name, value },
+}) => (
   <MuiCheckbox
     onChange={onChange}
     onBlur={onBlur}
@@ -36,7 +51,10 @@ const Checbox: React.SFC<FieldProps> = ({ field: { onChange, onBlur, name, value
   />
 )
 
-const TextField: React.SFC<FieldProps & TextFieldProps> = ({ field: { onChange, onBlur, name, value }, placeholder }) => (
+export const TextField: React.SFC<FieldProps & TextFieldProps> = ({
+  field: { onChange, onBlur, name, value },
+  placeholder,
+}) => (
   <MuiTextField
     onChange={onChange}
     onBlur={onBlur}
@@ -47,21 +65,18 @@ const TextField: React.SFC<FieldProps & TextFieldProps> = ({ field: { onChange, 
   />
 )
 
-const Select: React.SFC<FieldProps> = ({ field: { onChange, onBlur, name, value }, children }) => (
-  <MuiSelect
-    onChange={onChange}
-    onBlur={onBlur}
-    name={name}
-    value={value}
-    native
-  >
+export const Select: React.SFC<FieldProps> = ({
+  field: { onChange, onBlur, name, value },
+  children,
+}) => (
+  <MuiSelect onChange={onChange} onBlur={onBlur} name={name} value={value}>
     {children}
   </MuiSelect>
 )
 
 const CustomForm = styled(Form)({
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'column',
 })
 
 const ClaimPayments: React.SFC<Props> = ({ payments, createPayment }) => (
@@ -78,43 +93,63 @@ const ClaimPayments: React.SFC<Props> = ({ payments, createPayment }) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {payments.map(payment => (
-          <TableRow key={payment.amount.amount + payment.amount.currency + payment.timestamp}>
-            <TableCell>{payment.amount.amount} {payment.amount.currency}</TableCell>
+        {payments.map((payment) => (
+          <TableRow
+            key={
+              payment.amount.amount +
+              payment.amount.currency +
+              payment.timestamp
+            }
+          >
+            <TableCell>
+              {payment.amount.amount} {payment.amount.currency}
+            </TableCell>
             <TableCell>{payment.note}</TableCell>
-            <TableCell>{format(parse(payment.timestamp), 'YYYY-MM-DD hh:mm:ss')}</TableCell>
-            <TableCell>{payment.exGratia ? <Checkmark /> : <Cross />}</TableCell>
+            <TableCell>
+              {format(toDate(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
+            </TableCell>
+            <TableCell>
+              {payment.exGratia ? <Checkmark /> : <Cross />}
+            </TableCell>
             <TableCell>{payment.type}</TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
-    <Formik initialValues={{ type: "Manual" }} onSubmit={(values, { setSubmitting, resetForm }) => {
-      createPayment({
-        amount: {
-          amount: +values.amount, currency: 'SEK'
-        },
-        note: values.note,
-        exGratia: values.exGratia || false,
-        type: values.type
-      })
-      setSubmitting(false)
-      resetForm()
-    }}>
+    <Formik<{ amount: string; note: string; exGratia?: boolean; type: string }>
+      initialValues={{ type: 'Manual', amount: '', note: '' }}
+      onSubmit={(values, { setSubmitting, resetForm }) => {
+        createPayment({
+          amount: {
+            amount: +values.amount,
+            currency: 'SEK',
+          },
+          note: values.note,
+          exGratia: values.exGratia || false,
+          type: values.type,
+        })
+        setSubmitting(false)
+        resetForm()
+      }}
+    >
       <CustomForm>
-        <Field component={TextField} placeholder="Payment amount" name="amount" />
+        <Field
+          component={TextField}
+          placeholder="Payment amount"
+          name="amount"
+        />
         <Field component={TextField} placeholder="Note" name="note" />
         <FormControlLabel
           label="Ex Gratia?"
-          control={
-            <Field component={Checbox} name="exGratia" />
-          }
+          control={<Field component={Checbox} name="exGratia" />}
         />
         <Field component={Select} name="type">
-          <option value="Manual">Manual</option>
-          <option value="Trustly">Trustly</option>
+          <MenuItem value="Manual">Manual</MenuItem>
+          <MenuItem value="Trustly">Trustly</MenuItem>
         </Field>
-        <Button type="submit" variant="contained" color="primary">Create payment</Button>
+        <Button type="submit" variant="contained" color="primary">
+          Create payment
+        </Button>
       </CustomForm>
     </Formik>
   </CustomPaper>

@@ -1,5 +1,5 @@
 import { ActionMap, Container } from 'constate'
-import * as parse from 'date-fns/parse'
+import toDate from 'date-fns/toDate'
 import { DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import 'moment/locale/sv'
@@ -68,7 +68,7 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
       }}
       actions={{
         dateChangeHandler: (newDate: any) => (state) => {
-          const parsed = parse(newDate)
+          const parsed = toDate(newDate)
           const isoString = parsed.toISOString()
           props.changeHandler(props.changeType || DATE, null, {
             value: isoString,

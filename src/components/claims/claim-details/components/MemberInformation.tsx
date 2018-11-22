@@ -17,12 +17,26 @@ interface MemberInformationProps {
   }
 }
 
-const MemberInformation: React.SFC<MemberInformationProps> = ({ member: { firstName, lastName, personalNumber, address, postalNumber, city, directDebitStatus: { activated } } }) => (
+const MemberInformation: React.SFC<MemberInformationProps> = ({
+  member: {
+    firstName,
+    lastName,
+    personalNumber,
+    address,
+    postalNumber,
+    city,
+    directDebitStatus: { activated },
+  },
+}) => (
   <CustomPaper>
     <h3>Member Information</h3>
-    <p>Name: {firstName} {lastName}</p>
+    <p>
+      Name: {firstName} {lastName}
+    </p>
     <p>Personal Number: {personalNumber}</p>
-    <p>Address: {address}, {postalNumber} {city}</p>
+    <p>
+      Address: {address}, {postalNumber} {city}
+    </p>
     <p>Direct Debit: {activated ? <Checkmark /> : <Cross />}</p>
   </CustomPaper>
 )
