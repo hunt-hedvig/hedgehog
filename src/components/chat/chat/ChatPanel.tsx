@@ -2,6 +2,7 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Form, TextArea } from 'semantic-ui-react'
 import styled from 'styled-components'
+import { EmojiPicker } from './EmojiPicker'
 
 const MessagesPanelContariner = styled.div`
   display: flex;
@@ -32,7 +33,10 @@ const InputContainer = styled.div`
   width: 540px;
 `
 
-export default class ChatPanel extends React.Component {
+export default class ChatPanel extends React.Component<
+  any,
+  { message: string }
+> {
   constructor(props) {
     super(props)
     this.state = {
@@ -66,7 +70,14 @@ export default class ChatPanel extends React.Component {
               />
             </Form.Field>
           </InputContainer>
-          <Form.Button content="Send" primary />
+          <div>
+            <EmojiPicker
+              selectEmoji={(emoji) => {
+                this.setState({ message: `${this.state.message}${emoji}` })
+              }}
+            />
+            <Form.Button content="Send" primary />
+          </div>
         </MessagesPanelContariner>
       </ChatForm>
     )
