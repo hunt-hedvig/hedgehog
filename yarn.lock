@@ -873,6 +873,13 @@
     "@types/keygrip" "*"
     "@types/node" "*"
 
+"@types/emoji-mart@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@types/emoji-mart/-/emoji-mart-2.8.1.tgz#0de7741f5a5d1e651570f9736e3ae3372358333b"
+  integrity sha512-KgNfPD3ZqyM03cruProEysdA8h8HxQNsN10AI8ixpwjKof+pcMdGoG3bpJT4wAwPefWJ25gPevJolDCs5vW4Zg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/enzyme@^3.1.14":
   version "3.1.14"
   resolved "https://registry.yarnpkg.com/@types/enzyme/-/enzyme-3.1.14.tgz#379c26205f6e0e272f3a51d6bbdd50071a9d03a6"
@@ -3177,6 +3184,11 @@ elliptic@^6.0.0:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
+
+emoji-mart@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-2.9.1.tgz#7796bb8a3eed2238763faaa5236f6b817aff565e"
+  integrity sha512-bPBMe0lFuEukCNYqlA1KlZmdmVl5bMI+67F0R4FBYRe7utTOeADYleZpGyKGiipjja1GLU3bdVPcwzsbcPaeMw==
 
 emojis-list@^2.0.0:
   version "2.1.0"
