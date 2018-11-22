@@ -24,7 +24,7 @@ interface Actions {
 }
 
 const actions: ActionMap<State, Actions> = {
-  setIsOpen: (open: boolean) => (state) => ({ ...state, open }),
+  setIsOpen: (open: boolean) => () => ({ open }),
 }
 
 export const EmojiPicker: React.SFC<EmojiPickerProps> = ({ selectEmoji }) => (
