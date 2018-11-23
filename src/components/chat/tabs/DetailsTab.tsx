@@ -125,7 +125,7 @@ export default class DetailsTab extends React.Component {
                   <Header icon="edit" content="Edit Member" />
                   <Modal.Content>
                     <Form inverted size="small">
-                      <React.Fragment>
+                      <>
                         {Object.keys(memberInfo).map((field) => (
                           <Form.Input
                             key={field}
@@ -135,7 +135,7 @@ export default class DetailsTab extends React.Component {
                             onChange={this.handleChange(field)}
                           />
                         ))}
-                      </React.Fragment>
+                      </>
                       <Button.Group floated="right" labelposition="left">
                         <Button type="button" onClick={this.handleCancel}>
                           Cancel

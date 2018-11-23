@@ -1,5 +1,31 @@
 import * as React from 'react'
 import { Button, Dropdown, Icon, Input, Table } from 'semantic-ui-react'
+import styled from 'styled-components'
+
+const ButtonsBlock = styled('div')(() => ({
+  floar: 'right',
+  marginTop: '10px',
+}))
+
+const StatusBallBlock = ({ stateInfo, children }) => (
+  <span
+    title={
+      stateInfo && stateInfo.description
+        ? stateInfo.description
+        : 'Fraudulent Status is not defined'
+    }
+  >
+    {children}
+  </span>
+)
+
+const IconStyled = styled(Icon)(() => ({
+  verticalAlign: 'middle',
+}))
+
+const InputStyled = styled(Input)(() => ({
+  marginTop: '5px',
+}))
 
 const fraudulentStatuses = {
   UNDEFINED: 'grey',
@@ -9,14 +35,8 @@ const fraudulentStatuses = {
 }
 
 const FraudulentStatus = (props) => (
-  <span
-    title={
-      props.stateInfo && props.stateInfo.description
-        ? props.stateInfo.description
-        : 'Fraudulent Status is not defined'
-    }
-  >
-    <Icon
+  <StatusBallBlock stateInfo={props.stateInfo}>
+    <IconStyled
       name="circle"
       color={
         props.stateInfo && fraudulentStatuses[props.stateInfo.state]
@@ -24,9 +44,8 @@ const FraudulentStatus = (props) => (
           : 'grey'
       }
       size={'tiny'}
-      style={{ verticalAlign: 'middle' }}
     />
-  </span>
+  </StatusBallBlock>
 )
 
 const FraudulentStatusEdit = (props) => {
@@ -58,15 +77,14 @@ const FraudulentStatusEdit = (props) => {
               onChange={(e, d) => (fraudulentStatusValue = d.value)}
               placeholder={fraudulentStatusValue}
             />
-            <br />
-            <Input
+            <InputStyled
               fluid
               onChange={(e, d) => (descriptionValue = d.value)}
               defaultValue={descriptionValue}
             />
           </>
         )}
-        <div style={{ float: 'right', marginTop: '10px' }}>
+        <ButtonsBlock>
           {!props.getState() ? (
             <Button
               onClick={(e) =>
@@ -89,7 +107,7 @@ const FraudulentStatusEdit = (props) => {
               <Button onClick={(e) => props.setState(false)}>Cancel</Button>
             </>
           )}
-        </div>
+        </ButtonsBlock>
       </Table.Cell>
     </Table.Row>
   )
