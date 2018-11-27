@@ -99,7 +99,7 @@ export default class ClaimTypeFields extends React.Component {
     const { fieldsData } = this.state
     const isDisabled =
       !fieldsData.requiredData.length && !fieldsData.optionalData.length
-    const updatedTypes = updateTypesList(types.slice())
+    const updatedTypes = updateTypesList(types.slice(), type)
     return (
       <React.Fragment>
         <Form>
