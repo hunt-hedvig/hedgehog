@@ -12,7 +12,7 @@ enum ClaimState {
 }
 
 interface Props {
-  recordingUrl: string
+  recordingUrl: string | null
   registrationDate: string
   state: ClaimState
   updateState(state: ClaimState): void
@@ -39,14 +39,18 @@ const ClaimInformation: React.SFC<Props> = ({
     <p>
       Registered at: {format(toDate(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
     </p>
-    <audio controls>
-      <source src={recordingUrl} type="audio/aac" />
-    </audio>
-    <div>
-      <a href={recordingUrl} target="_blank" rel="noopener noreferrer">
-        Download claim file
-      </a>
-    </div>
+    {recordingUrl && (
+      <>
+        <audio controls>
+          <source src={recordingUrl} type="audio/aac" />
+        </audio>
+        <div>
+          <a href={recordingUrl} target="_blank" rel="noopener noreferrer">
+            Download claim file
+          </a>
+        </div>
+      </>
+    )}
     <p>Status</p>
     <Select
       value={state}
