@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { Form, TextArea } from 'semantic-ui-react'
+import { Form, Icon, TextArea } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { EmojiPicker } from './EmojiPicker'
 
@@ -9,7 +9,8 @@ const MessagesPanelContariner = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 20px;
+  padding-top: 5px;
+  padding-left: 15px;
   border-top: solid 2px #e8e5e5;
 `
 
@@ -62,7 +63,6 @@ export default class ChatPanel extends React.Component<
         <MessagesPanelContariner>
           <InputContainer>
             <Form.Field>
-              <label>Message</label>
               <TextArea
                 autoHeight
                 onChange={this.inputHandler}
@@ -76,7 +76,13 @@ export default class ChatPanel extends React.Component<
                 this.setState({ message: `${this.state.message}${emoji}` })
               }}
             />
-            <Form.Button content="Send" primary />
+            <Icon
+              name={'arrow circle right'}
+              color={'blue'}
+              size={'large'}
+              link
+              onClick={this.submitHandler}
+            />
           </div>
         </MessagesPanelContariner>
       </ChatForm>

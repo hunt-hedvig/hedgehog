@@ -29,6 +29,7 @@ TabItem.propTypes = {
   props: PropTypes.object.isRequired,
   TabContent: PropTypes.func,
   isChatTab: PropTypes.bool,
+  hideTab: PropTypes.bool,
 }
 
 /* eslint-disable react/display-name */
@@ -40,6 +41,12 @@ const memberPagePanes = (props, addMessage, socket) => {
       render: () => <TabItem props={props} TabContent={DetailsTab} />,
     },
     {
+      menuItem: 'Claims',
+      render: () => <TabItem props={props} TabContent={ClaimsTab} />,
+    },
+  ]
+  if (props.showChatTab) {
+    panes.push({
       menuItem: 'Chat',
       render: () => (
         <TabItem
@@ -48,12 +55,8 @@ const memberPagePanes = (props, addMessage, socket) => {
           isChatTab={true}
         />
       ),
-    },
-    {
-      menuItem: 'Claims',
-      render: () => <TabItem props={props} TabContent={ClaimsTab} />,
-    },
-  ]
+    })
+  }
   if (!insurance.error.length && insurance.data) {
     panes.push({
       menuItem: 'Current Insurance',
