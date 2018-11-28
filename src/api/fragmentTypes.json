@@ -1,0 +1,1 @@
+{"__schema":{"types":[{"kind":"UNION","name":"ClaimType","possibleTypes":[{"name":"TheftClaim"},{"name":"AccidentalDamageClaim"},{"name":"AssaultClaim"},{"name":"WaterDamageClaim"},{"name":"TravelAccidentClaim"},{"name":"LuggageDelayClaim"}]}]}}
