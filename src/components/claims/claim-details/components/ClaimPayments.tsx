@@ -14,14 +14,58 @@ import {
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
 import { Field, FieldProps, Form, Formik } from 'formik'
+import gql from 'graphql-tag'
 import * as React from 'react'
+import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { Checkmark, Cross } from '../../../icons'
 import { CustomPaper } from './Styles'
 
+const CREATE_PAYMENT_QUERY = gql`
+  query CreatePaymentQuery($id: ID!) {
+    claim(id: $id) {
+      payments {
+        amount
+        note
+        type
+        timestamp
+        exGratia
+        transaction {
+          status
+        }
+      }
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+
+const CREATE_PAYMENT_MUTATION = gql`
+  mutation CreatePayment($id: ID!, $payment: ClaimPaymentInput!) {
+    createClaimPayment(id: $id, payment: $payment) {
+      payments {
+        amount
+        note
+        type
+        timestamp
+        exGratia
+        transaction {
+          status
+        }
+      }
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+
 interface Props {
   payments: Payment[]
-  createPayment: (val: any) => void
+  claimId: string
 }
 
 interface Payment {
@@ -79,80 +123,109 @@ const CustomForm = styled(Form)({
   flexDirection: 'column',
 })
 
-const ClaimPayments: React.SFC<Props> = ({ payments, createPayment }) => (
-  <CustomPaper>
-    <h3>Payments</h3>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Amount</TableCell>
-          <TableCell>Note</TableCell>
-          <TableCell>Date</TableCell>
-          <TableCell>Ex Gratia</TableCell>
-          <TableCell>Type</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {payments.map((payment) => (
-          <TableRow
-            key={
-              payment.amount.amount +
-              payment.amount.currency +
-              payment.timestamp
-            }
-          >
-            <TableCell>
-              {payment.amount.amount} {payment.amount.currency}
-            </TableCell>
-            <TableCell>{payment.note}</TableCell>
-            <TableCell>
-              {format(toDate(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
-            </TableCell>
-            <TableCell>
-              {payment.exGratia ? <Checkmark /> : <Cross />}
-            </TableCell>
-            <TableCell>{payment.type}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-    <Formik<{ amount: string; note: string; exGratia?: boolean; type: string }>
-      initialValues={{ type: 'Manual', amount: '', note: '' }}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        createPayment({
-          amount: {
-            amount: +values.amount,
-            currency: 'SEK',
+const ClaimPayments: React.SFC<Props> = ({ payments, claimId }) => (
+  <Mutation
+    mutation={CREATE_PAYMENT_MUTATION}
+    update={(cache, { data: updateData }) => {
+      cache.writeQuery({
+        query: CREATE_PAYMENT_QUERY,
+        variables: { id: claimId },
+        data: {
+          claim: {
+            payments: updateData.createClaimPayment.payments,
+            __typename: updateData.createClaimPayment.__typename,
+            events: updateData.createClaimPayment.events,
           },
-          note: values.note,
-          exGratia: values.exGratia || false,
-          type: values.type,
-        })
-        setSubmitting(false)
-        resetForm()
-      }}
-    >
-      <CustomForm>
-        <Field
-          component={TextField}
-          placeholder="Payment amount"
-          name="amount"
-        />
-        <Field component={TextField} placeholder="Note" name="note" />
-        <FormControlLabel
-          label="Ex Gratia?"
-          control={<Field component={Checbox} name="exGratia" />}
-        />
-        <Field component={Select} name="type">
-          <MenuItem value="Manual">Manual</MenuItem>
-          <MenuItem value="Automatic">Automatic</MenuItem>
-        </Field>
-        <Button type="submit" variant="contained" color="primary">
-          Create payment
-        </Button>
-      </CustomForm>
-    </Formik>
-  </CustomPaper>
+        },
+      })
+    }}
+  >
+    {(createPayment) => (
+      <CustomPaper>
+        <h3>Payments</h3>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Amount</TableCell>
+              <TableCell>Note</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Ex Gratia</TableCell>
+              <TableCell>Type</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {payments.map((payment) => (
+              <TableRow
+                key={
+                  payment.amount.amount +
+                  payment.amount.currency +
+                  payment.timestamp
+                }
+              >
+                <TableCell>
+                  {payment.amount.amount} {payment.amount.currency}
+                </TableCell>
+                <TableCell>{payment.note}</TableCell>
+                <TableCell>
+                  {format(toDate(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
+                </TableCell>
+                <TableCell>
+                  {payment.exGratia ? <Checkmark /> : <Cross />}
+                </TableCell>
+                <TableCell>{payment.type}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Formik<{
+          amount: string
+          note: string
+          exGratia?: boolean
+          type: string
+        }>
+          initialValues={{ type: 'Manual', amount: '', note: '' }}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            createPayment({
+              variables: {
+                id: claimId,
+                payment: {
+                  amount: {
+                    amount: +values.amount,
+                    currency: 'SEK',
+                  },
+                  note: values.note,
+                  exGratia: values.exGratia || false,
+                  type: values.type,
+                },
+              },
+            })
+            setSubmitting(false)
+            resetForm()
+          }}
+        >
+          <CustomForm>
+            <Field
+              component={TextField}
+              placeholder="Payment amount"
+              name="amount"
+            />
+            <Field component={TextField} placeholder="Note" name="note" />
+            <FormControlLabel
+              label="Ex Gratia?"
+              control={<Field component={Checbox} name="exGratia" />}
+            />
+            <Field component={Select} name="type">
+              <MenuItem value="Manual">Manual</MenuItem>
+              <MenuItem value="Automatic">Automatic</MenuItem>
+            </Field>
+            <Button type="submit" variant="contained" color="primary">
+              Create payment
+            </Button>
+          </CustomForm>
+        </Formik>
+      </CustomPaper>
+    )}
+  </Mutation>
 )
 
 export { ClaimPayments }
