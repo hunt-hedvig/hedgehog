@@ -145,7 +145,7 @@ const ClaimPayments: React.SFC<Props> = ({ payments, createPayment }) => (
         />
         <Field component={Select} name="type">
           <MenuItem value="Manual">Manual</MenuItem>
-          <MenuItem value="Trustly">Trustly</MenuItem>
+          <MenuItem value="Automatic">Automatic</MenuItem>
         </Field>
         <Button type="submit" variant="contained" color="primary">
           Create payment
