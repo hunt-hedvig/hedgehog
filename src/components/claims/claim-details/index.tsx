@@ -94,6 +94,10 @@ const UPDATE_STATE_QUERY = gql`
   query UpdateClaimState($id: ID!) {
     claim(id: $id) {
       state
+      events {
+        text
+        date
+      }
     }
   }
 `
@@ -102,6 +106,10 @@ const UPDATE_CLAIM_STATE_MUTATION = gql`
   mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
     updateClaimState(id: $id, state: $state) {
       state
+      events {
+        text
+        date
+      }
     }
   }
 `
@@ -111,6 +119,10 @@ const SET_CLAIM_TYPE_QUERY = gql`
     claim(id: $id) {
       type {
         ${TYPE_FRAGMENT}
+      }
+      events {
+        text
+        date
       }
     }
   }
@@ -122,6 +134,10 @@ const SET_CLAIM_TYPE_MUTATION = gql`
       type {
         ${TYPE_FRAGMENT}
       }
+      events {
+        text
+        date
+      }
     }
   }
 `
@@ -132,6 +148,10 @@ const SET_CLAIM_INFORMATION = gql`
       type {
         ${TYPE_FRAGMENT}
       }
+      events {
+        text
+        date
+      }
     }
   }
 `
@@ -141,6 +161,10 @@ const SET_CLAIM_INFORMATION_QUERY = gql`
     claim(id: $id) {
       type {
         ${TYPE_FRAGMENT}
+      }
+      events {
+        text
+        date
       }
     }
   }
@@ -271,6 +295,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
                   data: {
                     claim: {
                       state: updateData.updateClaimState.state,
+                      events: updateData.updateClaimState.events,
                       __typename: data.claim.__typename,
                     },
                   },
@@ -300,6 +325,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
                 data: {
                   claim: {
                     type: updateData.setClaimType.type,
+                    events: updateData.setClaimType.events,
                     __typename: data.claim.__typename,
                   },
                 },
@@ -316,6 +342,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
                     data: {
                       claim: {
                         type: updateData.setClaimInformation.type,
+                        events: updateData.setClaimInformation.events,
                         __typename: data.claim.__typename,
                       },
                     },
