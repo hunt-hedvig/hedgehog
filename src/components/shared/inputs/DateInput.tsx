@@ -68,12 +68,16 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
       }}
       actions={{
         dateChangeHandler: (newDate: any) => (state) => {
-          const parsed = parse(newDate)
-          const isoString = parsed.toISOString()
-          props.changeHandler(props.changeType || DATE, null, {
-            value: isoString,
-          })
-          return { date: moment(newDate) }
+          if (moment(newDate).isValid()) {
+            const parsed = parse(newDate)
+            const isoString = parsed.toISOString()
+            props.changeHandler(props.changeType || DATE, null, {
+              value: isoString,
+            })
+            return { date: moment(newDate) }
+          } else {
+            return { date: moment() }
+          }
         },
         focusHandler: (result: any) => (state) => ({ focused: result.focused }),
       }}
@@ -96,7 +100,6 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
                   numberOfMonths={1}
                   isOutsideRange={() => false}
                   openDirection={OPEN_UP}
-                  readOnly={true}
                   hideKeyboardShortcutsPanel={true}
                 />
               </DatePickerContainer>
