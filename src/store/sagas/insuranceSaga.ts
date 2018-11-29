@@ -12,8 +12,6 @@ import {
   modifyInsuranceSuccess,
   saveActivationDateSuccess,
   saveCancellationDateSuccess,
-  saveFraudulentStatus,
-  saveFraudulentStatusSuccess,
   sendCancelRequestSuccess,
   sendCertificateSuccess,
 } from '../actions/insuranceActions'
@@ -27,7 +25,6 @@ import {
   SAVE_INSURANCE_DATE,
   SEND_CANCEL_REQUEST,
   SEND_CERTIFICATE,
-  SET_FRAUDULENT_STATUS,
 } from '../constants/members'
 
 const STUDENT_BRF = 'STUDENT_BRF'
@@ -166,35 +163,6 @@ function* modifyInsuranceFlow({ memberId, request }) {
     )
 
     yield put(modifyInsuranceSuccess(response.data))
-  } catch (error) {
-    yield [
-      put(
-        showNotification({
-          message: error.message,
-          header: 'Insurance',
-        }),
-      ),
-      put(insuranceError()),
-    ]
-  }
-}
-
-function* saveFraudelentStatusFlow({
-  fraudulentStatus,
-  fraudulentStatusDescription,
-  memberId,
-}) {
-  try {
-    const path = `${memberId}/fraudulentStatus`
-
-    const response = yield call(
-      api,
-      config.insurance.fraudulentStatus,
-      { fraudulentStatus, fraudulentStatusDescription },
-      path,
-    )
-
-    yield put(saveFraudulentStatusSuccess())
   } catch (error) {
     yield [
       put(
@@ -351,7 +319,6 @@ function* insuranceWatcher() {
     takeLatest(INSURANCES_LIST_REQUESTING, requestListofInsurancesFlow),
     takeLatest(MEMBER_CREATE_MODIFIED_INSURANCE, createModifiedInsuranceFlow),
     takeLatest(MODIFY_INSURANCE, modifyInsuranceFlow),
-    takeLatest(SET_FRAUDULENT_STATUS, saveFraudelentStatusFlow),
   ]
 }
 

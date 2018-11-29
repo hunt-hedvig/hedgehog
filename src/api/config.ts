@@ -37,6 +37,10 @@ export default {
       method: 'post',
       url: 'member',
     },
+    fraudulentStatus: {
+      url: 'member',
+      method: 'post',
+    },
   },
   claims: {
     getList: {
@@ -130,10 +134,6 @@ export default {
       method: 'post',
     },
     modifyProduct: {
-      url: 'member/insurance',
-      method: 'post',
-    },
-    fraudulentStatus: {
       url: 'member/insurance',
       method: 'post',
     },
