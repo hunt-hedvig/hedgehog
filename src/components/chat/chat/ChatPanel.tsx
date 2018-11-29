@@ -12,6 +12,7 @@ const MessagesPanelContariner = styled.div`
   padding-top: 5px;
   padding-left: 15px;
   border-top: solid 2px #e8e5e5;
+  height: 85px;
 `
 
 const ChatForm = styled(Form)`
@@ -28,6 +29,10 @@ const ChatForm = styled(Form)`
   & .primary.button {
     margin-top: 23px;
   }
+`
+
+const TextAreaStyled = styled(TextArea)`
+  height: 75px !important;
 `
 
 const InputContainer = styled.div`
@@ -63,7 +68,7 @@ export default class ChatPanel extends React.Component<
         <MessagesPanelContariner>
           <InputContainer>
             <Form.Field>
-              <TextArea
+              <TextAreaStyled
                 autoHeight
                 onChange={this.inputHandler}
                 value={this.state.message}
