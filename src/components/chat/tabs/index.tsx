@@ -14,13 +14,12 @@ const TabContainer = styled(Tab.Pane)`
     display: flex;
     flex-direction: column;
     min-width: 700px;
-    height: ${(props) => (props.isChatTab ? '100%' : 'auto')};
     margin-bottom: 50px !important;
   }
 `
 
-const TabItem = ({ props, TabContent, isChatTab }) => (
-  <TabContainer isChatTab={isChatTab}>
+const TabItem = ({ props, TabContent }) => (
+  <TabContainer>
     <TabContent {...props} />
   </TabContainer>
 )
