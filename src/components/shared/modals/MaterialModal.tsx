@@ -30,7 +30,7 @@ interface MaterialModalProps {
   children?: ReactNode
 }
 
-const MeterialModal: React.SFC<MaterialModalProps> = (props) => {
+const MaterialModal: React.SFC<MaterialModalProps> = (props) => {
   return (
     <Modal open={props.open} onClose={props.handleClose}>
       <div style={getModalStyle()} className={props.classes.paper}>
@@ -40,4 +40,4 @@ const MeterialModal: React.SFC<MaterialModalProps> = (props) => {
   )
 }
 
-export default withStyles(styles)(MeterialModal)
+export default withStyles(styles)(MaterialModal)
