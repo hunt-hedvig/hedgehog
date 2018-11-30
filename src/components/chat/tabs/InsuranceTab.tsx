@@ -1,11 +1,15 @@
 import InsuranceTableRows from 'components/chat/insurance-table-rows/InsuranceTableRows'
 import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
-import { getFieldName, getFieldValue } from 'lib/helpers'
+import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
+
+const insuranceFieldFormatters = {
+  signedOn: (date: string) => dateTimeFormatter(date, 'YYYY-MM-DD HH:mm:ss'),
+}
 
 export default class InsuranceTab extends React.Component {
   constructor(props) {
@@ -121,7 +125,10 @@ export default class InsuranceTab extends React.Component {
       <React.Fragment>
         <Table selectable>
           <Table.Body>
-            <TableFields fields={fields} />
+            <TableFields
+              fields={fields}
+              fieldFormatters={insuranceFieldFormatters}
+            />
             <InsuranceTableRows
               activeDate={activeDate}
               cancellationDate={cancellationDate}

@@ -1,5 +1,6 @@
 import ImageMessage from 'components/chat/messages/ImageMessage'
 import SelectMessage from 'components/chat/messages/SelectMessage'
+import { dateTimeFormatter } from 'lib/helpers'
 import * as types from 'lib/messageTypes'
 import * as moment from 'moment'
 import 'moment/locale/sv'
@@ -80,7 +81,7 @@ const Message = ({
           <Label>
             {from}
             <Label.Detail>
-              {moment(timestamp).format('HH:mm:ss DD MMMM YYYY')}
+              {dateTimeFormatter(timestamp, 'HH:mm:ss DD MMMM YYYY')}
             </Label.Detail>
           </Label>
         </MessageInfo>
