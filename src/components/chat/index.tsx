@@ -1,3 +1,4 @@
+import { FraudulentStatus } from 'lib/fraudulentStatus'
 import { disconnect } from 'lib/sockets'
 import { reconnect, subscribe } from 'lib/sockets/chat'
 import * as PropTypes from 'prop-types'
@@ -120,7 +121,10 @@ export default class Chat extends React.Component {
     const routeData = location.state ? location.state.to : null
     return (
       <ChatPageContainer>
-        <Header size="huge">{this.getChatTitle(messages.member)}</Header>
+        <Header size="huge">
+          <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
+          {this.getChatTitle(messages.member)}
+        </Header>
         <Tab
           style={{ height: '100%' }}
           panes={panes}
@@ -138,6 +142,17 @@ export default class Chat extends React.Component {
       </ChatPageContainer>
     )
   }
+
+  public getFraudulentStatus = () => ({
+    state:
+      this.props.messages && this.props.messages.member
+        ? this.props.messages.member.fraudulentStatus
+        : '',
+    description:
+      this.props.messages && this.props.messages.member
+        ? this.props.messages.member.fraudulentDescription
+        : '',
+  })
 }
 
 Chat.propTypes = {

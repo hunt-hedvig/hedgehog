@@ -37,6 +37,10 @@ export default {
       method: 'post',
       url: 'member',
     },
+    fraudulentStatus: {
+      url: 'member',
+      method: 'post',
+    },
   },
   claims: {
     getList: {
