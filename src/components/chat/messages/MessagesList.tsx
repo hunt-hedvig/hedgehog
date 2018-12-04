@@ -4,7 +4,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 const MessagesListContainer = styled.div`
-  height: 100%;
+  height: calc(100% - 130px);
   box-sizing: border-box;
   overflow-y: auto;
   padding: 20px 20px 60px;

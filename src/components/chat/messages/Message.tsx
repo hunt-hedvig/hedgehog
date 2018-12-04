@@ -28,7 +28,7 @@ const MessageBody = styled.div`
   border: 1px solid #d4d4d5;
   color: #4b4b4b;
   line-height: 1.4em;
-  background: #fff;
+  background: ${(props) => (props.left ? '#fff;' : '#d1f4ff')}
   border-radius: 0.3rem;
   padding: 0.8em 1em;
   box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
@@ -39,7 +39,7 @@ const MessageBody = styled.div`
     content: '';
     width: 0.7em;
     height: 0.7em;
-    background: #fff;
+    background: ${(props) => (props.left ? '#fff;' : '#d1f4ff')}
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     z-index: 2;

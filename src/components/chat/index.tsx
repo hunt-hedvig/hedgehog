@@ -6,6 +6,7 @@ import * as React from 'react'
 import { Header, Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
 import memberPagePanes from './tabs'
+import ChatTab from './tabs/ChatTab'
 
 const ChatPageContainer = styled.div`
   display: flex;
@@ -120,26 +121,29 @@ export default class Chat extends React.Component {
     )
     const routeData = location.state ? location.state.to : null
     return (
-      <ChatPageContainer>
-        <Header size="huge">
-          <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
-          {this.getChatTitle(messages.member)}
-        </Header>
-        <Tab
-          style={{ height: '100%' }}
-          panes={panes}
-          renderActiveOnly={true}
-          defaultActiveIndex={
-            routeData === 'insurance'
-              ? 3
-              : routeData === 'payments'
-                ? 5
-                : routeData === 'details'
-                  ? 0
-                  : 1
-          }
-        />
-      </ChatPageContainer>
+      <>
+        <ChatPageContainer>
+          <Header size="huge">
+            <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
+            {this.getChatTitle(messages.member)}
+          </Header>
+          <Tab
+            style={{ height: '100%' }}
+            panes={panes}
+            renderActiveOnly={true}
+            defaultActiveIndex={
+              routeData === 'insurance'
+                ? 3
+                : routeData === 'payments'
+                  ? 5
+                  : routeData === 'details'
+                    ? 0
+                    : 1
+            }
+          />
+        </ChatPageContainer>
+        <ChatTab {...this.props} addMessage={this.addMessageHandler} />
+      </>
     )
   }
 

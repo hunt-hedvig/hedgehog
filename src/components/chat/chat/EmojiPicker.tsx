@@ -2,13 +2,15 @@ import { ActionMap, Container } from 'constate'
 import { Picker } from 'emoji-mart'
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Button } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import { emojiMartStyles } from './_emojimartstyles'
 
 const Wrapper = styled('div')({
   position: 'absolute',
-  top: '-200%',
-  left: '100%',
+  maxHeight: '260px',
+  maxWidth: '250px',
+  bottom: 'calc(100% + 150px)',
+  right: '95px',
 })
 
 interface EmojiPickerProps {
@@ -31,9 +33,12 @@ export const EmojiPicker: React.SFC<EmojiPickerProps> = ({ selectEmoji }) => (
   <Container<State, Actions> initialState={{ open: false }} actions={actions}>
     {({ open, setIsOpen }) => (
       <>
-        <Button type="button" onClick={() => setIsOpen(!open)}>
-          {open ? 'Close' : 'Open'} emoji picker
-        </Button>
+        <Icon
+          name={'smile outline'}
+          size={'large'}
+          link
+          onClick={() => setIsOpen(!open)}
+        />
         {open && (
           <Wrapper className={emojiMartStyles}>
             <Picker
