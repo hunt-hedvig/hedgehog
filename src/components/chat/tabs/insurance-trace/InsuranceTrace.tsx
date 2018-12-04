@@ -8,9 +8,14 @@ const TextWrapper = styled('div')(
   ({ width = '200px' }: { width?: string }) => ({
     wordWrap: 'break-word',
     width,
-    fontSize: '80%',
+    fontSize: '90%',
   }),
 )
+
+const FieldWrapper = styled('span')({
+  fontWeight: 'bold',
+  color: '#888888',
+})
 
 const InsuranceTrace = ({ traceData }) =>
   !traceData || traceData.length === 0 ? null : (
@@ -20,12 +25,12 @@ const InsuranceTrace = ({ traceData }) =>
         {traceData.map((trace) => (
           <List.Item key={trace.fieldName + trace.date + trace.userId}>
             <List.Content floated="left">
-              <TextWrapper width={'300px'}>
-                {trace.date}. {getFieldName(trace.fieldName)}. {trace.userId}
+              <TextWrapper width={'100%'}>
+                <FieldWrapper>{getFieldName(trace.fieldName)}</FieldWrapper>{' '}
+                changed on <FieldWrapper>{trace.date}</FieldWrapper> by{' '}
+                <FieldWrapper>{trace.userId}</FieldWrapper>. The new value is{' '}
+                <FieldWrapper>{trace.newValue}</FieldWrapper>
               </TextWrapper>
-            </List.Content>
-            <List.Content floated="right">
-              <TextWrapper width={'300px'}>{trace.newValue}</TextWrapper>
             </List.Content>
           </List.Item>
         ))}
