@@ -113,6 +113,8 @@ const MessageContent = ({ content }) => {
     case types.MULTIPLE_SELECT:
     case types.SINGLE_SELECT:
       return <SelectMessage content={content} />
+    case types.FILE_UPLOAD:
+      return <a href={content.url}>Attached file</a>
     default:
       return null
   }

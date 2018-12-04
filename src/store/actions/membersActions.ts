@@ -5,6 +5,8 @@ import {
   MEMBERS_REQUESTING,
   MEMBERS_SEARCH_SUCCESS,
   NEW_MESSAGES_RECEIVED,
+  SET_FRAUDULENT_STATUS,
+  SET_FRAUDULENT_STATUS_SUCCESS,
   SET_MEMBER_FILTER,
   SORT_MEMBERS_LIST,
 } from '../constants/members'
@@ -62,4 +64,19 @@ export const sortMembersList = (fieldName, isReverse) => ({
   type: SORT_MEMBERS_LIST,
   fieldName,
   isReverse,
+})
+
+export const saveFraudulentStatus = (
+  fraudulentStatus,
+  fraudulentStatusDescription,
+  memberId,
+) => ({
+  type: SET_FRAUDULENT_STATUS,
+  fraudulentStatus,
+  fraudulentStatusDescription,
+  memberId,
+})
+
+export const saveFraudulentStatusSuccess = () => ({
+  type: SET_FRAUDULENT_STATUS_SUCCESS,
 })

@@ -67,12 +67,16 @@ export const setNewMessagesCounter = (members /* counters */) => members
  * Updating array of claims types
  * @param {array} list
  */
-export const updateTypesList = (list) =>
-  list.map((item) => {
-    const updated = { ...item }
-    delete updated.requiredData
-    delete updated.optionalData
-    return updated
+export const updateTypesList = (list, selectedType) =>
+  list
+    .filter(
+      (item) => !item.archive || (selectedType && selectedType === item.value),
+    )
+    .map((item) => {
+      const updated = { ...item }
+      delete updated.requiredData
+      delete updated.optionalData
+      return updated
   })
 
 /**
