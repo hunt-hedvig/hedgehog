@@ -22,7 +22,7 @@ const InsuranceTrace = ({ traceData }) =>
     <>
       <h4>List of changes</h4>
       <ScrollList selection>
-        {traceData.reverse().map((trace) => (
+        {[...traceData].reverse().map((trace) => (
           <List.Item key={trace.fieldName + trace.date + trace.userId}>
             <List.Content floated="left">
               <TextWrapper width={'100%'}>
