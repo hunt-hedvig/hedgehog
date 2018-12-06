@@ -27,8 +27,10 @@ const linkClickHandler = (id: string) => {
   history.push(`/members/${id}`, { to: 'insurance' })
 }
 
-const getFormattedDate = (date: any) => {
-  return date && isValidDate(date) ? formatDate(date, 'dd MMMM yyyy') : '-'
+const isValidDateTs = (date: unknown): date is Date => isValidDate(date)
+
+const getFormattedDate = (date: unknown) => {
+  return date && isValidDateTs(date) ? formatDate(date, 'dd MMMM yyyy') : '-'
 }
 
 const getTableRow = (item: MemberInsurance) => {

@@ -35,7 +35,7 @@ const App: React.SFC = () => (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Provider store={store}>
         <Router history={history}>
-          <React.Fragment>
+          <>
             <Navigation history={history} store={store} />
             <Switch>
               <Route path="/login/oauth" component={Routes.LoginPageRoute} />
@@ -88,7 +88,7 @@ const App: React.SFC = () => (
               <Redirect from="*" to="/dashboard" />
             </Switch>
             <Notifications />
-          </React.Fragment>
+          </>
         </Router>
       </Provider>
     </MuiPickersUtilsProvider>

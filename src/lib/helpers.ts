@@ -49,7 +49,7 @@ export const updateTypesList = (list: any[]) =>
     return updated
   })
 
-export const getSum = (list: any[]) =>
+export const getSum = (list: ReadonlyArray<{ amount: string }>) =>
   list.reduce((sum, payment) => sum + parseFloat(payment.amount), 0)
 
 const setFieldsValues = (fields, data) =>
