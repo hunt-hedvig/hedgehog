@@ -5,7 +5,7 @@ import * as React from 'react'
 import { CustomPaper } from './Styles'
 
 interface Props {
-  events: Array<{
+  events: ReadonlyArray<{
     text: string
     date: string
   }>
