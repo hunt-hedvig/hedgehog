@@ -41,6 +41,10 @@ const types = [
     value: 'PHONE',
     label: 'Phone',
   },
+  {
+    value: 'CHAT',
+    label: 'Chat',
+  },
 ]
 
 const CREATE_CLAIM_MUTATION = gql`
@@ -141,7 +145,7 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
               Create claim
             </Typography>
             <Typography variant="subtitle1" id="simple-modal-description">
-              Choose date and type of claim.
+              Choose notification date and type of claim.
             </Typography>
             <InlineFlex>
               <TextField
@@ -160,7 +164,11 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
                   </MenuItem>
                 ))}
               </TextField>
-              <DateInput changeHandler={dateChangeHandler} label />
+              <DateInput
+                changeHandler={dateChangeHandler}
+                forbidFuture={true}
+                label="Notification date"
+              />
             </InlineFlex>
             <InlineFlexButton>
               <Mutation mutation={CREATE_CLAIM_MUTATION}>
