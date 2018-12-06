@@ -28,7 +28,8 @@ export default class MembersList extends React.Component<MembersListProps, {}> {
       ? `${member.firstName} ${member.lastName || ''}`
       : `Member-${member.memberId}`
 
-  public linkClickHandler = (id: string) => history.push(`/members/${id}`)
+  public linkClickHandler = (id: string) =>
+    history.push(`/members/${id}`, { to: 'details' })
 
   public getTableRow = (item: Member) => {
     const signedOn = moment(item.signedOn).local()

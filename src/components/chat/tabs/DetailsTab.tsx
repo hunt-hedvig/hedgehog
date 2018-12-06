@@ -66,11 +66,11 @@ export default class DetailsTab extends React.Component {
       fraudulentDescription,
       fraudulentStatus,
       ...memberInfo
-    } = member
+    } = member || {}
 
     traceData = traceMemberInfo
 
-    return memberInfo ? (
+    return member ? (
       <>
         <Table selectable>
           <Table.Body>
