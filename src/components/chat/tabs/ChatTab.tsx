@@ -1,21 +1,20 @@
 import ChatPanel from 'components/chat/chat/ChatPanel'
 import MessagesList from 'components/chat/messages/MessagesList'
 import * as PropTypes from 'prop-types'
+import Resizable from 're-resizable'
 import * as React from 'react'
 import { Icon, Message } from 'semantic-ui-react'
 import styled from 'styled-components'
 
-const ChatContainer = styled.div`
-  position: fixed;
-  height: 80%;
-  top: 100px;
-  margin-right: 10px;
-  width: 350px;
-  right: 0;
-  box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16) !important;
-  border-radius: 8px !important;
-  background-color: #ffffff;
-`
+const resizableStyles = {
+  position: 'fixed',
+  height: '80%',
+  top: '100px',
+  right: '10px',
+  boxShadow: '0 5px 40px rgba(0, 0, 0, 0.16)',
+  borderRadius: '8px',
+  backgroundColor: '#ffffff',
+}
 
 const ChatHeaderStyle = styled.div`
   position: ${(props) => (!props.state ? 'fixed' : '')};
@@ -34,7 +33,7 @@ export default class ChatTab extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: window.innerWidth > 1400,
+      visible: window.innerWidth > 1500,
       manualChange: false,
     }
     window.addEventListener('resize', this.resizeControlChat)
@@ -45,14 +44,18 @@ export default class ChatTab extends React.Component {
 
   public resizeControlChat = (e) => {
     if (!this.state.manualChange) {
-      this.setState({ visible: window.innerWidth > 1400 })
+      this.setState({ visible: window.innerWidth > 1500 })
     }
   }
 
   public render() {
     return this.state.visible ? (
       <>
-        <ChatContainer>
+        <Resizable
+          style={resizableStyles}
+          defaultSize={{ width: '400px', height: '80%' }}
+          enable={{ left: true }}
+        >
           <ChatHeader ctx={this} />
           <MessagesList
             messages={(this.props.messages && this.props.messages.list) || []}
@@ -69,7 +72,7 @@ export default class ChatTab extends React.Component {
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>
           )}
-        </ChatContainer>
+        </Resizable>
       </>
     ) : (
       <>
