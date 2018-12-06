@@ -1,11 +1,16 @@
 import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
 import { FraudulentStatusEdit } from 'lib/fraudulentStatus'
-import { getFieldName, getFieldValue } from 'lib/helpers'
+import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
+
+const memberFieldFormatters = {
+  signedOn: (date: string) => dateTimeFormatter(date, 'YYYY-MM-DD HH:mm:ss'),
+  createdOn: (date: string) => dateTimeFormatter(date, 'YYYY-MM-DD HH:mm:ss'),
+}
 
 export default class DetailsTab extends React.Component {
   constructor(props) {
@@ -74,7 +79,10 @@ export default class DetailsTab extends React.Component {
       <>
         <Table selectable>
           <Table.Body>
-            <TableFields fields={memberInfo} />
+            <TableFields
+              fields={member}
+              fieldFormatters={memberFieldFormatters}
+            />
             <FraudulentStatusEdit
               getFraudStatusInfo={() => ({
                 status: this.state.fraudStatus || fraudulentStatus,

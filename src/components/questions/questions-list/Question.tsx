@@ -28,7 +28,7 @@ const Question = ({ activeList, question, membersList }) => {
               content={data.message.body}
               left={!data.answer}
               isQuestionMessage={true}
-              timestamp={data.date}
+              timestamp={data.localDate}
               from={memberInfo}
             />
             {data.answer ? (
@@ -36,7 +36,7 @@ const Question = ({ activeList, question, membersList }) => {
                 content={data.answer.body}
                 left={true}
                 isQuestionMessage={false}
-                timestamp={data.answerDate}
+                timestamp={data.localAnswerDate}
                 from={this.getSender(data)}
               />
             ) : null}

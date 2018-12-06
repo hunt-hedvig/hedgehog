@@ -50,7 +50,7 @@ export default class MessagesList extends React.Component {
               content={item.body}
               left={item.header.fromId !== id}
               msgId={item.globalId}
-              timestamp={item.timestamp}
+              timestamp={item.localTimestamp}
               from={
                 item.header.fromId !== id ? getAuthor(item.author) : 'member'
               }

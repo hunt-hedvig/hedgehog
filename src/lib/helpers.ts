@@ -1,4 +1,5 @@
 import * as dateCompareAsc from 'date-fns/compare_asc'
+import * as formatDate from 'date-fns/format'
 import * as parseDate from 'date-fns/parse'
 import moment from 'moment'
 import { QuestionGroup, QuestionsStore } from '../store/types/questionsTypes'
@@ -438,3 +439,6 @@ function sortListByDate(list, fieldName, isReverse) {
   const resultList = isReverse ? sortedDates.reverse() : sortedDates
   return [...resultList, ...withoutDates]
 }
+
+export const dateTimeFormatter = (date: string, format: string) =>
+  date && formatDate(parseDate(date), format)
