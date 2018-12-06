@@ -62,6 +62,12 @@ export default class ChatPanel extends React.Component<
     this.setState({ message: value })
   }
 
+  public textKeyPress = (e) => {
+    if (e && e.charCode === 13 && !e.shiftKey) {
+      this.submitHandler()
+    }
+  }
+
   public render() {
     return (
       <ChatForm onSubmit={this.submitHandler}>
@@ -72,6 +78,7 @@ export default class ChatPanel extends React.Component<
                 autoHeight
                 onChange={this.inputHandler}
                 value={this.state.message}
+                onKeyPress={this.textKeyPress}
               />
             </Form.Field>
           </InputContainer>
