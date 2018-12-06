@@ -80,7 +80,7 @@ export default class DetailsTab extends React.Component {
         <Table selectable>
           <Table.Body>
             <TableFields
-              fields={member}
+              fields={memberInfo}
               fieldFormatters={memberFieldFormatters}
             />
             <FraudulentStatusEdit
