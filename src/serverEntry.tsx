@@ -5,7 +5,6 @@ import {
 } from '@hedviginsurance/web-survival-kit'
 import * as Koa from 'koa'
 import * as proxy from 'koa-server-http-proxy'
-import * as enforceHttps from 'koa-sslify'
 import * as path from 'path'
 import { reactPageRoutes } from 'routes/routes'
 import 'source-map-support/register'
@@ -24,6 +23,8 @@ const template = () => `
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hedvig's Asset Management Application</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet"
         href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -52,14 +53,6 @@ const server = createKoaServer({
   publicPath: '/assets',
   assetLocation: __dirname + '/assets',
 })
-
-if (process.env.NODE_ENV === 'production') {
-  server.app.use(
-    enforceHttps({
-      trustProtoHeader: true,
-    }),
-  )
-}
 
 server.router.get('/', getPage)
 reactPageRoutes.forEach((route) => {

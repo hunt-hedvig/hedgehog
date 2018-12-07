@@ -1,21 +1,31 @@
 import { getFieldName, getFieldValue } from 'lib/helpers'
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 
-const TableFields = ({ fields }) => (
-  <React.Fragment>
-    {Object.keys(fields).map((field, id) => (
-      <Table.Row key={id}>
-        <Table.Cell>{getFieldName(field)}</Table.Cell>
-        <Table.Cell>{getFieldValue(fields[field])}</Table.Cell>
-      </Table.Row>
-    ))}
-  </React.Fragment>
-)
+interface TableFieldsProps<T> {
+  fields: T
+  fieldFormatters?: { [P in keyof T]?: (val: T[P]) => string }
+}
 
-TableFields.propTypes = {
-  fields: PropTypes.object.isRequired,
+const TableFields = <T extends {}>(props: TableFieldsProps<T>) => {
+  const { fields, fieldFormatters } = props
+  return (
+    <React.Fragment>
+      {(Object.keys(fields) as Array<keyof T>).map((field, id) => {
+        const formatter = fieldFormatters && fieldFormatters[field]
+        return (
+          <Table.Row key={id}>
+            <Table.Cell>{getFieldName(field)}</Table.Cell>
+            <Table.Cell>
+              {formatter
+                ? formatter(fields[field])
+                : getFieldValue(fields[field])}
+            </Table.Cell>
+          </Table.Row>
+        )
+      })}
+    </React.Fragment>
+  )
 }
 
 export default TableFields

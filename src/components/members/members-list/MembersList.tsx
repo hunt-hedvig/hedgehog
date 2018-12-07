@@ -1,4 +1,5 @@
 import { LinkRow } from 'components/shared'
+import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as sockets from 'lib/sockets'
 import * as moment from 'moment'
 import * as React from 'react'
@@ -27,7 +28,8 @@ export default class MembersList extends React.Component<MembersListProps, {}> {
       ? `${member.firstName} ${member.lastName || ''}`
       : `Member-${member.memberId}`
 
-  public linkClickHandler = (id: string) => history.push(`/members/${id}`)
+  public linkClickHandler = (id: string) =>
+    history.push(`/members/${id}`, { to: 'details' })
 
   public getTableRow = (item: Member) => {
     const signedOn = moment(item.signedOn).local()
@@ -42,7 +44,15 @@ export default class MembersList extends React.Component<MembersListProps, {}> {
 
     return (
       <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>
-        <Table.Cell>{this.getMemberName(item)}</Table.Cell>
+        <Table.Cell>
+          <FraudulentStatus
+            stateInfo={{
+              state: item.fraudulentStatus,
+              description: item.fraudulentDescription,
+            }}
+          />
+          {this.getMemberName(item)}
+        </Table.Cell>
         <Table.Cell>{formattedCreatedOn}</Table.Cell>
         <Table.Cell>{formattedsignedOn}</Table.Cell>
       </LinkRow>

@@ -44,6 +44,8 @@ export interface Member {
   birthDate: string
   signedOn: string
   createdOn: string
+  fraudulentStatus: string
+  fraudulentDescription: string
 }
 
 export interface MemberSearchFilter {

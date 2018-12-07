@@ -1,4 +1,5 @@
 import dateCompareAsc from 'date-fns/compareAsc'
+import formatDate from 'date-fns/format'
 import toDate from 'date-fns/toDate'
 import moment from 'moment'
 import { QuestionGroup, QuestionsStore } from '../store/types/questionsTypes'
@@ -41,13 +42,21 @@ export const refreshMessagesList = (
 // TODO append field "newMessagesCounter" to each member
 export const setNewMessagesCounter = (members /* counters */) => members
 
-export const updateTypesList = (list: any[]) =>
-  list.map((item) => {
-    const updated = { ...item }
-    delete updated.requiredData
-    delete updated.optionalData
-    return updated
-  })
+/**
+ * Updating array of claims types
+ * @param {array} list
+ */
+export const updateTypesList = (list, selectedType) =>
+  list
+    .filter(
+      (item) => !item.archive || (selectedType && selectedType === item.value),
+    )
+    .map((item) => {
+      const updated = { ...item }
+      delete updated.requiredData
+      delete updated.optionalData
+      return updated
+    })
 
 export const getSum = (list: ReadonlyArray<{ amount: string }>) =>
   list.reduce((sum, payment) => sum + parseFloat(payment.amount), 0)
@@ -404,3 +413,6 @@ function sortListByDate(list, fieldName, isReverse) {
   const resultList = isReverse ? sortedDates.reverse() : sortedDates
   return [...resultList, ...withoutDates]
 }
+
+export const dateTimeFormatter = (date: string, format: string) =>
+  date && formatDate(toDate(date), format)

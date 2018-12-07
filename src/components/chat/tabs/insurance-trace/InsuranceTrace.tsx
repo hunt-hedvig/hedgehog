@@ -1,33 +1,40 @@
+import { ScrollList } from 'components/shared'
 import { getFieldName } from 'lib/helpers'
 import * as React from 'react'
-import { Table } from 'semantic-ui-react'
+import { List } from 'semantic-ui-react'
+import styled from 'styled-components'
+
+const TextWrapper = styled('div')(
+  ({ width = '200px' }: { width?: string }) => ({
+    wordWrap: 'break-word',
+    width,
+    fontSize: '90%',
+  }),
+)
+
+const FieldWrapper = styled('span')({
+  fontWeight: 'bold',
+  color: '#888888',
+})
 
 const InsuranceTrace = ({ traceData }) =>
-  !traceData || traceData.length === 0 ? (
-    null
-  ) : (
+  !traceData || traceData.length === 0 ? null : (
     <>
       <h4>List of changes</h4>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell width={1}>Field</Table.HeaderCell>
-            <Table.HeaderCell width={1}>Date of change</Table.HeaderCell>
-            <Table.HeaderCell width={1}>Old value</Table.HeaderCell>
-            <Table.HeaderCell width={1}>New value</Table.HeaderCell>
-            <Table.HeaderCell width={1}>Author</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        {traceData.map((trace) => (
-          <Table.Row key={trace.id}>
-            <Table.Cell>{getFieldName(trace.fieldName)}</Table.Cell>
-            <Table.Cell>{trace.date}</Table.Cell>
-            <Table.Cell>{trace.oldValue}</Table.Cell>
-            <Table.Cell>{trace.newValue}</Table.Cell>
-            <Table.Cell>{trace.userId}</Table.Cell>
-          </Table.Row>
+      <ScrollList selection>
+        {[...traceData].reverse().map((trace) => (
+          <List.Item key={trace.fieldName + trace.date + trace.userId}>
+            <List.Content floated="left">
+              <TextWrapper width={'100%'}>
+                <FieldWrapper>{getFieldName(trace.fieldName)}</FieldWrapper>{' '}
+                changed on <FieldWrapper>{trace.date}</FieldWrapper> by{' '}
+                <FieldWrapper>{trace.userId}</FieldWrapper>. The new value is{' '}
+                <FieldWrapper>{trace.newValue}</FieldWrapper>
+              </TextWrapper>
+            </List.Content>
+          </List.Item>
         ))}
-      </Table>
+      </ScrollList>
     </>
   )
 

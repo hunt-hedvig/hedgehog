@@ -14,13 +14,12 @@ const TabContainer = styled(Tab.Pane)`
     display: flex;
     flex-direction: column;
     min-width: 700px;
-    height: ${(props) => (props.isChatTab ? '100%' : 'auto')};
     margin-bottom: 50px !important;
   }
 `
 
-const TabItem = ({ props, TabContent, isChatTab }) => (
-  <TabContainer isChatTab={isChatTab}>
+const TabItem = ({ props, TabContent }) => (
+  <TabContainer>
     <TabContent {...props} />
   </TabContainer>
 )
@@ -29,6 +28,7 @@ TabItem.propTypes = {
   props: PropTypes.object.isRequired,
   TabContent: PropTypes.func,
   isChatTab: PropTypes.bool,
+  hideTab: PropTypes.bool,
 }
 
 /* eslint-disable react/display-name */
@@ -40,6 +40,12 @@ const memberPagePanes = (props, addMessage, socket) => {
       render: () => <TabItem props={props} TabContent={DetailsTab} />,
     },
     {
+      menuItem: 'Claims',
+      render: () => <TabItem props={props} TabContent={ClaimsTab} />,
+    },
+  ]
+  if (props.showChatTab) {
+    panes.push({
       menuItem: 'Chat',
       render: () => (
         <TabItem
@@ -48,12 +54,8 @@ const memberPagePanes = (props, addMessage, socket) => {
           isChatTab={true}
         />
       ),
-    },
-    {
-      menuItem: 'Claims',
-      render: () => <TabItem props={props} TabContent={ClaimsTab} />,
-    },
-  ]
+    })
+  }
   if (!insurance.error.length && insurance.data) {
     panes.push({
       menuItem: 'Current Insurance',

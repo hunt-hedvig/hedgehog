@@ -1,15 +1,18 @@
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { Form, TextArea } from 'semantic-ui-react'
+import { Form, Icon, TextArea } from 'semantic-ui-react'
 import styled from 'styled-components'
+import { EmojiPicker } from './EmojiPicker'
 
 const MessagesPanelContariner = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 20px;
+  padding-top: 5px;
+  padding-left: 15px;
   border-top: solid 2px #e8e5e5;
+  height: 85px;
 `
 
 const ChatForm = styled(Form)`
@@ -28,11 +31,18 @@ const ChatForm = styled(Form)`
   }
 `
 
+const TextAreaStyled = styled(TextArea)`
+  height: 75px !important;
+`
+
 const InputContainer = styled.div`
   width: 540px;
 `
 
-export default class ChatPanel extends React.Component {
+export default class ChatPanel extends React.Component<
+  any,
+  { message: string }
+> {
   constructor(props) {
     super(props)
     this.state = {
@@ -52,21 +62,40 @@ export default class ChatPanel extends React.Component {
     this.setState({ message: value })
   }
 
+  public textKeyPress = (e) => {
+    if (e && e.charCode === 13 && !e.shiftKey) {
+      this.submitHandler()
+    }
+  }
+
   public render() {
     return (
       <ChatForm onSubmit={this.submitHandler}>
         <MessagesPanelContariner>
           <InputContainer>
             <Form.Field>
-              <label>Message</label>
-              <TextArea
+              <TextAreaStyled
                 autoHeight
                 onChange={this.inputHandler}
                 value={this.state.message}
+                onKeyPress={this.textKeyPress}
               />
             </Form.Field>
           </InputContainer>
-          <Form.Button content="Send" primary />
+          <div>
+            <EmojiPicker
+              selectEmoji={(emoji) => {
+                this.setState({ message: `${this.state.message}${emoji}` })
+              }}
+            />
+            <Icon
+              name={'arrow circle right'}
+              color={'blue'}
+              size={'large'}
+              link
+              onClick={this.submitHandler}
+            />
+          </div>
         </MessagesPanelContariner>
       </ChatForm>
     )

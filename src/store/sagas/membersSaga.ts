@@ -4,6 +4,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import {
   membersRequestError,
   membersRequestSuccess,
+  saveFraudulentStatusSuccess,
   SearchMemberRequestAction,
   searchMembersSuccess,
 } from '../actions/membersActions'
@@ -11,6 +12,7 @@ import { showNotification } from '../actions/notificationsActions'
 import {
   MEMBER_SEARCH_REQUESTING,
   MEMBERS_REQUESTING,
+  SET_FRAUDULENT_STATUS,
   SET_MEMBER_FILTER,
 } from '../constants/members'
 import { MembersSearchResult } from '../storeTypes'
@@ -51,11 +53,41 @@ function* membersSearchFlow(action: SearchMemberRequestAction) {
   }
 }
 
+function* saveFraudulentStatusFlow({
+  fraudulentStatus,
+  fraudulentStatusDescription,
+  memberId,
+}) {
+  try {
+    const path = `${memberId}/setFraudulentStatus`
+
+    const response = yield call(
+      api,
+      config.members.fraudulentStatus,
+      { fraudulentStatus, fraudulentStatusDescription },
+      path,
+    )
+
+    yield put(saveFraudulentStatusSuccess())
+  } catch (error) {
+    yield [
+      put(
+        showNotification({
+          message: error.message,
+          header: 'Insurance',
+        }),
+      ),
+      put(membersRequestError(error)),
+    ]
+  }
+}
+
 function* membersWatcher() {
   yield [
     takeLatest(MEMBERS_REQUESTING, membersRequestFlow),
     takeLatest(SET_MEMBER_FILTER, membersSearchFlow),
     takeLatest(MEMBER_SEARCH_REQUESTING, membersSearchFlow),
+    takeLatest(SET_FRAUDULENT_STATUS, saveFraudulentStatusFlow),
   ]
 }
 

@@ -4,7 +4,7 @@ import { DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import 'moment/locale/sv'
 import * as React from 'react'
-import { SingleDatePicker } from 'react-dates'
+import { isInclusivelyAfterDay, SingleDatePicker } from 'react-dates'
 import { OPEN_UP } from 'react-dates/constants'
 import 'react-dates/initialize'
 import styled from 'react-emotion'
@@ -45,10 +45,12 @@ const DatePickerContainer = styled('div')({
 
 interface DateInputProps {
   changeHandler: (type: string, e: any, value: object) => void
-  changeType: string
-  label: boolean
-  date: string
-  disabled: boolean
+  changeType?: string
+  label?: boolean | string
+  date?: string
+  disabled?: boolean
+  forbidFuture?: boolean
+  placeholder?: string
 }
 interface State {
   focused: boolean
@@ -68,12 +70,16 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
       }}
       actions={{
         dateChangeHandler: (newDate: any) => (state) => {
-          const parsed = toDate(newDate)
-          const isoString = parsed.toISOString()
-          props.changeHandler(props.changeType || DATE, null, {
-            value: isoString,
-          })
-          return { date: moment(newDate) }
+          if (moment(newDate).isValid()) {
+            const parsed = toDate(newDate)
+            const isoString = parsed.toISOString()
+            props.changeHandler(props.changeType || DATE, null, {
+              value: isoString,
+            })
+            return { date: moment(newDate) }
+          } else {
+            return { date: moment() }
+          }
         },
         focusHandler: (result: any) => (state) => ({ focused: result.focused }),
       }}
@@ -85,7 +91,11 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
           }}
         >
           <Form.Field disabled={props.disabled}>
-            {props.label ? <label>Date</label> : null}
+            {props.label && (
+              <label>
+                {typeof props.label === 'string' ? props.label : 'Date'}
+              </label>
+            )}
             <WidgetContainer className={dateInputStyles}>
               <DatePickerContainer>
                 <SingleDatePicker
@@ -94,9 +104,12 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
                   focused={focused}
                   onFocusChange={focusHandler}
                   numberOfMonths={1}
-                  isOutsideRange={() => false}
+                  isOutsideRange={(day) =>
+                    props.forbidFuture
+                      ? !isInclusivelyAfterDay(moment(), day)
+                      : false
+                  }
                   openDirection={OPEN_UP}
-                  readOnly={true}
                   hideKeyboardShortcutsPanel={true}
                 />
               </DatePickerContainer>

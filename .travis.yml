@@ -12,10 +12,17 @@ install:
 - yarn install
 
 script:
-- yarn lint
-- yarn test
-- yarn typecheck
+#- yarn lint
+#- yarn test
+#- yarn typecheck
 - yarn build
+
+sudo: required
+services:
+  - docker
+after_success:
+  - docker_push.sh
+  - kubernetes_deploy.sh
 
 notifications:
   email: false

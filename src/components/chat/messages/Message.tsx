@@ -1,5 +1,6 @@
 import ImageMessage from 'components/chat/messages/ImageMessage'
 import SelectMessage from 'components/chat/messages/SelectMessage'
+import { dateTimeFormatter } from 'lib/helpers'
 import * as types from 'lib/messageTypes'
 import * as moment from 'moment'
 import 'moment/locale/sv'
@@ -28,7 +29,7 @@ const MessageBody = styled.div`
   border: 1px solid #d4d4d5;
   color: #4b4b4b;
   line-height: 1.4em;
-  background: #fff;
+  background: ${(props) => (props.left ? '#fff;' : '#d1f4ff')}
   border-radius: 0.3rem;
   padding: 0.8em 1em;
   box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
@@ -39,7 +40,7 @@ const MessageBody = styled.div`
     content: '';
     width: 0.7em;
     height: 0.7em;
-    background: #fff;
+    background: ${(props) => (props.left ? '#fff;' : '#d1f4ff')}
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     z-index: 2;
@@ -80,7 +81,7 @@ const Message = ({
           <Label>
             {from}
             <Label.Detail>
-              {moment(timestamp).format('HH:mm:ss DD MMMM YYYY')}
+              {dateTimeFormatter(timestamp, 'HH:mm:ss DD MMMM YYYY')}
             </Label.Detail>
           </Label>
         </MessageInfo>
@@ -113,6 +114,8 @@ const MessageContent = ({ content }) => {
     case types.MULTIPLE_SELECT:
     case types.SINGLE_SELECT:
       return <SelectMessage content={content} />
+    case types.FILE_UPLOAD:
+      return <a href={content.url}>Attached file</a>
     default:
       return null
   }
