@@ -28,7 +28,6 @@ const InputStyled = styled(Input)(() => ({
 }))
 
 const fraudulentStatuses = {
-  UNDEFINED: 'grey',
   NOT_FRAUD: 'green',
   SUSPECTED_FRAUD: 'orange',
   CONFIRMED_FRAUD: 'red',
@@ -41,7 +40,7 @@ const FraudulentStatus = (props) => (
       color={
         props.stateInfo && fraudulentStatuses[props.stateInfo.state]
           ? fraudulentStatuses[props.stateInfo.state]
-          : 'grey'
+          : 'green'
       }
       size={'tiny'}
     />
