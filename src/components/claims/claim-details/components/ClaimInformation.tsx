@@ -48,7 +48,7 @@ const validateSelectOption = (
   event: React.ChangeEvent<HTMLSelectElement>,
 ): ClaimState => {
   const { value } = event.target
-  if (!Object.keys(ClaimState).includes(value)) {
+  if (!Object.values(ClaimState).includes(value)) {
     throw new Error(`invalid ClaimState: ${value}`)
   }
   return value as ClaimState
@@ -107,7 +107,7 @@ const ClaimInformation: React.SFC<Props> = ({
             })
           }
         >
-          {Object.keys(ClaimState).map((s) => (
+          {Object.values(ClaimState).map((s) => (
             <MenuItem key={s} value={s}>
               {s}
             </MenuItem>
