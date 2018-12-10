@@ -11,6 +11,7 @@ import {
   TableRow,
   TextField as MuiTextField,
 } from '@material-ui/core'
+import { ActionMap, Container } from 'constate'
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
 import { Field, FieldProps, Form, Formik } from 'formik'
@@ -18,6 +19,7 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import * as yup from 'yup'
 import { Checkmark, Cross } from '../../../icons'
 import { CustomPaper } from './Styles'
 
@@ -83,7 +85,7 @@ interface TextFieldProps {
   placeholder: string
 }
 
-const Checbox: React.SFC<FieldProps> = ({
+const Checkbox: React.SFC<FieldProps> = ({
   field: { onChange, onBlur, name, value },
 }) => (
   <MuiCheckbox
@@ -123,109 +125,152 @@ const CustomForm = styled(Form)({
   flexDirection: 'column',
 })
 
+interface State {
+  potentiallySanctioned: boolean
+}
+
+interface Actions {
+  setPotentiallySanctioned: (potentiallySanction: boolean) => void
+}
+
+const actions: ActionMap<State, Actions> = {
+  setPotentiallySanctioned: (potentiallySanctioned: boolean) => () => ({
+    potentiallySanctioned,
+  }),
+}
+
+interface FormData {
+  amount: string
+  note: string
+  exGratia?: boolean
+  type: string
+  overridden?: boolean
+}
+
+const schema = yup.object().shape({
+  amount: yup.string().required(),
+  note: yup.string().required(),
+  exGratia: yup.boolean(),
+  type: yup
+    .string()
+    .oneOf(['Manual', 'Automatic'])
+    .required(),
+  overridden: yup.boolean(),
+})
 const ClaimPayments: React.SFC<Props> = ({ payments, claimId }) => (
-  <Mutation
-    mutation={CREATE_PAYMENT_MUTATION}
-    update={(cache, { data: updateData }) => {
-      cache.writeQuery({
-        query: CREATE_PAYMENT_QUERY,
-        variables: { id: claimId },
-        data: {
-          claim: {
-            payments: updateData.createClaimPayment.payments,
-            __typename: updateData.createClaimPayment.__typename,
-            events: updateData.createClaimPayment.events,
-          },
-        },
-      })
-    }}
+  <Container<State, Actions>
+    initialState={{ potentiallySanctioned: false }}
+    actions={actions}
   >
-    {(createPayment) => (
-      <CustomPaper>
-        <h3>Payments</h3>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Amount</TableCell>
-              <TableCell>Note</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Ex Gratia</TableCell>
-              <TableCell>Type</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {payments.map((payment) => (
-              <TableRow
-                key={
-                  payment.amount.amount +
-                  payment.amount.currency +
-                  payment.timestamp
-                }
-              >
-                <TableCell>
-                  {payment.amount.amount} {payment.amount.currency}
-                </TableCell>
-                <TableCell>{payment.note}</TableCell>
-                <TableCell>
-                  {format(toDate(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
-                </TableCell>
-                <TableCell>
-                  {payment.exGratia ? <Checkmark /> : <Cross />}
-                </TableCell>
-                <TableCell>{payment.type}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Formik<{
-          amount: string
-          note: string
-          exGratia?: boolean
-          type: string
-        }>
-          initialValues={{ type: 'Manual', amount: '', note: '' }}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
-            createPayment({
-              variables: {
-                id: claimId,
-                payment: {
-                  amount: {
-                    amount: +values.amount,
-                    currency: 'SEK',
-                  },
-                  note: values.note,
-                  exGratia: values.exGratia || false,
-                  type: values.type,
-                },
+    {({ potentiallySanctioned, setPotentiallySanctioned }) => (
+      <Mutation
+        mutation={CREATE_PAYMENT_MUTATION}
+        update={(cache, { data: updateData }) => {
+          cache.writeQuery({
+            query: CREATE_PAYMENT_QUERY,
+            variables: { id: claimId },
+            data: {
+              claim: {
+                payments: updateData.createClaimPayment.payments,
+                __typename: updateData.createClaimPayment.__typename,
+                events: updateData.createClaimPayment.events,
               },
-            })
-            setSubmitting(false)
-            resetForm()
-          }}
-        >
-          <CustomForm>
-            <Field
-              component={TextField}
-              placeholder="Payment amount"
-              name="amount"
-            />
-            <Field component={TextField} placeholder="Note" name="note" />
-            <FormControlLabel
-              label="Ex Gratia?"
-              control={<Field component={Checbox} name="exGratia" />}
-            />
-            <Field component={Select} name="type">
-              <MenuItem value="Manual">Manual</MenuItem>
-              <MenuItem value="Automatic">Automatic</MenuItem>
-            </Field>
-            <Button type="submit" variant="contained" color="primary">
-              Create payment
-            </Button>
-          </CustomForm>
-        </Formik>
-      </CustomPaper>
+            },
+          })
+        }}
+        onError={(error) => {
+          if (error.message === 'potentially sanctioned') {
+            setPotentiallySanctioned(true)
+          }
+        }}
+      >
+        {(createPayment) => (
+          <CustomPaper>
+            <h3>Payments</h3>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Note</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Ex Gratia</TableCell>
+                  <TableCell>Type</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {payments.map((payment) => (
+                  <TableRow
+                    key={
+                      payment.amount.amount +
+                      payment.amount.currency +
+                      payment.timestamp
+                    }
+                  >
+                    <TableCell>
+                      {payment.amount.amount} {payment.amount.currency}
+                    </TableCell>
+                    <TableCell>{payment.note}</TableCell>
+                    <TableCell>
+                      {format(toDate(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
+                    </TableCell>
+                    <TableCell>
+                      {payment.exGratia ? <Checkmark /> : <Cross />}
+                    </TableCell>
+                    <TableCell>{payment.type}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <Formik<FormData>
+              initialValues={{ type: 'Manual', amount: '', note: '' }}
+              onSubmit={(values, { setSubmitting, resetForm }) => {
+                createPayment({
+                  variables: {
+                    id: claimId,
+                    payment: {
+                      amount: {
+                        amount: +values.amount,
+                        currency: 'SEK',
+                      },
+                      note: values.note,
+                      exGratia: values.exGratia || false,
+                      type: values.type,
+                    },
+                  },
+                })
+                setSubmitting(false)
+                resetForm()
+              }}
+              validationSchema={schema}
+            >
+              <CustomForm>
+                <Field
+                  component={TextField}
+                  placeholder="Payment amount"
+                  name="amount"
+                />
+                <Field component={TextField} placeholder="Note" name="note" />
+                <FormControlLabel
+                  label="Ex Gratia?"
+                  control={<Field component={Checkbox} name="exGratia" />}
+                />
+                <Field component={Select} name="type">
+                  <MenuItem value="Manual">Manual</MenuItem>
+                  <MenuItem value="Automatic">Automatic</MenuItem>
+                </Field>
+                {potentiallySanctioned && (
+                  <Field component={Checkbox} name="overridden" />
+                )}
+                <Button type="submit" variant="contained" color="primary">
+                  Create payment
+                </Button>
+              </CustomForm>
+            </Formik>
+          </CustomPaper>
+        )}
+      </Mutation>
     )}
-  </Mutation>
+  </Container>
 )
 
 export { ClaimPayments }
