@@ -14,7 +14,7 @@ import {
 import { ActionMap, Container } from 'constate'
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
-import { Field, FieldProps, Form, Formik } from 'formik'
+import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
@@ -22,6 +22,7 @@ import styled from 'react-emotion'
 import * as yup from 'yup'
 import { Checkmark, Cross } from '../../../icons'
 import { CustomPaper } from './Styles'
+import { validateOperation } from 'apollo-link/lib/linkUtils'
 
 const CREATE_PAYMENT_QUERY = gql`
   query CreatePaymentQuery($id: ID!) {
@@ -68,6 +69,7 @@ const CREATE_PAYMENT_MUTATION = gql`
 interface Props {
   payments: Payment[]
   claimId: string
+  directDebitStatus: boolean
 }
 
 interface Payment {
@@ -155,9 +157,17 @@ const schema = yup.object().shape({
     .string()
     .oneOf(['Manual', 'Automatic'])
     .required(),
-  overridden: yup.boolean(),
+  overridden: yup.boolean().when('$potentiallySanctioned', {
+    is: true,
+    then: yup.boolean().required(),
+  }),
 })
-const ClaimPayments: React.SFC<Props> = ({ payments, claimId }) => (
+
+const ClaimPayments: React.SFC<Props> = ({
+  payments,
+  claimId,
+  directDebitStatus,
+}) => (
   <Container<State, Actions>
     initialState={{ potentiallySanctioned: false }}
     actions={actions}
@@ -244,6 +254,16 @@ const ClaimPayments: React.SFC<Props> = ({ payments, claimId }) => (
                 resetForm()
               }}
               validationSchema={schema}
+              validate={(values) => {
+                try {
+                  validateYupSchema<FormData>(values, schema, false, {
+                    directDebitStatus,
+                    potentiallySanctioned,
+                  })
+                } catch (err) {
+                  throw new Error('An error occured with the validation ' + err)
+                }
+              }}
             >
               <CustomForm>
                 <Field
