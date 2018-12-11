@@ -23,6 +23,7 @@ const CLAIM_PAGE_QUERY = gql`
         directDebitStatus {
           activated
         }
+        sanctionStatus
       }
       registrationDate
       recordingUrl

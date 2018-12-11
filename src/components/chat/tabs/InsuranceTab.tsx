@@ -8,7 +8,7 @@ import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 const insuranceFieldFormatters = {
-  signedOn: (date: string) => dateTimeFormatter(date, 'YYYY-MM-DD HH:mm:ss'),
+  signedOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
 export default class InsuranceTab extends React.Component {
@@ -164,18 +164,17 @@ export default class InsuranceTab extends React.Component {
                   <Modal.Content>
                     <Form inverted size="small">
                       <React.Fragment>
-                        {Object.keys(data).map(
-                          (field, productId) =>
-                            this.shouldBeDisplayed(field) ? (
-                              <Form.Input
-                                key={productId}
-                                label={getFieldName(field)}
-                                defaultValue={getFieldValue(data[field])}
-                                onChange={this.handleChange(field)}
-                              />
-                            ) : (
-                              ''
-                            ),
+                        {Object.keys(data).map((field, productId) =>
+                          this.shouldBeDisplayed(field) ? (
+                            <Form.Input
+                              key={productId}
+                              label={getFieldName(field)}
+                              defaultValue={getFieldValue(data[field])}
+                              onChange={this.handleChange(field)}
+                            />
+                          ) : (
+                            ''
+                          ),
                         )}
                         <Form.Group inverted grouped>
                           <label>Safety Items</label>

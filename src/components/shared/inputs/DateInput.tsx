@@ -71,7 +71,7 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
       actions={{
         dateChangeHandler: (newDate: any) => (state) => {
           if (moment(newDate).isValid()) {
-            const parsed = toDate(newDate)
+            const parsed = newDate.toDate()
             const isoString = parsed.toISOString()
             props.changeHandler(props.changeType || DATE, null, {
               value: isoString,
