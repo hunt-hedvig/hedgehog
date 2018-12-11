@@ -179,9 +179,11 @@ const ClaimPayments: React.SFC<Props> = ({ payments, claimId }) => (
           })
         }}
         onError={(error) => {
-          if (error.message === 'potentially sanctioned') {
-            setPotentiallySanctioned(true)
-          }
+          console.error(error)
+          // if (error.message === 'potentially sanctioned') {
+          console.error('GraphQL error when trying to make a payment')
+          setPotentiallySanctioned(true)
+          // }
         }}
       >
         {(createPayment) => (
@@ -259,7 +261,10 @@ const ClaimPayments: React.SFC<Props> = ({ payments, claimId }) => (
                   <MenuItem value="Automatic">Automatic</MenuItem>
                 </Field>
                 {potentiallySanctioned && (
-                  <Field component={Checkbox} name="overridden" />
+                  <FormControlLabel
+                    label="Override sanction list result (I promise that I have manually checked the list)"
+                    control={<Field component={Checkbox} name="overridden" />}
+                  />
                 )}
                 <Button type="submit" variant="contained" color="primary">
                   Create payment
