@@ -87,6 +87,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         notes,
         events,
         payments,
+        reserves,
         type,
       } = data.claim
 
@@ -111,6 +112,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               payments={payments}
               claimId={match.params.id}
               directDebitStatus={member.directDebitStatus.activated}
+              reserves={reserves}
             />
           </Grid>
           <Grid item>

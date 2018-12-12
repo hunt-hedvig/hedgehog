@@ -21,6 +21,7 @@ import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import * as yup from 'yup'
 import { Checkmark, Cross } from '../../../icons'
+import { ClaimReserveForm } from './ClaimReserveForm'
 import { CustomPaper } from './Styles'
 
 const CREATE_PAYMENT_QUERY = gql`
@@ -50,6 +51,7 @@ const CREATE_PAYMENT_MUTATION = gql`
   mutation CreatePayment($id: ID!, $payment: ClaimPaymentInput!) {
     createClaimPayment(id: $id, payment: $payment) {
       payments {
+        id
         amount
         note
         type
@@ -58,6 +60,7 @@ const CREATE_PAYMENT_MUTATION = gql`
         transaction {
           status
         }
+        status
       }
       events {
         text
@@ -71,6 +74,7 @@ interface Props {
   payments: Payment[]
   claimId: string
   directDebitStatus: boolean
+  reserves: string
 }
 
 interface Payment {
@@ -125,9 +129,10 @@ export const Select: React.SFC<FieldProps> = ({
   </MuiSelect>
 )
 
-const CustomForm = styled(Form)({
+const PaymentForm = styled(Form)({
   display: 'flex',
   flexDirection: 'column',
+  marginTop: '20px',
 })
 
 interface State {
@@ -144,7 +149,7 @@ const actions: ActionMap<State, Actions> = {
   }),
 }
 
-interface FormData {
+interface PaymentFormData {
   amount: string
   note: string
   exGratia?: boolean
@@ -170,6 +175,7 @@ const ClaimPayments: React.SFC<Props> = ({
   payments,
   claimId,
   directDebitStatus,
+  reserves,
 }) => (
   <Container<State, Actions>
     initialState={{ potentiallySanctioned: false }}
@@ -202,6 +208,7 @@ const ClaimPayments: React.SFC<Props> = ({
         {(createPayment) => (
           <CustomPaper>
             <h3>Payments</h3>
+            <ClaimReserveForm claimId={claimId} reserves={reserves} />
             <Table>
               <TableHead>
                 <TableRow>
@@ -240,7 +247,8 @@ const ClaimPayments: React.SFC<Props> = ({
                 ))}
               </TableBody>
             </Table>
-            <Formik<FormData>
+
+            <Formik<PaymentFormData>
               initialValues={{ type: 'Manual', amount: '', note: '' }}
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 createPayment({
@@ -263,7 +271,7 @@ const ClaimPayments: React.SFC<Props> = ({
               validationSchema={schema}
               validate={(values) => {
                 try {
-                  validateYupSchema<FormData>(values, schema, false, {
+                  validateYupSchema<PaymentFormData>(values, schema, false, {
                     directDebitStatus,
                     potentiallySanctioned,
                   })
@@ -272,7 +280,7 @@ const ClaimPayments: React.SFC<Props> = ({
                 }
               }}
             >
-              <CustomForm>
+              <PaymentForm>
                 <Field
                   component={TextField}
                   placeholder="Payment amount"
@@ -296,7 +304,7 @@ const ClaimPayments: React.SFC<Props> = ({
                 <Button type="submit" variant="contained" color="primary">
                   Create payment
                 </Button>
-              </CustomForm>
+              </PaymentForm>
             </Formik>
           </CustomPaper>
         )}
