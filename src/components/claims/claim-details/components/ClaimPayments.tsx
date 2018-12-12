@@ -22,12 +22,12 @@ import styled from 'react-emotion'
 import * as yup from 'yup'
 import { Checkmark, Cross } from '../../../icons'
 import { CustomPaper } from './Styles'
-import { validateOperation } from 'apollo-link/lib/linkUtils'
 
 const CREATE_PAYMENT_QUERY = gql`
   query CreatePaymentQuery($id: ID!) {
     claim(id: $id) {
       payments {
+        id
         amount
         note
         type
@@ -36,6 +36,7 @@ const CREATE_PAYMENT_QUERY = gql`
         transaction {
           status
         }
+        status
       }
       events {
         text
@@ -73,6 +74,7 @@ interface Props {
 }
 
 interface Payment {
+  id: string
   amount: {
     amount: string
     currency: string
@@ -81,6 +83,7 @@ interface Payment {
   timestamp: string
   type: string
   exGratia: boolean
+  status: string
 }
 
 interface TextFieldProps {
@@ -202,11 +205,13 @@ const ClaimPayments: React.SFC<Props> = ({
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell>Id</TableCell>
                   <TableCell>Amount</TableCell>
                   <TableCell>Note</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Ex Gratia</TableCell>
                   <TableCell>Type</TableCell>
+                  <TableCell>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -218,6 +223,7 @@ const ClaimPayments: React.SFC<Props> = ({
                       payment.timestamp
                     }
                   >
+                    <TableCell>{payment.id}</TableCell>
                     <TableCell>
                       {payment.amount.amount} {payment.amount.currency}
                     </TableCell>
@@ -229,6 +235,7 @@ const ClaimPayments: React.SFC<Props> = ({
                       {payment.exGratia ? <Checkmark /> : <Cross />}
                     </TableCell>
                     <TableCell>{payment.type}</TableCell>
+                    <TableCell>{payment.status}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
