@@ -36,6 +36,7 @@ const CLAIM_PAGE_QUERY = gql`
       }
       reserves
       payments {
+        id
         amount
         note
         timestamp
@@ -44,6 +45,7 @@ const CLAIM_PAGE_QUERY = gql`
         transaction {
           status
         }
+        status
       }
       events {
         text
@@ -105,7 +107,11 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             <ClaimType type={type} claimId={match.params.id} />
           </Grid>
           <Grid item>
-            <ClaimPayments payments={payments} claimId={match.params.id} />
+            <ClaimPayments
+              payments={payments}
+              claimId={match.params.id}
+              directDebitStatus={member.directDebitStatus.activated}
+            />
           </Grid>
           <Grid item>
             <Notes notes={notes} claimId={match.params.id} />

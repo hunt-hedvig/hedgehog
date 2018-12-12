@@ -44,6 +44,9 @@ export const TYPE_FRAGMENT = `
           date
           ticket
         }
+        ... on NotCoveredClaim {
+          date
+        }
 `
 
 const SET_CLAIM_TYPE_QUERY = gql`
@@ -103,7 +106,13 @@ const SET_CLAIM_INFORMATION_QUERY = gql`
 `
 
 const hasLocation = (typename: ClaimTypes): boolean => {
-  return typename !== ClaimTypes.WaterDamageClaim
+  return [
+    ClaimTypes.TheftClaim,
+    ClaimTypes.AccidentalDamageClaim,
+    ClaimTypes.AssaultClaim,
+    ClaimTypes.TravelAccidentClaim,
+    ClaimTypes.LuggageDelayClaim,
+  ].includes(typename)
 }
 
 const hasItem = (typename: ClaimTypes): boolean => {
@@ -113,9 +122,12 @@ const hasItem = (typename: ClaimTypes): boolean => {
 }
 
 const hasPoliceReport = (typename: ClaimTypes): boolean => {
-  return ![ClaimTypes.WaterDamageClaim, ClaimTypes.LuggageDelayClaim].includes(
-    typename,
-  )
+  return [
+    ClaimTypes.TheftClaim,
+    ClaimTypes.AccidentalDamageClaim,
+    ClaimTypes.AssaultClaim,
+    ClaimTypes.TravelAccidentClaim,
+  ].includes(typename)
 }
 
 const hasReceipt = (typename: ClaimTypes): boolean => {
@@ -173,6 +185,11 @@ interface LuggageDelayClaim {
   __typename: ClaimTypes
 }
 
+interface NotCoveredClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
 export enum ClaimTypes {
   TheftClaim = 'TheftClaim',
   AccidentalDamageClaim = 'AccidentalDamageClaim',
@@ -180,6 +197,7 @@ export enum ClaimTypes {
   WaterDamageClaim = 'WaterDamageClaim',
   TravelAccidentClaim = 'TravelAccidentClaim',
   LuggageDelayClaim = 'LuggageDelayClaim',
+  NotCoveredClaim = 'NotCoveredClaim',
 }
 
 type ClaimType =
@@ -189,6 +207,7 @@ type ClaimType =
   | WaterDamageClaim
   | TravelAccidentClaim
   | LuggageDelayClaim
+  | NotCoveredClaim
 
 interface ClaimTypeProps {
   type?: ClaimType

@@ -72,7 +72,8 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
     </p>
     <p>Direct Debit: {activated ? <Checkmark /> : <Cross />}</p>
     <p>
-      SanctionStatus: <SanctionStatusIcon status={sanctionStatus} />
+      SanctionStatus: {sanctionStatus}{' '}
+      <SanctionStatusIcon status={sanctionStatus} />
     </p>
   </CustomPaper>
 )
