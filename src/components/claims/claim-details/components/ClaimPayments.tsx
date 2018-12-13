@@ -21,7 +21,7 @@ import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import * as yup from 'yup'
 import { Checkmark, Cross } from '../../../icons'
-import { ClaimReserveForm } from './ClaimReserveForm'
+import { ClaimReserves } from './ClaimReserves'
 import { CustomPaper } from './Styles'
 
 const CREATE_PAYMENT_QUERY = gql`
@@ -70,19 +70,21 @@ const CREATE_PAYMENT_MUTATION = gql`
   }
 `
 
+export interface MonetaryAmount {
+  amount: string
+  currency: string
+}
+
 interface Props {
   payments: Payment[]
   claimId: string
   directDebitStatus: boolean
-  reserves: string
+  reserves: MonetaryAmount
 }
 
 interface Payment {
   id: string
-  amount: {
-    amount: string
-    currency: string
-  }
+  amount: MonetaryAmount
   note: string
   timestamp: string
   type: string
@@ -208,7 +210,7 @@ const ClaimPayments: React.SFC<Props> = ({
         {(createPayment) => (
           <CustomPaper>
             <h3>Payments</h3>
-            <ClaimReserveForm claimId={claimId} reserves={reserves} />
+            <ClaimReserves claimId={claimId} reserves={reserves} />
             <Table>
               <TableHead>
                 <TableRow>

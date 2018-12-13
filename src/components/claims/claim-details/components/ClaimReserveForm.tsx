@@ -23,8 +23,8 @@ const UPDATE_RESERVE_MUTATION = gql`
 `
 
 const UPDATE_RESERVE_QUERY = gql`
-  query UpdateReserveQuery($id: ID!, $amount: MonetaryAmount!) {
-    updateReserve(id: $id, amount: $amount) {
+  query UpdateReserveQuery($id: ID!) {
+    claim(id: $id) {
       reserves
       events {
         text
@@ -35,10 +35,6 @@ const UPDATE_RESERVE_QUERY = gql`
 `
 
 interface Props {
-  reserves: {
-    amount: string
-    currency: string
-  }
   claimId: string
 }
 
@@ -75,7 +71,7 @@ const ReserveForm = styled(Form)({
   marginBottom: '20px',
 })
 
-const ClaimReserveForm: React.SFC<Props> = ({ claimId, reserves }) => (
+const ClaimReserveForm: React.SFC<Props> = ({ claimId }) => (
   <Mutation
     mutation={UPDATE_RESERVE_MUTATION}
     update={(cache, { data: updateData }) => {
@@ -116,7 +112,7 @@ const ClaimReserveForm: React.SFC<Props> = ({ claimId, reserves }) => (
         <ReserveForm>
           <Field
             component={TextField}
-            placeholder={reserves.amount || 'Reserve amount'}
+            placeholder={'Reserve amount'}
             name="amount"
           />
           <Button type="submit" color="primary">
