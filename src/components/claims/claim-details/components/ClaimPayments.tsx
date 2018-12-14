@@ -317,6 +317,11 @@ const ClaimPayments: React.SFC<Props> = ({
                     />
                     <Field
                       component={TextField}
+                      placeholder="Deductible"
+                      name="deductible"
+                    />
+                    <Field
+                      component={TextField}
                       placeholder="Note"
                       name="note"
                     />

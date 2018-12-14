@@ -59,6 +59,10 @@ export const PaymentConfirmationDialog: React.SFC<
                     amount: +payment.amount,
                     currency: 'SEK',
                   },
+                  deductible: {
+                    amount: +payment.amount,
+                    currency: 'SEK',
+                  },
                   note: payment.note,
                   exGratia: payment.exGratia || false,
                   type: payment.type,
