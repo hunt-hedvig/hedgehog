@@ -135,10 +135,10 @@ export default class Chat extends React.Component {
               routeData === 'insurance'
                 ? 2
                 : routeData === 'payments'
-                  ? 4
-                  : routeData === 'details'
-                    ? 0
-                    : 1
+                ? 4
+                : routeData === 'details'
+                ? 0
+                : 1
             }
           />
         </ChatPageContainer>

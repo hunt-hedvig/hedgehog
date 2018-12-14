@@ -121,9 +121,8 @@ export const getClaimFieldsData = (
     return [{ ...fieldObj, value }]
   }
   return existFieldObj
-    ? fieldsData.map(
-        (item) =>
-          item.name === fieldName ? { ...existFieldObj, value } : item,
+    ? fieldsData.map((item) =>
+        item.name === fieldName ? { ...existFieldObj, value } : item,
       )
     : [...fieldsData, { ...fieldObj, value }]
 }
@@ -246,9 +245,8 @@ export const sortMembersList = (list, fieldName, isReverse) => {
 
   switch (fieldName) {
     case 'name':
-      sortedList = list.sort(
-        (a, b) =>
-          a.firstName + a.lastName > b.firstName + b.lastName ? 1 : -1,
+      sortedList = list.sort((a, b) =>
+        a.firstName + a.lastName > b.firstName + b.lastName ? 1 : -1,
       )
       break
     case 'signedOn':
@@ -294,12 +292,11 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
 
   switch (fieldName) {
     case 'name':
-      sortedList = list.sort(
-        (a, b) =>
-          `${a.memberFirstName}${a.memberLastName}` >
-          `${b.memberFirstName}${b.memberLastName}`
-            ? 1
-            : -1,
+      sortedList = list.sort((a, b) =>
+        `${a.memberFirstName}${a.memberLastName}` >
+        `${b.memberFirstName}${b.memberLastName}`
+          ? 1
+          : -1,
       )
       break
 
@@ -349,8 +346,8 @@ function sortMembersByBool(list, fieldName, isReverse) {
     }
     return !!item[fieldName]
   })
-  const sortedList = filteredList.sort(
-    (a, b) => (a[fieldName] > b[fieldName] ? 1 : -1),
+  const sortedList = filteredList.sort((a, b) =>
+    a[fieldName] > b[fieldName] ? 1 : -1,
   )
   const resultList = isReverse ? sortedList.reverse() : sortedList
 
@@ -371,8 +368,8 @@ function sortListByText(list, fieldName, isReverse) {
     return a[fieldName].toUpperCase() > b[fieldName].toUpperCase()
       ? 1
       : a[fieldName].toUpperCase() < b[fieldName].toUpperCase()
-        ? -1
-        : 0
+      ? -1
+      : 0
   })
   const resultList = isReverse ? sortedTexts.reverse() : sortedTexts
   return [...resultList, ...withoutText]

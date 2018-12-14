@@ -19,11 +19,10 @@ export default function(state = initialState.assets, action) {
 
     case ASSET_UPDATE_SUCCESS:
       return {
-        list: state.list.map(
-          (asset) =>
-            asset.id === action.asset.id
-              ? { ...asset, state: action.asset.state }
-              : asset,
+        list: state.list.map((asset) =>
+          asset.id === action.asset.id
+            ? { ...asset, state: action.asset.state }
+            : asset,
         ),
         requesting: false,
       }
