@@ -38,6 +38,7 @@ const CLAIM_PAGE_QUERY = gql`
       payments {
         id
         amount
+        deductible
         note
         timestamp
         exGratia

@@ -36,6 +36,7 @@ const CREATE_PAYMENT_QUERY = gql`
       payments {
         id
         amount
+        deductible
         note
         type
         timestamp
@@ -59,6 +60,7 @@ const CREATE_PAYMENT_MUTATION = gql`
       payments {
         id
         amount
+        deductible
         note
         type
         timestamp
@@ -91,6 +93,7 @@ interface Props {
 interface Payment {
   id: string
   amount: MonetaryAmount
+  deductible: MonetaryAmount
   note: string
   timestamp: string
   type: string
@@ -252,6 +255,7 @@ const ClaimPayments: React.SFC<Props> = ({
                 <TableRow>
                   <TableCell>Id</TableCell>
                   <TableCell>Amount</TableCell>
+                  <TableCell>Deductible</TableCell>
                   <TableCell>Note</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Ex Gratia</TableCell>
@@ -271,6 +275,9 @@ const ClaimPayments: React.SFC<Props> = ({
                     <TableCell>{payment.id}</TableCell>
                     <TableCell>
                       {payment.amount.amount} {payment.amount.currency}
+                    </TableCell>
+                    <TableCell>
+                      {payment.deductible.amount} {payment.deductible.currency}
                     </TableCell>
                     <TableCell>{payment.note}</TableCell>
                     <TableCell>
