@@ -14,7 +14,7 @@ const ClaimReserves: React.SFC<Props> = ({ claimId, reserves }) => (
   <div>
     <ReservesTotal>
       {reserves && reserves.amount ? reserves.amount : '0.00'}{' '}
-      {reserves.currency}
+      {reserves && reserves.currency ? reserves.currency : 'SEK'}
     </ReservesTotal>
     <ClaimReserveForm claimId={claimId} />
   </div>
