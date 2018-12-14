@@ -235,6 +235,7 @@ const ClaimPayments: React.SFC<Props> = ({
           })
         }}
         onCompleted={() => {
+          closeInitiatedPayment()
           setPaymentStatus('COMPLETED')
         }}
         onError={(error) => {
