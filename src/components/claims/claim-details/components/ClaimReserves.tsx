@@ -13,7 +13,8 @@ const ReservesTotal = styled('span')({})
 const ClaimReserves: React.SFC<Props> = ({ claimId, reserves }) => (
   <div>
     <ReservesTotal>
-      {reserves.amount ? reserves.amount : '0.00'} {reserves.currency}
+      {reserves && reserves.amount ? reserves.amount : '0.00'}{' '}
+      {reserves.currency}
     </ReservesTotal>
     <ClaimReserveForm claimId={claimId} />
   </div>
