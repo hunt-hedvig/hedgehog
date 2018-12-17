@@ -10,7 +10,7 @@ import {
 } from '../../../icons'
 import { CustomPaper } from './Styles'
 
-enum SanctionStatus {
+export enum SanctionStatus {
   Undetermined = 'Undetermined',
   NoHit = 'NoHit',
   PartialHit = 'PartialHit',
