@@ -60,7 +60,7 @@ export const PaymentConfirmationDialog: React.SFC<
                     currency: 'SEK',
                   },
                   deductible: {
-                    amount: +payment.amount,
+                    amount: +payment.deductible,
                     currency: 'SEK',
                   },
                   note: payment.note,

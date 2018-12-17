@@ -176,6 +176,7 @@ const actions: ActionMap<State, Actions> = {
 
 export interface PaymentFormData {
   amount: string
+  deductible: string
   note: string
   exGratia?: boolean
   type: string
