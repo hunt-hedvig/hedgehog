@@ -63,6 +63,9 @@ export const PaymentConfirmationDialog: React.SFC<
                     amount: +payment.deductible,
                     currency: 'SEK',
                   },
+                  sanctionListSkipped: payment.overridden
+                    ? payment.overridden
+                    : false,
                   note: payment.note,
                   exGratia: payment.exGratia || false,
                   type: payment.type,

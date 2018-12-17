@@ -342,6 +342,7 @@ const ClaimPayments: React.SFC<Props> = ({
                       <MenuItem value="Manual">Manual</MenuItem>
                       <MenuItem value="Automatic">Automatic</MenuItem>
                     </Field>
+
                     {potentiallySanctioned && (
                       <FormControlLabel
                         label="Override sanction list result (I promise that I have manually checked the list)"
