@@ -81,7 +81,7 @@ const Message = ({
           <Label>
             {from}
             <Label.Detail>
-              {dateTimeFormatter(timestamp, 'HH:mm:ss DD MMMM YYYY')}
+              {dateTimeFormatter(timestamp, 'HH:mm:ss dd MMMM yyyy')}
             </Label.Detail>
           </Label>
         </MessageInfo>

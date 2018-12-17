@@ -1,71 +1,131 @@
-import ClaimInfo from 'components/claims/claim-info/ClaimInfo'
-import * as PropTypes from 'prop-types'
+import Grid from '@material-ui/core/Grid'
+import gql from 'graphql-tag'
 import * as React from 'react'
-import { Header } from 'semantic-ui-react'
-import styled from 'styled-components'
-import EventsLog from '../events-log/EventsLog'
-import Notes from '../notes/Notes'
-import Payments from '../payments/Payments'
+import { Query } from 'react-apollo'
 
-const ClaimDetailsContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto 50px;
+import { ClaimInformation } from './components/ClaimInformation'
+import { ClaimPayments } from './components/ClaimPayments'
+import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
+import { Events } from './components/Events'
+import { MemberInformation } from './components/MemberInformation'
+import { Notes } from './components/Notes'
+
+const CLAIM_PAGE_QUERY = gql`
+  query ClaimPage($id: ID!) {
+    claim(id: $id) {
+      member {
+        firstName
+        lastName
+        personalNumber
+        address
+        postalNumber
+        city
+        directDebitStatus {
+          activated
+        }
+        sanctionStatus
+      }
+      registrationDate
+      recordingUrl
+      state
+      type {
+        ${TYPE_FRAGMENT}
+      }
+      notes {
+        text
+      }
+      reserves
+      payments {
+        id
+        amount
+        deductible
+        note
+        timestamp
+        exGratia
+        type
+        transaction {
+          status
+        }
+        status
+      }
+      events {
+        text
+        date
+      }
+      __typename
+    }
+  }
 `
-export default class ClaimDetails extends React.Component {
-  constructor(props) {
-    super(props)
-  }
 
-  public componentDidMount() {
-    const { match, memberRequest, claimRequest, claimTypes } = this.props
-    const id = match.params.id
-    const userId = match.params.userId
-    claimRequest(id)
-    memberRequest(userId)
-    claimTypes()
-  }
-
-  public render() {
-    const {
-      claimDetails: { data },
-      createNote,
-      updateReserve,
-      createPayment,
-      match,
-    } = this.props
-    return (
-      <ClaimDetailsContainer>
-        <Header size="huge">Claim Details</Header>
-
-        {data ? (
-          <React.Fragment>
-            <ClaimInfo {...this.props} />
-            <Notes
-              notes={data.notes}
-              createNote={createNote}
-              id={match.params.id}
-            />
-            <Payments
-              claimDetails={data}
-              updateReserve={updateReserve}
-              createPayment={createPayment}
-              id={match.params.id}
-            />
-            <EventsLog events={data.events} />
-          </React.Fragment>
-        ) : null}
-      </ClaimDetailsContainer>
-    )
+interface Props {
+  match: {
+    params: {
+      id: string
+    }
   }
 }
 
-ClaimDetails.propTypes = {
-  claimDetails: PropTypes.object.isRequired,
-  createNote: PropTypes.func.isRequired,
-  updateReserve: PropTypes.func.isRequired,
-  match: PropTypes.object.isRequired,
-  claimRequest: PropTypes.func.isRequired,
-  claimTypes: PropTypes.func.isRequired,
-  createPayment: PropTypes.func.isRequired,
-  memberRequest: PropTypes.func.isRequired,
-}
+const ClaimPage: React.SFC<Props> = ({ match }) => (
+  <Query query={CLAIM_PAGE_QUERY} variables={{ id: match.params.id }}>
+    {({ loading, error, data }) => {
+      if (loading) {
+        return <div>Loading</div>
+      }
+
+      if (error) {
+        return (
+          <div>
+            Error: <pre>{JSON.stringify(error, null, 2)}</pre>
+          </div>
+        )
+      }
+
+      const {
+        member,
+        recordingUrl,
+        registrationDate,
+        state,
+        notes,
+        events,
+        payments,
+        reserves,
+        type,
+      } = data.claim
+
+      return (
+        <Grid container spacing={16}>
+          <Grid item>
+            <MemberInformation member={member} />
+          </Grid>
+          <Grid item>
+            <ClaimInformation
+              recordingUrl={recordingUrl}
+              registrationDate={registrationDate}
+              state={state}
+              claimId={match.params.id}
+            />
+          </Grid>
+          <Grid item>
+            <ClaimType type={type} claimId={match.params.id} />
+          </Grid>
+          <Grid item>
+            <ClaimPayments
+              payments={payments}
+              claimId={match.params.id}
+              reserves={reserves}
+              sanctionStatus={member.sanctionStatus}
+            />
+          </Grid>
+          <Grid item>
+            <Notes notes={notes} claimId={match.params.id} />
+          </Grid>
+          <Grid item>
+            <Events events={events} />
+          </Grid>
+        </Grid>
+      )
+    }}
+  </Query>
+)
+
+export default ClaimPage

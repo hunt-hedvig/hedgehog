@@ -2,12 +2,13 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "lib": ["dom", "es6", "es7"],
+    "lib": ["dom", "es6", "es7", "es2017.object"],
     "jsx": "react",
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
 
     "noUnusedLocals": true,
     "noUnusedParameters": true,

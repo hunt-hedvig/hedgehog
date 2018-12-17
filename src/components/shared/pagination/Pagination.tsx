@@ -59,32 +59,31 @@ export default class Pagination extends React.Component {
 
     return (
       <Paginator>
-        {pageState.pages &&
-          pageState.pages.length > 1 && (
-            <Button.Group>
+        {pageState.pages && pageState.pages.length > 1 && (
+          <Button.Group>
+            <Button
+              disabled={pageState.currentPage === 1}
+              onClick={this.setPage.bind(this, 1)}
+            >
+              First
+            </Button>
+            {pageState.pages.map((page, id) => (
               <Button
-                disabled={pageState.currentPage === 1}
-                onClick={this.setPage.bind(this, 1)}
+                key={id}
+                className={pageState.currentPage === page ? 'active' : ''}
+                onClick={this.setPage.bind(this, page)}
               >
-                First
+                {page}
               </Button>
-              {pageState.pages.map((page, id) => (
-                <Button
-                  key={id}
-                  className={pageState.currentPage === page ? 'active' : ''}
-                  onClick={this.setPage.bind(this, page)}
-                >
-                  {page}
-                </Button>
-              ))}
-              <Button
-                disabled={pageState.currentPage === pageState.totalPages}
-                onClick={this.setPage.bind(this, pageState.totalPages)}
-              >
-                Last
-              </Button>
-            </Button.Group>
-          )}
+            ))}
+            <Button
+              disabled={pageState.currentPage === pageState.totalPages}
+              onClick={this.setPage.bind(this, pageState.totalPages)}
+            >
+              Last
+            </Button>
+          </Button.Group>
+        )}
       </Paginator>
     )
   }

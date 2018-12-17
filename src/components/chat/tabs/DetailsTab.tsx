@@ -8,8 +8,8 @@ import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 const memberFieldFormatters = {
-  signedOn: (date: string) => dateTimeFormatter(date, 'YYYY-MM-DD HH:mm:ss'),
-  createdOn: (date: string) => dateTimeFormatter(date, 'YYYY-MM-DD HH:mm:ss'),
+  signedOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
+  createdOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
 export default class DetailsTab extends React.Component {

@@ -1,7 +1,7 @@
 import { LinkRow } from 'components/shared'
-import * as formatDate from 'date-fns/format'
-import * as isValidDate from 'date-fns/is_valid'
-import * as parseDate from 'date-fns/parse'
+import formatDate from 'date-fns/format'
+import isValidDate from 'date-fns/isValid'
+import toDate from 'date-fns/toDate'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
@@ -23,9 +23,9 @@ const linkClickHandler = (id: string, userId: string) => {
 }
 
 const getTableRow = (item: Claim) => {
-  const date = parseDate(item.date)
+  const date = toDate(item.date)
   const formattedDate = isValidDate(date)
-    ? formatDate(date, 'DD MMMM YYYY HH:mm')
+    ? formatDate(date, 'dd MMMM yyyy HH:mm')
     : '-'
   return (
     <LinkRow onClick={() => linkClickHandler(item.id, item.userId)}>

@@ -1,30 +1,15 @@
-import * as dateCompareAsc from 'date-fns/compare_asc'
-import * as formatDate from 'date-fns/format'
-import * as parseDate from 'date-fns/parse'
+import dateCompareAsc from 'date-fns/compareAsc'
+import formatDate from 'date-fns/format'
+import toDate from 'date-fns/toDate'
 import moment from 'moment'
 import { QuestionGroup, QuestionsStore } from '../store/types/questionsTypes'
 
-/**
- * Filter array of objects by obj field
- * @param {string} filter filter name
- * @param {array} list
- * @param {string} fieldName
- */
-export const filterList = (filter, list, fieldName) =>
+export const filterList = (filter: string, list: any[], fieldName: string) =>
   list.filter((item) => item[fieldName] === filter)
 
-/**
- * Sort arary by field name
- * @param {string} key
- */
-export const sortByKey = (key) => (a, b) => a[key] - b[key]
+export const sortByKey = (key: string) => (a, b) => a[key] - b[key]
 
-/**
- * Updating message in array of messages by global id
- * @param {array} list
- * @param {array} msg
- */
-export const updateList = (list, msg) => {
+export const updateList = (list: any[], msg: any[]) => {
   if (msg.length > 1) {
     return [...list, ...msg].sort(sortByKey('globalId'))
   } else {
@@ -41,21 +26,14 @@ export const updateList = (list, msg) => {
   }
 }
 
-/**
- * Slice array
- * @param {array} list array
- * @param {number} size slice size
- */
-export const sliceList = (list, size = 100) =>
+export const sliceList = (list: any[], size = 100) =>
   list.length > size ? list.slice(-size) : list
 
-/**
- * Refreshing array of messages in chat
- * @param {array} list
- * @param {object} message
- * @param {number} size slice size
- */
-export const refreshMessagesList = (list, message, size) => {
+export const refreshMessagesList = (
+  list: any[],
+  message: any,
+  size: number,
+) => {
   const slicedList = sliceList(list, size)
   const sorted = slicedList.sort(sortByKey('globalId'))
   return updateList(sorted, message)
@@ -78,13 +56,9 @@ export const updateTypesList = (list, selectedType) =>
       delete updated.requiredData
       delete updated.optionalData
       return updated
-  })
+    })
 
-/**
- * Calc sum of claim payments
- * @param {array} list
- */
-export const getSum = (list) =>
+export const getSum = (list: ReadonlyArray<{ amount: string }>) =>
   list.reduce((sum, payment) => sum + parseFloat(payment.amount), 0)
 
 const setFieldsValues = (fields, data) =>
@@ -147,9 +121,8 @@ export const getClaimFieldsData = (
     return [{ ...fieldObj, value }]
   }
   return existFieldObj
-    ? fieldsData.map(
-        (item) =>
-          item.name === fieldName ? { ...existFieldObj, value } : item,
+    ? fieldsData.map((item) =>
+        item.name === fieldName ? { ...existFieldObj, value } : item,
       )
     : [...fieldsData, { ...fieldObj, value }]
 }
@@ -159,7 +132,7 @@ export const getClaimFieldsData = (
  * @param {object} questions arrays of answered/not answered questions
  */
 export const sortQuestions = (questions: QuestionGroup[]): QuestionGroup[] =>
-  questions.sort((a, b) => dateCompareAsc(parseDate(a.date), parseDate(b.date)))
+  questions.sort((a, b) => dateCompareAsc(toDate(a.date), toDate(b.date)))
 
 /**
  * Replacing question from not answered to answered array
@@ -272,9 +245,8 @@ export const sortMembersList = (list, fieldName, isReverse) => {
 
   switch (fieldName) {
     case 'name':
-      sortedList = list.sort(
-        (a, b) =>
-          a.firstName + a.lastName > b.firstName + b.lastName ? 1 : -1,
+      sortedList = list.sort((a, b) =>
+        a.firstName + a.lastName > b.firstName + b.lastName ? 1 : -1,
       )
       break
     case 'signedOn':
@@ -320,12 +292,11 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
 
   switch (fieldName) {
     case 'name':
-      sortedList = list.sort(
-        (a, b) =>
-          `${a.memberFirstName}${a.memberLastName}` >
-          `${b.memberFirstName}${b.memberLastName}`
-            ? 1
-            : -1,
+      sortedList = list.sort((a, b) =>
+        `${a.memberFirstName}${a.memberLastName}` >
+        `${b.memberFirstName}${b.memberLastName}`
+          ? 1
+          : -1,
       )
       break
 
@@ -375,8 +346,8 @@ function sortMembersByBool(list, fieldName, isReverse) {
     }
     return !!item[fieldName]
   })
-  const sortedList = filteredList.sort(
-    (a, b) => (a[fieldName] > b[fieldName] ? 1 : -1),
+  const sortedList = filteredList.sort((a, b) =>
+    a[fieldName] > b[fieldName] ? 1 : -1,
   )
   const resultList = isReverse ? sortedList.reverse() : sortedList
 
@@ -397,8 +368,8 @@ function sortListByText(list, fieldName, isReverse) {
     return a[fieldName].toUpperCase() > b[fieldName].toUpperCase()
       ? 1
       : a[fieldName].toUpperCase() < b[fieldName].toUpperCase()
-        ? -1
-        : 0
+      ? -1
+      : 0
   })
   const resultList = isReverse ? sortedTexts.reverse() : sortedTexts
   return [...resultList, ...withoutText]
@@ -441,4 +412,4 @@ function sortListByDate(list, fieldName, isReverse) {
 }
 
 export const dateTimeFormatter = (date: string, format: string) =>
-  date && formatDate(parseDate(date), format)
+  date && formatDate(toDate(date), format)

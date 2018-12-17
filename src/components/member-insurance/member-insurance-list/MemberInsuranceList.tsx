@@ -1,7 +1,7 @@
 import { LinkRow } from 'components/shared'
-import * as formatDate from 'date-fns/format'
-import * as isValidDate from 'date-fns/is_valid'
-import * as parse from 'date-fns/parse'
+import formatDate from 'date-fns/format'
+import isValidDate from 'date-fns/isValid'
+import toDate from 'date-fns/toDate'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
@@ -23,31 +23,33 @@ const getMemberName = (ins: MemberInsurance) =>
     ? `${ins.memberFirstName} ${ins.memberLastName || ''}`
     : `${ins.memberId ? 'Member-' + ins.memberId : 'No id'}`
 
-const linkClickHandler = (id) => {
+const linkClickHandler = (id: string) => {
   history.push(`/members/${id}`, { to: 'insurance' })
 }
 
-const getFormattedDate = (date) => {
-  return date && isValidDate(date) ? formatDate(date, 'DD MMMM YYYY') : '-'
+const isValidDateTs = (date: unknown): date is Date => isValidDate(date)
+
+const getFormattedDate = (date: unknown) => {
+  return date && isValidDateTs(date) ? formatDate(date, 'dd MMMM yyyy') : '-'
 }
 
 const getTableRow = (item: MemberInsurance) => {
   // FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
   const activationDate =
     item.insuranceActiveFrom &&
-    parse(
+    toDate(
       item.insuranceActiveFrom.endsWith('Z')
         ? item.insuranceActiveFrom
         : `${item.insuranceActiveFrom}Z`,
     )
   const cancellationDate =
     item.insuranceActiveTo &&
-    parse(
+    toDate(
       item.insuranceActiveTo.endsWith('Z')
         ? item.insuranceActiveFrom
         : `${item.insuranceActiveFrom}Z`,
     )
-  const signedOnDate = item.signedOn && parse(item.signedOn)
+  const signedOnDate = item.signedOn && toDate(item.signedOn)
 
   return (
     <LinkRow onClick={() => linkClickHandler(item.memberId)}>
