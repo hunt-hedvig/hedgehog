@@ -101,7 +101,7 @@ export const PaymentConfirmationDialog: React.SFC<
                   color="primary"
                   disabled={!isValid}
                   variant="contained"
-                  onClick={() => submitForm()}
+                  onClick={submitForm}
                 >
                   Confirm Payment
                 </Button>
