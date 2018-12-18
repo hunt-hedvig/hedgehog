@@ -76,7 +76,8 @@ export const PaymentConfirmationDialog: React.SFC<
             onClose()
           }}
           validationSchema={paymentConfirmValidationSchema(payment.amount)}
-          render={({ isValid }) => (
+        >
+          {({ handleChange, values, isValid, submitForm }) => (
             <Form>
               <Field
                 component={CustomTextField}
@@ -88,6 +89,8 @@ export const PaymentConfirmationDialog: React.SFC<
                 type="text"
                 placeholder="Amount to be paid"
                 fullWidth
+                onChange={handleChange}
+                value={values.confirmation}
               />
               <DialogActions>
                 <Button onClick={onClose} color="primary">
@@ -98,13 +101,14 @@ export const PaymentConfirmationDialog: React.SFC<
                   color="primary"
                   disabled={!isValid}
                   variant="contained"
+                  onClick={() => submitForm()}
                 >
                   Confirm Payment
                 </Button>
               </DialogActions>
             </Form>
           )}
-        />
+        </Formik>
       </DialogContent>
     </Dialog>
   )
