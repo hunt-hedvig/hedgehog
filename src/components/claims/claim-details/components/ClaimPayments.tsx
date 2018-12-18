@@ -308,73 +308,72 @@ const ClaimPayments: React.SFC<Props> = ({
                     )
                   }
                 }}
-                render={({ resetForm }) => {
-                  return (
-                    <PaymentForm>
-                      <Field
-                        component={TextField}
-                        placeholder="Payment amount"
-                        name="amount"
-                      />
-                      <Field
-                        component={TextField}
-                        placeholder="Deductible"
-                        name="deductible"
-                      />
-                      <Field
-                        component={TextField}
-                        placeholder="Note"
-                        name="note"
-                      />
+              >
+                {({ resetForm }) => (
+                  <PaymentForm>
+                    <Field
+                      component={TextField}
+                      placeholder="Payment amount"
+                      name="amount"
+                    />
+                    <Field
+                      component={TextField}
+                      placeholder="Deductible"
+                      name="deductible"
+                    />
+                    <Field
+                      component={TextField}
+                      placeholder="Note"
+                      name="note"
+                    />
+                    <FormControlLabel
+                      label="Ex Gratia?"
+                      control={<Field component={Checkbox} name="exGratia" />}
+                    />
+                    <Field component={Select} name="type">
+                      <MenuItem value="Manual">Manual</MenuItem>
+                      <MenuItem value="Automatic">Automatic</MenuItem>
+                    </Field>
+
+                    {isPotentiallySanctioned && (
                       <FormControlLabel
-                        label="Ex Gratia?"
-                        control={<Field component={Checkbox} name="exGratia" />}
+                        label="Override sanction list result (I promise that I have manually checked the list)"
+                        control={
+                          <Field component={Checkbox} name="overridden" />
+                        }
                       />
-                      <Field component={Select} name="type">
-                        <MenuItem value="Manual">Manual</MenuItem>
-                        <MenuItem value="Automatic">Automatic</MenuItem>
-                      </Field>
+                    )}
 
-                      {isPotentiallySanctioned && (
-                        <FormControlLabel
-                          label="Override sanction list result (I promise that I have manually checked the list)"
-                          control={
-                            <Field component={Checkbox} name="overridden" />
-                          }
-                        />
-                      )}
+                    {initiatedPayment && (
+                      <PaymentConfirmationDialog
+                        onClose={() => {
+                          closeInitiatedPayment()
+                          resetForm()
+                        }}
+                        onSubmit={createPayment}
+                        payment={initiatedPayment}
+                        claimId={claimId}
+                      />
+                    )}
 
-                      {initiatedPayment && (
-                        <PaymentConfirmationDialog
-                          onClose={() => {
-                            closeInitiatedPayment()
-                            resetForm()
-                          }}
-                          onSubmit={createPayment}
-                          payment={initiatedPayment}
-                          claimId={claimId}
-                        />
-                      )}
+                    {!!paymentStatus && (
+                      <MutationFeedbackBlock
+                        status={paymentStatus}
+                        messages={{
+                          COMPLETED: 'Payment was completed',
+                          FAILED:
+                            'Payment failed. Please contact tech support if failure is persistent.',
+                        }}
+                        onTimeout={() => setPaymentStatus('')}
+                      />
+                    )}
 
-                      {!!paymentStatus && (
-                        <MutationFeedbackBlock
-                          status={paymentStatus}
-                          messages={{
-                            COMPLETED: 'Payment was completed',
-                            FAILED:
-                              'Payment failed. Please contact tech support if failure is persistent.',
-                          }}
-                          onTimeout={() => setPaymentStatus('')}
-                        />
-                      )}
-
-                      <Button type="submit" variant="contained" color="primary">
-                        Create payment
-                      </Button>
-                    </PaymentForm>
-                  )
-                }}
-              />
+                    <Button type="submit" variant="contained" color="primary">
+                      Create payment
+                    </Button>
+                  </PaymentForm>
+                )}
+              </Formik>
             </CustomPaper>
           )}
         </Mutation>
