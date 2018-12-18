@@ -26,7 +26,7 @@ const CustomTextField = ({ field, form, ...props }) => {
 
 const paymentConfirmValidationSchema = (amount: string) =>
   yup.object().shape({
-    confirmation: yup.string().matches(new RegExp(amount)),
+    confirmation: yup.string().matches(new RegExp(`^${amount}$`)),
   })
 
 interface ConfirmationData {
