@@ -310,39 +310,45 @@ const ClaimPayments: React.SFC<Props> = ({
                 }}
               >
                 {({ resetForm }) => (
-                  <PaymentForm>
-                    <Field
-                      component={TextField}
-                      placeholder="Payment amount"
-                      name="amount"
-                    />
-                    <Field
-                      component={TextField}
-                      placeholder="Deductible"
-                      name="deductible"
-                    />
-                    <Field
-                      component={TextField}
-                      placeholder="Note"
-                      name="note"
-                    />
-                    <FormControlLabel
-                      label="Ex Gratia?"
-                      control={<Field component={Checkbox} name="exGratia" />}
-                    />
-                    <Field component={Select} name="type">
-                      <MenuItem value="Manual">Manual</MenuItem>
-                      <MenuItem value="Automatic">Automatic</MenuItem>
-                    </Field>
-
-                    {isPotentiallySanctioned && (
-                      <FormControlLabel
-                        label="Override sanction list result (I promise that I have manually checked the list)"
-                        control={
-                          <Field component={Checkbox} name="overridden" />
-                        }
+                  <>
+                    <PaymentForm>
+                      <Field
+                        component={TextField}
+                        placeholder="Payment amount"
+                        name="amount"
                       />
-                    )}
+                      <Field
+                        component={TextField}
+                        placeholder="Deductible"
+                        name="deductible"
+                      />
+                      <Field
+                        component={TextField}
+                        placeholder="Note"
+                        name="note"
+                      />
+                      <FormControlLabel
+                        label="Ex Gratia?"
+                        control={<Field component={Checkbox} name="exGratia" />}
+                      />
+                      <Field component={Select} name="type">
+                        <MenuItem value="Manual">Manual</MenuItem>
+                        <MenuItem value="Automatic">Automatic</MenuItem>
+                      </Field>
+
+                      {isPotentiallySanctioned && (
+                        <FormControlLabel
+                          label="Override sanction list result (I promise that I have manually checked the list)"
+                          control={
+                            <Field component={Checkbox} name="overridden" />
+                          }
+                        />
+                      )}
+
+                      <Button type="submit" variant="contained" color="primary">
+                        Create payment
+                      </Button>
+                    </PaymentForm>
 
                     {initiatedPayment && (
                       <PaymentConfirmationDialog
@@ -367,11 +373,7 @@ const ClaimPayments: React.SFC<Props> = ({
                         onTimeout={() => setPaymentStatus('')}
                       />
                     )}
-
-                    <Button type="submit" variant="contained" color="primary">
-                      Create payment
-                    </Button>
-                  </PaymentForm>
+                  </>
                 )}
               </Formik>
             </CustomPaper>
