@@ -121,7 +121,7 @@ class Payment extends React.Component {
 
                 return (
                   <MonthlyPaymentsTable
-                    monthlyPayments={data.getMonthlyPayments}
+                    monthlyPayments={data.monthlyPayments}
                   />
                 )
               }}

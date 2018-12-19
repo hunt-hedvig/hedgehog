@@ -138,7 +138,7 @@ class PaymentsTab extends React.Component {
     cache.writeQuery({
       query: GET_MEMBER_QUERY,
       data: {
-        getMember: {
+        member: {
           transactions,
         },
       },
@@ -162,7 +162,7 @@ class PaymentsTab extends React.Component {
               <div>
                 <p>
                   Direct Debit activated:{' '}
-                  {data.getMember.directDebitStatus.activated ? (
+                  {data.member.directDebitStatus.activated ? (
                     <Checkmark />
                   ) : (
                     <Cross />
@@ -171,16 +171,16 @@ class PaymentsTab extends React.Component {
                 <p>
                   Subscrtiption cost for this month(
                   {this.variables.currentMonth}) is :{' '}
-                  {data.getMember.currentMonth.amount.amount}{' '}
-                  {data.getMember.currentMonth.amount.currency}
+                  {data.member.currentMonth.amount.amount}{' '}
+                  {data.member.currentMonth.amount.currency}
                 </p>
                 <p>
                   Subscrtiption cost for the previous month (
                   {this.variables.previousMonth}) is :{' '}
-                  {data.getMember.previousMonth.amount.amount}{' '}
-                  {data.getMember.previousMonth.amount.currency}
+                  {data.member.previousMonth.amount.amount}{' '}
+                  {data.member.previousMonth.amount.currency}
                 </p>
-                {data.getMember.directDebitStatus.activated && (
+                {data.member.directDebitStatus.activated && (
                   <Mutation
                     mutation={CHARGE_MEMBER_MUTATION}
                     update={this.handleUpdate}
@@ -233,7 +233,7 @@ class PaymentsTab extends React.Component {
                 <br />
                 <p>Transactions:</p>
                 <MemberTransactionsTable
-                  transactions={data.getMember.transactions
+                  transactions={data.member.transactions
                     .slice()
                     .sort(transactionDateSorter)
                     .reverse()}
