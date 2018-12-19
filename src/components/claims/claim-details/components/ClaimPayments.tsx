@@ -113,7 +113,7 @@ const Checkbox: React.SFC<FieldProps> = ({
     onChange={onChange}
     onBlur={onBlur}
     name={name}
-    value={value || ''}
+    checked={value || false}
     color="primary"
   />
 )
@@ -179,16 +179,26 @@ export interface PaymentFormData {
   overridden?: boolean
 }
 
-const paymentValidationSchema = yup.object().shape({
-  amount: yup.string().required(),
-  note: yup.string().required(),
-  exGratia: yup.boolean(),
-  type: yup
-    .string()
-    .oneOf(['Manual', 'Automatic'])
-    .required(),
-  overridden: yup.boolean(),
-})
+const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
+  yup.object().shape({
+    ...(isPotentiallySanctioned && {
+      overridden: yup
+        .boolean()
+        .required()
+        .test(
+          'overridden',
+          'Override saction list checkbox isn’t checked.',
+          (value) => value === true,
+        ),
+    }),
+    amount: yup.string().required(),
+    note: yup.string().required(),
+    exGratia: yup.boolean(),
+    type: yup
+      .string()
+      .oneOf(['Manual', 'Automatic'])
+      .required(),
+  })
 
 const ClaimPayments: React.SFC<Props> = ({
   payments,
@@ -203,7 +213,7 @@ const ClaimPayments: React.SFC<Props> = ({
     <Container<State, Actions>
       initialState={{
         initiatedPayment: null,
-        paymentStatus: null,
+        paymentStatus: '',
       }}
       actions={actions}
     >
@@ -233,7 +243,7 @@ const ClaimPayments: React.SFC<Props> = ({
             closeInitiatedPayment()
             setPaymentStatus('COMPLETED')
           }}
-          onError={(error) => {
+          onError={() => {
             closeInitiatedPayment()
             setPaymentStatus('FAILED')
           }}
@@ -290,16 +300,24 @@ const ClaimPayments: React.SFC<Props> = ({
               </Table>
 
               <Formik<PaymentFormData>
-                initialValues={{ type: 'Manual', amount: '', note: '' }}
+                initialValues={{
+                  type: 'Manual',
+                  amount: '',
+                  deductible: '',
+                  note: '',
+                  overridden: false,
+                }}
                 onSubmit={(values, {}) => {
                   initiatePayment(values)
                 }}
-                validationSchema={paymentValidationSchema}
+                validationSchema={getPaymentValidationSchema(
+                  isPotentiallySanctioned,
+                )}
                 validate={(values) => {
                   try {
                     validateYupSchema<PaymentFormData>(
                       values,
-                      paymentValidationSchema,
+                      getPaymentValidationSchema(isPotentiallySanctioned),
                       false,
                     )
                   } catch (err) {
@@ -309,7 +327,7 @@ const ClaimPayments: React.SFC<Props> = ({
                   }
                 }}
               >
-                {({ resetForm }) => (
+                {({ resetForm, isValid }) => (
                   <>
                     <PaymentForm>
                       <Field
@@ -345,7 +363,12 @@ const ClaimPayments: React.SFC<Props> = ({
                         />
                       )}
 
-                      <Button type="submit" variant="contained" color="primary">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={!isValid}
+                      >
                         Create payment
                       </Button>
                     </PaymentForm>
