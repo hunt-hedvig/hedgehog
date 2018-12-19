@@ -43,9 +43,9 @@ const CLAIM_PAGE_QUERY = gql`
         timestamp
         exGratia
         type
-        transaction {
-          status
-        }
+        #transaction {
+        #  status
+        #}
         status
       }
       events {
