@@ -93,11 +93,11 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
       } = data.claim
 
       return (
-        <Grid container spacing={16}>
-          <Grid item>
+        <Grid container spacing={8}>
+          <Grid item xs={12} sm={12} md={4}>
             <MemberInformation member={member} />
           </Grid>
-          <Grid item>
+          <Grid item xs={12} sm={12} md={4}>
             <ClaimInformation
               recordingUrl={recordingUrl}
               registrationDate={registrationDate}
@@ -105,10 +105,13 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               claimId={match.params.id}
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={12} sm={12} md={4}>
             <ClaimType type={type} claimId={match.params.id} />
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
+            <Notes notes={notes} claimId={match.params.id} />
+          </Grid>
+          <Grid item xs={12}>
             <ClaimPayments
               payments={payments}
               claimId={match.params.id}
@@ -116,10 +119,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               sanctionStatus={member.sanctionStatus}
             />
           </Grid>
-          <Grid item>
-            <Notes notes={notes} claimId={match.params.id} />
-          </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <Events events={events} />
           </Grid>
         </Grid>
