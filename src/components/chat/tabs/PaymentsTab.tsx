@@ -25,7 +25,7 @@ const GET_MEMBER_QUERY = gql`
     $currentMonth: YearMonth!
     $previousMonth: YearMonth!
   ) {
-    getMember(id: $id) {
+    member(id: $id) {
       directDebitStatus {
         activated
       }
