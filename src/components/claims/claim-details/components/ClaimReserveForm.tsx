@@ -1,14 +1,12 @@
-import {
-  Button,
-  Select as MuiSelect,
-  TextField as MuiTextField,
-} from '@material-ui/core'
+import { Button as MuiButton } from '@material-ui/core'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import * as yup from 'yup'
+
+import { TextField } from '../../../shared/inputs/TextField'
 
 const UPDATE_RESERVE_MUTATION = gql`
   mutation UpdateReserve($id: ID!, $amount: MonetaryAmount!) {
@@ -38,37 +36,18 @@ interface Props {
   claimId: string
 }
 
-interface TextFieldProps {
-  placeholder: string
-}
-
 interface ReserveFormData {
   amount: number
 }
 
-export const TextField: React.SFC<FieldProps & TextFieldProps> = ({
-  field: { onChange, onBlur, name, value },
-  placeholder,
-}) => (
-  <MuiTextField
-    onChange={onChange}
-    onBlur={onBlur}
-    name={name}
-    value={value || ''}
-    placeholder={placeholder}
-    autoComplete="off"
-  />
-)
-
-const schema = yup.object().shape({
+const validationSchema = yup.object().shape({
   amount: yup.string().required(),
 })
 
-const ReserveForm = styled(Form)({
-  display: 'flex',
-  flexDirection: 'column',
-  marginTop: '20px',
-  marginBottom: '20px',
+const ReserveForm = styled(Form)({})
+
+const SubmitButton = styled(MuiButton)({
+  marginTop: '1rem',
 })
 
 const ClaimReserveForm: React.SFC<Props> = ({ claimId }) => (
@@ -107,18 +86,25 @@ const ClaimReserveForm: React.SFC<Props> = ({ claimId }) => (
           setSubmitting(false)
           resetForm()
         }}
-        validationSchema={schema}
+        validationSchema={validationSchema}
       >
-        <ReserveForm>
-          <Field
-            component={TextField}
-            placeholder={'Reserve amount'}
-            name="amount"
-          />
-          <Button type="submit" color="primary">
-            Update Reserve
-          </Button>
-        </ReserveForm>
+        {({ isValid }) => (
+          <ReserveForm>
+            <Field
+              component={TextField}
+              placeholder={'Reserve amount'}
+              name="amount"
+            />
+            <SubmitButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!isValid}
+            >
+              Update Reserve
+            </SubmitButton>
+          </ReserveForm>
+        )}
       </Formik>
     )}
   </Mutation>

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import styled from 'react-emotion'
 
 import {
   Ban,
@@ -8,7 +9,8 @@ import {
   RedQuestionMark,
   ThumpsUp,
 } from '../../../icons'
-import { CustomPaper } from './Styles'
+
+import { Paper } from '../../../shared/Paper'
 
 export enum SanctionStatus {
   Undetermined = 'Undetermined',
@@ -49,6 +51,11 @@ const SanctionStatusIcon: React.SFC<{ status: SanctionStatus }> = ({
   }
 }
 
+const MemberName = styled('h2')({
+  marginTop: 0,
+  marginBottom: '2rem',
+})
+
 const MemberInformation: React.SFC<MemberInformationProps> = ({
   member: {
     firstName,
@@ -61,11 +68,11 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
     sanctionStatus,
   },
 }) => (
-  <CustomPaper>
+  <Paper>
     <h3>Member Information</h3>
-    <p>
-      Name: {firstName} {lastName}
-    </p>
+    <MemberName>
+      {firstName} {lastName}
+    </MemberName>
     <p>Personal Number: {personalNumber}</p>
     <p>
       Address: {address}, {postalNumber} {city}
@@ -75,7 +82,7 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
       SanctionStatus: {sanctionStatus}{' '}
       <SanctionStatusIcon status={sanctionStatus} />
     </p>
-  </CustomPaper>
+  </Paper>
 )
 
 export { MemberInformation }

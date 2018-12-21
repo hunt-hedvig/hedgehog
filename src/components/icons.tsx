@@ -1,9 +1,9 @@
 import * as React from 'react'
 import styled from 'react-emotion'
 
-const RedIcon = styled('i')({ color: '#ff0000' })
+const RedIcon = styled('i')({ color: '#FF8A80' })
 
-const GreenIcon = styled('i')({ color: '#00ff00' })
+const GreenIcon = styled('i')({ color: '#1BE9B6' })
 
 export const Checkmark = () => <GreenIcon className="fas fa-check-circle" />
 
