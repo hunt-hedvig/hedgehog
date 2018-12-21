@@ -1,11 +1,18 @@
 import * as React from 'react'
 
-import { MenuItem, Select } from '@material-ui/core'
+import {
+  InputLabel as MuiInputLabel,
+  MenuItem as MuiMenuItem,
+  Select as MuiSelect,
+} from '@material-ui/core'
+
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
 import gql from 'graphql-tag'
 import { Mutation } from 'react-apollo'
-import { CustomPaper } from './Styles'
+import styled from 'react-emotion'
+
+import { Paper } from '../../../shared/Paper'
 
 const UPDATE_STATE_QUERY = gql`
   query UpdateClaimState($id: ID!) {
@@ -54,6 +61,21 @@ const validateSelectOption = (
   return value as ClaimState
 }
 
+const AudioWrapper = styled('div')({})
+
+const Audio = styled('audio')({
+  width: '100%',
+})
+
+const DonloadClaimFile = styled('a')({
+  display: 'block',
+  marginTop: '0.5rem',
+})
+
+const StatusWrapper = styled('div')({
+  marginTop: '1rem',
+})
+
 const ClaimInformation: React.SFC<Props> = ({
   recordingUrl,
   registrationDate,
@@ -77,43 +99,47 @@ const ClaimInformation: React.SFC<Props> = ({
     }}
   >
     {(updateClaimState) => (
-      <CustomPaper>
+      <Paper>
         <h3>Claim Information</h3>
-        <p>
-          Registered at:{' '}
-          {format(toDate(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
-        </p>
         {recordingUrl && (
-          <>
-            <audio controls>
+          <AudioWrapper>
+            <p>
+              Registered at:{' '}
+              {format(toDate(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
+            </p>
+            <Audio controls>
               <source src={recordingUrl} type="audio/aac" />
-            </audio>
-            <div>
-              <a href={recordingUrl} target="_blank" rel="noopener noreferrer">
-                Download claim file
-              </a>
-            </div>
-          </>
+            </Audio>
+            <DonloadClaimFile
+              href={recordingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download claim file
+            </DonloadClaimFile>
+          </AudioWrapper>
         )}
-        <p>Status</p>
-        <Select
-          value={state}
-          onChange={(event) =>
-            updateClaimState({
-              variables: {
-                id: claimId,
-                state: validateSelectOption(event),
-              },
-            })
-          }
-        >
-          {Object.values(ClaimState).map((s) => (
-            <MenuItem key={s} value={s}>
-              {s}
-            </MenuItem>
-          ))}
-        </Select>
-      </CustomPaper>
+        <StatusWrapper>
+          <MuiInputLabel shrink>Status</MuiInputLabel>
+          <MuiSelect
+            value={state}
+            onChange={(event) =>
+              updateClaimState({
+                variables: {
+                  id: claimId,
+                  state: validateSelectOption(event),
+                },
+              })
+            }
+          >
+            {Object.values(ClaimState).map((s) => (
+              <MuiMenuItem key={s} value={s}>
+                {s}
+              </MuiMenuItem>
+            ))}
+          </MuiSelect>
+        </StatusWrapper>
+      </Paper>
     )}
   </Mutation>
 )

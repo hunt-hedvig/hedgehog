@@ -1,13 +1,16 @@
-import { Button, MenuItem } from '@material-ui/core'
+import { Button as MuiButton, MenuItem as MuiMenuItem } from '@material-ui/core'
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
-import { Field, FieldProps, Form, Formik } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
-import { DatePicker as MuiDatePicker } from 'material-ui-pickers'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
-import { Select, TextField } from './ClaimPayments'
-import { CustomPaper } from './Styles'
+import styled from 'react-emotion'
+
+import { DatePicker } from '../../../shared/inputs/DatePicker'
+import { FieldSelect } from '../../../shared/inputs/FieldSelect'
+import { TextField } from '../../../shared/inputs/TextField'
+import { Paper } from '../../../shared/Paper'
 
 export const TYPE_FRAGMENT = `
         __typename
@@ -214,22 +217,13 @@ interface ClaimTypeProps {
   claimId: string
 }
 
-const DatePickerField: React.SFC<FieldProps> = ({
-  field: { value, name },
-  form: { setFieldValue },
-}) => (
-  <MuiDatePicker
-    autoOk
-    keyboard={false}
-    allowKeyboardControl={false}
-    labelFunc={(date: Date) => format(date, 'yyyy-MM-dd')}
-    onChange={(newValue: Date) => {
-      setFieldValue(name, newValue)
-    }}
-    value={value}
-    name={name}
-  />
-)
+const SubmitButton = styled(MuiButton)({
+  marginTop: '1rem',
+})
+
+const ClaimTypeInformationForm = styled(Form)({
+  marginTop: '1rem',
+})
 
 const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
   <Mutation
@@ -266,7 +260,8 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
         }}
       >
         {(setClaimInformation) => (
-          <CustomPaper>
+          <Paper>
+            <h3>Type</h3>
             <Formik<{ selectedType?: ClaimTypes | '' }>
               initialValues={{ selectedType: (type && type.__typename) || '' }}
               onSubmit={(values, { setSubmitting }) => {
@@ -281,22 +276,25 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
             >
               <Form>
                 <div>
-                  <p>Type</p>
-                  <Field component={Select} name="selectedType">
-                    <MenuItem disabled value="">
+                  <Field component={FieldSelect} name="selectedType">
+                    <MuiMenuItem disabled value="">
                       Select a type...
-                    </MenuItem>
+                    </MuiMenuItem>
                     {Object.keys(ClaimTypes).map((t) => (
-                      <MenuItem key={t} value={t}>
+                      <MuiMenuItem key={t} value={t}>
                         {t}
-                      </MenuItem>
+                      </MuiMenuItem>
                     ))}
                   </Field>
                 </div>
                 <div>
-                  <Button type="submit" variant="contained" color="primary">
+                  <SubmitButton
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                  >
                     Set type
-                  </Button>
+                  </SubmitButton>
                 </div>
               </Form>
             </Formik>
@@ -330,7 +328,7 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                   setSubmitting(false)
                 }}
               >
-                <Form>
+                <ClaimTypeInformationForm>
                   {hasLocation(type.__typename) && (
                     <div>
                       <Field
@@ -342,7 +340,7 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                   )}
                   <div>
                     <Field
-                      component={DatePickerField}
+                      component={DatePicker}
                       name="date"
                       placeholder="Date"
                     />
@@ -384,14 +382,18 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                     </div>
                   )}
                   <div>
-                    <Button type="submit" variant="contained" color="primary">
+                    <SubmitButton
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                    >
                       Update claim information
-                    </Button>
+                    </SubmitButton>
                   </div>
-                </Form>
+                </ClaimTypeInformationForm>
               </Formik>
             ) : null}
-          </CustomPaper>
+          </Paper>
         )}
       </Mutation>
     )}

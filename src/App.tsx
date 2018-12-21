@@ -1,7 +1,8 @@
 import DateFnsUtils from '@date-io/date-fns'
+import { CssBaseline } from '@material-ui/core'
+import { MuiThemeProvider } from '@material-ui/core/styles'
 import Navigation from 'components/shared/navigation'
 import Notifications from 'containers/notification-service/NotificationService'
-import { injectGlobal } from 'emotion'
 import { MuiPickersUtilsProvider } from 'material-ui-pickers'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
@@ -9,6 +10,7 @@ import { Provider } from 'react-redux'
 import { Redirect, Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
 import Store, { history } from 'store'
+import { lightUiTheme } from './uiThemes'
 
 const store = Store.configureStore()
 
@@ -19,19 +21,9 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const GlobalCss: React.SFC = ({ children }) => {
-  // tslint:disable-next-line no-unused-expression
-  injectGlobal`
-    #react-root {
-      height: 100%
-    }
-  `
-  return <>{children}</>
-}
-
 const App: React.SFC = () => (
-  <>
-    <GlobalCss />
+  <MuiThemeProvider theme={lightUiTheme}>
+    <CssBaseline />
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Provider store={store}>
         <Router history={history}>
@@ -92,7 +84,7 @@ const App: React.SFC = () => (
         </Router>
       </Provider>
     </MuiPickersUtilsProvider>
-  </>
+  </MuiThemeProvider>
 )
 
 export default App

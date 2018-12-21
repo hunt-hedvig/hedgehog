@@ -3,12 +3,12 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 
+import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimInformation } from './components/ClaimInformation'
+import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
-import { Events } from './components/Events'
 import { MemberInformation } from './components/MemberInformation'
-import { Notes } from './components/Notes'
 
 const CLAIM_PAGE_QUERY = gql`
   query ClaimPage($id: ID!) {
@@ -109,7 +109,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             <ClaimType type={type} claimId={match.params.id} />
           </Grid>
           <Grid item xs={12}>
-            <Notes notes={notes} claimId={match.params.id} />
+            <ClaimNotes notes={notes} claimId={match.params.id} />
           </Grid>
           <Grid item xs={12}>
             <ClaimPayments
@@ -120,7 +120,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             />
           </Grid>
           <Grid item xs={12}>
-            <Events events={events} />
+            <ClaimEvents events={events} />
           </Grid>
         </Grid>
       )

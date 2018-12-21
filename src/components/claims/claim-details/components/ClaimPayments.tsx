@@ -1,83 +1,21 @@
 import {
-  Button,
-  Checkbox as MuiCheckbox,
-  FormControlLabel,
-  MenuItem,
-  Select as MuiSelect,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField as MuiTextField,
+  Table as MuiTable,
+  TableBody as MuiTableBody,
+  TableCell as MuiTableCell,
+  TableHead as MuiTableHead,
+  TableRow as MuiTableRow,
 } from '@material-ui/core'
-import { ActionMap, Container } from 'constate'
+
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
-import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
-import gql from 'graphql-tag'
 import * as React from 'react'
-import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
-import * as yup from 'yup'
+
 import { Checkmark, Cross } from '../../../icons'
+import { Paper } from '../../../shared/Paper'
+import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
 import { SanctionStatus } from './MemberInformation'
-import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
-import { CustomPaper } from './Styles'
-
-import {
-  MutationFeedbackBlock,
-  MutationStatus,
-} from '../../../shared/MutationFeedbackBlock'
-
-const CREATE_PAYMENT_QUERY = gql`
-  query CreatePaymentQuery($id: ID!) {
-    claim(id: $id) {
-      payments {
-        id
-        amount
-        deductible
-        note
-        type
-        timestamp
-        exGratia
-        transaction {
-          status
-        }
-        status
-      }
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-
-const CREATE_PAYMENT_MUTATION = gql`
-  mutation CreatePayment($id: ID!, $payment: ClaimPaymentInput!) {
-    createClaimPayment(id: $id, payment: $payment) {
-      payments {
-        id
-        amount
-        deductible
-        note
-        type
-        timestamp
-        exGratia
-        transaction {
-          status
-        }
-        status
-      }
-      events {
-        text
-        date
-      }
-    }
-  }
-`
 
 export interface MonetaryAmount {
   amount: string
@@ -102,103 +40,12 @@ interface Payment {
   status: string
 }
 
-interface TextFieldProps {
-  placeholder: string
-}
-
-const Checkbox: React.SFC<FieldProps> = ({
-  field: { onChange, onBlur, name, value },
-}) => (
-  <MuiCheckbox
-    onChange={onChange}
-    onBlur={onBlur}
-    name={name}
-    checked={value || false}
-    color="primary"
-  />
-)
-
-export const TextField: React.SFC<FieldProps & TextFieldProps> = ({
-  field: { onChange, onBlur, name, value },
-  placeholder,
-}) => (
-  <MuiTextField
-    onChange={onChange}
-    onBlur={onBlur}
-    name={name}
-    value={value || ''}
-    placeholder={placeholder}
-    autoComplete="off"
-  />
-)
-
-export const Select: React.SFC<FieldProps> = ({
-  field: { onChange, onBlur, name, value },
-  children,
-}) => (
-  <MuiSelect onChange={onChange} onBlur={onBlur} name={name} value={value}>
-    {children}
-  </MuiSelect>
-)
-
-const PaymentForm = styled(Form)({
-  display: 'flex',
-  flexDirection: 'column',
-  marginTop: '20px',
+const PaymentTable = styled(MuiTable)({
+  marginTop: '1rem',
+  '*': {
+    fontSize: '1rem',
+  },
 })
-
-interface State {
-  initiatedPayment: PaymentFormData | null
-  paymentStatus: MutationStatus
-}
-
-interface Actions {
-  initiatePayment: (payment: PaymentFormData) => void
-  closeInitiatedPayment: () => void
-  setPaymentStatus: (paymentStatus: MutationStatus) => void
-}
-
-const actions: ActionMap<State, Actions> = {
-  initiatePayment: (payment) => () => ({
-    initiatedPayment: payment,
-  }),
-  closeInitiatedPayment: () => () => ({
-    initiatedPayment: null,
-  }),
-  setPaymentStatus: (paymentStatus: MutationStatus) => () => ({
-    paymentStatus,
-  }),
-}
-
-export interface PaymentFormData {
-  amount: string
-  deductible: string
-  note: string
-  exGratia?: boolean
-  type: string
-  overridden?: boolean
-}
-
-const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
-  yup.object().shape({
-    ...(isPotentiallySanctioned && {
-      overridden: yup
-        .boolean()
-        .required()
-        .test(
-          'overridden',
-          'Override saction list checkbox isn’t checked.',
-          (value) => value === true,
-        ),
-    }),
-    amount: yup.string().required(),
-    note: yup.string().required(),
-    exGratia: yup.boolean(),
-    type: yup
-      .string()
-      .oneOf(['Manual', 'Automatic'])
-      .required(),
-  })
 
 const ClaimPayments: React.SFC<Props> = ({
   payments,
@@ -206,204 +53,56 @@ const ClaimPayments: React.SFC<Props> = ({
   reserves,
   sanctionStatus,
 }) => {
-  const isPotentiallySanctioned =
-    sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
-
   return (
-    <Container<State, Actions>
-      initialState={{
-        initiatedPayment: null,
-        paymentStatus: '',
-      }}
-      actions={actions}
-    >
-      {({
-        initiatePayment,
-        closeInitiatedPayment,
-        initiatedPayment,
-        paymentStatus,
-        setPaymentStatus,
-      }) => (
-        <Mutation
-          mutation={CREATE_PAYMENT_MUTATION}
-          update={(cache, { data: updateData }) => {
-            cache.writeQuery({
-              query: CREATE_PAYMENT_QUERY,
-              variables: { id: claimId },
-              data: {
-                claim: {
-                  payments: updateData.createClaimPayment.payments,
-                  __typename: updateData.createClaimPayment.__typename,
-                  events: updateData.createClaimPayment.events,
-                },
-              },
-            })
-          }}
-          onCompleted={() => {
-            closeInitiatedPayment()
-            setPaymentStatus('COMPLETED')
-          }}
-          onError={() => {
-            closeInitiatedPayment()
-            setPaymentStatus('FAILED')
-          }}
-        >
-          {(createPayment) => (
-            <CustomPaper>
-              <h3>Payments</h3>
-              <ClaimReserves claimId={claimId} reserves={reserves} />
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Id</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Deductible</TableCell>
-                    <TableCell>Note</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Ex Gratia</TableCell>
-                    <TableCell>Type</TableCell>
-                    <TableCell>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {payments.map((payment) => (
-                    <TableRow
-                      key={
-                        payment.amount.amount +
-                        payment.amount.currency +
-                        payment.timestamp
-                      }
-                    >
-                      <TableCell>{payment.id}</TableCell>
-                      <TableCell>
-                        {payment.amount.amount} {payment.amount.currency}
-                      </TableCell>
-                      <TableCell>
-                        {payment.deductible.amount}{' '}
-                        {payment.deductible.currency}
-                      </TableCell>
-                      <TableCell>{payment.note}</TableCell>
-                      <TableCell>
-                        {format(
-                          toDate(payment.timestamp),
-                          'yyyy-MM-dd hh:mm:ss',
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {payment.exGratia ? <Checkmark /> : <Cross />}
-                      </TableCell>
-                      <TableCell>{payment.type}</TableCell>
-                      <TableCell>{payment.status}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+    <Paper>
+      <h3>Payments</h3>
+      <ClaimReserves claimId={claimId} reserves={reserves} />
 
-              <Formik<PaymentFormData>
-                initialValues={{
-                  type: 'Manual',
-                  amount: '',
-                  deductible: '',
-                  note: '',
-                  overridden: false,
-                }}
-                onSubmit={(values, {}) => {
-                  initiatePayment(values)
-                }}
-                validationSchema={getPaymentValidationSchema(
-                  isPotentiallySanctioned,
-                )}
-                validate={(values) => {
-                  try {
-                    validateYupSchema<PaymentFormData>(
-                      values,
-                      getPaymentValidationSchema(isPotentiallySanctioned),
-                      false,
-                    )
-                  } catch (err) {
-                    throw new Error(
-                      'An error occured with the validation ' + err,
-                    )
-                  }
-                }}
-              >
-                {({ resetForm, isValid }) => (
-                  <>
-                    <PaymentForm>
-                      <Field
-                        component={TextField}
-                        placeholder="Payment amount"
-                        name="amount"
-                      />
-                      <Field
-                        component={TextField}
-                        placeholder="Deductible"
-                        name="deductible"
-                      />
-                      <Field
-                        component={TextField}
-                        placeholder="Note"
-                        name="note"
-                      />
-                      <FormControlLabel
-                        label="Ex Gratia?"
-                        control={<Field component={Checkbox} name="exGratia" />}
-                      />
-                      <Field component={Select} name="type">
-                        <MenuItem value="Manual">Manual</MenuItem>
-                        <MenuItem value="Automatic">Automatic</MenuItem>
-                      </Field>
+      <PaymentTable>
+        <MuiTableHead>
+          <MuiTableRow>
+            <MuiTableCell>Id</MuiTableCell>
+            <MuiTableCell>Amount</MuiTableCell>
+            <MuiTableCell>Deductible</MuiTableCell>
+            <MuiTableCell>Note</MuiTableCell>
+            <MuiTableCell>Date</MuiTableCell>
+            <MuiTableCell>Ex Gratia</MuiTableCell>
+            <MuiTableCell>Type</MuiTableCell>
+            <MuiTableCell>Status</MuiTableCell>
+          </MuiTableRow>
+        </MuiTableHead>
+        <MuiTableBody>
+          {payments.map((payment) => (
+            <MuiTableRow
+              key={
+                payment.amount.amount +
+                payment.amount.currency +
+                payment.timestamp
+              }
+            >
+              <MuiTableCell>{payment.id}</MuiTableCell>
+              <MuiTableCell>
+                {payment.amount.amount} {payment.amount.currency}
+              </MuiTableCell>
+              <MuiTableCell>
+                {payment.deductible.amount} {payment.deductible.currency}
+              </MuiTableCell>
+              <MuiTableCell>{payment.note}</MuiTableCell>
+              <MuiTableCell>
+                {format(toDate(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
+              </MuiTableCell>
+              <MuiTableCell>
+                {payment.exGratia ? <Checkmark /> : <Cross />}
+              </MuiTableCell>
+              <MuiTableCell>{payment.type}</MuiTableCell>
+              <MuiTableCell>{payment.status}</MuiTableCell>
+            </MuiTableRow>
+          ))}
+        </MuiTableBody>
+      </PaymentTable>
 
-                      {isPotentiallySanctioned && (
-                        <FormControlLabel
-                          label="Override sanction list result (I promise that I have manually checked the list)"
-                          control={
-                            <Field component={Checkbox} name="overridden" />
-                          }
-                        />
-                      )}
-
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        disabled={!isValid}
-                      >
-                        Create payment
-                      </Button>
-                    </PaymentForm>
-
-                    {initiatedPayment && (
-                      <PaymentConfirmationDialog
-                        onClose={() => {
-                          closeInitiatedPayment()
-                          resetForm()
-                        }}
-                        onSubmit={createPayment}
-                        payment={initiatedPayment}
-                        claimId={claimId}
-                      />
-                    )}
-
-                    {!!paymentStatus && (
-                      <MutationFeedbackBlock
-                        status={paymentStatus}
-                        messages={{
-                          COMPLETED: 'Payment was completed',
-                          FAILED:
-                            'Payment failed. Please contact tech support if failure is persistent.',
-                        }}
-                        onTimeout={() => setPaymentStatus('')}
-                      />
-                    )}
-                  </>
-                )}
-              </Formik>
-            </CustomPaper>
-          )}
-        </Mutation>
-      )}
-    </Container>
+      <ClaimPayment sanctionStatus={sanctionStatus} claimId={claimId} />
+    </Paper>
   )
 }
 

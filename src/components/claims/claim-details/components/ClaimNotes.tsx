@@ -1,9 +1,17 @@
-import { Button, List, ListItem, TextField } from '@material-ui/core'
+import {
+  Button as MuiButton,
+  List as MuiList,
+  ListItem as MuiListItem,
+  TextField as MuiTextField,
+} from '@material-ui/core'
+
 import { Field, FieldProps, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
-import { CustomPaper } from './Styles'
+import styled from 'react-emotion'
+
+import { Paper } from '../../../shared/Paper'
 
 const ADD_CLAIM_NOTE_QUERY = gql`
   query AddClaimQuery($id: ID!) {
@@ -45,7 +53,7 @@ interface Props {
 const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
   field: { onChange, onBlur, name, value },
 }) => (
-  <TextField
+  <MuiTextField
     onChange={onChange}
     onBlur={onBlur}
     name={name}
@@ -56,7 +64,17 @@ const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
   />
 )
 
-const Notes: React.SFC<Props> = ({ notes, claimId }) => (
+const ListItem = styled(MuiListItem)({
+  paddingLeft: 0,
+  paddingRight: 0,
+  borderBottom: '1px solid rgba(0,0,0,0.08)',
+})
+
+const SubmitButton = styled(MuiButton)({
+  marginTop: '1rem',
+})
+
+const ClaimNotes: React.SFC<Props> = ({ notes, claimId }) => (
   <Mutation
     mutation={ADD_CLAIM_NOTE_MUTATION}
     update={(cache, { data: updateData }) => {
@@ -74,15 +92,15 @@ const Notes: React.SFC<Props> = ({ notes, claimId }) => (
     }}
   >
     {(addClaimNote) => (
-      <CustomPaper>
+      <Paper>
         <h3>Notes</h3>
-        <List>
+        <MuiList>
           {notes.map((note) => (
             <ListItem key={note.text}>
               <p>{note.text}</p>
             </ListItem>
           ))}
-        </List>
+        </MuiList>
         <Formik<{ text: string }>
           initialValues={{ text: '' }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -93,20 +111,27 @@ const Notes: React.SFC<Props> = ({ notes, claimId }) => (
             resetForm()
           }}
         >
-          <Form>
-            <Field
-              component={TextArea}
-              placeholder="Type note content here"
-              name="text"
-            />
-            <Button type="submit" variant="contained" color="primary">
-              Add note
-            </Button>
-          </Form>
+          {({ isValid }) => (
+            <Form>
+              <Field
+                component={TextArea}
+                placeholder="Type note content here"
+                name="text"
+              />
+              <SubmitButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={!isValid}
+              >
+                Add note
+              </SubmitButton>
+            </Form>
+          )}
         </Formik>
-      </CustomPaper>
+      </Paper>
     )}
   </Mutation>
 )
 
-export { Notes }
+export { ClaimNotes }
