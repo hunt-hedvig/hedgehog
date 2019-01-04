@@ -1,4 +1,8 @@
-import { Button as MuiButton, MenuItem as MuiMenuItem } from '@material-ui/core'
+import {
+  Button as MuiButton,
+  MenuItem as MuiMenuItem,
+  withStyles,
+} from '@material-ui/core'
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
 import { Field, Form, Formik } from 'formik'
@@ -217,9 +221,11 @@ interface ClaimTypeProps {
   claimId: string
 }
 
-const SubmitButton = styled(MuiButton)({
-  marginTop: '1rem',
-})
+const SubmitButton = withStyles({
+  root: {
+    marginTop: '1rem',
+  },
+})(MuiButton)
 
 const ClaimTypeInformationForm = styled(Form)({
   marginTop: '1rem',
