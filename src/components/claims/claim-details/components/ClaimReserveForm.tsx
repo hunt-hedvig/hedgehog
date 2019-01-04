@@ -1,5 +1,5 @@
-import { Button as MuiButton } from '@material-ui/core'
-import { Field, FieldProps, Form, Formik } from 'formik'
+import { Button as MuiButton, withStyles } from '@material-ui/core'
+import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
@@ -46,9 +46,11 @@ const validationSchema = yup.object().shape({
 
 const ReserveForm = styled(Form)({})
 
-const SubmitButton = styled(MuiButton)({
-  marginTop: '1rem',
-})
+const SubmitButton = withStyles({
+  root: {
+    marginTop: '1rem',
+  },
+})(MuiButton)
 
 const ClaimReserveForm: React.SFC<Props> = ({ claimId }) => (
   <Mutation

@@ -3,6 +3,7 @@ import {
   Checkbox as MuiCheckbox,
   FormControlLabel as MuiFormControlLabel,
   MenuItem as MuiMenuItem,
+  withStyles,
 } from '@material-ui/core'
 
 import { ActionMap, Container } from 'constate'
@@ -110,10 +111,12 @@ const PaymentForm = styled(Form)({
   marginTop: '1rem',
 })
 
-const SubmitButton = styled(MuiButton)({
-  marginTop: '1rem',
-  display: 'block',
-})
+const SubmitButton = withStyles({
+  root: {
+    marginTop: '1rem',
+    display: 'block',
+  },
+})(MuiButton)
 
 const Checkbox: React.SFC<FieldProps> = ({
   field: { onChange, onBlur, name, value },

@@ -1,4 +1,8 @@
-import { Button as MuiButton, MenuItem as MuiMenuItem } from '@material-ui/core'
+import {
+  Button as MuiButton,
+  MenuItem as MuiMenuItem,
+  withStyles,
+} from '@material-ui/core'
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
 import { Field, Form, Formik } from 'formik'
@@ -217,9 +221,11 @@ interface ClaimTypeProps {
   claimId: string
 }
 
-const SubmitButton = styled(MuiButton)({
-  marginTop: '1rem',
-})
+const SubmitButton = withStyles({
+  root: {
+    marginTop: '1rem',
+  },
+})(MuiButton)
 
 const ClaimTypeInformationForm = styled(Form)({
   marginTop: '1rem',
@@ -274,29 +280,32 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                 setSubmitting(false)
               }}
             >
-              <Form>
-                <div>
-                  <Field component={FieldSelect} name="selectedType">
-                    <MuiMenuItem disabled value="">
-                      Select a type...
-                    </MuiMenuItem>
-                    {Object.keys(ClaimTypes).map((t) => (
-                      <MuiMenuItem key={t} value={t}>
-                        {t}
+              {({ isValid }) => (
+                <Form>
+                  <div>
+                    <Field component={FieldSelect} name="selectedType">
+                      <MuiMenuItem disabled value="">
+                        Select a type...
                       </MuiMenuItem>
-                    ))}
-                  </Field>
-                </div>
-                <div>
-                  <SubmitButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Set type
-                  </SubmitButton>
-                </div>
-              </Form>
+                      {Object.keys(ClaimTypes).map((t) => (
+                        <MuiMenuItem key={t} value={t}>
+                          {t}
+                        </MuiMenuItem>
+                      ))}
+                    </Field>
+                  </div>
+                  <div>
+                    <SubmitButton
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disabled={!isValid}
+                    >
+                      Set type
+                    </SubmitButton>
+                  </div>
+                </Form>
+              )}
             </Formik>
             {type ? (
               <Formik<{
@@ -308,12 +317,12 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                 ticket?: string
               }>
                 initialValues={{
-                  location: (type as any).location,
+                  location: (type as any).location || '',
                   date: type.date ? toDate(type.date) : undefined,
-                  item: (type as any).item,
-                  policeReport: (type as any).policeReport,
-                  receipt: (type as any).receipt,
-                  ticket: (type as any).ticket,
+                  item: (type as any).item || '',
+                  policeReport: (type as any).policeReport || '',
+                  receipt: (type as any).receipt || '',
+                  ticket: (type as any).ticket || '',
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                   setClaimInformation({
@@ -328,69 +337,74 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                   setSubmitting(false)
                 }}
               >
-                <ClaimTypeInformationForm>
-                  {hasLocation(type.__typename) && (
-                    <div>
-                      <Field
-                        component={TextField}
-                        name="location"
-                        placeholder="Location"
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <Field
-                      component={DatePicker}
-                      name="date"
-                      placeholder="Date"
-                    />
-                  </div>
-                  {hasItem(type.__typename) && (
-                    <div>
-                      <Field
-                        component={TextField}
-                        name="item"
-                        placeholder="Item"
-                      />
-                    </div>
-                  )}
-                  {hasPoliceReport(type.__typename) && (
-                    <div>
-                      <Field
-                        component={TextField}
-                        name="policeReport"
-                        placeholder="Police Report"
-                      />
-                    </div>
-                  )}
-                  {hasReceipt(type.__typename) && (
-                    <div>
-                      <Field
-                        component={TextField}
-                        name="receipt"
-                        placeholder="Receipt"
-                      />
-                    </div>
-                  )}
-                  {hasTicket(type.__typename) && (
-                    <div>
-                      <Field
-                        component={TextField}
-                        name="ticket"
-                        placeholder="Ticket"
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <SubmitButton
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                    >
-                      Update claim information
-                    </SubmitButton>
-                  </div>
-                </ClaimTypeInformationForm>
+                {({ isValid, values }) =>
+                  !console.log(values) && (
+                    <ClaimTypeInformationForm>
+                      {hasLocation(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="location"
+                            placeholder="Location"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <Field
+                          component={DatePicker}
+                          name="date"
+                          placeholder="Date"
+                        />
+                      </div>
+                      {hasItem(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="item"
+                            placeholder="Item"
+                          />
+                        </div>
+                      )}
+                      {hasPoliceReport(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="policeReport"
+                            placeholder="Police Report"
+                          />
+                        </div>
+                      )}
+                      {hasReceipt(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="receipt"
+                            placeholder="Receipt"
+                          />
+                        </div>
+                      )}
+                      {hasTicket(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="ticket"
+                            placeholder="Ticket"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <SubmitButton
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          disabled={!isValid}
+                        >
+                          Update claim information
+                        </SubmitButton>
+                      </div>
+                    </ClaimTypeInformationForm>
+                  )
+                }
               </Formik>
             ) : null}
           </Paper>

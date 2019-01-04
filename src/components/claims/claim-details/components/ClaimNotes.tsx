@@ -3,6 +3,7 @@ import {
   List as MuiList,
   ListItem as MuiListItem,
   TextField as MuiTextField,
+  withStyles,
 } from '@material-ui/core'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
@@ -70,9 +71,11 @@ const ListItem = styled(MuiListItem)({
   borderBottom: '1px solid rgba(0,0,0,0.08)',
 })
 
-const SubmitButton = styled(MuiButton)({
-  marginTop: '1rem',
-})
+const SubmitButton = withStyles({
+  root: {
+    marginTop: '1rem',
+  },
+})(MuiButton)
 
 const ClaimNotes: React.SFC<Props> = ({ notes, claimId }) => (
   <Mutation
