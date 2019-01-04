@@ -73,12 +73,12 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
 }) => (
   <Paper>
     <h3>Member Information</h3>
-    <p>
-      Id: <Link to={`/members/${memberId}`}>{memberId}</Link>
-    </p>
     <MemberName>
       {firstName} {lastName}
     </MemberName>
+    <p>
+      Id: <Link to={`/members/${memberId}`}>{memberId}</Link>
+    </p>
     <p>Personal Number: {personalNumber}</p>
     <p>
       Address: {address}, {postalNumber} {city}
