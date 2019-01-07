@@ -1,4 +1,5 @@
 import {
+  defaultDataIdFromObject,
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory'
@@ -17,9 +18,17 @@ export const apolloClient = (() => {
   }
 
   return new ApolloClient({
-    cache: new InMemoryCache({ fragmentMatcher }).restore(
-      (window as any).__INITIAL_STATE__,
-    ),
+    cache: new InMemoryCache({
+      fragmentMatcher,
+      dataIdFromObject: (object) => {
+        switch (object.__typename) {
+          case 'Member':
+            return object.memberId
+          default:
+            return defaultDataIdFromObject(object)
+        }
+      },
+    }).restore((window as any).__INITIAL_STATE__),
     link: createHttpLink({
       uri: '/api/graphql',
     }),

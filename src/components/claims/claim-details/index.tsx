@@ -14,6 +14,7 @@ const CLAIM_PAGE_QUERY = gql`
   query ClaimPage($id: ID!) {
     claim(id: $id) {
       member {
+        memberId
         firstName
         lastName
         personalNumber

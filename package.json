@@ -34,6 +34,7 @@
     "@types/react-hot-loader": "^4.1.0",
     "@types/react-redux": "^6.0.9",
     "@types/react-router": "^4.0.31",
+    "@types/react-router-dom": "^4.3.1",
     "@types/uuid": "^3.4.4",
     "@types/yup": "^0.26.2",
     "apollo-boost": "^0.1.16",

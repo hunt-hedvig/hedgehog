@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from 'react-emotion'
+import { Link } from 'react-router-dom'
 
 import {
   Ban,
@@ -21,6 +22,7 @@ export enum SanctionStatus {
 
 interface MemberInformationProps {
   member: {
+    memberId: string
     firstName: string
     lastName: string
     personalNumber: string
@@ -58,6 +60,7 @@ const MemberName = styled('h2')({
 
 const MemberInformation: React.SFC<MemberInformationProps> = ({
   member: {
+    memberId,
     firstName,
     lastName,
     personalNumber,
@@ -73,6 +76,9 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
     <MemberName>
       {firstName} {lastName}
     </MemberName>
+    <p>
+      Id: <Link to={`/members/${memberId}`}>{memberId}</Link>
+    </p>
     <p>Personal Number: {personalNumber}</p>
     <p>
       Address: {address}, {postalNumber} {city}
