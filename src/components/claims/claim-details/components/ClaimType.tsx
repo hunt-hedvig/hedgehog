@@ -54,6 +54,16 @@ export const TYPE_FRAGMENT = `
         ... on NotCoveredClaim {
           date
         }
+        ... on ConfirmedFraudClaim {
+          date
+        }
+        ... on TestClaim {
+          date
+        }
+        ... on LiabilityClaim {
+          date
+          location
+        }
 `
 
 const SET_CLAIM_TYPE_QUERY = gql`
@@ -119,6 +129,7 @@ const hasLocation = (typename: ClaimTypes): boolean => {
     ClaimTypes.AssaultClaim,
     ClaimTypes.TravelAccidentClaim,
     ClaimTypes.LuggageDelayClaim,
+    ClaimTypes.LiabilityClaim,
   ].includes(typename)
 }
 
@@ -197,6 +208,22 @@ interface NotCoveredClaim {
   __typename: ClaimTypes
 }
 
+interface TestClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface ConfirmedFraudClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface LiabilityClaim {
+  date?: string
+  location?: string
+  __typename: ClaimTypes
+}
+
 export enum ClaimTypes {
   TheftClaim = 'TheftClaim',
   AccidentalDamageClaim = 'AccidentalDamageClaim',
@@ -205,6 +232,9 @@ export enum ClaimTypes {
   TravelAccidentClaim = 'TravelAccidentClaim',
   LuggageDelayClaim = 'LuggageDelayClaim',
   NotCoveredClaim = 'NotCoveredClaim',
+  LiabilityClaim = 'LiabilityClaim',
+  ConfirmedFraudClaim = 'ConfirmedFraudClaim',
+  TestClaim = 'TestClaim',
 }
 
 type ClaimType =
@@ -215,6 +245,9 @@ type ClaimType =
   | TravelAccidentClaim
   | LuggageDelayClaim
   | NotCoveredClaim
+  | LiabilityClaim
+  | ConfirmedFraudClaim
+  | TestClaim
 
 interface ClaimTypeProps {
   type?: ClaimType
