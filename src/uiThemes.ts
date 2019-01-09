@@ -38,6 +38,15 @@ export const lightUiTheme = createMuiTheme({
       default: CUSTOM_GREY_LIGHT,
     },
   },
+  typography: {
+    fontFamily: [
+      'Lato',
+      'Helvetica Neue',
+      'Arial',
+      'Helvetica',
+      'sans-serif',
+    ].join(','),
+  },
   overrides: {
     MuiInput: {
       root: {
