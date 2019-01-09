@@ -64,6 +64,15 @@ export const TYPE_FRAGMENT = `
           date
           location
         }
+        ... on FireDamageClaim {
+          date
+          location
+        }
+        ... on ApplianceClaim {
+          date
+          location
+          item
+        }
 `
 
 const SET_CLAIM_TYPE_QUERY = gql`
@@ -130,13 +139,17 @@ const hasLocation = (typename: ClaimTypes): boolean => {
     ClaimTypes.TravelAccidentClaim,
     ClaimTypes.LuggageDelayClaim,
     ClaimTypes.LiabilityClaim,
+    ClaimTypes.FireDamageClaim,
+    ClaimTypes.ApplianceClaim,
   ].includes(typename)
 }
 
 const hasItem = (typename: ClaimTypes): boolean => {
-  return [ClaimTypes.TheftClaim, ClaimTypes.AccidentalDamageClaim].includes(
-    typename,
-  )
+  return [
+    ClaimTypes.TheftClaim,
+    ClaimTypes.AccidentalDamageClaim,
+    ClaimTypes.ApplianceClaim,
+  ].includes(typename)
 }
 
 const hasPoliceReport = (typename: ClaimTypes): boolean => {
@@ -224,6 +237,17 @@ interface LiabilityClaim {
   __typename: ClaimTypes
 }
 
+interface FireDamageClaim {
+  date?: string
+  location?: string
+  __typename: ClaimTypes
+}
+interface ApplianceClaim {
+  date?: string
+  location?: string
+  item?: string
+  __typename: ClaimTypes
+}
 export enum ClaimTypes {
   TheftClaim = 'TheftClaim',
   AccidentalDamageClaim = 'AccidentalDamageClaim',
@@ -235,6 +259,8 @@ export enum ClaimTypes {
   LiabilityClaim = 'LiabilityClaim',
   ConfirmedFraudClaim = 'ConfirmedFraudClaim',
   TestClaim = 'TestClaim',
+  FireDamageClaim = 'FireDamageClaim',
+  ApplianceClaim = 'ApplianceClaim',
 }
 
 type ClaimType =
@@ -248,6 +274,8 @@ type ClaimType =
   | LiabilityClaim
   | ConfirmedFraudClaim
   | TestClaim
+  | FireDamageClaim
+  | ApplianceClaim
 
 interface ClaimTypeProps {
   type?: ClaimType
