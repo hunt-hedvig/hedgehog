@@ -4,12 +4,12 @@ import {
   TableCell as MuiTableCell,
   TableHead as MuiTableHead,
   TableRow as MuiTableRow,
+  withStyles,
 } from '@material-ui/core'
 
 import format from 'date-fns/format'
 import toDate from 'date-fns/toDate'
 import * as React from 'react'
-import styled from 'react-emotion'
 
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
@@ -40,12 +40,17 @@ interface Payment {
   status: string
 }
 
-const PaymentTable = styled(MuiTable)({
-  marginTop: '1rem',
-  '*': {
+const PaymentTable = withStyles({
+  root: {
+    marginTop: '1rem',
+  },
+})(MuiTable)
+
+const PaymentTableCell = withStyles({
+  root: {
     fontSize: '1rem',
   },
-})
+})(MuiTableCell)
 
 const ClaimPayments: React.SFC<Props> = ({
   payments,
@@ -61,14 +66,14 @@ const ClaimPayments: React.SFC<Props> = ({
       <PaymentTable>
         <MuiTableHead>
           <MuiTableRow>
-            <MuiTableCell>Id</MuiTableCell>
-            <MuiTableCell>Amount</MuiTableCell>
-            <MuiTableCell>Deductible</MuiTableCell>
-            <MuiTableCell>Note</MuiTableCell>
-            <MuiTableCell>Date</MuiTableCell>
-            <MuiTableCell>Ex Gratia</MuiTableCell>
-            <MuiTableCell>Type</MuiTableCell>
-            <MuiTableCell>Status</MuiTableCell>
+            <PaymentTableCell>Id</PaymentTableCell>
+            <PaymentTableCell>Amount</PaymentTableCell>
+            <PaymentTableCell>Deductible</PaymentTableCell>
+            <PaymentTableCell>Note</PaymentTableCell>
+            <PaymentTableCell>Date</PaymentTableCell>
+            <PaymentTableCell>Ex Gratia</PaymentTableCell>
+            <PaymentTableCell>Type</PaymentTableCell>
+            <PaymentTableCell>Status</PaymentTableCell>
           </MuiTableRow>
         </MuiTableHead>
         <MuiTableBody>
@@ -80,22 +85,22 @@ const ClaimPayments: React.SFC<Props> = ({
                 payment.timestamp
               }
             >
-              <MuiTableCell>{payment.id}</MuiTableCell>
-              <MuiTableCell>
+              <PaymentTableCell>{payment.id}</PaymentTableCell>
+              <PaymentTableCell>
                 {payment.amount.amount} {payment.amount.currency}
-              </MuiTableCell>
-              <MuiTableCell>
+              </PaymentTableCell>
+              <PaymentTableCell>
                 {payment.deductible.amount} {payment.deductible.currency}
-              </MuiTableCell>
-              <MuiTableCell>{payment.note}</MuiTableCell>
-              <MuiTableCell>
+              </PaymentTableCell>
+              <PaymentTableCell>{payment.note}</PaymentTableCell>
+              <PaymentTableCell>
                 {format(toDate(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
-              </MuiTableCell>
-              <MuiTableCell>
+              </PaymentTableCell>
+              <PaymentTableCell>
                 {payment.exGratia ? <Checkmark /> : <Cross />}
-              </MuiTableCell>
-              <MuiTableCell>{payment.type}</MuiTableCell>
-              <MuiTableCell>{payment.status}</MuiTableCell>
+              </PaymentTableCell>
+              <PaymentTableCell>{payment.type}</PaymentTableCell>
+              <PaymentTableCell>{payment.status}</PaymentTableCell>
             </MuiTableRow>
           ))}
         </MuiTableBody>

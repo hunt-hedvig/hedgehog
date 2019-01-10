@@ -13,7 +13,6 @@ import { Field, FieldProps, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
-import styled from 'react-emotion'
 
 import { Paper } from '../../../shared/Paper'
 
@@ -76,24 +75,30 @@ const sortNotesByDate = (notes: Note[]) =>
     return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
   })
 
-const ListItem = styled(MuiListItem)({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingLeft: 0,
-  paddingRight: 0,
-  borderBottom: '1px solid rgba(0,0,0,0.08)',
-})
+const ListItem = withStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: 0,
+    paddingRight: 0,
+    borderBottom: '1px solid rgba(0,0,0,0.08)',
+  },
+})(MuiListItem)
 
-const ClaimNote = styled(MuiTypography)({
-  fontSize: '1rem',
-  maxWidth: '80%',
-})
+const ClaimNote = withStyles({
+  root: {
+    fontSize: '1rem',
+    maxWidth: '80%',
+  },
+})(MuiTypography)
 
-const ClaimNoteDate = styled(MuiTypography)({
-  fontSize: '0.875rem',
-})
+const ClaimNoteDate = withStyles({
+  root: {
+    fontSize: '0.875rem',
+  },
+})(MuiTypography)
 
 const SubmitButton = withStyles({
   root: {
