@@ -34,6 +34,7 @@ const CLAIM_PAGE_QUERY = gql`
       }
       notes {
         text
+        date
       }
       reserves
       payments {

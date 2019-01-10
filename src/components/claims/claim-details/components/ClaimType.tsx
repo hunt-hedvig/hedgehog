@@ -398,74 +398,72 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                   setSubmitting(false)
                 }}
               >
-                {({ isValid, values }) =>
-                  !console.log(values) && (
-                    <ClaimTypeInformationForm>
-                      {hasLocation(type.__typename) && (
-                        <div>
-                          <Field
-                            component={TextField}
-                            name="location"
-                            placeholder="Location"
-                          />
-                        </div>
-                      )}
+                {({ isValid }) => (
+                  <ClaimTypeInformationForm>
+                    {hasLocation(type.__typename) && (
                       <div>
                         <Field
-                          component={DatePicker}
-                          name="date"
-                          placeholder="Date"
+                          component={TextField}
+                          name="location"
+                          placeholder="Location"
                         />
                       </div>
-                      {hasItem(type.__typename) && (
-                        <div>
-                          <Field
-                            component={TextField}
-                            name="item"
-                            placeholder="Item"
-                          />
-                        </div>
-                      )}
-                      {hasPoliceReport(type.__typename) && (
-                        <div>
-                          <Field
-                            component={TextField}
-                            name="policeReport"
-                            placeholder="Police Report"
-                          />
-                        </div>
-                      )}
-                      {hasReceipt(type.__typename) && (
-                        <div>
-                          <Field
-                            component={TextField}
-                            name="receipt"
-                            placeholder="Receipt"
-                          />
-                        </div>
-                      )}
-                      {hasTicket(type.__typename) && (
-                        <div>
-                          <Field
-                            component={TextField}
-                            name="ticket"
-                            placeholder="Ticket"
-                          />
-                        </div>
-                      )}
+                    )}
+                    <div>
+                      <Field
+                        component={DatePicker}
+                        name="date"
+                        placeholder="Date"
+                      />
+                    </div>
+                    {hasItem(type.__typename) && (
                       <div>
-                        <SubmitButton
-                          type="submit"
-                          variant="contained"
-                          color="primary"
-                          disabled={!isValid}
-                        >
-                          Update claim information
-                        </SubmitButton>
+                        <Field
+                          component={TextField}
+                          name="item"
+                          placeholder="Item"
+                        />
                       </div>
-                    </ClaimTypeInformationForm>
-                  )
-                }
+                    )}
+                    {hasPoliceReport(type.__typename) && (
+                      <div>
+                        <Field
+                          component={TextField}
+                          name="policeReport"
+                          placeholder="Police Report"
+                        />
+                      </div>
+                    )}
+                    {hasReceipt(type.__typename) && (
+                      <div>
+                        <Field
+                          component={TextField}
+                          name="receipt"
+                          placeholder="Receipt"
+                        />
+                      </div>
+                    )}
+                    {hasTicket(type.__typename) && (
+                      <div>
+                        <Field
+                          component={TextField}
+                          name="ticket"
+                          placeholder="Ticket"
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <SubmitButton
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={!isValid}
+                      >
+                        Update claim information
+                      </SubmitButton>
+                    </div>
+                  </ClaimTypeInformationForm>
+                )}
               </Formik>
             ) : null}
           </Paper>

@@ -3,9 +3,12 @@ import {
   List as MuiList,
   ListItem as MuiListItem,
   TextField as MuiTextField,
+  Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
 
+import format from 'date-fns/format'
+import toDate from 'date-fns/toDate'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
@@ -19,6 +22,7 @@ const ADD_CLAIM_NOTE_QUERY = gql`
     claim(id: $id) {
       notes {
         text
+        date
       }
       events {
         text
@@ -33,6 +37,7 @@ const ADD_CLAIM_NOTE_MUTATION = gql`
     addClaimNote(id: $id, note: $note) {
       notes {
         text
+        date
       }
       events {
         text
@@ -44,6 +49,7 @@ const ADD_CLAIM_NOTE_MUTATION = gql`
 
 interface Note {
   text: string
+  date: string
 }
 
 interface Props {
@@ -65,10 +71,32 @@ const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
   />
 )
 
+const sortNotesByDate = (notes: Note[]) =>
+<<<<<<< HEAD
+  [...notes].sort((noteA, noteB) => {
+=======
+  notes.sort((noteA, noteB) => {
+>>>>>>> 953354b8f58c6521796f747f4472be623db1d10f
+    return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
+  })
+
 const ListItem = styled(MuiListItem)({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
   paddingLeft: 0,
   paddingRight: 0,
   borderBottom: '1px solid rgba(0,0,0,0.08)',
+})
+
+const ClaimNote = styled(MuiTypography)({
+  fontSize: '1rem',
+  maxWidth: '80%',
+})
+
+const ClaimNoteDate = styled(MuiTypography)({
+  fontSize: '0.875rem',
 })
 
 const SubmitButton = withStyles({
@@ -98,9 +126,12 @@ const ClaimNotes: React.SFC<Props> = ({ notes, claimId }) => (
       <Paper>
         <h3>Notes</h3>
         <MuiList>
-          {notes.map((note) => (
-            <ListItem key={note.text}>
-              <p>{note.text}</p>
+          {sortNotesByDate(notes).map((note) => (
+            <ListItem key={note.date}>
+              <ClaimNote component="p">{note.text}</ClaimNote>
+              <ClaimNoteDate component="span">
+                {format(toDate(note.date), 'yyyy-MM-dd hh:mm:ss')}
+              </ClaimNoteDate>
             </ListItem>
           ))}
         </MuiList>
