@@ -72,7 +72,7 @@ const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
 )
 
 const sortNotesByDate = (notes: Note[]) =>
-  notes.sort((noteA, noteB) => {
+  [...notes].sort((noteA, noteB) => {
     return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
   })
 
