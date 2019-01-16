@@ -8,6 +8,7 @@ const MessagesListContainer = styled.div`
   box-sizing: border-box;
   overflow-y: auto;
   padding: 20px 20px 60px;
+  flex-grow: 1;
 `
 
 const EmptyList = styled.h3`
