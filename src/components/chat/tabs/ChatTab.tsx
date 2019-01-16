@@ -7,6 +7,8 @@ import { Icon, Message } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const resizableStyles = {
+  display: 'flex',
+  flexDirection: 'column',
   position: 'fixed',
   height: '80%',
   top: '100px',
