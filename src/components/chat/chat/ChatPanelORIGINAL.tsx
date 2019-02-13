@@ -1,7 +1,6 @@
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { Form, Icon } from 'semantic-ui-react'
-import ReactAutocomplete from 'react-autocomplete'
+import { Form, Icon, TextArea } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { EmojiPicker } from './EmojiPicker'
 
@@ -12,6 +11,7 @@ const MessagesPanelContainer = styled.div`
   align-items: flex-end;
   padding: 5px;
   border-top: solid 2px #e8e5e5;
+  height: 85px;
 `
 
 const ChatForm = styled(Form)`
@@ -28,6 +28,14 @@ const ChatForm = styled(Form)`
   & .primary.button {
     margin-top: 23px;
   }
+`
+
+const TextAreaStyled = styled(TextArea)`
+  height: 75px !important;
+`
+
+const InputContainer = styled.div`
+  width: 540px;
 `
 
 const AutocompleteItems = styled.div`
@@ -61,14 +69,16 @@ interface SuggestionProps {
 interface State {
   message: string
   suggestions: SuggestionProps[]
+  focusedSuggestionIndex: number | null
 }
 
 export default class ChatPanel extends React.Component<any, State> {
-  constructor(props: object) {
+  constructor(props) {
     super(props)
     this.state = {
       message: '',
       suggestions: [],
+      focusedSuggestionIndex: null,
     }
   }
 
@@ -80,8 +90,7 @@ export default class ChatPanel extends React.Component<any, State> {
     }
   }
 
-  public onInputChange = (e) => {
-    const value = e.target.value
+  public onInputChange = (e, { value }: { value: string }) => {
     this.setState({ message: value })
     this.updateAutocompleteSuggestions(value)
   }
@@ -98,6 +107,61 @@ export default class ChatPanel extends React.Component<any, State> {
 
   public selectAutocompleteSuggestion = (suggestion: string) => {
     this.setState({ message: suggestion, suggestions: [] })
+  }
+
+  public onTextAreaKeyPress = (e) => {
+    if (e && e.charCode === 13 && !e.shiftKey) {
+      this.onSubmit()
+    }
+  }
+
+  public onTextAreaKeyDown = (e) => {
+    if (e && e.keyCode === 38) {
+      this.onTextAreaUpKey()
+    }
+    if (e && e.keyCode === 40) {
+      this.onTextAreaDownKey()
+    }
+  }
+
+  public onTextAreaUpKey = () => {
+    const { suggestions, focusedSuggestionIndex } = this.state
+    const suggestionsLength = suggestions.length
+    let newFocusedSuggestionIndex = null
+    if (!!suggestionsLength) {
+      if (!focusedSuggestionIndex) {
+        newFocusedSuggestionIndex = suggestionsLength
+      }
+      if (
+        focusedSuggestionIndex &&
+        focusedSuggestionIndex <= suggestionsLength
+      ) {
+        newFocusedSuggestionIndex = focusedSuggestionIndex - 1
+      }
+    }
+    this.setFocusAutoCompleteSuggestion(newFocusedSuggestionIndex)
+  }
+
+  public onTextAreaDownKey = () => {
+    const { suggestions, focusedSuggestionIndex } = this.state
+    const suggestionsLength = suggestions.length
+    let newFocusedSuggestionIndex = null
+    if (!!suggestionsLength) {
+      if (!focusedSuggestionIndex) {
+        newFocusedSuggestionIndex = 0
+      }
+      if (focusedSuggestionIndex < suggestionsLength) {
+        newFocusedSuggestionIndex = focusedSuggestionIndex + 1
+      }
+      if (focusedSuggestionIndex === suggestionsLength) {
+        newFocusedSuggestionIndex = 0
+      }
+    }
+    this.setFocusAutoCompleteSuggestion(newFocusedSuggestionIndex)
+  }
+
+  public setFocusAutoCompleteSuggestion(index) {
+    this.setState({ focusedSuggestionIndex: index })
   }
 
   public setAutocompleteSuggestions = (suggestions: SuggestionProps[]) => {
@@ -117,36 +181,39 @@ export default class ChatPanel extends React.Component<any, State> {
   }
 
   public render() {
-    const { message, suggestions } = this.state
+    const { message, suggestions, focusedSuggestionIndex } = this.state
     return (
       <ChatForm onSubmit={this.onSubmit}>
         <MessagesPanelContainer>
-          <ReactAutocomplete
-            getItemValue={({ text }: SuggestionProps) => text}
-            items={suggestions}
-            renderItem={(
-              suggestion: SuggestionProps,
-              isHighlighted: boolean,
-            ) => {
-              const { text } = suggestion
-              return (
-                <AutocompleteItem isFocused={isHighlighted}>
-                  {text}
-                </AutocompleteItem>
-              )
-            }}
-            value={message}
-            renderMenu={(components, undefined, style: object) => {
-              return (
-                <AutocompleteItems style={{ ...style }}>
-                  {components}
-                </AutocompleteItems>
-              )
-            }}
-            onChange={this.onInputChange}
-            onSelect={this.selectAutocompleteSuggestion}
-            wrapperStyle={{ width: '100%' }}
-          />
+          <InputContainer>
+            <Form.Field>
+              <TextAreaStyled
+                autoHeight
+                onChange={this.onInputChange}
+                value={message}
+                onKeyDown={this.onTextAreaKeyDown}
+                onKeyPress={this.onTextAreaKeyPress}
+              />
+            </Form.Field>
+            {!!suggestions.length && (
+              <AutocompleteItems>
+                {suggestions.map(({ text }, index) => {
+                  return (
+                    <AutocompleteItem
+                      key={text}
+                      isFocused={index === focusedSuggestionIndex}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        this.selectAutocompleteSuggestion(text)
+                      }}
+                    >
+                      {text}
+                    </AutocompleteItem>
+                  )
+                })}
+              </AutocompleteItems>
+            )}
+          </InputContainer>
           <div>
             <EmojiPicker
               selectEmoji={(emoji) => {

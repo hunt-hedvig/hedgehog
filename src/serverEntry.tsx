@@ -10,6 +10,7 @@ import { reactPageRoutes } from 'routes/routes'
 import 'source-map-support/register'
 import * as tls from 'tls'
 import * as url from 'url'
+import koamount from 'koa-mount'
 
 const scriptLocation = getScriptLocation({
   statsLocation: path.resolve(__dirname, 'assets'),
@@ -58,6 +59,16 @@ server.router.get('/', getPage)
 reactPageRoutes.forEach((route) => {
   server.router.get(route.path, getPage)
 })
+
+server.app.use(
+  koamount(
+    '/v0',
+    proxy({
+      target: 'http://localhost:5000/v0/messages/autocomplete?query=',
+      changeOrigin: true,
+    }),
+  ),
+)
 
 server.app.use(
   proxy({
