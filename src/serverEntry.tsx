@@ -62,9 +62,9 @@ reactPageRoutes.forEach((route) => {
 
 server.app.use(
   koamount(
-    '/v0',
+    '/hope-autocomplete/v0',
     proxy({
-      target: 'http://localhost:5000/v0/messages/autocomplete?query=',
+      target: 'http://localhost:5000/v0',
       changeOrigin: true,
     }),
   ),

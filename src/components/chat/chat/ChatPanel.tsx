@@ -61,6 +61,8 @@ interface SuggestionProps {
 interface State {
   message: string
   suggestions: SuggestionProps[]
+  autocompleteResponse: SuggestionProps[]
+  autocompleteQuery: string
 }
 
 export default class ChatPanel extends React.Component<any, State> {
@@ -69,6 +71,8 @@ export default class ChatPanel extends React.Component<any, State> {
     this.state = {
       message: '',
       suggestions: [],
+      autocompleteResponse: [],
+      autocompleteQuery: '',
     }
   }
 
@@ -77,13 +81,17 @@ export default class ChatPanel extends React.Component<any, State> {
     if (message) {
       this.props.addMessage(message)
       this.setState({ message: '' })
+      this.sendAutocompleteEvent()
     }
   }
 
   public onInputChange = (e) => {
     const value = e.target.value
+    if (!value) {
+      return this.setState({ message: '', suggestions: [] })
+    }
     this.setState({ message: value })
-    this.updateAutocompleteSuggestions(value)
+    this.getAutocompleteSuggestions(value)
   }
 
   public addEmojiToMessage(emoji: string) {
@@ -97,23 +105,49 @@ export default class ChatPanel extends React.Component<any, State> {
   }
 
   public selectAutocompleteSuggestion = (suggestion: string) => {
-    this.setState({ message: suggestion, suggestions: [] })
+    const { message } = this.state
+    this.setState({
+      message: suggestion,
+      suggestions: [],
+      autocompleteQuery: message,
+    })
   }
 
   public setAutocompleteSuggestions = (suggestions: SuggestionProps[]) => {
-    this.setState({ suggestions })
+    this.setState({ suggestions, autocompleteResponse: suggestions })
   }
 
-  public getAutocompleteSuggestions(message: string) {
+  public fetchAutocompleteSuggestions(message: string) {
     return fetch(
-      '/v0/messages/autocomplete?query=' + encodeURIComponent(message),
+      '/hope-autocomplete/v0/messages/autocomplete?query=' +
+        encodeURIComponent(message),
     ).then((r) => r.json())
   }
 
-  public updateAutocompleteSuggestions(message: string) {
-    this.getAutocompleteSuggestions(message).then(
+  public getAutocompleteSuggestions(message: string) {
+    this.fetchAutocompleteSuggestions(message).then(
       this.setAutocompleteSuggestions,
     )
+  }
+
+  public sendAutocompleteEvent() {
+    const { messages } = this.props
+    const { message, autocompleteResponse, autocompleteQuery } = this.state
+    return fetch('/hope-autocomplete/v0/messages/autocomplete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        autocomplete_response: autocompleteResponse,
+        autocomplete_query: autocompleteQuery,
+        submitted_response: {
+          text: message,
+          timestamp: Date.now() / 1000.0,
+        },
+        user_messages: messages,
+      }),
+    })
   }
 
   public render() {
@@ -169,4 +203,9 @@ export default class ChatPanel extends React.Component<any, State> {
 
 ChatPanel.propTypes = {
   addMessage: PropTypes.func.isRequired,
+  messages: PropTypes.array,
+}
+
+ChatPanel.defaultProps = {
+  messages: [],
 }

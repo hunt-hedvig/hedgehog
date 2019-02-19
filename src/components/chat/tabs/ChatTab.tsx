@@ -69,6 +69,7 @@ export default class ChatTab extends React.Component {
           />
           <ChatPanel
             addMessage={this.props.addMessage}
+            messages={(this.props.messages && this.props.messages.list) || []}
             select={(this.props.messages && this.props.messages.select) || ''}
           />
           {this.props.error && (
