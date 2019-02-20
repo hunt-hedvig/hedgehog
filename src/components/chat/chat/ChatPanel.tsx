@@ -1,18 +1,16 @@
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { Form, Icon, TextArea } from 'semantic-ui-react'
+import ReactAutocomplete from 'react-autocomplete'
+import { Form, Icon } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { EmojiPicker } from './EmojiPicker'
 
-const MessagesPanelContariner = styled.div`
+const MessagesPanelContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  padding-top: 5px;
-  padding-left: 15px;
+  padding: 5px;
   border-top: solid 2px #e8e5e5;
-  height: 85px;
 `
 
 const ChatForm = styled(Form)`
@@ -31,61 +29,164 @@ const ChatForm = styled(Form)`
   }
 `
 
-const TextAreaStyled = styled(TextArea)`
-  height: 75px !important;
+const AutocompleteItems = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12);
+  max-height: 150px;
+  overflow-y: scroll;
 `
 
-const InputContainer = styled.div`
-  width: 540px;
+const AutocompleteItem = styled.button`
+  flex-shrink: 0;
+  background: ${({ isFocused }: { isFocused: boolean }) =>
+    isFocused ? 'rgba(0,0,0,0.05)' : 'transparent'};
+  color: blue;
+  padding: 5px;
+  border: 0;
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 `
 
-export default class ChatPanel extends React.Component<
-  any,
-  { message: string }
-> {
-  constructor(props) {
+interface SuggestionProps {
+  score: number
+  text: string
+}
+
+interface State {
+  message: string
+  suggestions: SuggestionProps[]
+  autocompleteResponse: SuggestionProps[]
+  autocompleteQuery: string
+}
+
+export default class ChatPanel extends React.Component<any, State> {
+  public defaultProps = {
+    messages: [],
+  }
+  constructor(props: object) {
     super(props)
     this.state = {
       message: '',
+      suggestions: [],
+      autocompleteResponse: [],
+      autocompleteQuery: '',
     }
   }
 
-  public submitHandler = () => {
+  public onSubmit = () => {
     const { message } = this.state
     if (message) {
       this.props.addMessage(message)
       this.setState({ message: '' })
+      this.sendAutocompleteEvent()
     }
   }
 
-  public inputHandler = (e, { value }) => {
+  public onInputChange = (e: any) => {
+    const value = e.target.value
+    if (!value) {
+      return this.setState({ message: '', suggestions: [] })
+    }
     this.setState({ message: value })
+    this.getAutocompleteSuggestions(value)
   }
 
-  public textKeyPress = (e) => {
-    if (e && e.charCode === 13 && !e.shiftKey) {
-      this.submitHandler()
-    }
+  public addEmojiToMessage(emoji: string) {
+    const { message } = this.state
+    return `${message}${emoji}`
+  }
+
+  public selectEmoji = (emoji: string) => {
+    const emojiMessage = this.addEmojiToMessage(emoji)
+    this.setState({ message: emojiMessage })
+  }
+
+  public selectAutocompleteSuggestion = (suggestion: string) => {
+    const { message } = this.state
+    this.setState({
+      message: suggestion,
+      suggestions: [],
+      autocompleteQuery: message,
+    })
+  }
+
+  public setAutocompleteSuggestions = (suggestions: SuggestionProps[]) => {
+    this.setState({ suggestions, autocompleteResponse: suggestions })
+  }
+
+  public fetchAutocompleteSuggestions(message: string) {
+    return fetch(
+      '/api/autocomplete/suggestions?query=' + encodeURIComponent(message),
+    ).then((r) => r.json())
+  }
+
+  public getAutocompleteSuggestions(message: string) {
+    this.fetchAutocompleteSuggestions(message).then(
+      this.setAutocompleteSuggestions,
+    )
+  }
+
+  public sendAutocompleteEvent() {
+    const { messages } = this.props
+    const { message, autocompleteResponse, autocompleteQuery } = this.state
+    return fetch('/api/autocomplete/select', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        autocompleteResponse,
+        autocompleteQuery,
+        submittedResponse: {
+          text: message,
+          timestamp: Date.now() / 1000,
+          authorType: 'admin',
+        },
+        chatHistory: (messages || []).slice(-25),
+      }),
+    })
   }
 
   public render() {
+    const { message, suggestions } = this.state
     return (
-      <ChatForm onSubmit={this.submitHandler}>
-        <MessagesPanelContariner>
-          <InputContainer>
-            <Form.Field>
-              <TextAreaStyled
-                autoHeight
-                onChange={this.inputHandler}
-                value={this.state.message}
-                onKeyPress={this.textKeyPress}
-              />
-            </Form.Field>
-          </InputContainer>
+      <ChatForm onSubmit={this.onSubmit}>
+        <MessagesPanelContainer>
+          <ReactAutocomplete
+            getItemValue={({ text }: SuggestionProps) => text}
+            items={suggestions}
+            renderItem={(
+              suggestion: SuggestionProps,
+              isHighlighted: boolean,
+            ) => {
+              const { text } = suggestion
+              return (
+                <AutocompleteItem key={text} isFocused={isHighlighted}>
+                  {text}
+                </AutocompleteItem>
+              )
+            }}
+            value={message}
+            renderMenu={(components, _, style: object) => {
+              return (
+                <AutocompleteItems style={{ ...style }}>
+                  {components}
+                </AutocompleteItems>
+              )
+            }}
+            onChange={this.onInputChange}
+            onSelect={this.selectAutocompleteSuggestion}
+            wrapperStyle={{ width: '100%' }}
+          />
           <div>
             <EmojiPicker
               selectEmoji={(emoji) => {
-                this.setState({ message: `${this.state.message}${emoji}` })
+                this.selectEmoji(emoji)
               }}
             />
             <Icon
@@ -93,15 +194,11 @@ export default class ChatPanel extends React.Component<
               color={'blue'}
               size={'large'}
               link
-              onClick={this.submitHandler}
+              onClick={this.onSubmit}
             />
           </div>
-        </MessagesPanelContariner>
+        </MessagesPanelContainer>
       </ChatForm>
     )
   }
-}
-
-ChatPanel.propTypes = {
-  addMessage: PropTypes.func.isRequired,
 }
