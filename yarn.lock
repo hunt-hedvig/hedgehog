@@ -790,7 +790,7 @@
   resolved "https://registry.yarnpkg.com/@hedviginsurance/brand/-/brand-1.6.0.tgz#5b7e9d9e26b4dfcc35e7e8358934b542f871ec9f"
   integrity sha512-75jqoOelmH2MvSfklERqujE83fJP3s2/0F/RkfTYbzcuJrZ6poZfuhooeH1dR2HWD+jdPHpFjDX3i8zo8+d1CQ==
 
-"@hedviginsurance/cli@^2.1.1":
+"@hedviginsurance/cli@^2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@hedviginsurance/cli/-/cli-2.2.3.tgz#21a69832f05ecd88224c81d30170825b7df23222"
   integrity sha512-/R7Kod+it/3kpSUcr6SpfTMrdWQ1uOrdKEmjPJ9E3zSIyajKPGRzf+RK+Kl9HMNTNKZMVHhFgPuBc0zWMVQapw==
@@ -808,7 +808,7 @@
   resolved "https://registry.yarnpkg.com/@hedviginsurance/libkit/-/libkit-1.0.1.tgz#efe04ae3c88b302a30d44fd191f259ba57d19487"
   integrity sha512-7JR0IlMJPN6PhR5BZVqex4rcVyyTzDwvjcnvGTDS2JDECOuDiVi9/I4F4OQvlceuEB+SRNbiZp6516Q9Ie+j4Q==
 
-"@hedviginsurance/web-survival-kit@^1.5.1", "@hedviginsurance/web-survival-kit@^1.7.0":
+"@hedviginsurance/web-survival-kit@^1.7.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@hedviginsurance/web-survival-kit/-/web-survival-kit-1.7.0.tgz#bff5a934f5a904ac39cba2e607971f0dce07b216"
   integrity sha512-8a0C3Q0ByR/B1kHJ4u1WYlPcxnrQE1CFoeFJakRZZPA19ZtzbAVssYvLG/+SWtU4Ntj7eoFy1/rOmkGa0lmQ2g==
@@ -1077,6 +1077,13 @@
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.2.tgz#fa8e1ad1d474688a757140c91de6dace6f4abc8d"
   integrity sha512-HtKGu+qG1NPvYe1z7ezLsyIaXYyi8SoAVqWDZgDQ8dLrsZvSzUNCwZyfX33uhWxL/SU0ZDQZ3nwZ0nimt507Kw==
+
+"@types/react-autocomplete@^1.8.4":
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/@types/react-autocomplete/-/react-autocomplete-1.8.4.tgz#eeee3575ced20d0e3fe85adfadda9a95cf2d7dfa"
+  integrity sha512-EvSGh/K4Drsob1L2G09zIjCKCii1cGzuiZ7urvkku4t6F1MU+KaRHbctmKpH9ylenWuTyN0pbNj+igYbYh3FvQ==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-dates@^17.1.3":
   version "17.1.4"
@@ -3011,7 +3018,7 @@ debounce@^1.1.0:
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
   integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
-debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.1, debug@^2.6.8, debug@^2.6.9:
+debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   integrity sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
@@ -5873,7 +5880,7 @@ koa-basic-auth@^3.0.0:
   dependencies:
     basic-auth "^2.0.0"
 
-koa-compose@^3.0.0, koa-compose@^3.2.1:
+koa-compose@^3.0.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/koa-compose/-/koa-compose-3.2.1.tgz#a85ccb40b7d986d8e5a345b3a1ace8eabcf54de7"
   integrity sha1-qFzLQLfZhtjlo0Wzoazo6rz1Tec=
@@ -5914,14 +5921,6 @@ koa-is-json@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/koa-is-json/-/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
   integrity sha1-JzwH7c3Ljfaiwat9We52SRRR7BQ=
-
-koa-mount@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/koa-mount/-/koa-mount-3.0.0.tgz#08cab3b83d31442ed8b7e75c54b1abeb922ec197"
-  integrity sha1-CMqzuD0xRC7Yt+dcVLGr65IuwZc=
-  dependencies:
-    debug "^2.6.1"
-    koa-compose "^3.2.1"
 
 koa-mount@^4.0.0:
   version "4.0.0"
