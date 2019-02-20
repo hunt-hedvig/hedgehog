@@ -96,7 +96,7 @@ export default class ChatPanel extends React.Component<any, State> {
       return this.setState({ message: '', suggestions: [] })
     }
     this.setState({ message: value })
-    this.getAutocompleteSuggestions(value)
+      this.getAutocompleteSuggestions(value)
   }
 
   public addEmojiToMessage(emoji: string) {
@@ -147,7 +147,7 @@ export default class ChatPanel extends React.Component<any, State> {
         autocompleteQuery,
         submittedResponse: {
           text: message,
-          timestamp: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+          timestamp: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'.0Z'"),
           authorType: 'admin',
         },
         chatHistory: (messages || []).slice(-25),
