@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import * as React from 'react'
 import ReactAutocomplete from 'react-autocomplete'
 import { Form, Icon } from 'semantic-ui-react'
@@ -82,8 +83,10 @@ export default class ChatPanel extends React.Component<any, State> {
     const { message } = this.state
     if (message) {
       this.props.addMessage(message)
-      this.setState({ message: '' })
-      this.sendAutocompleteEvent()
+      if (this.state.autocompleteQuery) {
+        this.sendAutocompleteEvent(this.state)
+      }
+      this.setState({ message: '', autocompleteQuery: '' })
     }
   }
 
@@ -131,9 +134,9 @@ export default class ChatPanel extends React.Component<any, State> {
     )
   }
 
-  public sendAutocompleteEvent() {
+  public sendAutocompleteEvent(state: State) {
     const { messages } = this.props
-    const { message, autocompleteResponse, autocompleteQuery } = this.state
+    const { message, autocompleteResponse, autocompleteQuery } = state
     return fetch('/api/autocomplete/select', {
       method: 'POST',
       headers: {
@@ -144,7 +147,7 @@ export default class ChatPanel extends React.Component<any, State> {
         autocompleteQuery,
         submittedResponse: {
           text: message,
-          timestamp: Date.now() / 1000,
+          timestamp: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
           authorType: 'admin',
         },
         chatHistory: (messages || []).slice(-25),
