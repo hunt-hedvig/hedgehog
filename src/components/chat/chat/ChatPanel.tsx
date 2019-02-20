@@ -96,7 +96,7 @@ export default class ChatPanel extends React.Component<any, State> {
       return this.setState({ message: '', suggestions: [] })
     }
     this.setState({ message: value })
-      this.getAutocompleteSuggestions(value)
+    this.getAutocompleteSuggestions(value)
   }
 
   public addEmojiToMessage(emoji: string) {
@@ -150,7 +150,19 @@ export default class ChatPanel extends React.Component<any, State> {
           timestamp: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'.0Z'"),
           authorType: 'admin',
         },
-        chatHistory: (messages || []).slice(-25),
+        chatHistory: (messages || []).slice(-25).map((historyMessage: any) => {
+          const authorType =
+            historyMessage.author === null
+              ? historyMessage.header.fromId === 1
+                ? 'bot'
+                : 'user'
+              : 'admin'
+          return {
+            authorType,
+            text: historyMessage.body.text,
+            timestamp: historyMessage.timestamp,
+          }
+        }),
       }),
     })
   }
