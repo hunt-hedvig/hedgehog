@@ -55,7 +55,7 @@ export default class ChatTab extends React.Component {
       <>
         <Resizable
           style={resizableStyles}
-          defaultSize={{ width: '390px', height: '80%' }}
+          defaultSize={{ width: '400px', height: '80%' }}
           enable={{ left: true }}
         >
           <ChatHeader ctx={this} />
@@ -69,7 +69,6 @@ export default class ChatTab extends React.Component {
           />
           <ChatPanel
             addMessage={this.props.addMessage}
-            messages={(this.props.messages && this.props.messages.list) || []}
             select={(this.props.messages && this.props.messages.select) || ''}
           />
           {this.props.error && (
