@@ -9,7 +9,7 @@ const Wrapper = styled('div')({
   position: 'absolute',
   maxHeight: '260px',
   maxWidth: '250px',
-  bottom: 'calc(100% + 175px)',
+  bottom: 'calc(100% + 150px)',
   right: '95px',
 })
 
