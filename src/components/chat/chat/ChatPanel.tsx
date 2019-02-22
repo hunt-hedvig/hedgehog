@@ -1,4 +1,3 @@
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Form, Icon } from 'semantic-ui-react'
 import ReactAutocomplete from 'react-autocomplete'
@@ -34,7 +33,7 @@ const AutocompleteItems = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
-  box-shadow: '0 2px 4px 0 rgba(34, 36, 38, 0.12)';
+  box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12);
   max-height: 150px;
   overflow-y: scroll;
 `
@@ -66,6 +65,9 @@ interface State {
 }
 
 export default class ChatPanel extends React.Component<any, State> {
+  public defaultProps = {
+    messages: [],
+  }
   constructor(props: object) {
     super(props)
     this.state = {
@@ -85,7 +87,7 @@ export default class ChatPanel extends React.Component<any, State> {
     }
   }
 
-  public onInputChange = (e) => {
+  public onInputChange = (e: any) => {
     const value = e.target.value
     if (!value) {
       return this.setState({ message: '', suggestions: [] })
@@ -119,8 +121,7 @@ export default class ChatPanel extends React.Component<any, State> {
 
   public fetchAutocompleteSuggestions(message: string) {
     return fetch(
-      '/hope-autocomplete/v0/messages/autocomplete?query=' +
-        encodeURIComponent(message),
+      '/api/autocomplete/suggestions?query=' + encodeURIComponent(message),
     ).then((r) => r.json())
   }
 
@@ -133,7 +134,7 @@ export default class ChatPanel extends React.Component<any, State> {
   public sendAutocompleteEvent() {
     const { messages } = this.props
     const { message, autocompleteResponse, autocompleteQuery } = this.state
-    return fetch('/hope-autocomplete/v0/messages/autocomplete', {
+    return fetch('/api/autocomplete/select', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -144,8 +145,9 @@ export default class ChatPanel extends React.Component<any, State> {
         submitted_response: {
           text: message,
           timestamp: Date.now() / 1000.0,
+          authorType: 'admin',
         },
-        user_messages: messages,
+        user_messages: (messages || []).slice(-25),
       }),
     })
   }
@@ -164,13 +166,13 @@ export default class ChatPanel extends React.Component<any, State> {
             ) => {
               const { text } = suggestion
               return (
-                <AutocompleteItem isFocused={isHighlighted}>
+                <AutocompleteItem key={text} isFocused={isHighlighted}>
                   {text}
                 </AutocompleteItem>
               )
             }}
             value={message}
-            renderMenu={(components, undefined, style: object) => {
+            renderMenu={(components, _, style: object) => {
               return (
                 <AutocompleteItems style={{ ...style }}>
                   {components}
@@ -199,13 +201,4 @@ export default class ChatPanel extends React.Component<any, State> {
       </ChatForm>
     )
   }
-}
-
-ChatPanel.propTypes = {
-  addMessage: PropTypes.func.isRequired,
-  messages: PropTypes.array,
-}
-
-ChatPanel.defaultProps = {
-  messages: [],
 }
