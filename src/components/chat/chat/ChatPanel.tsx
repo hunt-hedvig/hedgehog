@@ -97,7 +97,7 @@ export default class ChatPanel extends React.Component<
         <ChatForm onSubmit={this.onSubmit}>
           <TextField
             multiline
-            rowsMax="15"
+            rowsMax="12"
             value={message}
             onChange={this.handleChange}
             margin="none"
