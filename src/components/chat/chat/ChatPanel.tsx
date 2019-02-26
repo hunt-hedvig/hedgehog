@@ -1,74 +1,77 @@
+import {
+  MenuItem as MuiMenuItem,
+  MenuList as MuiMenuList,
+  TextField as MuiTextField,
+  withStyles,
+} from '@material-ui/core'
 import * as React from 'react'
-import { Form, Icon } from 'semantic-ui-react'
-import ReactAutocomplete from 'react-autocomplete'
+import { Icon } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { EmojiPicker } from './EmojiPicker'
 
-const MessagesPanelContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 5px;
-  border-top: solid 2px #e8e5e5;
+const MessagesPanelContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  flexShrink: 0,
+  marginTop: 'auto',
+  padding: '0.5rem',
+})
+
+const ChatForm = styled('form')({
+  width: '100%',
+  marginRight: '0.5rem',
+})
+
+const ActionContainer = styled('div')`
+  position: relative;
 `
 
-const ChatForm = styled(Form)`
-  z-index: 10000;
+const TextField = withStyles({
+  root: {
+    width: '100%',
+    boxSizing: 'border-box',
+  },
+})(MuiTextField)
 
-  & .selection.dropdown {
-    min-width: 130px;
+const MenuList = withStyles({
+  root: {
+    maxHeight: '175px',
+    overflowY: 'scroll',
+    marginTop: '0.5rem',
+    backgroundColor: 'white',
+  },
+})(MuiMenuList)
 
-    & .menu {
-      max-height: 100px;
-    }
-  }
-
-  & .primary.button {
-    margin-top: 23px;
-  }
-`
-
-const AutocompleteItems = styled.div`
-  display: flex;
-  flex-direction: column;
-  background: white;
-  box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12);
-  max-height: 150px;
-  overflow-y: scroll;
-`
-
-const AutocompleteItem = styled.button`
-  flex-shrink: 0;
-  background: ${({ isFocused }: { isFocused: boolean }) =>
-    isFocused ? 'rgba(0,0,0,0.05)' : 'transparent'};
-  color: blue;
-  padding: 5px;
-  border: 0;
-  font-family: inherit;
-  font-size: inherit;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-`
+const MenuItem = withStyles({
+  root: {
+    height: 'auto',
+    overflow: 'auto',
+    whiteSpace: 'normal',
+  },
+})(MuiMenuItem)
 
 interface SuggestionProps {
   score: number
   text: string
 }
 
-interface State {
+interface ChatPanelProps {
+  messages: object
+  addMessage: () => void
+}
+
+interface ChatPanelState {
   message: string
   suggestions: SuggestionProps[]
   autocompleteResponse: SuggestionProps[]
   autocompleteQuery: string
 }
 
-export default class ChatPanel extends React.Component<any, State> {
-  public defaultProps = {
-    messages: [],
-  }
-  constructor(props: object) {
+export default class ChatPanel extends React.Component<
+  ChatPanelProps,
+  ChatPanelState
+> {
+  constructor(props: ChatPanelProps) {
     super(props)
     this.state = {
       message: '',
@@ -76,62 +79,117 @@ export default class ChatPanel extends React.Component<any, State> {
       autocompleteResponse: [],
       autocompleteQuery: '',
     }
+    this.handleChange = this.handleChange.bind(this)
+    this.getAutocompleteSuggestions = this.getAutocompleteSuggestions.bind(this)
+    this.fetchAutocompleteSuggestions = this.fetchAutocompleteSuggestions.bind(
+      this,
+    )
+    this.setAutocompleteSuggestions = this.setAutocompleteSuggestions.bind(this)
+    this.selectAutocompleteSuggestion = this.selectAutocompleteSuggestion.bind(
+      this,
+    )
   }
 
-  public onSubmit = () => {
-    const { message } = this.state
-    if (message) {
-      this.props.addMessage(message)
-      this.setState({ message: '' })
-      this.sendAutocompleteEvent()
-    }
+  public render() {
+    const { message, suggestions } = this.state
+    return (
+      <MessagesPanelContainer>
+        <ChatForm onSubmit={this.onSubmit}>
+          <TextField
+            multiline
+            rowsMax="15"
+            value={message}
+            onChange={this.handleChange}
+            margin="none"
+            variant="outlined"
+          />
+          {!!suggestions.length && (
+            <MenuList>
+              {suggestions.map((suggestion: SuggestionProps) => {
+                const { text } = suggestion
+                return (
+                  <MenuItem
+                    key={text}
+                    selected={message === text}
+                    onClick={this.selectAutocompleteSuggestion}
+                  >
+                    {text}
+                  </MenuItem>
+                )
+              })}
+            </MenuList>
+          )}
+        </ChatForm>
+        <ActionContainer>
+          <EmojiPicker
+            selectEmoji={(emoji) => {
+              this.selectEmoji(emoji)
+            }}
+          />
+          <Icon
+            name={'arrow circle right'}
+            color={'blue'}
+            size={'large'}
+            link
+            onClick={this.onSubmit}
+          />
+        </ActionContainer>
+      </MessagesPanelContainer>
+    )
   }
 
-  public onInputChange = (e: any) => {
-    const value = e.target.value
-    if (!value) {
+  private handleChange(event: any) {
+    const message = event.target.value
+    if (!message) {
       return this.setState({ message: '', suggestions: [] })
     }
-    this.setState({ message: value })
-    this.getAutocompleteSuggestions(value)
+    this.setState({ message })
+    this.getAutocompleteSuggestions(message)
   }
 
-  public addEmojiToMessage(emoji: string) {
-    const { message } = this.state
-    return `${message}${emoji}`
-  }
-
-  public selectEmoji = (emoji: string) => {
-    const emojiMessage = this.addEmojiToMessage(emoji)
-    this.setState({ message: emojiMessage })
-  }
-
-  public selectAutocompleteSuggestion = (suggestion: string) => {
-    const { message } = this.state
-    this.setState({
-      message: suggestion,
-      suggestions: [],
-      autocompleteQuery: message,
-    })
-  }
-
-  public setAutocompleteSuggestions = (suggestions: SuggestionProps[]) => {
-    this.setState({ suggestions, autocompleteResponse: suggestions })
-  }
-
-  public fetchAutocompleteSuggestions(message: string) {
-    return fetch(
-      '/api/autocomplete/suggestions?query=' + encodeURIComponent(message),
-    ).then((r) => r.json())
-  }
-
-  public getAutocompleteSuggestions(message: string) {
+  private getAutocompleteSuggestions(message: string) {
     this.fetchAutocompleteSuggestions(message).then(
       this.setAutocompleteSuggestions,
     )
   }
 
-  public sendAutocompleteEvent() {
+  private fetchAutocompleteSuggestions(message: string) {
+    return fetch(
+      '/api/autocomplete/suggestions?query=' + encodeURIComponent(message),
+    ).then((r) => r.json())
+  }
+
+  private setAutocompleteSuggestions = (suggestions: SuggestionProps[]) => {
+    this.setState({ suggestions, autocompleteResponse: suggestions })
+  }
+
+  private selectAutocompleteSuggestion = (event: any) => {
+    const { message } = this.state
+    const suggestion = event.target.innerText
+    const trimmedSuggestion = suggestion.trim()
+    this.setState({
+      message: trimmedSuggestion,
+      suggestions: [],
+      autocompleteQuery: message,
+    })
+  }
+
+  private selectEmoji = (emoji: string) => {
+    const emojiMessage = this.addEmojiToMessage(emoji)
+    this.setState({ message: emojiMessage })
+  }
+
+  private onSubmit = () => {
+    const { message } = this.state
+    const { addMessage } = this.props
+    if (message) {
+      addMessage(message)
+      this.setState({ message: '' })
+      this.sendAutocompleteEvent()
+    }
+  }
+
+  private sendAutocompleteEvent() {
     const { messages } = this.props
     const { message, autocompleteResponse, autocompleteQuery } = this.state
     return fetch('/api/autocomplete/select', {
@@ -150,55 +208,5 @@ export default class ChatPanel extends React.Component<any, State> {
         user_messages: (messages || []).slice(-25),
       }),
     })
-  }
-
-  public render() {
-    const { message, suggestions } = this.state
-    return (
-      <ChatForm onSubmit={this.onSubmit}>
-        <MessagesPanelContainer>
-          <ReactAutocomplete
-            getItemValue={({ text }: SuggestionProps) => text}
-            items={suggestions}
-            renderItem={(
-              suggestion: SuggestionProps,
-              isHighlighted: boolean,
-            ) => {
-              const { text } = suggestion
-              return (
-                <AutocompleteItem key={text} isFocused={isHighlighted}>
-                  {text}
-                </AutocompleteItem>
-              )
-            }}
-            value={message}
-            renderMenu={(components, _, style: object) => {
-              return (
-                <AutocompleteItems style={{ ...style }}>
-                  {components}
-                </AutocompleteItems>
-              )
-            }}
-            onChange={this.onInputChange}
-            onSelect={this.selectAutocompleteSuggestion}
-            wrapperStyle={{ width: '100%' }}
-          />
-          <div>
-            <EmojiPicker
-              selectEmoji={(emoji) => {
-                this.selectEmoji(emoji)
-              }}
-            />
-            <Icon
-              name={'arrow circle right'}
-              color={'blue'}
-              size={'large'}
-              link
-              onClick={this.onSubmit}
-            />
-          </div>
-        </MessagesPanelContainer>
-      </ChatForm>
-    )
   }
 }

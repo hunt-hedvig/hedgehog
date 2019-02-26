@@ -26,6 +26,7 @@ const ChatHeaderStyle = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: row;
+  flex-shrink: 0;
   justify-content: space-between;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -70,7 +71,6 @@ export default class ChatTab extends React.Component {
           <ChatPanel
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
-            select={(this.props.messages && this.props.messages.select) || ''}
           />
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>
