@@ -54,6 +54,7 @@ const CLAIM_PAGE_QUERY = gql`
         text
         date
       }
+      coveringEmployee
       __typename
     }
   }
@@ -92,6 +93,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         payments,
         reserves,
         type,
+        coveringEmployee,
       } = data.claim
 
       return (
@@ -105,6 +107,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               registrationDate={registrationDate}
               state={state}
               claimId={match.params.id}
+              coveringEmployee={coveringEmployee}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={4}>

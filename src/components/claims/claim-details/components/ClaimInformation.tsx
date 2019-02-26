@@ -13,11 +13,24 @@ import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 
 import { Paper } from '../../../shared/Paper'
+import { boolean } from 'yup'
 
 const UPDATE_STATE_QUERY = gql`
   query UpdateClaimState($id: ID!) {
     claim(id: $id) {
       state
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+
+const UPDATE_COVERING_EMPLOYEE_QUERY = gql`
+  query SetCoveringEmployee($id: ID!) {
+    claim(id: $id) {
+      coveringEmployee
       events {
         text
         date
@@ -37,6 +50,17 @@ const UPDATE_CLAIM_STATE_MUTATION = gql`
     }
   }
 `
+const SET_COVERING_EMPLOYEE = gql`
+  mutation SetCoveringEmployee($id: ID!, $coveringEmployee: Boolean!) {
+    setCoveringEmployee(id: $id, coveringEmployee: $coveringEmployee) {
+      coveringEmployee
+      events {
+        text
+        date
+      }
+    }
+  }
+`
 
 enum ClaimState {
   OPEN = 'OPEN',
@@ -49,6 +73,7 @@ interface Props {
   registrationDate: string
   state: ClaimState
   claimId: string
+  coveringEmployee: boolean
 }
 
 const validateSelectOption = (
@@ -59,6 +84,13 @@ const validateSelectOption = (
     throw new Error(`invalid ClaimState: ${value}`)
   }
   return value as ClaimState
+}
+
+const validateSelectEmployeeClaimOption = (
+  event: React.ChangeEvent<HTMLSelectElement>,
+): boolean => {
+  const { value } = event.target
+  return value === 'True'
 }
 
 const AudioWrapper = styled('div')({})
@@ -76,11 +108,16 @@ const StatusWrapper = styled('div')({
   marginTop: '1rem',
 })
 
+const EmployeeClaimWrapper = styled('div')({
+  marginTop: '1rem',
+})
+
 const ClaimInformation: React.SFC<Props> = ({
   recordingUrl,
   registrationDate,
   state,
   claimId,
+  coveringEmployee,
 }) => (
   <Mutation
     mutation={UPDATE_CLAIM_STATE_MUTATION}
@@ -99,47 +136,90 @@ const ClaimInformation: React.SFC<Props> = ({
     }}
   >
     {(updateClaimState) => (
-      <Paper>
-        <h3>Claim Information</h3>
-        {recordingUrl && (
-          <AudioWrapper>
-            <p>
-              Registered at:{' '}
-              {format(toDate(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
-            </p>
-            <Audio controls>
-              <source src={recordingUrl} type="audio/aac" />
-            </Audio>
-            <DonloadClaimFile
-              href={recordingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Download claim file
-            </DonloadClaimFile>
-          </AudioWrapper>
+      <Mutation
+        mutation={SET_COVERING_EMPLOYEE}
+        update={(cache, { data: updateData }) => {
+          cache.writeQuery({
+            query: UPDATE_COVERING_EMPLOYEE_QUERY,
+            variables: { id: claimId },
+            data: {
+              claim: {
+                coveringEmployee:
+                  updateData.setCoveringEmployee.coveringEmployee,
+                events: updateData.setCoveringEmployee.events,
+                __typename: updateData.setCoveringEmployee.__typename,
+              },
+            },
+          })
+        }}
+      >
+        {(setCoveringEmployee) => (
+          <Paper>
+            <h3>Claim Information</h3>
+            {recordingUrl && (
+              <AudioWrapper>
+                <p>
+                  Registered at:{' '}
+                  {format(toDate(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
+                </p>
+                <Audio controls>
+                  <source src={recordingUrl} type="audio/aac" />
+                </Audio>
+                <DonloadClaimFile
+                  href={recordingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download claim file
+                </DonloadClaimFile>
+              </AudioWrapper>
+            )}
+            <StatusWrapper>
+              <MuiInputLabel shrink>Status</MuiInputLabel>
+              <MuiSelect
+                value={state}
+                onChange={(event) =>
+                  updateClaimState({
+                    variables: {
+                      id: claimId,
+                      state: validateSelectOption(event),
+                    },
+                  })
+                }
+              >
+                {Object.values(ClaimState).map((s) => (
+                  <MuiMenuItem key={s} value={s}>
+                    {s}
+                  </MuiMenuItem>
+                ))}
+              </MuiSelect>
+            </StatusWrapper>
+            <EmployeeClaimWrapper>
+              <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
+              <MuiSelect
+                value={coveringEmployee ? 'True' : 'False'}
+                onChange={(event) =>
+                  setCoveringEmployee({
+                    variables: {
+                      id: claimId,
+                      coveringEmployee: validateSelectEmployeeClaimOption(
+                        event,
+                      ),
+                    },
+                  })
+                }
+              >
+                <MuiMenuItem key={'True'} value={'True'}>
+                  True
+                </MuiMenuItem>
+                <MuiMenuItem key={'False'} value={'False'}>
+                  False
+                </MuiMenuItem>
+              </MuiSelect>
+            </EmployeeClaimWrapper>
+          </Paper>
         )}
-        <StatusWrapper>
-          <MuiInputLabel shrink>Status</MuiInputLabel>
-          <MuiSelect
-            value={state}
-            onChange={(event) =>
-              updateClaimState({
-                variables: {
-                  id: claimId,
-                  state: validateSelectOption(event),
-                },
-              })
-            }
-          >
-            {Object.values(ClaimState).map((s) => (
-              <MuiMenuItem key={s} value={s}>
-                {s}
-              </MuiMenuItem>
-            ))}
-          </MuiSelect>
-        </StatusWrapper>
-      </Paper>
+      </Mutation>
     )}
   </Mutation>
 )
