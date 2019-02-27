@@ -79,7 +79,11 @@ export default class ChatPanel extends React.Component<
       autocompleteResponse: [],
       autocompleteQuery: '',
     }
-    this.handleChange = this.handleChange.bind(this)
+    this.onInputChange = this.onInputChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
+    this.addEmojiToMessage = this.addEmojiToMessage.bind(this)
+    this.selectEmoji = this.selectEmoji.bind(this)
+    this.sendAutocompleteEvent = this.sendAutocompleteEvent.bind(this)
     this.getAutocompleteSuggestions = this.getAutocompleteSuggestions.bind(this)
     this.fetchAutocompleteSuggestions = this.fetchAutocompleteSuggestions.bind(
       this,
@@ -99,7 +103,7 @@ export default class ChatPanel extends React.Component<
             multiline
             rowsMax="12"
             value={message}
-            onChange={this.handleChange}
+            onChange={this.onInputChange}
             margin="none"
             variant="outlined"
           />
@@ -138,13 +142,23 @@ export default class ChatPanel extends React.Component<
     )
   }
 
-  private handleChange(event: any) {
+  private onInputChange(event: any) {
     const message = event.target.value
     if (!message) {
       return this.setState({ message: '', suggestions: [] })
     }
     this.setState({ message })
     this.getAutocompleteSuggestions(message)
+  }
+
+  private onSubmit = () => {
+    const { message } = this.state
+    const { addMessage } = this.props
+    if (message) {
+      addMessage(message)
+      this.setState({ message: '' })
+      this.sendAutocompleteEvent()
+    }
   }
 
   private getAutocompleteSuggestions(message: string) {
@@ -182,16 +196,6 @@ export default class ChatPanel extends React.Component<
   private addEmojiToMessage(emoji: string) {
     const { message } = this.state
     return `${message}${emoji}`
-  }
-
-  private onSubmit = () => {
-    const { message } = this.state
-    const { addMessage } = this.props
-    if (message) {
-      addMessage(message)
-      this.setState({ message: '' })
-      this.sendAutocompleteEvent()
-    }
   }
 
   private sendAutocompleteEvent() {
