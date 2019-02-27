@@ -179,6 +179,11 @@ export default class ChatPanel extends React.Component<
     this.setState({ message: emojiMessage })
   }
 
+  private addEmojiToMessage(emoji: string) {
+    const { message } = this.state
+    return `${message}${emoji}`
+  }
+
   private onSubmit = () => {
     const { message } = this.state
     const { addMessage } = this.props
