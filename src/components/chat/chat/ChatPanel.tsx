@@ -4,11 +4,11 @@ import {
   TextField as MuiTextField,
   withStyles,
 } from '@material-ui/core'
+import { format } from 'date-fns'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 import { EmojiPicker } from './EmojiPicker'
-import { format } from 'date-fns';
 
 const MessagesPanelContainer = styled('div')({
   display: 'flex',
@@ -85,6 +85,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             rowsMax="12"
             value={this.state.currentMessage}
             onChange={this.handleInputChange}
+            onKeyDown={this.handleEnterMaybe}
             margin="none"
             variant="outlined"
           />
@@ -118,6 +119,21 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
         </ActionContainer>
       </MessagesPanelContainer>
     )
+  }
+
+  private handleEnterMaybe = (e: React.KeyboardEvent<any>) => {
+    if (window.matchMedia('(max-width: 800px)').matches) {
+      return
+    }
+    if (e.keyCode !== 13) {
+      return
+    }
+    if (e.shiftKey) {
+      return
+    }
+
+    e.preventDefault()
+    this.sendMessage()
   }
 
   private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -156,6 +172,9 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
   private handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    this.sendMessage()
+  }
+  private sendMessage = () => {
     this.props.addMessage(this.state.currentMessage)
     this.trackAutocompleteMessage()
     this.setState({
