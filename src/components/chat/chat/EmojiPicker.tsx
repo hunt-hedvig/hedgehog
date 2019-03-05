@@ -11,6 +11,7 @@ const Wrapper = styled('div')({
   maxWidth: '250px',
   bottom: 'calc(100% + 180px)',
   right: '95px',
+  zIndex: 999999,
 })
 
 interface EmojiPickerProps {
