@@ -1,4 +1,4 @@
-import ChatPanel from 'components/chat/chat/ChatPanel'
+import { ChatPanel } from 'components/chat/chat/ChatPanel'
 import MessagesList from 'components/chat/messages/MessagesList'
 import * as PropTypes from 'prop-types'
 import Resizable from 're-resizable'
@@ -26,6 +26,7 @@ const ChatHeaderStyle = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: row;
+  flex-shrink: 0;
   justify-content: space-between;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -69,7 +70,7 @@ export default class ChatTab extends React.Component {
           />
           <ChatPanel
             addMessage={this.props.addMessage}
-            select={(this.props.messages && this.props.messages.select) || ''}
+            messages={(this.props.messages && this.props.messages.list) || []}
           />
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>

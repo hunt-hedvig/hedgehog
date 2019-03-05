@@ -1,107 +1,215 @@
-import * as PropTypes from 'prop-types'
+import {
+  MenuItem as MuiMenuItem,
+  MenuList as MuiMenuList,
+  TextField as MuiTextField,
+  withStyles,
+} from '@material-ui/core'
 import * as React from 'react'
-import { Form, Icon, TextArea } from 'semantic-ui-react'
-import styled from 'styled-components'
+import styled from 'react-emotion'
+import { Icon } from 'semantic-ui-react'
 import { EmojiPicker } from './EmojiPicker'
+import { format } from 'date-fns';
 
-const MessagesPanelContariner = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding-top: 5px;
-  padding-left: 15px;
-  border-top: solid 2px #e8e5e5;
-  height: 85px;
+const MessagesPanelContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  flexShrink: 0,
+  marginTop: 'auto',
+  padding: '0.5rem',
+})
+
+const ChatForm = styled('form')({
+  width: '100%',
+  marginRight: '0.5rem',
+})
+
+const ActionContainer = styled('div')`
+  position: relative;
 `
 
-const ChatForm = styled(Form)`
-  z-index: 10000;
+const TextField = withStyles({
+  root: {
+    width: '100%',
+    boxSizing: 'border-box',
+  },
+})(MuiTextField)
 
-  & .selection.dropdown {
-    min-width: 130px;
+const MenuList = withStyles({
+  root: {
+    maxHeight: '175px',
+    overflowY: 'scroll',
+    marginTop: '0.5rem',
+    backgroundColor: 'white',
+  },
+})(MuiMenuList)
 
-    & .menu {
-      max-height: 100px;
-    }
-  }
+const MenuItem = withStyles({
+  root: {
+    height: 'auto',
+    overflow: 'auto',
+    whiteSpace: 'normal',
+  },
+})(MuiMenuItem)
 
-  & .primary.button {
-    margin-top: 23px;
-  }
-`
+interface ChatPanelProps {
+  messages: ReadonlyArray<{}>
+  addMessage: (message: string) => void
+}
 
-const TextAreaStyled = styled(TextArea)`
-  height: 75px !important;
-`
+interface State {
+  currentMessage: string
+  autocompleteSuggestions: ReadonlyArray<AutocompleteSuggestion>
+  autocompleteQuery: string | null
+  showAutocompleteSuggestions: boolean
+}
 
-const InputContainer = styled.div`
-  width: 540px;
-`
+interface AutocompleteSuggestion {
+  score: number
+  text: string
+}
 
-export default class ChatPanel extends React.Component<
-  any,
-  { message: string }
-> {
-  constructor(props) {
-    super(props)
-    this.state = {
-      message: '',
-    }
-  }
-
-  public submitHandler = () => {
-    const { message } = this.state
-    if (message) {
-      this.props.addMessage(message)
-      this.setState({ message: '' })
-    }
-  }
-
-  public inputHandler = (e, { value }) => {
-    this.setState({ message: value })
-  }
-
-  public textKeyPress = (e) => {
-    if (e && e.charCode === 13 && !e.shiftKey) {
-      this.submitHandler()
-    }
+export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
+  public state = {
+    currentMessage: '',
+    autocompleteQuery: null,
+    autocompleteSuggestions: [],
+    showAutocompleteSuggestions: false,
   }
 
   public render() {
     return (
-      <ChatForm onSubmit={this.submitHandler}>
-        <MessagesPanelContariner>
-          <InputContainer>
-            <Form.Field>
-              <TextAreaStyled
-                autoHeight
-                onChange={this.inputHandler}
-                value={this.state.message}
-                onKeyPress={this.textKeyPress}
-              />
-            </Form.Field>
-          </InputContainer>
-          <div>
-            <EmojiPicker
-              selectEmoji={(emoji) => {
-                this.setState({ message: `${this.state.message}${emoji}` })
-              }}
-            />
-            <Icon
-              name={'arrow circle right'}
-              color={'blue'}
-              size={'large'}
-              link
-              onClick={this.submitHandler}
-            />
-          </div>
-        </MessagesPanelContariner>
-      </ChatForm>
+      <MessagesPanelContainer>
+        <ChatForm onSubmit={this.handleSubmit}>
+          <TextField
+            multiline
+            rowsMax="12"
+            value={this.state.currentMessage}
+            onChange={this.handleInputChange}
+            margin="none"
+            variant="outlined"
+          />
+          {this.state.showAutocompleteSuggestions &&
+            this.state.autocompleteSuggestions && (
+              <MenuList>
+                {this.state.autocompleteSuggestions!.map((suggestion) => {
+                  const { text } = suggestion
+                  return (
+                    <MenuItem
+                      key={text}
+                      selected={this.state.currentMessage === text}
+                      onClick={this.selectAutocompleteSuggestion(text)}
+                    >
+                      {text}
+                    </MenuItem>
+                  )
+                })}
+              </MenuList>
+            )}
+        </ChatForm>
+        <ActionContainer>
+          <EmojiPicker selectEmoji={this.selectEmoji} />
+          <Icon
+            name="arrow circle right"
+            color="blue"
+            size="large"
+            link
+            onClick={this.handleSubmit}
+          />
+        </ActionContainer>
+      </MessagesPanelContainer>
     )
   }
-}
 
-ChatPanel.propTypes = {
-  addMessage: PropTypes.func.isRequired,
+  private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const message = e.currentTarget.value
+    this.setState({
+      currentMessage: message,
+    })
+    if (message.length > 0) {
+      this.findAutocompleteSuggestions(message)
+    } else {
+      this.setState({ showAutocompleteSuggestions: false })
+    }
+  }
+
+  private findAutocompleteSuggestions = (query: string) => {
+    fetch('/api/autocomplete/suggestions?query=' + encodeURIComponent(query))
+      .then((r) => {
+        if (r.status !== 200) {
+          throw new Error(
+            `Invalid response code ${
+              r.status
+            } received when fetching autocomple suggestions`,
+          )
+        }
+        return r
+      })
+      .then((response) => response.json())
+      .then((suggestions) => {
+        this.setState({
+          autocompleteQuery: query,
+          autocompleteSuggestions: suggestions,
+          showAutocompleteSuggestions: true,
+        })
+      })
+  }
+
+  private handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    this.props.addMessage(this.state.currentMessage)
+    this.trackAutocompleteMessage()
+    this.setState({
+      autocompleteSuggestions: [],
+      currentMessage: '',
+      showAutocompleteSuggestions: false,
+    })
+  }
+  private selectAutocompleteSuggestion = (suggestion: string) => (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault()
+    this.setState({
+      currentMessage: suggestion,
+      showAutocompleteSuggestions: false,
+    })
+  }
+
+  private selectEmoji = (emoji: string) => {
+    this.setState(({ currentMessage }) => ({
+      currentMessage: currentMessage + emoji,
+    }))
+  }
+
+  private trackAutocompleteMessage = () => {
+    fetch('/api/autocomplete/select', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        autocompleteResponse: this.state.autocompleteSuggestions,
+        autocompleteQuery: this.state.autocompleteQuery,
+        submittedResponse: {
+          text: this.state.currentMessage,
+          timestamp: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'.0Z'"),
+          authorType: 'admin',
+        },
+        chatHistory: (this.props.messages || [])
+          .slice(-25)
+          .map((historyMessage: any) => {
+            const authorType =
+              historyMessage.author === null
+                ? historyMessage.header.fromId === 1
+                  ? 'bot'
+                  : 'user'
+                : 'admin'
+            return {
+              authorType,
+              text: historyMessage.body.text,
+              timestamp: historyMessage.timestamp,
+            }
+          }),
+      }),
+    })
+  }
 }
