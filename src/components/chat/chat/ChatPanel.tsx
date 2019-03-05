@@ -5,9 +5,10 @@ import {
   withStyles,
 } from '@material-ui/core'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
-import styled from 'styled-components'
 import { EmojiPicker } from './EmojiPicker'
+import { format } from 'date-fns';
 
 const MessagesPanelContainer = styled('div')({
   display: 'flex',
@@ -50,171 +51,164 @@ const MenuItem = withStyles({
   },
 })(MuiMenuItem)
 
-interface SuggestionProps {
+interface ChatPanelProps {
+  messages: ReadonlyArray<{}>
+  addMessage: (message: string) => void
+}
+
+interface State {
+  currentMessage: string
+  autocompleteSuggestions: ReadonlyArray<AutocompleteSuggestion>
+  autocompleteQuery: string | null
+  showAutocompleteSuggestions: boolean
+}
+
+interface AutocompleteSuggestion {
   score: number
   text: string
 }
 
-interface ChatPanelProps {
-  messages: object
-  addMessage: () => void
-}
-
-interface ChatPanelState {
-  message: string
-  suggestions: SuggestionProps[]
-  autocompleteResponse: SuggestionProps[]
-  autocompleteQuery: string
-}
-
-export default class ChatPanel extends React.Component<
-  ChatPanelProps,
-  ChatPanelState
-> {
-  constructor(props: ChatPanelProps) {
-    super(props)
-    this.state = {
-      message: '',
-      suggestions: [],
-      autocompleteResponse: [],
-      autocompleteQuery: '',
-    }
-    this.onInputChange = this.onInputChange.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
-    this.addEmojiToMessage = this.addEmojiToMessage.bind(this)
-    this.selectEmoji = this.selectEmoji.bind(this)
-    this.sendAutocompleteEvent = this.sendAutocompleteEvent.bind(this)
-    this.getAutocompleteSuggestions = this.getAutocompleteSuggestions.bind(this)
-    this.fetchAutocompleteSuggestions = this.fetchAutocompleteSuggestions.bind(
-      this,
-    )
-    this.setAutocompleteSuggestions = this.setAutocompleteSuggestions.bind(this)
-    this.selectAutocompleteSuggestion = this.selectAutocompleteSuggestion.bind(
-      this,
-    )
+export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
+  public state = {
+    currentMessage: '',
+    autocompleteQuery: null,
+    autocompleteSuggestions: [],
+    showAutocompleteSuggestions: false,
   }
 
   public render() {
-    const { message, suggestions } = this.state
     return (
       <MessagesPanelContainer>
-        <ChatForm onSubmit={this.onSubmit}>
+        <ChatForm onSubmit={this.handleSubmit}>
           <TextField
             multiline
             rowsMax="12"
-            value={message}
-            onChange={this.onInputChange}
+            value={this.state.currentMessage}
+            onChange={this.handleInputChange}
             margin="none"
             variant="outlined"
           />
-          {!!suggestions.length && (
-            <MenuList>
-              {suggestions.map((suggestion: SuggestionProps) => {
-                const { text } = suggestion
-                return (
-                  <MenuItem
-                    key={text}
-                    selected={message === text}
-                    onClick={this.selectAutocompleteSuggestion}
-                  >
-                    {text}
-                  </MenuItem>
-                )
-              })}
-            </MenuList>
-          )}
+          {this.state.showAutocompleteSuggestions &&
+            this.state.autocompleteSuggestions && (
+              <MenuList>
+                {this.state.autocompleteSuggestions!.map((suggestion) => {
+                  const { text } = suggestion
+                  return (
+                    <MenuItem
+                      key={text}
+                      selected={this.state.currentMessage === text}
+                      onClick={this.selectAutocompleteSuggestion(text)}
+                    >
+                      {text}
+                    </MenuItem>
+                  )
+                })}
+              </MenuList>
+            )}
         </ChatForm>
         <ActionContainer>
-          <EmojiPicker
-            selectEmoji={(emoji) => {
-              this.selectEmoji(emoji)
-            }}
-          />
+          <EmojiPicker selectEmoji={this.selectEmoji} />
           <Icon
-            name={'arrow circle right'}
-            color={'blue'}
-            size={'large'}
+            name="arrow circle right"
+            color="blue"
+            size="large"
             link
-            onClick={this.onSubmit}
+            onClick={this.handleSubmit}
           />
         </ActionContainer>
       </MessagesPanelContainer>
     )
   }
 
-  private onInputChange(event: any) {
-    const message = event.target.value
-    if (!message) {
-      return this.setState({ message: '', suggestions: [] })
-    }
-    this.setState({ message })
-    this.getAutocompleteSuggestions(message)
-  }
-
-  private onSubmit = () => {
-    const { message } = this.state
-    const { addMessage } = this.props
-    if (message) {
-      addMessage(message)
-      this.setState({ message: '' })
-      this.sendAutocompleteEvent()
-    }
-  }
-
-  private getAutocompleteSuggestions(message: string) {
-    this.fetchAutocompleteSuggestions(message).then(
-      this.setAutocompleteSuggestions,
-    )
-  }
-
-  private fetchAutocompleteSuggestions(message: string) {
-    return fetch(
-      '/api/autocomplete/suggestions?query=' + encodeURIComponent(message),
-    ).then((r) => r.json())
-  }
-
-  private setAutocompleteSuggestions = (suggestions: SuggestionProps[]) => {
-    this.setState({ suggestions, autocompleteResponse: suggestions })
-  }
-
-  private selectAutocompleteSuggestion = (event: any) => {
-    const { message } = this.state
-    const suggestion = event.target.innerText
-    const trimmedSuggestion = suggestion.trim()
+  private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const message = e.currentTarget.value
     this.setState({
-      message: trimmedSuggestion,
-      suggestions: [],
-      autocompleteQuery: message,
+      currentMessage: message,
+    })
+    if (message.length > 0) {
+      this.findAutocompleteSuggestions(message)
+    } else {
+      this.setState({ showAutocompleteSuggestions: false })
+    }
+  }
+
+  private findAutocompleteSuggestions = (query: string) => {
+    fetch('/api/autocomplete/suggestions?query=' + encodeURIComponent(query))
+      .then((r) => {
+        if (r.status !== 200) {
+          throw new Error(
+            `Invalid response code ${
+              r.status
+            } received when fetching autocomple suggestions`,
+          )
+        }
+        return r
+      })
+      .then((response) => response.json())
+      .then((suggestions) => {
+        this.setState({
+          autocompleteQuery: query,
+          autocompleteSuggestions: suggestions,
+          showAutocompleteSuggestions: true,
+        })
+      })
+  }
+
+  private handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    this.props.addMessage(this.state.currentMessage)
+    this.trackAutocompleteMessage()
+    this.setState({
+      autocompleteSuggestions: [],
+      currentMessage: '',
+      showAutocompleteSuggestions: false,
+    })
+  }
+  private selectAutocompleteSuggestion = (suggestion: string) => (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault()
+    this.setState({
+      currentMessage: suggestion,
+      showAutocompleteSuggestions: false,
     })
   }
 
   private selectEmoji = (emoji: string) => {
-    const emojiMessage = this.addEmojiToMessage(emoji)
-    this.setState({ message: emojiMessage })
+    this.setState(({ currentMessage }) => ({
+      currentMessage: currentMessage + emoji,
+    }))
   }
 
-  private addEmojiToMessage(emoji: string) {
-    const { message } = this.state
-    return `${message}${emoji}`
-  }
-
-  private sendAutocompleteEvent() {
-    const { messages } = this.props
-    const { message, autocompleteResponse, autocompleteQuery } = this.state
-    return fetch('/api/autocomplete/select', {
+  private trackAutocompleteMessage = () => {
+    fetch('/api/autocomplete/select', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        autocomplete_response: autocompleteResponse,
-        autocomplete_query: autocompleteQuery,
-        submitted_response: {
-          text: message,
-          timestamp: Date.now() / 1000.0,
+        autocompleteResponse: this.state.autocompleteSuggestions,
+        autocompleteQuery: this.state.autocompleteQuery,
+        submittedResponse: {
+          text: this.state.currentMessage,
+          timestamp: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'.0Z'"),
           authorType: 'admin',
         },
-        user_messages: (messages || []).slice(-25),
+        chatHistory: (this.props.messages || [])
+          .slice(-25)
+          .map((historyMessage: any) => {
+            const authorType =
+              historyMessage.author === null
+                ? historyMessage.header.fromId === 1
+                  ? 'bot'
+                  : 'user'
+                : 'admin'
+            return {
+              authorType,
+              text: historyMessage.body.text,
+              timestamp: historyMessage.timestamp,
+            }
+          }),
       }),
     })
   }

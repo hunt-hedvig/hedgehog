@@ -1,4 +1,4 @@
-import ChatPanel from 'components/chat/chat/ChatPanel'
+import { ChatPanel } from 'components/chat/chat/ChatPanel'
 import MessagesList from 'components/chat/messages/MessagesList'
 import * as PropTypes from 'prop-types'
 import Resizable from 're-resizable'
