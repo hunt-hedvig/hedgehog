@@ -148,7 +148,13 @@ class PaymentsTab extends React.Component {
   public render() {
     return (
       <React.Fragment>
-        <Query query={GET_MEMBER_QUERY} variables={this.variables}>
+        <Query
+          query={GET_MEMBER_QUERY}
+          variables={this.variables}
+          onCompleted={(data) => {
+            this.setState({ amount: data.member.currentMonth.amount.amount })
+          }}
+        >
           {({ loading, error, data }) => {
             if (error) {
               return <div>Error!</div>
@@ -192,7 +198,7 @@ class PaymentsTab extends React.Component {
                             onChange={this.handleChange}
                             label="Amount"
                             placeholder="ex. 100"
-                            value={data.member.currentMonth.amount.amount}
+                            value={this.state.amount}
                           />
                           <br />
                           {!this.state.confirmed && (
