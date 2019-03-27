@@ -110,12 +110,13 @@ class PaymentsTab extends React.Component {
     this.setState({ amount: e.target.value })
   }
 
-  public handleChargeSubmit = (mutation) => () => {
+  public handleChargeSubmit = (defaultAmount: number) => (mutation) => () => {
     mutation({
       variables: {
         id: this.variables.id,
         amount: {
-          amount: +this.state.amount,
+          amount:
+            this.state.amount === null ? defaultAmount : +this.state.amount,
           currency: 'SEK',
         },
       },
@@ -148,13 +149,7 @@ class PaymentsTab extends React.Component {
   public render() {
     return (
       <React.Fragment>
-        <Query
-          query={GET_MEMBER_QUERY}
-          variables={this.variables}
-          onCompleted={(data) => {
-            this.setState({ amount: data.member.currentMonth.amount.amount })
-          }}
-        >
+        <Query query={GET_MEMBER_QUERY} variables={this.variables}>
           {({ loading, error, data }) => {
             if (error) {
               return <div>Error!</div>
@@ -198,7 +193,11 @@ class PaymentsTab extends React.Component {
                             onChange={this.handleChange}
                             label="Amount"
                             placeholder="ex. 100"
-                            value={this.state.amount}
+                            value={
+                              this.state.amount === null
+                                ? data.member.currentMonth.amount.amount
+                                : this.state.amount
+                            }
                           />
                           <br />
                           {!this.state.confirmed && (
@@ -226,7 +225,9 @@ class PaymentsTab extends React.Component {
                               <br />
                               <Button
                                 positive
-                                onClick={this.handleChargeSubmit(chargeMember)}
+                                onClick={this.handleChargeSubmit(
+                                  data.member.currentMonth.amount.amount,
+                                )(chargeMember)}
                               >
                                 Execute
                               </Button>
