@@ -128,7 +128,7 @@ class PaymentsTab extends React.Component {
   }
 
   public handleConfirmationChange = (e) => {
-    if (e.target.value.replace(/ /g, '').toLowerCase() === 'tech') {
+    if (e.target.value.replace(/ /g, '').toLowerCase() === 'a') {
       this.setState({ confirming: false, confirmed: true })
     }
   }
@@ -192,6 +192,7 @@ class PaymentsTab extends React.Component {
                             onChange={this.handleChange}
                             label="Amount"
                             placeholder="ex. 100"
+                            value={data.member.currentMonth.amount.amount}
                           />
                           <br />
                           {!this.state.confirmed && (
@@ -206,8 +207,8 @@ class PaymentsTab extends React.Component {
                               <Input
                                 onChange={this.handleConfirmationChange}
                                 focus
-                                label="Type tech to confirm"
-                                placeholder="tech"
+                                label="Type a to confirm"
+                                placeholder="a"
                               />
                               <br />
                             </React.Fragment>
