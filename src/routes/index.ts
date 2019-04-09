@@ -7,6 +7,7 @@ import LoginProcessPageRoute from 'routes/LoginProcessPageRoute'
 import MemberInsurancePageRoute from 'routes/MemberInsurancePageRoute'
 import MembersPageRoute from 'routes/MembersPageRoute'
 import PaymentsPageRoute from 'routes/PaymentsPageRoute'
+import PayoutPageRoute from 'routes/PayoutPageRoute'
 import PrivateRoute from 'routes/PrivateRoute'
 import QuestionsPageRoute from 'routes/QuestionsPageRoute'
 
@@ -20,6 +21,7 @@ export default {
   QuestionsPageRoute,
   MemberInsurancePageRoute,
   PaymentsPageRoute,
+  PayoutPageRoute,
   BourdereauPageRoute,
   PrivateRoute,
 }
