@@ -12,9 +12,9 @@ export function checkLocalAuth(getState) {
   return !!state.client.id
 }
 
-const makeLoginRequestWithRetryAttempt = async (loginConfig: any) => {
+const makeLoginRequestWithRetryAttempt = async () => {
   try {
-    return await api(loginConfig)
+    return await api(config.login.login)
   } catch (e) {
     const isNetworkError = (e.message as string).includes('Network Error')
     if (process.env.NODE_ENV !== 'development' || !isNetworkError) {
@@ -36,7 +36,7 @@ export async function checkApiAuth({ dispatch, getState }) {
       return true
     }
 
-    const client = await makeLoginRequestWithRetryAttempt(config.login.login)
+    const client = await makeLoginRequestWithRetryAttempt()
     dispatch(setClient(client.data))
     return true
   } catch (error) {
