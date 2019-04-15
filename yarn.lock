@@ -790,7 +790,7 @@
   resolved "https://registry.yarnpkg.com/@hedviginsurance/brand/-/brand-1.6.0.tgz#5b7e9d9e26b4dfcc35e7e8358934b542f871ec9f"
   integrity sha512-75jqoOelmH2MvSfklERqujE83fJP3s2/0F/RkfTYbzcuJrZ6poZfuhooeH1dR2HWD+jdPHpFjDX3i8zo8+d1CQ==
 
-"@hedviginsurance/cli@^2.1.1":
+"@hedviginsurance/cli@^2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@hedviginsurance/cli/-/cli-2.2.3.tgz#21a69832f05ecd88224c81d30170825b7df23222"
   integrity sha512-/R7Kod+it/3kpSUcr6SpfTMrdWQ1uOrdKEmjPJ9E3zSIyajKPGRzf+RK+Kl9HMNTNKZMVHhFgPuBc0zWMVQapw==
@@ -808,7 +808,7 @@
   resolved "https://registry.yarnpkg.com/@hedviginsurance/libkit/-/libkit-1.0.1.tgz#efe04ae3c88b302a30d44fd191f259ba57d19487"
   integrity sha512-7JR0IlMJPN6PhR5BZVqex4rcVyyTzDwvjcnvGTDS2JDECOuDiVi9/I4F4OQvlceuEB+SRNbiZp6516Q9Ie+j4Q==
 
-"@hedviginsurance/web-survival-kit@^1.5.1", "@hedviginsurance/web-survival-kit@^1.7.0":
+"@hedviginsurance/web-survival-kit@^1.7.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@hedviginsurance/web-survival-kit/-/web-survival-kit-1.7.0.tgz#bff5a934f5a904ac39cba2e607971f0dce07b216"
   integrity sha512-8a0C3Q0ByR/B1kHJ4u1WYlPcxnrQE1CFoeFJakRZZPA19ZtzbAVssYvLG/+SWtU4Ntj7eoFy1/rOmkGa0lmQ2g==
