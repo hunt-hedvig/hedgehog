@@ -11,7 +11,7 @@ import * as messagesActions from './messagesActions'
 import * as notesActions from './notesActions'
 import * as notificationsActions from './notificationsActions'
 import * as paymentActions from './paymentActions'
-import * as payoutActions from './payoutActions'
+import * as payoutDetailsActions from './payoutDetailsActions'
 import * as pollActions from './pollActions'
 import * as questionsActions from './questionsActions'
 
@@ -26,7 +26,7 @@ export default {
   claimsActions,
   claimDetailsActions,
   paymentActions,
-  payoutActions,
+  payoutDetailsActions,
   notesActions,
   questionsActions,
   insuranceActions,

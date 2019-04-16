@@ -58,6 +58,9 @@ const initialState: BackofficeStore = {
     notes: [],
     payments: [],
   },
+  payoutDetails: {
+    data: null,
+  },
   questions: {
     answered: {
       questions: [],

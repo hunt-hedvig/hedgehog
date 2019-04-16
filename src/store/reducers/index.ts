@@ -9,6 +9,7 @@ import memberInsurance from './memberInsuranceReducer'
 import members from './membersReducer'
 import messages from './messagesReducer'
 import notifications from './notificationsReducer'
+import payoutDetails from './payoutDetailsReducer'
 import poll from './pollReducer'
 import questions from './questionsReducer'
 
@@ -22,6 +23,7 @@ export default {
   dashboard,
   claims,
   claimDetails,
+  payoutDetails,
   questions,
   insurance,
   notifications,
