@@ -8,7 +8,10 @@ import {
 export default function(state = initialState.payoutDetails, action) {
   switch (action.type) {
     case PAYOUT_REQUEST_ERROR:
-      break
+      return {
+        ...state,
+        error: action.error,
+      }
     case PAYOUT_REQUEST_SUCCESS:
       return {
         ...state,
@@ -18,6 +21,7 @@ export default function(state = initialState.payoutDetails, action) {
       return {
         ...state,
         data: action.data,
+        memberId: action.memberId,
       }
     default:
       return {

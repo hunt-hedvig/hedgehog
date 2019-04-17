@@ -5,9 +5,13 @@ import {
   PAYOUT_REQUESTING,
 } from '../constants/payout'
 
-export const payoutRequest = (payoutData: PayoutFormData) => ({
+export const payoutRequest = (
+  payoutData: PayoutFormData,
+  memberId: string,
+) => ({
   type: PAYOUT_REQUESTING,
   data: payoutData,
+  memberId,
 })
 
 export const payoutRequestSuccess = (payoutData: PayoutFormData) => ({

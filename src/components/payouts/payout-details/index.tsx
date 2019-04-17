@@ -1,18 +1,24 @@
-import {Button as MuiButton, MenuItem as MuiMenuItem, withStyles} from '@material-ui/core'
+import {
+  Button as MuiButton,
+  MenuItem as MuiMenuItem,
+  withStyles,
+} from '@material-ui/core'
 import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
 import * as React from 'react'
 import { Payout } from 'store/types/payoutTypes'
+import * as yup from 'yup'
 import { FieldSelect } from '../../shared/inputs/FieldSelect'
 import { TextField } from '../../shared/inputs/TextField'
 
 export interface PayoutProps {
   data: any
-  payoutRequest: (id: string) => void
+  payoutRequest: (payoutFormData: any, memberId: string) => void
   payoutRequestSuccess: (payout: Payout) => void
   payoutRequestError: (error: any) => void
 }
 
 export interface PayoutFormData {
+  match: any
   memberId: string
   category: string
   amount: string
@@ -27,27 +33,34 @@ const SubmitButton = withStyles({
   },
 })(MuiButton)
 
+const getPayoutValidationSchema = () =>
+  yup.object().shape({
+    amount: yup.number().required(),
+    category: yup
+      .string()
+      .oneOf(['MARKETING', 'REFERRAL', 'REFUND'])
+      .required(),
+    referenceId: yup.string().required(),
+  })
+
 const PayoutDetails: React.SFC<PayoutProps> = ({
+  match,
   data,
   payoutRequest,
-  payoutRequestSuccess,
+  payoutRequestSuccess, // TODO: REMOVE
   payoutRequestError,
 }) => {
   return (
     <Formik
       initialValues={{ category: '', amount: '', note: '', referenceId: '' }}
       onSubmit={(payoutFormData: any, { setSubmitting }) => {
-        payoutRequest(payoutFormData)
+        payoutRequest(payoutFormData, match.params.id)
         setSubmitting(false)
       }}
+      validationSchema={getPayoutValidationSchema()}
     >
       {({ resetForm, isValid }) => (
         <Form>
-          <Field
-            component={TextField}
-            placeholder="Member ID"
-            name="memberId"
-          />
           <Field
             component={TextField}
             placeholder="Payment amount"

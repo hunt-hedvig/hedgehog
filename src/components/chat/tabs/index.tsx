@@ -4,6 +4,7 @@ import DetailsTab from 'components/chat/tabs/DetailsTab'
 import InsuranceListTab from 'components/chat/tabs/InsuranceListTab'
 import InsuranceTab from 'components/chat/tabs/InsuranceTab'
 import PaymentsTab from 'components/chat/tabs/PaymentsTab'
+import PayoutDetails from "components/payouts/payout-details"
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Tab } from 'semantic-ui-react'
@@ -61,17 +62,17 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Current Insurance',
       render: () => <TabItem props={props} TabContent={InsuranceTab} />,
     })
-  }
-  if (!insurance.error.length && insurance.data) {
     panes.push({
       menuItem: 'All Insurances',
       render: () => <TabItem props={props} TabContent={InsuranceListTab} />,
     })
-  }
-  if (!insurance.error.length && insurance.data) {
     panes.push({
       menuItem: 'Payments',
       render: () => <TabItem props={props} TabContent={PaymentsTab} />,
+    })
+    panes.push({
+      menuItem: 'Payout',
+      render: () => <TabItem props={props} TabContent={PayoutDetails} />,
     })
   }
   return panes

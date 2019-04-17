@@ -49,11 +49,6 @@ export const routesList = [
     type: 'PAYMENTS',
   },
   {
-    text: 'Payout',
-    route: '/payout',
-    type: 'PAYMENTS',
-  },
-  {
     text: 'BDX',
     route: '/BDX',
     type: 'BDX',

@@ -72,12 +72,6 @@ const App: React.SFC = () => (
                 store={store}
                 component={Routes.PaymentsPageRoute}
               />
-              <Route
-                path="/payout"
-                render={(routeProps) => (
-                  <Routes.PayoutPageRoute {...routeProps} store={store} />
-                )}
-              />
               <Routes.PrivateRoute
                 path="/BDX"
                 store={store}

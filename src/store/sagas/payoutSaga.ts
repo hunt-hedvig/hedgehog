@@ -4,7 +4,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import * as actions from '../actions/payoutDetailsActions'
 import { PAYOUT_REQUESTING } from '../constants/payout'
 
-function* createPayout({ data }) {
+function* createPayout({ data, memberId }) {
   try {
     const requestBody = {
       amount: {
@@ -14,11 +14,12 @@ function* createPayout({ data }) {
       category: data.category,
       referenceId: data.referenceId,
     }
+    console.log('Requesting payout', 'memberId', memberId, 'body', requestBody)
     const result = yield call(
       api,
       config.payout.create,
       { ...requestBody },
-      data.memberId
+      memberId,
     )
     console.log('result', result)
     yield [put(actions.payoutRequestSuccess(data))]
