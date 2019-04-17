@@ -70,10 +70,6 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Payments',
       render: () => <TabItem props={props} TabContent={PaymentsTab} />,
     })
-    panes.push({
-      menuItem: 'Payout',
-      render: () => <TabItem props={props} TabContent={PayoutDetails} />,
-    })
   }
   return panes
 }

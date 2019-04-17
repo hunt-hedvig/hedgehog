@@ -3,18 +3,17 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
-import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import * as React from 'react'
-import { Payout } from 'store/types/payoutTypes'
+import { PayoutRequestResult } from 'store/types/payoutTypes'
 import * as yup from 'yup'
 import { FieldSelect } from '../../shared/inputs/FieldSelect'
 import { TextField } from '../../shared/inputs/TextField'
 
 export interface PayoutProps {
-  data: any
+  payoutDetails
+  match: any
   payoutRequest: (payoutFormData: any, memberId: string) => void
-  payoutRequestSuccess: (payout: Payout) => void
-  payoutRequestError: (error: any) => void
 }
 
 export interface PayoutFormData {
@@ -44,39 +43,35 @@ const getPayoutValidationSchema = () =>
   })
 
 const PayoutDetails: React.SFC<PayoutProps> = ({
+  payoutDetails,
   match,
-  data,
   payoutRequest,
-  payoutRequestSuccess, // TODO: REMOVE
-  payoutRequestError,
 }) => {
+  const memberId = match.params.id
   return (
     <Formik
       initialValues={{ category: '', amount: '', note: '', referenceId: '' }}
-      onSubmit={(payoutFormData: any, { setSubmitting }) => {
-        payoutRequest(payoutFormData, match.params.id)
-        setSubmitting(false)
+      onSubmit={(payoutFormData: any, { resetForm }) => {
+        payoutRequest(payoutFormData, memberId)
+        resetForm()
       }}
       validationSchema={getPayoutValidationSchema()}
     >
-      {({ resetForm, isValid }) => (
+      {({ isValid }) => (
         <Form>
-          <Field
-            component={TextField}
-            placeholder="Payment amount"
-            name="amount"
-          />
           <Field component={FieldSelect} name="category">
             <MuiMenuItem value="MARKETING">Marketing</MuiMenuItem>
             <MuiMenuItem value="REFERRAL">Referral</MuiMenuItem>
             <MuiMenuItem value="REFUND">Refund</MuiMenuItem>
           </Field>
+          <Field component={TextField} label="Payout amount" name="amount" />
           <Field
             component={TextField}
-            placeholder="Reference Id"
+            label="Reference Id"
             name="referenceId"
           />
-          <Field component={TextField} placeholder="Note" name="note" />
+
+          <Field component={TextField} label="Note" name="note" />
           <SubmitButton
             type="submit"
             variant="contained"
@@ -92,42 +87,3 @@ const PayoutDetails: React.SFC<PayoutProps> = ({
 }
 
 export default PayoutDetails
-
-/*
-<Formik
-      initialValues={{ category: '', amount: '', note: '', refernceId: '' }}
-      onSubmit={(values, { setSubmitting }) => {
-        console.log(values)
-        setSubmitting(false)
-      }}
-    >
-      {({ resetForm, isValid }) => (
-        <Form>
-          <Field
-            component={TextField}
-            placeholder="Payment amount"
-            name="amount"
-          />
-          <Field component={FieldSelect} name="category">
-            <MuiMenuItem value="MARKETING">Marketing</MuiMenuItem>
-            <MuiMenuItem value="REFERRAL">Referral</MuiMenuItem>
-            <MuiMenuItem value="REFUND">Refund</MuiMenuItem>
-          </Field>
-          <Field
-            component={TextField}
-            placeholder="Reference Id"
-            name="referenceId"
-          />
-          <Field component={TextField} placeholder="Note" name="note" />
-          <SubmitButton
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={!isValid}
-          >
-            Create payout
-          </SubmitButton>
-        </Form>
-      )}
-    </Formik>
- */

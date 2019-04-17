@@ -53,7 +53,7 @@ export const lightUiTheme = createMuiTheme({
         width: '100%',
       },
       input: {
-        padding: '1rem 0',
+        padding: '8px 0',
       },
     },
     MuiButton: {

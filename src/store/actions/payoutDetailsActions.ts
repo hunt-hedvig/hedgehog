@@ -14,9 +14,8 @@ export const payoutRequest = (
   memberId,
 })
 
-export const payoutRequestSuccess = (payoutData: PayoutFormData) => ({
+export const payoutRequestSuccess = () => ({
   type: PAYOUT_REQUEST_SUCCESS,
-  data: payoutData,
 })
 
 export const payoutRequestError = (error) => ({
