@@ -5,7 +5,6 @@ import {
 } from '@material-ui/core'
 import { Field, Form, Formik } from 'formik'
 import * as React from 'react'
-import { PayoutRequestResult } from 'store/types/payoutTypes'
 import * as yup from 'yup'
 import { FieldSelect } from '../../shared/inputs/FieldSelect'
 import { TextField } from '../../shared/inputs/TextField'
@@ -13,13 +12,13 @@ import { TextField } from '../../shared/inputs/TextField'
 export interface PayoutProps {
   payoutDetails
   match: any
-  payoutRequest: (payoutFormData: any, memberId: string) => void
+  payoutRequest: (payoutFormData: PayoutFormData, memberId: string) => void
 }
 
 export interface PayoutFormData {
   match: any
   memberId: string
-  category: string
+  category: 'MARKETING' | 'REFERRAL' | 'REFUND'
   amount: string
   note: string
   referenceId: string

@@ -1,7 +1,7 @@
 import api from 'api'
 import config from 'api/config'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import {showNotification} from "store/actions/notificationsActions"
+import { showNotification } from 'store/actions/notificationsActions'
 import * as actions from '../actions/payoutDetailsActions'
 import { PAYOUT_REQUESTING } from '../constants/payout'
 
@@ -15,14 +15,9 @@ function* createPayout({ data, memberId }) {
       category: data.category,
       referenceId: data.referenceId,
     }
-    console.log('Requesting payout', 'memberId', memberId, 'body', requestBody)
-    const result = yield call(
-      api,
-      config.payout.create,
-      { ...requestBody },
-      memberId,
-    )
-    console.log('result', result)
+
+    yield call(api, config.payout.create, { ...requestBody }, memberId)
+
     yield [
       put(actions.payoutRequestSuccess()),
       put(

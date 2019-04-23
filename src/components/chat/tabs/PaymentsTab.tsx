@@ -1,4 +1,3 @@
-import PayoutDetails from "components/payouts/payout-details"
 import gql from 'graphql-tag'
 import * as moment from 'moment'
 import * as React from 'react'
@@ -6,6 +5,7 @@ import { Mutation, Query } from 'react-apollo'
 import { Button, Form, Input, Table } from 'semantic-ui-react'
 
 import { Checkmark, Cross } from 'components/icons'
+import PayoutDetails from 'components/payouts/payout-details'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)

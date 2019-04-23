@@ -11,7 +11,13 @@ const ChatPage = (props) => (
   </PageContainer>
 )
 
-const mapStateToProps = ({ messages, claims, insurance, client, payoutDetails }) => ({
+const mapStateToProps = ({
+  messages,
+  claims,
+  insurance,
+  client,
+  payoutDetails,
+}) => ({
   memberClaims: claims.memberClaims,
   messages,
   insurance,
