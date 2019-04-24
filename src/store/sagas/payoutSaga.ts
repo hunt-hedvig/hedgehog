@@ -14,6 +14,7 @@ function* createPayout({ data, memberId }) {
       },
       category: data.category,
       referenceId: data.referenceId,
+      note: data.note,
     }
 
     yield call(api, config.payout.create, { ...requestBody }, memberId)
