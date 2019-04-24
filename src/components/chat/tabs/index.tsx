@@ -68,10 +68,6 @@ const memberPagePanes = (props, addMessage, socket) => {
         render: () => <TabItem props={props} TabContent={InsuranceListTab} />,
       },
       {
-        menuItem: 'All Insurances',
-        render: () => <TabItem props={props} TabContent={InsuranceListTab} />,
-      },
-      {
         menuItem: 'Payments',
         render: () => <TabItem props={props} TabContent={PaymentsTab} />,
       },
