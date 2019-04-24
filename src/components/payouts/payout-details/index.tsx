@@ -56,7 +56,6 @@ class PayoutDetails extends React.Component<
       <Formik
         initialValues={{ category: '', amount: '', note: '', referenceId: '' }}
         onSubmit={(payoutFormData: any, { resetForm }) => {
-          debugger
           if (!this.state.confirmed) {
             return
           }
