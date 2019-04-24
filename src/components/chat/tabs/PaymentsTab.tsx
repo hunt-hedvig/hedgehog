@@ -5,6 +5,7 @@ import { Mutation, Query } from 'react-apollo'
 import { Button, Form, Input, Table } from 'semantic-ui-react'
 
 import { Checkmark, Cross } from 'components/icons'
+import PayoutDetails from 'components/payouts/payout-details'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -183,6 +184,7 @@ class PaymentsTab extends React.Component {
                   {data.member.previousMonth.amount.amount}{' '}
                   {data.member.previousMonth.amount.currency}
                 </p>
+                <h3>Charge:</h3>
                 {data.member.directDebitStatus.activated && (
                   <Mutation
                     mutation={CHARGE_MEMBER_MUTATION}
@@ -193,7 +195,7 @@ class PaymentsTab extends React.Component {
                         <Form>
                           <Form.Input
                             onChange={this.handleChange}
-                            label="Amount"
+                            label="Charge amount"
                             placeholder="ex. 100"
                             value={
                               this.state.amount === null
@@ -241,7 +243,9 @@ class PaymentsTab extends React.Component {
                   </Mutation>
                 )}
                 <br />
-                <p>Transactions:</p>
+                <h3>Payout:</h3>
+                <PayoutDetails {...this.props} />
+                <h3>Transactions:</h3>
                 <MemberTransactionsTable
                   transactions={data.member.transactions
                     .slice()

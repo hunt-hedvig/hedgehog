@@ -82,6 +82,12 @@ export default {
       },
     },
   },
+  payout: {
+    create: {
+      url: 'payout',
+      method: 'post',
+    },
+  },
   questions: {
     get: {
       url: 'questions',
