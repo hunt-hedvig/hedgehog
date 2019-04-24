@@ -41,48 +41,81 @@ const getPayoutValidationSchema = () =>
     referenceId: yup.string().required(),
   })
 
-const PayoutDetails: React.SFC<PayoutProps> = ({
-  payoutDetails,
-  match,
-  payoutRequest,
-}) => {
-  const memberId = match.params.id
-  return (
-    <Formik
-      initialValues={{ category: '', amount: '', note: '', referenceId: '' }}
-      onSubmit={(payoutFormData: any, { resetForm }) => {
-        payoutRequest(payoutFormData, memberId)
-        resetForm()
-      }}
-      validationSchema={getPayoutValidationSchema()}
-    >
-      {({ isValid }) => (
-        <Form>
-          <Field component={FieldSelect} name="category">
-            <MuiMenuItem value="MARKETING">Marketing</MuiMenuItem>
-            <MuiMenuItem value="REFERRAL">Referral</MuiMenuItem>
-            <MuiMenuItem value="REFUND">Refund</MuiMenuItem>
-          </Field>
-          <Field component={TextField} label="Payout amount" name="amount" />
-          <Field
-            component={TextField}
-            label="Reference Id"
-            name="referenceId"
-          />
+class PayoutDetails extends React.Component<
+  PayoutProps,
+  { confirmed: boolean }
+> {
+  public state = {
+    confirmed: false,
+  }
 
-          <Field component={TextField} label="Note" name="note" />
-          <SubmitButton
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={!isValid}
-          >
-            Create payout
-          </SubmitButton>
-        </Form>
-      )}
-    </Formik>
-  )
+  public render() {
+    const { payoutDetails, match, payoutRequest } = this.props
+    const memberId = match.params.id
+    return (
+      <Formik
+        initialValues={{ category: '', amount: '', note: '', referenceId: '' }}
+        onSubmit={(payoutFormData: any, { resetForm }) => {
+          debugger
+          if (!this.state.confirmed) {
+            return
+          }
+          payoutRequest(payoutFormData, memberId)
+          resetForm()
+          this.resetConfirmed()
+        }}
+        validationSchema={getPayoutValidationSchema()}
+      >
+        {({ isValid }) => (
+          <Form onChange={this.resetConfirmed}>
+            <Field component={FieldSelect} name="category">
+              <MuiMenuItem value="MARKETING">Marketing</MuiMenuItem>
+              <MuiMenuItem value="REFERRAL">Referral</MuiMenuItem>
+              <MuiMenuItem value="REFUND">Refund</MuiMenuItem>
+            </Field>
+            <Field component={TextField} label="Payout amount" name="amount" />
+            <Field
+              component={TextField}
+              label="Reference Id"
+              name="referenceId"
+            />
+
+            <Field component={TextField} label="Note" name="note" />
+            {!this.state.confirmed ? (
+              <SubmitButton
+                type="button"
+                variant="contained"
+                color="secondary"
+                disabled={!isValid}
+                onClick={(e) => {
+                  e.preventDefault()
+                  this.toggleConfirmed()
+                }}
+              >
+                Confirm payout
+              </SubmitButton>
+            ) : (
+              <SubmitButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={!isValid}
+              >
+                Create payout
+              </SubmitButton>
+            )}
+          </Form>
+        )}
+      </Formik>
+    )
+  }
+
+  private toggleConfirmed = () =>
+    this.setState((state) => ({
+      confirmed: !state.confirmed,
+    }))
+
+  private resetConfirmed = () => this.setState({ confirmed: false })
 }
 
 export default PayoutDetails
