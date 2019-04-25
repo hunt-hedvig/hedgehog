@@ -14,7 +14,6 @@ import {
 import { ExpandMoreOutlined } from '@material-ui/icons'
 import { gql } from 'apollo-boost'
 import { AddEntryForm } from 'components/chat/tabs/account-tab/add-entry-form'
-import { PayoutFormData } from 'components/payouts/payout-details'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'

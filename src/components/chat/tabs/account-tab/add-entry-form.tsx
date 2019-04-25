@@ -14,7 +14,7 @@ import * as yup from 'yup'
 const ADD_ACCOUNT_ENTRY_MUTATION = gql`
   mutation addAccountEntryToMember(
     $memberId: ID!
-    $accountEntry: AddAccountEntry!
+    $accountEntry: AccountEntryInput!
   ) {
     addAccountEntryToMember(memberId: $memberId, accountEntry: $accountEntry) {
       memberId
@@ -88,7 +88,7 @@ export class AddEntryForm extends React.Component<
           },
         ]}
       >
-        {(mutation) => (
+        {(mutation, { loading }) => (
           <Formik
             initialValues={{
               type: '',
@@ -100,7 +100,7 @@ export class AddEntryForm extends React.Component<
               fromDate: new Date(),
             }}
             onSubmit={(formData: any, { resetForm }) => {
-              if (!this.state.confirmed) {
+              if (!this.state.confirmed || loading) {
                 return
               }
               mutation({
@@ -187,7 +187,7 @@ export class AddEntryForm extends React.Component<
                       e.preventDefault()
                       this.toggleConfirmed()
                     }}
-                    disabled={!isValid}
+                    disabled={!isValid || loading}
                   >
                     Confirm entry
                   </SubmitButton>
@@ -196,7 +196,7 @@ export class AddEntryForm extends React.Component<
                     type="submit"
                     variant="contained"
                     color="primary"
-                    disabled={!isValid}
+                    disabled={!isValid || loading}
                   >
                     Create entry
                   </SubmitButton>
