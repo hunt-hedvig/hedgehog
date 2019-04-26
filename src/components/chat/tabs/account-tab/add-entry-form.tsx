@@ -42,6 +42,15 @@ const TextField = withStyles({
 })(MuiTextField)
 
 const Form = styled(FormikForm)({ width: '100%' })
+const BottomRowWrapper = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  '> div:first-of-type': {
+    flex: 1,
+  },
+})
+
+const parseAmount = (amount: string) => parseFloat(amount.replace(/\s+/g, ''))
 
 const getValidationSchema = () =>
   yup.object().shape({
@@ -70,7 +79,11 @@ const getValidationSchema = () =>
   })
 
 export class AddEntryForm extends React.Component<
-  { memberId: string; showNotification: (data: any) => void },
+  {
+    memberId: string
+    firstName: string
+    showNotification: (data: any) => void
+  },
   State
 > {
   public state = {
@@ -103,13 +116,14 @@ export class AddEntryForm extends React.Component<
               if (!this.state.confirmed || loading) {
                 return
               }
+
               mutation({
                 variables: {
                   memberId: this.props.memberId,
                   accountEntry: {
                     type: formData.type,
                     amount: {
-                      amount: parseFloat(formData.amount),
+                      amount: parseAmount(formData.amount),
                       currency: 'SEK',
                     },
                     fromDate: format(formData.fromDate, 'yyyy-MM-dd'),
@@ -127,82 +141,106 @@ export class AddEntryForm extends React.Component<
                     type: 'olive',
                   })
                   resetForm()
+                  this.resetConfirmed()
                 })
                 .catch((error) => {
                   this.props.showNotification({
                     message: error.message,
                     header: 'Error',
-                    type: 'olive',
+                    type: 'red',
                   })
                 })
             }}
             validationSchema={getValidationSchema()}
           >
-            {({ isValid }) => (
-              <Form onChange={this.resetConfirmed}>
-                <Field component={FieldSelect} name="type">
-                  <MenuItem value="CORRECTION">Correction</MenuItem>
-                  <MenuItem value="CAMPAIGN">Campaign</MenuItem>
-                  <MenuItem value="FEE">Fee</MenuItem>
-                  <MenuItem value="PAYMENT">Payment</MenuItem>
-                </Field>
-                <Field
-                  component={TextField}
-                  label="Amount"
-                  type="number"
-                  name="amount"
-                />
-                <Field
-                  component={TextField}
-                  label="Reference"
-                  name="reference"
-                  placeholder="123123"
-                />
-                <Field
-                  component={TextField}
-                  label="Source"
-                  name="source"
-                  placeholder="Member"
-                />
-                <Field
-                  component={TextField}
-                  label="Title"
-                  name="title"
-                  placeholder="Återbetalning dubbeldragning"
-                />
-                <Field component={TextField} label="Comment" name="comment" />
-                <Field
-                  component={DatePicker}
-                  label="From date"
-                  type="date"
-                  name="fromDate"
-                />
+            {({ values, isValid }) => {
+              const parsedAmount = parseAmount(values.amount)
 
-                {!this.state.confirmed ? (
-                  <SubmitButton
-                    type="button"
-                    variant="contained"
-                    color="secondary"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      this.toggleConfirmed()
-                    }}
-                    disabled={!isValid || loading}
-                  >
-                    Confirm entry
-                  </SubmitButton>
-                ) : (
-                  <SubmitButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={!isValid || loading}
-                  >
-                    Create entry
-                  </SubmitButton>
-                )}
-              </Form>
-            )}
+              return (
+                <Form onChange={this.resetConfirmed}>
+                  <Field component={FieldSelect} name="type">
+                    <MenuItem value="CORRECTION">Correction</MenuItem>
+                    <MenuItem value="CAMPAIGN">Campaign</MenuItem>
+                    <MenuItem value="FEE">Fee</MenuItem>
+                    <MenuItem value="PAYMENT">Payment</MenuItem>
+                  </Field>
+                  <Field
+                    component={TextField}
+                    label="Amount"
+                    type="number"
+                    name="amount"
+                  />
+                  <Field
+                    component={TextField}
+                    label="Reference"
+                    name="reference"
+                    placeholder="123123"
+                  />
+                  <Field
+                    component={TextField}
+                    label="Source"
+                    name="source"
+                    placeholder="Member"
+                  />
+                  <Field
+                    component={TextField}
+                    label="Title"
+                    name="title"
+                    placeholder="Återbetalning dubbeldragning"
+                  />
+                  <Field component={TextField} label="Comment" name="comment" />
+                  <Field
+                    component={DatePicker}
+                    label="From date"
+                    type="date"
+                    name="fromDate"
+                  />
+
+                  <BottomRowWrapper>
+                    <div>
+                      {!isNaN(parsedAmount) &&
+                        parsedAmount !== 0 &&
+                        (parsedAmount > 0 ? (
+                          <>
+                            {this.props.firstName} will owe us {parsedAmount}{' '}
+                            <strong>less</strong>
+                          </>
+                        ) : (
+                          <>
+                            {this.props.firstName} will owe us{' '}
+                            {parsedAmount * -1} <strong>more</strong>
+                          </>
+                        ))}
+                    </div>
+                    <div>
+                      {!this.state.confirmed ? (
+                        <SubmitButton
+                          type="button"
+                          variant="contained"
+                          color="secondary"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            this.toggleConfirmed()
+                          }}
+                          disabled={!isValid || loading}
+                        >
+                          Confirm entry
+                        </SubmitButton>
+                      ) : (
+                        <SubmitButton
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          disabled={!isValid || loading}
+                        >
+                          Create entry
+                        </SubmitButton>
+                      )}
+                    </div>
+                  </BottomRowWrapper>
+                </Form>
+              )
+            }}
           </Formik>
         )}
       </Mutation>

@@ -22,6 +22,7 @@ import { RouteComponentProps } from 'react-router'
 export const GET_MEMBER_ACCOUNT_QUERY = gql`
   query GetMemberAccount($memberId: ID!) {
     member(id: $memberId) {
+      firstName
       account {
         id
         balance
@@ -71,6 +72,7 @@ export const AccountTab: React.SFC<
             <ExpansionPanelDetails>
               <AddEntryForm
                 memberId={props.match.params.id}
+                firstName={data.member.firstName}
                 showNotification={props.showNotification}
               />
             </ExpansionPanelDetails>
