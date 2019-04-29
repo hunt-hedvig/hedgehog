@@ -26,7 +26,8 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
       firstName
       account {
         id
-        balance
+        currentMonthsBalance
+        totalBalance
         entries {
           id
           amount
@@ -67,7 +68,13 @@ export const AccountTab: React.SFC<
       }
       return (
         <>
-          <h3>Current balance: {formatMoneySE(data.member.account.balance)}</h3>
+          <h3>
+            Balance (current month):{' '}
+            {formatMoneySE(data.member.account.currentMonthsBalance)}
+          </h3>
+          <h3>
+            Balance (total): {formatMoneySE(data.member.account.totalBalance)}
+          </h3>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
               <Typography>Add entry</Typography>
