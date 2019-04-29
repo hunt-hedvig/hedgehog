@@ -18,6 +18,7 @@ import * as React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { RouteComponentProps } from 'react-router'
+import { formatMoneySE } from 'lib/intl'
 
 export const GET_MEMBER_ACCOUNT_QUERY = gql`
   query GetMemberAccount($memberId: ID!) {
@@ -31,6 +32,8 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
           amount
           fromDate
           title
+          source
+          reference
         }
       }
     }
@@ -58,13 +61,13 @@ export const AccountTab: React.SFC<
     query={GET_MEMBER_ACCOUNT_QUERY}
     variables={{ memberId: props.match.params.id }}
   >
-    {({ data, loading, error }) => {
+    {({ data, loading }) => {
       if (!data || loading) {
         return 'loading'
       }
       return (
         <>
-          <h3>Current balance: {data.member.account.balance.amount} kr</h3>
+          <h3>Current balance: {formatMoneySE(data.member.account.balance)}</h3>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
               <Typography>Add entry</Typography>
@@ -90,11 +93,15 @@ export const AccountTab: React.SFC<
                 {data.member.account.entries.map((entry) => (
                   <TableRowColored key={entry.id} amount={entry.amount.amount}>
                     <TableCell>{entry.fromDate}</TableCell>
-                    <TableCell>{entry.title}</TableCell>
+                    <TableCell>
+                      {entry.id}
+                      <br />
+                      {entry.title
+                        ? entry.title
+                        : `${entry.reference} (${entry.source})`}
+                    </TableCell>
                     <TableCell align="right">
-                      <strong>
-                        {entry.amount.amount} {entry.amount.currency}
-                      </strong>
+                      <strong>{formatMoneySE(entry.amount)}</strong>
                     </TableCell>
                   </TableRowColored>
                 ))}

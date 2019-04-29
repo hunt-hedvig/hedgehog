@@ -10,6 +10,7 @@ import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import * as yup from 'yup'
+import { formatMoneySE } from 'lib/intl'
 
 const ADD_ACCOUNT_ENTRY_MUTATION = gql`
   mutation addAccountEntryToMember(
@@ -204,7 +205,11 @@ export class AddEntryForm extends React.Component<
                         parsedAmount !== 0 &&
                         (parsedAmount > 0 ? (
                           <>
-                            {this.props.firstName} will owe us {parsedAmount}{' '}
+                            {this.props.firstName} will owe us{' '}
+                            {formatMoneySE({
+                              amount: parsedAmount,
+                              currency: 'SEK',
+                            })}{' '}
                             <strong>less</strong>
                           </>
                         ) : (
