@@ -149,6 +149,8 @@ export class AddEntryForm extends React.Component<
                     header: 'Error',
                     type: 'red',
                   })
+
+                  throw error
                 })
             }}
             validationSchema={getValidationSchema()}

@@ -76,7 +76,6 @@ class PayoutDetails extends React.Component<
               component={TextField}
               label="Payout amount"
               name="amount"
-              pattern="^\\d+$"
             />
             <Field
               component={TextField}

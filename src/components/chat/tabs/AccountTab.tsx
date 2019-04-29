@@ -38,7 +38,7 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
 `
 
 export interface AccountTabProps {
-  showNotification: ({}) => void
+  showNotification: (notification: {}) => void
 }
 
 const TableRowColored = styled(TableRow)(({ amount }: { amount: number }) => ({
