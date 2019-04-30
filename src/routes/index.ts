@@ -9,6 +9,7 @@ import MembersPageRoute from 'routes/MembersPageRoute'
 import PaymentsPageRoute from 'routes/PaymentsPageRoute'
 import PrivateRoute from 'routes/PrivateRoute'
 import QuestionsPageRoute from 'routes/QuestionsPageRoute'
+// import FileUploadRoute from 'routes/FileUploadRoute'
 
 export default {
   AssetsPageRoute,
@@ -22,4 +23,5 @@ export default {
   PaymentsPageRoute,
   BourdereauPageRoute,
   PrivateRoute,
+  // FileUploadRoute,
 }
