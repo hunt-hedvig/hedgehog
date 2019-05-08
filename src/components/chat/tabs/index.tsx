@@ -46,7 +46,6 @@ const memberPagePanes = (props, addMessage, socket) => {
       render: () => <TabItem props={props} TabContent={ClaimsTab} />,
     },
     {
-      // Should out this in FileTabs rather than MemberFile...
       menuItem: "Files",
       render: () => <TabItem props={props} TabContent={MemberFile} />,
     }
