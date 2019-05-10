@@ -2,6 +2,7 @@ import gql from "graphql-tag";
 import React from "react";
 import { Query } from "react-apollo";
 import { Table, Image } from 'semantic-ui-react'
+// import { Document } from 'react-pdf';
 
 
 const query = gql`
@@ -11,6 +12,7 @@ const query = gql`
         fileUploadUrl
         memberId
         timestamp
+        mimeType
       }
     }
   }
@@ -29,16 +31,13 @@ const fileDateSorter = (a, b) => {
     return 0
   }
 
-//   const handleClick = () => {
-//     console.log("hey");
-//   }
-
 const TableExampleCelled = ( { memberFiles } ) => (
     <Table celled>
     <Table.Header>
         <Table.Row>
-        <Table.HeaderCell>{console.log(memberFiles)} </Table.HeaderCell>
+        <Table.HeaderCell>Member File</Table.HeaderCell>
         <Table.HeaderCell>Time Stamp</Table.HeaderCell>
+        <Table.HeaderCell>File Type</Table.HeaderCell>
         </Table.Row>
     </Table.Header>
 
@@ -48,14 +47,14 @@ const TableExampleCelled = ( { memberFiles } ) => (
         ? "No Files uploaded for this member yet" 
         : memberFiles.sort(fileDateSorter).map((memberFile) => (
         <Table.Row>
-            {/* { console.log(memberFile.fileUploadUrl.state )} */}
             <Table.Cell>
-            {/* <Table.Cell className={ memberFile.fileUploadUrl.state.clicked ? "clicked" : "" } onClick={ this.handleClick }> */}
-                {/* <Image src={ memberFile.fileUploadUrl } target="_blank" />  */}
-                <Image src={ memberFile.fileUploadUrl } size="medium" /> 
+                <Image src={ memberFile.fileUploadUrl } size="medium" />
             </Table.Cell>
             <Table.Cell>
                 { memberFile.timestamp }
+            </Table.Cell>
+            <Table.Cell>
+                {  memberFile.mimeType }
             </Table.Cell>
         </Table.Row>
         ))}
@@ -83,7 +82,7 @@ class MemberFile extends React.Component {
             <Query query={query} variables={ this.variables }>
                 {({ loading, error, data }) => {
                     if (error) {
-                    return <div>Error in GraphQl query here..... { console.log(data) }: <pre>{JSON.stringify(error, null, 2)}</pre></div>
+                    return <div>Error in GraphQl query here.....: <pre>{JSON.stringify(error, null, 2)}</pre></div>
                     }
                     if (loading || !data) {
                     return <div>Loading...</div>
@@ -92,10 +91,7 @@ class MemberFile extends React.Component {
                     return ( 
                         <TableExampleCelled
                             memberFiles={ data.member.fileUploads } 
-                    /> 
-                        // return <div className="App">
-                        //     <input type="file" onChange={this.fileSelectedHandler} />
-                        // </div>
+                        /> 
                     )
                 }}
             </Query>
