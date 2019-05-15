@@ -4,7 +4,7 @@ import DetailsTab from 'components/chat/tabs/DetailsTab'
 import InsuranceListTab from 'components/chat/tabs/InsuranceListTab'
 import InsuranceTab from 'components/chat/tabs/InsuranceTab'
 import PaymentsTab from 'components/chat/tabs/PaymentsTab'
-import PayoutDetails from 'components/payouts/payout-details'
+import MemberFile from 'components/chat/tabs/FileTab'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Tab } from 'semantic-ui-react'
@@ -44,6 +44,10 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Claims',
       render: () => <TabItem props={props} TabContent={ClaimsTab} />,
     },
+    {
+      menuItem: "Files",
+      render: () => <TabItem props={props} TabContent={MemberFile} />,
+    }
   ]
   if (props.showChatTab) {
     panes.push({
