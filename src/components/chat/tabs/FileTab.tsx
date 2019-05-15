@@ -22,7 +22,18 @@ const sortFileDate = (a, b) => {
   return bDate - aDate
 }
 
-const MemberFileTable = ({ memberFiles }) => (
+interface FileUpload {
+  fileUploadUrl: string
+  memberId: string
+  timestamp: string
+  mimeType: string
+}
+
+interface MemberFileTableProps {
+  memberFiles: Array<FileUpload>
+}
+
+const MemberFileTable: React.FunctionComponent<MemberFileTableProps> = ({ memberFiles }) => (
   <Table celled>
     <Table.Header>
       <Table.Row>
