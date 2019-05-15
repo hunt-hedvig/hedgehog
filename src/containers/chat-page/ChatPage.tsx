@@ -11,11 +11,18 @@ const ChatPage = (props) => (
   </PageContainer>
 )
 
-const mapStateToProps = ({ messages, claims, insurance, client }) => ({
+const mapStateToProps = ({
+  messages,
+  claims,
+  insurance,
+  client,
+  payoutDetails,
+}) => ({
   memberClaims: claims.memberClaims,
   messages,
   insurance,
   client,
+  payoutDetails,
 })
 
 export default withRouter(
@@ -28,6 +35,7 @@ export default withRouter(
       ...actions.membersActions,
       ...actions.clientActions,
       ...actions.notificationsActions,
+      ...actions.payoutDetailsActions,
     },
   )(ChatPage),
 )

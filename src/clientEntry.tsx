@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 const appElement = document.getElementById('react-root')
 
-ReactDOM.hydrate(
+ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={apolloClient!}>
       <HotApp />

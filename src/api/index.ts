@@ -21,7 +21,7 @@ export default async (conf, data, id, params) => {
       params,
     })
   } catch (error) {
-    if (error.response.status === 403) {
+    if (error.response && error.response.status === 403) {
       history.replace('/login/oauth')
       return
     }

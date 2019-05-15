@@ -1,4 +1,5 @@
 import { BackofficeStore } from './storeTypes'
+import { PayoutRequestResult } from './types/payoutTypes'
 
 const initialState: BackofficeStore = {
   login: {
@@ -57,6 +58,11 @@ const initialState: BackofficeStore = {
     data: null,
     notes: [],
     payments: [],
+  },
+  payoutDetails: {
+    data: null,
+    requesting: false,
+    requestResult: PayoutRequestResult.READY,
   },
   questions: {
     answered: {

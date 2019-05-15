@@ -5,6 +5,7 @@ import { Mutation, Query } from 'react-apollo'
 import { Button, Form, Input, Table } from 'semantic-ui-react'
 
 import { Checkmark, Cross } from 'components/icons'
+import PayoutDetails from 'components/payouts/payout-details'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -110,12 +111,15 @@ class PaymentsTab extends React.Component {
     this.setState({ amount: e.target.value })
   }
 
-  public handleChargeSubmit = (mutation) => () => {
+  public handleChargeSubmit = (defaultAmount: any) => (mutation) => () => {
     mutation({
       variables: {
         id: this.variables.id,
         amount: {
-          amount: +this.state.amount,
+          amount:
+            this.state.amount === null
+              ? parseInt(defaultAmount, 10)
+              : +this.state.amount,
           currency: 'SEK',
         },
       },
@@ -128,7 +132,7 @@ class PaymentsTab extends React.Component {
   }
 
   public handleConfirmationChange = (e) => {
-    if (e.target.value.replace(/ /g, '').toLowerCase() === 'tech') {
+    if (e.target.value.replace(/ /g, '').toLowerCase() === 'a') {
       this.setState({ confirming: false, confirmed: true })
     }
   }
@@ -180,6 +184,7 @@ class PaymentsTab extends React.Component {
                   {data.member.previousMonth.amount.amount}{' '}
                   {data.member.previousMonth.amount.currency}
                 </p>
+                <h3>Charge:</h3>
                 {data.member.directDebitStatus.activated && (
                   <Mutation
                     mutation={CHARGE_MEMBER_MUTATION}
@@ -190,8 +195,13 @@ class PaymentsTab extends React.Component {
                         <Form>
                           <Form.Input
                             onChange={this.handleChange}
-                            label="Amount"
+                            label="Charge amount"
                             placeholder="ex. 100"
+                            value={
+                              this.state.amount === null
+                                ? data.member.currentMonth.amount.amount
+                                : this.state.amount
+                            }
                           />
                           <br />
                           {!this.state.confirmed && (
@@ -206,8 +216,8 @@ class PaymentsTab extends React.Component {
                               <Input
                                 onChange={this.handleConfirmationChange}
                                 focus
-                                label="Type tech to confirm"
-                                placeholder="tech"
+                                label="Type a to confirm"
+                                placeholder="a"
                               />
                               <br />
                             </React.Fragment>
@@ -219,7 +229,9 @@ class PaymentsTab extends React.Component {
                               <br />
                               <Button
                                 positive
-                                onClick={this.handleChargeSubmit(chargeMember)}
+                                onClick={this.handleChargeSubmit(
+                                  data.member.currentMonth.amount.amount,
+                                )(chargeMember)}
                               >
                                 Execute
                               </Button>
@@ -231,7 +243,9 @@ class PaymentsTab extends React.Component {
                   </Mutation>
                 )}
                 <br />
-                <p>Transactions:</p>
+                <h3>Payout:</h3>
+                <PayoutDetails {...this.props} />
+                <h3>Transactions:</h3>
                 <MemberTransactionsTable
                   transactions={data.member.transactions
                     .slice()

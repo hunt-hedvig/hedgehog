@@ -12,6 +12,7 @@ export interface BackofficeStore {
   dashboard: any
   claims: ClaimsStore
   claimDetails: any
+  payoutDetails: any
   questions: QuestionsStore
   insurance: any
   notifications: any
