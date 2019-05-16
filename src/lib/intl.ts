@@ -1,6 +1,6 @@
 export interface Money {
   amount: number
-  currency: 'SEK'
+  currency: 'SEK' | string
 }
 
 export const formatMoney = (locale: 'sv-SE') => (money: Money) =>

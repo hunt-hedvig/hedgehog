@@ -44,9 +44,9 @@ export const routesList = [
     type: 'CLAIMS',
   },
   {
-    text: 'Payments',
-    route: '/payments',
-    type: 'PAYMENTS',
+    text: 'Charges',
+    route: '/charges',
+    type: 'CHARGES',
   },
   {
     text: 'BDX',
