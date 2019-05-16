@@ -6,11 +6,11 @@ import { FieldSelect } from 'components/shared/inputs/FieldSelect'
 import { TextField as MuiTextField } from 'components/shared/inputs/TextField'
 import { format, startOfDay } from 'date-fns'
 import { Field, Form as FormikForm, Formik } from 'formik'
+import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import * as yup from 'yup'
-import { formatMoneySE } from 'lib/intl'
 
 const ADD_ACCOUNT_ENTRY_MUTATION = gql`
   mutation addAccountEntryToMember(
@@ -57,7 +57,7 @@ const getValidationSchema = () =>
   yup.object().shape({
     type: yup
       .string()
-      .oneOf(['CORRECTION', 'CAMPAIGN', 'FEE', 'PAYMENT'])
+      .oneOf(['CORRECTION', 'CAMPAIGN', 'SUBSCRIPTION', 'PAYOUT', 'CHARGE'])
       .required(),
     amount: yup.number().required(),
     reference: yup
@@ -164,8 +164,9 @@ export class AddEntryForm extends React.Component<
                   <Field component={FieldSelect} name="type">
                     <MenuItem value="CORRECTION">Correction</MenuItem>
                     <MenuItem value="CAMPAIGN">Campaign</MenuItem>
-                    <MenuItem value="FEE">Fee</MenuItem>
-                    <MenuItem value="PAYMENT">Payment</MenuItem>
+                    <MenuItem value="SUBSCRIPTION">Subscription</MenuItem>
+                    <MenuItem value="PAYOUT">Payout</MenuItem>
+                    <MenuItem value="CHARGE">Charge</MenuItem>
                   </Field>
                   <Field
                     component={TextField}
@@ -215,7 +216,11 @@ export class AddEntryForm extends React.Component<
                         ) : (
                           <>
                             {this.props.firstName} will owe us{' '}
-                            {parsedAmount * -1} <strong>more</strong>
+                            {formatMoneySE({
+                              amount: parsedAmount * -1,
+                              currency: 'SEK',
+                            })}{' '}
+                            <strong>more</strong>
                           </>
                         ))}
                     </div>
