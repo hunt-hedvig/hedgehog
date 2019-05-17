@@ -1,6 +1,11 @@
 import {
+  Button as MuiButton,
+  Checkbox as MuiCheckbox,
+  FormControlLabel as MuiFormControlLabel,
+  Icon as MuiIcon,
   MenuItem as MuiMenuItem,
   MenuList as MuiMenuList,
+  Switch as MuiSwitch,
   TextField as MuiTextField,
   withStyles,
 } from '@material-ui/core'
@@ -14,18 +19,42 @@ const MessagesPanelContainer = styled('div')({
   display: 'flex',
   flexDirection: 'row',
   flexShrink: 0,
+  flexWrap: 'wrap',
   marginTop: 'auto',
   padding: '0.5rem',
 })
 
 const ChatForm = styled('form')({
-  width: '100%',
+  marginLeft: '16px',
+  width: 'calc(100% - 3em - 16px)',
   marginRight: '0.5rem',
 })
 
 const ActionContainer = styled('div')`
   position: relative;
+  width: 2em;
+  text-align: right;
 `
+
+const OptionsContainer = styled('div')`
+  width: 100%;
+  display: flex;
+`
+
+const OptionCheckbox = withStyles({
+  root: {
+    verticalAlign: 'middle'
+  },
+})(MuiSwitch)
+
+const SubmitButton = withStyles({
+  root: {
+    marginLeft: 'auto',
+    marginTop: 'auto',
+    marginBottom: 'auto'
+  },
+})(MuiButton)
+
 
 const TextField = withStyles({
   root: {
@@ -53,7 +82,7 @@ const MenuItem = withStyles({
 
 interface ChatPanelProps {
   messages: ReadonlyArray<{}>
-  addMessage: (message: string) => void
+  addMessage: (message: string, forceSendMessage: boolean) => void
 }
 
 interface State {
@@ -61,6 +90,7 @@ interface State {
   autocompleteSuggestions: ReadonlyArray<AutocompleteSuggestion>
   autocompleteQuery: string | null
   showAutocompleteSuggestions: boolean
+  forceSendMessage: boolean
 }
 
 interface AutocompleteSuggestion {
@@ -71,6 +101,7 @@ interface AutocompleteSuggestion {
 export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   public state = {
     currentMessage: '',
+    forceSendMessage: false,
     autocompleteQuery: null,
     autocompleteSuggestions: [],
     showAutocompleteSuggestions: false,
@@ -109,14 +140,21 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
         </ChatForm>
         <ActionContainer>
           <EmojiPicker selectEmoji={this.selectEmoji} />
-          <Icon
-            name="arrow circle right"
-            color="blue"
-            size="large"
-            link
-            onClick={this.handleSubmit}
-          />
         </ActionContainer>
+        <OptionsContainer>
+          <MuiFormControlLabel
+            label="Force message"
+            labelPlacement="start"
+            control = {
+              <OptionCheckbox  color="primary" checked={this.state.forceSendMessage} onChange={this.handleCheckboxChange} />
+            }
+          />
+          <SubmitButton variant="raised"  onClick={this.handleSubmit}  color="primary" >
+        Send
+        {/* This Button uses a Font Icon, see the installation instructions in the docs. */}
+        <MuiIcon >send</MuiIcon>
+      </SubmitButton>
+        </OptionsContainer>
       </MessagesPanelContainer>
     )
   }
@@ -148,6 +186,10 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     }
   }
 
+  private handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({forceSendMessage: e.target.checked,})
+  }
+
   private findAutocompleteSuggestions = (query: string) => {
     fetch('/api/autocomplete/suggestions?query=' + encodeURIComponent(query))
       .then((r) => {
@@ -170,17 +212,18 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       })
   }
 
-  private handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  private handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault()
     this.sendMessage()
   }
   private sendMessage = () => {
-    this.props.addMessage(this.state.currentMessage)
+    this.props.addMessage(this.state.currentMessage, this.state.forceSendMessage)
     this.trackAutocompleteMessage()
     this.setState({
       autocompleteSuggestions: [],
       currentMessage: '',
       showAutocompleteSuggestions: false,
+      forceSendMessage: false,
     })
   }
   private selectAutocompleteSuggestion = (suggestion: string) => (

@@ -40,13 +40,14 @@ function* editMemberDetailsFlow({ member }) {
 
 function* messagesWatcher() {
   yield [
-    takeEvery(ADD_MESSAGE, ({ message, socket, id }) => {
-      socket.send(
-        config.ws.send + id,
+    takeEvery(ADD_MESSAGE, ({ message, forceSendMessage, stompClient, memberId }) => {
+      stompClient.send(
+        config.ws.send + memberId,
         {},
         JSON.stringify({
-          memberId: id,
+          memberId: memberId,
           msg: message,
+          forceSendMessage: forceSendMessage,
         }),
       )
     }),

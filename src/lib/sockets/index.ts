@@ -8,8 +8,8 @@ import * as membersList from './members'
 /* eslint-disable no-undef */
 export const connect = () => {
   return new Promise((resolve, reject) => {
-    const socket = new SockJS(`${config.ws.endpoint}`)
-    const stompClient = StompModule.Stomp.over(socket)
+    //const socket = new SockJS(`${config.ws.endpoint}`)
+    const stompClient = StompModule.Stomp.client(`ws${window.location.origin.slice(4)}${config.ws.endpoint}`)
     stompClient.connect(
       {},
       () => {
