@@ -40,7 +40,7 @@ export const lightUiTheme = createMuiTheme({
   },
   typography: {
     fontFamily: [
-      'Lato',
+      'Roboto',
       'Helvetica Neue',
       'Arial',
       'Helvetica',
@@ -58,7 +58,7 @@ export const lightUiTheme = createMuiTheme({
     },
     MuiButton: {
       contained: {
-        borderRadius: '100px',
+        /*borderRadius: '100px',*/
       },
     },
   },
