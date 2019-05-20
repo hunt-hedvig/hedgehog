@@ -33,6 +33,13 @@ const Button = styled('button')({
   },
 })
 
+const ConfirmMessage = styled('div')({
+  padding: '12px',
+  alignItems: 'center',
+  color: colors.OFF_BLACK_DARK,
+  fontSize: '1.2rem',
+})
+
 const members = [
   {
     memberId: '123',
@@ -93,7 +100,9 @@ export class ChargePage extends React.Component<{}, State> {
           <Button onClick={this.confirm}>
             {this.state.confirming ? "Yes, I'm sure" : 'Do it'}
           </Button>
-          {this.state.confirming ? <div>Are you sure?</div> : null}
+          {this.state.confirming ? (
+            <ConfirmMessage>Are you sure?</ConfirmMessage>
+          ) : null}
         </ButtonWrapper>
       </Wrapper>
     )
