@@ -1,6 +1,8 @@
 import * as React from 'react'
 import styled from 'react-emotion'
+import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
+import actions from 'store/actions'
 import { formatMoneySE } from 'lib/intl'
 import { colors } from '@hedviginsurance/brand'
 import gql from 'graphql-tag'
@@ -120,7 +122,12 @@ interface State {
   confirming: boolean
 }
 
-export class ChargePage extends React.Component<{}, State> {
+export class ChargePageComponent extends React.Component<
+  {
+    showNotification: (data: any) => void
+  },
+  State
+> {
   public state = {
     confirming: false,
   }
@@ -128,7 +135,10 @@ export class ChargePage extends React.Component<{}, State> {
   public render() {
     return (
       <Wrapper>
-        <Query query={query} variables={{ month: moment().format('YYYY-MM') }}>
+        <Query<any>
+          query={query}
+          variables={{ month: moment().format('YYYY-MM') }}
+        >
           {({ loading, error, data }) => {
             if (error) {
               return (
@@ -187,8 +197,23 @@ export class ChargePage extends React.Component<{}, State> {
                                         }),
                                       ),
                                     },
-                                  }).then(console.log)
-                                  this.resetButton()
+                                  })
+                                    .then(() => {
+                                      this.resetButton()
+                                      this.props.showNotification({
+                                        message: 'Charges sent for approval',
+                                        header: 'Approved',
+                                        type: 'olive',
+                                      })
+                                    })
+                                    .catch((error) => {
+                                      this.props.showNotification({
+                                        message: error.message,
+                                        header: 'Error',
+                                        type: 'red',
+                                      })
+                                      throw error
+                                    })
                                 }
                               : this.confirm
                           }
@@ -213,8 +238,14 @@ export class ChargePage extends React.Component<{}, State> {
   private resetButton = () => {
     this.setState({ confirming: false })
   }
-
   private confirm = () => {
     this.setState({ confirming: true })
   }
 }
+
+const mapActions = { ...actions.notificationsActions }
+
+export const ChargePage = connect(
+  null,
+  mapActions,
+)(ChargePageComponent)
