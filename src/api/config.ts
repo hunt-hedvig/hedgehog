@@ -161,7 +161,6 @@ export default {
     },
   },
   ws: {
-    // eslint-disable-next-line
     endpoint: '/wschat',
     messagesPrefix: '/user/',
     messages: '/messages/',

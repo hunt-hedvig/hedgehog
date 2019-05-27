@@ -45,9 +45,9 @@ function* messagesWatcher() {
         config.ws.send + memberId,
         {},
         JSON.stringify({
-          memberId: memberId,
+          memberId,
           msg: message,
-          forceSendMessage: forceSendMessage,
+          forceSendMessage,
         }),
       )
     }),

@@ -56,10 +56,5 @@ export const lightUiTheme = createMuiTheme({
         padding: '1rem 0',
       },
     },
-    MuiButton: {
-      contained: {
-        /*borderRadius: '100px',*/
-      },
-    },
   },
 })

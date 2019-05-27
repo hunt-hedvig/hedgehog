@@ -49,7 +49,7 @@ export const reconnect = async (actions, id, user) => {
     )
     return { stompClient, subscription }
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return connectError
   }
 }

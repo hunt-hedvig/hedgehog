@@ -12,7 +12,6 @@ import {
 import { format } from 'date-fns'
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Icon } from 'semantic-ui-react'
 import { EmojiPicker } from './EmojiPicker'
 
 const MessagesPanelContainer = styled('div')({
@@ -43,7 +42,7 @@ const OptionsContainer = styled('div')`
 
 const OptionCheckbox = withStyles({
   root: {
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
   },
 })(MuiSwitch)
 
@@ -51,10 +50,9 @@ const SubmitButton = withStyles({
   root: {
     marginLeft: 'auto',
     marginTop: 'auto',
-    marginBottom: 'auto'
+    marginBottom: 'auto',
   },
 })(MuiButton)
-
 
 const TextField = withStyles({
   root: {
@@ -145,15 +143,22 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
           <MuiFormControlLabel
             label="Force message"
             labelPlacement="start"
-            control = {
-              <OptionCheckbox  color="primary" checked={this.state.forceSendMessage} onChange={this.handleCheckboxChange} />
+            control={
+              <OptionCheckbox
+                color="primary"
+                checked={this.state.forceSendMessage}
+                onChange={this.handleCheckboxChange}
+              />
             }
           />
-          <SubmitButton variant="raised"  onClick={this.handleSubmit}  color="primary" >
-        Send
-        {/* This Button uses a Font Icon, see the installation instructions in the docs. */}
-        <MuiIcon >send</MuiIcon>
-      </SubmitButton>
+          <SubmitButton
+            variant="raised"
+            onClick={this.handleSubmit}
+            color="primary"
+          >
+            Send
+            <MuiIcon>send</MuiIcon>
+          </SubmitButton>
         </OptionsContainer>
       </MessagesPanelContainer>
     )
@@ -187,7 +192,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   }
 
   private handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({forceSendMessage: e.target.checked,})
+    this.setState({ forceSendMessage: e.target.checked })
   }
 
   private findAutocompleteSuggestions = (query: string) => {
@@ -212,12 +217,17 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       })
   }
 
-  private handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>) => {
+  private handleSubmit = (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
+  ) => {
     e.preventDefault()
     this.sendMessage()
   }
   private sendMessage = () => {
-    this.props.addMessage(this.state.currentMessage, this.state.forceSendMessage)
+    this.props.addMessage(
+      this.state.currentMessage,
+      this.state.forceSendMessage,
+    )
     this.trackAutocompleteMessage()
     this.setState({
       autocompleteSuggestions: [],
