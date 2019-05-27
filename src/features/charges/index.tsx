@@ -1,14 +1,14 @@
+import { colors } from '@hedviginsurance/brand'
+import gql from 'graphql-tag'
+import { formatMoneySE } from 'lib/intl'
+import * as moment from 'moment'
 import * as React from 'react'
+import { Mutation, Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
-import actions from 'store/actions'
-import { formatMoneySE } from 'lib/intl'
-import { colors } from '@hedviginsurance/brand'
-import gql from 'graphql-tag'
-import { Query, Mutation } from 'react-apollo'
-import * as moment from 'moment'
 import { MonetaryAmount } from 'src/components/claims/claim-details/components/ClaimPayments'
+import actions from 'store/actions'
 
 const query = gql`
   query PaymentScheduleQuery($month: YearMonth!) {
@@ -90,7 +90,7 @@ interface PaymentSchedule {
 }
 
 interface RowProps {
-  paymentSchedule: Array<PaymentSchedule>
+  paymentSchedule: PaymentSchedule[]
 }
 
 const Row: React.FunctionComponent<RowProps> = ({ paymentSchedule }) => (
@@ -171,7 +171,7 @@ export class ChargePageComponent extends React.Component<
                     mutation={approveMemberCharge}
                     refetchQueries={() => [
                       {
-                        query: query,
+                        query,
                         variables: { month: moment().format('YYYY-MM') },
                       },
                     ]}
