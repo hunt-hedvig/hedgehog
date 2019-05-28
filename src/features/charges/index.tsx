@@ -1,8 +1,41 @@
-import * as React from 'react'
-import styled from 'react-emotion'
-import { Table } from 'semantic-ui-react'
-import { formatMoneySE } from 'lib/intl'
 import { colors } from '@hedviginsurance/brand'
+import gql from 'graphql-tag'
+import { formatMoneySE } from 'lib/intl'
+import * as moment from 'moment'
+import * as React from 'react'
+import { Mutation, Query } from 'react-apollo'
+import styled from 'react-emotion'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
+import { MonetaryAmount } from 'src/components/claims/claim-details/components/ClaimPayments'
+import actions from 'store/actions'
+
+const query = gql`
+  query PaymentScheduleQuery($month: YearMonth!) {
+    paymentSchedule(status: SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL) {
+      id
+      member {
+        memberId
+        firstName
+        lastName
+        monthlySubscription(month: $month) {
+          amount
+        }
+        account {
+          currentBalance
+        }
+      }
+      status
+      amount
+    }
+  }
+`
+const approveMemberCharge = gql`
+  mutation approveMemberCharge($approvals: [MemberChargeApproval!]!) {
+    approveMemberCharge(approvals: $approvals)
+  }
+`
 
 const Wrapper = styled('div')({
   padding: '0 20px',
@@ -33,72 +66,193 @@ const Button = styled('button')({
   },
 })
 
-const members = [
-  {
-    memberId: '123',
-    memberName: 'test',
-    premium: { amount: 100, currency: 'SEK' },
-    amount: { amount: 100, currency: 'SEK' },
-    lastChargeAmount: { amount: 100, currency: 'SEK' },
-    lastChargeDate: '2019-04-27',
-  },
-  {
-    memberId: '321',
-    memberName: 'test 2',
-    premium: { amount: 200, currency: 'SEK' },
-    amount: { amount: 400, currency: 'SEK' },
-    lastChargeAmount: { amount: 200, currency: 'SEK' },
-    lastChargeDate: '2019-03-27',
-  },
-]
+const ConfirmMessage = styled('div')({
+  padding: '12px',
+  alignItems: 'center',
+  color: colors.OFF_BLACK_DARK,
+  fontSize: '1.2rem',
+})
 
-const buildRow = () =>
-  members.map((member) => (
-    <TableRow warning={member.premium.amount !== member.amount.amount}>
-      <Table.Cell>{member.memberName}</Table.Cell>
-      <Table.Cell>{member.memberId}</Table.Cell>
-      <Table.Cell>{formatMoneySE(member.premium)}</Table.Cell>
-      <Table.Cell>{formatMoneySE(member.amount)}</Table.Cell>
-      <Table.Cell>
-        Amount: {formatMoneySE(member.lastChargeAmount)}
-        <br />
-        Date: {member.lastChargeDate}
-      </Table.Cell>
-    </TableRow>
-  ))
+interface PaymentSchedule {
+  id: string
+  member: {
+    memberId: string
+    firstName: string
+    lastName: string
+    monthlySubscription: {
+      amount: MonetaryAmount
+    }
+    account: {
+      currentBalance: MonetaryAmount
+    }
+  }
+  chargeStatus: string
+  amount: MonetaryAmount
+}
+
+interface RowProps {
+  paymentSchedule: PaymentSchedule[]
+}
+
+const Row: React.FunctionComponent<RowProps> = ({ paymentSchedule }) => (
+  <>
+    {paymentSchedule.map((payment) => (
+      <TableRow
+        key={payment.id}
+        warning={
+          payment.member.account.currentBalance.amount !==
+          payment.member.monthlySubscription.amount.amount
+        }
+      >
+        <Table.Cell>
+          {payment.member.firstName + ' ' + payment.member.lastName}
+        </Table.Cell>
+        <Table.Cell>
+          <Link to={`/members/${payment.member.memberId}`}>
+            {payment.member.memberId}
+          </Link>
+        </Table.Cell>
+        <Table.Cell>
+          {formatMoneySE(payment.member.monthlySubscription.amount)}
+        </Table.Cell>
+        <Table.Cell>
+          {formatMoneySE(payment.member.account.currentBalance)}
+          {parseFloat(payment.member.account.currentBalance.amount) <= 0 &&
+            " (Won't be charged)"}
+        </Table.Cell>
+      </TableRow>
+    ))}
+  </>
+)
 
 interface State {
   confirming: boolean
 }
 
-export class ChargePage extends React.Component<{}, State> {
-  public state = { confirming: false }
+export class ChargePageComponent extends React.Component<
+  {
+    showNotification: (data: any) => void
+  },
+  State
+> {
+  public state = {
+    confirming: false,
+  }
+
   public render() {
     return (
       <Wrapper>
-        <Table celled>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Member Name</Table.HeaderCell>
-              <Table.HeaderCell>Member Id</Table.HeaderCell>
-              <Table.HeaderCell>Member Premium</Table.HeaderCell>
-              <Table.HeaderCell>Charge Amount</Table.HeaderCell>
-              <Table.HeaderCell>Last Charge</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>{buildRow()}</Table.Body>
-        </Table>
-
-        <ButtonWrapper>
-          <Button onClick={this.confirm}>
-            {this.state.confirming ? "Yes, I'm sure" : 'Do it'}
-          </Button>
-          {this.state.confirming ? <div>Are you sure?</div> : null}
-        </ButtonWrapper>
+        <Query<any>
+          query={query}
+          variables={{ month: moment().format('YYYY-MM') }}
+        >
+          {({ loading, error, data }) => {
+            if (error) {
+              return (
+                <Table.Row>
+                  Error in GraphQl query here:{' '}
+                  <pre>{JSON.stringify(error, null, 2)}</pre>
+                </Table.Row>
+              )
+            }
+            if (loading || !data || !data.paymentSchedule) {
+              return <div>Loading...</div>
+            }
+            return (
+              <>
+                <Table celled>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>Member Name</Table.HeaderCell>
+                      <Table.HeaderCell>Member Id</Table.HeaderCell>
+                      <Table.HeaderCell>Member Premium</Table.HeaderCell>
+                      <Table.HeaderCell>Charge Amount</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    <Row paymentSchedule={data.paymentSchedule} />
+                  </Table.Body>
+                </Table>
+                <ButtonWrapper>
+                  <Mutation
+                    mutation={approveMemberCharge}
+                    refetchQueries={() => [
+                      {
+                        query,
+                        variables: { month: moment().format('YYYY-MM') },
+                      },
+                    ]}
+                  >
+                    {(mutation, { loading }) => {
+                      return (
+                        <Button
+                          disabled={loading}
+                          onClick={
+                            this.state.confirming
+                              ? () => {
+                                  if (loading) {
+                                    return
+                                  }
+                                  mutation({
+                                    variables: {
+                                      approvals: data.paymentSchedule.map(
+                                        (payment) => ({
+                                          memberId: payment.member.memberId,
+                                          amount:
+                                            payment.member.account
+                                              .currentBalance,
+                                        }),
+                                      ),
+                                    },
+                                  })
+                                    .then(() => {
+                                      this.resetButton()
+                                      this.props.showNotification({
+                                        message: 'Charges sent for approval',
+                                        header: 'Approved',
+                                        type: 'olive',
+                                      })
+                                    })
+                                    .catch((error) => {
+                                      this.props.showNotification({
+                                        message: error.message,
+                                        header: 'Error',
+                                        type: 'red',
+                                      })
+                                      throw error
+                                    })
+                                }
+                              : this.confirm
+                          }
+                        >
+                          {this.state.confirming ? "Yes, I'm sure" : 'Do it'}
+                        </Button>
+                      )
+                    }}
+                  </Mutation>
+                  {this.state.confirming ? (
+                    <ConfirmMessage>Are you sure?</ConfirmMessage>
+                  ) : null}
+                </ButtonWrapper>
+              </>
+            )
+          }}
+        </Query>
       </Wrapper>
     )
+  }
+
+  private resetButton = () => {
+    this.setState({ confirming: false })
   }
   private confirm = () => {
     this.setState({ confirming: true })
   }
 }
+
+const mapActions = { ...actions.notificationsActions }
+
+export const ChargePage = connect(
+  null,
+  mapActions,
+)(ChargePageComponent)
