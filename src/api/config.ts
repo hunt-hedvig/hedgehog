@@ -161,11 +161,7 @@ export default {
     },
   },
   ws: {
-    // eslint-disable-next-line
-    endpoint:
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:8080/chat'
-        : '/chat',
+    endpoint: '/wschat',
     messagesPrefix: '/user/',
     messages: '/messages/',
     history: '/app/messages/history/',
