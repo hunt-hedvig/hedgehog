@@ -72,7 +72,11 @@ class PayoutDetails extends React.Component<
               <MuiMenuItem value="REFERRAL">Referral</MuiMenuItem>
               <MuiMenuItem value="REFUND">Refund</MuiMenuItem>
             </Field>
-            <Field component={TextField} label="Payout amount" name="amount" />
+            <Field
+              component={TextField}
+              label="Payout amount"
+              name="amount"
+            />
             <Field
               component={TextField}
               label="Reference Id"

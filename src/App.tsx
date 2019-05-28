@@ -68,9 +68,9 @@ const App: React.SFC = () => (
                 component={Routes.MemberInsurancePageRoute}
               />
               <Routes.PrivateRoute
-                path="/payments"
+                path="/charges"
                 store={store}
-                component={Routes.PaymentsPageRoute}
+                component={Routes.ChargePageRoute}
               />
               <Routes.PrivateRoute
                 path="/BDX"

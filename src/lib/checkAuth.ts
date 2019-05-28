@@ -21,7 +21,7 @@ const makeLoginRequestWithRetryAttempt = async () => {
       throw e
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 5000))
 
     return api(config.login.login)
   }

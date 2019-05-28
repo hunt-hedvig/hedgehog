@@ -1,12 +1,12 @@
 import AssetsPageRoute from 'routes/AssetsPageRoute'
 import BourdereauPageRoute from 'routes/BourdereauPageRoute'
+import ChargePageRoute from 'routes/ChargePageRoute'
 import ClaimsPageRoute from 'routes/ClaimsPageRoute'
 import DashboardPageRoute from 'routes/DashboardPageRoute'
 import LoginPageRoute from 'routes/LoginPageRoute'
 import LoginProcessPageRoute from 'routes/LoginProcessPageRoute'
 import MemberInsurancePageRoute from 'routes/MemberInsurancePageRoute'
 import MembersPageRoute from 'routes/MembersPageRoute'
-import PaymentsPageRoute from 'routes/PaymentsPageRoute'
 import PrivateRoute from 'routes/PrivateRoute'
 import QuestionsPageRoute from 'routes/QuestionsPageRoute'
 
@@ -19,7 +19,7 @@ export default {
   ClaimsPageRoute,
   QuestionsPageRoute,
   MemberInsurancePageRoute,
-  PaymentsPageRoute,
+  ChargePageRoute,
   BourdereauPageRoute,
   PrivateRoute,
 }
