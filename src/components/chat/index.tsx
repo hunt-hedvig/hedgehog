@@ -25,11 +25,11 @@ export default class Chat extends React.Component {
     }
   }
 
-  public addMessageHandler = (message) => {
+  public addMessageHandler = (message, forceSendMessage) => {
     const { socket } = this.state
     const { addMessage, match } = this.props
     if (socket) {
-      addMessage(message, match.params.id, socket)
+      addMessage(message, forceSendMessage, match.params.id, socket)
     }
   }
 

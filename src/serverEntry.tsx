@@ -68,6 +68,7 @@ server.app.use(
         tls.checkServerIdentity(url.parse(process.env.API_URL).hostname, cert)
       },
     },
+    ws: true
   }),
 )
 

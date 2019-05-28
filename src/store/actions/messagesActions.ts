@@ -11,11 +11,12 @@ import {
   SET_ACTIVE_CONNECTION,
 } from '../constants/members'
 
-export const addMessage = (message, id, socket) => ({
+export const addMessage = (message, forceSendMessage, memberId, stompClient) => ({
   type: ADD_MESSAGE,
   message,
-  id,
-  socket,
+  forceSendMessage,
+  memberId,
+  stompClient,
 })
 
 export const messageReceived = (message) => ({
