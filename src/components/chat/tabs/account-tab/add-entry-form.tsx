@@ -204,11 +204,11 @@ export class AddEntryForm extends React.Component<
                     <div>
                       {!isNaN(parsedAmount) &&
                         parsedAmount !== 0 &&
-                        (parsedAmount > 0 ? (
+                        (parsedAmount < 0 ? (
                           <>
                             {this.props.firstName} will owe us{' '}
                             {formatMoneySE({
-                              amount: parsedAmount,
+                              amount: parsedAmount * -1,
                               currency: 'SEK',
                             })}{' '}
                             <strong>less</strong>
@@ -217,7 +217,7 @@ export class AddEntryForm extends React.Component<
                           <>
                             {this.props.firstName} will owe us{' '}
                             {formatMoneySE({
-                              amount: parsedAmount * -1,
+                              amount: parsedAmount,
                               currency: 'SEK',
                             })}{' '}
                             <strong>more</strong>

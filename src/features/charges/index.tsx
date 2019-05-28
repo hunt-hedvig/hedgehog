@@ -6,6 +6,7 @@ import * as React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { MonetaryAmount } from 'src/components/claims/claim-details/components/ClaimPayments'
 import actions from 'store/actions'
@@ -106,12 +107,18 @@ const Row: React.FunctionComponent<RowProps> = ({ paymentSchedule }) => (
         <Table.Cell>
           {payment.member.firstName + ' ' + payment.member.lastName}
         </Table.Cell>
-        <Table.Cell>{payment.member.memberId}</Table.Cell>
+        <Table.Cell>
+          <Link to={`/members/${payment.member.memberId}`}>
+            {payment.member.memberId}
+          </Link>
+        </Table.Cell>
         <Table.Cell>
           {formatMoneySE(payment.member.monthlySubscription.amount)}
         </Table.Cell>
         <Table.Cell>
           {formatMoneySE(payment.member.account.currentBalance)}
+          {parseFloat(payment.member.account.currentBalance.amount) <= 0 &&
+            " (Won't be charged)"}
         </Table.Cell>
       </TableRow>
     ))}

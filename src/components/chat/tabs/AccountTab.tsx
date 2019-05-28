@@ -14,11 +14,11 @@ import {
 import { ExpandMoreOutlined } from '@material-ui/icons'
 import { gql } from 'apollo-boost'
 import { AddEntryForm } from 'components/chat/tabs/account-tab/add-entry-form'
+import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { RouteComponentProps } from 'react-router'
-import { formatMoneySE } from 'lib/intl'
 
 export const GET_MEMBER_ACCOUNT_QUERY = gql`
   query GetMemberAccount($memberId: ID!) {
