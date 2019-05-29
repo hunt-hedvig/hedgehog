@@ -161,7 +161,7 @@ export default {
     },
   },
   ws: {
-    endpoint: '/wschat',
+    endpoint: '/chat',
     messagesPrefix: '/user/',
     messages: '/messages/',
     history: '/app/messages/history/',

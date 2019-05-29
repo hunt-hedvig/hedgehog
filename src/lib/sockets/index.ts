@@ -1,5 +1,6 @@
 import * as StompModule from '@stomp/stompjs/esm5'
 import config from 'api/config'
+import * as SockJS from 'sockjs-client'
 import * as chat from './chat'
 import * as dashboard from './dashboard'
 import * as membersList from './members'
@@ -7,10 +8,8 @@ import * as membersList from './members'
 /* eslint-disable no-undef */
 export const connect = () => {
   return new Promise((resolve, reject) => {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const stompClient = StompModule.Stomp.client(
-      `${protocol}//${window.location.origin}${config.ws.endpoint}`,
-    )
+    const socket = new SockJS(`${config.ws.endpoint}`)
+    const stompClient = StompModule.Stomp.over(socket)
     stompClient.connect(
       {},
       () => {
