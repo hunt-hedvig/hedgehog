@@ -9,7 +9,7 @@ export const connect = () => {
   return new Promise((resolve, reject) => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
     const stompClient = StompModule.Stomp.client(
-      `${protocol}//${window.location.origin}${config.ws.endpoint}`,
+      `${protocol}${window.location.origin.slice(window.location.protocol.length)}${config.ws.endpoint}`,
     )
     stompClient.connect(
       {},
