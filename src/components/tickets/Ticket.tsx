@@ -5,35 +5,23 @@ const Card = styled('div')({
   border: '1px solid gray',
   width: '400px',
   boxShadow: '1px 1px gray',
-  margin: 'auto',
+  margin: '10px auto',
   padding: '30px 30px',
   boxSizing: 'border-box',
   background: 'white',
   borderRadius: '10px',
 })
 
-// public interface ITicket {
-//     id: string,
-//     issuedBy: string,
-//     dateIssued: string,
-//     lastChanged: string,
-//     status: string,
-//     resolved: string,
-//     content: string,
-// }
-
 class Ticket extends React.Component {
   public state = {
     ticketId: null,
     issuedBy: null,
+    expanded: false,
   }
 
   public render() {
-    return (
-      <Card>
-        <p>
-          <strong>Ticket:</strong>Name
-        </p>
+    const ticketBody = this.state.expanded ? (
+      <body>
         <p>
           <strong>Type:</strong>Name
         </p>
@@ -49,8 +37,26 @@ class Ticket extends React.Component {
           cupiditate?
         </p>
         <p>Assign ticket to: </p>
+      </body>
+    ) : null
+
+    return (
+      <Card>
+        <p>
+          <strong>Ticket:</strong>Name
+        </p>
+        {ticketBody}
+        <button onClick={(event) => this.expandTicketHandler(event)}>
+          EXPAND
+        </button>
       </Card>
     )
+  }
+
+  private expandTicketHandler(event) {
+    event.preventDefault()
+    const changedState = !this.state.expanded
+    this.setState({ expanded: changedState })
   }
 }
 

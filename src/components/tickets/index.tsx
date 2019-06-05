@@ -3,7 +3,15 @@ import Ticket from './Ticket'
 
 class Tickets extends React.Component {
   public render() {
-    return <Ticket />
+    return (
+      <React.Fragment>
+        <Ticket />
+        <Ticket />
+        <Ticket />
+        <Ticket />
+        <Ticket />
+      </React.Fragment>
+    )
   }
 }
 
