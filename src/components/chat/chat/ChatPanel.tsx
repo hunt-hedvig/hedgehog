@@ -13,6 +13,7 @@ import { format } from 'date-fns'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { EmojiPicker } from './EmojiPicker'
+import axios from 'axios';
 
 const MessagesPanelContainer = styled('div')({
   display: 'flex',
@@ -47,6 +48,14 @@ const OptionCheckbox = withStyles({
 })(MuiSwitch)
 
 const SubmitButton = withStyles({
+  root: {
+    marginLeft: 'auto',
+    marginTop: 'auto',
+    marginBottom: 'auto',
+  },
+})(MuiButton)
+
+const ClearButton = withStyles({
   root: {
     marginLeft: 'auto',
     marginTop: 'auto',
@@ -105,7 +114,23 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     showAutocompleteSuggestions: false,
   }
 
+  messageToSuggestion(userMessage){
+    const sampleAnswers = ['Självrisken är 1500 kr'];
+
+    // Check if the user wrote a text message
+    if (typeof userMessage === 'string' || userMessage instanceof String){
+        var answer = sampleAnswers[Math.floor(Math.random() * sampleAnswers.length)];
+
+        return answer;
+
+    }else{
+      return '';
+    }
+  }
+
+
   public render() {
+
     return (
       <MessagesPanelContainer>
         <ChatForm onSubmit={this.handleSubmit}>
@@ -117,7 +142,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             onKeyDown={this.handleEnterMaybe}
             margin="none"
             variant="outlined"
-          />
+          />          
           {this.state.showAutocompleteSuggestions &&
             this.state.autocompleteSuggestions && (
               <MenuList>
@@ -140,6 +165,12 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
           <EmojiPicker selectEmoji={this.selectEmoji} />
         </ActionContainer>
         <OptionsContainer>
+          <ClearButton 
+            variant="raised"
+              onClick={this.handleClear}
+              color="secondary">
+              Clear
+              </ClearButton>
           <MuiFormControlLabel
             label="Force message"
             labelPlacement="start"
@@ -151,9 +182,10 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
               />
             }
           />
+          
           <SubmitButton
             variant="raised"
-            onClick={this.handleSubmit}
+            onClick= {this.handleSubmit}
             color="primary"
           >
             Send
@@ -176,7 +208,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     }
 
     e.preventDefault()
-    this.sendMessage()
+    this.getAnswerSuggestion() //this.sendMessage()
   }
 
   private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -217,12 +249,55 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       })
   }
 
+  private handleClear = (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
+  ) => {
+    e.preventDefault()
+    this.clearMessage()
+  }
+
+  private clearMessage = () => {
+  
+    this.setState({
+      autocompleteSuggestions: [],
+      currentMessage: '',
+      showAutocompleteSuggestions: false,
+      forceSendMessage: false,
+    })
+  }
+
+  private getAnswerSuggestion(){     
+
+    axios.get(`http://localhost:5000/v0/answer`,{
+        
+            params: {text:this.state.currentMessage},
+            headers: { 'Content-Type': 'application/json' }
+            }        
+        ).then(response => {
+            this.props.addMessage(
+            this.state.currentMessage,
+            this.state.forceSendMessage,
+            )
+            this.trackAutocompleteMessage()
+
+            this.setState({currentMessage: ''});
+            this.setState({currentMessage: response.data[0].reply,
+            autocompleteSuggestions: [],
+            showAutocompleteSuggestions: false,
+            forceSendMessage: false,})                
+            
+        }).catch((error) => {
+            console.log(error);
+        })      
+  }
+
   private handleSubmit = (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
   ) => {
     e.preventDefault()
-    this.sendMessage()
+    this.getAnswerSuggestion() //this.sendMessage()
   }
+
   private sendMessage = () => {
     this.props.addMessage(
       this.state.currentMessage,

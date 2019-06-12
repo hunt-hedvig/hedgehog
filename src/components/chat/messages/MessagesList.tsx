@@ -34,7 +34,7 @@ export default class MessagesList extends React.Component {
       }
     })
     /* eslint-enable */
-  }
+  }   
 
   public render() {
     const { messages, error } = this.props
