@@ -13,7 +13,9 @@ import { format } from 'date-fns'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { EmojiPicker } from './EmojiPicker'
-import axios from 'axios';
+import axios from 'axios'
+import AnswerSuggestion from './AnswerSuggestion'
+
 
 const MessagesPanelContainer = styled('div')({
   display: 'flex',
@@ -87,6 +89,7 @@ const MenuItem = withStyles({
   },
 })(MuiMenuItem)
 
+
 interface ChatPanelProps {
   messages: ReadonlyArray<{}>
   addMessage: (message: string, forceSendMessage: boolean) => void
@@ -114,25 +117,13 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     showAutocompleteSuggestions: false,
   }
 
-  messageToSuggestion(userMessage){
-    const sampleAnswers = ['Självrisken är 1500 kr'];
-
-    // Check if the user wrote a text message
-    if (typeof userMessage === 'string' || userMessage instanceof String){
-        var answer = sampleAnswers[Math.floor(Math.random() * sampleAnswers.length)];
-
-        return answer;
-
-    }else{
-      return '';
-    }
-  }
-
 
   public render() {
 
-    return (
+    return (      
+        
       <MessagesPanelContainer>
+
         <ChatForm onSubmit={this.handleSubmit}>
           <TextField
             multiline
@@ -160,11 +151,14 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 })}
               </MenuList>
             )}
+        
         </ChatForm>
+        <AnswerSuggestion question="test Q"/>
         <ActionContainer>
           <EmojiPicker selectEmoji={this.selectEmoji} />
         </ActionContainer>
         <OptionsContainer>
+
           <ClearButton 
             variant="raised"
               onClick={this.handleClear}
@@ -193,6 +187,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
           </SubmitButton>
         </OptionsContainer>
       </MessagesPanelContainer>
+      
+      
     )
   }
 
@@ -208,7 +204,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     }
 
     e.preventDefault()
-    this.getAnswerSuggestion() //this.sendMessage()
+    this.getAnswerSuggestion()//this.sendMessage() 
   }
 
   private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -295,7 +291,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
   ) => {
     e.preventDefault()
-    this.getAnswerSuggestion() //this.sendMessage()
+    this.getAnswerSuggestion()  //this.sendMessage()
   }
 
   private sendMessage = () => {
