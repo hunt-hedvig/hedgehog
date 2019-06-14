@@ -3,11 +3,18 @@ import React from 'react'
 import styled from 'react-emotion'
 import  gql  from 'graphql-tag'
 import { Mutation } from 'react-apollo'
-import { GET_TICKETS } from '../../features/taskmanager/index'
+import { GET_TICKETS, CHANGE_DESCRIPTION, ASSIGN_TO, SET_REMINDER } from '../../features/taskmanager/queries'
 import { Dropdown, TextArea} from 'semantic-ui-react'
-import dateFnsFormat from 'date-fns/format'
+import {format} from 'date-fns'
 
+import { CLAIM, MESSAGE, REMIND, CALL_ME} from './icons'
 
+const typeIcons = {
+  CLAIM: CLAIM,
+  MESSAGE: MESSAGE,
+  REMIND: REMIND,
+  CALL_ME: CALL_ME,
+}
 
 const Card = styled('div')({
   border: '1px black gray',
@@ -29,7 +36,7 @@ const Blob = styled('span')`
   margin: 10px;
   padding: 1em 1em;
   background: white;
-  border-radius: 100%;
+  border-radius: 12%;
   background-color: ${ props => {
     if(props.color == 'HIGH'){
       return colors.PINK
@@ -41,7 +48,7 @@ const Blob = styled('span')`
      return 'lightgreen' 
     }
     else {
-     return 'lightgray' 
+     return 'seashell' 
     }
   }};
 `
@@ -63,31 +70,6 @@ const FlexWrapper = styled('div')({
   alignItems: 'baseline',
 })
 
-const CHANGE_DESCRIPTION = gql`
-  mutation ChangeDescription($id : ID!, $newDescription: String) {
-    changeTicketDescription(id: $id, newDescription: $newDescription) {
-      id
-      description
-    }
-  }
-`
-const ASSIGN_TO = gql`
-  mutation AssignTicketTo ($ticketId: ID!, $teamMemberId: ID!) {
-    assignTicketToTeamMember(ticketId: $ticketId, teamMemberId: $teamMemberId) {
-      id
-      assignedTo
-    }
-  }
-`
-
-const SET_REMINDER = gql`
-  mutation SetReminderDate ($ticketId: ID!, $remindNotificationDate: LocalDate ) {
-    setReminderDate (ticketId: $ticketId, remindNotificationDate: $rremindNotificationDate) {
-      id
-      remindDateNotifcationDate
-    }
-  }
-`
 
 const selectTeamOptions = [
   {
@@ -138,8 +120,12 @@ const updateCache = (cache, data, query) => {
   })
 } 
 
-const setTime = () => dateFns.format( new Date(), 'HH:mm')
-const setDate = () => dateFns.format( new Date(), 'MM-DD-YYYY')
+// const setTime = () => new Date().toString()
+// const setDate = () => new Date().toString()
+
+
+const setTime = () => format( new Date(), "HH-mm").toString()
+const setDate = () => format( new Date(), "MM-dd-yyyy").toString()
 const createDateTime = (date, time) =>{
   return date.toString() + 'T' + time.toString() 
 } 
@@ -149,8 +135,6 @@ class Ticket extends React.Component {
     showBody: false,
     inputDescription: this.props.description,
     inputAssignedTo: this.props.assignedTo,
-    inputReminderTime: setTime(),
-    inputReminderDate: setDate(), 
   }
 
   public render() {
@@ -169,11 +153,11 @@ class Ticket extends React.Component {
               }>
                 <label htmlFor="description">Edit description: </label>
                 <TextArea 
-                  row={3} col={10} 
-                  name="description"
+                  row={3} col={15} 
+                  name="inputDescription"
                   placeholder={this.props.description}
                   value={this.state.inputDescription}
-                  onChange={(e) => this.handleChange(e, "inputDescription")}
+                  onChange={(e) => this.handleChange(e)}
                    />
                 <Button type="submit">Change description</Button>
               </form>
@@ -210,38 +194,6 @@ class Ticket extends React.Component {
           } 
         }
         </Mutation>
-     
-         <Mutation mutation={SET_REMINDER} update={(cache, data ) => updateCache(cache, data, "setReminderDate")}>
-          {
-          ( setReminderDate, { data } ) => {
-            return ( 
-              <React.Fragment>
-              <form onSubmit ={(e) => {
-                e.preventDefault()
-                setReminderDate({ variables: { 
-                   ticketId: this.props.id,
-                   remindNotificationDate: createDateTime(this.state.inputDate, this.state.inputTime) 
-                 }})}}
-              >
-                <label htmlFor="reminder">Set Reminder</label>
-                 <input
-                  name="date"
-                  type="date"
-                  value={this.state.inputDate}
-                  onChange={(event) => this.setState({inputDate: event.target.value}) } />
-                <label htmlFor="time">Time: </label>
-                <input
-                  name="time"
-                  type="time"
-                  value={this.state.inputTime}
-                  onChange={(event) => this.setState({inputDate: event.target.value})} />
-                <Button type="submit">Set Reminder</Button>
-              </form>
-              </React.Fragment>
-            )
-          } 
-        }
-        </Mutation>
 
 
       </TicketBody>
@@ -254,14 +206,14 @@ class Ticket extends React.Component {
         <span>
           <strong>Type:</strong>
           <Blob color={this.props.type}>
-            {this.props.type}
+            {this.getTypeIcon(this.props.type)}
           </Blob>
         </span>
         
         <span>
           <strong>Priority:</strong>
           <Blob color={this.props.priority}>
-             {this.props.priority}
+             {this.props.priority.toLowerCase()}
           </Blob>
         </span>
         <span>
@@ -297,10 +249,17 @@ class Ticket extends React.Component {
     this.setState({ showBody: updatedState })
   }
 
-  private handleChange = ( event, origin) =>{
+  private handleChange = ( event ) =>{
     event.preventDefault()
-    this.setState( { [origin]:  event.target.value} )
+    // console.log(event.target.name)
+    this.setState( { [event.target.name]:  event.target.value} )
   }
+
+  private getTypeIcon = ( type ) => {
+    const icon = typeIcons[type]
+    return icon() 
+  } 
+
 }
 
 export default Ticket

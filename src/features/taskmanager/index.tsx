@@ -6,25 +6,15 @@ import styled from 'react-emotion'
 
 import Toolbar from '../../components/taskmanager-toolbar/index'
 import Ticket from '../../components/ticket/ticket'
+import Modal from '../../components/shared/modals/MaterialModal'
+import { GET_TICKETS } from './queries'
+
+import CreateNewTicket from '../../components/ticket/create-ticket/index'
 
 const Header = styled('div')({
   padding: '0 20px',
   textAlign: 'center',
 })
-
-export const GET_TICKETS = gql`
-  query GetTickets($request: String) {
-    tickets(req: $request) {
-      id
-      description
-      assignedTo
-      type
-      status
-      priority
-      remindNotificationDate
-    }
-  }
-`
 
 export const LOW_PRIORITY = 0
 export const MEDIUM_PRIORITY = 1
@@ -34,8 +24,12 @@ export const TYPE_CHATMSG = 'Chat message'
 export const TYPE_REMIND = 'Remind'
 export const TYPE_CLAIM = 'Claim'
 
+
+
+
 export default class TaskManagerPageComponent extends React.Component {
   public state = {
+    showModal: false,
     infoText: 'Default',
     sortBy: 'priority', // by default
     sortOrder: 'DESC', // ""
@@ -63,12 +57,22 @@ export default class TaskManagerPageComponent extends React.Component {
         hasCaret: false,
         isActive: false,
       },
+      {
+        label: 'Create New Ticket',
+        id: 'newTicket',
+        clicked: () => this.showModal(),
+        hasCaret: false,
+        isActive: false,
+      },
     ]
   }
+
 
   public render() {
     return (
       <React.Fragment>
+     
+        <Modal open={this.state.showModal} handleClose={this.closeModal}><CreateNewTicket/></Modal>
         <Header>
           {/* <h1>Task Manager</h1> */}
           {/* <h2>Current Tickets</h2> */}
@@ -198,4 +202,13 @@ export default class TaskManagerPageComponent extends React.Component {
   private sortByPriority(a, b) {
     this.parsePriority(b.priority) - this.parsePriority(a.priority)
   }
+
+  private closeModal = () => {
+    this.setState({ showModal: false })
+  }
+
+  private showModal = () => {
+   this.setState({showModal: true})
+  } 
+
 }
