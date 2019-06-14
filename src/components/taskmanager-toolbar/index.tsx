@@ -17,7 +17,6 @@ const ItemContainer = styled('ul')({
 
 // Props - ta in vilka knappar som ska finnas
 // samt funktionerna som ska mappas till dem
-
 class Toolbar extends React.Component {
   public render() {
 

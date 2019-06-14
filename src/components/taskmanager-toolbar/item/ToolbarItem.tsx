@@ -7,8 +7,6 @@ import { colors } from '@hedviginsurance/brand'
 
 class ToolbarItem extends React.Component {
 
-
-
   public handleClick = () => {
     this.props.onItemClicked(this.props.id)
   }
@@ -16,16 +14,6 @@ class ToolbarItem extends React.Component {
     const bgColor = (this.props.isActive) ? colors.LIGHT_GRAY : 'white'
     const txtColor = (this.props.isActive) ? 'black' : 'black'
     
-    // const ToolbarItemCss = styled('li')({
-    //   display: 'inline',
-    //   border: '1px solid lightgray',
-    //   cursor: 'pointer',
-    //   margin: '0 0.25em',
-    //   padding: '0.5em',
-    //   backgroundColor: bgColor,
-    //   color: txtColor,
-    // })
-
     const ToolbarItemCss = styled('li')`
       display: inline;
       border: 1px solid lightgray;
@@ -34,11 +22,7 @@ class ToolbarItem extends React.Component {
       padding: 0.5em;
       background-color: ${bgColor};
       color: ${txtColor},
-      &:hover {
-        color: yellow;
-      }
-`
-
+    `
 
     let caret = null
     if (this.props.caret) {
@@ -49,6 +33,7 @@ class ToolbarItem extends React.Component {
         caret = <i className={'fas fa-caret-up'} />
       }
     }
+
 
     return (
       <ToolbarItemCss onClick={this.handleClick}>

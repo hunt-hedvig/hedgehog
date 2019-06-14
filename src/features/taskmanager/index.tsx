@@ -12,7 +12,7 @@ const Header = styled('div')({
   textAlign: 'center',
 })
 
-const query = gql`
+export const GET_TICKETS = gql`
   query GetTickets($request: String) {
     tickets(req: $request) {
       id
@@ -21,9 +21,11 @@ const query = gql`
       type
       status
       priority
+      remindNotificationDate
     }
   }
 `
+
 export const LOW_PRIORITY = 0
 export const MEDIUM_PRIORITY = 1
 export const HIGH_PRIORITY = 2
@@ -72,7 +74,7 @@ export default class TaskManagerPageComponent extends React.Component {
           {/* <h2>Current Tickets</h2> */}
           <Toolbar items={this.state.toolbarItems} />
           <p>{this.state.infoText}</p>
-          <Query<any> query={query} variables={{ request: 'WHATEFVER' }}>
+          <Query<any> query={GET_TICKETS} variables={{ request: 'WHATEFVER' }}>
             {({ data, error, loading }) => {
               if (loading) {
                 return <p>Loading....</p>
@@ -114,7 +116,7 @@ export default class TaskManagerPageComponent extends React.Component {
               return (
                 <>
                   {sortedTickets.map((ticket) => (
-                    <Ticket key={ticket.id} {...ticket} />
+                    <Ticket key={ticket.id} {...ticket}/>
                   ))}
                 </>
               )
