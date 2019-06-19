@@ -48,15 +48,16 @@ class CreateNewTicket extends React.Component {
         {
           (createNewTicket, { data }) => {
             return (
-        			<form onSubmit ={ e => { e.preventDefault(), 
-                    //OBS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-              createNewTicket({ variables: { 
+        			<form onSubmit ={ e => { e.preventDefault() 
+                createNewTicket({ variables: { 
                     assignedTo: this.state.assignedTo,
                     createdBy: this.state.createdBy,
                     priority: this.state.priority,
                     remindNotificationDate: this.state.remindNotificationDate,
                     description: this.state.description    
-                  }})}}>
+                  }})
+                this.props.closeModal()
+              }}>
         			<label htmlFor={"description"}>Description:</label>
         			<br/>
         			<TextArea 

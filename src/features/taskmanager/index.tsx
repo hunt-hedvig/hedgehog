@@ -16,6 +16,7 @@ const Header = styled('div')({
   textAlign: 'center',
 })
 
+//TODO::: MOVE TO type.ts
 export const LOW_PRIORITY = 0
 export const MEDIUM_PRIORITY = 1
 export const HIGH_PRIORITY = 2
@@ -23,9 +24,6 @@ export const HIGH_PRIORITY = 2
 export const TYPE_CHATMSG = 'Chat message'
 export const TYPE_REMIND = 'Remind'
 export const TYPE_CLAIM = 'Claim'
-
-
-
 
 export default class TaskManagerPageComponent extends React.Component {
   public state = {
@@ -72,7 +70,7 @@ export default class TaskManagerPageComponent extends React.Component {
     return (
       <React.Fragment>
      
-        <Modal open={this.state.showModal} handleClose={this.closeModal}><CreateNewTicket/></Modal>
+        <Modal open={this.state.showModal} handleClose={this.closeModal}><CreateNewTicket closeModal={this.closeModal}/></Modal>
         <Header>
           {/* <h1>Task Manager</h1> */}
           {/* <h2>Current Tickets</h2> */}
