@@ -7,6 +7,9 @@ import { GET_TICKETS, CHANGE_DESCRIPTION, ASSIGN_TO, SET_REMINDER } from '../../
 import { Dropdown, TextArea} from 'semantic-ui-react'
 import {format} from 'date-fns'
 
+import { IEX_TEAM_MEMBERS, createOptionsArray} from '../../features/taskmanager/types'
+
+
 import { CLAIM, MESSAGE, REMIND, CALL_ME} from './icons'
 
 const typeIcons = {
@@ -71,32 +74,35 @@ const FlexWrapper = styled('div')({
 })
 
 
-const selectTeamOptions = [
-  {
-    text: 'Team Member1',
-    value: 'TeamMember1',
-  },
-  {
-    text: 'Team Member2',
-    value: 'TeamMember2',
-  },
-  {
-    text: 'Team Member3',
-    value: 'TeamMember3',
-  },
-  {
-    text: 'Team Member4',
-    value: 'TeamMember4',
-  },
-  {
-    text: 'Team Member5',
-    value: 'TeamMember5',
-  },
-   {
-    text: 'Unassigned',
-    value: 'Unassigned',
-  },
-]
+const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
+
+
+// const selectTeamOptions = [
+//   {
+//     text: 'Team Member1',
+//     value: 'TeamMember1',
+//   },
+//   {
+//     text: 'Team Member2',
+//     value: 'TeamMember2',
+//   },
+//   {
+//     text: 'Team Member3',
+//     value: 'TeamMember3',
+//   },
+//   {
+//     text: 'Team Member4',
+//     value: 'TeamMember4',
+//   },
+//   {
+//     text: 'Team Member5',
+//     value: 'TeamMember5',
+//   },
+//    {
+//     text: 'Unassigned',
+//     value: 'Unassigned',
+//   },
+// ]
 
 //Update mutated tickets in cache, keep in sync with the server
 // FIX FOR ASSIGN_TO !!!
@@ -181,7 +187,7 @@ class Ticket extends React.Component {
                    placeholder="Select team member"
                    search
                    selection
-                   options={selectTeamOptions}
+                   options={teamOptions}
                    // value={this.state.inputAssignedTo}
                    onChange={(e, { value }) => {
                      this.setState({ inputAssignedTo: value })
