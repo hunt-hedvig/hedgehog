@@ -5,6 +5,8 @@ import Resizable from 're-resizable'
 import * as React from 'react'
 import { Icon, Message } from 'semantic-ui-react'
 import styled from 'styled-components'
+import gql from 'graphql-tag'
+import { Mutation, Query } from 'react-apollo'
 
 const resizableStyles = {
   display: 'flex',
@@ -31,8 +33,17 @@ const ChatHeaderStyle = styled.div`
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 `
+const GET_SUGGESTED_ANSWER_QUERY = gql`
+query GetSuggestedAnswer ($question: String) 
+{
+  getAnswerSuggestion(question: $question) {
+    message
+           
+  }
+}
+`;
 
-export default class ChatTab extends React.Component {
+export default class ChatTab extends React.Component{
   constructor(props) {
     super(props)
     this.state = {
@@ -51,7 +62,26 @@ export default class ChatTab extends React.Component {
     }
   }
 
+  private getQuestionToAnalyze(){
+    if (this.props.messages.list.length > 0){
+      const lastMessage = this.props.messages.list[this.props.messages.list.length-1];
+
+      // this.props.match.params.id is the member id
+      if (lastMessage.header.fromId == this.props.match.params.id){
+
+        return lastMessage.body.text;
+
+      }else{
+      return '';
+    }      
+      
+    }
+
+  }
+
   public render() {
+    
+
     return this.state.visible ? (
       <>
         <Resizable
@@ -67,12 +97,36 @@ export default class ChatTab extends React.Component {
             messageId={
               (this.props.match && this.props.match.params.msgId) || ''
             }
-          />
-          
-          <ChatPanel
+          />    
+
+          {/* alternatives for updating the query https://www.apollographql.com/docs/react/essentials/queries/#polling-and-refetching*/}
+          <Query query={GET_SUGGESTED_ANSWER_QUERY} variables={{question: this.getQuestionToAnalyze()}}>
+          {({ data, loading, error }) => {
+            if (loading) return <ChatPanel
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
-          />
+            suggestedAnswer = ''
+          />;
+
+            if (error) return <ChatPanel
+            addMessage={this.props.addMessage}
+            messages={(this.props.messages && this.props.messages.list) || []}
+            suggestedAnswer = ''
+          />;
+
+            //sending an empty string to the python API returns an empty list so this statement fixes it
+            const answer = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].reply ;
+
+            return (
+            <ChatPanel
+            addMessage={this.props.addMessage}
+            messages={(this.props.messages && this.props.messages.list) || []}
+            suggestedAnswer = {answer}
+          />)
+          }}
+
+          </Query>          
+          
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>
           )}
@@ -84,6 +138,7 @@ export default class ChatTab extends React.Component {
       </>
     )
   }
+
 }
 
 const ChatHeader = (props) => (

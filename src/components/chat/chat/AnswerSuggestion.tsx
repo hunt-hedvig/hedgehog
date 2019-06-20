@@ -20,7 +20,7 @@ export default class AnswerSuggestion extends React.PureComponent <props,{}> {
 
 	public render(){
 
-		const questionToAnalyze = "test"//this.props.question;
+		const questionToAnalyze = "hej"//this.props.question;
 
 		return (
 
@@ -29,9 +29,12 @@ export default class AnswerSuggestion extends React.PureComponent <props,{}> {
 	          if (loading) return <div> Loading</div>;
 	          if (error) return <p>{console.log(error)} ERROR!</p>;
 
+
+
 	          return (
 	            <div>
-	                <p>{data.getAnswerSuggestion.message}</p>
+	                <p>{JSON.parse(data.getAnswerSuggestion.message)[0].reply}</p>	                
+	                
 	            </div>
 	            )
 	        }}

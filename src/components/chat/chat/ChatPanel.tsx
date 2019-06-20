@@ -93,6 +93,7 @@ const MenuItem = withStyles({
 interface ChatPanelProps {
   messages: ReadonlyArray<{}>
   addMessage: (message: string, forceSendMessage: boolean) => void
+  suggestedAnswer: string
 }
 
 interface State {
@@ -101,6 +102,7 @@ interface State {
   autocompleteQuery: string | null
   showAutocompleteSuggestions: boolean
   forceSendMessage: boolean
+  showAnswerSuggestion: boolean
 }
 
 interface AutocompleteSuggestion {
@@ -115,16 +117,31 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     autocompleteQuery: null,
     autocompleteSuggestions: [],
     showAutocompleteSuggestions: false,
+    showAnswerSuggestion: true,
   }
-
-
+ 
+  /*componentShouldUpdate (nextProps, nextState) {
+  return  nextProps != this.props && nextState != this.state 
+}*/
   public render() {
+
 
     return (      
         
       <MessagesPanelContainer>
 
         <ChatForm onSubmit={this.handleSubmit}>
+          {/*<AnswerSuggestion question="test"/>*/}
+            {/* there doesnt exist a function for changing his.props.suggestedAnswer to true now since the page is refreshed anyways*/}
+            {this.state.showAnswerSuggestion && this.props.suggestedAnswer !== '' &&(
+            <MenuList>
+            <MenuItem onClick={this.selectAnswerSuggestion(this.props.suggestedAnswer)} >
+             {this.props.suggestedAnswer}
+            </MenuItem>
+          </MenuList>
+        )}
+          
+
           <TextField
             multiline
             rowsMax="12"
@@ -151,20 +168,22 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 })}
               </MenuList>
             )}
+            {
+              
+            }
         
         </ChatForm>
-        <AnswerSuggestion question="test Q"/>
         <ActionContainer>
           <EmojiPicker selectEmoji={this.selectEmoji} />
         </ActionContainer>
         <OptionsContainer>
 
-          <ClearButton 
+          {/*<ClearButton 
             variant="raised"
               onClick={this.handleClear}
               color="secondary">
               Clear
-              </ClearButton>
+              </ClearButton>*/}
           <MuiFormControlLabel
             label="Force message"
             labelPlacement="start"
@@ -186,8 +205,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             <MuiIcon>send</MuiIcon>
           </SubmitButton>
         </OptionsContainer>
-      </MessagesPanelContainer>
-      
+      </MessagesPanelContainer>      
       
     )
   }
@@ -204,7 +222,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     }
 
     e.preventDefault()
-    this.getAnswerSuggestion()//this.sendMessage() 
+    this.sendMessage() //this.getAnswerSuggestion() 
   }
 
   private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -262,6 +280,16 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     })
   }
 
+  private selectAnswerSuggestion = (answerSuggestion: string) => (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault()
+    this.setState({
+      currentMessage: answerSuggestion,
+      showAnswerSuggestion: false,
+    })
+  }
+
   private getAnswerSuggestion(){     
 
     axios.get(`http://localhost:5000/v0/answer`,{
@@ -275,6 +303,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             this.state.forceSendMessage,
             )
             this.trackAutocompleteMessage()
+            console.log(response.data)
 
             this.setState({currentMessage: ''});
             this.setState({currentMessage: response.data[0].reply,
@@ -291,7 +320,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
   ) => {
     e.preventDefault()
-    this.getAnswerSuggestion()  //this.sendMessage()
+    this.sendMessage() //this.getAnswerSuggestion() 
   }
 
   private sendMessage = () => {
