@@ -8,15 +8,14 @@ import { Dropdown, TextArea} from 'semantic-ui-react'
 import {format} from 'date-fns'
 
 import { IEX_TEAM_MEMBERS, createOptionsArray} from '../../features/taskmanager/types'
-
-
-import { CLAIM, MESSAGE, REMIND, CALL_ME} from './icons'
+import { CLAIM, MESSAGE, REMIND, CALL_ME, OTHER} from './icons'
 
 const typeIcons = {
   CLAIM: CLAIM,
   MESSAGE: MESSAGE,
   REMIND: REMIND,
   CALL_ME: CALL_ME,
+  OTHER: OTHER, 
 }
 
 const Card = styled('div')({
@@ -75,34 +74,6 @@ const FlexWrapper = styled('div')({
 
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
-
-
-// const selectTeamOptions = [
-//   {
-//     text: 'Team Member1',
-//     value: 'TeamMember1',
-//   },
-//   {
-//     text: 'Team Member2',
-//     value: 'TeamMember2',
-//   },
-//   {
-//     text: 'Team Member3',
-//     value: 'TeamMember3',
-//   },
-//   {
-//     text: 'Team Member4',
-//     value: 'TeamMember4',
-//   },
-//   {
-//     text: 'Team Member5',
-//     value: 'TeamMember5',
-//   },
-//    {
-//     text: 'Unassigned',
-//     value: 'Unassigned',
-//   },
-// ]
 
 //Update mutated tickets in cache, keep in sync with the server
 // FIX FOR ASSIGN_TO !!!
@@ -263,7 +234,7 @@ class Ticket extends React.Component {
 
   private getTypeIcon = ( type ) => {
     const icon = typeIcons[type]
-    return icon() 
+    return icon 
   } 
 
 }

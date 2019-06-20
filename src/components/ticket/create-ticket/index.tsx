@@ -2,9 +2,10 @@ import React from 'react'
 import styled from 'react-emotion'
 import { Button, Input, Dropdown, TextArea} from 'semantic-ui-react'
 import { Mutation } from 'react-apollo'
-import { CREATE_TICKET } from '../../../features/taskmanager/queries'
+import { CREATE_TICKET, GET_TICKETS } from '../../../features/taskmanager/queries'
 import { IEX_TEAM_MEMBERS, 
   createOptionsArray, 
+  TicketPriority, 
   TICKET_PRIORITY_HIGH,
   TICKET_PRIORITY_MEDIUM,
   TICKET_PRIORITY_LOW,
@@ -25,6 +26,23 @@ const priorityOptions = [
   {text: 'low', value: TICKET_PRIORITY_LOW },   
   ] 
 
+// const priorityOptions = [ 
+//   {text: 'high', value: TicketPriority.HIGH},
+//   {text: 'medium', value: TicketPriority.MEDIUM},
+//   {text: 'low', value: TicketPriority.LOW },   
+//   ] 
+
+const updateCache = (cache, data, query) => {
+  const newTicket = data.data[query]
+  const updatedData  = {...cache.data.data}
+
+  updatedData['Ticket:'+newTicket.id] = newTicket
+    cache.writeQuery({
+    query: GET_TICKETS,
+    data:  updatedData,
+  })
+} 
+
 class CreateNewTicket extends React.Component {
 	state={ 
 		assignedTo: null,
@@ -44,7 +62,7 @@ class CreateNewTicket extends React.Component {
 		return(
 			<NewTicketBody>
   			<h2>Create a new ticket</h2>
-        <Mutation mutation={CREATE_TICKET}>
+        <Mutation mutation={CREATE_TICKET} update={(cache, data)=> updateCache(cache, data, "createTicket" )}>
         {
           (createNewTicket, { data }) => {
             return (

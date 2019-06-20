@@ -11,6 +11,7 @@ import { GET_TICKETS } from './queries'
 
 import CreateNewTicket from '../../components/ticket/create-ticket/index'
 
+
 const Header = styled('div')({
   padding: '0 20px',
   textAlign: 'center',
@@ -49,9 +50,10 @@ export default class TaskManagerPageComponent extends React.Component {
         isActive: false,
       },
       {
-        label: 'Show only tickets assigned to me',
-        clicked: (id) => this.changeSortbyHandler(id),
-        id: 'myTickets',
+        label: 'Show only tickets assigned to',
+        clicked: (id) => this.filterByHandler(id),
+        values: 
+        id: 'assignedTo',
         hasCaret: false,
         isActive: false,
       },
@@ -69,8 +71,8 @@ export default class TaskManagerPageComponent extends React.Component {
   public render() {
     return (
       <React.Fragment>
-     
-        <Modal open={this.state.showModal} handleClose={this.closeModal}><CreateNewTicket closeModal={this.closeModal}/></Modal>
+       
+
         <Header>
           {/* <h1>Task Manager</h1> */}
           {/* <h2>Current Tickets</h2> */}
@@ -117,6 +119,8 @@ export default class TaskManagerPageComponent extends React.Component {
               }
               return (
                 <>
+                <Modal open={this.state.showModal} handleClose={this.closeModal}><CreateNewTicket closeModal={this.closeModal}/></Modal>
+
                   {sortedTickets.map((ticket) => (
                     <Ticket key={ticket.id} {...ticket}/>
                   ))}

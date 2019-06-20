@@ -15,11 +15,11 @@ export const TICKET_PRIORITY_MEDIUM = 'MEDIUM'
 export const TICKET_PRIORITY_LOW = 'LOW'
 
 
-// export enum TicketPriority {
-// 	HIGH,
-// 	MEDIUM,
-// 	LOW,
-// }
+export enum TicketPriority {
+	HIGH,
+	MEDIUM,
+	LOW,
+}
 
 
 export const createOptionsArray = ( array ) => {

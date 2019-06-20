@@ -5,7 +5,13 @@ import gql from 'graphql-tag'
 export const CREATE_TICKET = gql`
   mutation CreateTicket ($assignedTo: String, $createdBy: String, $priority: TicketPriority, $remindNotificationDate: LocalDate, $description: String) {
     createTicket (assignedTo: $assignedTo, createdBy: $createdBy, priority: $priority, remindNotificationDate: $remindNotificationDate, description: $description ){
-     id
+      id 
+      description
+      assignedTo
+      type
+      status
+      priority
+      remindNotificationDate
     }
   }
 `
