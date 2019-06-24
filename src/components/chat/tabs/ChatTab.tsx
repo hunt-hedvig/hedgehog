@@ -63,11 +63,11 @@ export default class ChatTab extends React.Component{
   }
 
   private getQuestionToAnalyze(){
-    if (this.props.messages.list.length > 0){
+    if (this.props.messages && this.props.messages.list.length > 0){
       const lastMessage = this.props.messages.list[this.props.messages.list.length-1];
 
       // this.props.match.params.id is the member id
-      if (lastMessage.header.fromId == this.props.match.params.id){
+      if (lastMessage.header.fromId == this.props.match.params.id && lastMessage.id === "free.chat.message"){
 
         return lastMessage.body.text;
 
@@ -103,22 +103,30 @@ export default class ChatTab extends React.Component{
           <Query query={GET_SUGGESTED_ANSWER_QUERY} variables={{question: this.getQuestionToAnalyze()}}>
           {({ data, loading, error }) => {
             if (loading) return <ChatPanel
+            intent = ''
+            questionToLabel = ''
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
             suggestedAnswer = ''
           />;
 
             if (error) return <ChatPanel
+            intent = ''
+            questionToLabel = ''
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
             suggestedAnswer = ''
           />;
 
-            //sending an empty string to the python API returns an empty list so this statement fixes it
+            //sending an empty string to the python API returns an empty list so this statement fixes it                        
             const answer = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].reply ;
-
+            const intent = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].intent ;
+    
             return (
+
             <ChatPanel
+            intent = {intent}
+            questionToLabel = {this.getQuestionToAnalyze()}
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
             suggestedAnswer = {answer}

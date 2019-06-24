@@ -14,6 +14,8 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { EmojiPicker } from './EmojiPicker'
 import axios from 'axios'
+import { Mutation, Query } from 'react-apollo'
+import gql from 'graphql-tag'
 import AnswerSuggestion from './AnswerSuggestion'
 
 
@@ -89,11 +91,21 @@ const MenuItem = withStyles({
   },
 })(MuiMenuItem)
 
+const AUTO_LABEL_QUESTION = gql`
+  mutation AutoLabelQuestion($question: String!, $label: String!) {
+    autoLabelQuestion(question: $question, label: $label){
+      message
+
+    }
+  }
+`;
 
 interface ChatPanelProps {
   messages: ReadonlyArray<{}>
   addMessage: (message: string, forceSendMessage: boolean) => void
   suggestedAnswer: string
+  questionToLabel: string
+  intent: string
 }
 
 interface State {
@@ -123,24 +135,43 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   /*componentShouldUpdate (nextProps, nextState) {
   return  nextProps != this.props && nextState != this.state 
 }*/
+
   public render() {
 
+    return (    
 
-    return (      
-        
+      
       <MessagesPanelContainer>
 
         <ChatForm onSubmit={this.handleSubmit}>
           {/*<AnswerSuggestion question="test"/>*/}
             {/* there doesnt exist a function for changing his.props.suggestedAnswer to true now since the page is refreshed anyways*/}
-            {this.state.showAnswerSuggestion && this.props.suggestedAnswer !== '' &&(
+            {/*this.state.showAnswerSuggestion && this.props.suggestedAnswer !== '' && (
             <MenuList>
             <MenuItem onClick={this.selectAnswerSuggestion(this.props.suggestedAnswer)} >
              {this.props.suggestedAnswer}
             </MenuItem>
           </MenuList>
-        )}
-          
+        )*/}
+            {this.state.showAnswerSuggestion && this.props.suggestedAnswer !== '' && (
+            <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.selectAnswerSuggestion(this.props.suggestedAnswer)}
+            onError = {this.selectAnswerSuggestion(this.props.suggestedAnswer)}>
+            {(autoLabelQuestion) => (
+                <MenuList>
+                <MenuItem onClick={event => 
+                  {
+                    event.preventDefault();                    
+                    autoLabelQuestion({ variables: { question: this.props.questionToLabel, label: this.props.intent } });                                    
+                  }
+                }>
+                {this.props.suggestedAnswer}
+                </MenuItem>
+                </MenuList>
+              )                
+            }              
+
+            </Mutation>)}
+                   
 
           <TextField
             multiline
@@ -205,7 +236,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             <MuiIcon>send</MuiIcon>
           </SubmitButton>
         </OptionsContainer>
-      </MessagesPanelContainer>      
+      </MessagesPanelContainer>       
       
     )
   }
@@ -283,7 +314,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   private selectAnswerSuggestion = (answerSuggestion: string) => (
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    e.preventDefault()
+    //e.preventDefault()    
     this.setState({
       currentMessage: answerSuggestion,
       showAnswerSuggestion: false,
