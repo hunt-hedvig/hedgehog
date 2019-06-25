@@ -24,6 +24,6 @@ export enum TicketPriority {
 
 export const createOptionsArray = ( array ) => {
 	let res = []
-	array.map( element =>{ res.push({text : element, value: element})})
+	array.map( element =>{ res.push({text : element, value: element, key: element})})
 	return res 
 } 

@@ -10,6 +10,7 @@ import Modal from '../../components/shared/modals/MaterialModal'
 import { GET_TICKETS } from './queries'
 
 import CreateNewTicket from '../../components/ticket/create-ticket/index'
+import {IEX_TEAM_MEMBERS, createOptionsArray} from './types'
 
 
 const Header = styled('div')({
@@ -26,16 +27,22 @@ export const TYPE_CHATMSG = 'Chat message'
 export const TYPE_REMIND = 'Remind'
 export const TYPE_CLAIM = 'Claim'
 
+const team_member_options = createOptionsArray(IEX_TEAM_MEMBERS)
+team_member_options.push({ text:'Everyone', value:'Everyone', key:'Everyone' }) 
+
+
 export default class TaskManagerPageComponent extends React.Component {
   public state = {
     showModal: false,
     infoText: 'Default',
     sortBy: 'priority', // by default
     sortOrder: 'DESC', // ""
+    filterAssignedTo: "Everyone",
     toolbarItems: [
       {
         label: 'Sort by Priority',
-        clicked: (id) => this.changeSortbyHandler(id),
+        inputType: 'button',
+        clicked: (id) => this.changeSortByHandler(id),
         id: 'priority',
         hasCaret: true,
         caretDirection: 'DESC',
@@ -43,22 +50,26 @@ export default class TaskManagerPageComponent extends React.Component {
       },
       {
         label: 'Sort by Type',
-        clicked: (id) => this.changeSortbyHandler(id),
+        inputType: 'button',
+        clicked: (id) => this.changeSortByHandler(id),
         id: 'type',
         hasCaret: true,
         caretDirection: 'DESC',
         isActive: false,
       },
       {
-        label: 'Show only tickets assigned to',
+        label: 'Show only tickets assigned to: ',
+        inputType: 'dropdown',
         clicked: (id) => this.filterByHandler(id),
-        values: 
+        options: team_member_options,
+        handleChange: (id, value) => this.handleOptionsChange(id, value),
         id: 'assignedTo',
         hasCaret: false,
         isActive: false,
       },
       {
         label: 'Create New Ticket',
+        inputType: 'button',
         id: 'newTicket',
         clicked: () => this.showModal(),
         hasCaret: false,
@@ -67,18 +78,17 @@ export default class TaskManagerPageComponent extends React.Component {
     ]
   }
 
+ 
+
 
   public render() {
     return (
       <React.Fragment>
-       
-
-        <Header>
+         <Header>
           {/* <h1>Task Manager</h1> */}
           {/* <h2>Current Tickets</h2> */}
           <Toolbar items={this.state.toolbarItems} />
-          <p>{this.state.infoText}</p>
-          <Query<any> query={GET_TICKETS} variables={{ request: 'WHATEFVER' }}>
+          <Query<any> query={GET_TICKETS} variables={{ request: 'GiveItToMe' }}>
             {({ data, error, loading }) => {
               if (loading) {
                 return <p>Loading....</p>
@@ -91,6 +101,8 @@ export default class TaskManagerPageComponent extends React.Component {
                   </p>
                 )
               }
+
+               //SORT AND FILTER THE TICKETS
               let sortedTickets = data.tickets
                 .slice()
                 .sort((a, b) => this.sortByPriority(a, b))
@@ -112,10 +124,15 @@ export default class TaskManagerPageComponent extends React.Component {
                 }
               } else if (this.state.sortBy === 'type') {
                 if (this.state.sortOrder === 'ASC') {
-                  sortedTickets = sortedTickets.sort((a, b) => b.type > a.type)
+                  sortedTickets = sortedTickets.sort((a, b) => this.sortByType(a,b))
                 } else if (this.state.sortOrder === 'DESC') {
-                  sortedTickets = sortedTickets.sort((a, b) => a.type > b.type)
+                  sortedTickets = sortedTickets.sort((a, b) =>  this.sortByType(b,a))
                 }
+              }
+
+              if (this.state.filterAssignedTo !== 'Everyone' && this.state.filterAssignedTo !== ""){
+           
+                sortedTickets = sortedTickets.filter( ticket => ticket.assignedTo == this.state.filterAssignedTo ) 
               }
               return (
                 <>
@@ -133,13 +150,14 @@ export default class TaskManagerPageComponent extends React.Component {
     )
   }
 
-  public changeSortbyHandler(id) {
-    let sortBy = this.state.sortBy
-    let order = this.state.sortOrder
+
+  public changeSortByHandler(id) {
+    let sortBy 
+    let sortOrder     
     switch (id) {
       case 'priority':
       case 'type':
-          order = this.changeOrder(id, this.state.sortBy, order)
+          sortOrder = this.changeOrder(id, this.state.sortBy, this.state.sortOrder)
           sortBy = id
         break
       default:
@@ -150,8 +168,9 @@ export default class TaskManagerPageComponent extends React.Component {
     const correctItem = updatedItems.filter( item => item.id === id)[0]
     const newActiveItem = {...correctItem}
     newActiveItem['isActive'] = true
-    newActiveItem['caretDirection'] = order
+    newActiveItem['caretDirection'] = sortOrder
     //TODO: @Refactor Could remember the index to avoid iterating through the array again -make own func
+    
     for (let i = 0; i < updatedItems.length ; i++) {
       if (updatedItems[i].id === id ){
         updatedItems[i] = newActiveItem 
@@ -167,9 +186,13 @@ export default class TaskManagerPageComponent extends React.Component {
       }
     }
     }
-    const infoText = 'sorting by ' + sortBy + ' ' + order
-    this.setState({ sortBy, infoText, sortOrder: order, toolbarItems: updatedItems })
+    const infoText = 'sorting by ' + sortBy + ' ' + sortOrder
+  
+    this.setState({ sortBy, infoText, sortOrder: sortOrder, toolbarItems: updatedItems })
   }
+
+
+
 
   private changeOrder(newSortBy, oldSortBy, oldOrder) {
     let order = oldOrder
@@ -181,7 +204,7 @@ export default class TaskManagerPageComponent extends React.Component {
     return order
   }
 
-  // TODO: Move to util-file
+  // TODO: Move to util-file, also this is reverse of how the enum is defined in back-office
   private parsePriority(p) {
     switch (p) {
       case 'HIGH':
@@ -195,9 +218,17 @@ export default class TaskManagerPageComponent extends React.Component {
     }
   }
 
+
+
   // use default lexical comparison
   private sortByType(a, b) {
-    return a.type < b.type
+    if (a.type > b.type ) {
+      return -1
+    }
+    else if (a.type == b.type) {
+      return 0
+    }
+    return 1
   }
 
   // HIGH > MEDIUM > LOW (obviously)
@@ -212,5 +243,13 @@ export default class TaskManagerPageComponent extends React.Component {
   private showModal = () => {
    this.setState({showModal: true})
   } 
+
+ //Get back option value for selecting team members 
+  public handleOptionsChange  (id, value) {
+    
+    
+    
+    this.setState( {filterAssignedTo: value})
+  }
 
 }

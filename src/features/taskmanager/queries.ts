@@ -3,8 +3,22 @@ import gql from 'graphql-tag'
   // createTicket ( assignedTo: String, createdBy: String, priority: TicketPriority, remindNotificationDate: LocalDate, description: String) : ID
 
 export const CREATE_TICKET = gql`
-  mutation CreateTicket ($assignedTo: String, $createdBy: String, $priority: TicketPriority, $remindNotificationDate: LocalDate, $description: String) {
-    createTicket (assignedTo: $assignedTo, createdBy: $createdBy, priority: $priority, remindNotificationDate: $remindNotificationDate, description: $description ){
+  mutation CreateTicket (
+      $assignedTo: String,
+      $createdBy: String,
+      $priority: TicketPriority,
+      $remindNotificationDate: LocalDate,
+      $remindNotificationTime: LocalTime,
+      $description: String)
+   {
+    createTicket (
+        assignedTo: $assignedTo,
+        createdBy: $createdBy,
+        priority: $priority,
+        remindNotificationDate: $remindNotificationDate,
+        remindNotificationTime: $remindNotificationTime,
+        description: $description 
+    ){
       id 
       description
       assignedTo
@@ -12,6 +26,7 @@ export const CREATE_TICKET = gql`
       status
       priority
       remindNotificationDate
+      remindNotificationTime
     }
   }
 `
@@ -25,6 +40,7 @@ export const GET_TICKETS = gql`
       status
       priority
       remindNotificationDate
+      remindNotificationTime
     }
   }
 `
@@ -48,7 +64,7 @@ export const ASSIGN_TO = gql`
 
 export const SET_REMINDER = gql`
   mutation SetReminderDate ($ticketId: ID!, $remindNotificationDate: LocalDate ) {
-    setReminderDate (ticketId: $ticketId, remindNotificationDate: $rremindNotificationDate) {
+    setReminderDate (ticketId: $ticketId, remindNotificationDate: $remindNotificationDate) {
       id
       remindDateNotifcationDate
     }

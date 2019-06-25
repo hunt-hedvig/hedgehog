@@ -12,6 +12,7 @@ const ItemContainer = styled('ul')({
   padding: '1em',
   display: 'flexbox',
   boxSizing: 'border-box',
+  alignItems: 'center',
 })
 
 
@@ -27,7 +28,11 @@ class Toolbar extends React.Component {
         id={item.id} 
         caret={item.hasCaret} 
         caretDirection={item.caretDirection}
-        isActive={item.isActive}>
+        isActive={item.isActive}
+        inputType={item.inputType}
+        options={item.options}
+        handleChange={item.handleChange}
+        >
         {item.label} 
       </ToolbarItem>
     ))

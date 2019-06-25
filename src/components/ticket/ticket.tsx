@@ -3,12 +3,15 @@ import React from 'react'
 import styled from 'react-emotion'
 import  gql  from 'graphql-tag'
 import { Mutation } from 'react-apollo'
-import { GET_TICKETS, CHANGE_DESCRIPTION, ASSIGN_TO, SET_REMINDER } from '../../features/taskmanager/queries'
-import { Dropdown, TextArea} from 'semantic-ui-react'
-import {format} from 'date-fns'
+import { Icon, Divider, Button, Segment, Form, Dropdown, TextArea} from 'semantic-ui-react'
+import parse from 'date-fns/parse'
 
+import { GET_TICKETS, CHANGE_DESCRIPTION, ASSIGN_TO, SET_REMINDER } from '../../features/taskmanager/queries'
 import { IEX_TEAM_MEMBERS, createOptionsArray} from '../../features/taskmanager/types'
 import { CLAIM, MESSAGE, REMIND, CALL_ME, OTHER} from './icons'
+
+import EditTicket from './editTicket'
+
 
 const typeIcons = {
   CLAIM: CLAIM,
@@ -20,7 +23,7 @@ const typeIcons = {
 
 const Card = styled('div')({
   border: '1px black gray',
-  boxShadow: '3px 3px 10px gray',
+  boxShadow: '3px 3px 10px rgba(0,0,0,0.2)',
   margin: '10px auto',
   padding: '1em 1em',
   background: 'white',
@@ -55,54 +58,17 @@ const Blob = styled('span')`
   }};
 `
 
-const Button = styled('button')({
-  background: colors.WHITE,
-  border: 'none',
-  cursor: 'pointer',
-  padding: '0.75em',
-  borderRadius: '3px',
-  font: 'inherit',
-  boxShadow: '2px 2px 10px lightgray',
-})
-
 const FlexWrapper = styled('div')({
   display: 'flex',
   justifyContent: 'space-evenly',
   alignContent: 'space-between',
   alignItems: 'baseline',
-})
 
+})
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
 
-//Update mutated tickets in cache, keep in sync with the server
-// FIX FOR ASSIGN_TO !!!
-const updateCache = (cache, data, query) => {
-  const mutatedTicket= data.data[query]
-  const updatedData = {...cache.data.data}
-  const updatedTicket = {...updatedData['Ticket:'+ mutatedTicket.id]}
 
-  //TODO: Make this more general, without need for if statements
-  if(query === "assignTicketTo"){
-    updatedTicket.assignedTo = mutatedTicket.assignedTo
-      updatedData['Ticket:'+updatedTicket.id] = mutatedTicket.assignedTo
-  }
-  else if(query === "changeTicketDescription") {
-    updatedTicket.description = mutatedTicket.description
-    updatedData['Ticket:'+updatedTicket.id] = mutatedTicket.description
-  }
-  cache.writeQuery({
-    query: GET_TICKETS,
-    data:  updatedData,
-  })
-} 
-
-// const setTime = () => new Date().toString()
-// const setDate = () => new Date().toString()
-
-
-const setTime = () => format( new Date(), "HH-mm").toString()
-const setDate = () => format( new Date(), "MM-dd-yyyy").toString()
 const createDateTime = (date, time) =>{
   return date.toString() + 'T' + time.toString() 
 } 
@@ -110,72 +76,49 @@ const createDateTime = (date, time) =>{
 class Ticket extends React.Component {
   public state = {
     showBody: false,
-    inputDescription: this.props.description,
-    inputAssignedTo: this.props.assignedTo,
+    showEditTicket: false, 
+    // inputDescription: this.props.description,
+    // inputAssignedTo: this.props.assignedTo,
   }
 
   public render() {
+
+
+    const ticketInfo = (
+       <Segment.Group>
+        <Segment color="grey" compact><strong>Description</strong></Segment>
+        <Segment compact textAlign="left">{this.props.description}</Segment>
+        <Segment compact>Status: {this.props.status} </Segment>
+      </Segment.Group> 
+    )
+
     const ticketBody = (
       <TicketBody>
-        <p>Description: {this.props.description}</p>
-        <p>Status: {this.props.status}</p>
-           <Mutation mutation={CHANGE_DESCRIPTION} update={(cache, data ) => updateCache(cache, data, "changeTicketDescription")}>
-          {
-          ( changeTicketDescription, { data } ) => {
-            return ( 
-              <React.Fragment>
-              <form onSubmit ={(e) => {
-                e.preventDefault()
-                changeTicketDescription({ variables: { id: this.props.id, newDescription: this.state.inputDescription} })}
-              }>
-                <label htmlFor="description">Edit description: </label>
-                <TextArea 
-                  row={3} col={15} 
-                  name="inputDescription"
-                  placeholder={this.props.description}
-                  value={this.state.inputDescription}
-                  onChange={(e) => this.handleChange(e)}
-                   />
-                <Button type="submit">Change description</Button>
-              </form>
-              </React.Fragment>
-            )
-          } 
-        }
-        </Mutation>
-          <Mutation mutation={ASSIGN_TO} update={(cache, data ) => updateCache(cache, data, "assignTicketToTeamMember")}>
-          {
-          ( assignTicketToTeamMember, { data } ) => {
-            return ( 
-              <React.Fragment>
-              <form onSubmit ={(e) => {
-                e.preventDefault()
-                assignTicketToTeamMember({ variables: { ticketId: this.props.id, teamMemberId: this.state.inputAssignedTo }})}
-              }>
-                <label htmlFor="assign">Assign to Team Member: </label>
-                 <Dropdown 
-                   name="assign"
-                   placeholder="Select team member"
-                   search
-                   selection
-                   options={teamOptions}
-                   // value={this.state.inputAssignedTo}
-                   onChange={(e, { value }) => {
-                     this.setState({ inputAssignedTo: value })
-                                      }}
-                   />
-                <Button type="submit">Assign</Button>
-              </form>
-              </React.Fragment>
-            )
-          } 
-        }
-        </Mutation>
 
+       { 
+         this.state.showEditTicket ?   
+         <EditTicket 
+          description={this.props.description}
+          assignedTo={this.props.assignedTo}
+          id={this.props.id}
+          /> 
+          : ticketInfo 
+       }
 
+      <Button 
+        labelPosition="left" 
+        icon 
+        onClick={(event) => this.toggleEditTicket(event)}
+        basic
+        toggle
+        active={this.state.showEditTicket}
+        > 
+          <Icon name="pencil alternate"/>
+          Edit 
+      </Button>
       </TicketBody>
     )
-    const bookIcon = <i className={"fas fa-book-open"}></i>
+
 
     return (
       <Card>
@@ -205,19 +148,29 @@ class Ticket extends React.Component {
           <span>
             <strong>Remind:</strong> 
             <Blob color={this.props.assignedTo}>
-              {this.props.remindNotificationDate}
+              {getNotificationTimeInWords(this.props.remindNotificationDate)}
             </Blob>
           </span>
           : null 
          }
 
-        <Button onClick={(event) => this.toggleShowBody(event)}>
-          Show details {bookIcon} 
+        <Button 
+          onClick={(event) => this.toggleShowBody(event)}
+          size="medium"  
+          compact
+        >
+          Show details  
         </Button>
         </FlexWrapper>
               {(this.state.showBody)? ticketBody : null} 
       </Card>
     )
+  }
+
+  private toggleEditTicket = (event) => {
+    event.preventDefault()
+    const updatedState = !this.state.showEditTicket
+    this.setState({ showEditTicket: updatedState  })
   }
 
   private toggleShowBody = (event) => {
@@ -226,11 +179,11 @@ class Ticket extends React.Component {
     this.setState({ showBody: updatedState })
   }
 
-  private handleChange = ( event ) =>{
-    event.preventDefault()
-    // console.log(event.target.name)
-    this.setState( { [event.target.name]:  event.target.value} )
-  }
+  // private handleChange = ( event ) =>{
+  //   event.preventDefault()
+  //   // console.log(event.target.name)
+  //   this.setState( { [event.target.name]:  event.target.value} )
+  // }
 
   private getTypeIcon = ( type ) => {
     const icon = typeIcons[type]
@@ -238,5 +191,21 @@ class Ticket extends React.Component {
   } 
 
 }
+
+const getNotificationTimeInWords = (dateTime) => {
+  return dateTime
+    // var [date, time ] = dateTime.split('T')
+    // console.log(date)
+    // console.log(time)
+    // console.log(dateTime)
+
+    // var parsedD = parse(date, 'yyyy-MM-dd', Date())
+    // console.log(parsedD)
+
+    // var parsedT = parse('10:03:22', 'HH:mm:ss', Date())
+    // console.log(parsedT)
+
+}
+
 
 export default Ticket

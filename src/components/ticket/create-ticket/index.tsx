@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'react-emotion'
 import { Button, Input, Dropdown, TextArea} from 'semantic-ui-react'
+import format from 'date-fns/format'
 import { Mutation } from 'react-apollo'
 import { CREATE_TICKET, GET_TICKETS } from '../../../features/taskmanager/queries'
 import { IEX_TEAM_MEMBERS, 
@@ -33,15 +34,31 @@ const priorityOptions = [
 //   ] 
 
 const updateCache = (cache, data, query) => {
-  const newTicket = data.data[query]
-  const updatedData  = {...cache.data.data}
+//update={(cache, data)=> updateCache(cache, data, "createTicket" )}
+  // const newTicket = data.data[query]
+  // const updatedData  = {...cache.data.data}
+  // updatedData['Ticket:'+ newTicket.id] = newTicket
 
-  updatedData['Ticket:'+newTicket.id] = newTicket
-    cache.writeQuery({
+  // const dataFromCache = cache.readQuery({query: GET_TICKETS})
+  // console.log(dataFromCache)
+  // console.log(tickets)
+  console.log(cache)
+  console.log(data)
+
+  cache.writeQuery({
     query: GET_TICKETS,
     data:  updatedData,
   })
 } 
+
+
+const formatDateTime = (date) => {
+
+  let fDate = format(date,'yyyy-MM-dd' )
+  let fTime = format(date,'HH:mm:ss' )
+  return [fDate, fTime]
+}
+
 
 class CreateNewTicket extends React.Component {
 	state={ 
@@ -49,20 +66,20 @@ class CreateNewTicket extends React.Component {
     createdBy: null, 
     priority: null,
     remindNotificationDate: "", 
+    remindNotificationTime: "", 
     description: "",
-	}
-  //TODO::: GraphQl Mutation 
+}
 
   componentDidMount() {
-    let date = new Date().toISOString().substring(0,10);
-    this.setState({remindNotificationDate: date })
+    var [date, time] = formatDateTime(new Date())
+    this.setState({remindNotificationDate: date, remindNotificationTime: time })
   }
 
 	render() {
 		return(
 			<NewTicketBody>
   			<h2>Create a new ticket</h2>
-        <Mutation mutation={CREATE_TICKET} update={(cache, data)=> updateCache(cache, data, "createTicket" )}>
+        <Mutation mutation={CREATE_TICKET}  >
         {
           (createNewTicket, { data }) => {
             return (
@@ -72,8 +89,10 @@ class CreateNewTicket extends React.Component {
                     createdBy: this.state.createdBy,
                     priority: this.state.priority,
                     remindNotificationDate: this.state.remindNotificationDate,
+                    remindNotificationTime: this.state.remindNotificationTime,
                     description: this.state.description    
-                  }})
+                  },
+                  refetchQueries: [ {query: GET_TICKETS}]})
                 this.props.closeModal()
               }}>
         			<label htmlFor={"description"}>Description:</label>
