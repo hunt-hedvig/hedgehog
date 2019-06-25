@@ -1,3 +1,6 @@
+
+//This is hardcoded for now, since Hedgehog has no way of being aware of 
+// who is who and who is part of what team. 
 export const IEX_TEAM_MEMBERS = [
 	'Matilda',
 	'Karl',
@@ -10,9 +13,18 @@ export const IEX_TEAM_MEMBERS = [
 	'Unassigned',
 ] 
 
+
 export const TICKET_PRIORITY_HIGH = 'HIGH'
 export const TICKET_PRIORITY_MEDIUM = 'MEDIUM'
 export const TICKET_PRIORITY_LOW = 'LOW'
+
+export const LOW_PRIORITY = 0
+export const MEDIUM_PRIORITY = 1
+export const HIGH_PRIORITY = 2
+
+export const TYPE_CHATMSG = 'Chat message'
+export const TYPE_REMIND = 'Remind'
+export const TYPE_CLAIM = 'Claim'
 
 
 export enum TicketPriority {

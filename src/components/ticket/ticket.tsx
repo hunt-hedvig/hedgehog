@@ -1,16 +1,10 @@
 import { colors } from '@hedviginsurance/brand'
 import React from 'react'
 import styled from 'react-emotion'
-import  gql  from 'graphql-tag'
-import { Mutation } from 'react-apollo'
-import { Icon, Divider, Button, Segment, Form, Dropdown, TextArea} from 'semantic-ui-react'
+import { Icon, Button, Popup } from 'semantic-ui-react'
 import parse from 'date-fns/parse'
-
-import { GET_TICKETS, CHANGE_DESCRIPTION, ASSIGN_TO, SET_REMINDER } from '../../features/taskmanager/queries'
-import { IEX_TEAM_MEMBERS, createOptionsArray} from '../../features/taskmanager/types'
 import { CLAIM, MESSAGE, REMIND, CALL_ME, OTHER} from './icons'
-
-import EditTicket from './editTicket'
+import TicketBody from './ticketBody'
 
 
 const typeIcons = {
@@ -30,12 +24,6 @@ const Card = styled('div')({
   borderRadius: '3px',
   maxWidth: '800px',
 })
-
-const TicketBody = styled('div')`
-  padding: 1em;
-  margin: 1em;
-  border: 1px lightgray solid;
-`
 
 const Blob = styled('span')`
   margin: 10px;
@@ -66,72 +54,35 @@ const FlexWrapper = styled('div')({
 
 })
 
-const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
 
 
-const createDateTime = (date, time) =>{
-  return date.toString() + 'T' + time.toString() 
-} 
+// const createDateTime = (date, time) =>{
+//   return date.toString() + 'T' + time.toString() 
+// } 
 
 class Ticket extends React.Component {
   public state = {
     showBody: false,
-    showEditTicket: false, 
-    // inputDescription: this.props.description,
-    // inputAssignedTo: this.props.assignedTo,
   }
 
   public render() {
-
-
-    const ticketInfo = (
-       <Segment.Group>
-        <Segment color="grey" compact><strong>Description</strong></Segment>
-        <Segment compact textAlign="left">{this.props.description}</Segment>
-        <Segment compact>Status: {this.props.status} </Segment>
-      </Segment.Group> 
-    )
-
-    const ticketBody = (
-      <TicketBody>
-
-       { 
-         this.state.showEditTicket ?   
-         <EditTicket 
-          description={this.props.description}
-          assignedTo={this.props.assignedTo}
-          id={this.props.id}
-          /> 
-          : ticketInfo 
-       }
-
-      <Button 
-        labelPosition="left" 
-        icon 
-        onClick={(event) => this.toggleEditTicket(event)}
-        basic
-        toggle
-        active={this.state.showEditTicket}
-        > 
-          <Icon name="pencil alternate"/>
-          Edit 
-      </Button>
-      </TicketBody>
-    )
-
-
-    return (
+     return (
       <Card>
         <FlexWrapper>
         <span>
-          <strong>Type:</strong>
-          <Blob color={this.props.type}>
-            {this.getTypeIcon(this.props.type)}
-          </Blob>
+          {/* <strong>Type:</strong> */}
+          <Popup 
+            content={"ticket type: " + this.props.type.toLowerCase()}
+            trigger={
+              <Blob color={this.props.type}>
+                {this.getTypeIcon(this.props.type)}
+              </Blob>
+            }
+          />
         </span>
         
         <span>
-          <strong>Priority:</strong>
+          {/* <strong>Priority:</strong> */}
           <Blob color={this.props.priority}>
              {this.props.priority.toLowerCase()}
           </Blob>
@@ -162,15 +113,17 @@ class Ticket extends React.Component {
           Show details  
         </Button>
         </FlexWrapper>
-              {(this.state.showBody)? ticketBody : null} 
+          {
+            (this.state.showBody) ? 
+              <TicketBody 
+                description={this.props.description}
+                assignedTo={this.props.assignedTo}
+                id={this.props.id}
+              />
+             : null
+           } 
       </Card>
     )
-  }
-
-  private toggleEditTicket = (event) => {
-    event.preventDefault()
-    const updatedState = !this.state.showEditTicket
-    this.setState({ showEditTicket: updatedState  })
   }
 
   private toggleShowBody = (event) => {
@@ -179,17 +132,10 @@ class Ticket extends React.Component {
     this.setState({ showBody: updatedState })
   }
 
-  // private handleChange = ( event ) =>{
-  //   event.preventDefault()
-  //   // console.log(event.target.name)
-  //   this.setState( { [event.target.name]:  event.target.value} )
-  // }
-
   private getTypeIcon = ( type ) => {
     const icon = typeIcons[type]
     return icon 
   } 
-
 }
 
 const getNotificationTimeInWords = (dateTime) => {

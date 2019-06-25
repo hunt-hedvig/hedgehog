@@ -152,7 +152,6 @@ class CreateNewTicket extends React.Component {
 		e.preventDefault()
     this.setState( { [event.target.name]:  event.target.value} )
 	}
-
 }
 
 export default CreateNewTicket 

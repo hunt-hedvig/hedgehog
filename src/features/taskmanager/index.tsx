@@ -10,7 +10,16 @@ import Modal from '../../components/shared/modals/MaterialModal'
 import { GET_TICKETS } from './queries'
 
 import CreateNewTicket from '../../components/ticket/create-ticket/index'
-import {IEX_TEAM_MEMBERS, createOptionsArray} from './types'
+import {
+    IEX_TEAM_MEMBERS, 
+    createOptionsArray,
+    LOW_PRIORITY,
+    MEDIUM_PRIORITY,
+    HIGH_PRIORITY,
+    TYPE_CHATMSG,
+    TYPE_REMIND,
+    TYPE_CLAIM,
+    } from './types'
 
 
 const Header = styled('div')({
@@ -18,14 +27,6 @@ const Header = styled('div')({
   textAlign: 'center',
 })
 
-//TODO::: MOVE TO type.ts
-export const LOW_PRIORITY = 0
-export const MEDIUM_PRIORITY = 1
-export const HIGH_PRIORITY = 2
-
-export const TYPE_CHATMSG = 'Chat message'
-export const TYPE_REMIND = 'Remind'
-export const TYPE_CLAIM = 'Claim'
 
 const team_member_options = createOptionsArray(IEX_TEAM_MEMBERS)
 team_member_options.push({ text:'Everyone', value:'Everyone', key:'Everyone' }) 
@@ -78,9 +79,6 @@ export default class TaskManagerPageComponent extends React.Component {
     ]
   }
 
- 
-
-
   public render() {
     return (
       <React.Fragment>
@@ -101,7 +99,6 @@ export default class TaskManagerPageComponent extends React.Component {
                   </p>
                 )
               }
-
                //SORT AND FILTER THE TICKETS
               let sortedTickets = data.tickets
                 .slice()
@@ -150,7 +147,6 @@ export default class TaskManagerPageComponent extends React.Component {
     )
   }
 
-
   public changeSortByHandler(id) {
     let sortBy 
     let sortOrder     
@@ -191,9 +187,6 @@ export default class TaskManagerPageComponent extends React.Component {
     this.setState({ sortBy, infoText, sortOrder: sortOrder, toolbarItems: updatedItems })
   }
 
-
-
-
   private changeOrder(newSortBy, oldSortBy, oldOrder) {
     let order = oldOrder
     if (newSortBy === oldSortBy) {
@@ -217,8 +210,6 @@ export default class TaskManagerPageComponent extends React.Component {
         return 0
     }
   }
-
-
 
   // use default lexical comparison
   private sortByType(a, b) {

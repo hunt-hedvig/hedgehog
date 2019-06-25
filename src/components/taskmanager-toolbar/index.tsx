@@ -2,6 +2,9 @@ import React from 'react'
 import styled from 'react-emotion'
 import ToolbarItem from './item/ToolbarItem'
 
+import { Icon, Button, Menu } from 'semantic-ui-react'
+
+
 const ToolbarCss = styled('div')({
   background: 'white',
   boxShadow: '1px 1px 5px lightgray',
@@ -22,6 +25,7 @@ class Toolbar extends React.Component {
   public render() {
 
     const toolbarItems = this.props.items.map((item) => (
+      <Menu.Item key={item.id}>
       <ToolbarItem 
         key={item.id} 
         onItemClicked={item.clicked} 
@@ -35,10 +39,13 @@ class Toolbar extends React.Component {
         >
         {item.label} 
       </ToolbarItem>
+      </Menu.Item>
     ))
     return (
       <ToolbarCss>
-        <ItemContainer>{toolbarItems}</ItemContainer>
+        <Menu size="mini">
+          <ItemContainer>{toolbarItems}</ItemContainer>
+        </Menu>
       </ToolbarCss>
     )
   }
