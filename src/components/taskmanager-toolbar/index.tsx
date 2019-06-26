@@ -1,55 +1,50 @@
 import React from 'react'
 import styled from 'react-emotion'
-import ToolbarItem from './item/ToolbarItem'
+import ToolbarItem from './item/toolbarItem'
 
-import { Icon, Button, Menu } from 'semantic-ui-react'
-
+import { Grid } from 'semantic-ui-react'
 
 const ToolbarCss = styled('div')({
   background: 'white',
   boxShadow: '1px 1px 5px lightgray',
+  marginBottom: '3em',
+  padding: '0',
 })
-
-const ItemContainer = styled('ul')({
-  listStyle: ' none',
-  padding: '1em',
-  display: 'flexbox',
-  boxSizing: 'border-box',
-  alignItems: 'center',
-})
-
 
 // Props - ta in vilka knappar som ska finnas
 // samt funktionerna som ska mappas till dem
 class Toolbar extends React.Component {
   public render() {
-
     const toolbarItems = this.props.items.map((item) => (
-      <Menu.Item key={item.id}>
-      <ToolbarItem 
-        key={item.id} 
-        onItemClicked={item.clicked} 
-        id={item.id} 
-        caret={item.hasCaret} 
-        caretDirection={item.caretDirection}
-        isActive={item.isActive}
-        inputType={item.inputType}
-        options={item.options}
-        handleChange={item.handleChange}
+      <Grid.Column key={item.id + 'g'}>
+        <ToolbarItem
+          key={item.id}
+          onItemClicked={item.clicked}
+          id={item.id}
+          caret={item.hasCaret}
+          caretDirection={item.caretDirection}
+          isActive={item.isActive}
+          itemType={item.itemType}
+          options={item.options}
+          primary={item.primary}
+          handleChange={item.handleChange}
         >
-        {item.label} 
-      </ToolbarItem>
-      </Menu.Item>
+          {item.label}
+        </ToolbarItem>
+      </Grid.Column>
     ))
+
     return (
       <ToolbarCss>
-        <Menu size="mini">
-          <ItemContainer>{toolbarItems}</ItemContainer>
-        </Menu>
+        <Grid stackable columns={this.props.items.length}>
+          <Grid.Row style={{ padding: '0.5em' }}>
+            {toolbarItems}
+            {/* <ItemContainer>{toolbarItems}</ItemContainer> */}
+          </Grid.Row>
+        </Grid>
       </ToolbarCss>
     )
   }
 }
-
 
 export default Toolbar

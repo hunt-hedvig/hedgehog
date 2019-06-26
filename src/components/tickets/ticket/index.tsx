@@ -54,12 +54,6 @@ const FlexWrapper = styled('div')({
 
 })
 
-
-
-// const createDateTime = (date, time) =>{
-//   return date.toString() + 'T' + time.toString() 
-// } 
-
 class Ticket extends React.Component {
   public state = {
     showBody: false,
