@@ -81,12 +81,16 @@ class CreateNewTicket extends React.Component {
                   e.preventDefault()
                   createNewTicket({
                     variables: {
-                      assignedTo: this.state.assignedTo,
-                      createdBy: this.state.createdBy,
-                      priority: this.state.priority,
-                      remindNotificationDate: this.state.remindNotificationDate,
-                      remindNotificationTime: this.state.remindNotificationTime,
-                      description: this.state.description,
+                      ticket:{
+                        assignedTo: this.state.assignedTo,
+                        createdBy: this.state.createdBy,
+                        priority: this.state.priority,
+                        type: 'REMIND',
+                        remindNotificationDate: this.state.remindNotificationDate,
+                        remindNotificationTime: this.state.remindNotificationTime,
+                        description: this.state.description,
+                        status: 'WAITING',
+                      }
                     },
                     refetchQueries: [{ query: GET_TICKETS }],
                   })

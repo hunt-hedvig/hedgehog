@@ -1,35 +1,21 @@
 import gql from 'graphql-tag'
-
-  // createTicket ( assignedTo: String, createdBy: String, priority: TicketPriority, remindNotificationDate: LocalDate, description: String) : ID
-
+ 
 export const CREATE_TICKET = gql`
-  mutation CreateTicket (
-      $assignedTo: String,
-      $createdBy: String,
-      $priority: TicketPriority,
-      $remindNotificationDate: LocalDate,
-      $remindNotificationTime: LocalTime,
-      $description: String)
-   {
-    createTicket (
-        assignedTo: $assignedTo,
-        createdBy: $createdBy,
-        priority: $priority,
-        remindNotificationDate: $remindNotificationDate,
-        remindNotificationTime: $remindNotificationTime,
-        description: $description 
-    ){
-      id 
-      description
-      assignedTo
-      type
-      status
-      priority
-      remindNotificationDate
-      remindNotificationTime
-    }
-  }
-`
+  mutation CreateTicket ( $ticket: TicketIn ) 
+    {
+      createTicket ( ticket: $ticket ) {
+        id 
+        description
+        assignedTo
+        type
+        status
+        priority
+        remindNotificationDate
+        remindNotificationTime
+      }
+    }  
+  `
+
 export const GET_TICKETS = gql`
   query GetTickets($request: String) {
     tickets(req: $request) {
@@ -67,6 +53,15 @@ export const SET_REMINDER = gql`
     setReminderDate (ticketId: $ticketId, remindNotificationDate: $remindNotificationDate) {
       id
       remindDateNotifcationDate
+    }
+  }
+`
+
+export const CHANGE_STATUS = gql`
+  mutation ChangeStatus ($ticketId: ID!, $newStatus: TicketStatus ) {
+    setReminderDate (ticketId: $ticketId, newStatus: $newStatus) {
+      id
+      status 
     }
   }
 `
