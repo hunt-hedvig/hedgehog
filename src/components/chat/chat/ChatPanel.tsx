@@ -16,7 +16,7 @@ import { EmojiPicker } from './EmojiPicker'
 import axios from 'axios'
 import { Mutation, Query } from 'react-apollo'
 import gql from 'graphql-tag'
-import AnswerSuggestion from './AnswerSuggestion'
+import { Button, Dropdown } from 'semantic-ui-react'
 
 
 const MessagesPanelContainer = styled('div')({
@@ -92,8 +92,8 @@ const MenuItem = withStyles({
 })(MuiMenuItem)
 
 const AUTO_LABEL_QUESTION = gql`
-  mutation AutoLabelQuestion($question: String!, $label: String!) {
-    autoLabelQuestion(question: $question, label: $label){
+  mutation AutoLabelQuestion($question: String!, $label: String!, $memberId: String, $messageId: String) {
+    autoLabelQuestion(question: $question, label: $label, memberId: $memberId, messageId: $messageId){
       message
 
     }
@@ -105,7 +105,9 @@ interface ChatPanelProps {
   addMessage: (message: string, forceSendMessage: boolean) => void
   suggestedAnswer: string
   questionToLabel: string
-  intent: string
+  memberId: string
+  messageId: string
+  allReplies: JSON
 }
 
 interface State {
@@ -115,6 +117,7 @@ interface State {
   showAutocompleteSuggestions: boolean
   forceSendMessage: boolean
   showAnswerSuggestion: boolean
+  chosenAnswer: string
 }
 
 interface AutocompleteSuggestion {
@@ -130,6 +133,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     autocompleteSuggestions: [],
     showAutocompleteSuggestions: false,
     showAnswerSuggestion: true,
+    chosenAnswer: ''
   }
  
   /*componentShouldUpdate (nextProps, nextState) {
@@ -138,35 +142,64 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
   public render() {
 
-    return (    
+    const allreplies = this.props.allReplies;
+    var allRepliesIntents = [];
 
+    //appending all intents/keys to array
+    for (var key in allreplies) {
+    if (allreplies.hasOwnProperty(key)) {
+        console.log(key + " -> " + allreplies[key].reply);
+        allRepliesIntents.push(key)
+      }
+    }
+
+    return (    
       
       <MessagesPanelContainer>
 
-        <ChatForm onSubmit={this.handleSubmit}>
-          {/*<AnswerSuggestion question="test"/>*/}
+        <ChatForm onSubmit={this.handleSubmit}>          
+          
             {/* there doesnt exist a function for changing his.props.suggestedAnswer to true now since the page is refreshed anyways*/}
-            {/*this.state.showAnswerSuggestion && this.props.suggestedAnswer !== '' && (
-            <MenuList>
-            <MenuItem onClick={this.selectAnswerSuggestion(this.props.suggestedAnswer)} >
-             {this.props.suggestedAnswer}
-            </MenuItem>
-          </MenuList>
-        )*/}
             {this.state.showAnswerSuggestion && this.props.suggestedAnswer !== '' && (
-            <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.selectAnswerSuggestion(this.props.suggestedAnswer)}
-            onError = {this.selectAnswerSuggestion(this.props.suggestedAnswer)}>
+            <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.selectAnswerSuggestion(this.state.chosenAnswer)}
+            onError = {this.selectAnswerSuggestion(this.state.chosenAnswer)}>
             {(autoLabelQuestion) => (
+              
                 <MenuList>
-                <MenuItem onClick={event => 
+
+                {/*<MenuItem onClick={event => 
                   {
                     event.preventDefault();                    
-                    autoLabelQuestion({ variables: { question: this.props.questionToLabel, label: this.props.intent } });                                    
+                    autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
+                      label: this.props.intent, memberId: this.props.memberId, messageId: this.props.messageId } });                                    
                   }
                 }>
                 {this.props.suggestedAnswer}
-                </MenuItem>
+                </MenuItem>*/}
+
+                {allRepliesIntents!.map((intent) => {
+                  //strip \n 
+                  const  text  = allreplies[intent].reply.replace(/(\r\n|\n|\r)/gm, "");
+                  return (
+                    <MenuItem
+                      key={text}
+                      selected={this.props.suggestedAnswer === text}
+                      onClick={event => 
+                  {
+                    this.setState({chosenAnswer: text})
+                    event.preventDefault();                    
+                    autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
+                      label: intent, memberId: this.props.memberId, messageId: this.props.messageId } });                                    
+                  }}
+                    >
+                      {text}
+                    </MenuItem>
+                  )
+                })}
+
                 </MenuList>
+                
+
               )                
             }              
 
@@ -199,9 +232,6 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 })}
               </MenuList>
             )}
-            {
-              
-            }
         
         </ChatForm>
         <ActionContainer>
@@ -253,7 +283,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     }
 
     e.preventDefault()
-    this.sendMessage() //this.getAnswerSuggestion() 
+    this.sendMessage() 
   }
 
   private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -321,37 +351,12 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     })
   }
 
-  private getAnswerSuggestion(){     
-
-    axios.get(`http://localhost:5000/v0/answer`,{
-        
-            params: {text:this.state.currentMessage},
-            headers: { 'Content-Type': 'application/json' }
-            }        
-        ).then(response => {
-            this.props.addMessage(
-            this.state.currentMessage,
-            this.state.forceSendMessage,
-            )
-            this.trackAutocompleteMessage()
-            console.log(response.data)
-
-            this.setState({currentMessage: ''});
-            this.setState({currentMessage: response.data[0].reply,
-            autocompleteSuggestions: [],
-            showAutocompleteSuggestions: false,
-            forceSendMessage: false,})                
-            
-        }).catch((error) => {
-            console.log(error);
-        })      
-  }
 
   private handleSubmit = (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
   ) => {
     e.preventDefault()
-    this.sendMessage() //this.getAnswerSuggestion() 
+    this.sendMessage() 
   }
 
   private sendMessage = () => {

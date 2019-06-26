@@ -37,7 +37,10 @@ const GET_SUGGESTED_ANSWER_QUERY = gql`
 query GetSuggestedAnswer ($question: String) 
 {
   getAnswerSuggestion(question: $question) {
-    message
+    intent
+    reply
+    text
+    allReplies
            
   }
 }
@@ -103,7 +106,9 @@ export default class ChatTab extends React.Component{
           <Query query={GET_SUGGESTED_ANSWER_QUERY} variables={{question: this.getQuestionToAnalyze()}}>
           {({ data, loading, error }) => {
             if (loading) return <ChatPanel
-            intent = ''
+            allReplies = {null}
+            memberId = ''
+            messageId = ''
             questionToLabel = ''
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
@@ -111,7 +116,9 @@ export default class ChatTab extends React.Component{
           />;
 
             if (error) return <ChatPanel
-            intent = ''
+            allReplies = {null}
+            memberId = ''
+            messageId = ''
             questionToLabel = ''
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
@@ -119,17 +126,20 @@ export default class ChatTab extends React.Component{
           />;
 
             //sending an empty string to the python API returns an empty list so this statement fixes it                        
-            const answer = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].reply ;
-            const intent = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].intent ;
+            //const answer = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].reply ;
+            //const intent = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].intent ;
+            const lastMessage = (this.props.messages && this.props.messages.list.length > 0) ? this.props.messages.list[this.props.messages.list.length-1] : '';
     
             return (
 
             <ChatPanel
-            intent = {intent}
+            allReplies = {JSON.parse(data.getAnswerSuggestion.allReplies)}
+            memberId = {this.props.match.params.id}
+            messageId = {String(lastMessage.header.messageId)}
             questionToLabel = {this.getQuestionToAnalyze()}
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
-            suggestedAnswer = {answer}
+            suggestedAnswer = {data.getAnswerSuggestion.reply}
           />)
           }}
 
