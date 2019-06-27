@@ -142,16 +142,9 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
   public render() {
 
-    const allreplies = this.props.allReplies;
-    var allRepliesIntents = [];
+    const allReplies = this.props.allReplies;
+    const allIntents = this.getAllIntents(allReplies);
 
-    //appending all intents/keys to array
-    for (var key in allreplies) {
-    if (allreplies.hasOwnProperty(key)) {
-        console.log(key + " -> " + allreplies[key].reply);
-        allRepliesIntents.push(key)
-      }
-    }
 
     return (    
       
@@ -177,9 +170,9 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 {this.props.suggestedAnswer}
                 </MenuItem>*/}
 
-                {allRepliesIntents!.map((intent) => {
+                {allIntents!.map((intent) => {
                   //strip \n 
-                  const  text  = allreplies[intent].reply.replace(/(\r\n|\n|\r)/gm, "");
+                  const  text  = allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, "");
                   return (
                     <MenuItem
                       key={text}
@@ -294,7 +287,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     if (message.length > 0) {
       this.findAutocompleteSuggestions(message)
     } else {
-      this.setState({ showAutocompleteSuggestions: false })
+      this.setState({ showAutocompleteSuggestions: false })      
     }
   }
 
@@ -330,6 +323,21 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     e.preventDefault()
     this.clearMessage()
   }
+
+  //takes an object with intents as keys
+  private getAllIntents = (allReplies: array) => {
+
+    var allIntents = [];
+
+    //appending all intents/keys to array, except from other class
+    for (var key in allReplies) {
+    if (allReplies.hasOwnProperty(key) && key !== "other") {
+        allIntents.push(key)
+      }
+    }
+
+    return allIntents;
+  } 
 
   private clearMessage = () => {
   
