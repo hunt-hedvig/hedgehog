@@ -37,7 +37,6 @@ const GET_SUGGESTED_ANSWER_QUERY = gql`
 query GetSuggestedAnswer ($question: String) 
 {
   getAnswerSuggestion(question: $question) {
-    intent
     reply
     text
     allReplies
@@ -65,25 +64,37 @@ export default class ChatTab extends React.Component{
     }
   }
 
+  //concatenates last messages written by member into one question. The loop could maybe be improved?
   private getQuestionToAnalyze(){
+
+    var lastMemberMessages = '';
+    var messageIds = [];
+
     if (this.props.messages && this.props.messages.list.length > 0){
-      const lastMessage = this.props.messages.list[this.props.messages.list.length-1];
+            
+      let message = this.props.messages.list[this.props.messages.list.length-1];      
 
+      let i=1;
       // this.props.match.params.id is the member id
-      if (lastMessage.header.fromId == this.props.match.params.id && lastMessage.id === "free.chat.message"){
+      while (i<this.props.messages.list.length+1 && message.header.fromId == +this.props.match.params.id && message.id === "free.chat.message"){  
+        
+        message = this.props.messages.list[this.props.messages.list.length-i];  
+        lastMemberMessages = message.body.text.concat(' ').concat(lastMemberMessages);  
 
-        return lastMessage.body.text;
+        messageIds.push(String(message.header.messageId));   
 
-      }else{
-      return '';
-    }      
+        i++;
+        message = this.props.messages.list[this.props.messages.list.length-i]; 
+      }      
+      
+    }    
+    return [lastMemberMessages, messageIds];      
       
     }
 
-  }
-
   public render() {
     
+    const questionAndMessageIds = this.getQuestionToAnalyze(); 
 
     return this.state.visible ? (
       <>
@@ -103,7 +114,7 @@ export default class ChatTab extends React.Component{
           />    
 
           {/* alternatives for updating the query https://www.apollographql.com/docs/react/essentials/queries/#polling-and-refetching*/}
-          <Query query={GET_SUGGESTED_ANSWER_QUERY} variables={{question: this.getQuestionToAnalyze()}}>
+          <Query query={GET_SUGGESTED_ANSWER_QUERY} pollInterval={2000} variables={{question: questionAndMessageIds[0]}}>
           {({ data, loading, error }) => {
             if (loading) return <ChatPanel
             allReplies = {null}
@@ -135,8 +146,8 @@ export default class ChatTab extends React.Component{
             <ChatPanel
             allReplies = {JSON.parse(data.getAnswerSuggestion.allReplies)}
             memberId = {this.props.match.params.id}
-            messageId = {String(lastMessage.header.messageId)}
-            questionToLabel = {this.getQuestionToAnalyze()}
+            messageId = {questionAndMessageIds[1]}
+            questionToLabel = {questionAndMessageIds[0]}//{data.getAnswerSuggestion.text}
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
             suggestedAnswer = {data.getAnswerSuggestion.reply}

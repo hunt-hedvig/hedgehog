@@ -92,7 +92,7 @@ const MenuItem = withStyles({
 })(MuiMenuItem)
 
 const AUTO_LABEL_QUESTION = gql`
-  mutation AutoLabelQuestion($question: String!, $label: String!, $memberId: String, $messageId: String) {
+  mutation AutoLabelQuestion($question: String!, $label: String!, $memberId: String, $messageId: [String!]) {
     autoLabelQuestion(question: $question, label: $label, memberId: $memberId, messageId: $messageId){
       message
 
@@ -116,8 +116,7 @@ interface State {
   autocompleteQuery: string | null
   showAutocompleteSuggestions: boolean
   forceSendMessage: boolean
-  showAnswerSuggestion: boolean
-  chosenAnswer: string
+  chosenIntent: string
 }
 
 interface AutocompleteSuggestion {
@@ -132,13 +131,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     autocompleteQuery: null,
     autocompleteSuggestions: [],
     showAutocompleteSuggestions: false,
-    showAnswerSuggestion: true,
-    chosenAnswer: ''
+    chosenIntent: 'other'
   }
- 
-  /*componentShouldUpdate (nextProps, nextState) {
-  return  nextProps != this.props && nextState != this.state 
-}*/
 
   public render() {
 
@@ -153,22 +147,9 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
         <ChatForm onSubmit={this.handleSubmit}>          
           
             {/* there doesnt exist a function for changing his.props.suggestedAnswer to true now since the page is refreshed anyways*/}
-            {this.state.showAnswerSuggestion && this.props.suggestedAnswer !== '' && (
-            <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.selectAnswerSuggestion(this.state.chosenAnswer)}
-            onError = {this.selectAnswerSuggestion(this.state.chosenAnswer)}>
-            {(autoLabelQuestion) => (
+            {this.props.questionToLabel !== '' && (            
               
                 <MenuList>
-
-                {/*<MenuItem onClick={event => 
-                  {
-                    event.preventDefault();                    
-                    autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
-                      label: this.props.intent, memberId: this.props.memberId, messageId: this.props.messageId } });                                    
-                  }
-                }>
-                {this.props.suggestedAnswer}
-                </MenuItem>*/}
 
                 {allIntents!.map((intent) => {
                   //strip \n 
@@ -177,13 +158,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                     <MenuItem
                       key={text}
                       selected={this.props.suggestedAnswer === text}
-                      onClick={event => 
-                  {
-                    this.setState({chosenAnswer: text})
-                    event.preventDefault();                    
-                    autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
-                      label: intent, memberId: this.props.memberId, messageId: this.props.messageId } });                                    
-                  }}
+                      onClick={this.selectAnswerSuggestion(intent, allReplies)}
                     >
                       {text}
                     </MenuItem>
@@ -191,13 +166,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 })}
 
                 </MenuList>
-                
-
               )                
-            }              
-
-            </Mutation>)}
-                   
+            }        
 
           <TextField
             multiline
@@ -232,12 +202,6 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
         </ActionContainer>
         <OptionsContainer>
 
-          {/*<ClearButton 
-            variant="raised"
-              onClick={this.handleClear}
-              color="secondary">
-              Clear
-              </ClearButton>*/}
           <MuiFormControlLabel
             label="Force message"
             labelPlacement="start"
@@ -249,15 +213,41 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
               />
             }
           />
-          
+
+          {/* Only make mutation if last message was from member*/}
+          {this.props.questionToLabel !== '' ? (
+          <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.handleSubmit}
+            onError = {this.handleSubmit}>
+            {(autoLabelQuestion) => (
+
+              <SubmitButton
+              variant="raised"
+              color="primary"
+              onClick= { event => 
+                  {            
+                    event.preventDefault();                    
+                    autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
+                      label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });                                    
+                  }}              
+              >
+              Send
+             <MuiIcon>send</MuiIcon>
+             </SubmitButton>                 
+
+              )                
+            }              
+
+            </Mutation>) : ( 
           <SubmitButton
-            variant="raised"
-            onClick= {this.handleSubmit}
-            color="primary"
-          >
-            Send
-            <MuiIcon>send</MuiIcon>
-          </SubmitButton>
+              variant="raised"
+              color="primary"
+              onClick= {this.handleSubmit}              
+              >
+              Send
+             <MuiIcon>send</MuiIcon>
+             </SubmitButton> ) 
+        }
+
         </OptionsContainer>
       </MessagesPanelContainer>       
       
@@ -287,7 +277,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     if (message.length > 0) {
       this.findAutocompleteSuggestions(message)
     } else {
-      this.setState({ showAutocompleteSuggestions: false })      
+      //If the message is deleted => the label is reset to other class
+      this.setState({ showAutocompleteSuggestions: false, chosenIntent: 'other' })      
     }
   }
 
@@ -317,13 +308,6 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       })
   }
 
-  private handleClear = (
-    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
-  ) => {
-    e.preventDefault()
-    this.clearMessage()
-  }
-
   //takes an object with intents as keys
   private getAllIntents = (allReplies: array) => {
 
@@ -339,31 +323,21 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     return allIntents;
   } 
 
-  private clearMessage = () => {
-  
-    this.setState({
-      autocompleteSuggestions: [],
-      currentMessage: '',
-      showAutocompleteSuggestions: false,
-      forceSendMessage: false,
-    })
-  }
-
-  private selectAnswerSuggestion = (answerSuggestion: string) => (
+  private selectAnswerSuggestion = (intent: string, allReplies: array) => (
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     //e.preventDefault()    
     this.setState({
-      currentMessage: answerSuggestion,
-      showAnswerSuggestion: false,
+      chosenIntent: intent,
+      currentMessage: allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, ""),
     })
   }
 
 
   private handleSubmit = (
-    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
+   // e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
   ) => {
-    e.preventDefault()
+   // e.preventDefault()
     this.sendMessage() 
   }
 
