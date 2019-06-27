@@ -24,9 +24,9 @@ const NewTicketBody = styled('div')`
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
 
 const priorityOptions = [
-  { text: 'high', value: TICKET_PRIORITY_HIGH },
-  { text: 'medium', value: TICKET_PRIORITY_MEDIUM },
-  { text: 'low', value: TICKET_PRIORITY_LOW },
+  { text: 'high', value: 1.0 },
+  { text: 'medium', value: 0.5 },
+  { text: 'low', value: 0.0 },
 ]
 
 // const updateCache = (cache, data, query) => {
@@ -92,7 +92,7 @@ class CreateNewTicket extends React.Component {
                         status: 'WAITING',
                       }
                     },
-                    refetchQueries: [{ query: GET_TICKETS }],
+                    refetchQueries: [{ query: GET_TICKETS, variables: {request: "GiveItToMe"} }],
                   })
                   this.props.closeModal()
                 }}

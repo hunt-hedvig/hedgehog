@@ -2,7 +2,10 @@ import * as React from 'react'
 import { Query } from 'react-apollo'
 import Ticket from './ticket/index'
 import { GET_TICKETS } from '../../features/taskmanager/queries'
-
+import Notifier from '../taskmanager-notifications/index'
+import isSameDay from 'date-fns/isSameDay'
+import isBefore from 'date-fns/isBefore'
+import parse from 'date-fns/parse'
 
 export default class Tickets extends React.Component {
   public render() {
@@ -11,7 +14,7 @@ export default class Tickets extends React.Component {
         <Query<any> query={GET_TICKETS} variables={{ request: 'GiveItToMe' }}>
           {({ data, error, loading }) => {
             if (loading) {
-              return <p>Loading....</p>
+              return <p>FETCHING DEM SWEET TICKETS....</p>
             }
             if (error) {
               return (
@@ -21,25 +24,20 @@ export default class Tickets extends React.Component {
                 </p>
               )
             }
+             //Set up Notifications
+            this.processReminders(data.tickets)
+
+
             //SORT AND FILTER THE TICKETS
             let sortedTickets = data.tickets
               .slice()
-              .sort((a, b) => this.sortByPriority(a, b))
+              .sort()
+              // .sort((a, b) => this.sortByPriority(a, b))
             if (this.props.sortBy === 'priority') {
               if (this.props.sortOrder === 'DESC') {
-                sortedTickets = sortedTickets.sort((a, b) => {
-                  return (
-                    this.parsePriority(b.priority) -
-                    this.parsePriority(a.priority)
-                  )
-                })
+                sortedTickets = sortedTickets.sort((a, b) => this.sortByPriority(a,b))
               } else if (this.props.sortOrder === 'ASC') {
-                sortedTickets = sortedTickets.sort((a, b) => {
-                  return (
-                    this.parsePriority(a.priority) -
-                    this.parsePriority(b.priority)
-                  )
-                })
+                sortedTickets = sortedTickets.sort((a, b) => this.sortByPriority(b,a))
               }
             } else if (this.props.sortBy === 'type') {
               if (this.props.sortOrder === 'ASC') {
@@ -61,8 +59,19 @@ export default class Tickets extends React.Component {
                 (ticket) => ticket.assignedTo == this.props.filterAssignedTo,
               )
             }
+
+            if (
+              this.props.filterOnStatus !== 'All' &&
+              this.props.filterOnStatus !== ''
+            ) {
+              sortedTickets = sortedTickets.filter(
+                (ticket) => ticket.status == this.props.filterOnStatus,
+              )
+            }
+
             return (
               <>
+             {/* <Notifier notifications={true}/> */}
                 {sortedTickets.map((ticket) => (
                   <Ticket key={ticket.id} {...ticket} />
                 ))}
@@ -74,7 +83,7 @@ export default class Tickets extends React.Component {
     )
   }
 
-  private changeOrder(newSortBy, oldSortBy, oldOrder) {
+  private changeOrder(newSortBy, oldSortBy, oldOrder): string {
     let order = oldOrder
     if (newSortBy === oldSortBy) {
       order = oldOrder === 'ASC' ? 'DESC' : 'ASC'
@@ -84,22 +93,21 @@ export default class Tickets extends React.Component {
     return order
   }
 
-  // TODO: Move to util-file, also this is reverse of how the enum is defined in back-office
-  private parsePriority(p) {
-    switch (p) {
-      case 'HIGH':
-        return 2
-      case 'MEDIUM':
-        return 1
-      case 'LOW':
-        return 0
-      default:
-        return 0
-    }
-  }
+  private processReminders(tickets) {
+    const today = new Date() 
+    //We only care about reminders that will fire today, after the current time: 
+    const remindersToday = tickets.filter( ticket => {
+        return ( 
+        isSameDay(   parse(ticket.remindNotificationDate,'yyyy-MM-dd', today ),today)
+        && 
+        isBefore(today, parse(ticket.remindNotificationTime, 'HH:mm:ss', today) )
+        )
+    } )
+    
+  } 
 
   // use default lexical comparison
-  private sortByType(a, b) {
+  private sortByType(a, b): number {
     if (a.type > b.type) {
       return -1
     } else if (a.type == b.type) {
@@ -107,8 +115,16 @@ export default class Tickets extends React.Component {
     }
     return 1
   }
+  
   // HIGH > MEDIUM > LOW (obviously)
-  private sortByPriority(a, b) {
-    this.parsePriority(b.priority) - this.parsePriority(a.priority)
+  private sortByPriority(a, b): number {
+    let evaluate = a.priority - b.priority 
+    if (evaluate > 0 ){
+      return -1
+    }
+    else if (evaluate === 0 ) {
+      return 0
+    } 
+    return 1 
   }
 }

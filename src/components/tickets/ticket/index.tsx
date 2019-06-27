@@ -31,13 +31,13 @@ const Blob = styled('span')`
   background: white;
   border-radius: 12%;
   background-color: ${ props => {
-    if(props.color == 'HIGH'){
+    if(props.color >= 0.66){
       return colors.PINK
     }
-    else if(props.color == 'MEDIUM'){
+    else if(props.color > 0.33 && props.color < 0.66 ){
      return 'moccasin' 
     }
-   else if(props.color == 'LOW'){
+   else if(props.color < 0.33){
      return 'lightgreen' 
     }
     else {
@@ -78,7 +78,7 @@ class Ticket extends React.Component {
         <span>
           {/* <strong>Priority:</strong> */}
           <Blob color={this.props.priority}>
-             {this.props.priority.toLowerCase()}
+             {this.props.priority}
           </Blob>
         </span>
         <span>
@@ -112,6 +112,7 @@ class Ticket extends React.Component {
               <TicketBody 
                 description={this.props.description}
                 assignedTo={this.props.assignedTo}
+                status={this.props.status}
                 id={this.props.id}
               />
              : null

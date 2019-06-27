@@ -5,10 +5,12 @@ import Toolbar from '../../components/taskmanager-toolbar/index'
 import Tickets from '../../components/tickets/index'
 import CreateNewTicket from '../../components/tickets/ticket/create-ticket/index'
 
+
 import {
   createOptionsArray,
   HIGH_PRIORITY,
   IEX_TEAM_MEMBERS,
+  TICKET_STATUS,
   LOW_PRIORITY,
   MEDIUM_PRIORITY,
   TYPE_CHATMSG,
@@ -21,12 +23,20 @@ const Header = styled('div')({
   textAlign: 'center',
 })
 
-const team_member_options = createOptionsArray(IEX_TEAM_MEMBERS)
-team_member_options.push({
+const teamMemberOptions = createOptionsArray(IEX_TEAM_MEMBERS)
+teamMemberOptions.push({
   text: 'Everyone',
   value: 'Everyone',
   key: 'Everyone',
 })
+
+const statusOptions = createOptionsArray(TICKET_STATUS)
+statusOptions.push({
+  text: 'All tickets',
+  value: 'All',
+  key: 'All',
+})
+
 
 export default class TaskManagerPageComponent extends React.Component {
   public state = {
@@ -34,6 +44,7 @@ export default class TaskManagerPageComponent extends React.Component {
     sortBy: 'priority', // by default
     sortOrder: 'DESC', // ""
     filterAssignedTo: 'Everyone',
+    filterOnStatus: 'All',
     toolbarItems: [
       {
         label: 'Sort by Priority',
@@ -57,9 +68,19 @@ export default class TaskManagerPageComponent extends React.Component {
         label: 'Show only tickets assigned to: ',
         itemType: 'dropdown',
         clicked: (id) => this.filterByHandler(id),
-        options: team_member_options,
+        options: teamMemberOptions,
         handleChange: (id, value) => this.handleOptionsChange(id, value),
         id: 'assignedTo',
+        hasCaret: false,
+        isActive: false,
+      },
+      {
+        label: 'Ticket status ',
+        itemType: 'dropdown',
+        clicked: (id) => this.filterByHandler(id),
+        options: statusOptions,
+        handleChange: (id, value) => this.handleOptionsChange(id, value),
+        id: 'status',
         hasCaret: false,
         isActive: false,
       },
@@ -88,6 +109,7 @@ export default class TaskManagerPageComponent extends React.Component {
           sortBy={this.state.sortBy}
           sortOrder={this.state.sortOrder}
           filterAssignedTo={this.state.filterAssignedTo}
+          filterOnStatus={this.state.filterOnStatus}
           refresh={this.state.refreshTickets}
         />
       </React.Fragment>
@@ -123,7 +145,18 @@ export default class TaskManagerPageComponent extends React.Component {
 
   //Get back option value for selecting team members
   public handleOptionsChange(id, value) {
-    this.setState({ filterAssignedTo: value })
+    switch (id) {
+      case "status":
+        this.setState({ filterOnStatus: value })
+        break;
+
+      case "assignedTo":
+        this.setState({ filterAssignedTo: value })
+        break;
+      
+      default: 
+        return;
+    }
   }
 
   private changeOrder(newSortBy, oldSortBy, oldOrder) {
@@ -143,6 +176,5 @@ export default class TaskManagerPageComponent extends React.Component {
   private showModal = () => {
     this.setState({ showModal: true })
   }
- 
 }
 

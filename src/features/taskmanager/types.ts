@@ -13,6 +13,12 @@ export const IEX_TEAM_MEMBERS = [
 	'Unassigned',
 ] 
 
+export const TICKET_STATUS = [
+	'WAITING',
+	'WORKED_ON',
+	'RESOLVED',
+]
+
 
 export const TICKET_PRIORITY_HIGH = 'HIGH'
 export const TICKET_PRIORITY_MEDIUM = 'MEDIUM'
@@ -32,7 +38,6 @@ export enum TicketPriority {
 	MEDIUM,
 	LOW,
 }
-
 
 export const createOptionsArray = ( array ) => {
 	let res = []

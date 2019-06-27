@@ -2,28 +2,32 @@ import React from 'react'
 import styled from 'react-emotion'
 import { Mutation } from 'react-apollo'
 import {
-  Icon,
-  Divider,
   Button,
-  Segment,
-  Form,
+  Divider,
   Dropdown,
+  Form,
+  Icon,
+  Segment,
   TextArea,
 } from 'semantic-ui-react'
 import {
-  GET_TICKETS,
-  CHANGE_DESCRIPTION,
   ASSIGN_TO,
+  CHANGE_DESCRIPTION,
+  CHANGE_STATUS, 
+  GET_TICKETS,
   SET_REMINDER,
 } from '../../../features/taskmanager/queries'
 import {
   IEX_TEAM_MEMBERS,
+  TICKET_STATUS,
   createOptionsArray,
 } from '../../../features/taskmanager/types'
 import Notification from '../../notifications/Notification'
 
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
+const statusOptions = createOptionsArray(TICKET_STATUS)
+
 
 const TicketBodyCss = styled('div')`
   padding: 1em;
@@ -36,6 +40,7 @@ class TicketBody extends React.Component {
     inputDescription: this.props.description,
     inputAssignedTo: this.props.assignedTo,
     showNotification: false,
+    status: this.props.status,
   }
 
   render() {
@@ -44,7 +49,7 @@ class TicketBody extends React.Component {
         <Segment color="grey" compact>
           <em>Edit Ticket</em>
         </Segment>
-        <Mutation mutation={CHANGE_DESCRIPTION}>
+        <Mutation mutation={CHANGE_DESCRIPTION} key={this.props.id + 'description'}>
           {(changeTicketDescription, { data }) => {
             return (
               <Form
@@ -89,7 +94,7 @@ class TicketBody extends React.Component {
           }}
         </Mutation>
         <Divider horizontal> </Divider>
-        <Mutation mutation={ASSIGN_TO} key={this.props.id}>
+        <Mutation mutation={ASSIGN_TO} key={this.props.id + 'assign'}>
           {(assignTicketToTeamMember, { data }) => {
             return (
               <Form
@@ -104,7 +109,7 @@ class TicketBody extends React.Component {
                 }}
               >
                 <Form.Field inline>
-                  <label htmlFor="assign">Assign to Team Member: </label>
+                  <label htmlFor="assign">Assign to: </label>
                   <Dropdown
                     name="assign"
                     placeholder="Select team member"
@@ -124,6 +129,47 @@ class TicketBody extends React.Component {
             )
           }}
         </Mutation>
+
+
+       <Divider horizontal> </Divider>
+       
+        <Mutation mutation={CHANGE_STATUS} key={this.props.id + 'status'}>
+          {(changeTicketStatus, { data }) => {
+            return (
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  changeTicketStatus({
+                    variables: {
+                      ticketId: this.props.id,
+                      newStatus: this.state.status,
+                    },
+                  })
+                }}
+              >
+                <Form.Field inline>
+                  <label htmlFor="status">Status: </label>
+                  <Dropdown
+                    name="status"
+                    placeholder="Assign new status:"
+                    search
+                    selection
+                    options={statusOptions}
+                    // value={this.state.inputAssignedTo}
+                    onChange={(e, { value }) => {
+                      this.setState({ status: value })
+                    }}
+                  />
+                  <Button basic type="submit" compact>
+                    Change status
+                  </Button>
+                </Form.Field>
+              </Form>
+            )
+          }}
+        </Mutation>
+
+
       </Segment.Group>
     )
 

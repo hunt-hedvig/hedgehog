@@ -58,8 +58,8 @@ export const SET_REMINDER = gql`
 `
 
 export const CHANGE_STATUS = gql`
-  mutation ChangeStatus ($ticketId: ID!, $newStatus: TicketStatus ) {
-    setReminderDate (ticketId: $ticketId, newStatus: $newStatus) {
+  mutation ChangeTicketStatus ($ticketId: ID!, $newStatus: TicketStatus ) {
+    changeTicketStatus (ticketId: $ticketId, newStatus: $newStatus) {
       id
       status 
     }
