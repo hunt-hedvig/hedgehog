@@ -59,11 +59,12 @@ const SubmitButton = withStyles({
   },
 })(MuiButton)
 
-const ClearButton = withStyles({
+const ShowMoreRepliesButton = withStyles({
   root: {
     marginLeft: 'auto',
     marginTop: 'auto',
     marginBottom: 'auto',
+    width: '100%',
   },
 })(MuiButton)
 
@@ -149,6 +150,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             {/* there doesnt exist a function for changing his.props.suggestedAnswer to true now since the page is refreshed anyways*/}
             {this.props.questionToLabel !== '' && (            
               
+                <div>
                 <MenuList>
 
                 {allIntents!.map((intent) => {
@@ -166,6 +168,14 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 })}
 
                 </MenuList>
+                <ShowMoreRepliesButton
+              variant="raised"
+              color="default"
+              onClick= {this.handleSubmit}              
+              >Show more replies
+             
+             </ShowMoreRepliesButton>
+             </div>
               )                
             }        
 
