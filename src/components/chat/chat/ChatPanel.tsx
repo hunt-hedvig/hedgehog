@@ -177,17 +177,30 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
              </ShowMoreRepliesButton>
              </div>
               )                
-            }        
+            }
 
-          <TextField
-            multiline
-            rowsMax="12"
-            value={this.state.currentMessage}
-            onChange={this.handleInputChange}
-            onKeyDown={this.handleEnterMaybe}
-            margin="none"
-            variant="outlined"
-          />          
+            {/*should make this and the below mutation into one component but dont succeed with that*/}
+            <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.sendMessage} onError = {this.sendMessage}>
+            {(autoLabelQuestion) => (
+
+              <TextField
+              multiline
+              rowsMax="12"
+              margin="none"
+              variant="outlined"
+              value={this.state.currentMessage}
+              onChange={this.handleInputChange}
+              onKeyDown={ event => 
+                  {            
+                    if (this.shouldSubmit(event)) {event.preventDefault();
+                      autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
+                      label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });}                    
+                                                        
+                  }}
+              /> )                
+            }
+            </Mutation>             
+      
           {this.state.showAutocompleteSuggestions &&
             this.state.autocompleteSuggestions && (
               <MenuList>
@@ -224,12 +237,12 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             }
           />
 
-          {/* Only make mutation if last message was from member*/}
-          {this.props.questionToLabel !== '' ? (
-          <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.handleSubmit}
-            onError = {this.handleSubmit}>
-            {(autoLabelQuestion) => (
-
+          {/* Only make mutation if last message was from member*/}          
+          <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.sendMessage}
+            onError = {this.sendMessage}>
+            {(autoLabelQuestion) => (              
+              
+              this.props.questionToLabel !== '' ? (
               <SubmitButton
               variant="contained"
               color="primary"
@@ -237,26 +250,24 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                   {            
                     event.preventDefault();                    
                     autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
-                      label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });                                    
+                      label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });                                                          
                   }}              
               >
               Send
              <MuiIcon>send</MuiIcon>
-             </SubmitButton>                 
-
-              )                
-            }              
-
-            </Mutation>) : ( 
-          <SubmitButton
+             </SubmitButton> ) : ( 
+              <SubmitButton
               variant="contained"
               color="primary"
               onClick= {this.handleSubmit}              
               >
               Send
              <MuiIcon>send</MuiIcon>
-             </SubmitButton> ) 
-        }
+             </SubmitButton> )
+
+              ) 
+            }             
+            </Mutation>                                 
 
         </OptionsContainer>
       </MessagesPanelContainer>       
@@ -264,19 +275,17 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     )
   }
 
-  private handleEnterMaybe = (e: React.KeyboardEvent<any>) => {
-    if (window.matchMedia('(max-width: 800px)').matches) {
-      return
-    }
-    if (e.keyCode !== 13) {
-      return
-    }
-    if (e.shiftKey) {
-      return
-    }
+  private shouldSubmit = (e: React.KeyboardEvent<any>) => {
 
-    e.preventDefault()
-    this.sendMessage() 
+    return !window.matchMedia('(max-width: 800px)').matches && e.keyCode === 13 && !e.shiftKey
+
+  }
+
+  private handleEnterMaybe = (e: React.KeyboardEvent<any>) => {
+    if (this.shouldSubmit(e)){
+      e.preventDefault()
+      this.sendMessage()
+    }     
   }
 
   private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -349,9 +358,9 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
 
   private handleSubmit = (
-   // e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
   ) => {
-   // e.preventDefault()
+    e.preventDefault()
     this.sendMessage() 
   }
 
