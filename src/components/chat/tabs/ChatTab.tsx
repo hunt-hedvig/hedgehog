@@ -119,7 +119,7 @@ export default class ChatTab extends React.Component{
             if (loading) return <ChatPanel
             allReplies = {null}
             memberId = ''
-            messageId = ''
+            messageId = {[]}
             questionToLabel = ''
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
@@ -129,17 +129,12 @@ export default class ChatTab extends React.Component{
             if (error) return <ChatPanel
             allReplies = {null}
             memberId = ''
-            messageId = ''
+            messageId = {[]}
             questionToLabel = ''
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
             suggestedAnswer = ''
           />;
-
-            //sending an empty string to the python API returns an empty list so this statement fixes it                        
-            //const answer = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].reply ;
-            //const intent = (JSON.parse(data.getAnswerSuggestion.message).length == 0) ? '' : JSON.parse(data.getAnswerSuggestion.message)[0].intent ;
-            const lastMessage = (this.props.messages && this.props.messages.list.length > 0) ? this.props.messages.list[this.props.messages.list.length-1] : {header: {messageId: 0}};
     
             return (
 

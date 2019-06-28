@@ -16,7 +16,6 @@ import { EmojiPicker } from './EmojiPicker'
 import axios from 'axios'
 import { Mutation, Query } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Button, Dropdown } from 'semantic-ui-react'
 
 
 const MessagesPanelContainer = styled('div')({
@@ -118,6 +117,7 @@ interface State {
   showAutocompleteSuggestions: boolean
   forceSendMessage: boolean
   chosenIntent: string
+  showMoreReplies: boolean
 }
 
 interface AutocompleteSuggestion {
@@ -132,7 +132,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     autocompleteQuery: null,
     autocompleteSuggestions: [],
     showAutocompleteSuggestions: false,
-    chosenIntent: 'other'
+    chosenIntent: 'other',
+    showMoreReplies: false
   }
 
   public render() {
@@ -147,7 +148,6 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
         <ChatForm onSubmit={this.handleSubmit}>          
           
-            {/* there doesnt exist a function for changing his.props.suggestedAnswer to true now since the page is refreshed anyways*/}
             {this.props.questionToLabel !== '' && (            
               
                 <div>
@@ -157,22 +157,22 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                   //strip \n 
                   const  text  = allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, "");
                   return (
-                    <MenuItem
-                      key={text}
-                      selected={this.props.suggestedAnswer === text}
+                     (this.state.showMoreReplies == true || (this.state.showMoreReplies == false && this.props.suggestedAnswer === text)) && (
+                      <MenuItem
+                      key={text}                      
                       onClick={this.selectAnswerSuggestion(intent, allReplies)}
                     >
                       {text}
-                    </MenuItem>
+                    </MenuItem>)
                   )
                 })}
 
                 </MenuList>
                 <ShowMoreRepliesButton
-              variant="raised"
+              variant="outlined"
               color="default"
-              onClick= {this.handleSubmit}              
-              >Show more replies
+              onClick= {this.showMoreReplies}              
+              >{(this.state.showMoreReplies) ? "Hide replies" : "Show more replies"}
              
              </ShowMoreRepliesButton>
              </div>
@@ -231,7 +231,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             {(autoLabelQuestion) => (
 
               <SubmitButton
-              variant="raised"
+              variant="contained"
               color="primary"
               onClick= { event => 
                   {            
@@ -249,7 +249,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
             </Mutation>) : ( 
           <SubmitButton
-              variant="raised"
+              variant="contained"
               color="primary"
               onClick= {this.handleSubmit}              
               >
@@ -333,6 +333,10 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     return allIntents;
   } 
 
+  private showMoreReplies = () => {
+    this.setState({showMoreReplies: !this.state.showMoreReplies});
+  }
+
   private selectAnswerSuggestion = (intent: string, allReplies: array) => (
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
@@ -362,6 +366,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       currentMessage: '',
       showAutocompleteSuggestions: false,
       forceSendMessage: false,
+      chosenIntent: 'other',
+      showMoreReplies: false
     })
   }
   private selectAutocompleteSuggestion = (suggestion: string) => (
