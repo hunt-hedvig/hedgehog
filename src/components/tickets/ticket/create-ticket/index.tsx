@@ -14,6 +14,8 @@ import {
   TICKET_PRIORITY_MEDIUM,
   TICKET_PRIORITY_LOW,
 } from '../../../../features/taskmanager/types'
+import Datepicker from './datepicker.tsx'
+
 
 const NewTicketBody = styled('div')`
   border: solid 1px gray;
@@ -29,21 +31,6 @@ const priorityOptions = [
   { text: 'low', value: 0.0 },
 ]
 
-// const updateCache = (cache, data, query) => {
-// //update={(cache, data)=> updateCache(cache, data, "createTicket" )}
-//   // const newTicket = data.data[query]
-//   // const updatedData  = {...cache.data.data}
-//   // updatedData['Ticket:'+ newTicket.id] = newTicket
-
-//   // const dataFromCache = cache.readQuery({query: GET_TICKETS})
-//   // console.log(dataFromCache)
-//   // console.log(tickets)
-
-//   cache.writeQuery({
-//     query: GET_TICKETS,
-//     data:  updatedData,
-//   })
-// }
 
 const formatDateTime = (date) => {
   let fDate = format(date, 'yyyy-MM-dd')
@@ -108,9 +95,9 @@ class CreateNewTicket extends React.Component {
                   onChange={(e) => this.handleChange(e)}
                 />
                 <br />
-                <label htmlFor={'createdby'}>Created by:</label>
+                <label htmlFor={'createdBy'}>Created by:</label>
                 <Dropdown
-                  name="createdby"
+                  name="createdBy"
                   placeholder="Select team member"
                   search
                   selection
@@ -143,7 +130,15 @@ class CreateNewTicket extends React.Component {
                     this.setState({ priority: value })
                   }}
                 />
-                <p>Set reminder: [PLACEHOLDER]</p>
+                <br/>
+                <p><strong>Set reminder:</strong></p>
+                <Datepicker 
+                  handleChange={this.handleChange}
+                  datepickerName="remindNotificationDate"
+                  datepickerValue={this.state.remindNotificationDate}
+                  timepickerName="remindNotificationTime"
+                  timepickerValue={this.state.remindNotificationTime}
+                />
                 <Button type="submit">Create</Button>
               </form>
             )

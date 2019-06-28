@@ -5,6 +5,7 @@ import { GET_TICKETS } from '../../features/taskmanager/queries'
 import Notifier from '../taskmanager-notifications/index'
 import isSameDay from 'date-fns/isSameDay'
 import isBefore from 'date-fns/isBefore'
+import isAfter from 'date-fns/isAfter'
 import parse from 'date-fns/parse'
 
 export default class Tickets extends React.Component {
@@ -14,7 +15,7 @@ export default class Tickets extends React.Component {
         <Query<any> query={GET_TICKETS} variables={{ request: 'GiveItToMe' }}>
           {({ data, error, loading }) => {
             if (loading) {
-              return <p>FETCHING DEM SWEET TICKETS....</p>
+              return <p>...FETCHING DEM TICKETS...</p>
             }
             if (error) {
               return (
@@ -95,15 +96,49 @@ export default class Tickets extends React.Component {
 
   private processReminders(tickets) {
     const today = new Date() 
-    //We only care about reminders that will fire today, after the current time: 
-    const remindersToday = tickets.filter( ticket => {
-        return ( 
-        isSameDay(   parse(ticket.remindNotificationDate,'yyyy-MM-dd', today ),today)
-        && 
-        isBefore(today, parse(ticket.remindNotificationTime, 'HH:mm:ss', today) )
-        )
-    } )
+    // const remindersToday = tickets.filter( ticket => {
+    //     return ( 
+    //     isSameDay(   parse(ticket.remindNotificationDate,'yyyy-MM-dd', today ),today)
+    //     && 
+    //     isBefore(today, parse(ticket.remindNotificationTime, 'HH:mm:ss', today) )
+    //     &&
+    //     ticket.status !== 'RESOLVED'
+    //     )
+    // } )
+
+    //Select tickets that have not been resolved and that are overdue or due for today.
+    //Ignore tickets further in the future...
+    const unresolvedTickets = tickets.filter( ticket => {
+          return ticket.status !== 'RESOLVED'
+          &&  !isAfter(parse(ticket.remindNotificationDate, 'yyyy-MM-dd', today), today)
+        } )
+
+    const overdueReminders = []
+    const upcomingRemindersToday = []
     
+    // for (let i; i < unresolvedTickets.length; i++) {
+    
+      // console.log(unresolvedTickets)
+      for (var i = 0 ; i <unresolvedTickets.length ; i++) {
+        if ( 
+          isSameDay( parse(unresolvedTickets[i].remindNotificationDate, 'yyyy-MM-dd', today), today)
+          &&
+          isAfter( parse(unresolvedTickets[i].remindNotificationTime, 'HH:mm:ss',today), today)
+          ) 
+        {
+          // console.log(unresolvedTickets[i])
+          upcomingRemindersToday.push(unresolvedTickets[i])
+        } 
+        else {
+          overdueReminders.push(unresolvedTickets[i])
+        }
+      }
+
+    // console.log("OVERDUE:")
+    // console.log(overdueReminders)
+    // console.log("UPCOMING:")
+    // console.log(upcomingRemindersToday)
+
   } 
 
   // use default lexical comparison
