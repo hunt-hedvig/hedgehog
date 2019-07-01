@@ -25,6 +25,7 @@ const MessagesPanelContainer = styled('div')({
   flexWrap: 'wrap',
   marginTop: 'auto',
   padding: '0.5rem',
+  border: '2px solid #cccccc', 
 })
 
 const ChatForm = styled('form')({
