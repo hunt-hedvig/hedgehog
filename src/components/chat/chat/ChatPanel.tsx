@@ -143,12 +143,16 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
 
     return (    
-      
-      <MessagesPanelContainer>
+   
+          <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.sendMessage}
+            onError = {this.sendMessage}>
+            {(autoLabelQuestion) => ( 
 
-        <ChatForm onSubmit={this.handleSubmit}>          
+              <MessagesPanelContainer>
+              
+              <ChatForm onSubmit={this.handleSubmit}>          
           
-            {this.props.questionToLabel !== '' && (            
+                {this.props.questionToLabel !== '' && (            
               
                 <div>
                 <MenuList>
@@ -169,19 +173,15 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
                 </MenuList>
                 <ShowMoreRepliesButton
-              variant="outlined"
-              color="default"
-              onClick= {this.showMoreReplies}              
-              >{(this.state.showMoreReplies) ? "Hide replies" : "Show more replies"}
+                variant="outlined"
+                color="default"
+                onClick= {this.showMoreReplies}              
+                >{(this.state.showMoreReplies) ? "Hide replies" : "Show more replies"}
              
-             </ShowMoreRepliesButton>
-             </div>
+               </ShowMoreRepliesButton>
+               </div>
               )                
             }
-
-            {/*should make this and the below mutation into one component but dont succeed with that*/}
-            <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.sendMessage} onError = {this.sendMessage}>
-            {(autoLabelQuestion) => (
 
               <TextField
               multiline
@@ -197,10 +197,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                       label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });}                    
                                                         
                   }}
-              /> )                
-            }
-            </Mutation>             
-      
+              />                 
+
           {this.state.showAutocompleteSuggestions &&
             this.state.autocompleteSuggestions && (
               <MenuList>
@@ -219,10 +217,13 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
               </MenuList>
             )}
         
-        </ChatForm>
-        <ActionContainer>
-          <EmojiPicker selectEmoji={this.selectEmoji} />
+        </ChatForm>        
+        
+        <ActionContainer>        
+          <EmojiPicker selectEmoji={this.selectEmoji} />          
         </ActionContainer>
+
+
         <OptionsContainer>
 
           <MuiFormControlLabel
@@ -237,40 +238,29 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
             }
           />
 
-          {/* Only make mutation if last message was from member*/}          
-          <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.sendMessage}
-            onError = {this.sendMessage}>
-            {(autoLabelQuestion) => (              
-              
-              this.props.questionToLabel !== '' ? (
               <SubmitButton
               variant="contained"
               color="primary"
               onClick= { event => 
-                  {            
-                    event.preventDefault();                    
+                  {
+                    event.preventDefault(); 
+                    if (this.props.questionToLabel !== ''){                           
                     autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
-                      label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });                                                          
+                      label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });  
+                      }else{this.sendMessage()}                                                        
                   }}              
               >
               Send
              <MuiIcon>send</MuiIcon>
-             </SubmitButton> ) : ( 
-              <SubmitButton
-              variant="contained"
-              color="primary"
-              onClick= {this.handleSubmit}              
-              >
-              Send
-             <MuiIcon>send</MuiIcon>
-             </SubmitButton> )
+             </SubmitButton>                                                            
 
-              ) 
-            }             
-            </Mutation>                                 
+        </OptionsContainer>      
 
-        </OptionsContainer>
-      </MessagesPanelContainer>       
+      </MessagesPanelContainer>
+
+              )}     
+
+        </Mutation>  
       
     )
   }

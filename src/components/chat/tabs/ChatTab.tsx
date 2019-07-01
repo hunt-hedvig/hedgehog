@@ -70,7 +70,7 @@ export default class ChatTab extends React.Component{
     var lastMemberMessages = '';
     var messageIds = [];
 
-    if (this.props.messages && this.props.messages.list.length > 0){
+    if (this.props.messages && this.props.messages.list){
             
       let message = this.props.messages.list[this.props.messages.list.length-1];      
 
@@ -116,17 +116,7 @@ export default class ChatTab extends React.Component{
           {/* alternatives for updating the query https://www.apollographql.com/docs/react/essentials/queries/#polling-and-refetching*/}
           <Query query={GET_SUGGESTED_ANSWER_QUERY} pollInterval={2000} variables={{question: questionAndMessageIds[0]}}>
           {({ data, loading, error }) => {
-            if (loading) return <ChatPanel
-            allReplies = {null}
-            memberId = ''
-            messageId = {[]}
-            questionToLabel = ''
-            addMessage={this.props.addMessage}
-            messages={(this.props.messages && this.props.messages.list) || []}
-            suggestedAnswer = ''
-          />;
-
-            if (error) return <ChatPanel
+            if (loading || error) return <ChatPanel
             allReplies = {null}
             memberId = ''
             messageId = {[]}
@@ -142,7 +132,7 @@ export default class ChatTab extends React.Component{
             allReplies = {JSON.parse(data.getAnswerSuggestion.allReplies)}
             memberId = {this.props.match.params.id}
             messageId = {questionAndMessageIds[1]}
-            questionToLabel = {questionAndMessageIds[0]}//{data.getAnswerSuggestion.text}
+            questionToLabel = {data.getAnswerSuggestion.text || ''}
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
             suggestedAnswer = {data.getAnswerSuggestion.reply}
