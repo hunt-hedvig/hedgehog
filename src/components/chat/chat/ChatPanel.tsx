@@ -17,7 +17,6 @@ import axios from 'axios'
 import { Mutation, Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-
 const MessagesPanelContainer = styled('div')({
   display: 'flex',
   flexDirection: 'row',
@@ -25,7 +24,7 @@ const MessagesPanelContainer = styled('div')({
   flexWrap: 'wrap',
   marginTop: 'auto',
   padding: '0.5rem',
-  border: '2px solid #cccccc', 
+  border: '2px solid #cccccc',
 })
 
 const ChatForm = styled('form')({
@@ -93,12 +92,22 @@ const MenuItem = withStyles({
 })(MuiMenuItem)
 
 const AUTO_LABEL_QUESTION = gql`
-  mutation AutoLabelQuestion($question: String!, $label: String!, $memberId: String, $messageId: [String!]) {
-    autoLabelQuestion(question: $question, label: $label, memberId: $memberId, messageId: $messageId){
+  mutation AutoLabelQuestion(
+    $question: String!
+    $label: String!
+    $memberId: String
+    $messageId: [String!]
+  ) {
+    autoLabelQuestion(
+      question: $question
+      label: $label
+      memberId: $memberId
+      messageId: $messageId
+    ) {
       message
     }
   }
-`;
+`
 
 interface ChatPanelProps {
   messages: ReadonlyArray<{}>
@@ -133,154 +142,161 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     autocompleteSuggestions: [],
     showAutocompleteSuggestions: false,
     chosenIntent: 'other',
-    showMoreReplies: false
+    showMoreReplies: false,
   }
 
   public render() {
+    const allReplies = this.props.allReplies
+    const allIntents = this.getAllIntents(allReplies)
 
-    const allReplies = this.props.allReplies;
-    const allIntents = this.getAllIntents(allReplies);
-
-    return (    
-   
-          <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.sendMessage}
-            onError = {this.sendMessage}>
-            {(autoLabelQuestion) => ( 
-
-              <MessagesPanelContainer>
-              
-              <ChatForm onSubmit={this.handleSubmit}>          
-          
-                {this.props.questionToLabel !== '' && (            
-              
+    return (
+      <Mutation
+        mutation={AUTO_LABEL_QUESTION}
+        ignoreResults={true}
+        onCompleted={this.sendMessage}
+        onError={this.sendMessage}
+      >
+        {(autoLabelQuestion) => (
+          <MessagesPanelContainer>
+            <ChatForm onSubmit={this.handleSubmit}>
+              {this.props.questionToLabel !== '' && (
                 <div>
-                <MenuList>
-
-                {allIntents!.map((intent) => {
-                  
-                  const  text  = this.getReply(allReplies, intent);
-                  return (
-                     (this.state.showMoreReplies || (!this.state.showMoreReplies && this.props.suggestedAnswer === text)) && (
-                      <MenuItem
-                      key={text}                      
-                      onClick={this.selectAnswerSuggestion(intent, allReplies)}
-                    >
-                      {text}
-                    </MenuItem>)
-                  )
-                })}
-
-                </MenuList>
-                <ShowMoreRepliesButton
-                variant="outlined"
-                color="default"
-                onClick= {this.showMoreReplies}              
-                >{(this.state.showMoreReplies) ? "Hide replies" : "Show more replies"}
-             
-               </ShowMoreRepliesButton>
-               </div>
-              )                
-            }
+                  <MenuList>
+                    {allIntents!.map((intent) => {
+                      const text = this.getReply(allReplies, intent)
+                      return (
+                        (this.state.showMoreReplies ||
+                          (!this.state.showMoreReplies &&
+                            this.props.suggestedAnswer === text)) && (
+                          <MenuItem
+                            key={text}
+                            onClick={this.selectAnswerSuggestion(
+                              intent,
+                              allReplies,
+                            )}
+                          >
+                            {text}
+                          </MenuItem>
+                        )
+                      )
+                    })}
+                  </MenuList>
+                  <ShowMoreRepliesButton
+                    variant="outlined"
+                    color="default"
+                    onClick={this.showMoreReplies}
+                  >
+                    {this.state.showMoreReplies
+                      ? 'Hide replies'
+                      : 'Show more replies'}
+                  </ShowMoreRepliesButton>
+                </div>
+              )}
 
               <TextField
-              multiline
-              rowsMax="12"
-              margin="none"
-              variant="outlined"
-              value={this.state.currentMessage}
-              onChange={this.handleInputChange}
-              onKeyDown={ event => 
-                  {            
-                    if (this.shouldSubmit(event)) {event.preventDefault();
-                      autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
-                      label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });}                    
-                                                        
-                  }}
-              />                 
-
-          {this.state.showAutocompleteSuggestions &&
-            this.state.autocompleteSuggestions && (
-              <MenuList>
-                {this.state.autocompleteSuggestions!.map((suggestion) => {
-                  const { text } = suggestion
-                  return (
-                    <MenuItem
-                      key={text}
-                      selected={this.state.currentMessage === text}
-                      onClick={this.selectAutocompleteSuggestion(text)}
-                    >
-                      {text}
-                    </MenuItem>
-                  )
-                })}
-              </MenuList>
-            )}
-        
-        </ChatForm>        
-        
-        <ActionContainer>        
-          <EmojiPicker selectEmoji={this.selectEmoji} />          
-        </ActionContainer>
-
-
-        <OptionsContainer>
-
-          <MuiFormControlLabel
-            label="Force message"
-            labelPlacement="start"
-            control={
-              <OptionCheckbox
-                color="primary"
-                checked={this.state.forceSendMessage}
-                onChange={this.handleCheckboxChange}
+                multiline
+                rowsMax="12"
+                margin="none"
+                variant="outlined"
+                value={this.state.currentMessage}
+                onChange={this.handleInputChange}
+                onKeyDown={(event) => {
+                  if (this.shouldSubmit(event)) {
+                    event.preventDefault()
+                    autoLabelQuestion({
+                      variables: {
+                        question: this.props.questionToLabel,
+                        label: this.state.chosenIntent,
+                        memberId: this.props.memberId,
+                        messageId: this.props.messageId,
+                      },
+                    })
+                  }
+                }}
               />
-            }
-          />
+
+              {this.state.showAutocompleteSuggestions &&
+                this.state.autocompleteSuggestions && (
+                  <MenuList>
+                    {this.state.autocompleteSuggestions!.map((suggestion) => {
+                      const { text } = suggestion
+                      return (
+                        <MenuItem
+                          key={text}
+                          selected={this.state.currentMessage === text}
+                          onClick={this.selectAutocompleteSuggestion(text)}
+                        >
+                          {text}
+                        </MenuItem>
+                      )
+                    })}
+                  </MenuList>
+                )}
+            </ChatForm>
+
+            <ActionContainer>
+              <EmojiPicker selectEmoji={this.selectEmoji} />
+            </ActionContainer>
+
+            <OptionsContainer>
+              <MuiFormControlLabel
+                label="Force message"
+                labelPlacement="start"
+                control={
+                  <OptionCheckbox
+                    color="primary"
+                    checked={this.state.forceSendMessage}
+                    onChange={this.handleCheckboxChange}
+                  />
+                }
+              />
 
               <SubmitButton
-              variant="contained"
-              color="primary"
-              onClick= { event => 
-                  {
-                    event.preventDefault(); 
-                    if (this.props.questionToLabel !== ''){                           
-                    autoLabelQuestion({ variables: { question: this.props.questionToLabel, 
-                      label: this.state.chosenIntent, memberId: this.props.memberId, messageId: this.props.messageId } });  
-                      }else{this.sendMessage()}                                                        
-                  }}              
+                variant="contained"
+                color="primary"
+                onClick={(event) => {
+                  event.preventDefault()
+                  if (this.props.questionToLabel !== '') {
+                    autoLabelQuestion({
+                      variables: {
+                        question: this.props.questionToLabel,
+                        label: this.state.chosenIntent,
+                        memberId: this.props.memberId,
+                        messageId: this.props.messageId,
+                      },
+                    })
+                  } else {
+                    this.sendMessage()
+                  }
+                }}
               >
-              Send
-             <MuiIcon>send</MuiIcon>
-             </SubmitButton>                                                            
-
-        </OptionsContainer>      
-
-      </MessagesPanelContainer>
-
-              )}     
-
-        </Mutation>  
-      
+                Send
+                <MuiIcon>send</MuiIcon>
+              </SubmitButton>
+            </OptionsContainer>
+          </MessagesPanelContainer>
+        )}
+      </Mutation>
     )
   }
   private getReply = (allReplies: object, intent: string) => {
-
-    //strip \n 
-    return allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, "");
-
+    //strip \n
+    return allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, '')
   }
 
   private shouldSubmit = (e: React.KeyboardEvent<any>) => {
-
-    return !window.matchMedia('(max-width: 800px)').matches && e.keyCode === 13 && !e.shiftKey
-
+    return (
+      !window.matchMedia('(max-width: 800px)').matches &&
+      e.keyCode === 13 &&
+      !e.shiftKey
+    )
   }
 
   private handleEnterMaybe = (e: React.KeyboardEvent<any>) => {
-    if (this.shouldSubmit(e)){
+    if (this.shouldSubmit(e)) {
       e.preventDefault()
       this.sendMessage()
-    }     
+    }
   }
 
   private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -292,7 +308,10 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       this.findAutocompleteSuggestions(message)
     } else {
       //If the message is deleted => the label is reset to other class
-      this.setState({ showAutocompleteSuggestions: false, chosenIntent: 'other' })      
+      this.setState({
+        showAutocompleteSuggestions: false,
+        chosenIntent: 'other',
+      })
     }
   }
 
@@ -322,31 +341,31 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       })
   }
 
-  private getAllIntents = (allReplies: object) => {    
-
-    const allIntents = allReplies ? Object.keys(allReplies).filter(key => key !== 'other') : [];
-    return [...(new Set(allIntents))]
-  } 
+  private getAllIntents = (allReplies: object) => {
+    const allIntents = allReplies
+      ? Object.keys(allReplies).filter((key) => key !== 'other')
+      : []
+    return [...new Set(allIntents)]
+  }
 
   private showMoreReplies = () => {
-    this.setState({showMoreReplies: !this.state.showMoreReplies});
+    this.setState({ showMoreReplies: !this.state.showMoreReplies })
   }
 
   private selectAnswerSuggestion = (intent: string, allReplies: object) => (
     e: React.MouseEvent<HTMLButtonElement>,
-  ) => {   
+  ) => {
     this.setState({
       chosenIntent: intent,
       currentMessage: this.getReply(allReplies, intent),
     })
   }
 
-
   private handleSubmit = (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<Element, MouseEvent>,
   ) => {
     e.preventDefault()
-    this.sendMessage() 
+    this.sendMessage()
   }
 
   private sendMessage = () => {
@@ -361,7 +380,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       showAutocompleteSuggestions: false,
       forceSendMessage: false,
       chosenIntent: 'other',
-      showMoreReplies: false
+      showMoreReplies: false,
     })
   }
   private selectAutocompleteSuggestion = (suggestion: string) => (
