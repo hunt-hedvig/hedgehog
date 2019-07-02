@@ -74,7 +74,7 @@ export default class ChatTab extends React.Component {
       !this.props.messages.list ||
       this.props.messages.list.length === 0
     ) {
-      return [lastMemberMessages, messageIds]
+      return { lastMemberMessages, messageIds }
     }
 
     const messages = this.props.messages.list
@@ -85,13 +85,13 @@ export default class ChatTab extends React.Component {
       .map((id) => id === +this.props.match.params.id)
       .lastIndexOf(false)
 
-    lastMemberMessages = messages.filter(
+    const lastMemberMessagesArray = messages.filter(
       (message, index) =>
         message.id === 'free.chat.message' && index > lastNonMemberIndex,
     )
 
-    messageIds = lastMemberMessages.map((message) => message.header.messageId)
-    lastMemberMessages = lastMemberMessages
+    messageIds = lastMemberMessagesArray.map((message) => message.header.messageId)
+    lastMemberMessages = lastMemberMessagesArray
       .map((message) => message.body.text)
       .join(' ')
 

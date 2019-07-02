@@ -280,7 +280,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     )
   }
   private getReply = (allReplies: object, intent: string) => {
-    //strip \n
+
     const message = allReplies.find(message => message.intent === intent);
     return message.reply.replace(/(\r\n|\n|\r)/gm, '')
   }
@@ -293,13 +293,6 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     )
   }
 
-  private handleEnterMaybe = (e: React.KeyboardEvent<any>) => {
-    if (this.shouldSubmit(e)) {
-      e.preventDefault()
-      this.sendMessage()
-    }
-  }
-
   private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const message = e.currentTarget.value
     this.setState({
@@ -308,7 +301,6 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     if (message.length > 0) {
       this.findAutocompleteSuggestions(message)
     } else {
-      //If the message is deleted => the label is reset to other class
       this.setState({
         showAutocompleteSuggestions: false,
         chosenIntent: 'other',
