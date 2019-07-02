@@ -34,18 +34,16 @@ const ChatHeaderStyle = styled.div`
   border-top-right-radius: 8px;
 `
 const GET_SUGGESTED_ANSWER_QUERY = gql`
-query GetSuggestedAnswer ($question: String) 
-{
-  getAnswerSuggestion(question: $question) {
-    reply
-    text
-    allReplies
-           
+  query GetSuggestedAnswer($question: String) {
+    getAnswerSuggestion(question: $question) {
+      reply
+      text
+      allReplies
+    }
   }
-}
-`;
+`
 
-export default class ChatTab extends React.Component{
+export default class ChatTab extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -65,32 +63,41 @@ export default class ChatTab extends React.Component{
   }
 
   //concatenates last messages written by member into one question. The loop could maybe be improved?
-  private getQuestionToAnalyze(){
+  private getQuestionToAnalyze() {
+    var lastMemberMessages = ''
+    var messageIds = []
 
-    var lastMemberMessages = '';
-    var messageIds = [];
+    if (
+      !this.props.messages ||
+      !this.props.messages.list ||
+      this.props.messages.list.length === 0
+    ) {
+      return [lastMemberMessages, messageIds]
+    }
 
-    if (!this.props.messages || !this.props.messages.list || this.props.messages.list.length === 0){
-      return [lastMemberMessages, messageIds];}
-            
-    const messages = this.props.messages.list;
+    const messages = this.props.messages.list
 
-    const fromIds = messages.map(message => message.header.fromId);
+    const fromIds = messages.map((message) => message.header.fromId)
 
-    const lastNonMemberIndex = fromIds.map(id => id === +this.props.match.params.id).lastIndexOf(false);  
+    const lastNonMemberIndex = fromIds
+      .map((id) => id === +this.props.match.params.id)
+      .lastIndexOf(false)
 
-    lastMemberMessages = messages.filter((message, index) =>  message.id === "free.chat.message" && index > lastNonMemberIndex );
+    lastMemberMessages = messages.filter(
+      (message, index) =>
+        message.id === 'free.chat.message' && index > lastNonMemberIndex,
+    )
 
-    messageIds = lastMemberMessages.map(message => message.header.messageId);
-    lastMemberMessages = lastMemberMessages.map(message => message.body.text).join(' ');    
+    messageIds = lastMemberMessages.map((message) => message.header.messageId)
+    lastMemberMessages = lastMemberMessages
+      .map((message) => message.body.text)
+      .join(' ')
 
-    return {lastMemberMessages, messageIds};      
-      
-    }    
+    return { lastMemberMessages, messageIds }
+  }
 
   public render() {
-    
-    const questionAndMessageIds = this.getQuestionToAnalyze(); 
+    const questionAndMessageIds = this.getQuestionToAnalyze()
 
     return this.state.visible ? (
       <>
@@ -107,35 +114,46 @@ export default class ChatTab extends React.Component{
             messageId={
               (this.props.match && this.props.match.params.msgId) || ''
             }
-          />    
+          />
 
-          <Query query={GET_SUGGESTED_ANSWER_QUERY} pollInterval={2000} variables={{question: questionAndMessageIds.lastMemberMessages}}>
-          {({ data, loading, error }) => {
-            if (loading || error) {return <ChatPanel
-            allReplies = {null}
-            memberId = ''
-            messageId = {[]}
-            questionToLabel = ''
-            addMessage={this.props.addMessage}
-            messages={(this.props.messages && this.props.messages.list) || []}
-            suggestedAnswer = ''
-          />;}
-    
-            return (
+          <Query
+            query={GET_SUGGESTED_ANSWER_QUERY}
+            pollInterval={2000}
+            variables={{ question: questionAndMessageIds.lastMemberMessages }}
+          >
+            {({ data, loading, error }) => {
+              if (loading || error) {
+                return (
+                  <ChatPanel
+                    allReplies={null}
+                    memberId=""
+                    messageId={[]}
+                    questionToLabel=""
+                    addMessage={this.props.addMessage}
+                    messages={
+                      (this.props.messages && this.props.messages.list) || []
+                    }
+                    suggestedAnswer=""
+                  />
+                )
+              }
 
-            <ChatPanel
-            allReplies = {JSON.parse(data.getAnswerSuggestion.allReplies)}
-            memberId = {this.props.match.params.id}
-            messageId = {questionAndMessageIds.messageIds}
-            questionToLabel = {data.getAnswerSuggestion.text || ''}
-            addMessage={this.props.addMessage}
-            messages={(this.props.messages && this.props.messages.list) || []}
-            suggestedAnswer = {data.getAnswerSuggestion.reply}
-          />)
-          }}
+              return (
+                <ChatPanel
+                  allReplies={JSON.parse(data.getAnswerSuggestion.allReplies)}
+                  memberId={this.props.match.params.id}
+                  messageId={questionAndMessageIds.messageIds}
+                  questionToLabel={data.getAnswerSuggestion.text || ''}
+                  addMessage={this.props.addMessage}
+                  messages={
+                    (this.props.messages && this.props.messages.list) || []
+                  }
+                  suggestedAnswer={data.getAnswerSuggestion.reply}
+                />
+              )
+            }}
+          </Query>
 
-          </Query>          
-          
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>
           )}
@@ -147,7 +165,6 @@ export default class ChatTab extends React.Component{
       </>
     )
   }
-
 }
 
 const ChatHeader = (props) => (
