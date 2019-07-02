@@ -281,7 +281,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   }
   private getReply = (allReplies: object, intent: string) => {
     //strip \n
-    return allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, '')
+    const message = allReplies.find(message => message.intent === intent);
+    return message.reply.replace(/(\r\n|\n|\r)/gm, '')
   }
 
   private shouldSubmit = (e: React.KeyboardEvent<any>) => {
@@ -342,10 +343,9 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   }
 
   private getAllIntents = (allReplies: object) => {
-    const allIntents = allReplies
-      ? Object.keys(allReplies).filter((key) => key !== 'other')
-      : []
-    return [...new Set(allIntents)]
+    const allIntents = allReplies ? allReplies.map(message => message.intent).filter((key) => key !== 'other') : [];
+
+    return allIntents;
   }
 
   private showMoreReplies = () => {

@@ -38,7 +38,10 @@ const GET_SUGGESTED_ANSWER_QUERY = gql`
     getAnswerSuggestion(question: $question) {
       reply
       text
-      allReplies
+      allRepliesArray {        
+        reply
+        intent      
+      }
     }
   }
 `
@@ -62,7 +65,6 @@ export default class ChatTab extends React.Component {
     }
   }
 
-  //concatenates last messages written by member into one question. The loop could maybe be improved?
   private getQuestionToAnalyze() {
     var lastMemberMessages = ''
     var messageIds = []
@@ -136,11 +138,12 @@ export default class ChatTab extends React.Component {
                     suggestedAnswer=""
                   />
                 )
-              }
+              }              
 
               return (
+
                 <ChatPanel
-                  allReplies={JSON.parse(data.getAnswerSuggestion.allReplies)}
+                  allReplies={data.getAnswerSuggestion.allRepliesArray}
                   memberId={this.props.match.params.id}
                   messageId={questionAndMessageIds.messageIds}
                   questionToLabel={data.getAnswerSuggestion.text || ''}
