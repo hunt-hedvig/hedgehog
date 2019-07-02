@@ -70,27 +70,23 @@ export default class ChatTab extends React.Component{
     var lastMemberMessages = '';
     var messageIds = [];
 
-    if (this.props.messages && this.props.messages.list){
+    if (!this.props.messages || !this.props.messages.list || this.props.messages.list.length === 0){
+      return [lastMemberMessages, messageIds];}
             
-      let message = this.props.messages.list[this.props.messages.list.length-1];      
+    const messages = this.props.messages.list;
 
-      let i=1;
-      // this.props.match.params.id is the member id
-      while (i<this.props.messages.list.length+1 && message.header.fromId == +this.props.match.params.id && message.id === "free.chat.message"){  
-        
-        message = this.props.messages.list[this.props.messages.list.length-i];  
-        lastMemberMessages = message.body.text.concat(' ').concat(lastMemberMessages);  
+    const fromIds = messages.map(message => message.header.fromId);
 
-        messageIds.push(String(message.header.messageId));   
+    const lastNonMemberIndex = fromIds.map(id => id === +this.props.match.params.id).lastIndexOf(false);  
 
-        i++;
-        message = this.props.messages.list[this.props.messages.list.length-i]; 
-      }      
+    lastMemberMessages = messages.filter((message, index) =>  message.id === "free.chat.message" && index > lastNonMemberIndex );
+
+    messageIds = lastMemberMessages.map(message => message.header.messageId);
+    lastMemberMessages = lastMemberMessages.map(message => message.body.text).join(' ');    
+
+    return {lastMemberMessages, messageIds};      
       
     }    
-    return [lastMemberMessages, messageIds];      
-      
-    }
 
   public render() {
     
@@ -113,10 +109,9 @@ export default class ChatTab extends React.Component{
             }
           />    
 
-          {/* alternatives for updating the query https://www.apollographql.com/docs/react/essentials/queries/#polling-and-refetching*/}
-          <Query query={GET_SUGGESTED_ANSWER_QUERY} pollInterval={2000} variables={{question: questionAndMessageIds[0]}}>
+          <Query query={GET_SUGGESTED_ANSWER_QUERY} pollInterval={2000} variables={{question: questionAndMessageIds.lastMemberMessages}}>
           {({ data, loading, error }) => {
-            if (loading || error) return <ChatPanel
+            if (loading || error) {return <ChatPanel
             allReplies = {null}
             memberId = ''
             messageId = {[]}
@@ -124,14 +119,14 @@ export default class ChatTab extends React.Component{
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}
             suggestedAnswer = ''
-          />;
+          />;}
     
             return (
 
             <ChatPanel
             allReplies = {JSON.parse(data.getAnswerSuggestion.allReplies)}
             memberId = {this.props.match.params.id}
-            messageId = {questionAndMessageIds[1]}
+            messageId = {questionAndMessageIds.messageIds}
             questionToLabel = {data.getAnswerSuggestion.text || ''}
             addMessage={this.props.addMessage}
             messages={(this.props.messages && this.props.messages.list) || []}

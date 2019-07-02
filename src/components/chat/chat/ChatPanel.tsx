@@ -96,7 +96,6 @@ const AUTO_LABEL_QUESTION = gql`
   mutation AutoLabelQuestion($question: String!, $label: String!, $memberId: String, $messageId: [String!]) {
     autoLabelQuestion(question: $question, label: $label, memberId: $memberId, messageId: $messageId){
       message
-
     }
   }
 `;
@@ -108,7 +107,7 @@ interface ChatPanelProps {
   questionToLabel: string
   memberId: string
   messageId: string
-  allReplies: JSON
+  allReplies: any
 }
 
 interface State {
@@ -142,7 +141,6 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     const allReplies = this.props.allReplies;
     const allIntents = this.getAllIntents(allReplies);
 
-
     return (    
    
           <Mutation mutation= {AUTO_LABEL_QUESTION} ignoreResults = {true} onCompleted = {this.sendMessage}
@@ -159,10 +157,10 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 <MenuList>
 
                 {allIntents!.map((intent) => {
-                  //strip \n 
-                  const  text  = allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, "");
+                  
+                  const  text  = this.getReply(allReplies, intent);
                   return (
-                     (this.state.showMoreReplies == true || (this.state.showMoreReplies == false && this.props.suggestedAnswer === text)) && (
+                     (this.state.showMoreReplies || (!this.state.showMoreReplies && this.props.suggestedAnswer === text)) && (
                       <MenuItem
                       key={text}                      
                       onClick={this.selectAnswerSuggestion(intent, allReplies)}
@@ -265,6 +263,12 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       
     )
   }
+  private getReply = (allReplies: object, intent: string) => {
+
+    //strip \n 
+    return allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, "");
+
+  }
 
   private shouldSubmit = (e: React.KeyboardEvent<any>) => {
 
@@ -318,32 +322,22 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       })
   }
 
-  //takes an object with intents as keys
-  private getAllIntents = (allReplies: array) => {
+  private getAllIntents = (allReplies: object) => {    
 
-    var allIntents = [];
-
-    //appending all intents/keys to array, except from other class
-    for (var key in allReplies) {
-    if (allReplies.hasOwnProperty(key) && key !== "other") {
-        allIntents.push(key)
-      }
-    }
-
-    return allIntents;
+    const allIntents = allReplies ? Object.keys(allReplies).filter(key => key !== 'other') : [];
+    return [...(new Set(allIntents))]
   } 
 
   private showMoreReplies = () => {
     this.setState({showMoreReplies: !this.state.showMoreReplies});
   }
 
-  private selectAnswerSuggestion = (intent: string, allReplies: array) => (
+  private selectAnswerSuggestion = (intent: string, allReplies: object) => (
     e: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    //e.preventDefault()    
+  ) => {   
     this.setState({
       chosenIntent: intent,
-      currentMessage: allReplies[intent].reply.replace(/(\r\n|\n|\r)/gm, ""),
+      currentMessage: this.getReply(allReplies, intent),
     })
   }
 
