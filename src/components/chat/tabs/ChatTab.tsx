@@ -129,7 +129,7 @@ export default class ChatTab extends React.Component {
                   <ChatPanel
                     allReplies={null}
                     memberId=""
-                    messageId={[]}
+                    messageIds={[]}
                     questionToLabel=""
                     addMessage={this.props.addMessage}
                     messages={
@@ -145,7 +145,7 @@ export default class ChatTab extends React.Component {
                 <ChatPanel
                   allReplies={data.getAnswerSuggestion.allRepliesArray}
                   memberId={this.props.match.params.id}
-                  messageId={questionAndMessageIds.messageIds}
+                  messageIds={questionAndMessageIds.messageIds}
                   questionToLabel={data.getAnswerSuggestion.text || ''}
                   addMessage={this.props.addMessage}
                   messages={

@@ -96,17 +96,17 @@ const AUTO_LABEL_QUESTION = gql`
     $question: String!
     $label: String!
     $memberId: String
-    $messageId: [String!]
+    $messageIds: [String!]
   ) {
     autoLabelQuestion(
       question: $question
       label: $label
       memberId: $memberId
-      messageId: $messageId
+      messageIds: $messageIds
     ) {
       message
     }
-  }
+  } 
 `
 
 interface ChatPanelProps {
@@ -115,7 +115,7 @@ interface ChatPanelProps {
   suggestedAnswer: string
   questionToLabel: string
   memberId: string
-  messageId: string
+  messageIds: string
   allReplies: any
 }
 
@@ -165,9 +165,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                     {allIntents!.map((intent) => {
                       const text = this.getReply(allReplies, intent)
                       return (
-                        (this.state.showMoreReplies ||
-                          (!this.state.showMoreReplies &&
-                            this.props.suggestedAnswer === text)) && (
+                        (this.shouldShowSuggestedAnswer(text)) && (
                           <MenuItem
                             key={text}
                             onClick={this.selectAnswerSuggestion(
@@ -184,7 +182,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                   <ShowMoreRepliesButton
                     variant="outlined"
                     color="default"
-                    onClick={this.showMoreReplies}
+                    onClick={this.toggleMoreReplies}
                   >
                     {this.state.showMoreReplies
                       ? 'Hide replies'
@@ -208,7 +206,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                         question: this.props.questionToLabel,
                         label: this.state.chosenIntent,
                         memberId: this.props.memberId,
-                        messageId: this.props.messageId,
+                        messageIds: this.props.messageIds,
                       },
                     })
                   }
@@ -262,7 +260,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                         question: this.props.questionToLabel,
                         label: this.state.chosenIntent,
                         memberId: this.props.memberId,
-                        messageId: this.props.messageId,
+                        messageIds: this.props.messageIds,
                       },
                     })
                   } else {
@@ -279,6 +277,12 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       </Mutation>
     )
   }
+  private shouldShowSuggestedAnswer = (text: string) => {
+    return this.state.showMoreReplies ||
+    (!this.state.showMoreReplies && this.props.suggestedAnswer === text)
+
+  }
+
   private getReply = (allReplies: object, intent: string) => {
 
     const message = allReplies.find(message => message.intent === intent);
@@ -340,7 +344,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     return allIntents;
   }
 
-  private showMoreReplies = () => {
+  private toggleMoreReplies = () => {
     this.setState({ showMoreReplies: !this.state.showMoreReplies })
   }
 
