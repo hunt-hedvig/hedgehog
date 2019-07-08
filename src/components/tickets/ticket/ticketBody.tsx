@@ -43,6 +43,11 @@ class TicketBody extends React.Component {
     status: this.props.status,
   }
 
+  //TODO: Cancel mutations: 
+  // componentWillUnmount() {
+
+  // }
+
   render() {
     const editTicket = (
       <Segment.Group>

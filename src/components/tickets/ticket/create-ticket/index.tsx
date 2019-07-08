@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'react-emotion'
-import { Button, Dropdown, TextArea } from 'semantic-ui-react'
+import { Button, Dropdown, TextArea, Checkbox, Form, Label } from 'semantic-ui-react'
 import format from 'date-fns/format'
 import { Mutation } from 'react-apollo'
 import {
@@ -22,7 +22,6 @@ const NewTicketBody = styled('div')`
   padding: 1em;
 `
 
-//TODO: Fetch these or just match them to hardcoded values in Backoffice
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
 
 const priorityOptions = [
@@ -45,6 +44,7 @@ class CreateNewTicket extends React.Component {
     priority: null,
     remindNotificationDate: '',
     remindNotificationTime: '',
+    remindMessage: '',
     description: '',
   }
 
@@ -63,7 +63,7 @@ class CreateNewTicket extends React.Component {
         <Mutation mutation={CREATE_TICKET}>
           {(createNewTicket, { data }) => {
             return (
-              <form
+              <Form
                 onSubmit={(e) => {
                   e.preventDefault()
                   createNewTicket({
@@ -73,8 +73,11 @@ class CreateNewTicket extends React.Component {
                         createdBy: this.state.createdBy,
                         priority: this.state.priority,
                         type: 'REMIND',
-                        remindNotificationDate: this.state.remindNotificationDate,
-                        remindNotificationTime: this.state.remindNotificationTime,
+                        reminder:{
+                          date: this.state.remindNotificationDate,
+                          time: this.state.remindNotificationTime,
+                          message: this.state.remindMessage, 
+                        },
                         description: this.state.description,
                         status: 'WAITING',
                       }
@@ -84,7 +87,7 @@ class CreateNewTicket extends React.Component {
                   this.props.closeModal()
                 }}
               >
-                <label htmlFor={'description'}>Description:</label>
+                <Label htmlFor={'description'}>Description:</Label>
                 <br />
                 <TextArea
                   row={4}
@@ -95,7 +98,7 @@ class CreateNewTicket extends React.Component {
                   onChange={(e) => this.handleChange(e)}
                 />
                 <br />
-                <label htmlFor={'createdBy'}>Created by:</label>
+                <Label htmlFor={'createdBy'}>Created by:</Label>
                 <Dropdown
                   name="createdBy"
                   placeholder="Select team member"
@@ -107,7 +110,7 @@ class CreateNewTicket extends React.Component {
                     this.setState({ createdBy: value })
                   }}
                 />
-                <label htmlFor={'assign'}>Assign to:</label>
+                <Label htmlFor={'assign'}>Assign to:</Label>
                 <Dropdown
                   name="assign"
                   placeholder="Select team member"
@@ -119,7 +122,7 @@ class CreateNewTicket extends React.Component {
                     this.setState({ assignedTo: value })
                   }}
                 />
-                <label htmlFor={'priority'}>Priority:</label>
+                <Label htmlFor={'priority'}>Priority:</Label>
                 <Dropdown
                   name="priority"
                   placeholder="Set priority"
@@ -131,16 +134,47 @@ class CreateNewTicket extends React.Component {
                   }}
                 />
                 <br/>
-                <p><strong>Set reminder:</strong></p>
-                <Datepicker 
-                  handleChange={this.handleChange}
-                  datepickerName="remindNotificationDate"
-                  datepickerValue={this.state.remindNotificationDate}
-                  timepickerName="remindNotificationTime"
-                  timepickerValue={this.state.remindNotificationTime}
-                />
+                <div>
+                  <p><strong>Set reminder:</strong></p>
+                  <Checkbox 
+                    toggle 
+                    label="Include a reminder"
+                    checked={this.state.setReminder}
+                    onChange={()=> { 
+                        let flippedState = !this.state.setReminder
+                        this.setState(  {setReminder: flippedState })}
+                        }
+                    />
+                </div>
+                { 
+                  this.state.setReminder ? 
+                  <div>
+                  <Label htmlFor={'remindMessage'}>Message:</Label> 
+                  <br/>
+                  <TextArea
+                  row={4}
+                  col={20}
+                  name="remindMessage"
+                  placeholder="Give a short remind message (max 100 characters)"
+                  value={this.state.remindMessage}
+                  onChange={(e) => this.handleChange(e)}
+                  maxLength={100}
+                  />
+                  <br />
+                  <Datepicker 
+                    handleChange={this.handleChange}
+                    datepickerName="remindNotificationDate"
+                    datepickerValue={this.state.remindNotificationDate}
+                    timepickerName="remindNotificationTime"
+                    timepickerValue={this.state.remindNotificationTime}
+                  />
+                  </div>
+                  :
+                  null 
+                }
+                <br/>
                 <Button type="submit">Create</Button>
-              </form>
+              </Form>
             )
           }}
         </Mutation>

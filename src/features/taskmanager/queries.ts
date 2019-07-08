@@ -7,11 +7,13 @@ export const CREATE_TICKET = gql`
         id 
         description
         assignedTo
+        createdBy
         type
         status
         priority
         remindNotificationDate
         remindNotificationTime
+        remindMessage  
       }
     }  
   `
@@ -27,6 +29,7 @@ export const GET_TICKETS = gql`
       priority
       remindNotificationDate
       remindNotificationTime
+      remindMessage
     }
   }
 `
@@ -49,10 +52,17 @@ export const ASSIGN_TO = gql`
 `
 
 export const SET_REMINDER = gql`
-  mutation SetReminderDate ($ticketId: ID!, $remindNotificationDate: LocalDate ) {
-    setReminderDate (ticketId: $ticketId, remindNotificationDate: $remindNotificationDate) {
+  mutation SetReminderDate ($ticketId: ID!, $remindNotificationDate: LocalDate, $remindNotificationTime: LocalTime ) {
+    setReminderDate (
+        ticketId: $ticketId,
+        remindNotificationDate: $remindNotificationDate, 
+        remindNotificationTime:$remindNotificationTime 
+      ) 
+    {
       id
-      remindDateNotifcationDate
+      remindNotificationDate
+      remindNotificationTime
+      remindMessage
     }
   }
 `

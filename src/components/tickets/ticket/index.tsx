@@ -26,6 +26,7 @@ const Card = styled('div')({
 })
 
 const Blob = styled('span')`
+  min-width: 10px,
   margin: 10px;
   padding: 1em 1em;
   background: white;
@@ -78,7 +79,7 @@ class Ticket extends React.Component {
         <span>
           {/* <strong>Priority:</strong> */}
           <Blob color={this.props.priority}>
-             {this.props.priority}
+             
           </Blob>
         </span>
         <span>

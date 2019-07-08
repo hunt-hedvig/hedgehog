@@ -1,14 +1,14 @@
 import React from 'react'
-import {Input } from 'semantic-ui-react'
+import {Input, Label } from 'semantic-ui-react'
 
 class Datepicker extends React.Component {
 
 	render(){
 		return (
 			<React.Fragment>
-				<label htmlFor={this.props.datepickerName}>
+				<Label htmlFor={this.props.datepickerName}>
 					Set remind notification date:
-				</label>
+				</Label>
 				<br/>
 				<input 
 					type="date" 
@@ -17,9 +17,9 @@ class Datepicker extends React.Component {
 					onChange={(e) => this.props.handleChange(e)}
 				/>	
 				<br/>
-				<label htmlFor={this.props.timepickerName}>
+				<Label htmlFor={this.props.timepickerName}>
 					Set remind notification time:
-				</label>
+				</Label>
 				<br/>
 				<Input 
 					type="text" 
