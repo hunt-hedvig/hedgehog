@@ -286,7 +286,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   private getReply = (allReplies: object, intent: string) => {
 
     const message = allReplies.find(message => message.intent === intent);
-    return message.reply.replace(/(\r\n|\n|\r)/gm, '')
+    return message.reply
   }
 
   private shouldSubmit = (e: React.KeyboardEvent<any>) => {

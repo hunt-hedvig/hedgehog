@@ -35,13 +35,13 @@ const ChatHeaderStyle = styled.div`
 `
 const GET_SUGGESTED_ANSWER_QUERY = gql`
   query GetSuggestedAnswer($question: String) {
-    getAnswerSuggestion(question: $question) {
+    getAnswerSuggestion(question: $question) {      
       reply
       text
-      allRepliesArray {        
+      allReplies {        
         reply
         intent      
-      }
+      }      
     }
   }
 `
@@ -66,8 +66,8 @@ export default class ChatTab extends React.Component {
   }
 
   private getQuestionToAnalyze() {
-    var lastMemberMessages = ''
-    var messageIds = []
+    let lastMemberMessages = ''
+    let messageIds = []
 
     if (
       !this.props.messages ||
@@ -96,6 +96,20 @@ export default class ChatTab extends React.Component {
       .join(' ')
 
     return { lastMemberMessages, messageIds }
+  }
+
+  private getQuestionAndAnswer(data: object) {
+    let question = "";
+    let answer = "";
+    const questionResponses = data.filter(sentence =>  (sentence.text.match(/\?/g) || []).length > 0);
+
+    if (questionResponses.length !== 1){
+      return {question, answer}
+    }
+    question = questionResponses[0].text
+    answer = questionResponses[0].reply
+    return {question, answer}
+
   }
 
   public render() {
@@ -139,19 +153,19 @@ export default class ChatTab extends React.Component {
                   />
                 )
               }              
-
+              
               return (
 
                 <ChatPanel
-                  allReplies={data.getAnswerSuggestion.allRepliesArray}
+                  allReplies={(data.getAnswerSuggestion.length > 0 && data.getAnswerSuggestion[0].allReplies) || null }
                   memberId={this.props.match.params.id}
                   messageIds={questionAndMessageIds.messageIds}
-                  questionToLabel={data.getAnswerSuggestion.text || ''}
+                  questionToLabel={this.getQuestionAndAnswer(data.getAnswerSuggestion).question}
                   addMessage={this.props.addMessage}
                   messages={
                     (this.props.messages && this.props.messages.list) || []
                   }
-                  suggestedAnswer={data.getAnswerSuggestion.reply}
+                  suggestedAnswer={this.getQuestionAndAnswer(data.getAnswerSuggestion).answer}
                 />
               )
             }}
