@@ -98,17 +98,21 @@ export default class ChatTab extends React.Component {
     return { lastMemberMessages, messageIds }
   }
 
-  private getQuestionAndAnswer(data: object) {
+  private getQuestionAndAnswer(responses: object) {
     let question = "";
     let answer = "";
-    const questionResponses = data.filter(sentence =>  (sentence.text.match(/\?/g) || []).length > 0);
+    const questionResponses = responses.filter(sentence =>  (sentence.text.match(/\?/g) || []).length > 0);
 
-    if (questionResponses.length !== 1){
+    if (questionResponses.length > 1){
+      return {question, answer}
+    }else if(questionResponses.length === 1){ 
+      question = questionResponses[0].text;
+      answer = questionResponses[0].reply;
       return {question, answer}
     }
-    question = questionResponses[0].text
-    answer = questionResponses[0].reply
-    return {question, answer}
+    question = (responses.length) ? responses[responses.length-1].text : "";
+    answer = (responses.length) ? responses[responses.length-1].reply : "";
+    return {question, answer}    
 
   }
 
