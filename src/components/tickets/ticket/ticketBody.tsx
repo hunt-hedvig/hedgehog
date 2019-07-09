@@ -9,20 +9,26 @@ import {
   Icon,
   Segment,
   TextArea,
+  Label,
 } from 'semantic-ui-react'
 import {
   ASSIGN_TO,
   CHANGE_DESCRIPTION,
+  CHANGE_REMINDER,
   CHANGE_STATUS, 
   GET_TICKETS,
-  SET_REMINDER,
 } from '../../../features/taskmanager/queries'
 import {
   IEX_TEAM_MEMBERS,
   TICKET_STATUS,
   createOptionsArray,
+  createOptionsArrayFromObjects, 
+  lookupStatus,
+  lookupTeamMemberName, 
 } from '../../../features/taskmanager/types'
 import Notification from '../../notifications/Notification'
+import Datepicker from './create-ticket/datepicker'
+import format from 'date-fns/format'
 
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
@@ -39,13 +45,16 @@ class TicketBody extends React.Component {
   public state = {
     inputDescription: this.props.description,
     inputAssignedTo: this.props.assignedTo,
+    inputRemindNotificationDate: format(new Date(), 'yyyy-MM-dd'),
+    inputRemindNotificationTime: format(new Date(), 'HH:mm:ss'),
+    inputRemindMessage: '', 
     showNotification: false,
+    notificationMessage: "", 
     status: this.props.status,
   }
 
   //TODO: Cancel mutations: 
   // componentWillUnmount() {
-
   // }
 
   render() {
@@ -60,7 +69,7 @@ class TicketBody extends React.Component {
               <Form
                 onSubmit={(e) => {
                   e.preventDefault()
-                  this.setState({ showNotification: true })
+                  this.setState({ showNotification: true, notificationMessage: "Success! Changed description" })
                   changeTicketDescription({
                     variables: {
                       id: this.props.id,
@@ -70,7 +79,7 @@ class TicketBody extends React.Component {
                 }}
               >
                 <Form.Field>
-                  <label htmlFor="description">Edit description: </label>
+                  <Label htmlFor="description">Edit description: </Label>
                   <TextArea
                     row={3}
                     col={15}
@@ -83,17 +92,7 @@ class TicketBody extends React.Component {
                     Change description
                   </Button>
                 </Form.Field>
-                {this.state.showNotification ? (
-                  <Notification
-                    closeHandler={(id) => this.closeNotification(id)}
-                    content={{
-                      header: 'Success!',
-                      id: 'confirmation',
-                      message: 'Changed description!',
-                      type: 'green',
-                    }}
-                  />
-                ) : null}
+                
               </Form>
             )
           }}
@@ -105,6 +104,8 @@ class TicketBody extends React.Component {
               <Form
                 onSubmit={(e) => {
                   e.preventDefault()
+                  this.setState({ showNotification: true,
+                       notificationMessage: "Success! Assigned the ticket to: " + lookupTeamMemberName(this.state.inputAssignedTo) })
                   assignTicketToTeamMember({
                     variables: {
                       ticketId: this.props.id,
@@ -114,7 +115,7 @@ class TicketBody extends React.Component {
                 }}
               >
                 <Form.Field inline>
-                  <label htmlFor="assign">Assign to: </label>
+                  <Label htmlFor="assign">Assign to: </Label>
                   <Dropdown
                     name="assign"
                     placeholder="Select team member"
@@ -144,6 +145,8 @@ class TicketBody extends React.Component {
               <Form
                 onSubmit={(e) => {
                   e.preventDefault()
+                  this.setState({ showNotification: true, 
+                      notificationMessage: "Success! Changed the status to: " + lookupStatus(this.state.status)})
                   changeTicketStatus({
                     variables: {
                       ticketId: this.props.id,
@@ -153,7 +156,7 @@ class TicketBody extends React.Component {
                 }}
               >
                 <Form.Field inline>
-                  <label htmlFor="status">Status: </label>
+                  <Label htmlFor="status">Status: </Label>
                   <Dropdown
                     name="status"
                     placeholder="Assign new status:"
@@ -174,6 +177,52 @@ class TicketBody extends React.Component {
           }}
         </Mutation>
 
+       <Divider horizontal> </Divider>
+
+       <Mutation mutation={CHANGE_REMINDER} key={this.props.id + 'reminder'}>
+          { (changeTicketReminder, {data}) => {
+            return (
+              <Form 
+                onSubmit={ e => {
+                  e.preventDefault()
+                  this.setState({ showNotification: true,
+                       notificationMessage: "Success! Set a reminder for: " + this.state.inputRemindNotificationDate + " " + this.state.inputRemindNotificationTime })
+                  changeTicketReminder({
+                    variables: {
+                      ticketId: this.props.id,
+                      newReminder: {
+                        date: this.state.inputRemindNotificationDate,
+                        time: this.state.inputRemindNotificationTime,
+                        message: this.state.inputRemindMessage,
+                      },
+                    }
+                  })
+                }}>
+              <Label htmlFor={'remindMessage'}>Message for remind notification:</Label> 
+              <br/>  
+              <TextArea
+                row={4}
+                col={20}
+                name="inputRemindMessage"
+                placeholder="Give a short remind message (max 100 characters)"
+                value={this.state.inputRemindMessage}
+                onChange={(e) => this.handleChange(e)}
+                maxLength={100}
+              />
+              <Datepicker 
+                handleChange={ e => this.handleChange(e) }
+                datepickerName="inputRemindNotificationDate"
+                datepickerValue={this.state.inputRemindNotificationDate}
+                timepickerName="inputRemindNotificationTime"
+                timepickerValue={this.state.inputRemindNotificationTime}
+              />
+              <Button basic type="submit" compact>
+                Set reminder
+              </Button>
+              </Form>
+            )
+          }}
+          </Mutation>
 
       </Segment.Group>
     )
@@ -186,7 +235,7 @@ class TicketBody extends React.Component {
         <Segment compact textAlign="left">
           {this.props.description}
         </Segment>
-        <Segment compact>Status: {this.props.status} </Segment>
+        <Segment compact>Status: {lookupStatus(this.props.status)} </Segment>
       </Segment.Group>
     )
 
@@ -204,6 +253,19 @@ class TicketBody extends React.Component {
           <Icon name="pencil alternate" />
           Edit
         </Button>
+        {
+          this.state.showNotification ? (
+            <Notification
+                closeHandler={(id) => this.closeNotification(id)}
+                content={{
+                header: 'Success!',
+                id: 'confirmation',
+                message: this.state.notificationMessage,
+                type: 'green',
+              }}
+            />
+          ) : null
+        }
       </TicketBodyCss>
     )
   }
@@ -226,30 +288,4 @@ class TicketBody extends React.Component {
 
 export default TicketBody
 
-//////////////// SLASKEN
 
-//Saved these just in case, they should not be needed....
-//update={(cache, data ) => updateCache(cache, data, "changeTicketDescription")}
-//update={(cache, data ) => updateCache(cache, data, "assignTicketToTeamMember")}
-
-//Update mutated tickets in cache, keep in sync with the server
-//
-// const updateCache = (cache, data, query) => {
-//   const mutatedTicket= data.data[query]
-//   const updatedData = {...cache.data.data}
-//   const updatedTicket = {...updatedData['Ticket:'+ mutatedTicket.id]}
-
-//   //TODO: Make this more general, without need for if statements
-//   if(query === "assignTicketTo"){
-//     updatedTicket.assignedTo = mutatedTicket.assignedTo
-//       updatedData['Ticket:'+updatedTicket.id] = mutatedTicket.assignedTo
-//   }
-//   else if(query === "changeTicketDescription") {
-//     updatedTicket.description = mutatedTicket.description
-//     updatedData['Ticket:'+updatedTicket.id] = mutatedTicket.description
-//   }
-//   cache.writeQuery({
-//     query: GET_TICKETS,
-//     data:  updatedData,
-//   })
-// }

@@ -2,7 +2,6 @@ import React from 'react'
 import {Input, Label } from 'semantic-ui-react'
 
 class Datepicker extends React.Component {
-
 	render(){
 		return (
 			<React.Fragment>

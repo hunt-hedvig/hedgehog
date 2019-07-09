@@ -5,6 +5,7 @@ import { Icon, Button, Popup } from 'semantic-ui-react'
 import parse from 'date-fns/parse'
 import { CLAIM, MESSAGE, REMIND, CALL_ME, OTHER} from './icons'
 import TicketBody from './ticketBody'
+import {IEX_TEAM_MEMBERS, lookupTeamMemberName } from '../../../features/taskmanager/types' 
 
 
 const typeIcons = {
@@ -84,8 +85,8 @@ class Ticket extends React.Component {
         </span>
         <span>
           <strong>Assigned to:</strong> 
-          <Blob color={this.props.assignedTo}>
-            {this.props.assignedTo}
+          <Blob color={"seashell"}>
+            {lookupTeamMemberName(this.props.assignedTo)}
           </Blob>
         </span>
 
@@ -134,19 +135,9 @@ class Ticket extends React.Component {
   } 
 }
 
+//TODO: Fix this
 const getNotificationTimeInWords = (dateTime) => {
   return dateTime
-    // var [date, time ] = dateTime.split('T')
-    // console.log(date)
-    // console.log(time)
-    // console.log(dateTime)
-
-    // var parsedD = parse(date, 'yyyy-MM-dd', Date())
-    // console.log(parsedD)
-
-    // var parsedT = parse('10:03:22', 'HH:mm:ss', Date())
-    // console.log(parsedT)
-
 }
 
 

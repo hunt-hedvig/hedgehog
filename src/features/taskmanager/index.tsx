@@ -5,7 +5,6 @@ import Toolbar from '../../components/taskmanager-toolbar/index'
 import Tickets from '../../components/tickets/index'
 import CreateNewTicket from '../../components/tickets/ticket/create-ticket/index'
 
-
 import {
   createOptionsArray,
   HIGH_PRIORITY,

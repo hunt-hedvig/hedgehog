@@ -1,5 +1,11 @@
 import gql from 'graphql-tag'
  
+//Hacky solution to know who the user is: , returns the email.
+export const ME = gql`
+  query Me {
+    me 
+  }
+`
 export const CREATE_TICKET = gql`
   mutation CreateTicket ( $ticket: TicketIn ) 
     {
@@ -19,11 +25,12 @@ export const CREATE_TICKET = gql`
   `
 
 export const GET_TICKETS = gql`
-  query GetTickets($request: String) {
-    tickets(req: $request) {
+  query GetTickets {
+    tickets {
       id
       description
       assignedTo
+      createdBy
       type
       status
       priority
@@ -51,27 +58,38 @@ export const ASSIGN_TO = gql`
   }
 `
 
-export const SET_REMINDER = gql`
-  mutation SetReminderDate ($ticketId: ID!, $remindNotificationDate: LocalDate, $remindNotificationTime: LocalTime ) {
-    setReminderDate (
-        ticketId: $ticketId,
-        remindNotificationDate: $remindNotificationDate, 
-        remindNotificationTime:$remindNotificationTime 
-      ) 
-    {
-      id
-      remindNotificationDate
-      remindNotificationTime
-      remindMessage
-    }
-  }
-`
+// export const SET_REMINDER = gql`
+//   mutation SetReminderDate ($ticketId: ID!, $remindNotificationDate: LocalDate, $remindNotificationTime: LocalTime ) {
+//     setReminderDate (
+//         ticketId: $ticketId,
+//         remindNotificationDate: $remindNotificationDate, 
+//         remindNotificationTime:$remindNotificationTime 
+//       ) 
+//     {
+//       id
+//       remindNotificationDate
+//       remindNotificationTime
+//       remindMessage
+//     }
+//   }
+// `
 
 export const CHANGE_STATUS = gql`
   mutation ChangeTicketStatus ($ticketId: ID!, $newStatus: TicketStatus ) {
     changeTicketStatus (ticketId: $ticketId, newStatus: $newStatus) {
       id
       status 
+    }
+  }
+`
+
+export const CHANGE_REMINDER = gql`
+  mutation ChangeTicketReminder ($ticketId: ID!, $newReminder: RemindNotification  ) {
+    changeTicketReminder (ticketId: $ticketId, newReminder: $newReminder) {
+      id
+      remindNotificationDate
+      remindNotificationTime
+      remindMessage 
     }
   }
 `

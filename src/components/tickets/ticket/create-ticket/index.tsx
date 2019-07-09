@@ -16,12 +16,10 @@ import {
 } from '../../../../features/taskmanager/types'
 import Datepicker from './datepicker.tsx'
 
-
 const NewTicketBody = styled('div')`
   border: solid 1px gray;
   padding: 1em;
 `
-
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
 
 const priorityOptions = [
@@ -29,7 +27,6 @@ const priorityOptions = [
   { text: 'medium', value: 0.5 },
   { text: 'low', value: 0.0 },
 ]
-
 
 const formatDateTime = (date) => {
   let fDate = format(date, 'yyyy-MM-dd')
@@ -40,12 +37,12 @@ const formatDateTime = (date) => {
 class CreateNewTicket extends React.Component {
   state = {
     assignedTo: null,
-    createdBy: null,
     priority: null,
     remindNotificationDate: '',
     remindNotificationTime: '',
     remindMessage: '',
     description: '',
+    setReminder: false, 
   }
 
   componentDidMount() {
@@ -66,23 +63,32 @@ class CreateNewTicket extends React.Component {
               <Form
                 onSubmit={(e) => {
                   e.preventDefault()
+                  const reminder = (this.state.setReminder) ? 
+                    {
+                      date: this.state.remindNotificationDate,
+                      time: this.state.remindNotificationTime,
+                      message: this.state.remindMessage, 
+                    }
+                    :
+                    null 
+
                   createNewTicket({
                     variables: {
                       ticket:{
                         assignedTo: this.state.assignedTo,
-                        createdBy: this.state.createdBy,
                         priority: this.state.priority,
                         type: 'REMIND',
-                        reminder:{
-                          date: this.state.remindNotificationDate,
-                          time: this.state.remindNotificationTime,
-                          message: this.state.remindMessage, 
-                        },
+                        reminder, 
+                        // reminder:{
+                        //   date: this.state.remindNotificationDate,
+                        //   time: this.state.remindNotificationTime,
+                        //   message: this.state.remindMessage, 
+                        // },
                         description: this.state.description,
                         status: 'WAITING',
                       }
                     },
-                    refetchQueries: [{ query: GET_TICKETS, variables: {request: "GiveItToMe"} }],
+                    refetchQueries: [{ query: GET_TICKETS }],
                   })
                   this.props.closeModal()
                 }}
@@ -97,20 +103,8 @@ class CreateNewTicket extends React.Component {
                   value={this.state.description}
                   onChange={(e) => this.handleChange(e)}
                 />
-                <br />
-                <Label htmlFor={'createdBy'}>Created by:</Label>
-                <Dropdown
-                  name="createdBy"
-                  placeholder="Select team member"
-                  search
-                  selection
-                  options={teamOptions}
-                  // value={this.state.inputAssignedTo}
-                  onChange={(e, { value }) => {
-                    this.setState({ createdBy: value })
-                  }}
-                />
-                <Label htmlFor={'assign'}>Assign to:</Label>
+                <br /> 
+                <Label htmlFor='assign'>Assign to:</Label>
                 <Dropdown
                   name="assign"
                   placeholder="Select team member"
