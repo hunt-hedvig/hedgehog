@@ -200,6 +200,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 onKeyDown={(event) => {
                   if (this.shouldSubmit(event)) {
                     event.preventDefault()
+                    if (this.props.questionToLabel !== '') {
                     autoLabelQuestion({
                       variables: {
                         question: this.props.questionToLabel,
@@ -208,6 +209,9 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                         messageIds: this.props.messageIds,
                       },
                     })
+                  } else {
+                    this.sendMessage()
+                    }
                   }
                 }}
               />
