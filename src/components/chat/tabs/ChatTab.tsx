@@ -35,13 +35,13 @@ const ChatHeaderStyle = styled.div`
 `
 const GET_SUGGESTED_ANSWER_QUERY = gql`
   query GetSuggestedAnswer($question: String) {
-    getAnswerSuggestion(question: $question) {      
+    getAnswerSuggestion(question: $question) {
       reply
       text
-      allReplies {        
+      allReplies {
         reply
-        intent      
-      }      
+        intent
+      }
     }
   }
 `
@@ -90,7 +90,9 @@ export default class ChatTab extends React.Component {
         message.id === 'free.chat.message' && index > lastNonMemberIndex,
     )
 
-    messageIds = lastMemberMessagesArray.map((message) => message.header.messageId)
+    messageIds = lastMemberMessagesArray.map(
+      (message) => message.header.messageId,
+    )
     lastMemberMessages = lastMemberMessagesArray
       .map((message) => message.body.text)
       .join(' ')
@@ -99,15 +101,15 @@ export default class ChatTab extends React.Component {
   }
 
   private getQuestionAndAnswer(responses: object) {
-    let question = "";
-    let answer = "";
+    let question = ''
+    let answer = ''
 
-    if (responses.length !== 1){
-      return {question, answer}
+    if (responses.length !== 1) {
+      return { question, answer }
     }
-    question = responses[0].text;
-    answer = responses[0].reply;
-    return {question, answer}  
+    question = responses[0].text
+    answer = responses[0].reply
+    return { question, answer }
   }
 
   public render() {
@@ -150,20 +152,27 @@ export default class ChatTab extends React.Component {
                     suggestedAnswer=""
                   />
                 )
-              }              
-              
-              return (
+              }
 
+              return (
                 <ChatPanel
-                  allReplies={(data.getAnswerSuggestion.length > 0 && data.getAnswerSuggestion[0].allReplies) || null }
+                  allReplies={
+                    (data.getAnswerSuggestion.length > 0 &&
+                      data.getAnswerSuggestion[0].allReplies) ||
+                    null
+                  }
                   memberId={this.props.match.params.id}
                   messageIds={questionAndMessageIds.messageIds}
-                  questionToLabel={this.getQuestionAndAnswer(data.getAnswerSuggestion).question}
+                  questionToLabel={
+                    this.getQuestionAndAnswer(data.getAnswerSuggestion).question
+                  }
                   addMessage={this.props.addMessage}
                   messages={
                     (this.props.messages && this.props.messages.list) || []
                   }
-                  suggestedAnswer={this.getQuestionAndAnswer(data.getAnswerSuggestion).answer}
+                  suggestedAnswer={
+                    this.getQuestionAndAnswer(data.getAnswerSuggestion).answer
+                  }
                 />
               )
             }}

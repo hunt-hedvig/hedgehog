@@ -13,7 +13,6 @@ import { format } from 'date-fns'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { EmojiPicker } from './EmojiPicker'
-import axios from 'axios'
 import { Mutation, Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -106,7 +105,7 @@ const AUTO_LABEL_QUESTION = gql`
     ) {
       message
     }
-  } 
+  }
 `
 
 interface ChatPanelProps {
@@ -165,7 +164,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                     {allIntents!.map((intent) => {
                       const text = this.getReply(allReplies, intent)
                       return (
-                        (this.shouldShowSuggestedAnswer(text)) && (
+                        this.shouldShowSuggestedAnswer(text) && (
                           <MenuItem
                             key={text}
                             onClick={this.selectAnswerSuggestion(
@@ -278,14 +277,14 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     )
   }
   private shouldShowSuggestedAnswer = (text: string) => {
-    return this.state.showMoreReplies ||
-    (!this.state.showMoreReplies && this.props.suggestedAnswer === text)
-
+    return (
+      this.state.showMoreReplies ||
+      (!this.state.showMoreReplies && this.props.suggestedAnswer === text)
+    )
   }
 
   private getReply = (allReplies: object, intent: string) => {
-
-    const message = allReplies.find(message => message.intent === intent);
+    const message = allReplies.find((message) => message.intent === intent)
     return message.reply
   }
 
@@ -339,9 +338,13 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   }
 
   private getAllIntents = (allReplies: object) => {
-    const allIntents = allReplies ? allReplies.map(message => message.intent).filter((key) => key !== 'other') : [];
+    const allIntents = allReplies
+      ? allReplies
+          .map((message) => message.intent)
+          .filter((key) => key !== 'other')
+      : []
 
-    return allIntents;
+    return allIntents
   }
 
   private toggleMoreReplies = () => {
