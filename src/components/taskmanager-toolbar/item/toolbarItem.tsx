@@ -1,39 +1,40 @@
 import React from 'react'
-// import styled from 'react-emotion'
-// import { colors } from '@hedviginsurance/brand'
-import { Dropdown, Button } from 'semantic-ui-react'
+import { Button, Dropdown } from 'semantic-ui-react'
+import { EOrder } from '../../tickets/types'
+import { IToolbarItem } from '../types'
 
-class ToolbarItem extends React.Component {
+class ToolbarItem extends React.Component<IToolbarItem, {}> {
   public handleClick = () => {
-    this.props.onItemClicked(this.props.id)
+    this.props.behaviors.onClicked(this.props.id)
   }
 
   public handleChange = (event, { value }) => {
-    this.props.handleChange(this.props.id, value)
+    this.props.behaviors.handleChange(this.props.id, value)
   }
 
   public render() {
     let caret = null
     if (this.props.caret) {
-      if (this.props.caretDirection === 'DESC') {
-        caret = <i className={'fas fa-caret-down'} />
-      } else {
-        caret = <i className={'fas fa-caret-up'} />
-      }
+      caret =
+        this.props.caret.direction === EOrder.DESC ? (
+          <i className={'fas fa-caret-down'} />
+        ) : (
+          <i className={'fas fa-caret-up'} />
+        )
     }
 
-    var item
+    let item
     switch (this.props.itemType) {
       case 'button':
         {
           item = (
             <Button
               basic
-              active={this.props.isActive}
+              active={this.props.active}
               primary={this.props.primary}
               onClick={this.handleClick}
             >
-              {this.props.children} {caret}
+              {this.props.label} {caret}
             </Button>
           )
         }
@@ -42,7 +43,7 @@ class ToolbarItem extends React.Component {
         {
           item = (
             <span>
-              {this.props.children}
+              {this.props.label}
               <Dropdown
                 inline
                 options={this.props.options}

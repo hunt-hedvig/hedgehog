@@ -1,28 +1,27 @@
 import gql from 'graphql-tag'
- 
-//Hacky solution to know who the user is: , returns the email.
+
+// Hacky solution to know who the user is: , returns the email.
 export const ME = gql`
   query Me {
-    me 
+    me
   }
 `
 export const CREATE_TICKET = gql`
-  mutation CreateTicket ( $ticket: TicketIn ) 
-    {
-      createTicket ( ticket: $ticket ) {
-        id 
-        description
-        assignedTo
-        createdBy
-        type
-        status
-        priority
-        remindNotificationDate
-        remindNotificationTime
-        remindMessage  
-      }
-    }  
-  `
+  mutation CreateTicket($ticket: TicketIn) {
+    createTicket(ticket: $ticket) {
+      id
+      description
+      assignedTo
+      createdBy
+      type
+      status
+      priority
+      remindNotificationDate
+      remindNotificationTime
+      remindMessage
+    }
+  }
+`
 
 export const GET_TICKETS = gql`
   query GetTickets {
@@ -42,7 +41,7 @@ export const GET_TICKETS = gql`
 `
 
 export const CHANGE_DESCRIPTION = gql`
-  mutation ChangeDescription($id : ID!, $newDescription: String) {
+  mutation ChangeDescription($id: ID!, $newDescription: String) {
     changeTicketDescription(id: $id, newDescription: $newDescription) {
       id
       description
@@ -50,46 +49,32 @@ export const CHANGE_DESCRIPTION = gql`
   }
 `
 export const ASSIGN_TO = gql`
-  mutation AssignTicketTo ($ticketId: ID!, $teamMemberId: ID!) {
+  mutation AssignTicketTo($ticketId: ID!, $teamMemberId: ID!) {
     assignTicketToTeamMember(ticketId: $ticketId, teamMemberId: $teamMemberId) {
       id
       assignedTo
     }
   }
 `
-
-// export const SET_REMINDER = gql`
-//   mutation SetReminderDate ($ticketId: ID!, $remindNotificationDate: LocalDate, $remindNotificationTime: LocalTime ) {
-//     setReminderDate (
-//         ticketId: $ticketId,
-//         remindNotificationDate: $remindNotificationDate, 
-//         remindNotificationTime:$remindNotificationTime 
-//       ) 
-//     {
-//       id
-//       remindNotificationDate
-//       remindNotificationTime
-//       remindMessage
-//     }
-//   }
-// `
-
 export const CHANGE_STATUS = gql`
-  mutation ChangeTicketStatus ($ticketId: ID!, $newStatus: TicketStatus ) {
-    changeTicketStatus (ticketId: $ticketId, newStatus: $newStatus) {
+  mutation ChangeTicketStatus($ticketId: ID!, $newStatus: TicketStatus) {
+    changeTicketStatus(ticketId: $ticketId, newStatus: $newStatus) {
       id
-      status 
+      status
     }
   }
 `
 
 export const CHANGE_REMINDER = gql`
-  mutation ChangeTicketReminder ($ticketId: ID!, $newReminder: RemindNotification  ) {
-    changeTicketReminder (ticketId: $ticketId, newReminder: $newReminder) {
+  mutation ChangeTicketReminder(
+    $ticketId: ID!
+    $newReminder: RemindNotification
+  ) {
+    changeTicketReminder(ticketId: $ticketId, newReminder: $newReminder) {
       id
       remindNotificationDate
       remindNotificationTime
-      remindMessage 
+      remindMessage
     }
   }
 `

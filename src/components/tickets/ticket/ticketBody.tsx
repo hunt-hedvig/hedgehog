@@ -1,39 +1,35 @@
+import format from 'date-fns/format'
 import React from 'react'
-import styled from 'react-emotion'
 import { Mutation } from 'react-apollo'
+import styled from 'react-emotion'
 import {
   Button,
   Divider,
   Dropdown,
   Form,
   Icon,
+  Label,
   Segment,
   TextArea,
-  Label,
 } from 'semantic-ui-react'
 import {
   ASSIGN_TO,
   CHANGE_DESCRIPTION,
   CHANGE_REMINDER,
-  CHANGE_STATUS, 
-  GET_TICKETS,
+  CHANGE_STATUS,
 } from '../../../features/taskmanager/queries'
 import {
-  IEX_TEAM_MEMBERS,
-  TICKET_STATUS,
   createOptionsArray,
-  createOptionsArrayFromObjects, 
+  IEX_TEAM_MEMBERS,
   lookupStatus,
-  lookupTeamMemberName, 
+  lookupTeamMemberName,
+  TICKET_STATUS,
 } from '../../../features/taskmanager/types'
 import Notification from '../../notifications/Notification'
 import Datepicker from './create-ticket/datepicker'
-import format from 'date-fns/format'
-
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
 const statusOptions = createOptionsArray(TICKET_STATUS)
-
 
 const TicketBodyCss = styled('div')`
   padding: 1em;
@@ -41,39 +37,70 @@ const TicketBodyCss = styled('div')`
   border: 1px lightgray solid;
 `
 
-class TicketBody extends React.Component {
+interface ITicketBody {
+  id: string
+  assignedTo: string
+  status: string
+  description: string
+}
+
+interface ITicketBodyState {
+  inputs: {
+    description: string
+    assignedTo: string
+    remindDate: any
+    remindTime: any
+    remindMessage: string
+    status: string
+  }
+  notification: {
+    show: boolean
+    message: string
+  }
+  showEditTicket: boolean
+}
+
+class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
   public state = {
-    inputDescription: this.props.description,
-    inputAssignedTo: this.props.assignedTo,
-    inputRemindNotificationDate: format(new Date(), 'yyyy-MM-dd'),
-    inputRemindNotificationTime: format(new Date(), 'HH:mm:ss'),
-    inputRemindMessage: '', 
-    showNotification: false,
-    notificationMessage: "", 
-    status: this.props.status,
+    inputs: {
+      description: this.props.description,
+      assignedTo: this.props.assignedTo,
+      status: this.props.status,
+      remindDate: format(new Date(), 'yyyy-MM-dd'),
+      remindTime: format(new Date(), 'HH:mm:ss'),
+      remindMessage: '',
+    },
+    notification: {
+      show: false,
+      message: '',
+    },
+    showEditTicket: false,
   }
 
-  //TODO: Cancel mutations: 
+  // TODO: Cancel mutations:
   // componentWillUnmount() {
   // }
 
-  render() {
+  public render() {
     const editTicket = (
       <Segment.Group>
         <Segment color="grey" compact>
           <em>Edit Ticket</em>
         </Segment>
-        <Mutation mutation={CHANGE_DESCRIPTION} key={this.props.id + 'description'}>
+        <Mutation
+          mutation={CHANGE_DESCRIPTION}
+          key={this.props.id + 'description'}
+        >
           {(changeTicketDescription, { data }) => {
             return (
               <Form
                 onSubmit={(e) => {
                   e.preventDefault()
-                  this.setState({ showNotification: true, notificationMessage: "Success! Changed description" })
+                  this.showNotification('Success! Changed description')
                   changeTicketDescription({
                     variables: {
                       id: this.props.id,
-                      newDescription: this.state.inputDescription,
+                      newDescription: this.state.inputs.description,
                     },
                   })
                 }}
@@ -83,49 +110,49 @@ class TicketBody extends React.Component {
                   <TextArea
                     row={3}
                     col={15}
-                    name="inputDescription"
+                    name="description"
                     placeholder={this.props.description}
-                    value={this.state.inputDescription}
+                    value={this.state.inputs.description}
                     onChange={(e) => this.handleChange(e)}
                   />
                   <Button compact basic type="submit">
                     Change description
                   </Button>
                 </Form.Field>
-                
               </Form>
             )
           }}
         </Mutation>
+
         <Divider horizontal> </Divider>
+
         <Mutation mutation={ASSIGN_TO} key={this.props.id + 'assign'}>
           {(assignTicketToTeamMember, { data }) => {
             return (
               <Form
                 onSubmit={(e) => {
                   e.preventDefault()
-                  this.setState({ showNotification: true,
-                       notificationMessage: "Success! Assigned the ticket to: " + lookupTeamMemberName(this.state.inputAssignedTo) })
+                  this.showNotification(
+                    'Success! Assigned the ticket to: ' +
+                      lookupTeamMemberName(this.state.inputs.assignedTo),
+                  )
                   assignTicketToTeamMember({
                     variables: {
                       ticketId: this.props.id,
-                      teamMemberId: this.state.inputAssignedTo,
+                      teamMemberId: this.state.inputs.assignedTo,
                     },
                   })
                 }}
               >
                 <Form.Field inline>
-                  <Label htmlFor="assign">Assign to: </Label>
+                  <Label htmlFor="assignedTo">Assign to: </Label>
                   <Dropdown
-                    name="assign"
+                    name="assignedTo"
                     placeholder="Select team member"
                     search
                     selection
                     options={teamOptions}
-                    // value={this.state.inputAssignedTo}
-                    onChange={(e, { value }) => {
-                      this.setState({ inputAssignedTo: value })
-                    }}
+                    onChange={(event, {value}) => this.handleOptionChange("assignedTo", value)}
                   />
                   <Button basic type="submit" compact>
                     Assign
@@ -136,21 +163,23 @@ class TicketBody extends React.Component {
           }}
         </Mutation>
 
+        <Divider horizontal> </Divider>
 
-       <Divider horizontal> </Divider>
-       
         <Mutation mutation={CHANGE_STATUS} key={this.props.id + 'status'}>
           {(changeTicketStatus, { data }) => {
             return (
               <Form
                 onSubmit={(e) => {
                   e.preventDefault()
-                  this.setState({ showNotification: true, 
-                      notificationMessage: "Success! Changed the status to: " + lookupStatus(this.state.status)})
+                  this.showNotification(
+                    'Success! Changed the status to: ' +
+                      lookupStatus(this.state.inputs.status),
+                  )
+
                   changeTicketStatus({
                     variables: {
                       ticketId: this.props.id,
-                      newStatus: this.state.status,
+                      newStatus: this.state.inputs.status,
                     },
                   })
                 }}
@@ -163,10 +192,7 @@ class TicketBody extends React.Component {
                     search
                     selection
                     options={statusOptions}
-                    // value={this.state.inputAssignedTo}
-                    onChange={(e, { value }) => {
-                      this.setState({ status: value })
-                    }}
+                    onChange={(event, {value}) => this.handleOptionChange("status",value)}
                   />
                   <Button basic type="submit" compact>
                     Change status
@@ -177,53 +203,65 @@ class TicketBody extends React.Component {
           }}
         </Mutation>
 
-       <Divider horizontal> </Divider>
+        <Divider horizontal> </Divider>
 
-       <Mutation mutation={CHANGE_REMINDER} key={this.props.id + 'reminder'}>
-          { (changeTicketReminder, {data}) => {
+        <Mutation mutation={CHANGE_REMINDER} key={this.props.id + 'reminder'}>
+          {(changeTicketReminder, { data }) => {
             return (
-              <Form 
-                onSubmit={ e => {
+              <Form
+                onSubmit={(e) => {
                   e.preventDefault()
-                  this.setState({ showNotification: true,
-                       notificationMessage: "Success! Set a reminder for: " + this.state.inputRemindNotificationDate + " " + this.state.inputRemindNotificationTime })
+
+                  this.showNotification(
+                    'Success! Set a reminder for: ' +
+                      this.state.inputs.remindDate +
+                      ' ' +
+                      this.state.inputs.remindTime,
+                  )
+
                   changeTicketReminder({
                     variables: {
                       ticketId: this.props.id,
                       newReminder: {
-                        date: this.state.inputRemindNotificationDate,
-                        time: this.state.inputRemindNotificationTime,
-                        message: this.state.inputRemindMessage,
+                        date: this.state.inputs.remindDate,
+                        time: this.state.inputs.remindTime,
+                        message: this.state.inputs.remindMessage,
                       },
-                    }
+                    },
                   })
-                }}>
-              <Label htmlFor={'remindMessage'}>Message for remind notification:</Label> 
-              <br/>  
-              <TextArea
-                row={4}
-                col={20}
-                name="inputRemindMessage"
-                placeholder="Give a short remind message (max 100 characters)"
-                value={this.state.inputRemindMessage}
-                onChange={(e) => this.handleChange(e)}
-                maxLength={100}
-              />
-              <Datepicker 
-                handleChange={ e => this.handleChange(e) }
-                datepickerName="inputRemindNotificationDate"
-                datepickerValue={this.state.inputRemindNotificationDate}
-                timepickerName="inputRemindNotificationTime"
-                timepickerValue={this.state.inputRemindNotificationTime}
-              />
-              <Button basic type="submit" compact>
-                Set reminder
-              </Button>
+                }}
+              >
+                <Label htmlFor={'remindMessage'}>
+                  Message for remind notification:
+                </Label>
+                <br />
+                <TextArea
+                  row={4}
+                  col={20}
+                  name="remindMessage"
+                  placeholder="Give a short remind message (max 100 characters)"
+                  value={this.state.inputs.remindMessage}
+                  onChange={(e) => this.handleChange(e)}
+                  maxLength={100}
+                />
+                <Datepicker
+                  handleChange={(e) => this.handleChange(e)}
+                  datepicker={{
+                    name: 'remindDate',
+                    value: this.state.inputs.remindDate,
+                  }}
+                  timepicker={{
+                    name: 'remindTime',
+                    value: this.state.inputs.remindTime,
+                  }}
+                />
+                <Button basic type="submit" compact>
+                  Set reminder
+                </Button>
               </Form>
             )
           }}
-          </Mutation>
-
+        </Mutation>
       </Segment.Group>
     )
 
@@ -253,39 +291,54 @@ class TicketBody extends React.Component {
           <Icon name="pencil alternate" />
           Edit
         </Button>
-        {
-          this.state.showNotification ? (
-            <Notification
-                closeHandler={(id) => this.closeNotification(id)}
-                content={{
-                header: 'Success!',
-                id: 'confirmation',
-                message: this.state.notificationMessage,
-                type: 'green',
-              }}
-            />
-          ) : null
-        }
+        {this.state.notification.show ? (
+          <Notification
+            closeHandler={(id) => this.closeNotification()}
+            content={{
+              header: 'Success!',
+              id: 'confirmation',
+              message: this.state.notification.message,
+              type: 'green',
+            }}
+          />
+        ) : null}
       </TicketBodyCss>
     )
   }
 
-  private closeNotification = (id) => {
-    this.setState({ showNotification: false })
+  private showNotification = (message: string): void => {
+    const updateNotification = { ...this.state.notification }
+    updateNotification.message = message
+    updateNotification.show = true
+    this.setState({ notification: updateNotification })
+  }
+
+  private closeNotification = () => {
+    const notification = { ...this.state.notification }
+    notification.show = false
+    notification.message = ''
+    this.setState({ notification })
   }
 
   private toggleEditTicket = (event) => {
     event.preventDefault()
+    this.closeNotification()
     const updatedState = !this.state.showEditTicket
-    this.setState({ showEditTicket: updatedState, showNotification: false })
+    this.setState({ showEditTicket: updatedState })
+  }
+
+  private handleOptionChange = (id: string , value: string):void => {
+    const inputs = { ...this.state.inputs }
+    inputs[id] = value    
+    this.setState({ inputs })
   }
 
   private handleChange = (event) => {
-    event.preventDefault()
-    this.setState({ [event.target.name]: event.target.value })
+    const inputs = { ...this.state.inputs }
+    inputs[event.target.name] = event.target.value
+    this.setState({ inputs })
   }
 }
 
 export default TicketBody
-
 

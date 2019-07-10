@@ -3,6 +3,7 @@ import styled from 'react-emotion'
 import ToolbarItem from './item/toolbarItem'
 
 import { Grid } from 'semantic-ui-react'
+import { IToolbar } from './types';
 
 const ToolbarCss = styled('div')({
   background: 'white',
@@ -11,36 +12,28 @@ const ToolbarCss = styled('div')({
   padding: '0',
 })
 
-// Props - ta in vilka knappar som ska finnas
-// samt funktionerna som ska mappas till dem
-class Toolbar extends React.Component {
+class Toolbar extends React.Component<IToolbar, {}> {
   public render() {
     const toolbarItems = this.props.items.map((item) => (
       <Grid.Column key={item.id + 'g'}>
         <ToolbarItem
           key={item.id}
-          onItemClicked={item.clicked}
           id={item.id}
-          caret={item.hasCaret}
-          caretDirection={item.caretDirection}
-          isActive={item.isActive}
           itemType={item.itemType}
+          behaviors={item.behaviors}
+          caret={item.caret}
           options={item.options}
+          active={item.active}
           primary={item.primary}
-          handleChange={item.handleChange}
-        >
-          {item.label}
-        </ToolbarItem>
+          label={item.label}
+        />
       </Grid.Column>
     ))
 
     return (
       <ToolbarCss>
         <Grid stackable columns={this.props.items.length}>
-          <Grid.Row style={{ padding: '0.5em' }}>
-            {toolbarItems}
-            {/* <ItemContainer>{toolbarItems}</ItemContainer> */}
-          </Grid.Row>
+          <Grid.Row style={{ padding: '0.5em' }}>{toolbarItems}</Grid.Row>
         </Grid>
       </ToolbarCss>
     )
