@@ -77,6 +77,11 @@ const App: React.SFC = () => (
                 store={store}
                 component={Routes.BourdereauPageRoute}
               />
+              <Routes.PrivateRoute
+                path="/pricing"
+                store={store}
+                component={Routes.PricingPageRoute}
+              />
               <Redirect from="*" to="/dashboard" />
             </Switch>
             <Notifications />

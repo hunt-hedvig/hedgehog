@@ -26,5 +26,6 @@ export const reactPageRoutes = [
   { path: '/questions/**', Component: Routes.QuestionsPageRoute, exact: true },
   { path: '/questions', Component: Routes.QuestionsPageRoute, exact: true },
   { path: '/charges', Component: Routes.ChargePageRoute, exact: true },
+  { path: '/pricing', Component: Routes.PricingPageRoute, exact: true },
   { path: '/dashboard', Component: Routes.DashboardPageRoute, exact: true },
 ]
