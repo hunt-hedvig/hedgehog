@@ -149,12 +149,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     const allIntents = this.getAllIntents(allReplies)
 
     return (
-      <Mutation
-        mutation={AUTO_LABEL_QUESTION}
-        ignoreResults={true}
-        onCompleted={this.sendMessage}
-        onError={this.sendMessage}
-      >
+      <Mutation mutation={AUTO_LABEL_QUESTION} ignoreResults={true}>
         {(autoLabelQuestion) => (
           <MessagesPanelContainer>
             <ChatForm onSubmit={this.handleSubmit}>
@@ -201,16 +196,17 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                   if (this.shouldSubmit(event)) {
                     event.preventDefault()
                     if (this.props.questionToLabel !== '') {
-                    autoLabelQuestion({
-                      variables: {
-                        question: this.props.questionToLabel,
-                        label: this.state.chosenIntent,
-                        memberId: this.props.memberId,
-                        messageIds: this.props.messageIds,
-                      },
-                    })
-                  } else {
-                    this.sendMessage()
+                      autoLabelQuestion({
+                        variables: {
+                          question: this.props.questionToLabel,
+                          label: this.state.chosenIntent,
+                          memberId: this.props.memberId,
+                          messageIds: this.props.messageIds,
+                        },
+                      })
+                      this.sendMessage()
+                    } else {
+                      this.sendMessage()
                     }
                   }
                 }}
@@ -266,6 +262,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                         messageIds: this.props.messageIds,
                       },
                     })
+                    this.sendMessage()
                   } else {
                     this.sendMessage()
                   }
