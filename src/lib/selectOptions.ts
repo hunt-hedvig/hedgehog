@@ -53,6 +53,11 @@ export const routesList = [
     route: '/BDX',
     type: 'BDX',
   },
+  {
+    text: 'Pricing',
+    route: '/pricing',
+    type: 'PRICING',
+  },
 ]
 
 export const claimStatus = [
