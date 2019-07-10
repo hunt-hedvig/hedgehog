@@ -27,6 +27,8 @@ import {
 } from '../../../features/taskmanager/types'
 import Notification from '../../notifications/Notification'
 import Datepicker from './create-ticket/datepicker'
+import ChangeDescriptionMutation from './edit-ticket/description'
+import AssignTicketToMutation from './edit-ticket/assignTo';
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
 const statusOptions = createOptionsArray(TICKET_STATUS)
@@ -87,7 +89,15 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
         <Segment color="grey" compact>
           <em>Edit Ticket</em>
         </Segment>
-        <Mutation
+
+        <ChangeDescriptionMutation
+          id={this.props.id}
+          showNotification={this.showNotification}
+          description={this.state.inputs.description}
+          handleChange={this.handleChange}
+        />
+
+        {/* <Mutation
           mutation={CHANGE_DESCRIPTION}
           key={this.props.id + 'description'}
         >
@@ -122,11 +132,19 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
               </Form>
             )
           }}
-        </Mutation>
+        </Mutation> */}
 
         <Divider horizontal> </Divider>
 
-        <Mutation mutation={ASSIGN_TO} key={this.props.id + 'assign'}>
+        <AssignTicketToMutation
+          id={this.props.id}
+          showNotification={this.showNotification}
+          handleChange={this.handleOptionChange}
+          options={teamOptions}
+          assignedTo={this.state.inputs.assignedTo}
+       />
+
+        {/* <Mutation mutation={ASSIGN_TO} key={this.props.id + 'assign'}>
           {(assignTicketToTeamMember, { data }) => {
             return (
               <Form
@@ -152,7 +170,9 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
                     search
                     selection
                     options={teamOptions}
-                    onChange={(event, {value}) => this.handleOptionChange("assignedTo", value)}
+                    onChange={(event, { value }) =>
+                      this.handleOptionChange('assignedTo', value)
+                    }
                   />
                   <Button basic type="submit" compact>
                     Assign
@@ -161,7 +181,7 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
               </Form>
             )
           }}
-        </Mutation>
+        </Mutation> */}
 
         <Divider horizontal> </Divider>
 
@@ -192,7 +212,9 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
                     search
                     selection
                     options={statusOptions}
-                    onChange={(event, {value}) => this.handleOptionChange("status",value)}
+                    onChange={(event, { value }) =>
+                      this.handleOptionChange('status', value)
+                    }
                   />
                   <Button basic type="submit" compact>
                     Change status
@@ -327,9 +349,9 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     this.setState({ showEditTicket: updatedState })
   }
 
-  private handleOptionChange = (id: string , value: string):void => {
+  private handleOptionChange = (id: string, value: string): void => {
     const inputs = { ...this.state.inputs }
-    inputs[id] = value    
+    inputs[id] = value
     this.setState({ inputs })
   }
 
