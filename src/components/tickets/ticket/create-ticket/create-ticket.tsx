@@ -98,7 +98,7 @@ class CreateNewTicket extends React.Component<
                         assignedTo: this.state.assignedTo,
                         priority: this.state.priority,
                         type: 'REMIND',
-                        reminder,
+                        //                        reminder,
                         description: this.state.description,
                         status: 'WAITING',
                       },

@@ -7,7 +7,7 @@ export const ME = gql`
   }
 `
 export const CREATE_TICKET = gql`
-  mutation CreateTicket($ticket: TicketIn) {
+  mutation CreateTicket($ticket: TicketInput) {
     createTicket(ticket: $ticket) {
       id
       description

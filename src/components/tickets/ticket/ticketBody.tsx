@@ -13,8 +13,6 @@ import {
   TextArea,
 } from 'semantic-ui-react'
 import {
-  ASSIGN_TO,
-  CHANGE_DESCRIPTION,
   CHANGE_REMINDER,
   CHANGE_STATUS,
 } from '../../../features/taskmanager/queries'
@@ -28,7 +26,7 @@ import {
 import Notification from '../../notifications/Notification'
 import Datepicker from './create-ticket/datepicker'
 import ChangeDescriptionMutation from './edit-ticket/description'
-import AssignTicketToMutation from './edit-ticket/assignTo';
+import AssignTicketToMutation from './edit-ticket/assignTo'
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
 const statusOptions = createOptionsArray(TICKET_STATUS)
