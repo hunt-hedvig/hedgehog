@@ -101,7 +101,15 @@ export default class Tickets extends React.Component<ITickets, {}> {
             return (
               <>
                 {sortedTickets.map((ticket) => (
-                  <Ticket key={ticket.id} {...ticket} />
+                  <Ticket
+                    key={ticket.id}
+                    reminder={{
+                      date: ticket.remindNotificationDate,
+                      time: ticket.remindNotificationTime,
+                      message: ticket.remindMessage,
+                    }}
+                    {...ticket}
+                  />
                 ))}
               </>
             )
@@ -161,7 +169,6 @@ export default class Tickets extends React.Component<ITickets, {}> {
         parse(reminders[i].remindNotificationTime, 'HH:mm:ss', now),
         now,
       )
-      // console.log(msUntilFire)
       setTimeout(() => {
         new Notification('Ticket Reminder', {
           silent: true,

@@ -106,6 +106,7 @@ class Ticket extends React.Component<ITicket, {}> {
             assignedTo={this.props.assignedTo}
             status={this.props.status}
             id={this.props.id}
+            reminder={this.props.reminder}
           />
         ) : null}
       </Card>

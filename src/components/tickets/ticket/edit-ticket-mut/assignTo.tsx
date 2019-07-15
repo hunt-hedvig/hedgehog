@@ -10,6 +10,7 @@ interface IAssignTicketTo {
   handleChange: (id: string, value: any) => void
   options: any[]
   assignedTo: string
+  currentlyAssignedTo: string
 }
 
 export default class AssignTicketToMutation extends React.Component<
@@ -41,7 +42,9 @@ export default class AssignTicketToMutation extends React.Component<
                 <Label htmlFor="assignedTo">Assign to: </Label>
                 <Dropdown
                   name="assignedTo"
-                  placeholder="Select team member"
+                  placeholder={lookupTeamMemberName(
+                    this.props.currentlyAssignedTo,
+                  )}
                   search
                   selection
                   options={this.props.options}
@@ -49,9 +52,20 @@ export default class AssignTicketToMutation extends React.Component<
                     this.props.handleChange('assignedTo', value)
                   }
                 />
-                <Button basic type="submit" compact>
+                <Button
+                  basic
+                  type="submit"
+                  compact
+                  disabled={this.props.assignedTo === '' ? true : false}
+                >
                   Assign
                 </Button>
+                <p>
+                  Currently assigned to:{' '}
+                  <em>
+                    {lookupTeamMemberName(this.props.currentlyAssignedTo)}
+                  </em>{' '}
+                </p>
               </Form.Field>
             </Form>
           )

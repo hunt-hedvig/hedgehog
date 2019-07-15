@@ -99,6 +99,9 @@ class CreateNewTicket extends React.Component<
                         priority: this.state.priority,
                         type: 'REMIND',
                         //                        reminder,
+                        remindNotificationDate: this.state.remindDate,
+                        remindNotificationTime: this.state.remindTime,
+                        remindMessage: this.state.remindMessage,
                         description: this.state.description,
                         status: 'WAITING',
                       },
@@ -126,7 +129,9 @@ class CreateNewTicket extends React.Component<
                   search
                   selection
                   options={teamOptions}
-                  onChange={ (event, {value}) => this.handleOptionChange ("assignedTo",value )}
+                  onChange={(event, { value }) =>
+                    this.handleOptionChange('assignedTo', value)
+                  }
                 />
                 <Label htmlFor={'priority'}>Priority:</Label>
                 <Dropdown
@@ -134,7 +139,9 @@ class CreateNewTicket extends React.Component<
                   placeholder="Set priority"
                   selection
                   options={priorityOptions}
-                  onChange={(event, {value}) => this.handleOptionChange("priority", value )}
+                  onChange={(event, { value }) =>
+                    this.handleOptionChange('priority', value)
+                  }
                 />
                 <br />
                 <div>
@@ -163,6 +170,7 @@ class CreateNewTicket extends React.Component<
                       value={this.state.remindMessage}
                       onChange={(e) => this.handleChange(e)}
                       maxLength={100}
+                      // error={(this.state.remindMessage.length > 0) ? false: true }
                     />
                     <br />
                     <Datepicker
@@ -179,7 +187,9 @@ class CreateNewTicket extends React.Component<
                   </div>
                 ) : null}
                 <br />
-                <Button type="submit">Create</Button>
+                <Button type="submit" disabled={!this.validityCheck()}>
+                  Create
+                </Button>
               </Form>
             )
           }}
@@ -188,12 +198,26 @@ class CreateNewTicket extends React.Component<
     )
   }
 
-  private handleOptionChange = (id: string , value: string):void => {
-    this.setState( {[id]: value  })
+  private handleOptionChange = (id: string, value: string): void => {
+    this.setState({ [id]: value })
   }
 
   private handleChange = (event): void => {
     this.setState({ [event.target.name]: event.target.value })
+  }
+
+  private validityCheck = (): boolean => {
+    const validReminder = this.state.setReminder
+      ? this.state.remindDate !== '' &&
+        this.state.remindTime !== '' &&
+        this.state.remindMessage.length > 0
+      : true
+    return (
+      this.state.assignedTo !== '' &&
+      this.state.priority !== '' &&
+      this.state.description.length > 0 &&
+      validReminder
+    )
   }
 }
 
