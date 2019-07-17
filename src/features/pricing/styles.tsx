@@ -7,8 +7,29 @@ export const HeaderContainer = styled.div`
   margin-top: 2em;
 `
 
+export const SubHeaderContainer = styled.div`
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+  justify-content: space-between;
+  width: 100%;
+`
+
 export const InputContainer = styled.div`
   margin-top: 2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`
+
+export const PropContainer = styled.div`
+  margin-top: 0.6em;
+  justify-content: space-between;
+  width: 100%;
+`
+
+export const ListContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;

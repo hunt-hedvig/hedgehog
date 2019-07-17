@@ -24,3 +24,14 @@ export const SEARCH_ITEMS = gql`
     }
   }
 `
+
+export const GET_PRICES = gql`
+  query Prices($date: String!, $ids: [String!]!) {
+    prices(date: $date, ids: $ids) {
+      id
+      upper
+      mean
+      lower
+    }
+  }
+`
