@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Query } from 'react-apollo'
 import { GET_TICKETS, ME } from '../../features/taskmanager/queries'
 import Ticket from './ticket/ticket'
+import { Loader, Dimmer } from 'semantic-ui-react'
 
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds'
 import isAfter from 'date-fns/isAfter'
@@ -30,10 +31,10 @@ export default class Tickets extends React.Component<ITickets, {}> {
             return null
           }}
         </Query>
-        <Query<any> query={GET_TICKETS}>
+        <Query<any> query={GET_TICKETS} pollInterval={5000}>
           {({ data, error, loading }) => {
             if (loading) {
-              return <p>...FETCHING TICKETS...</p>
+              return  <Dimmer active> <Loader size='big' >Fetching tickets</Loader></Dimmer>
             }
             if (error) {
               return (
