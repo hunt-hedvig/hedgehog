@@ -4,26 +4,21 @@ import { Query } from 'react-apollo'
 import { Label, Table } from 'semantic-ui-react'
 
 export default class ItemTable extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      priceData: [],
-    }
-
-    this.handlePriceData = this.handlePriceData.bind(this)
+  public state = {
+    priceData: [],
   }
 
-  public handlePriceData(data) {
+  public handlePriceData = (data) => {
     if (data) {
       return 'prices' in data
         ? Object.assign({}, ...data.prices.map((s) => ({ [s.id]: s })))
         : {}
-    } else {
-      return {}
     }
+
+    return {}
   }
 
-  public getItemIds() {
+  public getItemIds = () => {
     const { products } = this.props.items
     return [...new Set(products.slice(0, 10).map((item) => item.id))]
   }
@@ -44,7 +39,7 @@ export default class ItemTable extends React.Component {
             query={GET_PRICES}
             variables={{ date: this.props.date, ids: this.getItemIds() }}
           >
-            {({ loading, error, data }) => {
+            {({ loading, data }) => {
               const prices = this.handlePriceData(data)
               return this.props.items.products.slice(0, 10).map((row) => (
                 <Table.Row>

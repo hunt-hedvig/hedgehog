@@ -3,10 +3,6 @@ import * as React from 'react'
 import { Dropdown, Header, Icon, Label } from 'semantic-ui-react'
 
 export default class FilterContainer extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   public render() {
     return (
       <PropContainer>

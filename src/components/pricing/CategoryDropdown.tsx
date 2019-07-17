@@ -4,10 +4,6 @@ import { Query } from 'react-apollo'
 import { Dropdown } from 'semantic-ui-react'
 
 export default class CategoryDropdown extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   public render() {
     return (
       <Query query={GET_CATEGORIES}>
