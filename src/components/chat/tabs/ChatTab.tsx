@@ -38,6 +38,7 @@ const GET_SUGGESTED_ANSWER_QUERY = gql`
     getAnswerSuggestion(question: $question) {
       reply
       text
+      confidence
       allReplies {
         reply
         intent
@@ -103,13 +104,15 @@ export default class ChatTab extends React.Component {
   private getQuestionAndAnswer(responses: object) {
     let question = ''
     let answer = ''
+    let confidence = 0
 
     if (responses.length !== 1) {
-      return { question, answer }
+      return { question, answer, confidence }
     }
     question = responses[0].text
     answer = responses[0].reply
-    return { question, answer }
+    confidence = responses[0].confidence
+    return { question, answer, confidence }
   }
 
   public render() {
@@ -145,6 +148,7 @@ export default class ChatTab extends React.Component {
                     memberId=""
                     messageIds={[]}
                     questionToLabel=""
+                    confidence={0}
                     addMessage={this.props.addMessage}
                     messages={
                       (this.props.messages && this.props.messages.list) || []
@@ -166,6 +170,7 @@ export default class ChatTab extends React.Component {
                   questionToLabel={
                     this.getQuestionAndAnswer(data.getAnswerSuggestion).question
                   }
+                  confidence={this.getQuestionAndAnswer(data.getAnswerSuggestion).confidence}
                   addMessage={this.props.addMessage}
                   messages={
                     (this.props.messages && this.props.messages.list) || []

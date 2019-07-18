@@ -90,6 +90,10 @@ const MenuItem = withStyles({
   },
 })(MuiMenuItem)
 
+const ColoredMenuItem = styled(MenuItem)((props: {backgroundColor: string})=>({
+  backgroundColor: props.backgroundColor
+}))
+
 const AUTO_LABEL_QUESTION = gql`
   mutation AutoLabelQuestion(
     $question: String!
@@ -116,6 +120,7 @@ interface ChatPanelProps {
   memberId: string
   messageIds: string
   allReplies: any
+  confidence: number
 }
 
 interface State {
@@ -144,6 +149,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     chosenIntent: 'other',
     showMoreReplies: false,
     shouldAutoLabel: true,
+
   }
 
   public render() {
@@ -162,7 +168,9 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                       const text = this.getReply(allReplies, intent)
                       return (
                         this.shouldShowSuggestedAnswer(text) && (
-                          <MenuItem
+                          <ColoredMenuItem                          
+                            backgroundColor={(this.isSuggestedAnswer(text) && 
+                              this.confidenceColor(this.props.confidence)) || 'white'}                           
                             key={text}
                             onClick={this.selectAnswerSuggestion(
                               intent,
@@ -170,7 +178,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                             )}
                           >
                             {text}
-                          </MenuItem>
+                          </ColoredMenuItem>
                         )
                       )
                     })}
@@ -297,11 +305,31 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       </Mutation>
     )
   }
+
+  private confidenceColor = (confidence: number) => {
+    let percentage = confidence*100
+    let red, green, blue = 0;
+  if(percentage < 50) {
+    red = 255;
+    green = Math.round(5.1 * percentage);
+  }
+  else {
+    green = 255;
+    red = Math.round(510 - 5.10 * percentage);
+  }
+  const h = red * 0x10000 + green * 0x100 + blue * 0x1;
+  return '#' + ('000000' + h.toString(16)).slice(-6);
+  }
+
   private shouldShowSuggestedAnswer = (text: string) => {
     return (
       this.state.showMoreReplies ||
-      (!this.state.showMoreReplies && this.props.suggestedAnswer === text)
+      (!this.state.showMoreReplies && this.isSuggestedAnswer(text))
     )
+  }
+
+  private isSuggestedAnswer = (text: string) => {
+    return this.props.suggestedAnswer === text
   }
 
   private getReply = (allReplies: object, intent: string) => {
