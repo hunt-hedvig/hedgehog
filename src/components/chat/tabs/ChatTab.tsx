@@ -170,7 +170,10 @@ export default class ChatTab extends React.Component {
                   questionToLabel={
                     this.getQuestionAndAnswer(data.getAnswerSuggestion).question
                   }
-                  confidence={this.getQuestionAndAnswer(data.getAnswerSuggestion).confidence}
+                  confidence={
+                    this.getQuestionAndAnswer(data.getAnswerSuggestion)
+                      .confidence
+                  }
                   addMessage={this.props.addMessage}
                   messages={
                     (this.props.messages && this.props.messages.list) || []
