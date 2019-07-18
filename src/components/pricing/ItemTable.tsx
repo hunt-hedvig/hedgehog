@@ -4,14 +4,10 @@ import { Query } from 'react-apollo'
 import { Label, Table } from 'semantic-ui-react'
 
 export default class ItemTable extends React.Component {
-  public state = {
-    priceData: [],
-  }
-
   public handlePriceData = (data) => {
     if (data) {
       return 'prices' in data
-        ? Object.assign({}, ...data.prices.map((s) => ({ [s.id]: s })))
+        ? Object.assign({}, ...data.prices.map((s) => ({ [s.itemId]: s })))
         : {}
     }
 
@@ -23,14 +19,20 @@ export default class ItemTable extends React.Component {
     return [...new Set(products.slice(0, 10).map((item) => item.id))]
   }
 
+  public getPriceString = (prices, row, property) => {
+    return row.id in prices
+      ? Math.floor(prices[row.id][property]).toLocaleString('sv-SE') + ' kr'
+      : '…'
+  }
+
   public render() {
     return (
       <Table celled>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell width={9}>Name</Table.HeaderCell>
-            <Table.HeaderCell width={3}>Price</Table.HeaderCell>
-            <Table.HeaderCell width={4}>Range</Table.HeaderCell>
+            <Table.HeaderCell width={8}>Name</Table.HeaderCell>
+            <Table.HeaderCell>Price</Table.HeaderCell>
+            <Table.HeaderCell>Range</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -52,13 +54,7 @@ export default class ItemTable extends React.Component {
                         loading ? 'grey' : row.id in prices ? 'green' : 'grey'
                       }
                     >
-                      {loading
-                        ? '…'
-                        : row.id in prices
-                        ? Math.floor(prices[row.id].mean).toLocaleString(
-                            'sv-SE',
-                          ) + ' kr'
-                        : '…'}
+                      {loading ? '…' : this.getPriceString(prices, row, 'mean')}
                     </Label>
                   </Table.Cell>
                   <Table.Cell textAlign="center" verticalAlign="middle">
@@ -71,16 +67,9 @@ export default class ItemTable extends React.Component {
                     >
                       {loading
                         ? '…'
-                        : row.id in prices
-                        ? Math.floor(prices[row.id].lower).toLocaleString(
-                            'sv-SE',
-                          ) +
-                          ' kr - ' +
-                          Math.floor(prices[row.id].upper).toLocaleString(
-                            'sv-SE',
-                          ) +
-                          ' kr'
-                        : '…'}
+                        : this.getPriceString(prices, row, 'lower') +
+                          ' - ' +
+                          this.getPriceString(prices, row, 'upper')}
                     </Label>
                   </Table.Cell>
                 </Table.Row>

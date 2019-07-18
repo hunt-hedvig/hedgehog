@@ -15,19 +15,16 @@ import { Query } from 'react-apollo'
 import { Header, Input } from 'semantic-ui-react'
 
 export default class Pricing extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      activeCategory: '',
-      activeQuery: '',
-      activeDate: new Date().toJSON().slice(0, 10),
-      activeFilters: [],
-      usedDate: new Date().toJSON().slice(0, 10),
+  public state = {
+    activeCategory: '',
+    activeQuery: '',
+    activeDate: new Date().toJSON().slice(0, 10),
+    activeFilters: [],
+    usedDate: new Date().toJSON().slice(0, 10),
 
-      categoryData: [{ key: 1, text: 'None', value: 1 }],
-      itemData: { products: [], suggestions: [] },
-      priceData: {},
-    }
+    categoryData: [{ key: 1, text: 'None', value: 1 }],
+    itemData: { products: [], suggestions: [] },
+    priceData: {},
   }
 
   public addFilter = (event, itemRow, categoryRow) => {
@@ -115,6 +112,7 @@ export default class Pricing extends React.Component {
                         value={this.state.activeDate}
                         placeholder="Date..."
                         error={!this.isDateValid(this.state.activeDate)}
+                        autoComplete="off"
                       />
 
                       <Input
