@@ -126,6 +126,7 @@ interface State {
   forceSendMessage: boolean
   chosenIntent: string
   showMoreReplies: boolean
+  shouldAutoLabel: boolean
 }
 
 interface AutocompleteSuggestion {
@@ -142,6 +143,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     showAutocompleteSuggestions: false,
     chosenIntent: 'other',
     showMoreReplies: false,
+    shouldAutoLabel: true,
   }
 
   public render() {
@@ -195,7 +197,10 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 onKeyDown={(event) => {
                   if (this.shouldSubmit(event)) {
                     event.preventDefault()
-                    if (this.props.questionToLabel !== '') {
+                    if (
+                      this.props.questionToLabel !== '' &&
+                      this.state.shouldAutoLabel
+                    ) {
                       autoLabelQuestion({
                         variables: {
                           question: this.props.questionToLabel,
@@ -248,12 +253,27 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 }
               />
 
+              <MuiFormControlLabel
+                label="Send feedback"
+                labelPlacement="start"
+                control={
+                  <OptionCheckbox
+                    color="secondary"
+                    checked={this.state.shouldAutoLabel}
+                    onChange={this.handleAutoLabelCheckboxChange}
+                  />
+                }
+              />
+
               <SubmitButton
                 variant="contained"
                 color="primary"
                 onClick={(event) => {
                   event.preventDefault()
-                  if (this.props.questionToLabel !== '') {
+                  if (
+                    this.props.questionToLabel !== '' &&
+                    this.state.shouldAutoLabel
+                  ) {
                     autoLabelQuestion({
                       variables: {
                         question: this.props.questionToLabel,
@@ -316,6 +336,12 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     this.setState({ forceSendMessage: e.target.checked })
   }
 
+  private handleAutoLabelCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    this.setState({ shouldAutoLabel: e.target.checked })
+  }
+
   private findAutocompleteSuggestions = (query: string) => {
     fetch('/api/autocomplete/suggestions?query=' + encodeURIComponent(query))
       .then((r) => {
@@ -358,6 +384,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     this.setState({
       chosenIntent: intent,
       currentMessage: this.getReply(allReplies, intent),
+      showMoreReplies: false,
     })
   }
 
