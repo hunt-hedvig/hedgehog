@@ -1,4 +1,5 @@
 import { GET_PRICES } from 'features/pricing/queries'
+import { formatMoney } from 'lib/intl'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 import { Label, Table } from 'semantic-ui-react'
@@ -14,14 +15,16 @@ export default class ItemTable extends React.Component {
     return {}
   }
 
-  public getItemIds = () => {
-    const { products } = this.props.items
+  public getItemIds = (products) => {
     return [...new Set(products.slice(0, 10).map((item) => item.id))]
   }
 
   public getPriceString = (prices, row, property) => {
     return row.id in prices
-      ? Math.floor(prices[row.id][property]).toLocaleString('sv-SE') + ' kr'
+      ? formatMoney('sv-SE', 0)({
+          amount: prices[row.id][property],
+          currency: 'SEK',
+        })
       : '…'
   }
 
@@ -39,12 +42,15 @@ export default class ItemTable extends React.Component {
         <Table.Body>
           <Query
             query={GET_PRICES}
-            variables={{ date: this.props.date, ids: this.getItemIds() }}
+            variables={{
+              date: this.props.date,
+              ids: this.getItemIds(this.props.items.products),
+            }}
           >
             {({ loading, data }) => {
               const prices = this.handlePriceData(data)
               return this.props.items.products.slice(0, 10).map((row) => (
-                <Table.Row>
+                <Table.Row key={row.id}>
                   <Table.Cell>{row.name}</Table.Cell>
                   <Table.Cell textAlign="center" verticalAlign="middle">
                     <Label
