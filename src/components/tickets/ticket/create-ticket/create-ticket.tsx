@@ -5,7 +5,7 @@ import styled from 'react-emotion'
 import {
   Button,
   Checkbox,
-  Dropdown,
+  Divider,
   Form,
   Label,
   TextArea,
@@ -18,19 +18,16 @@ import {
   createOptionsArray,
   IEX_TEAM_MEMBERS,
 } from '../../../../features/taskmanager/types'
+import ColorIndicator from '../color-indicator/colorIndicator'
+
 import Datepicker from './datepicker'
 
 const NewTicketBody = styled('div')`
   border: solid 1px gray;
+  border-radius: 2px;
   padding: 1em;
 `
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
-
-const priorityOptions = [
-  { text: 'high', value: 1.0 },
-  { text: 'medium', value: 0.5 },
-  { text: 'low', value: 0.0 },
-]
 
 const formatDateTime = (date) => {
   const fDate = format(date, 'yyyy-MM-dd')
@@ -44,7 +41,7 @@ interface ICreateNewTicket {
 
 interface ICreateNewTicketState {
   assignedTo: string
-  priority: string
+  priority: number
   setReminder: boolean
   remindDate: any
   remindTime: any
@@ -58,7 +55,7 @@ class CreateNewTicket extends React.Component<
 > {
   public state = {
     assignedTo: '',
-    priority: '',
+    priority: 0,
     remindDate: '',
     remindTime: '',
     remindMessage: '',
@@ -112,8 +109,7 @@ class CreateNewTicket extends React.Component<
                 }}
               >
                 <Label htmlFor={'description'}>Description:</Label>
-                <br />
-                <TextArea
+                <Form.TextArea
                   row={4}
                   col={20}
                   name="description"
@@ -121,9 +117,9 @@ class CreateNewTicket extends React.Component<
                   value={this.state.description}
                   onChange={(e) => this.handleChange(e)}
                 />
-                <br />
+                <Divider />
                 <Label htmlFor="assignedTo">Assign to:</Label>
-                <Dropdown
+                <Form.Dropdown
                   name="assignedTo"
                   placeholder="Select team member"
                   search
@@ -133,17 +129,25 @@ class CreateNewTicket extends React.Component<
                     this.handleOptionChange('assignedTo', value)
                   }
                 />
-                <Label htmlFor={'priority'}>Priority:</Label>
-                <Dropdown
+                <Divider />
+
+                <Form.Input
+                  label="Set Priority"
+                  min={0}
+                  max={1}
                   name="priority"
-                  placeholder="Set priority"
-                  selection
-                  options={priorityOptions}
-                  onChange={(event, { value }) =>
-                    this.handleOptionChange('priority', value)
-                  }
+                  onChange={(event) => this.handleChange(event)}
+                  step={0.05}
+                  type="range"
+                  value={this.state.priority}
                 />
-                <br />
+                <p>
+                  Current priority:
+                  {this.state.priority.toFixed(2)}
+                  <ColorIndicator percentage={this.state.priority} />
+                </p>
+                <Divider />
+
                 <div>
                   <p>
                     <strong>Set reminder:</strong>
@@ -160,6 +164,7 @@ class CreateNewTicket extends React.Component<
                 </div>
                 {this.state.setReminder ? (
                   <div>
+                    <Divider />
                     <Label htmlFor={'remindMessage'}>Message:</Label>
                     <br />
                     <TextArea
@@ -187,6 +192,7 @@ class CreateNewTicket extends React.Component<
                   </div>
                 ) : null}
                 <br />
+                <Divider />
                 <Button type="submit" disabled={!this.validityCheck()}>
                   Create
                 </Button>
@@ -214,7 +220,7 @@ class CreateNewTicket extends React.Component<
       : true
     return (
       this.state.assignedTo !== '' &&
-      this.state.priority !== '' &&
+      this.state.priority !== null &&
       this.state.description.length > 0 &&
       validReminder
     )

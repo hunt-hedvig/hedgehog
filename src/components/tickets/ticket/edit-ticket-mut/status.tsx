@@ -1,14 +1,16 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { Button, Dropdown, Form, Label } from 'semantic-ui-react'
-
 import { CHANGE_STATUS } from '../../../../features/taskmanager/queries'
-import { lookupStatus } from '../../../../features/taskmanager/types'
+import {
+  lookupStatus,
+  TicketStatus,
+} from '../../../../features/taskmanager/types'
 
 interface IChangeStatus {
   id: string
-  status: string
-  currentStatus: string
+  status: TicketStatus
+  currentStatus: TicketStatus
   showNotification: (message: string) => void
   handleChange: (event: any, value: any) => void
   options: any[]

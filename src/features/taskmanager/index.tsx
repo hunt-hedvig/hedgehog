@@ -127,7 +127,7 @@ export default class TaskManagerPageComponent extends React.Component <{}, ITask
     )
   }
 
-  public changeSortByHandler(id: string): void {
+  public changeSortByHandler = (id: string): void => {
     const sortCategory = id
     const sortOrder = this.changeOrder(
       id,
@@ -165,8 +165,7 @@ export default class TaskManagerPageComponent extends React.Component <{}, ITask
     })
   }
 
-  // Get back option value for selecting team members
-  public handleOptionsChange(id: string, value: string): void {
+  public handleOptionsChange = (id: string, value: string): void => {
     // Change what we filter the tickets on:
     if (id === 'status' || id === 'assignedTo') {
       const filter = { ...this.state.filter }
@@ -175,11 +174,11 @@ export default class TaskManagerPageComponent extends React.Component <{}, ITask
     }
   }
 
-  private changeOrder(
+  private changeOrder = (
     newCategory: string,
     oldCategory: string,
     oldOrder: EOrder,
-  ): EOrder {
+  ): EOrder => {
     if (newCategory !== oldCategory) {
       return EOrder.DESC // Sort in DESC is default when switching category
     }

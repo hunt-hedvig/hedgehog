@@ -12,6 +12,7 @@ const ToolbarCss = styled('div')({
   padding: '0',
 })
 
+
 class Toolbar extends React.Component<IToolbar, {}> {
   public render() {
     const toolbarItems = this.props.items.map((item) => (

@@ -1,11 +1,20 @@
-import { colors } from '@hedviginsurance/brand'
 import React from 'react'
 import styled from 'react-emotion'
-import { Button, Popup, Grid  } from 'semantic-ui-react'
-import { lookupTeamMemberName } from '../../../features/taskmanager/types'
+import { Button, Grid, Popup } from 'semantic-ui-react'
+import {
+  lookupTeamMemberName,
+  TICKET_STATUS,
+  TicketStatus,
+} from '../../../features/taskmanager/types'
 import { ITicket } from '../types'
-import { CALL_ME, CLAIM, MESSAGE, OTHER, REMIND } from './icons'
+import { CALL_ME, CLAIM, COMPLETED, MESSAGE, OTHER, REMIND } from './icons'
 import TicketBody from './ticketBody'
+
+import isAfter from 'date-fns/isAfter'
+import isSameDay from 'date-fns/isSameDay'
+import parse from 'date-fns/parse'
+
+import ColorIndicator from './color-indicator/colorIndicator'
 
 const typeIcons = {
   CLAIM,
@@ -13,94 +22,30 @@ const typeIcons = {
   REMIND,
   CALL_ME,
   OTHER,
+  COMPLETED,
 }
 
 const Card = styled('div')({
   border: '1px black gray',
-  boxShadow: '3px 3px 10px rgba(0,0,0,0.2)',
+  boxShadow: '3px 3px 10px rgba(0,0,0,0.1)',
   margin: '10px auto',
   padding: '1em 1em',
   background: 'white',
   borderRadius: '3px',
   maxWidth: '800px',
-   alignItems: 'baseline',
+  alignItems: 'baseline',
 })
 
-const red: IColor = {
-  red: 236, 
-  green: 54,
-  blue: 54,
-  alpha: 1.0,
-}
-
-const orange: IColor = {
-  red: 233,
-  green: 110,
-  blue: 36,
-  alpha: 1.0, 
-}
-
-const yellow: IColor = {
-  red: 233,
-  green: 200, 
-  blue: 58, 
-  alpha: 1.0, 
-}
-
-const green: IColor = {
-  red: 110,
-  green: 209, 
-  blue: 80, 
-  alpha: 1.0, 
-}
-
-
-const Blob = styled('span')`
+const HighlightedField = styled('span')`
   min-width: 10px,
   margin: 10px;
   padding: 1em 1em;
   background: white;
   border-radius: 12%;
   background-color: ${(props) => {
-
-    if (props.color >= 0.66) {
-      return interpolateBetweenColors ( orange, red, props.color )
-    } else if (props.color > 0.33 && props.color < 0.66) {
-      return interpolateBetweenColors ( yellow , orange, props.color )
-    } else if (props.color < 0.33) {
-      return interpolateBetweenColors ( green, yellow, props.color )
-    } else {
-      return 'seashell'
-    }
+    return props.color
   }};
 `
-
-interface IColor {
-  red: number
-  green: number
-  blue: number
-  alpha: number 
-}
-
-//t = [0 ... 1]
-const interpolateBetweenColors = (colorA: IColor, colorB: IColor, t: number ): String  => {
-   let red = Math.min(colorA.red * (1-t) + colorB.red * t, 255)  
-   let green = Math.min(colorA.green * (1-t) + colorB.green * t, 255 )
-   let blue = Math.min(colorA.blue * (1-t) + colorB.blue * t)
-   let alpha = Math.min(colorA.alpha * (1-t) + colorB.alpha * t, 1)     
-   let result =  "rgba(" + red.toFixed(0) + ","+ green.toFixed(0) + "," + blue.toFixed(0) + "," + alpha + ")"
-   return result 
-}
-
-const FlexWrapper = styled('div')({
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  justifyContent: 'flex-start',
-  alignContent: 'space-between',
-  alignItems: 'baseline',
-})
-
 
 class Ticket extends React.Component<ITicket, {}> {
   public state = {
@@ -109,62 +54,62 @@ class Ticket extends React.Component<ITicket, {}> {
 
   public render() {
     return (
-      <Card >
-        <Grid container divided stackable columns="equal" verticalAlign="middle"  >
-          <Grid.Row >
-       {/*  <FlexWrapper> */}
-         <Grid.Column floated="left" > 
-          <span>
-            {/* <strong>Type:</strong> */}
-            <Popup
-              content={'ticket type: ' + this.props.type.toLowerCase()}
-              trigger={
-                <Blob color={this.props.type}>
-                  {this.getTypeIcon(this.props.type)}
-                </Blob>
-              }
-            />
-          </span>
-          </Grid.Column>
-          
-          <Grid.Column width={3}>
-          <span>
-             <strong>Priority: </strong>
-            <Blob color={this.props.priority} />
-          </span>
-          </Grid.Column>
+      <Card>
+        <Grid
+          container
+          divided
+          stackable
+          columns="equal"
+          verticalAlign="middle"
+        >
+          <Grid.Row>
+            <Grid.Column floated="left">
+              <Popup
+                content={'Ticket type: ' + this.props.type.toLowerCase()}
+                trigger={<span>{this.getTypeIcon(this.props.type)}</span>}
+              />
+              {this.props.status === TicketStatus.RESOLVED ? (
+                <Popup
+                  content={'Ticket has been completed'}
+                  trigger={this.getTypeIcon('COMPLETED')}
+                />
+              ) : null}
+            </Grid.Column>
 
-          <Grid.Column width={5}>
-            <strong>Assigned to:</strong>
-            <Blob color={'seashell'}>
-              {lookupTeamMemberName(this.props.assignedTo)}
-            </Blob>
-          </Grid.Column>
+            <Grid.Column width={3}>
+              <strong>Priority: </strong>
+              <ColorIndicator percentage={this.props.priority} />
+            </Grid.Column>
 
-          <Grid.Column width={4}>
-          {this.props.reminder && this.props.reminder.date ? (
-            <span>
-              <strong>Remind:</strong>
-              <Blob color={this.props.assignedTo}>
-                {getNotificationTimeInWords(this.props.reminder.date)}
-              </Blob>
-            </span>
-          ) : null}
-          </Grid.Column>
+            <Grid.Column width={4}>
+              <strong>Assigned to:</strong>
+              <HighlightedField color={'seashell'}>
+                {lookupTeamMemberName(this.props.assignedTo)}
+              </HighlightedField>
+            </Grid.Column>
 
-          <Grid.Column floated="right">
-          <Button
-            onClick={(event) => this.toggleShowBody(event)}
-            compact
-          >
-            Show details
-          </Button>
-          </Grid.Column>
+            <Grid.Column width={5}>
+              {this.props.reminder && this.props.reminder.date ? (
+                <React.Fragment>
+                  <strong>Remind:</strong>
+                  <HighlightedField color={this.props.assignedTo}>
+                    {getReminderTimeInWords(
+                      this.props.reminder.date,
+                      this.props.reminder.time,
+                    )}
+                  </HighlightedField>
+                </React.Fragment>
+              ) : null}
+            </Grid.Column>
+
+            <Grid.Column floated="right">
+              <Button onClick={(event) => this.toggleShowBody(event)} compact>
+                {this.state.showBody ? 'Hide details' : 'Show details'}
+              </Button>
+            </Grid.Column>
           </Grid.Row>
         </Grid>
 
-
-      {/*    </FlexWrapper> */ }
         {this.state.showBody ? (
           <TicketBody
             description={this.props.description}
@@ -190,9 +135,17 @@ class Ticket extends React.Component<ITicket, {}> {
   }
 }
 
-// TODO: Fix this
-const getNotificationTimeInWords = (dateTime) => {
-  return dateTime
+const getReminderTimeInWords = (date, time) => {
+  const now = new Date()
+  const parsedDate = parse(date, 'yyyy-MM-dd', now)
+
+  if (isSameDay(parsedDate, now)) {
+    return 'today: ' + time
+  } else if (isAfter(parsedDate, now)) {
+    return date + ', ' + time
+  } else {
+    return 'has passed: ' + date
+  }
 }
 
 export default Ticket

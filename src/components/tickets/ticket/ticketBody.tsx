@@ -65,15 +65,11 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     showEditTicket: false,
   }
 
-  // TODO: Cancel mutations:
-  // componentWillUnmount() {
-  // }
-
   public render() {
     const editTicket = (
       <Segment.Group>
         <Segment color="grey" compact>
-          <em>Edit Ticket</em>
+          <strong>Edit Ticket</strong>
         </Segment>
 
         <ChangeDescriptionMutation
@@ -143,7 +139,7 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           active={this.state.showEditTicket}
         >
           <Icon name="pencil alternate" />
-          Edit
+          {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
         </Button>
         {this.state.notification.show ? (
           <Notification
@@ -195,4 +191,3 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
 }
 
 export default TicketBody
-
