@@ -18,6 +18,7 @@ export default class FilterContainer extends React.Component {
             basic
             as="a"
             color="blue"
+            key={filterRow.value + filterRow.name}
             onClick={(e) => this.props.removeFilter(e, filterRow)}
           >
             {filterRow.value}
@@ -35,10 +36,11 @@ export default class FilterContainer extends React.Component {
         )}
 
         {this.props.items.suggestions.map((categoryRow) => (
-          <Label.Group color="blue">
+          <Label.Group color="blue" key={categoryRow.name}>
             {categoryRow.items.map((itemRow) => (
               <Label
                 as="a"
+                key={itemRow + categoryRow.name}
                 onClick={(e) => this.props.addFilter(e, itemRow, categoryRow)}
               >
                 {itemRow}

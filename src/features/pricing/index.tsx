@@ -18,13 +18,12 @@ export default class Pricing extends React.Component {
   public state = {
     activeCategory: '',
     activeQuery: '',
-    activeDate: new Date().toJSON().slice(0, 10),
     activeFilters: [],
+    activeDate: new Date().toJSON().slice(0, 10),
     usedDate: new Date().toJSON().slice(0, 10),
 
     categoryData: [{ key: 1, text: 'None', value: 1 }],
-    itemData: { products: [], suggestions: [] },
-    priceData: {},
+    offset: 0,
   }
 
   public addFilter = (event, itemRow, categoryRow) => {
@@ -63,10 +62,21 @@ export default class Pricing extends React.Component {
   }
 
   public handleChange = (event, { name, value }) => {
-    if (name === 'activeDate' && this.isDateValid(value)) {
-      this.setState({
-        usedDate: new Date(Date.parse(value)).toJSON().slice(0, 10),
-      })
+    switch (name) {
+      case 'activeDate':
+        if (this.isDateValid(value)) {
+          this.setState({
+            usedDate: new Date(Date.parse(value)).toJSON().slice(0, 10),
+          })
+        }
+        break
+
+      case 'activeCategory':
+        this.setState({
+          activeFilters: [],
+          activeQuery: '',
+        })
+        break
     }
 
     this.setState({ [name]: value })
@@ -136,9 +146,22 @@ export default class Pricing extends React.Component {
 
                     <ItemTable
                       items={items}
-                      prices={this.state.priceData}
                       date={this.state.usedDate}
                     />
+                    <p>
+                      {items.products.length !== 0
+                        ? 'Showing ' +
+                          this.state.offset.toString() +
+                          ' - ' +
+                          Math.min(
+                            items.products.length,
+                            this.state.offset + 10,
+                          ).toString() +
+                          (items.products.length >= 10
+                            ? ' out of ' + items.products.length.toString()
+                            : '')
+                        : 'No items to show'}
+                    </p>
                   </div>
                 )
               }}

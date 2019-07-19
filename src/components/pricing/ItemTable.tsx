@@ -6,13 +6,22 @@ import { Label, Table } from 'semantic-ui-react'
 
 export default class ItemTable extends React.Component {
   public handlePriceData = (data) => {
-    if (data) {
-      return 'prices' in data
-        ? Object.assign({}, ...data.prices.map((s) => ({ [s.itemId]: s })))
-        : {}
+    if (data && 'prices' in data) {
+      return data.prices.reduce(
+        (accumulator, s) => ({ ...accumulator, [s.itemId]: s }),
+        {},
+      )
     }
 
     return {}
+  }
+
+  public getLabelColor = (loading, priceExist, expectedColor) => {
+    if (loading) {
+      return 'grey'
+    }
+
+    return priceExist ? expectedColor : 'grey'
   }
 
   public getItemIds = (products) => {
@@ -56,9 +65,11 @@ export default class ItemTable extends React.Component {
                     <Label
                       basic
                       as="a"
-                      color={
-                        loading ? 'grey' : row.id in prices ? 'green' : 'grey'
-                      }
+                      color={this.getLabelColor(
+                        loading,
+                        row.id in prices,
+                        'green',
+                      )}
                     >
                       {loading ? '…' : this.getPriceString(prices, row, 'mean')}
                     </Label>
@@ -67,9 +78,11 @@ export default class ItemTable extends React.Component {
                     <Label
                       basic
                       as="a"
-                      color={
-                        loading ? 'grey' : row.id in prices ? 'blue' : 'grey'
-                      }
+                      color={this.getLabelColor(
+                        loading,
+                        row.id in prices,
+                        'blue',
+                      )}
                     >
                       {loading
                         ? '…'
