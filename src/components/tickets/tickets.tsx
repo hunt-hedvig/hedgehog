@@ -83,6 +83,7 @@ export class Tickets extends React.Component<ITickets, {}> {
                 {filteredTickets.map((ticket) => (
                   <Ticket
                     key={ticket.id}
+                    overdue={(ticket.id in overdueNotifications)}
                     reminder={{
                       date: ticket.remindNotificationDate,
                       time: ticket.remindNotificationTime,
@@ -111,6 +112,7 @@ export class Tickets extends React.Component<ITickets, {}> {
       return (
         ticket.assignedTo === me &&
         ticket.status !== 'RESOLVED' &&
+        ticket.remindNotificationDate !== null && 
         !isAfter(
           parse(ticket.remindNotificationDate, 'yyyy-MM-dd', today),
           today,
@@ -118,7 +120,7 @@ export class Tickets extends React.Component<ITickets, {}> {
       )
     })
 
-    const overdueReminders = []
+    let overdueReminders = {}
     const upcomingRemindersToday = []
 
     for (let i = 0; i < unresolvedTickets.length; i++) {
@@ -145,9 +147,11 @@ export class Tickets extends React.Component<ITickets, {}> {
       ) {
         upcomingRemindersToday.push(unresolvedTickets[i])
       } else {
-        overdueReminders.push(unresolvedTickets[i])
+        //Just keep track of the id of the tickets that are overdue
+        overdueReminders = {...overdueReminders, [unresolvedTickets[i].id] : true }
       }
     }
+    console.log(overdueReminders)
     return [overdueReminders, upcomingRemindersToday]
   }
 

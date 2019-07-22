@@ -13,6 +13,7 @@ import { ITicket } from '../types'
 import { ColorIndicator } from './color-indicator/colorIndicator'
 import { CALL_ME, CLAIM, COMPLETED, MESSAGE, OTHER, REMIND } from './icons'
 import { TicketBody } from './ticketBody'
+import { OverdueNotifier } from './overdue-notifier/overdueNotifier'
 
 const typeIcons = {
   CLAIM,
@@ -69,6 +70,7 @@ export class Ticket extends React.Component<ITicket, {}> {
                   trigger={this.getTypeIcon('COMPLETED')}
                 />
               )}
+              {this.props.overdue ? <OverdueNotifier id={this.props.id}/> : null }
             </Grid.Column>
 
             <Grid.Column width={3}>
