@@ -13,22 +13,21 @@ interface IDateTimePicker {
   handleChange: (event: any) => void
 }
 
-export class DateTimePicker extends React.Component<IDateTimePicker, {}> {
-  public render() {
-    return (
-      <React.Fragment>
-        <Label htmlFor={this.props.datepicker.name}>
+export const DateTimePicker = (props: IDateTimePicker) => {
+  return (
+     <>
+        <Label htmlFor={props.datepicker.name}>
           Set remind notification date:
         </Label>
         <br />
         <input
           type="date"
-          name={this.props.datepicker.name}
-          value={this.props.datepicker.value}
-          onChange={(e) => this.props.handleChange(e)}
+          name={props.datepicker.name}
+          value={props.datepicker.value}
+          onChange={(e) => props.handleChange(e)}
         />
         <br />
-        <Label htmlFor={this.props.timepicker.name}>
+        <Label htmlFor={props.timepicker.name}>
           Set remind notification time:
         </Label>
         <br />
@@ -36,13 +35,13 @@ export class DateTimePicker extends React.Component<IDateTimePicker, {}> {
           type="text"
           maxLength={8}
           placeholder="hh:mm:zz"
-          onChange={(e) => this.props.handleChange(e)}
-          value={this.props.timepicker.value}
-          name={this.props.timepicker.name}
+          onChange={(e) => props.handleChange(e)}
+          value={props.timepicker.value}
+          name={props.timepicker.name}
           pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
         />
-      </React.Fragment>
+      </>
     )
-  }
-}
+} 
+
 
