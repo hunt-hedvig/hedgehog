@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'react-emotion'
 
+
 import { GREEN, interpolateBetweenColors, ORANGE, RED, YELLOW } from './colors'
 
 export const Circle = styled('span')`

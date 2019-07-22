@@ -19,6 +19,7 @@ export interface ITicket {
   description: string
   status: TicketStatus
   priority: number
+  overdue: boolean
 }
 
 export interface IRemindNotification {
