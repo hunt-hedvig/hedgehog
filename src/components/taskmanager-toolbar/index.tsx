@@ -3,7 +3,7 @@ import styled from 'react-emotion'
 import ToolbarItem from './item/toolbarItem'
 
 import { Grid } from 'semantic-ui-react'
-import { IToolbar } from './types';
+import { IToolbar } from './types'
 
 const ToolbarCss = styled('div')({
   background: 'white',
@@ -19,14 +19,7 @@ class Toolbar extends React.Component<IToolbar, {}> {
       <Grid.Column key={item.id + 'g'}>
         <ToolbarItem
           key={item.id}
-          id={item.id}
-          itemType={item.itemType}
-          behaviors={item.behaviors}
-          caret={item.caret}
-          options={item.options}
-          active={item.active}
-          primary={item.primary}
-          label={item.label}
+          {...item}
         />
       </Grid.Column>
     ))

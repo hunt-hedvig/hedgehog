@@ -56,7 +56,7 @@ export default class TaskManagerPageComponent extends React.Component <{}, ITask
     toolbarItems: [
       {
         id: 'priority',
-        itemType: 'button',
+        itemType: 'sortingButton',
         label: 'Sort by Priority',
         active: true,
         caret: {
@@ -68,7 +68,7 @@ export default class TaskManagerPageComponent extends React.Component <{}, ITask
       },
       {
         id: 'type',
-        itemType: 'button',
+        itemType: 'sortingButton',
         label: 'Sort by Type',
         active: false,
         behaviors: {
@@ -136,14 +136,13 @@ export default class TaskManagerPageComponent extends React.Component <{}, ITask
     )
 
     const toolbarItemsToUpdate = [...this.state.toolbarItems]
-    // const itemToUpdate = toolbarItemsToUpdate.filter((item) => item.id === id)[0]
 
     for (let i = 0; i < toolbarItemsToUpdate.length; i++) {
       if (toolbarItemsToUpdate[i].id === id) {
         const newActiveItem = {
           ...toolbarItemsToUpdate[i],
           isActive: true,
-          caretDirection: sortOrder,
+          caret: { direction: sortOrder },
         }
         toolbarItemsToUpdate[i] = newActiveItem
       }
