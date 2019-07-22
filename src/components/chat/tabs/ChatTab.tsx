@@ -88,7 +88,9 @@ export default class ChatTab extends React.Component {
 
     const lastMemberMessagesArray = messages.filter(
       (message, index) =>
-        ['free.chat.message', 'free.chat.from.bo', 'free.chat.start'].includes(message.id) && index > lastNonMemberIndex,
+        ['free.chat.message', 'free.chat.from.bo', 'free.chat.start'].includes(
+          message.id,
+        ) && index > lastNonMemberIndex,
     )
 
     messageIds = lastMemberMessagesArray.map(
