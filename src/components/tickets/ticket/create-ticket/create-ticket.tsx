@@ -18,8 +18,8 @@ import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
 } from '../../../../features/taskmanager/types'
-import ColorIndicator from '../color-indicator/colorIndicator'
-import DateTimePicker from '../util/datetimepicker'
+import { ColorIndicator } from '../color-indicator/colorIndicator'
+import { DateTimePicker } from '../util/datetimepicker'
 
 const NewTicketBody = styled('div')`
   border: solid 1px gray;
@@ -48,7 +48,7 @@ interface ICreateNewTicketState {
   description: string
 }
 
-class CreateNewTicket extends React.Component<
+export class CreateNewTicket extends React.Component<
   ICreateNewTicket,
   ICreateNewTicketState
 > {
@@ -209,4 +209,3 @@ class CreateNewTicket extends React.Component<
   }
 }
 
-export default CreateNewTicket

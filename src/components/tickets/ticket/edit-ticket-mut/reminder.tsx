@@ -5,7 +5,7 @@ import { Button, Form, Label, TextArea } from 'semantic-ui-react'
 import { CHANGE_REMINDER } from '../../../../features/taskmanager/queries'
 import actions from '../../../../store/actions/index'
 import { IRemindNotification } from '../../types'
-import DateTimePicker from '../util/datetimepicker'
+import { DateTimePicker } from '../util/datetimepicker'
 
 interface IChangeReminder {
   id: string

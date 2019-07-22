@@ -1,17 +1,16 @@
 import * as React from 'react'
 import styled from 'react-emotion'
 import Modal from '../../components/shared/modals/MaterialModal'
-import Toolbar from '../../components/taskmanager-toolbar/index'
-import Tickets from '../../components/tickets/tickets'
-
-import CreateNewTicket from '../../components/tickets/ticket/create-ticket/create-ticket'
-
+import { Toolbar } from '../../components/taskmanager-toolbar/index'
 import { IToolbarItem } from '../../components/taskmanager-toolbar/types'
-import { EOrder } from '../../components/tickets/types' 
-import { createOptionsArray, IEX_TEAM_MEMBERS_OPTIONS, TICKET_STATUS} from './types'
-
-
-
+import { CreateNewTicket } from '../../components/tickets/ticket/create-ticket/create-ticket'
+import { Tickets } from '../../components/tickets/tickets'
+import { EOrder } from '../../components/tickets/types'
+import {
+  createOptionsArray,
+  IEX_TEAM_MEMBERS_OPTIONS,
+  TICKET_STATUS,
+} from './types'
 
 const Header = styled('div')({
   padding: '0 20px',
@@ -45,7 +44,10 @@ interface ITaskManagerState {
   toolbarItems: IToolbarItem[]
 }
 
-export default class TaskManagerPageComponent extends React.Component <{}, ITaskManagerState> {
+export default class TaskManagerPageComponent extends React.Component<
+  {},
+  ITaskManagerState
+> {
   public state = {
     showModal: false,
     sort: {

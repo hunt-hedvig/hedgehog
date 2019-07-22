@@ -1,6 +1,5 @@
 import React from 'react'
 import { Input, Label } from 'semantic-ui-react'
-import Datepicker from '../../../shared/inputs/DatePicker'
 
 interface IDateTimePicker {
   datepicker: {
@@ -14,7 +13,7 @@ interface IDateTimePicker {
   handleChange: (event: any) => void
 }
 
-class DateTimePicker extends React.Component<IDateTimePicker, {}> {
+export class DateTimePicker extends React.Component<IDateTimePicker, {}> {
   public render() {
     return (
       <React.Fragment>
@@ -47,4 +46,3 @@ class DateTimePicker extends React.Component<IDateTimePicker, {}> {
   }
 }
 
-export default DateTimePicker

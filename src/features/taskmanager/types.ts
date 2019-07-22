@@ -28,27 +28,13 @@ export const IEX_TEAM_MEMBERS_OPTIONS = [
 
 // Purely for making it easier to read in the UI:
 let IEX_TEAM_NAME_LOOKUP = {}
-IEX_TEAM_MEMBERS_OPTIONS.forEach( entry => 
-  IEX_TEAM_NAME_LOOKUP = { ...IEX_TEAM_NAME_LOOKUP,  [entry.value]: entry.text })
-
-
-// const IEX_TEAM_NAME_LOOKUP = {
-//   'matilda@hedvig.com': 'Matilda',
-//   'karl@hedvig.com': 'Karl',
-//   'johanna@hedvig.com': 'Johanna',
-//   'tomas@hedvig.com': 'Tomas',
-//   'karl.jernberg@hedvig.com': 'Kalle',
-//   'emma@hedvig.com': 'Emma',
-//   'sara@hedvig.com': 'Sara',
-//   'axel.bryhn@hedvig.com': 'Axel',
-//   Unassigned: 'Unassigned',
-// }
-
-// export const IEX_TEAM_NAME_LOOKUP2 = Object.keys(IEX_TEAM_MEMBERS_OPTIONS).reduce((acc, key) => ({...acc, [IEX_TEAM_MEMBERS_OPTIONS[key]]: key})) 
-// export const IEX_TEAM_NAME_LOOKUP2 = IEX_TEAM_MEMBERS_OPTIONS.forEach((value) => (Object.keys(IEX_TEAM_MEMBERS_OPTIONS).reduce((acc, key) => ({...acc, [IEX_TEAM_MEMBERS_OPTIONS[key]]: key})) ) )
- 
-
-
+IEX_TEAM_MEMBERS_OPTIONS.forEach(
+  (entry) =>
+    (IEX_TEAM_NAME_LOOKUP = {
+      ...IEX_TEAM_NAME_LOOKUP,
+      [entry.value]: entry.text,
+    }),
+)
 
 export const lookupTeamMemberName = (email: string): string => {
   name = IEX_TEAM_NAME_LOOKUP[email]
@@ -91,5 +77,3 @@ export enum TicketType {
   CALL_ME = 'CALL_ME',
   OTHER = 'CALL_ME',
 }
-
-

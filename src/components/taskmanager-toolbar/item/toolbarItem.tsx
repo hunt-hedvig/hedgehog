@@ -3,7 +3,7 @@ import { Button, Dropdown, Icon } from 'semantic-ui-react'
 import { EOrder } from '../../tickets/types'
 import { IToolbarItem } from '../types'
 
-class ToolbarItem extends React.Component<IToolbarItem, {}> {
+export class ToolbarItem extends React.Component<IToolbarItem, {}> {
   public handleClick = () => {
     this.props.behaviors.onClicked(this.props.id)
   }
@@ -87,4 +87,3 @@ class ToolbarItem extends React.Component<IToolbarItem, {}> {
   }
 }
 
-export default ToolbarItem

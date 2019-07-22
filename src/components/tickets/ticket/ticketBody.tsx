@@ -44,7 +44,7 @@ interface ITicketBodyState {
   showEditTicket: boolean
 }
 
-class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
+export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
   public state = {
     inputs: {
       description: this.props.description,
@@ -151,5 +151,3 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     this.setState({ inputs })
   }
 }
-
-export default TicketBody

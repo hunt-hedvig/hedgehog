@@ -27,8 +27,7 @@ interface IColorIndicator {
   percentage: number
 }
 
-const ColorIndicator = (props: IColorIndicator) => (
+export const ColorIndicator = (props: IColorIndicator) => (
   <Circle percentage={props.percentage} />
 )
 
-export default ColorIndicator

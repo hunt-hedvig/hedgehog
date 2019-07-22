@@ -1,3 +1,6 @@
+import isAfter from 'date-fns/isAfter'
+import isSameDay from 'date-fns/isSameDay'
+import parse from 'date-fns/parse'
 import React from 'react'
 import styled from 'react-emotion'
 import { Button, Grid, Popup } from 'semantic-ui-react'
@@ -6,14 +9,9 @@ import {
   TicketStatus,
 } from '../../../features/taskmanager/types'
 import { ITicket } from '../types'
+import { ColorIndicator } from './color-indicator/colorIndicator'
 import { CALL_ME, CLAIM, COMPLETED, MESSAGE, OTHER, REMIND } from './icons'
-import TicketBody from './ticketBody'
-
-import isAfter from 'date-fns/isAfter'
-import isSameDay from 'date-fns/isSameDay'
-import parse from 'date-fns/parse'
-
-import ColorIndicator from './color-indicator/colorIndicator'
+import { TicketBody } from './ticketBody'
 
 const typeIcons = {
   CLAIM,
@@ -46,7 +44,7 @@ const HighlightedField = styled('span')`
   }};
 `
 
-class Ticket extends React.Component<ITicket, {}> {
+export class Ticket extends React.Component<ITicket, {}> {
   public state = {
     showBody: false,
   }
@@ -146,5 +144,3 @@ const getReminderTimeInWords = (date, time) => {
     return 'has passed: ' + date
   }
 }
-
-export default Ticket

@@ -6,10 +6,10 @@ import * as React from 'react'
 import { Query } from 'react-apollo'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { GET_TICKETS, ME } from '../../features/taskmanager/queries'
-import Ticket from './ticket/ticket'
+import { Ticket } from './ticket/ticket'
 import { EOrder, ITickets } from './types'
 
-export default class Tickets extends React.Component<ITickets, {}> {
+export class Tickets extends React.Component<ITickets, {}> {
   public state = {
     remindersHaveBeenProcessed: false,
     remindersWeHaveSeen: {},
