@@ -4,7 +4,7 @@ import styled from 'react-emotion'
 import { Button, Divider, Icon, Segment } from 'semantic-ui-react'
 import {
   createOptionsArray,
-  IEX_TEAM_MEMBERS,
+  IEX_TEAM_MEMBERS_OPTIONS,
   lookupStatus,
   TICKET_STATUS,
   TicketStatus,
@@ -15,7 +15,7 @@ import ChangeDescriptionMutation from './edit-ticket-mut/description'
 import ChangeReminderMutation from './edit-ticket-mut/reminder'
 import ChangeStatusMutation from './edit-ticket-mut/status'
 
-const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
+const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 const statusOptions = createOptionsArray(TICKET_STATUS)
 
 const TicketBodyCss = styled('div')`

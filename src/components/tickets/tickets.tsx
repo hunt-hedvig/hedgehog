@@ -24,7 +24,7 @@ export default class Tickets extends React.Component<ITickets, {}> {
 
   public render() {
     return (
-      <React.Fragment>
+      <>
         <Query<any> query={ME}>
           {({ data, error, loading }) => {
             this.state.me.email = data.me
@@ -120,12 +120,15 @@ export default class Tickets extends React.Component<ITickets, {}> {
             )
           }}
         </Query>
-      </React.Fragment>
+      </>
     )
   }
 
   private processReminders = (tickets) => {
-    // Select tickets that have been assigned to me, not been resolved and that are overdue or due for today.
+    // Select tickets that: 
+    // a) have been assigned to me,
+    // b)  not been resolved and 
+    // c)  that are overdue or due for today.
     // Ignore tickets further in the future...
     const today = new Date()
     const me = this.state.me.email
@@ -173,7 +176,7 @@ export default class Tickets extends React.Component<ITickets, {}> {
     return [overdueReminders, upcomingRemindersToday]
   }
 
-  // createNotifications take @reminders that will fire later today...
+  // createNotifications takes @reminders that will fire later today...
   private createNotifications = (reminders: any[]): void => {
     const now = new Date()
     for (let i = 0; i < reminders.length; i++) {

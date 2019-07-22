@@ -16,7 +16,7 @@ import {
 } from '../../../../features/taskmanager/queries'
 import {
   createOptionsArray,
-  IEX_TEAM_MEMBERS,
+  IEX_TEAM_MEMBERS_OPTIONS,
 } from '../../../../features/taskmanager/types'
 import ColorIndicator from '../color-indicator/colorIndicator'
 import DateTimePicker from '../util/datetimepicker'
@@ -26,7 +26,7 @@ const NewTicketBody = styled('div')`
   border-radius: 2px;
   padding: 1em;
 `
-const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS)
+const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 
 const formatDateTime = (date) => {
   const fDate = format(date, 'yyyy-MM-dd')
@@ -55,19 +55,11 @@ class CreateNewTicket extends React.Component<
   public state = {
     assignedTo: '',
     priority: 0,
-    remindDate: '',
-    remindTime: '',
+    remindDate: null,
+    remindTime: null,
     remindMessage: '',
     description: '',
     setReminder: false,
-  }
-
-  public componentDidMount() {
-    const [date, time] = formatDateTime(new Date())
-    this.setState({
-      remindDate: date,
-      remindTime: time,
-    })
   }
 
   public render() {
@@ -80,13 +72,6 @@ class CreateNewTicket extends React.Component<
               <Form
                 onSubmit={(e) => {
                   e.preventDefault()
-                  const reminder = this.state.setReminder
-                    ? {
-                        date: this.state.remindDate,
-                        time: this.state.remindTime,
-                        message: this.state.remindMessage,
-                      }
-                    : null
 
                   createNewTicket({
                     variables: {
@@ -94,7 +79,6 @@ class CreateNewTicket extends React.Component<
                         assignedTo: this.state.assignedTo,
                         priority: this.state.priority,
                         type: 'REMIND',
-                        //                        reminder,
                         remindNotificationDate: this.state.remindDate,
                         remindNotificationTime: this.state.remindTime,
                         remindMessage: this.state.remindMessage,

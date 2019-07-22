@@ -14,7 +14,7 @@ export const createOptionsArray = (array: IOption[]): IOption[] => {
 
 // This is hardcoded for now, since Hedgehog has no way of being aware of
 // who is who and who is part of what team (?).
-export const IEX_TEAM_MEMBERS = [
+export const IEX_TEAM_MEMBERS_OPTIONS = [
   { text: 'Matilda', value: 'matilda@hedvig.com' },
   { text: 'Karl', value: 'karl@hedvig.com' },
   { text: 'Johanna', value: 'johanna@hedvig.com' },
@@ -27,17 +27,28 @@ export const IEX_TEAM_MEMBERS = [
 ]
 
 // Purely for making it easier to read in the UI:
-const IEX_TEAM_NAME_LOOKUP = {
-  'matilda@hedvig.com': 'Matilda',
-  'karl@hedvig.com': 'Karl',
-  'johanna@hedvig.com': 'Johanna',
-  'tomas@hedvig.com': 'Tomas',
-  'karl.jernberg@hedvig.com': 'Kalle',
-  'emma@hedvig.com': 'Emma',
-  'sara@hedvig.com': 'Sara',
-  'axel.bryhn@hedvig.com': 'Axel',
-  Unassigned: 'Unassigned',
-}
+let IEX_TEAM_NAME_LOOKUP = {}
+IEX_TEAM_MEMBERS_OPTIONS.forEach( entry => 
+  IEX_TEAM_NAME_LOOKUP = { ...IEX_TEAM_NAME_LOOKUP,  [entry.value]: entry.text })
+
+
+// const IEX_TEAM_NAME_LOOKUP = {
+//   'matilda@hedvig.com': 'Matilda',
+//   'karl@hedvig.com': 'Karl',
+//   'johanna@hedvig.com': 'Johanna',
+//   'tomas@hedvig.com': 'Tomas',
+//   'karl.jernberg@hedvig.com': 'Kalle',
+//   'emma@hedvig.com': 'Emma',
+//   'sara@hedvig.com': 'Sara',
+//   'axel.bryhn@hedvig.com': 'Axel',
+//   Unassigned: 'Unassigned',
+// }
+
+// export const IEX_TEAM_NAME_LOOKUP2 = Object.keys(IEX_TEAM_MEMBERS_OPTIONS).reduce((acc, key) => ({...acc, [IEX_TEAM_MEMBERS_OPTIONS[key]]: key})) 
+// export const IEX_TEAM_NAME_LOOKUP2 = IEX_TEAM_MEMBERS_OPTIONS.forEach((value) => (Object.keys(IEX_TEAM_MEMBERS_OPTIONS).reduce((acc, key) => ({...acc, [IEX_TEAM_MEMBERS_OPTIONS[key]]: key})) ) )
+ 
+
+
 
 export const lookupTeamMemberName = (email: string): string => {
   name = IEX_TEAM_NAME_LOOKUP[email]

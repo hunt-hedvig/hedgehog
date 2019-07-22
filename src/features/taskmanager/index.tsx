@@ -8,14 +8,17 @@ import CreateNewTicket from '../../components/tickets/ticket/create-ticket/creat
 
 import { IToolbarItem } from '../../components/taskmanager-toolbar/types'
 import { EOrder } from '../../components/tickets/types' 
-import { createOptionsArray, IEX_TEAM_MEMBERS, TICKET_STATUS } from './types'
+import { createOptionsArray, IEX_TEAM_MEMBERS_OPTIONS, TICKET_STATUS} from './types'
+
+
+
 
 const Header = styled('div')({
   padding: '0 20px',
   textAlign: 'center',
 })
 
-const teamMemberOptions = createOptionsArray(IEX_TEAM_MEMBERS)
+const teamMemberOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 teamMemberOptions.push({
   text: 'Everyone',
   value: 'Everyone',
