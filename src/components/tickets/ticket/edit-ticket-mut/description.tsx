@@ -1,16 +1,21 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
+import { connect } from 'react-redux'
 import { Button, Form, Label, TextArea } from 'semantic-ui-react'
 import { CHANGE_DESCRIPTION } from '../../../../features/taskmanager/queries'
+import actions from '../../../../store/actions/index'
 
 interface IChangeDescription {
   id: string
-  showNotification: (message: string) => void
+  showNotification: (data: any) => void
   description: string
   handleChange: (event: any) => void
 }
 
-export default class ChangeDescriptionMutation extends React.Component<IChangeDescription, {}> {
+class ChangeDescriptionMutation extends React.Component<
+  IChangeDescription,
+  {}
+> {
   public render() {
     return (
       <Mutation
@@ -22,13 +27,27 @@ export default class ChangeDescriptionMutation extends React.Component<IChangeDe
             <Form
               onSubmit={(e) => {
                 e.preventDefault()
-                this.props.showNotification('Success! Changed description')
                 changeTicketDescription({
                   variables: {
                     id: this.props.id,
                     newDescription: this.props.description,
                   },
                 })
+                  .then(() => {
+                    this.props.showNotification({
+                      header: 'Change success!',
+                      message: 'Changed the description',
+                      type: 'green',
+                    })
+                  })
+                  .catch((error) => {
+                    this.props.showNotification({
+                      header: 'Error',
+                      message: error.message,
+                      type: 'red',
+                    })
+                    throw error
+                  })
               }}
             >
               <Form.Field>
@@ -52,3 +71,10 @@ export default class ChangeDescriptionMutation extends React.Component<IChangeDe
     )
   }
 }
+
+const mapActions = { ...actions.notificationsActions }
+
+export default connect(
+  null,
+  mapActions,
+)(ChangeDescriptionMutation)

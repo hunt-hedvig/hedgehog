@@ -12,15 +12,11 @@ const ToolbarCss = styled('div')({
   padding: '0',
 })
 
-
 class Toolbar extends React.Component<IToolbar, {}> {
   public render() {
     const toolbarItems = this.props.items.map((item) => (
       <Grid.Column key={item.id + 'g'}>
-        <ToolbarItem
-          key={item.id}
-          {...item}
-        />
+        <ToolbarItem key={item.id} {...item} />
       </Grid.Column>
     ))
 

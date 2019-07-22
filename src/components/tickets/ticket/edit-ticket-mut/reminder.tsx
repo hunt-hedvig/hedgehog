@@ -1,25 +1,23 @@
 import React from 'react'
-
 import { Mutation } from 'react-apollo'
+import { connect } from 'react-redux'
 import { Button, Form, Label, TextArea } from 'semantic-ui-react'
 import { CHANGE_REMINDER } from '../../../../features/taskmanager/queries'
+import actions from '../../../../store/actions/index'
 import { IRemindNotification } from '../../types'
-import Datepicker from '../create-ticket/datepicker'
+import DateTimePicker from '../util/datetimepicker'
 
 interface IChangeReminder {
   id: string
   remindDate: any
   remindTime: any
   remindMessage: string
-  showNotification: (message: string) => void
+  showNotification: (data: any) => void
   handleChange: (event: any) => void
   currentReminder: IRemindNotification
 }
 
-export default class ChangeReminderMutation extends React.Component<
-  IChangeReminder,
-  {}
-> {
+class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
   public render() {
     return (
       <Mutation mutation={CHANGE_REMINDER} key={this.props.id + 'reminder'}>
@@ -28,14 +26,6 @@ export default class ChangeReminderMutation extends React.Component<
             <Form
               onSubmit={(e) => {
                 e.preventDefault()
-
-                this.props.showNotification(
-                  'Success! Set a reminder for: ' +
-                    this.props.remindDate +
-                    ' ' +
-                    this.props.remindTime,
-                )
-
                 changeTicketReminder({
                   variables: {
                     ticketId: this.props.id,
@@ -46,6 +36,25 @@ export default class ChangeReminderMutation extends React.Component<
                     },
                   },
                 })
+                  .then(() => {
+                    this.props.showNotification({
+                      header: 'Change success!',
+                      message:
+                        'Set a reminder for: ' +
+                        this.props.remindDate +
+                        ' ' +
+                        this.props.remindTime,
+                      type: 'green',
+                    })
+                  })
+                  .catch((error) => {
+                    this.props.showNotification({
+                      header: 'Error',
+                      message: error.message,
+                      type: 'red',
+                    })
+                    throw error
+                  })
               }}
             >
               <Label htmlFor={'remindMessage'}>
@@ -61,7 +70,7 @@ export default class ChangeReminderMutation extends React.Component<
                 onChange={(e) => this.props.handleChange(e)}
                 maxLength={100}
               />
-              <Datepicker
+              <DateTimePicker
                 handleChange={(e) => this.props.handleChange(e)}
                 datepicker={{
                   name: 'remindDate',
@@ -100,3 +109,10 @@ export default class ChangeReminderMutation extends React.Component<
     )
   }
 }
+
+const mapActions = { ...actions.notificationsActions }
+
+export default connect(
+  null,
+  mapActions,
+)(ChangeReminderMutation)

@@ -1,25 +1,24 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
+import { connect } from 'react-redux'
 import { Button, Dropdown, Form, Label } from 'semantic-ui-react'
 import { CHANGE_STATUS } from '../../../../features/taskmanager/queries'
 import {
   lookupStatus,
   TicketStatus,
 } from '../../../../features/taskmanager/types'
+import actions from '../../../../store/actions/index'
 
 interface IChangeStatus {
   id: string
   status: TicketStatus
   currentStatus: TicketStatus
-  showNotification: (message: string) => void
+  showNotification: (data: any) => void
   handleChange: (event: any, value: any) => void
   options: any[]
 }
 
-export default class ChangeStatusMutation extends React.Component<
-  IChangeStatus,
-  {}
-> {
+class ChangeStatusMutation extends React.Component<IChangeStatus, {}> {
   public render() {
     return (
       <Mutation mutation={CHANGE_STATUS} key={this.props.id + 'status'}>
@@ -28,17 +27,29 @@ export default class ChangeStatusMutation extends React.Component<
             <Form
               onSubmit={(e) => {
                 e.preventDefault()
-                this.props.showNotification(
-                  'Success! Changed the status to: ' +
-                    lookupStatus(this.props.status),
-                )
-
                 changeTicketStatus({
                   variables: {
                     ticketId: this.props.id,
                     newStatus: this.props.status,
                   },
                 })
+                  .then(() => {
+                    this.props.showNotification({
+                      header: 'Change success!',
+                      message:
+                        'Changed the status to: ' +
+                        lookupStatus(this.props.status),
+                      type: 'green',
+                    })
+                  })
+                  .catch((error) => {
+                    this.props.showNotification({
+                      header: 'Error',
+                      message: error.message,
+                      type: 'red',
+                    })
+                    throw error
+                  })
               }}
             >
               <Form.Field inline>
@@ -68,3 +79,10 @@ export default class ChangeStatusMutation extends React.Component<
     )
   }
 }
+
+const mapActions = { ...actions.notificationsActions }
+
+export default connect(
+  null,
+  mapActions,
+)(ChangeStatusMutation)

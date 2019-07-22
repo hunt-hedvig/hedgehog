@@ -19,8 +19,7 @@ import {
   IEX_TEAM_MEMBERS,
 } from '../../../../features/taskmanager/types'
 import ColorIndicator from '../color-indicator/colorIndicator'
-
-import Datepicker from './datepicker'
+import DateTimePicker from '../util/datetimepicker'
 
 const NewTicketBody = styled('div')`
   border: solid 1px gray;
@@ -143,8 +142,8 @@ class CreateNewTicket extends React.Component<
                 />
                 <p>
                   Current priority:
-                  {this.state.priority.toFixed(2)}
                   <ColorIndicator percentage={this.state.priority} />
+                  {this.state.priority}
                 </p>
                 <Divider />
 
@@ -175,10 +174,9 @@ class CreateNewTicket extends React.Component<
                       value={this.state.remindMessage}
                       onChange={(e) => this.handleChange(e)}
                       maxLength={100}
-                      // error={(this.state.remindMessage.length > 0) ? false: true }
                     />
                     <br />
-                    <Datepicker
+                    <DateTimePicker
                       handleChange={this.handleChange}
                       datepicker={{
                         name: 'remindDate',

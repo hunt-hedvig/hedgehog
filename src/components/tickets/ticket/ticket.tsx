@@ -3,7 +3,6 @@ import styled from 'react-emotion'
 import { Button, Grid, Popup } from 'semantic-ui-react'
 import {
   lookupTeamMemberName,
-  TICKET_STATUS,
   TicketStatus,
 } from '../../../features/taskmanager/types'
 import { ITicket } from '../types'

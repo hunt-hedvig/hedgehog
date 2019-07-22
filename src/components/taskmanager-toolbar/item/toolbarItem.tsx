@@ -69,7 +69,7 @@ class ToolbarItem extends React.Component<IToolbarItem, {}> {
         item = null
         break
     }
-    return <React.Fragment>{item}</React.Fragment>
+    return <>{item}</>
   }
 
   private getButtonIcon = (caret): string => {

@@ -7,8 +7,8 @@ import {
   IEX_TEAM_MEMBERS,
   lookupStatus,
   TICKET_STATUS,
+  TicketStatus,
 } from '../../../features/taskmanager/types'
-import Notification from '../../notifications/Notification'
 import { IRemindNotification } from '../types'
 import AssignTicketToMutation from './edit-ticket-mut/assignTo'
 import ChangeDescriptionMutation from './edit-ticket-mut/description'
@@ -27,7 +27,7 @@ const TicketBodyCss = styled('div')`
 interface ITicketBody {
   id: string
   assignedTo: string
-  status: string
+  status: TicketStatus
   description: string
   reminder: IRemindNotification
 }
@@ -39,11 +39,7 @@ interface ITicketBodyState {
     remindDate: any
     remindTime: any
     remindMessage: string
-    status: string
-  }
-  notification: {
-    show: boolean
-    message: string
+    status: TicketStatus
   }
   showEditTicket: boolean
 }
@@ -58,10 +54,6 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
       remindTime: format(new Date(), 'HH:mm:ss'),
       remindMessage: '',
     },
-    notification: {
-      show: false,
-      message: '',
-    },
     showEditTicket: false,
   }
 
@@ -74,7 +66,6 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
 
         <ChangeDescriptionMutation
           id={this.props.id}
-          showNotification={this.showNotification}
           description={this.state.inputs.description}
           handleChange={this.handleChange}
         />
@@ -83,7 +74,6 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
 
         <AssignTicketToMutation
           id={this.props.id}
-          showNotification={this.showNotification}
           handleChange={this.handleOptionChange}
           options={teamOptions}
           assignedTo={this.state.inputs.assignedTo}
@@ -95,7 +85,6 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
         <ChangeStatusMutation
           id={this.props.id}
           status={this.state.inputs.status}
-          showNotification={this.showNotification}
           handleChange={this.handleOptionChange}
           options={statusOptions}
           currentStatus={this.props.status}
@@ -109,7 +98,6 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           remindTime={this.state.inputs.remindTime}
           remindMessage={this.state.inputs.remindMessage}
           handleChange={this.handleChange}
-          showNotification={this.showNotification}
           currentReminder={this.props.reminder}
         />
       </Segment.Group>
@@ -141,38 +129,12 @@ class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           <Icon name="pencil alternate" />
           {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
         </Button>
-        {this.state.notification.show ? (
-          <Notification
-            closeHandler={(id) => this.closeNotification()}
-            content={{
-              header: 'Success!',
-              id: 'confirmation',
-              message: this.state.notification.message,
-              type: 'green',
-            }}
-          />
-        ) : null}
       </TicketBodyCss>
     )
   }
 
-  private showNotification = (message: string): void => {
-    const updateNotification = { ...this.state.notification }
-    updateNotification.message = message
-    updateNotification.show = true
-    this.setState({ notification: updateNotification })
-  }
-
-  private closeNotification = () => {
-    const notification = { ...this.state.notification }
-    notification.show = false
-    notification.message = ''
-    this.setState({ notification })
-  }
-
   private toggleEditTicket = (event) => {
     event.preventDefault()
-    this.closeNotification()
     const updatedState = !this.state.showEditTicket
     this.setState({ showEditTicket: updatedState })
   }
