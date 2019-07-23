@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'react-emotion'
-import {ToolbarItem} from './item/toolbarItem'
-
 import { Grid } from 'semantic-ui-react'
+import { ToolbarItem } from './item/toolbarItem'
 import { IToolbar } from './types'
 
 const ToolbarCss = styled('div')({
@@ -15,7 +14,7 @@ const ToolbarCss = styled('div')({
 export class Toolbar extends React.Component<IToolbar, {}> {
   public render() {
     const toolbarItems = this.props.items.map((item) => (
-      <Grid.Column key={item.id + 'g'}>
+      <Grid.Column key={item.id}>
         <ToolbarItem key={item.id} {...item} />
       </Grid.Column>
     ))
@@ -29,4 +28,3 @@ export class Toolbar extends React.Component<IToolbar, {}> {
     )
   }
 }
-

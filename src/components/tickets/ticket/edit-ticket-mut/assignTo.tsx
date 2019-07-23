@@ -18,7 +18,7 @@ interface IAssignTicketTo {
 class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
   public render() {
     return (
-      <Mutation mutation={ASSIGN_TO} key={this.props.id + 'assign'}>
+      <Mutation mutation={ASSIGN_TO}> 
         {(assignTicketToTeamMember, { data }) => {
           return (
             <Form

@@ -86,4 +86,3 @@ export class ToolbarItem extends React.Component<IToolbarItem, {}> {
     }
   }
 }
-

@@ -20,7 +20,7 @@ interface IChangeReminder {
 class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
   public render() {
     return (
-      <Mutation mutation={CHANGE_REMINDER} key={this.props.id + 'reminder'}>
+      <Mutation mutation={CHANGE_REMINDER}>
         {(changeTicketReminder, { data }) => {
           return (
             <Form
@@ -96,12 +96,7 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
     )
   }
   private reminderToString = () => {
-    if (
-      this.props.currentReminder === undefined ||
-      this.props.currentReminder === null ||
-      this.props.currentReminder.date === null ||
-      this.props.currentReminder.time === null
-    ) {
+    if (!this.props.currentReminder || !this.props.currentReminder.date) {
       return 'none'
     }
     return (

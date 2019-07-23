@@ -6,4 +6,4 @@ export const CLAIM =  <Icon name="hand lizard" />
 export const REMIND =  <Icon name="alarm" />
 export const MESSAGE =  <Icon name="mail square" />
 export const OTHER =  <Icon name="asterisk" />
-export const COMPLETED = <Icon name="check circle outline" />
+export const COMPLETED = <Icon name="check circle outline" size="large" color="green" />

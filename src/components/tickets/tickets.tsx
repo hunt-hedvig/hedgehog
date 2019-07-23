@@ -63,7 +63,8 @@ export class Tickets extends React.Component<ITickets, {}> {
 
             // SORT AND FILTER THE TICKETS
             let sortedTickets = data.tickets.slice().sort()
-            if (this.props.sort.category === 'priority') {
+
+             if (this.props.sort.category === 'priority') {
               if (this.props.sort.order === EOrder.DESC) {
                 sortedTickets = sortedTickets.sort((a, b) =>
                   this.sortByPriority(a, b),
@@ -73,39 +74,13 @@ export class Tickets extends React.Component<ITickets, {}> {
                   this.sortByPriority(b, a),
                 )
               }
-            } else if (this.props.sort.category === 'type') {
-              if (this.props.sort.order === EOrder.ASC) {
-                sortedTickets = sortedTickets.sort((a, b) =>
-                  this.sortByType(a, b),
-                )
-              } else if (this.props.sort.order === EOrder.DESC) {
-                sortedTickets = sortedTickets.sort((a, b) =>
-                  this.sortByType(b, a),
-                )
-              }
             }
 
-            if (
-              this.props.filter.assignedTo !== 'Everyone' &&
-              this.props.filter.assignedTo !== ''
-            ) {
-              sortedTickets = sortedTickets.filter(
-                (ticket) => ticket.assignedTo === this.props.filter.assignedTo,
-              )
-            }
+            const filteredTickets = this.applyFilters(sortedTickets)
 
-            if (
-              this.props.filter.status !== 'All' &&
-              this.props.filter.status !== ''
-            ) {
-              sortedTickets = sortedTickets.filter(
-                (ticket) => ticket.status === this.props.filter.status,
-              )
-            }
-
-            return (
+           return (
               <>
-                {sortedTickets.map((ticket) => (
+                {filteredTickets.map((ticket) => (
                   <Ticket
                     key={ticket.id}
                     reminder={{
@@ -125,9 +100,9 @@ export class Tickets extends React.Component<ITickets, {}> {
   }
 
   private processReminders = (tickets) => {
-    // Select tickets that: 
+    // Select tickets that:
     // a) have been assigned to me,
-    // b)  not been resolved and 
+    // b)  not been resolved and
     // c)  that are overdue or due for today.
     // Ignore tickets further in the future...
     const today = new Date()
@@ -204,14 +179,35 @@ export class Tickets extends React.Component<ITickets, {}> {
     }
   }
 
-  private sortByType = (a, b): number => {
-    // use default lexical comparison
-    if (a.type > b.type) {
-      return -1
-    } else if (a.type === b.type) {
-      return 0
-    }
-    return 1
+  private applyFilters = (sortedTickets: any[]):any[]  => {
+     let filteredTickets = [...sortedTickets]
+     if (
+          this.props.filter.assignedTo !== 'Everyone' &&
+          this.props.filter.assignedTo !== ''
+        ) {
+          filteredTickets = filteredTickets.filter(
+            (ticket) => ticket.assignedTo === this.props.filter.assignedTo,
+          )
+        }
+
+        if (
+          this.props.filter.status !== 'All' &&
+          this.props.filter.status !== ''
+        ) {
+          filteredTickets = filteredTickets.filter(
+            (ticket) => ticket.status === this.props.filter.status,
+          )
+        }
+
+        if (
+          this.props.filter.type !== 'All' &&
+          this.props.filter.type !== ''
+        ) {
+          filteredTickets = filteredTickets.filter(
+            (ticket) => ticket.type === this.props.filter.type,
+          )
+      }
+      return filteredTickets
   }
 
   // HIGH > MEDIUM > LOW (obviously)

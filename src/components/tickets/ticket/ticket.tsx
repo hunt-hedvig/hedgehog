@@ -1,3 +1,4 @@
+import formatDistance from 'date-fns/formatDistance'
 import isAfter from 'date-fns/isAfter'
 import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
@@ -65,12 +66,12 @@ export class Ticket extends React.Component<ITicket, {}> {
                 content={'Ticket type: ' + this.props.type.toLowerCase()}
                 trigger={<span>{this.getTypeIcon(this.props.type)}</span>}
               />
-              {this.props.status === TicketStatus.RESOLVED ? (
+              {this.props.status === TicketStatus.RESOLVED && (
                 <Popup
                   content={'Ticket has been completed'}
                   trigger={this.getTypeIcon('COMPLETED')}
                 />
-              ) : null}
+              )}
             </Grid.Column>
 
             <Grid.Column width={3}>
@@ -135,9 +136,9 @@ export class Ticket extends React.Component<ITicket, {}> {
 const getReminderTimeInWords = (date, time) => {
   const now = new Date()
   const parsedDate = parse(date, 'yyyy-MM-dd', now)
-
+  const parsedTime = parse(time, 'HH:mm:ss', now)
   if (isSameDay(parsedDate, now)) {
-    return 'today: ' + time
+    return formatDistance(now, parsedTime)
   } else if (isAfter(parsedDate, now)) {
     return date + ', ' + time
   } else {

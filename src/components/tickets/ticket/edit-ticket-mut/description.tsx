@@ -18,10 +18,7 @@ class ChangeDescriptionMutation extends React.Component<
 > {
   public render() {
     return (
-      <Mutation
-        mutation={CHANGE_DESCRIPTION}
-        key={this.props.id + 'description'}
-      >
+      <Mutation mutation={CHANGE_DESCRIPTION}>
         {(changeTicketDescription, { data }) => {
           return (
             <Form

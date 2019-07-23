@@ -3,18 +3,26 @@ import styled from 'react-emotion'
 import Modal from '../../components/shared/modals/MaterialModal'
 import { Toolbar } from '../../components/taskmanager-toolbar/index'
 import { IToolbarItem } from '../../components/taskmanager-toolbar/types'
-import { CreateNewTicket } from '../../components/tickets/ticket/create-ticket/create-ticket'
+import CreateNewTicket from '../../components/tickets/ticket/create-ticket/create-ticket'
 import { Tickets } from '../../components/tickets/tickets'
 import { EOrder } from '../../components/tickets/types'
 import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
   TICKET_STATUS,
+  TICKET_TYPE_OPTIONS,
 } from './types'
 
 const Header = styled('div')({
   padding: '0 20px',
   textAlign: 'center',
+})
+
+const ticketTypeOptions = createOptionsArray(TICKET_TYPE_OPTIONS)
+ticketTypeOptions.push({
+  text: 'All types',
+  value: 'All',
+  key: 'All',
 })
 
 const teamMemberOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
@@ -40,6 +48,7 @@ interface ITaskManagerState {
   filter: {
     assignedTo: string
     status: string
+    type: string
   }
   toolbarItems: IToolbarItem[]
 }
@@ -57,6 +66,7 @@ export default class TaskManagerPageComponent extends React.Component<
     filter: {
       assignedTo: 'Everyone',
       status: 'All',
+      type: 'All',
     },
     toolbarItems: [
       {
@@ -73,15 +83,13 @@ export default class TaskManagerPageComponent extends React.Component<
       },
       {
         id: 'type',
-        itemType: 'sortingButton',
-        label: 'Sort by Type',
+        itemType: 'dropdown',
+        label: 'Filter by Type: ',
         active: false,
         behaviors: {
-          onClicked: (id) => this.changeSortByHandler(id),
+          handleChange: (id, value) => this.handleOptionsChange(id, value),
         },
-        caret: {
-          direction: EOrder.DESC,
-        },
+        options: ticketTypeOptions,
       },
       {
         id: 'assignedTo',
@@ -89,7 +97,6 @@ export default class TaskManagerPageComponent extends React.Component<
         label: 'Show only tickets assigned to: ',
         active: false,
         behaviors: {
-          onClicked: (id) => this.filterByHandler(id),
           handleChange: (id, value) => this.handleOptionsChange(id, value),
         },
         options: teamMemberOptions,
@@ -97,10 +104,9 @@ export default class TaskManagerPageComponent extends React.Component<
       {
         id: 'status',
         itemType: 'dropdown',
-        label: 'Ticket status ',
+        label: 'Ticket status: ',
         active: false,
         behaviors: {
-          onClicked: (id) => this.filterByHandler(id),
           handleChange: (id, value) => this.handleOptionsChange(id, value),
         },
         options: statusOptions,
@@ -140,28 +146,32 @@ export default class TaskManagerPageComponent extends React.Component<
       this.state.sort.order,
     )
 
-    const toolbarItemsToUpdate = [...this.state.toolbarItems]
-
-    for (let i = 0; i < toolbarItemsToUpdate.length; i++) {
-      if (toolbarItemsToUpdate[i].id === id) {
-        const newActiveItem = {
-          ...toolbarItemsToUpdate[i],
+    // const toolbarItemsToUpdate = [...this.state.toolbarItems]
+    const toolbarItemsToUpdate = this.state.toolbarItems.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
           isActive: true,
           caret: { direction: sortOrder },
         }
-        toolbarItemsToUpdate[i] = newActiveItem
       }
-      if (id !== this.state.sort.category) {
-        if (toolbarItemsToUpdate[i].id === this.state.sort.category) {
-          const deactivateItem = { ...toolbarItemsToUpdate[i], isActive: false } // need to deactivate the previously active item
-          toolbarItemsToUpdate[i] = deactivateItem
+      if (
+        id !== this.state.sort.category &&
+        item.id === this.state.sort.category
+      ) {
+        return {
+          ...item,
+          isActive: false,
         }
       }
-    }
 
-    const sort = { ...this.state.sort }
-    sort.order = sortOrder
-    sort.category = sortCategory
+      return { ...item }
+    })
+    const sort = {
+      ...this.state.sort,
+      order: sortOrder,
+      category: sortCategory,
+    }
 
     this.setState({
       sort,
@@ -171,7 +181,7 @@ export default class TaskManagerPageComponent extends React.Component<
 
   public handleOptionsChange = (id: string, value: string): void => {
     // Change what we filter the tickets on:
-    if (id === 'status' || id === 'assignedTo') {
+    if (id === 'status' || id === 'assignedTo' || id === 'type') {
       const filter = { ...this.state.filter }
       filter[id] = value
       this.setState({ filter })

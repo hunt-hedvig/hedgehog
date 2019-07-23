@@ -21,7 +21,7 @@ interface IChangeStatus {
 class ChangeStatusMutation extends React.Component<IChangeStatus, {}> {
   public render() {
     return (
-      <Mutation mutation={CHANGE_STATUS} key={this.props.id + 'status'}>
+      <Mutation mutation={CHANGE_STATUS} >
         {(changeTicketStatus, { data }) => {
           return (
             <Form

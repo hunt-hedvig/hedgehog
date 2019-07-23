@@ -27,22 +27,15 @@ export const IEX_TEAM_MEMBERS_OPTIONS = [
 ]
 
 // Purely for making it easier to read in the UI:
-let IEX_TEAM_NAME_LOOKUP = {}
-IEX_TEAM_MEMBERS_OPTIONS.forEach(
-  (entry) =>
-    (IEX_TEAM_NAME_LOOKUP = {
-      ...IEX_TEAM_NAME_LOOKUP,
-      [entry.value]: entry.text,
-    }),
+const IEX_TEAM_NAME_LOOKUP = IEX_TEAM_MEMBERS_OPTIONS.reduce(
+  (acc, val) => {
+    return { ...acc, [val.value]: val.text }
+  },
+  { 'matilda@hedvig.com': 'Matilda' },
 )
 
 export const lookupTeamMemberName = (email: string): string => {
-  name = IEX_TEAM_NAME_LOOKUP[email]
-  if (name === '' || name === 'undefined') {
-    return 'Unassigned'
-  } else {
-    return name
-  }
+  return (name = IEX_TEAM_NAME_LOOKUP[email] || 'Unassigned')
 }
 
 export enum TicketStatus {
@@ -75,5 +68,13 @@ export enum TicketType {
   MESSAGE = 'MESSAGE',
   CLAIM = 'CLAIM',
   CALL_ME = 'CALL_ME',
-  OTHER = 'CALL_ME',
+  OTHER = 'OTHER',
 }
+
+export const TICKET_TYPE_OPTIONS = [
+  { text: 'IEX Created', value: TicketType.REMIND },
+  { text: 'Message', value: TicketType.MESSAGE },
+  { text: 'Claim', value: TicketType.CLAIM },
+  { text: 'Callback', value: TicketType.CALL_ME },
+  { text: 'Other', value: TicketType.OTHER },
+]

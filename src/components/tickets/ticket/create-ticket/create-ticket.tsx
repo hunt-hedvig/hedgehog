@@ -20,6 +20,8 @@ import {
 } from '../../../../features/taskmanager/types'
 import { ColorIndicator } from '../color-indicator/colorIndicator'
 import { DateTimePicker } from '../util/datetimepicker'
+import { connect } from 'react-redux'
+import actions from '../../../../store/actions/index'
 
 const NewTicketBody = styled('div')`
   border: solid 1px gray;
@@ -36,6 +38,7 @@ const formatDateTime = (date) => {
 
 interface ICreateNewTicket {
   closeModal: () => void
+  showNotification: (data: any) => void
 }
 
 interface ICreateNewTicketState {
@@ -48,7 +51,7 @@ interface ICreateNewTicketState {
   description: string
 }
 
-export class CreateNewTicket extends React.Component<
+class CreateNewTicket extends React.Component<
   ICreateNewTicket,
   ICreateNewTicketState
 > {
@@ -88,7 +91,22 @@ export class CreateNewTicket extends React.Component<
                     },
                     refetchQueries: [{ query: GET_TICKETS }],
                   })
-                  this.props.closeModal()
+                    .then(() => {
+                      this.props.closeModal()
+                      this.props.showNotification({
+                        header: 'Success!',
+                        message: 'Created a new ticket.',
+                        type: 'green',
+                      })
+                    })
+                    .catch((error) => {
+                      this.props.showNotification({
+                        header: 'Error!',
+                        message: error.message,
+                        type: 'red',
+                      })
+                      throw error
+                    })
                 }}
               >
                 <Label htmlFor={'description'}>Description:</Label>
@@ -142,6 +160,18 @@ export class CreateNewTicket extends React.Component<
                     onChange={() => {
                       const flippedState = !this.state.setReminder
                       this.setState({ setReminder: flippedState })
+                      if (this.state.setReminder !== true) {
+                        const [date, time] = formatDateTime(new Date())
+                        this.setState({
+                          remindDate: date,
+                          remindTime: time,
+                        })
+                      } else {
+                        this.setState({
+                          remindDate: null,
+                          remindTime: null,
+                        })
+                      }
                     }}
                   />
                 </div>
@@ -156,7 +186,7 @@ export class CreateNewTicket extends React.Component<
                       name="remindMessage"
                       placeholder="Give a short remind message (max 100 characters)"
                       value={this.state.remindMessage}
-                      onChange={(e) => this.handleChange(e)}
+                      onChange={this.handleChange}
                       maxLength={100}
                     />
                     <br />
@@ -209,3 +239,9 @@ export class CreateNewTicket extends React.Component<
   }
 }
 
+const mapActions = { ...actions.notificationsActions }
+
+export default connect(
+  null,
+  mapActions,
+)(CreateNewTicket)
