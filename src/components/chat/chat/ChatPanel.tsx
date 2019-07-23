@@ -229,7 +229,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 }}
               />
 
-              {this.state.showAutocompleteSuggestions &&
+              {this.state.showAutocompleteSuggestions && 
+                this.props.questionToLabel === '' &&
                 this.state.autocompleteSuggestions && (
                   <MenuList>
                     {this.state.autocompleteSuggestions!.map((suggestion) => {
@@ -311,19 +312,10 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   }
 
   private confidenceColor = (confidence: number) => {
-    let percentage = confidence * 100
-    let red,
-      green,
-      blue = 0
-    if (percentage < 50) {
-      red = 255
-      green = Math.round(5.1 * percentage)
-    } else {
-      green = 255
-      red = Math.round(510 - 5.1 * percentage)
-    }
-    const h = red * 0x10000 + green * 0x100 + blue * 0x1
-    return '#' + ('000000' + h.toString(16)).slice(-6)
+    //colors from red to green
+    const colors = ['#f07b73', '#f5a767', '#f5eb7f', '#d9f567', '#a6ed91']
+
+    return colors[Math.round(confidence/(1/(colors.length-1)))]
   }
 
   private shouldShowSuggestedAnswer = (text: string) => {
