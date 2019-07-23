@@ -325,7 +325,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
 
   private confidenceColor = (confidence: number) => {
     //colors from red to green
-    const colors = ['#f07b73', '#f5a767', '#f5eb7f', '#d9f567', '#a6ed91']
+    const colors = ['#DB2929', '#F2711C', '#FBBE1C', '#E2EB44', '#23BA45']
 
     return colors[Math.round(confidence * (colors.length - 1))]
   }
