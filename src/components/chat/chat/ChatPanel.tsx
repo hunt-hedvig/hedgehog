@@ -165,7 +165,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
               {this.props.questionToLabel !== '' && (
                 <div>
                   <MenuList>
-                    {allIntents!.map((intent) => {
+                    {allIntents!.map((intent, index) => {
                       const text = this.getReply(allReplies, intent)
                       return (
                         this.shouldShowSuggestedAnswer(text) && (
@@ -181,7 +181,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                               allReplies,
                             )}
                           >
-                            {text}
+                            {this.displayedText(text, index)}
                           </ColoredMenuItem>
                         )
                       )
@@ -309,6 +309,18 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
         )}
       </Mutation>
     )
+  }
+  private displayedText = (text: string, index: integer) => {
+    return index + 1 + '. ' + this.minimizeText(text)
+  }
+
+  private minimizeText = (text: string) => {
+    const minimizedText =
+      text.length > 100
+        ? text.substring(0, 100).concat('...')
+        : text.substring(0, 100)
+
+    return minimizedText
   }
 
   private confidenceColor = (confidence: number) => {
