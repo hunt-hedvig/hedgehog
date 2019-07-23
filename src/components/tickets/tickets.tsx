@@ -210,7 +210,6 @@ export class Tickets extends React.Component<ITickets, {}> {
       return filteredTickets
   }
 
-  // HIGH > MEDIUM > LOW (obviously)
   private sortByPriority = (a, b): number => {
     const evaluate = a.priority - b.priority
     if (evaluate > 0) {
