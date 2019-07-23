@@ -31,7 +31,8 @@ const IEX_TEAM_NAME_LOOKUP = IEX_TEAM_MEMBERS_OPTIONS.reduce(
   (acc, val) => {
     return { ...acc, [val.value]: val.text }
   },
-  { 'matilda@hedvig.com': 'Matilda' },
+  { [IEX_TEAM_MEMBERS_OPTIONS[0].value] : IEX_TEAM_MEMBERS_OPTIONS[0].text },
+  // { 'matilda@hedvig.com': 'Matilda' },
 )
 
 export const lookupTeamMemberName = (email: string): string => {
