@@ -4,7 +4,7 @@ export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2em;
+  margin-top: 0em;
 `
 
 export const SubHeaderContainer = styled.div`
@@ -35,4 +35,13 @@ export const ListContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+`
+
+export const ItemPage = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 800px;
+  margin: 0 auto 50px;
 `

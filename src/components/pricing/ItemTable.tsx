@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Query } from 'react-apollo'
 import { Label, Table } from 'semantic-ui-react'
 
-export default class ItemTable extends React.Component {
+export class ItemTable extends React.Component {
   public handlePriceData = (data) => {
     if (data && 'prices' in data) {
       return data.prices.reduce(
@@ -25,7 +25,7 @@ export default class ItemTable extends React.Component {
   }
 
   public getItemIds = (products) => {
-    return [...new Set(products.slice(0, 10).map((item) => item.id))]
+    return [...products.slice(0, 5).map((item) => item.id)]
   }
 
   public getPriceString = (prices, row, property) => {
@@ -55,10 +55,12 @@ export default class ItemTable extends React.Component {
               date: this.props.date,
               ids: this.getItemIds(this.props.items.products),
             }}
+            fetchPolicy="no-cache"
           >
-            {({ loading, data }) => {
+            {({ loading, data, error }) => {
               const prices = this.handlePriceData(data)
-              return this.props.items.products.slice(0, 10).map((row) => (
+
+              return this.props.items.products.slice(0, 5).map((row) => (
                 <Table.Row key={row.id}>
                   <Table.Cell>{row.name}</Table.Cell>
                   <Table.Cell textAlign="center" verticalAlign="middle">

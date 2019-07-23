@@ -2,7 +2,7 @@ import { PropContainer, SubHeaderContainer } from 'features/pricing/styles'
 import * as React from 'react'
 import { Dropdown, Header, Icon, Label } from 'semantic-ui-react'
 
-export default class FilterContainer extends React.Component {
+export class FilterContainer extends React.Component {
   public render() {
     return (
       <PropContainer>
@@ -54,6 +54,7 @@ export default class FilterContainer extends React.Component {
                   {categoryRow.others.map((itemRow) => (
                     <Dropdown.Item
                       text={itemRow + ' (' + categoryRow.name + ')'}
+                      key={itemRow + categoryRow.name}
                       onClick={(e) =>
                         this.props.addFilter(e, itemRow, categoryRow)
                       }

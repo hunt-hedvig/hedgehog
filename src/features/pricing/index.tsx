@@ -21,8 +21,6 @@ export default class Pricing extends React.Component {
     activeFilters: [],
     activeDate: new Date().toJSON().slice(0, 10),
     usedDate: new Date().toJSON().slice(0, 10),
-
-    categoryData: [{ key: 1, text: 'None', value: 1 }],
     offset: 0,
   }
 
@@ -147,6 +145,7 @@ export default class Pricing extends React.Component {
                     <ItemTable
                       items={items}
                       date={this.state.usedDate}
+                      category={this.state.activeCategory}
                     />
                     <p>
                       {items.products.length !== 0
@@ -155,9 +154,9 @@ export default class Pricing extends React.Component {
                           ' - ' +
                           Math.min(
                             items.products.length,
-                            this.state.offset + 10,
+                            this.state.offset + 5,
                           ).toString() +
-                          (items.products.length >= 10
+                          (items.products.length >= 5
                             ? ' out of ' + items.products.length.toString()
                             : '')
                         : 'No items to show'}

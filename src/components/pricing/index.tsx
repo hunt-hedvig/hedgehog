@@ -1,3 +1,3 @@
-export { default as CategoryDropdown } from './CategoryDropdown'
-export { default as ItemTable } from './ItemTable'
-export { default as FilterContainer } from './FilterContainer'
+export { CategoryDropdown } from './CategoryDropdown'
+export { ItemTable } from './ItemTable'
+export { FilterContainer } from './FilterContainer'

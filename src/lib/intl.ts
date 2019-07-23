@@ -3,12 +3,12 @@ export interface Money {
   currency: 'SEK' | string
 }
 
-export const formatMoney = (locale: 'sv-SE', digits?: number) => (money: Money) =>
+export const formatMoney = (locale: 'sv-SE', digits: number = 2) => ( money : Money) =>
   new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: money.currency,
-    maximumFractionDigits: typeof digits === 'number' ? digits : 2,
-    minimumFractionDigits: typeof digits === 'number' ? digits : 2,
+    maximumFractionDigits: digits,
+    minimumFractionDigits: digits,
   }).format(
     typeof money.amount === 'number' ? money.amount : parseFloat(money.amount),
   )
