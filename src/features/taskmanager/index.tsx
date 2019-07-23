@@ -146,7 +146,6 @@ export default class TaskManagerPageComponent extends React.Component<
       this.state.sort.order,
     )
 
-    // const toolbarItemsToUpdate = [...this.state.toolbarItems]
     const toolbarItemsToUpdate = this.state.toolbarItems.map((item) => {
       if (item.id === id) {
         return {
