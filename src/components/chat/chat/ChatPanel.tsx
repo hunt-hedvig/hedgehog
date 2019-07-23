@@ -91,8 +91,8 @@ const MenuItem = withStyles({
 })(MuiMenuItem)
 
 const ColoredMenuItem = styled(MenuItem)(
-  (props: { backgroundColor: string }) => ({
-    backgroundColor: props.backgroundColor,
+  (props: { confidencecolor: string }) => ({
+    borderLeft: `5px solid ${props.confidencecolor} !important`,
   }),
 )
 
@@ -170,7 +170,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                       return (
                         this.shouldShowSuggestedAnswer(text) && (
                           <ColoredMenuItem
-                            backgroundColor={
+                            confidencecolor={
                               (this.isSuggestedAnswer(text) &&
                                 this.confidenceColor(this.props.confidence)) ||
                               'white'
@@ -229,7 +229,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                 }}
               />
 
-              {this.state.showAutocompleteSuggestions && 
+              {this.state.showAutocompleteSuggestions &&
                 this.props.questionToLabel === '' &&
                 this.state.autocompleteSuggestions && (
                   <MenuList>
@@ -315,7 +315,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     //colors from red to green
     const colors = ['#f07b73', '#f5a767', '#f5eb7f', '#d9f567', '#a6ed91']
 
-    return colors[Math.round(confidence/(1/(colors.length-1)))]
+    return colors[Math.round(confidence * (colors.length - 1))]
   }
 
   private shouldShowSuggestedAnswer = (text: string) => {
