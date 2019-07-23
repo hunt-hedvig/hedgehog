@@ -23,27 +23,24 @@ const typeIcons = {
   COMPLETED,
 }
 
-const Card = styled('div')({
-  border: '1px black gray',
-  boxShadow: '3px 3px 10px rgba(0,0,0,0.1)',
-  margin: '10px auto',
-  padding: '1em 1em',
-  background: 'white',
-  borderRadius: '3px',
-  maxWidth: '800px',
-  alignItems: 'baseline',
-})
+const Card = styled('div')`
+  border: 1px black gray;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+  margin: 10px auto;
+  padding: 1em 1em;
+  background: ${(props) => (props.status === TicketStatus.RESOLVED )?  'rgba(40,100,40,0.01)' :  'white' };
+  border-radius: 3px;
+  max-width: 850px;
+  align-items: baseline;
+`
 
 const HighlightedField = styled('span')`
-  min-width: 10px,
+  min-width: 10px;
   margin: 10px;
   padding: 1em 1em;
-  background: white;
   border-radius: 12%;
-  background-color: ${(props) => {
-    return props.color
-  }};
 `
+
 
 export class Ticket extends React.Component<ITicket, {}> {
   public state = {
@@ -52,7 +49,7 @@ export class Ticket extends React.Component<ITicket, {}> {
 
   public render() {
     return (
-      <Card>
+      <Card status={this.props.status}>
         <Grid
           container
           divided
