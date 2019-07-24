@@ -91,8 +91,8 @@ const MenuItem = withStyles({
 })(MuiMenuItem)
 
 const ColoredMenuItem = styled(MenuItem)(
-  (props: { backgroundColor: string }) => ({
-    backgroundColor: props.backgroundColor,
+  (props: { confidencecolor: string }) => ({
+    borderLeft: `5px solid ${props.confidencecolor} !important`,
   }),
 )
 
@@ -165,12 +165,12 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
               {this.props.questionToLabel !== '' && (
                 <div>
                   <MenuList>
-                    {allIntents!.map((intent) => {
+                    {allIntents!.map((intent, index) => {
                       const text = this.getReply(allReplies, intent)
                       return (
                         this.shouldShowSuggestedAnswer(text) && (
                           <ColoredMenuItem
-                            backgroundColor={
+                            confidencecolor={
                               (this.isSuggestedAnswer(text) &&
                                 this.confidenceColor(this.props.confidence)) ||
                               'white'
@@ -181,7 +181,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
                               allReplies,
                             )}
                           >
-                            {text}
+                            {this.displayedText(text, index)}
                           </ColoredMenuItem>
                         )
                       )
@@ -230,6 +230,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
               />
 
               {this.state.showAutocompleteSuggestions &&
+                this.props.questionToLabel === '' &&
                 this.state.autocompleteSuggestions && (
                   <MenuList>
                     {this.state.autocompleteSuggestions!.map((suggestion) => {
@@ -309,21 +310,24 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       </Mutation>
     )
   }
+  private displayedText = (text: string, index: integer) => {
+    return index + 1 + '. ' + this.minimizeText(text)
+  }
+
+  private minimizeText = (text: string) => {
+    const minimizedText =
+      text.length > 100
+        ? text.substring(0, 100).concat('...')
+        : text.substring(0, 100)
+
+    return minimizedText
+  }
 
   private confidenceColor = (confidence: number) => {
-    let percentage = confidence * 100
-    let red,
-      green,
-      blue = 0
-    if (percentage < 50) {
-      red = 255
-      green = Math.round(5.1 * percentage)
-    } else {
-      green = 255
-      red = Math.round(510 - 5.1 * percentage)
-    }
-    const h = red * 0x10000 + green * 0x100 + blue * 0x1
-    return '#' + ('000000' + h.toString(16)).slice(-6)
+    //colors from red to green
+    const colors = ['#DB2929', '#F2711C', '#FBBE1C', '#E2EB44', '#23BA45']
+
+    return colors[Math.round(confidence * (colors.length - 1))]
   }
 
   private shouldShowSuggestedAnswer = (text: string) => {
