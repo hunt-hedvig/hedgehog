@@ -55,9 +55,8 @@ export class ItemTable extends React.Component {
               date: this.props.date,
               ids: this.getItemIds(this.props.items.products),
             }}
-            fetchPolicy="no-cache"
           >
-            {({ loading, data, error }) => {
+            {({ loading, data }) => {
               const prices = this.handlePriceData(data)
 
               return this.props.items.products.slice(0, 5).map((row) => (
