@@ -11,6 +11,13 @@ const ToolbarCss = styled('div')({
   padding: '0',
 })
 
+const Wrapper = styled('div')({
+  width: '80%',
+  maxWidth: '1000px',
+  marginLeft: 'auto',
+  marginRight: 'auto'
+})
+
 export class Toolbar extends React.Component<IToolbar, {}> {
   public render() {
     const toolbarItems = this.props.items.map((item) => (
@@ -21,9 +28,11 @@ export class Toolbar extends React.Component<IToolbar, {}> {
 
     return (
       <ToolbarCss>
+        <Wrapper>
         <Grid stackable columns={this.props.items.length}>
           <Grid.Row style={{ padding: '0.5em' }}>{toolbarItems}</Grid.Row>
         </Grid>
+        </Wrapper>
       </ToolbarCss>
     )
   }

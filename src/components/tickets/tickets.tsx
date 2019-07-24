@@ -44,8 +44,8 @@ export class Tickets extends React.Component<ITickets, {}> {
             if (error) {
               return (
                 <p>
-                  Error ! : {error.message.toString()}{' '}
-                  {error.networkError.toString()}{' '}
+                  Error ! : {error.message}{' '}
+                  {error.networkError}{' '}
                 </p>
               )
             }
