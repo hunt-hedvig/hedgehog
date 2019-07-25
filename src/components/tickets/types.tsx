@@ -1,0 +1,33 @@
+import { TicketStatus, TicketType } from '../../features/taskmanager/types'
+
+export interface ITickets {
+  sort: {
+    order: EOrder
+    category: string
+  }
+  filter: {
+    assignedTo: string
+    status: string
+  }
+}
+
+export interface ITicket {
+  id: string
+  type: TicketType
+  assignedTo: string
+  reminder?: IRemindNotification
+  description: string
+  status: TicketStatus
+  priority: number
+}
+
+export interface IRemindNotification {
+  date: any
+  time: any
+  message: string
+}
+
+export enum EOrder {
+  ASC,
+  DESC,
+}
