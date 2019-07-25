@@ -64,10 +64,11 @@ class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
                   }
                 />
                 <Button
-                  basic
                   type="submit"
                   compact
-                  disabled={!this.props.assignedTo}
+                  disabled={this.props.assignedTo === this.props.currentlyAssignedTo }
+                  active={this.props.assignedTo !== this.props.currentlyAssignedTo }
+                  toggle 
                 >
                   Assign
                 </Button>

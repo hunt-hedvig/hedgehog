@@ -64,7 +64,13 @@ class ChangeStatusMutation extends React.Component<IChangeStatus, {}> {
                     this.props.handleChange('status', value)
                   }
                 />
-                <Button basic type="submit" compact>
+                <Button  
+                  type="submit" 
+                  compact 
+                  toggle
+                  active={this.props.status !== this.props.currentStatus}
+                  disabled={this.props.status === this.props.currentStatus}
+                >
                   Change status
                 </Button>
                 <p>

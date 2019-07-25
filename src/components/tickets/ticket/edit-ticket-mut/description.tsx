@@ -56,11 +56,16 @@ class ChangeDescriptionMutation extends React.Component<
                   row={3}
                   col={15}
                   name="description"
-                  placeholder={this.props.description}
+                  placeholder={this.props.oldDescription}
                   value={this.props.description}
                   onChange={this.props.handleChange}
                 />
-                <Button compact basic type="submit">
+                <Button 
+                  compact 
+                  toggle 
+                  active={this.props.touched} 
+                  disabled={!this.props.touched} 
+                  type="submit">
                   Change description
                 </Button>
               </Form.Field>
