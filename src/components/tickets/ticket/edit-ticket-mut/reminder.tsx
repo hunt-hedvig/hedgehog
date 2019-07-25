@@ -57,19 +57,9 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                   })
               }}
             >
-              <Label htmlFor={'remindMessage'}>
-                Message for remind notification:
-              </Label>
+             
               <br />
-              <TextArea
-                row={4}
-                col={20}
-                name="remindMessage"
-                placeholder="Give a short remind message (max 100 characters)"
-                value={this.props.remindMessage}
-                onChange={(e) => this.props.handleChange(e)}
-                maxLength={100}
-              />
+              
               <DateTimePicker
                 handleChange={(e) => this.props.handleChange(e)}
                 datepicker={{
@@ -81,10 +71,25 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                   value: this.props.remindTime,
                 }}
               />
+              <Form.TextArea
+                label="Message for the notification"
+                row={4}
+                col={20}
+                name="remindMessage"
+                placeholder="Give a short remind message (max 100 characters)"
+                value={this.props.remindMessage}
+                onChange={(e) => this.props.handleChange(e)}
+                maxLength={100}
+                error={this.props.touchedMessage && !(this.props.remindMessage.length > 0 )}
+              />
+
               <Button
                 type="submit"
                 compact
+                toggle
                 disabled={this.props.remindMessage.length > 0 ? false : true}
+                active ={!this.props.remindMessage.length > 0 ? false : true}
+
               >
                 Set reminder
               </Button>

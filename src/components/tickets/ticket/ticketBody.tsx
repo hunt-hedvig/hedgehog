@@ -40,6 +40,12 @@ interface ITicketBodyState {
     remindTime: any
     remindMessage: string
     status: TicketStatus
+    touched: {
+        description: boolean
+        remindDate: boolean
+        remindTime: boolean
+        remindMessage: boolean       
+    }
   }
   showEditTicket: boolean
 }
@@ -53,6 +59,14 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
       remindDate: format(new Date(), 'yyyy-MM-dd'),
       remindTime: format(new Date(), 'HH:mm:ss'),
       remindMessage: '',
+      touched: {
+        description: false,
+        assignedTo: false,
+        status: false,
+        remindDate: false,
+        remindTime: false,
+        remindMessage: false, 
+      }
     },
     showEditTicket: false,
   }
@@ -67,7 +81,9 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
         <ChangeDescriptionMutation
           id={this.props.id}
           description={this.state.inputs.description}
+          touched={this.state.inputs.touched.description}
           handleChange={this.handleChange}
+          oldDescription={this.props.description}
         />
 
         <Divider horizontal> </Divider>
@@ -99,6 +115,10 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           remindMessage={this.state.inputs.remindMessage}
           handleChange={this.handleChange}
           currentReminder={this.props.reminder}
+          touchedDate ={this.state.inputs.touched.remindDate}
+          touchedTime ={this.state.inputs.touched.remindTime}
+          touchedMessage ={this.state.inputs.touched.remindMessage}
+
         />
       </Segment.Group>
     )
@@ -124,9 +144,8 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           onClick={(event) => this.toggleEditTicket(event)}
           basic
           toggle
-          active={this.state.showEditTicket}
         >
-          <Icon name="pencil alternate" />
+          {this.state.showEditTicket ? <Icon name="close" /> : <Icon name="pencil alternate" /> } 
           {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
         </Button>
       </TicketBodyCss>
@@ -148,6 +167,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
   private handleChange = (event) => {
     const inputs = { ...this.state.inputs }
     inputs[event.target.name] = event.target.value
+    inputs.touched[event.target.name] = true 
     this.setState({ inputs })
   }
 }
