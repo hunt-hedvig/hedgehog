@@ -24,6 +24,7 @@ const TicketBodyCss = styled('div')`
   padding: 1em;
   margin: 1em;
   border: 1px lightgray solid;
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(227,231,235,0.33) 100%);
 `
 
 interface ITicketBody {
