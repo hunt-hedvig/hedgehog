@@ -151,6 +151,7 @@ export class Tickets extends React.Component<ITickets, {}> {
         overdueReminders = {...overdueReminders, [unresolvedTickets[i].id] : true }
       }
     }
+    console.log(overdueReminders)
     return [overdueReminders, upcomingRemindersToday]
   }
 
