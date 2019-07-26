@@ -80,7 +80,7 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                 value={this.props.remindMessage}
                 onChange={(e) => this.props.handleChange(e)}
                 maxLength={100}
-                error={this.props.touchedMessage && !(this.props.remindMessage.length > 0 )}
+                error={(this.props.touchedDate || this.props.touchedTime || this.props.touchedMessage) && !(this.props.remindMessage.length > 0 )}
               />
 
               <Button

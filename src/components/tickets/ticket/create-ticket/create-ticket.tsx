@@ -138,7 +138,7 @@ class CreateNewTicket extends React.Component<
                   max={1}
                   name="priority"
                   onChange={(event) => this.handleChange(event)}
-                  step={0.05}
+                  step={0.01}
                   type="range"
                   value={this.state.priority}
                 />

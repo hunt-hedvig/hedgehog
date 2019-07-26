@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Label } from 'semantic-ui-react'
+import { Input, Label, Grid, Divider } from 'semantic-ui-react'
 
 interface IDateTimePicker {
   datepicker: {
@@ -16,21 +16,24 @@ interface IDateTimePicker {
 export const DateTimePicker = (props: IDateTimePicker) => {
   return (
     <>
+    <Grid columns={2} stackable >
+      <Grid.Row verticalAlign='middle'>
+      <Grid.Column>
       <Label htmlFor={props.datepicker.name}>
         Set remind notification date:
       </Label>
-      <br />
-      <input
+      <Input
         type="date"
         name={props.datepicker.name}
         value={props.datepicker.value}
         onChange={(e) => props.handleChange(e)}
       />
-      <br />
+      </Grid.Column>
+
+      <Grid.Column>
       <Label htmlFor={props.timepicker.name}>
         Set remind notification time:
       </Label>
-      <br />
       <Input
         type="text"
         maxLength={8}
@@ -40,6 +43,11 @@ export const DateTimePicker = (props: IDateTimePicker) => {
         name={props.timepicker.name}
         pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
       />
+
+      </Grid.Column>
+      </Grid.Row>
+     </Grid>
     </>
+
   )
 }

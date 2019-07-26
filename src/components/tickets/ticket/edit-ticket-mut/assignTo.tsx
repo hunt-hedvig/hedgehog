@@ -1,7 +1,7 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
-import { Button, Dropdown, Form, Label } from 'semantic-ui-react'
+import { Button, Dropdown, Form, Label  } from 'semantic-ui-react'
 import { ASSIGN_TO } from '../../../../features/taskmanager/queries'
 import { lookupTeamMemberName } from '../../../../features/taskmanager/types'
 import actions from '../../../../store/actions/index'
@@ -49,9 +49,8 @@ class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
                   })
               }}
             >
-              <Form.Field inline>
-                <Label htmlFor="assignedTo">Assign to: </Label>
-                <Dropdown
+                <Form.Dropdown
+                  label="Assign to:"
                   name="assignedTo"
                   placeholder={lookupTeamMemberName(
                     this.props.currentlyAssignedTo,
@@ -78,7 +77,6 @@ class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
                     {lookupTeamMemberName(this.props.currentlyAssignedTo)}
                   </em>{' '}
                 </p>
-              </Form.Field>
             </Form>
           )
         }}

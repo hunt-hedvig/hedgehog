@@ -39,8 +39,8 @@ export const GET_TICKETS = gql`
 `
 
 export const CHANGE_DESCRIPTION = gql`
-  mutation ChangeDescription($id: ID!, $newDescription: String) {
-    changeTicketDescription(id: $id, newDescription: $newDescription) {
+  mutation ChangeDescription($ticketId: ID!, $newDescription: String) {
+    changeTicketDescription(ticketId: $ticketId, newDescription: $newDescription) {
       id
       description
     }
@@ -62,6 +62,16 @@ export const CHANGE_STATUS = gql`
     }
   }
 `
+
+export const CHANGE_PRIORITY = gql`
+  mutation ChangeTicketPriority ($ticketId: ID!, $newPriority: Float) {
+    changeTicketPriority (ticketId: $ticketId, newPriority: $newPriority) {
+      id
+      priority
+    }
+  }
+`
+
 
 export const CHANGE_REMINDER = gql`
   mutation ChangeTicketReminder(

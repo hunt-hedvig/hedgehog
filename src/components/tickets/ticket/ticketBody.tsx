@@ -1,7 +1,7 @@
 import format from 'date-fns/format'
 import React from 'react'
 import styled from 'react-emotion'
-import { Button, Divider, Icon, Segment } from 'semantic-ui-react'
+import { Button, Divider, Icon, Segment, Grid } from 'semantic-ui-react'
 import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
@@ -14,6 +14,8 @@ import AssignTicketToMutation from './edit-ticket-mut/assignTo'
 import ChangeDescriptionMutation from './edit-ticket-mut/description'
 import ChangeReminderMutation from './edit-ticket-mut/reminder'
 import ChangeStatusMutation from './edit-ticket-mut/status'
+import ChangePriorityMutation from './edit-ticket-mut/priority'
+
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 const statusOptions = createOptionsArray(TICKET_STATUS)
@@ -27,6 +29,7 @@ const TicketBodyCss = styled('div')`
 interface ITicketBody {
   id: string
   assignedTo: string
+  priority: number 
   status: TicketStatus
   description: string
   reminder: IRemindNotification
@@ -39,6 +42,7 @@ interface ITicketBodyState {
     remindDate: any
     remindTime: any
     remindMessage: string
+    priority: number, 
     status: TicketStatus
     touched: {
         description: boolean
@@ -59,6 +63,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
       remindDate: format(new Date(), 'yyyy-MM-dd'),
       remindTime: format(new Date(), 'HH:mm:ss'),
       remindMessage: '',
+      priority: this.props.priority, 
       touched: {
         description: false,
         assignedTo: false,
@@ -73,11 +78,20 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
 
   public render() {
     const editTicket = (
-      <Segment.Group>
-        <Segment color="grey" compact>
-          <strong>Edit Ticket</strong>
-        </Segment>
+      <Grid celled>
 
+         <Button
+          labelPosition="left"
+          icon
+          onClick={(event) => this.toggleEditTicket(event)}
+          basic
+          toggle
+        >
+          {this.state.showEditTicket ? <Icon name="close" /> : <Icon name="pencil alternate" /> } 
+          {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
+        </Button>
+        <Grid.Row >
+        <Grid.Column color="Cornsilk">
         <ChangeDescriptionMutation
           id={this.props.id}
           description={this.state.inputs.description}
@@ -85,8 +99,12 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           handleChange={this.handleChange}
           oldDescription={this.props.description}
         />
-
-        <Divider horizontal> </Divider>
+        </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+        <Grid columns={2} stackable>
+          <Grid.Row verticalAlign='middle'>
+            <Grid.Column>
 
         <AssignTicketToMutation
           id={this.props.id}
@@ -96,8 +114,8 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           currentlyAssignedTo={this.props.assignedTo}
         />
 
-        <Divider horizontal> </Divider>
-
+          </Grid.Column>
+          <Grid.Column>
         <ChangeStatusMutation
           id={this.props.id}
           status={this.state.inputs.status}
@@ -105,8 +123,27 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           options={statusOptions}
           currentStatus={this.props.status}
         />
-
+            </Grid.Column>
+          </Grid.Row>
+        </Grid> 
+        </Grid.Row>
         <Divider horizontal> </Divider>
+
+         <Grid.Row>
+         <Grid.Column>
+        <ChangePriorityMutation 
+          id={this.props.id}
+          priority={this.state.inputs.priority}
+          oldPriority={this.props.priority}
+          handleChange={this.handleChange}
+        />
+        </Grid.Column>
+        </Grid.Row>
+        <Divider horizontal> </Divider>
+
+        <Grid.Row>
+        <Grid.Column>
+        <strong>Set reminder</strong>
 
         <ChangeReminderMutation
           id={this.props.id}
@@ -118,9 +155,10 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           touchedDate ={this.state.inputs.touched.remindDate}
           touchedTime ={this.state.inputs.touched.remindTime}
           touchedMessage ={this.state.inputs.touched.remindMessage}
-
         />
-      </Segment.Group>
+      </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
 
     const ticketInfo = (

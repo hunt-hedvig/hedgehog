@@ -114,6 +114,7 @@ export class Ticket extends React.Component<ITicket, {}> {
             status={this.props.status}
             id={this.props.id}
             reminder={this.props.reminder}
+            priority={this.props.priority}
           />
         ) : null}
       </Card>

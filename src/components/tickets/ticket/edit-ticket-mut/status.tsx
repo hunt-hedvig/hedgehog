@@ -52,9 +52,8 @@ class ChangeStatusMutation extends React.Component<IChangeStatus, {}> {
                   })
               }}
             >
-              <Form.Field inline>
-                <Label htmlFor="status">Status: </Label>
-                <Dropdown
+                <Form.Dropdown
+                  label="Edit status: "
                   name="status"
                   placeholder={lookupStatus(this.props.currentStatus)}
                   search
@@ -77,7 +76,6 @@ class ChangeStatusMutation extends React.Component<IChangeStatus, {}> {
                   Current status:{' '}
                   <em>{lookupStatus(this.props.currentStatus)}</em>{' '}
                 </p>
-              </Form.Field>
             </Form>
           )
         }}
