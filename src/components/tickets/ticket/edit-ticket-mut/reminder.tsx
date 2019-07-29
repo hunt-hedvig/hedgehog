@@ -57,9 +57,6 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                   })
               }}
             >
-             
-              <br />
-              
               <DateTimePicker
                 handleChange={(e) => this.props.handleChange(e)}
                 datepicker={{
@@ -80,7 +77,12 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                 value={this.props.remindMessage}
                 onChange={(e) => this.props.handleChange(e)}
                 maxLength={100}
-                error={(this.props.touchedDate || this.props.touchedTime || this.props.touchedMessage) && !(this.props.remindMessage.length > 0 )}
+                error={
+                  (this.props.touchedDate ||
+                    this.props.touchedTime ||
+                    this.props.touchedMessage) &&
+                  !(this.props.remindMessage.length > 0)
+                }
               />
 
               <Button
@@ -88,8 +90,7 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                 compact
                 toggle
                 disabled={this.props.remindMessage.length > 0 ? false : true}
-                active ={!this.props.remindMessage.length > 0 ? false : true}
-
+                active={!this.props.remindMessage.length > 0 ? false : true}
               >
                 Set reminder
               </Button>

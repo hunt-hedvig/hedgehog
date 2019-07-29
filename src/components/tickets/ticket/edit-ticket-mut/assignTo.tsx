@@ -1,7 +1,7 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
-import { Button, Dropdown, Form, Label  } from 'semantic-ui-react'
+import { Button, Form } from 'semantic-ui-react'
 import { ASSIGN_TO } from '../../../../features/taskmanager/queries'
 import { lookupTeamMemberName } from '../../../../features/taskmanager/types'
 import actions from '../../../../store/actions/index'
@@ -18,7 +18,7 @@ interface IAssignTicketTo {
 class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
   public render() {
     return (
-      <Mutation mutation={ASSIGN_TO}> 
+      <Mutation mutation={ASSIGN_TO}>
         {(assignTicketToTeamMember, { data }) => {
           return (
             <Form
@@ -49,34 +49,36 @@ class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
                   })
               }}
             >
-                <Form.Dropdown
-                  label="Assign to:"
-                  name="assignedTo"
-                  placeholder={lookupTeamMemberName(
-                    this.props.currentlyAssignedTo,
-                  )}
-                  search
-                  selection
-                  options={this.props.options}
-                  onChange={(event, { value }) =>
-                    this.props.handleChange('assignedTo', value)
-                  }
-                />
-                <Button
-                  type="submit"
-                  compact
-                  disabled={this.props.assignedTo === this.props.currentlyAssignedTo }
-                  active={this.props.assignedTo !== this.props.currentlyAssignedTo }
-                  toggle 
-                >
-                  Assign
-                </Button>
-                <p>
-                  Currently assigned to:{' '}
-                  <em>
-                    {lookupTeamMemberName(this.props.currentlyAssignedTo)}
-                  </em>{' '}
-                </p>
+              <Form.Dropdown
+                label="Assign to:"
+                name="assignedTo"
+                placeholder={lookupTeamMemberName(
+                  this.props.currentlyAssignedTo,
+                )}
+                search
+                selection
+                options={this.props.options}
+                onChange={(event, { value }) =>
+                  this.props.handleChange('assignedTo', value)
+                }
+              />
+              <Button
+                type="submit"
+                compact
+                disabled={
+                  this.props.assignedTo === this.props.currentlyAssignedTo
+                }
+                active={
+                  this.props.assignedTo !== this.props.currentlyAssignedTo
+                }
+                toggle
+              >
+                Assign
+              </Button>
+              <p>
+                Currently assigned to:{' '}
+                <em>{lookupTeamMemberName(this.props.currentlyAssignedTo)}</em>{' '}
+              </p>
             </Form>
           )
         }}

@@ -2,6 +2,7 @@ import format from 'date-fns/format'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { connect } from 'react-redux'
 import {
   Button,
   Checkbox,
@@ -18,10 +19,9 @@ import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
 } from '../../../../features/taskmanager/types'
+import actions from '../../../../store/actions/index'
 import { ColorIndicator } from '../color-indicator/colorIndicator'
 import { DateTimePicker } from '../util/datetimepicker'
-import { connect } from 'react-redux'
-import actions from '../../../../store/actions/index'
 
 const NewTicketBody = styled('div')`
   border: solid 1px gray;

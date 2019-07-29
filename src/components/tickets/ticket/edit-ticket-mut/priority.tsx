@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 import { Button, Form } from 'semantic-ui-react'
 import { CHANGE_PRIORITY } from '../../../../features/taskmanager/queries'
 import actions from '../../../../store/actions/index'
-import {ColorIndicator} from '../color-indicator/colorIndicator'
-
+import { ColorIndicator } from '../color-indicator/colorIndicator'
 
 interface IChangeDescription {
   id: string
@@ -15,10 +14,7 @@ interface IChangeDescription {
   handleChange: (event: any) => void
 }
 
-class ChangePriorityMutation extends React.Component<
-  IChangeDescription,
-  {}
-> {
+class ChangePriorityMutation extends React.Component<IChangeDescription, {}> {
   public render() {
     return (
       <Mutation mutation={CHANGE_PRIORITY}>
@@ -50,30 +46,31 @@ class ChangePriorityMutation extends React.Component<
                   })
               }}
             >
-                <Form.Input
-                  label="Set Priority"
-                  min={0}
-                  max={1}
-                  name="priority"
-                  onChange={this.props.handleChange}
-                  step={0.01}
-                  type="range"
-                  value={this.props.priority}
-                />
-                <p>
-                  Current priority:
-                  <ColorIndicator percentage={this.props.priority} />
-                  {this.props.priority}
-                </p>
-                
-                <Button 
-                  compact 
-                  toggle 
-                  active={this.props.priority !== this.props.oldPriority } 
-                  disabled={this.props.priority === this.props.oldPriority} 
-                  type="submit">
-                  Change priority
-                </Button>
+              <Form.Input
+                label="Set Priority"
+                min={0}
+                max={1}
+                name="priority"
+                onChange={this.props.handleChange}
+                step={0.01}
+                type="range"
+                value={this.props.priority}
+              />
+              <p>
+                Current priority:
+                <ColorIndicator percentage={this.props.priority} />
+                {this.props.priority}
+              </p>
+
+              <Button
+                compact
+                toggle
+                active={this.props.priority !== this.props.oldPriority}
+                disabled={this.props.priority === this.props.oldPriority}
+                type="submit"
+              >
+                Change priority
+              </Button>
             </Form>
           )
         }}
@@ -88,5 +85,3 @@ export default connect(
   null,
   mapActions,
 )(ChangePriorityMutation)
-
-                

@@ -23,7 +23,6 @@ export const IEX_TEAM_MEMBERS_OPTIONS = [
   { text: 'Emma', value: 'emma@hedvig.com' },
   { text: 'Sara', value: 'sara@hedvig.com' },
   { text: 'Axel', value: 'axel.bryhn@hedvig.com' },
-  { text: 'Fabian', value: 'fabian@hedvig.com' },
   { text: 'Unassigned', value: 'Unassigned' },
 
 ]
