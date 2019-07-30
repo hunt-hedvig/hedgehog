@@ -5,7 +5,6 @@ import { Query } from 'react-apollo'
 
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimInformation } from './components/ClaimInformation'
-import { ClaimItems } from './components/ClaimItems'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
@@ -113,12 +112,6 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
             <ClaimType type={type} claimId={match.params.id} />
-          </Grid>
-          <Grid item xs={12} sm={12} md={8}>
-            <ClaimItems notes={notes} claimId={match.params.id} />
-          </Grid>
-          <Grid item xs={12} sm={12} md={4}>
-            <ClaimNotes notes={notes} claimId={match.params.id} />
           </Grid>
           <Grid item xs={12}>
             <ClaimNotes notes={notes} claimId={match.params.id} />

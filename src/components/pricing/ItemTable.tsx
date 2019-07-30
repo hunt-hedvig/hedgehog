@@ -43,8 +43,8 @@ export class ItemTable extends React.Component {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell width={8}>Name</Table.HeaderCell>
-            <Table.HeaderCell>Price</Table.HeaderCell>
-            <Table.HeaderCell>Range</Table.HeaderCell>
+            <Table.HeaderCell>Estimated Price</Table.HeaderCell>
+            <Table.HeaderCell>Estimated Range</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
