@@ -6,8 +6,8 @@ import { GREEN, interpolateBetweenColors, ORANGE, RED, YELLOW } from './colors'
 
 export const Circle = styled('span')`
   border-radius: 50%;
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
   display: inline-block;
   margin: 0 5px;
 

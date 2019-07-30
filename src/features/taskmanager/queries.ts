@@ -8,16 +8,7 @@ export const ME = gql`
 `
 export const CREATE_TICKET = gql`
   mutation CreateTicket($ticket: TicketInput) {
-    createTicket(ticket: $ticket) {
-      description
-      assignedTo
-      type
-      status
-      priority
-      remindNotificationDate
-      remindNotificationTime
-      remindMessage
-    }
+    createTicket(ticket: $ticket) 
   }
 `
 
@@ -43,35 +34,23 @@ export const CHANGE_DESCRIPTION = gql`
     changeTicketDescription(
       ticketId: $ticketId
       newDescription: $newDescription
-    ) {
-      id
-      description
-    }
+    ) 
   }
 `
 export const ASSIGN_TO = gql`
   mutation AssignTicketTo($ticketId: ID!, $teamMemberId: ID!) {
-    assignTicketToTeamMember(ticketId: $ticketId, teamMemberId: $teamMemberId) {
-      id
-      assignedTo
-    }
+    assignTicketToTeamMember(ticketId: $ticketId, teamMemberId: $teamMemberId) 
   }
 `
 export const CHANGE_STATUS = gql`
   mutation ChangeTicketStatus($ticketId: ID!, $newStatus: TicketStatus) {
-    changeTicketStatus(ticketId: $ticketId, newStatus: $newStatus) {
-      id
-      status
-    }
+    changeTicketStatus(ticketId: $ticketId, newStatus: $newStatus) 
   }
 `
 
 export const CHANGE_PRIORITY = gql`
   mutation ChangeTicketPriority($ticketId: ID!, $newPriority: Float) {
-    changeTicketPriority(ticketId: $ticketId, newPriority: $newPriority) {
-      id
-      priority
-    }
+    changeTicketPriority(ticketId: $ticketId, newPriority: $newPriority) 
   }
 `
 
@@ -80,11 +59,6 @@ export const CHANGE_REMINDER = gql`
     $ticketId: ID!
     $newReminder: RemindNotification
   ) {
-    changeTicketReminder(ticketId: $ticketId, newReminder: $newReminder) {
-      id
-      remindNotificationDate
-      remindNotificationTime
-      remindMessage
-    }
+    changeTicketReminder(ticketId: $ticketId, newReminder: $newReminder) 
   }
 `
