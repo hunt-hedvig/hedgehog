@@ -77,7 +77,12 @@ const App: React.SFC = () => (
                 store={store}
                 component={Routes.BourdereauPageRoute}
               />
-               <Routes.PrivateRoute
+              <Routes.PrivateRoute
+                path="/pricing"
+                store={store}
+                component={Routes.PricingPageRoute}
+              />
+              <Routes.PrivateRoute
                 path="/taskmanager"
                 store={store}
                 component={Routes.TaskManagerPageRoute}
