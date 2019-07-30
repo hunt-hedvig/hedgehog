@@ -10,6 +10,7 @@ import MembersPageRoute from 'routes/MembersPageRoute'
 import PricingPageRoute from 'routes/PricingPageRoute'
 import PrivateRoute from 'routes/PrivateRoute'
 import QuestionsPageRoute from 'routes/QuestionsPageRoute'
+import TaskManagerPageRoute from 'routes/TaskManagerPageRoute'
 
 export default {
   AssetsPageRoute,
@@ -24,4 +25,5 @@ export default {
   BourdereauPageRoute,
   PrivateRoute,
   PricingPageRoute,
+  TaskManagerPageRoute,
 }

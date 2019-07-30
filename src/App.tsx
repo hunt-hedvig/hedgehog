@@ -82,6 +82,11 @@ const App: React.SFC = () => (
                 store={store}
                 component={Routes.PricingPageRoute}
               />
+              <Routes.PrivateRoute
+                path="/taskmanager"
+                store={store}
+                component={Routes.TaskManagerPageRoute}
+              />
               <Redirect from="*" to="/dashboard" />
             </Switch>
             <Notifications />

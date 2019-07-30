@@ -58,6 +58,11 @@ export const routesList = [
     route: '/pricing',
     type: 'PRICING',
   },
+  {
+    text: 'Task Manager',
+    route: '/taskmanager',
+    type: 'TASK_MANAGER',
+  },
 ]
 
 export const claimStatus = [
