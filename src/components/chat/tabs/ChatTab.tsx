@@ -88,7 +88,7 @@ export default class ChatTab extends React.Component {
 
     const lastMemberMessagesArray = messages.filter(
       (message, index) =>
-        ['free.chat.message', 'free.chat.from.bo'].includes(
+        ['free.chat.message', 'free.chat.from.bo', 'free.chat.start'].includes(
           message.id,
         ) && index > lastNonMemberIndex,
     )
@@ -138,8 +138,7 @@ export default class ChatTab extends React.Component {
           />
 
           <Query
-            query={GET_SUGGESTED_ANSWER_QUERY}
-            pollInterval={2000}
+            query={GET_SUGGESTED_ANSWER_QUERY}            
             variables={{ question: questionAndMessageIds.lastMemberMessages }}
           >
             {({ data, loading, error }) => {
