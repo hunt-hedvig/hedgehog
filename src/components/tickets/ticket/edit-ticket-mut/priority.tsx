@@ -2,38 +2,37 @@ import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
 import { Button, Form } from 'semantic-ui-react'
-import { CHANGE_DESCRIPTION } from '../../../../features/taskmanager/queries'
+import { CHANGE_PRIORITY } from '../../../../features/taskmanager/queries'
 import actions from '../../../../store/actions/index'
+import { ColorIndicator } from '../color-indicator/colorIndicator'
 
 interface IChangeDescription {
   id: string
   showNotification: (data: any) => void
-  description: string
+  priority: number
+  oldPriority: number
   handleChange: (event: any) => void
 }
 
-class ChangeDescriptionMutation extends React.Component<
-  IChangeDescription,
-  {}
-> {
+class ChangePriorityMutation extends React.Component<IChangeDescription, {}> {
   public render() {
     return (
-      <Mutation mutation={CHANGE_DESCRIPTION}>
-        {(changeTicketDescription, { data }) => {
+      <Mutation mutation={CHANGE_PRIORITY}>
+        {(changeTicketPriority, { data }) => {
           return (
             <Form
               onSubmit={(e) => {
                 e.preventDefault()
-                changeTicketDescription({
+                changeTicketPriority({
                   variables: {
                     ticketId: this.props.id,
-                    newDescription: this.props.description,
+                    newPriority: this.props.priority,
                   },
                 })
                   .then(() => {
                     this.props.showNotification({
                       header: 'Change success!',
-                      message: 'Changed the description',
+                      message: 'Changed the priority',
                       type: 'green',
                     })
                   })
@@ -47,23 +46,30 @@ class ChangeDescriptionMutation extends React.Component<
                   })
               }}
             >
-              <Form.TextArea
-                label="Edit description"
-                row={3}
-                col={15}
-                name="description"
-                placeholder={this.props.oldDescription}
-                value={this.props.description}
+              <Form.Input
+                label="Set Priority"
+                min={0}
+                max={1}
+                name="priority"
                 onChange={this.props.handleChange}
+                step={0.01}
+                type="range"
+                value={this.props.priority}
               />
+              <p>
+                Current priority:
+                <ColorIndicator percentage={this.props.priority} />
+                {this.props.priority}
+              </p>
+
               <Button
                 compact
                 toggle
-                active={this.props.touched}
-                disabled={!this.props.touched}
+                active={this.props.priority !== this.props.oldPriority}
+                disabled={this.props.priority === this.props.oldPriority}
                 type="submit"
               >
-                Change description
+                Change priority
               </Button>
             </Form>
           )
@@ -78,4 +84,4 @@ const mapActions = { ...actions.notificationsActions }
 export default connect(
   null,
   mapActions,
-)(ChangeDescriptionMutation)
+)(ChangePriorityMutation)

@@ -12,6 +12,7 @@ import {
 import { ITicket } from '../types'
 import { ColorIndicator } from './color-indicator/colorIndicator'
 import { CALL_ME, CLAIM, COMPLETED, MESSAGE, OTHER, REMIND } from './icons'
+import { OverdueNotifier } from './overdue-notifier/overdueNotifier'
 import { TicketBody } from './ticketBody'
 
 const typeIcons = {
@@ -25,10 +26,11 @@ const typeIcons = {
 
 const Card = styled('div')`
   border: 1px black gray;
-  box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
   margin: 10px auto;
   padding: 1em 1em;
-  background: ${(props) => (props.status === TicketStatus.RESOLVED )?  'rgba(40,100,40,0.01)' :  'white' };
+  background: ${(props) =>
+    props.status === TicketStatus.RESOLVED ? 'rgba(40,100,40,0.01)' : 'white'};
   border-radius: 3px;
   max-width: 850px;
   align-items: baseline;
@@ -40,7 +42,6 @@ const HighlightedField = styled('span')`
   padding: 1em 1em;
   border-radius: 12%;
 `
-
 
 export class Ticket extends React.Component<ITicket, {}> {
   public state = {
@@ -69,6 +70,9 @@ export class Ticket extends React.Component<ITicket, {}> {
                   trigger={this.getTypeIcon('COMPLETED')}
                 />
               )}
+              {this.props.overdue ? (
+                <OverdueNotifier id={this.props.id} />
+              ) : null}
             </Grid.Column>
 
             <Grid.Column width={3}>
@@ -112,6 +116,7 @@ export class Ticket extends React.Component<ITicket, {}> {
             status={this.props.status}
             id={this.props.id}
             reminder={this.props.reminder}
+            priority={this.props.priority}
           />
         ) : null}
       </Card>

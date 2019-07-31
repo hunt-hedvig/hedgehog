@@ -44,8 +44,7 @@ export class Tickets extends React.Component<ITickets, {}> {
             if (error) {
               return (
                 <p>
-                  Error ! : {error.message}{' '}
-                  {error.networkError}{' '}
+                  Error ! : {error.message} {error.networkError}{' '}
                 </p>
               )
             }
@@ -64,7 +63,7 @@ export class Tickets extends React.Component<ITickets, {}> {
             // SORT AND FILTER THE TICKETS
             let sortedTickets = data.tickets.slice().sort()
 
-             if (this.props.sort.category === 'priority') {
+            if (this.props.sort.category === 'priority') {
               if (this.props.sort.order === EOrder.DESC) {
                 sortedTickets = sortedTickets.sort((a, b) =>
                   this.sortByPriority(a, b),
@@ -78,11 +77,12 @@ export class Tickets extends React.Component<ITickets, {}> {
 
             const filteredTickets = this.applyFilters(sortedTickets)
 
-           return (
+            return (
               <>
                 {filteredTickets.map((ticket) => (
                   <Ticket
                     key={ticket.id}
+                    overdue={ticket.id in overdueNotifications}
                     reminder={{
                       date: ticket.remindNotificationDate,
                       time: ticket.remindNotificationTime,
@@ -111,6 +111,7 @@ export class Tickets extends React.Component<ITickets, {}> {
       return (
         ticket.assignedTo === me &&
         ticket.status !== 'RESOLVED' &&
+        ticket.remindNotificationDate !== null &&
         !isAfter(
           parse(ticket.remindNotificationDate, 'yyyy-MM-dd', today),
           today,
@@ -118,7 +119,7 @@ export class Tickets extends React.Component<ITickets, {}> {
       )
     })
 
-    const overdueReminders = []
+    let overdueReminders = {}
     const upcomingRemindersToday = []
 
     for (let i = 0; i < unresolvedTickets.length; i++) {
@@ -145,7 +146,11 @@ export class Tickets extends React.Component<ITickets, {}> {
       ) {
         upcomingRemindersToday.push(unresolvedTickets[i])
       } else {
-        overdueReminders.push(unresolvedTickets[i])
+        // Just keep track of the id of the tickets that are overdue
+        overdueReminders = {
+          ...overdueReminders,
+          [unresolvedTickets[i].id]: true,
+        }
       }
     }
     return [overdueReminders, upcomingRemindersToday]
@@ -162,7 +167,7 @@ export class Tickets extends React.Component<ITickets, {}> {
           reminders[i].remindNotificationDate,
           reminders[i].remindNotificationTime,
         ),
-        { value: null }
+        { value: null },
       )
       const msUntilFire = differenceInMilliseconds(
         parse(reminders[i].remindNotificationTime, 'HH:mm:ss', now),
@@ -179,35 +184,29 @@ export class Tickets extends React.Component<ITickets, {}> {
     }
   }
 
-  private applyFilters = (sortedTickets: any[]):any[]  => {
-     let filteredTickets = [...sortedTickets]
-     if (
-          this.props.filter.assignedTo !== 'Everyone' &&
-          this.props.filter.assignedTo !== ''
-        ) {
-          filteredTickets = filteredTickets.filter(
-            (ticket) => ticket.assignedTo === this.props.filter.assignedTo,
-          )
-        }
+  private applyFilters = (sortedTickets: any[]): any[] => {
+    let filteredTickets = [...sortedTickets]
+    if (
+      this.props.filter.assignedTo !== 'Everyone' &&
+      this.props.filter.assignedTo !== ''
+    ) {
+      filteredTickets = filteredTickets.filter(
+        (ticket) => ticket.assignedTo === this.props.filter.assignedTo,
+      )
+    }
 
-        if (
-          this.props.filter.status !== 'All' &&
-          this.props.filter.status !== ''
-        ) {
-          filteredTickets = filteredTickets.filter(
-            (ticket) => ticket.status === this.props.filter.status,
-          )
-        }
+    if (this.props.filter.status !== 'All' && this.props.filter.status !== '') {
+      filteredTickets = filteredTickets.filter(
+        (ticket) => ticket.status === this.props.filter.status,
+      )
+    }
 
-        if (
-          this.props.filter.type !== 'All' &&
-          this.props.filter.type !== ''
-        ) {
-          filteredTickets = filteredTickets.filter(
-            (ticket) => ticket.type === this.props.filter.type,
-          )
-      }
-      return filteredTickets
+    if (this.props.filter.type !== 'All' && this.props.filter.type !== '') {
+      filteredTickets = filteredTickets.filter(
+        (ticket) => ticket.type === this.props.filter.type,
+      )
+    }
+    return filteredTickets
   }
 
   private sortByPriority = (a, b): number => {

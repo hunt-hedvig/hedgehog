@@ -24,6 +24,7 @@ export const IEX_TEAM_MEMBERS_OPTIONS = [
   { text: 'Sara', value: 'sara@hedvig.com' },
   { text: 'Axel', value: 'axel.bryhn@hedvig.com' },
   { text: 'Unassigned', value: 'Unassigned' },
+
 ]
 
 // Purely for making it easier to read in the UI:
