@@ -93,6 +93,11 @@ const validateSelectEmployeeClaimOption = (
   return value === 'True'
 }
 
+const getUrlWithoutParameters = (recordingUrl): string => {
+  const regex = recordingUrl.split(/\?/)
+  return regex[0]
+}
+
 const AudioWrapper = styled('div')({})
 
 const Audio = styled('audio')({
@@ -165,8 +170,21 @@ const ClaimInformation: React.SFC<Props> = ({
                 <Audio controls>
                   <source src={recordingUrl} type="audio/aac" />
                 </Audio>
+                <Audio controls>
+                  <source
+                    src={getUrlWithoutParameters(recordingUrl)}
+                    type="audio/aac"
+                  />
+                </Audio>
                 <DonloadClaimFile
                   href={recordingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download claim file
+                </DonloadClaimFile>
+                <DonloadClaimFile
+                  href={getUrlWithoutParameters(recordingUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
