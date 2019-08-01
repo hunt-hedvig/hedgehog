@@ -120,7 +120,7 @@ interface ChatPanelProps {
   suggestedAnswer: string
   questionToLabel: string
   memberId: string
-  messageIds: string
+  messageIds: string[]
   allReplies: any
   confidence: number
 }
