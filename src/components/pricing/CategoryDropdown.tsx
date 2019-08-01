@@ -7,7 +7,11 @@ export class CategoryDropdown extends React.Component {
   public render() {
     return (
       <Query query={GET_CATEGORIES}>
-        {({ loading, data }) => {
+        {({ loading, error, data }) => {
+          if (error) {
+            return error
+          }
+
           return (
             <Dropdown
               placeholder="Category"

@@ -25,13 +25,28 @@ export class ItemTable extends React.Component {
   }
 
   public getItemIds = (products) => {
-    return [...products.slice(0, 5).map((item) => item.id)]
+    return [...products.map((item) => item.id)]
+  }
+
+  public getRangeColor = (prices, row) => {
+    if (row.id in prices) {
+      const colors = ['red', 'orange', 'yellow', 'olive', 'green']
+
+      const score = Math.max(
+        1 - (prices[row.id].upper - prices[row.id].lower) / prices[row.id].mean,
+        0,
+      )
+
+      return colors[Math.floor(score * 5)]
+    } else {
+      return 'grey'
+    }
   }
 
   public getPriceString = (prices, row, property) => {
     return row.id in prices
       ? formatMoney('sv-SE', 0)({
-          amount: prices[row.id][property],
+          amount: Math.max(prices[row.id][property], 0),
           currency: 'SEK',
         })
       : '…'
@@ -42,9 +57,9 @@ export class ItemTable extends React.Component {
       <Table celled>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell width={8}>Name</Table.HeaderCell>
-            <Table.HeaderCell>Estimated Price</Table.HeaderCell>
-            <Table.HeaderCell>Estimated Range</Table.HeaderCell>
+            <Table.HeaderCell width={7}>Name</Table.HeaderCell>
+            <Table.HeaderCell>Est. Price</Table.HeaderCell>
+            <Table.HeaderCell>Est. Range</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -59,7 +74,7 @@ export class ItemTable extends React.Component {
             {({ loading, data }) => {
               const prices = this.handlePriceData(data)
 
-              return this.props.items.products.slice(0, 5).map((row) => (
+              return this.props.items.products.map((row) => (
                 <Table.Row key={row.id}>
                   <Table.Cell>{row.name}</Table.Cell>
                   <Table.Cell textAlign="center" verticalAlign="middle">
@@ -69,22 +84,14 @@ export class ItemTable extends React.Component {
                       color={this.getLabelColor(
                         loading,
                         row.id in prices,
-                        'green',
+                        'teal',
                       )}
                     >
                       {loading ? '…' : this.getPriceString(prices, row, 'mean')}
                     </Label>
                   </Table.Cell>
                   <Table.Cell textAlign="center" verticalAlign="middle">
-                    <Label
-                      basic
-                      as="a"
-                      color={this.getLabelColor(
-                        loading,
-                        row.id in prices,
-                        'blue',
-                      )}
-                    >
+                    <Label basic as="a" color={this.getRangeColor(prices, row)}>
                       {loading
                         ? '…'
                         : this.getPriceString(prices, row, 'lower') +

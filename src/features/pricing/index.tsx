@@ -12,7 +12,7 @@ import {
 } from 'features/pricing/styles'
 import * as React from 'react'
 import { Query } from 'react-apollo'
-import { Header, Input } from 'semantic-ui-react'
+import { Dropdown, Header, Icon, Input, Label } from 'semantic-ui-react'
 
 export default class Pricing extends React.Component {
   public state = {
@@ -22,6 +22,7 @@ export default class Pricing extends React.Component {
     activeDate: new Date().toJSON().slice(0, 10),
     usedDate: new Date().toJSON().slice(0, 10),
     offset: 0,
+    batchSize: 5,
   }
 
   public addFilter = (event, itemRow, categoryRow) => {
@@ -57,6 +58,14 @@ export default class Pricing extends React.Component {
     }
 
     return false
+  }
+
+  public changePage = (steps) => {
+    this.setState((prevState) => {
+      return {
+        offset: prevState.offset + steps,
+      }
+    })
   }
 
   public handleChange = (event, { name, value }) => {
@@ -100,10 +109,22 @@ export default class Pricing extends React.Component {
               }}
             >
               {({ loading, data }) => {
-                const items =
+                const allItems =
                   data && Object.keys(data).length !== 0
                     ? data.items
                     : { products: [], suggestions: [] }
+
+                const items =
+                  data && Object.keys(allItems).length !== 0
+                    ? {
+                        products: allItems.products.slice(
+                          this.state.offset,
+                          this.state.offset + this.state.batchSize,
+                        ),
+                        suggestions: allItems.suggestions,
+                      }
+                    : { products: [], suggestions: [] }
+
 
                 return (
                   <div>
@@ -147,20 +168,79 @@ export default class Pricing extends React.Component {
                       date={this.state.usedDate}
                       category={this.state.activeCategory}
                     />
-                    <p>
-                      {items.products.length !== 0
-                        ? 'Showing ' +
-                          this.state.offset.toString() +
-                          ' - ' +
-                          Math.min(
-                            items.products.length,
-                            this.state.offset + 5,
-                          ).toString() +
-                          (items.products.length >= 5
-                            ? ' out of ' + items.products.length.toString()
-                            : '')
-                        : 'No items to show'}
-                    </p>
+
+                    <div style={{ float: 'left' }}>
+                      <p>
+                        {items.products.length !== 0
+                          ? 'Showing ' +
+                            this.state.offset.toString() +
+                            ' - ' +
+                            Math.min(
+                              allItems.products.length,
+                              this.state.offset + this.state.batchSize,
+                            ).toString() +
+                            (allItems.products.length >= this.state.batchSize
+                              ? ' out of ' + allItems.products.length.toString()
+                              : '')
+                          : 'No items to show'}
+                      </p>
+                    </div>
+
+                    <div
+                      style={{
+                        float: 'left',
+                        marginLeft: '0.9em',
+                      }}
+                    >
+                      <Icon
+                        link
+                        name="arrow alternate circle left"
+                        style={{
+                          display:
+                            items.products.length === 0 ||
+                            this.state.offset - this.state.batchSize < 0
+                              ? 'none'
+                              : 'inline-block',
+                        }}
+                        onClick={() => this.changePage(-this.state.batchSize)}
+                      />
+                      <Icon
+                        link
+                        name="arrow alternate circle right"
+                        style={{
+                          display:
+                            items.products.length === 0 ||
+                            this.state.offset + this.state.batchSize >=
+                              allItems.products.length
+                              ? 'none'
+                              : 'inline-block',
+                        }}
+                        onClick={() => this.changePage(this.state.batchSize)}
+                      />
+                    </div>
+
+                    <div style={{ float: 'right' }}>
+                      <p
+                        style={{
+                          display: 'inline-block',
+                          marginRight: '0.5em',
+                        }}
+                      >
+                        Items per page:
+                      </p>
+                      <Dropdown
+                        value={this.state.batchSize}
+                        name="batchSize"
+                        onChange={this.handleChange}
+                        options={[
+                          { key: 5, text: '5', value: 5 },
+                          { key: 10, text: '10', value: 10 },
+                          { key: 25, text: '25', value: 25 },
+                          { key: 50, text: '50', value: 50 },
+                          { key: 100, text: '100', value: 100 },
+                        ]}
+                      />
+                    </div>
                   </div>
                 )
               }}
