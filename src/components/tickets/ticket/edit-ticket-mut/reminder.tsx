@@ -15,6 +15,9 @@ interface IChangeReminder {
   showNotification: (data: any) => void
   handleChange: (event: any) => void
   currentReminder: IRemindNotification
+  touchedDate: boolean
+  touchedTime: boolean
+  touchedMessage: boolean
 }
 
 class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
