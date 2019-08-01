@@ -8,6 +8,7 @@ import {
   lookupStatus,
   TICKET_STATUS,
   TicketStatus,
+  TicketType,
 } from '../../../features/taskmanager/types'
 import { IRemindNotification } from '../types'
 import AssignTicketToMutation from './edit-ticket-mut/assignTo'
@@ -15,6 +16,8 @@ import ChangeDescriptionMutation from './edit-ticket-mut/description'
 import ChangePriorityMutation from './edit-ticket-mut/priority'
 import ChangeReminderMutation from './edit-ticket-mut/reminder'
 import ChangeStatusMutation from './edit-ticket-mut/status'
+import { Redirector } from './util/redirect'
+
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 const statusOptions = createOptionsArray(TICKET_STATUS)
@@ -37,6 +40,9 @@ interface ITicketBody {
   status: TicketStatus
   description: string
   reminder: IRemindNotification
+  type: TicketType
+  memberId: string
+  referenceId: string 
 }
 
 interface ITicketBodyState {
@@ -56,6 +62,7 @@ interface ITicketBodyState {
     }
   }
   showEditTicket: boolean
+  redirect: boolean
 }
 
 export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
@@ -78,6 +85,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
       },
     },
     showEditTicket: false,
+    redirect: false, 
   }
 
   public render() {
@@ -98,7 +106,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
         </Button>
         <Grid.Row>
-          <Grid.Column color="Cornsilk">
+          <Grid.Column >
             <ChangeDescriptionMutation
               id={this.props.id}
               description={this.state.inputs.description}
@@ -167,6 +175,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     )
 
     const ticketInfo = (
+      <>
       <Segment.Group>
         <Segment color="grey" compact>
           <strong>Description</strong>
@@ -174,8 +183,15 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
         <Segment compact textAlign="left">
           {this.props.description}
         </Segment>
-        <Segment compact>Status: {lookupStatus(this.props.status)} </Segment>
+
+        { this.props.referenceId && this.props.referenceId.length > 0 ? this.createReferenceRoute(this.props.referenceId, this.props.type) : null } 
+        </Segment.Group>
+
+      <Segment.Group horizontal>
+        <Segment compact><strong>Status:</strong> {lookupStatus(this.props.status)} </Segment>
+        <Segment compact><strong>MemberId:</strong> {this.props.memberId} </Segment>
       </Segment.Group>
+      </>
     )
 
     return (
@@ -217,4 +233,17 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     inputs.touched[event.target.name] = true
     this.setState({ inputs })
   }
+
+  private createReferenceRoute = (referenceId: string, type: TicketType) => {
+    switch (type) {
+      case TicketType.CLAIM:
+        return <Redirector route="" redirectText="Go to claim"/>
+      case TicketType.MESSAGE:
+        const route = "members/" + referenceId
+        return <Redirector route={route} redirectText="Go to chat"/>
+      default:
+        return null 
+    }
+  }
+
 }

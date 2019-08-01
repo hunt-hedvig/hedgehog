@@ -13,6 +13,8 @@ import {
   TICKET_TYPE_OPTIONS,
 } from './types'
 
+
+
 const Header = styled('div')({
   padding: '0 20px',
   textAlign: 'center',
@@ -125,6 +127,12 @@ export default class TaskManagerPageComponent extends React.Component<
   }
 
   public render() {
+
+////////////////////
+    console.log(this.props)
+    
+//////////////////
+
     return (
       <React.Fragment>
         <Header>

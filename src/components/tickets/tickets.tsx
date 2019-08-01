@@ -54,7 +54,6 @@ export class Tickets extends React.Component<ITickets, {}> {
               overdueNotifications,
               upcomingNotifications,
             ] = this.processReminders(data.tickets)
-            // @TODO Handle notifications that are overdue (unresolved tickets)? Do IEX want to see these?
 
             if (upcomingNotifications.length > 0) {
               this.createNotifications(upcomingNotifications)

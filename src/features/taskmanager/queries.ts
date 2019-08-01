@@ -25,6 +25,8 @@ export const GET_TICKETS = gql`
       remindNotificationDate
       remindNotificationTime
       remindMessage
+      referenceId
+      memberId
     }
   }
 `

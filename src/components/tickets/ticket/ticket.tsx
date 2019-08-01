@@ -111,13 +111,8 @@ export class Ticket extends React.Component<ITicket, {}> {
 
         {this.state.showBody ? (
           <TicketBody
-            description={this.props.description}
-            assignedTo={this.props.assignedTo}
-            status={this.props.status}
-            id={this.props.id}
-            reminder={this.props.reminder}
-            priority={this.props.priority}
-          />
+            {...this.props}
+           />
         ) : null}
       </Card>
     )
@@ -139,7 +134,7 @@ const getReminderTimeInWords = (date, time) => {
   const now = new Date()
   const parsedDate = parse(date, 'yyyy-MM-dd', now)
   const parsedTime = parse(time, 'HH:mm:ss', now)
-  if (isSameDay(parsedDate, now)) {
+  if (isSameDay(parsedDate, now) && isAfter(parsedTime, now)) {
     return formatDistance(now, parsedTime)
   } else if (isAfter(parsedDate, now)) {
     return date + ', ' + time

@@ -55,4 +55,3 @@ export interface IColor {
   blue: number
   alpha: number
 }
-

@@ -1,6 +1,14 @@
 import TaskManagerPage from '../features/taskmanager/index'
 import * as React from 'react'
+import actions from '../store/actions'
+import { connect } from 'react-redux'
 
-const TaskManagerPageRoute = () => <TaskManagerPage />
+////////////////////////////////REMEMBER THIS BRO
 
-export default TaskManagerPageRoute;
+const TaskManagerPageRoute = (props) => <TaskManagerPage {...props} />
+
+const mapStateToProps = ({members})  => ({
+	members,
+})
+
+export default connect(mapStateToProps)(TaskManagerPageRoute);
