@@ -76,8 +76,8 @@ export class Ticket extends React.Component<ITicket, {}> {
             </Grid.Column>
 
             <Grid.Column width={3}>
-              <strong>Priority: </strong>
-              <ColorIndicator percentage={this.props.priority} />
+                <strong>Priority: </strong>
+                 <ColorIndicator percentage={this.props.priority} /> 
             </Grid.Column>
 
             <Grid.Column width={4}>
