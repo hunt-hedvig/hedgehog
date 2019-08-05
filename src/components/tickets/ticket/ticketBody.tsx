@@ -196,9 +196,8 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           <Segment compact>
             <strong>Status:</strong> {lookupStatus(this.props.status)}{' '}
           </Segment>
-          <Segment compact>
-            <strong>MemberId:</strong> {this.props.memberId}{' '}
-          </Segment>
+           {this.fillInMemberId(this.props.memberId)}
+           {this.fillInReferenceId(this.props.type, this.props.referenceId)}
         </Segment.Group>
       </>
     )
@@ -242,6 +241,31 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     inputs.touched[event.target.name] = true
     this.setState({ inputs })
   }
+
+  private fillInReferenceId = (type: TicketType, referenceId: string ) => {
+    var label: string
+    switch (type) {
+      case TicketType.CLAIM:
+        label = "ClaimId: "
+        // code...
+        break;
+
+      case TicketType.MESSAGE:
+        label = "MessageId: "
+
+        break;
+      default:
+        return null 
+    }
+    return (<Segment compact><strong>{label}</strong>{referenceId} </Segment>)
+  }
+
+
+  private fillInMemberId = (memberId: string ) => {
+    if (memberId === null ) return null 
+    return (<Segment compact><strong>MemberId: </strong>{memberId} </Segment>)
+  }
+
 
   private createReferenceRoute = (
     referenceId: string,
