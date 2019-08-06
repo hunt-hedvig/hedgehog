@@ -1,7 +1,7 @@
 import format from 'date-fns/format'
 import React from 'react'
 import styled from 'react-emotion'
-import { Button, Divider, Grid, Icon, Segment } from 'semantic-ui-react'
+import { Button,Container, Divider, Grid, Icon, Segment } from 'semantic-ui-react'
 import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
@@ -180,7 +180,9 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
             <strong>Description</strong>
           </Segment>
           <Segment compact textAlign="left">
+            <Container text>
             {this.props.description}
+            </Container>
           </Segment>
 
           {this.props.referenceId && this.props.referenceId.length > 0
