@@ -127,12 +127,6 @@ export default class TaskManagerPageComponent extends React.Component<
   }
 
   public render() {
-
-////////////////////
-    console.log(this.props)
-    
-//////////////////
-
     return (
       <React.Fragment>
         <Header>

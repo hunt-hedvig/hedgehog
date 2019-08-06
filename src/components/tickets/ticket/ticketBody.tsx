@@ -1,7 +1,14 @@
 import format from 'date-fns/format'
 import React from 'react'
 import styled from 'react-emotion'
-import { Button,Container, Divider, Grid, Icon, Segment } from 'semantic-ui-react'
+import {
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Icon,
+  Segment,
+} from 'semantic-ui-react'
 import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
@@ -180,9 +187,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
             <strong>Description</strong>
           </Segment>
           <Segment compact textAlign="left">
-            <Container text>
-            {this.props.description}
-            </Container>
+            <Container text>{this.props.description}</Container>
           </Segment>
 
           {this.props.referenceId && this.props.referenceId.length > 0
@@ -198,8 +203,8 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           <Segment compact>
             <strong>Status:</strong> {lookupStatus(this.props.status)}{' '}
           </Segment>
-           {this.fillInMemberId(this.props.memberId)}
-           {this.fillInReferenceId(this.props.type, this.props.referenceId)}
+          {this.fillInMemberId(this.props.memberId)}
+          {this.fillInReferenceId(this.props.type, this.props.referenceId)}
         </Segment.Group>
       </>
     )
@@ -244,30 +249,40 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     this.setState({ inputs })
   }
 
-  private fillInReferenceId = (type: TicketType, referenceId: string ) => {
-    var label: string
+  private fillInReferenceId = (type: TicketType, referenceId: string) => {
+    let label: string
     switch (type) {
       case TicketType.CLAIM:
-        label = "ClaimId: "
+        label = 'ClaimId: '
         // code...
-        break;
+        break
 
       case TicketType.MESSAGE:
-        label = "MessageId: "
+        label = 'MessageId: '
 
-        break;
+        break
       default:
-        return null 
+        return null
     }
-    return (<Segment compact><strong>{label}</strong>{referenceId} </Segment>)
+    return (
+      <Segment compact>
+        <strong>{label}</strong>
+        {referenceId}{' '}
+      </Segment>
+    )
   }
 
-
-  private fillInMemberId = (memberId: string ) => {
-    if (memberId === null ) return null 
-    return (<Segment compact><strong>MemberId: </strong>{memberId} </Segment>)
+  private fillInMemberId = (memberId: string) => {
+    if (memberId === null) {
+      return null
+    }
+    return (
+      <Segment compact>
+        <strong>MemberId: </strong>
+        {memberId}{' '}
+      </Segment>
+    )
   }
-
 
   private createReferenceRoute = (
     referenceId: string,

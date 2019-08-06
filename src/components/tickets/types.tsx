@@ -8,6 +8,7 @@ export interface ITickets {
   filter: {
     assignedTo: string
     status: string
+    type: string
   }
 }
 
