@@ -42,6 +42,6 @@ export const ItemPage = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  max-width: 800px;
+  max-width: 80%;
   margin: 0 auto 50px;
 `

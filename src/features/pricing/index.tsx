@@ -12,11 +12,12 @@ import {
 } from 'features/pricing/styles'
 import * as React from 'react'
 import { Query } from 'react-apollo'
-import { Dropdown, Header, Icon, Input, Label } from 'semantic-ui-react'
+import { Dropdown, Header, Icon, Input } from 'semantic-ui-react'
 
 export default class Pricing extends React.Component {
   public state = {
     activeCategory: '',
+    activeCategoryName: '',
     activeQuery: '',
     activeFilters: [],
     activeDate: new Date().toJSON().slice(0, 10),
@@ -32,6 +33,7 @@ export default class Pricing extends React.Component {
           ...state.activeFilters,
           { value: itemRow, name: categoryRow.name },
         ],
+        offset: 0,
       }
     })
   }
@@ -42,6 +44,7 @@ export default class Pricing extends React.Component {
         activeFilters: state.activeFilters.filter(
           (e) => e.name !== filterRow.name,
         ),
+        offset: 0,
       }
     })
   }
@@ -68,21 +71,36 @@ export default class Pricing extends React.Component {
     })
   }
 
+  public switchCategory = (categoryName, categoryValue) => {
+    // tslint:disable-next-line:no-console
+    console.log(categoryValue)
+    this.setState({
+      activeFilters: [],
+      activeQuery: '',
+      offset: 0,
+    })
+
+    this.setState({ activeCategory: categoryValue })
+    this.setState({ activeCategoryName: categoryName })
+  }
+
   public handleChange = (event, { name, value }) => {
     switch (name) {
       case 'activeDate':
         if (this.isDateValid(value)) {
           this.setState({
             usedDate: new Date(Date.parse(value)).toJSON().slice(0, 10),
+            offset: 0,
           })
         }
         break
-
       case 'activeCategory':
         this.setState({
           activeFilters: [],
           activeQuery: '',
+          offset: 0,
         })
+        this.setState({ activeCategoryName: event.target.textContent })
         break
     }
 
@@ -93,9 +111,11 @@ export default class Pricing extends React.Component {
     return (
       <React.Fragment>
         <ListPage>
-          <HeaderContainer>
-            <Header size="huge">Pricing</Header>
-          </HeaderContainer>
+          {!('minimal' in this.props) ? (
+            <HeaderContainer>
+              <Header size="huge">Pricing</Header>
+            </HeaderContainer>
+          ) : null}
 
           <HeaderContainer>
             <Query
@@ -124,7 +144,6 @@ export default class Pricing extends React.Component {
                         suggestions: allItems.suggestions,
                       }
                     : { products: [], suggestions: [] }
-
 
                 return (
                   <div>
@@ -166,7 +185,15 @@ export default class Pricing extends React.Component {
                     <ItemTable
                       items={items}
                       date={this.state.usedDate}
-                      category={this.state.activeCategory}
+                      category={{
+                        id: this.state.activeCategory,
+                        name: this.state.activeCategoryName,
+                      }}
+                      selectionHandle={
+                        'selectionHandle' in this.props
+                          ? this.props.selectionHandle
+                          : null
+                      }
                     />
 
                     <div style={{ float: 'left' }}>

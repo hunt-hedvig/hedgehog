@@ -54,10 +54,10 @@ export class ItemTable extends React.Component {
 
   public render() {
     return (
-      <Table celled>
+      <Table celled selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell width={7}>Name</Table.HeaderCell>
+            <Table.HeaderCell width={9}>Name</Table.HeaderCell>
             <Table.HeaderCell>Est. Price</Table.HeaderCell>
             <Table.HeaderCell>Est. Range</Table.HeaderCell>
           </Table.Row>
@@ -75,12 +75,21 @@ export class ItemTable extends React.Component {
               const prices = this.handlePriceData(data)
 
               return this.props.items.products.map((row) => (
-                <Table.Row key={row.id}>
+                <Table.Row
+                  key={row.id}
+                  onClick={() =>
+                    this.props.selectionHandle(
+                      row.id,
+                      row.name,
+                      this.props.category,
+                      row.id in prices ? prices[row.id] : null,
+                    )
+                  }
+                >
                   <Table.Cell>{row.name}</Table.Cell>
                   <Table.Cell textAlign="center" verticalAlign="middle">
                     <Label
                       basic
-                      as="a"
                       color={this.getLabelColor(
                         loading,
                         row.id in prices,
@@ -91,7 +100,7 @@ export class ItemTable extends React.Component {
                     </Label>
                   </Table.Cell>
                   <Table.Cell textAlign="center" verticalAlign="middle">
-                    <Label basic as="a" color={this.getRangeColor(prices, row)}>
+                    <Label basic color={this.getRangeColor(prices, row)}>
                       {loading
                         ? '…'
                         : this.getPriceString(prices, row, 'lower') +
