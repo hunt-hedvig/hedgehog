@@ -1,13 +1,21 @@
 import format from 'date-fns/format'
 import React from 'react'
 import styled from 'react-emotion'
-import { Button, Divider, Grid, Icon, Segment } from 'semantic-ui-react'
+import {
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Icon,
+  Segment,
+} from 'semantic-ui-react'
 import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
   lookupStatus,
   TICKET_STATUS,
   TicketStatus,
+  TicketType,
 } from '../../../features/taskmanager/types'
 import { IRemindNotification } from '../types'
 import AssignTicketToMutation from './edit-ticket-mut/assignTo'
@@ -15,6 +23,7 @@ import ChangeDescriptionMutation from './edit-ticket-mut/description'
 import ChangePriorityMutation from './edit-ticket-mut/priority'
 import ChangeReminderMutation from './edit-ticket-mut/reminder'
 import ChangeStatusMutation from './edit-ticket-mut/status'
+import { Redirector } from './util/redirect'
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 const statusOptions = createOptionsArray(TICKET_STATUS)
@@ -37,6 +46,9 @@ interface ITicketBody {
   status: TicketStatus
   description: string
   reminder: IRemindNotification
+  type: TicketType
+  memberId: string
+  referenceId: string
 }
 
 interface ITicketBodyState {
@@ -56,6 +68,7 @@ interface ITicketBodyState {
     }
   }
   showEditTicket: boolean
+  redirect: boolean
 }
 
 export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
@@ -78,6 +91,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
       },
     },
     showEditTicket: false,
+    redirect: false,
   }
 
   public render() {
@@ -98,7 +112,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
         </Button>
         <Grid.Row>
-          <Grid.Column color="Cornsilk">
+          <Grid.Column>
             <ChangeDescriptionMutation
               id={this.props.id}
               description={this.state.inputs.description}
@@ -167,15 +181,32 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     )
 
     const ticketInfo = (
-      <Segment.Group>
-        <Segment color="grey" compact>
-          <strong>Description</strong>
-        </Segment>
-        <Segment compact textAlign="left">
-          {this.props.description}
-        </Segment>
-        <Segment compact>Status: {lookupStatus(this.props.status)} </Segment>
-      </Segment.Group>
+      <>
+        <Segment.Group>
+          <Segment color="grey" compact>
+            <strong>Description</strong>
+          </Segment>
+          <Segment compact textAlign="left">
+            <Container text>{this.props.description}</Container>
+          </Segment>
+
+          {this.props.referenceId && this.props.referenceId.length > 0
+            ? this.createReferenceRoute(
+                this.props.referenceId,
+                this.props.memberId,
+                this.props.type,
+              )
+            : null}
+        </Segment.Group>
+
+        <Segment.Group horizontal>
+          <Segment compact>
+            <strong>Status:</strong> {lookupStatus(this.props.status)}{' '}
+          </Segment>
+          {this.fillInMemberId(this.props.memberId)}
+          {this.fillInReferenceId(this.props.type, this.props.referenceId)}
+        </Segment.Group>
+      </>
     )
 
     return (
@@ -216,5 +247,62 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     inputs[event.target.name] = event.target.value
     inputs.touched[event.target.name] = true
     this.setState({ inputs })
+  }
+
+  private fillInReferenceId = (type: TicketType, referenceId: string) => {
+    let label: string
+    switch (type) {
+      case TicketType.CLAIM:
+        label = 'ClaimId: '
+        // code...
+        break
+
+      case TicketType.MESSAGE:
+        label = 'MessageId: '
+
+        break
+      default:
+        return null
+    }
+    return (
+      <Segment compact>
+        <strong>{label}</strong>
+        {referenceId}{' '}
+      </Segment>
+    )
+  }
+
+  private fillInMemberId = (memberId: string) => {
+    if (memberId === null) {
+      return null
+    }
+    return (
+      <Segment compact>
+        <strong>MemberId: </strong>
+        {memberId}{' '}
+      </Segment>
+    )
+  }
+
+  private createReferenceRoute = (
+    referenceId: string,
+    memberId: string,
+    type: TicketType,
+  ) => {
+    switch (type) {
+      case TicketType.CLAIM: {
+        if (!memberId) {
+          return null
+        }
+        const route = 'claims/' + referenceId + '/members/' + memberId
+        return <Redirector route={route} redirectText="Go to claim" />
+      }
+      case TicketType.MESSAGE: {
+        const route = 'members/' + referenceId
+        return <Redirector route={route} redirectText="Go to chat" />
+      }
+      default:
+        return null
+    }
   }
 }

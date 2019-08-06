@@ -13,6 +13,8 @@ import {
   TICKET_TYPE_OPTIONS,
 } from './types'
 
+
+
 const Header = styled('div')({
   padding: '0 20px',
   textAlign: 'center',

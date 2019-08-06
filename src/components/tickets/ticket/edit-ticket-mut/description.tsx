@@ -9,7 +9,9 @@ interface IChangeDescription {
   id: string
   showNotification: (data: any) => void
   description: string
+  oldDescription: string
   handleChange: (event: any) => void
+  touched: boolean
 }
 
 class ChangeDescriptionMutation extends React.Component<
