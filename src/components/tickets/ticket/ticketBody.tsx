@@ -24,6 +24,8 @@ import ChangePriorityMutation from './edit-ticket-mut/priority'
 import ChangeReminderMutation from './edit-ticket-mut/reminder'
 import ChangeStatusMutation from './edit-ticket-mut/status'
 import { Redirector } from './util/redirect'
+import { history } from 'store'
+import MessageResponseForm from './body/message-response'
 
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 const statusOptions = createOptionsArray(TICKET_STATUS)
@@ -197,6 +199,10 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
                 this.props.type,
               )
             : null}
+
+            //TODO: INSERT NEW COMPONENT HERE !!!
+            {this.props.type === TicketType.MESSAGE ? <MessageResponseForm memberId={this.props.memberId}/> : null  }
+
         </Segment.Group>
 
         <Segment.Group horizontal>
@@ -254,7 +260,6 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     switch (type) {
       case TicketType.CLAIM:
         label = 'ClaimId: '
-        // code...
         break
 
       case TicketType.MESSAGE:
@@ -279,7 +284,12 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     return (
       <Segment compact>
         <strong>MemberId: </strong>
-        {memberId}{' '}
+        <a 
+          href='#' 
+          onClick={ () => history.push("/members/${memberId}", {to: 'details'})}
+        >   
+          {memberId}
+        </a>
       </Segment>
     )
   }
