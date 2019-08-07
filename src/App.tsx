@@ -87,6 +87,12 @@ const App: React.SFC = () => (
                 store={store}
                 component={Routes.TaskManagerPageRoute}
               />
+              <Route 
+                path="/ticket_history/:id"
+                render={(routeProps) => (
+                  <Routes.TicketHistoryPageRoute{...routeProps} store={store} />
+                )}
+                />
               <Redirect from="*" to="/dashboard" />
             </Switch>
             <Notifications />

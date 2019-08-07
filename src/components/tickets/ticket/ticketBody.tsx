@@ -203,6 +203,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           {this.props.type === TicketType.MESSAGE ? (
             <MessageResponseForm memberId={this.props.memberId} />
           ) : null}
+
         </Segment.Group>
 
         <Segment.Group horizontal>
@@ -214,6 +215,8 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
         </Segment.Group>
       </>
     )
+
+    const ticketId = this.props.id
 
     return (
       <TicketBodyCss>
@@ -231,6 +234,9 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
             <Icon name="pencil alternate" />
           )}
           {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
+        </Button>
+        <Button onClick={ () => history.push("/ticket_history/" + this.props.id.toString() )  } >
+          View history
         </Button>
       </TicketBodyCss>
     )
