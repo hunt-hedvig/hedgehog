@@ -8,6 +8,7 @@ import { Dimmer, Loader } from 'semantic-ui-react'
 import { GET_TICKETS, ME } from '../../features/taskmanager/queries'
 import { Ticket } from './ticket/ticket'
 import { EOrder, ITickets } from './types'
+import {TicketStatus } from '../../features/taskmanager/types'
 
 export class Tickets extends React.Component<ITickets, {}> {
   public state = {
@@ -31,7 +32,11 @@ export class Tickets extends React.Component<ITickets, {}> {
             return null
           }}
         </Query>
-        <Query<any> query={GET_TICKETS} pollInterval={5000}>
+        <Query<any> 
+          query={GET_TICKETS} 
+          variables={{onlyResolvedTickets: (this.props.filter.status == TicketStatus.RESOLVED)}} 
+          pollInterval={5000}>
+          
           {({ data, error, loading }) => {
             if (loading) {
               return (

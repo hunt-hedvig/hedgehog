@@ -36,7 +36,7 @@ teamMemberOptions.push({
 
 const statusOptions = createOptionsArray(TICKET_STATUS)
 statusOptions.push({
-  text: 'All tickets',
+  text: 'Not completed',
   value: 'All',
   key: 'All',
 })

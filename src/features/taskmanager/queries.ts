@@ -13,8 +13,8 @@ export const CREATE_TICKET = gql`
 `
 
 export const GET_TICKETS = gql`
-  query GetTickets {
-    tickets {
+  query GetTickets ($onlyResolvedTickets: Boolean ){
+    tickets (resolved: $onlyResolvedTickets){
       id
       description
       assignedTo
