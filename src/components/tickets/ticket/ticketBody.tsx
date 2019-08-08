@@ -200,7 +200,6 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
               )
             : null}
 
-            //TODO: INSERT NEW COMPONENT HERE !!!
             {this.props.type === TicketType.MESSAGE ? <MessageResponseForm memberId={this.props.memberId}/> : null  }
 
         </Segment.Group>
