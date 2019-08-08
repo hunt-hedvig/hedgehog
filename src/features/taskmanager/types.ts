@@ -72,6 +72,15 @@ export enum TicketType {
   OTHER = 'OTHER',
 }
 
+export enum TicketChangeType {
+  TICKET_CREATED = "TICKET_CREATED",
+  CHANGED_REMINDER = "CHANGED_REMINDER",
+  CHANGED_ASSIGNED_TO = "CHANGED_ASSIGNED_TO",
+  CHANGED_DESCRIPTION = "CHANGED_DESCRIPTION",
+  CHANGED_STATUS = "CHANGED_STATUS",
+  CHANGED_PRIORITY ="CHANGED_PRIORITY",
+}
+
 export const TICKET_TYPE_OPTIONS = [
   { text: 'IEX Created', value: TicketType.REMIND },
   { text: 'Message', value: TicketType.MESSAGE },

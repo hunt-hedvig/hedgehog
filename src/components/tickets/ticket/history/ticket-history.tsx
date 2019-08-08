@@ -4,13 +4,14 @@ import styled from 'react-emotion'
 import { TICKET_HISTORY } from '../../../../features/taskmanager/queries'
 import { TicketHead } from './head'
 import { TicketRevision } from './revision'
+import { Divider, Segment  } from 'semantic-ui-react'
+
 
 const TicketContainer = styled('div')`
   border: 1px black gray;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
   margin: 10px auto;
   padding: 1em 1em;
-  background: 'white';
   border-radius: 3px;
   max-width: 850px;
 `
@@ -33,10 +34,9 @@ export class TicketHistory extends React.Component {
               )
             }
             // We got the data:
-            console.log(data)
-
             return (
               <TicketContainer>
+              <Segment>
                 <TicketHead
                   id={data.ticketWithFullHistory.id}
                   type={data.ticketWithFullHistory.type}
@@ -44,8 +44,12 @@ export class TicketHistory extends React.Component {
                   createdBy={data.ticketWithFullHistory.createdBy}
                 />
                 {data.ticketWithFullHistory.revisions.map((revision) => (
-                  <TicketRevision {...revision} />
+                  <>
+                      <Divider horizontal key={revision.createdAt}/>
+                      <TicketRevision  key={revision.createdAt} {...revision} />
+                  </>
                 ))}
+                </Segment>
               </TicketContainer>
             )
           }}

@@ -35,7 +35,7 @@ export class Tickets extends React.Component<ITickets, {}> {
         <Query<any> 
           query={GET_TICKETS} 
           variables={{onlyResolvedTickets: (this.props.filter.status == TicketStatus.RESOLVED)}} 
-          pollInterval={5000}>
+          pollInterval={1000}>
           
           {({ data, error, loading }) => {
             if (loading) {
