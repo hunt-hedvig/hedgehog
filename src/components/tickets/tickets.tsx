@@ -32,6 +32,7 @@ export class Tickets extends React.Component<ITickets, {}> {
             return null
           }}
         </Query>
+
         <Query<any>
           query={GET_TICKETS}
           variables={{

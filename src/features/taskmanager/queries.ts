@@ -20,22 +20,19 @@ export const TICKET_HISTORY = gql`
       createdAt
       type
       revisions {
+        assignedTo
+        manualPriority
+        remindDate
+        remindTime
+        remindMessage
+        changedAt
+        description
         changeType
         changedBy
       }
     }
   }
 `
-  // assignedTo: String
-  // manualPriority: Float
-  // remindDate: LocalDate
-  // remindTime: LocalTime
-  // remindMessage: String
-  // status: TicketStatus
-  // changedAt: Instant
-  // changeType: TicketChangeType
-  // changedBy: String
-  // description: String
 
 
 export const GET_TICKETS = gql`
