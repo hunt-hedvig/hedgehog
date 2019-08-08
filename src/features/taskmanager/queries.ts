@@ -13,8 +13,8 @@ export const CREATE_TICKET = gql`
 `
 
 export const GET_TICKETS = gql`
-  query GetTickets {
-    tickets {
+  query GetTickets ($onlyResolvedTickets: Boolean ){
+    tickets (resolved: $onlyResolvedTickets){
       id
       description
       assignedTo
@@ -62,5 +62,11 @@ export const CHANGE_REMINDER = gql`
     $newReminder: RemindNotification
   ) {
     changeTicketReminder(ticketId: $ticketId, newReminder: $newReminder)
+  }
+`
+
+export const QUESTION_IS_DONE = gql`
+  mutation QuestionIsDone($memberId: ID!) {
+    questionIsDone(memberId: $memberId)
   }
 `
