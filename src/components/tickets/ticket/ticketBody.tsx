@@ -200,8 +200,9 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
               )
             : null}
 
-            {this.props.type === TicketType.MESSAGE ? <MessageResponseForm memberId={this.props.memberId}/> : null  }
-
+          {this.props.type === TicketType.MESSAGE ? (
+            <MessageResponseForm memberId={this.props.memberId} />
+          ) : null}
         </Segment.Group>
 
         <Segment.Group horizontal>
@@ -283,10 +284,12 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     return (
       <Segment compact>
         <strong>MemberId: </strong>
-        <a 
-          href='#' 
-          onClick={ () => history.push("/members/${memberId}", {to: 'details'})}
-        >   
+        <a
+          href="#"
+          onClick={() =>
+            history.push(`/members/${memberId}`, { to: 'details' })
+          }
+        >
           {memberId}
         </a>
       </Segment>
