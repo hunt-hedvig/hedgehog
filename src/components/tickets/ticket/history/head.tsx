@@ -6,6 +6,7 @@ import { Segment  } from 'semantic-ui-react'
 
 const Container = styled('div')`
   border: 1px black gray;
+  backgroud: 'salmon';
 `
 
 export const TicketHead = (props) => {
