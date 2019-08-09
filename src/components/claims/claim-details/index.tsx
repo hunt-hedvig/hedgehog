@@ -5,7 +5,7 @@ import { Query } from 'react-apollo'
 
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimInformation } from './components/ClaimInformation'
-import { ClaimItemDatabase } from './components/ClaimItemDatabase'
+import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'

@@ -36,7 +36,11 @@ export class FilterContainer extends React.Component {
         )}
 
         {this.props.items.suggestions.map((categoryRow) => (
-          <Label.Group color="blue" key={categoryRow.name}>
+          <Label.Group
+            color="blue"
+            key={categoryRow.name}
+            style={{ marginBottom: '10px' }}
+          >
             {categoryRow.items.map((itemRow) => (
               <Label
                 as="a"

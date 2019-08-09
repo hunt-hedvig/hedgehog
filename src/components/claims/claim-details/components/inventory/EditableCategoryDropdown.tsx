@@ -3,19 +3,19 @@ import * as React from 'react'
 import { Query } from 'react-apollo'
 import { Dropdown } from 'semantic-ui-react'
 
-export class CategoryDropdown extends React.Component {
+export class EditableCategoryDropdown extends React.Component {
   public render() {
+    const { searchQuery, value } = this.props
+
     return (
       <Query query={GET_CATEGORIES}>
         {({ loading, error, data }) => {
           return (
             <Dropdown
-              placeholder="Category"
-              name="activeCategory"
-              search
-              selection
-              onChange={this.props.handle}
-              value={this.props.value}
+              fluid
+              disabled={this.props.locked}
+              onChange={this.props.handleChange}
+              onSearchChange={this.props.handleSearchChange}
               options={
                 loading || error
                   ? [{ key: 1, text: 'None', value: 1 }]
@@ -29,6 +29,12 @@ export class CategoryDropdown extends React.Component {
                       }
                     })
               }
+              search
+              searchQuery={searchQuery}
+              placeholder="Category"
+              selection
+              value={value}
+              style={{ marginTop: '7px', width: '60%', float: 'left' }}
             />
           )
         }}
