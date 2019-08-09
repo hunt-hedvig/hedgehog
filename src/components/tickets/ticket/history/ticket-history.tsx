@@ -1,11 +1,10 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'
+import { Divider, Segment } from 'semantic-ui-react'
 import { TICKET_HISTORY } from '../../../../features/taskmanager/queries'
 import { TicketHead } from './head'
 import { TicketRevision } from './revision'
-import { Divider, Segment  } from 'semantic-ui-react'
-
 
 const TicketContainer = styled('div')`
   border: 1px black gray;
@@ -35,19 +34,19 @@ export class TicketHistory extends React.Component {
             }
             return (
               <TicketContainer>
-              <Segment>
-                <TicketHead
-                  id={data.ticketWithFullHistory.id}
-                  type={data.ticketWithFullHistory.type}
-                  createdAt={data.ticketWithFullHistory.createdAt}
-                  createdBy={data.ticketWithFullHistory.createdBy}
-                />
-                {data.ticketWithFullHistory.revisions.map((revision) => (
-                  <>
-                      <Divider horizontal key={revision.createdAt}/>
-                      <TicketRevision  key={revision.createdAt} {...revision} />
-                  </>
-                ))}
+                <Segment>
+                  <TicketHead
+                    id={data.ticketWithFullHistory.id}
+                    type={data.ticketWithFullHistory.type}
+                    createdAt={data.ticketWithFullHistory.createdAt}
+                    createdBy={data.ticketWithFullHistory.createdBy}
+                  />
+                  {data.ticketWithFullHistory.revisions.map((revision) => (
+                    <>
+                      <Divider horizontal key={revision.createdAt} />
+                      <TicketRevision key={revision.createdAt} {...revision} />
+                    </>
+                  ))}
                 </Segment>
               </TicketContainer>
             )

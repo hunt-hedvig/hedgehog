@@ -4,7 +4,7 @@ import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
 import React from 'react'
 import styled from 'react-emotion'
-import { Button, Grid, Popup, Label } from 'semantic-ui-react'
+import { Button, Grid, Popup } from 'semantic-ui-react'
 import {
   lookupTeamMemberName,
   TicketStatus,
@@ -35,18 +35,9 @@ const Card = styled('div')`
   max-width: 850px;
   align-items: baseline;
 `
-
-const HighlightedField = styled('span')`
-  min-width: 10px;
-  margin: 10px;
-  padding: 1em 1em;
-  border-radius: 12%;
-`
-
 const SmallText = styled('div')`
   font-size: 0.8em;
 `
-
 export class Ticket extends React.Component<ITicket, {}> {
   public state = {
     showBody: false,
@@ -86,26 +77,27 @@ export class Ticket extends React.Component<ITicket, {}> {
 
             <Grid.Column width={4}>
               <strong>Assigned to: </strong>
-                {lookupTeamMemberName(this.props.assignedTo)}
+              {lookupTeamMemberName(this.props.assignedTo)}
             </Grid.Column>
 
             <Grid.Column width={5}>
-            <Grid.Row>
-              <SmallText>
-                <strong>Created at: </strong> {this.props.createdAt.slice(0,19).replace("T", " ")}
-              </SmallText>
-            </Grid.Row>
-            <Grid.Row>
-              {this.props.reminder && this.props.reminder.date ? (
-              <SmallText>
-                  <strong>Remind: </strong>
+              <Grid.Row>
+                <SmallText>
+                  <strong>Created at: </strong>{' '}
+                  {this.props.createdAt.slice(0, 19).replace('T', ' ')}
+                </SmallText>
+              </Grid.Row>
+              <Grid.Row>
+                {this.props.reminder && this.props.reminder.date ? (
+                  <SmallText>
+                    <strong>Remind: </strong>
                     {getReminderTimeInWords(
                       this.props.reminder.date,
                       this.props.reminder.time,
                     )}
-            </SmallText>
-              ) : null}
-            </Grid.Row>
+                  </SmallText>
+                ) : null}
+              </Grid.Row>
             </Grid.Column>
 
             <Grid.Column floated="right">

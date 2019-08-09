@@ -13,8 +13,8 @@ export const CREATE_TICKET = gql`
 `
 
 export const TICKET_HISTORY = gql`
-  query GetTicketWithFullHistory($id: ID!) {
-    ticketWithFullHistory(id: $id) {
+  query GetFullTicketHistory($id: ID!) {
+    getFullTicketHistory(id: $id) {
       id
       createdBy
       createdAt
@@ -34,7 +34,6 @@ export const TICKET_HISTORY = gql`
     }
   }
 `
-
 
 export const GET_TICKETS = gql`
   query GetTickets($onlyResolvedTickets: Boolean) {
