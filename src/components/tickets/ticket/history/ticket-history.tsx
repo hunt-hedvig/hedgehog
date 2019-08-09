@@ -36,12 +36,12 @@ export class TicketHistory extends React.Component {
               <TicketContainer>
                 <Segment>
                   <TicketHead
-                    id={data.ticketWithFullHistory.id}
-                    type={data.ticketWithFullHistory.type}
-                    createdAt={data.ticketWithFullHistory.createdAt}
-                    createdBy={data.ticketWithFullHistory.createdBy}
+                    id={data.getFullTicketHistory.id}
+                    type={data.getFullTicketHistory.type}
+                    createdAt={data.getFullTicketHistory.createdAt}
+                    createdBy={data.getFullTicketHistory.createdBy}
                   />
-                  {data.ticketWithFullHistory.revisions.map((revision) => (
+                  {data.getFullTicketHistory.revisions.map((revision) => (
                     <>
                       <Divider horizontal key={revision.createdAt} />
                       <TicketRevision key={revision.createdAt} {...revision} />
