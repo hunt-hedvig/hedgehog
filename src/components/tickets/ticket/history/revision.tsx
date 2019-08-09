@@ -1,6 +1,7 @@
 import React from 'react'
 import { Label, Segment, Grid, Button  } from 'semantic-ui-react'
-import { TicketChangeType } from   '../../../../features/taskmanager/types'
+import { TicketChangeType, lookupStatus } from   '../../../../features/taskmanager/types'
+
 
 
 export class TicketRevision extends React.Component<{},{}> {
@@ -36,13 +37,12 @@ export class TicketRevision extends React.Component<{},{}> {
                     </Grid.Row>
                     </Grid>
                     )
-           break;
-            
+
            case TicketChangeType.CHANGED_REMINDER: 
                 return ( 
                     <Grid columns={2} celled>
                     <Grid.Row>
-                        <Grid.Column width={4}><em>Reminder date</em></Grid.Column>
+                        <Grid.Column width={4}><em>Reminder date:</em></Grid.Column>
                         <Grid.Column>{this.props.remindDate}</Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
@@ -51,30 +51,51 @@ export class TicketRevision extends React.Component<{},{}> {
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column width={4}><em>Remind message: </em></Grid.Column>
-                        <Grid.Column>{this.props.manualPriority}</Grid.Column>
+                        <Grid.Column>{this.props.remindMessage}</Grid.Column>
                     </Grid.Row>
                     </Grid>)
-           break;
 
            case TicketChangeType.CHANGED_ASSIGNED_TO:
-                return(<Segment>Changed assigned to  details </Segment>)
-
+                  return ( 
+                    <Grid columns={2} celled>
+                        <Grid.Row>
+                            <Grid.Column width={4}><em>Was assigned to:</em></Grid.Column>
+                            <Grid.Column>{this.props.assignedTo}</Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                    )
 
            case  TicketChangeType.CHANGED_DESCRIPTION:
-                return (<Segment>Description changed details </Segment>)
-            break
+              return ( 
+                    <Grid columns={2} celled>
+                        <Grid.Row>
+                            <Grid.Column width={4}><em>Description changed to:</em></Grid.Column>
+                            <Grid.Column>{this.props.description}</Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                    )
           
            case TicketChangeType.CHANGED_STATUS: 
-                return (<Segment>Change status  details </Segment>)
-           break
+              return ( 
+                    <Grid columns={2} celled>
+                        <Grid.Row>
+                            <Grid.Column width={4}><em>Status changed to:</em></Grid.Column>
+                            <Grid.Column>{lookupStatus(this.props.status)}</Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                    )
           
            case TicketChangeType.CHANGED_PRIORITY: 
-                return (<Segment>Change priority details </Segment>)
-           break
-
+                    return ( 
+                    <Grid columns={2} celled>
+                        <Grid.Row>
+                            <Grid.Column width={4}><em>Priority was manually changed to:</em></Grid.Column>
+                            <Grid.Column>{this.props.manualPriority}</Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                    )
            default:
-                return (<Segment>Something went wrong... details </Segment>)
-            break;
+                return null
         }
     }
 
@@ -93,7 +114,7 @@ export class TicketRevision extends React.Component<{},{}> {
 			<Segment.Group horizontal>
 				<Segment><Label attached='top'>A revision of type:</Label> <p>{this.props.changeType}</p> </Segment>
 				<Segment><Label attached='top'>Changed by:</Label> <p>{this.props.changedBy}</p> </Segment>
-				<Segment><Label attached='top'>Changed at:</Label> <p>{this.props.changedAt}</p></Segment>
+				<Segment><Label attached='top'>Changed at:</Label> <p>{this.props.changedAt.slice(0,19).replace("T", " ")}</p></Segment>
 			</Segment.Group >
             <Segment>
                 {  

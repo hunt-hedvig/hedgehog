@@ -23,7 +23,7 @@ export class TicketHistory extends React.Component {
         <Query<any> query={TICKET_HISTORY} variables={{ id: this.props.id }}>
           {({ data, error, loading }) => {
             if (loading) {
-              return <p>Loading</p>
+              return <p>Loading ticket history...</p>
             }
             if (error) {
               return (
@@ -33,7 +33,6 @@ export class TicketHistory extends React.Component {
                 </p>
               )
             }
-            // We got the data:
             return (
               <TicketContainer>
               <Segment>

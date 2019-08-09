@@ -4,7 +4,7 @@ import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
 import React from 'react'
 import styled from 'react-emotion'
-import { Button, Grid, Popup } from 'semantic-ui-react'
+import { Button, Grid, Popup, Label } from 'semantic-ui-react'
 import {
   lookupTeamMemberName,
   TicketStatus,
@@ -41,6 +41,10 @@ const HighlightedField = styled('span')`
   margin: 10px;
   padding: 1em 1em;
   border-radius: 12%;
+`
+
+const SmallText = styled('div')`
+  font-size: 0.8em;
 `
 
 export class Ticket extends React.Component<ITicket, {}> {
@@ -81,24 +85,27 @@ export class Ticket extends React.Component<ITicket, {}> {
             </Grid.Column>
 
             <Grid.Column width={4}>
-              <strong>Assigned to:</strong>
-              <HighlightedField color={'seashell'}>
+              <strong>Assigned to: </strong>
                 {lookupTeamMemberName(this.props.assignedTo)}
-              </HighlightedField>
             </Grid.Column>
 
             <Grid.Column width={5}>
+            <Grid.Row>
+              <SmallText>
+                <strong>Created at: </strong> {this.props.createdAt.slice(0,19).replace("T", " ")}
+              </SmallText>
+            </Grid.Row>
+            <Grid.Row>
               {this.props.reminder && this.props.reminder.date ? (
-                <React.Fragment>
-                  <strong>Remind:</strong>
-                  <HighlightedField color={this.props.assignedTo}>
+              <SmallText>
+                  <strong>Remind: </strong>
                     {getReminderTimeInWords(
                       this.props.reminder.date,
                       this.props.reminder.time,
                     )}
-                  </HighlightedField>
-                </React.Fragment>
+            </SmallText>
               ) : null}
+            </Grid.Row>
             </Grid.Column>
 
             <Grid.Column floated="right">

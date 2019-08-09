@@ -18,7 +18,7 @@ export const TicketHead = (props) => {
 			    <Segment><strong>Ticket type:</strong> {props.type}</Segment>
             </Segment.Group>
             <Segment.Group horizontal>
-    			<Segment><strong>Created at:</strong> {props.createdAt} </Segment>
+    			<Segment><strong>Created at:</strong> {props.createdAt.slice(0,19).replace("T", " ")} </Segment>
 	    		<Segment><strong>Created by:</strong> {props.createdBy} </Segment>
             </Segment.Group>
 

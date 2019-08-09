@@ -29,6 +29,7 @@ export const TICKET_HISTORY = gql`
         description
         changeType
         changedBy
+        status
       }
     }
   }
@@ -42,6 +43,7 @@ export const GET_TICKETS = gql`
       description
       assignedTo
       createdBy
+      createdAt
       type
       status
       priority
