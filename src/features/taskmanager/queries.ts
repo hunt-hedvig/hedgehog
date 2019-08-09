@@ -12,13 +12,37 @@ export const CREATE_TICKET = gql`
   }
 `
 
+export const TICKET_HISTORY = gql`
+  query GetFullTicketHistory($id: ID!) {
+    getFullTicketHistory(id: $id) {
+      id
+      createdBy
+      createdAt
+      type
+      revisions {
+        assignedTo
+        manualPriority
+        remindDate
+        remindTime
+        remindMessage
+        changedAt
+        description
+        changeType
+        changedBy
+        status
+      }
+    }
+  }
+`
+
 export const GET_TICKETS = gql`
-  query GetTickets ($onlyResolvedTickets: Boolean ){
-    tickets (resolved: $onlyResolvedTickets){
+  query GetTickets($onlyResolvedTickets: Boolean) {
+    tickets(resolved: $onlyResolvedTickets) {
       id
       description
       assignedTo
       createdBy
+      createdAt
       type
       status
       priority

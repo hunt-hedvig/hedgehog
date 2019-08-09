@@ -35,14 +35,9 @@ const Card = styled('div')`
   max-width: 850px;
   align-items: baseline;
 `
-
-const HighlightedField = styled('span')`
-  min-width: 10px;
-  margin: 10px;
-  padding: 1em 1em;
-  border-radius: 12%;
+const SmallText = styled('div')`
+  font-size: 0.8em;
 `
-
 export class Ticket extends React.Component<ITicket, {}> {
   public state = {
     showBody: false,
@@ -81,24 +76,28 @@ export class Ticket extends React.Component<ITicket, {}> {
             </Grid.Column>
 
             <Grid.Column width={4}>
-              <strong>Assigned to:</strong>
-              <HighlightedField color={'seashell'}>
-                {lookupTeamMemberName(this.props.assignedTo)}
-              </HighlightedField>
+              <strong>Assigned to: </strong>
+              {lookupTeamMemberName(this.props.assignedTo)}
             </Grid.Column>
 
             <Grid.Column width={5}>
-              {this.props.reminder && this.props.reminder.date ? (
-                <React.Fragment>
-                  <strong>Remind:</strong>
-                  <HighlightedField color={this.props.assignedTo}>
+              <Grid.Row>
+                <SmallText>
+                  <strong>Created at: </strong>{' '}
+                  {this.props.createdAt.slice(0, 19).replace('T', ' ')}
+                </SmallText>
+              </Grid.Row>
+              <Grid.Row>
+                {this.props.reminder && this.props.reminder.date ? (
+                  <SmallText>
+                    <strong>Remind: </strong>
                     {getReminderTimeInWords(
                       this.props.reminder.date,
                       this.props.reminder.time,
                     )}
-                  </HighlightedField>
-                </React.Fragment>
-              ) : null}
+                  </SmallText>
+                ) : null}
+              </Grid.Row>
             </Grid.Column>
 
             <Grid.Column floated="right">

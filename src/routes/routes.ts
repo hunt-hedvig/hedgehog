@@ -29,5 +29,5 @@ export const reactPageRoutes = [
   { path: '/pricing', Component: Routes.PricingPageRoute, exact: true },
   { path: '/taskmanager', Component: Routes.TaskManagerPageRoute, exact: true },
   { path: '/dashboard', Component: Routes.DashboardPageRoute, exact: true },
-
+  { path: '/ticket_history/:id', Component: Routes.TicketHistoryPageRoute, exact: true }
 ]

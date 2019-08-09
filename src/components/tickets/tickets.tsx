@@ -32,6 +32,7 @@ export class Tickets extends React.Component<ITickets, {}> {
             return null
           }}
         </Query>
+
         <Query<any>
           query={GET_TICKETS}
           variables={{
@@ -43,10 +44,7 @@ export class Tickets extends React.Component<ITickets, {}> {
           {({ data, error, loading }) => {
             if (loading) {
               return (
-                <Dimmer active>
-                  {' '}
-                  <Loader size="big">Fetching tickets</Loader>
-                </Dimmer>
+                <p>fetching tickets </p>
               )
             }
             if (error) {
