@@ -215,8 +215,6 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
       </>
     )
 
-    const ticketId = this.props.id
-
     return (
       <TicketBodyCss>
         {this.state.showEditTicket ? editTicket : ticketInfo}

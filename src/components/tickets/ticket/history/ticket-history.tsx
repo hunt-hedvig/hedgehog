@@ -32,6 +32,7 @@ export class TicketHistory extends React.Component {
                 </p>
               )
             }
+
             return (
               <TicketContainer>
                 <Segment>
