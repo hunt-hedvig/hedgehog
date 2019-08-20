@@ -5,7 +5,15 @@ import TableFields from 'components/shared/table-fields/TableFields'
 import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import {
+  Button,
+  Form,
+  Header,
+  Icon,
+  Loader,
+  Modal,
+  Table,
+} from 'semantic-ui-react'
 
 const DateTypeEnum = {
   terminationDate: 1,
@@ -80,8 +88,6 @@ export default class InsuranceList extends React.Component {
     }
 
     modifyInsurance(data.memberId, request)
-    this.handleClose()
-    location.reload()
   }
 
   public isTheActiveInsurance = (item, data) => {
@@ -254,7 +260,11 @@ export default class InsuranceList extends React.Component {
                               onClick={this.handleSubmissionButton}
                               positive
                             >
-                              Submit
+                              {this.props.insurance.requesting ? (
+                                <><Loader /> Loading</>
+                              ) : (
+                                'Submit'
+                              )}
                             </Button>
                           </Button.Group>
                         </Form>
