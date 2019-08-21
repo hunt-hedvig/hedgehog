@@ -13,9 +13,9 @@ const query = gql`
     member(id: $memberId) {
       person {
         personFlags
-        personStatus {
+        status {
           flag
-          isWhitelisted
+          whitelisted
         }
         debt {
           paymentDefaults {
@@ -33,6 +33,10 @@ const query = gql`
           totalAmountPrivateDebt
           totalAmountDebt
           fromDateTime
+        }
+        whitelisted {
+          whitelistedAt
+          whitelistedBy
         }
       }
     }
@@ -56,6 +60,18 @@ interface PaymentDefaultsTableProps {
   paymentDefaults: Array<PaymentDefault>
 }
 
+interface DebtProfile {
+  totalAmountPublicDebt: MonetaryAmount
+  numberPublicDebts: BigInteger
+  totalAmountPrivateDebt: MonetaryAmount
+  numberPrivateDebts: BigInteger
+  fromDateTime: LocalDateTime
+}
+
+interface OverallDebtProfileTableProps {
+  debt: DebtProfile
+}
+
 const PaymentDefaultsTable: React.FunctionComponent<
   PaymentDefaultsTableProps
 > = ({ paymentDefaults }) => (
@@ -70,37 +86,53 @@ const PaymentDefaultsTable: React.FunctionComponent<
       </Table.Row>
     </Table.Header>
     <Table.Body>
-      {[...paymentDefaults].map((paymentDefault) => (
-        <Table.Row>
-          {/* <Table.Row key={}> */}
-          <Table.Cell>{paymentDefault.year}</Table.Cell>
-          <Table.Cell>{paymentDefault.paymentDefaultType}</Table.Cell>
-          <Table.Cell>{paymentDefault.paymentDefaultTypeText}</Table.Cell>
-          <Table.Cell>
-            {paymentDefault.amount.amount} {paymentDefault.amount.currency}
-          </Table.Cell>
-          <Table.Cell>{paymentDefault.claimant}</Table.Cell>
-        </Table.Row>
-      ))}
+      {[...paymentDefaults]
+        .sort(sortPaymentDefaultByYear)
+        .map((paymentDefault) => (
+          <Table.Row
+            key={
+              paymentDefault.year.toString() +
+              paymentDefault.paymentDefaultTypeText.toString() +
+              paymentDefault.amount.amount.toString() +
+              paymentDefault.claimant
+            }
+          >
+            <Table.Cell>{paymentDefault.year}</Table.Cell>
+            <Table.Cell>{paymentDefault.paymentDefaultType}</Table.Cell>
+            <Table.Cell>{paymentDefault.paymentDefaultTypeText}</Table.Cell>
+            <Table.Cell>
+              {paymentDefault.amount.amount} {paymentDefault.amount.currency}
+            </Table.Cell>
+            <Table.Cell>{paymentDefault.claimant}</Table.Cell>
+          </Table.Row>
+        ))}
     </Table.Body>
   </Table>
 )
 
-interface DebtProfile {
-  totalAmountPublicDebt: MonetaryAmount
-  numberPublicDebts: BigInteger
-  totalAmountPrivateDebt: MonetaryAmount
-  numberPrivateDebts: BigInteger
-  fromDateTime: LocalDateTime
-}
-
-interface OverallDebtProfileTableProps {
-  debt: DebtProfile
+enum Flag {
+  GREEN,
+  AMBER,
+  RED,
 }
 
 const ButtonWrapper = styled('div')({
   display: 'flex',
   justifyContent: 'flex-end',
+})
+
+const PersonStatusWrapper = styled('div')({
+  padding: '10px 15px',
+  fontWeight: 700,
+  fontSize: '1.5rem',
+})
+
+const GreenFlagWrapper = styled('span')({
+  color: colors.GREEN,
+})
+
+const RedFlagWrapper = styled('span')({
+  color: colors.PINK,
 })
 
 const Button = styled('button')({
@@ -130,6 +162,12 @@ const ConfirmMessage = styled('div')({
   fontSize: '1.2rem',
 })
 
+const sortPaymentDefaultByYear = (a, b) => {
+  const aDate = new Date(a.year)
+  const bDate = new Date(b.year)
+  return bDate - aDate
+}
+
 const OverallDebtProfileTable: React.FunctionComponent<
   OverallDebtProfileTableProps
 > = ({ debt }) => (
@@ -140,7 +178,7 @@ const OverallDebtProfileTable: React.FunctionComponent<
         <Table.HeaderCell>Number of Public Debts</Table.HeaderCell>
         <Table.HeaderCell>Total Amount of Private Debt</Table.HeaderCell>
         <Table.HeaderCell>Number of Private Debts</Table.HeaderCell>
-        <Table.HeaderCell>Data Valid From</Table.HeaderCell>
+        <Table.HeaderCell>Date of Debt Check</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
     <Table.Body>
@@ -184,81 +222,99 @@ class MemberDebtComponent extends React.Component<
         >
           {({ loading, error, data }) => {
             if (error) {
-              return (
-                <div>
-                  Issue retrieving debt for this member Error in GraphQl query
-                  here.....: <pre>{JSON.stringify(error, null, 2)}</pre>
-                </div>
-              )
+              return <div>Issue retrieving debt for this member</div>
             }
             if (loading || !data) {
               return <div>Loading...</div>
             }
-            if (data.member.person.debt.paymentDefaults.length === 0) {
-              return <div>No payment defaults for this member</div>
-            }
             return (
               <>
+                <PersonStatusWrapper>
+                  <div>
+                    Member flag:{' '}
+                    {data.member.person.status.flag === Flag.GREEN ? (
+                      <GreenFlagWrapper>
+                        {data.member.person.status.flag}
+                      </GreenFlagWrapper>
+                    ) : (
+                      <RedFlagWrapper>
+                        {data.member.person.status.flag}
+                      </RedFlagWrapper>
+                    )}
+                  </div>
+                </PersonStatusWrapper>
+                <PersonStatusWrapper>
+                  <div>
+                    Member status:{' '}
+                    {data.member.person.status.whitelisted
+                      ? 'Whitelisted'
+                      : 'Not Whitelisted'}
+                  </div>
+                </PersonStatusWrapper>
                 <OverallDebtProfileTable debt={data.member.person.debt} />
                 <PaymentDefaultsTable
                   paymentDefaults={data.member.person.debt.paymentDefaults}
                 />
-                <ButtonWrapper>
-                  <Mutation
-                    mutation={whitelistMember}
-                    refetchQueries={() => [
-                      {
-                        query,
-                        variables: { memberId: this.props.match.params.id },
-                      },
-                    ]}
-                  >
-                    {(mutation, { loading }) => {
-                      return (
-                        <Button
-                          disabled={loading}
-                          onClick={
-                            this.state.confirming
-                              ? () => {
-                                  if (loading) {
-                                    return
+                {!data.member.person.status.whitelisted &&
+                data.member.person.debt.paymentDefaults.length !== 0 ? (
+                  <ButtonWrapper>
+                    <Mutation
+                      mutation={whitelistMember}
+                      refetchQueries={() => [
+                        {
+                          query,
+                          variables: { memberId: this.props.match.params.id },
+                        },
+                      ]}
+                    >
+                      {(mutation, { loading }) => {
+                        return (
+                          <Button
+                            disabled={loading}
+                            onClick={
+                              this.state.confirming
+                                ? () => {
+                                    if (loading) {
+                                      return
+                                    }
+                                    mutation({
+                                      variables: {
+                                        memberId: this.props.match.params.id,
+                                      },
+                                    })
+                                      .then(() => {
+                                        this.resetButton()
+                                        this.props.showNotification({
+                                          message:
+                                            'Member has been whitelisted',
+                                          header: 'Approved',
+                                          type: 'olive',
+                                        })
+                                      })
+                                      .catch((error) => {
+                                        this.props.showNotification({
+                                          message: error.message,
+                                          header: 'Error',
+                                          type: 'red',
+                                        })
+                                        throw error
+                                      })
                                   }
-                                  mutation({
-                                    variables: {
-                                      memberId: this.props.match.params.id,
-                                    },
-                                  })
-                                    .then(() => {
-                                      this.resetButton()
-                                      this.props.showNotification({
-                                        message: 'Member has been whitelisted',
-                                        header: 'Approved',
-                                        type: 'olive',
-                                      })
-                                    })
-                                    .catch((error) => {
-                                      this.props.showNotification({
-                                        message: error.message,
-                                        header: 'Error',
-                                        type: 'red',
-                                      })
-                                      throw error
-                                    })
-                                }
-                              : this.confirm
-                          }
-                        >
-                          {this.state.confirming
-                            ? "Yes, I'm sure"
-                            : 'White List Member'}
-                        </Button>
-                      )
-                    }}
-                  </Mutation>
-                  {this.state.confirming ? (
-                    <ConfirmMessage>Are you sure?</ConfirmMessage>
-                  ) : null}
-                </ButtonWrapper>
+                                : this.confirm
+                            }
+                          >
+                            {this.state.confirming
+                              ? "Yes, I'm sure"
+                              : 'White List Member'}
+                          </Button>
+                        )
+                      }}
+                    </Mutation>
+                    {this.state.confirming ? (
+                      <ConfirmMessage>Are you sure?</ConfirmMessage>
+                    ) : null}
+                  </ButtonWrapper>
+                ) : null}
               </>
             )
           }}
@@ -274,7 +330,6 @@ class MemberDebtComponent extends React.Component<
     this.setState({ confirming: true })
   }
 }
-// }
 
 const mapActions = { ...actions.notificationsActions }
 
