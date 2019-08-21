@@ -46,8 +46,8 @@ const getTableRow = (item: MemberInsurance) => {
     item.insuranceActiveTo &&
     toDate(
       item.insuranceActiveTo.endsWith('Z')
-        ? item.insuranceActiveFrom
-        : `${item.insuranceActiveFrom}Z`,
+        ? item.insuranceActiveTo
+        : `${item.insuranceActiveTo}Z`,
     )
   const signedOnDate = item.signedOn && toDate(item.signedOn)
 
