@@ -16,11 +16,7 @@ import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
 import { SanctionStatus } from './MemberInformation'
-
-export interface MonetaryAmount {
-  amount: string
-  currency: string
-}
+import { MonetaryAmount } from '../../../shared/inputs/MonetaryAmount'
 
 interface Props {
   payments: Payment[]

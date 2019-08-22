@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'react-emotion'
-import { MonetaryAmount } from './ClaimPayments'
+import { MonetaryAmount } from '../../../shared/inputs/MonetaryAmount'
 import { ClaimReserveForm } from './ClaimReserveForm'
 
 interface Props {

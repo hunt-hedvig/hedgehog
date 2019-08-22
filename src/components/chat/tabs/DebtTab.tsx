@@ -1,4 +1,4 @@
-import { MonetaryAmount } from '../../../components/claims/claim-details/components/ClaimPayments'
+import { MonetaryAmount } from '../../shared/inputs/MonetaryAmount'
 import { Table } from 'semantic-ui-react'
 import gql from 'graphql-tag'
 import * as React from 'react'
@@ -7,6 +7,7 @@ import { colors } from '@hedviginsurance/brand'
 import styled from 'react-emotion'
 import actions from 'store/actions'
 import { connect } from 'react-redux'
+import { formatMoneySE } from '../../../lib/intl'
 
 const query = gql`
   query PersonQuery($memberId: ID!) {
@@ -54,6 +55,7 @@ interface PaymentDefault {
   paymentDefaultTypeText: string
   amount: MonetaryAmount
   claimant: string
+  caseId: string
 }
 
 interface PaymentDefaultsTableProps {
@@ -79,7 +81,6 @@ const PaymentDefaultsTable: React.FunctionComponent<
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell>Year</Table.HeaderCell>
-        <Table.HeaderCell>Payment Default Type Code</Table.HeaderCell>
         <Table.HeaderCell>Payment Default Type</Table.HeaderCell>
         <Table.HeaderCell>Debt Amount</Table.HeaderCell>
         <Table.HeaderCell>Claimant</Table.HeaderCell>
@@ -89,20 +90,10 @@ const PaymentDefaultsTable: React.FunctionComponent<
       {[...paymentDefaults]
         .sort(sortPaymentDefaultByYear)
         .map((paymentDefault) => (
-          <Table.Row
-            key={
-              paymentDefault.year.toString() +
-              paymentDefault.paymentDefaultTypeText.toString() +
-              paymentDefault.amount.amount.toString() +
-              paymentDefault.claimant
-            }
-          >
+          <Table.Row key={paymentDefault.caseId}>
             <Table.Cell>{paymentDefault.year}</Table.Cell>
-            <Table.Cell>{paymentDefault.paymentDefaultType}</Table.Cell>
             <Table.Cell>{paymentDefault.paymentDefaultTypeText}</Table.Cell>
-            <Table.Cell>
-              {paymentDefault.amount.amount} {paymentDefault.amount.currency}
-            </Table.Cell>
+            <Table.Cell>{formatMoneySE(paymentDefault.amount)}</Table.Cell>
             <Table.Cell>{paymentDefault.claimant}</Table.Cell>
           </Table.Row>
         ))}
@@ -183,15 +174,9 @@ const OverallDebtProfileTable: React.FunctionComponent<
     </Table.Header>
     <Table.Body>
       <Table.Row>
-        <Table.Cell>
-          {debt.totalAmountPublicDebt.amount}{' '}
-          {debt.totalAmountPublicDebt.currency}
-        </Table.Cell>
+        <Table.Cell>{formatMoneySE(debt.totalAmountPublicDebt)}</Table.Cell>
         <Table.Cell>{debt.numberPublicDebts}</Table.Cell>
-        <Table.Cell>
-          {debt.totalAmountPrivateDebt.amount}{' '}
-          {debt.totalAmountPrivateDebt.currency}
-        </Table.Cell>
+        <Table.Cell>{formatMoneySE(debt.totalAmountPrivateDebt)}</Table.Cell>
         <Table.Cell>{debt.numberPrivateDebts}</Table.Cell>
         <Table.Cell>{debt.fromDateTime}</Table.Cell>
       </Table.Row>
@@ -203,7 +188,7 @@ interface State {
   confirming: boolean
 }
 
-class MemberDebtComponent extends React.Component<
+export class MemberDebtComponent extends React.Component<
   {
     showNotification: (data: any) => void
   },
@@ -277,28 +262,7 @@ class MemberDebtComponent extends React.Component<
                                     if (loading) {
                                       return
                                     }
-                                    mutation({
-                                      variables: {
-                                        memberId: this.props.match.params.id,
-                                      },
-                                    })
-                                      .then(() => {
-                                        this.resetButton()
-                                        this.props.showNotification({
-                                          message:
-                                            'Member has been whitelisted',
-                                          header: 'Approved',
-                                          type: 'olive',
-                                        })
-                                      })
-                                      .catch((error) => {
-                                        this.props.showNotification({
-                                          message: error.message,
-                                          header: 'Error',
-                                          type: 'red',
-                                        })
-                                        throw error
-                                      })
+                                    this.handleClick(mutation)
                                   }
                                 : this.confirm
                             }
@@ -322,6 +286,31 @@ class MemberDebtComponent extends React.Component<
       </Wrapper>
     )
   }
+
+  private handleClick = (mutation) => {
+    mutation({
+      variables: {
+        memberId: this.props.match.params.id,
+      },
+    })
+      .then(() => {
+        this.resetButton()
+        this.props.showNotification({
+          message: 'Member has been whitelisted',
+          header: 'Approved',
+          type: 'olive',
+        })
+      })
+      .catch((error) => {
+        this.props.showNotification({
+          message: error.message,
+          header: 'Error',
+          type: 'red',
+        })
+        throw error
+      })
+  }
+
   private resetButton = () => {
     this.setState({ confirming: false })
   }
@@ -332,8 +321,6 @@ class MemberDebtComponent extends React.Component<
 }
 
 const mapActions = { ...actions.notificationsActions }
-
-export default MemberDebtComponent
 
 export const MemberDebt = connect(
   null,
