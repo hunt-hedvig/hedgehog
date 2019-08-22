@@ -12,7 +12,7 @@ const ChatPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 700px;
+  width: 790px;
   height: 100%;
 `
 
