@@ -2,6 +2,7 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 import { Table, Image } from 'semantic-ui-react'
+import { dateTimeFormatter } from '../../../lib/helpers'
 
 const query = gql`
   query FileUploadsQuery($memberId: ID!) {
@@ -48,7 +49,7 @@ const MemberFileTable: React.FunctionComponent<MemberFileTableProps> = ({ member
           <Table.Cell>
             <Image src={memberFile.fileUploadUrl} size="medium" />
           </Table.Cell>
-          <Table.Cell>{memberFile.timestamp}</Table.Cell>
+          <Table.Cell>{dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}</Table.Cell>
           <Table.Cell>{memberFile.mimeType}</Table.Cell>
         </Table.Row>
       ))}

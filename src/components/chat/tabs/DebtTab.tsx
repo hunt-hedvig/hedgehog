@@ -1,4 +1,3 @@
-import { MonetaryAmount } from '../../shared/inputs/MonetaryAmount'
 import { Table } from 'semantic-ui-react'
 import gql from 'graphql-tag'
 import * as React from 'react'
@@ -8,6 +7,7 @@ import styled from 'react-emotion'
 import actions from 'store/actions'
 import { connect } from 'react-redux'
 import { formatMoneySE } from '../../../lib/intl'
+import { dateTimeFormatter, MonetaryAmount } from '../../../lib/helpers'
 
 const query = gql`
   query PersonQuery($memberId: ID!) {
@@ -178,7 +178,7 @@ const OverallDebtProfileTable: React.FunctionComponent<
         <Table.Cell>{debt.numberPublicDebts}</Table.Cell>
         <Table.Cell>{formatMoneySE(debt.totalAmountPrivateDebt)}</Table.Cell>
         <Table.Cell>{debt.numberPrivateDebts}</Table.Cell>
-        <Table.Cell>{debt.fromDateTime}</Table.Cell>
+        <Table.Cell>{dateTimeFormatter(debt.fromDateTime, 'yyyy-MM-dd')}</Table.Cell>
       </Table.Row>
     </Table.Body>
   </Table>
