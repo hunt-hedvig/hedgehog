@@ -137,7 +137,7 @@ const Button = styled('button')({
   transition: 'background 250ms',
 
   '&:hover, &:focus': {
-    background: '#18cea1',
+    background: colors.TURQUOISE,
     cursor: 'pointer',
   },
 })
