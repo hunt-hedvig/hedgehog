@@ -12,6 +12,7 @@ import PrivateRoute from 'routes/PrivateRoute'
 import QuestionsPageRoute from 'routes/QuestionsPageRoute'
 import TaskManagerPageRoute from 'routes/TaskManagerPageRoute'
 import TicketHistoryPageRoute from 'routes/TicketHistoryPageRoute'
+import { ToolsPageRoute } from 'routes/ToolsPageRoute'
 
 export default {
   AssetsPageRoute,
@@ -24,6 +25,7 @@ export default {
   MemberInsurancePageRoute,
   ChargePageRoute,
   BourdereauPageRoute,
+  ToolsPageRoute,
   PrivateRoute,
   PricingPageRoute,
   TaskManagerPageRoute,
