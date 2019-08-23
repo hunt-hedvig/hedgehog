@@ -32,6 +32,11 @@ const template = () => `
         crossorigin="anonymous">
   <script src="https://cdn.ravenjs.com/3.22.3/raven.min.js"
           crossorigin="anonymous"></script>
+  <style>
+  body {
+    overflow-x: visible;
+  }
+</style>
 </head>
 <body>
   <div id="react-root"></div>
