@@ -1,17 +1,19 @@
 import { colors } from '@hedviginsurance/brand'
-import { connect } from 'react-redux'
 import * as React from 'react'
 import styled from 'react-emotion'
+import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import actions from 'store/actions'
 import { Logo } from './elements'
 
 const Wrapper = styled('div')(({ collapsed }: { collapsed: boolean }) => ({
+  flex: 1,
   background: colors.OFF_BLACK_DARK,
   color: '#fff',
   overflowX: 'hidden',
   transition: 'max-width 300ms',
-  maxWidth: collapsed ? 16 * 3 : 500,
+  maxWidth: collapsed ? 16 * 3 : 250,
+  minWidth: 16 * 3,
 }))
 const InnerWrapper = styled('div')({
   position: 'sticky',
@@ -94,18 +96,6 @@ export class VerticalMenuComponent extends React.Component<
     isCollapsed: localStorage.getItem('hedvig:menu:collapse') === 'true',
   }
 
-  private toggleOpen = () => {
-    this.setState(
-      ({ isCollapsed }) => ({ isCollapsed: !isCollapsed }),
-      () => {
-        localStorage.setItem(
-          'hedvig:menu:collapse',
-          JSON.stringify(this.state.isCollapsed),
-        )
-      },
-    )
-  }
-
   public render() {
     return (
       <Wrapper collapsed={this.state.isCollapsed}>
@@ -162,6 +152,18 @@ export class VerticalMenuComponent extends React.Component<
           </Menu>
         </InnerWrapper>
       </Wrapper>
+    )
+  }
+
+  private toggleOpen = () => {
+    this.setState(
+      ({ isCollapsed }) => ({ isCollapsed: !isCollapsed }),
+      () => {
+        localStorage.setItem(
+          'hedvig:menu:collapse',
+          JSON.stringify(this.state.isCollapsed),
+        )
+      },
     )
   }
 }
