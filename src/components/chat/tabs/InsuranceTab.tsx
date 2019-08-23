@@ -1,15 +1,46 @@
+import { colors } from '@hedviginsurance/brand'
+import { Paper } from '@material-ui/core'
 import InsuranceTableRows from 'components/chat/insurance-table-rows/InsuranceTableRows'
 import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
+import { format, formatDistance, parse } from 'date-fns'
 import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
+import { formatMoneySE } from 'lib/intl'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 const insuranceFieldFormatters = {
   signedOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
+
+const Wrapper = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+})
+const Box = styled(Paper)({
+  padding: 16,
+  backgroundColor: '#fff',
+  width: '50%',
+})
+const Name = styled('h1')({
+  color: colors.BLACK_PURPLE,
+  fontSize: 18,
+})
+const Address = styled('address')({
+  color: colors.BLACK_PURPLE,
+  fontSize: 20,
+})
+const PriceTitle = styled('div')({
+  color: colors.PINK,
+})
+const Price = styled('div')({
+  color: colors.PINK,
+  fontSize: 30,
+})
 
 export default class InsuranceTab extends React.Component {
   constructor(props) {
@@ -122,20 +153,59 @@ export default class InsuranceTab extends React.Component {
     }
 
     return fields ? (
-      <React.Fragment>
+      <Wrapper>
+        <Box>
+          <Name>
+            {fields.memberFirstName} {fields.memberLastName}
+          </Name>
+          <Address>
+            {fields.street}
+            <br />
+            {fields.zipCode} {fields.city}
+          </Address>
+          <dl>
+            <dt>Type</dt>
+            <dd>
+              <strong>{fields.insuranceType}</strong>
+            </dd>
+            <dt>SQM</dt>
+            <dd>{fields.livingSpace}</dd>
+            <dt>Persons in household</dt>
+            <dd>{fields.personsInHouseHold}</dd>
+          </dl>
+        </Box>
+        <Box>
+          <PriceTitle>Current Total Price</PriceTitle>
+          <Price>
+            {formatMoneySE({
+              amount: fields.currentTotalPrice,
+              currency: 'SEK',
+            })}
+          </Price>
+          <dl>
+            <dt>Status</dt>
+            <dd>{fields.insuranceStatus}</dd>
+            <dt>State</dt>
+            <dd>{fields.insuranceState}</dd>
+            <dt>Signed</dt>
+            <dd>
+              <strong>{fields.signedOn}</strong>
+            </dd>
+          </dl>
+        </Box>
         <Table selectable>
-          <Table.Body>
-            <TableFields
-              fields={fields}
-              fieldFormatters={insuranceFieldFormatters}
-            />
-            <InsuranceTableRows
-              activeDate={activeDate}
-              cancellationDate={cancellationDate}
-              fields={fields}
-              {...this.props}
-            />
-          </Table.Body>
+          {/*<Table.Body>*/}
+          {/*  <TableFields*/}
+          {/*    fields={fields}*/}
+          {/*    fieldFormatters={insuranceFieldFormatters}*/}
+          {/*  />*/}
+          {/*  <InsuranceTableRows*/}
+          {/*    activeDate={activeDate}*/}
+          {/*    cancellationDate={cancellationDate}*/}
+          {/*    fields={fields}*/}
+          {/*    {...this.props}*/}
+          {/*  />*/}
+          {/*</Table.Body>*/}
           <Table.Footer fullWidth>
             <Table.Row>
               <Table.HeaderCell />
@@ -220,7 +290,7 @@ export default class InsuranceTab extends React.Component {
           </Table.Footer>
         </Table>
         <InsuranceTrace traceData={traceData} />
-      </React.Fragment>
+      </Wrapper>
     ) : (
       <Header>No insurance info </Header>
     )

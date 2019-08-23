@@ -3,16 +3,22 @@ import { disconnect } from 'lib/sockets'
 import { reconnect, subscribe } from 'lib/sockets/chat'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Header, Tab } from 'semantic-ui-react'
-import styled from 'styled-components'
 import memberPagePanes from './tabs'
 import ChatTab from './tabs/ChatTab'
 
-const ChatPageContainer = styled.div`
+const ChatPageWrapper = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+})
+
+const ChatPageContainer = styled('div')`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 700px;
+  width: calc(100% - 400px);
+  min-width: 700px;
   height: 100%;
 `
 
@@ -110,18 +116,14 @@ export default class Chat extends React.Component {
   }
 
   public render() {
-    const {
-      messages,
-      history: { location },
-    } = this.props
+    const { messages } = this.props
     const panes = memberPagePanes(
       this.props,
       this.addMessageHandler,
       this.state.socket,
     )
-    const routeData = location.state ? location.state.to : null
     return (
-      <>
+      <ChatPageWrapper>
         <ChatPageContainer>
           <Header size="huge">
             <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
@@ -135,7 +137,7 @@ export default class Chat extends React.Component {
           />
         </ChatPageContainer>
         <ChatTab {...this.props} addMessage={this.addMessageHandler} />
-      </>
+      </ChatPageWrapper>
     )
   }
 
