@@ -131,15 +131,7 @@ export default class Chat extends React.Component {
             style={{ height: '100%' }}
             panes={panes}
             renderActiveOnly={true}
-            defaultActiveIndex={
-              routeData === 'insurance'
-                ? 2
-                : routeData === 'payments'
-                ? 4
-                : routeData === 'details'
-                ? 0
-                : 1
-            }
+            defaultActiveIndex={3}
           />
         </ChatPageContainer>
         <ChatTab {...this.props} addMessage={this.addMessageHandler} />
