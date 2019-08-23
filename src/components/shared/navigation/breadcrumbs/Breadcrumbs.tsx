@@ -7,15 +7,16 @@ import styled from 'styled-components'
 
 const BreadcrumbsContainer = styled.div`
   display: flex;
-  margin: 20px;
+  margin: 20px 0;
 `
 
 const Breadcrumbs = ({ state, history }) => {
   // eslint-disable-next-line no-undef
-  const pathname =
-    typeof window !== 'undefined'
-      ? window.location.pathname
-      : history.location.pathname
+  const pathname = history.location.pathname
+  if (pathname.startsWith('/login')) {
+    return null
+  }
+
   const paths = pathname.split('/').map((path, i, arr) => {
     if (i === 0) {
       return {

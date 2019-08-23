@@ -1,7 +1,7 @@
 import * as React from 'react'
+import styled from 'react-emotion'
 import GoogleButton from 'react-google-button'
 import { Header, Segment } from 'semantic-ui-react'
-import styled from 'styled-components'
 
 const LoginContainer = styled(Segment)`
   &&& {
@@ -11,7 +11,6 @@ const LoginContainer = styled(Segment)`
     align-items: flex-start;
     width: 400px;
     margin: 200px auto;
-
     & a {
       margin: 20px auto;
     }
