@@ -9,15 +9,7 @@ import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
-import {
-  Button,
-  Form,
-  Header,
-  Icon,
-  Modal,
-  Radio,
-  Table,
-} from 'semantic-ui-react'
+import { Button, Form, Header, Icon, Modal, Radio } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 const Wrapper = styled('div')({
@@ -35,9 +27,15 @@ const ActionBox = styled(Box)({
   border: '1px solid ' + colors.DARK_GRAY,
   borderRadius: 5,
 })
+const ActionHeadline = styled('h3')({
+  marginBottom: 5,
+})
 const DebugBox = styled(ActionBox)({
   opacity: 0.8,
   width: 'calc(100% - 16px)',
+})
+const SpacedBottom = styled('div')({
+  paddingBottom: 8,
 })
 const PropList = styled('dl')({
   dt: {
@@ -54,15 +52,18 @@ const PropList = styled('dl')({
     display: 'block',
     margin: 0,
     marginBottom: 8,
+    fontWeight: 'bold',
   },
 })
 const Name = styled('h1')({
   color: colors.BLACK_PURPLE,
   fontSize: 18,
+  marginBottom: 0,
 })
 const Address = styled('address')({
   color: colors.BLACK_PURPLE,
   fontSize: 20,
+  lineHeight: 1.2,
 })
 const PriceTitle = styled('div')({
   color: colors.PINK,
@@ -88,7 +89,9 @@ const HedvigStyledButton = styled('button')({
   },
 })
 const ButtonLink = HedvigStyledButton.withComponent('a')
-const FileButton = HedvigStyledButton.withComponent('label')
+const FileButton = styled(HedvigStyledButton)({
+  marginLeft: 8,
+}).withComponent('label')
 
 const timeStringToDistance = (timeString: string) =>
   formatDistance(
@@ -216,9 +219,7 @@ export default class InsuranceTab extends React.Component {
           </Address>
           <PropList>
             <dt>Type</dt>
-            <dd>
-              <strong>{fields.insuranceType}</strong>
-            </dd>
+            <dd>{fields.insuranceType}</dd>
             <dt>SQM</dt>
             <dd>{fields.livingSpace}</dd>
             <dt>Persons in household</dt>
@@ -242,7 +243,7 @@ export default class InsuranceTab extends React.Component {
             <dd>
               {fields.signedOn ? (
                 <>
-                  <strong>{fields.signedOn.replace(/\..*$/, '')}</strong> (
+                  {fields.signedOn.replace(/\..*$/, '')} (
                   {timeStringToDistance(fields.signedOn)})
                 </>
               ) : (
@@ -254,7 +255,7 @@ export default class InsuranceTab extends React.Component {
           </PropList>
         </Box>
         <ActionBox>
-          <h3>Insurance Mandate</h3>
+          <ActionHeadline>Insurance Mandate</ActionHeadline>
           <ButtonLink
             target="_blank"
             href={`/api/member/mandate/${fields.memberId}`}
@@ -263,7 +264,7 @@ export default class InsuranceTab extends React.Component {
           </ButtonLink>
         </ActionBox>
         <ActionBox>
-          <h3>Insured at other company</h3>
+          <ActionHeadline>Insured at other company</ActionHeadline>
           <Radio
             toggle
             checked={fields.insuredAtOtherCompany}
@@ -272,7 +273,7 @@ export default class InsuranceTab extends React.Component {
           />
         </ActionBox>
         <ActionBox>
-          <h3>Insurance certificate</h3>
+          <ActionHeadline>Insurance certificate</ActionHeadline>
           {fields.certificateUploaded ? (
             <>
               <ButtonLink target="_blank" href={fields.certificateUrl}>
@@ -305,7 +306,7 @@ export default class InsuranceTab extends React.Component {
           )}
         </ActionBox>
         <ActionBox>
-          <h3>Create modified insurance</h3>
+          <ActionHeadline>Create modified insurance</ActionHeadline>
           <WideModal
             className="scrolling"
             trigger={
@@ -377,15 +378,15 @@ export default class InsuranceTab extends React.Component {
           </WideModal>
         </ActionBox>
         <ActionBox>
-          <h3>Cancellation Date</h3>
+          <ActionHeadline>Cancellation Date</ActionHeadline>
           {this.state.cancellationDatePickerEnabled ? (
             <>
-              <div>
+              <SpacedBottom>
                 <DateInput
                   changeHandler={this.handleDateChange}
                   changeType={CANCELLATION_DATE}
                 />
-              </div>
+              </SpacedBottom>
               <Button
                 onClick={() => {
                   this.props.saveInsuranceDate(
@@ -411,13 +412,13 @@ export default class InsuranceTab extends React.Component {
             </>
           ) : (
             <>
-              <div>
+              <SpacedBottom>
                 {cancellationDate ? (
                   cancellationDate.replace(/T.*$/, '')
                 ) : (
                   <em>Not set</em>
                 )}
-              </div>
+              </SpacedBottom>
               <HedvigStyledButton
                 onClick={() => {
                   this.setState((state) => ({
@@ -431,15 +432,15 @@ export default class InsuranceTab extends React.Component {
           )}
         </ActionBox>
         <ActionBox>
-          <h3>Activation Date</h3>
+          <ActionHeadline>Activation Date</ActionHeadline>
           {this.state.activationDatePickerEnabled ? (
             <>
-              <div>
+              <SpacedBottom>
                 <DateInput
                   changeHandler={this.handleDateChange}
                   changeType={ACTIVATION_DATE}
                 />
-              </div>
+              </SpacedBottom>
               <Button
                 onClick={() => {
                   this.props.saveInsuranceDate(
@@ -465,9 +466,9 @@ export default class InsuranceTab extends React.Component {
             </>
           ) : (
             <>
-              <div>
+              <SpacedBottom>
                 {activeDate ? activeDate.replace(/T.*$/, '') : <em>Not set</em>}
-              </div>
+              </SpacedBottom>
               <HedvigStyledButton
                 onClick={() => {
                   this.setState((state) => ({
@@ -481,7 +482,7 @@ export default class InsuranceTab extends React.Component {
           )}
         </ActionBox>
         <DebugBox>
-          <h3>Debug</h3>
+          <ActionHeadline>Debug</ActionHeadline>
           <PropList>
             <dt>Product id</dt>
             <dd>{fields.productId}</dd>
