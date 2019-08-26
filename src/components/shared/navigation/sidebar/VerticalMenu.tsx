@@ -117,11 +117,15 @@ export class VerticalMenuComponent extends React.Component<
               <MenuText collapsed={this.state.isCollapsed}>Dashborad</MenuText>
             </MenuItem>
             <MenuItem
-              to="/member_insurance"
+              to="/members"
               isActive={(_match, location) =>
-                location.pathname.startsWith('/member')
+                location.pathname.startsWith('/members')
               }
             >
+              <MenuIcon className="fa fa-users" />
+              <MenuText collapsed={this.state.isCollapsed}>Members</MenuText>
+            </MenuItem>
+            <MenuItem to="/member_insurance">
               <MenuIcon className="fa fa-list" />
               <MenuText collapsed={this.state.isCollapsed}>
                 Member Insurance
