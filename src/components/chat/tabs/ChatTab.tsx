@@ -103,12 +103,12 @@ export default class ChatTab extends React.Component {
     return { lastMemberMessages, messageIds }
   }
 
-  private getQuestionAndAnswer(responses: object) {
+  private getQuestionAndAnswer(responses: any) {
     let question = ''
     let answer = ''
     let confidence = 0
 
-    if (responses.length !== 1) {
+    if (!responses || responses.length !== 1) {
       return { question, answer, confidence }
     }
     question = responses[0].text
@@ -138,7 +138,7 @@ export default class ChatTab extends React.Component {
           />
 
           <Query
-            query={GET_SUGGESTED_ANSWER_QUERY}            
+            query={GET_SUGGESTED_ANSWER_QUERY}
             variables={{ question: questionAndMessageIds.lastMemberMessages }}
           >
             {({ data, loading, error }) => {
@@ -162,7 +162,8 @@ export default class ChatTab extends React.Component {
               return (
                 <ChatPanel
                   allReplies={
-                    (data.getAnswerSuggestion.length > 0 &&
+                    (data.getAnswerSuggestion &&
+                      data.getAnswerSuggestion.length > 0 &&
                       data.getAnswerSuggestion[0].allReplies) ||
                     null
                   }
