@@ -1,30 +1,60 @@
 import { colors } from '@hedviginsurance/brand'
-import { Paper } from '@material-ui/core'
-import InsuranceTableRows from 'components/chat/insurance-table-rows/InsuranceTableRows'
+import DateInput from 'components/shared/inputs/DateInput'
 import { WideModal } from 'components/shared/modals/WideModal'
-import TableFields from 'components/shared/table-fields/TableFields'
-import { format, formatDistance, parse } from 'date-fns'
-import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
+import { formatDistance, parse } from 'date-fns'
+import { getFieldName, getFieldValue } from 'lib/helpers'
 import { formatMoneySE } from 'lib/intl'
+import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
+import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import {
+  Button,
+  Form,
+  Header,
+  Icon,
+  Modal,
+  Radio,
+  Table,
+} from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
-
-const insuranceFieldFormatters = {
-  signedOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
-}
 
 const Wrapper = styled('div')({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
 })
-const Box = styled(Paper)({
+const Box = styled('div')({
   padding: 16,
-  backgroundColor: '#fff',
   width: '50%',
+})
+const ActionBox = styled(Box)({
+  margin: 8,
+  width: 'calc(50% - 16px)',
+  border: '1px solid ' + colors.DARK_GRAY,
+  borderRadius: 5,
+})
+const DebugBox = styled(ActionBox)({
+  opacity: 0.8,
+  width: 'calc(100% - 16px)',
+})
+const PropList = styled('dl')({
+  dt: {
+    float: 'left',
+    display: 'inline-block',
+    '&:after': {
+      content: '": "',
+    },
+    paddingRight: 8,
+  },
+
+  dd: {
+    padding: 0,
+    display: 'block',
+    margin: 0,
+    marginBottom: 8,
+  },
 })
 const Name = styled('h1')({
   color: colors.BLACK_PURPLE,
@@ -41,25 +71,50 @@ const Price = styled('div')({
   color: colors.PINK,
   fontSize: 30,
 })
+const HedvigStyledButton = styled('button')({
+  background: colors.PURPLE,
+  color: '#fff',
+  border: 0,
+  fontSize: 'inherit',
+  borderRadius: 40,
+  padding: '12px 18px',
+  cursor: 'pointer',
+  whiteSpace: 'nowrap',
+  margin: 0,
+  display: 'inline-block',
+
+  '&:hover, &:focus': {
+    color: '#fff',
+  },
+})
+const ButtonLink = HedvigStyledButton.withComponent('a')
+const FileButton = HedvigStyledButton.withComponent('label')
+
+const timeStringToDistance = (timeString: string) =>
+  formatDistance(
+    parse(timeString.replace(/\..*$/, ''), "yyyy-MM-dd'T'HH:mm:ss", new Date()),
+    new Date(),
+    { addSuffix: true },
+  )
 
 export default class InsuranceTab extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      modalOpen: false,
-      insurance: [],
-      availableSafetyIncreasers: {
-        SMOKE_ALARM: 'Smoke alarm',
-        FIRE_EXTINGUISHER: 'Fire extinguisher',
-        SAFETY_DOOR: 'Safety door',
-        GATE: 'Gate',
-        BURGLAR_ALARM: 'Burglar alarm',
-        NONE: 'None',
-      },
-      safetyIncreasers: [],
-      isStudent: true,
-    }
+  public state = {
+    modalOpen: false,
+    insurance: [],
+    availableSafetyIncreasers: {
+      SMOKE_ALARM: 'Smoke alarm',
+      FIRE_EXTINGUISHER: 'Fire extinguisher',
+      SAFETY_DOOR: 'Safety door',
+      GATE: 'Gate',
+      BURGLAR_ALARM: 'Burglar alarm',
+      NONE: 'None',
+    },
+    safetyIncreasers: [],
+    isStudent: true,
+    activationDatePickerEnabled: false,
+    cancellationDatePickerEnabled: false,
   }
+  private fileInputRef = React.createRef<HTMLInputElement>()
 
   public handleOpen = () => this.setState({ modalOpen: true })
 
@@ -163,7 +218,7 @@ export default class InsuranceTab extends React.Component {
             <br />
             {fields.zipCode} {fields.city}
           </Address>
-          <dl>
+          <PropList>
             <dt>Type</dt>
             <dd>
               <strong>{fields.insuranceType}</strong>
@@ -172,7 +227,7 @@ export default class InsuranceTab extends React.Component {
             <dd>{fields.livingSpace}</dd>
             <dt>Persons in household</dt>
             <dd>{fields.personsInHouseHold}</dd>
-          </dl>
+          </PropList>
         </Box>
         <Box>
           <PriceTitle>Current Total Price</PriceTitle>
@@ -182,118 +237,297 @@ export default class InsuranceTab extends React.Component {
               currency: 'SEK',
             })}
           </Price>
-          <dl>
+          <PropList>
             <dt>Status</dt>
             <dd>{fields.insuranceStatus}</dd>
             <dt>State</dt>
             <dd>{fields.insuranceState}</dd>
             <dt>Signed</dt>
             <dd>
-              <strong>{fields.signedOn}</strong>
+              {fields.signedOn ? (
+                <>
+                  <strong>{fields.signedOn.replace(/\..*$/, '')}</strong> (
+                  {timeStringToDistance(fields.signedOn)})
+                </>
+              ) : (
+                'Not signed'
+              )}
             </dd>
-          </dl>
+            <dt>Current Insurer</dt>
+            <dd>{fields.currentInsurer || 'N/A'}</dd>
+          </PropList>
         </Box>
-        <Table selectable>
-          {/*<Table.Body>*/}
-          {/*  <TableFields*/}
-          {/*    fields={fields}*/}
-          {/*    fieldFormatters={insuranceFieldFormatters}*/}
-          {/*  />*/}
-          {/*  <InsuranceTableRows*/}
-          {/*    activeDate={activeDate}*/}
-          {/*    cancellationDate={cancellationDate}*/}
-          {/*    fields={fields}*/}
-          {/*    {...this.props}*/}
-          {/*  />*/}
-          {/*</Table.Body>*/}
-          <Table.Footer fullWidth>
-            <Table.Row>
-              <Table.HeaderCell />
-              <Table.HeaderCell colSpan="2">
-                <WideModal
-                  className="scrolling"
-                  trigger={
-                    <Button
-                      floated="right"
-                      icon
-                      labelposition="left"
-                      primary
-                      size="medium"
-                      onClick={this.handleOpen}
-                    >
-                      <Icon name="edit" /> Create modified insurance
-                    </Button>
-                  }
-                  open={this.state.modalOpen}
-                  onClose={this.handleClose}
-                  basic
-                  size="small"
-                  dimmer="blurring"
-                >
-                  <Header icon="edit" content="Modify Insurance" />
-                  <Modal.Content>
-                    <Form inverted size="small">
-                      <React.Fragment>
-                        {Object.keys(data).map((field, productId) =>
-                          this.shouldBeDisplayed(field) ? (
-                            <Form.Input
-                              key={productId}
-                              label={getFieldName(field)}
-                              defaultValue={getFieldValue(data[field])}
-                              onChange={this.handleChange(field)}
-                            />
-                          ) : (
-                            ''
-                          ),
-                        )}
-                        <Form.Group inverted grouped>
-                          <label>Safety Items</label>
-                          {Object.keys(
-                            this.state.availableSafetyIncreasers,
-                          ).map((field) => (
-                            <Form.Checkbox
-                              key={field}
-                              label={getFieldValue(
-                                this.state.availableSafetyIncreasers[field],
-                              )}
-                              onChange={this.handleChange(field)}
-                            />
-                          ))}
-                        </Form.Group>
-                        <Form.Group inverted grouped>
-                          <label>Student</label>
-                          <Form.Checkbox
-                            key="isStudent"
-                            label="Is Student?"
-                            onChange={this.handleChange('isStudent')}
-                          />
-                        </Form.Group>
-                      </React.Fragment>
-                      <Button.Group floated="right" labelposition="left">
-                        <Button type="button" onClick={this.handleCancel}>
-                          Cancel
-                        </Button>
-                        <Button.Or />
-                        <Button
-                          type="button"
-                          onClick={this.handleSubmissionButton}
-                          positive
-                        >
-                          Submit
-                        </Button>
-                      </Button.Group>
-                    </Form>
-                  </Modal.Content>
-                </WideModal>
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Footer>
-        </Table>
+        <ActionBox>
+          <h3>Insurance Mandate</h3>
+          <ButtonLink
+            target="_blank"
+            href={`/api/member/mandate/${fields.memberId}`}
+          >
+            Download
+          </ButtonLink>
+        </ActionBox>
+        <ActionBox>
+          <h3>Insured at other company</h3>
+          <Radio
+            toggle
+            checked={fields.insuredAtOtherCompany}
+            onChange={this.changeCompanyStatus}
+            disabled={this.props.insurance.requesting}
+          />
+        </ActionBox>
+        <ActionBox>
+          <h3>Insurance certificate</h3>
+          {fields.certificateUploaded ? (
+            <>
+              <ButtonLink target="_blank" href={fields.certificateUrl}>
+                View existing
+              </ButtonLink>
+              <input
+                type="file"
+                name="certFile"
+                id="certFile"
+                multiple={false}
+                onChange={this.handleCertificateUploadedEvent(fields.memberId)}
+                style={{ display: 'none' }}
+                ref={this.fileInputRef}
+              />
+              <FileButton htmlFor="certFile">Upload new</FileButton>
+            </>
+          ) : (
+            <>
+              <input
+                type="file"
+                name="certFile"
+                id="certFile"
+                multiple={false}
+                onChange={this.handleCertificateUploadedEvent(fields.memberId)}
+                style={{ display: 'none' }}
+                ref={this.fileInputRef}
+              />
+              <FileButton htmlFor="certFile">Upload new</FileButton>
+            </>
+          )}
+        </ActionBox>
+        <ActionBox>
+          <h3>Activation Date</h3>
+          {this.state.activationDatePickerEnabled ? (
+            <>
+              <div>
+                <DateInput
+                  changeHandler={this.handleDateChange}
+                  changeType={ACTIVATION_DATE}
+                />
+              </div>
+              <Button
+                onClick={() => {
+                  this.props.saveInsuranceDate(
+                    this.state.activationDateValue,
+                    ACTIVATION_DATE,
+                    fields.memberId,
+                    fields.productId,
+                  )
+                  this.setState({ activationDatePickerEnabled: false })
+                }}
+              >
+                Save
+              </Button>
+              <Button
+                onClick={() => {
+                  this.setState((state) => ({
+                    activationDatePickerEnabled: !state.activationDatePickerEnabled,
+                  }))
+                }}
+              >
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <>
+              <div>
+                {activeDate ? activeDate.replace(/T.*$/, '') : <em>Not set</em>}
+              </div>
+              <HedvigStyledButton
+                onClick={() => {
+                  this.setState((state) => ({
+                    activationDatePickerEnabled: !state.activationDatePickerEnabled,
+                  }))
+                }}
+              >
+                <Icon name="edit" /> Edit
+              </HedvigStyledButton>
+            </>
+          )}
+        </ActionBox>
+        <ActionBox>
+          <h3>Cancellation Date</h3>
+          {this.state.cancellationDatePickerEnabled ? (
+            <>
+              <div>
+                <DateInput
+                  changeHandler={this.handleDateChange}
+                  changeType={CANCELLATION_DATE}
+                />
+              </div>
+              <Button
+                onClick={() => {
+                  this.props.saveInsuranceDate(
+                    this.state.cancellationDateValue,
+                    CANCELLATION_DATE,
+                    fields.memberId,
+                    fields.productId,
+                  )
+                  this.setState({ cancellationDatePickerEnabled: false })
+                }}
+              >
+                Save
+              </Button>
+              <Button
+                onClick={() => {
+                  this.setState((state) => ({
+                    cancellationDatePickerEnabled: !state.cancellationDatePickerEnabled,
+                  }))
+                }}
+              >
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <>
+              <div>
+                {cancellationDate ? (
+                  cancellationDate.replace(/T.*$/, '')
+                ) : (
+                  <em>Not set</em>
+                )}
+              </div>
+              <HedvigStyledButton
+                onClick={() => {
+                  this.setState((state) => ({
+                    cancellationDatePickerEnabled: !state.cancellationDatePickerEnabled,
+                  }))
+                }}
+              >
+                <Icon name="edit" /> Edit
+              </HedvigStyledButton>
+            </>
+          )}
+        </ActionBox>
+        <ActionBox>
+          <h3>Create modified insurance</h3>
+          <WideModal
+            className="scrolling"
+            trigger={
+              <HedvigStyledButton onClick={this.handleOpen}>
+                <Icon name="edit" /> Edit
+              </HedvigStyledButton>
+            }
+            open={this.state.modalOpen}
+            onClose={this.handleClose}
+            basic
+            size="small"
+            dimmer="blurring"
+            closeOnDimmerClick={false}
+          >
+            <Header icon="edit" content="Modify Insurance" />
+            <Modal.Content>
+              <Form inverted size="small">
+                <React.Fragment>
+                  {Object.keys(data).map((field, productId) =>
+                    this.shouldBeDisplayed(field) ? (
+                      <Form.Input
+                        key={productId}
+                        label={getFieldName(field)}
+                        defaultValue={getFieldValue(data[field])}
+                        onChange={this.handleChange(field)}
+                      />
+                    ) : (
+                      ''
+                    ),
+                  )}
+                  <Form.Group inverted grouped>
+                    <label>Safety Items</label>
+                    {Object.keys(this.state.availableSafetyIncreasers).map(
+                      (field) => (
+                        <Form.Checkbox
+                          key={field}
+                          label={getFieldValue(
+                            this.state.availableSafetyIncreasers[field],
+                          )}
+                          onChange={this.handleChange(field)}
+                        />
+                      ),
+                    )}
+                  </Form.Group>
+                  <Form.Group inverted grouped>
+                    <label>Student</label>
+                    <Form.Checkbox
+                      key="isStudent"
+                      label="Is Student?"
+                      onChange={this.handleChange('isStudent')}
+                    />
+                  </Form.Group>
+                </React.Fragment>
+                <Button.Group floated="right" labelposition="left">
+                  <Button type="button" onClick={this.handleCancel}>
+                    Cancel
+                  </Button>
+                  <Button.Or />
+                  <Button
+                    type="button"
+                    onClick={this.handleSubmissionButton}
+                    positive
+                  >
+                    Submit
+                  </Button>
+                </Button.Group>
+              </Form>
+            </Modal.Content>
+          </WideModal>
+        </ActionBox>
+        <DebugBox>
+          <h3>Debug</h3>
+          <PropList>
+            <dt>Product id</dt>
+            <dd>{fields.productId}</dd>
+            <dt>Member id</dt>
+            <dd>{fields.memberId}</dd>
+          </PropList>
+        </DebugBox>
         <InsuranceTrace traceData={traceData} />
       </Wrapper>
     ) : (
       <Header>No insurance info </Header>
     )
+  }
+
+  public handleCertificateUploadedEvent = (memberId) => (e) => {
+    const formData = new FormData()
+    formData.set('file', e.target.files[0])
+    this.props.sendCertificate(formData, memberId)
+  }
+
+  public handleDateChange = (type, e, { value }) => {
+    switch (type) {
+      case ACTIVATION_DATE:
+        this.setState({
+          activationDateValue: moment(value).format('YYYY-MM-DD'),
+        })
+        break
+      case CANCELLATION_DATE:
+        this.setState({
+          cancellationDateValue: moment(value).format('YYYY-MM-DD'),
+        })
+        break
+      default:
+        throw new Error(`No such date change type "${type}"`)
+    }
+  }
+  private changeCompanyStatus = (e, { checked }) => {
+    const {
+      messages: { member },
+      changeCompanyStatus,
+    } = this.props
+    changeCompanyStatus(checked, member.memberId)
   }
 }
 
