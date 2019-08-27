@@ -52,6 +52,12 @@ export default class DetailsTab extends React.Component {
     this.handleClose()
   }
 
+  public removeSsnIfNotSignedMember = (memberInfo) => {
+    if (memberInfo.status !== 'SIGNED') {
+      memberInfo.ssn = ''
+    }
+  }
+
   public handleSubmissionButton = () => {
     const { editMemberDetails, messages } = this.props
     const submittedMember = { ...messages.member, ...this.state.member }
@@ -74,6 +80,10 @@ export default class DetailsTab extends React.Component {
     } = member || {}
 
     traceData = traceMemberInfo
+
+    {
+      this.removeSsnIfNotSignedMember(memberInfo)
+    }
 
     return member ? (
       <>
