@@ -75,12 +75,17 @@ export default class DetailsTab extends React.Component {
 
     traceData = traceMemberInfo
 
+    const memberInfoWithoutSsn = {
+      ...memberInfo,
+      ssn: memberInfo.status !== 'SIGNED' ? '' : memberInfo.ssn,
+    }
+
     return member ? (
       <>
         <Table selectable>
           <Table.Body>
             <TableFields
-              fields={memberInfo}
+              fields={memberInfoWithoutSsn}
               fieldFormatters={memberFieldFormatters}
             />
             <FraudulentStatusEdit
