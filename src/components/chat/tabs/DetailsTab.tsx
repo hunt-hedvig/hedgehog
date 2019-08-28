@@ -52,12 +52,6 @@ export default class DetailsTab extends React.Component {
     this.handleClose()
   }
 
-  public removeSsnIfNotSignedMember = (memberInfo) => {
-    if (memberInfo.status !== 'SIGNED') {
-      memberInfo.ssn = ''
-    }
-  }
-
   public handleSubmissionButton = () => {
     const { editMemberDetails, messages } = this.props
     const submittedMember = { ...messages.member, ...this.state.member }
@@ -81,16 +75,14 @@ export default class DetailsTab extends React.Component {
 
     traceData = traceMemberInfo
 
-    {
-      this.removeSsnIfNotSignedMember(memberInfo)
-    }
+    const memberInfoWithoutSsn = { ...memberInfo, ssn: memberInfo.status !== 'SIGNED' ? "" : memberInfo.ssn }
 
     return member ? (
       <>
         <Table selectable>
           <Table.Body>
             <TableFields
-              fields={memberInfo}
+              fields={memberInfoWithoutSsn}
               fieldFormatters={memberFieldFormatters}
             />
             <FraudulentStatusEdit
