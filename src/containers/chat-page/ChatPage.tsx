@@ -1,15 +1,10 @@
 import Chat from 'components/chat'
-import { PageContainer } from 'components/shared'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import actions from 'store/actions'
 
-const ChatPage = (props) => (
-  <PageContainer>
-    <Chat {...props} />
-  </PageContainer>
-)
+const ChatPage = (props) => <Chat {...props} />
 
 const mapStateToProps = ({
   messages,

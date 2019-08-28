@@ -26,7 +26,10 @@ export default class MessagesList extends React.Component {
     /* eslint-disable */
     setTimeout(() => {
       const list = this.messagesList
-      this.messagesList.scrollTop = list ? list.scrollHeight : 0
+      if (!list) {
+        return
+      }
+      list.scrollTop = list ? list.scrollHeight : 0
       const id = this.props.messageId
       const msgNode = document.getElementById(`msg-${id}`)
       if (id && msgNode) {
@@ -34,7 +37,7 @@ export default class MessagesList extends React.Component {
       }
     })
     /* eslint-enable */
-  }   
+  }
 
   public render() {
     const { messages, error } = this.props

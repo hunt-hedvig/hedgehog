@@ -163,6 +163,7 @@ function* modifyInsuranceFlow({ memberId, request }) {
     )
 
     yield put(modifyInsuranceSuccess(response.data))
+    window.location.reload() // Sorry
   } catch (error) {
     yield [
       put(

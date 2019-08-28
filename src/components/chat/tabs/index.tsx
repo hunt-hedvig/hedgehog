@@ -48,13 +48,13 @@ const memberPagePanes = (props, addMessage, socket) => {
       render: () => <TabItem props={props} TabContent={ClaimsTab} />,
     },
     {
-      menuItem: "Files",
+      menuItem: 'Files',
       render: () => <TabItem props={props} TabContent={MemberFile} />,
     }, 
     {
       menuItem: "Debt",
       render: () => <TabItem props={props} TabContent={MemberDebtComponent} />
-    }
+    },
   ]
   if (props.showChatTab) {
     panes.push({
