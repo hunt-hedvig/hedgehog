@@ -178,7 +178,9 @@ const OverallDebtProfileTable: React.FunctionComponent<
         <Table.Cell>{debt.numberPublicDebts}</Table.Cell>
         <Table.Cell>{formatMoneySE(debt.totalAmountPrivateDebt)}</Table.Cell>
         <Table.Cell>{debt.numberPrivateDebts}</Table.Cell>
-        <Table.Cell>{dateTimeFormatter(debt.fromDateTime, 'yyyy-MM-dd')}</Table.Cell>
+        <Table.Cell>
+          {dateTimeFormatter(debt.fromDateTime, 'yyyy-MM-dd')}
+        </Table.Cell>
       </Table.Row>
     </Table.Body>
   </Table>
@@ -214,71 +216,80 @@ export class MemberDebtComponent extends React.Component<
             }
             return (
               <>
-                <PersonStatusWrapper>
-                  <div>
-                    Member flag:{' '}
-                    {data.member.person.status.flag === Flag.GREEN ? (
-                      <GreenFlagWrapper>
-                        {data.member.person.status.flag}
-                      </GreenFlagWrapper>
-                    ) : (
-                      <RedFlagWrapper>
-                        {data.member.person.status.flag}
-                      </RedFlagWrapper>
-                    )}
-                  </div>
-                </PersonStatusWrapper>
-                <PersonStatusWrapper>
-                  <div>
-                    Member status:{' '}
-                    {data.member.person.status.whitelisted
-                      ? 'Whitelisted'
-                      : 'Not Whitelisted'}
-                  </div>
-                </PersonStatusWrapper>
-                <OverallDebtProfileTable debt={data.member.person.debt} />
-                <PaymentDefaultsTable
-                  paymentDefaults={data.member.person.debt.paymentDefaults}
-                />
-                {!data.member.person.status.whitelisted &&
-                data.member.person.debt.paymentDefaults.length !== 0 ? (
-                  <ButtonWrapper>
-                    <Mutation
-                      mutation={whitelistMember}
-                      refetchQueries={() => [
-                        {
-                          query,
-                          variables: { memberId: this.props.match.params.id },
-                        },
-                      ]}
-                    >
-                      {(mutation, { loading }) => {
-                        return (
-                          <Button
-                            disabled={loading}
-                            onClick={
-                              this.state.confirming
-                                ? () => {
-                                    if (loading) {
-                                      return
-                                    }
-                                    this.handleClick(mutation)
-                                  }
-                                : this.confirm
-                            }
-                          >
-                            {this.state.confirming
-                              ? "Yes, I'm sure"
-                              : 'White List Member'}
-                          </Button>
-                        )
-                      }}
-                    </Mutation>
-                    {this.state.confirming ? (
-                      <ConfirmMessage>Are you sure?</ConfirmMessage>
+                {data.member.person === null ? (
+                  'Issue retrieving debt for this member'
+                ) : (
+                  <>
+                    (
+                    <PersonStatusWrapper>
+                      <div>
+                        Member flag:{' '}
+                        {data.member.person.status.flag === Flag.GREEN ? (
+                          <GreenFlagWrapper>
+                            {data.member.person.status.flag}
+                          </GreenFlagWrapper>
+                        ) : (
+                          <RedFlagWrapper>
+                            {data.member.person.status.flag}
+                          </RedFlagWrapper>
+                        )}
+                      </div>
+                    </PersonStatusWrapper>
+                    <PersonStatusWrapper>
+                      <div>
+                        Member status:{' '}
+                        {data.member.person.status.whitelisted
+                          ? 'Whitelisted'
+                          : 'Not Whitelisted'}
+                      </div>
+                    </PersonStatusWrapper>
+                    <OverallDebtProfileTable debt={data.member.person.debt} />
+                    <PaymentDefaultsTable
+                      paymentDefaults={data.member.person.debt.paymentDefaults}
+                    />
+                    {!data.member.person.status.whitelisted &&
+                    data.member.person.debt.paymentDefaults.length !== 0 ? (
+                      <ButtonWrapper>
+                        <Mutation
+                          mutation={whitelistMember}
+                          refetchQueries={() => [
+                            {
+                              query,
+                              variables: {
+                                memberId: this.props.match.params.id,
+                              },
+                            },
+                          ]}
+                        >
+                          {(mutation, { loading }) => {
+                            return (
+                              <Button
+                                disabled={loading}
+                                onClick={
+                                  this.state.confirming
+                                    ? () => {
+                                        if (loading) {
+                                          return
+                                        }
+                                        this.handleClick(mutation)
+                                      }
+                                    : this.confirm
+                                }
+                              >
+                                {this.state.confirming
+                                  ? "Yes, I'm sure"
+                                  : 'White List Member'}
+                              </Button>
+                            )
+                          }}
+                        </Mutation>
+                        {this.state.confirming ? (
+                          <ConfirmMessage>Are you sure?</ConfirmMessage>
+                        ) : null}
+                      </ButtonWrapper>
                     ) : null}
-                  </ButtonWrapper>
-                ) : null}
+                  </>
+                )}
               </>
             )
           }}
