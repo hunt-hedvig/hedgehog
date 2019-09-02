@@ -216,11 +216,10 @@ export class MemberDebtComponent extends React.Component<
             }
             return (
               <>
-                {data.member.person === null ? (
+                {data.member === null || data.member.person === null ? (
                   'Issue retrieving debt for this member'
                 ) : (
                   <>
-                    (
                     <PersonStatusWrapper>
                       <div>
                         Member flag:{' '}
