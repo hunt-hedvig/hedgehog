@@ -216,7 +216,7 @@ export class MemberDebtComponent extends React.Component<
             }
             return (
               <>
-                {data.member === null || data.member.person === null ? (
+                {!data.member || !data.member.person ? (
                   'Issue retrieving debt for this member'
                 ) : (
                   <>
