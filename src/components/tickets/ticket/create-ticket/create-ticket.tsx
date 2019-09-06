@@ -86,7 +86,6 @@ class CreateNewTicket extends React.Component<
                         remindNotificationTime: this.state.remindTime,
                         remindMessage: this.state.remindMessage,
                         description: this.state.description,
-                        status: 'WAITING',
                       },
                     },
                     refetchQueries: [{ query: GET_TICKETS }],
