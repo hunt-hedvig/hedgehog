@@ -112,11 +112,6 @@ class App extends React.Component {
                       component={Routes.ToolsPageRoute}
                     />
                     <Routes.PrivateRoute
-                      path="/pricing"
-                      store={store}
-                      component={Routes.PricingPageRoute}
-                    />
-                    <Routes.PrivateRoute
                       path="/taskmanager"
                       store={store}
                       component={Routes.TaskManagerPageRoute}

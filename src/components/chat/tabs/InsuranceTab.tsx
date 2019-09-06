@@ -378,6 +378,56 @@ export default class InsuranceTab extends React.Component {
           </WideModal>
         </ActionBox>
         <ActionBox>
+          <ActionHeadline>Activation Date</ActionHeadline>
+          {this.state.activationDatePickerEnabled ? (
+            <>
+              <SpacedBottom>
+                <DateInput
+                  changeHandler={this.handleDateChange}
+                  changeType={ACTIVATION_DATE}
+                />
+              </SpacedBottom>
+              <Button
+                onClick={() => {
+                  this.props.saveInsuranceDate(
+                    this.state.activationDateValue,
+                    ACTIVATION_DATE,
+                    fields.memberId,
+                    fields.productId,
+                  )
+                  this.setState({ activationDatePickerEnabled: false })
+                }}
+              >
+                Save
+              </Button>
+              <Button
+                onClick={() => {
+                  this.setState((state) => ({
+                    activationDatePickerEnabled: !state.activationDatePickerEnabled,
+                  }))
+                }}
+              >
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <>
+              <SpacedBottom>
+                {activeDate ? activeDate.replace(/T.*$/, '') : <em>Not set</em>}
+              </SpacedBottom>
+              <HedvigStyledButton
+                onClick={() => {
+                  this.setState((state) => ({
+                    activationDatePickerEnabled: !state.activationDatePickerEnabled,
+                  }))
+                }}
+              >
+                <Icon name="edit" /> Edit
+              </HedvigStyledButton>
+            </>
+          )}
+        </ActionBox>
+        <ActionBox>
           <ActionHeadline>Cancellation Date</ActionHeadline>
           {this.state.cancellationDatePickerEnabled ? (
             <>
@@ -423,56 +473,6 @@ export default class InsuranceTab extends React.Component {
                 onClick={() => {
                   this.setState((state) => ({
                     cancellationDatePickerEnabled: !state.cancellationDatePickerEnabled,
-                  }))
-                }}
-              >
-                <Icon name="edit" /> Edit
-              </HedvigStyledButton>
-            </>
-          )}
-        </ActionBox>
-        <ActionBox>
-          <ActionHeadline>Activation Date</ActionHeadline>
-          {this.state.activationDatePickerEnabled ? (
-            <>
-              <SpacedBottom>
-                <DateInput
-                  changeHandler={this.handleDateChange}
-                  changeType={ACTIVATION_DATE}
-                />
-              </SpacedBottom>
-              <Button
-                onClick={() => {
-                  this.props.saveInsuranceDate(
-                    this.state.activationDateValue,
-                    ACTIVATION_DATE,
-                    fields.memberId,
-                    fields.productId,
-                  )
-                  this.setState({ activationDatePickerEnabled: false })
-                }}
-              >
-                Save
-              </Button>
-              <Button
-                onClick={() => {
-                  this.setState((state) => ({
-                    activationDatePickerEnabled: !state.activationDatePickerEnabled,
-                  }))
-                }}
-              >
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <>
-              <SpacedBottom>
-                {activeDate ? activeDate.replace(/T.*$/, '') : <em>Not set</em>}
-              </SpacedBottom>
-              <HedvigStyledButton
-                onClick={() => {
-                  this.setState((state) => ({
-                    activationDatePickerEnabled: !state.activationDatePickerEnabled,
                   }))
                 }}
               >

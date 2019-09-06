@@ -8,7 +8,7 @@ import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { MonetaryAmount } from 'src/components/claims/claim-details/components/ClaimPayments'
+import { MonetaryAmount } from 'src/lib/helpers'
 import actions from 'store/actions'
 
 const query = gql`
