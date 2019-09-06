@@ -7,7 +7,6 @@ import LoginPageRoute from 'routes/LoginPageRoute'
 import LoginProcessPageRoute from 'routes/LoginProcessPageRoute'
 import MemberInsurancePageRoute from 'routes/MemberInsurancePageRoute'
 import MembersPageRoute from 'routes/MembersPageRoute'
-import PricingPageRoute from 'routes/PricingPageRoute'
 import PrivateRoute from 'routes/PrivateRoute'
 import QuestionsPageRoute from 'routes/QuestionsPageRoute'
 import TaskManagerPageRoute from 'routes/TaskManagerPageRoute'
@@ -27,7 +26,6 @@ export default {
   BourdereauPageRoute,
   ToolsPageRoute,
   PrivateRoute,
-  PricingPageRoute,
   TaskManagerPageRoute,
   TicketHistoryPageRoute,
 }

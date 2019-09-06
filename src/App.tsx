@@ -106,11 +106,6 @@ class App extends React.Component {
                       store={store}
                       component={Routes.BourdereauPageRoute}
                     />
-<Routes.PrivateRoute
-path="/taskmanager"
-store={store}
-component={Routes.TaskManagerPageRoute}
-/>
                     <Routes.PrivateRoute
                       path="/tools"
                       store={store}
