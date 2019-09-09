@@ -481,7 +481,6 @@ export default class InsuranceTab extends React.Component {
             </>
           )}
         </ActionBox>
-
         <DebugBox>
           <ActionHeadline>Debug</ActionHeadline>
           <PropList>

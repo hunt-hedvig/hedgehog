@@ -139,6 +139,10 @@ export class VerticalMenuComponent extends React.Component<
               <MenuIcon className="fa fa-exclamation" />
               <MenuText collapsed={this.state.isCollapsed}>Claims</MenuText>
             </MenuItem>
+            <MenuItem to="/taskmanager">
+              <MenuIcon className="fa fa-clipboard-check" />
+              <MenuText collapsed={this.state.isCollapsed}>Tickets</MenuText>
+            </MenuItem>
             <MenuItem to="/tools">
               <MenuIcon className="fa fa-toolbox" />
               <MenuText collapsed={this.state.isCollapsed}>Tools</MenuText>

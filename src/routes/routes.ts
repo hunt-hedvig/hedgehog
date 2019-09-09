@@ -26,6 +26,12 @@ export const reactPageRoutes = [
   { path: '/questions/**', Component: Routes.QuestionsPageRoute, exact: true },
   { path: '/questions', Component: Routes.QuestionsPageRoute, exact: true },
   { path: '/charges', Component: Routes.ChargePageRoute, exact: true },
+  { path: '/taskmanager', Component: Routes.TaskManagerPageRoute, exact: true },
+  {
+    path: '/ticket_history/:id',
+    Component: Routes.TicketHistoryPageRoute,
+    exact: true,
+  },
   { path: '/dashboard', Component: Routes.DashboardPageRoute, exact: true },
   { path: '/tools', Component: Routes.ToolsPageRoute, exact: true },
 ]

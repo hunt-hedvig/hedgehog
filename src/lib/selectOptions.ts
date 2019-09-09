@@ -53,6 +53,11 @@ export const routesList = [
     route: '/BDX',
     type: 'BDX',
   },
+  {
+    text: 'Task Manager',
+    route: '/taskmanager',
+    type: 'TASK_MANAGER',
+  },
 ]
 
 export const claimStatus = [

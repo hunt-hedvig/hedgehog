@@ -9,6 +9,8 @@ import MemberInsurancePageRoute from 'routes/MemberInsurancePageRoute'
 import MembersPageRoute from 'routes/MembersPageRoute'
 import PrivateRoute from 'routes/PrivateRoute'
 import QuestionsPageRoute from 'routes/QuestionsPageRoute'
+import TaskManagerPageRoute from 'routes/TaskManagerPageRoute'
+import TicketHistoryPageRoute from 'routes/TicketHistoryPageRoute'
 import { ToolsPageRoute } from 'routes/ToolsPageRoute'
 
 export default {
@@ -24,4 +26,6 @@ export default {
   BourdereauPageRoute,
   ToolsPageRoute,
   PrivateRoute,
+  TaskManagerPageRoute,
+  TicketHistoryPageRoute,
 }
