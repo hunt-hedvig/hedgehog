@@ -41,6 +41,11 @@ const TicketBodyCss = styled('div')`
   );
 `
 
+const StyledPre = styled('pre')`
+  font-family: inherit;
+  margin: 0;
+`
+
 interface ITicketBody {
   id: string
   assignedTo: string
@@ -189,7 +194,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
             <strong>Description</strong>
           </Segment>
           <Segment compact textAlign="left">
-            {this.props.description.replace(/\n/g, '<br />')}
+            <StyledPre>{this.props.description}</StyledPre>
           </Segment>
 
           {this.props.referenceId && this.props.referenceId.length > 0
