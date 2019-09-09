@@ -189,7 +189,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
             <strong>Description</strong>
           </Segment>
           <Segment compact textAlign="left">
-            {this.props.description}
+            {this.props.description.replace(/\n/g, '<br />')}
           </Segment>
 
           {this.props.referenceId && this.props.referenceId.length > 0
