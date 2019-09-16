@@ -47,7 +47,7 @@ export enum TicketStatus {
   WAITING = 'WAITING',
   WORKING_ON = 'WORKING_ON',
   RESOLVED = 'RESOLVED',
-  ON_HOLD = 'ON HOLD',
+  ON_HOLD = 'ON_HOLD',
 }
 
 export const TICKET_STATUS = [

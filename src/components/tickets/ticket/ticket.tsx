@@ -42,8 +42,8 @@ const SmallText = styled('div')`
 `
 
 const GET_MEMBER_NAME_QUERY = gql`
-  query GetMember($id: ID!) {
-    member(id: $id) {
+  query GetMember($memberId: ID!) {
+    member(id: $memberId) {
       firstName
       lastName
     }
@@ -94,45 +94,47 @@ export class Ticket extends React.Component<ITicket, {}> {
               </Grid.Row>
               {this.props.memberId ? (
                 <Grid.Row>
-                  <strong>Member: </strong>
-                  <Query
-                    query={GET_MEMBER_NAME_QUERY}
-                    variables={{ memberId: this.props.memberId }}
-                  >
-                    {({ loading, error, data }) => {
-                      if (loading) {
-                        return <>Loading...</>
-                      }
-                      if (error) {
-                        return <>Error</>
-                      }
-                      return (
-                        <>
-                          {data.firstName} {data.lastName}
-                        </>
-                      )
-                    }}
-                  </Query>
+                  <SmallText>
+                    <strong>Member: </strong>
+                    <Query
+                      query={GET_MEMBER_NAME_QUERY}
+                      variables={{ memberId: this.props.memberId }}
+                    >
+                      {({ loading, error, data }) => {
+                        if (loading) {
+                          return <>Loading...</>
+                        }
+                        if (error) {
+                          return <>Error</>
+                        }
+                        return (
+                          <>
+                            {data.member.firstName} {data.member.lastName}
+                          </>
+                        )
+                      }}
+                    </Query>
+                  </SmallText>
                 </Grid.Row>
               ) : null}
             </Grid.Column>
 
             <Grid.Column width={5}>
               <Grid.Row>
-                <>
+                <SmallText>
                   <strong>Created at: </strong>{' '}
                   {this.props.createdAt.slice(0, 19).replace('T', ' ')}
-                </>
+                </SmallText>
               </Grid.Row>
               <Grid.Row>
                 {this.props.reminder && this.props.reminder.date ? (
-                  <>
+                  <SmallText>
                     <strong>Remind: </strong>
                     {getReminderTimeInWords(
                       this.props.reminder.date,
                       this.props.reminder.time,
                     )}
-                  </>
+                  </SmallText>
                 ) : null}
               </Grid.Row>
             </Grid.Column>
