@@ -47,11 +47,13 @@ export enum TicketStatus {
   WAITING = 'WAITING',
   WORKING_ON = 'WORKING_ON',
   RESOLVED = 'RESOLVED',
+  ON_HOLD = 'ON HOLD',
 }
 
 export const TICKET_STATUS = [
   { text: 'Waiting', value: TicketStatus.WAITING },
   { text: 'Working on', value: TicketStatus.WORKING_ON },
+  { text: 'On hold', value: TicketStatus.ON_HOLD },
   { text: 'Resolved', value: TicketStatus.RESOLVED },
 ]
 
@@ -61,6 +63,8 @@ export const lookupStatus = (statusValue: TicketStatus): string => {
       return 'Resolved'
     case TicketStatus.WAITING:
       return 'Waiting'
+    case TicketStatus.ON_HOLD:
+      return 'On hold'
     case TicketStatus.WORKING_ON:
       return 'Working on'
     default:

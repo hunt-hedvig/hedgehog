@@ -21,7 +21,7 @@ interface ITicketRevision {
 
 export class TicketRevision extends React.Component<ITicketRevision, {}> {
   public state = {
-    showDetails: false,
+    hideDetails: false,
   }
 
   public render() {
@@ -37,7 +37,7 @@ export class TicketRevision extends React.Component<ITicketRevision, {}> {
           onClick={this.toggleShowDetails}
           floated="right"
         >
-          {this.state.showDetails ? 'Hide details' : 'Show details'}
+          {this.state.hideDetails ? 'Hide details' : 'Show details'}
         </Button>
         <Segment.Group horizontal>
           <Segment>
@@ -54,7 +54,7 @@ export class TicketRevision extends React.Component<ITicketRevision, {}> {
           </Segment>
         </Segment.Group>
         <Segment>
-          {this.state.showDetails
+          {this.state.hideDetails
             ? this.renderTicketDetails(this.props.changeType)
             : null}
         </Segment>
@@ -64,8 +64,8 @@ export class TicketRevision extends React.Component<ITicketRevision, {}> {
 
   private toggleShowDetails = (event) => {
     event.preventDefault()
-    const newState = !this.state.showDetails
-    this.setState({ showDetails: newState })
+    const newState = !this.state.hideDetails
+    this.setState({ hideDetails: newState })
   }
 
   private renderTicketDetails = (changeType) => {
