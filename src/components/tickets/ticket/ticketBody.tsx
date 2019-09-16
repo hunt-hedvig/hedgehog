@@ -40,6 +40,7 @@ const TicketBodyCss = styled('div')`
 const StyledPre = styled('pre')`
   font-family: inherit;
   margin: 0;
+  white-space: pre-line;
 `
 
 interface ITicketBody {
@@ -74,7 +75,7 @@ interface ITicketBodyState {
   redirect: boolean
 }
 
-export const IM_ON_IT = gql`
+export const IM_ON_IT_MUTATION = gql`
   mutation ImOnIt(
     $ticketId: ID!
     $teamMemberId: ID!
@@ -247,7 +248,7 @@ export class TicketBody extends React.Component<
             )}
           </Mutation>
         ) : (
-          <Mutation mutation={IM_ON_IT}>
+          <Mutation mutation={IM_ON_IT_MUTATION}>
             {(imOnIt) => (
               <Button secondary={true} onClick={() => this.imOnItClick(imOnIt)}>
                 I'm on it

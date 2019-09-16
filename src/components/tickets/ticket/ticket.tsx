@@ -41,7 +41,7 @@ const SmallText = styled('div')`
   font-size: 0.8em;
 `
 
-const GET_MEMBER_QUERY = gql`
+const GET_MEMBER_NAME_QUERY = gql`
   query GetMember($id: ID!) {
     member(id: $id) {
       firstName
@@ -96,7 +96,7 @@ export class Ticket extends React.Component<ITicket, {}> {
                 <Grid.Row>
                   <strong>Member: </strong>
                   <Query
-                    query={GET_MEMBER_QUERY}
+                    query={GET_MEMBER_NAME_QUERY}
                     variables={{ memberId: this.props.memberId }}
                   >
                     {({ loading, error, data }) => {

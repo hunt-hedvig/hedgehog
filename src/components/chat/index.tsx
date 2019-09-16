@@ -71,8 +71,8 @@ export default class Chat extends React.Component {
     } = this.props
 
     reconnect({ messageReceived, showNotification }, id, client.id).then(
-      (reslut) => {
-        const { stompClient, subscription } = reslut
+      (result) => {
+        const { stompClient, subscription } = result
         this.setState({ socket: stompClient, subscription })
         setActiveConnection(stompClient)
       },
