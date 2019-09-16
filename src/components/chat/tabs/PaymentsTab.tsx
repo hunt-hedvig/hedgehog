@@ -152,6 +152,7 @@ class PaymentsTab extends React.Component {
   public render() {
     return (
       <React.Fragment>
+
         <Query query={GET_MEMBER_QUERY} variables={this.variables}>
           {({ loading, error, data }) => {
             if (error) {

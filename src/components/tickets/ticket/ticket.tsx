@@ -1,8 +1,10 @@
+import { gql } from 'apollo-boost'
 import formatDistance from 'date-fns/formatDistance'
 import isAfter from 'date-fns/isAfter'
 import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
 import React from 'react'
+import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { Button, Grid, Popup } from 'semantic-ui-react'
 import {
@@ -38,9 +40,19 @@ const Card = styled('div')`
 const SmallText = styled('div')`
   font-size: 0.8em;
 `
+
+const GET_MEMBER_NAME_QUERY = gql`
+  query GetMember($id: ID!) {
+    member(id: $id) {
+      firstName
+      lastName
+    }
+  }
+`
+
 export class Ticket extends React.Component<ITicket, {}> {
   public state = {
-    showBody: false,
+    showBody: true,
   }
 
   public render() {
@@ -71,31 +83,56 @@ export class Ticket extends React.Component<ITicket, {}> {
             </Grid.Column>
 
             <Grid.Column width={3}>
-              <strong>Priority: </strong>
+              <strong>Priority:</strong>
               <ColorIndicator percentage={this.props.priority} />
             </Grid.Column>
 
             <Grid.Column width={4}>
-              <strong>Assigned to: </strong>
-              {lookupTeamMemberName(this.props.assignedTo)}
+              <Grid.Row>
+                <strong>Assigned to: </strong>
+                {lookupTeamMemberName(this.props.assignedTo)}
+              </Grid.Row>
+              {this.props.memberId ? (
+                <Grid.Row>
+                  <strong>Member: </strong>
+                  <Query
+                    query={GET_MEMBER_NAME_QUERY}
+                    variables={{ memberId: this.props.memberId }}
+                  >
+                    {({ loading, error, data }) => {
+                      if (loading) {
+                        return <>Loading...</>
+                      }
+                      if (error) {
+                        return <>Error</>
+                      }
+                      return (
+                        <>
+                          {data.firstName} {data.lastName}
+                        </>
+                      )
+                    }}
+                  </Query>
+                </Grid.Row>
+              ) : null}
             </Grid.Column>
 
             <Grid.Column width={5}>
               <Grid.Row>
-                <SmallText>
+                <>
                   <strong>Created at: </strong>{' '}
                   {this.props.createdAt.slice(0, 19).replace('T', ' ')}
-                </SmallText>
+                </>
               </Grid.Row>
               <Grid.Row>
                 {this.props.reminder && this.props.reminder.date ? (
-                  <SmallText>
+                  <>
                     <strong>Remind: </strong>
                     {getReminderTimeInWords(
                       this.props.reminder.date,
                       this.props.reminder.time,
                     )}
-                  </SmallText>
+                  </>
                 ) : null}
               </Grid.Row>
             </Grid.Column>
