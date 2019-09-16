@@ -13,6 +13,7 @@ export const createOptionsArray = (array: IOption[]): IOption[] => {
 }
 
 export const IEX_TEAM_MEMBERS_OPTIONS = [
+  { text: 'Unassigned', value: null },
   { text: 'Tomas', value: 'tomas@hedvig.com' },
   { text: 'Kalle', value: 'karl.jernberg@hedvig.com' },
   { text: 'Emma', value: 'emma@hedvig.com' },
@@ -28,7 +29,6 @@ export const IEX_TEAM_MEMBERS_OPTIONS = [
   { text: 'Karl', value: 'karl@hedvig.com' },
   { text: 'Johanna', value: 'johanna@hedvig.com' },
   { text: 'Axel', value: 'axel.bryhn@hedvig.com' },
-  { text: 'Unassigned', value: null },
 ]
 
 // Purely for making it easier to read in the UI:
