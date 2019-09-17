@@ -17,6 +17,7 @@ class MessageResponseForm extends React.Component<IMessageResponseForm, {}> {
         {(questionIsDone) => {
           return (
             <Button
+              primary={true}
               onClick={(event) => {
                 event.preventDefault()
                 questionIsDone({

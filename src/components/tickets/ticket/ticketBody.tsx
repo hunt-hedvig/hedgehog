@@ -340,7 +340,7 @@ export class TicketBody extends React.Component<
         return <Redirector route={route} redirectText="Go to chat" />
       }
       default:
-        return <></>
+        return null
     }
   }
 
