@@ -1,3 +1,4 @@
+import {ExtraBuilding} from "components/chat/tabs/InsuranceTab"
 import { LinkRow } from 'components/shared'
 import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
@@ -21,6 +22,21 @@ const DateTypeEnum = {
 }
 
 export default class InsuranceList extends React.Component {
+  public insuranceFieldFormatters = {
+    extraBuildings: (buildings: ExtraBuilding[]) => (
+      <>
+        {buildings.map((building) => (
+          <p>
+            {building.type} {building.area} m<sup>2</sup> (
+            {building.hasWaterConnected
+              ? 'has water connected'
+              : 'no water connected'}
+            )
+          </p>
+        ))}
+      </>
+    ),
+  }
   constructor(props) {
     super(props)
     this.state = {
@@ -199,7 +215,10 @@ export default class InsuranceList extends React.Component {
             <Header> Selected Insurance </Header>
             <Table>
               <Table.Body>
-                <TableFields fields={this.state.item} />
+                <TableFields
+                  fields={this.state.item}
+                  fieldFormatters={this.insuranceFieldFormatters}
+                />
               </Table.Body>
               <Table.Footer fullWidth>
                 <Table.Row>
@@ -261,7 +280,9 @@ export default class InsuranceList extends React.Component {
                               positive
                             >
                               {this.props.insurance.requesting ? (
-                                <><Loader /> Loading</>
+                                <>
+                                  <Loader /> Loading
+                                </>
                               ) : (
                                 'Submit'
                               )}

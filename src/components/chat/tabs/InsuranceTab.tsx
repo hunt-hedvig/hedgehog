@@ -12,6 +12,19 @@ import styled from 'react-emotion'
 import { Button, Form, Header, Icon, Modal, Radio } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
+export enum ExtraBuildingType {
+  GARAGE = 'GARAGE',
+  ATTEFALL = 'ATTEFALL',
+  FRIGGEBOD = 'FRIGGEBOD',
+  OTHER = 'OTHER',
+}
+
+export interface ExtraBuilding {
+  type: ExtraBuildingType
+  area: number
+  hasWaterConnected: boolean
+}
+
 const Wrapper = styled('div')({
   display: 'flex',
   flexDirection: 'row',
@@ -92,6 +105,9 @@ const ButtonLink = HedvigStyledButton.withComponent('a')
 const FileButton = styled(HedvigStyledButton)({
   marginLeft: 8,
 }).withComponent('label')
+const ExtraBuildingsForm = styled('div')`
+  margin-bottom: 15px;
+`
 
 const timeStringToDistance = (timeString: string) =>
   formatDistance(
@@ -114,8 +130,15 @@ export default class InsuranceTab extends React.Component {
     },
     safetyIncreasers: [],
     isStudent: true,
+    isSubleted:
+      this.props.insurance.data.isSubleted !== undefined
+        ? this.props.insurance.data.isSubleted
+        : false,
     activationDatePickerEnabled: false,
     cancellationDatePickerEnabled: false,
+    extraBuildings: [
+      ...this.props.insurance.data.extraBuildings,
+    ] as ExtraBuilding[],
   }
   private fileInputRef = React.createRef<HTMLInputElement>()
 
@@ -125,6 +148,11 @@ export default class InsuranceTab extends React.Component {
     this.setState({ modalOpen: false })
     this.setState({ insurance: [] })
     this.setState({ safetyIncreasers: [] })
+    this.setState({
+      extraBuildings: [
+        ...this.props.insurance.data.extraBuildings,
+      ] as ExtraBuilding[],
+    })
   }
 
   public shouldBeDisplayed = (field) => {
@@ -134,9 +162,12 @@ export default class InsuranceTab extends React.Component {
       case 'street':
       case 'city':
       case 'zipcode':
-      case 'floor':
       case 'livingspace':
         return true
+      case 'ancillaryarea':
+      case 'yearofconstruction':
+      case 'numberofbathrooms':
+        return this.isModifyingHouseInsurance()
       default:
         return false
     }
@@ -161,6 +192,9 @@ export default class InsuranceTab extends React.Component {
         this.setState({ isStudent: !this.state.isStudent })
         insurance[field] = this.state.isStudent
         break
+      case 'isSubleted':
+        this.setState({ isSubleted: !this.state.isSubleted })
+        break
       default:
         insurance[field] = e.target.value
         break
@@ -174,9 +208,107 @@ export default class InsuranceTab extends React.Component {
 
   public handleSubmissionButton = () => {
     const { createModifiedInsurance, insurance } = this.props
-    const submittedInsurance = { ...insurance.data, ...this.state.insurance }
-    createModifiedInsurance(insurance.data.memberId, submittedInsurance)
+    const submittedInsurance = {
+      ...insurance.data,
+      ...this.state.insurance,
+      extraBuildings: this.state.extraBuildings,
+      isSubleted: this.state.isSubleted,
+    }
     this.handleClose()
+    createModifiedInsurance(insurance.data.memberId, submittedInsurance)
+  }
+
+  public addExtraBuilding = () => {
+    let { extraBuildings } = this.state
+    if (extraBuildings === undefined) {
+      extraBuildings = [] as ExtraBuilding[]
+    }
+    extraBuildings.push({
+      type: ExtraBuildingType.OTHER,
+      area: 0,
+      hasWaterConnected: false,
+    })
+    this.setState({ extraBuildings })
+  }
+
+  public getExtraBuildings = () => {
+    const { extraBuildings } = this.state
+    return (
+      <>
+        {extraBuildings.map((extraBuilding, index) => {
+          return (
+            <>
+              <h4>Extra building {index + 1}</h4>
+              <ExtraBuildingsForm>
+                <Form.Dropdown
+                  label="Type:"
+                  selection
+                  options={Object.values(ExtraBuildingType).map(
+                    (type, optionIndex) => {
+                      return {
+                        key: optionIndex,
+                        text: type,
+                        value: type,
+                      }
+                    },
+                  )}
+                  defaultValue={extraBuilding.type}
+                  onChange={(__, { value }) =>
+                    this.handleExtraBuildingTypeChange(index, value)
+                  }
+                />
+                <Form.Input
+                  type="number"
+                  label={'Area'}
+                  defaultValue={extraBuilding.area}
+                  onChange={this.handleExtraBuildingChange('area', index)}
+                />
+              </ExtraBuildingsForm>
+              <Form.Checkbox
+                label="Has water connected?"
+                onChange={this.handleExtraBuildingChange(
+                  'hasWaterConnected',
+                  index,
+                )}
+                defaultChecked={extraBuilding.hasWaterConnected}
+              />
+            </>
+          )
+        })}
+      </>
+    )
+  }
+
+  public isModifyingHouseInsurance = () => {
+    const insuranceToBeSubmitted = {
+      ...this.props.insurance.data,
+      ...this.state.insurance,
+    }
+    return insuranceToBeSubmitted.insuranceType === 'HOUSE'
+  }
+
+  public hasHouseInsurance = () => {
+    const { data } = this.props.insurance
+    return data.insuranceType === 'HOUSE'
+  }
+
+  public handleExtraBuildingChange = (key, index) => (e) => {
+    const { extraBuildings } = this.state
+    switch (key) {
+      case 'area':
+        extraBuildings[index].area = +e.target.value
+        break
+      case 'hasWaterConnected':
+        extraBuildings[index].hasWaterConnected = !extraBuildings[index][key]
+        break
+      default:
+        throw new Error(`No such extra building property "${key}"`)
+    }
+  }
+
+  public handleExtraBuildingTypeChange = (index, value) => {
+    const { extraBuildings } = this.state
+    extraBuildings[index].type = value
   }
 
   public render() {
@@ -220,10 +352,40 @@ export default class InsuranceTab extends React.Component {
           <PropList>
             <dt>Type</dt>
             <dd>{fields.insuranceType}</dd>
-            <dt>SQM</dt>
-            <dd>{fields.livingSpace}</dd>
             <dt>Persons in household</dt>
             <dd>{fields.personsInHouseHold}</dd>
+            <dt>Living space</dt>
+            <dd>
+              {fields.livingSpace} m<sup>2</sup>
+            </dd>
+            {this.hasHouseInsurance() ? (
+              <>
+                <dt>Ancillary area</dt>
+                <dd>
+                  {fields.ancillaryArea} m<sup>2</sup>
+                </dd>
+                <dt>Year of construction</dt>
+                <dd>{fields.yearOfConstruction}</dd>
+                <dt>Number of bathrooms</dt>
+                <dd>{fields.numberOfBathrooms}</dd>
+                <dt>Is subleted</dt>
+                <dd>{fields.isSubleted ? 'Yes' : 'No'}</dd>
+                {fields.extraBuildings.map((extraBuilding, index) => (
+                  <>
+                    <dt>Extra building {index + 1}</dt>
+                    <dd>
+                      {extraBuilding.type} {extraBuilding.area} m<sum>2</sum> (
+                      {extraBuilding.hasWaterConnected
+                        ? 'has water connected'
+                        : 'no water connected'}
+                      )
+                    </dd>
+                  </>
+                ))}
+              </>
+            ) : (
+              ''
+            )}
           </PropList>
         </Box>
         <Box>
@@ -337,28 +499,36 @@ export default class InsuranceTab extends React.Component {
                       ''
                     ),
                   )}
-                  <Form.Group inverted grouped>
-                    <label>Safety Items</label>
-                    {Object.keys(this.state.availableSafetyIncreasers).map(
-                      (field) => (
+                  {!this.isModifyingHouseInsurance() ? (
+                    <>
+                      <Form.Group inverted grouped>
+                        <label>Student</label>
                         <Form.Checkbox
-                          key={field}
-                          label={getFieldValue(
-                            this.state.availableSafetyIncreasers[field],
-                          )}
-                          onChange={this.handleChange(field)}
+                          key="isStudent"
+                          label="Is Student?"
+                          onChange={this.handleChange('isStudent')}
+                          defaultChecked={this.state.isSubleted}
                         />
-                      ),
-                    )}
-                  </Form.Group>
-                  <Form.Group inverted grouped>
-                    <label>Student</label>
-                    <Form.Checkbox
-                      key="isStudent"
-                      label="Is Student?"
-                      onChange={this.handleChange('isStudent')}
-                    />
-                  </Form.Group>
+                      </Form.Group>
+                    </>
+                  ) : (
+                    <>
+                      <Form.Group inverted grouped>
+                        <label>Subletting</label>
+                        <Form.Checkbox
+                          key="isSubleted"
+                          label="Is Subleted?"
+                          onChange={this.handleChange('isSubleted')}
+                        />
+                      </Form.Group>
+                      {this.state.extraBuildings !== undefined
+                        ? this.getExtraBuildings()
+                        : ''}
+                      <Button primary={true} onClick={this.addExtraBuilding}>
+                        Add extra building
+                      </Button>
+                    </>
+                  )}
                 </React.Fragment>
                 <Button.Group floated="right" labelposition="left">
                   <Button type="button" onClick={this.handleCancel}>
