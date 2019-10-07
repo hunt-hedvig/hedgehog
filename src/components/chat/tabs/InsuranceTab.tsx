@@ -14,8 +14,18 @@ import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 export enum ExtraBuildingType {
   GARAGE = 'GARAGE',
-  ATTEFALL = 'ATTEFALL',
+  CARPORT = 'CARPORT',
+  SHED = 'SHED',
+  STOREHOUSE = 'STOREHOUSE',
   FRIGGEBOD = 'FRIGGEBOD',
+  ATTEFALL = 'ATTEFALL',
+  OUTHOUSE = 'OUTHOUSE',
+  GUESTHOUSE = 'GUESTHOUSE',
+  GAZEBO = 'GAZEBO',
+  GREENHOUSE = 'GREENHOUSE',
+  SAUNA = 'SAUNA',
+  BARN = 'BARN',
+  BOATHOUSE = 'BOATHOUSE',
   OTHER = 'OTHER',
 }
 
