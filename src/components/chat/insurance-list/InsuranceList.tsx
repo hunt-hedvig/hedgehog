@@ -1,4 +1,4 @@
-import {ExtraBuilding} from "components/chat/tabs/InsuranceTab"
+import { ExtraBuilding } from 'components/chat/tabs/InsuranceTab'
 import { LinkRow } from 'components/shared'
 import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
