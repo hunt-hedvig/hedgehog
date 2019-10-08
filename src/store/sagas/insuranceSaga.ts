@@ -174,7 +174,7 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
         error = {
           message:
             error.message +
-            ', extra buildings with an area over 6 m2 should be equal to or less than 4 ',
+            ', number of extra buildings with an area over 6 m2 should be equal to or less than 4 ',
         }
         shouldThrow = true
       }
@@ -186,6 +186,16 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
           message:
             error.message +
             ', area of an extra building must be equal or less than 75 m2 ',
+        }
+        shouldThrow = true
+      }
+      if (
+        modifiedDetails.extraBuildings.filter((building) => building.area <= 0)
+          .length > 0
+      ) {
+        error = {
+          message:
+            error.message + ', area of an extra building should be above 0 ',
         }
         shouldThrow = true
       }
