@@ -10,16 +10,28 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Button, Form, Header, Icon, Modal, Radio } from 'semantic-ui-react'
+import * as uuid from 'uuid/v4'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 export enum ExtraBuildingType {
-  GARAGE = 'GARAGE',
-  ATTEFALL = 'ATTEFALL',
-  FRIGGEBOD = 'FRIGGEBOD',
-  OTHER = 'OTHER',
+  ATTEFALL = 'Attefallshus',
+  SAUNA = 'Bastu',
+  BOATHOUSE = 'Båthus',
+  CARPORT = 'Carport',
+  GUESTHOUSE = 'Gästhus',
+  FRIGGEBOD = 'Friggebod',
+  STOREHOUSE = 'Förråd',
+  GARAGE = 'Garage',
+  BARN = 'Lada',
+  GAZEBO = 'Lusthus',
+  SHED = 'Skjul',
+  OUTHOUSE = 'Uthus',
+  GREENHOUSE = 'Växthus',
+  OTHER = 'Annat',
 }
 
 export interface ExtraBuilding {
+  id: string
   type: ExtraBuildingType
   area: number
   hasWaterConnected: boolean
@@ -105,10 +117,9 @@ const ButtonLink = HedvigStyledButton.withComponent('a')
 const FileButton = styled(HedvigStyledButton)({
   marginLeft: 8,
 }).withComponent('label')
-const ExtraBuildingsForm = styled('div')`
-  margin-bottom: 15px;
-`
-
+const ExtraBuildingsForm = styled('div')({
+  marginBottom: '15px',
+})
 const timeStringToDistance = (timeString: string) =>
   formatDistance(
     parse(timeString.replace(/\..*$/, ''), "yyyy-MM-dd'T'HH:mm:ss", new Date()),
@@ -116,7 +127,7 @@ const timeStringToDistance = (timeString: string) =>
     { addSuffix: true },
   )
 
-export default class InsuranceTab extends React.Component {
+export default class InsuranceTab extends React.Component<any, any> {
   public state = {
     modalOpen: false,
     insurance: [],
@@ -130,10 +141,7 @@ export default class InsuranceTab extends React.Component {
     },
     safetyIncreasers: [],
     isStudent: true,
-    isSubleted:
-      this.props.insurance.data.isSubleted !== undefined
-        ? this.props.insurance.data.isSubleted
-        : false,
+    isSubleted: Boolean(this.props.insurance.data.isSubleted),
     activationDatePickerEnabled: false,
     cancellationDatePickerEnabled: false,
     extraBuildings: [
@@ -148,6 +156,7 @@ export default class InsuranceTab extends React.Component {
     this.setState({ modalOpen: false })
     this.setState({ insurance: [] })
     this.setState({ safetyIncreasers: [] })
+    this.setState({ isSubleted: Boolean(this.props.insurance.data.isSubleted) })
     this.setState({
       extraBuildings: [
         ...this.props.insurance.data.extraBuildings,
@@ -189,11 +198,11 @@ export default class InsuranceTab extends React.Component {
         insurance.safetyIncreasers = safetyIncreasers
         break
       case 'isStudent':
-        this.setState({ isStudent: !this.state.isStudent })
+        this.setState((state) => ({ isStudent: !state.isStudent }))
         insurance[field] = this.state.isStudent
         break
       case 'isSubleted':
-        this.setState({ isSubleted: !this.state.isSubleted })
+        this.setState((state) => ({ isSubleted: !state.isSubleted }))
         break
       default:
         insurance[field] = e.target.value
@@ -215,20 +224,22 @@ export default class InsuranceTab extends React.Component {
       isSubleted: this.state.isSubleted,
     }
     this.handleClose()
+    console.log(submittedInsurance)
     createModifiedInsurance(insurance.data.memberId, submittedInsurance)
   }
 
   public addExtraBuilding = () => {
-    let { extraBuildings } = this.state
-    if (extraBuildings === undefined) {
-      extraBuildings = [] as ExtraBuilding[]
-    }
-    extraBuildings.push({
-      type: ExtraBuildingType.OTHER,
-      area: 0,
-      hasWaterConnected: false,
-    })
-    this.setState({ extraBuildings })
+    this.setState((state) => ({
+      extraBuildings: [
+        ...state.extraBuildings,
+        {
+          id: uuid(),
+          type: 'OTHER',
+          area: 0,
+          hasWaterConnected: false,
+        },
+      ],
+    }))
   }
 
   public getExtraBuildings = () => {
@@ -237,21 +248,19 @@ export default class InsuranceTab extends React.Component {
       <>
         {extraBuildings.map((extraBuilding, index) => {
           return (
-            <>
+            <React.Fragment key={extraBuilding.id}>
               <h4>Extra building {index + 1}</h4>
               <ExtraBuildingsForm>
                 <Form.Dropdown
                   label="Type:"
                   selection
-                  options={Object.values(ExtraBuildingType).map(
-                    (type, optionIndex) => {
-                      return {
-                        key: optionIndex,
-                        text: type,
-                        value: type,
-                      }
-                    },
-                  )}
+                  options={Object.keys(ExtraBuildingType).map((key) => {
+                    return {
+                      key,
+                      text: ExtraBuildingType[key],
+                      value: key,
+                    }
+                  })}
                   defaultValue={extraBuilding.type}
                   onChange={(__, { value }) =>
                     this.handleExtraBuildingTypeChange(index, value)
@@ -272,7 +281,7 @@ export default class InsuranceTab extends React.Component {
                 )}
                 defaultChecked={extraBuilding.hasWaterConnected}
               />
-            </>
+            </React.Fragment>
           )
         })}
       </>
@@ -292,23 +301,35 @@ export default class InsuranceTab extends React.Component {
     return data.insuranceType === 'HOUSE'
   }
 
-  public handleExtraBuildingChange = (key, index) => (e) => {
-    const { extraBuildings } = this.state
+  public handleExtraBuildingChange = (key, index) => (event) => {
+    const extraBuildings = [...this.state.extraBuildings]
     switch (key) {
       case 'area':
-        extraBuildings[index].area = +e.target.value
+        extraBuildings[index] = {
+          ...extraBuildings[index],
+          area: +event.target.value,
+        }
+        this.setState({ extraBuildings })
         break
       case 'hasWaterConnected':
-        extraBuildings[index].hasWaterConnected = !extraBuildings[index][key]
+        extraBuildings[index] = {
+          ...extraBuildings[index],
+          hasWaterConnected: !extraBuildings[index].hasWaterConnected,
+        }
+        this.setState({ extraBuildings })
         break
       default:
         throw new Error(`No such extra building property "${key}"`)
     }
   }
 
-  public handleExtraBuildingTypeChange = (index, value) => {
-    const { extraBuildings } = this.state
-    extraBuildings[index].type = value
+  public handleExtraBuildingTypeChange = (index, type) => {
+    const extraBuildings = [...this.state.extraBuildings]
+    extraBuildings[index] = {
+      ...extraBuildings[index],
+      type,
+    }
+    this.setState({ extraBuildings })
   }
 
   public render() {
@@ -371,21 +392,19 @@ export default class InsuranceTab extends React.Component {
                 <dt>Is subleted</dt>
                 <dd>{fields.isSubleted ? 'Yes' : 'No'}</dd>
                 {fields.extraBuildings.map((extraBuilding, index) => (
-                  <>
+                  <React.Fragment key={extraBuilding.id}>
                     <dt>Extra building {index + 1}</dt>
                     <dd>
-                      {extraBuilding.type} {extraBuilding.area} m<sum>2</sum> (
+                      {extraBuilding.type} {extraBuilding.area} m<sup>2</sup> (
                       {extraBuilding.hasWaterConnected
                         ? 'has water connected'
                         : 'no water connected'}
                       )
                     </dd>
-                  </>
+                  </React.Fragment>
                 ))}
               </>
-            ) : (
-              ''
-            )}
+            ) : null}
           </PropList>
         </Box>
         <Box>
@@ -499,36 +518,32 @@ export default class InsuranceTab extends React.Component {
                       ''
                     ),
                   )}
-                  {!this.isModifyingHouseInsurance() ? (
-                    <>
-                      <Form.Group inverted grouped>
-                        <label>Student</label>
-                        <Form.Checkbox
-                          key="isStudent"
-                          label="Is Student?"
-                          onChange={this.handleChange('isStudent')}
-                          defaultChecked={this.state.isSubleted}
-                        />
-                      </Form.Group>
-                    </>
-                  ) : (
-                    <>
-                      <Form.Group inverted grouped>
-                        <label>Subletting</label>
-                        <Form.Checkbox
-                          key="isSubleted"
-                          label="Is Subleted?"
-                          onChange={this.handleChange('isSubleted')}
-                        />
-                      </Form.Group>
-                      {this.state.extraBuildings !== undefined
-                        ? this.getExtraBuildings()
-                        : ''}
-                      <Button primary={true} onClick={this.addExtraBuilding}>
-                        Add extra building
-                      </Button>
-                    </>
+                  {!this.isModifyingHouseInsurance() && (
+                    <Form.Group inverted grouped>
+                      <label>Student</label>
+                      <Form.Checkbox
+                        key="isStudent"
+                        label="Is Student?"
+                        onChange={this.handleChange('isStudent')}
+                      />
+                    </Form.Group>
                   )}
+                  {this.isModifyingHouseInsurance() && (
+                    <Form.Group inverted grouped>
+                      <label>Subletting</label>
+                      <Form.Checkbox
+                        key="isSubleted"
+                        label="Is Subleted?"
+                        onChange={this.handleChange('isSubleted')}
+                      />
+                    </Form.Group>
+                  )}
+                  {this.state.extraBuildings !== undefined
+                    ? this.getExtraBuildings()
+                    : null}
+                  <Button primary onClick={this.addExtraBuilding}>
+                    Add extra building
+                  </Button>
                 </React.Fragment>
                 <Button.Group floated="right" labelposition="left">
                   <Button type="button" onClick={this.handleCancel}>
