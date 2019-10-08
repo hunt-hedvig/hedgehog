@@ -26,7 +26,7 @@ export default class InsuranceList extends React.Component {
     extraBuildings: (buildings: ExtraBuilding[]) =>
       buildings.map((building) => (
         <p key={building.id}>
-          {building.type} {building.area} m<sup>2</sup> (
+          {building.displayName} {building.area} m<sup>2</sup> (
           {building.hasWaterConnected
             ? 'has water connected'
             : 'no water connected'}

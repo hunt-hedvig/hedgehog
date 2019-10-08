@@ -35,6 +35,7 @@ export interface ExtraBuilding {
   type: ExtraBuildingType
   area: number
   hasWaterConnected: boolean
+  displayName?: string
 }
 
 const Wrapper = styled('div')({
@@ -241,6 +242,16 @@ export default class InsuranceTab extends React.Component<any, any> {
     }))
   }
 
+  public removeExtraBuilding = (id) => {
+    this.setState({
+      extraBuildings: [
+        ...this.state.extraBuildings.filter(
+          (extraBuilding) => extraBuilding.id !== id,
+        ),
+      ],
+    })
+  }
+
   public getExtraBuildings = () => {
     const { extraBuildings } = this.state
     return (
@@ -249,6 +260,13 @@ export default class InsuranceTab extends React.Component<any, any> {
           return (
             <React.Fragment key={extraBuilding.id}>
               <h4>Extra building {index + 1}</h4>
+              <Button
+                floated="right"
+                style={{ marginTop: '-2.5em' }}
+                onClick={() => this.removeExtraBuilding(extraBuilding.id)}
+              >
+                Remove
+              </Button>
               <ExtraBuildingsForm>
                 <Form.Dropdown
                   label="Type:"
@@ -271,15 +289,15 @@ export default class InsuranceTab extends React.Component<any, any> {
                   defaultValue={extraBuilding.area}
                   onChange={this.handleExtraBuildingChange('area', index)}
                 />
+                <Form.Checkbox
+                  label="Has water connected?"
+                  onChange={this.handleExtraBuildingChange(
+                    'hasWaterConnected',
+                    index,
+                  )}
+                  defaultChecked={extraBuilding.hasWaterConnected}
+                />
               </ExtraBuildingsForm>
-              <Form.Checkbox
-                label="Has water connected?"
-                onChange={this.handleExtraBuildingChange(
-                  'hasWaterConnected',
-                  index,
-                )}
-                defaultChecked={extraBuilding.hasWaterConnected}
-              />
             </React.Fragment>
           )
         })}
@@ -394,7 +412,8 @@ export default class InsuranceTab extends React.Component<any, any> {
                   <React.Fragment key={extraBuilding.id}>
                     <dt>Extra building {index + 1}</dt>
                     <dd>
-                      {extraBuilding.type} {extraBuilding.area} m<sup>2</sup> (
+                      {extraBuilding.displayName} {extraBuilding.area} m
+                      <sup>2</sup> (
                       {extraBuilding.hasWaterConnected
                         ? 'has water connected'
                         : 'no water connected'}
@@ -503,7 +522,7 @@ export default class InsuranceTab extends React.Component<any, any> {
           >
             <Header icon="edit" content="Modify Insurance" />
             <Modal.Content>
-              <Form inverted size="small">
+              <Form size="small">
                 <React.Fragment>
                   {Object.keys(data).map((field, productId) =>
                     this.shouldBeDisplayed(field) ? (
@@ -518,7 +537,7 @@ export default class InsuranceTab extends React.Component<any, any> {
                     ),
                   )}
                   {!this.isModifyingHouseInsurance() && (
-                    <Form.Group inverted grouped>
+                    <Form.Group grouped>
                       <label>Student</label>
                       <Form.Checkbox
                         key="isStudent"
@@ -528,7 +547,7 @@ export default class InsuranceTab extends React.Component<any, any> {
                     </Form.Group>
                   )}
                   {this.isModifyingHouseInsurance() && (
-                    <Form.Group inverted grouped>
+                    <Form.Group grouped>
                       <label>Subletting</label>
                       <Form.Checkbox
                         key="isSubleted"
@@ -537,12 +556,15 @@ export default class InsuranceTab extends React.Component<any, any> {
                       />
                     </Form.Group>
                   )}
-                  {this.state.extraBuildings !== undefined
+                  {this.isModifyingHouseInsurance() &&
+                  this.state.extraBuildings.length > 0
                     ? this.getExtraBuildings()
                     : null}
-                  <Button primary onClick={this.addExtraBuilding}>
-                    Add extra building
-                  </Button>
+                  {this.isModifyingHouseInsurance() && (
+                    <Button primary onClick={this.addExtraBuilding}>
+                      Add extra building
+                    </Button>
+                  )}
                 </React.Fragment>
                 <Button.Group floated="right" labelposition="left">
                   <Button type="button" onClick={this.handleCancel}>
