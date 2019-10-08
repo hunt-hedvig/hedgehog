@@ -153,11 +153,11 @@ export default class InsuranceTab extends React.Component<any, any> {
   public handleOpen = () => this.setState({ modalOpen: true })
 
   public handleClose = () => {
-    this.setState({ modalOpen: false })
-    this.setState({ insurance: [] })
-    this.setState({ safetyIncreasers: [] })
-    this.setState({ isSubleted: Boolean(this.props.insurance.data.isSubleted) })
     this.setState({
+      modalOpen: false,
+      insurance: [],
+      safetyIncreasers: [],
+      isSubleted: Boolean(this.props.insurance.data.isSubleted),
       extraBuildings: [
         ...this.props.insurance.data.extraBuildings,
       ] as ExtraBuilding[],
@@ -224,7 +224,6 @@ export default class InsuranceTab extends React.Component<any, any> {
       isSubleted: this.state.isSubleted,
     }
     this.handleClose()
-    console.log(submittedInsurance)
     createModifiedInsurance(insurance.data.memberId, submittedInsurance)
   }
 
