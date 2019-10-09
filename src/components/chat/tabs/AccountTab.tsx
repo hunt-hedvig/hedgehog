@@ -35,6 +35,9 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
           title
           source
           reference
+          type
+          failedAt
+          chargedAt
         }
       }
     }
@@ -45,9 +48,15 @@ export interface AccountTabProps {
   showNotification: (notification: {}) => void
 }
 
-const TableRowColored = styled(TableRow)(({ amount }: { amount: number }) => ({
-  backgroundColor: amount < 0 ? '#FFDDDD' : '#DDFFDD',
-}))
+const TableRowColored = styled(TableRow)(({ entry }: { entry }) => {
+  if (entry.failedAt) {
+    return { backgroundColor: '#FFDDDD' }
+  } else if (entry.amount.amount < 0) {
+    return { backgroundColor: '#FFFFDD' }
+  } else {
+    return { backgroundColor: '#DDFFDD' }
+  }
+})
 
 const TableCell = withStyles({
   root: {
@@ -92,14 +101,16 @@ export const AccountTab: React.SFC<
               <TableHead>
                 <TableRow>
                   <TableCell>Date</TableCell>
+                  <TableCell>Type</TableCell>
                   <TableCell>Title</TableCell>
                   <TableCell align="right">Amount</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {data.member.account.entries.map((entry) => (
-                  <TableRowColored key={entry.id} amount={entry.amount.amount}>
+                  <TableRowColored key={entry.id} entry={entry}>
                     <TableCell>{entry.fromDate}</TableCell>
+                    <TableCell>{entry.type.toLowerCase()}</TableCell>
                     <TableCell>
                       {entry.id}
                       <br />
