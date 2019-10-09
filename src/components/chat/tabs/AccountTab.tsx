@@ -49,15 +49,13 @@ export interface AccountTabProps {
 }
 
 const TableRowColored = styled(TableRow)(({ entry }: { entry }) => {
-  let backgroundColor
   if (entry.failedAt) {
-    backgroundColor = '#FFDDDD'
+    return { backgroundColor: '#FFDDDD' }
   } else if (entry.amount.amount < 0) {
-    backgroundColor = '#FFFFDD'
+    return { backgroundColor: '#FFFFDD' }
   } else {
-    backgroundColor = '#DDFFDD'
+    return { backgroundColor: '#DDFFDD' }
   }
-  return { backgroundColor }
 })
 
 const TableCell = withStyles({
