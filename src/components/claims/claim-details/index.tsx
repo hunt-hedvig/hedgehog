@@ -15,6 +15,7 @@ const CLAIM_PAGE_QUERY = gql`
     claim(id: $id) {
       member {
         memberId
+        signedOn
         firstName
         lastName
         personalNumber
@@ -24,7 +25,15 @@ const CLAIM_PAGE_QUERY = gql`
         directDebitStatus {
           activated
         }
+        fraudulentStatus
         sanctionStatus
+        numberFailedCharges {
+          numberFailedCharges
+          lastFailedChargeAt
+        }
+        account {
+          totalBalance
+        }
       }
       registrationDate
       recordingUrl

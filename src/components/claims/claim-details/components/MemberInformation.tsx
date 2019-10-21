@@ -1,6 +1,8 @@
+import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
+import { timeAgo } from 'utils/DateUtil'
 
 import {
   Ban,
@@ -23,6 +25,7 @@ export enum SanctionStatus {
 interface MemberInformationProps {
   member: {
     memberId: string
+    signedOn: Date
     firstName: string
     lastName: string
     personalNumber: string
@@ -32,7 +35,17 @@ interface MemberInformationProps {
     directDebitStatus: {
       activated: boolean
     }
+    fraudulentStatus: string
     sanctionStatus: SanctionStatus
+    numberFailedCharges: {
+      numberFailedCharges: number
+    }
+    account: {
+      totalBalance: {
+        amount: number
+        currency: string
+      }
+    }
   }
 }
 
@@ -61,6 +74,7 @@ const MemberName = styled('h2')({
 const MemberInformation: React.SFC<MemberInformationProps> = ({
   member: {
     memberId,
+    signedOn,
     firstName,
     lastName,
     personalNumber,
@@ -68,7 +82,12 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
     postalNumber,
     city,
     directDebitStatus: { activated },
+    fraudulentStatus,
     sanctionStatus,
+    numberFailedCharges: { numberFailedCharges },
+    account: {
+      totalBalance: { amount, currency },
+    },
   },
 }) => (
   <Paper>
@@ -77,15 +96,34 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
       {firstName} {lastName}
     </MemberName>
     <p>
-      Id: <Link to={`/members/${memberId}`}>{memberId}</Link>
+      <b>Id:</b> <Link to={`/members/${memberId}`}>{memberId}</Link>
     </p>
-    <p>Personal Number: {personalNumber}</p>
     <p>
-      Address: {address}, {postalNumber} {city}
+      <b>Signed:</b> {timeAgo(signedOn)}
     </p>
-    <p>Direct Debit: {activated ? <Checkmark /> : <Cross />}</p>
     <p>
-      SanctionStatus: {sanctionStatus}{' '}
+      <b>Personal Number:</b> {personalNumber}
+    </p>
+    <p>
+      <b>Address:</b> {address}, {postalNumber} {city}
+    </p>
+    <p>
+      <b>Failed Charge Spree:</b> {numberFailedCharges}
+    </p>
+    <p>
+      <b>Total Debt (Minimum):</b> {Math.trunc(amount)} {currency}
+    </p>
+    <p>
+      <b>Direct Debit:</b> {activated ? <Checkmark /> : <Cross />}
+    </p>
+    <p style={{ marginTop: '-7px' }}>
+      <b>Fraudulent Status:</b>{' '}
+      <span style={{ fontSize: '32px' }}>
+        <FraudulentStatus stateInfo={fraudulentStatus} />
+      </span>
+    </p>
+    <p>
+      <b>Sanction Status:</b> {sanctionStatus}{' '}
       <SanctionStatusIcon status={sanctionStatus} />
     </p>
   </Paper>
