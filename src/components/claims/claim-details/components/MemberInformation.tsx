@@ -1,8 +1,8 @@
+import {formatDistance} from "date-fns"
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
-import { timeAgo } from 'utils/DateUtil'
 
 import {
   Ban,
@@ -99,7 +99,7 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
       <b>Id:</b> <Link to={`/members/${memberId}`}>{memberId}</Link>
     </p>
     <p>
-      <b>Signed:</b> {timeAgo(signedOn)}
+      <b>Signed:</b> {formatDistance(signedOn, new Date(), { addSuffix: true })}
     </p>
     <p>
       <b>Personal Number:</b> {personalNumber}
