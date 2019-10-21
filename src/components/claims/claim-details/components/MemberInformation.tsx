@@ -1,5 +1,6 @@
-import {formatDistance} from "date-fns"
+import { formatDistance } from 'date-fns'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
+import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
@@ -85,9 +86,7 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
     fraudulentStatus,
     sanctionStatus,
     numberFailedCharges: { numberFailedCharges },
-    account: {
-      totalBalance: { amount, currency },
-    },
+    account: { totalBalance },
   },
 }) => (
   <Paper>
@@ -108,10 +107,10 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
       <b>Address:</b> {address}, {postalNumber} {city}
     </p>
     <p>
-      <b>Failed Charge Spree:</b> {numberFailedCharges}
+      <b>Failed Charge Spree:</b> {numberFailedCharges} charge(s) in a row
     </p>
     <p>
-      <b>Total Debt (Minimum):</b> {Math.trunc(amount)} {currency}
+      <b>Total Debt (Minimum):</b> {formatMoneySE(totalBalance)}
     </p>
     <p>
       <b>Direct Debit:</b> {activated ? <Checkmark /> : <Cross />}
