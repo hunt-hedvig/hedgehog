@@ -98,22 +98,18 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
       <b>Id:</b> <Link to={`/members/${memberId}`}>{memberId}</Link>
     </p>
     <p>
-      <b>Signed:</b> {formatDistance(signedOn, new Date(), { addSuffix: true })}
-    </p>
-    <p>
       <b>Personal Number:</b> {personalNumber}
     </p>
     <p>
       <b>Address:</b> {address}, {postalNumber} {city}
     </p>
     <p>
-      <b>Failed Charge Spree:</b> {numberFailedCharges} charge(s) in a row
+      <b>Sanction Status:</b> {sanctionStatus}{' '}
+      <SanctionStatusIcon status={sanctionStatus} />
     </p>
+    <h3>Fraud Checks</h3>
     <p>
-      <b>Total Debt (Minimum):</b> {formatMoneySE(totalBalance)}
-    </p>
-    <p>
-      <b>Direct Debit:</b> {activated ? <Checkmark /> : <Cross />}
+      <b>Signed:</b> {formatDistance(signedOn, new Date(), { addSuffix: true })}
     </p>
     <p style={{ marginTop: '-7px' }}>
       <b>Fraudulent Status:</b>{' '}
@@ -122,8 +118,13 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
       </span>
     </p>
     <p>
-      <b>Sanction Status:</b> {sanctionStatus}{' '}
-      <SanctionStatusIcon status={sanctionStatus} />
+      <b>Direct Debit:</b> {activated ? <Checkmark /> : <Cross />}
+    </p>
+    <p>
+      <b>Payments Balance (Minimum):</b> {formatMoneySE(totalBalance)}
+    </p>
+    <p>
+      <b>Failed Payments:</b> {numberFailedCharges} payment(s) in a row
     </p>
   </Paper>
 )
