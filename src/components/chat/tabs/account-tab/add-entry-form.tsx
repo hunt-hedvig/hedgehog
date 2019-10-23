@@ -27,10 +27,11 @@ interface State {
   confirmed: boolean
 }
 
-const SubmitButton = withStyles({
+export const SubmitButton = withStyles({
   root: {
     display: 'block',
     marginTop: '1rem',
+    marginBottom: '1rem',
     marginLeft: 'auto',
   },
 })(MuiButton)
