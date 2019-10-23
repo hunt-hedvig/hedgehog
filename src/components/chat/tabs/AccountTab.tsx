@@ -11,13 +11,14 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
 import { ExpandMoreOutlined } from '@material-ui/icons'
 import { gql } from 'apollo-boost'
 import { AddEntryForm } from 'components/chat/tabs/account-tab/add-entry-form'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
-import { Query } from 'react-apollo'
-import styled from 'react-emotion'
+import { Mutation, Query } from 'react-apollo'
+import styled, { css } from 'react-emotion'
 import { RouteComponentProps } from 'react-router'
 
 export const GET_MEMBER_ACCOUNT_QUERY = gql`
@@ -43,6 +44,11 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
     }
   }
 `
+export const BACKFILL_SUBSCRIPTIONS_MUTATION = gql`
+  mutation backfillSubscriptions($memberId: ID!) {
+    backfillSubscriptions(memberId: $memberId)
+  }
+`
 
 export interface AccountTabProps {
   showNotification: (notification: {}) => void
@@ -56,6 +62,11 @@ const TableRowColored = styled(TableRow)(({ entry }: { entry }) => {
   } else {
     return { backgroundColor: '#DDFFDD' }
   }
+})
+
+const buttonStyle = css({
+  width: '130px',
+  alignSelf: 'flex-end',
 })
 
 const TableCell = withStyles({
@@ -84,6 +95,18 @@ export const AccountTab: React.SFC<
           <h3>
             Balance (total): {formatMoneySE(data.member.account.totalBalance)}
           </h3>
+          <Mutation mutation={BACKFILL_SUBSCRIPTIONS_MUTATION}>
+            {(backfillSubscriptions) => (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => backfillSubscriptions(props.match.params.id)}
+                className={buttonStyle}
+              >
+                Backfill All Subscriptions
+              </Button>
+            )}
+          </Mutation>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
               <Typography>Add entry</Typography>
