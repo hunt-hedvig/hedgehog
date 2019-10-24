@@ -27,10 +27,11 @@ interface State {
   confirmed: boolean
 }
 
-const SubmitButton = withStyles({
+export const SubmitButton = withStyles({
   root: {
     display: 'block',
     marginTop: '1rem',
+    marginBottom: '1rem',
     marginLeft: 'auto',
   },
 })(MuiButton)
@@ -95,12 +96,6 @@ export class AddEntryForm extends React.Component<
     return (
       <Mutation
         mutation={ADD_ACCOUNT_ENTRY_MUTATION}
-        refetchQueries={() => [
-          {
-            query: GET_MEMBER_ACCOUNT_QUERY,
-            variables: { memberId: this.props.memberId },
-          },
-        ]}
       >
         {(mutation, { loading }) => (
           <Formik

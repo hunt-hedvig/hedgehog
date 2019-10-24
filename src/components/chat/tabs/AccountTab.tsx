@@ -14,6 +14,7 @@ import {
 import { ExpandMoreOutlined } from '@material-ui/icons'
 import { gql } from 'apollo-boost'
 import { AddEntryForm } from 'components/chat/tabs/account-tab/add-entry-form'
+import { BackfillSubscriptionsButton } from 'components/chat/tabs/account-tab/backfill-subscriptions-button'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import { Query } from 'react-apollo'
@@ -70,6 +71,7 @@ export const AccountTab: React.SFC<
   <Query
     query={GET_MEMBER_ACCOUNT_QUERY}
     variables={{ memberId: props.match.params.id }}
+    pollInterval={2000}
   >
     {({ data, loading }) => {
       if (!data || loading) {
@@ -126,6 +128,10 @@ export const AccountTab: React.SFC<
               </TableBody>
             </Table>
           </Paper>
+          <BackfillSubscriptionsButton
+            memberId={props.match.params.id}
+            showNotification={props.showNotification}
+          />
         </>
       )
     }}
