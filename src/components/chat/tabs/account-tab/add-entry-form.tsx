@@ -96,12 +96,6 @@ export class AddEntryForm extends React.Component<
     return (
       <Mutation
         mutation={ADD_ACCOUNT_ENTRY_MUTATION}
-        refetchQueries={() => [
-          {
-            query: GET_MEMBER_ACCOUNT_QUERY,
-            variables: { memberId: this.props.memberId },
-          },
-        ]}
       >
         {(mutation, { loading }) => (
           <Formik

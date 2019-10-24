@@ -71,7 +71,7 @@ export const AccountTab: React.SFC<
   <Query
     query={GET_MEMBER_ACCOUNT_QUERY}
     variables={{ memberId: props.match.params.id }}
-    pollInterval={1000}
+    pollInterval={2000}
   >
     {({ data, loading }) => {
       if (!data || loading) {

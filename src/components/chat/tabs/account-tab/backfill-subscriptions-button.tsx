@@ -31,12 +31,6 @@ export class BackfillSubscriptionsButton extends React.Component<
     return (
       <Mutation
         mutation={BACKFILL_SUBSCRIPTIONS_MUTATION}
-        refetchQueries={() => [
-          {
-            query: GET_MEMBER_ACCOUNT_QUERY,
-            variables: { memberId: this.props.memberId },
-          },
-        ]}
       >
         {(backfillSubscriptions, { loading }) => (
           <>
