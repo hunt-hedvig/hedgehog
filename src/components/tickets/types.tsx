@@ -8,6 +8,7 @@ export interface ITickets {
   filter: {
     assignedTo: string
     status: string
+    type: string
   }
 }
 
@@ -19,6 +20,8 @@ export interface ITicket {
   description: string
   status: TicketStatus
   priority: number
+  overdue: boolean
+  memberId?: string
 }
 
 export interface IRemindNotification {

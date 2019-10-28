@@ -1,3 +1,4 @@
+import { ExtraBuilding } from 'components/chat/tabs/InsuranceTab'
 import { LinkRow } from 'components/shared'
 import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
@@ -5,7 +6,15 @@ import TableFields from 'components/shared/table-fields/TableFields'
 import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import {
+  Button,
+  Form,
+  Header,
+  Icon,
+  Loader,
+  Modal,
+  Table,
+} from 'semantic-ui-react'
 
 const DateTypeEnum = {
   terminationDate: 1,
@@ -13,6 +22,18 @@ const DateTypeEnum = {
 }
 
 export default class InsuranceList extends React.Component {
+  public insuranceFieldFormatters = {
+    extraBuildings: (buildings: ExtraBuilding[]) =>
+      buildings.map((building) => (
+        <p key={building.id}>
+          {building.displayName} {building.area} m<sup>2</sup> (
+          {building.hasWaterConnected
+            ? 'has water connected'
+            : 'no water connected'}
+          )
+        </p>
+      )),
+  }
   constructor(props) {
     super(props)
     this.state = {
@@ -80,8 +101,6 @@ export default class InsuranceList extends React.Component {
     }
 
     modifyInsurance(data.memberId, request)
-    this.handleClose()
-    location.reload()
   }
 
   public isTheActiveInsurance = (item, data) => {
@@ -193,7 +212,10 @@ export default class InsuranceList extends React.Component {
             <Header> Selected Insurance </Header>
             <Table>
               <Table.Body>
-                <TableFields fields={this.state.item} />
+                <TableFields
+                  fields={this.state.item}
+                  fieldFormatters={this.insuranceFieldFormatters}
+                />
               </Table.Body>
               <Table.Footer fullWidth>
                 <Table.Row>
@@ -254,7 +276,13 @@ export default class InsuranceList extends React.Component {
                               onClick={this.handleSubmissionButton}
                               positive
                             >
-                              Submit
+                              {this.props.insurance.requesting ? (
+                                <>
+                                  <Loader /> Loading
+                                </>
+                              ) : (
+                                'Submit'
+                              )}
                             </Button>
                           </Button.Group>
                         </Form>

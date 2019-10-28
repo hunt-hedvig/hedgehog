@@ -13,6 +13,8 @@ import {
   TICKET_TYPE_OPTIONS,
 } from './types'
 
+
+
 const Header = styled('div')({
   padding: '0 20px',
   textAlign: 'center',
@@ -34,7 +36,7 @@ teamMemberOptions.push({
 
 const statusOptions = createOptionsArray(TICKET_STATUS)
 statusOptions.push({
-  text: 'All tickets',
+  text: 'Not resolved',
   value: 'All',
   key: 'All',
 })

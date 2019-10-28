@@ -413,3 +413,8 @@ function sortListByDate(list, fieldName, isReverse) {
 
 export const dateTimeFormatter = (date: string, format: string) =>
   date && formatDate(toDate(date), format)
+
+export interface MonetaryAmount {
+  amount: string
+  currency: string
+}

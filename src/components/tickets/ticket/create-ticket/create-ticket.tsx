@@ -2,6 +2,7 @@ import format from 'date-fns/format'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { connect } from 'react-redux'
 import {
   Button,
   Checkbox,
@@ -18,10 +19,9 @@ import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
 } from '../../../../features/taskmanager/types'
+import actions from '../../../../store/actions/index'
 import { ColorIndicator } from '../color-indicator/colorIndicator'
 import { DateTimePicker } from '../util/datetimepicker'
-import { connect } from 'react-redux'
-import actions from '../../../../store/actions/index'
 
 const NewTicketBody = styled('div')`
   border: solid 1px gray;
@@ -86,7 +86,6 @@ class CreateNewTicket extends React.Component<
                         remindNotificationTime: this.state.remindTime,
                         remindMessage: this.state.remindMessage,
                         description: this.state.description,
-                        status: 'WAITING',
                       },
                     },
                     refetchQueries: [{ query: GET_TICKETS }],
@@ -138,7 +137,7 @@ class CreateNewTicket extends React.Component<
                   max={1}
                   name="priority"
                   onChange={(event) => this.handleChange(event)}
-                  step={0.05}
+                  step={0.01}
                   type="range"
                   value={this.state.priority}
                 />

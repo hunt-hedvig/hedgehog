@@ -9,6 +9,7 @@ const ButtonsBlock = styled('div')(() => ({
 
 const StatusBallBlock = ({ stateInfo, children }) => (
   <span
+    style={{ verticalAlign: 'middle' }}
     title={
       stateInfo && stateInfo.description
         ? stateInfo.description

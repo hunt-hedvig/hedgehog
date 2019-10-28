@@ -33,6 +33,7 @@ const BRF = 'BRF'
 const RENT = 'RENT'
 const SUBLET_BRF = 'SUBLET_BRF'
 const SUBLET_RENT = 'SUBLET_RENT'
+const HOUSE = 'HOUSE'
 
 function* requestFlow({ id }) {
   try {
@@ -75,11 +76,12 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
       modifiedDetails.insuranceType !== STUDENT_BRF &&
       modifiedDetails.insuranceType !== STUDENT_RENT &&
       modifiedDetails.insuranceType !== SUBLET_BRF &&
-      modifiedDetails.insuranceType !== SUBLET_RENT
+      modifiedDetails.insuranceType !== SUBLET_RENT &&
+      modifiedDetails.insuranceType !== HOUSE
     ) {
       const error = {
         message:
-          'Insurance type should be BRF, RENT, STUDENT_BRF, STUDENT_RENT, SUBLET_BRF or SUBLET_RENT',
+          'Insurance type should be BRF, RENT, STUDENT_BRF, STUDENT_RENT, SUBLET_BRF, SUBLET_RENT or HOUSE',
       }
       throw error
     }
@@ -90,24 +92,110 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
     ) {
       let shouldThrow = false
       let error = {
-        message: 'Cannot apply student policy',
+        message: 'Cannot create modified student insurance',
       }
       if (+modifiedDetails.livingSpace > 50) {
         error = {
           message:
-            error.message + ' ,livingspace should be equal or less than 50 m2 ',
+            error.message + ', livingspace should be equal or less than 50 m2 ',
         }
         shouldThrow = true
       }
       if (+modifiedDetails.personsInHouseHold > 2) {
         error = {
-          message: error.message + ' ,the household size less than 3 people ',
+          message:
+            error.message +
+            ', the household size should be less than 3 people ',
         }
         shouldThrow = true
       }
       if (!modifiedDetails.isStudent) {
         error = {
-          message: error.message + ' ,the IsStudent box should be selected. ',
+          message:
+            error.message +
+            ', the "Is Student?" box should be selected for student insurance. ',
+        }
+        shouldThrow = true
+      }
+      if (shouldThrow) {
+        throw error
+      }
+    }
+
+    if (modifiedDetails.insuranceType === HOUSE) {
+      let shouldThrow = false
+      let error = {
+        message: 'Cannot create modified house insurance ',
+      }
+      if (+modifiedDetails.livingSpace > 250) {
+        error = {
+          message:
+            error.message +
+            ', living space should be equal or less than 250 m2 ',
+        }
+        shouldThrow = true
+      }
+      if (+modifiedDetails.livingSpace + +modifiedDetails.ancillaryArea > 300) {
+        error = {
+          message:
+            error.message +
+            ', total area (living space + ancillary area) should be equal or less than 300 m2 ',
+        }
+        shouldThrow = true
+      }
+      if (+modifiedDetails.personsInHouseHold > 6) {
+        error = {
+          message:
+            error.message +
+            ', the number of persons in the household should be equal or less than 6 people ',
+        }
+        shouldThrow = true
+      }
+      if (+modifiedDetails.yearOfConstruction < 1925) {
+        error = {
+          message:
+            error.message +
+            ', house year of construction must at or before 1925 ',
+        }
+        shouldThrow = true
+      }
+      if (+modifiedDetails.numberOfBathrooms > 2) {
+        error = {
+          message:
+            error.message +
+            ', number of bathrooms must be equal or less than 2 ',
+        }
+        shouldThrow = true
+      }
+      if (
+        modifiedDetails.extraBuildings.filter((building) => building.area > 6)
+          .length > 4
+      ) {
+        error = {
+          message:
+            error.message +
+            ', number of extra buildings with an area over 6 m2 should be equal to or less than 4 ',
+        }
+        shouldThrow = true
+      }
+      if (
+        modifiedDetails.extraBuildings.filter((building) => building.area > 75)
+          .length > 0
+      ) {
+        error = {
+          message:
+            error.message +
+            ', area of an extra building must be equal or less than 75 m2 ',
+        }
+        shouldThrow = true
+      }
+      if (
+        modifiedDetails.extraBuildings.filter((building) => building.area <= 0)
+          .length > 0
+      ) {
+        error = {
+          message:
+            error.message + ', area of an extra building should be above 0 ',
         }
         shouldThrow = true
       }
@@ -133,6 +221,11 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
           ? modifiedDetails.safetyIncreasers
           : modifiedDetails.safetyIncreasers.trim().split(','),
         isStudent: modifiedDetails.isStudent,
+        ancillaryArea: modifiedDetails.ancillaryArea,
+        yearOfConstruction: modifiedDetails.yearOfConstruction,
+        numberOfBathrooms: modifiedDetails.numberOfBathrooms,
+        extraBuildings: modifiedDetails.extraBuildings,
+        isSubleted: modifiedDetails.isSubleted,
       },
       path,
     )
@@ -163,6 +256,7 @@ function* modifyInsuranceFlow({ memberId, request }) {
     )
 
     yield put(modifyInsuranceSuccess(response.data))
+    window.location.reload() // Sorry
   } catch (error) {
     yield [
       put(

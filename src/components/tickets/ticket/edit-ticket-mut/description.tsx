@@ -1,7 +1,7 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
-import { Button, Form, Label, TextArea } from 'semantic-ui-react'
+import { Button, Form } from 'semantic-ui-react'
 import { CHANGE_DESCRIPTION } from '../../../../features/taskmanager/queries'
 import actions from '../../../../store/actions/index'
 
@@ -9,7 +9,9 @@ interface IChangeDescription {
   id: string
   showNotification: (data: any) => void
   description: string
+  oldDescription: string
   handleChange: (event: any) => void
+  touched: boolean
 }
 
 class ChangeDescriptionMutation extends React.Component<
@@ -26,7 +28,7 @@ class ChangeDescriptionMutation extends React.Component<
                 e.preventDefault()
                 changeTicketDescription({
                   variables: {
-                    id: this.props.id,
+                    ticketId: this.props.id,
                     newDescription: this.props.description,
                   },
                 })
@@ -47,20 +49,24 @@ class ChangeDescriptionMutation extends React.Component<
                   })
               }}
             >
-              <Form.Field>
-                <Label htmlFor="description">Edit description: </Label>
-                <TextArea
-                  row={3}
-                  col={15}
-                  name="description"
-                  placeholder={this.props.description}
-                  value={this.props.description}
-                  onChange={this.props.handleChange}
-                />
-                <Button compact basic type="submit">
-                  Change description
-                </Button>
-              </Form.Field>
+              <Form.TextArea
+                label="Edit description"
+                row={3}
+                col={15}
+                name="description"
+                placeholder={this.props.oldDescription}
+                value={this.props.description}
+                onChange={this.props.handleChange}
+              />
+              <Button
+                compact
+                toggle
+                active={this.props.touched}
+                disabled={!this.props.touched}
+                type="submit"
+              >
+                Change description
+              </Button>
             </Form>
           )
         }}

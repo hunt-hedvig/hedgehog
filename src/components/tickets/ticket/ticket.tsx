@@ -1,8 +1,10 @@
+import { gql } from 'apollo-boost'
 import formatDistance from 'date-fns/formatDistance'
 import isAfter from 'date-fns/isAfter'
 import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
 import React from 'react'
+import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { Button, Grid, Popup } from 'semantic-ui-react'
 import {
@@ -12,6 +14,7 @@ import {
 import { ITicket } from '../types'
 import { ColorIndicator } from './color-indicator/colorIndicator'
 import { CALL_ME, CLAIM, COMPLETED, MESSAGE, OTHER, REMIND } from './icons'
+import { OverdueNotifier } from './overdue-notifier/overdueNotifier'
 import { TicketBody } from './ticketBody'
 
 const typeIcons = {
@@ -25,26 +28,31 @@ const typeIcons = {
 
 const Card = styled('div')`
   border: 1px black gray;
-  box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
   margin: 10px auto;
   padding: 1em 1em;
-  background: ${(props) => (props.status === TicketStatus.RESOLVED )?  'rgba(40,100,40,0.01)' :  'white' };
+  background: ${(props) =>
+    props.status === TicketStatus.RESOLVED ? 'rgba(40,100,40,0.01)' : 'white'};
   border-radius: 3px;
   max-width: 850px;
   align-items: baseline;
 `
-
-const HighlightedField = styled('span')`
-  min-width: 10px;
-  margin: 10px;
-  padding: 1em 1em;
-  border-radius: 12%;
+const SmallText = styled('div')`
+  font-size: 0.8em;
 `
 
+const GET_MEMBER_NAME_QUERY = gql`
+  query GetMember($memberId: ID!) {
+    member(id: $memberId) {
+      firstName
+      lastName
+    }
+  }
+`
 
 export class Ticket extends React.Component<ITicket, {}> {
   public state = {
-    showBody: false,
+    showBody: true,
   }
 
   public render() {
@@ -69,32 +77,66 @@ export class Ticket extends React.Component<ITicket, {}> {
                   trigger={this.getTypeIcon('COMPLETED')}
                 />
               )}
+              {this.props.overdue ? (
+                <OverdueNotifier id={this.props.id} />
+              ) : null}
             </Grid.Column>
 
             <Grid.Column width={3}>
-              <strong>Priority: </strong>
+              <strong>Priority:</strong>
               <ColorIndicator percentage={this.props.priority} />
             </Grid.Column>
 
             <Grid.Column width={4}>
-              <strong>Assigned to:</strong>
-              <HighlightedField color={'seashell'}>
+              <Grid.Row>
+                <strong>Assigned to: </strong>
                 {lookupTeamMemberName(this.props.assignedTo)}
-              </HighlightedField>
+              </Grid.Row>
+              {this.props.memberId ? (
+                <Grid.Row>
+                  <SmallText>
+                    <strong>Member: </strong>
+                    <Query
+                      query={GET_MEMBER_NAME_QUERY}
+                      variables={{ memberId: this.props.memberId }}
+                    >
+                      {({ loading, error, data }) => {
+                        if (loading) {
+                          return <>Loading...</>
+                        }
+                        if (error) {
+                          return <>Error</>
+                        }
+                        return (
+                          <>
+                            {data.member.firstName} {data.member.lastName}
+                          </>
+                        )
+                      }}
+                    </Query>
+                  </SmallText>
+                </Grid.Row>
+              ) : null}
             </Grid.Column>
 
             <Grid.Column width={5}>
-              {this.props.reminder && this.props.reminder.date ? (
-                <React.Fragment>
-                  <strong>Remind:</strong>
-                  <HighlightedField color={this.props.assignedTo}>
+              <Grid.Row>
+                <SmallText>
+                  <strong>Created at: </strong>{' '}
+                  {this.props.createdAt.slice(0, 19).replace('T', ' ')}
+                </SmallText>
+              </Grid.Row>
+              <Grid.Row>
+                {this.props.reminder && this.props.reminder.date ? (
+                  <SmallText>
+                    <strong>Remind: </strong>
                     {getReminderTimeInWords(
                       this.props.reminder.date,
                       this.props.reminder.time,
                     )}
-                  </HighlightedField>
-                </React.Fragment>
-              ) : null}
+                  </SmallText>
+                ) : null}
+              </Grid.Row>
             </Grid.Column>
 
             <Grid.Column floated="right">
@@ -105,15 +147,7 @@ export class Ticket extends React.Component<ITicket, {}> {
           </Grid.Row>
         </Grid>
 
-        {this.state.showBody ? (
-          <TicketBody
-            description={this.props.description}
-            assignedTo={this.props.assignedTo}
-            status={this.props.status}
-            id={this.props.id}
-            reminder={this.props.reminder}
-          />
-        ) : null}
+        {this.state.showBody ? <TicketBody {...this.props} /> : null}
       </Card>
     )
   }
@@ -134,7 +168,7 @@ const getReminderTimeInWords = (date, time) => {
   const now = new Date()
   const parsedDate = parse(date, 'yyyy-MM-dd', now)
   const parsedTime = parse(time, 'HH:mm:ss', now)
-  if (isSameDay(parsedDate, now)) {
+  if (isSameDay(parsedDate, now) && isAfter(parsedTime, now)) {
     return formatDistance(now, parsedTime)
   } else if (isAfter(parsedDate, now)) {
     return date + ', ' + time
