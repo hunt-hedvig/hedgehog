@@ -217,7 +217,7 @@ export default class InsuranceTab extends React.Component<any, any> {
   }
 
   public handleSubmissionButton = () => {
-    const { createModifiedInsurance, insurance } = this.props
+    const { createModifiedQuote, insurance } = this.props
     const submittedInsurance = {
       ...insurance.data,
       ...this.state.insurance,
@@ -225,7 +225,7 @@ export default class InsuranceTab extends React.Component<any, any> {
       isSubleted: this.state.isSubleted,
     }
     this.handleClose()
-    createModifiedInsurance(insurance.data.memberId, submittedInsurance)
+    createModifiedQuote(insurance.data.memberId, submittedInsurance)
   }
 
   public addExtraBuilding = () => {
@@ -523,49 +523,49 @@ export default class InsuranceTab extends React.Component<any, any> {
             <Header icon="edit" content="Modify Insurance" />
             <Modal.Content>
               <Form size="small">
-                <React.Fragment>
-                  {Object.keys(data).map((field, productId) =>
-                    this.shouldBeDisplayed(field) ? (
-                      <Form.Input
-                        key={productId}
-                        label={getFieldName(field)}
-                        defaultValue={getFieldValue(data[field])}
-                        onChange={this.handleChange(field)}
-                      />
-                    ) : (
-                      ''
-                    ),
-                  )}
-                  {!this.isModifyingHouseInsurance() && (
-                    <Form.Group grouped>
-                      <label>Student</label>
-                      <Form.Checkbox
-                        key="isStudent"
-                        label="Is Student?"
-                        onChange={this.handleChange('isStudent')}
-                      />
-                    </Form.Group>
-                  )}
-                  {this.isModifyingHouseInsurance() && (
-                    <Form.Group grouped>
-                      <label>Subletting</label>
-                      <Form.Checkbox
-                        key="isSubleted"
-                        label="Is Subleted?"
-                        onChange={this.handleChange('isSubleted')}
-                      />
-                    </Form.Group>
-                  )}
-                  {this.isModifyingHouseInsurance() &&
-                  this.state.extraBuildings.length > 0
-                    ? this.getExtraBuildings()
-                    : null}
-                  {this.isModifyingHouseInsurance() && (
-                    <Button primary onClick={this.addExtraBuilding}>
-                      Add extra building
-                    </Button>
-                  )}
-                </React.Fragment>
+                {Object.keys(data).map((field, productId) =>
+                  this.shouldBeDisplayed(field) ? (
+                    <Form.Input
+                      key={productId}
+                      label={getFieldName(field)}
+                      defaultValue={getFieldValue(data[field])}
+                      onChange={this.handleChange(field)}
+                    />
+                  ) : (
+                    ''
+                  ),
+                )}
+
+                {!this.isModifyingHouseInsurance() && (
+                  <Form.Group grouped>
+                    <label>Student</label>
+                    <Form.Checkbox
+                      key="isStudent"
+                      label="Is Student?"
+                      onChange={this.handleChange('isStudent')}
+                    />
+                  </Form.Group>
+                )}
+                {this.isModifyingHouseInsurance() && (
+                  <Form.Group grouped>
+                    <label>Subletting</label>
+                    <Form.Checkbox
+                      key="isSubleted"
+                      label="Is Subleted?"
+                      onChange={this.handleChange('isSubleted')}
+                    />
+                  </Form.Group>
+                )}
+                {this.isModifyingHouseInsurance() &&
+                this.state.extraBuildings.length > 0
+                  ? this.getExtraBuildings()
+                  : null}
+                {this.isModifyingHouseInsurance() && (
+                  <Button primary onClick={this.addExtraBuilding}>
+                    Add extra building
+                  </Button>
+                )}
+
                 <Button.Group floated="right" labelposition="left">
                   <Button type="button" onClick={this.handleCancel}>
                     Cancel
@@ -739,5 +739,5 @@ InsuranceTab.propTypes = {
   messages: PropTypes.object.isRequired,
   saveInsuranceDate: PropTypes.func.isRequired,
   sendCancelRequest: PropTypes.func.isRequired,
-  createModifiedInsurance: PropTypes.func.isRequired,
+  createModifiedQuote: PropTypes.func.isRequired,
 }

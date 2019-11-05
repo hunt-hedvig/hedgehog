@@ -84,7 +84,7 @@ export default class InsuranceList extends React.Component {
 
   public handleSubmissionButton = () => {
     const {
-      modifyInsurance,
+      activateQuote,
       insurance: { data },
     } = this.props
 
@@ -100,7 +100,7 @@ export default class InsuranceList extends React.Component {
       memberId: data.memberId,
     }
 
-    modifyInsurance(data.memberId, request)
+    activateQuote(data.memberId, "TODO", request) // TODO
   }
 
   public isTheActiveInsurance = (item, data) => {
@@ -313,5 +313,5 @@ export default class InsuranceList extends React.Component {
 
 InsuranceList.propTypes = {
   insurance: PropTypes.object.isRequired,
-  modifyInsurance: PropTypes.func.isRequired,
+  activateQuote: PropTypes.func.isRequired,
 }

@@ -1,4 +1,5 @@
 import {
+  ACTIVATE_QUOTE, ACTIVATE_QUOTE_SUCCESS,
   INSURANCE_ERROR,
   INSURANCE_REQUEST_SUCCESS,
   INSURANCE_REQUESTING,
@@ -6,8 +7,8 @@ import {
   INSURANCES_LIST_REQUESTING,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
-  MEMBER_CREATE_MODIFIED_INSURANCE,
   MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
+  MEMBER_CREATE_MODIFIED_QUOTE, MEMBER_CREATE_MODIFIED_QUOTE_SUCCESS,
   MODIFY_INSURANCE,
   MODIFY_INSURANCE_SUCCESS,
   SAVE_ACTIVATION_DATE_SUCCESS,
@@ -97,23 +98,24 @@ export const changeCompanyStatusSuccess = (value) => ({
   value,
 })
 
-export const createModifiedInsurance = (memberId, modifiedDetails) => ({
-  type: MEMBER_CREATE_MODIFIED_INSURANCE,
+export const createModifiedQuote = (memberId, modifiedDetails) => ({
+  type: MEMBER_CREATE_MODIFIED_QUOTE,
   modifiedDetails,
   memberId,
 })
 
-export const createModifiedInsuranceSuccess = (updatedProduct) => ({
-  type: MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
-  updatedProduct,
+export const createModifiedQuoteSuccess = ({ quoteId }) => ({
+  type: MEMBER_CREATE_MODIFIED_QUOTE_SUCCESS,
+  quoteId,
 })
 
-export const modifyInsurance = (memberId, request) => ({
-  type: MODIFY_INSURANCE,
+export const activateQuote = (memberId, quoteId, request) => ({
+  type: ACTIVATE_QUOTE,
   memberId,
+  quoteId,
   request,
 })
 
-export const modifyInsuranceSuccess = () => ({
-  type: MODIFY_INSURANCE_SUCCESS,
+export const activateQuoteSuccess = () => ({
+  type: ACTIVATE_QUOTE_SUCCESS,
 })

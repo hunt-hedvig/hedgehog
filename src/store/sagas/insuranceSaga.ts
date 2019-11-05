@@ -3,13 +3,13 @@ import config from 'api/config'
 import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
 import { call, put, takeLatest } from 'redux-saga/effects'
 import {
+  activateQuoteSuccess,
   changeCompanyStatusSuccess,
-  createModifiedInsuranceSuccess,
+  createModifiedQuoteSuccess,
   insuranceError,
   insuranceGetError,
   insuranceGetSuccess,
   insurancesListGetSuccess,
-  modifyInsuranceSuccess,
   saveActivationDateSuccess,
   saveCancellationDateSuccess,
   sendCancelRequestSuccess,
@@ -17,11 +17,10 @@ import {
 } from '../actions/insuranceActions'
 import { showNotification } from '../actions/notificationsActions'
 import {
+  ACTIVATE_QUOTE,
   INSURANCE_REQUESTING,
   INSURANCES_LIST_REQUESTING,
-  MEMBER_COMPANY_STATUS,
-  MEMBER_CREATE_MODIFIED_INSURANCE,
-  MODIFY_INSURANCE,
+  MEMBER_COMPANY_STATUS, MEMBER_CREATE_MODIFIED_QUOTE,
   SAVE_INSURANCE_DATE,
   SEND_CANCEL_REQUEST,
   SEND_CERTIFICATE,
@@ -61,9 +60,9 @@ function* requestListofInsurancesFlow({ id }) {
   }
 }
 
-function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
+function* createModifiedQuoteFlow({ memberId, modifiedDetails }) {
   try {
-    const path = `${memberId}/createmodifiedProduct`
+    const path = `${memberId}/quotes`
 
     if (!modifiedDetails.livingSpace) {
       const error = { message: 'Livingspace is empty' }
@@ -204,33 +203,49 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
       }
     }
 
-    const response = yield call(
-      api,
-      config.insurance.createModifiedInsurance,
-      {
-        idToBeReplaced: modifiedDetails.productId,
-        memberId,
-        street: modifiedDetails.street,
-        city: modifiedDetails.city,
-        zipCode: modifiedDetails.zipCode,
-        floor: modifiedDetails.floor,
-        livingSpace: modifiedDetails.livingSpace,
-        houseType: modifiedDetails.insuranceType,
-        personsInHouseHold: modifiedDetails.personsInHouseHold,
-        safetyIncreasers: Array.isArray(modifiedDetails.safetyIncreasers)
-          ? modifiedDetails.safetyIncreasers
-          : modifiedDetails.safetyIncreasers.trim().split(','),
-        isStudent: modifiedDetails.isStudent,
+    const requestData = {
+      originalProductId: modifiedDetails.productId,
+      currentInsurer: modifiedDetails.currentInsurer,
+    }
+    const requestQuoteData = {
+      street: modifiedDetails.street,
+      city: modifiedDetails.city,
+      zipCode: modifiedDetails.zipCode,
+      floor: modifiedDetails.floor,
+      livingSpace: modifiedDetails.livingSpace,
+      householdSize: modifiedDetails.personsInHouseHold,
+      safetyIncreasers: Array.isArray(modifiedDetails.safetyIncreasers)
+        ? modifiedDetails.safetyIncreasers
+        : modifiedDetails.safetyIncreasers.trim().split(','),
+
+    }
+
+    if (modifiedDetails.productType === "HOUSE") {
+      requestData.incompleteHouseQuoteData = {
+        ...requestQuoteData,
+        isStudent: false,
         ancillaryArea: modifiedDetails.ancillaryArea,
         yearOfConstruction: modifiedDetails.yearOfConstruction,
         numberOfBathrooms: modifiedDetails.numberOfBathrooms,
         extraBuildings: modifiedDetails.extraBuildings,
         isSubleted: modifiedDetails.isSubleted,
-      },
+      }
+    } else {
+      requestData.incompleteApartmentQuoteData = {
+        ...requestQuoteData,
+        subType: modifiedDetails.insuranceType,
+        isStudent: modifiedDetails.isStudent,
+      }
+    }
+
+    const response = yield call(
+      api,
+      config.insurance.createQuoteFromProduct,
+      requestData,
       path,
     )
 
-    yield put(createModifiedInsuranceSuccess(response.data))
+    yield put(createModifiedQuoteSuccess({ quoteId: response.data }))
   } catch (error) {
     yield [
       put(
@@ -244,18 +259,18 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
   }
 }
 
-function* modifyInsuranceFlow({ memberId, request }) {
+function* activateQuoteFlow({ memberId, quoteId, request }) {
   try {
-    const path = `${memberId}/modifyProduct`
+    const path = `${memberId}/quotes/${quoteId}/activate`
 
-    const response = yield call(
+    yield call(
       api,
-      config.insurance.modifyProduct,
+      config.insurance.activateQuote,
       request,
       path,
     )
 
-    yield put(modifyInsuranceSuccess(response.data))
+    yield put(activateQuoteSuccess())
     window.location.reload() // Sorry
   } catch (error) {
     yield [
@@ -411,8 +426,8 @@ function* insuranceWatcher() {
     takeLatest(SEND_CERTIFICATE, sendCertificateFlow),
     takeLatest(MEMBER_COMPANY_STATUS, changeCompanyStatusFlow),
     takeLatest(INSURANCES_LIST_REQUESTING, requestListofInsurancesFlow),
-    takeLatest(MEMBER_CREATE_MODIFIED_INSURANCE, createModifiedInsuranceFlow),
-    takeLatest(MODIFY_INSURANCE, modifyInsuranceFlow),
+    takeLatest(MEMBER_CREATE_MODIFIED_QUOTE, createModifiedQuoteFlow),
+    takeLatest(ACTIVATE_QUOTE, activateQuoteFlow),
   ]
 }
 
