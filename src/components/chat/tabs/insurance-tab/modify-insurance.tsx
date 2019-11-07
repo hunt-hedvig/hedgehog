@@ -3,7 +3,7 @@ import { colorsV2 } from '@hedviginsurance/brand/dist'
 import { gql } from 'apollo-boost'
 import * as React from 'react'
 import { useState } from 'react'
-import { QUOTES_QUERY, useQuotes } from 'components/chat/tabs/quotes/use-quotes'
+import { QUOTES_QUERY, signedOrExpiredPredicate, useQuotes } from 'components/chat/tabs/quotes/use-quotes'
 import styled from 'react-emotion'
 import { Button, Modal } from 'semantic-ui-react'
 
@@ -72,7 +72,7 @@ export const ModifyInsurance: React.FunctionComponent<{ memberId: string, insura
       {(createQuoteFromProduct, createQuoteMutation) => (
         <Modal
           trigger={
-            quotes.map(quote => quote.originatingProductId).includes(insurance.productId) && !loadingQuotes ?
+            quotes.filter(quote => !signedOrExpiredPredicate(quote)).map(quote => quote.originatingProductId).includes(insurance.productId) && !loadingQuotes ?
               <>Insurance has existing quote</>
               : (
                 !loadingQuotes &&

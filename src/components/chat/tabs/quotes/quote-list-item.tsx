@@ -125,8 +125,8 @@ const ACTIVATE_MUTATION = gql`
   }
 `
 
-export const QuoteListItem: React.FunctionComponent<{ quote: QuoteResponseEntity<QuoteData> }> =
-  function ({ quote }) {
+export const QuoteListItem: React.FunctionComponent<{ quote: QuoteResponseEntity<QuoteData>, inactionable?: boolean, memberId: string }> =
+  function ({ quote, inactionable, memberId }) {
     const [action, setAction] = useState<Action | null>(null)
     const [activationDate, setActivationDate] = useState<Date | null>(null)
     const [terminationDate, setTerminationDate] = useState<Date | null>(null)
@@ -135,7 +135,7 @@ export const QuoteListItem: React.FunctionComponent<{ quote: QuoteResponseEntity
     const [activateQuote, activationMutation] = useMutation(ACTIVATE_MUTATION, {
       refetchQueries: () => [{
         query: QUOTES_QUERY,
-        variables: { memberId: quote.member.id }
+        variables: { memberId }
       }]
     })
 
@@ -169,10 +169,12 @@ export const QuoteListItem: React.FunctionComponent<{ quote: QuoteResponseEntity
             </DetailWrapper>
             <DetailWrapper>
               Modified: <strong>{quote.createdAt}</strong><br />
-              State: <strong>{quote.state}</strong>
+              State: <strong>{quote.state}</strong><br />
+              Originating product id: <strong>{quote.originatingProductId ?? '-'}</strong><br />
+              Quote id: <strong>{quote.id}</strong>
             </DetailWrapper>
           </DetailsWrapper>
-          <ActionsButtonsWrapper>
+          {!!inactionable || <ActionsButtonsWrapper>
             <BottomSpacerWrapper>
               <ActivateButton onClick={() => {
                 if (action === Action.ACTIVATE) {
@@ -188,14 +190,13 @@ export const QuoteListItem: React.FunctionComponent<{ quote: QuoteResponseEntity
             <div>
               <OtherButton>Do something?</OtherButton>
             </div>
-          </ActionsButtonsWrapper>
+          </ActionsButtonsWrapper>}
         </QuoteWrapper>
         {action !== null && (
           <ActionsWrapper>
             {action === Action.ACTIVATE && (
               <form onSubmit={async (e) => {
                 e.preventDefault()
-                // TODO
                 if (activationMutation.loading || !activationDate) {
                   return
                 }
@@ -239,15 +240,21 @@ export const QuoteListItem: React.FunctionComponent<{ quote: QuoteResponseEntity
                       <BaseDatePicker
                         value={terminationDate}
                         onChange={setTerminationDate}
-                        minDate={activationDate}
+                        maxDate={activationDate}
                       />
                     </div>
                   </BottomSpacerWrapper>
                 )}
 
-                <SubmitButton type="submit" disabled={activationMutation.loading}>
-                  Do activate quote
-                </SubmitButton>
+                {!activationMutation.data?.activateQuote ?
+                  <SubmitButton type="submit" disabled={activationMutation.loading}>
+                    Do activate quote
+                  </SubmitButton>
+                  : <Button type="button"onClick={(e) => {
+                    e.preventDefault()
+                    window.location.reload()
+                  }}>Reload</Button>
+                }
 
                 {activationMutation.error &&
                 <ErrorMessage>{JSON.stringify(activationMutation.error, null, 2)}</ErrorMessage>}

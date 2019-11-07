@@ -2,7 +2,7 @@ import { colors } from '@hedviginsurance/brand'
 import { colorsV2 } from '@hedviginsurance/brand/dist'
 import {
   createCreateQuoteFromProductRequest,
-  ModifyInsurance
+  ModifyInsurance,
 } from 'components/chat/tabs/insurance-tab/modify-insurance'
 import { Mutation } from 'react-apollo'
 import DateInput from 'components/shared/inputs/DateInput'
@@ -393,8 +393,8 @@ export default class InsuranceTab extends React.Component<any, any> {
           )}
         </ActionBox>
         <ActionBox>
-          <ActionHeadline>Create modified insurance</ActionHeadline>
-          <ModifyInsurance memberId={fields.memberId} insurance={data}/>
+          <ActionHeadline>Create quote</ActionHeadline>
+          <ModifyInsurance memberId={fields.memberId} insurance={data} />
         </ActionBox>
         <ActionBox>
           <ActionHeadline>Activation Date</ActionHeadline>

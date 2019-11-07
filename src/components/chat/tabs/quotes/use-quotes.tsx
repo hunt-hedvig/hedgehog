@@ -54,6 +54,10 @@ type QuotesGqlType = { member: { quotes: ReadonlyArray<QuoteResponseEntity<Apart
 const latest = (a: QuoteResponseEntity<any>, b: QuoteResponseEntity<any>) =>
   parseISO(b.createdAt) - parseISO(a.createdAt)
 
+
+export const signedOrExpiredPredicate = (quote) =>
+  quote.state === 'EXPIRED' || quote.state === 'SIGNED'
+
 export const useQuotes = function (memberId: string): [ReadonlyArray<QuoteResponseEntity<ApartmentQuoteData | HouseQuoteData>>, boolean] {
   const { data, loading } = useQuery<QuotesGqlType>(QUOTES_QUERY, { variables: { memberId } })
   const quotes = [...((data?.member?.quotes) ?? [])]
