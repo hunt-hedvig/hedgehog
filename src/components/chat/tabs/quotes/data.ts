@@ -11,7 +11,7 @@ export interface QuoteResponseEntity<TData extends QuoteData> {
   currentInsurer?: string
   startDate?: string
   validity: number
-  memberId: string
+  member: { id }
   isComplete: boolean
   data: TData
 }

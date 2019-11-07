@@ -1,4 +1,9 @@
 import { colors } from '@hedviginsurance/brand'
+import { colorsV2 } from '@hedviginsurance/brand/dist'
+import { QUOTES_QUERY } from 'components/chat/tabs/quotes'
+import gql from 'graphql-tag'
+import { createCreateQuoteFromProductRequest } from 'components/chat/tabs/insurance-tab/modify-insurance'
+import { Mutation } from 'react-apollo'
 import DateInput from 'components/shared/inputs/DateInput'
 import { WideModal } from 'components/shared/modals/WideModal'
 import { formatDistance, parse } from 'date-fns'
@@ -121,6 +126,10 @@ const FileButton = styled(HedvigStyledButton)({
 const ExtraBuildingsForm = styled('div')({
   marginBottom: '15px',
 })
+const SuccessMessage = styled('h3')({
+  color: colorsV2.grass500,
+})
+
 const timeStringToDistance = (timeString: string) =>
   formatDistance(
     parse(timeString.replace(/\..*$/, ''), "yyyy-MM-dd'T'HH:mm:ss", new Date()),
@@ -128,9 +137,19 @@ const timeStringToDistance = (timeString: string) =>
     { addSuffix: true },
   )
 
+const CREATE_QUOTE_FROM_PRODUCT_MUTATION = gql`
+  mutation CreateQuoteFromProduct(
+    $memberId: ID!
+    $quoteData: QuoteFromProductInput!
+  ) {
+    createQuoteFromProduct(memberId: $memberId, quoteData: $quoteData)
+  }
+`
+
 export default class InsuranceTab extends React.Component<any, any> {
   public state = {
     modalOpen: false,
+    confirmCreateQuoteModalOpen: false,
     insurance: [],
     availableSafetyIncreasers: {
       SMOKE_ALARM: 'Smoke alarm',
@@ -216,93 +235,18 @@ export default class InsuranceTab extends React.Component<any, any> {
     this.handleClose()
   }
 
-  public handleSubmissionButton = () => {
-    const { createModifiedQuote, insurance } = this.props
+  public handleSubmissionButton = (mutate) => async () => {
+    const { insurance } = this.props
     const submittedInsurance = {
       ...insurance.data,
       ...this.state.insurance,
       extraBuildings: this.state.extraBuildings,
       isSubleted: this.state.isSubleted,
     }
-    this.handleClose()
-    createModifiedQuote(insurance.data.memberId, submittedInsurance)
-  }
-
-  public addExtraBuilding = () => {
-    this.setState((state) => ({
-      extraBuildings: [
-        ...state.extraBuildings,
-        {
-          id: uuid(),
-          type: 'OTHER',
-          area: 0,
-          hasWaterConnected: false,
-        },
-      ],
-    }))
-  }
-
-  public removeExtraBuilding = (id) => {
-    this.setState({
-      extraBuildings: [
-        ...this.state.extraBuildings.filter(
-          (extraBuilding) => extraBuilding.id !== id,
-        ),
-      ],
+    const quoteData = createCreateQuoteFromProductRequest(submittedInsurance)
+    await mutate({
+      variables: { memberId: insurance.data.memberId, quoteData },
     })
-  }
-
-  public getExtraBuildings = () => {
-    const { extraBuildings } = this.state
-    return (
-      <>
-        {extraBuildings.map((extraBuilding, index) => {
-          return (
-            <React.Fragment key={extraBuilding.id}>
-              <h4>Extra building {index + 1}</h4>
-              <Button
-                floated="right"
-                style={{ marginTop: '-2.5em' }}
-                onClick={() => this.removeExtraBuilding(extraBuilding.id)}
-              >
-                Remove
-              </Button>
-              <ExtraBuildingsForm>
-                <Form.Dropdown
-                  label="Type:"
-                  selection
-                  options={Object.keys(ExtraBuildingType).map((key) => {
-                    return {
-                      key,
-                      text: ExtraBuildingType[key],
-                      value: key,
-                    }
-                  })}
-                  defaultValue={extraBuilding.type}
-                  onChange={(__, { value }) =>
-                    this.handleExtraBuildingTypeChange(index, value)
-                  }
-                />
-                <Form.Input
-                  type="number"
-                  label={'Area'}
-                  defaultValue={extraBuilding.area}
-                  onChange={this.handleExtraBuildingChange('area', index)}
-                />
-                <Form.Checkbox
-                  label="Has water connected?"
-                  onChange={this.handleExtraBuildingChange(
-                    'hasWaterConnected',
-                    index,
-                  )}
-                  defaultChecked={extraBuilding.hasWaterConnected}
-                />
-              </ExtraBuildingsForm>
-            </React.Fragment>
-          )
-        })}
-      </>
-    )
   }
 
   public isModifyingHouseInsurance = () => {
@@ -316,37 +260,6 @@ export default class InsuranceTab extends React.Component<any, any> {
   public hasHouseInsurance = () => {
     const { data } = this.props.insurance
     return data.insuranceType === 'HOUSE'
-  }
-
-  public handleExtraBuildingChange = (key, index) => (event) => {
-    const extraBuildings = [...this.state.extraBuildings]
-    switch (key) {
-      case 'area':
-        extraBuildings[index] = {
-          ...extraBuildings[index],
-          area: +event.target.value,
-        }
-        this.setState({ extraBuildings })
-        break
-      case 'hasWaterConnected':
-        extraBuildings[index] = {
-          ...extraBuildings[index],
-          hasWaterConnected: !extraBuildings[index].hasWaterConnected,
-        }
-        this.setState({ extraBuildings })
-        break
-      default:
-        throw new Error(`No such extra building property "${key}"`)
-    }
-  }
-
-  public handleExtraBuildingTypeChange = (index, type) => {
-    const extraBuildings = [...this.state.extraBuildings]
-    extraBuildings[index] = {
-      ...extraBuildings[index],
-      type,
-    }
-    this.setState({ extraBuildings })
   }
 
   public render() {
@@ -506,82 +419,79 @@ export default class InsuranceTab extends React.Component<any, any> {
         </ActionBox>
         <ActionBox>
           <ActionHeadline>Create modified insurance</ActionHeadline>
-          <WideModal
-            className="scrolling"
-            trigger={
-              <HedvigStyledButton onClick={this.handleOpen}>
-                <Icon name="edit" /> Edit
-              </HedvigStyledButton>
-            }
-            open={this.state.modalOpen}
-            onClose={this.handleClose}
-            basic
-            size="small"
-            dimmer="blurring"
-            closeOnDimmerClick={false}
+          <Mutation
+            mutation={CREATE_QUOTE_FROM_PRODUCT_MUTATION}
+            refetchQueries={() => [
+              {
+                query: QUOTES_QUERY,
+                variables: { memberId: fields.memberId },
+              },
+            ]}
           >
-            <Header icon="edit" content="Modify Insurance" />
-            <Modal.Content>
-              <Form size="small">
-                {Object.keys(data).map((field, productId) =>
-                  this.shouldBeDisplayed(field) ? (
-                    <Form.Input
-                      key={productId}
-                      label={getFieldName(field)}
-                      defaultValue={getFieldValue(data[field])}
-                      onChange={this.handleChange(field)}
-                    />
-                  ) : (
-                    ''
-                  ),
-                )}
-
-                {!this.isModifyingHouseInsurance() && (
-                  <Form.Group grouped>
-                    <label>Student</label>
-                    <Form.Checkbox
-                      key="isStudent"
-                      label="Is Student?"
-                      onChange={this.handleChange('isStudent')}
-                    />
-                  </Form.Group>
-                )}
-                {this.isModifyingHouseInsurance() && (
-                  <Form.Group grouped>
-                    <label>Subletting</label>
-                    <Form.Checkbox
-                      key="isSubleted"
-                      label="Is Subleted?"
-                      onChange={this.handleChange('isSubleted')}
-                    />
-                  </Form.Group>
-                )}
-                {this.isModifyingHouseInsurance() &&
-                this.state.extraBuildings.length > 0
-                  ? this.getExtraBuildings()
-                  : null}
-                {this.isModifyingHouseInsurance() && (
-                  <Button primary onClick={this.addExtraBuilding}>
-                    Add extra building
-                  </Button>
-                )}
-
-                <Button.Group floated="right" labelposition="left">
-                  <Button type="button" onClick={this.handleCancel}>
-                    Cancel
-                  </Button>
-                  <Button.Or />
-                  <Button
-                    type="button"
-                    onClick={this.handleSubmissionButton}
-                    positive
+            {(createQuoteFromProduct, createQuoteMutation) => (
+              <Modal
+                trigger={
+                  <HedvigStyledButton
+                    onClick={() =>
+                      this.setState({ confirmCreateQuoteModalOpen: true })
+                    }
                   >
-                    Submit
-                  </Button>
-                </Button.Group>
-              </Form>
-            </Modal.Content>
-          </WideModal>
+                    Create quote
+                  </HedvigStyledButton>
+                }
+                open={this.state.confirmCreateQuoteModalOpen}
+                size="tiny"
+                onClose={() =>
+                  this.setState({ confirmCreateQuoteModalOpen: false })
+                }
+              >
+                <Modal.Content>
+                  {createQuoteMutation &&
+                  createQuoteMutation.data &&
+                  createQuoteMutation.data.createQuoteFromProduct ? (
+                    <>
+                      <SuccessMessage>Quote created!</SuccessMessage>
+                      <Button>Go to quote</Button>
+                    </>
+                  ) : (
+                    <h3>Create quote?</h3>
+                  )}
+                </Modal.Content>
+                {!(
+                  createQuoteMutation &&
+                  createQuoteMutation.data &&
+                  createQuoteMutation.data.createQuoteFromProduct
+                ) && (
+                  <Modal.Actions>
+                    <Button.Group>
+                      <Button
+                        onClick={() =>
+                          this.setState({ confirmCreateQuoteModalOpen: false })
+                        }
+                      >
+                        Cancel
+                      </Button>
+
+                      <Button
+                        onClick={this.handleSubmissionButton(
+                          createQuoteFromProduct,
+                        )}
+                        positive
+                        disabled={
+                          createQuoteMutation.loading ||
+                          (createQuoteMutation.data &&
+                            createQuoteMutation.data &&
+                            createQuoteMutation.data.createQuoteFromProduct)
+                        }
+                      >
+                        Create quote
+                      </Button>
+                    </Button.Group>
+                  </Modal.Actions>
+                )}
+              </Modal>
+            )}
+          </Mutation>
         </ActionBox>
         <ActionBox>
           <ActionHeadline>Activation Date</ActionHeadline>

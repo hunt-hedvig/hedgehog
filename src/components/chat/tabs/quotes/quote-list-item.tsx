@@ -1,5 +1,8 @@
+import { useMutation } from '@apollo/react-hooks'
 import { colorsV2 } from '@hedviginsurance/brand'
+import { gql } from 'apollo-boost'
 import { ApartmentQuoteData, QuoteData, QuoteResponseEntity } from 'components/chat/tabs/quotes/data'
+import { QUOTES_QUERY } from 'components/chat/tabs/quotes/index'
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
 import { formatMoneySE } from 'lib/intl'
 import { DatePicker } from 'material-ui-pickers'
@@ -103,18 +106,39 @@ const SubmitButton = styled(Button)({
     }
   }
 })
+const ErrorMessage = styled('pre')({
+  paddingTop: '1rem',
+  color: 'red',
+})
 
 enum Action {
   ACTIVATE,
   MODIFY
 }
 
-export const Quote: React.FunctionComponent<{ quote: QuoteResponseEntity<QuoteData> }> =
+const ACTIVATE_MUTATION = gql`
+  mutation ActivateQuote($id: ID!, $activationDate: LocalDate!, $terminationDate: LocalDate) {
+    activateQuote(id: $id, activationDate: $activationDate, terminationDate: $terminationDate) {
+      id
+      originatingProductId
+      signedProductId
+    }
+  }
+`
+
+export const QuoteListItem: React.FunctionComponent<{ quote: QuoteResponseEntity<QuoteData> }> =
   function ({ quote }) {
     const [action, setAction] = useState<Action | null>(null)
     const [activationDate, setActivationDate] = useState<Date | null>(null)
     const [terminationDate, setTerminationDate] = useState<Date | null>(null)
     const [useGap, setUseGap] = useState(false)
+
+    const [activateQuote, activationMutation] = useMutation(ACTIVATE_MUTATION, {
+      refetchQueries: () => [{
+        query: QUOTES_QUERY,
+        variables: { memberId: quote.member.id }
+      }]
+    })
 
     return (
       <OuterWrapper>
@@ -170,10 +194,19 @@ export const Quote: React.FunctionComponent<{ quote: QuoteResponseEntity<QuoteDa
         {action !== null && (
           <ActionsWrapper>
             {action === Action.ACTIVATE && (
-              <form onSubmit={(e) => {
+              <form onSubmit={async (e) => {
                 e.preventDefault()
                 // TODO
-                // activateQuote({ variables: { memberId }})
+                if (activationMutation.loading || !activationDate) {
+                  return
+                }
+                await activateQuote({
+                  variables: {
+                    id: quote.id,
+                    activationDate: activationDate.toISOString().slice(0, 10),
+                    terminationDate: terminationDate?.toISOString()?.slice(0, 10)
+                  }
+                })
               }}>
                 <BottomSpacerWrapper>
                   <div>
@@ -213,9 +246,12 @@ export const Quote: React.FunctionComponent<{ quote: QuoteResponseEntity<QuoteDa
                   </BottomSpacerWrapper>
                 )}
 
-                <SubmitButton type="submit">
+                <SubmitButton type="submit" disabled={activationMutation.loading}>
                   Do activate quote
                 </SubmitButton>
+
+                {activationMutation.error &&
+                <ErrorMessage>{JSON.stringify(activationMutation.error, null, 2)}</ErrorMessage>}
               </form>
             )}
           </ActionsWrapper>
