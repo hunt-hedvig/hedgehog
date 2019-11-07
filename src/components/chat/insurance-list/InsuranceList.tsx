@@ -100,7 +100,7 @@ export default class InsuranceList extends React.Component {
       memberId: data.memberId,
     }
 
-    activateQuote(data.memberId, "TODO", request) // TODO
+    activateQuote(data.memberId, 'TODO', request) // TODO
   }
 
   public isTheActiveInsurance = (item, data) => {
@@ -205,108 +205,118 @@ export default class InsuranceList extends React.Component {
       insurance: { data, list },
     } = this.props
 
-    return list ? (
-      <React.Fragment>
-        {this.state.item ? (
-          <React.Fragment>
-            <Header> Selected Insurance </Header>
-            <Table>
-              <Table.Body>
-                <TableFields
-                  fields={this.state.item}
-                  fieldFormatters={this.insuranceFieldFormatters}
-                />
-              </Table.Body>
-              <Table.Footer fullWidth>
-                <Table.Row>
-                  <Table.HeaderCell>
-                    Do you want to replace the current insurance with price{' '}
-                    {data.currentTotalPrice}
-                    <br /> with the updated insurance with price{' '}
-                    {this.state.item.currentTotalPrice} ?
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <WideModal
-                      className="scrolling"
-                      trigger={
-                        <Button
-                          floated="right"
-                          icon
-                          labelposition="left"
-                          primary
-                          size="medium"
-                          onClick={this.handleOpen}
-                        >
-                          <Icon name="edit" /> Choose dates
-                        </Button>
-                      }
-                      open={this.state.modalOpen}
-                      onClose={this.handleClose}
-                      basic
-                      size="small"
-                      dimmer="blurring"
-                    >
-                      <Header
-                        icon="question circle"
-                        content="Are you sure you want to replace the insurance?"
-                      />
-                      <Modal.Content>
-                        <Form inverted size="small">
-                          <Form.Input
-                            label="Current insurance's termination date"
-                            onChange={this.handleChange(
-                              DateTypeEnum.terminationDate,
-                            )}
-                            defaultValue={moment().format('YYYY-MM-DD')}
-                          />
-                          <Form.Input
-                            label="New insurance's activation date"
-                            onChange={this.handleChange(
-                              DateTypeEnum.activationDate,
-                            )}
-                            defaultValue={moment().format('YYYY-MM-DD')}
-                          />
-                          <Button.Group floated="right" labelposition="left">
-                            <Button type="button" onClick={this.handleClose}>
-                              Cancel
-                            </Button>
-                            <Button.Or />
+    return (
+      <>
+        {list ? (
+          <>
+            {this.state.item ? (
+              <React.Fragment>
+                <Header> Selected Insurance </Header>
+                <Table>
+                  <Table.Body>
+                    <TableFields
+                      fields={this.state.item}
+                      fieldFormatters={this.insuranceFieldFormatters}
+                    />
+                  </Table.Body>
+                  <Table.Footer fullWidth>
+                    <Table.Row>
+                      <Table.HeaderCell>
+                        Do you want to replace the current insurance with price{' '}
+                        {data.currentTotalPrice}
+                        <br /> with the updated insurance with price{' '}
+                        {this.state.item.currentTotalPrice} ?
+                      </Table.HeaderCell>
+                      <Table.HeaderCell>
+                        <WideModal
+                          className="scrolling"
+                          trigger={
                             <Button
-                              type="button"
-                              onClick={this.handleSubmissionButton}
-                              positive
+                              floated="right"
+                              icon
+                              labelposition="left"
+                              primary
+                              size="medium"
+                              onClick={this.handleOpen}
                             >
-                              {this.props.insurance.requesting ? (
-                                <>
-                                  <Loader /> Loading
-                                </>
-                              ) : (
-                                'Submit'
-                              )}
+                              <Icon name="edit" /> Choose dates
                             </Button>
-                          </Button.Group>
-                        </Form>
-                      </Modal.Content>
-                    </WideModal>
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Footer>
-            </Table>
-          </React.Fragment>
+                          }
+                          open={this.state.modalOpen}
+                          onClose={this.handleClose}
+                          basic
+                          size="small"
+                          dimmer="blurring"
+                        >
+                          <Header
+                            icon="question circle"
+                            content="Are you sure you want to replace the insurance?"
+                          />
+                          <Modal.Content>
+                            <Form inverted size="small">
+                              <Form.Input
+                                label="Current insurance's termination date"
+                                onChange={this.handleChange(
+                                  DateTypeEnum.terminationDate,
+                                )}
+                                defaultValue={moment().format('YYYY-MM-DD')}
+                              />
+                              <Form.Input
+                                label="New insurance's activation date"
+                                onChange={this.handleChange(
+                                  DateTypeEnum.activationDate,
+                                )}
+                                defaultValue={moment().format('YYYY-MM-DD')}
+                              />
+                              <Button.Group
+                                floated="right"
+                                labelposition="left"
+                              >
+                                <Button
+                                  type="button"
+                                  onClick={this.handleClose}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button.Or />
+                                <Button
+                                  type="button"
+                                  onClick={this.handleSubmissionButton}
+                                  positive
+                                >
+                                  {this.props.insurance.requesting ? (
+                                    <>
+                                      <Loader /> Loading
+                                    </>
+                                  ) : (
+                                    'Submit'
+                                  )}
+                                </Button>
+                              </Button.Group>
+                            </Form>
+                          </Modal.Content>
+                        </WideModal>
+                      </Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Footer>
+                </Table>
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            <PaginatorList
+              list={list}
+              itemContent={(item) => this.getTableRow(item, data)}
+              tableHeader={this.getTableHeader()}
+              pageSize={3}
+              isSortable={false}
+              keyName="productId"
+            />
+          </>
         ) : (
-          ''
+          <Header>No insurances found</Header>
         )}
-        <PaginatorList
-          list={list}
-          itemContent={(item) => this.getTableRow(item, data)}
-          tableHeader={this.getTableHeader()}
-          pageSize={3}
-          isSortable={false}
-          keyName="productId"
-        />
-      </React.Fragment>
-    ) : (
-      <Header>No insurances found</Header>
+      </>
     )
   }
 }

@@ -11,7 +11,7 @@ import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 
-import { DatePicker } from '../../../shared/inputs/DatePicker'
+import { FormikDatePicker } from '../../../shared/inputs/DatePicker'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
 import { TextField } from '../../../shared/inputs/TextField'
 import { Paper } from '../../../shared/Paper'
@@ -534,7 +534,7 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                     )}
                     <div>
                       <Field
-                        component={DatePicker}
+                        component={FormikDatePicker}
                         name="date"
                         placeholder="Date"
                       />
