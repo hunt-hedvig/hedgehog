@@ -3,8 +3,7 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory'
-import { ApolloClient } from 'apollo-client'
-import { createHttpLink } from 'apollo-link-http'
+import ApolloClient from 'apollo-boost'
 
 import introspectionQueryResultData from './fragmentTypes.json'
 
@@ -18,6 +17,7 @@ export const apolloClient = (() => {
   }
 
   return new ApolloClient({
+    uri: '/api/graphql',
     cache: new InMemoryCache({
       fragmentMatcher,
       dataIdFromObject: (object) => {
@@ -28,9 +28,6 @@ export const apolloClient = (() => {
             return defaultDataIdFromObject(object)
         }
       },
-    }).restore((window as any).__INITIAL_STATE__),
-    link: createHttpLink({
-      uri: '/api/graphql',
     }),
   })
 })()
