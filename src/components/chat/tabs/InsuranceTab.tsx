@@ -1,8 +1,9 @@
 import { colors } from '@hedviginsurance/brand'
 import { colorsV2 } from '@hedviginsurance/brand/dist'
-import { QUOTES_QUERY } from 'components/chat/tabs/quotes'
-import gql from 'graphql-tag'
-import { createCreateQuoteFromProductRequest } from 'components/chat/tabs/insurance-tab/modify-insurance'
+import {
+  createCreateQuoteFromProductRequest,
+  ModifyInsurance
+} from 'components/chat/tabs/insurance-tab/modify-insurance'
 import { Mutation } from 'react-apollo'
 import DateInput from 'components/shared/inputs/DateInput'
 import { WideModal } from 'components/shared/modals/WideModal'
@@ -126,9 +127,6 @@ const FileButton = styled(HedvigStyledButton)({
 const ExtraBuildingsForm = styled('div')({
   marginBottom: '15px',
 })
-const SuccessMessage = styled('h3')({
-  color: colorsV2.grass500,
-})
 
 const timeStringToDistance = (timeString: string) =>
   formatDistance(
@@ -136,15 +134,6 @@ const timeStringToDistance = (timeString: string) =>
     new Date(),
     { addSuffix: true },
   )
-
-const CREATE_QUOTE_FROM_PRODUCT_MUTATION = gql`
-  mutation CreateQuoteFromProduct(
-    $memberId: ID!
-    $quoteData: QuoteFromProductInput!
-  ) {
-    createQuoteFromProduct(memberId: $memberId, quoteData: $quoteData)
-  }
-`
 
 export default class InsuranceTab extends React.Component<any, any> {
   public state = {
@@ -233,20 +222,6 @@ export default class InsuranceTab extends React.Component<any, any> {
 
   public handleCancel = () => {
     this.handleClose()
-  }
-
-  public handleSubmissionButton = (mutate) => async () => {
-    const { insurance } = this.props
-    const submittedInsurance = {
-      ...insurance.data,
-      ...this.state.insurance,
-      extraBuildings: this.state.extraBuildings,
-      isSubleted: this.state.isSubleted,
-    }
-    const quoteData = createCreateQuoteFromProductRequest(submittedInsurance)
-    await mutate({
-      variables: { memberId: insurance.data.memberId, quoteData },
-    })
   }
 
   public isModifyingHouseInsurance = () => {
@@ -419,79 +394,7 @@ export default class InsuranceTab extends React.Component<any, any> {
         </ActionBox>
         <ActionBox>
           <ActionHeadline>Create modified insurance</ActionHeadline>
-          <Mutation
-            mutation={CREATE_QUOTE_FROM_PRODUCT_MUTATION}
-            refetchQueries={() => [
-              {
-                query: QUOTES_QUERY,
-                variables: { memberId: fields.memberId },
-              },
-            ]}
-          >
-            {(createQuoteFromProduct, createQuoteMutation) => (
-              <Modal
-                trigger={
-                  <HedvigStyledButton
-                    onClick={() =>
-                      this.setState({ confirmCreateQuoteModalOpen: true })
-                    }
-                  >
-                    Create quote
-                  </HedvigStyledButton>
-                }
-                open={this.state.confirmCreateQuoteModalOpen}
-                size="tiny"
-                onClose={() =>
-                  this.setState({ confirmCreateQuoteModalOpen: false })
-                }
-              >
-                <Modal.Content>
-                  {createQuoteMutation &&
-                  createQuoteMutation.data &&
-                  createQuoteMutation.data.createQuoteFromProduct ? (
-                    <>
-                      <SuccessMessage>Quote created!</SuccessMessage>
-                      <Button>Go to quote</Button>
-                    </>
-                  ) : (
-                    <h3>Create quote?</h3>
-                  )}
-                </Modal.Content>
-                {!(
-                  createQuoteMutation &&
-                  createQuoteMutation.data &&
-                  createQuoteMutation.data.createQuoteFromProduct
-                ) && (
-                  <Modal.Actions>
-                    <Button.Group>
-                      <Button
-                        onClick={() =>
-                          this.setState({ confirmCreateQuoteModalOpen: false })
-                        }
-                      >
-                        Cancel
-                      </Button>
-
-                      <Button
-                        onClick={this.handleSubmissionButton(
-                          createQuoteFromProduct,
-                        )}
-                        positive
-                        disabled={
-                          createQuoteMutation.loading ||
-                          (createQuoteMutation.data &&
-                            createQuoteMutation.data &&
-                            createQuoteMutation.data.createQuoteFromProduct)
-                        }
-                      >
-                        Create quote
-                      </Button>
-                    </Button.Group>
-                  </Modal.Actions>
-                )}
-              </Modal>
-            )}
-          </Mutation>
+          <ModifyInsurance memberId={fields.memberId} insurance={data}/>
         </ActionBox>
         <ActionBox>
           <ActionHeadline>Activation Date</ActionHeadline>

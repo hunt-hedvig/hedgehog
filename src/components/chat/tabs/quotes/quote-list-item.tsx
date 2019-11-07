@@ -2,14 +2,13 @@ import { useMutation } from '@apollo/react-hooks'
 import { colorsV2 } from '@hedviginsurance/brand'
 import { gql } from 'apollo-boost'
 import { ApartmentQuoteData, QuoteData, QuoteResponseEntity } from 'components/chat/tabs/quotes/data'
-import { QUOTES_QUERY } from 'components/chat/tabs/quotes/index'
+import { QUOTES_QUERY } from 'components/chat/tabs/quotes/use-quotes'
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
 import { formatMoneySE } from 'lib/intl'
-import { DatePicker } from 'material-ui-pickers'
 import * as React from 'react'
 import { useState } from 'react'
 import styled from 'react-emotion'
-import { Button, Checkbox, Label } from 'semantic-ui-react'
+import { Button, Checkbox } from 'semantic-ui-react'
 
 const OuterWrapper = styled('div')({
   ':not(:last-child)': {

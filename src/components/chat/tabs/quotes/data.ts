@@ -13,6 +13,8 @@ export interface QuoteResponseEntity<TData extends QuoteData> {
   validity: number
   member: { id }
   isComplete: boolean
+  originatingProductId?: string
+  signedProductId?: string
   data: TData
 }
 
