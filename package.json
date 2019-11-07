@@ -145,5 +145,8 @@
     "graphql": "^0.13.0",
     "prop-types": "15.x",
     "redux": "^4.0.0-0"
+  },
+  "resolutions": {
+    "react-month-picker-input/webpack-dev-server": "3.9.0"
   }
 }
