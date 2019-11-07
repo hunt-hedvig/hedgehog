@@ -29,7 +29,7 @@ module.exports =
     },
     output: {
       filename: '[name].js',
-      publicPath: '/static/'
+      publicPath: 'http://localhost:9443/static/'
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),

@@ -29,12 +29,14 @@ const actions: ActionMap<State, Actions> = {
   setIsOpen: (open: boolean) => () => ({ open }),
 }
 
-const LazyEmojiPicker = React.lazy(() =>
-  import(/* webpackChunkName: 'emoji-mart' */ 'emoji-mart').then(
-    ({ Picker }) => Picker,
-  ) as any,
+const LazyEmojiPicker = React.lazy(
+  () =>
+    import(/* webpackChunkName: 'emoji-mart' */ 'emoji-mart').then(
+      ({ Picker }) => ({ default: Picker }),
+    ) as any,
 )
 
+emojiMartStyles()
 export const EmojiPicker: React.SFC<EmojiPickerProps> = ({ selectEmoji }) => {
   return (
     <Container<State, Actions> initialState={{ open: false }} actions={actions}>
@@ -47,15 +49,17 @@ export const EmojiPicker: React.SFC<EmojiPickerProps> = ({ selectEmoji }) => {
             onClick={() => setIsOpen(!open)}
           />
           {open && (
-            <Wrapper className={emojiMartStyles}>
-              <LazyEmojiPicker
-                onSelect={(emoji) => {
-                  if (!(emoji as any).native) {
-                    return
-                  }
-                  selectEmoji((emoji as any).native)
-                }}
-              />
+            <Wrapper>
+              <React.Suspense fallback="...">
+                <LazyEmojiPicker
+                  onSelect={(emoji) => {
+                    if (!(emoji as any).native) {
+                      return
+                    }
+                    selectEmoji((emoji as any).native)
+                  }}
+                />
+              </React.Suspense>
             </Wrapper>
           )}
         </>
