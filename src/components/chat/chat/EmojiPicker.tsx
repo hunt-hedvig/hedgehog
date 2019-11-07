@@ -1,5 +1,4 @@
 import { ActionMap, Container } from 'constate'
-import { Picker } from 'emoji-mart'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
@@ -30,29 +29,37 @@ const actions: ActionMap<State, Actions> = {
   setIsOpen: (open: boolean) => () => ({ open }),
 }
 
-export const EmojiPicker: React.SFC<EmojiPickerProps> = ({ selectEmoji }) => (
-  <Container<State, Actions> initialState={{ open: false }} actions={actions}>
-    {({ open, setIsOpen }) => (
-      <>
-        <Icon
-          name={'smile outline'}
-          size={'large'}
-          link
-          onClick={() => setIsOpen(!open)}
-        />
-        {open && (
-          <Wrapper className={emojiMartStyles}>
-            <Picker
-              onSelect={(emoji) => {
-                if (!(emoji as any).native) {
-                  return
-                }
-                selectEmoji((emoji as any).native)
-              }}
-            />
-          </Wrapper>
-        )}
-      </>
-    )}
-  </Container>
+const LazyEmojiPicker = React.lazy(() =>
+  import(/* webpackChunkName: 'emoji-mart' */ 'emoji-mart').then(
+    ({ Picker }) => Picker,
+  ) as any,
 )
+
+export const EmojiPicker: React.SFC<EmojiPickerProps> = ({ selectEmoji }) => {
+  return (
+    <Container<State, Actions> initialState={{ open: false }} actions={actions}>
+      {({ open, setIsOpen }) => (
+        <>
+          <Icon
+            name={'smile outline'}
+            size={'large'}
+            link
+            onClick={() => setIsOpen(!open)}
+          />
+          {open && (
+            <Wrapper className={emojiMartStyles}>
+              <LazyEmojiPicker
+                onSelect={(emoji) => {
+                  if (!(emoji as any).native) {
+                    return
+                  }
+                  selectEmoji((emoji as any).native)
+                }}
+              />
+            </Wrapper>
+          )}
+        </>
+      )}
+    </Container>
+  )
+}
