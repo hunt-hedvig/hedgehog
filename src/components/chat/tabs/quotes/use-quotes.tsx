@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import { ApartmentQuoteData, HouseQuoteData, QuoteResponseEntity } from 'components/chat/tabs/quotes/data'
-import { parseISO } from "date-fns"
+import { ApartmentQuoteData, HouseQuoteData, QuoteResponseEntity } from './data'
+import { parseISO } from 'date-fns'
 
 export const QUOTES_QUERY = gql`
   query Quotes($memberId: ID!) {
@@ -18,16 +18,16 @@ export const QUOTES_QUERY = gql`
         originatingProductId
         signedProductId
         data {
-
-          ...on ApartmentQuoteData {
+          ... on ApartmentQuoteData {
             street
             zipCode
             city
             householdSize
             livingSpace
+            subType
           }
 
-          ...on HouseQuoteData {
+          ... on HouseQuoteData {
             street
             zipCode
             city
@@ -49,19 +49,30 @@ export const QUOTES_QUERY = gql`
     }
   }
 `
-type QuotesGqlType = { member: { quotes: ReadonlyArray<QuoteResponseEntity<ApartmentQuoteData | HouseQuoteData>> } }
+type QuotesGqlType = {
+  member: {
+    quotes: ReadonlyArray<
+      QuoteResponseEntity<ApartmentQuoteData | HouseQuoteData>
+    >
+  }
+}
 
 const latest = (a: QuoteResponseEntity<any>, b: QuoteResponseEntity<any>) =>
   parseISO(b.createdAt) - parseISO(a.createdAt)
 
-
 export const signedOrExpiredPredicate = (quote) =>
   quote.state === 'EXPIRED' || quote.state === 'SIGNED'
 
-export const useQuotes = function (memberId: string): [ReadonlyArray<QuoteResponseEntity<ApartmentQuoteData | HouseQuoteData>>, boolean] {
-  const { data, loading } = useQuery<QuotesGqlType>(QUOTES_QUERY, { variables: { memberId } })
-  const quotes = [...((data?.member?.quotes) ?? [])]
-    .sort(latest)
+export const useQuotes = function(
+  memberId: string,
+): [
+  ReadonlyArray<QuoteResponseEntity<ApartmentQuoteData | HouseQuoteData>>,
+  boolean,
+] {
+  const { data, loading } = useQuery<QuotesGqlType>(QUOTES_QUERY, {
+    variables: { memberId },
+  })
+  const quotes = [...(data?.member?.quotes ?? [])].sort(latest)
 
   return [quotes, loading]
 }

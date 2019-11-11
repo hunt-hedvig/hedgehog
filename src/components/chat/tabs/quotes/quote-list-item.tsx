@@ -1,14 +1,15 @@
-import { useMutation } from '@apollo/react-hooks'
 import { colorsV2 } from '@hedviginsurance/brand'
-import { gql } from 'apollo-boost'
-import { ApartmentQuoteData, QuoteData, QuoteResponseEntity } from 'components/chat/tabs/quotes/data'
-import { QUOTES_QUERY } from 'components/chat/tabs/quotes/use-quotes'
-import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
+import { connect } from 'react-redux'
+import actions from 'store/actions'
+import { BottomSpacerWrapper, Muted } from './common'
+import { ApartmentQuoteData, QuoteData, QuoteResponseEntity } from './data'
+import { QuoteActivation } from './quote-activation'
+import { QuoteModification } from './quote-modification'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import { useState } from 'react'
 import styled from 'react-emotion'
-import { Button, Checkbox } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 
 const OuterWrapper = styled('div')({
   ':not(:last-child)': {
@@ -44,12 +45,8 @@ const DetailWrapper = styled('div')({
   paddingBottom: '1rem',
 })
 
-
 const ActionsButtonsWrapper = styled('div')({
   flexShrink: 1,
-})
-const BottomSpacerWrapper = styled('div')({
-  paddingBottom: '1rem',
 })
 const ActivateButton = styled(Button)({
   '&&': {
@@ -60,8 +57,8 @@ const ActivateButton = styled(Button)({
     '&:hover, &:focus': {
       background: colorsV2.grass500,
       color: '#fff',
-    }
-  }
+    },
+  },
 })
 const ModifyButton = styled(Button)({
   '&&': {
@@ -72,8 +69,8 @@ const ModifyButton = styled(Button)({
     '&:hover, &:focus': {
       background: colorsV2.violet700,
       color: '#fff',
-    }
-  }
+    },
+  },
 })
 const OtherButton = styled(Button)({
   '&&': {
@@ -84,184 +81,196 @@ const OtherButton = styled(Button)({
     '&:hover, &:focus': {
       background: colorsV2.darkgray,
       color: '#fff',
-    }
-  }
+    },
+  },
 })
 
 const ActionsWrapper = styled('div')({
   background: colorsV2.flamingo200,
   padding: '1rem',
-  width: '100%'
-})
-const SubmitButton = styled(Button)({
-  '&&': {
-    whiteSpace: 'nowrap',
-    width: '100%',
-    background: colorsV2.ocean700,
-    color: '#fff',
-    '&:hover, &:focus': {
-      background: colorsV2.grass500,
-      color: '#fff',
-    }
-  }
-})
-const ErrorMessage = styled('pre')({
-  paddingTop: '1rem',
-  color: 'red',
+  width: '100%',
+  marginBottom: '1rem',
 })
 
 enum Action {
   ACTIVATE,
-  MODIFY
+  MODIFY,
 }
 
-const ACTIVATE_MUTATION = gql`
-  mutation ActivateQuote($id: ID!, $activationDate: LocalDate!, $terminationDate: LocalDate) {
-    activateQuote(id: $id, activationDate: $activationDate, terminationDate: $terminationDate) {
-      id
-      originatingProductId
-      signedProductId
+const QuoteDetails: React.FunctionComponent<{
+  quote: QuoteResponseEntity<QuoteData>
+}> = function({ quote }) {
+  return (
+    <DetailsWrapper>
+      <AddressNPriceWrapper>
+        <AddressWrapper>
+          {quote.data.street}
+          {quote.data.street && (
+            <>
+              , <br />
+            </>
+          )}
+          {quote.data.zipCode} {quote.data.city ?? '🤷️'}
+        </AddressWrapper>
+        <PriceWrapper>
+          {quote.price &&
+            formatMoneySE({ amount: quote.price, currency: 'SEK' })}
+          {!quote.price && '-'}
+        </PriceWrapper>
+      </AddressNPriceWrapper>
+      <DetailWrapper>
+        Product type:{' '}
+        <strong>
+          {quote.productType}
+          {quote.productType === 'APARTMENT' &&
+            ` (${(quote.data as ApartmentQuoteData)?.subType ?? 'none'})`}
+        </strong>
+        <br />
+        Living space:
+        <strong>
+          {' '}
+          {quote.data.livingSpace} m<sup>2</sup>
+        </strong>
+        <br />
+        Household size:
+        <strong> {quote.data.householdSize} person(s)</strong>
+      </DetailWrapper>
+      <DetailWrapper>
+        <Muted>
+          Created: <strong>{quote.createdAt}</strong>
+          <br />
+          State: <strong>{quote.state}</strong>
+          <br />
+          Originating product id:{' '}
+          <strong>{quote.originatingProductId ?? '-'}</strong>
+          <br />
+          Quote id: <strong>{quote.id}</strong>
+        </Muted>
+      </DetailWrapper>
+    </DetailsWrapper>
+  )
+}
+
+export const QuoteListItemComponent: React.FunctionComponent<{
+  quote: QuoteResponseEntity<QuoteData>
+  inactionable?: boolean
+  memberId: string
+  showNotification?: (data: any) => void
+}> = function({ quote, inactionable, memberId, showNotification }) {
+  const [action, setAction] = useState<Action | null>(null)
+  const [isWip, setIsWip] = useState(false)
+
+  const toggleState = (targetAction: Action) => () => {
+    const isTransitionToOpen = action === null
+    if (isTransitionToOpen) {
+      setAction(targetAction)
+      return
     }
+
+    const isTransitionToClose = action === targetAction
+    if (isTransitionToClose) {
+      if (
+        !isWip ||
+        confirm('Any changes will get lost. Do you want to continue?')
+      ) {
+        setAction(null)
+      }
+      return
+    }
+
+    const isTransitionToOther = true
+    if (isTransitionToOther) {
+      if (
+        !isWip ||
+        confirm('Any changes will get lost. Do you want to continue?')
+      ) {
+        setAction(targetAction)
+        return
+      }
+    }
+
+    throw Error(
+      'Illegal state! This should never happen, please file a report to the ministry of logic',
+    )
   }
-`
 
-export const QuoteListItem: React.FunctionComponent<{ quote: QuoteResponseEntity<QuoteData>, inactionable?: boolean, memberId: string }> =
-  function ({ quote, inactionable, memberId }) {
-    const [action, setAction] = useState<Action | null>(null)
-    const [activationDate, setActivationDate] = useState<Date | null>(null)
-    const [terminationDate, setTerminationDate] = useState<Date | null>(null)
-    const [useGap, setUseGap] = useState(false)
+  return (
+    <OuterWrapper>
+      <QuoteWrapper>
+        <QuoteDetails quote={quote} />
 
-    const [activateQuote, activationMutation] = useMutation(ACTIVATE_MUTATION, {
-      refetchQueries: () => [{
-        query: QUOTES_QUERY,
-        variables: { memberId }
-      }]
-    })
-
-    return (
-      <OuterWrapper>
-        <QuoteWrapper>
-          <DetailsWrapper>
-            <AddressNPriceWrapper>
-              <AddressWrapper>
-                {quote.data.street}{quote.data.street && <>, <br /></>}
-                {quote.data.zipCode} {quote.data.city ?? '🤷️'}
-              </AddressWrapper>
-              <PriceWrapper>
-                {quote.price && formatMoneySE({ amount: quote.price, currency: 'SEK' })}
-                {!quote.price && '-'}
-              </PriceWrapper>
-            </AddressNPriceWrapper>
-            <DetailWrapper>
-              Product type:{' '}
-              <strong>
-                {quote.productType}
-                {quote.productType === 'APARTMENT' && ` (${(quote.data as ApartmentQuoteData)?.subType ?? 'none'})`}
-              </strong>
-              <br />
-
-              Living space:
-              <strong> {quote.data.livingSpace} m<sup>2</sup></strong><br />
-
-              Household size:
-              <strong> {quote.data.householdSize} person(s)</strong>
-            </DetailWrapper>
-            <DetailWrapper>
-              Modified: <strong>{quote.createdAt}</strong><br />
-              State: <strong>{quote.state}</strong><br />
-              Originating product id: <strong>{quote.originatingProductId ?? '-'}</strong><br />
-              Quote id: <strong>{quote.id}</strong>
-            </DetailWrapper>
-          </DetailsWrapper>
-          {!!inactionable || <ActionsButtonsWrapper>
+        {!!inactionable || (
+          <ActionsButtonsWrapper>
             <BottomSpacerWrapper>
-              <ActivateButton onClick={() => {
-                if (action === Action.ACTIVATE) {
-                  setAction(null)
-                } else {
-                  setAction(Action.ACTIVATE)
-                }
-              }}>Activate</ActivateButton>
+              <ModifyButton onClick={toggleState(Action.MODIFY)}>
+                Modify
+              </ModifyButton>
             </BottomSpacerWrapper>
             <BottomSpacerWrapper>
-              <ModifyButton>Modify</ModifyButton>
+              <ActivateButton onClick={toggleState(Action.ACTIVATE)}>
+                Activate
+              </ActivateButton>
             </BottomSpacerWrapper>
             <div>
               <OtherButton>Do something?</OtherButton>
             </div>
-          </ActionsButtonsWrapper>}
-        </QuoteWrapper>
-        {action !== null && (
-          <ActionsWrapper>
-            {action === Action.ACTIVATE && (
-              <form onSubmit={async (e) => {
-                e.preventDefault()
-                if (activationMutation.loading || !activationDate) {
-                  return
-                }
-                await activateQuote({
-                  variables: {
-                    id: quote.id,
-                    activationDate: activationDate.toISOString().slice(0, 10),
-                    terminationDate: terminationDate?.toISOString()?.slice(0, 10)
-                  }
-                })
-              }}>
-                <BottomSpacerWrapper>
-                  <div>
-                    <strong>Activation date</strong>
-                  </div>
-                  <div>
-                    <BaseDatePicker value={activationDate} onChange={setActivationDate} />
-                  </div>
-                </BottomSpacerWrapper>
-
-                <BottomSpacerWrapper>
-                  <Checkbox
-                    onChange={(e) => {
-                      const newUseGap = !useGap
-                      if (!newUseGap) {
-                        setTerminationDate(null)
-                      }
-                      setUseGap(newUseGap)
-                    }}
-                    label="Create gap between insurances"
-                    value={useGap}
-                  />
-                </BottomSpacerWrapper>
-
-                {useGap && (
-                  <BottomSpacerWrapper>
-                    <div>
-                      <strong>Terminate current insurance at</strong>
-                    </div>
-                    <div>
-                      <BaseDatePicker
-                        value={terminationDate}
-                        onChange={setTerminationDate}
-                        maxDate={activationDate}
-                      />
-                    </div>
-                  </BottomSpacerWrapper>
-                )}
-
-                {!activationMutation.data?.activateQuote ?
-                  <SubmitButton type="submit" disabled={activationMutation.loading}>
-                    Do activate quote
-                  </SubmitButton>
-                  : <Button type="button"onClick={(e) => {
-                    e.preventDefault()
-                    window.location.reload()
-                  }}>Reload</Button>
-                }
-
-                {activationMutation.error &&
-                <ErrorMessage>{JSON.stringify(activationMutation.error, null, 2)}</ErrorMessage>}
-              </form>
-            )}
-          </ActionsWrapper>
+          </ActionsButtonsWrapper>
         )}
-      </OuterWrapper>
-    )
-  }
+      </QuoteWrapper>
+      {action === Action.ACTIVATE && (
+        <ActionsWrapper>
+          <QuoteActivation
+            quote={quote}
+            memberId={memberId}
+            onWipChange={setIsWip}
+            onSubmitted={() => {
+              showNotification &&
+                showNotification({
+                  header: 'Activated',
+                  message: (
+                    <>
+                      Quote activated,{' '}
+                      <Button
+                        color="green"
+                        size="tiny"
+                        onClick={() => window.location.reload()}
+                      >
+                        reload?
+                      </Button>
+                    </>
+                  ),
+                  type: 'olive',
+                })
+              setIsWip(false)
+              setAction(null)
+            }}
+          />
+        </ActionsWrapper>
+      )}
+
+      {action === Action.MODIFY && (
+        <ActionsWrapper>
+          <QuoteModification
+            quote={quote}
+            memberId={memberId}
+            onWipChange={setIsWip}
+            onSubmitted={() => {
+              showNotification &&
+                showNotification({
+                  header: 'Saved',
+                  message: <>Quote saved</>,
+                  type: 'olive',
+                })
+              setIsWip(false)
+              setAction(null)
+            }}
+          />
+        </ActionsWrapper>
+      )}
+    </OuterWrapper>
+  )
+}
+
+const mapActions = { ...actions.notificationsActions }
+
+export const QuoteListItem = connect(null, mapActions)(QuoteListItemComponent)
