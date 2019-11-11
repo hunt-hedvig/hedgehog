@@ -5,7 +5,6 @@ import * as React from 'react'
 import { useState } from 'react'
 import {
   QUOTES_QUERY,
-  signedOrExpiredPredicate,
   useQuotes,
 } from 'components/chat/tabs/quotes/use-quotes'
 import styled from 'react-emotion'
@@ -24,15 +23,20 @@ export const createCreateQuoteFromProductRequest = (modifiedDetails) => {
     householdSize: modifiedDetails.personsInHouseHold,
   }
 
-  if (modifiedDetails.productType === 'HOUSE') {
+  if (modifiedDetails.insuranceType === 'HOUSE') {
     requestData.incompleteHouseQuoteData = {
       ...requestQuoteData,
-      floor: modifiedDetails.floor,
-      isStudent: false,
       ancillaryArea: modifiedDetails.ancillaryArea,
       yearOfConstruction: modifiedDetails.yearOfConstruction,
       numberOfBathrooms: modifiedDetails.numberOfBathrooms,
-      extraBuildings: modifiedDetails.extraBuildings,
+      extraBuildings: modifiedDetails.extraBuildings?.map(
+        ({ area, displayName, hasWaterConnected, type }) => ({
+          area,
+          displayName,
+          hasWaterConnected,
+          type,
+        }),
+      ),
       isSubleted: modifiedDetails.isSubleted,
     }
   } else {
@@ -80,7 +84,6 @@ export const CreateQuote: React.FunctionComponent<{
         <Modal
           trigger={
             quotes
-              .filter((quote) => !signedOrExpiredPredicate(quote))
               .map((quote) => quote.originatingProductId)
               .includes(insurance.productId) && !loadingQuotes ? (
               <>Insurance has existing quote</>

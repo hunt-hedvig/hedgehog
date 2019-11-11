@@ -36,7 +36,7 @@ export const QuoteActivation: React.FunctionComponent<{
   onSubmitted = () => {},
   onWipChange = (_) => {},
 }) {
-  const [activationDate, setActivationDate] = useState<Date | null>(null)
+  const [activationDate, setActivationDate] = useState<Date | null>(new Date())
   const [terminationDate, setTerminationDate] = useState<Date | null>(null)
   const [useGap, setUseGap] = useState(false)
 
@@ -53,7 +53,13 @@ export const QuoteActivation: React.FunctionComponent<{
     <form
       onSubmit={async (e) => {
         e.preventDefault()
-        if (activationMutation.loading || !activationDate) {
+        if (
+          activationMutation.loading ||
+          !activationDate ||
+          !confirm(
+            'Are you sure you want to activate?',
+          )
+        ) {
           return
         }
         await activateQuote({
@@ -116,7 +122,7 @@ export const QuoteActivation: React.FunctionComponent<{
 
       {!activationMutation.data?.activateQuote ? (
         <SubmitButton type="submit" disabled={activationMutation.loading}>
-          Do activate quote
+          Activate
         </SubmitButton>
       ) : (
         <Button
