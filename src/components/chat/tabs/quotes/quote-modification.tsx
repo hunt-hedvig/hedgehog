@@ -1,12 +1,28 @@
 import { useMutation } from '@apollo/react-hooks'
-import styled from 'react-emotion'
-import { SubmitButton } from './common'
-import { useState } from 'react'
-import * as React from 'react'
+import { colorsV2 } from '@hedviginsurance/brand/dist'
 import { gql } from 'apollo-boost'
-import { ApartmentQuoteData, QuoteData, QuoteResponseEntity } from './data'
+import {
+  ExtraBuilding,
+  ExtraBuildingType,
+} from 'components/chat/tabs/InsuranceTab'
+import * as React from 'react'
+import { useState } from 'react'
+import styled from 'react-emotion'
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Input as SuiInput,
+} from 'semantic-ui-react'
+import * as uuid from 'uuid/v4'
+import { ErrorMessage, SubmitButton } from './common'
+import {
+  ApartmentQuoteData,
+  HouseQuoteData,
+  QuoteData,
+  QuoteResponseEntity,
+} from './data'
 import { QUOTES_QUERY } from './use-quotes'
-import { Dropdown, Input as SuiInput } from 'semantic-ui-react'
 
 const Label = styled('label')({
   display: 'block',
@@ -57,10 +73,25 @@ export const QuoteModification: React.FunctionComponent<{
   const [zipCode, setZipCode] = useState<string | null>(null)
   const [city, setCity] = useState<string | null>(null)
   const [productType, setProductType] = useState<string | null>(null)
-  const [livingSpace, setLivingSpace] = useState<number | null>(null)
-  const [householdSize, setHouseholdSize] = useState<number | null>(null)
+  const [livingSpace, setLivingSpace] = useState<string | null>(null)
+  const [householdSize, setHouseholdSize] = useState<string | null>(null)
+  const [ancillaryArea, setAncillaryArea] = useState<string | null>(null)
+  const [yearOfConstruction, setYearOfConstruction] = useState<string | null>(
+    null,
+  )
+  const [numberOfBathrooms, setNumberOfBathrooms] = useState<string | null>(
+    null,
+  )
+  const [extraBuildings, setExtraBuildings] = useState<ReadonlyArray<
+    ExtraBuilding
+  > | null>(
+    ((quote.data as HouseQuoteData | null)?.extraBuildings?.map(
+      (extraBuilding) => ({ ...extraBuilding, id: uuid() }),
+    ) ?? []) as ExtraBuilding[],
+  )
+  const [isSubleted, setIsSubleted] = useState<boolean | null>(null)
 
-  const getInput = (
+  const getTextInput = (
     variable: string,
     label: string,
     value: string | number | null,
@@ -80,6 +111,12 @@ export const QuoteModification: React.FunctionComponent<{
       />
     </>
   )
+  const getNumberInput = (
+    variable: string,
+    label: string,
+    value: string | number | null,
+    setter: (val: any) => void,
+  ) => getTextInput(variable, label, value, setter, 'number')
 
   return (
     <Wrapper
@@ -90,17 +127,31 @@ export const QuoteModification: React.FunctionComponent<{
           return
         }
 
-        const quoteData: any = {}
+        const quoteData: any = {
+          productType: (productType ?? quote.productType) === 'HOUSE' ? 'HOUSE' : 'APARTMENT',
+        }
         const baseData = {
           street,
           zipCode,
           city,
-          livingSpace,
-          householdSize,
+          livingSpace: parseInt(livingSpace!),
+          householdSize: parseInt(householdSize!),
         }
-        if (productType === 'HOUSE') {
+        if ((productType ?? quote.productType) === 'HOUSE') {
           quoteData.houseData = {
             ...baseData,
+            ancillaryArea: parseInt(ancillaryArea!),
+            yearOfConstruction: parseInt(yearOfConstruction!),
+            numberOfBathrooms: parseInt(numberOfBathrooms!),
+            extraBuildings: extraBuildings?.map(
+              ({ displayName, area, type, hasWaterConnected }) => ({
+                displayName,
+                area,
+                type,
+                hasWaterConnected,
+              }),
+            ),
+            isSubleted: isSubleted ?? quote.data['isSubleted'] ?? false,
           }
         } else {
           quoteData.apartmentData = {
@@ -112,7 +163,6 @@ export const QuoteModification: React.FunctionComponent<{
         await modifyField({
           variables: {
             quoteId: quote.id,
-            productType,
             quoteData,
           },
         })
@@ -120,9 +170,9 @@ export const QuoteModification: React.FunctionComponent<{
       }}
     >
       <InputGroup>
-        {getInput('street', 'Street', street, setStreet)}
-        {getInput('zipCode', 'Zip code', zipCode, setZipCode)}
-        {getInput('city', 'City', city, setCity)}
+        {getTextInput('street', 'Street', street, setStreet)}
+        {getTextInput('zipCode', 'Zip code', zipCode, setZipCode)}
+        {getTextInput('city', 'City', city, setCity)}
       </InputGroup>
       <InputGroup>
         <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
@@ -148,34 +198,211 @@ export const QuoteModification: React.FunctionComponent<{
           ]}
         />
 
-        {getInput(
+        {getNumberInput(
           'livingSpace',
           'Living space (m2)',
           livingSpace,
-          (val) => {
-            setLivingSpace(parseInt(val as string))
-          },
-          'number',
+          setLivingSpace,
         )}
-        {getInput(
+        {getNumberInput(
           'householdSize',
           'Household size (# of people)',
           householdSize,
-          (val) => {
-            setHouseholdSize(parseInt(val as string))
-          },
-          'number',
+          setHouseholdSize,
         )}
       </InputGroup>
 
-      {productType === 'HOUSE' && (
-        <InputGroup>Switching to HOUSE product not supported yet</InputGroup>
+      {(productType ?? quote.productType) === 'HOUSE' && (
+        <>
+          <InputGroup>
+            {getNumberInput(
+              'ancillaryArea',
+              <>
+                Ancillary area (m<sup>2</sup>)
+              </>,
+              ancillaryArea ?? quote.data['ancillaryArea'] ?? 0,
+              setAncillaryArea,
+            )}
+            {getNumberInput(
+              'yearOfConstruction',
+              'Year of construction',
+              yearOfConstruction ?? quote.data['yearOfConstruction'] ?? '',
+              setYearOfConstruction,
+            )}
+            {getNumberInput(
+              'numberOfBathrooms',
+              'Number of bathrooms',
+              numberOfBathrooms ?? quote.data['numberOfBathrooms'] ?? '',
+              setNumberOfBathrooms,
+            )}
+            <Label>Is subleted</Label>
+            <Checkbox
+              onClick={(e) => setIsSubleted(e.currentTarget.checked)}
+              label="Is subleted"
+              value={isSubleted ?? false}
+            />
+          </InputGroup>
+          <InputGroup>
+            <ExtraBuildingEditor
+              extraBuildings={extraBuildings ?? []}
+              onChange={setExtraBuildings}
+            />
+          </InputGroup>
+        </>
       )}
 
       <SubmitButton type="submit" disabled={fieldModification.loading}>
         Save modifications
       </SubmitButton>
-      {}
+
+      {fieldModification.error && (
+        <ErrorMessage>
+          {JSON.stringify(fieldModification.error, null, 2)}
+        </ErrorMessage>
+      )}
     </Wrapper>
+  )
+}
+
+const ExtraBuildingEditorWrapper = styled('div')({
+  border: '1px solid ' + colorsV2.semilightgray,
+  padding: '1rem 0',
+})
+const ExtraBuildingWrapper = styled('div')({
+  borderBottom: '1px solid ' + colorsV2.semilightgray,
+  marginBottom: '1rem',
+  padding: '1rem',
+  paddingTop: 0,
+
+  ':nth-child(odd)': {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  },
+})
+const RemoveButtonWrapper = styled('div')({
+  textAlign: 'right',
+  paddingTop: '1rem',
+})
+
+const ExtraBuildingEditor: React.FunctionComponent<{
+  extraBuildings: ReadonlyArray<ExtraBuilding>
+  onChange: (value: ReadonlyArray<ExtraBuilding>) => void
+}> = function({ extraBuildings, onChange }) {
+  const handleExtraBuildingChange = (index: number) => (
+    data: ExtraBuilding,
+  ) => {
+    onChange(
+      extraBuildings.map((extraBuilding, i) =>
+        i === index ? { ...extraBuilding, ...data } : extraBuilding,
+      ),
+    )
+  }
+  return (
+    <ExtraBuildingEditorWrapper>
+      <div>
+        <strong>Extra buildings</strong>
+      </div>
+      {extraBuildings.map((extraBuilding, i) => (
+        <ExtraBuildingWrapper key={extraBuilding.id}>
+          <div>
+            <Label htmlFor={`displayName-${extraBuilding.id}`}>Name</Label>
+            <Input
+              id={`displayName-${extraBuilding.id}`}
+              value={extraBuilding.displayName}
+              onChange={(e) =>
+                handleExtraBuildingChange(i)({
+                  displayName: e.currentTarget.value,
+                })
+              }
+            />
+          </div>
+
+          <div>
+            <Label htmlFor={`area-${extraBuilding.id}`}>Area</Label>
+            <Input
+              id={`area-${extraBuilding.id}`}
+              label="m2"
+              labelPosition="right"
+              type="number"
+              value={extraBuilding.area}
+              onChange={(e) =>
+                handleExtraBuildingChange(i)({
+                  area: e.currentTarget.value
+                    ? parseInt(e.currentTarget.value)
+                    : '',
+                })
+              }
+            />
+          </div>
+          <div>
+            <Label htmlFor={`type-${extraBuilding.id}`}>Type</Label>
+            <Dropdown
+              id={`type-${extraBuilding.id}`}
+              fluid
+              selection
+              options={Object.keys(ExtraBuildingType).map((type) => ({
+                text: type,
+                value: type,
+              }))}
+              value={extraBuilding.type}
+              onChange={(_, newValue) =>
+                handleExtraBuildingChange(i)({ type: newValue.value })
+              }
+            />
+          </div>
+          <div>
+            <Label htmlFor={`hasWaterConnected-${extraBuilding.id}`}>
+              Water connection
+            </Label>
+            <Checkbox
+              id={`hasWaterConnected-${extraBuilding.id}`}
+              label="Has water connected"
+              value={extraBuilding.hasWaterConnected}
+              onChange={(e) =>
+                handleExtraBuildingChange(i)({
+                  hasWaterConnected: e.currentTarget.checked,
+                })
+              }
+            />
+          </div>
+          <RemoveButtonWrapper>
+            <Button
+              color="red"
+              size="tiny"
+              onClick={(e) => {
+                e.preventDefault()
+                if (
+                  confirm(
+                    `Are you sure you want to remove the extra building "${extraBuilding.displayName}"?`,
+                  )
+                ) {
+                  onChange(
+                    extraBuildings.filter(({ id }) => id !== extraBuilding.id),
+                  )
+                }
+              }}
+            >
+              Remove
+            </Button>
+          </RemoveButtonWrapper>
+        </ExtraBuildingWrapper>
+      ))}
+      <Button
+        onClick={(e) => {
+          e.preventDefault()
+          onChange([
+            ...extraBuildings,
+            {
+              area: 0,
+              displayName: '',
+              hasWaterConnected: false,
+              id: uuid(),
+              type: ExtraBuildingType.ATTEFALL,
+            },
+          ])
+        }}
+      >
+        + Add
+      </Button>
+    </ExtraBuildingEditorWrapper>
   )
 }

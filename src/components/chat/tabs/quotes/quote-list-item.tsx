@@ -211,9 +211,6 @@ export const QuoteListItemComponent: React.FunctionComponent<{
                 Activate
               </ActivateButton>
             </BottomSpacerWrapper>
-            <div>
-              <OtherButton>Do something?</OtherButton>
-            </div>
           </ActionsButtonsWrapper>
         )}
       </QuoteWrapper>
