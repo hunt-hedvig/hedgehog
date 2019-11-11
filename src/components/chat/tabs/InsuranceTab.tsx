@@ -2,8 +2,8 @@ import { colors } from '@hedviginsurance/brand'
 import { colorsV2 } from '@hedviginsurance/brand/dist'
 import {
   createCreateQuoteFromProductRequest,
-  ModifyInsurance,
-} from 'components/chat/tabs/insurance-tab/modify-insurance'
+  CreateQuote,
+} from './insurance-tab/create-quote'
 import { Mutation } from 'react-apollo'
 import DateInput from 'components/shared/inputs/DateInput'
 import { WideModal } from 'components/shared/modals/WideModal'
@@ -124,9 +124,6 @@ const ButtonLink = HedvigStyledButton.withComponent('a')
 const FileButton = styled(HedvigStyledButton)({
   marginLeft: 8,
 }).withComponent('label')
-const ExtraBuildingsForm = styled('div')({
-  marginBottom: '15px',
-})
 
 const timeStringToDistance = (timeString: string) =>
   formatDistance(
@@ -159,8 +156,6 @@ export default class InsuranceTab extends React.Component<any, any> {
   }
   private fileInputRef = React.createRef<HTMLInputElement>()
 
-  public handleOpen = () => this.setState({ modalOpen: true })
-
   public handleClose = () => {
     this.setState({
       modalOpen: false,
@@ -171,24 +166,6 @@ export default class InsuranceTab extends React.Component<any, any> {
         ...this.props.insurance.data.extraBuildings,
       ] as ExtraBuilding[],
     })
-  }
-
-  public shouldBeDisplayed = (field) => {
-    switch (field.toLowerCase()) {
-      case 'personsinhousehold':
-      case 'insurancetype':
-      case 'street':
-      case 'city':
-      case 'zipcode':
-      case 'livingspace':
-        return true
-      case 'ancillaryarea':
-      case 'yearofconstruction':
-      case 'numberofbathrooms':
-        return this.isModifyingHouseInsurance()
-      default:
-        return false
-    }
   }
 
   public handleChange = (field) => (e) => {
@@ -218,18 +195,6 @@ export default class InsuranceTab extends React.Component<any, any> {
         break
     }
     this.setState({ insurance })
-  }
-
-  public handleCancel = () => {
-    this.handleClose()
-  }
-
-  public isModifyingHouseInsurance = () => {
-    const insuranceToBeSubmitted = {
-      ...this.props.insurance.data,
-      ...this.state.insurance,
-    }
-    return insuranceToBeSubmitted.insuranceType === 'HOUSE'
   }
 
   public hasHouseInsurance = () => {
@@ -394,7 +359,7 @@ export default class InsuranceTab extends React.Component<any, any> {
         </ActionBox>
         <ActionBox>
           <ActionHeadline>Create quote</ActionHeadline>
-          <ModifyInsurance memberId={fields.memberId} insurance={data} />
+          <CreateQuote memberId={fields.memberId} insurance={data} />
         </ActionBox>
         <ActionBox>
           <ActionHeadline>Activation Date</ActionHeadline>

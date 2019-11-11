@@ -1,6 +1,4 @@
 import {
-  ACTIVATE_QUOTE,
-  ACTIVATE_QUOTE_SUCCESS,
   INSURANCE_ERROR,
   INSURANCE_REQUEST_SUCCESS,
   INSURANCE_REQUESTING,
@@ -8,8 +6,6 @@ import {
   INSURANCES_LIST_REQUESTING,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
-  MEMBER_CREATE_MODIFIED_QUOTE,
-  MEMBER_CREATE_MODIFIED_QUOTE_SUCCESS,
   SAVE_ACTIVATION_DATE_SUCCESS,
   SAVE_CANCELLATION_DATE_SUCCESS,
   SAVE_INSURANCE_DATE,
@@ -29,8 +25,6 @@ export default function(state = initialState.insurance, action) {
     case SAVE_INSURANCE_DATE:
     case SEND_CERTIFICATE:
     case MEMBER_COMPANY_STATUS:
-    case MEMBER_CREATE_MODIFIED_QUOTE:
-    case ACTIVATE_QUOTE:
       return {
         ...state,
         requesting: true,
@@ -52,15 +46,6 @@ export default function(state = initialState.insurance, action) {
         requesting: false,
         successful: true,
         data: action.insurance,
-        error: [],
-      }
-
-    case MEMBER_CREATE_MODIFIED_QUOTE_SUCCESS:
-      return {
-        ...state,
-        requesting: false,
-        successful: true,
-        list: [...state.list], // TODO how to squeeze the quote in here?
         error: [],
       }
 
@@ -113,7 +98,6 @@ export default function(state = initialState.insurance, action) {
         requesting: false,
       }
 
-    case ACTIVATE_QUOTE_SUCCESS:
     default:
       return state
   }

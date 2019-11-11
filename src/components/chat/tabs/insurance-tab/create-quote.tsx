@@ -3,7 +3,11 @@ import { colorsV2 } from '@hedviginsurance/brand/dist'
 import { gql } from 'apollo-boost'
 import * as React from 'react'
 import { useState } from 'react'
-import { QUOTES_QUERY, signedOrExpiredPredicate, useQuotes } from 'components/chat/tabs/quotes/use-quotes'
+import {
+  QUOTES_QUERY,
+  signedOrExpiredPredicate,
+  useQuotes,
+} from 'components/chat/tabs/quotes/use-quotes'
 import styled from 'react-emotion'
 import { Button, Modal } from 'semantic-ui-react'
 
@@ -20,7 +24,7 @@ export const createCreateQuoteFromProductRequest = (modifiedDetails) => {
     householdSize: modifiedDetails.personsInHouseHold,
   }
 
-  if (modifiedDetails.productType === "HOUSE") {
+  if (modifiedDetails.productType === 'HOUSE') {
     requestData.incompleteHouseQuoteData = {
       ...requestQuoteData,
       floor: modifiedDetails.floor,
@@ -55,7 +59,10 @@ const SuccessMessage = styled('h3')({
   color: colorsV2.grass500,
 })
 
-export const ModifyInsurance: React.FunctionComponent<{ memberId: string, insurance: any }> = function ({ memberId, insurance }) {
+export const CreateQuote: React.FunctionComponent<{
+  memberId: string
+  insurance: any
+}> = function({ memberId, insurance }) {
   const [quotes, loadingQuotes] = useQuotes(memberId)
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -72,24 +79,20 @@ export const ModifyInsurance: React.FunctionComponent<{ memberId: string, insura
       {(createQuoteFromProduct, createQuoteMutation) => (
         <Modal
           trigger={
-            quotes.filter(quote => !signedOrExpiredPredicate(quote)).map(quote => quote.originatingProductId).includes(insurance.productId) && !loadingQuotes ?
+            quotes
+              .filter((quote) => !signedOrExpiredPredicate(quote))
+              .map((quote) => quote.originatingProductId)
+              .includes(insurance.productId) && !loadingQuotes ? (
               <>Insurance has existing quote</>
-              : (
-                !loadingQuotes &&
-                <Button
-                  onClick={() =>
-                    setModalOpen(true)
-                  }
-                >
-                  Create quote
-                </Button>
+            ) : (
+              !loadingQuotes && (
+                <Button onClick={() => setModalOpen(true)}>Create quote</Button>
               )
+            )
           }
           open={modalOpen}
           size="tiny"
-          onClose={() =>
-            setModalOpen(false)
-          }
+          onClose={() => setModalOpen(false)}
         >
           <Modal.Content>
             {createQuoteMutation &&
@@ -110,17 +113,13 @@ export const ModifyInsurance: React.FunctionComponent<{ memberId: string, insura
           ) && (
             <Modal.Actions>
               <Button.Group>
-                <Button
-                  onClick={() =>
-                    setModalOpen(false)
-                  }
-                >
-                  Cancel
-                </Button>
+                <Button onClick={() => setModalOpen(false)}>Cancel</Button>
 
                 <Button
                   onClick={async () => {
-                    const quoteData = createCreateQuoteFromProductRequest(insurance)
+                    const quoteData = createCreateQuoteFromProductRequest(
+                      insurance,
+                    )
                     await createQuoteFromProduct({
                       variables: { memberId, quoteData },
                     })

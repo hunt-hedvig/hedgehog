@@ -1,5 +1,4 @@
 import {
-  ACTIVATE_QUOTE, ACTIVATE_QUOTE_SUCCESS,
   INSURANCE_ERROR,
   INSURANCE_REQUEST_SUCCESS,
   INSURANCE_REQUESTING,
@@ -7,10 +6,6 @@ import {
   INSURANCES_LIST_REQUESTING,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
-  MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
-  MEMBER_CREATE_MODIFIED_QUOTE, MEMBER_CREATE_MODIFIED_QUOTE_SUCCESS,
-  MODIFY_INSURANCE,
-  MODIFY_INSURANCE_SUCCESS,
   SAVE_ACTIVATION_DATE_SUCCESS,
   SAVE_CANCELLATION_DATE_SUCCESS,
   SAVE_INSURANCE_DATE,
@@ -96,26 +91,4 @@ export const changeCompanyStatus = (value, memberId) => ({
 export const changeCompanyStatusSuccess = (value) => ({
   type: MEMBER_COMPANY_STATUS_SUCCESS,
   value,
-})
-
-export const createModifiedQuote = (memberId, modifiedDetails) => ({
-  type: MEMBER_CREATE_MODIFIED_QUOTE,
-  modifiedDetails,
-  memberId,
-})
-
-export const createModifiedQuoteSuccess = ({ quoteId }) => ({
-  type: MEMBER_CREATE_MODIFIED_QUOTE_SUCCESS,
-  quoteId,
-})
-
-export const activateQuote = (memberId, quoteId, request) => ({
-  type: ACTIVATE_QUOTE,
-  memberId,
-  quoteId,
-  request,
-})
-
-export const activateQuoteSuccess = () => ({
-  type: ACTIVATE_QUOTE_SUCCESS,
 })
