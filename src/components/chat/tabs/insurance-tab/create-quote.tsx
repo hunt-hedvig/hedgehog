@@ -103,6 +103,7 @@ export const CreateQuote: React.FunctionComponent<{
             createQuoteMutation.data.createQuoteFromProduct ? (
               <>
                 <SuccessMessage>Quote created!</SuccessMessage>
+                <p>Go to the quotes tab to change the details and activate the quote.</p>
                 <Button onClick={() => setModalOpen(false)}>Close</Button>
               </>
             ) : (
