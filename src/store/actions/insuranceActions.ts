@@ -8,12 +8,13 @@ import {
   MEMBER_COMPANY_STATUS_SUCCESS,
   SAVE_ACTIVATION_DATE_SUCCESS,
   SAVE_CANCELLATION_DATE_SUCCESS,
+  MODIFY_INSURANCE,
   SAVE_INSURANCE_DATE,
   SEND_CANCEL_REQUEST,
   SEND_CANCEL_REQUEST_SUCCESS,
   SEND_CERTIFICATE,
   SEND_CERTIFICATE_ERROR,
-  SEND_CERTIFICATE_SUCCESS,
+  SEND_CERTIFICATE_SUCCESS, MODIFY_INSURANCE_SUCCESS,
 } from '../constants/members'
 
 export const insuranceRequest = (id) => ({
@@ -91,4 +92,14 @@ export const changeCompanyStatus = (value, memberId) => ({
 export const changeCompanyStatusSuccess = (value) => ({
   type: MEMBER_COMPANY_STATUS_SUCCESS,
   value,
+})
+
+export const modifyInsurance = (memberId, request) => ({
+  type: MODIFY_INSURANCE,
+  memberId,
+  request,
+})
+
+export const modifyInsuranceSuccess = () => ({
+  type: MODIFY_INSURANCE_SUCCESS,
 })

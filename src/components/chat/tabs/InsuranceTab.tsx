@@ -1,22 +1,14 @@
 import { colors } from '@hedviginsurance/brand'
-import { colorsV2 } from '@hedviginsurance/brand/dist'
-import {
-  createCreateQuoteFromProductRequest,
-  CreateQuote,
-} from './insurance-tab/create-quote'
-import { Mutation } from 'react-apollo'
 import DateInput from 'components/shared/inputs/DateInput'
-import { WideModal } from 'components/shared/modals/WideModal'
 import { formatDistance, parse } from 'date-fns'
-import { getFieldName, getFieldValue } from 'lib/helpers'
 import { formatMoneySE } from 'lib/intl'
 import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Button, Form, Header, Icon, Modal, Radio } from 'semantic-ui-react'
-import * as uuid from 'uuid/v4'
+import { Button, Header, Icon, Radio } from 'semantic-ui-react'
+import { CreateQuote, } from './insurance-tab/create-quote'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 export enum ExtraBuildingType {
@@ -517,5 +509,4 @@ InsuranceTab.propTypes = {
   messages: PropTypes.object.isRequired,
   saveInsuranceDate: PropTypes.func.isRequired,
   sendCancelRequest: PropTypes.func.isRequired,
-  createModifiedQuote: PropTypes.func.isRequired,
 }

@@ -1,18 +1,32 @@
 import { ExtraBuilding } from 'components/chat/tabs/InsuranceTab'
 import { LinkRow } from 'components/shared'
+import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
 import TableFields from 'components/shared/table-fields/TableFields'
 import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { Header, Table } from 'semantic-ui-react'
+import {
+  Button,
+  Form,
+  Header,
+  Icon,
+  Loader,
+  Modal,
+  Table,
+} from 'semantic-ui-react'
+
+const DateTypeEnum = {
+  terminationDate: 1,
+  activationDate: 2,
+}
 
 export default class InsuranceList extends React.Component {
   public insuranceFieldFormatters = {
     extraBuildings: (buildings: ExtraBuilding[]) =>
       buildings.map((building) => (
         <p key={building.id}>
-          {building.displayName} {building.area} m<sup>2</sup> (
+          {building.type} {building.area} m<sup>2</sup> (
           {building.hasWaterConnected
             ? 'has water connected'
             : 'no water connected'}
@@ -26,8 +40,13 @@ export default class InsuranceList extends React.Component {
       column: null,
       direction: null,
       item: null,
+      terminationDate: null,
+      activationDate: null,
+      modalOpen: false,
     }
   }
+
+  public handleOpen = () => this.setState({ modalOpen: true })
 
   public getFormattedDate = (date) => {
     return date.isValid() ? date.format('DD MMMM YYYY') : '-'
@@ -39,6 +58,49 @@ export default class InsuranceList extends React.Component {
     } else {
       this.setState({ item: i })
     }
+  }
+
+  public handleClose = () => {
+    this.setState({ item: null })
+    this.setState({ terminationDate: null })
+    this.setState({ activationDate: null })
+    this.setState({ modalOpen: false })
+  }
+
+  public handleChange = (type) => (e) => {
+    switch (type) {
+      case DateTypeEnum.terminationDate:
+        this.setState({ terminationDate: e.target.value })
+        break
+
+      case DateTypeEnum.activationDate:
+        this.setState({ activationDate: e.target.value })
+        break
+
+      default:
+        console.warn('InsuranceList , handleChange') // tslint:disable-line
+    }
+  }
+
+  public handleSubmissionButton = () => {
+    const {
+      modifyInsurance,
+      insurance: { data },
+    } = this.props
+
+    const request = {
+      insuranceIdToBeReplaced: data.productId,
+      terminationDate: this.state.terminationDate
+        ? this.state.terminationDate
+        : moment().format('YYYY-MM-DD'),
+      insuranceIdToReplace: this.state.item.productId,
+      activationDate: this.state.activationDate
+        ? this.state.activationDate
+        : moment().format('YYYY-MM-DD'),
+      memberId: data.memberId,
+    }
+
+    modifyInsurance(data.memberId, request)
   }
 
   public isTheActiveInsurance = (item, data) => {
@@ -143,41 +205,113 @@ export default class InsuranceList extends React.Component {
       insurance: { data, list },
     } = this.props
 
-    return (
-      <>
-        {list ? (
-          <>
-            {this.state.item && (
-              <>
-                <Header> Selected Insurance </Header>
-                <Table>
-                  <Table.Body>
-                    <TableFields
-                      fields={this.state.item}
-                      fieldFormatters={this.insuranceFieldFormatters}
-                    />
-                  </Table.Body>
-                </Table>
-              </>
-            )}
-            <PaginatorList
-              list={list}
-              itemContent={(item) => this.getTableRow(item, data)}
-              tableHeader={this.getTableHeader()}
-              pageSize={3}
-              isSortable={false}
-              keyName="productId"
-            />
-          </>
+    return list ? (
+      <React.Fragment>
+        {this.state.item ? (
+          <React.Fragment>
+            <Header> Selected Insurance </Header>
+            <Table>
+              <Table.Body>
+                <TableFields
+                  fields={this.state.item}
+                  fieldFormatters={this.insuranceFieldFormatters}
+                />
+              </Table.Body>
+              <Table.Footer fullWidth>
+                <Table.Row>
+                  <Table.HeaderCell>
+                    Do you want to replace the current insurance with price{' '}
+                    {data.currentTotalPrice}
+                    <br /> with the updated insurance with price{' '}
+                    {this.state.item.currentTotalPrice} ?
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <WideModal
+                      className="scrolling"
+                      trigger={
+                        <Button
+                          floated="right"
+                          icon
+                          labelposition="left"
+                          primary
+                          size="medium"
+                          onClick={this.handleOpen}
+                        >
+                          <Icon name="edit" /> Choose dates
+                        </Button>
+                      }
+                      open={this.state.modalOpen}
+                      onClose={this.handleClose}
+                      basic
+                      size="small"
+                      dimmer="blurring"
+                    >
+                      <Header
+                        icon="question circle"
+                        content="Are you sure you want to replace the insurance?"
+                      />
+                      <Modal.Content>
+                        <Form inverted size="small">
+                          <Form.Input
+                            label="Current insurance's termination date"
+                            onChange={this.handleChange(
+                              DateTypeEnum.terminationDate,
+                            )}
+                            defaultValue={moment().format('YYYY-MM-DD')}
+                          />
+                          <Form.Input
+                            label="New insurance's activation date"
+                            onChange={this.handleChange(
+                              DateTypeEnum.activationDate,
+                            )}
+                            defaultValue={moment().format('YYYY-MM-DD')}
+                          />
+                          <Button.Group floated="right" labelposition="left">
+                            <Button type="button" onClick={this.handleClose}>
+                              Cancel
+                            </Button>
+                            <Button.Or />
+                            <Button
+                              type="button"
+                              onClick={this.handleSubmissionButton}
+                              positive
+                            >
+                              {this.props.insurance.requesting ? (
+                                <>
+                                  <Loader /> Loading
+                                </>
+                              ) : (
+                                'Submit'
+                              )}
+                            </Button>
+                          </Button.Group>
+                        </Form>
+                      </Modal.Content>
+                    </WideModal>
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Footer>
+            </Table>
+          </React.Fragment>
         ) : (
-          <Header>No insurances found</Header>
+          ''
         )}
-      </>
+        <PaginatorList
+          list={list}
+          itemContent={(item) => this.getTableRow(item, data)}
+          tableHeader={this.getTableHeader()}
+          pageSize={10}
+          isSortable={false}
+          keyName="productId"
+        />
+      </React.Fragment>
+    ) : (
+      <Header>No insurances found</Header>
     )
   }
 }
 
 InsuranceList.propTypes = {
   insurance: PropTypes.object.isRequired,
-  activateQuote: PropTypes.func.isRequired,
+  modifyInsurance: PropTypes.func.isRequired,
 }

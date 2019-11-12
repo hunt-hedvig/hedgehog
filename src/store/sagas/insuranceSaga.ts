@@ -9,6 +9,7 @@ import {
   insuranceGetSuccess,
   insurancesListGetSuccess,
   saveActivationDateSuccess,
+  modifyInsuranceSuccess,
   saveCancellationDateSuccess,
   sendCancelRequestSuccess,
   sendCertificateSuccess,
@@ -17,7 +18,7 @@ import { showNotification } from '../actions/notificationsActions'
 import {
   INSURANCE_REQUESTING,
   INSURANCES_LIST_REQUESTING,
-  MEMBER_COMPANY_STATUS,
+  MEMBER_COMPANY_STATUS, MODIFY_INSURANCE,
   SAVE_INSURANCE_DATE,
   SEND_CANCEL_REQUEST,
   SEND_CERTIFICATE,
@@ -92,6 +93,33 @@ function* saveDateFlow({ memberId, insuranceId, date, changeType }) {
         }),
       ),
       put(insuranceError()),
+    ]
+  }
+}
+
+function* modifyInsuranceFlow({ memberId, request }) {
+  try {
+    const path = `${memberId}/modifyProduct`
+
+    const response = yield call(
+      api,
+      config.insurance.modifyProduct,
+      request,
+      path,
+    )
+
+    yield put(modifyInsuranceSuccess(response.data))
+    window.location.reload() // Sorry
+  } catch (error) {
+    yield [
+      put(
+        showNotification({
+          message: error.message,
+          header: 'Insurance',
+        }),
+      ),
+      put(insuranceError()),
+      console.error(error)
     ]
   }
 }
@@ -190,6 +218,7 @@ function* insuranceWatcher() {
     takeLatest(SEND_CERTIFICATE, sendCertificateFlow),
     takeLatest(MEMBER_COMPANY_STATUS, changeCompanyStatusFlow),
     takeLatest(INSURANCES_LIST_REQUESTING, requestListofInsurancesFlow),
+    takeLatest(MODIFY_INSURANCE, modifyInsuranceFlow),
   ]
 }
 

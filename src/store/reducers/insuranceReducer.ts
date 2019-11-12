@@ -6,6 +6,8 @@ import {
   INSURANCES_LIST_REQUESTING,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
+  MODIFY_INSURANCE,
+  MODIFY_INSURANCE_SUCCESS,
   SAVE_ACTIVATION_DATE_SUCCESS,
   SAVE_CANCELLATION_DATE_SUCCESS,
   SAVE_INSURANCE_DATE,
@@ -25,6 +27,7 @@ export default function(state = initialState.insurance, action) {
     case SAVE_INSURANCE_DATE:
     case SEND_CERTIFICATE:
     case MEMBER_COMPANY_STATUS:
+    case MODIFY_INSURANCE:
       return {
         ...state,
         requesting: true,
@@ -98,6 +101,7 @@ export default function(state = initialState.insurance, action) {
         requesting: false,
       }
 
+    case MODIFY_INSURANCE_SUCCESS:
     default:
       return state
   }

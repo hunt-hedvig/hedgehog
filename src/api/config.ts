@@ -135,11 +135,7 @@ export default {
       url: 'member/insurance',
       method: 'get',
     },
-    createQuoteFromProduct: {
-      url: 'member/insurance',
-      method: 'post',
-    },
-    activateQuote: {
+    modifyProduct: {
       url: 'member/insurance',
       method: 'post',
     },
