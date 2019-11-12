@@ -55,7 +55,9 @@ const CREATE_QUOTE_FROM_PRODUCT_MUTATION = gql`
     $memberId: ID!
     $quoteData: QuoteFromProductInput!
   ) {
-    createQuoteFromProduct(memberId: $memberId, quoteData: $quoteData)
+    createQuoteFromProduct(memberId: $memberId, quoteData: $quoteData) {
+      id
+    }
   }
 `
 
