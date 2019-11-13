@@ -75,7 +75,7 @@ export const QuoteModification: React.FunctionComponent<{
   const [productType, setProductType] = useState<string | null>(null)
   const [livingSpace, setLivingSpace] = useState<string | null>(null)
   const [householdSize, setHouseholdSize] = useState<string | null>(null)
-  const [ancillaryArea, setAncillaryArea] = useState<string | null>(null)
+  const [ancillaryArea, setAncillaryArea] = useState<string | null>('0')
   const [yearOfConstruction, setYearOfConstruction] = useState<string | null>(
     null,
   )
@@ -144,8 +144,7 @@ export const QuoteModification: React.FunctionComponent<{
             yearOfConstruction: parseInt(yearOfConstruction!),
             numberOfBathrooms: parseInt(numberOfBathrooms!),
             extraBuildings: extraBuildings?.map(
-              ({ displayName, area, type, hasWaterConnected }) => ({
-                displayName,
+              ({ area, type, hasWaterConnected }) => ({
                 area,
                 type,
                 hasWaterConnected,
@@ -220,7 +219,7 @@ export const QuoteModification: React.FunctionComponent<{
               <>
                 Ancillary area (m<sup>2</sup>)
               </>,
-              ancillaryArea ?? quote.data['ancillaryArea'] ?? 0,
+              (ancillaryArea === '0' ? quote.data['ancillaryArea'] : ancillaryArea) ?? '0',
               setAncillaryArea,
             )}
             {getNumberInput(
@@ -304,19 +303,6 @@ const ExtraBuildingEditor: React.FunctionComponent<{
       {extraBuildings.map((extraBuilding, i) => (
         <ExtraBuildingWrapper key={extraBuilding.id}>
           <div>
-            <Label htmlFor={`displayName-${extraBuilding.id}`}>Name</Label>
-            <Input
-              id={`displayName-${extraBuilding.id}`}
-              value={extraBuilding.displayName}
-              onChange={(e) =>
-                handleExtraBuildingChange(i)({
-                  displayName: e.currentTarget.value,
-                })
-              }
-            />
-          </div>
-
-          <div>
             <Label htmlFor={`area-${extraBuilding.id}`}>Area</Label>
             <Input
               id={`area-${extraBuilding.id}`}
@@ -368,6 +354,7 @@ const ExtraBuildingEditor: React.FunctionComponent<{
             <Button
               color="red"
               size="tiny"
+              type="button"
               onClick={(e) => {
                 e.preventDefault()
                 if (
@@ -393,13 +380,13 @@ const ExtraBuildingEditor: React.FunctionComponent<{
             ...extraBuildings,
             {
               area: 0,
-              displayName: '',
               hasWaterConnected: false,
               id: uuid(),
               type: ExtraBuildingType.ATTEFALL,
             },
           ])
         }}
+        type="button"
       >
         + Add
       </Button>

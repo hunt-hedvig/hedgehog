@@ -30,9 +30,8 @@ export const createCreateQuoteFromProductRequest = (modifiedDetails) => {
       yearOfConstruction: modifiedDetails.yearOfConstruction,
       numberOfBathrooms: modifiedDetails.numberOfBathrooms,
       extraBuildings: modifiedDetails.extraBuildings?.map(
-        ({ area, displayName, hasWaterConnected, type }) => ({
+        ({ area, hasWaterConnected, type }) => ({
           area,
-          displayName,
           hasWaterConnected,
           type,
         }),
