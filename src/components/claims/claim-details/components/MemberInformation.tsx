@@ -1,3 +1,6 @@
+import { formatDistance } from 'date-fns'
+import { FraudulentStatus } from 'lib/fraudulentStatus'
+import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
@@ -23,6 +26,7 @@ export enum SanctionStatus {
 interface MemberInformationProps {
   member: {
     memberId: string
+    signedOn: Date
     firstName: string
     lastName: string
     personalNumber: string
@@ -32,7 +36,17 @@ interface MemberInformationProps {
     directDebitStatus: {
       activated: boolean
     }
+    fraudulentStatus: string
     sanctionStatus: SanctionStatus
+    numberFailedCharges: {
+      numberFailedCharges: number
+    }
+    account: {
+      totalBalance: {
+        amount: number
+        currency: string
+      }
+    }
   }
 }
 
@@ -61,6 +75,7 @@ const MemberName = styled('h2')({
 const MemberInformation: React.SFC<MemberInformationProps> = ({
   member: {
     memberId,
+    signedOn,
     firstName,
     lastName,
     personalNumber,
@@ -68,7 +83,10 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
     postalNumber,
     city,
     directDebitStatus: { activated },
+    fraudulentStatus,
     sanctionStatus,
+    numberFailedCharges: { numberFailedCharges },
+    account: { totalBalance },
   },
 }) => (
   <Paper>
@@ -77,16 +95,36 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
       {firstName} {lastName}
     </MemberName>
     <p>
-      Id: <Link to={`/members/${memberId}`}>{memberId}</Link>
+      <b>Id:</b> <Link to={`/members/${memberId}`}>{memberId}</Link>
     </p>
-    <p>Personal Number: {personalNumber}</p>
     <p>
-      Address: {address}, {postalNumber} {city}
+      <b>Personal Number:</b> {personalNumber}
     </p>
-    <p>Direct Debit: {activated ? <Checkmark /> : <Cross />}</p>
     <p>
-      SanctionStatus: {sanctionStatus}{' '}
+      <b>Address:</b> {address}, {postalNumber} {city}
+    </p>
+    <p>
+      <b>Sanction Status:</b> {sanctionStatus}{' '}
       <SanctionStatusIcon status={sanctionStatus} />
+    </p>
+    <h3>Fraud Checks</h3>
+    <p>
+      <b>Signed:</b> {formatDistance(signedOn, new Date(), { addSuffix: true })}
+    </p>
+    <p style={{ marginTop: '-7px' }}>
+      <b>Fraudulent Status:</b>{' '}
+      <span style={{ fontSize: '32px' }}>
+        <FraudulentStatus stateInfo={fraudulentStatus} />
+      </span>
+    </p>
+    <p>
+      <b>Direct Debit:</b> {activated ? <Checkmark /> : <Cross />}
+    </p>
+    <p>
+      <b>Payments Balance (Minimum):</b> {formatMoneySE(totalBalance)}
+    </p>
+    <p>
+      <b>Failed Payments:</b> {numberFailedCharges} payment(s) in a row
     </p>
   </Paper>
 )

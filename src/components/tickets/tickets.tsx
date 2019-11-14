@@ -4,7 +4,6 @@ import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
 import * as React from 'react'
 import { Query } from 'react-apollo'
-import { Dimmer, Loader } from 'semantic-ui-react'
 import { GET_TICKETS, ME } from '../../features/taskmanager/queries'
 import { TicketStatus } from '../../features/taskmanager/types'
 import { Ticket } from './ticket/ticket'
@@ -44,7 +43,7 @@ export class Tickets extends React.Component<ITickets, {}> {
           {({ data, error, loading }) => {
             if (loading) {
               return (
-                <p>fetching tickets </p>
+                <p>Fetching tickets... </p>
               )
             }
             if (error) {
@@ -93,6 +92,8 @@ export class Tickets extends React.Component<ITickets, {}> {
                       time: ticket.remindNotificationTime,
                       message: ticket.remindMessage,
                     }}
+                    memberId={ticket.memberId}
+                    me={this.state.me.email}
                     {...ticket}
                   />
                 ))}

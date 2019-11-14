@@ -14,9 +14,10 @@ class MessageResponseForm extends React.Component<IMessageResponseForm, {}> {
   public render() {
     return (
       <Mutation mutation={QUESTION_IS_DONE}>
-        {(questionIsDone, { data }) => {
+        {(questionIsDone) => {
           return (
             <Button
+              primary={true}
               onClick={(event) => {
                 event.preventDefault()
                 questionIsDone({
@@ -26,8 +27,8 @@ class MessageResponseForm extends React.Component<IMessageResponseForm, {}> {
                 })
                   .then(() => {
                     this.props.showNotification({
-                      header: 'Change success!',
-                      message: 'Set conversation as done!',
+                      header: 'Success!',
+                      message: 'Conversation set as done!',
                       type: 'green',
                     })
                   })
@@ -41,7 +42,7 @@ class MessageResponseForm extends React.Component<IMessageResponseForm, {}> {
                   })
               }}
             >
-              Done{' '}
+              Done with conversation
             </Button>
           )
         }}

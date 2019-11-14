@@ -36,7 +36,7 @@ teamMemberOptions.push({
 
 const statusOptions = createOptionsArray(TICKET_STATUS)
 statusOptions.push({
-  text: 'Not completed',
+  text: 'Not resolved',
   value: 'All',
   key: 'All',
 })

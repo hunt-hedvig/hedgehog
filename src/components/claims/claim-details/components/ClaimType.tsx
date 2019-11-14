@@ -73,6 +73,42 @@ export const TYPE_FRAGMENT = `
           location
           item
         }
+        ... on LegalProtectionClaim {
+          date
+        }
+        ... on WaterDamageBathroomClaim {
+          date
+        }
+        ... on WaterDamageBathroomClaim {
+          date
+        }
+        ... on BurglaryClaim {
+          location
+          date
+          item
+          policeReport
+          receipt
+        }
+        ... on FloodingClaim {
+          date
+        }
+        ... on EarthquakeClaim {
+          date
+        }
+        ... on InstallationsClaim {
+          date
+          location
+          item
+        }
+        ... on SnowPressureClaim {
+          date
+        }
+        ... on StormDamageClaim {
+          date
+        }
+        ... on VerminAndPestsClaim {
+          date
+        }
 `
 
 const SET_CLAIM_TYPE_QUERY = gql`
@@ -141,6 +177,8 @@ const hasLocation = (typename: ClaimTypes): boolean => {
     ClaimTypes.LiabilityClaim,
     ClaimTypes.FireDamageClaim,
     ClaimTypes.ApplianceClaim,
+    ClaimTypes.BurglaryClaim,
+    ClaimTypes.InstallationsClaim,
   ].includes(typename)
 }
 
@@ -149,6 +187,8 @@ const hasItem = (typename: ClaimTypes): boolean => {
     ClaimTypes.TheftClaim,
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.ApplianceClaim,
+    ClaimTypes.BurglaryClaim,
+    ClaimTypes.InstallationsClaim,
   ].includes(typename)
 }
 
@@ -158,6 +198,7 @@ const hasPoliceReport = (typename: ClaimTypes): boolean => {
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.AssaultClaim,
     ClaimTypes.TravelAccidentClaim,
+    ClaimTypes.BurglaryClaim
   ].includes(typename)
 }
 
@@ -165,6 +206,7 @@ const hasReceipt = (typename: ClaimTypes): boolean => {
   return [
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.TravelAccidentClaim,
+    ClaimTypes.BurglaryClaim
   ].includes(typename)
 }
 
@@ -248,19 +290,65 @@ interface ApplianceClaim {
   item?: string
   __typename: ClaimTypes
 }
-export enum ClaimTypes {
-  TheftClaim = 'TheftClaim',
-  AccidentalDamageClaim = 'AccidentalDamageClaim',
-  AssaultClaim = 'AssaultClaim',
-  WaterDamageClaim = 'WaterDamageClaim',
-  TravelAccidentClaim = 'TravelAccidentClaim',
-  LuggageDelayClaim = 'LuggageDelayClaim',
-  NotCoveredClaim = 'NotCoveredClaim',
-  LiabilityClaim = 'LiabilityClaim',
-  ConfirmedFraudClaim = 'ConfirmedFraudClaim',
-  TestClaim = 'TestClaim',
-  FireDamageClaim = 'FireDamageClaim',
-  ApplianceClaim = 'ApplianceClaim',
+
+interface LegalProtectionClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface WaterDamageBathroomClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface WaterDamageKitchenClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface BurglaryClaim {
+  location?: string
+  date?: string
+  policeReport?: string
+  receipt?: string
+  __typename: ClaimTypes
+}
+
+interface FloodingClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface EarthquakeClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface InstallationsClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface InstallationsClaim {
+  date?: string
+  location?: string
+  item?: string
+  __typename: ClaimTypes
+}
+
+interface SnowPressureClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface StormDamageClaim {
+  date?: string
+  __typename: ClaimTypes
+}
+
+interface VerminAndPestsClaim {
+  date?: string
+  __typename: ClaimTypes
 }
 
 type ClaimType =
@@ -273,9 +361,44 @@ type ClaimType =
   | NotCoveredClaim
   | LiabilityClaim
   | ConfirmedFraudClaim
-  | TestClaim
   | FireDamageClaim
   | ApplianceClaim
+  | LegalProtectionClaim
+  | WaterDamageBathroomClaim
+  | WaterDamageKitchenClaim
+  | BurglaryClaim
+  | FloodingClaim
+  | EarthquakeClaim
+  | InstallationsClaim
+  | SnowPressureClaim
+  | StormDamageClaim
+  | VerminAndPestsClaim
+  | TestClaim
+
+export enum ClaimTypes {
+  AccidentalDamageClaim = 'AccidentalDamageClaim',
+  ApplianceClaim = 'ApplianceClaim',
+  AssaultClaim = 'AssaultClaim',
+  BurglaryClaim = 'BurglaryClaim',
+  ConfirmedFraudClaim = 'ConfirmedFraudClaim',
+  EarthquakeClaim = 'EarthquakeClaim',
+  FireDamageClaim = 'FireDamageClaim',
+  FloodingClaim = 'FloodingClaim',
+  InstallationsClaim = 'InstallationsClaim',
+  LegalProtectionClaim = 'LegalProtectionClaim',
+  LiabilityClaim = 'LiabilityClaim',
+  LuggageDelayClaim = 'LuggageDelayClaim',
+  NotCoveredClaim = 'NotCoveredClaim',
+  SnowPressureClaim = 'SnowPressureClaim',
+  StormDamageClaim = 'StormDamageClaim',
+  TestClaim = 'TestClaim',
+  TheftClaim = 'TheftClaim',
+  TravelAccidentClaim = 'TravelAccidentClaim',
+  VerminAndPestsClaim = 'VerminAndPestsClaim',
+  WaterDamageClaim = 'WaterDamageClaim',
+  WaterDamageBathroomClaim = 'WaterDamageBathroomClaim',
+  WaterDamageKitchenClaim = 'WaterDamageKitchenClaim',
+}
 
 interface ClaimTypeProps {
   type?: ClaimType

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Button } from 'semantic-ui-react'
 
 interface IRedirecterProps {
@@ -15,23 +15,14 @@ export class Redirector extends React.Component<
   IRedirecterProps,
   IRedirecterState
 > {
-  public state = {
-    redirect: false,
-  }
 
   public render() {
     return (
       <>
-        {this.state.redirect ? <Redirect push to={this.props.route} /> : null}
-        <Button secondary onClick={this.handleClick}>
-          {this.props.redirectText}
-        </Button>
+        <Link to={this.props.route} target="_blank">
+          <Button secondary>{this.props.redirectText}</Button>
+        </Link>
       </>
     )
-  }
-
-  private handleClick = (event) => {
-    event.preventDefault()
-    this.setState({ redirect: true })
   }
 }

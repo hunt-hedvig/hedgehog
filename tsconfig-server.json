@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "esnext",
-    "lib": ["dom", "es6", "es7", "es2017.object"],
-    "jsx": "react",
+    "module": "commonjs",
+    "lib": ["dom", "es6"],
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": false,
@@ -16,15 +15,12 @@
 
     "moduleResolution": "node",
     "baseUrl": ".",
-    "paths": {
-      "*": ["*", "node_modules/*", "src/*"]
-    },
     "typeRoots": ["./src/types", "./node_modules/@types"],
     "types": ["jest", "node"],
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["./src"],
+  "include": ["./src/server"],
   "exclude": ["node_modules"]
 }

@@ -14,6 +14,7 @@ import {
 import { ExpandMoreOutlined } from '@material-ui/icons'
 import { gql } from 'apollo-boost'
 import { AddEntryForm } from 'components/chat/tabs/account-tab/add-entry-form'
+import { BackfillSubscriptionsButton } from 'components/chat/tabs/account-tab/backfill-subscriptions-button'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import { Query } from 'react-apollo'
@@ -35,6 +36,9 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
           title
           source
           reference
+          type
+          failedAt
+          chargedAt
         }
       }
     }
@@ -45,9 +49,15 @@ export interface AccountTabProps {
   showNotification: (notification: {}) => void
 }
 
-const TableRowColored = styled(TableRow)(({ amount }: { amount: number }) => ({
-  backgroundColor: amount < 0 ? '#FFDDDD' : '#DDFFDD',
-}))
+const TableRowColored = styled(TableRow)(({ entry }: { entry }) => {
+  if (entry.failedAt) {
+    return { backgroundColor: '#FFDDDD' }
+  } else if (entry.amount.amount < 0) {
+    return { backgroundColor: '#FFFFDD' }
+  } else {
+    return { backgroundColor: '#DDFFDD' }
+  }
+})
 
 const TableCell = withStyles({
   root: {
@@ -61,6 +71,7 @@ export const AccountTab: React.SFC<
   <Query
     query={GET_MEMBER_ACCOUNT_QUERY}
     variables={{ memberId: props.match.params.id }}
+    pollInterval={2000}
   >
     {({ data, loading }) => {
       if (!data || loading) {
@@ -92,14 +103,16 @@ export const AccountTab: React.SFC<
               <TableHead>
                 <TableRow>
                   <TableCell>Date</TableCell>
+                  <TableCell>Type</TableCell>
                   <TableCell>Title</TableCell>
                   <TableCell align="right">Amount</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {data.member.account.entries.map((entry) => (
-                  <TableRowColored key={entry.id} amount={entry.amount.amount}>
+                  <TableRowColored key={entry.id} entry={entry}>
                     <TableCell>{entry.fromDate}</TableCell>
+                    <TableCell>{entry.type.toLowerCase()}</TableCell>
                     <TableCell>
                       {entry.id}
                       <br />
@@ -115,6 +128,10 @@ export const AccountTab: React.SFC<
               </TableBody>
             </Table>
           </Paper>
+          <BackfillSubscriptionsButton
+            memberId={props.match.params.id}
+            showNotification={props.showNotification}
+          />
         </>
       )
     }}

@@ -13,6 +13,7 @@ export const createOptionsArray = (array: IOption[]): IOption[] => {
 }
 
 export const IEX_TEAM_MEMBERS_OPTIONS = [
+  { text: 'Unassigned', value: null },
   { text: 'Tomas', value: 'tomas@hedvig.com' },
   { text: 'Kalle', value: 'karl.jernberg@hedvig.com' },
   { text: 'Emma', value: 'emma@hedvig.com' },
@@ -28,7 +29,6 @@ export const IEX_TEAM_MEMBERS_OPTIONS = [
   { text: 'Karl', value: 'karl@hedvig.com' },
   { text: 'Johanna', value: 'johanna@hedvig.com' },
   { text: 'Axel', value: 'axel.bryhn@hedvig.com' },
-  { text: 'Unassigned', value: null },
 ]
 
 // Purely for making it easier to read in the UI:
@@ -47,11 +47,13 @@ export enum TicketStatus {
   WAITING = 'WAITING',
   WORKING_ON = 'WORKING_ON',
   RESOLVED = 'RESOLVED',
+  ON_HOLD = 'ON_HOLD',
 }
 
 export const TICKET_STATUS = [
   { text: 'Waiting', value: TicketStatus.WAITING },
   { text: 'Working on', value: TicketStatus.WORKING_ON },
+  { text: 'On hold', value: TicketStatus.ON_HOLD },
   { text: 'Resolved', value: TicketStatus.RESOLVED },
 ]
 
@@ -61,6 +63,8 @@ export const lookupStatus = (statusValue: TicketStatus): string => {
       return 'Resolved'
     case TicketStatus.WAITING:
       return 'Waiting'
+    case TicketStatus.ON_HOLD:
+      return 'On hold'
     case TicketStatus.WORKING_ON:
       return 'Working on'
     default:

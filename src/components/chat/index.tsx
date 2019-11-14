@@ -71,8 +71,8 @@ export default class Chat extends React.Component {
     } = this.props
 
     reconnect({ messageReceived, showNotification }, id, client.id).then(
-      (reslut) => {
-        const { stompClient, subscription } = reslut
+      (result) => {
+        const { stompClient, subscription } = result
         this.setState({ socket: stompClient, subscription })
         setActiveConnection(stompClient)
       },
@@ -129,12 +129,14 @@ export default class Chat extends React.Component {
             <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
             {this.getChatTitle(messages.member)}
           </Header>
-          <Tab
-            style={{ height: '100%' }}
-            panes={panes}
-            renderActiveOnly={true}
-            defaultActiveIndex={3}
-          />
+          {this.props.insurance.requesting || (
+            <Tab
+              style={{ height: '100%' }}
+              panes={panes}
+              renderActiveOnly={true}
+              defaultActiveIndex={!!this.props.insurance?.data || this.props.insurance?.list?.length > 0 ? 4 : 0}
+            />
+          )}
         </ChatPageContainer>
         <ChatTab {...this.props} addMessage={this.addMessageHandler} />
       </ChatPageWrapper>

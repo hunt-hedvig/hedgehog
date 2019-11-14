@@ -21,6 +21,7 @@ export interface ITicket {
   status: TicketStatus
   priority: number
   overdue: boolean
+  memberId?: string
 }
 
 export interface IRemindNotification {

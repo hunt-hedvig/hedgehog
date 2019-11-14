@@ -1,14 +1,10 @@
+import { gql } from 'apollo-boost'
 import format from 'date-fns/format'
+import { CHANGE_STATUS, QUESTION_IS_DONE } from 'features/taskmanager/queries'
 import React from 'react'
+import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
-import {
-  Button,
-  Container,
-  Divider,
-  Grid,
-  Icon,
-  Segment,
-} from 'semantic-ui-react'
+import { Button, Divider, Grid, Icon, Segment } from 'semantic-ui-react'
 import { history } from 'store'
 import {
   createOptionsArray,
@@ -39,6 +35,12 @@ const TicketBodyCss = styled('div')`
     rgba(255, 255, 255, 1) 0%,
     rgba(227, 231, 235, 0.33) 100%
   );
+`
+
+const StyledPre = styled('pre')`
+  font-family: inherit;
+  margin: 0;
+  white-space: pre-line;
 `
 
 interface ITicketBody {
@@ -73,7 +75,22 @@ interface ITicketBodyState {
   redirect: boolean
 }
 
-export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
+export const IM_ON_IT_MUTATION = gql`
+  mutation ImOnIt(
+    $ticketId: ID!
+    $teamMemberId: ID!
+    $newStatus: TicketStatus
+  ) {
+    assignTicketToTeamMember(ticketId: $ticketId, teamMemberId: $teamMemberId)
+    changeTicketStatus(ticketId: $ticketId, newStatus: $newStatus)
+  }
+`
+
+export class TicketBody extends React.Component<
+  ITicketBody,
+  ITicketBodyState,
+  {}
+> {
   public state = {
     inputs: {
       description: this.props.description,
@@ -189,7 +206,7 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
             <strong>Description</strong>
           </Segment>
           <Segment compact textAlign="left">
-            {this.props.description}
+            <StyledPre>{this.props.description}</StyledPre>
           </Segment>
 
           {this.props.referenceId && this.props.referenceId.length > 0
@@ -199,10 +216,6 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
                 this.props.type,
               )
             : null}
-
-          {this.props.type === TicketType.MESSAGE ? (
-            <MessageResponseForm memberId={this.props.memberId} />
-          ) : null}
         </Segment.Group>
 
         <Segment.Group horizontal>
@@ -218,12 +231,16 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
     return (
       <TicketBodyCss>
         {this.state.showEditTicket ? editTicket : ticketInfo}
+
+        {this.getResolveOption()}
+
         <Button
           labelPosition="left"
           icon
           onClick={(event) => this.toggleEditTicket(event)}
           basic
           toggle
+          floated="right"
         >
           {this.state.showEditTicket ? (
             <Icon name="close" />
@@ -232,7 +249,9 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
           )}
           {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
         </Button>
+
         <Button
+          floated="right"
           onClick={() =>
             history.push('/ticket_history/' + this.props.id.toString())
           }
@@ -323,5 +342,77 @@ export class TicketBody extends React.Component<ITicketBody, ITicketBodyState> {
       default:
         return null
     }
+  }
+
+  private getResolveOption = () => {
+    if (
+      this.props.type === TicketType.MESSAGE &&
+      this.props.assignedTo === this.props.me
+    ) {
+      return <MessageResponseForm memberId={this.props.memberId} />
+    }
+    if (this.props.assignedTo === this.props.me) {
+      return (
+        <Mutation mutation={CHANGE_STATUS}>
+          {(resolveTicket) => (
+            <Button
+              primary={true}
+              onClick={() => this.resolveTicketClick(resolveTicket)}
+            >
+              Resolve ticket
+            </Button>
+          )}
+        </Mutation>
+      )
+    }
+    if (
+      this.props.status === TicketStatus.WAITING &&
+      this.props.assignedTo == null
+    ) {
+      return (
+        <Mutation mutation={IM_ON_IT_MUTATION}>
+          {(imOnIt) => (
+            <Button secondary={true} onClick={() => this.imOnItClick(imOnIt)}>
+              I'm on it
+            </Button>
+          )}
+        </Mutation>
+      )
+    }
+    return (
+      <Button
+        labelPosition="left"
+        icon
+        onClick={(event) => this.toggleEditTicket(event)}
+        basic
+        toggle
+      >
+        {this.state.showEditTicket ? (
+          <Icon name="close" />
+        ) : (
+          <Icon name="pencil alternate" />
+        )}
+        {this.state.showEditTicket ? 'Close Edit' : 'Open Edit'}
+      </Button>
+    )
+  }
+
+  private resolveTicketClick = (mutation) => {
+    mutation({
+      variables: {
+        ticketId: this.props.id,
+        newStatus: TicketStatus.RESOLVED,
+      },
+    })
+  }
+
+  private imOnItClick = (mutation) => {
+    mutation({
+      variables: {
+        ticketId: this.props.id,
+        teamMemberId: this.props.me,
+        newStatus: TicketStatus.WORKING_ON,
+      },
+    })
   }
 }
