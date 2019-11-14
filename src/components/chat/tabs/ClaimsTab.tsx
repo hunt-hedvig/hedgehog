@@ -185,7 +185,7 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
               </Mutation>
             </InlineFlexButton>
           </MaterialModal>
-        </>
+        </> 
       )}
     </Container>
   )
