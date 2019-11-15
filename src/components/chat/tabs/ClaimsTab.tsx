@@ -9,7 +9,7 @@ import { ActionMap, Container } from 'constate'
 import gql from 'graphql-tag'
 import * as moment from 'moment'
 import * as React from 'react'
-import { Mutation, Query } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import styled, { css } from 'react-emotion'
 import { history } from 'store'
 

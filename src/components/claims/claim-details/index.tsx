@@ -13,11 +13,14 @@ import { FileUpload } from './components/FileUpload'
 import { Table, Image } from 'semantic-ui-react'
 import styled from 'react-emotion'
 import { colors } from '@hedviginsurance/brand'
+import actions from 'store/actions'
+import { connect } from 'react-redux'
 
-const CLAIM_FILE_QUERY = gql`
+const CLAIM_FILES_QUERY = gql`
   query ClaimFilesQuery($id: ID!) {
     claim(id: $id) {
       claimFiles {
+        claimFileId
         fileUploadUrl
         markedAsDeleted
       }
@@ -26,8 +29,8 @@ const CLAIM_FILE_QUERY = gql`
 `
 
 const MARK_CLAIM_FILE_AS_DELETED = gql`
-  mutation MarkClaimFileAsDeleted($claimId: ID!, $claimFileId: ID!) {
-    markClaimFileAsDeleted(claimId: $id, claimFileId: $id)
+  mutation markClaimFileAsDeleted($claimId: ID!, $claimFileId: ID!) {
+    markClaimFileAsDeleted(claimId: $claimId, claimFileId: $claimFileId)
   }
 `
 
@@ -99,12 +102,15 @@ interface Props {
 }
 
 interface ClaimFiles {
+  claimFileId: string
   fileUploadUrl: string
-  markedAsDeleted: Boolean
+  markedAsDeleted: boolean
 }
 
 interface MemberFileTableProps {
   claimFiles: Array<ClaimFiles>
+  claimId: string
+  showNotification: (data: any) => void
 }
 
 const Button = styled('div')({
@@ -112,34 +118,61 @@ const Button = styled('div')({
   padding: '2rem',
 })
 
-const handleDelete = (claimFile) => {
-  console.log(claimFile)
-  // <Mutation
-  //   mutation={MARK_CLAIM_FILE_AS_DELETED}
-  //   refetchQueries={() => [
-  //     {
-  //       query,
-  //       variables: {
-  //         claimId: claimFile.claimId,
-  //         claimFileId: claimFile.claimFileId,
-  //       },
-  //     },
-  //   ]}
-  // >
-  //   {(mutation, { loading }) => {
-  //     if (loading) return
-  //     mutation
-  //   }
-  //   }}
-  // </Mutation>
+// const queryClaims = (id) => {
+//   <Query query={CLAIM_FILES_QUERY} variables={{ id: id}}>
+//   {({ loading, error, data }) => {
+//     if (error) {
+//       return (
+//         <div>
+//           Error in GraphQl query here.....:{' '}
+//           <pre>{JSON.stringify(error, null, 2)}</pre>
+//         </div>
+//       )
+//     }
+//     if (loading || !data) {
+//       return <div>Loading...</div>
+//     }
+//     return data.claim.claimFiles === 0 ? (
+//       <div>No claim documents have been uploaded for this claim</div>
+//     ) : (
+//       <ClaimFileTable claimFiles={data.claim.claimFiles} claimId={id} />
+//     )
+//   }}
+// </Query>
+// }
+
+const handleClick = (mutation, claimId, claimFileId, showNotification) => {
+  console.log(`do we get here ${mutation} ${claimId} ${claimFileId}`)
+  mutation({
+    variables: {
+      claimId: claimId,
+      claimFileId: claimFileId
+    },
+  })
+  // }).then(() => {
+  //   queryClaims(claimId)
+  // })
+    .then(() => {
+      showNotification({
+        message: 'claim file has been deleted',
+        header: 'Approved',
+        type: 'olive',
+      })
+    })
+    .catch((error) => {
+      showNotification({
+        message: error.message,
+        header: 'Error',
+        type: 'red',
+      })
+      throw error
+    })
 }
 
-const handleClick = () => {
-  console.log('here?')
-}
-
-export const ClaimFileTable: React.FunctionComponent<MemberFileTableProps> = ({
+export const ClaimFileTableComponent: React.FunctionComponent<MemberFileTableProps> = ({
   claimFiles,
+  claimId,
+  showNotification
 }) => (
   <Table celled>
     <Table.Header>
@@ -156,7 +189,28 @@ export const ClaimFileTable: React.FunctionComponent<MemberFileTableProps> = ({
                 <Image src={claimFile.fileUploadUrl} size="medium" />
               </Table.Cell>
               <Table.Cell>
-                <Button>Delete</Button>
+
+
+              <Mutation
+                mutation={MARK_CLAIM_FILE_AS_DELETED}
+                // refetchQueries={() => [
+                //   {
+                //     CLAIM_FILES_QUERY,
+                //     variables: {
+                //       claimId: claimId,
+                //     },
+                //   },
+                // ]}
+              >
+                {(mutation, { loading }) => {
+                  return (
+                    <Button
+                      disabled={loading}
+                      onClick={() => handleClick(mutation, claimId, claimFile.claimFileId, showNotification)}
+                    >Delete</Button>
+                  )
+                }}
+              </Mutation>
               </Table.Cell>
             </Table.Row>
           )
@@ -165,6 +219,13 @@ export const ClaimFileTable: React.FunctionComponent<MemberFileTableProps> = ({
     </Table.Body>
   </Table>
 )
+
+const mapActions = { ...actions.notificationsActions }
+
+export const ClaimFileTable = connect(
+  null,
+  mapActions,
+)(ClaimFileTableComponent)
 
 const ClaimPage: React.SFC<Props> = ({ match }) => (
   <>
@@ -237,7 +298,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
       }}
     </Query>
 
-    <Query query={CLAIM_FILE_QUERY} variables={{ id: match.params.id }}>
+    <Query query={CLAIM_FILES_QUERY} variables={{ id: match.params.id }}>
       {({ loading, error, data }) => {
         if (error) {
           return (
@@ -250,12 +311,10 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         if (loading || !data) {
           return <div>Loading...</div>
         }
-
-        console.log(data)
         return data.claim.claimFiles === 0 ? (
           <div>No claim documents have been uploaded for this claim</div>
         ) : (
-          <ClaimFileTable claimFiles={data.claim.claimFiles} />
+          <ClaimFileTable claimFiles={data.claim.claimFiles} claimId={match.params.id} />
         )
       }}
     </Query>
