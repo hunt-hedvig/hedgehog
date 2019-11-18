@@ -2,17 +2,20 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { colors } from '@hedviginsurance/brand'
 import Dropzone from 'react-dropzone'
+import actions from 'store/actions'
+import { connect } from 'react-redux'
 
 const UploadClaimFileWrapper = styled('div')({
+  padding: '4rem',
   alignItems: 'center',
-  backgroundColor: colors.LIGHT_GRAY,
-  justifyContent: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  border: '1px solid rgba(0,0,0,0.08)',
+  minHeight: '20rem',
 })
 
-const UploadClaimFileHeader = styled('h3')({
-  alignItems: 'center',
-  justifyContent: 'center',
-})
+const UploadClaimFileHeader = styled('h3')({})
 
 export const Button = styled('button')({
   display: 'inline-flex',
@@ -20,14 +23,15 @@ export const Button = styled('button')({
   justifyContent: 'center',
   fontSize: 'inherit',
   font: 'inherit',
-  padding: '.5rem 2rem',
+  padding: '2rem 2rem',
   border: '1px solid ',
+  borderRadius: '0.2',
   color: colors.BLACK,
   background: colors.WHITE,
   cursor: 'pointer',
   textDecoration: 'none',
   '&:hover, &:focus': {
-    color: colors.BLACK_PURPLE,
+    color: colors.GREEN,
     textDecoration: 'none',
   },
   '&:focus, &:hover': {
@@ -40,9 +44,10 @@ const FileUploadContainer = styled('div')({
   padding: '2rem 2rem',
 })
 
-class FileUpload extends React.Component<{
+class FileUploadComponent extends React.Component<{
   claimId: string
   memberId: string
+  showNotification: (data: any) => void
 }> {
   state = {
     value: null,
@@ -54,7 +59,11 @@ class FileUpload extends React.Component<{
         <UploadClaimFileWrapper>
           <UploadClaimFileHeader>Upload files here</UploadClaimFileHeader>
           <FileUploadContainer>
-            <Dropzone onDrop={this.onDrop} multiple>
+            <Dropzone
+              onDrop={(files) => {
+                this.onDrop(files, this.props.showNotification)
+              }}
+            >
               {({ getRootProps, getInputProps, isDragActive }) => (
                 <Button {...getRootProps()}>
                   <input {...getInputProps()} />
@@ -76,12 +85,12 @@ class FileUpload extends React.Component<{
     })
   }
 
-  private onDrop = (acceptedFiles) => {
+  private onDrop = (acceptedFiles, showNotification) => {
     this.onChangeHandler(acceptedFiles)
-    this.uploadFiles(acceptedFiles)
+    this.uploadFiles(acceptedFiles, showNotification)
   }
 
-  private uploadFiles(files): any {
+  private uploadFiles(files, showNotification): any {
     var claimFiles = new FormData()
 
     for (const file of files) {
@@ -93,12 +102,27 @@ class FileUpload extends React.Component<{
       method: 'POST',
       body: claimFiles,
     })
-      .then((response) => response.json())
-      .then((success) => {
-        console.log('success')
+      .then(() => {
+        showNotification({
+          message: 'upload successful!',
+          header: 'Approved',
+          type: 'olive',
+        })
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        showNotification({
+          message: error.message,
+          header: 'Error',
+          type: 'red',
+        })
+        throw error
+      })
   }
 }
 
-export { FileUpload }
+const mapActions = { ...actions.notificationsActions }
+
+export const FileUpload = connect(
+  null,
+  mapActions,
+)(FileUploadComponent)
