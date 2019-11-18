@@ -1,20 +1,21 @@
-import {
-  // tslint:disable-line ordered-imports
-  createKoaServer,
-  getScriptLocation,
-} from '@hedviginsurance/web-survival-kit'
 import * as Koa from 'koa'
+import * as Router from 'koa-router'
+import * as compress from 'koa-compress'
+import * as mount from 'koa-mount'
+import * as serve from 'koa-static'
 import * as proxy from 'koa-server-http-proxy'
 import * as path from 'path'
-import { reactPageRoutes } from 'routes/routes'
 import 'source-map-support/register'
+import {
+  loggerFactory,
+  logRequestMiddleware,
+  setLoggerMiddleware,
+  setRequestUuidMiddleware,
+} from './request-enhancers'
 import * as tls from 'tls'
 import * as url from 'url'
+import { readFileSync } from 'fs'
 
-const scriptLocation = getScriptLocation({
-  statsLocation: path.resolve(__dirname, 'assets'),
-  webpackPublicPath: process.env.WEBPACK_PUBLIC_PATH || '',
-})
 const template = () => `
 <!doctype html>
 <html lang="en">
@@ -53,22 +54,30 @@ const getPort = () => (process.env.PORT ? Number(process.env.PORT) : 9000)
 
 console.log(`Booting server on ${getPort()} 👢`) // tslint:disable-line no-console
 
-const server = createKoaServer({
-  publicPath: '/assets',
-  assetLocation: __dirname + '/assets',
-})
+const logger = loggerFactory.getLogger('app')
+const app = new Koa()
+const router = new Router()
+app.use(compress({ threshold: 5 * 1024 }))
 
-server.router.get('/', getPage)
-reactPageRoutes.forEach((route) => {
-  server.router.get(route.path, getPage)
-})
+const buildDir = path.resolve(__dirname, '../../build')
+const scriptLocation =
+  process.env.NODE_ENV === 'production'
+    ? '/static/' + JSON.parse(readFileSync(path.resolve(buildDir, 'stats.json'), 'UTF8'))
+        .assetsByChunkName.app[0]
+    : 'http://localhost:9443/static/app.js'
+app.use(mount('/static', serve(buildDir, { maxage: 86400 * 365 })))
 
-server.app.use(
+app.use(setRequestUuidMiddleware)
+app.use(setLoggerMiddleware)
+app.use(logRequestMiddleware)
+app.use(router.middleware())
+router.get(/^\/(?!api|chat).*/, getPage)
+app.use(
   proxy({
     target: process.env.API_URL,
     changeOrigin: false,
     ssl: {
-      checkServerIdentity(host, cert) {
+      checkServerIdentity(_host, cert) {
         tls.checkServerIdentity(url.parse(process.env.API_URL!).hostname!, cert)
       },
     },
@@ -76,6 +85,6 @@ server.app.use(
   }),
 )
 
-server.app.listen(getPort(), () => {
-  console.log(`Server started 🚀 listening on port ${getPort()}`) // tslint:disable-line no-console
+app.listen(getPort(), () => {
+  logger.info(`Server started 🚀 listening on port ${getPort()}`)
 })

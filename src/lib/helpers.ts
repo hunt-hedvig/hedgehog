@@ -411,8 +411,14 @@ function sortListByDate(list, fieldName, isReverse) {
   return [...resultList, ...withoutDates]
 }
 
-export const dateTimeFormatter = (date: string, format: string) =>
-  date && formatDate(toDate(date), format)
+export const dateTimeFormatter = (date: string, format: string) =>{
+  try {
+    return date && formatDate(toDate(date), format)
+  } catch (e) {
+    console.error(e)
+    return undefined
+  }
+}
 
 export interface MonetaryAmount {
   amount: string

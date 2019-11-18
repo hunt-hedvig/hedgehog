@@ -129,12 +129,14 @@ export default class Chat extends React.Component {
             <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
             {this.getChatTitle(messages.member)}
           </Header>
-          <Tab
-            style={{ height: '100%' }}
-            panes={panes}
-            renderActiveOnly={true}
-            defaultActiveIndex={3}
-          />
+          {this.props.insurance.requesting || (
+            <Tab
+              style={{ height: '100%' }}
+              panes={panes}
+              renderActiveOnly={true}
+              defaultActiveIndex={!!this.props.insurance?.data || this.props.insurance?.list?.length > 0 ? 4 : 0}
+            />
+          )}
         </ChatPageContainer>
         <ChatTab {...this.props} addMessage={this.addMessageHandler} />
       </ChatPageWrapper>
