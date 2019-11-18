@@ -7,14 +7,17 @@ import { Mutation, Query } from 'react-apollo'
 import { Button, Input, Loader } from 'semantic-ui-react'
 
 export class AddItemPrompt extends React.Component {
-  public state = {
-    itemName: '',
-    itemCategory: null,
-    searchQuery: '',
-    itemValue: '',
-    itemFilters: [],
-    prepopulated: false,
-    showFilters: false,
+
+  public constructor(props) {
+    super(props)
+    this.state = {
+      itemFilters: [],
+      itemName: props.activeItem.name,
+      itemValue: Math.floor(props.activeItem.amount),
+      itemCategory: props.activeItem.category.id,
+      showFilters: false,
+      searchQuery: props.activeItem.category.name,
+    }
   }
 
   public addFilter = ({ name, value }) => {
@@ -63,26 +66,19 @@ export class AddItemPrompt extends React.Component {
     this.props.closePrompt()
   }
 
-  public populate = () => {
-    if (this.props.activeItem) {
-      if (!this.state.prepopulated) {
+  public populate = (props) => {
+    if (props.activeItem) {
         this.setState({
-          itemName: this.props.activeItem.name,
-          itemValue: Math.floor(this.props.activeItem.amount),
-          itemCategory: this.props.activeItem.category.id,
-          searchQuery: this.props.activeItem.category.name,
-          prepopulated: true,
+          itemName: props.activeItem.name,
+          itemValue: Math.floor(props.activeItem.amount),
+          itemCategory: props.activeItem.category.id,
+          searchQuery: props.activeItem.category.name,
         })
-      }
     }
   }
 
-  public componentDidMount() {
-    this.populate()
-  }
-
   public componentWillReceiveProps(nextProps) {
-    this.populate()
+    this.populate(nextProps)
   }
 
   public render() {
