@@ -122,14 +122,6 @@ export class AddItemPrompt extends React.Component {
 
         <Mutation
           mutation={ADD_ITEM}
-          refetchQueries={() => {
-            return [
-              {
-                query: GET_INVENTORY,
-                variables: { claimId: this.props.claimId },
-              },
-            ]
-          }}
         >
           {(addItem, { error }) => {
             if (error) {
@@ -170,7 +162,7 @@ export class AddItemPrompt extends React.Component {
                   this.close()
                 }}
               >
-                Add
+                OK
               </Button>
             )
           }}
