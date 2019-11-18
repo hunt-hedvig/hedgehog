@@ -12,11 +12,11 @@ export class AddItemPrompt extends React.Component {
     super(props)
     this.state = {
       itemFilters: [],
-      itemName: props.activeItem.name,
-      itemValue: Math.floor(props.activeItem.amount),
-      itemCategory: props.activeItem.category.id,
+      itemName: props.activeItem ? props.activeItem.name : '',
+      itemValue: props.activeItem ? Math.floor(props.activeItem.amount) : '',
+      itemCategory: props.activeItem ? props.activeItem.category.id : null,
       showFilters: false,
-      searchQuery: props.activeItem.category.name,
+      searchQuery: props.activeItem ? props.activeItem.category.name : '',
     }
   }
 
