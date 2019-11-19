@@ -8,33 +8,8 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Button, Header, Icon, Radio } from 'semantic-ui-react'
-import { CreateQuote, } from './insurance-tab/create-quote'
+import { CreateQuote } from './insurance-tab/create-quote'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
-
-export enum ExtraBuildingType {
-  ATTEFALL = 'Attefallshus',
-  SAUNA = 'Bastu',
-  BOATHOUSE = 'Båthus',
-  CARPORT = 'Carport',
-  GUESTHOUSE = 'Gästhus',
-  FRIGGEBOD = 'Friggebod',
-  STOREHOUSE = 'Förråd',
-  GARAGE = 'Garage',
-  BARN = 'Lada',
-  GAZEBO = 'Lusthus',
-  SHED = 'Skjul',
-  OUTHOUSE = 'Uthus',
-  GREENHOUSE = 'Växthus',
-  OTHER = 'Annat',
-}
-
-export interface ExtraBuilding {
-  id: string
-  type: ExtraBuildingType
-  area: number
-  hasWaterConnected: boolean
-  displayName?: string
-}
 
 const Wrapper = styled('div')({
   display: 'flex',
@@ -126,68 +101,10 @@ const timeStringToDistance = (timeString: string) =>
 
 export default class InsuranceTab extends React.Component<any, any> {
   public state = {
-    modalOpen: false,
-    confirmCreateQuoteModalOpen: false,
-    insurance: [],
-    availableSafetyIncreasers: {
-      SMOKE_ALARM: 'Smoke alarm',
-      FIRE_EXTINGUISHER: 'Fire extinguisher',
-      SAFETY_DOOR: 'Safety door',
-      GATE: 'Gate',
-      BURGLAR_ALARM: 'Burglar alarm',
-      NONE: 'None',
-    },
-    safetyIncreasers: [],
-    isStudent: true,
-    isSubleted: Boolean(this.props.insurance.data.isSubleted),
     activationDatePickerEnabled: false,
     cancellationDatePickerEnabled: false,
-    extraBuildings: [
-      ...this.props.insurance.data.extraBuildings,
-    ] as ExtraBuilding[],
   }
   private fileInputRef = React.createRef<HTMLInputElement>()
-
-  public handleClose = () => {
-    this.setState({
-      modalOpen: false,
-      insurance: [],
-      safetyIncreasers: [],
-      isSubleted: Boolean(this.props.insurance.data.isSubleted),
-      extraBuildings: [
-        ...this.props.insurance.data.extraBuildings,
-      ] as ExtraBuilding[],
-    })
-  }
-
-  public handleChange = (field) => (e) => {
-    const { insurance, safetyIncreasers } = this.state
-
-    switch (field) {
-      case 'SMOKE_ALARM':
-      case 'FIRE_EXTINGUISHER':
-      case 'SAFETY_DOOR':
-      case 'GATE':
-      case 'BURGLAR_ALARM':
-      case 'NONE':
-        safetyIncreasers.indexOf(field) === -1
-          ? safetyIncreasers.push(field)
-          : safetyIncreasers.splice(safetyIncreasers.indexOf(field), 1)
-        insurance.safetyIncreasers = safetyIncreasers
-        break
-      case 'isStudent':
-        this.setState((state) => ({ isStudent: !state.isStudent }))
-        insurance[field] = this.state.isStudent
-        break
-      case 'isSubleted':
-        this.setState((state) => ({ isSubleted: !state.isSubleted }))
-        break
-      default:
-        insurance[field] = e.target.value
-        break
-    }
-    this.setState({ insurance })
-  }
 
   public hasHouseInsurance = () => {
     const { data } = this.props.insurance
