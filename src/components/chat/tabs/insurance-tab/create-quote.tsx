@@ -1,17 +1,19 @@
 import { Mutation } from '@apollo/react-components'
 import { colorsV2 } from '@hedviginsurance/brand/dist'
+import {
+  MutationType,
+  MutationTypeCreateQuoteFromProductArgs,
+  QuoteFromProductInput,
+} from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
+import { QUOTES_QUERY, useQuotes } from 'components/chat/tabs/quotes/use-quotes'
 import * as React from 'react'
 import { useState } from 'react'
-import {
-  QUOTES_QUERY,
-  useQuotes,
-} from 'components/chat/tabs/quotes/use-quotes'
 import styled from 'react-emotion'
 import { Button, Modal } from 'semantic-ui-react'
 
-export const createCreateQuoteFromProductRequest = (modifiedDetails) => {
-  const requestData: any = {
+export const createQuoteFromProductRequest = (modifiedDetails) => {
+  const requestData: QuoteFromProductInput = {
     originatingProductId: modifiedDetails.productId,
     currentInsurer: modifiedDetails.currentInsurer,
   }
@@ -42,7 +44,6 @@ export const createCreateQuoteFromProductRequest = (modifiedDetails) => {
     requestData.incompleteApartmentQuoteData = {
       ...requestQuoteData,
       subType: modifiedDetails.insuranceType,
-      isStudent: modifiedDetails.isStudent,
     }
   }
 
@@ -72,7 +73,10 @@ export const CreateQuote: React.FunctionComponent<{
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
-    <Mutation
+    <Mutation<
+      Pick<MutationType, 'createQuoteFromProduct'>,
+      MutationTypeCreateQuoteFromProductArgs
+    >
       mutation={CREATE_QUOTE_FROM_PRODUCT_MUTATION}
       refetchQueries={() => [
         {
@@ -104,7 +108,10 @@ export const CreateQuote: React.FunctionComponent<{
             createQuoteMutation.data.createQuoteFromProduct ? (
               <>
                 <SuccessMessage>Quote created!</SuccessMessage>
-                <p>Go to the quotes tab to change the details and activate the quote.</p>
+                <p>
+                  Go to the quotes tab to change the details and activate the
+                  quote.
+                </p>
                 <Button onClick={() => setModalOpen(false)}>Close</Button>
               </>
             ) : (
@@ -122,9 +129,7 @@ export const CreateQuote: React.FunctionComponent<{
 
                 <Button
                   onClick={async () => {
-                    const quoteData = createCreateQuoteFromProductRequest(
-                      insurance,
-                    )
+                    const quoteData = createQuoteFromProductRequest(insurance)
                     await createQuoteFromProduct({
                       variables: { memberId, quoteData },
                     })
@@ -132,9 +137,11 @@ export const CreateQuote: React.FunctionComponent<{
                   positive
                   disabled={
                     createQuoteMutation.loading ||
-                    (createQuoteMutation.data &&
+                    Boolean(
                       createQuoteMutation.data &&
-                      createQuoteMutation.data.createQuoteFromProduct)
+                        createQuoteMutation.data &&
+                        createQuoteMutation.data.createQuoteFromProduct,
+                    )
                   }
                 >
                   Create quote
