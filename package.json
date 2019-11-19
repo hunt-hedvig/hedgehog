@@ -76,6 +76,8 @@
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
     "@babel/preset-typescript": "^7.7.0",
+    "@graphql-codegen/cli": "^1.8.3",
+    "@graphql-codegen/typescript": "1.8.3",
     "@types/emoji-mart": "^2.8.1",
     "@types/enzyme": "^3.1.14",
     "@types/jest": "^23.3.2",
@@ -116,7 +118,12 @@
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
-    "webpack-stats-plugin": "^0.3.0"
+    "webpack-stats-plugin": "^0.3.0",
+    "@graphql-codegen/typescript-operations": "1.8.3",
+    "@graphql-codegen/typescript-react-apollo": "1.8.3",
+    "@graphql-codegen/typescript-document-nodes": "1.8.3",
+    "@graphql-codegen/fragment-matcher": "1.8.3",
+    "@graphql-codegen/introspection": "1.8.3"
   },
   "scripts": {
     "start": "NODE_ENV=production ts-node -P tsconfig-server.json src/server/serverEntry.ts",
@@ -127,7 +134,8 @@
     "watch-server": "cross-env NODE_ENV=development BROWSER=false API_URL=http://localhost:8443 nodemon -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/serverEntry.ts",
     "test": "cross-env NODE_ENV=test jest",
     "typecheck": "tsc --noEmit",
-    "lint": "tslint \"src/**/*.{ts,tsx}\""
+    "lint": "tslint \"src/**/*.{ts,tsx}\"",
+    "graphql:gen": "graphql-codegen --config graphql-codegen.yml"
   },
   "husky": {
     "hooks": {

@@ -1,8 +1,8 @@
 import { colorsV2 } from '@hedviginsurance/brand'
+import { ApartmentQuoteData, Quote } from 'api/generated/graphql'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
 import { BottomSpacerWrapper, Muted } from './common'
-import { ApartmentQuoteData, QuoteData, QuoteResponseEntity } from './data'
 import { QuoteActivation } from './quote-activation'
 import { QuoteModification } from './quote-modification'
 import { formatMoneySE } from 'lib/intl'
@@ -72,18 +72,6 @@ const ModifyButton = styled(Button)({
     },
   },
 })
-const OtherButton = styled(Button)({
-  '&&': {
-    whiteSpace: 'nowrap',
-    width: '100%',
-    background: colorsV2.darkgray,
-    color: '#fff',
-    '&:hover, &:focus': {
-      background: colorsV2.darkgray,
-      color: '#fff',
-    },
-  },
-})
 
 const ActionsWrapper = styled('div')({
   background: colorsV2.flamingo200,
@@ -98,19 +86,19 @@ enum Action {
 }
 
 const QuoteDetails: React.FunctionComponent<{
-  quote: QuoteResponseEntity<QuoteData>
+  quote: Quote
 }> = function({ quote }) {
   return (
     <DetailsWrapper>
       <AddressNPriceWrapper>
         <AddressWrapper>
-          {quote.data.street}
-          {quote.data.street && (
+          {quote.data?.street}
+          {quote.data?.street && (
             <>
               , <br />
             </>
           )}
-          {quote.data.zipCode} {quote.data.city ?? '🤷️'}
+          {quote.data?.zipCode} {quote.data?.city ?? '🤷️'}
         </AddressWrapper>
         <PriceWrapper>
           {quote.price &&
@@ -129,11 +117,11 @@ const QuoteDetails: React.FunctionComponent<{
         Living space:
         <strong>
           {' '}
-          {quote.data.livingSpace} m<sup>2</sup>
+          {quote.data?.livingSpace} m<sup>2</sup>
         </strong>
         <br />
         Household size:
-        <strong> {quote.data.householdSize} person(s)</strong>
+        <strong> {quote.data?.householdSize} person(s)</strong>
       </DetailWrapper>
       <DetailWrapper>
         <Muted>
@@ -152,7 +140,7 @@ const QuoteDetails: React.FunctionComponent<{
 }
 
 export const QuoteListItemComponent: React.FunctionComponent<{
-  quote: QuoteResponseEntity<QuoteData>
+  quote: Quote
   inactionable?: boolean
   memberId: string
   showNotification?: (data: any) => void

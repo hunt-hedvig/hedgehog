@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/react-hooks'
+import { Quote } from 'api/generated/graphql'
 import { useState } from 'react'
 import * as React from 'react'
 import { gql } from 'apollo-boost'
 import { BottomSpacerWrapper, ErrorMessage, SubmitButton } from './common'
-import { QuoteData, QuoteResponseEntity } from './data'
 import { QUOTES_QUERY } from './use-quotes'
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
 import { Button, Checkbox } from 'semantic-ui-react'
@@ -26,7 +26,7 @@ const ACTIVATE_MUTATION = gql`
   }
 `
 export const QuoteActivation: React.FunctionComponent<{
-  quote: QuoteResponseEntity<QuoteData>
+  quote: Quote
   memberId
   onSubmitted?: () => void
   onWipChange?: (isWip: boolean) => void
@@ -56,9 +56,7 @@ export const QuoteActivation: React.FunctionComponent<{
         if (
           activationMutation.loading ||
           !activationDate ||
-          !confirm(
-            'Are you sure you want to activate?',
-          )
+          !confirm('Are you sure you want to activate?')
         ) {
           return
         }
@@ -91,14 +89,13 @@ export const QuoteActivation: React.FunctionComponent<{
         <Checkbox
           onChange={(e) => {
             onWipChange && onWipChange(true)
-            const newUseGap = !useGap
-            if (!newUseGap) {
+            if (!e.currentTarget.checked) {
               setTerminationDate(null)
             }
-            setUseGap(newUseGap)
+            setUseGap(e.currentTarget.checked)
           }}
           label="Create gap between insurances"
-          value={useGap}
+          value={useGap as any}
         />
       </BottomSpacerWrapper>
 

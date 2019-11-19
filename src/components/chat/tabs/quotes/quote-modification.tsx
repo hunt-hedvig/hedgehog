@@ -1,10 +1,14 @@
 import { useMutation } from '@apollo/react-hooks'
 import { colorsV2 } from '@hedviginsurance/brand/dist'
-import { gql } from 'apollo-boost'
 import {
-  ExtraBuilding,
-  ExtraBuildingType,
-} from 'components/chat/tabs/InsuranceTab'
+  ApartmentQuoteData,
+  ApartmentSubType,
+  ExtraBuilding, ExtraBuildingType,
+  HouseQuoteData,
+  Quote,
+  QuoteData
+} from 'api/generated/graphql'
+import { gql } from 'apollo-boost'
 import * as React from 'react'
 import { useState } from 'react'
 import styled from 'react-emotion'
@@ -16,12 +20,6 @@ import {
 } from 'semantic-ui-react'
 import * as uuid from 'uuid/v4'
 import { ErrorMessage, SubmitButton } from './common'
-import {
-  ApartmentQuoteData,
-  HouseQuoteData,
-  QuoteData,
-  QuoteResponseEntity,
-} from './data'
 import { QUOTES_QUERY } from './use-quotes'
 
 const Label = styled('label')({
@@ -48,6 +46,11 @@ const InputGroup = styled('div')({
   },
 })
 
+interface EditableExtraBuilding extends ExtraBuilding {
+  id: string
+  area: any | string | number | undefined
+}
+
 const UPDATE_QUOTE_MUTATION = gql`
   mutation UpdateQuote($quoteId: ID!, $quoteData: QuoteInput!) {
     updateQuote(quoteId: $quoteId, quoteData: $quoteData) {
@@ -57,15 +60,17 @@ const UPDATE_QUOTE_MUTATION = gql`
 `
 export const QuoteModification: React.FunctionComponent<{
   memberId: string
-  quote: QuoteResponseEntity<QuoteData>
+  quote: Quote
   onWipChange?: (isWip: boolean) => void
   onSubmitted?: () => void
-}> = function({
-  memberId,
-  quote,
-  onWipChange = () => {},
-  onSubmitted = () => {},
-}) {
+}> = function ({
+                 memberId,
+                 quote,
+                 onWipChange = () => {
+                 },
+                 onSubmitted = () => {
+                 },
+               }) {
   const [modifyField, fieldModification] = useMutation(UPDATE_QUOTE_MUTATION, {
     refetchQueries: () => [{ query: QUOTES_QUERY, variables: { memberId } }],
   })
@@ -82,18 +87,16 @@ export const QuoteModification: React.FunctionComponent<{
   const [numberOfBathrooms, setNumberOfBathrooms] = useState<string | null>(
     null,
   )
-  const [extraBuildings, setExtraBuildings] = useState<ReadonlyArray<
-    ExtraBuilding
-  > | null>(
+  const [extraBuildings, setExtraBuildings] = useState<ReadonlyArray<EditableExtraBuilding>>(
     ((quote.data as HouseQuoteData | null)?.extraBuildings?.map(
       (extraBuilding) => ({ ...extraBuilding, id: uuid() }),
-    ) ?? []) as ExtraBuilding[],
+    ) ?? []),
   )
   const [isSubleted, setIsSubleted] = useState<boolean | null>(null)
 
   const getTextInput = (
     variable: string,
-    label: string,
+    label: React.ReactNode,
     value: string | number | null,
     setter: (val: any) => void,
     inputType = 'text',
@@ -105,7 +108,7 @@ export const QuoteModification: React.FunctionComponent<{
           onWipChange && onWipChange(true)
           setter(e.currentTarget.value)
         }}
-        value={value ?? quote.data[variable]}
+        value={value ?? (quote.data as QuoteData)[variable]}
         id={`${variable}-${quote.id}`}
         type={inputType}
       />
@@ -113,7 +116,7 @@ export const QuoteModification: React.FunctionComponent<{
   )
   const getNumberInput = (
     variable: string,
-    label: string,
+    label: React.ReactNode,
     value: string | number | null,
     setter: (val: any) => void,
   ) => getTextInput(variable, label, value, setter, 'number')
@@ -128,7 +131,10 @@ export const QuoteModification: React.FunctionComponent<{
         }
 
         const quoteData: any = {
-          productType: (productType ?? quote.productType) === 'HOUSE' ? 'HOUSE' : 'APARTMENT',
+          productType:
+            (productType ?? quote.productType) === 'HOUSE'
+              ? 'HOUSE'
+              : 'APARTMENT',
         }
         const baseData = {
           street,
@@ -150,7 +156,7 @@ export const QuoteModification: React.FunctionComponent<{
                 hasWaterConnected,
               }),
             ),
-            isSubleted: isSubleted ?? quote.data['isSubleted'] ?? false,
+            isSubleted: isSubleted ?? (quote.data as HouseQuoteData)?.isSubleted ?? false,
           }
         } else {
           quoteData.apartmentData = {
@@ -181,7 +187,7 @@ export const QuoteModification: React.FunctionComponent<{
           value={
             productType ??
             (quote.productType === 'APARTMENT'
-              ? (quote.data as ApartmentQuoteData).subType
+              ? (quote.data as ApartmentQuoteData).subType as ApartmentSubType
               : 'HOUSE')
           }
           onChange={(_, data) => {
@@ -219,26 +225,26 @@ export const QuoteModification: React.FunctionComponent<{
               <>
                 Ancillary area (m<sup>2</sup>)
               </>,
-              (ancillaryArea === '0' ? quote.data['ancillaryArea'] : ancillaryArea) ?? '0',
+              (ancillaryArea === '0' ? quote.data!['ancillaryArea'] : ancillaryArea) ?? '0',
               setAncillaryArea,
             )}
             {getNumberInput(
               'yearOfConstruction',
               'Year of construction',
-              yearOfConstruction ?? quote.data['yearOfConstruction'] ?? '',
+              yearOfConstruction ?? quote.data!['yearOfConstruction'] ?? '',
               setYearOfConstruction,
             )}
             {getNumberInput(
               'numberOfBathrooms',
               'Number of bathrooms',
-              numberOfBathrooms ?? quote.data['numberOfBathrooms'] ?? '',
+              numberOfBathrooms ?? quote.data!['numberOfBathrooms'] ?? '',
               setNumberOfBathrooms,
             )}
             <Label>Is subleted</Label>
             <Checkbox
               onClick={(e) => setIsSubleted(e.currentTarget.checked)}
               label="Is subleted"
-              value={isSubleted ?? false}
+              value={isSubleted ?? false as any}
             />
           </InputGroup>
           <InputGroup>
@@ -283,11 +289,11 @@ const RemoveButtonWrapper = styled('div')({
 })
 
 const ExtraBuildingEditor: React.FunctionComponent<{
-  extraBuildings: ReadonlyArray<ExtraBuilding>
-  onChange: (value: ReadonlyArray<ExtraBuilding>) => void
-}> = function({ extraBuildings, onChange }) {
+  extraBuildings: ReadonlyArray<EditableExtraBuilding>
+  onChange: (value: ReadonlyArray<EditableExtraBuilding>) => void
+}> = function ({ extraBuildings, onChange }) {
   const handleExtraBuildingChange = (index: number) => (
-    data: ExtraBuilding,
+    data: Partial<EditableExtraBuilding>,
   ) => {
     onChange(
       extraBuildings.map((extraBuilding, i) =>
@@ -301,11 +307,11 @@ const ExtraBuildingEditor: React.FunctionComponent<{
         <strong>Extra buildings</strong>
       </div>
       {extraBuildings.map((extraBuilding, i) => (
-        <ExtraBuildingWrapper key={extraBuilding.id}>
+        <ExtraBuildingWrapper key={extraBuilding?.id}>
           <div>
-            <Label htmlFor={`area-${extraBuilding.id}`}>Area</Label>
+            <Label htmlFor={`area-${extraBuilding?.id}`}>Area</Label>
             <Input
-              id={`area-${extraBuilding.id}`}
+              id={`area-${extraBuilding}`}
               label="m2"
               labelPosition="right"
               type="number"
@@ -325,13 +331,13 @@ const ExtraBuildingEditor: React.FunctionComponent<{
               id={`type-${extraBuilding.id}`}
               fluid
               selection
-              options={Object.keys(ExtraBuildingType).map((type) => ({
+              options={Object.values(ExtraBuildingType).map((type) => ({
                 text: type,
                 value: type,
               }))}
               value={extraBuilding.type}
               onChange={(_, newValue) =>
-                handleExtraBuildingChange(i)({ type: newValue.value })
+                handleExtraBuildingChange(i)({ type: newValue.value as ExtraBuildingType })
               }
             />
           </div>
@@ -342,7 +348,7 @@ const ExtraBuildingEditor: React.FunctionComponent<{
             <Checkbox
               id={`hasWaterConnected-${extraBuilding.id}`}
               label="Has water connected"
-              value={extraBuilding.hasWaterConnected}
+              value={extraBuilding.hasWaterConnected as any}
               onChange={(e) =>
                 handleExtraBuildingChange(i)({
                   hasWaterConnected: e.currentTarget.checked,
@@ -382,7 +388,7 @@ const ExtraBuildingEditor: React.FunctionComponent<{
               area: 0,
               hasWaterConnected: false,
               id: uuid(),
-              type: ExtraBuildingType.ATTEFALL,
+              type: ExtraBuildingType.Attefall,
             },
           ])
         }}

@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/react-hooks'
+import { Member, Quote } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
-import { ApartmentQuoteData, HouseQuoteData, QuoteResponseEntity } from './data'
 import { parseISO } from 'date-fns'
 
 export const QUOTES_QUERY = gql`
@@ -49,27 +49,20 @@ export const QUOTES_QUERY = gql`
     }
   }
 `
-type QuotesGqlType = {
-  member: {
-    quotes: ReadonlyArray<
-      QuoteResponseEntity<ApartmentQuoteData | HouseQuoteData>
-    >
-  }
-}
 
-const latest = (a: QuoteResponseEntity<any>, b: QuoteResponseEntity<any>) =>
-  parseISO(b.createdAt) - parseISO(a.createdAt)
+const latest = (a: Quote, b: Quote) =>
+  Number(parseISO(b.createdAt)) - Number(parseISO(a.createdAt))
 
 export const signedOrExpiredPredicate = (quote) =>
   quote.state === 'EXPIRED' || quote.state === 'SIGNED'
 
-export const useQuotes = function(
+export const useQuotes = function (
   memberId: string,
 ): [
-  ReadonlyArray<QuoteResponseEntity<ApartmentQuoteData | HouseQuoteData>>,
+  ReadonlyArray<Quote>,
   boolean,
 ] {
-  const { data, loading } = useQuery<QuotesGqlType>(QUOTES_QUERY, {
+  const { data, loading } = useQuery<{ member: { quotes: Member['quotes'] } }>(QUOTES_QUERY, {
     variables: { memberId },
   })
   const quotes = [...(data?.member?.quotes ?? [])].sort(latest)
