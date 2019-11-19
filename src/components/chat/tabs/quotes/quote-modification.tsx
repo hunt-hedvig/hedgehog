@@ -3,10 +3,11 @@ import { colorsV2 } from '@hedviginsurance/brand/dist'
 import {
   ApartmentQuoteData,
   ApartmentSubType,
-  ExtraBuilding, ExtraBuildingType,
+  ExtraBuilding,
+  ExtraBuildingType,
   HouseQuoteData,
   Quote,
-  QuoteData
+  QuoteData,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
 import * as React from 'react'
@@ -63,14 +64,12 @@ export const QuoteModification: React.FunctionComponent<{
   quote: Quote
   onWipChange?: (isWip: boolean) => void
   onSubmitted?: () => void
-}> = function ({
-                 memberId,
-                 quote,
-                 onWipChange = () => {
-                 },
-                 onSubmitted = () => {
-                 },
-               }) {
+}> = function({
+  memberId,
+  quote,
+  onWipChange = () => {},
+  onSubmitted = () => {},
+}) {
   const [modifyField, fieldModification] = useMutation(UPDATE_QUOTE_MUTATION, {
     refetchQueries: () => [{ query: QUOTES_QUERY, variables: { memberId } }],
   })
@@ -87,10 +86,12 @@ export const QuoteModification: React.FunctionComponent<{
   const [numberOfBathrooms, setNumberOfBathrooms] = useState<string | null>(
     null,
   )
-  const [extraBuildings, setExtraBuildings] = useState<ReadonlyArray<EditableExtraBuilding>>(
-    ((quote.data as HouseQuoteData | null)?.extraBuildings?.map(
+  const [extraBuildings, setExtraBuildings] = useState<
+    ReadonlyArray<EditableExtraBuilding>
+  >(
+    (quote.data as HouseQuoteData | null)?.extraBuildings?.map(
       (extraBuilding) => ({ ...extraBuilding, id: uuid() }),
-    ) ?? []),
+    ) ?? [],
   )
   const [isSubleted, setIsSubleted] = useState<boolean | null>(null)
 
@@ -156,7 +157,8 @@ export const QuoteModification: React.FunctionComponent<{
                 hasWaterConnected,
               }),
             ),
-            isSubleted: isSubleted ?? (quote.data as HouseQuoteData)?.isSubleted ?? false,
+            isSubleted:
+              isSubleted ?? (quote.data as HouseQuoteData)?.isSubleted ?? false,
           }
         } else {
           quoteData.apartmentData = {
@@ -187,7 +189,7 @@ export const QuoteModification: React.FunctionComponent<{
           value={
             productType ??
             (quote.productType === 'APARTMENT'
-              ? (quote.data as ApartmentQuoteData).subType as ApartmentSubType
+              ? ((quote.data as ApartmentQuoteData).subType as ApartmentSubType)
               : 'HOUSE')
           }
           onChange={(_, data) => {
@@ -225,7 +227,9 @@ export const QuoteModification: React.FunctionComponent<{
               <>
                 Ancillary area (m<sup>2</sup>)
               </>,
-              (ancillaryArea === '0' ? quote.data!['ancillaryArea'] : ancillaryArea) ?? '0',
+              (ancillaryArea === '0'
+                ? quote.data!['ancillaryArea']
+                : ancillaryArea) ?? '0',
               setAncillaryArea,
             )}
             {getNumberInput(
@@ -244,7 +248,7 @@ export const QuoteModification: React.FunctionComponent<{
             <Checkbox
               onClick={(e) => setIsSubleted(e.currentTarget.checked)}
               label="Is subleted"
-              value={isSubleted ?? false as any}
+              value={isSubleted ?? (false as any)}
             />
           </InputGroup>
           <InputGroup>
@@ -291,7 +295,7 @@ const RemoveButtonWrapper = styled('div')({
 const ExtraBuildingEditor: React.FunctionComponent<{
   extraBuildings: ReadonlyArray<EditableExtraBuilding>
   onChange: (value: ReadonlyArray<EditableExtraBuilding>) => void
-}> = function ({ extraBuildings, onChange }) {
+}> = function({ extraBuildings, onChange }) {
   const handleExtraBuildingChange = (index: number) => (
     data: Partial<EditableExtraBuilding>,
   ) => {
@@ -337,7 +341,9 @@ const ExtraBuildingEditor: React.FunctionComponent<{
               }))}
               value={extraBuilding.type}
               onChange={(_, newValue) =>
-                handleExtraBuildingChange(i)({ type: newValue.value as ExtraBuildingType })
+                handleExtraBuildingChange(i)({
+                  type: newValue.value as ExtraBuildingType,
+                })
               }
             />
           </div>

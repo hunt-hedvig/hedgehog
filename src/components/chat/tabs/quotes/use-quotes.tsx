@@ -56,15 +56,15 @@ const latest = (a: Quote, b: Quote) =>
 export const signedOrExpiredPredicate = (quote) =>
   quote.state === 'EXPIRED' || quote.state === 'SIGNED'
 
-export const useQuotes = function (
+export const useQuotes = function(
   memberId: string,
-): [
-  ReadonlyArray<Quote>,
-  boolean,
-] {
-  const { data, loading } = useQuery<{ member: { quotes: Member['quotes'] } }>(QUOTES_QUERY, {
-    variables: { memberId },
-  })
+): [ReadonlyArray<Quote>, boolean] {
+  const { data, loading } = useQuery<{ member: { quotes: Member['quotes'] } }>(
+    QUOTES_QUERY,
+    {
+      variables: { memberId },
+    },
+  )
   const quotes = [...(data?.member?.quotes ?? [])].sort(latest)
 
   return [quotes, loading]

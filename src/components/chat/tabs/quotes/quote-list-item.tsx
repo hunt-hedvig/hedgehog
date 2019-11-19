@@ -144,7 +144,16 @@ export const QuoteListItemComponent: React.FunctionComponent<{
   inactionable?: boolean
   memberId: string
   showNotification?: (data: any) => void
-}> = function({ quote, inactionable, memberId, showNotification }) {
+  insuranceRequest?: (memberId: string) => void
+  insurancesListRequest?: (memberId: string) => void
+}> = function({
+  quote,
+  inactionable,
+  memberId,
+  showNotification,
+  insuranceRequest,
+  insurancesListRequest,
+}) {
   const [action, setAction] = useState<Action | null>(null)
   const [isWip, setIsWip] = useState(false)
 
@@ -212,22 +221,13 @@ export const QuoteListItemComponent: React.FunctionComponent<{
               showNotification &&
                 showNotification({
                   header: 'Activated',
-                  message: (
-                    <>
-                      Quote activated,{' '}
-                      <Button
-                        color="green"
-                        size="tiny"
-                        onClick={() => window.location.reload()}
-                      >
-                        reload?
-                      </Button>
-                    </>
-                  ),
+                  message: 'Quote activated',
                   type: 'olive',
                 })
               setIsWip(false)
               setAction(null)
+              insuranceRequest && insuranceRequest(memberId)
+              insurancesListRequest && insurancesListRequest(memberId)
             }}
           />
         </ActionsWrapper>
@@ -256,6 +256,9 @@ export const QuoteListItemComponent: React.FunctionComponent<{
   )
 }
 
-const mapActions = { ...actions.notificationsActions }
+const mapActions = {
+  ...actions.notificationsActions,
+  ...actions.insuranceActions,
+}
 
 export const QuoteListItem = connect(null, mapActions)(QuoteListItemComponent)
