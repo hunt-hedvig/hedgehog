@@ -10,7 +10,6 @@ const UploadClaimFileWrapper = styled('div')({
   alignItems: 'center',
   display: 'flex',
   flexDirection: 'column',
-  height: '100%',
   border: '1px solid rgba(0,0,0,0.08)',
   minHeight: '20rem',
 })
@@ -48,9 +47,11 @@ class FileUploadComponent extends React.Component<{
   claimId: string
   memberId: string
   showNotification: (data: any) => void
+  onUploaded: () => void
 }> {
-  state = {
+  public state = {
     value: null,
+    uploaded: false,
   }
 
   render() {
@@ -108,6 +109,9 @@ class FileUploadComponent extends React.Component<{
           header: 'Approved',
           type: 'olive',
         })
+        this.setState({ uploaded: true })
+        this.props.onUploaded()
+        console.log(this.props.onUploaded)
       })
       .catch((error) => {
         showNotification({

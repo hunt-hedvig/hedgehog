@@ -11,8 +11,6 @@ import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
 import { FileUpload } from './components/FileUpload'
 import { Table, Image } from 'semantic-ui-react'
-import styled from 'react-emotion'
-import { colors } from '@hedviginsurance/brand'
 import actions from 'store/actions'
 import { connect } from 'react-redux'
 import { Button } from 'semantic-ui-react'
@@ -124,41 +122,7 @@ interface ClaimFiles {
   category: string
 }
 
-const ConfirmMessage = styled('div')({
-  padding: '12px',
-  alignItems: 'center',
-  color: colors.OFF_BLACK_DARK,
-  fontSize: '1.2rem',
-})
-
-const handleClick = (mutation, claimId, claimFileId, showNotification) => {
-  mutation({
-    variables: {
-      claimId: claimId,
-      claimFileId: claimFileId,
-    },
-  })
-    .then(() => {
-      showNotification({
-        message: 'claim file has been deleted',
-        header: 'Approved',
-        type: 'olive',
-      })
-    })
-    .catch((error) => {
-      showNotification({
-        message: error.message,
-        header: 'Error',
-        type: 'red',
-      })
-      throw error
-    })
-}
-
 const handleSelect = (event, mutation, claimFileId, claimId) => {
-  // console.log(event.target.value)
-  // console.log(claimFileId)
-  // console.log(claimId)
   mutation({
     variables: {
       claimId: claimId,
@@ -169,117 +133,55 @@ const handleSelect = (event, mutation, claimFileId, claimId) => {
 }
 
 interface State {
-  confirming: boolean
+  confirmed: boolean
 }
-class ClaimFileTableComponent extends React.Component<
-  {
-    claimFiles: Array<ClaimFiles>
-    claimId: string
-    showNotification: (data: any) => void
-  },
-  State
-> {
+
+export class DeleteButton extends React.Component<
+{
+  claimId: string
+  claimFileId: string
+  showNotification: (data: any) => void
+}, State> {
   public state = {
-    confirming: false,
+    confirmed: false,
   }
+
   public render() {
     return (
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Claim Files</Table.HeaderCell>
-            <Table.HeaderCell>File Type</Table.HeaderCell>
-            <Table.HeaderCell></Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {[...this.props.claimFiles].map((claimFile) => {
-            if (claimFile.markedAsDeleted === false) {
-              return (
-                <Table.Row key={claimFile.fileUploadUrl}>
-                  <Table.Cell>
-                    <Image src={claimFile.fileUploadUrl} size="medium" />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Mutation mutation={SET_CLAIM_FILE_CATEGORY}>
-                      {(mutation) => {
-                        return (
-                          <select
-                            class="ui fluid search dropdown"
-                            multiple=""
-                            onChange={() =>
-                              handleSelect(
-                                event,
-                                mutation,
-                                claimFile.claimFileId,
-                                this.props.claimId,
-                              )
-                            }
-                          >
-                            <option>
-                              {claimFile.category != null
-                                ? claimFile.category
-                                : 'File Type'}
-                            </option>
-                            <option>Reciept</option>
-                            <option>Proof of ownership</option>
-                            <option>Invoice</option>
-                            <option>Proof of damage</option>
-                          </select>
-                        )
-                      }}
-                    </Mutation>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Mutation
-                      mutation={MARK_CLAIM_FILE_AS_DELETED}
-                      refetchQueries={() => [
-                        {
-                          CLAIM_FILES_QUERY,
-                          variables: {
-                            claimId: this.props.claimId,
-                          },
-                        },
-                      ]}
-                    >
-                      {(mutation, { loading }) => {
-                        return (
-                          <Button
-                            disabled={loading}
-                            onClick={
-                              this.state.confirming
-                                ? () => {
-                                    if (loading) {
-                                      return
-                                    }
-                                    handleClick(
-                                      mutation,
-                                      this.props.claimId,
-                                      claimFile.claimFileId,
-                                      this.props.showNotification,
-                                    )
-                                  }
-                                : this.confirm
-                            }
-                          >
-                            {' '}
-                            {this.state.confirming
-                              ? "Yes, I'm sure"
-                              : 'Delete claim file'}
-                          </Button>
-                        )
-                      }}
-                    </Mutation>
-                    {this.state.confirming ? (
-                      <ConfirmMessage>Are you sure?</ConfirmMessage>
-                    ) : null}
-                  </Table.Cell>
-                </Table.Row>
-              )
-            }
-          })}
-        </Table.Body>
-      </Table>
+      <Mutation
+        mutation={MARK_CLAIM_FILE_AS_DELETED}
+        refetchQueries={() => [
+          {
+            query: CLAIM_FILES_QUERY,
+            variables: {
+              id: this.props.claimId,
+            },
+          },
+        ]}
+      >
+        {(mutation, { loading }) => (
+          <>
+            {!this.state.confirmed ? (
+              <Button
+                onClick={(e) => {
+                  e.preventDefault()
+                  this.toggleConfirmed()
+                }}
+                disabled={loading}
+              >
+                Delete
+              </Button>
+            ) : (
+              <Button
+                disabled={loading}
+                onClick={() => this.handleClick(mutation)}
+              >
+                Are you sure?
+              </Button>
+            )}
+          </>
+        )}
+      </Mutation>
     )
   }
 
@@ -287,15 +189,16 @@ class ClaimFileTableComponent extends React.Component<
     mutation({
       variables: {
         claimId: this.props.claimId,
+        claimFileId: this.props.claimFileId,
       },
     })
       .then(() => {
-        this.resetButton()
         this.props.showNotification({
-          message: 'claim file has been deleted',
-          header: 'Approved',
+          message: 'file has been marked as deleted',
+          header: 'Success',
           type: 'olive',
         })
+        this.resetConfirmed()
       })
       .catch((error) => {
         this.props.showNotification({
@@ -303,16 +206,87 @@ class ClaimFileTableComponent extends React.Component<
           header: 'Error',
           type: 'red',
         })
-        throw error
-      })
+      }
+    )
   }
 
-  private resetButton = () => {
-    this.setState({ confirming: false })
-  }
+  private resetConfirmed = () => this.setState({ confirmed: false })
 
-  private confirm = () => {
-    this.setState({ confirming: true })
+  private toggleConfirmed = () =>
+    this.setState((state) => ({ confirmed: !state.confirmed }))
+}
+
+
+class ClaimFileTableComponent extends React.Component<
+  {
+    claimFiles: Array<ClaimFiles>
+    claimId: string
+    showNotification: (data: any) => void
+  }> {
+  public render() {
+    return (
+      <>
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Claim Files</Table.HeaderCell>
+              <Table.HeaderCell>File Type</Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {[...this.props.claimFiles].map((claimFile) => {
+              if (claimFile.markedAsDeleted === false) {
+                return (
+                  <Table.Row key={claimFile.fileUploadUrl}>
+                    <Table.Cell>
+                      <Image src={claimFile.fileUploadUrl} size="medium" />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Mutation mutation={SET_CLAIM_FILE_CATEGORY}>
+                        {(mutation) => {
+                          return (
+                            <select
+                              class="ui fluid search dropdown"
+                              multiple=""
+                              onChange={() =>
+                                handleSelect(
+                                  event,
+                                  mutation,
+                                  claimFile.claimFileId,
+                                  this.props.claimId
+                                )
+                              }
+                            >
+                              <option>
+                                {claimFile.category != null
+                                  ? claimFile.category
+                                  : 'File Type'}
+                              </option>
+                              <option>Reciept</option>
+                              <option>Proof of ownership</option>
+                              <option>Police report</option>
+                              <option>Invoice</option>
+                              <option>Proof of damage</option>
+                              <option>Other</option>
+                            </select>
+                          )
+                        }}
+                      </Mutation>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <DeleteButton claimId={this.props.claimId} 
+                      claimFileId={claimFile.claimFileId}
+                      showNotification={this.props.showNotification}/>
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              }
+            })}
+          </Table.Body>
+        </Table>
+      </>
+    )
   }
 }
 
@@ -381,39 +355,50 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               />
             </Grid>
             <Grid item xs={12}>
-              <ClaimEvents events={events} />
+              <Query
+                query={CLAIM_FILES_QUERY}
+                variables={{ id: match.params.id }}
+              >
+                {({ loading, error, data, refetch }) => {
+                  if (error) {
+                    return (
+                      <div>
+                        Error in GraphQl query here.....:{' '}
+                        <pre>{JSON.stringify(error, null, 2)}</pre>
+                      </div>
+                    )
+                  }
+                  if (loading || !data) {
+                    return <div>Loading...</div>
+                  }
+                  return data.claim.claimFiles === 0 ? (
+                    <div>
+                      No claim documents have been uploaded for this claim
+                    </div>
+                  ) : (
+                    <>
+                      <Grid item xs={12}>
+                        <ClaimFileTable
+                          claimFiles={data.claim.claimFiles}
+                          claimId={match.params.id}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FileUpload
+                          claimId={match.params.id}
+                          memberId={data.claim.memberId}
+                          onUploaded={() => refetch}
+                        />
+                      </Grid>
+                    </>
+                  )
+                }}
+              </Query>
             </Grid>
             <Grid item xs={12}>
-              <FileUpload
-                claimId={match.params.id}
-                memberId={data.claim.member.memberId}
-              />
+              <ClaimEvents events={events} />
             </Grid>
           </Grid>
-        )
-      }}
-    </Query>
-
-    <Query query={CLAIM_FILES_QUERY} variables={{ id: match.params.id }}>
-      {({ loading, error, data }) => {
-        if (error) {
-          return (
-            <div>
-              Error in GraphQl query here.....:{' '}
-              <pre>{JSON.stringify(error, null, 2)}</pre>
-            </div>
-          )
-        }
-        if (loading || !data) {
-          return <div>Loading...</div>
-        }
-        return data.claim.claimFiles === 0 ? (
-          <div>No claim documents have been uploaded for this claim</div>
-        ) : (
-          <ClaimFileTable
-            claimFiles={data.claim.claimFiles}
-            claimId={match.params.id}
-          />
         )
       }}
     </Query>
