@@ -1,6 +1,6 @@
 import * as React from 'react'
-import {PropContainer, SubHeaderContainer} from "features/pricing/styles"
-import {Dropdown, Header, Label} from "semantic-ui-react"
+import { PropContainer, SubHeaderContainer } from 'features/pricing/styles'
+import { Dropdown, Header, Label } from 'semantic-ui-react'
 
 export class InventoryFilterContainer extends React.Component {
   public isFilterActive = (value, name) => {

@@ -7,7 +7,6 @@ import { Mutation, Query } from 'react-apollo'
 import { Button, Input, Loader } from 'semantic-ui-react'
 
 export class AddItemPrompt extends React.Component {
-
   public constructor(props) {
     super(props)
     this.state = {
@@ -68,12 +67,12 @@ export class AddItemPrompt extends React.Component {
 
   public populate = (props) => {
     if (props.activeItem) {
-        this.setState({
-          itemName: props.activeItem.name,
-          itemValue: Math.floor(props.activeItem.amount),
-          itemCategory: props.activeItem.category.id,
-          searchQuery: props.activeItem.category.name,
-        })
+      this.setState({
+        itemName: props.activeItem.name,
+        itemValue: Math.floor(props.activeItem.amount),
+        itemCategory: props.activeItem.category.id,
+        searchQuery: props.activeItem.category.name,
+      })
     }
   }
 
@@ -118,21 +117,27 @@ export class AddItemPrompt extends React.Component {
 
         <Mutation
           mutation={ADD_ITEM}
+          refetchQueries={() => [
+            {
+              query: GET_INVENTORY,
+              variables: { claimId: this.props.claimId },
+            },
+          ]}
         >
-          {(addItem, { error }) => {
-            if (error) {
+          {(addItem,  addItemMutation ) => {
+            if (addItemMutation.error) {
               return <React.Fragment />
             }
 
             return (
               <Button
-                disabled={!this.areFieldsPopulated()}
+                disabled={!this.areFieldsPopulated() || addItemMutation.loading}
                 size="small"
                 primary
                 style={{ marginTop: '7px' }}
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault()
-                  addItem({
+                  await addItem({
                     variables: {
                       item: {
                         inventoryItemId: null,
@@ -185,14 +190,14 @@ export class AddItemPrompt extends React.Component {
             if (error) {
               return null
             }
-
+            
             return (
               <React.Fragment>
                 <Button
                   disabled={
                     this.state.itemCategory === 'Övrigt' ||
                     this.state.itemCategory === null ||
-                    this.props.activeItem
+                    Boolean(this.props.activeItem)
                   }
                   color="teal"
                   size="small"
@@ -208,20 +213,21 @@ export class AddItemPrompt extends React.Component {
                   {this.state.showFilters ? 'Hide filters' : 'Show filters'}
                 </Button>
 
-                {!this.state.showFilters ? null : loading ? (
+                  { this.state.showFilters && loading &&
                   <Loader
                     active
                     inline="centered"
                     style={{ marginTop: '20px' }}
                   />
-                ) : (
+                }
+                  { this.state.showFilters && !loading &&
                   <InventoryFilterContainer
                     filters={data.filters}
                     activeFilters={this.state.itemFilters}
                     addFilter={this.addFilter}
                     removeFilter={this.removeFilter}
                   />
-                )}
+                }
               </React.Fragment>
             )
           }}

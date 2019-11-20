@@ -198,7 +198,7 @@ const hasPoliceReport = (typename: ClaimTypes): boolean => {
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.AssaultClaim,
     ClaimTypes.TravelAccidentClaim,
-    ClaimTypes.BurglaryClaim
+    ClaimTypes.BurglaryClaim,
   ].includes(typename)
 }
 
@@ -206,7 +206,7 @@ const hasReceipt = (typename: ClaimTypes): boolean => {
   return [
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.TravelAccidentClaim,
-    ClaimTypes.BurglaryClaim
+    ClaimTypes.BurglaryClaim,
   ].includes(typename)
 }
 

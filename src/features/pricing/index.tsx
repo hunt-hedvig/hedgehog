@@ -4,6 +4,7 @@ import {
   ItemTable,
 } from 'components/pricing'
 import { ListPage } from 'components/shared'
+import { format } from 'date-fns'
 import { SEARCH_ITEMS } from 'features/pricing/queries'
 import {
   HeaderContainer,
@@ -20,8 +21,8 @@ export default class Pricing extends React.Component {
     activeCategoryName: '',
     activeQuery: '',
     activeFilters: [],
-    activeDate: new Date().toJSON().slice(0, 10),
-    usedDate: new Date().toJSON().slice(0, 10),
+    activeDate: format(new Date(), "yyyy-MM-dd"),
+    usedDate: format(new Date(), "yyyy-MM-dd"),
     offset: 0,
     batchSize: 5,
   }

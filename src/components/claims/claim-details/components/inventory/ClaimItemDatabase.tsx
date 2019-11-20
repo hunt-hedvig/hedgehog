@@ -62,7 +62,6 @@ export class ClaimItemDatabase extends React.Component {
                 }
               }
 
-
               return (
                 <ClaimInventory
                   items={items}

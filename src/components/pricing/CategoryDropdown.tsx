@@ -4,6 +4,11 @@ import { Query } from 'react-apollo'
 import { Dropdown } from 'semantic-ui-react'
 
 export class CategoryDropdown extends React.Component {
+  //TODO: Pass clean category names from item-service instead of parsing here
+  public parseCategoryName(text) {
+    return text.split(' > ')[text.split(' > ').length - 1]
+  }
+
   public render() {
     return (
       <Query query={GET_CATEGORIES}>
@@ -22,9 +27,7 @@ export class CategoryDropdown extends React.Component {
                   : data.categories.map((item) => {
                       return {
                         key: item.id,
-                        text: item.name.split(' > ')[
-                          item.name.split(' > ').length - 1
-                        ],
+                        text: this.parseCategoryName(item.name),
                         value: item.id,
                       }
                     })
