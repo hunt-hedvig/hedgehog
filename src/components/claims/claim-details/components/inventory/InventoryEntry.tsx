@@ -13,6 +13,18 @@ export class InventoryEntry extends React.Component {
     this.props.removeItem(this.props.item)
   }
 
+  public truncateItemName(word, n, useWordBoundary) {
+    if (word.length <= n) {
+      return word
+    }
+    const subString = word.substr(0, n - 1)
+    return (
+      (useWordBoundary
+        ? subString.substr(0, subString.lastIndexOf(' '))
+        : subString) + '...'
+    )
+  }
+
   public render() {
     const {
       inventoryItemId,
@@ -25,21 +37,9 @@ export class InventoryEntry extends React.Component {
       itemId,
     } = this.props.item
 
-    String.prototype.trunc = function(n, useWordBoundary) {
-      if (this.length <= n) {
-        return this
-      }
-      const subString = this.substr(0, n - 1)
-      return (
-        (useWordBoundary
-          ? subString.substr(0, subString.lastIndexOf(' '))
-          : subString) + '...'
-      )
-    }
-
     return (
       <Table.Row>
-        <Table.Cell>{itemName.trunc(25, true)}</Table.Cell>
+        <Table.Cell>{this.truncateItemName(itemName, 25, true)}</Table.Cell>
         <Table.Cell textAlign="center" verticalAlign="middle">
           <Label basic color="blue">
             {formatMoney('sv-SE', 0)({
