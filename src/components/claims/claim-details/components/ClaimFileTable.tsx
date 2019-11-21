@@ -6,6 +6,7 @@ import { Table, Image } from 'semantic-ui-react'
 import actions from '../../../../store/actions'
 import { connect } from 'react-redux'
 import { DeleteButton } from '../components/DeleteClaimFileButton'
+import { dateTimeFormatter } from '../../../../lib/helpers'
 
 const SET_CLAIM_FILE_CATEGORY = gql`
   mutation setClaimFileCategory(
@@ -21,9 +22,18 @@ const SET_CLAIM_FILE_CATEGORY = gql`
   }
 `
 
+const sortClaimFileDate = (a, b) => {
+    const aDate = new Date(a.uploadedAt)
+    const bDate = new Date(b.uploadedAt)
+  
+    return bDate - aDate
+  }
+  
+
 interface ClaimFiles {
   claimFileId: string
   fileUploadUrl: string
+  uploadedAt: Instant
   markedAsDeleted: boolean
   category: string
 }
@@ -41,11 +51,12 @@ class ClaimFileTableComponent extends React.Component<{
             <Table.Row>
               <Table.HeaderCell>Claim Files</Table.HeaderCell>
               <Table.HeaderCell>File Type</Table.HeaderCell>
+              <Table.HeaderCell>Uploaded At</Table.HeaderCell>
               <Table.HeaderCell></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {[...this.props.claimFiles].map((claimFile) => {
+            {[...this.props.claimFiles].sort(sortClaimFileDate).map((claimFile) => {
               if (claimFile.markedAsDeleted === false) {
                 return (
                   <Table.Row key={claimFile.fileUploadUrl}>
@@ -83,6 +94,7 @@ class ClaimFileTableComponent extends React.Component<{
                         }}
                       </Mutation>
                     </Table.Cell>
+                    <Table.Cell>{dateTimeFormatter(claimFile.uploadedAt, 'yyyy-MM-dd HH:mm:ss')}</Table.Cell>
                     <Table.Cell>
                       <DeleteButton
                         claimId={this.props.claimId}

@@ -18,6 +18,7 @@ const CLAIM_FILES_QUERY = gql`
       claimFiles {
         claimFileId
         fileUploadUrl
+        uploadedAt
         markedAsDeleted
         category
       }
