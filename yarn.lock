@@ -1553,6 +1553,11 @@ ajv@^6.1.0, ajv@^6.10.2, ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+animated-scroll-to@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/animated-scroll-to/-/animated-scroll-to-2.0.5.tgz#475fcf742ee38de0a969920182a6aaba319771b4"
+  integrity sha512-xDZY/geNZSJj99xftr8uAAJpp6k6yI8mdBNp8HM1LTwmeebaw4EjkHL8y0PtsuZg9/UG9tUNn2JqaZxEfzJxLw==
+
 ansi-align@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-2.0.0.tgz#c36aeccba563b89ceb556f3690f0b1d9e3547f7f"

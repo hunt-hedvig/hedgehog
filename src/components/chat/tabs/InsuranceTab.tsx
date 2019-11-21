@@ -160,7 +160,7 @@ export default class InsuranceTab extends React.Component<any, any> {
       safetyIncreasers: [],
       isSubleted: Boolean(this.props.insurance.data.isSubleted),
       extraBuildings: [
-        ...this.props.insurance.data.extraBuildings,
+        ...(this.props.insurance.data.extraBuildings ?? []),
       ] as ExtraBuilding[],
     })
   }
