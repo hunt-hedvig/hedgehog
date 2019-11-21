@@ -146,7 +146,7 @@ export default class InsuranceTab extends React.Component<any, any> {
     activationDatePickerEnabled: false,
     cancellationDatePickerEnabled: false,
     extraBuildings: [
-      ...this.props.insurance.data.extraBuildings,
+      ...(this.props.insurance.data.extraBuildings ?? []),
     ] as ExtraBuilding[],
   }
   private fileInputRef = React.createRef<HTMLInputElement>()
