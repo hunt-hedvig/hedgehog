@@ -21,30 +21,37 @@ const getAuthor = (author: string) => {
 export default class MessagesList extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      messagesLength: 0,
+    }
   }
 
   public componentDidUpdate() {
     /* eslint-disable */
-    setTimeout(() => {
-      const list = this.messagesList
-      if (!list) {
-        return
-      }
-      const { messages } = this.props
+    const list = this.messagesList
+    if (!list) {
+      return
+    }
+    const { messages } = this.props
+    if (messages.length !== this.state.messagesLength) {
+      this.setState({ messagesLength: messages.length })
       const lastMessage = messages[messages.length - 1]
       const lastMessageElement = document.getElementById(
         `msg-${lastMessage.globalId}`,
       )
       if (lastMessageElement) {
-        animateScrollTo(lastMessageElement, { elementToScroll: list })
+        animateScrollTo(lastMessageElement, {
+          elementToScroll: list,
+          maxDuration: 500,
+        })
       }
-    })
+    }
     /* eslint-enable */
   }
 
   public render() {
     const { messages, error } = this.props
-    const id = parseInt(this.props.id, 10)
+    const memberId = parseInt(this.props.id, 10)
 
     return (
       <MessagesListContainer innerRef={(el) => (this.messagesList = el)}>
@@ -53,11 +60,13 @@ export default class MessagesList extends React.Component {
             <Message
               key={key}
               content={item.body}
-              left={item.header.fromId !== id}
+              left={item.header.fromId !== memberId}
               msgId={item.globalId}
               timestamp={item.localTimestamp}
               from={
-                item.header.fromId !== id ? getAuthor(item.author) : 'member'
+                item.header.fromId !== memberId
+                  ? getAuthor(item.author)
+                  : 'member'
               }
             />
           ))
