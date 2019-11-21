@@ -22,9 +22,9 @@ export const Button = styled('button')({
   justifyContent: 'center',
   fontSize: 'inherit',
   font: 'inherit',
-  padding: '2rem 2rem',
+  padding: '4rem 4rem',
   border: '1px solid ',
-  borderRadius: '0.2',
+  borderRadius: '0.4',
   color: colors.BLACK,
   background: colors.WHITE,
   cursor: 'pointer',
@@ -62,14 +62,14 @@ class FileUploadComponent extends React.Component<{
           <FileUploadContainer>
             <Dropzone
               onDrop={(files) => {
-                this.onDrop(files, this.props.showNotification)
+                this.onDrop(files)
               }}
             >
               {({ getRootProps, getInputProps, isDragActive }) => (
                 <Button {...getRootProps()}>
                   <input {...getInputProps()} />
                   {isDragActive
-                    ? 'Drop files here!'
+                    ? 'Drop files here to upload them!'
                     : 'Click here or drag files to upload!'}
                 </Button>
               )}
@@ -80,21 +80,14 @@ class FileUploadComponent extends React.Component<{
     )
   }
 
-  private onChangeHandler = (acceptedFiles) => {
+  private onDrop = (acceptedFiles) => {
     this.setState({
       value: acceptedFiles,
     })
-  }
 
-  private onDrop = (acceptedFiles, showNotification) => {
-    this.onChangeHandler(acceptedFiles)
-    this.uploadFiles(acceptedFiles, showNotification)
-  }
-
-  private uploadFiles(files, showNotification): any {
     var claimFiles = new FormData()
 
-    for (const file of files) {
+    for (const file of acceptedFiles) {
       claimFiles.append('files', file)
     }
     claimFiles.append('memberId', this.props.memberId)
@@ -104,17 +97,16 @@ class FileUploadComponent extends React.Component<{
       body: claimFiles,
     })
       .then(() => {
-        showNotification({
+        this.props.showNotification({
           message: 'upload successful!',
           header: 'Approved',
           type: 'olive',
         })
-        this.setState({ uploaded: true })
         this.props.onUploaded()
-        console.log(this.props.onUploaded)
+        this.setState({ uploaded: true })
       })
       .catch((error) => {
-        showNotification({
+        this.props.showNotification({
           message: error.message,
           header: 'Error',
           type: 'red',
