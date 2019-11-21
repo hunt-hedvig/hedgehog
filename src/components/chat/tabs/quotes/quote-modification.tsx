@@ -380,7 +380,7 @@ const ExtraBuildingEditor: React.FunctionComponent<{
               id={`hasWaterConnected-${extraBuilding.id}`}
               label="Has water connected"
               checked={extraBuilding.hasWaterConnected}
-              onChange={(_, { checked}) =>
+              onChange={(_, { checked }) =>
                 handleExtraBuildingChange(i)({
                   hasWaterConnected: checked,
                 })
