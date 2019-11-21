@@ -43,7 +43,6 @@ export class ClaimItemDatabase extends React.Component {
         <Grid item xs={12} sm={12} md={4}>
           <Query
             query={GET_INVENTORY}
-            pollInterval={2500}
             variables={{
               claimId: this.props.claimId,
             }}
