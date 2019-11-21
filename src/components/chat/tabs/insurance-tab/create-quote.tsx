@@ -1,4 +1,4 @@
-import { Mutation } from '@apollo/react-components'
+import { useMutation } from '@apollo/react-hooks'
 import { colorsV2 } from '@hedviginsurance/brand/dist'
 import {
   MutationType,
@@ -71,86 +71,81 @@ export const CreateQuote: React.FunctionComponent<{
 }> = function({ memberId, insurance }) {
   const [quotes, loadingQuotes] = useQuotes(memberId)
   const [modalOpen, setModalOpen] = useState(false)
+  const [createQuoteFromProduct, createQuoteMutation] = useMutation<
+    Pick<MutationType, 'createQuoteFromProduct'>,
+    MutationTypeCreateQuoteFromProductArgs
+  >(CREATE_QUOTE_FROM_PRODUCT_MUTATION, {
+    refetchQueries: () => [
+      {
+        query: QUOTES_QUERY,
+        variables: { memberId },
+      },
+    ],
+  })
 
   return (
-    <Mutation<
-      Pick<MutationType, 'createQuoteFromProduct'>,
-      MutationTypeCreateQuoteFromProductArgs
+    <Modal
+      trigger={
+        quotes
+          .map((quote) => quote.originatingProductId)
+          .includes(insurance.productId) && !loadingQuotes ? (
+          <>Insurance has existing quote</>
+        ) : (
+          !loadingQuotes && (
+            <Button onClick={() => setModalOpen(true)}>Create quote</Button>
+          )
+        )
+      }
+      open={modalOpen}
+      size="tiny"
+      onClose={() => setModalOpen(false)}
     >
-      mutation={CREATE_QUOTE_FROM_PRODUCT_MUTATION}
-      refetchQueries={() => [
-        {
-          query: QUOTES_QUERY,
-          variables: { memberId },
-        },
-      ]}
-    >
-      {(createQuoteFromProduct, createQuoteMutation) => (
-        <Modal
-          trigger={
-            quotes
-              .map((quote) => quote.originatingProductId)
-              .includes(insurance.productId) && !loadingQuotes ? (
-              <>Insurance has existing quote</>
-            ) : (
-              !loadingQuotes && (
-                <Button onClick={() => setModalOpen(true)}>Create quote</Button>
-              )
-            )
-          }
-          open={modalOpen}
-          size="tiny"
-          onClose={() => setModalOpen(false)}
-        >
-          <Modal.Content>
-            {createQuoteMutation &&
-            createQuoteMutation.data &&
-            createQuoteMutation.data.createQuoteFromProduct ? (
-              <>
-                <SuccessMessage>Quote created!</SuccessMessage>
-                <p>
-                  Go to the quotes tab to change the details and activate the
-                  quote.
-                </p>
-                <Button onClick={() => setModalOpen(false)}>Close</Button>
-              </>
-            ) : (
-              <h3>Create quote?</h3>
-            )}
-          </Modal.Content>
-          {!(
-            createQuoteMutation &&
-            createQuoteMutation.data &&
-            createQuoteMutation.data.createQuoteFromProduct
-          ) && (
-            <Modal.Actions>
-              <Button.Group>
-                <Button onClick={() => setModalOpen(false)}>Cancel</Button>
+      <Modal.Content>
+        {createQuoteMutation &&
+        createQuoteMutation.data &&
+        createQuoteMutation.data.createQuoteFromProduct ? (
+          <>
+            <SuccessMessage>Quote created!</SuccessMessage>
+            <p>
+              Go to the quotes tab to change the details and activate the quote.
+            </p>
+            <Button onClick={() => setModalOpen(false)}>Close</Button>
+          </>
+        ) : (
+          <h3>Create quote?</h3>
+        )}
+      </Modal.Content>
+      {!(
+        createQuoteMutation &&
+        createQuoteMutation.data &&
+        createQuoteMutation.data.createQuoteFromProduct
+      ) && (
+        <Modal.Actions>
+          <Button.Group>
+            <Button onClick={() => setModalOpen(false)}>Cancel</Button>
 
-                <Button
-                  onClick={async () => {
-                    const quoteData = createQuoteFromProductRequest(insurance)
-                    await createQuoteFromProduct({
-                      variables: { memberId, quoteData },
-                    })
-                  }}
-                  positive
-                  disabled={
-                    createQuoteMutation.loading ||
-                    Boolean(
-                      createQuoteMutation.data &&
-                        createQuoteMutation.data &&
-                        createQuoteMutation.data.createQuoteFromProduct,
-                    )
-                  }
-                >
-                  Create quote
-                </Button>
-              </Button.Group>
-            </Modal.Actions>
-          )}
-        </Modal>
+            <Button
+              onClick={async () => {
+                const quoteData = createQuoteFromProductRequest(insurance)
+                await createQuoteFromProduct({
+                  variables: { memberId, quoteData },
+                })
+              }}
+              positive
+              disabled={
+                createQuoteMutation.loading ||
+                Boolean(
+                  createQuoteMutation.data &&
+                    createQuoteMutation.data &&
+                    createQuoteMutation.data.createQuoteFromProduct,
+                )
+              }
+            >
+              Create quote
+            </Button>
+          </Button.Group>
+        </Modal.Actions>
       )}
-    </Mutation>
+    </Modal>
   )
 }
