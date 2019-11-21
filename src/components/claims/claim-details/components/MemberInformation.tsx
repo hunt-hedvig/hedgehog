@@ -114,7 +114,7 @@ const MemberInformation: React.SFC<MemberInformationProps> = ({
     <p style={{ marginTop: '-7px' }}>
       <b>Fraudulent Status:</b>{' '}
       <span style={{ fontSize: '32px' }}>
-        <FraudulentStatus stateInfo={fraudulentStatus} />
+        <FraudulentStatus stateInfo={{ state: fraudulentStatus }} />
       </span>
     </p>
     <p>
