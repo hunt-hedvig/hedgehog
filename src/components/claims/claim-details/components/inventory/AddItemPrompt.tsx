@@ -124,7 +124,7 @@ export class AddItemPrompt extends React.Component {
             },
           ]}
         >
-          {(addItem,  addItemMutation ) => {
+          {(addItem, addItemMutation) => {
             if (addItemMutation.error) {
               return <React.Fragment />
             }
@@ -181,16 +181,14 @@ export class AddItemPrompt extends React.Component {
         <Query
           query={GET_ALL_FILTERS}
           variables={{
-            categoryId: this.state.itemCategory
-              ? this.state.itemCategory
-              : '-1',
+            categoryId: this.state.itemCategory ? this.state.itemCategory : -1,
           }}
         >
           {({ data, loading, error }) => {
             if (error) {
               return null
             }
-            
+
             return (
               <React.Fragment>
                 <Button
@@ -213,21 +211,21 @@ export class AddItemPrompt extends React.Component {
                   {this.state.showFilters ? 'Hide filters' : 'Show filters'}
                 </Button>
 
-                  { this.state.showFilters && loading &&
+                {this.state.showFilters && loading && (
                   <Loader
                     active
                     inline="centered"
                     style={{ marginTop: '20px' }}
                   />
-                }
-                  { this.state.showFilters && !loading &&
+                )}
+                {this.state.showFilters && !loading && (
                   <InventoryFilterContainer
                     filters={data.filters}
                     activeFilters={this.state.itemFilters}
                     addFilter={this.addFilter}
                     removeFilter={this.removeFilter}
                   />
-                }
+                )}
               </React.Fragment>
             )
           }}
