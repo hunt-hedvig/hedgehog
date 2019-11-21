@@ -1,17 +1,18 @@
+import animateScrollTo from 'animated-scroll-to'
 import Message from 'components/chat/messages/Message'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import styled from 'styled-components'
+import styled from 'react-emotion'
 
-const MessagesListContainer = styled.div`
-  box-sizing: border-box;
-  overflow-y: auto;
-  padding: 20px 20px 60px;
-`
+const MessagesListContainer = styled('div')({
+  boxSizing: 'border-box',
+  overflowY: 'auto',
+  padding: '20px 20px 20px',
+})
 
-const EmptyList = styled.h3`
-  text-align: center;
-`
+const EmptyList = styled('h3')({
+  textAlign: 'center',
+})
 
 const getAuthor = (author: string) => {
   return author ? author : 'bot'
@@ -20,28 +21,37 @@ const getAuthor = (author: string) => {
 export default class MessagesList extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      messagesLength: 0,
+    }
   }
 
-  public componentWillReceiveProps() {
+  public componentDidUpdate() {
     /* eslint-disable */
-    setTimeout(() => {
-      const list = this.messagesList
-      if (!list) {
-        return
+    const list = this.messagesList
+    if (!list) {
+      return
+    }
+    const { messages } = this.props
+    if (messages.length !== this.state.messagesLength) {
+      this.setState({ messagesLength: messages.length })
+      const lastMessage = messages[messages.length - 1]
+      const lastMessageElement = document.getElementById(
+        `msg-${lastMessage.globalId}`,
+      )
+      if (lastMessageElement) {
+        animateScrollTo(lastMessageElement, {
+          elementToScroll: list,
+          maxDuration: 500,
+        })
       }
-      list.scrollTop = list ? list.scrollHeight : 0
-      const id = this.props.messageId
-      const msgNode = document.getElementById(`msg-${id}`)
-      if (id && msgNode) {
-        msgNode.scrollIntoView()
-      }
-    })
+    }
     /* eslint-enable */
   }
 
   public render() {
     const { messages, error } = this.props
-    const id = parseInt(this.props.id, 10)
+    const memberId = parseInt(this.props.id, 10)
 
     return (
       <MessagesListContainer innerRef={(el) => (this.messagesList = el)}>
@@ -50,11 +60,13 @@ export default class MessagesList extends React.Component {
             <Message
               key={key}
               content={item.body}
-              left={item.header.fromId !== id}
+              left={item.header.fromId !== memberId}
               msgId={item.globalId}
               timestamp={item.localTimestamp}
               from={
-                item.header.fromId !== id ? getAuthor(item.author) : 'member'
+                item.header.fromId !== memberId
+                  ? getAuthor(item.author)
+                  : 'member'
               }
             />
           ))
