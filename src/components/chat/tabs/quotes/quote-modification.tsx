@@ -6,8 +6,12 @@ import {
   ExtraBuilding,
   ExtraBuildingType,
   HouseQuoteData,
+  MutationType,
+  MutationTypeUpdateQuoteArgs,
   Quote,
   QuoteData,
+  QuoteInput,
+  QuoteProductType,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
 import * as React from 'react'
@@ -59,6 +63,73 @@ const UPDATE_QUOTE_MUTATION = gql`
     }
   }
 `
+
+function createQuoteData({
+  productType,
+  quote,
+  street,
+  zipCode,
+  city,
+  livingSpace,
+  householdSize,
+  ancillaryArea,
+  yearOfConstruction,
+  numberOfBathrooms,
+  extraBuildings,
+  isSubleted,
+}: FormState & { quote: Quote }) {
+  const quoteData: Partial<QuoteInput> = {
+    productType: ((productType ?? quote.productType) === 'HOUSE'
+      ? 'HOUSE'
+      : 'APARTMENT') as QuoteProductType,
+  }
+  const baseData = {
+    street,
+    zipCode,
+    city,
+    livingSpace: parseInt(livingSpace!),
+    householdSize: parseInt(householdSize!),
+  }
+  if ((productType ?? quote.productType) === 'HOUSE') {
+    quoteData.houseData = {
+      ...baseData,
+      ancillaryArea: ancillaryArea !== null ? parseInt(ancillaryArea) : null,
+      yearOfConstruction:
+        yearOfConstruction !== null ? parseInt(yearOfConstruction) : null,
+      numberOfBathrooms:
+        numberOfBathrooms !== null ? parseInt(numberOfBathrooms) : null,
+      extraBuildings: extraBuildings?.map(
+        ({ area, type, hasWaterConnected }) => ({
+          area,
+          type,
+          hasWaterConnected,
+        }),
+      ),
+      isSubleted,
+    }
+  } else {
+    quoteData.apartmentData = {
+      ...baseData,
+      subType: productType as ApartmentSubType,
+    }
+  }
+  return quoteData
+}
+
+interface FormState {
+  street: string | null
+  zipCode: string | null
+  city: string | null
+  productType: string | null
+  livingSpace: string | null
+  householdSize: string | null
+  ancillaryArea: string | null
+  yearOfConstruction: string | null
+  numberOfBathrooms: string | null
+  extraBuildings: ReadonlyArray<EditableExtraBuilding>
+  isSubleted: boolean | null
+}
+
 export const QuoteModification: React.FunctionComponent<{
   memberId: string
   quote: Quote
@@ -70,57 +141,55 @@ export const QuoteModification: React.FunctionComponent<{
   onWipChange = () => {},
   onSubmitted = () => {},
 }) {
-  const [modifyField, fieldModification] = useMutation(UPDATE_QUOTE_MUTATION, {
+  const [modifyField, fieldModification] = useMutation<
+    Pick<MutationType, 'updateQuote'>,
+    MutationTypeUpdateQuoteArgs
+  >(UPDATE_QUOTE_MUTATION, {
     refetchQueries: () => [{ query: QUOTES_QUERY, variables: { memberId } }],
   })
-  const [street, setStreet] = useState<string | null>(null)
-  const [zipCode, setZipCode] = useState<string | null>(null)
-  const [city, setCity] = useState<string | null>(null)
-  const [productType, setProductType] = useState<string | null>(null)
-  const [livingSpace, setLivingSpace] = useState<string | null>(null)
-  const [householdSize, setHouseholdSize] = useState<string | null>(null)
-  const [ancillaryArea, setAncillaryArea] = useState<string | null>('0')
-  const [yearOfConstruction, setYearOfConstruction] = useState<string | null>(
-    null,
-  )
-  const [numberOfBathrooms, setNumberOfBathrooms] = useState<string | null>(
-    null,
-  )
-  const [extraBuildings, setExtraBuildings] = useState<
-    ReadonlyArray<EditableExtraBuilding>
-  >(
-    (quote.data as HouseQuoteData | null)?.extraBuildings?.map(
-      (extraBuilding) => ({ ...extraBuilding, id: uuid() }),
-    ) ?? [],
-  )
-  const [isSubleted, setIsSubleted] = useState<boolean | null>(null)
+  const [formState, setFormState] = useState<FormState>({
+    street: null,
+    city: null,
+    ancillaryArea: null,
+    extraBuildings:
+      (quote.data as HouseQuoteData | null)?.extraBuildings?.map(
+        (extraBuilding) => ({ ...extraBuilding, id: uuid() }),
+      ) ?? [],
+    householdSize: null,
+    isSubleted: null,
+    livingSpace: null,
+    numberOfBathrooms: null,
+    productType: null,
+    yearOfConstruction: null,
+    zipCode: null,
+  })
 
   const getTextInput = (
-    variable: string,
+    variable: keyof FormState,
     label: React.ReactNode,
-    value: string | number | null,
-    setter: (val: any) => void,
     inputType = 'text',
+    value?: any,
   ) => (
     <>
       <Label htmlFor={`${variable}-${quote.id}`}>{label}</Label>
       <Input
         onChange={(e) => {
           onWipChange && onWipChange(true)
-          setter(e.currentTarget.value)
+          setFormState({ ...formState, [variable]: e.currentTarget.value })
         }}
-        value={value ?? (quote.data as QuoteData)[variable]}
+        value={
+          value ?? formState[variable] ?? (quote.data as QuoteData)[variable]
+        }
         id={`${variable}-${quote.id}`}
         type={inputType}
       />
     </>
   )
   const getNumberInput = (
-    variable: string,
+    variable: keyof FormState,
     label: React.ReactNode,
-    value: string | number | null,
-    setter: (val: any) => void,
-  ) => getTextInput(variable, label, value, setter, 'number')
+    value?: any,
+  ) => getTextInput(variable, label, 'number', value)
 
   return (
     <Wrapper
@@ -131,41 +200,7 @@ export const QuoteModification: React.FunctionComponent<{
           return
         }
 
-        const quoteData: any = {
-          productType:
-            (productType ?? quote.productType) === 'HOUSE'
-              ? 'HOUSE'
-              : 'APARTMENT',
-        }
-        const baseData = {
-          street,
-          zipCode,
-          city,
-          livingSpace: parseInt(livingSpace!),
-          householdSize: parseInt(householdSize!),
-        }
-        if ((productType ?? quote.productType) === 'HOUSE') {
-          quoteData.houseData = {
-            ...baseData,
-            ancillaryArea: parseInt(ancillaryArea!),
-            yearOfConstruction: parseInt(yearOfConstruction!),
-            numberOfBathrooms: parseInt(numberOfBathrooms!),
-            extraBuildings: extraBuildings?.map(
-              ({ area, type, hasWaterConnected }) => ({
-                area,
-                type,
-                hasWaterConnected,
-              }),
-            ),
-            isSubleted:
-              isSubleted ?? (quote.data as HouseQuoteData)?.isSubleted ?? false,
-          }
-        } else {
-          quoteData.apartmentData = {
-            ...baseData,
-            subType: productType,
-          }
-        }
+        const quoteData = createQuoteData({ ...formState, quote })
 
         await modifyField({
           variables: {
@@ -177,9 +212,9 @@ export const QuoteModification: React.FunctionComponent<{
       }}
     >
       <InputGroup>
-        {getTextInput('street', 'Street', street, setStreet)}
-        {getTextInput('zipCode', 'Zip code', zipCode, setZipCode)}
-        {getTextInput('city', 'City', city, setCity)}
+        {getTextInput('street', 'Street')}
+        {getTextInput('zipCode', 'Zip code')}
+        {getTextInput('city', 'City')}
       </InputGroup>
       <InputGroup>
         <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
@@ -187,14 +222,14 @@ export const QuoteModification: React.FunctionComponent<{
           fluid
           selection
           value={
-            productType ??
+            formState.productType ??
             (quote.productType === 'APARTMENT'
               ? ((quote.data as ApartmentQuoteData).subType as ApartmentSubType)
               : 'HOUSE')
           }
           onChange={(_, data) => {
             onWipChange && onWipChange(true)
-            setProductType(data.value as string)
+            setFormState({ ...formState, productType: data.value as string })
           }}
           options={[
             { text: 'Apartment (rent)', value: 'RENT' },
@@ -205,21 +240,11 @@ export const QuoteModification: React.FunctionComponent<{
           ]}
         />
 
-        {getNumberInput(
-          'livingSpace',
-          'Living space (m2)',
-          livingSpace,
-          setLivingSpace,
-        )}
-        {getNumberInput(
-          'householdSize',
-          'Household size (# of people)',
-          householdSize,
-          setHouseholdSize,
-        )}
+        {getNumberInput('livingSpace', 'Living space (m2)')}
+        {getNumberInput('householdSize', 'Household size (# of people)')}
       </InputGroup>
 
-      {(productType ?? quote.productType) === 'HOUSE' && (
+      {(formState.productType ?? quote.productType) === 'HOUSE' && (
         <>
           <InputGroup>
             {getNumberInput(
@@ -227,34 +252,34 @@ export const QuoteModification: React.FunctionComponent<{
               <>
                 Ancillary area (m<sup>2</sup>)
               </>,
-              (ancillaryArea === '0'
+              (formState.ancillaryArea === null
                 ? quote.data!['ancillaryArea']
-                : ancillaryArea) ?? '0',
-              setAncillaryArea,
+                : formState.ancillaryArea) ?? '0',
             )}
-            {getNumberInput(
-              'yearOfConstruction',
-              'Year of construction',
-              yearOfConstruction ?? quote.data!['yearOfConstruction'] ?? '',
-              setYearOfConstruction,
-            )}
-            {getNumberInput(
-              'numberOfBathrooms',
-              'Number of bathrooms',
-              numberOfBathrooms ?? quote.data!['numberOfBathrooms'] ?? '',
-              setNumberOfBathrooms,
-            )}
+            {getNumberInput('yearOfConstruction', 'Year of construction')}
+            {getNumberInput('numberOfBathrooms', 'Number of bathrooms')}
             <Label>Is subleted</Label>
             <Checkbox
-              onClick={(e) => setIsSubleted(e.currentTarget.checked)}
+              onChange={(_, { checked }) => {
+                setFormState({
+                  ...formState,
+                  isSubleted: checked!,
+                })
+              }}
               label="Is subleted"
-              value={isSubleted ?? (false as any)}
+              checked={
+                formState.isSubleted ??
+                (quote.data as HouseQuoteData).isSubleted ??
+                false
+              }
             />
           </InputGroup>
           <InputGroup>
             <ExtraBuildingEditor
-              extraBuildings={extraBuildings ?? []}
-              onChange={setExtraBuildings}
+              extraBuildings={formState.extraBuildings ?? []}
+              onChange={(extraBuildings) =>
+                setFormState({ ...formState, extraBuildings })
+              }
             />
           </InputGroup>
         </>
@@ -354,10 +379,10 @@ const ExtraBuildingEditor: React.FunctionComponent<{
             <Checkbox
               id={`hasWaterConnected-${extraBuilding.id}`}
               label="Has water connected"
-              value={extraBuilding.hasWaterConnected as any}
-              onChange={(e) =>
+              checked={extraBuilding.hasWaterConnected}
+              onChange={(_, { checked}) =>
                 handleExtraBuildingChange(i)({
-                  hasWaterConnected: e.currentTarget.checked,
+                  hasWaterConnected: checked,
                 })
               }
             />
