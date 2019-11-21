@@ -24,7 +24,7 @@ const DateTypeEnum = {
 export default class InsuranceList extends React.Component {
   public insuranceFieldFormatters = {
     extraBuildings: (buildings: ExtraBuilding[]) =>
-      buildings.map((building) => (
+      (buildings ?? []).map((building) => (
         <p key={building.id}>
           {building.displayName} {building.area} m<sup>2</sup> (
           {building.hasWaterConnected
