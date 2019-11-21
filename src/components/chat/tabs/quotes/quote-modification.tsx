@@ -105,7 +105,7 @@ function createQuoteData({
           hasWaterConnected,
         }),
       ),
-      isSubleted,
+      isSubleted: isSubleted ?? false,
     }
   } else {
     quoteData.apartmentData = {

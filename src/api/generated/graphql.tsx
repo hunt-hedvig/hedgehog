@@ -152,6 +152,12 @@ export type BurglaryClaim = {
   receipt?: Maybe<Scalars['String']>,
 };
 
+export type Category = {
+   __typename?: 'Category',
+  id: Scalars['String'],
+  name: Scalars['String'],
+};
+
 export enum ChargeStatus {
   ApprovedForCharge = 'APPROVED_FOR_CHARGE',
   ChargeCompleted = 'CHARGE_COMPLETED',
@@ -314,13 +320,13 @@ export type EarthquakeClaim = {
 export type ExtraBuilding = {
    __typename?: 'ExtraBuilding',
   area: Scalars['Int'],
-  displayName?: Maybe<Scalars['String']>,
   hasWaterConnected: Scalars['Boolean'],
   type: ExtraBuildingType,
 };
 
 export type ExtraBuildingInput = {
   area: Scalars['Int'],
+  displayName?: Maybe<Scalars['String']>,
   hasWaterConnected: Scalars['Boolean'],
   type: Scalars['String'],
 };
@@ -348,6 +354,24 @@ export type FileUpload = {
   memberId?: Maybe<Scalars['ID']>,
   mimeType?: Maybe<Scalars['String']>,
   timestamp?: Maybe<Scalars['Instant']>,
+};
+
+export type Filter = {
+  name: Scalars['String'],
+  value: Scalars['String'],
+};
+
+export type FilterOutput = {
+   __typename?: 'FilterOutput',
+  name: Scalars['String'],
+  value: Scalars['String'],
+};
+
+export type FilterSuggestion = {
+   __typename?: 'FilterSuggestion',
+  items: Array<Scalars['String']>,
+  name: Scalars['String'],
+  others: Array<Scalars['String']>,
 };
 
 export type FireDamageClaim = {
@@ -422,6 +446,35 @@ export type InstallationsClaim = {
 };
 
 
+export type InventoryItem = {
+   __typename?: 'InventoryItem',
+  categoryId: Scalars['String'],
+  categoryName: Scalars['String'],
+  claimId: Scalars['String'],
+  filters?: Maybe<Array<Maybe<FilterOutput>>>,
+  inventoryItemId: Scalars['ID'],
+  itemId?: Maybe<Scalars['String']>,
+  itemName: Scalars['String'],
+  lowerRange?: Maybe<Scalars['Float']>,
+  source: Scalars['String'],
+  upperRange?: Maybe<Scalars['Float']>,
+  value: Scalars['Float'],
+};
+
+export type InventoryItemInput = {
+  categoryId: Scalars['String'],
+  categoryName: Scalars['String'],
+  claimId: Scalars['String'],
+  filters?: Maybe<Array<Maybe<Filter>>>,
+  inventoryItemId?: Maybe<Scalars['String']>,
+  itemId?: Maybe<Scalars['String']>,
+  itemName: Scalars['String'],
+  lowerRange?: Maybe<Scalars['Float']>,
+  source: Scalars['String'],
+  upperRange?: Maybe<Scalars['Float']>,
+  value: Scalars['Float'],
+};
+
 export type IQuoteData = {
   city?: Maybe<Scalars['String']>,
   firstName?: Maybe<Scalars['String']>,
@@ -432,6 +485,19 @@ export type IQuoteData = {
   ssn?: Maybe<Scalars['String']>,
   street?: Maybe<Scalars['String']>,
   zipCode?: Maybe<Scalars['String']>,
+};
+
+export type Item = {
+   __typename?: 'Item',
+  category: Scalars['String'],
+  id: Scalars['String'],
+  name: Scalars['String'],
+};
+
+export type ItemSearch = {
+   __typename?: 'ItemSearch',
+  products: Array<Item>,
+  suggestions: Array<FilterSuggestion>,
 };
 
 export type LegalProtectionClaim = {
@@ -500,6 +566,7 @@ export type MutationType = {
   activateQuote: Quote,
   addAccountEntryToMember: Member,
   addClaimNote?: Maybe<Claim>,
+  addInventoryItem?: Maybe<Scalars['Boolean']>,
   approveMemberCharge?: Maybe<Scalars['Boolean']>,
   assignTicketToTeamMember?: Maybe<Scalars['ID']>,
   autoLabelQuestion?: Maybe<AutoLabel>,
@@ -515,6 +582,7 @@ export type MutationType = {
   createQuoteFromProduct: Quote,
   createTicket?: Maybe<Scalars['ID']>,
   questionIsDone?: Maybe<Scalars['Boolean']>,
+  removeInventoryItem?: Maybe<Scalars['Boolean']>,
   setClaimInformation?: Maybe<Claim>,
   setClaimType?: Maybe<Claim>,
   setCoveringEmployee?: Maybe<Claim>,
@@ -541,6 +609,11 @@ export type MutationTypeAddAccountEntryToMemberArgs = {
 export type MutationTypeAddClaimNoteArgs = {
   id: Scalars['ID'],
   note: ClaimNoteInput
+};
+
+
+export type MutationTypeAddInventoryItemArgs = {
+  item: InventoryItemInput
 };
 
 
@@ -627,6 +700,11 @@ export type MutationTypeQuestionIsDoneArgs = {
 };
 
 
+export type MutationTypeRemoveInventoryItemArgs = {
+  inventoryItemId: Scalars['ID']
+};
+
+
 export type MutationTypeSetClaimInformationArgs = {
   id: Scalars['ID'],
   information: ClaimInformationInput
@@ -678,6 +756,12 @@ export type NumberFailedCharges = {
   numberFailedCharges: Scalars['Int'],
 };
 
+export type Payload = {
+  category: Scalars['String'],
+  filters: Array<Filter>,
+  query: Scalars['String'],
+};
+
 export type PaymentDefault = {
    __typename?: 'PaymentDefault',
   amount?: Maybe<Scalars['MonetaryAmount']>,
@@ -703,15 +787,31 @@ export type PersonStatus = {
   whitelisted?: Maybe<Scalars['Boolean']>,
 };
 
+export type PricePoint = {
+   __typename?: 'PricePoint',
+  date: Scalars['String'],
+  id: Scalars['String'],
+  itemId: Scalars['String'],
+  lower: Scalars['Float'],
+  mean: Scalars['Float'],
+  upper: Scalars['Float'],
+};
+
 export type QueryType = {
    __typename?: 'QueryType',
+  categories?: Maybe<Array<Category>>,
   claim?: Maybe<Claim>,
+  filters: Array<FilterSuggestion>,
   getAnswerSuggestion: Array<Suggestion>,
   getFullTicketHistory?: Maybe<TicketHistory>,
+  inventory: Array<Maybe<InventoryItem>>,
+  inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>,
+  items: ItemSearch,
   me?: Maybe<Scalars['String']>,
   member?: Maybe<Member>,
   monthlyPayments?: Maybe<Array<Maybe<MonthlySubscription>>>,
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>,
+  prices: Array<PricePoint>,
   ticket?: Maybe<Ticket>,
   tickets: Array<Ticket>,
 };
@@ -722,6 +822,11 @@ export type QueryTypeClaimArgs = {
 };
 
 
+export type QueryTypeFiltersArgs = {
+  categoryId: Scalars['String']
+};
+
+
 export type QueryTypeGetAnswerSuggestionArgs = {
   question?: Maybe<Scalars['String']>
 };
@@ -729,6 +834,21 @@ export type QueryTypeGetAnswerSuggestionArgs = {
 
 export type QueryTypeGetFullTicketHistoryArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryTypeInventoryArgs = {
+  claimId: Scalars['ID']
+};
+
+
+export type QueryTypeInventoryItemFiltersArgs = {
+  inventoryItemId: Scalars['String']
+};
+
+
+export type QueryTypeItemsArgs = {
+  payload: Payload
 };
 
 
@@ -744,6 +864,12 @@ export type QueryTypeMonthlyPaymentsArgs = {
 
 export type QueryTypePaymentScheduleArgs = {
   status: ChargeStatus
+};
+
+
+export type QueryTypePricesArgs = {
+  date: Scalars['String'],
+  ids: Array<Scalars['String']>
 };
 
 

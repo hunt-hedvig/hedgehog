@@ -40,7 +40,6 @@ export const QUOTES_QUERY = gql`
               type
               area
               hasWaterConnected
-              displayName
             }
             isSubleted
           }
