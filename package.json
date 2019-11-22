@@ -136,12 +136,8 @@
     "test": "cross-env NODE_ENV=test jest",
     "typecheck": "tsc --noEmit",
     "lint": "tslint \"src/**/*.{ts,tsx}\"",
-    "graphql:gen": "graphql-codegen --config graphql-codegen.yml"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "graphql:gen": "graphql-codegen --config graphql-codegen.yml",
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
