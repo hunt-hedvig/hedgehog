@@ -6,9 +6,8 @@ import {
   TableRow as MuiTableRow,
   withStyles,
 } from '@material-ui/core'
+import { format, parseISO } from 'date-fns'
 
-import format from 'date-fns/format'
-import toDate from 'date-fns/toDate'
 import * as React from 'react'
 
 import { Checkmark, Cross } from '../../../icons'
@@ -90,7 +89,7 @@ const ClaimPayments: React.SFC<Props> = ({
               </PaymentTableCell>
               <PaymentTableCell>{payment.note}</PaymentTableCell>
               <PaymentTableCell>
-                {format(toDate(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
+                {format(parseISO(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
               </PaymentTableCell>
               <PaymentTableCell>
                 {payment.exGratia ? <Checkmark /> : <Cross />}
