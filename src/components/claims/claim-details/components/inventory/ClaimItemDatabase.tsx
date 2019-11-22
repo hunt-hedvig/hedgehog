@@ -46,7 +46,6 @@ export class ClaimItemDatabase extends React.Component {
             variables={{
               claimId: this.props.claimId,
             }}
-            fetchPolicy="no-cache"
           >
             {({ data, loading, error }) => {
               let items = []
