@@ -12,20 +12,6 @@ import { MemberInformation } from './components/MemberInformation'
 import { FileUpload } from './components/FileUpload'
 import { ClaimFileTable } from './components/ClaimFileTable'
 
-const CLAIM_FILES_QUERY = gql`
-  query ClaimFilesQuery($id: ID!) {
-    claim(id: $id) {
-      claimFiles {
-        claimFileId
-        fileUploadUrl
-        uploadedAt
-        markedAsDeleted
-        category
-      }
-    }
-  }
-`
-
 const CLAIM_PAGE_QUERY = gql`
   query ClaimPage($id: ID!) {
     claim(id: $id) {
@@ -78,6 +64,14 @@ const CLAIM_PAGE_QUERY = gql`
       events {
         text
         date
+      } 
+      claimFiles {
+        claimFileId
+        fileUploadUrl
+        uploadedAt
+        markedAsDeleted
+        category
+        contentType
       }
       coveringEmployee
       __typename
@@ -96,7 +90,7 @@ interface Props {
 const ClaimPage: React.SFC<Props> = ({ match }) => (
   <>
     <Query query={CLAIM_PAGE_QUERY} variables={{ id: match.params.id }}>
-      {({ loading, error, data }) => {
+      {({ loading, error, data, refetch }) => {
         if (loading) {
           return <div>Loading</div>
         }
@@ -120,6 +114,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
           reserves,
           type,
           coveringEmployee,
+          claimFiles,
         } = data.claim
 
         return (
@@ -151,45 +146,21 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               />
             </Grid>
             <Grid item xs={12}>
-              <Query
-                query={CLAIM_FILES_QUERY}
-                variables={{ id: match.params.id }}
-              >
-                {({ loading, error, data, refetch }) => {
-                  if (error) {
-                    return (
-                      <div>
-                        Error in GraphQl query here.....:{' '}
-                        <pre>{JSON.stringify(error, null, 2)}</pre>
-                      </div>
-                    )
-                  }
-                  if (loading || !data) {
-                    return <div>Loading...</div>
-                  }
-                  return data.claim.claimFiles === 0 ? (
-                    <div>
-                      No claim documents have been uploaded for this claim
-                    </div>
-                  ) : (
-                    <>
-                      <Grid item xs={12}>
-                        <FileUpload
-                          claimId={match.params.id}
-                          memberId={data.claim.memberId}
-                          onUploaded={() => refetch}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <ClaimFileTable
-                          claimFiles={data.claim.claimFiles}
-                          claimId={match.params.id}
-                        />
-                      </Grid>
-                    </>
-                  )
-                }}
-              </Query>
+              <>
+                <Grid item xs={12}>
+                  <FileUpload
+                    claimId={match.params.id}
+                    memberId={data.claim.memberId}
+                    onUploaded={() => refetch}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <ClaimFileTable
+                    claimFiles={data.claim.claimFiles}
+                    claimId={match.params.id}
+                  />
+                </Grid>
+              </>
             </Grid>
             <Grid item xs={12}>
               <ClaimEvents events={events} />

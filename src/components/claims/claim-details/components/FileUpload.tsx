@@ -22,9 +22,10 @@ export const Button = styled('button')({
   justifyContent: 'center',
   fontSize: 'inherit',
   font: 'inherit',
-  padding: '4rem 4rem',
-  border: '1px solid ',
-  borderRadius: '0.4',
+  padding: '4rem',
+  border: '1px solid',
+  borderColor: colors.DARK_GRAY,
+  borderRadius: '5px',
   color: colors.BLACK,
   background: colors.WHITE,
   cursor: 'pointer',
@@ -40,7 +41,7 @@ export const Button = styled('button')({
 })
 
 const FileUploadContainer = styled('div')({
-  padding: '2rem 2rem',
+  padding: '2rem',
 })
 
 class FileUploadComponent extends React.Component<{
@@ -49,22 +50,13 @@ class FileUploadComponent extends React.Component<{
   showNotification: (data: any) => void
   onUploaded: () => void
 }> {
-  public state = {
-    value: null,
-    uploaded: false,
-  }
-
   render() {
     return (
       <>
         <UploadClaimFileWrapper>
           <UploadClaimFileHeader>Upload files here</UploadClaimFileHeader>
           <FileUploadContainer>
-            <Dropzone
-              onDrop={(files) => {
-                this.onDrop(files)
-              }}
-            >
+            <Dropzone onDrop={this.onDrop}>
               {({ getRootProps, getInputProps, isDragActive }) => (
                 <Button {...getRootProps()}>
                   <input {...getInputProps()} />
@@ -81,10 +73,6 @@ class FileUploadComponent extends React.Component<{
   }
 
   private onDrop = (acceptedFiles) => {
-    this.setState({
-      value: acceptedFiles,
-    })
-
     var claimFiles = new FormData()
 
     for (const file of acceptedFiles) {
@@ -103,7 +91,7 @@ class FileUploadComponent extends React.Component<{
           type: 'olive',
         })
         this.props.onUploaded()
-        this.setState({ uploaded: true })
+        window.location.reload()
       })
       .catch((error) => {
         this.props.showNotification({

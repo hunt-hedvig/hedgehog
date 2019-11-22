@@ -87,7 +87,7 @@ export class DeleteButton extends React.Component<
     })
       .then(() => {
         this.props.showNotification({
-          message: 'file has been marked as deleted',
+          message: 'File has been deleted',
           header: 'Success',
           type: 'olive',
         })

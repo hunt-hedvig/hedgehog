@@ -63,7 +63,6 @@
     "webpack-node-externals": "^1.7.2",
     "websocket": "^1.0.28",
     "ws": "^6.1.0",
-    "yarn": "^1.17.3",
     "yup": "^0.26.6"
   },
   "devDependencies": {
