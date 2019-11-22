@@ -6,12 +6,10 @@ import {
   INSURANCES_LIST_REQUESTING,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
-  MEMBER_CREATE_MODIFIED_INSURANCE,
-  MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
-  MODIFY_INSURANCE,
-  MODIFY_INSURANCE_SUCCESS,
   SAVE_ACTIVATION_DATE_SUCCESS,
   SAVE_CANCELLATION_DATE_SUCCESS,
+  MODIFY_INSURANCE,
+  MODIFY_INSURANCE_SUCCESS,
   SAVE_INSURANCE_DATE,
   SEND_CANCEL_REQUEST,
   SEND_CANCEL_REQUEST_SUCCESS,
@@ -95,17 +93,6 @@ export const changeCompanyStatus = (value, memberId) => ({
 export const changeCompanyStatusSuccess = (value) => ({
   type: MEMBER_COMPANY_STATUS_SUCCESS,
   value,
-})
-
-export const createModifiedInsurance = (memberId, modifiedDetails) => ({
-  type: MEMBER_CREATE_MODIFIED_INSURANCE,
-  modifiedDetails,
-  memberId,
-})
-
-export const createModifiedInsuranceSuccess = (updatedProduct) => ({
-  type: MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
-  updatedProduct,
 })
 
 export const modifyInsurance = (memberId, request) => ({

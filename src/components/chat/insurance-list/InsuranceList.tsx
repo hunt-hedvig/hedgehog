@@ -1,4 +1,3 @@
-import { ExtraBuilding } from 'components/chat/tabs/InsuranceTab'
 import { LinkRow } from 'components/shared'
 import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
@@ -21,12 +20,37 @@ const DateTypeEnum = {
   activationDate: 2,
 }
 
+export enum ExtraBuildingType {
+  ATTEFALL = 'Attefallshus',
+  SAUNA = 'Bastu',
+  BOATHOUSE = 'Båthus',
+  CARPORT = 'Carport',
+  GUESTHOUSE = 'Gästhus',
+  FRIGGEBOD = 'Friggebod',
+  STOREHOUSE = 'Förråd',
+  GARAGE = 'Garage',
+  BARN = 'Lada',
+  GAZEBO = 'Lusthus',
+  SHED = 'Skjul',
+  OUTHOUSE = 'Uthus',
+  GREENHOUSE = 'Växthus',
+  OTHER = 'Annat',
+}
+
+export interface ExtraBuilding {
+  id: string
+  type: ExtraBuildingType
+  area: number
+  hasWaterConnected: boolean
+  displayName?: string
+}
+
 export default class InsuranceList extends React.Component {
   public insuranceFieldFormatters = {
     extraBuildings: (buildings: ExtraBuilding[]) =>
-      buildings.map((building) => (
+      (buildings ?? []).map((building) => (
         <p key={building.id}>
-          {building.displayName} {building.area} m<sup>2</sup> (
+          {building.type} {building.area} m<sup>2</sup> (
           {building.hasWaterConnected
             ? 'has water connected'
             : 'no water connected'}
@@ -300,7 +324,7 @@ export default class InsuranceList extends React.Component {
           list={list}
           itemContent={(item) => this.getTableRow(item, data)}
           tableHeader={this.getTableHeader()}
-          pageSize={3}
+          pageSize={10}
           isSortable={false}
           keyName="productId"
         />

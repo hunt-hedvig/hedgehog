@@ -1,5 +1,4 @@
 import { ActionMap, Container } from 'constate'
-import toDate from 'date-fns/toDate'
 import { DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import 'moment/locale/sv'
