@@ -88,88 +88,86 @@ interface Props {
 }
 
 const ClaimPage: React.SFC<Props> = ({ match }) => (
-  <>
-    <Query query={CLAIM_PAGE_QUERY} variables={{ id: match.params.id }}>
-      {({ loading, error, data, refetch }) => {
-        if (loading) {
-          return <div>Loading</div>
-        }
+  <Query query={CLAIM_PAGE_QUERY} variables={{ id: match.params.id }}>
+    {({ loading, error, data, refetch }) => {
+      if (loading) {
+        return <div>Loading</div>
+      }
 
-        if (error) {
-          return (
-            <div>
-              Error: <pre>{JSON.stringify(error, null, 2)}</pre>
-            </div>
-          )
-        }
-
-        const {
-          member,
-          recordingUrl,
-          registrationDate,
-          state,
-          notes,
-          events,
-          payments,
-          reserves,
-          type,
-          coveringEmployee,
-          claimFiles,
-        } = data.claim
-
+      if (error) {
         return (
-          <Grid container spacing={8}>
-            <Grid item xs={12} sm={12} md={4}>
-              <MemberInformation member={member} />
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <ClaimInformation
-                recordingUrl={recordingUrl}
-                registrationDate={registrationDate}
-                state={state}
-                claimId={match.params.id}
-                coveringEmployee={coveringEmployee}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <ClaimType type={type} claimId={match.params.id} />
-            </Grid>
-            <Grid item xs={12}>
-              <ClaimNotes notes={notes} claimId={match.params.id} />
-            </Grid>
-            <Grid item xs={12}>
-              <ClaimPayments
-                payments={payments}
-                claimId={match.params.id}
-                reserves={reserves}
-                sanctionStatus={member.sanctionStatus}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <>
-                <Grid item xs={12}>
-                  <FileUpload
-                    claimId={match.params.id}
-                    memberId={data.claim.memberId}
-                    onUploaded={() => refetch}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <ClaimFileTable
-                    claimFiles={data.claim.claimFiles}
-                    claimId={match.params.id}
-                  />
-                </Grid>
-              </>
-            </Grid>
-            <Grid item xs={12}>
-              <ClaimEvents events={events} />
-            </Grid>
-          </Grid>
+          <div>
+            Error: <pre>{JSON.stringify(error, null, 2)}</pre>
+          </div>
         )
-      }}
-    </Query>
-  </>
+      }
+
+      const {
+        member,
+        recordingUrl,
+        registrationDate,
+        state,
+        notes,
+        events,
+        payments,
+        reserves,
+        type,
+        coveringEmployee,
+        claimFiles,
+      } = data.claim
+
+      return (
+        <Grid container spacing={8}>
+          <Grid item xs={12} sm={12} md={4}>
+            <MemberInformation member={member} />
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <ClaimInformation
+              recordingUrl={recordingUrl}
+              registrationDate={registrationDate}
+              state={state}
+              claimId={match.params.id}
+              coveringEmployee={coveringEmployee}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <ClaimType type={type} claimId={match.params.id} />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimNotes notes={notes} claimId={match.params.id} />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimPayments
+              payments={payments}
+              claimId={match.params.id}
+              reserves={reserves}
+              sanctionStatus={member.sanctionStatus}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <>
+              <Grid item xs={12}>
+                <FileUpload
+                  claimId={match.params.id}
+                  memberId={data.claim.memberId}
+                  onUploaded={() => refetch}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <ClaimFileTable
+                  claimFiles={data.claim.claimFiles}
+                  claimId={match.params.id}
+                />
+              </Grid>
+            </>
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimEvents events={events} />
+          </Grid>
+        </Grid>
+      )
+    }}
+  </Query>
 )
 
 export default ClaimPage
