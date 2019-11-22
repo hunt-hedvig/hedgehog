@@ -3,8 +3,7 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
-import format from 'date-fns/format'
-import toDate from 'date-fns/toDate'
+import { format, parseISO } from 'date-fns'
 import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
@@ -198,7 +197,7 @@ const hasPoliceReport = (typename: ClaimTypes): boolean => {
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.AssaultClaim,
     ClaimTypes.TravelAccidentClaim,
-    ClaimTypes.BurglaryClaim
+    ClaimTypes.BurglaryClaim,
   ].includes(typename)
 }
 
@@ -206,7 +205,7 @@ const hasReceipt = (typename: ClaimTypes): boolean => {
   return [
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.TravelAccidentClaim,
-    ClaimTypes.BurglaryClaim
+    ClaimTypes.BurglaryClaim,
   ].includes(typename)
 }
 
@@ -514,7 +513,9 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                       id: claimId,
                       claimInformation: {
                         ...values,
-                        date: values.date && format(values.date, 'yyyy-MM-dd'),
+                        date:
+                          values.date &&
+                          format(parseISO(values.date), 'yyyy-MM-dd'),
                       },
                     },
                   })

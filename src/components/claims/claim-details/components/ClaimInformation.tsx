@@ -1,19 +1,16 @@
-import * as React from 'react'
-
 import {
   InputLabel as MuiInputLabel,
   MenuItem as MuiMenuItem,
   Select as MuiSelect,
 } from '@material-ui/core'
+import { format, parseISO, toDate } from 'date-fns'
 
-import format from 'date-fns/format'
-import toDate from 'date-fns/toDate'
 import gql from 'graphql-tag'
+import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 
 import { Paper } from '../../../shared/Paper'
-import { boolean } from 'yup'
 
 const UPDATE_STATE_QUERY = gql`
   query UpdateClaimState($id: ID!) {
@@ -165,7 +162,7 @@ const ClaimInformation: React.SFC<Props> = ({
               <AudioWrapper>
                 <p>
                   Registered at:{' '}
-                  {format(toDate(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
+                  {format(parseISO(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
                 </p>
                 <Audio controls>
                   <source src={recordingUrl} type="audio/aac" />

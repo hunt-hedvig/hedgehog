@@ -6,9 +6,8 @@ import {
   Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
+import { format, parseISO } from 'date-fns'
 
-import format from 'date-fns/format'
-import toDate from 'date-fns/toDate'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
@@ -131,7 +130,7 @@ const ClaimNotes: React.SFC<Props> = ({ notes, claimId }) => (
             <ListItem key={note.date}>
               <ClaimNote component="p">{note.text}</ClaimNote>
               <ClaimNoteDate component="span">
-                {format(toDate(note.date), 'yyyy-MM-dd hh:mm:ss')}
+                {format(parseISO(note.date), 'yyyy-MM-dd hh:mm:ss')}
               </ClaimNoteDate>
             </ListItem>
           ))}

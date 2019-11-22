@@ -1,6 +1,5 @@
 import { Button as MuiButton, MenuItem, withStyles } from '@material-ui/core'
 import { gql } from 'apollo-boost'
-import { GET_MEMBER_ACCOUNT_QUERY } from 'components/chat/tabs/AccountTab'
 import { FormikDatePicker } from 'components/shared/inputs/DatePicker'
 import { FieldSelect } from 'components/shared/inputs/FieldSelect'
 import { TextField as MuiTextField } from 'components/shared/inputs/TextField'
@@ -94,9 +93,7 @@ export class AddEntryForm extends React.Component<
 
   public render() {
     return (
-      <Mutation
-        mutation={ADD_ACCOUNT_ENTRY_MUTATION}
-      >
+      <Mutation mutation={ADD_ACCOUNT_ENTRY_MUTATION}>
         {(mutation, { loading }) => (
           <Formik
             initialValues={{

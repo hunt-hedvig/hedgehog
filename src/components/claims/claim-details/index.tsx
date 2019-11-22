@@ -1,4 +1,5 @@
 import Grid from '@material-ui/core/Grid'
+import { QueryType } from 'api/generated/graphql'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Query } from 'react-apollo'
@@ -78,7 +79,10 @@ interface Props {
 }
 
 const ClaimPage: React.SFC<Props> = ({ match }) => (
-  <Query query={CLAIM_PAGE_QUERY} variables={{ id: match.params.id }}>
+  <Query<Pick<QueryType, 'claim'>>
+    query={CLAIM_PAGE_QUERY}
+    variables={{ id: match.params.id }}
+  >
     {({ loading, error, data }) => {
       if (loading) {
         return <div>Loading</div>

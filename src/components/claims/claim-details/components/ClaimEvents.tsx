@@ -3,8 +3,7 @@ import {
   ListItem as MuiListItem,
   withStyles,
 } from '@material-ui/core'
-import format from 'date-fns/format'
-import toDate from 'date-fns/toDate'
+import { format, parseISO } from 'date-fns'
 import * as React from 'react'
 import { Paper } from '../../../shared/Paper'
 
@@ -29,7 +28,7 @@ export const ClaimEvents: React.SFC<Props> = ({ events }) => (
     <MuiList>
       {events.map((event) => (
         <ListItem key={event.date}>
-          {format(toDate(event.date), 'yyyy-MM-dd hh:mm:ss')}: {event.text}
+          {format(parseISO(event.date), 'yyyy-MM-dd hh:mm:ss')}: {event.text}
         </ListItem>
       ))}
     </MuiList>
