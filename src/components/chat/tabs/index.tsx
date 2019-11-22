@@ -7,6 +7,7 @@ import { MemberDebtComponent } from 'components/chat/tabs/DebtTab'
 import InsuranceListTab from 'components/chat/tabs/InsuranceListTab'
 import InsuranceTab from 'components/chat/tabs/InsuranceTab'
 import PaymentsTab from 'components/chat/tabs/PaymentsTab'
+import { Quotes } from 'components/chat/tabs/quotes'
 
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
@@ -50,7 +51,7 @@ const memberPagePanes = (props, addMessage, socket) => {
     {
       menuItem: 'Files',
       render: () => <TabItem props={props} TabContent={MemberFile} />,
-    }, 
+    },
     {
       menuItem: "Debt",
       render: () => <TabItem props={props} TabContent={MemberDebtComponent} />
@@ -88,6 +89,11 @@ const memberPagePanes = (props, addMessage, socket) => {
       },
     )
   }
+  panes.push({
+    menuItem: 'Quotes',
+    render: () => <TabItem props={{ memberId: props.match.params.id }} TabContent={Quotes} />
+  })
+
   return panes
 }
 export default memberPagePanes

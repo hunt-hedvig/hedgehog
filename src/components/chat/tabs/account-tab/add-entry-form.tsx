@@ -1,7 +1,7 @@
 import { Button as MuiButton, MenuItem, withStyles } from '@material-ui/core'
 import { gql } from 'apollo-boost'
 import { GET_MEMBER_ACCOUNT_QUERY } from 'components/chat/tabs/AccountTab'
-import { DatePicker } from 'components/shared/inputs/DatePicker'
+import { FormikDatePicker } from 'components/shared/inputs/DatePicker'
 import { FieldSelect } from 'components/shared/inputs/FieldSelect'
 import { TextField as MuiTextField } from 'components/shared/inputs/TextField'
 import { format, startOfDay } from 'date-fns'
@@ -189,7 +189,7 @@ export class AddEntryForm extends React.Component<
                   />
                   <Field component={TextField} label="Comment" name="comment" />
                   <Field
-                    component={DatePicker}
+                    component={FormikDatePicker}
                     label="From date"
                     type="date"
                     name="fromDate"
