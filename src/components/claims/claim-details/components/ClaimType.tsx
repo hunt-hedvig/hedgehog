@@ -501,7 +501,7 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
               }>
                 initialValues={{
                   location: (type as any).location || '',
-                  date: type.date ? toDate(type.date) : undefined,
+                  date: type.date ? parseISO(type.date) : undefined,
                   item: (type as any).item || '',
                   policeReport: (type as any).policeReport || '',
                   receipt: (type as any).receipt || '',

@@ -3,7 +3,7 @@ import {
   MenuItem as MuiMenuItem,
   Select as MuiSelect,
 } from '@material-ui/core'
-import { format, parseISO, toDate } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 
 import gql from 'graphql-tag'
 import * as React from 'react'
