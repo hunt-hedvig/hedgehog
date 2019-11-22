@@ -411,9 +411,12 @@ function sortListByDate(list, fieldName, isReverse) {
   return [...resultList, ...withoutDates]
 }
 
-export const dateTimeFormatter = (date: string, format: string) => {
+export const dateTimeFormatter = (date: string | number, format: string) => {
   try {
-    return date && formatDate(toDate(date), format)
+    return (
+      date &&
+      formatDate(typeof date === 'string' ? parseISO(date) : date, format)
+    )
   } catch (e) {
     console.error(e)
     return undefined
