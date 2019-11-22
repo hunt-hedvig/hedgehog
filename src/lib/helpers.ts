@@ -1,6 +1,6 @@
+import { parseISO } from 'date-fns'
 import dateCompareAsc from 'date-fns/compareAsc'
 import formatDate from 'date-fns/format'
-import toDate from 'date-fns/toDate'
 import moment from 'moment'
 import { QuestionGroup, QuestionsStore } from '../store/types/questionsTypes'
 
@@ -132,7 +132,7 @@ export const getClaimFieldsData = (
  * @param {object} questions arrays of answered/not answered questions
  */
 export const sortQuestions = (questions: QuestionGroup[]): QuestionGroup[] =>
-  questions.sort((a, b) => dateCompareAsc(toDate(a.date), toDate(b.date)))
+  questions.sort((a, b) => dateCompareAsc(parseISO(a.date), parseISO(b.date)))
 
 /**
  * Replacing question from not answered to answered array
@@ -411,7 +411,7 @@ function sortListByDate(list, fieldName, isReverse) {
   return [...resultList, ...withoutDates]
 }
 
-export const dateTimeFormatter = (date: string, format: string) =>{
+export const dateTimeFormatter = (date: string, format: string) => {
   try {
     return date && formatDate(toDate(date), format)
   } catch (e) {

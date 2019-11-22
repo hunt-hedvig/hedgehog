@@ -1,7 +1,7 @@
 import { LinkRow } from 'components/shared'
+import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import isValidDate from 'date-fns/isValid'
-import toDate from 'date-fns/toDate'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
@@ -34,22 +34,11 @@ const getFormattedDate = (date: unknown) => {
 }
 
 const getTableRow = (item: MemberInsurance) => {
-  // FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
   const activationDate =
-    item.insuranceActiveFrom &&
-    toDate(
-      item.insuranceActiveFrom.endsWith('Z')
-        ? item.insuranceActiveFrom
-        : `${item.insuranceActiveFrom}Z`,
-    )
+    item.insuranceActiveFrom && parseISO(item.insuranceActiveFrom)
   const cancellationDate =
-    item.insuranceActiveTo &&
-    toDate(
-      item.insuranceActiveTo.endsWith('Z')
-        ? item.insuranceActiveTo
-        : `${item.insuranceActiveTo}Z`,
-    )
-  const signedOnDate = item.signedOn && toDate(item.signedOn)
+    item.insuranceActiveTo && parseISO(item.insuranceActiveTo)
+  const signedOnDate = item.signedOn && parseISO(item.signedOn)
 
   return (
     <LinkRow onClick={() => linkClickHandler(item.memberId)}>

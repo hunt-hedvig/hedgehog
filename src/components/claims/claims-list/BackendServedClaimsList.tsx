@@ -1,7 +1,7 @@
 import { LinkRow } from 'components/shared'
+import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import isValidDate from 'date-fns/isValid'
-import toDate from 'date-fns/toDate'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
@@ -23,7 +23,7 @@ const linkClickHandler = (id: string, userId: string) => {
 }
 
 const getTableRow = (item: Claim) => {
-  const date = toDate(item.date)
+  const date = parseISO(item.date)
   const formattedDate = isValidDate(date)
     ? formatDate(date, 'dd MMMM yyyy HH:mm')
     : '-'
