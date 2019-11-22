@@ -1,10 +1,9 @@
 import { Button as MuiButton, MenuItem, withStyles } from '@material-ui/core'
 import { gql } from 'apollo-boost'
-import { GET_MEMBER_ACCOUNT_QUERY } from 'components/chat/tabs/AccountTab'
 import { FormikDatePicker } from 'components/shared/inputs/DatePicker'
 import { FieldSelect } from 'components/shared/inputs/FieldSelect'
 import { TextField as MuiTextField } from 'components/shared/inputs/TextField'
-import { format, parseISO, startOfDay } from 'date-fns'
+import { format, startOfDay } from 'date-fns'
 import { Field, Form as FormikForm, Formik } from 'formik'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
@@ -120,7 +119,7 @@ export class AddEntryForm extends React.Component<
                       amount: parseAmount(formData.amount),
                       currency: 'SEK',
                     },
-                    fromDate: format(parseISO(formData.fromDate), 'yyyy-MM-dd'),
+                    fromDate: format(formData.fromDate, 'yyyy-MM-dd'),
                     reference: formData.reference,
                     source: formData.source,
                     title: formData.title,
