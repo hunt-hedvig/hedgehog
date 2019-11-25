@@ -15,6 +15,7 @@ export const QUOTES_QUERY = gql`
         validity
         isComplete
         createdAt
+        breachedUnderwritingGuidelines
         originatingProductId
         signedProductId
         data {

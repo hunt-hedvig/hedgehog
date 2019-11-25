@@ -134,6 +134,7 @@ export const CreateQuote: React.FunctionComponent<{
               positive
               disabled={
                 createQuoteMutation.loading ||
+                createQuoteMutation.called ||
                 Boolean(
                   createQuoteMutation.data &&
                     createQuoteMutation.data &&

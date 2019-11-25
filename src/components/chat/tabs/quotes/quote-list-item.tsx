@@ -44,6 +44,9 @@ const PriceWrapper = styled('div')({
 const DetailWrapper = styled('div')({
   paddingBottom: '1rem',
 })
+const BreachedUnderwritingGuidelines = styled('div')({
+  color: colorsV2.coral700,
+})
 
 const ActionsButtonsWrapper = styled('div')({
   flexShrink: 1,
@@ -123,6 +126,18 @@ const QuoteDetails: React.FunctionComponent<{
         Household size:
         <strong> {quote.data?.householdSize} person(s)</strong>
       </DetailWrapper>
+      {quote.breachedUnderwritingGuidelines?.length > 0 && (
+        <DetailWrapper>
+          <BreachedUnderwritingGuidelines>
+            <h3>Important! Member breaches underwriting guidelines</h3>
+            <ul>
+              {quote.breachedUnderwritingGuidelines!.map((guideline) => (
+                <li key={guideline}>{guideline}</li>
+              ))}
+            </ul>
+          </BreachedUnderwritingGuidelines>
+        </DetailWrapper>
+      )}
       <DetailWrapper>
         <Muted>
           Created: <strong>{quote.createdAt}</strong>

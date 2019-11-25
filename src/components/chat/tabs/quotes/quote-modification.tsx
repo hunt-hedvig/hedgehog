@@ -57,8 +57,16 @@ interface EditableExtraBuilding extends ExtraBuilding {
 }
 
 const UPDATE_QUOTE_MUTATION = gql`
-  mutation UpdateQuote($quoteId: ID!, $quoteData: QuoteInput!) {
-    updateQuote(quoteId: $quoteId, quoteData: $quoteData) {
+  mutation UpdateQuote(
+    $quoteId: ID!
+    $quoteData: QuoteInput!
+    $bypassUnderwritingGuidelines: Boolean
+  ) {
+    updateQuote(
+      quoteId: $quoteId
+      quoteData: $quoteData
+      bypassUnderwritingGuidelines: $bypassUnderwritingGuidelines
+    ) {
       id
     }
   }
@@ -163,6 +171,10 @@ export const QuoteModification: React.FunctionComponent<{
     yearOfConstruction: null,
     zipCode: null,
   })
+  const [
+    bypassUnderwritingGuidelines,
+    setBypassUnderwritingGuidelines,
+  ] = useState(false)
 
   const getTextInput = (
     variable: keyof FormState,
@@ -206,6 +218,7 @@ export const QuoteModification: React.FunctionComponent<{
           variables: {
             quoteId: quote.id,
             quoteData,
+            bypassUnderwritingGuidelines,
           },
         })
         onSubmitted && onSubmitted()
@@ -284,6 +297,16 @@ export const QuoteModification: React.FunctionComponent<{
           </InputGroup>
         </>
       )}
+
+      <InputGroup>
+        <Checkbox
+          checked={bypassUnderwritingGuidelines}
+          onChange={(_, { checked }) =>
+            setBypassUnderwritingGuidelines(checked!)
+          }
+          label="Bypass underwriting guidelines"
+        />
+      </InputGroup>
 
       <SubmitButton type="submit" disabled={fieldModification.loading}>
         Save modifications
