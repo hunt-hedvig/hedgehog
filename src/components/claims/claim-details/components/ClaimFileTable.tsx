@@ -38,7 +38,6 @@ interface ClaimFiles {
   claimFileId: string
   fileUploadUrl: string
   uploadedAt: Instant
-  markedAsDeleted: boolean
   category: string
   contentType: string
 }
@@ -69,9 +68,6 @@ class ClaimFileTableComponent extends React.Component<{
               [...this.props.claimFiles]
                 .sort(sortClaimFileDate)
                 .map((claimFile) => {
-                  if (claimFile.markedAsDeleted) {
-                    return null
-                  }
                   return (
                     <Table.Row key={claimFile.fileUploadUrl}>
                       <Table.Cell>

@@ -69,7 +69,6 @@ const CLAIM_PAGE_QUERY = gql`
         claimFileId
         fileUploadUrl
         uploadedAt
-        markedAsDeleted
         category
         contentType
       }
