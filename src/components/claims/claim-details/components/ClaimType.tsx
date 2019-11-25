@@ -3,15 +3,14 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
-import format from 'date-fns/format'
-import toDate from 'date-fns/toDate'
+import { format, parseISO } from 'date-fns'
 import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 
-import { DatePicker } from '../../../shared/inputs/DatePicker'
+import { FormikDatePicker } from '../../../shared/inputs/DatePicker'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
 import { TextField } from '../../../shared/inputs/TextField'
 import { Paper } from '../../../shared/Paper'
@@ -198,7 +197,7 @@ const hasPoliceReport = (typename: ClaimTypes): boolean => {
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.AssaultClaim,
     ClaimTypes.TravelAccidentClaim,
-    ClaimTypes.BurglaryClaim
+    ClaimTypes.BurglaryClaim,
   ].includes(typename)
 }
 
@@ -206,7 +205,7 @@ const hasReceipt = (typename: ClaimTypes): boolean => {
   return [
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.TravelAccidentClaim,
-    ClaimTypes.BurglaryClaim
+    ClaimTypes.BurglaryClaim,
   ].includes(typename)
 }
 
@@ -502,7 +501,7 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
               }>
                 initialValues={{
                   location: (type as any).location || '',
-                  date: type.date ? toDate(type.date) : undefined,
+                  date: type.date ? parseISO(type.date) : undefined,
                   item: (type as any).item || '',
                   policeReport: (type as any).policeReport || '',
                   receipt: (type as any).receipt || '',
@@ -514,7 +513,9 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                       id: claimId,
                       claimInformation: {
                         ...values,
-                        date: values.date && format(values.date, 'yyyy-MM-dd'),
+                        date:
+                          values.date &&
+                          format(parseISO(values.date), 'yyyy-MM-dd'),
                       },
                     },
                   })
@@ -534,7 +535,7 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                     )}
                     <div>
                       <Field
-                        component={DatePicker}
+                        component={FormikDatePicker}
                         name="date"
                         placeholder="Date"
                       />

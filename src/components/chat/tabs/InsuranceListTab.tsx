@@ -12,9 +12,7 @@ export default class InsuranceListTab extends React.Component {
     const { insurance } = this.props
 
     return insurance.list ? (
-      <React.Fragment>
-        <InsuranceList {...this.props} />
-      </React.Fragment>
+      <InsuranceList {...this.props} />
     ) : (
       <Header>No insurance info </Header>
     )

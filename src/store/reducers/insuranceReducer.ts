@@ -6,8 +6,6 @@ import {
   INSURANCES_LIST_REQUESTING,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
-  MEMBER_CREATE_MODIFIED_INSURANCE,
-  MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
   MODIFY_INSURANCE,
   MODIFY_INSURANCE_SUCCESS,
   SAVE_ACTIVATION_DATE_SUCCESS,
@@ -29,7 +27,6 @@ export default function(state = initialState.insurance, action) {
     case SAVE_INSURANCE_DATE:
     case SEND_CERTIFICATE:
     case MEMBER_COMPANY_STATUS:
-    case MEMBER_CREATE_MODIFIED_INSURANCE:
     case MODIFY_INSURANCE:
       return {
         ...state,
@@ -52,15 +49,6 @@ export default function(state = initialState.insurance, action) {
         requesting: false,
         successful: true,
         data: action.insurance,
-        error: [],
-      }
-
-    case MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS:
-      return {
-        ...state,
-        requesting: false,
-        successful: true,
-        list: [...state.list, action.updatedProduct],
         error: [],
       }
 

@@ -1,42 +1,15 @@
 import { colors } from '@hedviginsurance/brand'
 import DateInput from 'components/shared/inputs/DateInput'
-import { WideModal } from 'components/shared/modals/WideModal'
 import { formatDistance, parse } from 'date-fns'
-import { getFieldName, getFieldValue } from 'lib/helpers'
 import { formatMoneySE } from 'lib/intl'
 import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
 import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Button, Form, Header, Icon, Modal, Radio } from 'semantic-ui-react'
-import * as uuid from 'uuid/v4'
+import { Button, Header, Icon, Radio } from 'semantic-ui-react'
+import { CreateQuote } from './insurance-tab/create-quote'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
-
-export enum ExtraBuildingType {
-  ATTEFALL = 'Attefallshus',
-  SAUNA = 'Bastu',
-  BOATHOUSE = 'Båthus',
-  CARPORT = 'Carport',
-  GUESTHOUSE = 'Gästhus',
-  FRIGGEBOD = 'Friggebod',
-  STOREHOUSE = 'Förråd',
-  GARAGE = 'Garage',
-  BARN = 'Lada',
-  GAZEBO = 'Lusthus',
-  SHED = 'Skjul',
-  OUTHOUSE = 'Uthus',
-  GREENHOUSE = 'Växthus',
-  OTHER = 'Annat',
-}
-
-export interface ExtraBuilding {
-  id: string
-  type: ExtraBuildingType
-  area: number
-  hasWaterConnected: boolean
-  displayName?: string
-}
 
 const Wrapper = styled('div')({
   display: 'flex',
@@ -118,9 +91,7 @@ const ButtonLink = HedvigStyledButton.withComponent('a')
 const FileButton = styled(HedvigStyledButton)({
   marginLeft: 8,
 }).withComponent('label')
-const ExtraBuildingsForm = styled('div')({
-  marginBottom: '15px',
-})
+
 const timeStringToDistance = (timeString: string) =>
   formatDistance(
     parse(timeString.replace(/\..*$/, ''), "yyyy-MM-dd'T'HH:mm:ss", new Date()),
@@ -130,223 +101,14 @@ const timeStringToDistance = (timeString: string) =>
 
 export default class InsuranceTab extends React.Component<any, any> {
   public state = {
-    modalOpen: false,
-    insurance: [],
-    availableSafetyIncreasers: {
-      SMOKE_ALARM: 'Smoke alarm',
-      FIRE_EXTINGUISHER: 'Fire extinguisher',
-      SAFETY_DOOR: 'Safety door',
-      GATE: 'Gate',
-      BURGLAR_ALARM: 'Burglar alarm',
-      NONE: 'None',
-    },
-    safetyIncreasers: [],
-    isStudent: true,
-    isSubleted: Boolean(this.props.insurance.data.isSubleted),
     activationDatePickerEnabled: false,
     cancellationDatePickerEnabled: false,
-    extraBuildings: [
-      ...this.props.insurance.data.extraBuildings,
-    ] as ExtraBuilding[],
   }
   private fileInputRef = React.createRef<HTMLInputElement>()
-
-  public handleOpen = () => this.setState({ modalOpen: true })
-
-  public handleClose = () => {
-    this.setState({
-      modalOpen: false,
-      insurance: [],
-      safetyIncreasers: [],
-      isSubleted: Boolean(this.props.insurance.data.isSubleted),
-      extraBuildings: [
-        ...this.props.insurance.data.extraBuildings,
-      ] as ExtraBuilding[],
-    })
-  }
-
-  public shouldBeDisplayed = (field) => {
-    switch (field.toLowerCase()) {
-      case 'personsinhousehold':
-      case 'insurancetype':
-      case 'street':
-      case 'city':
-      case 'zipcode':
-      case 'livingspace':
-        return true
-      case 'ancillaryarea':
-      case 'yearofconstruction':
-      case 'numberofbathrooms':
-        return this.isModifyingHouseInsurance()
-      default:
-        return false
-    }
-  }
-
-  public handleChange = (field) => (e) => {
-    const { insurance, safetyIncreasers } = this.state
-
-    switch (field) {
-      case 'SMOKE_ALARM':
-      case 'FIRE_EXTINGUISHER':
-      case 'SAFETY_DOOR':
-      case 'GATE':
-      case 'BURGLAR_ALARM':
-      case 'NONE':
-        safetyIncreasers.indexOf(field) === -1
-          ? safetyIncreasers.push(field)
-          : safetyIncreasers.splice(safetyIncreasers.indexOf(field), 1)
-        insurance.safetyIncreasers = safetyIncreasers
-        break
-      case 'isStudent':
-        this.setState((state) => ({ isStudent: !state.isStudent }))
-        insurance[field] = this.state.isStudent
-        break
-      case 'isSubleted':
-        this.setState((state) => ({ isSubleted: !state.isSubleted }))
-        break
-      default:
-        insurance[field] = e.target.value
-        break
-    }
-    this.setState({ insurance })
-  }
-
-  public handleCancel = () => {
-    this.handleClose()
-  }
-
-  public handleSubmissionButton = () => {
-    const { createModifiedInsurance, insurance } = this.props
-    const submittedInsurance = {
-      ...insurance.data,
-      ...this.state.insurance,
-      extraBuildings: this.state.extraBuildings,
-      isSubleted: this.state.isSubleted,
-    }
-    this.handleClose()
-    createModifiedInsurance(insurance.data.memberId, submittedInsurance)
-  }
-
-  public addExtraBuilding = () => {
-    this.setState((state) => ({
-      extraBuildings: [
-        ...state.extraBuildings,
-        {
-          id: uuid(),
-          type: 'OTHER',
-          area: 0,
-          hasWaterConnected: false,
-        },
-      ],
-    }))
-  }
-
-  public removeExtraBuilding = (id) => {
-    this.setState({
-      extraBuildings: [
-        ...this.state.extraBuildings.filter(
-          (extraBuilding) => extraBuilding.id !== id,
-        ),
-      ],
-    })
-  }
-
-  public getExtraBuildings = () => {
-    const { extraBuildings } = this.state
-    return (
-      <>
-        {extraBuildings.map((extraBuilding, index) => {
-          return (
-            <React.Fragment key={extraBuilding.id}>
-              <h4>Extra building {index + 1}</h4>
-              <Button
-                floated="right"
-                style={{ marginTop: '-2.5em' }}
-                onClick={() => this.removeExtraBuilding(extraBuilding.id)}
-              >
-                Remove
-              </Button>
-              <ExtraBuildingsForm>
-                <Form.Dropdown
-                  label="Type:"
-                  selection
-                  options={Object.keys(ExtraBuildingType).map((key) => {
-                    return {
-                      key,
-                      text: ExtraBuildingType[key],
-                      value: key,
-                    }
-                  })}
-                  defaultValue={extraBuilding.type}
-                  onChange={(__, { value }) =>
-                    this.handleExtraBuildingTypeChange(index, value)
-                  }
-                />
-                <Form.Input
-                  type="number"
-                  label={'Area'}
-                  defaultValue={extraBuilding.area}
-                  onChange={this.handleExtraBuildingChange('area', index)}
-                />
-                <Form.Checkbox
-                  label="Has water connected?"
-                  onChange={this.handleExtraBuildingChange(
-                    'hasWaterConnected',
-                    index,
-                  )}
-                  defaultChecked={extraBuilding.hasWaterConnected}
-                />
-              </ExtraBuildingsForm>
-            </React.Fragment>
-          )
-        })}
-      </>
-    )
-  }
-
-  public isModifyingHouseInsurance = () => {
-    const insuranceToBeSubmitted = {
-      ...this.props.insurance.data,
-      ...this.state.insurance,
-    }
-    return insuranceToBeSubmitted.insuranceType === 'HOUSE'
-  }
 
   public hasHouseInsurance = () => {
     const { data } = this.props.insurance
     return data.insuranceType === 'HOUSE'
-  }
-
-  public handleExtraBuildingChange = (key, index) => (event) => {
-    const extraBuildings = [...this.state.extraBuildings]
-    switch (key) {
-      case 'area':
-        extraBuildings[index] = {
-          ...extraBuildings[index],
-          area: +event.target.value,
-        }
-        this.setState({ extraBuildings })
-        break
-      case 'hasWaterConnected':
-        extraBuildings[index] = {
-          ...extraBuildings[index],
-          hasWaterConnected: !extraBuildings[index].hasWaterConnected,
-        }
-        this.setState({ extraBuildings })
-        break
-      default:
-        throw new Error(`No such extra building property "${key}"`)
-    }
-  }
-
-  public handleExtraBuildingTypeChange = (index, type) => {
-    const extraBuildings = [...this.state.extraBuildings]
-    extraBuildings[index] = {
-      ...extraBuildings[index],
-      type,
-    }
-    this.setState({ extraBuildings })
   }
 
   public render() {
@@ -505,83 +267,8 @@ export default class InsuranceTab extends React.Component<any, any> {
           )}
         </ActionBox>
         <ActionBox>
-          <ActionHeadline>Create modified insurance</ActionHeadline>
-          <WideModal
-            className="scrolling"
-            trigger={
-              <HedvigStyledButton onClick={this.handleOpen}>
-                <Icon name="edit" /> Edit
-              </HedvigStyledButton>
-            }
-            open={this.state.modalOpen}
-            onClose={this.handleClose}
-            basic
-            size="small"
-            dimmer="blurring"
-            closeOnDimmerClick={false}
-          >
-            <Header icon="edit" content="Modify Insurance" />
-            <Modal.Content>
-              <Form size="small">
-                <React.Fragment>
-                  {Object.keys(data).map((field, productId) =>
-                    this.shouldBeDisplayed(field) ? (
-                      <Form.Input
-                        key={productId}
-                        label={getFieldName(field)}
-                        defaultValue={getFieldValue(data[field])}
-                        onChange={this.handleChange(field)}
-                      />
-                    ) : (
-                      ''
-                    ),
-                  )}
-                  {!this.isModifyingHouseInsurance() && (
-                    <Form.Group grouped>
-                      <label>Student</label>
-                      <Form.Checkbox
-                        key="isStudent"
-                        label="Is Student?"
-                        onChange={this.handleChange('isStudent')}
-                      />
-                    </Form.Group>
-                  )}
-                  {this.isModifyingHouseInsurance() && (
-                    <Form.Group grouped>
-                      <label>Subletting</label>
-                      <Form.Checkbox
-                        key="isSubleted"
-                        label="Is Subleted?"
-                        onChange={this.handleChange('isSubleted')}
-                      />
-                    </Form.Group>
-                  )}
-                  {this.isModifyingHouseInsurance() &&
-                  this.state.extraBuildings.length > 0
-                    ? this.getExtraBuildings()
-                    : null}
-                  {this.isModifyingHouseInsurance() && (
-                    <Button primary onClick={this.addExtraBuilding}>
-                      Add extra building
-                    </Button>
-                  )}
-                </React.Fragment>
-                <Button.Group floated="right" labelposition="left">
-                  <Button type="button" onClick={this.handleCancel}>
-                    Cancel
-                  </Button>
-                  <Button.Or />
-                  <Button
-                    type="button"
-                    onClick={this.handleSubmissionButton}
-                    positive
-                  >
-                    Submit
-                  </Button>
-                </Button.Group>
-              </Form>
-            </Modal.Content>
-          </WideModal>
+          <ActionHeadline>Create quote</ActionHeadline>
+          <CreateQuote memberId={fields.memberId} insurance={data} />
         </ActionBox>
         <ActionBox>
           <ActionHeadline>Activation Date</ActionHeadline>
@@ -739,5 +426,4 @@ InsuranceTab.propTypes = {
   messages: PropTypes.object.isRequired,
   saveInsuranceDate: PropTypes.func.isRequired,
   sendCancelRequest: PropTypes.func.isRequired,
-  createModifiedInsurance: PropTypes.func.isRequired,
 }

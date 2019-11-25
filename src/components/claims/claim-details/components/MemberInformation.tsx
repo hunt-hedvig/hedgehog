@@ -1,4 +1,5 @@
-import { formatDistance } from 'date-fns'
+import { Member } from 'api/generated/graphql'
+import { formatDistance, parseISO } from 'date-fns'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
@@ -23,33 +24,6 @@ export enum SanctionStatus {
   FullHit = 'FullHit',
 }
 
-interface MemberInformationProps {
-  member: {
-    memberId: string
-    signedOn: Date
-    firstName: string
-    lastName: string
-    personalNumber: string
-    address: string
-    postalNumber: string
-    city: string
-    directDebitStatus: {
-      activated: boolean
-    }
-    fraudulentStatus: string
-    sanctionStatus: SanctionStatus
-    numberFailedCharges: {
-      numberFailedCharges: number
-    }
-    account: {
-      totalBalance: {
-        amount: number
-        currency: string
-      }
-    }
-  }
-}
-
 const SanctionStatusIcon: React.SFC<{ status: SanctionStatus }> = ({
   status,
 }) => {
@@ -72,61 +46,54 @@ const MemberName = styled('h2')({
   marginBottom: '2rem',
 })
 
-const MemberInformation: React.SFC<MemberInformationProps> = ({
-  member: {
-    memberId,
-    signedOn,
-    firstName,
-    lastName,
-    personalNumber,
-    address,
-    postalNumber,
-    city,
-    directDebitStatus: { activated },
-    fraudulentStatus,
-    sanctionStatus,
-    numberFailedCharges: { numberFailedCharges },
-    account: { totalBalance },
-  },
-}) => (
-  <Paper>
-    <h3>Member Information</h3>
-    <MemberName>
-      {firstName} {lastName}
-    </MemberName>
-    <p>
-      <b>Id:</b> <Link to={`/members/${memberId}`}>{memberId}</Link>
-    </p>
-    <p>
-      <b>Personal Number:</b> {personalNumber}
-    </p>
-    <p>
-      <b>Address:</b> {address}, {postalNumber} {city}
-    </p>
-    <p>
-      <b>Sanction Status:</b> {sanctionStatus}{' '}
-      <SanctionStatusIcon status={sanctionStatus} />
-    </p>
-    <h3>Fraud Checks</h3>
-    <p>
-      <b>Signed:</b> {formatDistance(signedOn, new Date(), { addSuffix: true })}
-    </p>
-    <p style={{ marginTop: '-7px' }}>
-      <b>Fraudulent Status:</b>{' '}
-      <span style={{ fontSize: '32px' }}>
-        <FraudulentStatus stateInfo={fraudulentStatus} />
-      </span>
-    </p>
-    <p>
-      <b>Direct Debit:</b> {activated ? <Checkmark /> : <Cross />}
-    </p>
-    <p>
-      <b>Payments Balance (Minimum):</b> {formatMoneySE(totalBalance)}
-    </p>
-    <p>
-      <b>Failed Payments:</b> {numberFailedCharges} payment(s) in a row
-    </p>
-  </Paper>
-)
+const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
+  return (
+    <Paper>
+      <h3>Member Information</h3>
+      <MemberName>
+        {member.firstName} {member.lastName}
+      </MemberName>
+      <p>
+        <b>Id:</b>{' '}
+        <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
+      </p>
+      <p>
+        <b>Personal Number:</b> {member.personalNumber}
+      </p>
+      <p>
+        <b>Address:</b> {member.address}, {member.postalNumber} {member.city}
+      </p>
+      <p>
+        <b>Sanction Status:</b> {member.sanctionStatus}{' '}
+        <SanctionStatusIcon status={member.sanctionStatus} />
+      </p>
+      <h3>Fraud Checks</h3>
+      <p>
+        <b>Signed:</b>{' '}
+        {formatDistance(parseISO(member.signedOn), new Date(), {
+          addSuffix: true,
+        })}
+      </p>
+      <p style={{ marginTop: '-7px' }}>
+        <b>Fraudulent Status:</b>{' '}
+        <span style={{ fontSize: '32px' }}>
+          <FraudulentStatus stateInfo={{ state: member.fraudulentStatus }} />
+        </span>
+      </p>
+      <p>
+        <b>Direct Debit:</b>{' '}
+        {member.directDebitStatus?.activated ? <Checkmark /> : <Cross />}
+      </p>
+      <p>
+        <b>Payments Balance (Minimum):</b>{' '}
+        {formatMoneySE(member.account?.totalBalance)}
+      </p>
+      <p>
+        <b>Failed Payments:</b>{' '}
+        {member.numberFailedCharges?.numberFailedCharges} payment(s) in a row
+      </p>
+    </Paper>
+  )
+}
 
 export { MemberInformation }

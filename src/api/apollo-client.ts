@@ -23,7 +23,7 @@ export const apolloClient = (() => {
       dataIdFromObject: (object) => {
         switch (object.__typename) {
           case 'Member':
-            return object.memberId
+            return (object as any).memberId
           default:
             return defaultDataIdFromObject(object)
         }

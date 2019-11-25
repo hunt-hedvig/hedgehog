@@ -1,10 +1,12 @@
 import Grid from '@material-ui/core/Grid'
+import { QueryType } from 'api/generated/graphql'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimInformation } from './components/ClaimInformation'
+import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
@@ -87,7 +89,10 @@ interface Props {
 }
 
 const ClaimPage: React.SFC<Props> = ({ match }) => (
-  <Query query={CLAIM_PAGE_QUERY} variables={{ id: match.params.id }}>
+  <Query<Pick<QueryType, 'claim'>>
+    query={CLAIM_PAGE_QUERY}
+    variables={{ id: match.params.id }}
+  >
     {({ loading, error, data, refetch }) => {
       if (loading) {
         return <div>Loading</div>
@@ -113,12 +118,12 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         type,
         coveringEmployee,
         claimFiles,
-      } = data.claim
+      } = data!.claim!
 
       return (
         <Grid container spacing={8}>
           <Grid item xs={12} sm={12} md={4}>
-            <MemberInformation member={member} />
+            <MemberInformation member={member!} />
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
             <ClaimInformation
@@ -132,6 +137,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
           <Grid item xs={12} sm={12} md={4}>
             <ClaimType type={type} claimId={match.params.id} />
           </Grid>
+          <ClaimItemDatabase type={type} claimId={match.params.id} />
           <Grid item xs={12}>
             <ClaimNotes notes={notes} claimId={match.params.id} />
           </Grid>
@@ -148,13 +154,13 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               <Grid item xs={12}>
                 <FileUpload
                   claimId={match.params.id}
-                  memberId={data.claim.memberId}
+                  memberId={member.memberId}
                   onUploaded={() => refetch}
                 />
               </Grid>
               <Grid item xs={12}>
                 <ClaimFileTable
-                  claimFiles={data.claim.claimFiles}
+                  claimFiles={claimFiles}
                   claimId={match.params.id}
                 />
               </Grid>
