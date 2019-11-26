@@ -11,7 +11,7 @@ export type Scalars = {
   YearMonth: any
   /** An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}` */
   MonetaryAmount: any
-  /** An epoch-representation of `java.time.Instant`. ex: `1531914777` */
+  /** A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"` */
   Instant: any
   /** A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"` */
   LocalDate: any
@@ -80,6 +80,50 @@ export type AllRepliesEntry = {
   __typename?: 'AllRepliesEntry'
   intent: Scalars['String']
   reply: Scalars['String']
+}
+
+export type ApartmentQuoteData = IQuoteData & {
+  __typename?: 'ApartmentQuoteData'
+  id: Scalars['ID']
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  subType?: Maybe<ApartmentSubType>
+}
+
+export type ApartmentQuoteDataInput = {
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  subType?: Maybe<ApartmentSubType>
+}
+
+export type ApartmentQuoteInput = {
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  subType?: Maybe<ApartmentSubType>
+}
+
+export enum ApartmentSubType {
+  Brf = 'BRF',
+  Rent = 'RENT',
+  SubletRental = 'SUBLET_RENTAL',
+  SubletBrf = 'SUBLET_BRF',
+  StudentBrf = 'STUDENT_BRF',
+  StudentRent = 'STUDENT_RENT',
 }
 
 export type ApplianceClaim = {
@@ -308,6 +352,37 @@ export type EarthquakeClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export type ExtraBuilding = {
+  __typename?: 'ExtraBuilding'
+  type: ExtraBuildingType
+  area: Scalars['Int']
+  hasWaterConnected: Scalars['Boolean']
+}
+
+export type ExtraBuildingInput = {
+  type: Scalars['String']
+  area: Scalars['Int']
+  hasWaterConnected: Scalars['Boolean']
+  displayName?: Maybe<Scalars['String']>
+}
+
+export enum ExtraBuildingType {
+  Garage = 'GARAGE',
+  Carport = 'CARPORT',
+  Shed = 'SHED',
+  Storehouse = 'STOREHOUSE',
+  Friggebod = 'FRIGGEBOD',
+  Attefall = 'ATTEFALL',
+  Outhouse = 'OUTHOUSE',
+  Guesthouse = 'GUESTHOUSE',
+  Gazebo = 'GAZEBO',
+  Greenhouse = 'GREENHOUSE',
+  Sauna = 'SAUNA',
+  Barn = 'BARN',
+  Boathouse = 'BOATHOUSE',
+  Other = 'OTHER',
+}
+
 export type FileUpload = {
   __typename?: 'FileUpload'
   fileUploadUrl?: Maybe<Scalars['URL']>
@@ -356,6 +431,53 @@ export type FloodingClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export type HouseQuoteData = IQuoteData & {
+  __typename?: 'HouseQuoteData'
+  id: Scalars['ID']
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  ancillaryArea?: Maybe<Scalars['Int']>
+  yearOfConstruction?: Maybe<Scalars['Int']>
+  numberOfBathrooms?: Maybe<Scalars['Int']>
+  extraBuildings: Array<ExtraBuilding>
+  isSubleted?: Maybe<Scalars['Boolean']>
+}
+
+export type HouseQuoteDataInput = {
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  ancillaryArea?: Maybe<Scalars['Int']>
+  yearOfConstruction?: Maybe<Scalars['Int']>
+  numberOfBathrooms?: Maybe<Scalars['Int']>
+  extraBuildings: Array<ExtraBuildingInput>
+  isSubleted?: Maybe<Scalars['Boolean']>
+}
+
+export type HouseQuoteInput = {
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  ancillaryArea?: Maybe<Scalars['Int']>
+  yearOfConstruction?: Maybe<Scalars['Int']>
+  numberOfBathrooms?: Maybe<Scalars['Int']>
+  extraBuildings?: Maybe<Array<ExtraBuildingInput>>
+  isSubleted?: Maybe<Scalars['Boolean']>
+}
+
 export type InstallationsClaim = {
   __typename?: 'InstallationsClaim'
   date?: Maybe<Scalars['LocalDate']>
@@ -390,6 +512,18 @@ export type InventoryItemInput = {
   lowerRange?: Maybe<Scalars['Float']>
   itemId?: Maybe<Scalars['String']>
   filters?: Maybe<Array<Maybe<Filter>>>
+}
+
+export type IQuoteData = {
+  id: Scalars['ID']
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
 }
 
 export type Item = {
@@ -443,6 +577,7 @@ export type Member = {
   fileUploads: Array<FileUpload>
   person?: Maybe<Person>
   numberFailedCharges?: Maybe<NumberFailedCharges>
+  quotes: Array<Quote>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -487,6 +622,10 @@ export type MutationType = {
   setClaimFileCategory?: Maybe<Scalars['String']>
   addInventoryItem?: Maybe<Scalars['Boolean']>
   removeInventoryItem?: Maybe<Scalars['Boolean']>
+  activateQuote: Quote
+  /** Creates a quote from a product and returns the quote id */
+  createQuoteFromProduct: Quote
+  updateQuote: Quote
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -611,6 +750,23 @@ export type MutationTypeRemoveInventoryItemArgs = {
   inventoryItemId: Scalars['ID']
 }
 
+export type MutationTypeActivateQuoteArgs = {
+  id: Scalars['ID']
+  activationDate: Scalars['LocalDate']
+  terminationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type MutationTypeCreateQuoteFromProductArgs = {
+  memberId: Scalars['ID']
+  quoteData: QuoteFromProductInput
+}
+
+export type MutationTypeUpdateQuoteArgs = {
+  quoteId: Scalars['ID']
+  quoteData: QuoteInput
+  bypassUnderwritingGuidelines?: Maybe<Scalars['Boolean']>
+}
+
 export type NotCoveredClaim = {
   __typename?: 'NotCoveredClaim'
   date?: Maybe<Scalars['LocalDate']>
@@ -733,6 +889,56 @@ export type QueryTypeFiltersArgs = {
 
 export type QueryTypeInventoryItemFiltersArgs = {
   inventoryItemId: Scalars['String']
+}
+
+export type Quote = {
+  __typename?: 'Quote'
+  id: Scalars['ID']
+  createdAt?: Maybe<Scalars['Instant']>
+  price?: Maybe<Scalars['Float']>
+  productType?: Maybe<QuoteProductType>
+  state?: Maybe<QuoteState>
+  initiatedFrom?: Maybe<Scalars['String']>
+  attributedTo?: Maybe<Scalars['String']>
+  currentInsurer?: Maybe<Scalars['String']>
+  startDate?: Maybe<Scalars['String']>
+  validity?: Maybe<Scalars['Int']>
+  memberId?: Maybe<Scalars['ID']>
+  breachedUnderwritingGuidelines?: Maybe<Array<Scalars['String']>>
+  isComplete?: Maybe<Scalars['Boolean']>
+  data?: Maybe<QuoteData>
+  signedProductId?: Maybe<Scalars['ID']>
+  originatingProductId?: Maybe<Scalars['ID']>
+}
+
+export type QuoteData = ApartmentQuoteData | HouseQuoteData
+
+export type QuoteFromProductInput = {
+  incompleteHouseQuoteData?: Maybe<HouseQuoteDataInput>
+  incompleteApartmentQuoteData?: Maybe<ApartmentQuoteDataInput>
+  originatingProductId?: Maybe<Scalars['ID']>
+  currentInsurer?: Maybe<Scalars['String']>
+}
+
+export type QuoteInput = {
+  productType?: Maybe<QuoteProductType>
+  currentInsurer?: Maybe<Scalars['String']>
+  apartmentData?: Maybe<ApartmentQuoteInput>
+  houseData?: Maybe<HouseQuoteInput>
+  originatingProductId?: Maybe<Scalars['ID']>
+}
+
+export enum QuoteProductType {
+  Apartment = 'APARTMENT',
+  House = 'HOUSE',
+  Object = 'OBJECT',
+}
+
+export enum QuoteState {
+  Incomplete = 'INCOMPLETE',
+  Quoted = 'QUOTED',
+  Signed = 'SIGNED',
+  Expired = 'EXPIRED',
 }
 
 export type RemindNotification = {
@@ -924,6 +1130,30 @@ export interface IntrospectionResultData {
 const result: IntrospectionResultData = {
   __schema: {
     types: [
+      {
+        kind: 'UNION',
+        name: 'QuoteData',
+        possibleTypes: [
+          {
+            name: 'ApartmentQuoteData',
+          },
+          {
+            name: 'HouseQuoteData',
+          },
+        ],
+      },
+      {
+        kind: 'INTERFACE',
+        name: 'IQuoteData',
+        possibleTypes: [
+          {
+            name: 'ApartmentQuoteData',
+          },
+          {
+            name: 'HouseQuoteData',
+          },
+        ],
+      },
       {
         kind: 'UNION',
         name: 'ClaimType',

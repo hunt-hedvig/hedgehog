@@ -47,6 +47,10 @@ type MutationType {
   setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
   addInventoryItem(item: InventoryItemInput!): Boolean
   removeInventoryItem(inventoryItemId: ID!): Boolean
+  activateQuote(id: ID!, activationDate: LocalDate!, terminationDate: LocalDate): Quote!
+  # Creates a quote from a product and returns the quote id
+  createQuoteFromProduct(memberId: ID!, quoteData: QuoteFromProductInput!): Quote!
+  updateQuote(quoteId: ID!, quoteData: QuoteInput!, bypassUnderwritingGuidelines: Boolean): Quote!
 }
 
 type Suggestion {
@@ -240,7 +244,194 @@ type Member {
   fileUploads: [FileUpload!]!
   person: Person
   numberFailedCharges: NumberFailedCharges
+  quotes: [Quote!]!
 }
+
+interface IQuoteData {
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+}
+
+type Quote {
+  id: ID!
+  createdAt: Instant
+  price: Float
+  productType: QuoteProductType
+  state: QuoteState
+  initiatedFrom: String
+  attributedTo: String
+  currentInsurer: String
+  startDate: String
+  validity: Int
+  memberId: ID
+  breachedUnderwritingGuidelines: [String!]
+  isComplete: Boolean
+  data: QuoteData
+  signedProductId: ID
+  originatingProductId: ID
+}
+
+enum QuoteProductType {
+  APARTMENT,
+  HOUSE,
+  OBJECT
+}
+enum QuoteState {
+  INCOMPLETE,
+  QUOTED,
+  SIGNED,
+  EXPIRED
+}
+
+union QuoteData = ApartmentQuoteData | HouseQuoteData
+
+type ApartmentQuoteData implements IQuoteData{
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  subType: ApartmentSubType
+}
+
+enum ApartmentSubType {
+  BRF,
+  RENT,
+  SUBLET_RENTAL,
+  SUBLET_BRF,
+  STUDENT_BRF,
+  STUDENT_RENT
+}
+
+type HouseQuoteData implements IQuoteData {
+  id: ID!
+  ssn: String
+  firstName: String
+  lastName: String
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  ancillaryArea: Int
+  yearOfConstruction: Int
+  numberOfBathrooms: Int
+  extraBuildings: [ExtraBuilding!]!
+  isSubleted: Boolean
+}
+
+type ExtraBuilding {
+  type: ExtraBuildingType!
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+enum ExtraBuildingType {
+  GARAGE,
+  CARPORT,
+  SHED,
+  STOREHOUSE,
+  FRIGGEBOD,
+  ATTEFALL,
+  OUTHOUSE,
+  GUESTHOUSE,
+  GAZEBO,
+  GREENHOUSE,
+  SAUNA,
+  BARN,
+  BOATHOUSE,
+  OTHER
+}
+
+input QuoteInput {
+  productType: QuoteProductType
+  currentInsurer: String
+  apartmentData: ApartmentQuoteInput
+  houseData: HouseQuoteInput
+  originatingProductId: ID
+}
+
+input ApartmentQuoteInput {
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  subType: ApartmentSubType
+}
+
+input HouseQuoteInput {
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  ancillaryArea: Int
+  yearOfConstruction: Int
+  numberOfBathrooms: Int
+  extraBuildings: [ExtraBuildingInput!]
+  isSubleted: Boolean
+}
+
+input QuoteFromProductInput {
+  incompleteHouseQuoteData: HouseQuoteDataInput
+  incompleteApartmentQuoteData: ApartmentQuoteDataInput
+  originatingProductId: ID
+  currentInsurer: String
+}
+
+input ApartmentQuoteDataInput {
+  ssn:  String
+  firstName: String
+  lastName: String
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  subType: ApartmentSubType
+}
+
+input HouseQuoteDataInput {
+  ssn: String
+  firstName: String
+  lastName: String
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  ancillaryArea: Int
+  yearOfConstruction: Int
+  numberOfBathrooms: Int
+  extraBuildings: [ExtraBuildingInput!]!
+  isSubleted: Boolean
+}
+
+input ExtraBuildingInput {
+  type: String!
+  area: Int!
+  hasWaterConnected: Boolean!
+  displayName: String
+}
+
 
 type Transaction {
   id: ID
@@ -670,5 +861,8 @@ scalar LocalDate
 scalar LocalTime
 # A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime
+# A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"`
+scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
+
