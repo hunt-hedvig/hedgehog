@@ -11,6 +11,8 @@ import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
+import { FileUpload } from './components/FileUpload'
+import { ClaimFileTable } from './components/ClaimFileTable'
 
 const CLAIM_PAGE_QUERY = gql`
   query ClaimPage($id: ID!) {
@@ -64,6 +66,13 @@ const CLAIM_PAGE_QUERY = gql`
       events {
         text
         date
+      } 
+      claimFiles {
+        claimFileId
+        fileUploadUrl
+        uploadedAt
+        category
+        contentType
       }
       coveringEmployee
       __typename
@@ -84,7 +93,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
     query={CLAIM_PAGE_QUERY}
     variables={{ id: match.params.id }}
   >
-    {({ loading, error, data }) => {
+    {({ loading, error, data, refetch }) => {
       if (loading) {
         return <div>Loading</div>
       }
@@ -108,12 +117,13 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         reserves,
         type,
         coveringEmployee,
-      } = data.claim
+        claimFiles,
+      } = data!.claim!
 
       return (
         <Grid container spacing={8}>
           <Grid item xs={12} sm={12} md={4}>
-            <MemberInformation member={member} />
+            <MemberInformation member={member!} />
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
             <ClaimInformation
@@ -138,6 +148,23 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               reserves={reserves}
               sanctionStatus={member.sanctionStatus}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <>
+              <Grid item xs={12}>
+                <FileUpload
+                  claimId={match.params.id}
+                  memberId={member.memberId}
+                  onUploaded={() => refetch()}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <ClaimFileTable
+                  claimFiles={claimFiles}
+                  claimId={match.params.id}
+                />
+              </Grid>
+            </>
           </Grid>
           <Grid item xs={12}>
             <ClaimEvents events={events} />

@@ -71,7 +71,7 @@ app.use(setRequestUuidMiddleware)
 app.use(setLoggerMiddleware)
 app.use(logRequestMiddleware)
 app.use(router.middleware())
-router.get(/^\/(?!api|chat).*/, getPage)
+router.get(/^\/(?!api|chat|graphiql|vendor).*/, getPage)
 app.use(
   proxy({
     target: process.env.API_URL,

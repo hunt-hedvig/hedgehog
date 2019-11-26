@@ -7,71 +7,73 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
-  /** A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"` */
-  Instant: any
+  /** A String-representation of `java.time.YearMonth`. ex: `"2018-06"` */
+  YearMonth: any
   /** An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}` */
   MonetaryAmount: any
+  /** A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"` */
+  Instant: any
   /** A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"` */
   LocalDate: any
   /** A String-representation of `java.net.URL`, ex: "https://www.google.com/" */
   URL: any
-  /** A String-representation of `java.time.YearMonth`. ex: `"2018-06"` */
-  YearMonth: any
   /** A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"` */
   LocalDateTime: any
   /** A String-representation of `java.time.LocalTime`, */
   LocalTime: any
+  /** A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"` */
+  ZonedDateTime: any
 }
 
 export type AccidentalDamageClaim = {
   __typename?: 'AccidentalDamageClaim'
+  location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
-  location?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
 }
 
 export type Account = {
   __typename?: 'Account'
-  currentBalance: Scalars['MonetaryAmount']
-  entries: Array<AccountEntry>
   id: Scalars['ID']
+  currentBalance: Scalars['MonetaryAmount']
   totalBalance: Scalars['MonetaryAmount']
+  entries: Array<AccountEntry>
 }
 
 export type AccountEntry = {
   __typename?: 'AccountEntry'
-  amount: Scalars['MonetaryAmount']
-  chargedAt?: Maybe<Scalars['Instant']>
-  comment?: Maybe<Scalars['String']>
-  failedAt?: Maybe<Scalars['Instant']>
-  fromDate: Scalars['LocalDate']
   id: Scalars['ID']
+  type: AccountEntryType
+  amount: Scalars['MonetaryAmount']
+  fromDate: Scalars['LocalDate']
   reference: Scalars['String']
   source: Scalars['String']
   title?: Maybe<Scalars['String']>
-  type: AccountEntryType
+  comment?: Maybe<Scalars['String']>
+  failedAt?: Maybe<Scalars['Instant']>
+  chargedAt?: Maybe<Scalars['Instant']>
 }
 
 export type AccountEntryInput = {
+  type: AccountEntryType
   amount: Scalars['MonetaryAmount']
-  comment?: Maybe<Scalars['String']>
   fromDate: Scalars['LocalDate']
   reference: Scalars['String']
   source: Scalars['String']
   title?: Maybe<Scalars['String']>
-  type: AccountEntryType
+  comment?: Maybe<Scalars['String']>
 }
 
 export enum AccountEntryType {
-  Campaign = 'CAMPAIGN',
-  Charge = 'CHARGE',
   Correction = 'CORRECTION',
-  FreeMonthDiscount = 'FREE_MONTH_DISCOUNT',
-  Payout = 'PAYOUT',
-  ReferralDiscount = 'REFERRAL_DISCOUNT',
   Subscription = 'SUBSCRIPTION',
+  Campaign = 'CAMPAIGN',
+  Payout = 'PAYOUT',
+  Charge = 'CHARGE',
+  ReferralDiscount = 'REFERRAL_DISCOUNT',
+  FreeMonthDiscount = 'FREE_MONTH_DISCOUNT',
 }
 
 export type AllRepliesEntry = {
@@ -82,59 +84,59 @@ export type AllRepliesEntry = {
 
 export type ApartmentQuoteData = IQuoteData & {
   __typename?: 'ApartmentQuoteData'
-  city?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
   id: Scalars['ID']
-  lastName?: Maybe<Scalars['String']>
-  livingSpace?: Maybe<Scalars['Int']>
   ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
   street?: Maybe<Scalars['String']>
-  subType?: Maybe<ApartmentSubType>
+  city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  subType?: Maybe<ApartmentSubType>
 }
 
 export type ApartmentQuoteDataInput = {
-  city?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  lastName?: Maybe<Scalars['String']>
-  livingSpace?: Maybe<Scalars['Int']>
   ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
   street?: Maybe<Scalars['String']>
-  subType?: Maybe<ApartmentSubType>
+  city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  subType?: Maybe<ApartmentSubType>
 }
 
 export type ApartmentQuoteInput = {
+  street?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  street?: Maybe<Scalars['String']>
   subType?: Maybe<ApartmentSubType>
-  zipCode?: Maybe<Scalars['String']>
 }
 
 export enum ApartmentSubType {
   Brf = 'BRF',
   Rent = 'RENT',
+  SubletRental = 'SUBLET_RENTAL',
+  SubletBrf = 'SUBLET_BRF',
   StudentBrf = 'STUDENT_BRF',
   StudentRent = 'STUDENT_RENT',
-  SubletBrf = 'SUBLET_BRF',
-  SubletRental = 'SUBLET_RENTAL',
 }
 
 export type ApplianceClaim = {
   __typename?: 'ApplianceClaim'
+  location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
-  location?: Maybe<Scalars['String']>
 }
 
 export type AssaultClaim = {
   __typename?: 'AssaultClaim'
-  date?: Maybe<Scalars['LocalDate']>
   location?: Maybe<Scalars['String']>
+  date?: Maybe<Scalars['LocalDate']>
   policeReport?: Maybe<Scalars['String']>
 }
 
@@ -145,9 +147,9 @@ export type AutoLabel = {
 
 export type BurglaryClaim = {
   __typename?: 'BurglaryClaim'
+  location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
-  location?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
 }
@@ -159,45 +161,56 @@ export type Category = {
 }
 
 export enum ChargeStatus {
+  Initiated = 'INITIATED',
+  WaitingForSubscription = 'WAITING_FOR_SUBSCRIPTION',
+  SchedulingSubscription = 'SCHEDULING_SUBSCRIPTION',
+  ScheduleSubscriptionFailed = 'SCHEDULE_SUBSCRIPTION_FAILED',
+  SubscriptionScheduledAndWaitingForApproval = 'SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL',
   ApprovedForCharge = 'APPROVED_FOR_CHARGE',
-  ChargeCompleted = 'CHARGE_COMPLETED',
-  ChargeFailed = 'CHARGE_FAILED',
-  ChargeInitiated = 'CHARGE_INITIATED',
+  SchedulingCharge = 'SCHEDULING_CHARGE',
   ChargeRequesting = 'CHARGE_REQUESTING',
   ChargeRequestFailed = 'CHARGE_REQUEST_FAILED',
-  Initiated = 'INITIATED',
-  ScheduleSubscriptionFailed = 'SCHEDULE_SUBSCRIPTION_FAILED',
-  SchedulingCharge = 'SCHEDULING_CHARGE',
-  SchedulingSubscription = 'SCHEDULING_SUBSCRIPTION',
-  SubscriptionScheduledAndWaitingForApproval = 'SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL',
-  WaitingForSubscription = 'WAITING_FOR_SUBSCRIPTION',
+  ChargeInitiated = 'CHARGE_INITIATED',
+  ChargeFailed = 'CHARGE_FAILED',
+  ChargeCompleted = 'CHARGE_COMPLETED',
 }
 
 export type Claim = {
   __typename?: 'Claim'
-  coveringEmployee: Scalars['Boolean']
-  events?: Maybe<Array<Maybe<ClaimEvent>>>
   id?: Maybe<Scalars['ID']>
   member?: Maybe<Member>
-  notes?: Maybe<Array<Maybe<ClaimNote>>>
-  payments?: Maybe<Array<Maybe<ClaimPayment>>>
   recordingUrl?: Maybe<Scalars['String']>
-  registrationDate?: Maybe<Scalars['Instant']>
-  reserves?: Maybe<Scalars['MonetaryAmount']>
   state?: Maybe<ClaimState>
   type?: Maybe<ClaimType>
+  reserves?: Maybe<Scalars['MonetaryAmount']>
+  registrationDate?: Maybe<Scalars['Instant']>
+  notes?: Maybe<Array<Maybe<ClaimNote>>>
+  payments?: Maybe<Array<Maybe<ClaimPayment>>>
+  events?: Maybe<Array<Maybe<ClaimEvent>>>
+  coveringEmployee: Scalars['Boolean']
+  claimFiles: Array<ClaimFileUpload>
 }
 
 export type ClaimEvent = {
   __typename?: 'ClaimEvent'
-  date?: Maybe<Scalars['Instant']>
   text?: Maybe<Scalars['String']>
+  date?: Maybe<Scalars['Instant']>
+}
+
+export type ClaimFileUpload = {
+  __typename?: 'ClaimFileUpload'
+  claimFileId?: Maybe<Scalars['ID']>
+  fileUploadUrl?: Maybe<Scalars['URL']>
+  uploadedAt?: Maybe<Scalars['Instant']>
+  claimId?: Maybe<Scalars['ID']>
+  category?: Maybe<Scalars['String']>
+  contentType?: Maybe<Scalars['String']>
 }
 
 export type ClaimInformationInput = {
+  location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
-  location?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
   ticket?: Maybe<Scalars['String']>
@@ -205,8 +218,8 @@ export type ClaimInformationInput = {
 
 export type ClaimNote = {
   __typename?: 'ClaimNote'
-  date?: Maybe<Scalars['LocalDateTime']>
   text?: Maybe<Scalars['String']>
+  date?: Maybe<Scalars['LocalDateTime']>
 }
 
 export type ClaimNoteInput = {
@@ -215,100 +228,100 @@ export type ClaimNoteInput = {
 
 export type ClaimPayment = {
   __typename?: 'ClaimPayment'
+  id?: Maybe<Scalars['String']>
   amount?: Maybe<Scalars['MonetaryAmount']>
   deductible?: Maybe<Scalars['MonetaryAmount']>
-  exGratia?: Maybe<Scalars['Boolean']>
-  id?: Maybe<Scalars['String']>
   note?: Maybe<Scalars['String']>
-  status?: Maybe<ClaimPaymentStatus>
-  timestamp?: Maybe<Scalars['Instant']>
-  transaction?: Maybe<Transaction>
   type?: Maybe<ClaimPaymentType>
+  timestamp?: Maybe<Scalars['Instant']>
+  exGratia?: Maybe<Scalars['Boolean']>
+  transaction?: Maybe<Transaction>
+  status?: Maybe<ClaimPaymentStatus>
 }
 
 export type ClaimPaymentInput = {
   amount: Scalars['MonetaryAmount']
   deductible: Scalars['MonetaryAmount']
-  exGratia: Scalars['Boolean']
   note: Scalars['String']
-  sanctionListSkipped: Scalars['Boolean']
   type: ClaimPaymentType
+  exGratia: Scalars['Boolean']
+  sanctionListSkipped: Scalars['Boolean']
 }
 
 export enum ClaimPaymentStatus {
+  Prepared = 'PREPARED',
+  Initiated = 'INITIATED',
+  SanctionListHit = 'SANCTION_LIST_HIT',
   Completed = 'COMPLETED',
   Failed = 'FAILED',
-  Initiated = 'INITIATED',
-  Prepared = 'PREPARED',
-  SanctionListHit = 'SANCTION_LIST_HIT',
 }
 
 export enum ClaimPaymentType {
-  Automatic = 'Automatic',
   Manual = 'Manual',
+  Automatic = 'Automatic',
 }
 
 export enum ClaimSource {
   App = 'APP',
-  Chat = 'CHAT',
   Email = 'EMAIL',
   Intercom = 'INTERCOM',
   Phone = 'PHONE',
+  Chat = 'CHAT',
 }
 
 export enum ClaimState {
-  Closed = 'CLOSED',
   Open = 'OPEN',
+  Closed = 'CLOSED',
   Reopened = 'REOPENED',
 }
 
 export type ClaimType =
+  | TheftClaim
   | AccidentalDamageClaim
-  | ApplianceClaim
   | AssaultClaim
-  | BurglaryClaim
-  | ConfirmedFraudClaim
-  | EarthquakeClaim
-  | FireDamageClaim
-  | FloodingClaim
-  | InstallationsClaim
-  | LegalProtectionClaim
-  | LiabilityClaim
+  | WaterDamageClaim
+  | TravelAccidentClaim
   | LuggageDelayClaim
   | NotCoveredClaim
+  | FireDamageClaim
+  | ConfirmedFraudClaim
+  | LiabilityClaim
+  | ApplianceClaim
+  | LegalProtectionClaim
+  | WaterDamageBathroomClaim
+  | WaterDamageKitchenClaim
+  | BurglaryClaim
+  | FloodingClaim
+  | EarthquakeClaim
+  | InstallationsClaim
   | SnowPressureClaim
   | StormDamageClaim
-  | TestClaim
-  | TheftClaim
-  | TravelAccidentClaim
   | VerminAndPestsClaim
-  | WaterDamageBathroomClaim
-  | WaterDamageClaim
-  | WaterDamageKitchenClaim
+  | TestClaim
 
 export enum ClaimTypes {
+  TheftClaim = 'TheftClaim',
   AccidentalDamageClaim = 'AccidentalDamageClaim',
-  ApplianceClaim = 'ApplianceClaim',
   AssaultClaim = 'AssaultClaim',
-  BurglaryClaim = 'BurglaryClaim',
-  ConfirmedFraudClaim = 'ConfirmedFraudClaim',
-  EarthquakeClaim = 'EarthquakeClaim',
-  FireDamageClaim = 'FireDamageClaim',
-  FloodingClaim = 'FloodingClaim',
-  InstallationsClaim = 'InstallationsClaim',
-  LegalProtectionClaim = 'LegalProtectionClaim',
-  LiabilityClaim = 'LiabilityClaim',
+  WaterDamageClaim = 'WaterDamageClaim',
+  TravelAccidentClaim = 'TravelAccidentClaim',
   LuggageDelayClaim = 'LuggageDelayClaim',
   NotCoveredClaim = 'NotCoveredClaim',
+  FireDamageClaim = 'FireDamageClaim',
+  ApplianceClaim = 'ApplianceClaim',
+  ConfirmedFraudClaim = 'ConfirmedFraudClaim',
+  LiabilityClaim = 'LiabilityClaim',
+  LegalProtectionClaim = 'LegalProtectionClaim',
+  WaterDamageBathroomClaim = 'WaterDamageBathroomClaim',
+  WaterDamageKitchenClaim = 'WaterDamageKitchenClaim',
+  BurglaryClaim = 'BurglaryClaim',
+  FloodingClaim = 'FloodingClaim',
+  EarthquakeClaim = 'EarthquakeClaim',
+  InstallationsClaim = 'InstallationsClaim',
   SnowPressureClaim = 'SnowPressureClaim',
   StormDamageClaim = 'StormDamageClaim',
-  TestClaim = 'TestClaim',
-  TheftClaim = 'TheftClaim',
-  TravelAccidentClaim = 'TravelAccidentClaim',
   VerminAndPestsClaim = 'VerminAndPestsClaim',
-  WaterDamageBathroomClaim = 'WaterDamageBathroomClaim',
-  WaterDamageClaim = 'WaterDamageClaim',
-  WaterDamageKitchenClaim = 'WaterDamageKitchenClaim',
+  TestClaim = 'TestClaim',
 }
 
 export type ConfirmedFraudClaim = {
@@ -318,15 +331,15 @@ export type ConfirmedFraudClaim = {
 
 export type Debt = {
   __typename?: 'Debt'
-  checkedAt?: Maybe<Scalars['Instant']>
-  debtDate?: Maybe<Scalars['LocalDate']>
-  fromDateTime?: Maybe<Scalars['LocalDateTime']>
-  numberPrivateDebts?: Maybe<Scalars['Int']>
-  numberPublicDebts?: Maybe<Scalars['Int']>
   paymentDefaults?: Maybe<Array<Maybe<PaymentDefault>>>
-  totalAmountDebt?: Maybe<Scalars['MonetaryAmount']>
-  totalAmountPrivateDebt?: Maybe<Scalars['MonetaryAmount']>
+  debtDate?: Maybe<Scalars['LocalDate']>
   totalAmountPublicDebt?: Maybe<Scalars['MonetaryAmount']>
+  numberPublicDebts?: Maybe<Scalars['Int']>
+  totalAmountPrivateDebt?: Maybe<Scalars['MonetaryAmount']>
+  numberPrivateDebts?: Maybe<Scalars['Int']>
+  totalAmountDebt?: Maybe<Scalars['MonetaryAmount']>
+  checkedAt?: Maybe<Scalars['Instant']>
+  fromDateTime?: Maybe<Scalars['LocalDateTime']>
 }
 
 export type DirectDebitStatus = {
@@ -341,41 +354,41 @@ export type EarthquakeClaim = {
 
 export type ExtraBuilding = {
   __typename?: 'ExtraBuilding'
+  type: ExtraBuildingType
   area: Scalars['Int']
   hasWaterConnected: Scalars['Boolean']
-  type: ExtraBuildingType
 }
 
 export type ExtraBuildingInput = {
-  area: Scalars['Int']
-  displayName?: Maybe<Scalars['String']>
-  hasWaterConnected: Scalars['Boolean']
   type: Scalars['String']
+  area: Scalars['Int']
+  hasWaterConnected: Scalars['Boolean']
+  displayName?: Maybe<Scalars['String']>
 }
 
 export enum ExtraBuildingType {
-  Attefall = 'ATTEFALL',
-  Barn = 'BARN',
-  Boathouse = 'BOATHOUSE',
-  Carport = 'CARPORT',
-  Friggebod = 'FRIGGEBOD',
   Garage = 'GARAGE',
-  Gazebo = 'GAZEBO',
-  Greenhouse = 'GREENHOUSE',
-  Guesthouse = 'GUESTHOUSE',
-  Other = 'OTHER',
-  Outhouse = 'OUTHOUSE',
-  Sauna = 'SAUNA',
+  Carport = 'CARPORT',
   Shed = 'SHED',
   Storehouse = 'STOREHOUSE',
+  Friggebod = 'FRIGGEBOD',
+  Attefall = 'ATTEFALL',
+  Outhouse = 'OUTHOUSE',
+  Guesthouse = 'GUESTHOUSE',
+  Gazebo = 'GAZEBO',
+  Greenhouse = 'GREENHOUSE',
+  Sauna = 'SAUNA',
+  Barn = 'BARN',
+  Boathouse = 'BOATHOUSE',
+  Other = 'OTHER',
 }
 
 export type FileUpload = {
   __typename?: 'FileUpload'
   fileUploadUrl?: Maybe<Scalars['URL']>
-  memberId?: Maybe<Scalars['ID']>
-  mimeType?: Maybe<Scalars['String']>
   timestamp?: Maybe<Scalars['Instant']>
+  mimeType?: Maybe<Scalars['String']>
+  memberId?: Maybe<Scalars['ID']>
 }
 
 export type Filter = {
@@ -389,22 +402,27 @@ export type FilterOutput = {
   value: Scalars['String']
 }
 
+export type FilterPayload = {
+  filters: Array<Filter>
+  inventoryItemId: Scalars['ID']
+}
+
 export type FilterSuggestion = {
   __typename?: 'FilterSuggestion'
-  items: Array<Scalars['String']>
   name: Scalars['String']
+  items: Array<Scalars['String']>
   others: Array<Scalars['String']>
 }
 
 export type FireDamageClaim = {
   __typename?: 'FireDamageClaim'
-  date?: Maybe<Scalars['LocalDate']>
   location?: Maybe<Scalars['String']>
+  date?: Maybe<Scalars['LocalDate']>
 }
 
 export enum Flag {
-  Amber = 'AMBER',
   Green = 'GREEN',
+  Amber = 'AMBER',
   Red = 'RED',
 }
 
@@ -415,49 +433,49 @@ export type FloodingClaim = {
 
 export type HouseQuoteData = IQuoteData & {
   __typename?: 'HouseQuoteData'
-  ancillaryArea?: Maybe<Scalars['Int']>
-  city?: Maybe<Scalars['String']>
-  extraBuildings: Array<ExtraBuilding>
-  firstName?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
   id: Scalars['ID']
-  isSubleted?: Maybe<Scalars['Boolean']>
-  lastName?: Maybe<Scalars['String']>
-  livingSpace?: Maybe<Scalars['Int']>
-  numberOfBathrooms?: Maybe<Scalars['Int']>
   ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
   street?: Maybe<Scalars['String']>
-  yearOfConstruction?: Maybe<Scalars['Int']>
+  city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  ancillaryArea?: Maybe<Scalars['Int']>
+  yearOfConstruction?: Maybe<Scalars['Int']>
+  numberOfBathrooms?: Maybe<Scalars['Int']>
+  extraBuildings: Array<ExtraBuilding>
+  isSubleted?: Maybe<Scalars['Boolean']>
 }
 
 export type HouseQuoteDataInput = {
-  ancillaryArea?: Maybe<Scalars['Int']>
-  city?: Maybe<Scalars['String']>
-  extraBuildings: Array<ExtraBuildingInput>
-  firstName?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  isSubleted?: Maybe<Scalars['Boolean']>
-  lastName?: Maybe<Scalars['String']>
-  livingSpace?: Maybe<Scalars['Int']>
-  numberOfBathrooms?: Maybe<Scalars['Int']>
   ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
   street?: Maybe<Scalars['String']>
-  yearOfConstruction?: Maybe<Scalars['Int']>
+  city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  ancillaryArea?: Maybe<Scalars['Int']>
+  yearOfConstruction?: Maybe<Scalars['Int']>
+  numberOfBathrooms?: Maybe<Scalars['Int']>
+  extraBuildings: Array<ExtraBuildingInput>
+  isSubleted?: Maybe<Scalars['Boolean']>
 }
 
 export type HouseQuoteInput = {
-  ancillaryArea?: Maybe<Scalars['Int']>
-  city?: Maybe<Scalars['String']>
-  extraBuildings?: Maybe<Array<ExtraBuildingInput>>
-  householdSize?: Maybe<Scalars['Int']>
-  isSubleted?: Maybe<Scalars['Boolean']>
-  livingSpace?: Maybe<Scalars['Int']>
-  numberOfBathrooms?: Maybe<Scalars['Int']>
   street?: Maybe<Scalars['String']>
-  yearOfConstruction?: Maybe<Scalars['Int']>
+  city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  ancillaryArea?: Maybe<Scalars['Int']>
+  yearOfConstruction?: Maybe<Scalars['Int']>
+  numberOfBathrooms?: Maybe<Scalars['Int']>
+  extraBuildings?: Maybe<Array<ExtraBuildingInput>>
+  isSubleted?: Maybe<Scalars['Boolean']>
 }
 
 export type InstallationsClaim = {
@@ -469,43 +487,43 @@ export type InstallationsClaim = {
 
 export type InventoryItem = {
   __typename?: 'InventoryItem'
-  categoryId: Scalars['String']
-  categoryName: Scalars['String']
-  claimId: Scalars['String']
-  filters?: Maybe<Array<Maybe<FilterOutput>>>
   inventoryItemId: Scalars['ID']
-  itemId?: Maybe<Scalars['String']>
+  claimId: Scalars['String']
   itemName: Scalars['String']
-  lowerRange?: Maybe<Scalars['Float']>
+  categoryName: Scalars['String']
+  categoryId: Scalars['String']
+  value: Scalars['Float']
   source: Scalars['String']
   upperRange?: Maybe<Scalars['Float']>
-  value: Scalars['Float']
+  lowerRange?: Maybe<Scalars['Float']>
+  itemId?: Maybe<Scalars['String']>
+  filters?: Maybe<Array<Maybe<FilterOutput>>>
 }
 
 export type InventoryItemInput = {
-  categoryId: Scalars['String']
-  categoryName: Scalars['String']
-  claimId: Scalars['String']
-  filters?: Maybe<Array<Maybe<Filter>>>
   inventoryItemId?: Maybe<Scalars['String']>
-  itemId?: Maybe<Scalars['String']>
+  claimId: Scalars['String']
   itemName: Scalars['String']
-  lowerRange?: Maybe<Scalars['Float']>
+  categoryName: Scalars['String']
+  categoryId: Scalars['String']
+  value: Scalars['Float']
   source: Scalars['String']
   upperRange?: Maybe<Scalars['Float']>
-  value: Scalars['Float']
+  lowerRange?: Maybe<Scalars['Float']>
+  itemId?: Maybe<Scalars['String']>
+  filters?: Maybe<Array<Maybe<Filter>>>
 }
 
 export type IQuoteData = {
-  city?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
   id: Scalars['ID']
-  lastName?: Maybe<Scalars['String']>
-  livingSpace?: Maybe<Scalars['Int']>
   ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
   street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
 }
 
 export type Item = {
@@ -534,32 +552,32 @@ export type LiabilityClaim = {
 
 export type LuggageDelayClaim = {
   __typename?: 'LuggageDelayClaim'
-  date?: Maybe<Scalars['LocalDate']>
   location?: Maybe<Scalars['String']>
+  date?: Maybe<Scalars['LocalDate']>
   ticket?: Maybe<Scalars['String']>
 }
 
 export type Member = {
   __typename?: 'Member'
-  account?: Maybe<Account>
-  address?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  directDebitStatus?: Maybe<DirectDebitStatus>
-  fileUploads: Array<FileUpload>
+  memberId: Scalars['ID']
+  signedOn?: Maybe<Scalars['Instant']>
   firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  personalNumber?: Maybe<Scalars['String']>
+  address?: Maybe<Scalars['String']>
+  postalNumber?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  transactions?: Maybe<Array<Maybe<Transaction>>>
+  directDebitStatus?: Maybe<DirectDebitStatus>
+  monthlySubscription?: Maybe<MonthlySubscription>
   fraudulentStatus?: Maybe<Scalars['String']>
   fraudulentStatusDescription?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  memberId: Scalars['ID']
-  monthlySubscription?: Maybe<MonthlySubscription>
-  numberFailedCharges?: Maybe<NumberFailedCharges>
-  person?: Maybe<Person>
-  personalNumber?: Maybe<Scalars['String']>
-  postalNumber?: Maybe<Scalars['String']>
-  quotes: Array<Quote>
   sanctionStatus?: Maybe<SanctionStatus>
-  signedOn?: Maybe<Scalars['Instant']>
-  transactions?: Maybe<Array<Maybe<Transaction>>>
+  account?: Maybe<Account>
+  fileUploads: Array<FileUpload>
+  person?: Maybe<Person>
+  numberFailedCharges?: Maybe<NumberFailedCharges>
+  quotes: Array<Quote>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -567,8 +585,8 @@ export type MemberMonthlySubscriptionArgs = {
 }
 
 export type MemberChargeApproval = {
-  amount: Scalars['MonetaryAmount']
   memberId: Scalars['ID']
+  amount: Scalars['MonetaryAmount']
 }
 
 export type MonthlySubscription = {
@@ -579,141 +597,49 @@ export type MonthlySubscription = {
 
 export type MutationType = {
   __typename?: 'MutationType'
-  activateQuote: Quote
-  addAccountEntryToMember: Member
-  addClaimNote?: Maybe<Claim>
-  addInventoryItem?: Maybe<Scalars['Boolean']>
-  approveMemberCharge?: Maybe<Scalars['Boolean']>
-  assignTicketToTeamMember?: Maybe<Scalars['ID']>
-  autoLabelQuestion?: Maybe<AutoLabel>
-  backfillSubscriptions: Member
-  changeTicketDescription?: Maybe<Scalars['ID']>
-  changeTicketPriority?: Maybe<Scalars['ID']>
-  changeTicketReminder?: Maybe<Scalars['ID']>
-  changeTicketStatus?: Maybe<Scalars['ID']>
   chargeMember?: Maybe<Member>
+  addAccountEntryToMember: Member
+  approveMemberCharge?: Maybe<Scalars['Boolean']>
+  updateClaimState?: Maybe<Claim>
   createClaim?: Maybe<Scalars['ID']>
+  addClaimNote?: Maybe<Claim>
   createClaimPayment?: Maybe<Claim>
+  setClaimType?: Maybe<Claim>
+  setClaimInformation?: Maybe<Claim>
+  updateReserve?: Maybe<Claim>
+  setCoveringEmployee?: Maybe<Claim>
+  createTicket?: Maybe<Scalars['ID']>
+  changeTicketDescription?: Maybe<Scalars['ID']>
+  assignTicketToTeamMember?: Maybe<Scalars['ID']>
+  changeTicketStatus?: Maybe<Scalars['ID']>
+  changeTicketReminder?: Maybe<Scalars['ID']>
+  changeTicketPriority?: Maybe<Scalars['ID']>
+  autoLabelQuestion?: Maybe<AutoLabel>
+  questionIsDone?: Maybe<Scalars['Boolean']>
+  whitelistMember?: Maybe<Scalars['Boolean']>
+  markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
+  backfillSubscriptions: Member
+  setClaimFileCategory?: Maybe<Scalars['String']>
+  addInventoryItem?: Maybe<Scalars['Boolean']>
+  removeInventoryItem?: Maybe<Scalars['Boolean']>
+  activateQuote: Quote
   /** Creates a quote from a product and returns the quote id */
   createQuoteFromProduct: Quote
-  createTicket?: Maybe<Scalars['ID']>
-  questionIsDone?: Maybe<Scalars['Boolean']>
-  removeInventoryItem?: Maybe<Scalars['Boolean']>
-  setClaimInformation?: Maybe<Claim>
-  setClaimType?: Maybe<Claim>
-  setCoveringEmployee?: Maybe<Claim>
-  updateClaimState?: Maybe<Claim>
   updateQuote: Quote
-  updateReserve?: Maybe<Claim>
-  whitelistMember?: Maybe<Scalars['Boolean']>
 }
 
-export type MutationTypeActivateQuoteArgs = {
-  activationDate: Scalars['LocalDate']
+export type MutationTypeChargeMemberArgs = {
   id: Scalars['ID']
-  terminationDate?: Maybe<Scalars['LocalDate']>
+  amount: Scalars['MonetaryAmount']
 }
 
 export type MutationTypeAddAccountEntryToMemberArgs = {
-  accountEntry: AccountEntryInput
   memberId: Scalars['ID']
-}
-
-export type MutationTypeAddClaimNoteArgs = {
-  id: Scalars['ID']
-  note: ClaimNoteInput
-}
-
-export type MutationTypeAddInventoryItemArgs = {
-  item: InventoryItemInput
+  accountEntry: AccountEntryInput
 }
 
 export type MutationTypeApproveMemberChargeArgs = {
   approvals: Array<MemberChargeApproval>
-}
-
-export type MutationTypeAssignTicketToTeamMemberArgs = {
-  teamMemberId: Scalars['ID']
-  ticketId: Scalars['ID']
-}
-
-export type MutationTypeAutoLabelQuestionArgs = {
-  label: Scalars['String']
-  memberId?: Maybe<Scalars['String']>
-  messageIds?: Maybe<Array<Scalars['String']>>
-  question: Scalars['String']
-}
-
-export type MutationTypeBackfillSubscriptionsArgs = {
-  memberId: Scalars['ID']
-}
-
-export type MutationTypeChangeTicketDescriptionArgs = {
-  newDescription?: Maybe<Scalars['String']>
-  ticketId: Scalars['ID']
-}
-
-export type MutationTypeChangeTicketPriorityArgs = {
-  newPriority?: Maybe<Scalars['Float']>
-  ticketId: Scalars['ID']
-}
-
-export type MutationTypeChangeTicketReminderArgs = {
-  newReminder?: Maybe<RemindNotification>
-  ticketId: Scalars['ID']
-}
-
-export type MutationTypeChangeTicketStatusArgs = {
-  newStatus?: Maybe<TicketStatus>
-  ticketId: Scalars['ID']
-}
-
-export type MutationTypeChargeMemberArgs = {
-  amount: Scalars['MonetaryAmount']
-  id: Scalars['ID']
-}
-
-export type MutationTypeCreateClaimArgs = {
-  date: Scalars['LocalDateTime']
-  memberId: Scalars['ID']
-  source: ClaimSource
-}
-
-export type MutationTypeCreateClaimPaymentArgs = {
-  id: Scalars['ID']
-  payment: ClaimPaymentInput
-}
-
-export type MutationTypeCreateQuoteFromProductArgs = {
-  memberId: Scalars['ID']
-  quoteData: QuoteFromProductInput
-}
-
-export type MutationTypeCreateTicketArgs = {
-  ticket?: Maybe<TicketInput>
-}
-
-export type MutationTypeQuestionIsDoneArgs = {
-  memberId: Scalars['ID']
-}
-
-export type MutationTypeRemoveInventoryItemArgs = {
-  inventoryItemId: Scalars['ID']
-}
-
-export type MutationTypeSetClaimInformationArgs = {
-  id: Scalars['ID']
-  information: ClaimInformationInput
-}
-
-export type MutationTypeSetClaimTypeArgs = {
-  id: Scalars['ID']
-  type: ClaimTypes
-}
-
-export type MutationTypeSetCoveringEmployeeArgs = {
-  coveringEmployee: Scalars['Boolean']
-  id: Scalars['ID']
 }
 
 export type MutationTypeUpdateClaimStateArgs = {
@@ -721,19 +647,124 @@ export type MutationTypeUpdateClaimStateArgs = {
   state: ClaimState
 }
 
-export type MutationTypeUpdateQuoteArgs = {
-  bypassUnderwritingGuidelines?: Maybe<Scalars['Boolean']>
-  quoteData: QuoteInput
-  quoteId: Scalars['ID']
+export type MutationTypeCreateClaimArgs = {
+  memberId: Scalars['ID']
+  date: Scalars['LocalDateTime']
+  source: ClaimSource
+}
+
+export type MutationTypeAddClaimNoteArgs = {
+  id: Scalars['ID']
+  note: ClaimNoteInput
+}
+
+export type MutationTypeCreateClaimPaymentArgs = {
+  id: Scalars['ID']
+  payment: ClaimPaymentInput
+}
+
+export type MutationTypeSetClaimTypeArgs = {
+  id: Scalars['ID']
+  type: ClaimTypes
+}
+
+export type MutationTypeSetClaimInformationArgs = {
+  id: Scalars['ID']
+  information: ClaimInformationInput
 }
 
 export type MutationTypeUpdateReserveArgs = {
-  amount: Scalars['MonetaryAmount']
   id: Scalars['ID']
+  amount: Scalars['MonetaryAmount']
+}
+
+export type MutationTypeSetCoveringEmployeeArgs = {
+  id: Scalars['ID']
+  coveringEmployee: Scalars['Boolean']
+}
+
+export type MutationTypeCreateTicketArgs = {
+  ticket?: Maybe<TicketInput>
+}
+
+export type MutationTypeChangeTicketDescriptionArgs = {
+  ticketId: Scalars['ID']
+  newDescription?: Maybe<Scalars['String']>
+}
+
+export type MutationTypeAssignTicketToTeamMemberArgs = {
+  ticketId: Scalars['ID']
+  teamMemberId: Scalars['ID']
+}
+
+export type MutationTypeChangeTicketStatusArgs = {
+  ticketId: Scalars['ID']
+  newStatus?: Maybe<TicketStatus>
+}
+
+export type MutationTypeChangeTicketReminderArgs = {
+  ticketId: Scalars['ID']
+  newReminder?: Maybe<RemindNotification>
+}
+
+export type MutationTypeChangeTicketPriorityArgs = {
+  ticketId: Scalars['ID']
+  newPriority?: Maybe<Scalars['Float']>
+}
+
+export type MutationTypeAutoLabelQuestionArgs = {
+  question: Scalars['String']
+  label: Scalars['String']
+  memberId?: Maybe<Scalars['String']>
+  messageIds?: Maybe<Array<Scalars['String']>>
+}
+
+export type MutationTypeQuestionIsDoneArgs = {
+  memberId: Scalars['ID']
 }
 
 export type MutationTypeWhitelistMemberArgs = {
   memberId: Scalars['ID']
+}
+
+export type MutationTypeMarkClaimFileAsDeletedArgs = {
+  claimId: Scalars['ID']
+  claimFileId: Scalars['ID']
+}
+
+export type MutationTypeBackfillSubscriptionsArgs = {
+  memberId: Scalars['ID']
+}
+
+export type MutationTypeSetClaimFileCategoryArgs = {
+  claimId: Scalars['ID']
+  claimFileId: Scalars['ID']
+  category?: Maybe<Scalars['String']>
+}
+
+export type MutationTypeAddInventoryItemArgs = {
+  item: InventoryItemInput
+}
+
+export type MutationTypeRemoveInventoryItemArgs = {
+  inventoryItemId: Scalars['ID']
+}
+
+export type MutationTypeActivateQuoteArgs = {
+  id: Scalars['ID']
+  activationDate: Scalars['LocalDate']
+  terminationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type MutationTypeCreateQuoteFromProductArgs = {
+  memberId: Scalars['ID']
+  quoteData: QuoteFromProductInput
+}
+
+export type MutationTypeUpdateQuoteArgs = {
+  quoteId: Scalars['ID']
+  quoteData: QuoteInput
+  bypassUnderwritingGuidelines?: Maybe<Scalars['Boolean']>
 }
 
 export type NotCoveredClaim = {
@@ -743,33 +774,33 @@ export type NotCoveredClaim = {
 
 export type NumberFailedCharges = {
   __typename?: 'NumberFailedCharges'
-  lastFailedChargeAt?: Maybe<Scalars['Instant']>
   numberFailedCharges: Scalars['Int']
+  lastFailedChargeAt?: Maybe<Scalars['Instant']>
 }
 
 export type Payload = {
   category: Scalars['String']
-  filters: Array<Filter>
   query: Scalars['String']
+  filters: Array<Filter>
 }
 
 export type PaymentDefault = {
   __typename?: 'PaymentDefault'
+  year?: Maybe<Scalars['Int']>
+  week?: Maybe<Scalars['Int']>
+  paymentDefaultType?: Maybe<Scalars['String']>
+  paymentDefaultTypeText?: Maybe<Scalars['String']>
   amount?: Maybe<Scalars['MonetaryAmount']>
   caseId?: Maybe<Scalars['String']>
   claimant?: Maybe<Scalars['String']>
-  paymentDefaultType?: Maybe<Scalars['String']>
-  paymentDefaultTypeText?: Maybe<Scalars['String']>
-  week?: Maybe<Scalars['Int']>
-  year?: Maybe<Scalars['Int']>
 }
 
 export type Person = {
   __typename?: 'Person'
-  debt?: Maybe<Debt>
   personFlags?: Maybe<Array<Maybe<Flag>>>
-  status?: Maybe<PersonStatus>
+  debt?: Maybe<Debt>
   whitelisted?: Maybe<Whitelisted>
+  status?: Maybe<PersonStatus>
 }
 
 export type PersonStatus = {
@@ -780,9 +811,9 @@ export type PersonStatus = {
 
 export type PricePoint = {
   __typename?: 'PricePoint'
-  date: Scalars['String']
   id: Scalars['String']
   itemId: Scalars['String']
+  date: Scalars['String']
   lower: Scalars['Float']
   mean: Scalars['Float']
   upper: Scalars['Float']
@@ -790,61 +821,41 @@ export type PricePoint = {
 
 export type QueryType = {
   __typename?: 'QueryType'
-  categories?: Maybe<Array<Category>>
-  claim?: Maybe<Claim>
-  filters: Array<FilterSuggestion>
-  getAnswerSuggestion: Array<Suggestion>
-  getFullTicketHistory?: Maybe<TicketHistory>
-  inventory: Array<Maybe<InventoryItem>>
-  inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
-  items: ItemSearch
-  me?: Maybe<Scalars['String']>
-  member?: Maybe<Member>
   monthlyPayments?: Maybe<Array<Maybe<MonthlySubscription>>>
+  member?: Maybe<Member>
+  claim?: Maybe<Claim>
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
+  categories?: Maybe<Array<Category>>
+  items: ItemSearch
   prices: Array<PricePoint>
   ticket?: Maybe<Ticket>
+  getFullTicketHistory?: Maybe<TicketHistory>
   tickets: Array<Ticket>
-}
-
-export type QueryTypeClaimArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryTypeFiltersArgs = {
-  categoryId: Scalars['String']
-}
-
-export type QueryTypeGetAnswerSuggestionArgs = {
-  question?: Maybe<Scalars['String']>
-}
-
-export type QueryTypeGetFullTicketHistoryArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryTypeInventoryArgs = {
-  claimId: Scalars['ID']
-}
-
-export type QueryTypeInventoryItemFiltersArgs = {
-  inventoryItemId: Scalars['String']
-}
-
-export type QueryTypeItemsArgs = {
-  payload: Payload
-}
-
-export type QueryTypeMemberArgs = {
-  id: Scalars['ID']
+  getAnswerSuggestion: Array<Suggestion>
+  me?: Maybe<Scalars['String']>
+  inventory: Array<Maybe<InventoryItem>>
+  filters: Array<FilterSuggestion>
+  inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
   month: Scalars['YearMonth']
 }
 
+export type QueryTypeMemberArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryTypeClaimArgs = {
+  id: Scalars['ID']
+}
+
 export type QueryTypePaymentScheduleArgs = {
   status: ChargeStatus
+}
+
+export type QueryTypeItemsArgs = {
+  payload: Payload
 }
 
 export type QueryTypePricesArgs = {
@@ -856,45 +867,65 @@ export type QueryTypeTicketArgs = {
   id: Scalars['ID']
 }
 
+export type QueryTypeGetFullTicketHistoryArgs = {
+  id: Scalars['ID']
+}
+
 export type QueryTypeTicketsArgs = {
   resolved?: Maybe<Scalars['Boolean']>
 }
 
+export type QueryTypeGetAnswerSuggestionArgs = {
+  question?: Maybe<Scalars['String']>
+}
+
+export type QueryTypeInventoryArgs = {
+  claimId: Scalars['ID']
+}
+
+export type QueryTypeFiltersArgs = {
+  categoryId: Scalars['String']
+}
+
+export type QueryTypeInventoryItemFiltersArgs = {
+  inventoryItemId: Scalars['String']
+}
+
 export type Quote = {
   __typename?: 'Quote'
-  attributedTo?: Maybe<Scalars['String']>
-  breachedUnderwritingGuidelines?: Maybe<Array<Scalars['String']>>
-  createdAt?: Maybe<Scalars['Instant']>
-  currentInsurer?: Maybe<Scalars['String']>
-  data?: Maybe<QuoteData>
   id: Scalars['ID']
-  initiatedFrom?: Maybe<Scalars['String']>
-  isComplete?: Maybe<Scalars['Boolean']>
-  memberId?: Maybe<Scalars['ID']>
-  originatingProductId?: Maybe<Scalars['ID']>
+  createdAt?: Maybe<Scalars['Instant']>
   price?: Maybe<Scalars['Float']>
   productType?: Maybe<QuoteProductType>
-  signedProductId?: Maybe<Scalars['ID']>
-  startDate?: Maybe<Scalars['String']>
   state?: Maybe<QuoteState>
+  initiatedFrom?: Maybe<Scalars['String']>
+  attributedTo?: Maybe<Scalars['String']>
+  currentInsurer?: Maybe<Scalars['String']>
+  startDate?: Maybe<Scalars['String']>
   validity?: Maybe<Scalars['Int']>
+  memberId?: Maybe<Scalars['ID']>
+  breachedUnderwritingGuidelines?: Maybe<Array<Scalars['String']>>
+  isComplete?: Maybe<Scalars['Boolean']>
+  data?: Maybe<QuoteData>
+  signedProductId?: Maybe<Scalars['ID']>
+  originatingProductId?: Maybe<Scalars['ID']>
 }
 
 export type QuoteData = ApartmentQuoteData | HouseQuoteData
 
 export type QuoteFromProductInput = {
-  currentInsurer?: Maybe<Scalars['String']>
-  incompleteApartmentQuoteData?: Maybe<ApartmentQuoteDataInput>
   incompleteHouseQuoteData?: Maybe<HouseQuoteDataInput>
+  incompleteApartmentQuoteData?: Maybe<ApartmentQuoteDataInput>
   originatingProductId?: Maybe<Scalars['ID']>
+  currentInsurer?: Maybe<Scalars['String']>
 }
 
 export type QuoteInput = {
-  apartmentData?: Maybe<ApartmentQuoteInput>
+  productType?: Maybe<QuoteProductType>
   currentInsurer?: Maybe<Scalars['String']>
+  apartmentData?: Maybe<ApartmentQuoteInput>
   houseData?: Maybe<HouseQuoteInput>
   originatingProductId?: Maybe<Scalars['ID']>
-  productType?: Maybe<QuoteProductType>
 }
 
 export enum QuoteProductType {
@@ -904,33 +935,33 @@ export enum QuoteProductType {
 }
 
 export enum QuoteState {
-  Expired = 'EXPIRED',
   Incomplete = 'INCOMPLETE',
   Quoted = 'QUOTED',
   Signed = 'SIGNED',
+  Expired = 'EXPIRED',
 }
 
 export type RemindNotification = {
   date?: Maybe<Scalars['LocalDate']>
-  message?: Maybe<Scalars['String']>
   time?: Maybe<Scalars['LocalTime']>
+  message?: Maybe<Scalars['String']>
 }
 
 export enum SanctionStatus {
-  FullHit = 'FullHit',
+  Undetermined = 'Undetermined',
   NoHit = 'NoHit',
   PartialHit = 'PartialHit',
-  Undetermined = 'Undetermined',
+  FullHit = 'FullHit',
 }
 
 export type SchedulerState = {
   __typename?: 'SchedulerState'
-  amount?: Maybe<Scalars['MonetaryAmount']>
-  changedAt: Scalars['Instant']
-  changedBy: Scalars['String']
   id: Scalars['ID']
   member?: Maybe<Member>
   status: ChargeStatus
+  changedBy: Scalars['String']
+  changedAt: Scalars['Instant']
+  amount?: Maybe<Scalars['MonetaryAmount']>
   transactionId?: Maybe<Scalars['ID']>
 }
 
@@ -946,11 +977,11 @@ export type StormDamageClaim = {
 
 export type Suggestion = {
   __typename?: 'Suggestion'
-  allReplies: Array<AllRepliesEntry>
-  confidence: Scalars['Float']
   intent: Scalars['String']
   reply: Scalars['String']
   text: Scalars['String']
+  confidence: Scalars['Float']
+  allReplies: Array<AllRepliesEntry>
 }
 
 export type TestClaim = {
@@ -960,101 +991,101 @@ export type TestClaim = {
 
 export type TheftClaim = {
   __typename?: 'TheftClaim'
+  location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
-  location?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
 }
 
 export type Ticket = {
   __typename?: 'Ticket'
+  id?: Maybe<Scalars['ID']>
   assignedTo?: Maybe<Scalars['String']>
   createdAt?: Maybe<Scalars['Instant']>
   createdBy?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['ID']>
   memberId?: Maybe<Scalars['String']>
-  priority?: Maybe<Scalars['Float']>
   referenceId?: Maybe<Scalars['String']>
-  remindMessage?: Maybe<Scalars['String']>
+  priority?: Maybe<Scalars['Float']>
+  type?: Maybe<TicketType>
   remindNotificationDate?: Maybe<Scalars['LocalDate']>
   remindNotificationTime?: Maybe<Scalars['LocalTime']>
+  remindMessage?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
   status?: Maybe<TicketStatus>
-  type?: Maybe<TicketType>
 }
 
 export enum TicketChangeType {
+  TicketCreated = 'TICKET_CREATED',
+  ChangedReminder = 'CHANGED_REMINDER',
   ChangedAssignedTo = 'CHANGED_ASSIGNED_TO',
   ChangedDescription = 'CHANGED_DESCRIPTION',
-  ChangedPriority = 'CHANGED_PRIORITY',
-  ChangedReminder = 'CHANGED_REMINDER',
   ChangedStatus = 'CHANGED_STATUS',
-  TicketCreated = 'TICKET_CREATED',
+  ChangedPriority = 'CHANGED_PRIORITY',
 }
 
 export type TicketHistory = {
   __typename?: 'TicketHistory'
+  id?: Maybe<Scalars['ID']>
   createdAt?: Maybe<Scalars['Instant']>
   createdBy?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['ID']>
-  revisions?: Maybe<Array<Maybe<TicketRevision>>>
   type?: Maybe<TicketType>
+  revisions?: Maybe<Array<Maybe<TicketRevision>>>
 }
 
 export type TicketInput = {
   assignedTo?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
   priority?: Maybe<Scalars['Float']>
-  remindMessage?: Maybe<Scalars['String']>
+  type?: Maybe<TicketType>
   remindNotificationDate?: Maybe<Scalars['LocalDate']>
   remindNotificationTime?: Maybe<Scalars['LocalTime']>
+  remindMessage?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
   status?: Maybe<TicketStatus>
-  type?: Maybe<TicketType>
 }
 
 export type TicketRevision = {
   __typename?: 'TicketRevision'
   assignedTo?: Maybe<Scalars['String']>
-  changeType?: Maybe<TicketChangeType>
-  changedAt?: Maybe<Scalars['Instant']>
-  changedBy?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
   manualPriority?: Maybe<Scalars['Float']>
   remindDate?: Maybe<Scalars['LocalDate']>
-  remindMessage?: Maybe<Scalars['String']>
   remindTime?: Maybe<Scalars['LocalTime']>
+  remindMessage?: Maybe<Scalars['String']>
   status?: Maybe<TicketStatus>
+  changedAt?: Maybe<Scalars['Instant']>
+  changeType?: Maybe<TicketChangeType>
+  changedBy?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
 }
 
 export enum TicketStatus {
-  OnHold = 'ON_HOLD',
-  Resolved = 'RESOLVED',
   Waiting = 'WAITING',
   WorkingOn = 'WORKING_ON',
+  OnHold = 'ON_HOLD',
+  Resolved = 'RESOLVED',
 }
 
 export enum TicketType {
-  CallMe = 'CALL_ME',
-  Claim = 'CLAIM',
-  Message = 'MESSAGE',
-  Other = 'OTHER',
   Remind = 'REMIND',
+  Message = 'MESSAGE',
+  Claim = 'CLAIM',
+  CallMe = 'CALL_ME',
+  Other = 'OTHER',
 }
 
 export type Transaction = {
   __typename?: 'Transaction'
-  amount?: Maybe<Scalars['MonetaryAmount']>
   id?: Maybe<Scalars['ID']>
-  status?: Maybe<Scalars['String']>
+  amount?: Maybe<Scalars['MonetaryAmount']>
   timestamp?: Maybe<Scalars['Instant']>
   type?: Maybe<Scalars['String']>
+  status?: Maybe<Scalars['String']>
 }
 
 export type TravelAccidentClaim = {
   __typename?: 'TravelAccidentClaim'
-  date?: Maybe<Scalars['LocalDate']>
   location?: Maybe<Scalars['String']>
+  date?: Maybe<Scalars['LocalDate']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
 }
@@ -1128,37 +1159,19 @@ const result: IntrospectionResultData = {
         name: 'ClaimType',
         possibleTypes: [
           {
-            name: 'AccidentalDamageClaim',
+            name: 'TheftClaim',
           },
           {
-            name: 'ApplianceClaim',
+            name: 'AccidentalDamageClaim',
           },
           {
             name: 'AssaultClaim',
           },
           {
-            name: 'BurglaryClaim',
+            name: 'WaterDamageClaim',
           },
           {
-            name: 'ConfirmedFraudClaim',
-          },
-          {
-            name: 'EarthquakeClaim',
-          },
-          {
-            name: 'FireDamageClaim',
-          },
-          {
-            name: 'FloodingClaim',
-          },
-          {
-            name: 'InstallationsClaim',
-          },
-          {
-            name: 'LegalProtectionClaim',
-          },
-          {
-            name: 'LiabilityClaim',
+            name: 'TravelAccidentClaim',
           },
           {
             name: 'LuggageDelayClaim',
@@ -1167,31 +1180,49 @@ const result: IntrospectionResultData = {
             name: 'NotCoveredClaim',
           },
           {
+            name: 'FireDamageClaim',
+          },
+          {
+            name: 'ConfirmedFraudClaim',
+          },
+          {
+            name: 'LiabilityClaim',
+          },
+          {
+            name: 'ApplianceClaim',
+          },
+          {
+            name: 'LegalProtectionClaim',
+          },
+          {
+            name: 'WaterDamageBathroomClaim',
+          },
+          {
+            name: 'WaterDamageKitchenClaim',
+          },
+          {
+            name: 'BurglaryClaim',
+          },
+          {
+            name: 'FloodingClaim',
+          },
+          {
+            name: 'EarthquakeClaim',
+          },
+          {
+            name: 'InstallationsClaim',
+          },
+          {
             name: 'SnowPressureClaim',
           },
           {
             name: 'StormDamageClaim',
           },
           {
-            name: 'TestClaim',
-          },
-          {
-            name: 'TheftClaim',
-          },
-          {
-            name: 'TravelAccidentClaim',
-          },
-          {
             name: 'VerminAndPestsClaim',
           },
           {
-            name: 'WaterDamageBathroomClaim',
-          },
-          {
-            name: 'WaterDamageClaim',
-          },
-          {
-            name: 'WaterDamageKitchenClaim',
+            name: 'TestClaim',
           },
         ],
       },

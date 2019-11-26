@@ -6,7 +6,12 @@ import { Query } from 'react-apollo'
 import { Paper } from '../../../../shared/Paper'
 import { ClaimInventory } from './ClaimInventory'
 
-export class ClaimItemDatabase extends React.Component {
+interface Props {
+  type: string
+  claimId: string
+}
+
+export class ClaimItemDatabase extends React.Component<Props> {
   public state = {
     activeItem: null,
   }

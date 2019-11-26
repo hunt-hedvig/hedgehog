@@ -16,12 +16,12 @@ export const FormikDatePicker: React.SFC<FieldProps> = ({
   />
 )
 
-export const BaseDatePicker = props => (
+export const BaseDatePicker = (props) => (
   <MuiDatePicker
     autoOk
     keyboard={false}
     allowKeyboardControl={false}
-    labelFunc={(date: Date) => date ? format(date, 'yyyy-MM-dd') : ''}
+    labelFunc={(date: Date) => (date ? format(date, 'yyyy-MM-dd') : '')}
     fullWidth
     {...props}
   />

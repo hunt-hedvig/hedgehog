@@ -45,7 +45,10 @@ export class ItemTable extends React.Component {
 
   public getPriceString = (prices, row, property) => {
     return row.id in prices
-      ? formatMoney('sv-SE', 0)({
+      ? formatMoney(
+          'sv-SE',
+          0,
+        )({
           amount: Math.max(prices[row.id][property], 0),
           currency: 'SEK',
         })

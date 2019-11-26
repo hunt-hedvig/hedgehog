@@ -42,7 +42,10 @@ export class InventoryEntry extends React.Component {
         <Table.Cell>{this.truncateItemName(itemName, 25, true)}</Table.Cell>
         <Table.Cell textAlign="center" verticalAlign="middle">
           <Label basic color="blue">
-            {formatMoney('sv-SE', 0)({
+            {formatMoney(
+              'sv-SE',
+              0,
+            )({
               amount: value,
               currency: 'SEK',
             })}
@@ -68,12 +71,18 @@ export class InventoryEntry extends React.Component {
                       <Table.Cell textAlign="right">Range:</Table.Cell>
                       <Table.Cell>
                         <Label size="small" basic color="blue">
-                          {formatMoney('sv-SE', 0)({
+                          {formatMoney(
+                            'sv-SE',
+                            0,
+                          )({
                             amount: lowerRange,
                             currency: 'SEK',
                           }) +
                             ' - ' +
-                            formatMoney('sv-SE', 0)({
+                            formatMoney(
+                              'sv-SE',
+                              0,
+                            )({
                               amount: upperRange,
                               currency: 'SEK',
                             })}

@@ -53,8 +53,8 @@ const memberPagePanes = (props, addMessage, socket) => {
       render: () => <TabItem props={props} TabContent={MemberFile} />,
     },
     {
-      menuItem: "Debt",
-      render: () => <TabItem props={props} TabContent={MemberDebtComponent} />
+      menuItem: 'Debt',
+      render: () => <TabItem props={props} TabContent={MemberDebtComponent} />,
     },
   ]
   if (props.showChatTab) {
@@ -91,7 +91,12 @@ const memberPagePanes = (props, addMessage, socket) => {
   }
   panes.push({
     menuItem: 'Quotes',
-    render: () => <TabItem props={{ memberId: props.match.params.id }} TabContent={Quotes} />
+    render: () => (
+      <TabItem
+        props={{ memberId: props.match.params.id }}
+        TabContent={Quotes}
+      />
+    ),
   })
 
   return panes
