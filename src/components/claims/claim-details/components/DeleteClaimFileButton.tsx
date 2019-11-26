@@ -22,22 +22,11 @@ const MARK_CLAIM_FILE_AS_DELETED = gql`
   }
 `
 
-interface State {
-  confirmed: boolean
-}
-
-export class DeleteButton extends React.Component<
-  {
-    claimId: string
-    claimFileId: string
-    showNotification: (data: any) => void
-  },
-  State
-> {
-  public state = {
-    confirmed: false,
-  }
-
+export class DeleteButton extends React.Component<{
+  claimId: string
+  claimFileId: string
+  showNotification: (data: any) => void
+}> {
   public render() {
     return (
       <Mutation
@@ -53,24 +42,15 @@ export class DeleteButton extends React.Component<
       >
         {(mutation, { loading }) => (
           <>
-            {!this.state.confirmed ? (
-              <Button
-                onClick={(e) => {
-                  e.preventDefault()
-                  this.toggleConfirmed()
-                }}
-                disabled={loading}
-              >
-                Delete
-              </Button>
-            ) : (
-              <Button
-                disabled={loading}
-                onClick={() => this.handleClick(mutation)}
-              >
-                Are you sure?
-              </Button>
-            )}
+            <Button
+              disabled={loading}
+              onClick={() => {
+                window.confirm('Are you sure you want to delete this file?')
+                this.handleClick(mutation)
+              }}
+            >
+              Delete
+            </Button>
           </>
         )}
       </Mutation>
@@ -90,7 +70,6 @@ export class DeleteButton extends React.Component<
           header: 'Success',
           type: 'olive',
         })
-        this.resetConfirmed()
       })
       .catch((error) => {
         this.props.showNotification({
@@ -98,11 +77,7 @@ export class DeleteButton extends React.Component<
           header: 'Error',
           type: 'red',
         })
+        throw error
       })
   }
-
-  private resetConfirmed = () => this.setState({ confirmed: false })
-
-  private toggleConfirmed = () =>
-    this.setState((state) => ({ confirmed: !state.confirmed }))
 }

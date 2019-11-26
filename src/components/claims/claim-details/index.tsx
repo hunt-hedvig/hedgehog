@@ -155,7 +155,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
                 <FileUpload
                   claimId={match.params.id}
                   memberId={member.memberId}
-                  onUploaded={() => refetch}
+                  onUploaded={() => refetch()}
                 />
               </Grid>
               <Grid item xs={12}>

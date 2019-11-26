@@ -91,7 +91,6 @@ class FileUploadComponent extends React.Component<{
           type: 'olive',
         })
         this.props.onUploaded()
-        window.location.reload()
       })
       .catch((error) => {
         this.props.showNotification({
@@ -106,7 +105,4 @@ class FileUploadComponent extends React.Component<{
 
 const mapActions = { ...actions.notificationsActions }
 
-export const FileUpload = connect(
-  null,
-  mapActions,
-)(FileUploadComponent)
+export const FileUpload = connect(null, mapActions)(FileUploadComponent)

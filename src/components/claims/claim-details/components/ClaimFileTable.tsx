@@ -8,6 +8,7 @@ import actions from '../../../../store/actions'
 import { connect } from 'react-redux'
 import { DeleteButton } from '../components/DeleteClaimFileButton'
 import { dateTimeFormatter } from '../../../../lib/helpers'
+import { Dropdown } from 'semantic-ui-react'
 
 const SET_CLAIM_FILE_CATEGORY = gql`
   mutation setClaimFileCategory(
@@ -33,6 +34,39 @@ const sortClaimFileDate = (a, b) => {
 const NoClaimFiles = styled('div')({
   padding: '1rem',
 })
+
+const fileUploadOptions = [
+  {
+    key: 'Reciept',
+    text: 'Reciept',
+    value: 'Reciept',
+  },
+  {
+    key: 'Proof of ownership',
+    text: 'Proof of ownership',
+    value: 'Proof of ownership',
+  },
+  {
+    key: 'Police report',
+    text: 'Police report',
+    value: 'Police report',
+  },
+  {
+    key: 'Invoice',
+    text: 'Invoice',
+    value: 'Invoice',
+  },
+  {
+    key: 'Proof of damage',
+    text: 'Proof of damage',
+    value: 'Proof of damage',
+  },
+  {
+    key: 'Other',
+    text: 'Other',
+    value: 'Other',
+  },
+]
 
 interface ClaimFiles {
   claimFileId: string
@@ -85,29 +119,25 @@ class ClaimFileTableComponent extends React.Component<{
                         <Mutation mutation={SET_CLAIM_FILE_CATEGORY}>
                           {(mutation) => {
                             return (
-                              <select
-                                class="ui fluid search dropdown"
-                                multiple=""
-                                onChange={() => this.handleSelect(event, mutation, claimFile.claimFileId)}
-                              >
-                                <option value="placeholder">
-                                  {claimFile.category != null
+                              <Dropdown
+                                placeholder={
+                                  claimFile.category != null
                                     ? claimFile.category
-                                    : 'File Type'}
-                                </option>
-                                <option value="Reciept">Reciept</option>
-                                <option value="Proof of ownership">
-                                  Proof of ownership
-                                </option>
-                                <option value="Police report">
-                                  Police report
-                                </option>
-                                <option value="Invoice">Invoice</option>
-                                <option value="Proof of damage">
-                                  Proof of damage
-                                </option>
-                                <option value="Other">Other</option>
-                              </select>
+                                    : 'File Type'
+                                }
+                                fluid
+                                selection
+                                options={fileUploadOptions}
+                                onChange={(event) =>
+                                  mutation({
+                                    variables: {
+                                      claimId: this.props.claimId,
+                                      claimFileId: claimFile.claimFileId,
+                                      category: event.currentTarget.textContent,
+                                    },
+                                  })
+                                }
+                              />
                             )
                           }}
                         </Mutation>
@@ -134,20 +164,8 @@ class ClaimFileTableComponent extends React.Component<{
       </>
     )
   }
-  private handleSelect = (event, mutation, claimFileId) => {
-    mutation({
-      variables: {
-        claimId: this.props.claimId,
-        claimFileId: claimFileId,
-        category: event.target.value,
-      },
-    })
-  }
 }
 
 const mapActions = { ...actions.notificationsActions }
 
-export const ClaimFileTable = connect(
-  null,
-  mapActions,
-)(ClaimFileTableComponent)
+export const ClaimFileTable = connect(null, mapActions)(ClaimFileTableComponent)
