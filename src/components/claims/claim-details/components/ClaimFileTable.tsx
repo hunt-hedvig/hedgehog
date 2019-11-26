@@ -3,12 +3,11 @@ import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 
-import { Table, Image } from 'semantic-ui-react'
+import { Table, Image, Dropdown } from 'semantic-ui-react'
 import actions from '../../../../store/actions'
 import { connect } from 'react-redux'
 import { DeleteButton } from '../components/DeleteClaimFileButton'
 import { dateTimeFormatter } from '../../../../lib/helpers'
-import { Dropdown } from 'semantic-ui-react'
 
 const SET_CLAIM_FILE_CATEGORY = gql`
   mutation setClaimFileCategory(
