@@ -127,10 +127,10 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
           <Grid item xs={12} sm={12} md={4}>
             <ClaimType type={type} claimId={match.params.id} />
           </Grid>
-          <ClaimItemDatabase type={type} claimId={match.params.id} />
           <Grid item xs={12}>
             <ClaimNotes notes={notes} claimId={match.params.id} />
           </Grid>
+          <ClaimItemDatabase type={type} claimId={match.params.id} />
           <Grid item xs={12}>
             <ClaimPayments
               payments={payments}
