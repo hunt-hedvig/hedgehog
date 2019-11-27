@@ -89,12 +89,12 @@ export const QuoteActivation: React.FunctionComponent<{
 
       <BottomSpacerWrapper>
         <Checkbox
-          onChange={(e, { checked }) => {
+          onChange={(_, { checked }) => {
             onWipChange && onWipChange(true)
-            if (!e.currentTarget.checked) {
+            if (!checked) {
               setTerminationDate(null)
             }
-            setUseGap(checked)
+            setUseGap(checked!)
           }}
           label="Create gap between insurances"
           checked={useGap}
