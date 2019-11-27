@@ -64,7 +64,9 @@ export const QuoteActivation: React.FunctionComponent<{
           variables: {
             id: quote.id,
             activationDate: activationDate.toISOString().slice(0, 10),
-            terminationDate: terminationDate?.toISOString()?.slice(0, 10),
+            terminationDate: useGap
+              ? terminationDate?.toISOString()?.slice(0, 10)
+              : null,
           },
         })
         onSubmitted && onSubmitted()
@@ -87,15 +89,15 @@ export const QuoteActivation: React.FunctionComponent<{
 
       <BottomSpacerWrapper>
         <Checkbox
-          onChange={(e) => {
+          onChange={(_, { checked }) => {
             onWipChange && onWipChange(true)
-            if (!e.currentTarget.checked) {
+            if (!checked) {
               setTerminationDate(null)
             }
-            setUseGap(e.currentTarget.checked)
+            setUseGap(checked!)
           }}
           label="Create gap between insurances"
-          value={useGap as any}
+          checked={useGap}
         />
       </BottomSpacerWrapper>
 
