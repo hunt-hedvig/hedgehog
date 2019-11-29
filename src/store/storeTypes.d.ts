@@ -1,5 +1,4 @@
 import { ClaimsStore } from './types/claimsTypes'
-import { MemberInsuranceStore } from './types/memberInsuranceTypes'
 import { QuestionsStore } from './types/questionsTypes'
 
 export interface BackofficeStore {
@@ -16,7 +15,6 @@ export interface BackofficeStore {
   questions: QuestionsStore
   insurance: any
   notifications: any
-  memberInsurance: MemberInsuranceStore
 }
 
 type MembersSortBy = 'NAME' | 'CREATED' | 'SIGN_UP'

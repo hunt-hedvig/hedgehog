@@ -140,16 +140,6 @@ export default {
       method: 'post',
     },
   },
-  insMembers: {
-    get: {
-      method: 'get',
-      url: 'member/insurance/search',
-    },
-    searchPaged: {
-      method: 'get',
-      url: 'member/insurance/searchPaged',
-    },
-  },
   reports: {
     getBDX: {
       method: 'get',

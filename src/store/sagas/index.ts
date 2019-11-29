@@ -3,7 +3,6 @@ import ClaimDetailsSaga from './claimDetailsSaga'
 import ClaimsSaga from './claimsSaga'
 import InsuranceSaga from './insuranceSaga'
 import LoginSaga from './loginSaga'
-import MemberInsuranceSaga from './memberInsuranceSaga'
 import MembersSaga from './membersSaga'
 import MessagesSaga from './messagesSaga'
 import NotesSaga from './notesSaga'
@@ -26,6 +25,5 @@ export default function* IndexSaga() {
     NotesSaga(),
     QuestionsSaga(),
     InsuranceSaga(),
-    MemberInsuranceSaga(),
   ]
 }
