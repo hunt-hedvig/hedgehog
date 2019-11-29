@@ -50,7 +50,7 @@ export interface Member {
 }
 
 export interface MemberSearchFilter {
-  status: MemberStatus | undefined
+  includeAll?: boolean
   query: string
   sortBy: MembersSortBy
   sortDirection: SortDirection
@@ -58,8 +58,15 @@ export interface MemberSearchFilter {
   pageSize: number
 }
 
+export interface MemberSearchResultItem {
+  member: Member
+  firstActiveFrom: string | null
+  lastActiveTo: string | null
+  productStatus: string | null
+}
+
 export interface MembersSearchResult {
-  members: Member[]
+  items: ReadonlyArray<MemberSearchResultItem>
   totalPages: number
   page: number
 }

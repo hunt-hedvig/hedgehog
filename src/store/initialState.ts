@@ -21,7 +21,7 @@ const initialState: BackofficeStore = {
   members: {
     list: [],
     searchResult: {
-      members: [],
+      items: [],
       page: 0,
       totalPages: 1,
     },
@@ -29,7 +29,7 @@ const initialState: BackofficeStore = {
     searchFilter: {
       status: undefined,
       query: '',
-      sortBy: 'CREATED',
+      sortBy: 'SIGN_UP',
       sortDirection: 'DESC',
       page: 0,
       pageSize: 25,

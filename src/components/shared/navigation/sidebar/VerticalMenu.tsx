@@ -125,12 +125,6 @@ export class VerticalMenuComponent extends React.Component<
               <MenuIcon className="fa fa-users" />
               <MenuText collapsed={this.state.isCollapsed}>Members</MenuText>
             </MenuItem>
-            <MenuItem to="/member_insurance">
-              <MenuIcon className="fa fa-list" />
-              <MenuText collapsed={this.state.isCollapsed}>
-                Member Insurance
-              </MenuText>
-            </MenuItem>
             <MenuItem to="/questions">
               <MenuIcon className="fa fa-question" />
               <MenuText collapsed={this.state.isCollapsed}>Questions</MenuText>
@@ -176,7 +170,6 @@ export class VerticalMenuComponent extends React.Component<
   }
 }
 
-export const VerticalMenu = connect(
-  null,
-  { ...actions.clientActions },
-)(VerticalMenuComponent)
+export const VerticalMenu = connect(null, { ...actions.clientActions })(
+  VerticalMenuComponent,
+)

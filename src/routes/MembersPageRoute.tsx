@@ -1,4 +1,5 @@
 import ChatPage from 'containers/chat-page/ChatPage'
+import { MembersSearchPage } from 'containers/member-search-page'
 import MembersPage from 'containers/members-page/MembersPage'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
@@ -11,7 +12,11 @@ const MessagesPageRouter = ({ store }) => (
       exact
       path="/members"
       render={() => (
-        <PrivateRoute component={MembersPage} path="/members" store={store} />
+        <PrivateRoute
+          component={MembersSearchPage}
+          path="/members"
+          store={store}
+        />
       )}
     />
     <Route

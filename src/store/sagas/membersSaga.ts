@@ -40,7 +40,15 @@ function* membersSearchFlow(action: SearchMemberRequestAction) {
       config.members.search,
       null,
       '',
-      queryFilter,
+      {
+        query: '',
+        pageSize: 25,
+        page: 0,
+        includeAll: false,
+        sortBy: 'SIGN_UP',
+        sortDirection: 'DESC',
+        ...queryFilter,
+      },
     )
     yield put(
       searchMembersSuccess(searchResult.data, fieldName, isDescendingOrder),

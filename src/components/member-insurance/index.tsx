@@ -19,7 +19,7 @@ export const MemberInsurance: React.SFC<MemberInsuranceProps> = ({
 }) => (
   <Mount on={() => searchMemberInsRequest({})}>
     <>
-      <Header size="huge"> Member Insurance </Header>
+      <Header size="huge">Member Insurance</Header>
       <MemberInsuranceFilter
         memberInsurance={memberInsurance}
         searchMemberInsRequest={searchMemberInsRequest}
