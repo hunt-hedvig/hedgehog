@@ -12,7 +12,7 @@ const PaginatorContainer = styled.div`
 export interface BackendPaginatorListProps<T> {
   pagedItems: T[]
   itemContent: (item: T) => React.ReactElement<any>
-  tableHeader: React.ReactElement<any>
+  tableHeader: React.ReactNode
   currentPage: number
   totalPages: number
   isSortable: boolean
@@ -23,10 +23,6 @@ export interface BackendPaginatorListProps<T> {
 export default class BackendPaginatorList<T> extends React.Component<
   BackendPaginatorListProps<T>
 > {
-  constructor(props: BackendPaginatorListProps<T>) {
-    super(props)
-  }
-
   public render() {
     const {
       pagedItems,
@@ -40,7 +36,7 @@ export default class BackendPaginatorList<T> extends React.Component<
     } = this.props
     return (
       <React.Fragment>
-        <Table celled selectable sortable={isSortable ? true : false}>
+        <Table celled selectable sortable={isSortable}>
           {tableHeader}
           {pagedItems.length ? (
             <Table.Body>

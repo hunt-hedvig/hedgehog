@@ -27,7 +27,7 @@ export default {
     },
     search: {
       method: 'get',
-      url: 'member/searchPaged',
+      url: 'member/search',
     },
     findOne: {
       method: 'get',
@@ -138,16 +138,6 @@ export default {
     modifyProduct: {
       url: 'member/insurance',
       method: 'post',
-    },
-  },
-  insMembers: {
-    get: {
-      method: 'get',
-      url: 'member/insurance/search',
-    },
-    searchPaged: {
-      method: 'get',
-      url: 'member/insurance/searchPaged',
     },
   },
   reports: {

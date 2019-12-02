@@ -5,7 +5,6 @@ import * as clientActions from './clientActions'
 import * as dashboardActions from './dashboardActions'
 import * as insuranceActions from './insuranceActions'
 import * as loginActions from './loginActions'
-import * as memberInsuranceActions from './memberInsuranceActions'
 import * as membersActions from './membersActions'
 import * as messagesActions from './messagesActions'
 import * as notesActions from './notesActions'
@@ -31,5 +30,4 @@ export default {
   questionsActions,
   insuranceActions,
   notificationsActions,
-  memberInsuranceActions,
 }

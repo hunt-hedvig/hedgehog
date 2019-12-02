@@ -281,46 +281,6 @@ export const sortClaimsList = (list, fieldName, isReverse) => {
   return isReverse ? sortedList.reverse() : sortedList
 }
 
-/**
- * Sort members table (MemberInsurance page)
- * @param {array} list membersList
- * @param {string} fieldName clicked column name
- * @param {bool} isReverse
- */
-export const sortMemberInsList = (list, fieldName, isReverse) => {
-  let sortedList = null
-
-  switch (fieldName) {
-    case 'name':
-      sortedList = list.sort((a, b) =>
-        `${a.memberFirstName}${a.memberLastName}` >
-        `${b.memberFirstName}${b.memberLastName}`
-          ? 1
-          : -1,
-      )
-      break
-
-    case 'date':
-    case 'signedOn':
-    case 'insuranceActiveFrom':
-    case 'insuranceActiveTo':
-      return sortListByDate(list, fieldName, isReverse)
-
-    case 'insuranceType':
-    case 'insuranceStatus':
-    case 'personsInHouseHold':
-      sortedList = list.sort((a, b) => (a[fieldName] > b[fieldName] ? 1 : -1))
-      break
-    case 'cancellationEmailSent':
-    case 'certificateUploaded':
-      return sortMembersByBool(list, fieldName, isReverse)
-
-    default:
-      sortedList = list
-  }
-  return isReverse ? sortedList.reverse() : sortedList
-}
-
 export const range = (
   startInclusive: number,
   endExclusive: number,
