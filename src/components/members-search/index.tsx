@@ -177,7 +177,7 @@ const Search: React.FC<{
         <SearchInputGroup>
           <SearchInput
             onChange={(_, { value }) => setQuery(value)}
-            placeholder="20121212-1212"
+            placeholder="Looking for someone...?"
             id="query"
             value={query}
             loading={loading}
@@ -211,6 +211,7 @@ const ListHeader: React.FC = () => (
     <Table.HeaderCell>Active from</Table.HeaderCell>
     <Table.HeaderCell>Active to</Table.HeaderCell>
     <Table.HeaderCell>Status</Table.HeaderCell>
+    <Table.HeaderCell>Size</Table.HeaderCell>
   </Table.Header>
 )
 
@@ -232,7 +233,13 @@ const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => (
     <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>
     <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
     <Table.Cell>
-      {item.member.status} / {item.productStatus ?? '-'}
+      {(item.member.status !== 'SIGNED'
+        ? item.member.status
+        : item.productStatus) ?? '-'}
+    </Table.Cell>
+    <Table.Cell>
+      {item.householdSize ?? '-'} peeps / {item.livingSpace ?? '-'} m
+      <sup>2</sup>
     </Table.Cell>
   </Table.Row>
 )

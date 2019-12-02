@@ -61,6 +61,8 @@ export interface MemberSearchResultItem {
   firstActiveFrom: string | null
   lastActiveTo: string | null
   productStatus: string | null
+  householdSize: number | null
+  livingSpace: number | null
 }
 
 export interface MembersSearchResult {
