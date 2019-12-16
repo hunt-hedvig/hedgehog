@@ -3,12 +3,15 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
+import { connect } from 'react-redux'
+import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 import { format, parseISO } from 'date-fns'
 import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { showNotification } from 'store/actions/notificationsActions'
 
 import { FormikDatePicker } from '../../../shared/inputs/DatePicker'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
@@ -110,20 +113,6 @@ export const TYPE_FRAGMENT = `
         }
 `
 
-const SET_CLAIM_TYPE_QUERY = gql`
-  query SetClaimType($id: ID!) {
-    claim(id: $id) {
-      type {
-        ${TYPE_FRAGMENT}
-      }
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-
 const SET_CLAIM_TYPE_MUTATION = gql`
   mutation SetClaimType($id: ID!, $type: ClaimTypes!) {
     setClaimType(id: $id, type: $type) {
@@ -141,20 +130,6 @@ const SET_CLAIM_TYPE_MUTATION = gql`
 const SET_CLAIM_INFORMATION = gql`
   mutation SetClaimInformation($id: ID!, $claimInformation: ClaimInformationInput!) {
     setClaimInformation(id: $id, information: $claimInformation) {
-      type {
-        ${TYPE_FRAGMENT}
-      }
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-
-const SET_CLAIM_INFORMATION_QUERY = gql`
-  query SetClaimInformation($id: ID!) {
-    claim(id: $id) {
       type {
         ${TYPE_FRAGMENT}
       }
@@ -414,41 +389,38 @@ const ClaimTypeInformationForm = styled(Form)({
   marginTop: '1rem',
 })
 
-const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
+const handleError = (showNotification: (data: any) => void) => () => {
+  showNotification({
+    type: 'error',
+    message: 'Something went wrong, notify the tech team plz',
+    headline: '):',
+  })
+}
+const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
+  showNotification: (data: any) => void
+}> = ({ type, claimId, showNotification }) => (
   <Mutation
     mutation={SET_CLAIM_TYPE_MUTATION}
-    update={(cache, { data: updateData }) => {
-      cache.writeQuery({
-        query: SET_CLAIM_TYPE_QUERY,
+    refetchQueries={() => [
+      {
+        query: CLAIM_PAGE_QUERY,
         variables: { id: claimId },
-        data: {
-          claim: {
-            type: updateData.setClaimType.type,
-            events: updateData.setClaimType.events,
-            __typename: updateData.setClaimType.__typename,
-          },
-        },
-      })
-    }}
+      },
+    ]}
+    onError={handleError(showNotification)}
   >
-    {(setClaimType) => (
+    {(setClaimType, setTypeMutation) => (
       <Mutation
         mutation={SET_CLAIM_INFORMATION}
-        update={(cache, { data: updateData }) => {
-          cache.writeQuery({
-            query: SET_CLAIM_INFORMATION_QUERY,
+        refetchQueries={() => [
+          {
+            query: CLAIM_PAGE_QUERY,
             variables: { id: claimId },
-            data: {
-              claim: {
-                type: updateData.setClaimInformation.type,
-                events: updateData.setClaimInformation.events,
-                __typename: updateData.setClaimInformation.__typename,
-              },
-            },
-          })
-        }}
+          },
+        ]}
+        onError={handleError(showNotification)}
       >
-        {(setClaimInformation) => (
+        {(setClaimInformation, setInfoMutation) => (
           <Paper>
             <h3>Type</h3>
             <Formik<{ selectedType?: ClaimTypes | '' }>
@@ -482,9 +454,9 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                       type="submit"
                       variant="contained"
                       color="primary"
-                      disabled={!isValid}
+                      disabled={!isValid || setTypeMutation.loading}
                     >
-                      Set type
+                      {setTypeMutation.loading ? <>...</> : <>Set type</>}
                     </SubmitButton>
                   </div>
                 </Form>
@@ -513,9 +485,7 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                       id: claimId,
                       claimInformation: {
                         ...values,
-                        date:
-                          values.date &&
-                          format(parseISO(values.date), 'yyyy-MM-dd'),
+                        date: values.date && format(values.date, 'yyyy-MM-dd'),
                       },
                     },
                   })
@@ -582,8 +552,13 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
                         variant="contained"
                         color="primary"
                         disabled={!isValid}
+                        disabled={!isValid || setInfoMutation.loading}
                       >
-                        Update claim information
+                        {setInfoMutation.loading ? (
+                          <>...</>
+                        ) : (
+                          <>Update claim information</>
+                        )}
                       </SubmitButton>
                     </div>
                   </ClaimTypeInformationForm>
@@ -596,5 +571,7 @@ const ClaimType: React.SFC<ClaimTypeProps> = ({ type, claimId }) => (
     )}
   </Mutation>
 )
+
+const ClaimType = connect(null, { showNotification })(ClaimTypeComponent)
 
 export { ClaimType }

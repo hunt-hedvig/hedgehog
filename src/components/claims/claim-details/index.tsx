@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid'
 import { QueryType } from 'api/generated/graphql'
-import gql from 'graphql-tag'
+import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 
@@ -9,76 +9,10 @@ import { ClaimInformation } from './components/ClaimInformation'
 import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
-import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
+import { ClaimType } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
 import { FileUpload } from './components/FileUpload'
 import { ClaimFileTable } from './components/ClaimFileTable'
-
-const CLAIM_PAGE_QUERY = gql`
-  query ClaimPage($id: ID!) {
-    claim(id: $id) {
-      member {
-        memberId
-        signedOn
-        firstName
-        lastName
-        personalNumber
-        address
-        postalNumber
-        city
-        directDebitStatus {
-          activated
-        }
-        fraudulentStatus
-        sanctionStatus
-        numberFailedCharges {
-          numberFailedCharges
-          lastFailedChargeAt
-        }
-        account {
-          totalBalance
-        }
-      }
-      registrationDate
-      recordingUrl
-      state
-      type {
-        ${TYPE_FRAGMENT}
-      }
-      notes {
-        text
-        date
-      }
-      reserves
-      payments {
-        id
-        amount
-        deductible
-        note
-        timestamp
-        exGratia
-        type
-        #transaction {
-        #  status
-        #}
-        status
-      }
-      events {
-        text
-        date
-      } 
-      claimFiles {
-        claimFileId
-        fileUploadUrl
-        uploadedAt
-        category
-        contentType
-      }
-      coveringEmployee
-      __typename
-    }
-  }
-`
 
 interface Props {
   match: {
