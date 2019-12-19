@@ -74,6 +74,7 @@ export enum AccountEntryType {
   Charge = 'CHARGE',
   ReferralDiscount = 'REFERRAL_DISCOUNT',
   FreeMonthDiscount = 'FREE_MONTH_DISCOUNT',
+  Loss = 'LOSS',
 }
 
 export type AllRepliesEntry = {
@@ -945,6 +946,7 @@ export type RemindNotification = {
   date?: Maybe<Scalars['LocalDate']>
   time?: Maybe<Scalars['LocalTime']>
   message?: Maybe<Scalars['String']>
+  sendReminderTo?: Maybe<Scalars['String']>
 }
 
 export enum SanctionStatus {
@@ -1042,6 +1044,7 @@ export type TicketInput = {
   remindMessage?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
   status?: Maybe<TicketStatus>
+  claimId?: Maybe<Scalars['String']>
 }
 
 export type TicketRevision = {

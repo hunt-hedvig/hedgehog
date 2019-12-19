@@ -39,6 +39,7 @@ const formatDateTime = (date) => {
 interface ICreateNewTicket {
   closeModal: () => void
   showNotification: (data: any) => void
+  claimId: string
 }
 
 interface ICreateNewTicketState {
@@ -51,7 +52,7 @@ interface ICreateNewTicketState {
   description: string
 }
 
-class CreateNewTicket extends React.Component<
+export class CreateNewTicket extends React.Component<
   ICreateNewTicket,
   ICreateNewTicketState
 > {
@@ -86,6 +87,7 @@ class CreateNewTicket extends React.Component<
                         remindNotificationTime: this.state.remindTime,
                         remindMessage: this.state.remindMessage,
                         description: this.state.description,
+                        claimId: this.props.claimId,
                       },
                     },
                     refetchQueries: [{ query: GET_TICKETS }],
@@ -239,8 +241,3 @@ class CreateNewTicket extends React.Component<
 }
 
 const mapActions = { ...actions.notificationsActions }
-
-export default connect(
-  null,
-  mapActions,
-)(CreateNewTicket)

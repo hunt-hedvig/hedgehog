@@ -509,7 +509,8 @@ enum AccountEntryType {
   PAYOUT,
   CHARGE,
   REFERRAL_DISCOUNT,
-  FREE_MONTH_DISCOUNT
+  FREE_MONTH_DISCOUNT,
+  LOSS
 }
 
 enum ClaimSource {
@@ -778,6 +779,7 @@ input TicketInput {
   remindMessage: String
   description: String
   status : TicketStatus
+  claimId: String
 }
 
 type Ticket {
@@ -821,6 +823,7 @@ input RemindNotification {
   date: LocalDate
   time: LocalTime
   message: String
+  sendReminderTo: String
 }
 
 enum TicketChangeType {
@@ -865,4 +868,3 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
-

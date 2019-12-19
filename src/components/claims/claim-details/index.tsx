@@ -3,6 +3,7 @@ import { QueryType } from 'api/generated/graphql'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Query } from 'react-apollo'
+import styled from 'react-emotion'
 
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimInformation } from './components/ClaimInformation'
@@ -13,6 +14,7 @@ import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
 import { FileUpload } from './components/FileUpload'
 import { ClaimFileTable } from './components/ClaimFileTable'
+import { CreateTicketStandAlone } from '../../../components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 
 const CLAIM_PAGE_QUERY = gql`
   query ClaimPage($id: ID!) {
@@ -79,6 +81,10 @@ const CLAIM_PAGE_QUERY = gql`
     }
   }
 `
+
+const Wrapper = styled('div')({
+  display: 'flex',
+})
 
 interface Props {
   match: {
@@ -150,21 +156,17 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             />
           </Grid>
           <Grid item xs={12}>
-            <>
-              <Grid item xs={12}>
-                <FileUpload
-                  claimId={match.params.id}
-                  memberId={member.memberId}
-                  onUploaded={() => refetch()}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <ClaimFileTable
-                  claimFiles={claimFiles}
-                  claimId={match.params.id}
-                />
-              </Grid>
-            </>
+            <CreateTicketStandAlone claimId={match.params.id} />
+          </Grid>
+          <Grid item xs={12}>
+            <FileUpload
+              claimId={match.params.id}
+              memberId={member.memberId}
+              onUploaded={() => refetch()}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimFileTable claimFiles={claimFiles} claimId={match.params.id} />
           </Grid>
           <Grid item xs={12}>
             <ClaimEvents events={events} />

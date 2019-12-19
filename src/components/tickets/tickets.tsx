@@ -25,8 +25,19 @@ export class Tickets extends React.Component<ITickets, {}> {
   public render() {
     return (
       <>
-        <Query<any> query={ME}>
+        <Query query={ME}>
           {({ data, error, loading }) => {
+            if (loading) {
+              return <div>Loading</div>
+            }
+
+            if (error) {
+              return (
+                <div>
+                  Error: <pre>{JSON.stringify(error, null, 2)}</pre>
+                </div>
+              )
+            }
             this.state.me.email = data.me
             return null
           }}
@@ -42,9 +53,7 @@ export class Tickets extends React.Component<ITickets, {}> {
         >
           {({ data, error, loading }) => {
             if (loading) {
-              return (
-                <p>Fetching tickets... </p>
-              )
+              return <p>Fetching tickets... </p>
             }
             if (error) {
               return (
@@ -210,6 +219,15 @@ export class Tickets extends React.Component<ITickets, {}> {
     if (this.props.filter.type !== 'All' && this.props.filter.type !== '') {
       filteredTickets = filteredTickets.filter(
         (ticket) => ticket.type === this.props.filter.type,
+      )
+    }
+
+    if (
+      this.props.filter.claimId != 'All' &&
+      this.props.filter.claimId !== ''
+    ) {
+      filteredTickets = filteredTickets.filter(
+        (ticket) => ticket.referenceId === this.props.filter.claimId,
       )
     }
     return filteredTickets

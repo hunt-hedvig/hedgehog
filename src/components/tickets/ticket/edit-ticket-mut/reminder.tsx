@@ -18,6 +18,7 @@ interface IChangeReminder {
   touchedDate: boolean
   touchedTime: boolean
   touchedMessage: boolean
+  sendReminderTo: String
 }
 
 class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
@@ -36,6 +37,7 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                       date: this.props.remindDate,
                       time: this.props.remindTime,
                       message: this.props.remindMessage,
+                      sendReminderTo: this.props.sendReminderTo,
                     },
                   },
                 })
@@ -116,7 +118,4 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
 
 const mapActions = { ...actions.notificationsActions }
 
-export default connect(
-  null,
-  mapActions,
-)(ChangeReminderMutation)
+export default connect(null, mapActions)(ChangeReminderMutation)

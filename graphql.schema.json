@@ -1285,6 +1285,12 @@
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "LOSS",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -7513,6 +7519,16 @@
               "ofType": null
             },
             "defaultValue": null
+          },
+          {
+            "name": "claimId",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
           }
         ],
         "interfaces": null,
@@ -7547,6 +7563,16 @@
           },
           {
             "name": "message",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "sendReminderTo",
             "description": "",
             "type": {
               "kind": "SCALAR",
