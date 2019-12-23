@@ -57,7 +57,7 @@ const getValidationSchema = () =>
   yup.object().shape({
     type: yup
       .string()
-      .oneOf(['CORRECTION', 'CAMPAIGN', 'SUBSCRIPTION', 'PAYOUT', 'CHARGE'])
+      .oneOf(['CAMPAIGN', 'SUBSCRIPTION', 'LOSS', 'CHARGE'])
       .required(),
     amount: yup.number().required(),
     reference: yup
@@ -154,10 +154,9 @@ export class AddEntryForm extends React.Component<
               return (
                 <Form onChange={this.resetConfirmed}>
                   <Field component={FieldSelect} name="type">
-                    <MenuItem value="CORRECTION">Correction</MenuItem>
                     <MenuItem value="CAMPAIGN">Campaign</MenuItem>
                     <MenuItem value="SUBSCRIPTION">Subscription</MenuItem>
-                    <MenuItem value="PAYOUT">Payout</MenuItem>
+                    <MenuItem value="LOSS">Loss</MenuItem>
                     <MenuItem value="CHARGE">Charge</MenuItem>
                   </Field>
                   <Field
