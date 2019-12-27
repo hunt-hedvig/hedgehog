@@ -39,7 +39,7 @@ const formatDateTime = (date) => {
 interface ICreateNewTicket {
   closeModal: () => void
   showNotification: (data: any) => void
-  claimId: string
+  referenceId: any
 }
 
 interface ICreateNewTicketState {
@@ -87,7 +87,7 @@ export class CreateNewTicket extends React.Component<
                         remindNotificationTime: this.state.remindTime,
                         remindMessage: this.state.remindMessage,
                         description: this.state.description,
-                        claimId: this.props.claimId,
+                        referenceId: this.props.referenceId,
                       },
                     },
                     refetchQueries: [{ query: GET_TICKETS }],

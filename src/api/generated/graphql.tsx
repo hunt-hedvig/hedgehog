@@ -1044,7 +1044,7 @@ export type TicketInput = {
   remindMessage?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
   status?: Maybe<TicketStatus>
-  claimId?: Maybe<Scalars['String']>
+  referenceId?: Maybe<Scalars['String']>
 }
 
 export type TicketRevision = {

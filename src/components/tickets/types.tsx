@@ -9,7 +9,7 @@ export interface ITickets {
     assignedTo: string
     status: string
     type: string
-    claimId: string
+    referenceId: string
   }
 }
 

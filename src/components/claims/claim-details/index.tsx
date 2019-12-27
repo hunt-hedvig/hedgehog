@@ -1,16 +1,15 @@
 import Grid from '@material-ui/core/Grid'
 import { QueryType } from 'api/generated/graphql'
 import gql from 'graphql-tag'
+import { TYPE_FRAGMENT } from './components/ClaimType'
 import * as React from 'react'
 import { Query } from 'react-apollo'
-import styled from 'react-emotion'
-
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimInformation } from './components/ClaimInformation'
 import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
-import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
+import { ClaimType } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
 import { FileUpload } from './components/FileUpload'
 import { ClaimFileTable } from './components/ClaimFileTable'
@@ -81,11 +80,6 @@ const CLAIM_PAGE_QUERY = gql`
     }
   }
 `
-
-const Wrapper = styled('div')({
-  display: 'flex',
-})
-
 interface Props {
   match: {
     params: {
@@ -156,7 +150,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             />
           </Grid>
           <Grid item xs={12}>
-            <CreateTicketStandAlone claimId={match.params.id} />
+            <CreateTicketStandAlone referenceId={match.params.id} />
           </Grid>
           <Grid item xs={12}>
             <FileUpload

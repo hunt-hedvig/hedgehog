@@ -223,11 +223,11 @@ export class Tickets extends React.Component<ITickets, {}> {
     }
 
     if (
-      this.props.filter.claimId != 'All' &&
-      this.props.filter.claimId !== ''
+      this.props.filter.referenceId != 'All' &&
+      this.props.filter.referenceId !== ''
     ) {
       filteredTickets = filteredTickets.filter(
-        (ticket) => ticket.referenceId === this.props.filter.claimId,
+        (ticket) => ticket.referenceId === this.props.filter.referenceId,
       )
     }
     return filteredTickets

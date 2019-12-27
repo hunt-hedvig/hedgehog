@@ -69,7 +69,7 @@ class TaskManagerPageComponent extends React.Component<
       assignedTo: 'Everyone',
       status: 'All',
       type: 'All',
-      claimId: 'All',
+      referenceId: 'All',
     },
     toolbarItems: [
       {
@@ -136,7 +136,7 @@ class TaskManagerPageComponent extends React.Component<
         <Modal open={this.state.showModal} handleClose={this.closeModal}>
           <CreateNewTicket
             closeModal={this.closeModal}
-            claimId={''}
+            referenceId={null}
             showNotification={this.props.showNotification}
           />
         </Modal>

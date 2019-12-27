@@ -11,7 +11,7 @@ import { EOrder } from '../../types'
 
 interface props {
   showNotification: (data: any) => void
-  claimId: string
+  referenceId: string
 }
 
 const ButtonWrapper = styled('div')({
@@ -28,37 +28,29 @@ const TicketTitle = styled('h3')({
 
 const CreateTicketStandAloneComponent: React.FunctionComponent<props> = ({
   showNotification,
-  claimId,
+  referenceId,
 }) => {
-  const [showModal, setModal] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const [filter, setFilter] = useState({
     assignedTo: 'Everyone',
     status: 'All',
     type: 'All',
-    claimId: claimId,
+    referenceId: referenceId,
   })
   const [sort, setSort] = useState({ category: 'priority', order: EOrder.DESC })
-
-  const closeModal = (): void => {
-    setModal(false)
-  }
-
-  const onClicked = () => {
-    setModal(true)
-  }
 
   return (
     <>
       <ButtonWrapper>
         <TicketTitle>Create Tickets</TicketTitle>
-        <Button onClick={onClicked}>Create New Ticket</Button>
+        <Button onClick={() => setShowModal(true)}>Create New Ticket</Button>
       </ButtonWrapper>
 
-      <Modal open={showModal} handleClose={closeModal}>
+      <Modal open={showModal} handleClose={() => setShowModal(false)}>
         <CreateNewTicket
-          closeModal={closeModal}
+          closeModal={() => setShowModal(false)}
           showNotification={showNotification}
-          claimId={claimId}
+          referenceId={referenceId}
         />
       </Modal>
 

@@ -779,7 +779,7 @@ input TicketInput {
   remindMessage: String
   description: String
   status : TicketStatus
-  claimId: String
+  referenceId: String
 }
 
 type Ticket {
