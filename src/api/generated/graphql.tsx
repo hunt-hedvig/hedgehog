@@ -74,6 +74,7 @@ export enum AccountEntryType {
   Charge = 'CHARGE',
   ReferralDiscount = 'REFERRAL_DISCOUNT',
   FreeMonthDiscount = 'FREE_MONTH_DISCOUNT',
+  Loss = 'LOSS',
 }
 
 export type AllRepliesEntry = {
@@ -1042,6 +1043,7 @@ export type TicketInput = {
   remindMessage?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
   status?: Maybe<TicketStatus>
+  referenceId?: Maybe<Scalars['String']>
 }
 
 export type TicketRevision = {

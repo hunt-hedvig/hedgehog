@@ -18,7 +18,7 @@ class ChangePriorityMutation extends React.Component<IChangeDescription, {}> {
   public render() {
     return (
       <Mutation mutation={CHANGE_PRIORITY}>
-        {(changeTicketPriority, { data }) => {
+        {(changeTicketPriority) => {
           return (
             <Form
               onSubmit={(e) => {
@@ -81,7 +81,4 @@ class ChangePriorityMutation extends React.Component<IChangeDescription, {}> {
 
 const mapActions = { ...actions.notificationsActions }
 
-export default connect(
-  null,
-  mapActions,
-)(ChangePriorityMutation)
+export default connect(null, mapActions)(ChangePriorityMutation)
