@@ -1,4 +1,4 @@
-import { isBefore } from 'date-fns'
+import { isAfter, isBefore } from 'date-fns'
 import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
 import { GET_TICKETS, ME } from 'features/taskmanager/queries'
@@ -111,16 +111,16 @@ export class Tickets extends React.Component<ITickets, {}> {
     }
 
     const today = new Date()
-    const reminderDate = parse(date, 'yyyy-MM-dd', today)
-    const reminderTime = parse(time, 'HH:mm:ss', today)
+    const reminderDate: Date = parse(date, 'yyyy-MM-dd', today)
+    const reminderTime: Date = parse(time, 'HH:mm:ss', today)
 
-    if (isBefore(reminderDate, today)) {
-      return true
+    if (isAfter(reminderDate, today)) {
+      return false
     }
-    if (isSameDay(reminderDate, today)) {
-      return isBefore(reminderTime, today)
+    if (isSameDay(reminderDate, today) && isAfter(reminderTime, today)) {
+      return false
     }
-    return false
+    return true
   }
 
   private applyFilters = (sortedTickets: any[]): any[] => {
