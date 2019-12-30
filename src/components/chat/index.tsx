@@ -134,7 +134,12 @@ export default class Chat extends React.Component {
               style={{ height: '100%' }}
               panes={panes}
               renderActiveOnly={true}
-              defaultActiveIndex={!!this.props.insurance?.data || this.props.insurance?.list?.length > 0 ? 4 : 0}
+              defaultActiveIndex={
+                !!this.props.insurance?.data ||
+                this.props.insurance?.list?.length > 0
+                  ? 5
+                  : 0
+              }
             />
           )}
         </ChatPageContainer>
