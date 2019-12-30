@@ -1,6 +1,6 @@
 import { gql } from 'apollo-boost'
 import format from 'date-fns/format'
-import { CHANGE_STATUS } from 'features/taskmanager/queries'
+import { CHANGE_STATUS, GET_TICKETS } from 'features/taskmanager/queries'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
@@ -396,6 +396,7 @@ export class TicketBody extends React.Component<
         ticketId: this.props.id,
         newStatus: TicketStatus.RESOLVED,
       },
+      refetchQueries: [{ query: GET_TICKETS }],
     })
   }
 
@@ -406,6 +407,7 @@ export class TicketBody extends React.Component<
         teamMemberId: this.props.me,
         newStatus: TicketStatus.WORKING_ON,
       },
+      refetchQueries: [{ query: GET_TICKETS }],
     })
   }
 
@@ -416,6 +418,7 @@ export class TicketBody extends React.Component<
         teamMemberId: this.props.me,
         newStatus: TicketStatus.ON_HOLD,
       },
+      refetchQueries: [{ query: GET_TICKETS }],
     })
   }
 }
