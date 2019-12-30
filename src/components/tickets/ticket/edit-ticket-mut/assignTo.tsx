@@ -26,7 +26,6 @@ class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
         refetchQueries={() => [
           {
             query: GET_TICKETS,
-            variables: { id: this.props.id },
           },
         ]}
       >

@@ -15,8 +15,8 @@ export const createOptionsArray = (array: IOption[]): IOption[] => {
 export const IEX_TEAM_MEMBERS_OPTIONS = [
   { text: 'Unassigned', value: null },
   { text: 'Emma', value: 'emma@hedvig.com' },
-  { text: 'Kalle', value: 'karl.jernberg@hedvig.com' },
   { text: 'Kajsa', value: 'kajsa@hedvig.com' },
+  { text: 'Kalle', value: 'karl.jernberg@hedvig.com' },
   { text: 'Ludvig', value: 'ludvig@hedvig.com' },
   { text: 'Sara', value: 'sara@hedvig.com' },
   { text: 'Tomas', value: 'tomas@hedvig.com' },

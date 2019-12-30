@@ -29,7 +29,6 @@ class ChangeStatusMutation extends React.Component<IChangeStatus, {}> {
         refetchQueries={() => [
           {
             query: GET_TICKETS,
-            variables: { id: this.props.id },
           },
         ]}
       >

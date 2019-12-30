@@ -141,7 +141,7 @@ export class Ticket extends React.Component<ITicket, {}> {
 
             <Grid.Column floated="right">
               <Button onClick={(event) => this.toggleShowBody(event)} compact>
-                {this.state.showBody ? '' + 'Hide details' : 'Show details'}
+                {this.state.showBody ? 'Hide details' : 'Show details'}
               </Button>
             </Grid.Column>
           </Grid.Row>

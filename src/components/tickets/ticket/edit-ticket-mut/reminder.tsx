@@ -22,7 +22,6 @@ interface IChangeReminder {
   touchedDate: boolean
   touchedTime: boolean
   touchedMessage: boolean
-  sendReminderTo: string
 }
 
 class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
@@ -33,7 +32,6 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
         refetchQueries={() => [
           {
             query: GET_TICKETS,
-            variables: { id: this.props.id },
           },
         ]}
       >
@@ -49,7 +47,6 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                       date: this.props.remindDate,
                       time: this.props.remindTime,
                       message: this.props.remindMessage,
-                      sendReminderTo: this.props.sendReminderTo,
                     },
                   },
                 })

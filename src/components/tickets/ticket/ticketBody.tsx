@@ -193,7 +193,6 @@ export class TicketBody extends React.Component<
               touchedDate={this.state.inputs.touched.remindDate}
               touchedTime={this.state.inputs.touched.remindTime}
               touchedMessage={this.state.inputs.touched.remindMessage}
-              sendReminderTo={this.state.inputs.assignedTo}
             />
           </Grid.Column>
         </Grid.Row>

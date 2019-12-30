@@ -823,7 +823,6 @@ input RemindNotification {
   date: LocalDate
   time: LocalTime
   message: String
-  sendReminderTo: String
 }
 
 enum TicketChangeType {

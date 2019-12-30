@@ -946,7 +946,6 @@ export type RemindNotification = {
   date?: Maybe<Scalars['LocalDate']>
   time?: Maybe<Scalars['LocalTime']>
   message?: Maybe<Scalars['String']>
-  sendReminderTo?: Maybe<Scalars['String']>
 }
 
 export enum SanctionStatus {
