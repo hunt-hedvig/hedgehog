@@ -1,5 +1,4 @@
-import differenceInMilliseconds from 'date-fns/differenceInMilliseconds'
-import isAfter from 'date-fns/isAfter'
+import { isBefore } from 'date-fns'
 import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
 import { GET_TICKETS, ME } from 'features/taskmanager/queries'
@@ -17,6 +16,7 @@ export class Tickets extends React.Component<ITickets, {}> {
       email: '',
     },
   }
+
   public componentDidMount() {
     this.setState({ remindersHaveBeenProcessed: true })
   }
@@ -62,17 +62,6 @@ export class Tickets extends React.Component<ITickets, {}> {
               )
             }
 
-            // Set up Notifications
-            const [
-              overdueNotifications,
-              upcomingNotifications,
-            ] = this.processReminders(data.tickets)
-
-            if (upcomingNotifications.length > 0) {
-              this.createNotifications(upcomingNotifications)
-            }
-
-            // SORT AND FILTER THE TICKETS
             let sortedTickets = data.tickets.slice().sort()
 
             if (this.props.sort.category === 'priority') {
@@ -94,7 +83,10 @@ export class Tickets extends React.Component<ITickets, {}> {
                 {filteredTickets.map((ticket) => (
                   <Ticket
                     key={ticket.id}
-                    overdue={ticket.id in overdueNotifications}
+                    overdue={this.isOverdue(
+                      ticket.remindNotificationDate,
+                      ticket.remindNotificationTime,
+                    )}
                     reminder={{
                       date: ticket.remindNotificationDate,
                       time: ticket.remindNotificationTime,
@@ -113,89 +105,22 @@ export class Tickets extends React.Component<ITickets, {}> {
     )
   }
 
-  private processReminders = (tickets) => {
-    // Select tickets that:
-    // a) have been assigned to me,
-    // b)  not been resolved and
-    // c)  that are overdue or due for today.
-    // Ignore tickets further in the future...
+  private isOverdue = (date, time) => {
+    if (date === null || time === null) {
+      return false
+    }
+
     const today = new Date()
-    const me = this.state.me.email
-    const unresolvedTickets = tickets.filter((ticket) => {
-      return (
-        ticket.assignedTo === me &&
-        ticket.status !== 'RESOLVED' &&
-        ticket.remindNotificationDate !== null &&
-        !isAfter(
-          parse(ticket.remindNotificationDate, 'yyyy-MM-dd', today),
-          today,
-        )
-      )
-    })
+    const reminderDate = parse(date, 'yyyy-MM-dd', today)
+    const reminderTime = parse(time, 'HH:mm:ss', today)
 
-    let overdueReminders = {}
-    const upcomingRemindersToday = []
-
-    for (let i = 0; i < unresolvedTickets.length; i++) {
-      if (
-        isSameDay(
-          parse(
-            unresolvedTickets[i].remindNotificationDate,
-            'yyyy-MM-dd',
-            today,
-          ),
-          today,
-        ) &&
-        isAfter(
-          parse(unresolvedTickets[i].remindNotificationTime, 'HH:mm:ss', today),
-          today,
-        ) &&
-        !(
-          this.generateReminderId(
-            unresolvedTickets[i].id,
-            unresolvedTickets[i].remindNotificationDate,
-            unresolvedTickets[i].remindNotificationDate,
-          ) in this.state.remindersWeHaveSeen
-        )
-      ) {
-        upcomingRemindersToday.push(unresolvedTickets[i])
-      } else {
-        // Just keep track of the id of the tickets that are overdue
-        overdueReminders = {
-          ...overdueReminders,
-          [unresolvedTickets[i].id]: true,
-        }
-      }
+    if (isBefore(reminderDate, today)) {
+      return true
     }
-    return [overdueReminders, upcomingRemindersToday]
-  }
-
-  // createNotifications takes @reminders that will fire later today...
-  private createNotifications = (reminders: any[]): void => {
-    const now = new Date()
-    for (let i = 0; i < reminders.length; i++) {
-      Object.defineProperty(
-        this.state.remindersWeHaveSeen,
-        this.generateReminderId(
-          reminders[i].id,
-          reminders[i].remindNotificationDate,
-          reminders[i].remindNotificationTime,
-        ),
-        { value: null },
-      )
-      const msUntilFire = differenceInMilliseconds(
-        parse(reminders[i].remindNotificationTime, 'HH:mm:ss', now),
-        now,
-      )
-      setTimeout(() => {
-        new Notification('Ticket Reminder', {
-          silent: true,
-          body: reminders[i].remindMessage,
-          icon: null,
-          requireInteraction: true,
-        })
-      }, msUntilFire)
+    if (isSameDay(reminderDate, today)) {
+      return isBefore(reminderTime, today)
     }
+    return false
   }
 
   private applyFilters = (sortedTickets: any[]): any[] => {
@@ -249,9 +174,5 @@ export class Tickets extends React.Component<ITickets, {}> {
       return 0
     }
     return 1
-  }
-
-  private generateReminderId = (ticketId, date, time): string => {
-    return ticketId + date.toString() + time.toString()
   }
 }
