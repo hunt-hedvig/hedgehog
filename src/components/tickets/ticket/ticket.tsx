@@ -77,7 +77,8 @@ export class Ticket extends React.Component<ITicket, {}> {
                   trigger={this.getTypeIcon('COMPLETED')}
                 />
               )}
-              {this.props.overdue ? (
+              {this.props.overdue &&
+              this.props.status !== TicketStatus.RESOLVED ? (
                 <OverdueNotifier reminder={this.props.reminder!!} />
               ) : null}
             </Grid.Column>
