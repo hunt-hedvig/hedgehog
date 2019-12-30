@@ -10,6 +10,7 @@ export interface ITickets {
     status: string
     type: string
     referenceId: string
+    memberId: string
   }
 }
 

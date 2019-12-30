@@ -238,7 +238,7 @@ const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => (
         : item.productStatus) ?? '-'}
     </Table.Cell>
     <Table.Cell>
-      {item.householdSize ?? '-'} peeps / {item.livingSpace ?? '-'} m
+      {item.householdSize ?? '-'} people / {item.livingSpace ?? '-'} m
       <sup>2</sup>
     </Table.Cell>
   </Table.Row>

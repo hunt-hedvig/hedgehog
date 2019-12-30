@@ -1,19 +1,19 @@
 import Grid from '@material-ui/core/Grid'
 import { QueryType } from 'api/generated/graphql'
 import gql from 'graphql-tag'
-import { TYPE_FRAGMENT } from './components/ClaimType'
 import * as React from 'react'
 import { Query } from 'react-apollo'
+import { CreateTicketStandAlone } from '../../../components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 import { ClaimEvents } from './components/ClaimEvents'
+import { ClaimFileTable } from './components/ClaimFileTable'
 import { ClaimInformation } from './components/ClaimInformation'
-import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
+import { TYPE_FRAGMENT } from './components/ClaimType'
 import { ClaimType } from './components/ClaimType'
-import { MemberInformation } from './components/MemberInformation'
 import { FileUpload } from './components/FileUpload'
-import { ClaimFileTable } from './components/ClaimFileTable'
-import { CreateTicketStandAlone } from '../../../components/tickets/ticket/create-ticket/create-ticket-stand-alone'
+import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
+import { MemberInformation } from './components/MemberInformation'
 
 const CLAIM_PAGE_QUERY = gql`
   query ClaimPage($id: ID!) {
@@ -84,6 +84,7 @@ interface Props {
   match: {
     params: {
       id: string
+      userId: string
     }
   }
 }
@@ -149,17 +150,19 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               sanctionStatus={member.sanctionStatus}
             />
           </Grid>
-          <Grid item xs={12}>
-            <CreateTicketStandAlone referenceId={match.params.id} />
+          <Grid item xl={6} xs={12}>
+            <CreateTicketStandAlone
+              referenceId={match.params.id}
+              memberId={match.params.userId}
+              ticketType={'CLAIM'}
+            />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xl={6} xs={12}>
             <FileUpload
               claimId={match.params.id}
               memberId={member.memberId}
               onUploaded={() => refetch()}
             />
-          </Grid>
-          <Grid item xs={12}>
             <ClaimFileTable claimFiles={claimFiles} claimId={match.params.id} />
           </Grid>
           <Grid item xs={12}>

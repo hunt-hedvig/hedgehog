@@ -70,6 +70,7 @@ class TaskManagerPageComponent extends React.Component<
       status: 'All',
       type: 'All',
       referenceId: 'All',
+      memberId: 'All',
     },
     toolbarItems: [
       {

@@ -1,13 +1,14 @@
 import { AccountTab } from 'components/chat/tabs/AccountTab'
 import ChatTab from 'components/chat/tabs/ChatTab'
 import ClaimsTab from 'components/chat/tabs/ClaimsTab'
+import { MemberDebtComponent } from 'components/chat/tabs/DebtTab'
 import DetailsTab from 'components/chat/tabs/DetailsTab'
 import MemberFile from 'components/chat/tabs/FileTab'
-import { MemberDebtComponent } from 'components/chat/tabs/DebtTab'
 import InsuranceListTab from 'components/chat/tabs/InsuranceListTab'
 import InsuranceTab from 'components/chat/tabs/InsuranceTab'
 import PaymentsTab from 'components/chat/tabs/PaymentsTab'
 import { Quotes } from 'components/chat/tabs/quotes'
+import { CreateTicketStandAlone } from 'components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
@@ -55,6 +56,15 @@ const memberPagePanes = (props, addMessage, socket) => {
     {
       menuItem: 'Debt',
       render: () => <TabItem props={props} TabContent={MemberDebtComponent} />,
+    },
+    {
+      menuItem: 'Tickets',
+      render: () => (
+        <TabItem
+          props={{ memberId: props.match.params.id, ticketType: 'REMIND' }}
+          TabContent={CreateTicketStandAlone}
+        /> // FIXME: Send props like other locations
+      ),
     },
   ]
   if (props.showChatTab) {

@@ -2,10 +2,10 @@ import differenceInMilliseconds from 'date-fns/differenceInMilliseconds'
 import isAfter from 'date-fns/isAfter'
 import isSameDay from 'date-fns/isSameDay'
 import parse from 'date-fns/parse'
+import { GET_TICKETS, ME } from 'features/taskmanager/queries'
+import { TicketStatus } from 'features/taskmanager/types'
 import * as React from 'react'
 import { Query } from 'react-apollo'
-import { GET_TICKETS, ME } from '../../features/taskmanager/queries'
-import { TicketStatus } from '../../features/taskmanager/types'
 import { Ticket } from './ticket/ticket'
 import { EOrder, ITickets } from './types'
 
@@ -18,7 +18,6 @@ export class Tickets extends React.Component<ITickets, {}> {
     },
   }
   public componentDidMount() {
-    // Make sure to not process reminders again when sorting tickets
     this.setState({ remindersHaveBeenProcessed: true })
   }
 
@@ -49,7 +48,7 @@ export class Tickets extends React.Component<ITickets, {}> {
             onlyResolvedTickets:
               this.props.filter.status === TicketStatus.RESOLVED,
           }}
-          pollInterval={1000}
+          pollInterval={3000}
         >
           {({ data, error, loading }) => {
             if (loading) {
@@ -223,11 +222,20 @@ export class Tickets extends React.Component<ITickets, {}> {
     }
 
     if (
-      this.props.filter.referenceId != 'All' &&
+      this.props.filter.referenceId !== 'All' &&
       this.props.filter.referenceId !== ''
     ) {
       filteredTickets = filteredTickets.filter(
         (ticket) => ticket.referenceId === this.props.filter.referenceId,
+      )
+    }
+
+    if (
+      this.props.filter.memberId !== 'All' &&
+      this.props.filter.memberId !== ''
+    ) {
+      filteredTickets = filteredTickets.filter(
+        (ticket) => ticket.memberId === this.props.filter.memberId,
       )
     }
     return filteredTickets

@@ -2,7 +2,6 @@ import format from 'date-fns/format'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
-import { connect } from 'react-redux'
 import {
   Button,
   Checkbox,
@@ -39,11 +38,13 @@ const formatDateTime = (date) => {
 interface ICreateNewTicket {
   closeModal: () => void
   showNotification: (data: any) => void
-  referenceId: any
+  referenceId: string
+  memberId: string
+  type: string
 }
 
 interface ICreateNewTicketState {
-  assignedTo: string
+  assignedTo?: string
   priority: number
   setReminder: boolean
   remindDate: any
@@ -57,13 +58,14 @@ export class CreateNewTicket extends React.Component<
   ICreateNewTicketState
 > {
   public state = {
-    assignedTo: '',
+    assignedTo: null,
     priority: 0,
     remindDate: null,
     remindTime: null,
     remindMessage: '',
     description: '',
     setReminder: false,
+    type: this.props.type ?? 'REMIND',
   }
 
   public render() {
@@ -71,7 +73,7 @@ export class CreateNewTicket extends React.Component<
       <NewTicketBody>
         <h2>Create a new ticket</h2>
         <Mutation mutation={CREATE_TICKET}>
-          {(createNewTicket, { data }) => {
+          {(createNewTicket) => {
             return (
               <Form
                 onSubmit={(e) => {
@@ -82,12 +84,13 @@ export class CreateNewTicket extends React.Component<
                       ticket: {
                         assignedTo: this.state.assignedTo,
                         priority: this.state.priority,
-                        type: 'REMIND',
+                        type: this.state.type,
                         remindNotificationDate: this.state.remindDate,
                         remindNotificationTime: this.state.remindTime,
                         remindMessage: this.state.remindMessage,
                         description: this.state.description,
                         referenceId: this.props.referenceId,
+                        memberId: this.props.memberId,
                       },
                     },
                     refetchQueries: [{ query: GET_TICKETS }],
@@ -166,11 +169,13 @@ export class CreateNewTicket extends React.Component<
                         this.setState({
                           remindDate: date,
                           remindTime: time,
+                          remindMessage: this.state.description,
                         })
                       } else {
                         this.setState({
                           remindDate: null,
                           remindTime: null,
+                          remindMessage: null,
                         })
                       }
                     }}

@@ -15,12 +15,11 @@ export class Redirector extends React.Component<
   IRedirecterProps,
   IRedirecterState
 > {
-
   public render() {
     return (
       <>
         <Link to={this.props.route} target="_blank">
-          <Button secondary>{this.props.redirectText}</Button>
+          <Button>{this.props.redirectText}</Button>
         </Link>
       </>
     )
