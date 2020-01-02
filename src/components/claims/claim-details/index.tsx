@@ -10,7 +10,7 @@ import { ClaimInformation } from './components/ClaimInformation'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
 import { TYPE_FRAGMENT } from './components/ClaimType'
-import { ClaimType } from './components/ClaimType'
+import { ClaimTypeForm } from './components/ClaimType'
 import { FileUpload } from './components/FileUpload'
 import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { MemberInformation } from './components/MemberInformation'
@@ -67,7 +67,7 @@ const CLAIM_PAGE_QUERY = gql`
       events {
         text
         date
-      } 
+      }
       claimFiles {
         claimFileId
         fileUploadUrl
@@ -136,7 +136,11 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             />
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
-            <ClaimType type={type} claimId={match.params.id} />
+            <ClaimTypeForm
+              type={type}
+              claimId={match.params.id}
+              refetchPage={refetch}
+            />
           </Grid>
           <Grid item xs={12}>
             <ClaimNotes notes={notes} claimId={match.params.id} />

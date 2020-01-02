@@ -3,15 +3,15 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
-import { connect } from 'react-redux'
-import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 import { format, parseISO } from 'date-fns'
 import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { connect } from 'react-redux'
 import { showNotification } from 'store/actions/notificationsActions'
+import { sleep } from 'utils/sleep'
 
 import { FormikDatePicker } from '../../../shared/inputs/DatePicker'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
@@ -377,6 +377,7 @@ export enum ClaimTypes {
 interface ClaimTypeProps {
   type?: ClaimType
   claimId: string
+  refetchPage: () => Promise<void>
 }
 
 const SubmitButton = withStyles({
@@ -398,180 +399,188 @@ const handleError = (showNotification: (data: any) => void) => () => {
 }
 const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
   showNotification: (data: any) => void
-}> = ({ type, claimId, showNotification }) => (
-  <Mutation
-    mutation={SET_CLAIM_TYPE_MUTATION}
-    refetchQueries={() => [
-      {
-        query: CLAIM_PAGE_QUERY,
-        variables: { id: claimId },
-      },
-    ]}
-    onError={handleError(showNotification)}
-  >
-    {(setClaimType, setTypeMutation) => (
-      <Mutation
-        mutation={SET_CLAIM_INFORMATION}
-        refetchQueries={() => [
-          {
-            query: CLAIM_PAGE_QUERY,
-            variables: { id: claimId },
-          },
-        ]}
-        onError={handleError(showNotification)}
-      >
-        {(setClaimInformation, setInfoMutation) => (
-          <Paper>
-            <h3>Type</h3>
-            <Formik<{ selectedType?: ClaimTypes | '' }>
-              initialValues={{ selectedType: (type && type.__typename) || '' }}
-              onSubmit={(values, { setSubmitting }) => {
-                if (!values.selectedType) {
-                  return
-                }
-                setClaimType({
-                  variables: { id: claimId, type: values.selectedType },
-                })
-                setSubmitting(false)
-              }}
-            >
-              {({ isValid }) => (
-                <Form>
-                  <div>
-                    <Field component={FieldSelect} name="selectedType">
-                      <MuiMenuItem disabled value="">
-                        Select a type...
-                      </MuiMenuItem>
-                      {Object.keys(ClaimTypes).map((t) => (
-                        <MuiMenuItem key={t} value={t}>
-                          {t}
-                        </MuiMenuItem>
-                      ))}
-                    </Field>
-                  </div>
-                  <div>
-                    <SubmitButton
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      disabled={!isValid || setTypeMutation.loading}
-                    >
-                      {setTypeMutation.loading ? <>...</> : <>Set type</>}
-                    </SubmitButton>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-            {type ? (
-              <Formik<{
-                location?: string
-                date?: Date
-                item?: string
-                policeReport?: string
-                receipt?: string
-                ticket?: string
-              }>
-                initialValues={{
-                  location: (type as any).location || '',
-                  date: type.date ? parseISO(type.date) : undefined,
-                  item: (type as any).item || '',
-                  policeReport: (type as any).policeReport || '',
-                  receipt: (type as any).receipt || '',
-                  ticket: (type as any).ticket || '',
-                }}
-                onSubmit={(values, { setSubmitting }) => {
-                  setClaimInformation({
-                    variables: {
-                      id: claimId,
-                      claimInformation: {
-                        ...values,
-                        date: values.date && format(values.date, 'yyyy-MM-dd'),
-                      },
-                    },
+}> = ({ type, claimId, refetchPage, showNotification }) => {
+  const [isSetClaimTypeLoading, setSetClaimTypeLoading] = React.useState(false)
+
+  return (
+    <Mutation
+      mutation={SET_CLAIM_TYPE_MUTATION}
+      onError={handleError(showNotification)}
+    >
+      {(setClaimType, setTypeMutation) => (
+        <Mutation
+          mutation={SET_CLAIM_INFORMATION}
+          onError={handleError(showNotification)}
+        >
+          {(setClaimInformation, setInfoMutation) => (
+            <Paper>
+              <h3>Type</h3>
+              <Formik<{ selectedType?: ClaimTypes | '' }>
+                initialValues={{ selectedType: type?.__typename || '' }}
+                onSubmit={async (values, { setSubmitting }) => {
+                  if (!values.selectedType) {
+                    return
+                  }
+                  setSetClaimTypeLoading(true)
+                  await setClaimType({
+                    variables: { id: claimId, type: values.selectedType },
                   })
+                  await sleep(2000) // wait for claims service to propagate changes :(
+                  await refetchPage()
                   setSubmitting(false)
+                  setSetClaimTypeLoading(false)
                 }}
               >
                 {({ isValid }) => (
-                  <ClaimTypeInformationForm>
-                    {hasLocation(type.__typename) && (
-                      <div>
-                        <Field
-                          component={TextField}
-                          name="location"
-                          placeholder="Location"
-                        />
-                      </div>
-                    )}
+                  <Form>
                     <div>
-                      <Field
-                        component={FormikDatePicker}
-                        name="date"
-                        placeholder="Date"
-                      />
+                      <Field component={FieldSelect} name="selectedType">
+                        <MuiMenuItem disabled value="">
+                          Select a type...
+                        </MuiMenuItem>
+                        {Object.keys(ClaimTypes).map((t) => (
+                          <MuiMenuItem key={t} value={t}>
+                            {t}
+                          </MuiMenuItem>
+                        ))}
+                      </Field>
                     </div>
-                    {hasItem(type.__typename) && (
-                      <div>
-                        <Field
-                          component={TextField}
-                          name="item"
-                          placeholder="Item"
-                        />
-                      </div>
-                    )}
-                    {hasPoliceReport(type.__typename) && (
-                      <div>
-                        <Field
-                          component={TextField}
-                          name="policeReport"
-                          placeholder="Police Report"
-                        />
-                      </div>
-                    )}
-                    {hasReceipt(type.__typename) && (
-                      <div>
-                        <Field
-                          component={TextField}
-                          name="receipt"
-                          placeholder="Receipt"
-                        />
-                      </div>
-                    )}
-                    {hasTicket(type.__typename) && (
-                      <div>
-                        <Field
-                          component={TextField}
-                          name="ticket"
-                          placeholder="Ticket"
-                        />
-                      </div>
-                    )}
                     <div>
                       <SubmitButton
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={!isValid}
-                        disabled={!isValid || setInfoMutation.loading}
+                        disabled={
+                          !isValid ||
+                          setTypeMutation.loading ||
+                          isSetClaimTypeLoading
+                        }
                       >
-                        {setInfoMutation.loading ? (
+                        {setTypeMutation.loading || isSetClaimTypeLoading ? (
                           <>...</>
                         ) : (
-                          <>Update claim information</>
+                          <>Set type</>
                         )}
                       </SubmitButton>
                     </div>
-                  </ClaimTypeInformationForm>
+                  </Form>
                 )}
               </Formik>
-            ) : null}
-          </Paper>
-        )}
-      </Mutation>
-    )}
-  </Mutation>
-)
+              {type ? (
+                <Formik<{
+                  location?: string
+                  date?: Date
+                  item?: string
+                  policeReport?: string
+                  receipt?: string
+                  ticket?: string
+                }>
+                  initialValues={{
+                    location: (type as any).location || '',
+                    date: type.date ? parseISO(type.date) : undefined,
+                    item: (type as any).item || '',
+                    policeReport: (type as any).policeReport || '',
+                    receipt: (type as any).receipt || '',
+                    ticket: (type as any).ticket || '',
+                  }}
+                  onSubmit={(values, { setSubmitting }) => {
+                    setClaimInformation({
+                      variables: {
+                        id: claimId,
+                        claimInformation: {
+                          ...values,
+                          date:
+                            values.date && format(values.date, 'yyyy-MM-dd'),
+                        },
+                      },
+                    })
+                    setSubmitting(false)
+                  }}
+                >
+                  {({ isValid }) => (
+                    <ClaimTypeInformationForm>
+                      {hasLocation(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="location"
+                            placeholder="Location"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <Field
+                          component={FormikDatePicker}
+                          name="date"
+                          placeholder="Date"
+                        />
+                      </div>
+                      {hasItem(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="item"
+                            placeholder="Item"
+                          />
+                        </div>
+                      )}
+                      {hasPoliceReport(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="policeReport"
+                            placeholder="Police Report"
+                          />
+                        </div>
+                      )}
+                      {hasReceipt(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="receipt"
+                            placeholder="Receipt"
+                          />
+                        </div>
+                      )}
+                      {hasTicket(type.__typename) && (
+                        <div>
+                          <Field
+                            component={TextField}
+                            name="ticket"
+                            placeholder="Ticket"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <SubmitButton
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          disabled={
+                            !isValid ||
+                            setInfoMutation.loading ||
+                            isSetClaimTypeLoading
+                          }
+                        >
+                          {setInfoMutation.loading ? (
+                            <>...</>
+                          ) : (
+                            <>Update claim information</>
+                          )}
+                        </SubmitButton>
+                      </div>
+                    </ClaimTypeInformationForm>
+                  )}
+                </Formik>
+              ) : null}
+            </Paper>
+          )}
+        </Mutation>
+      )}
+    </Mutation>
+  )
+}
 
-const ClaimType = connect(null, { showNotification })(ClaimTypeComponent)
+const ClaimTypeForm = connect(null, { showNotification })(ClaimTypeComponent)
 
-export { ClaimType }
+export { ClaimTypeForm }
