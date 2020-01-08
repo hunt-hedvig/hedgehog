@@ -29,6 +29,7 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
         id
         currentBalance
         totalBalance
+        chargeEstimation
         entries {
           id
           amount
@@ -65,9 +66,8 @@ const TableCell = withStyles({
   },
 })(MuiTableCell)
 
-export const AccountTab: React.SFC<
-  RouteComponentProps<{ id: string }> & AccountTabProps
-> = (props) => (
+export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
+  AccountTabProps> = (props) => (
   <Query
     query={GET_MEMBER_ACCOUNT_QUERY}
     variables={{ memberId: props.match.params.id }}
