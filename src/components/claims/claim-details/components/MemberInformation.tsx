@@ -70,9 +70,10 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
       <h3>Fraud Checks</h3>
       <p>
         <b>Signed:</b>{' '}
-        {formatDistance(parseISO(member.signedOn), new Date(), {
-          addSuffix: true,
-        })}
+        {Boolean(member.signedOn) &&
+          formatDistance(parseISO(member.signedOn), new Date(), {
+            addSuffix: true,
+          })}
       </p>
       <p style={{ marginTop: '-7px' }}>
         <b>Fraudulent Status:</b>{' '}

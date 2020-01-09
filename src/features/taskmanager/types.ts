@@ -14,21 +14,18 @@ export const createOptionsArray = (array: IOption[]): IOption[] => {
 
 export const IEX_TEAM_MEMBERS_OPTIONS = [
   { text: 'Unassigned', value: null },
-  { text: 'Tomas', value: 'tomas@hedvig.com' },
-  { text: 'Kalle', value: 'karl.jernberg@hedvig.com' },
   { text: 'Emma', value: 'emma@hedvig.com' },
-  { text: 'Sara', value: 'sara@hedvig.com' },
   { text: 'Kajsa', value: 'kajsa@hedvig.com' },
-  { text: 'John', value: 'john@hedvig.com' },
-  { text: 'Johan', value: 'johan.palmfjord@hedvig.com' },
-  { text: 'Alexandra', value: 'alexandra@hedvig.com' },
-  { text: 'Elvin', value: 'elvin@hedvig.com' },
-  { text: 'Matilda', value: 'matilda@hedvig.com' },
+  { text: 'Kalle', value: 'karl.jernberg@hedvig.com' },
+  { text: 'Ludvig', value: 'ludvig@hedvig.com' },
+  { text: 'Sara', value: 'sara@hedvig.com' },
+  { text: 'Tomas', value: 'tomas@hedvig.com' },
   { text: 'Ella', value: 'ella@hedvig.com' },
-  { text: 'Sebastian', value: 'sebastian@hedvig.com' },
-  { text: 'Karl', value: 'karl@hedvig.com' },
   { text: 'Johanna', value: 'johanna@hedvig.com' },
-  { text: 'Axel', value: 'axel.bryhn@hedvig.com' },
+  { text: 'Karl', value: 'karl@hedvig.com' },
+  { text: 'Matilda', value: 'matilda@hedvig.com' },
+  { text: 'Sebastian', value: 'sebastian@hedvig.com' },
+  { text: 'Elvin', value: 'elvin@hedvig.com' },
 ]
 
 // Purely for making it easier to read in the UI:

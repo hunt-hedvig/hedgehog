@@ -10,6 +10,7 @@ export const Circle = styled('span')`
   display: inline-block;
   margin: 0 5px;
   line-height: 20px;
+  vertical-align: middle;
 
   background-color: ${(props: IColorIndicator) => {
     if (props.percentage >= 0.66) {

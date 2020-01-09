@@ -1,8 +1,12 @@
+import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
 import { Button, Form, Label, TextArea } from 'semantic-ui-react'
-import { CHANGE_REMINDER } from '../../../../features/taskmanager/queries'
+import {
+  CHANGE_REMINDER,
+  GET_TICKETS,
+} from '../../../../features/taskmanager/queries'
 import actions from '../../../../store/actions/index'
 import { IRemindNotification } from '../../types'
 import { DateTimePicker } from '../util/datetimepicker'
@@ -23,8 +27,15 @@ interface IChangeReminder {
 class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
   public render() {
     return (
-      <Mutation mutation={CHANGE_REMINDER}>
-        {(changeTicketReminder, { data }) => {
+      <Mutation
+        mutation={CHANGE_REMINDER}
+        refetchQueries={() => [
+          {
+            query: GET_TICKETS,
+          },
+        ]}
+      >
+        {(changeTicketReminder) => {
           return (
             <Form
               onSubmit={(e) => {
@@ -116,7 +127,4 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
 
 const mapActions = { ...actions.notificationsActions }
 
-export default connect(
-  null,
-  mapActions,
-)(ChangeReminderMutation)
+export default connect(null, mapActions)(ChangeReminderMutation)

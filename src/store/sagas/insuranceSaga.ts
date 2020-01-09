@@ -18,7 +18,8 @@ import { showNotification } from '../actions/notificationsActions'
 import {
   INSURANCE_REQUESTING,
   INSURANCES_LIST_REQUESTING,
-  MEMBER_COMPANY_STATUS, MODIFY_INSURANCE,
+  MEMBER_COMPANY_STATUS,
+  MODIFY_INSURANCE,
   SAVE_INSURANCE_DATE,
   SEND_CANCEL_REQUEST,
   SEND_CERTIFICATE,
@@ -119,7 +120,7 @@ function* modifyInsuranceFlow({ memberId, request }) {
         }),
       ),
       put(insuranceError()),
-      console.error(error)
+      console.error(error),
     ]
   }
 }

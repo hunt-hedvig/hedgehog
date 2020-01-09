@@ -9,7 +9,7 @@ import { ActionMap, Container } from 'constate'
 import gql from 'graphql-tag'
 import * as moment from 'moment'
 import * as React from 'react'
-import { Mutation, Query } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import styled, { css } from 'react-emotion'
 import { history } from 'store'
 
@@ -97,9 +97,7 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
             },
           }).then((response) => {
             history.push(
-              `/claims/${response.data.createClaim}/members/${
-                props.insurance.data.memberId
-              }`,
+              `/claims/${response.data.createClaim}/members/${props.insurance.data.memberId}`,
             )
           })
           return { date: moment(), value: 'EMAIL', open: false }

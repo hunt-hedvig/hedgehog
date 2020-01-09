@@ -92,11 +92,6 @@ class App extends React.Component {
                       )}
                     />
                     <Routes.PrivateRoute
-                      path="/member_insurance"
-                      store={store}
-                      component={Routes.MemberInsurancePageRoute}
-                    />
-                    <Routes.PrivateRoute
                       path="/charges"
                       store={store}
                       component={Routes.ChargePageRoute}

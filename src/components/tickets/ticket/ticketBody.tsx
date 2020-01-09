@@ -1,6 +1,6 @@
 import { gql } from 'apollo-boost'
 import format from 'date-fns/format'
-import { CHANGE_STATUS, QUESTION_IS_DONE } from 'features/taskmanager/queries'
+import { CHANGE_STATUS, GET_TICKETS } from 'features/taskmanager/queries'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
@@ -208,14 +208,6 @@ export class TicketBody extends React.Component<
           <Segment compact textAlign="left">
             <StyledPre>{this.props.description}</StyledPre>
           </Segment>
-
-          {this.props.referenceId && this.props.referenceId.length > 0
-            ? this.createReferenceRoute(
-                this.props.referenceId,
-                this.props.memberId,
-                this.props.type,
-              )
-            : null}
         </Segment.Group>
 
         <Segment.Group horizontal>
@@ -223,7 +215,6 @@ export class TicketBody extends React.Component<
             <strong>Status:</strong> {lookupStatus(this.props.status)}{' '}
           </Segment>
           {this.fillInMemberId(this.props.memberId)}
-          {this.fillInReferenceId(this.props.type, this.props.referenceId)}
         </Segment.Group>
       </>
     )
@@ -233,6 +224,13 @@ export class TicketBody extends React.Component<
         {this.state.showEditTicket ? editTicket : ticketInfo}
 
         {this.getResolveOption()}
+        {this.props.referenceId
+          ? this.createReferenceRoute(
+              this.props.referenceId,
+              this.props.memberId,
+              this.props.type,
+            )
+          : null}
 
         <Button
           labelPosition="left"
@@ -281,28 +279,6 @@ export class TicketBody extends React.Component<
     this.setState({ inputs })
   }
 
-  private fillInReferenceId = (type: TicketType, referenceId: string) => {
-    let label: string
-    switch (type) {
-      case TicketType.CLAIM:
-        label = 'ClaimId: '
-        break
-
-      case TicketType.MESSAGE:
-        label = 'MessageId: '
-
-        break
-      default:
-        return null
-    }
-    return (
-      <Segment compact>
-        <strong>{label}</strong>
-        {referenceId}{' '}
-      </Segment>
-    )
-  }
-
   private fillInMemberId = (memberId: string) => {
     if (memberId === null) {
       return null
@@ -332,11 +308,11 @@ export class TicketBody extends React.Component<
         if (!memberId) {
           return null
         }
-        const route = 'claims/' + referenceId + '/members/' + memberId
+        const route = '/claims/' + referenceId + '/members/' + memberId
         return <Redirector route={route} redirectText="Go to claim" />
       }
       case TicketType.MESSAGE: {
-        const route = 'members/' + memberId
+        const route = '/members/' + memberId
         return <Redirector route={route} redirectText="Go to chat" />
       }
       default:
@@ -351,29 +327,46 @@ export class TicketBody extends React.Component<
     ) {
       return <MessageResponseForm memberId={this.props.memberId} />
     }
-    if (this.props.assignedTo === this.props.me) {
+    if (
+      this.props.assignedTo === this.props.me &&
+      this.props.status === TicketStatus.WORKING_ON
+    ) {
       return (
-        <Mutation mutation={CHANGE_STATUS}>
-          {(resolveTicket) => (
-            <Button
-              primary={true}
-              onClick={() => this.resolveTicketClick(resolveTicket)}
-            >
-              Resolve ticket
-            </Button>
-          )}
-        </Mutation>
+        <>
+          <Mutation mutation={CHANGE_STATUS}>
+            {(resolveTicket) => (
+              <Button
+                primary={true}
+                onClick={() => this.resolveTicketClick(resolveTicket)}
+              >
+                Resolve ticket
+              </Button>
+            )}
+          </Mutation>
+          <Mutation mutation={IM_ON_IT_MUTATION}>
+            {(resolveTicket) => (
+              <Button
+                secondary={true}
+                onClick={() => this.imBlockedClick(resolveTicket)}
+              >
+                I'm blocked
+              </Button>
+            )}
+          </Mutation>
+        </>
       )
     }
     if (
-      this.props.status === TicketStatus.WAITING &&
-      this.props.assignedTo == null
+      this.props.status === TicketStatus.WAITING ||
+      this.props.status === TicketStatus.ON_HOLD
     ) {
       return (
         <Mutation mutation={IM_ON_IT_MUTATION}>
           {(imOnIt) => (
             <Button secondary={true} onClick={() => this.imOnItClick(imOnIt)}>
-              I'm on it
+              {this.props.status === TicketStatus.WAITING
+                ? "I'm on it"
+                : 'Revive ticket'}
             </Button>
           )}
         </Mutation>
@@ -403,6 +396,7 @@ export class TicketBody extends React.Component<
         ticketId: this.props.id,
         newStatus: TicketStatus.RESOLVED,
       },
+      refetchQueries: [{ query: GET_TICKETS }],
     })
   }
 
@@ -413,6 +407,18 @@ export class TicketBody extends React.Component<
         teamMemberId: this.props.me,
         newStatus: TicketStatus.WORKING_ON,
       },
+      refetchQueries: [{ query: GET_TICKETS }],
+    })
+  }
+
+  private imBlockedClick = (mutation) => {
+    mutation({
+      variables: {
+        ticketId: this.props.id,
+        teamMemberId: this.props.me,
+        newStatus: TicketStatus.ON_HOLD,
+      },
+      refetchQueries: [{ query: GET_TICKETS }],
     })
   }
 }

@@ -1,5 +1,4 @@
 import { ClaimsStore } from './types/claimsTypes'
-import { MemberInsuranceStore } from './types/memberInsuranceTypes'
 import { QuestionsStore } from './types/questionsTypes'
 
 export interface BackofficeStore {
@@ -16,7 +15,6 @@ export interface BackofficeStore {
   questions: QuestionsStore
   insurance: any
   notifications: any
-  memberInsurance: MemberInsuranceStore
 }
 
 type MembersSortBy = 'NAME' | 'CREATED' | 'SIGN_UP'
@@ -50,7 +48,7 @@ export interface Member {
 }
 
 export interface MemberSearchFilter {
-  status: MemberStatus | undefined
+  includeAll?: boolean
   query: string
   sortBy: MembersSortBy
   sortDirection: SortDirection
@@ -58,8 +56,17 @@ export interface MemberSearchFilter {
   pageSize: number
 }
 
+export interface MemberSearchResultItem {
+  member: Member
+  firstActiveFrom: string | null
+  lastActiveTo: string | null
+  productStatus: string | null
+  householdSize: number | null
+  livingSpace: number | null
+}
+
 export interface MembersSearchResult {
-  members: Member[]
+  items: ReadonlyArray<MemberSearchResultItem>
   totalPages: number
   page: number
 }

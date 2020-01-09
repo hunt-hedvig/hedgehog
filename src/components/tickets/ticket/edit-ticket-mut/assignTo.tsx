@@ -2,7 +2,10 @@ import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
 import { Button, Form } from 'semantic-ui-react'
-import { ASSIGN_TO } from '../../../../features/taskmanager/queries'
+import {
+  ASSIGN_TO,
+  GET_TICKETS,
+} from '../../../../features/taskmanager/queries'
 import { lookupTeamMemberName } from '../../../../features/taskmanager/types'
 import actions from '../../../../store/actions/index'
 
@@ -18,8 +21,15 @@ interface IAssignTicketTo {
 class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
   public render() {
     return (
-      <Mutation mutation={ASSIGN_TO}>
-        {(assignTicketToTeamMember, { data }) => {
+      <Mutation
+        mutation={ASSIGN_TO}
+        refetchQueries={() => [
+          {
+            query: GET_TICKETS,
+          },
+        ]}
+      >
+        {(assignTicketToTeamMember) => {
           return (
             <Form
               onSubmit={(e) => {
@@ -89,7 +99,4 @@ class AssignTicketToMutation extends React.Component<IAssignTicketTo, {}> {
 
 const mapActions = { ...actions.notificationsActions }
 
-export default connect(
-  null,
-  mapActions,
-)(AssignTicketToMutation)
+export default connect(null, mapActions)(AssignTicketToMutation)

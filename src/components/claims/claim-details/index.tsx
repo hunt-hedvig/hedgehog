@@ -3,13 +3,16 @@ import { QueryType } from 'api/generated/graphql'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Query } from 'react-apollo'
-
+import { CreateTicketStandAlone } from '../../../components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 import { ClaimEvents } from './components/ClaimEvents'
+import { ClaimFileTable } from './components/ClaimFileTable'
 import { ClaimInformation } from './components/ClaimInformation'
-import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
-import { ClaimType, TYPE_FRAGMENT } from './components/ClaimType'
+import { TYPE_FRAGMENT } from './components/ClaimType'
+import { ClaimTypeForm } from './components/ClaimType'
+import { FileUpload } from './components/FileUpload'
+import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { MemberInformation } from './components/MemberInformation'
 
 const CLAIM_PAGE_QUERY = gql`
@@ -65,16 +68,23 @@ const CLAIM_PAGE_QUERY = gql`
         text
         date
       }
+      claimFiles {
+        claimFileId
+        fileUploadUrl
+        uploadedAt
+        category
+        contentType
+      }
       coveringEmployee
       __typename
     }
   }
 `
-
 interface Props {
   match: {
     params: {
       id: string
+      userId: string
     }
   }
 }
@@ -84,7 +94,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
     query={CLAIM_PAGE_QUERY}
     variables={{ id: match.params.id }}
   >
-    {({ loading, error, data }) => {
+    {({ loading, error, data, refetch }) => {
       if (loading) {
         return <div>Loading</div>
       }
@@ -108,12 +118,13 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         reserves,
         type,
         coveringEmployee,
-      } = data.claim
+        claimFiles,
+      } = data!.claim!
 
       return (
         <Grid container spacing={8}>
           <Grid item xs={12} sm={12} md={4}>
-            <MemberInformation member={member} />
+            <MemberInformation member={member!} />
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
             <ClaimInformation
@@ -125,12 +136,16 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             />
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
-            <ClaimType type={type} claimId={match.params.id} />
+            <ClaimTypeForm
+              type={type}
+              claimId={match.params.id}
+              refetchPage={refetch}
+            />
           </Grid>
-          <ClaimItemDatabase type={type} claimId={match.params.id} />
           <Grid item xs={12}>
             <ClaimNotes notes={notes} claimId={match.params.id} />
           </Grid>
+          <ClaimItemDatabase type={type} claimId={match.params.id} />
           <Grid item xs={12}>
             <ClaimPayments
               payments={payments}
@@ -138,6 +153,21 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               reserves={reserves}
               sanctionStatus={member.sanctionStatus}
             />
+          </Grid>
+          <Grid item xl={6} xs={12}>
+            <CreateTicketStandAlone
+              referenceId={match.params.id}
+              memberId={match.params.userId}
+              ticketType={'CLAIM'}
+            />
+          </Grid>
+          <Grid item xl={6} xs={12}>
+            <FileUpload
+              claimId={match.params.id}
+              memberId={member.memberId}
+              onUploaded={() => refetch()}
+            />
+            <ClaimFileTable claimFiles={claimFiles} claimId={match.params.id} />
           </Grid>
           <Grid item xs={12}>
             <ClaimEvents events={events} />

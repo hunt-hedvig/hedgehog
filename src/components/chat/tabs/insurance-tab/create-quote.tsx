@@ -115,11 +115,7 @@ export const CreateQuote: React.FunctionComponent<{
           <h3>Create quote?</h3>
         )}
       </Modal.Content>
-      {!(
-        createQuoteMutation &&
-        createQuoteMutation.data &&
-        createQuoteMutation.data.createQuoteFromProduct
-      ) && (
+      {!createQuoteMutation?.data?.createQuoteFromProduct && (
         <Modal.Actions>
           <Button.Group>
             <Button onClick={() => setModalOpen(false)}>Cancel</Button>
@@ -134,6 +130,7 @@ export const CreateQuote: React.FunctionComponent<{
               positive
               disabled={
                 createQuoteMutation.loading ||
+                createQuoteMutation.called ||
                 Boolean(
                   createQuoteMutation.data &&
                     createQuoteMutation.data &&

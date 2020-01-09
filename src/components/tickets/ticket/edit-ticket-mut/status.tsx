@@ -2,7 +2,10 @@ import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
 import { Button, Form } from 'semantic-ui-react'
-import { CHANGE_STATUS } from '../../../../features/taskmanager/queries'
+import {
+  CHANGE_STATUS,
+  GET_TICKETS,
+} from '../../../../features/taskmanager/queries'
 import {
   lookupStatus,
   TicketStatus,
@@ -21,8 +24,15 @@ interface IChangeStatus {
 class ChangeStatusMutation extends React.Component<IChangeStatus, {}> {
   public render() {
     return (
-      <Mutation mutation={CHANGE_STATUS}>
-        {(changeTicketStatus, { data }) => {
+      <Mutation
+        mutation={CHANGE_STATUS}
+        refetchQueries={() => [
+          {
+            query: GET_TICKETS,
+          },
+        ]}
+      >
+        {(changeTicketStatus) => {
           return (
             <Form
               onSubmit={(e) => {
@@ -86,7 +96,4 @@ class ChangeStatusMutation extends React.Component<IChangeStatus, {}> {
 
 const mapActions = { ...actions.notificationsActions }
 
-export default connect(
-  null,
-  mapActions,
-)(ChangeStatusMutation)
+export default connect(null, mapActions)(ChangeStatusMutation)

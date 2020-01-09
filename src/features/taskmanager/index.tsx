@@ -1,9 +1,11 @@
 import * as React from 'react'
 import styled from 'react-emotion'
+import actions from 'store/actions'
+import { connect } from 'react-redux'
 import Modal from '../../components/shared/modals/MaterialModal'
 import { Toolbar } from '../../components/taskmanager-toolbar/index'
 import { IToolbarItem } from '../../components/taskmanager-toolbar/types'
-import CreateNewTicket from '../../components/tickets/ticket/create-ticket/create-ticket'
+import { CreateNewTicket } from '../../components/tickets/ticket/create-ticket/create-ticket'
 import { Tickets } from '../../components/tickets/tickets'
 import { EOrder } from '../../components/tickets/types'
 import {
@@ -12,8 +14,6 @@ import {
   TICKET_STATUS,
   TICKET_TYPE_OPTIONS,
 } from './types'
-
-
 
 const Header = styled('div')({
   padding: '0 20px',
@@ -55,8 +55,8 @@ interface ITaskManagerState {
   toolbarItems: IToolbarItem[]
 }
 
-export default class TaskManagerPageComponent extends React.Component<
-  {},
+class TaskManagerPageComponent extends React.Component<
+  { showNotification: (data: any) => void },
   ITaskManagerState
 > {
   public state = {
@@ -69,6 +69,8 @@ export default class TaskManagerPageComponent extends React.Component<
       assignedTo: 'Everyone',
       status: 'All',
       type: 'All',
+      referenceId: 'All',
+      memberId: 'All',
     },
     toolbarItems: [
       {
@@ -133,7 +135,11 @@ export default class TaskManagerPageComponent extends React.Component<
           <Toolbar items={this.state.toolbarItems} />
         </Header>
         <Modal open={this.state.showModal} handleClose={this.closeModal}>
-          <CreateNewTicket closeModal={this.closeModal} />
+          <CreateNewTicket
+            closeModal={this.closeModal}
+            referenceId={null}
+            showNotification={this.props.showNotification}
+          />
         </Modal>
         <Tickets sort={this.state.sort} filter={this.state.filter} />
       </React.Fragment>
@@ -208,3 +214,10 @@ export default class TaskManagerPageComponent extends React.Component<
     this.setState({ showModal: true })
   }
 }
+
+const mapActions = { ...actions.notificationsActions }
+
+export const TaskManagerPage = connect(
+  null,
+  mapActions,
+)(TaskManagerPageComponent)

@@ -1,3 +1,4 @@
+import { CreateQuote } from 'components/chat/tabs/insurance-tab/create-quote'
 import { LinkRow } from 'components/shared'
 import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
@@ -231,8 +232,8 @@ export default class InsuranceList extends React.Component {
 
     return list ? (
       <React.Fragment>
-        {this.state.item ? (
-          <React.Fragment>
+        {this.state.item && (
+          <>
             <Header> Selected Insurance </Header>
             <Table>
               <Table.Body>
@@ -314,11 +315,18 @@ export default class InsuranceList extends React.Component {
                     </WideModal>
                   </Table.HeaderCell>
                 </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Quote</Table.Cell>
+                  <Table.Cell style={{ textAlign: 'right' }}>
+                    <CreateQuote
+                      memberId={this.props.insurance.data.memberId}
+                      insurance={this.state.item}
+                    />
+                  </Table.Cell>
+                </Table.Row>
               </Table.Footer>
             </Table>
-          </React.Fragment>
-        ) : (
-          ''
+          </>
         )}
         <PaginatorList
           list={list}

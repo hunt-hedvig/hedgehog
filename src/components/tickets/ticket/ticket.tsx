@@ -34,8 +34,8 @@ const Card = styled('div')`
   background: ${(props) =>
     props.status === TicketStatus.RESOLVED ? 'rgba(40,100,40,0.01)' : 'white'};
   border-radius: 3px;
-  max-width: 850px;
   align-items: baseline;
+  max-width: 850px;
 `
 const SmallText = styled('div')`
   font-size: 0.8em;
@@ -77,8 +77,9 @@ export class Ticket extends React.Component<ITicket, {}> {
                   trigger={this.getTypeIcon('COMPLETED')}
                 />
               )}
-              {this.props.overdue ? (
-                <OverdueNotifier id={this.props.id} />
+              {this.props.overdue &&
+              this.props.status !== TicketStatus.RESOLVED ? (
+                <OverdueNotifier reminder={this.props.reminder!!} />
               ) : null}
             </Grid.Column>
 

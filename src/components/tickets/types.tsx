@@ -9,6 +9,8 @@ export interface ITickets {
     assignedTo: string
     status: string
     type: string
+    referenceId: string
+    memberId: string
   }
 }
 
@@ -28,6 +30,7 @@ export interface IRemindNotification {
   date: any
   time: any
   message: string
+  assignedTo: string
 }
 
 export enum EOrder {

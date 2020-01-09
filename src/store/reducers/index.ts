@@ -5,7 +5,6 @@ import client from './clientReducer'
 import dashboard from './dashboardReducer'
 import insurance from './insuranceReducer'
 import login from './loginReducer'
-import memberInsurance from './memberInsuranceReducer'
 import members from './membersReducer'
 import messages from './messagesReducer'
 import notifications from './notificationsReducer'
@@ -27,5 +26,4 @@ export default {
   questions,
   insurance,
   notifications,
-  memberInsurance,
 }

@@ -21,8 +21,8 @@ export default class Pricing extends React.Component {
     activeCategoryName: '',
     activeQuery: '',
     activeFilters: [],
-    activeDate: format(new Date(), "yyyy-MM-dd"),
-    usedDate: format(new Date(), "yyyy-MM-dd"),
+    activeDate: format(new Date(), 'yyyy-MM-dd'),
+    usedDate: format(new Date(), 'yyyy-MM-dd'),
     offset: 0,
     batchSize: 5,
   }
