@@ -29,7 +29,11 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
         id
         currentBalance
         totalBalance
-        chargeEstimation
+        chargeEstimation {
+          subscription
+          discount
+          charge
+        }
         entries {
           id
           amount
@@ -83,6 +87,14 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
             Balance (current month):{' '}
             {formatMoneySE(data.member.account.currentBalance)}
           </h3>
+          <h4>
+            Next subscription charge:{' '}
+            {formatMoneySE(data.member.account.chargeEstimation.subscription)}
+          </h4>
+          <h4>
+            Next discount:{' '}
+            {formatMoneySE(data.member.account.chargeEstimation.discount)}
+          </h4>
           <h3>
             Balance (total): {formatMoneySE(data.member.account.totalBalance)}
           </h3>
