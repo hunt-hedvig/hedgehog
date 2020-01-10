@@ -48,6 +48,7 @@ export type AccountChargeEstimation = {
   subscription: Scalars['MonetaryAmount']
   discount: Scalars['MonetaryAmount']
   charge: Scalars['MonetaryAmount']
+  discountCodes: Array<Scalars['String']>
 }
 
 export type AccountEntry = {

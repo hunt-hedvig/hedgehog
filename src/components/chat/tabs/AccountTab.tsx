@@ -33,6 +33,7 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
           subscription
           discount
           charge
+          discountCodes
         }
         entries {
           id
@@ -87,17 +88,26 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
             Balance (current month):{' '}
             {formatMoneySE(data.member.account.currentBalance)}
           </h3>
-          <h4>
-            Next subscription charge:{' '}
-            {formatMoneySE(data.member.account.chargeEstimation.subscription)}
-          </h4>
-          <h4>
-            Next discount:{' '}
-            {formatMoneySE(data.member.account.chargeEstimation.discount)}
-          </h4>
           <h3>
             Balance (total): {formatMoneySE(data.member.account.totalBalance)}
           </h3>
+          <h3>Upcoming charge information:</h3>
+          <b4>
+            <b>Total discount amount:</b>{' '}
+            {formatMoneySE(data.member.account.chargeEstimation.discount)}
+          </b4>
+          <b4>
+            <b>Subscription charge:</b>{' '}
+            {formatMoneySE(data.member.account.chargeEstimation.subscription)}
+          </b4>
+          <b4>
+            <b>Discount references:</b>{' '}
+            {data.member.account.chargeEstimation.discountCodes}
+          </b4>
+          <h5>
+            Total charge next month:{' '}
+            {formatMoneySE(data.member.account.chargeEstimation.charge)}
+          </h5>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
               <Typography>Add entry</Typography>
