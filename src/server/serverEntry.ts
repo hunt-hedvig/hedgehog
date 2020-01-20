@@ -62,8 +62,7 @@ app.use(compress({ threshold: 5 * 1024 }))
 const buildDir = path.resolve(__dirname, '../../build')
 const scriptLocation =
   process.env.NODE_ENV === 'production'
-    ? '/static/' +
-      JSON.parse(readFileSync(path.resolve(buildDir, 'stats.json'), 'UTF8'))
+    ? '/static/' + JSON.parse(readFileSync(path.resolve(buildDir, 'stats.json'), 'UTF8'))
         .assetsByChunkName.app[0]
     : 'http://localhost:9443/static/app.js'
 app.use(mount('/static', serve(buildDir, { maxage: 86400 * 365 })))

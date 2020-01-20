@@ -29,12 +29,6 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
         id
         currentBalance
         totalBalance
-        chargeEstimation {
-          subscription
-          discountCodes
-          charge
-          totalDiscountAmount
-        }
         entries {
           id
           amount
@@ -71,8 +65,9 @@ const TableCell = withStyles({
   },
 })(MuiTableCell)
 
-export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
-  AccountTabProps> = (props) => (
+export const AccountTab: React.SFC<
+  RouteComponentProps<{ id: string }> & AccountTabProps
+> = (props) => (
   <Query
     query={GET_MEMBER_ACCOUNT_QUERY}
     variables={{ memberId: props.match.params.id }}
@@ -91,25 +86,6 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
           <h3>
             Balance (total): {formatMoneySE(data.member.account.totalBalance)}
           </h3>
-          <h3>Upcoming charge information:</h3>
-          <b4>
-            <b>Total discount amount:</b>{' '}
-            {formatMoneySE(
-              data.member.account.chargeEstimation.totalDiscountAmount,
-            )}
-          </b4>
-          <b4>
-            <b>Subscription charge:</b>{' '}
-            {formatMoneySE(data.member.account.chargeEstimation.subscription)}
-          </b4>
-          <b4>
-            <b>Discount references:</b>{' '}
-            {data.member.account.chargeEstimation.discountCodes}
-          </b4>
-          <h5>
-            Total charge next month:{' '}
-            {formatMoneySE(data.member.account.chargeEstimation.charge)}
-          </h5>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
               <Typography>Add entry</Typography>
