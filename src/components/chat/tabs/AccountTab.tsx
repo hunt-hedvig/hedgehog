@@ -31,7 +31,7 @@ export const GET_MEMBER_ACCOUNT_QUERY = gql`
         totalBalance
         chargeEstimation {
           subscription
-          discount
+          discountCodes
           charge
           totalDiscountAmount
         }
