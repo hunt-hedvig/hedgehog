@@ -97,7 +97,9 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
             },
           }).then((response) => {
             history.push(
-              `/claims/${response.data.createClaim}/members/${props.insurance.data.memberId}`,
+              `/claims/${response.data.createClaim}/members/${
+                props.insurance.data.memberId
+              }`,
             )
           })
           return { date: moment(), value: 'EMAIL', open: false }
@@ -183,7 +185,7 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
               </Mutation>
             </InlineFlexButton>
           </MaterialModal>
-        </>
+        </> 
       )}
     </Container>
   )
