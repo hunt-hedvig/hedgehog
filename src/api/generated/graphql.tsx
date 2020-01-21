@@ -40,6 +40,15 @@ export type Account = {
   currentBalance: Scalars['MonetaryAmount']
   totalBalance: Scalars['MonetaryAmount']
   entries: Array<AccountEntry>
+  chargeEstimation: AccountChargeEstimation
+}
+
+export type AccountChargeEstimation = {
+  __typename?: 'AccountChargeEstimation'
+  subscription: Scalars['MonetaryAmount']
+  discount: Scalars['MonetaryAmount']
+  charge: Scalars['MonetaryAmount']
+  discountCodes: Array<Scalars['String']>
 }
 
 export type AccountEntry = {
