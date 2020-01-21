@@ -12,6 +12,7 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
 import { TextField } from '../../../shared/inputs/TextField'
@@ -73,6 +74,7 @@ const CREATE_PAYMENT_MUTATION = gql`
 interface Props {
   sanctionStatus: SanctionStatus
   claimId: string
+  refetchPage: () => Promise<void>
 }
 
 interface State {
@@ -151,7 +153,11 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
       .required(),
   })
 
-export const ClaimPayment: React.SFC<Props> = ({ sanctionStatus, claimId }) => {
+export const ClaimPayment: React.SFC<Props> = ({
+  sanctionStatus,
+  claimId,
+  refetchPage,
+}) => {
   const isPotentiallySanctioned =
     sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
 
@@ -172,19 +178,6 @@ export const ClaimPayment: React.SFC<Props> = ({ sanctionStatus, claimId }) => {
       }) => (
         <Mutation
           mutation={CREATE_PAYMENT_MUTATION}
-          update={(cache, { data: updateData }) => {
-            cache.writeQuery({
-              query: CREATE_PAYMENT_QUERY,
-              variables: { id: claimId },
-              data: {
-                claim: {
-                  payments: updateData.createClaimPayment.payments,
-                  __typename: updateData.createClaimPayment.__typename,
-                  events: updateData.createClaimPayment.events,
-                },
-              },
-            })
-          }}
           onCompleted={() => {
             closeInitiatedPayment()
             setPaymentStatus('COMPLETED')
@@ -275,7 +268,11 @@ export const ClaimPayment: React.SFC<Props> = ({ sanctionStatus, claimId }) => {
                         closeInitiatedPayment()
                         resetForm()
                       }}
-                      onSubmit={createPayment}
+                      onSubmit={async (graphqlArgs) => {
+                        await createPayment(graphqlArgs)
+                        await sleep(1000)
+                        await refetchPage()
+                      }}
                       payment={initiatedPayment}
                       claimId={claimId}
                     />

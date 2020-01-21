@@ -6,6 +6,7 @@ import { ClaimReserveForm } from './ClaimReserveForm'
 interface Props {
   reserves: MonetaryAmount
   claimId: string
+  refetchPage: () => Promise<void>
 }
 
 const ReservesWrapper = styled('div')({
@@ -19,7 +20,11 @@ const ReservesTotal = styled('span')({
   fontSize: '1.125rem',
 })
 
-const ClaimReserves: React.SFC<Props> = ({ claimId, reserves }) => {
+const ClaimReserves: React.SFC<Props> = ({
+  claimId,
+  reserves,
+  refetchPage,
+}) => {
   const reserveAmount = reserves && reserves.amount ? reserves.amount : '0.00'
   const reserveCurrency =
     reserves && reserves.currency ? reserves.currency : 'SEK'
@@ -29,7 +34,7 @@ const ClaimReserves: React.SFC<Props> = ({ claimId, reserves }) => {
       <ReservesTotal>
         {reserveAmountInteger} {reserveCurrency} Reserved
       </ReservesTotal>
-      <ClaimReserveForm claimId={claimId} />
+      <ClaimReserveForm claimId={claimId} refetchPage={refetchPage} />
     </ReservesWrapper>
   )
 }

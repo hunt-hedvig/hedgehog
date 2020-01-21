@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid'
 import { QueryType } from 'api/generated/graphql'
-import gql from 'graphql-tag'
+import { CLAIM_PAGE_QUERY } from './data'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 import { CreateTicketStandAlone } from '../../../components/tickets/ticket/create-ticket/create-ticket-stand-alone'
@@ -9,77 +9,10 @@ import { ClaimFileTable } from './components/ClaimFileTable'
 import { ClaimInformation } from './components/ClaimInformation'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
-import { TYPE_FRAGMENT } from './components/ClaimType'
 import { ClaimTypeForm } from './components/ClaimType'
 import { FileUpload } from './components/FileUpload'
 import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { MemberInformation } from './components/MemberInformation'
-
-const CLAIM_PAGE_QUERY = gql`
-  query ClaimPage($id: ID!) {
-    claim(id: $id) {
-      member {
-        memberId
-        signedOn
-        firstName
-        lastName
-        personalNumber
-        address
-        postalNumber
-        city
-        directDebitStatus {
-          activated
-        }
-        fraudulentStatus
-        sanctionStatus
-        numberFailedCharges {
-          numberFailedCharges
-          lastFailedChargeAt
-        }
-        account {
-          totalBalance
-        }
-      }
-      registrationDate
-      recordingUrl
-      state
-      type {
-        ${TYPE_FRAGMENT}
-      }
-      notes {
-        text
-        date
-      }
-      reserves
-      payments {
-        id
-        amount
-        deductible
-        note
-        timestamp
-        exGratia
-        type
-        #transaction {
-        #  status
-        #}
-        status
-      }
-      events {
-        text
-        date
-      }
-      claimFiles {
-        claimFileId
-        fileUploadUrl
-        uploadedAt
-        category
-        contentType
-      }
-      coveringEmployee
-      __typename
-    }
-  }
-`
 
 interface Props {
   match: {
@@ -94,6 +27,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
   <Query<Pick<QueryType, 'claim'>>
     query={CLAIM_PAGE_QUERY}
     variables={{ id: match.params.id }}
+    fetchPolicy="no-cache"
   >
     {({ loading, error, data, refetch }) => {
       if (loading) {
@@ -134,6 +68,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               state={state}
               claimId={match.params.id}
               coveringEmployee={coveringEmployee}
+              refetchPage={refetch}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
@@ -144,7 +79,11 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             />
           </Grid>
           <Grid item xs={12}>
-            <ClaimNotes notes={notes} claimId={match.params.id} />
+            <ClaimNotes
+              notes={notes}
+              claimId={match.params.id}
+              refetchPage={refetch}
+            />
           </Grid>
           <ClaimItemDatabase type={type} claimId={match.params.id} />
           <Grid item xs={12}>
@@ -153,6 +92,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               claimId={match.params.id}
               reserves={reserves}
               sanctionStatus={member.sanctionStatus}
+              refetchPage={refetch}
             />
           </Grid>
           <Grid item xs={12}>
