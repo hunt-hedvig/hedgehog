@@ -80,6 +80,7 @@ const CLAIM_PAGE_QUERY = gql`
     }
   }
 `
+
 interface Props {
   match: {
     params: {
@@ -154,14 +155,14 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
               sanctionStatus={member.sanctionStatus}
             />
           </Grid>
-          <Grid item xl={6} xs={12}>
+          <Grid item xs={12}>
             <CreateTicketStandAlone
               referenceId={match.params.id}
               memberId={match.params.userId}
               ticketType={'CLAIM'}
             />
           </Grid>
-          <Grid item xl={6} xs={12}>
+          <Grid item xs={12}>
             <FileUpload
               claimId={match.params.id}
               memberId={member.memberId}
