@@ -6,12 +6,14 @@ import {
   Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
+import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
+import { sleep } from 'utils/sleep'
 
 import { Paper } from '../../../shared/Paper'
 
@@ -53,6 +55,7 @@ interface Note {
 interface Props {
   notes: Note[]
   claimId: string
+  refetchPage: () => Promise<void>
 }
 
 const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
@@ -105,23 +108,8 @@ const SubmitButton = withStyles({
   },
 })(MuiButton)
 
-const ClaimNotes: React.SFC<Props> = ({ notes, claimId }) => (
-  <Mutation
-    mutation={ADD_CLAIM_NOTE_MUTATION}
-    update={(cache, { data: updateData }) => {
-      cache.writeQuery({
-        query: ADD_CLAIM_NOTE_QUERY,
-        variables: { id: claimId },
-        data: {
-          claim: {
-            notes: updateData.addClaimNote.notes,
-            events: updateData.addClaimNote.events,
-            __typename: updateData.addClaimNote.__typename,
-          },
-        },
-      })
-    }}
-  >
+const ClaimNotes: React.SFC<Props> = ({ notes, claimId, refetchPage }) => (
+  <Mutation mutation={ADD_CLAIM_NOTE_MUTATION}>
     {(addClaimNote) => (
       <Paper>
         <h3>Notes</h3>
@@ -137,15 +125,18 @@ const ClaimNotes: React.SFC<Props> = ({ notes, claimId }) => (
         </MuiList>
         <Formik<{ text: string }>
           initialValues={{ text: '' }}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
-            addClaimNote({
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
+            setSubmitting(true)
+            await addClaimNote({
               variables: { id: claimId, note: { text: values.text } },
             })
+            await sleep(1000)
+            await refetchPage()
             setSubmitting(false)
             resetForm()
           }}
         >
-          {({ isValid }) => (
+          {({ isValid, isSubmitting }) => (
             <Form>
               <Field
                 component={TextArea}
@@ -156,7 +147,7 @@ const ClaimNotes: React.SFC<Props> = ({ notes, claimId }) => (
                 type="submit"
                 variant="contained"
                 color="primary"
-                disabled={!isValid}
+                disabled={!isValid || isSubmitting}
               >
                 Add note
               </SubmitButton>

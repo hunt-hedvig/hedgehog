@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
 
 import { TextField } from '../../../shared/inputs/TextField'
@@ -34,6 +35,7 @@ const UPDATE_RESERVE_QUERY = gql`
 
 interface Props {
   claimId: string
+  refetchPage: () => Promise<void>
 }
 
 interface ReserveFormData {
@@ -52,21 +54,9 @@ const SubmitButton = withStyles({
   },
 })(MuiButton)
 
-const ClaimReserveForm: React.SFC<Props> = ({ claimId }) => (
+const ClaimReserveForm: React.SFC<Props> = ({ claimId, refetchPage }) => (
   <Mutation
     mutation={UPDATE_RESERVE_MUTATION}
-    update={(cache, { data: updateData }) => {
-      cache.writeQuery({
-        query: UPDATE_RESERVE_QUERY,
-        variables: { id: claimId },
-        data: {
-          claim: {
-            reserves: updateData.updateReserve.reserves,
-            events: updateData.updateReserve.events,
-          },
-        },
-      })
-    }}
     onError={(error) => {
       console.error(error)
       console.error('GraphQL error when trying to update the reserve')
@@ -75,8 +65,8 @@ const ClaimReserveForm: React.SFC<Props> = ({ claimId }) => (
     {(updateReserve) => (
       <Formik<ReserveFormData>
         initialValues={{ amount: 0 }}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          updateReserve({
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          await updateReserve({
             variables: {
               id: claimId,
               amount: {
@@ -85,12 +75,14 @@ const ClaimReserveForm: React.SFC<Props> = ({ claimId }) => (
               },
             },
           })
+          await sleep(1000)
+          await refetchPage()
           setSubmitting(false)
           resetForm()
         }}
         validationSchema={validationSchema}
       >
-        {({ isValid }) => (
+        {({ isValid, isSubmitting }) => (
           <ReserveForm>
             <Field
               component={TextField}
@@ -101,7 +93,7 @@ const ClaimReserveForm: React.SFC<Props> = ({ claimId }) => (
               type="submit"
               variant="contained"
               color="primary"
-              disabled={!isValid}
+              disabled={!isValid || isSubmitting}
             >
               Update Reserve
             </SubmitButton>

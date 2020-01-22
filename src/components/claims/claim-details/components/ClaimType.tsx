@@ -258,6 +258,7 @@ interface FireDamageClaim {
   location?: string
   __typename: ClaimTypes
 }
+
 interface ApplianceClaim {
   date?: string
   location?: string
@@ -477,7 +478,7 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
                 }>
                   initialValues={{
                     location: (type as any).location || '',
-                    date: type.date ? parseISO(type.date) : undefined,
+                    date: type.date ? parseISO(type.date) : null,
                     item: (type as any).item || '',
                     policeReport: (type as any).policeReport || '',
                     receipt: (type as any).receipt || '',

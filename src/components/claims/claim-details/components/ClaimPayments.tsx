@@ -22,6 +22,7 @@ interface Props {
   claimId: string
   reserves: MonetaryAmount
   sanctionStatus: SanctionStatus
+  refetchPage: () => Promise<void>
 }
 
 interface Payment {
@@ -52,11 +53,16 @@ const ClaimPayments: React.SFC<Props> = ({
   claimId,
   reserves,
   sanctionStatus,
+  refetchPage,
 }) => {
   return (
     <Paper>
       <h3>Payments</h3>
-      <ClaimReserves claimId={claimId} reserves={reserves} />
+      <ClaimReserves
+        claimId={claimId}
+        reserves={reserves}
+        refetchPage={refetchPage}
+      />
 
       <PaymentTable>
         <MuiTableHead>
@@ -101,7 +107,11 @@ const ClaimPayments: React.SFC<Props> = ({
         </MuiTableBody>
       </PaymentTable>
 
-      <ClaimPayment sanctionStatus={sanctionStatus} claimId={claimId} />
+      <ClaimPayment
+        sanctionStatus={sanctionStatus}
+        claimId={claimId}
+        refetchPage={refetchPage}
+      />
     </Paper>
   )
 }

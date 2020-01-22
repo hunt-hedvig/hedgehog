@@ -9,6 +9,7 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { sleep } from 'utils/sleep'
 
 import { Paper } from '../../../shared/Paper'
 
@@ -71,6 +72,7 @@ interface Props {
   state: ClaimState
   claimId: string
   coveringEmployee: boolean
+  refetchPage: () => Promise<void>
 }
 
 const validateSelectOption = (
@@ -120,41 +122,11 @@ const ClaimInformation: React.SFC<Props> = ({
   state,
   claimId,
   coveringEmployee,
+  refetchPage,
 }) => (
-  <Mutation
-    mutation={UPDATE_CLAIM_STATE_MUTATION}
-    update={(cache, { data: updateData }) => {
-      cache.writeQuery({
-        query: UPDATE_STATE_QUERY,
-        variables: { id: claimId },
-        data: {
-          claim: {
-            state: updateData.updateClaimState.state,
-            events: updateData.updateClaimState.events,
-            __typename: updateData.updateClaimState.__typename,
-          },
-        },
-      })
-    }}
-  >
+  <Mutation mutation={UPDATE_CLAIM_STATE_MUTATION}>
     {(updateClaimState) => (
-      <Mutation
-        mutation={SET_COVERING_EMPLOYEE}
-        update={(cache, { data: updateData }) => {
-          cache.writeQuery({
-            query: UPDATE_COVERING_EMPLOYEE_QUERY,
-            variables: { id: claimId },
-            data: {
-              claim: {
-                coveringEmployee:
-                  updateData.setCoveringEmployee.coveringEmployee,
-                events: updateData.setCoveringEmployee.events,
-                __typename: updateData.setCoveringEmployee.__typename,
-              },
-            },
-          })
-        }}
-      >
+      <Mutation mutation={SET_COVERING_EMPLOYEE}>
         {(setCoveringEmployee) => (
           <Paper>
             <h3>Claim Information</h3>
@@ -193,14 +165,15 @@ const ClaimInformation: React.SFC<Props> = ({
               <MuiInputLabel shrink>Status</MuiInputLabel>
               <MuiSelect
                 value={state}
-                onChange={(event) =>
-                  updateClaimState({
+                onChange={async (event) => {
+                  await updateClaimState({
                     variables: {
                       id: claimId,
                       state: validateSelectOption(event),
                     },
                   })
-                }
+                  await refetchPage()
+                }}
               >
                 {Object.values(ClaimState).map((s) => (
                   <MuiMenuItem key={s} value={s}>
@@ -213,8 +186,8 @@ const ClaimInformation: React.SFC<Props> = ({
               <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
               <MuiSelect
                 value={coveringEmployee ? 'True' : 'False'}
-                onChange={(event) =>
-                  setCoveringEmployee({
+                onChange={async (event) => {
+                  await setCoveringEmployee({
                     variables: {
                       id: claimId,
                       coveringEmployee: validateSelectEmployeeClaimOption(
@@ -222,7 +195,9 @@ const ClaimInformation: React.SFC<Props> = ({
                       ),
                     },
                   })
-                }
+                  await sleep(1000)
+                  await refetchPage()
+                }}
               >
                 <MuiMenuItem key={'True'} value={'True'}>
                   True
