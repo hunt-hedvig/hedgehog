@@ -11,9 +11,9 @@ type QueryType {
   categories: [Category!]
   items(payload: Payload!): ItemSearch!
   prices(date: String!, ids: [String!]!): [PricePoint!]!
-  ticket (id: ID!): Ticket
-  getFullTicketHistory( id: ID!): TicketHistory
-  tickets (resolved: Boolean): [Ticket!]!
+  ticket(id: ID!): Ticket
+  getFullTicketHistory(id: ID!): TicketHistory
+  tickets(resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   inventory(claimId: ID!): [InventoryItem]!
@@ -23,7 +23,10 @@ type QueryType {
 
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
-  addAccountEntryToMember(memberId: ID!, accountEntry: AccountEntryInput!): Member!
+  addAccountEntryToMember(
+    memberId: ID!
+    accountEntry: AccountEntryInput!
+  ): Member!
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
@@ -33,13 +36,18 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  createTicket (ticket: TicketInput): ID
-  changeTicketDescription (ticketId: ID!, newDescription : String): ID
+  createTicket(ticket: TicketInput): ID
+  changeTicketDescription(ticketId: ID!, newDescription: String): ID
   assignTicketToTeamMember(ticketId: ID!, teamMemberId: ID!): ID
-  changeTicketStatus (ticketId: ID!, newStatus: TicketStatus): ID
+  changeTicketStatus(ticketId: ID!, newStatus: TicketStatus): ID
   changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
   changeTicketPriority(ticketId: ID!, newPriority: Float): ID
-  autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
+  autoLabelQuestion(
+    question: String!
+    label: String!
+    memberId: String
+    messageIds: [String!]
+  ): AutoLabel
   questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
@@ -47,10 +55,21 @@ type MutationType {
   setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
   addInventoryItem(item: InventoryItemInput!): Boolean
   removeInventoryItem(inventoryItemId: ID!): Boolean
-  activateQuote(id: ID!, activationDate: LocalDate!, terminationDate: LocalDate): Quote!
+  activateQuote(
+    id: ID!
+    activationDate: LocalDate!
+    terminationDate: LocalDate
+  ): Quote!
   # Creates a quote from a product and returns the quote id
-  createQuoteFromProduct(memberId: ID!, quoteData: QuoteFromProductInput!): Quote!
-  updateQuote(quoteId: ID!, quoteData: QuoteInput!, bypassUnderwritingGuidelines: Boolean): Quote!
+  createQuoteFromProduct(
+    memberId: ID!
+    quoteData: QuoteFromProductInput!
+  ): Quote!
+  updateQuote(
+    quoteId: ID!
+    quoteData: QuoteInput!
+    bypassUnderwritingGuidelines: Boolean
+  ): Quote!
 }
 
 type Suggestion {
@@ -117,7 +136,7 @@ type Category {
 }
 
 input Payload {
-  category:  String!
+  category: String!
   query: String!
   filters: [Filter!]!
 }
@@ -139,7 +158,7 @@ type ItemSearch {
 
 type FilterSuggestion {
   name: String!
-  items:  [String!]!
+  items: [String!]!
   others: [String!]!
 }
 
@@ -148,7 +167,6 @@ type Item {
   id: String!
   name: String!
 }
-
 
 type FileUpload {
   fileUploadUrl: URL
@@ -206,8 +224,8 @@ type Whitelisted {
 }
 
 enum Flag {
-  GREEN,
-  AMBER,
+  GREEN
+  AMBER
   RED
 }
 
@@ -231,6 +249,7 @@ type Member {
   firstName: String
   lastName: String
   personalNumber: String
+  gender: Gender
   address: String
   postalNumber: String
   city: String
@@ -247,9 +266,15 @@ type Member {
   quotes: [Quote!]!
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 interface IQuoteData {
   id: ID!
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
   street: String
@@ -279,22 +304,22 @@ type Quote {
 }
 
 enum QuoteProductType {
-  APARTMENT,
-  HOUSE,
+  APARTMENT
+  HOUSE
   OBJECT
 }
 enum QuoteState {
-  INCOMPLETE,
-  QUOTED,
-  SIGNED,
+  INCOMPLETE
+  QUOTED
+  SIGNED
   EXPIRED
 }
 
 union QuoteData = ApartmentQuoteData | HouseQuoteData
 
-type ApartmentQuoteData implements IQuoteData{
+type ApartmentQuoteData implements IQuoteData {
   id: ID!
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
   street: String
@@ -307,11 +332,11 @@ type ApartmentQuoteData implements IQuoteData{
 }
 
 enum ApartmentSubType {
-  BRF,
-  RENT,
-  SUBLET_RENTAL,
-  SUBLET_BRF,
-  STUDENT_BRF,
+  BRF
+  RENT
+  SUBLET_RENTAL
+  SUBLET_BRF
+  STUDENT_BRF
   STUDENT_RENT
 }
 
@@ -340,19 +365,19 @@ type ExtraBuilding {
 }
 
 enum ExtraBuildingType {
-  GARAGE,
-  CARPORT,
-  SHED,
-  STOREHOUSE,
-  FRIGGEBOD,
-  ATTEFALL,
-  OUTHOUSE,
-  GUESTHOUSE,
-  GAZEBO,
-  GREENHOUSE,
-  SAUNA,
-  BARN,
-  BOATHOUSE,
+  GARAGE
+  CARPORT
+  SHED
+  STOREHOUSE
+  FRIGGEBOD
+  ATTEFALL
+  OUTHOUSE
+  GUESTHOUSE
+  GAZEBO
+  GREENHOUSE
+  SAUNA
+  BARN
+  BOATHOUSE
   OTHER
 }
 
@@ -396,7 +421,7 @@ input QuoteFromProductInput {
 }
 
 input ApartmentQuoteDataInput {
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
   street: String
@@ -432,7 +457,6 @@ input ExtraBuildingInput {
   displayName: String
 }
 
-
 type Transaction {
   id: ID
   amount: MonetaryAmount
@@ -446,22 +470,30 @@ type DirectDebitStatus {
 }
 
 enum SanctionStatus {
-  Undetermined,
-  NoHit,
-  PartialHit,
+  Undetermined
+  NoHit
+  PartialHit
   FullHit
 }
 
 type NumberFailedCharges {
-    numberFailedCharges: Int!
-    lastFailedChargeAt: Instant
+  numberFailedCharges: Int!
+  lastFailedChargeAt: Instant
 }
 
 type Account {
   id: ID!
   currentBalance: MonetaryAmount!
   totalBalance: MonetaryAmount!
+  chargeEstimation: AccountChargeEstimation!
   entries: [AccountEntry!]!
+}
+
+type AccountChargeEstimation {
+  subscription: MonetaryAmount!
+  discount: MonetaryAmount!
+  charge: MonetaryAmount!
+  discountCodes: [String!]!
 }
 
 type SchedulerState {
@@ -503,13 +535,13 @@ type AccountEntry {
 }
 
 enum AccountEntryType {
-  CORRECTION,
-  SUBSCRIPTION,
-  CAMPAIGN,
-  PAYOUT,
-  CHARGE,
-  REFERRAL_DISCOUNT,
-  FREE_MONTH_DISCOUNT,
+  CORRECTION
+  SUBSCRIPTION
+  CAMPAIGN
+  PAYOUT
+  CHARGE
+  REFERRAL_DISCOUNT
+  FREE_MONTH_DISCOUNT
   LOSS
 }
 
@@ -542,30 +574,31 @@ type ClaimNote {
 }
 
 enum ClaimTypes {
-  TheftClaim,
-  AccidentalDamageClaim,
-  AssaultClaim,
-  WaterDamageClaim,
-  TravelAccidentClaim,
-  LuggageDelayClaim,
-  NotCoveredClaim,
-  FireDamageClaim,
-  ApplianceClaim,
-  ConfirmedFraudClaim,
-  LiabilityClaim,
-  LegalProtectionClaim,
-  WaterDamageBathroomClaim,
-  WaterDamageKitchenClaim,
-  BurglaryClaim,
-  FloodingClaim,
-  EarthquakeClaim,
-  InstallationsClaim,
-  SnowPressureClaim,
-  StormDamageClaim,
-  VerminAndPestsClaim,
+  TheftClaim
+  AccidentalDamageClaim
+  AssaultClaim
+  WaterDamageClaim
+  TravelAccidentClaim
+  LuggageDelayClaim
+  NotCoveredClaim
+  FireDamageClaim
+  ApplianceClaim
+  ConfirmedFraudClaim
+  LiabilityClaim
+  LegalProtectionClaim
+  WaterDamageBathroomClaim
+  WaterDamageKitchenClaim
+  BurglaryClaim
+  FloodingClaim
+  EarthquakeClaim
+  InstallationsClaim
+  SnowPressureClaim
+  StormDamageClaim
+  VerminAndPestsClaim
   TestClaim
 }
-union ClaimType = TheftClaim
+union ClaimType =
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -705,7 +738,6 @@ type TestClaim {
   date: LocalDate
 }
 
-
 type ClaimPayment {
   id: String
   amount: MonetaryAmount
@@ -719,10 +751,10 @@ type ClaimPayment {
 }
 
 enum ClaimPaymentStatus {
-  PREPARED,
-  INITIATED,
-  SANCTION_LIST_HIT,
-  COMPLETED,
+  PREPARED
+  INITIATED
+  SANCTION_LIST_HIT
+  COMPLETED
   FAILED
 }
 
@@ -756,18 +788,18 @@ enum ClaimPaymentType {
 }
 
 enum ChargeStatus {
-  INITIATED,
-  WAITING_FOR_SUBSCRIPTION,
-  SCHEDULING_SUBSCRIPTION,
-  SCHEDULE_SUBSCRIPTION_FAILED,
-  SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL,
-  APPROVED_FOR_CHARGE,
-  SCHEDULING_CHARGE,
-  CHARGE_REQUESTING,
-  CHARGE_REQUEST_FAILED,
-  CHARGE_INITIATED,
-  CHARGE_FAILED,
-  CHARGE_COMPLETED,
+  INITIATED
+  WAITING_FOR_SUBSCRIPTION
+  SCHEDULING_SUBSCRIPTION
+  SCHEDULE_SUBSCRIPTION_FAILED
+  SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL
+  APPROVED_FOR_CHARGE
+  SCHEDULING_CHARGE
+  CHARGE_REQUESTING
+  CHARGE_REQUEST_FAILED
+  CHARGE_INITIATED
+  CHARGE_FAILED
+  CHARGE_COMPLETED
 }
 
 input TicketInput {
@@ -778,8 +810,9 @@ input TicketInput {
   remindNotificationTime: LocalTime
   remindMessage: String
   description: String
-  status : TicketStatus
+  status: TicketStatus
   referenceId: String
+  memberId: String
 }
 
 type Ticket {
@@ -826,26 +859,26 @@ input RemindNotification {
 }
 
 enum TicketChangeType {
-  TICKET_CREATED,
-  CHANGED_REMINDER,
-  CHANGED_ASSIGNED_TO,
-  CHANGED_DESCRIPTION,
-  CHANGED_STATUS,
-  CHANGED_PRIORITY,
+  TICKET_CREATED
+  CHANGED_REMINDER
+  CHANGED_ASSIGNED_TO
+  CHANGED_DESCRIPTION
+  CHANGED_STATUS
+  CHANGED_PRIORITY
 }
 
 enum TicketStatus {
-  WAITING,
-  WORKING_ON,
-  ON_HOLD,
-  RESOLVED,
+  WAITING
+  WORKING_ON
+  ON_HOLD
+  RESOLVED
 }
 
 enum TicketType {
-  REMIND,
-  MESSAGE,
-  CLAIM,
-  CALL_ME,
+  REMIND
+  MESSAGE
+  CLAIM
+  CALL_ME
   OTHER
 }
 
