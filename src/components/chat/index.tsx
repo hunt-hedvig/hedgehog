@@ -130,8 +130,8 @@ export default class Chat extends React.Component {
             <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
             {this.getChatTitle(messages.member)}
             <MemberEmoji
-              birthDateString={messages.member.birthDate}
-              gender={messages.member.gender}
+              birthDateString={messages.member?.birthDate}
+              gender={messages.member?.gender}
             />
           </Header>
           {this.props.insurance.requesting || (

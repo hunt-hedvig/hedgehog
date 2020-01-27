@@ -23,7 +23,16 @@ export const MemberEmoji: React.FC<{
   birthDateString: string
   gender: Gender
 }> = ({ birthDateString, gender }) => {
-  const birthDate = parse(birthDateString, 'yyyy-MM-dd', new Date())
+  if (!birthDateString) {
+    return null
+  }
+  let birthDate
+  try {
+    birthDate = parse(birthDateString, 'yyyy-MM-dd', new Date())
+  } catch (e) {
+    console.error(e)
+    return null
+  }
   const age = differenceInYears(new Date(), birthDate)
 
   return (
