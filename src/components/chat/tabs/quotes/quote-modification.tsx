@@ -244,13 +244,16 @@ export const QuoteModification: React.FunctionComponent<{
             onWipChange && onWipChange(true)
             setFormState({ ...formState, productType: data.value as string })
           }}
-          options={[
-            { text: 'Apartment (rent)', value: 'RENT' },
-            { text: 'Apartment (brf)', value: 'BRF' },
-            { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
-            { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
-            { text: 'House', value: 'HOUSE' },
-          ]}
+          options={
+            quote.productType === 'APARTMENT'
+              ? [
+                  { text: 'Apartment (rent)', value: 'RENT' },
+                  { text: 'Apartment (brf)', value: 'BRF' },
+                  { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
+                  { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
+                ]
+              : [{ text: 'House', value: 'HOUSE' }]
+          }
         />
 
         {getNumberInput('livingSpace', 'Living space (m2)')}
