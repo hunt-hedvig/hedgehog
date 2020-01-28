@@ -25,11 +25,13 @@ type MemberStatus =
   | 'SIGNED'
   | 'INACTIVATED'
   | 'TERMINATED'
+export type Gender = 'MALE' | 'FEMALE' | 'OTHER'
 
 export interface Member {
   memberId: number
   status: MemberStatus
   ssn: string
+  gender: Gender
   firstName: string
   lastName: string
   street: string

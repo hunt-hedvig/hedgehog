@@ -5,6 +5,7 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Header, Tab } from 'semantic-ui-react'
+import { MemberEmoji } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatTab from './tabs/ChatTab'
 
@@ -128,6 +129,10 @@ export default class Chat extends React.Component {
           <Header size="huge">
             <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
             {this.getChatTitle(messages.member)}
+            <MemberEmoji
+              birthDateString={messages.member?.birthDate}
+              gender={messages.member?.gender}
+            />
           </Header>
           {this.props.insurance.requesting || (
             <Tab

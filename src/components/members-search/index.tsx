@@ -10,6 +10,7 @@ import {
   MemberSearchResultItem,
   MembersSearchResult,
 } from 'store/storeTypes'
+import { MemberEmoji } from 'utils/member'
 
 export interface Props {
   searchMemberRequest: (
@@ -205,8 +206,8 @@ const Search: React.FC<{
 }
 const ListHeader: React.FC = () => (
   <Table.Header>
-    <Table.HeaderCell>Member id</Table.HeaderCell>
-    <Table.HeaderCell>Name</Table.HeaderCell>
+    <Table.HeaderCell>Member</Table.HeaderCell>
+    <Table.HeaderCell></Table.HeaderCell>
     <Table.HeaderCell>Sign up</Table.HeaderCell>
     <Table.HeaderCell>Active from</Table.HeaderCell>
     <Table.HeaderCell>Active to</Table.HeaderCell>
@@ -228,6 +229,10 @@ const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => (
     </Table.Cell>
     <Table.Cell>
       {item.member.firstName ?? '-'} {item.member.lastName ?? '-'}
+      <MemberEmoji
+        birthDateString={item.member.birthDate}
+        gender={item.member.gender}
+      />
     </Table.Cell>
     <Table.Cell>{item.member.signedOn}</Table.Cell>
     <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>

@@ -39,8 +39,8 @@ export type Account = {
   id: Scalars['ID']
   currentBalance: Scalars['MonetaryAmount']
   totalBalance: Scalars['MonetaryAmount']
-  entries: Array<AccountEntry>
   chargeEstimation: AccountChargeEstimation
+  entries: Array<AccountEntry>
 }
 
 export type AccountChargeEstimation = {
@@ -441,6 +441,12 @@ export type FloodingClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export enum Gender {
+  Male = 'MALE',
+  Female = 'FEMALE',
+  Other = 'OTHER',
+}
+
 export type HouseQuoteData = IQuoteData & {
   __typename?: 'HouseQuoteData'
   id: Scalars['ID']
@@ -574,6 +580,7 @@ export type Member = {
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   personalNumber?: Maybe<Scalars['String']>
+  gender?: Maybe<Gender>
   address?: Maybe<Scalars['String']>
   postalNumber?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
@@ -1053,6 +1060,7 @@ export type TicketInput = {
   description?: Maybe<Scalars['String']>
   status?: Maybe<TicketStatus>
   referenceId?: Maybe<Scalars['String']>
+  memberId?: Maybe<Scalars['String']>
 }
 
 export type TicketRevision = {
