@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 import * as Koa from 'koa'
 import * as Router from 'koa-router'
 import * as compress from 'koa-compress'
@@ -6,7 +9,8 @@ import * as serve from 'koa-static'
 import * as proxy from 'koa-server-http-proxy'
 import * as path from 'path'
 import 'source-map-support/register'
-import { loginCallback } from './auth'
+import { loginCallback, refreshTokenCallback } from './auth'
+import { config } from './config'
 import {
   loggerFactory,
   logRequestMiddleware,
@@ -73,7 +77,11 @@ app.use(setRequestUuidMiddleware)
 app.use(setLoggerMiddleware)
 app.use(logRequestMiddleware)
 app.use(router.middleware())
+
 router.get('/login/callback', loginCallback)
+router.post('/login/refresh', refreshTokenCallback)
+logger.info(`Using gatekeeper "${config.gatekeeperHost}"`)
+
 router.get(/^\/(?!api|chat|graphiql|vendor).*/, getPage)
 app.use(
   proxy({
