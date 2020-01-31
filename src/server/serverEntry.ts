@@ -6,6 +6,7 @@ import * as serve from 'koa-static'
 import * as proxy from 'koa-server-http-proxy'
 import * as path from 'path'
 import 'source-map-support/register'
+import { loginCallback } from './auth'
 import {
   loggerFactory,
   logRequestMiddleware,
@@ -72,6 +73,7 @@ app.use(setRequestUuidMiddleware)
 app.use(setLoggerMiddleware)
 app.use(logRequestMiddleware)
 app.use(router.middleware())
+router.get('/login/callback', loginCallback)
 router.get(/^\/(?!api|chat|graphiql|vendor).*/, getPage)
 app.use(
   proxy({
