@@ -11,11 +11,6 @@ import {
   LOGIN_SUCCESS,
 } from '../constants/login'
 
-const clearStore = () => {
-  unsetClient()
-  history.push('/login/oauth')
-}
-
 export function* logout() {
   try {
     yield call(api, config.login.logout)

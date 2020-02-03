@@ -54,12 +54,9 @@ class App extends React.Component {
                   <Breadcrumbs history={history} state={store.getState()} />
                   <Switch>
                     <Route
-                      path="/login/oauth"
+                      path="/login"
+                      exact
                       component={Routes.LoginPageRoute}
-                    />
-                    <Route
-                      path="/login/process"
-                      component={Routes.LoginProcessPageRoute}
                     />
                     <Routes.PrivateRoute
                       path="/assets"

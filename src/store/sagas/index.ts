@@ -3,6 +3,7 @@ import ClaimDetailsSaga from './claimDetailsSaga'
 import ClaimsSaga from './claimsSaga'
 import InsuranceSaga from './insuranceSaga'
 import LoginSaga from './loginSaga'
+import AuthSaga from './authSaga'
 import MembersSaga from './membersSaga'
 import MessagesSaga from './messagesSaga'
 import NotesSaga from './notesSaga'
@@ -13,7 +14,8 @@ import QuestionsSaga from './questionsSaga'
 
 export default function* IndexSaga() {
   yield [
-    LoginSaga(),
+    // LoginSaga(),
+    AuthSaga(),
     AssetsSaga(),
     PollingSaga(),
     MembersSaga(),

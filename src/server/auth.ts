@@ -24,7 +24,7 @@ function setTokenCookies(
   })
 }
 
-export const loginCallback: Middleware<any> = async (ctx) => {
+export const loginCallback: Middleware<object> = async (ctx) => {
   const accessToken = ctx.request.query['access-token']
   const refreshToken = ctx.request.query['refresh-token']
   setTokenCookies(ctx, { accessToken, refreshToken })
@@ -37,7 +37,12 @@ export const loginCallback: Middleware<any> = async (ctx) => {
   ctx.redirect('/dashboard')
 }
 
-export const refreshTokenCallback: Middleware<any> = async (ctx) => {
+export const logout: Middleware<object> = async (ctx) => {
+  setTokenCookies(ctx, { accessToken: '', refreshToken: '' })
+  ctx.redirect('/login')
+}
+
+export const refreshTokenCallback: Middleware<object> = async (ctx) => {
   const refreshToken = ctx.cookies.get('_hvg_rt') ?? ''
   const request = [
     'client_id=' + encodeURIComponent(config.oauthClientId),

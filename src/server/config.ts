@@ -23,5 +23,8 @@ export const config = {
     process.env.OAUTH_CLIENT_SECRET,
     'oauth client secret',
   ),
-  gatekeeperHost: requireNotNullish(defaultGatekeeperHost, 'gatekeeper host'),
+  gatekeeperHost: requireNotNullish(
+    process.env.GATEKEEPER_HOST ?? defaultGatekeeperHost,
+    'gatekeeper host',
+  ),
 }
