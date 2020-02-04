@@ -10,27 +10,24 @@ const mapStateToProps = ({
   messages,
   claims,
   insurance,
-  client,
+  auth,
   payoutDetails,
 }) => ({
   memberClaims: claims.memberClaims,
   messages,
   insurance,
-  client,
+  auth,
   payoutDetails,
 })
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      claimsByMember: actions.claimsActions.claimsByMember,
-      ...actions.insuranceActions,
-      ...actions.messagesActions,
-      ...actions.membersActions,
-      ...actions.clientActions,
-      ...actions.notificationsActions,
-      ...actions.payoutDetailsActions,
-    },
-  )(ChatPage),
+  connect(mapStateToProps, {
+    claimsByMember: actions.claimsActions.claimsByMember,
+    ...actions.insuranceActions,
+    ...actions.messagesActions,
+    ...actions.membersActions,
+    ...actions.clientActions,
+    ...actions.notificationsActions,
+    ...actions.payoutDetailsActions,
+  })(ChatPage),
 )

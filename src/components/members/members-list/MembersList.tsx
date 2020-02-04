@@ -1,6 +1,5 @@
 import { LinkRow } from 'components/shared'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
-import * as sockets from 'lib/sockets'
 import * as moment from 'moment'
 import * as React from 'react'
 import { Table } from 'semantic-ui-react'
@@ -118,35 +117,6 @@ export default class MembersList extends React.Component<MembersListProps, {}> {
         </Table.Row>
       </Table.Header>
     )
-  }
-
-  public subscribeSocket = (connection) => {
-    const {
-      newMessagesReceived,
-      client: { name },
-    } = this.props
-    const { stompClient, subscription } = sockets.membersListSubscribe(
-      { newMessagesReceived },
-      name,
-      connection,
-    )
-    this.setState({
-      socket: stompClient,
-      subscription,
-    })
-  }
-
-  public componentDidMount() {
-    // TODO uncomment when ready method to count the number of unread messages
-    /* const { setActiveConnection, messages } = this.props;
-        if (!messages.activeConnection) {
-            sockets.connect().then(stompClient => {
-                setActiveConnection(stompClient);
-                this.subscribeSocket(stompClient);
-            });
-        } else {
-            this.subscribeSocket(messages.activeConnection);
-        } */
   }
 
   public render() {
