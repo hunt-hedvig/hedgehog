@@ -32,7 +32,7 @@ function* membersRequestFlow() {
   }
 }
 
-function* membersSearchFlow(action: SearcMemberRequestAction) {
+function* membersSearchFlow(action: SearchMemberRequestAction) {
   const queryFilter = action.searchFilter
   try {
     const searchResult: MembersSearchResult = yield call(
