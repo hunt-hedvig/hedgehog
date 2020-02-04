@@ -1,14 +1,14 @@
 import { refreshAccessToken } from 'api/index'
+import ApolloClient from 'apollo-boost'
 import {
   defaultDataIdFromObject,
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory'
 import { ServerError } from 'apollo-link-http-common'
-import ApolloClient from 'apollo-boost'
 import { Store } from 'redux'
-import { history } from 'store'
 import { showNotification } from 'store/actions/notificationsActions'
+import { forceLogOut } from 'utils/auth'
 
 import introspectionQueryResultData from './fragmentTypes.json'
 
@@ -49,7 +49,7 @@ export const apolloClient = (() => {
             )
           })
           .catch((_) => {
-            history.push('/login')
+            forceLogOut()
           })
       }
     },

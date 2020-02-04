@@ -3,6 +3,7 @@ import config from 'api/config'
 import { call, put, takeLatest } from 'redux-saga/effects'
 import { authFailure, authSuccess } from 'store/actions/auth'
 import { AUTH_CHECK, AUTH_LOG_OUT } from 'store/constants/auth'
+import { forceLogOut } from 'utils/auth'
 
 function* checkAuth() {
   const response = yield call(api, config.login.login)
@@ -12,11 +13,11 @@ function* checkAuth() {
   }
 
   yield put(authFailure())
-  window.location.pathname = '/login/logout'
+  forceLogOut()
 }
 
 function* logOut() {
-  window.location.pathname = '/login/logout'
+  forceLogOut()
 }
 
 function* authFlow() {
