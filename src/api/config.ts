@@ -15,9 +15,9 @@ export default {
       method: 'get',
       url: 'settings/me',
     },
-    logout: {
+    authSuccess: {
       method: 'post',
-      url: 'logout',
+      url: 'settings/auth-success',
     },
   },
   members: {

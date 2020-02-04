@@ -1,6 +1,11 @@
 import { AnyAction, Reducer } from 'redux'
 import { AuthState } from 'store/actions/auth'
-import { AUTH_CHECK, AUTH_FAILURE, AUTH_SUCCESS } from 'store/constants/auth'
+import {
+  AUTH_CHECK,
+  AUTH_FAILURE,
+  AUTH_LOG_OUT,
+  AUTH_SUCCESS,
+} from 'store/constants/auth'
 import initialState from 'store/initialState'
 import { BackofficeStore } from 'store/storeTypes'
 
@@ -21,6 +26,11 @@ const authReducer: Reducer<BackofficeStore['auth']> = (
         loading: false,
         state: AuthState.UNAUTHENTICATED,
         scopes: [],
+      }
+    case AUTH_LOG_OUT:
+      return {
+        ...state,
+        state: AuthState.LOGOUT_LOADING,
       }
     case AUTH_CHECK:
     default:

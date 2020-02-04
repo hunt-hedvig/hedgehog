@@ -4,6 +4,8 @@ import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import actions from 'store/actions'
+import { authLogOut, AuthState } from 'store/actions/auth'
+import { BackofficeStore } from 'store/storeTypes'
 import { Logo } from './elements'
 
 const Wrapper = styled('div')(({ collapsed }: { collapsed: boolean }) => ({
@@ -144,12 +146,17 @@ export class VerticalMenuComponent extends React.Component<
             <MenuItem
               onClick={(e) => {
                 e.preventDefault()
-                this.props.unsetClient()
+                console.log(this.props)
+                this.props.authLogOut()
               }}
               to="#"
             >
               <MenuIcon className="fa fa-sign-out-alt" />
-              <MenuText collapsed={this.state.isCollapsed}>Log out</MenuText>
+              <MenuText collapsed={this.state.isCollapsed}>
+                {this.props.loginState === AuthState.LOGOUT_LOADING
+                  ? '...'
+                  : 'Log out'}
+              </MenuText>
             </MenuItem>
           </Menu>
         </InnerWrapper>
@@ -170,6 +177,12 @@ export class VerticalMenuComponent extends React.Component<
   }
 }
 
-export const VerticalMenu = connect(null, { ...actions.clientActions })(
-  VerticalMenuComponent,
-)
+export const VerticalMenu = connect(
+  (state) => ({
+    loginState: (state as BackofficeStore).auth.state,
+  }),
+  {
+    authLogOut,
+    ...actions.clientActions,
+  },
+)(VerticalMenuComponent)

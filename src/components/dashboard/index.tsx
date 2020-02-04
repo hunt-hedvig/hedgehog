@@ -38,7 +38,7 @@ export class Dashboard extends React.Component<any> {
   }
 
   public propTypes = {
-    unsetClient: PropTypes.func.isRequired,
+    authLogOut: PropTypes.func.isRequired,
     setActiveConnection: PropTypes.func.isRequired,
     messages: PropTypes.object.isRequired,
     dashboard: PropTypes.object.isRequired,

@@ -12,6 +12,23 @@ const axiosInstance = axios.create({
   },
 })
 
+export const refreshAccessToken = async () => {
+  await axios.post('/login/refresh', null, {
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    withCredentials: true,
+  })
+  await axios.post('/api/settings/auth-success', null, {
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    withCredentials: true,
+  })
+}
+
 const callApi = async (conf, data, id, params) => {
   try {
     return await axiosInstance.request({
@@ -22,17 +39,14 @@ const callApi = async (conf, data, id, params) => {
       params,
     })
   } catch (error) {
-    if (error.response && error.response.status === 403) {
+    if (
+      error.response &&
+      (error.response.status === 403 || error.response.status === 401)
+    ) {
       try {
-        await axios.post('/login/refresh', null, {
-          headers: {
-            accept: 'application/json',
-            'content-type': 'application/json',
-          },
-          withCredentials: true,
-        })
+        await refreshAccessToken()
       } catch (e) {
-        history.push('/login/oauth')
+        history.push('/login')
         return
       }
 
