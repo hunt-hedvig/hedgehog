@@ -1,9 +1,14 @@
+import { refreshAccessToken } from 'api/index'
+import ApolloClient from 'apollo-boost'
 import {
   defaultDataIdFromObject,
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory'
-import ApolloClient from 'apollo-boost'
+import { ServerError } from 'apollo-link-http-common'
+import { Store } from 'redux'
+import { showNotification } from 'store/actions/notificationsActions'
+import { forceLogOut } from 'utils/auth'
 
 import introspectionQueryResultData from './fragmentTypes.json'
 
@@ -29,5 +34,24 @@ export const apolloClient = (() => {
         }
       },
     }),
+    credentials: 'same-origin',
+    onError: (error) => {
+      if ((error?.networkError as ServerError)?.response?.status === 403) {
+        refreshAccessToken()
+          .then(() => {
+            ;((window as any).__store as Store).dispatch(
+              showNotification({
+                header: 'Authentication error',
+                message:
+                  'The request failed because the authentication needed to refresh, please try again',
+                type: 'yellow',
+              }),
+            )
+          })
+          .catch((_) => {
+            forceLogOut()
+          })
+      }
+    },
   })
 })()

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import styled from 'react-emotion'
-import GoogleButton from 'react-google-button'
 import { Header, Segment } from 'semantic-ui-react'
 
 const LoginContainer = styled(Segment)`
@@ -20,8 +19,12 @@ const LoginContainer = styled(Segment)`
 const LoginPage = () => (
   <LoginContainer>
     <Header size="huge">Login</Header>
-    <a href="/api/login/google">
-      <GoogleButton label="Login with Google" />
+    <a
+      href={`${(window as any).GATEKEEPER_HOST}/sso?redirect=${
+        window.location.protocol
+      }//${window.location.host}/login/callback`}
+    >
+      Log in
     </a>
   </LoginContainer>
 )

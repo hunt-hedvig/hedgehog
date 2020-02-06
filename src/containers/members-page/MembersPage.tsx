@@ -11,19 +11,15 @@ const MembersPage = (props) => (
   </ListPage>
 )
 
-const mapStateToProps = ({ client, members, messages }) => ({
-  client,
+const mapStateToProps = ({ members, messages }) => ({
   members,
   messages,
 })
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      ...actions.clientActions,
-      ...actions.membersActions,
-      ...actions.messagesActions,
-    },
-  )(MembersPage),
+  connect(mapStateToProps, {
+    ...actions.clientActions,
+    ...actions.membersActions,
+    ...actions.messagesActions,
+  })(MembersPage),
 )

@@ -38,14 +38,13 @@ export class Dashboard extends React.Component<any> {
   }
 
   public propTypes = {
-    unsetClient: PropTypes.func.isRequired,
     setActiveConnection: PropTypes.func.isRequired,
     messages: PropTypes.object.isRequired,
     dashboard: PropTypes.object.isRequired,
     dashboardUpdated: PropTypes.func.isRequired,
     dashboardErrorReceived: PropTypes.func.isRequired,
     updatesRequestSuccess: PropTypes.func.isRequired,
-    client: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
   }
 
   public subscribeSocket = (connection) => {
@@ -53,11 +52,11 @@ export class Dashboard extends React.Component<any> {
       dashboardUpdated,
       dashboardErrorReceived,
       updatesRequestSuccess,
-      client: { id },
+      auth: { email },
     } = this.props
     const { stompClient, subscription } = sockets.dashboardSubscribe(
       { dashboardUpdated, dashboardErrorReceived, updatesRequestSuccess },
-      id,
+      email,
       connection,
     )
     this.setState({

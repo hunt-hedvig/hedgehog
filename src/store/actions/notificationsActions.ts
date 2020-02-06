@@ -1,10 +1,18 @@
+import React from 'react'
+import { SemanticCOLORS } from 'semantic-ui-react'
 import {
   NOTIFICATION_CLEAR,
   NOTIFICATION_DISMISS,
   NOTIFICATION_SHOW,
 } from '../constants/notifications'
 
-export const showNotification = (data) => ({
+export interface Notification {
+  type?: SemanticCOLORS
+  header: React.ReactNode
+  message: React.ReactNode
+}
+
+export const showNotification = (data: Notification) => ({
   type: NOTIFICATION_SHOW,
   data: {
     ...data,

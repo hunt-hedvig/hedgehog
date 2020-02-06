@@ -8,8 +8,8 @@ const DashboardPage = (props) => <Dashboard {...props} />
 
 export default withRouter(
   connect(
-    ({ client, messages, dashboard }) => ({
-      client,
+    ({ auth, messages, dashboard }) => ({
+      auth,
       messages,
       dashboard,
     }),

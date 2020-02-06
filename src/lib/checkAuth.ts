@@ -1,46 +1,16 @@
-import api from 'api'
-import config from 'api/config'
-import { history } from 'store'
-import { setClient } from '../store/actions/clientActions'
+import { Store } from 'redux'
+import { authCheck, AuthState } from 'store/actions/auth'
+import { BackofficeStore } from 'store/storeTypes'
 
-/**
- * Check credentials in app store
- * @param {function} getState
- */
-export function checkLocalAuth(getState) {
-  const state = getState()
-  return !!state.client.id
+export function getAuthState(getState: Store['getState']): AuthState {
+  const state = getState<BackofficeStore>()
+  return state.auth.state
 }
 
-const makeLoginRequestWithRetryAttempt = async () => {
-  try {
-    return await api(config.login.login)
-  } catch (e) {
-    const isNetworkError = (e.message as string).includes('Network Error')
-    if (process.env.NODE_ENV !== 'development' || !isNetworkError) {
-      throw e
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 2500))
-
-    return makeLoginRequestWithRetryAttempt()
+export function getAuthStateOrStartChecking({ dispatch, getState }: Store) {
+  const loginState = getAuthState(getState)
+  if (loginState === AuthState.UNKNOWN) {
+    dispatch(authCheck())
   }
-}
-
-/**
- * Check client credentails in backend
- */
-export async function checkApiAuth({ dispatch, getState }) {
-  try {
-    if (checkLocalAuth(getState)) {
-      return true
-    }
-
-    const client = await makeLoginRequestWithRetryAttempt()
-    dispatch(setClient(client.data))
-    return true
-  } catch (error) {
-    history.replace('/login/oauth')
-    return false
-  }
+  return loginState
 }

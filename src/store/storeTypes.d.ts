@@ -1,7 +1,14 @@
+import { AuthState } from 'store/actions/auth'
 import { ClaimsStore } from './types/claimsTypes'
 import { QuestionsStore } from './types/questionsTypes'
 
 export interface BackofficeStore {
+  auth: {
+    state: AuthState
+    scopes: ReadonlyArray<string>
+    id?: string
+    email?: string
+  }
   login: any
   assets: any
   client: any
