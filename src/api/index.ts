@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { history } from '../store'
+import { forceLogOut } from 'utils/auth'
 import config from './config'
 
 const axiosInstance = axios.create({
@@ -29,7 +29,7 @@ export const refreshAccessToken = async () => {
   })
 }
 
-const callApi = async (conf, data, id, params) => {
+const callApi = async (conf, data, id, params, retryCount = 0) => {
   try {
     return await axiosInstance.request({
       url: `${conf.url}${id ? '/' + id : ''}`,
@@ -46,11 +46,16 @@ const callApi = async (conf, data, id, params) => {
       try {
         await refreshAccessToken()
       } catch (e) {
-        history.push('/login')
+        forceLogOut()
         return
       }
 
-      return callApi(conf, data, id, params)
+      if (retryCount >= 10) {
+        forceLogOut()
+        return
+      }
+
+      return callApi(conf, data, id, params, retryCount + 1)
     }
     throw new Error(error)
   }

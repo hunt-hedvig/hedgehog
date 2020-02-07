@@ -48,7 +48,16 @@ export const apolloClient = (() => {
               }),
             )
           })
-          .catch((_) => {
+          .catch((e) => {
+            console.error('Failed to refresh access token', e)
+            ;((window as any).__store as Store).dispatch(
+              showNotification({
+                header: 'Authentication failed',
+                message:
+                  "The request failed because the authentication needed to refresh, but it failed. You're being logged out",
+                type: 'red',
+              }),
+            )
             forceLogOut()
           })
       }
