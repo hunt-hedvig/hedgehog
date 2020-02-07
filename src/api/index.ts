@@ -13,20 +13,24 @@ const axiosInstance = axios.create({
 })
 
 export const refreshAccessToken = async () => {
-  await axios.post('/login/refresh', null, {
-    headers: {
-      accept: 'application/json',
-      'content-type': 'application/json',
-    },
-    withCredentials: true,
-  })
-  await axios.post('/api/settings/auth-success', null, {
-    headers: {
-      accept: 'application/json',
-      'content-type': 'application/json',
-    },
-    withCredentials: true,
-  })
+  if ((window as any).__hvg_refreshingAccessToken) {
+    // bail if we're already refreshing
+    return
+  }
+
+  try {
+    ;(window as any).__hvg_refreshingAccessToken = true
+    await axios.post('/login/refresh', null, {
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+      },
+      withCredentials: true,
+    })
+    await axiosInstance.post('/settings/auth-success')
+  } finally {
+    ;(window as any).__hvg_refreshingAccessToken = false
+  }
 }
 
 const callApi = async (conf, data, id, params, retryCount = 0) => {
