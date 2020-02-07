@@ -1,6 +1,7 @@
 import { ExtendableContext, Middleware } from 'koa'
 import { addDays, addMinutes } from 'date-fns'
 import fetch from 'node-fetch'
+import { LoggingMiddleware } from './request-enhancers'
 import { config } from './config'
 
 interface Tokens {
@@ -42,7 +43,9 @@ export const logout: Middleware<object> = async (ctx) => {
   ctx.redirect('/login')
 }
 
-export const refreshTokenCallback: Middleware<object> = async (ctx) => {
+export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
+  ctx,
+) => {
   const refreshToken = ctx.cookies.get('_hvg_rt') ?? ''
   const request = [
     'client_id=' + encodeURIComponent(config.oauthClientId),
@@ -60,9 +63,14 @@ export const refreshTokenCallback: Middleware<object> = async (ctx) => {
   })
 
   const body = await response.json()
+
   if (!response.ok) {
     ctx.status = response.status
     ctx.body = body
+    ctx.state
+      .getLogger('tokenRefresh')
+      .error('Something went wrong when refreshing token', ctx.body)
+    return
   }
   setTokenCookies(ctx, {
     accessToken: body['access_token'],

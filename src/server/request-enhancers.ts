@@ -1,12 +1,17 @@
 import { Middleware } from 'koa'
 
 import {
-  LoggerFactoryOptions,
   LFService,
+  Logger,
+  LoggerFactoryOptions,
   LogGroupRule,
   LogLevel,
 } from 'typescript-logging'
 import * as uuidV4 from 'uuid/v4'
+
+export interface LoggingMiddleware {
+  getLogger: (name: string) => Logger
+}
 
 const options = new LoggerFactoryOptions().addLogGroupRule(
   new LogGroupRule(/.+/, LogLevel.fromString('info')),
