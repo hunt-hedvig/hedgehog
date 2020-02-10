@@ -12,7 +12,7 @@ install:
   - yarn
 
 before_script:
-  - git remote set-branches
+  - git remote set-branches --add origin master
   - git fetch
 
 script:
