@@ -11,7 +11,6 @@ install:
   - npm i -g yarn@1.22.0
   - yarn
   - git fetch --unshallow origin master:master
-  - git diff origin/master --name-only
 
 script:
   - yarn lint
