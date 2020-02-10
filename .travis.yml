@@ -1,5 +1,8 @@
 language: node_js
 
+git:
+  depth: false
+
 node_js:
   - '10'
 
@@ -19,6 +22,10 @@ script:
   - yarn lint
   - yarn tdm
   - yarn build
+
+branches:
+  except:
+    - master
 
 notifications:
   email: false
