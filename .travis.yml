@@ -11,9 +11,11 @@ install:
   - npm i -g yarn@1.22.0
   - yarn
 
+before_script:
+  - git fetch
+
 script:
   - yarn lint
-  - yarn test
   - yarn tdm
   - yarn build
 
