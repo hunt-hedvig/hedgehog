@@ -12,9 +12,9 @@ import {
 } from '../constants/claims'
 import { ClaimSearchResult } from '../types/claimsTypes'
 
-function* requestFlow({ searchFilter }: actions.ClaimsRequestAction) {
+function* requestFlow({ searchFilter }) {
   try {
-    const { data }: AxiosResponse<ClaimSearchResult> = yield call(
+    const { data } = yield call(
       api,
       config.claims.search,
       null,

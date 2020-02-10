@@ -1,5 +1,5 @@
 import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import { Button, Form, Message, TextArea } from 'semantic-ui-react'
 import styled from 'styled-components'
 
@@ -26,21 +26,21 @@ export default class AnswerForm extends React.Component {
     }
   }
 
-  public answerChangeHandler = (e, { value }) => {
+  answerChangeHandler = (e, { value }) => {
     this.setState({ answer: value })
   }
 
-  public answerClick = (id) => {
+  answerClick = (id) => {
     if (this.state.answer.trim().length) {
       this.props.sendAnswer({ msg: this.state.answer, id })
     }
   }
 
-  public doneClick = (id) => {
+  doneClick = (id) => {
     this.props.sendDoneMsg({ id })
   }
 
-  public render() {
+  render() {
     const { memberId, redirectClick, error } = this.props
     return (
       <React.Fragment>

@@ -50,7 +50,7 @@ export default function(state = initialState.members, action) {
     case NEW_MESSAGES_RECEIVED:
       return {
         ...state,
-        list: setNewMessagesCounter(state.list.slice(), action.messagesCouters),
+        list: setNewMessagesCounter(state.list.slice()),
       }
 
     case SET_MEMBER_FILTER:

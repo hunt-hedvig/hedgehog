@@ -43,57 +43,6 @@ export const refreshMessagesList = (
 export const setNewMessagesCounter = (members /* counters */) => members
 
 /**
- * Updating array of claims types
- * @param {array} list
- */
-export const updateTypesList = (list, selectedType) =>
-  list
-    .filter(
-      (item) => !item.archive || (selectedType && selectedType === item.value),
-    )
-    .map((item) => {
-      const updated = { ...item }
-      delete updated.requiredData
-      delete updated.optionalData
-      return updated
-    })
-
-export const getSum = (list: ReadonlyArray<{ amount: string }>) =>
-  list.reduce((sum, payment) => sum + parseFloat(payment.amount), 0)
-
-const setFieldsValues = (fields, data) =>
-  fields.map((item) => {
-    const fieldInClaimData = data.find((claim) => claim.name === item.name) // @ts-ignore
-    if (fieldInClaimData) {
-      return {
-        ...item,
-        value: fieldInClaimData.value,
-        received: fieldInClaimData.received,
-      }
-    } else {
-      return item
-    }
-  })
-
-/**
- * Returns updated type object
- * @param {array} types
- * @param {object} claimData
- */
-export const getActiveType = (types, claimData) => {
-  const activeType = types.find((item) => item.name === claimData.type)
-
-  const requiredData = setFieldsValues(activeType.requiredData, claimData.data)
-  const optionalData = setFieldsValues(activeType.optionalData, claimData.data)
-
-  return {
-    ...activeType,
-    requiredData,
-    optionalData,
-  }
-}
-
-/**
  * Hidding inactive members on first render && sort by signup date
  * @param {object} param0 -
  */
@@ -179,10 +128,8 @@ export const getMemberInfo = (members, id) => {
     : `${id ? 'Member-' + id : 'No id'}`
 }
 
-String.prototype.capitalize = function() {
-  return typeof this === 'string'
-    ? this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
-    : this
+const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }
 
 /**
@@ -205,11 +152,12 @@ export const getMemberFullName = (member) => {
  * @example 'memberFirstName' -> 'Member first name'
  */
 export const getFieldName = (field) =>
-  field
-    .match(/([A-Z]?[^A-Z]*)/g)
-    .slice(0, -1)
-    .join(' ')
-    .capitalize()
+  capitalize(
+    field
+      .match(/([A-Z]?[^A-Z]*)/g)
+      .slice(0, -1)
+      .join(' '),
+  )
 
 export const getFieldValue = (value) => {
   if (!value) {
@@ -255,7 +203,7 @@ export const sortMembersList = (list, fieldName, isReverse) => {
     default:
       sortedList = list
   }
-  return isReverse ? sortedList.reverse() : sortedList
+  return isReverse ? (sortedList ?? []).reverse() : sortedList
 }
 
 /**
@@ -278,7 +226,7 @@ export const sortClaimsList = (list, fieldName, isReverse) => {
     default:
       sortedList = list
   }
-  return isReverse ? sortedList.reverse() : sortedList
+  return isReverse ? (sortedList ?? []).reverse() : sortedList
 }
 
 export const range = (
@@ -299,7 +247,7 @@ export const range = (
 }
 
 function sortMembersByBool(list, fieldName, isReverse) {
-  const withoutVal = []
+  const withoutVal: any[] = []
   const filteredList = list.filter((item) => {
     if (!item[fieldName]) {
       withoutVal.push(item)
@@ -315,7 +263,7 @@ function sortMembersByBool(list, fieldName, isReverse) {
 }
 
 function sortListByText(list, fieldName, isReverse) {
-  const withoutText = []
+  const withoutText: any[] = []
 
   const withText = list.filter((item) => {
     if (!item[fieldName]) {
@@ -336,7 +284,7 @@ function sortListByText(list, fieldName, isReverse) {
 }
 
 function sortListByNumber(list, fieldName, isReverse) {
-  const withoutNumbers = []
+  const withoutNumbers: any[] = []
 
   const withNumbers = list.filter((item) => {
     if (!item[fieldName] || isNaN(item[fieldName])) {
@@ -353,7 +301,7 @@ function sortListByNumber(list, fieldName, isReverse) {
 }
 
 function sortListByDate(list, fieldName, isReverse) {
-  const withoutDates = []
+  const withoutDates: any[] = []
 
   const withDates = list.filter((item) => {
     if (!item[fieldName]) {

@@ -5,7 +5,6 @@ import {
   membersRequestError,
   membersRequestSuccess,
   saveFraudulentStatusSuccess,
-  SearchMemberRequestAction,
   searchMembersSuccess,
 } from '../actions/membersActions'
 import { showNotification } from '../actions/notificationsActions'
@@ -15,7 +14,6 @@ import {
   SET_FRAUDULENT_STATUS,
   SET_MEMBER_FILTER,
 } from '../constants/members'
-import { MembersSearchResult } from '../storeTypes'
 
 const fieldName = 'createdOn'
 const isDescendingOrder = true
@@ -32,24 +30,18 @@ function* membersRequestFlow() {
   }
 }
 
-function* membersSearchFlow(action: SearchMemberRequestAction) {
+function* membersSearchFlow(action) {
   const queryFilter = action.searchFilter
   try {
-    const searchResult: MembersSearchResult = yield call(
-      api,
-      config.members.search,
-      null,
-      '',
-      {
-        query: '',
-        pageSize: 25,
-        page: 0,
-        includeAll: false,
-        sortBy: 'SIGN_UP',
-        sortDirection: 'DESC',
-        ...queryFilter,
-      },
-    )
+    const searchResult = yield call(api, config.members.search, null, '', {
+      query: '',
+      pageSize: 25,
+      page: 0,
+      includeAll: false,
+      sortBy: 'SIGN_UP',
+      sortDirection: 'DESC',
+      ...queryFilter,
+    })
     yield put(
       searchMembersSuccess(searchResult.data, fieldName, isDescendingOrder),
     )

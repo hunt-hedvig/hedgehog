@@ -22,8 +22,8 @@ const rootReducer = combineReducers({
 const configureStore = () => {
   const sagaMiddleware = createSagaMiddleware({
     onError: (e) => {
-      if (window.Raven && process.env.NODE_ENV === 'production') {
-        Raven.captureException(e)
+      if ((window as any).Raven && process.env.NODE_ENV === 'production') {
+        ;(window as any).Raven.captureException(e)
       }
     },
   })

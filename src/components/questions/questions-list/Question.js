@@ -1,7 +1,7 @@
 import Message from 'components/chat/messages/Message'
 import { getMemberInfo } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import { Header } from 'semantic-ui-react'
 import { history } from 'store'
 

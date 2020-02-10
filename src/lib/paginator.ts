@@ -24,7 +24,7 @@ export const getPageState = (totalItems, currentPage, pageSize) => {
   const startIndex = (currentPage - 1) * pageSize
   const endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1)
   const pages = Array(end - start + 1)
-    .fill()
+    .fill(null)
     .map((_, id) => start + id)
 
   return {

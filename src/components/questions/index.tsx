@@ -16,7 +16,7 @@ export interface QuestionsProps {
   questionsRequest: (listId: QuestionListKind) => void
 }
 
-const Questions: React.SFC<QuestionsProps> = ({
+const Questions: React.FC<QuestionsProps> = ({
   questions,
   members,
   sendAnswer,
@@ -25,7 +25,7 @@ const Questions: React.SFC<QuestionsProps> = ({
 }) => {
   return (
     <Mount on={() => questionsRequest('NOT_ANSWERED')}>
-      <React.Fragment>
+      <>
         <Header size="huge">Questions</Header>
         <QuestionsList
           questions={questions}
@@ -36,7 +36,7 @@ const Questions: React.SFC<QuestionsProps> = ({
           }
           members={members.list}
         />
-      </React.Fragment>
+      </>
     </Mount>
   )
 }

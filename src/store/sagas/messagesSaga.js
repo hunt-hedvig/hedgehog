@@ -40,17 +40,20 @@ function* editMemberDetailsFlow({ member }) {
 
 function* messagesWatcher() {
   yield [
-    takeEvery(ADD_MESSAGE, ({ message, forceSendMessage, stompClient, memberId }) => {
-      stompClient.send(
-        config.ws.send + memberId,
-        {},
-        JSON.stringify({
-          memberId,
-          msg: message,
-          forceSendMessage,
-        }),
-      )
-    }),
+    takeEvery(
+      ADD_MESSAGE,
+      ({ message, forceSendMessage, stompClient, memberId }) => {
+        stompClient.send(
+          config.ws.send + memberId,
+          {},
+          JSON.stringify({
+            memberId,
+            msg: message,
+            forceSendMessage,
+          }),
+        )
+      },
+    ),
     takeLatest(MEMBER_REQUESTING, memberRequestFlow),
     takeLatest(EDIT_MEMBER_DETAILS, editMemberDetailsFlow),
   ]

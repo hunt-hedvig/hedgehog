@@ -1,8 +1,6 @@
-import * as React from 'react'
+import React from 'react'
 import { Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
-import { MembersStore } from '../../../store/storeTypes'
-import { QuestionsStore } from '../../../store/types/questionsTypes'
 import SortedList from './SortedList'
 
 const ListContainer = styled.div`
@@ -12,15 +10,7 @@ const ListContainer = styled.div`
   margin: 0 auto 50px;
 `
 
-export interface QuestionsListProps {
-  questions: QuestionsStore
-  members: MembersStore
-  sendAnswer: (answer: any) => void
-  sendDoneMsg: (id: string) => void
-  tabChange: (event, data) => void
-}
-
-const QuestionsList: React.SFC<QuestionsListProps> = ({
+const QuestionsList = ({
   questions,
   members,
   sendAnswer,
