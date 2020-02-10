@@ -1,9 +1,7 @@
-import { select, withKnobs } from '@storybook/addon-knobs'
-import * as React from 'react'
-
 import { action } from '@storybook/addon-actions'
-import { Button } from 'hedvig-ui/button'
-import { buttonColorMap, buttonSizeMap } from './button'
+import { select, withKnobs } from '@storybook/addon-knobs'
+import { Button, buttonColorMap, ButtonProps } from 'hedvig-ui/button'
+import * as React from 'react'
 import { WithStory } from './story-utils'
 
 export default {
@@ -12,26 +10,37 @@ export default {
   decorators: [withKnobs],
 }
 
-const colors = Object.keys(buttonColorMap)
-const sizes = Object.keys(buttonSizeMap)
+const colors: ReadonlyArray<ButtonProps['type']> = Object.keys(
+  buttonColorMap,
+) as any
+const sizes: ReadonlyArray<NonNullable<ButtonProps['size']>> = [
+  'mini',
+  'tiny',
+  'small',
+  'medium',
+  'large',
+  'big',
+  'huge',
+  'massive',
+]
 
 export const Text = () => {
   return (
     <Button
       onClick={action('clicked')}
       type={select('Type', colors, 'primary')}
-      size={select('Size', sizes, 'md')}
+      size={select('Size', sizes, 'medium')}
     >
       Hello Button
     </Button>
   )
 }
 
-export const Emoji: React.FC & WithStory = (blah) => (
+export const Emoji: React.FC & WithStory = () => (
   <Button
     onClick={action('clicked')}
     type={select('Type', colors, 'primary')}
-    size={select('Size', sizes, 'md')}
+    size={select('Size', sizes, 'medium')}
   >
     <span role="img" aria-label="so cool">
       😀 😎 👍 💯
