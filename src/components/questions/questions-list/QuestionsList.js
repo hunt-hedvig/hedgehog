@@ -2,6 +2,8 @@ import React from 'react'
 import { Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
 import SortedList from './SortedList'
+import { FilterState } from 'components/questions/filter'
+import { isMemberIdEven } from 'utils/member'
 
 const ListContainer = styled.div`
   display: flex;
@@ -10,8 +12,13 @@ const ListContainer = styled.div`
   margin: 0 auto 50px;
 `
 
+const doFilter = (selectedFilters) => ({ memberId }) =>
+  (selectedFilters.includes(FilterState.Even) && isMemberIdEven(memberId)) ||
+  (selectedFilters.includes(FilterState.Odd) && !isMemberIdEven(memberId))
+
 const QuestionsList = ({
   questions,
+  selectedFilters,
   members,
   sendAnswer,
   tabChange,
@@ -20,7 +27,7 @@ const QuestionsList = ({
   const notAnswered = () => (
     <Tab.Pane>
       <SortedList
-        list={questions.notAnswered.questions}
+        list={questions.notAnswered.questions.filter(doFilter(selectedFilters))}
         members={members}
         sendAnswer={sendAnswer}
         sendDoneMsg={sendDoneMsg}
@@ -31,7 +38,7 @@ const QuestionsList = ({
   const answered = () => (
     <Tab.Pane>
       <SortedList
-        list={questions.answered.questions}
+        list={questions.answered.questions.filter(doFilter(selectedFilters))}
         members={members}
         sendAnswer={sendAnswer}
         sendDoneMsg={sendDoneMsg}

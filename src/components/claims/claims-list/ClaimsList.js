@@ -15,11 +15,11 @@ export default class ClaimsList extends React.Component {
     }
   }
 
-  public linkClickHandler = (id, userId) => {
+  linkClickHandler = (id, userId) => {
     history.push(`/claims/${id}/members/${userId}`)
   }
 
-  public sortTable = (clickedColumn) => {
+  sortTable = (clickedColumn) => {
     const { column, direction } = this.state
 
     if (column !== clickedColumn) {
@@ -43,7 +43,7 @@ export default class ClaimsList extends React.Component {
     )
   }
 
-  public getTableHeader = () => {
+  getTableHeader = () => {
     const { column, direction } = this.state
     return (
       <Table.Header>
@@ -81,7 +81,7 @@ export default class ClaimsList extends React.Component {
     )
   }
 
-  public getTableRow = (item) => {
+  getTableRow = (item) => {
     const date = moment(item.date).local()
     const formattedDate = date.isValid()
       ? date.format('DD MMMM YYYY HH:mm')
@@ -96,7 +96,7 @@ export default class ClaimsList extends React.Component {
     )
   }
 
-  public render() {
+  render() {
     const {
       claims: { list },
     } = this.props

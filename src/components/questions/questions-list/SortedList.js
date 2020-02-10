@@ -59,11 +59,7 @@ export default class SortedList extends React.Component {
           <React.Fragment>
             {list.map((question) => (
               <MemberQuestionItem key={question.id}>
-                <Question
-                  activeList={activeList}
-                  question={question}
-                  membersList={members}
-                />
+                <Question activeList={activeList} question={question} />
                 {!question.answer && question.answer !== '' ? (
                   <AnswerForm
                     memberId={question.memberId}

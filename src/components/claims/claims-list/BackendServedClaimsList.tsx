@@ -3,8 +3,10 @@ import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import isValidDate from 'date-fns/isValid'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
+import { getMemberIdColor, isMemberIdEven } from 'utils/member'
 import {
   Claim,
   ClaimSearchFilter,
@@ -18,6 +20,12 @@ export interface BackendServedClaimsListProps {
   claimsRequest: (filter: ClaimSearchFilter) => void
 }
 
+const MemberIdCell = styled(Table.Cell)<{ memberId: string }>(
+  ({ memberId }) => ({
+    borderLeft: `7px solid ${getMemberIdColor(memberId)} !important`,
+  }),
+)
+
 const linkClickHandler = (id: string, userId: string) => {
   history.push(`/claims/${id}/members/${userId}`)
 }
@@ -27,8 +35,10 @@ const getTableRow = (item: Claim) => {
   const formattedDate = isValidDate(date)
     ? formatDate(date, 'dd MMMM yyyy HH:mm')
     : '-'
+
   return (
     <LinkRow onClick={() => linkClickHandler(item.id, item.userId)}>
+      <MemberIdCell memberId={item.userId}>{item.userId}</MemberIdCell>
       <Table.Cell>{formattedDate}</Table.Cell>
       <Table.Cell>{item.type}</Table.Cell>
       <Table.Cell>{item.state}</Table.Cell>
@@ -62,6 +72,7 @@ const getTableHeader = (
   return (
     <Table.Header>
       <Table.Row>
+        <Table.HeaderCell width={6}>Member id</Table.HeaderCell>
         <Table.HeaderCell
           width={6}
           sorted={sortBy === 'DATE' ? direction : undefined}

@@ -22,16 +22,23 @@ export const buttonColorMap: Record<
 }
 
 export const Button = styled(SemanticButton)<ButtonProps>(
-  ({ variation = 'primary', fullWidth }) => ({
-    '&&': {
+  ({ variation = 'primary', fullWidth, basic }) => ({
+    '&&&': {
       whiteSpace: 'nowrap',
-      background: buttonColorMap[variation].background,
-      color: buttonColorMap[variation].foreground,
+      background: basic
+        ? 'transparent'
+        : buttonColorMap[variation].background + ' !important',
+      color:
+        (basic
+          ? buttonColorMap[variation].background
+          : buttonColorMap[variation].foreground) + ' !important',
+      border: `1px solid ${buttonColorMap[variation].background} !important`,
+      boxShadow: 'none !important',
       width: fullWidth ? '100%' : 'auto',
 
       '&:hover, &:focus': {
-        background: buttonColorMap[variation].background,
-        color: buttonColorMap[variation].foreground,
+        background: buttonColorMap[variation].background + ' !important',
+        color: buttonColorMap[variation].foreground + ' !important',
       },
     },
   }),

@@ -1,25 +1,35 @@
 import Message from 'components/chat/messages/Message'
-import { getMemberInfo } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Header } from 'semantic-ui-react'
-import { history } from 'store'
+import { Link } from 'react-router-dom'
+import { useMemberNameQuery } from 'api/generated/graphql'
+import styled from 'react-emotion'
+import { getMemberIdColor } from 'utils/member'
 
-const Question = ({ activeList, question, membersList }) => {
-  const memberInfo = getMemberInfo(membersList, question.memberId)
+const QuestionWrapper = styled('div')(({ memberId }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  paddingLeft: '1rem',
+  borderLeft: '7px solid ' + getMemberIdColor(memberId),
+}))
 
+const Question = ({ activeList, question }) => {
+  const memberNameQuery = useMemberNameQuery({
+    variables: { memberId: question.memberId },
+  })
+
+  const graphqlMemberDataMaybe = memberNameQuery?.data?.member
   return (
-    <React.Fragment>
+    <QuestionWrapper memberId={question.memberId}>
       <Header>
         Questions from:{' '}
-        <a
-          href="#"
-          onClick={() =>
-            history.push(`/members/${question.memberId}`, { to: 'details' })
-          }
-        >
-          {memberInfo}
-        </a>
+        <Link to={`/members/${question.memberId}`}>
+          {question.memberId}
+          {graphqlMemberDataMaybe
+            ? ` ${graphqlMemberDataMaybe?.firstName} ${graphqlMemberDataMaybe?.lastName}`
+            : ''}
+        </Link>
       </Header>
       {activeList[question.memberId] &&
         activeList[question.memberId].map((data) => (
@@ -29,7 +39,7 @@ const Question = ({ activeList, question, membersList }) => {
               left={!data.answer}
               isQuestionMessage={true}
               timestamp={data.localDate}
-              from={memberInfo}
+              from={question.memberId}
             />
             {data.answer ? (
               <Message
@@ -42,7 +52,7 @@ const Question = ({ activeList, question, membersList }) => {
             ) : null}
           </div>
         ))}
-    </React.Fragment>
+    </QuestionWrapper>
   )
 }
 

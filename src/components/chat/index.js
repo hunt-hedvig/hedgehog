@@ -4,8 +4,8 @@ import { reconnect, subscribe } from 'lib/sockets/chat'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Header, Tab } from 'semantic-ui-react'
-import { MemberEmoji } from 'utils/member'
+import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
+import { getMemberIdColor, isMemberIdEven, MemberEmoji } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatTab from './tabs/ChatTab'
 
@@ -23,6 +23,21 @@ const ChatPageContainer = styled('div')`
   height: 100%;
 `
 
+const Header = styled(SemanticHeader)`
+  display: flex;
+  align-items: center;
+`
+
+const Badge = styled('div')`
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  line-height: 1;
+  font-size: 1rem;
+  ${({ memberId }) => `background: ${getMemberIdColor(memberId)}`};
+  border-radius: 8px;
+  color: #fff;
+`
+
 export default class Chat extends React.Component {
   constructor(props) {
     super(props)
@@ -32,7 +47,7 @@ export default class Chat extends React.Component {
     }
   }
 
-  public addMessageHandler = (message, forceSendMessage) => {
+  addMessageHandler = (message, forceSendMessage) => {
     const { socket } = this.state
     const { addMessage, match } = this.props
     if (socket) {
@@ -40,7 +55,7 @@ export default class Chat extends React.Component {
     }
   }
 
-  public subscribeSocket = () => {
+  subscribeSocket = () => {
     const {
       messageReceived,
       match: {
@@ -60,7 +75,7 @@ export default class Chat extends React.Component {
     return { stompClient, subscription }
   }
 
-  public reconnectSocket = () => {
+  reconnectSocket = () => {
     const {
       messageReceived,
       match: {
@@ -80,14 +95,14 @@ export default class Chat extends React.Component {
     )
   }
 
-  public getChatTitle = (member) =>
+  getChatTitle = (member) =>
     `Member: ${
       member && (member.firstName || member.lastName)
         ? member.firstName + ' ' + (member.lastName || '')
         : ''
     }`
 
-  public componentDidMount() {
+  componentDidMount() {
     const {
       match: {
         params: { id },
@@ -110,19 +125,20 @@ export default class Chat extends React.Component {
     insurancesListRequest(id)
   }
 
-  public componentWillUnmount() {
+  componentWillUnmount() {
     const { subscription } = this.state
     disconnect(null, subscription)
     this.props.clearMessagesList()
   }
 
-  public render() {
+  render() {
     const { messages } = this.props
     const panes = memberPagePanes(
       this.props,
       this.addMessageHandler,
       this.state.socket,
     )
+    console.log(messages)
     return (
       <ChatPageWrapper>
         <ChatPageContainer>
@@ -133,6 +149,13 @@ export default class Chat extends React.Component {
               birthDateString={messages.member?.birthDate}
               gender={messages.member?.gender}
             />
+            {messages.member && (
+              <Badge memberId={messages.member.memberId}>
+                {isMemberIdEven(messages.member.memberId)
+                  ? 'The empire'
+                  : 'The resistance'}
+              </Badge>
+            )}
           </Header>
           {this.props.insurance.requesting || (
             <Tab
@@ -153,7 +176,7 @@ export default class Chat extends React.Component {
     )
   }
 
-  public getFraudulentStatus = () => ({
+  getFraudulentStatus = () => ({
     state:
       this.props.messages && this.props.messages.member
         ? this.props.messages.member.fraudulentStatus
