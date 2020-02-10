@@ -15,7 +15,7 @@ install:
   - yarn
   - git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
   - git remote set-branches --add origin master
-  - git fetch
+  - git fetch origin master
 
 script:
   - yarn lint
