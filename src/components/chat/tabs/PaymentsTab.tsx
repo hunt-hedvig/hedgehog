@@ -71,7 +71,7 @@ const TableRowColored = styled(TableRow)(
 
 // @ts-ignore
 const MemberTransactionsTable = ({ transactions }) => (
-  <Table celled selectable compact>
+  <Table celled compact>
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell>ID</Table.HeaderCell>
@@ -86,7 +86,8 @@ const MemberTransactionsTable = ({ transactions }) => (
         <TableRowColored key={transaction.id} transaction={transaction}>
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
-            {transaction.amount.amount} {transaction.amount.currency}
+            <strong>{formatMoneySE(transaction.amount)}</strong>
+            {/*{transaction.amount.amount} {transaction.amount.currency}*/}
           </Table.Cell>
           <Table.Cell>
             {moment(transaction.timestamp).format('YYYY-MM-DD HH:mm:ss')}
