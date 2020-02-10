@@ -6,6 +6,9 @@ import { Button, Form, Input, Table } from 'semantic-ui-react'
 
 import { Checkmark, Cross } from 'components/icons'
 import PayoutDetails from 'components/payouts/payout-details'
+import styled from 'react-emotion'
+import { TableRow } from '@material-ui/core'
+import { formatMoneySE } from 'lib/intl'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -60,9 +63,15 @@ const CHARGE_MEMBER_MUTATION = gql`
     }
   }
 `
+const TableRowColored = styled(TableRow)(
+  ({ transaction }: { transaction }) => ({
+    backgroundColor: transaction.type === 'CHARGE' ? '#FFFFDD' : '#DDFFDD',
+  }),
+)
+
 // @ts-ignore
 const MemberTransactionsTable = ({ transactions }) => (
-  <Table celled selectable compact striped>
+  <Table celled selectable compact>
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell>ID</Table.HeaderCell>
@@ -74,7 +83,7 @@ const MemberTransactionsTable = ({ transactions }) => (
     </Table.Header>
     <Table.Body>
       {transactions.map((transaction) => (
-        <Table.Row key={transaction.id}>
+        <TableRowColored key={transaction.id} transaction={transaction}>
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
             {transaction.amount.amount} {transaction.amount.currency}
@@ -84,7 +93,7 @@ const MemberTransactionsTable = ({ transactions }) => (
           </Table.Cell>
           <Table.Cell>{transaction.type}</Table.Cell>
           <Table.Cell>{transaction.status}</Table.Cell>
-        </Table.Row>
+        </TableRowColored>
       ))}
     </Table.Body>
   </Table>
@@ -152,7 +161,6 @@ class PaymentsTab extends React.Component {
   public render() {
     return (
       <React.Fragment>
-
         <Query query={GET_MEMBER_QUERY} variables={this.variables}>
           {({ loading, error, data }) => {
             if (error) {
