@@ -24,6 +24,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
       - run: yarn
       - run: yarn lint
       - run: yarn tdm
