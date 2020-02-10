@@ -10,9 +10,9 @@ export default {
   decorators: [withKnobs],
 }
 
-const colors: ReadonlyArray<ButtonProps['type']> = Object.keys(
-  buttonColorMap,
-) as any
+const colors: ReadonlyArray<NonNullable<
+  ButtonProps['variation']
+>> = Object.keys(buttonColorMap) as any
 const sizes: ReadonlyArray<NonNullable<ButtonProps['size']>> = [
   'mini',
   'tiny',
@@ -28,7 +28,7 @@ export const Text = () => {
   return (
     <Button
       onClick={action('clicked')}
-      type={select('Type', colors, 'primary')}
+      variation={select('variation', colors, 'primary')}
       size={select('Size', sizes, 'medium')}
     >
       Hello Button
@@ -39,7 +39,7 @@ export const Text = () => {
 export const Emoji: React.FC & WithStory = () => (
   <Button
     onClick={action('clicked')}
-    type={select('Type', colors, 'primary')}
+    variation={select('variation', colors, 'primary')}
     size={select('Size', sizes, 'medium')}
   >
     <span role="img" aria-label="so cool">

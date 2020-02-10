@@ -14,17 +14,13 @@ import {
   QuoteProductType,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
+import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import styled from 'react-emotion'
-import {
-  Button,
-  Checkbox,
-  Dropdown,
-  Input as SuiInput,
-} from 'semantic-ui-react'
+import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import * as uuid from 'uuid/v4'
-import { ErrorMessage, SubmitButton } from './common'
+import { ErrorMessage } from './common'
 import { QUOTES_QUERY } from './use-quotes'
 
 const Label = styled('label')({
@@ -316,9 +312,13 @@ export const QuoteModification: React.FC<{
         />
       </InputGroup>
 
-      <SubmitButton type="submit" disabled={fieldModification.loading}>
+      <Button
+        variation="success"
+        type="submit"
+        disabled={fieldModification.loading}
+      >
         Save modifications
-      </SubmitButton>
+      </Button>
 
       {fieldModification.error && (
         <ErrorMessage>
@@ -420,7 +420,7 @@ const ExtraBuildingEditor: React.FC<{
           </div>
           <RemoveButtonWrapper>
             <Button
-              color="red"
+              variation="danger"
               size="tiny"
               type="button"
               onClick={(e) => {

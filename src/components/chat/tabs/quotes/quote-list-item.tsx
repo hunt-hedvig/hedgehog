@@ -187,12 +187,20 @@ export const QuoteListItemComponent: React.FC<{
         {!!inactionable || (
           <ActionsButtonsWrapper>
             <BottomSpacerWrapper>
-              <Button type="primary" onClick={toggleState(Action.MODIFY)}>
+              <Button
+                fullWidth
+                type="primary"
+                onClick={toggleState(Action.MODIFY)}
+              >
                 Modify
               </Button>
             </BottomSpacerWrapper>
             <BottomSpacerWrapper>
-              <Button type="success" onClick={toggleState(Action.ACTIVATE)}>
+              <Button
+                fullWidth
+                variation="success"
+                onClick={toggleState(Action.ACTIVATE)}
+              >
                 Activate
               </Button>
             </BottomSpacerWrapper>
