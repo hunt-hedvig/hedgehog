@@ -21,6 +21,7 @@ const ChatPageContainer = styled('div')`
   width: calc(100% - 400px);
   min-width: 700px;
   height: 100%;
+  white-space: nowrap;
 `
 
 const Header = styled(SemanticHeader)`
