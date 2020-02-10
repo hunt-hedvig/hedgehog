@@ -5,6 +5,7 @@
     "lib": ["dom", "es6", "es7", "es2017.object"],
     "jsx": "react",
     "strict": true,
+    "noImplicitAny": false,
     "moduleResolution": "node",
     "typeRoots": ["./src/types", "./node_modules/@types"],
     "types": ["jest", "node"],
@@ -17,5 +18,5 @@
       "*": ["*", "node_modules/*", "src/*", "shared/*"]
     }
   },
-  "exclude": ["node_modules", "node_modules/@types/react"]
+  "exclude": ["node_modules"]
 }
