@@ -6,6 +6,8 @@ import { Button, Form, Input, Table } from 'semantic-ui-react'
 
 import { Checkmark, Cross } from 'components/icons'
 import PayoutDetails from 'components/payouts/payout-details'
+import styled from 'react-emotion'
+import { formatMoneySE } from 'lib/intl'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -60,9 +62,24 @@ const CHARGE_MEMBER_MUTATION = gql`
     }
   }
 `
+const TableRowColored = styled(Table.Row)(
+  ({ transaction }: { transaction }) => {
+    if (transaction.type === 'CHARGE') {
+      switch (transaction.status) {
+        case 'INITIATED':
+          return { backgroundColor: '#FFFFDD' } //Yellow
+        case 'COMPLETED':
+          return { backgroundColor: '#DDFFDD' } //Green
+        case 'FAILED':
+          return { backgroundColor: '#FF8A80' } //Red
+      }
+    }
+  },
+)
+
 // @ts-ignore
 const MemberTransactionsTable = ({ transactions }) => (
-  <Table celled selectable compact striped>
+  <Table celled compact>
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell>ID</Table.HeaderCell>
@@ -74,17 +91,17 @@ const MemberTransactionsTable = ({ transactions }) => (
     </Table.Header>
     <Table.Body>
       {transactions.map((transaction) => (
-        <Table.Row key={transaction.id}>
+        <TableRowColored key={transaction.id} transaction={transaction}>
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
-            {transaction.amount.amount} {transaction.amount.currency}
+            <strong>{formatMoneySE(transaction.amount)}</strong>
           </Table.Cell>
           <Table.Cell>
             {moment(transaction.timestamp).format('YYYY-MM-DD HH:mm:ss')}
           </Table.Cell>
           <Table.Cell>{transaction.type}</Table.Cell>
           <Table.Cell>{transaction.status}</Table.Cell>
-        </Table.Row>
+        </TableRowColored>
       ))}
     </Table.Body>
   </Table>
@@ -152,7 +169,6 @@ class PaymentsTab extends React.Component {
   public render() {
     return (
       <React.Fragment>
-
         <Query query={GET_MEMBER_QUERY} variables={this.variables}>
           {({ loading, error, data }) => {
             if (error) {
