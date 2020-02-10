@@ -14,7 +14,7 @@ install:
   - npm i -g yarn@1.22.0
   - yarn
   - git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
-  - git fetch
+  - git fetch --unshallow
 
 script:
   - yarn lint
