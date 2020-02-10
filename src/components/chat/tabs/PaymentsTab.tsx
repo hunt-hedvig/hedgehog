@@ -7,7 +7,6 @@ import { Button, Form, Input, Table } from 'semantic-ui-react'
 import { Checkmark, Cross } from 'components/icons'
 import PayoutDetails from 'components/payouts/payout-details'
 import styled from 'react-emotion'
-import { TableRow } from '@material-ui/core'
 import { formatMoneySE } from 'lib/intl'
 
 const transactionDateSorter = (a, b) => {
@@ -63,18 +62,20 @@ const CHARGE_MEMBER_MUTATION = gql`
     }
   }
 `
-const TableRowColored = styled(TableRow)(({ transaction }: { transaction }) => {
-  if (transaction.type === 'CHARGE') {
-    switch (transaction.status) {
-      case 'INITIATED':
-        return { backgroundColor: '#FFFFDD' } //Yellow
-      case 'COMPLETED':
-        return { backgroundColor: '#DDFFDD' } //Green
-      case 'FAILED':
-        return { backgroundColor: '#FF8A80' } //Red
+const TableRowColored = styled(Table.Row)(
+  ({ transaction }: { transaction }) => {
+    if (transaction.type === 'CHARGE') {
+      switch (transaction.status) {
+        case 'INITIATED':
+          return { backgroundColor: '#FFFFDD' } //Yellow
+        case 'COMPLETED':
+          return { backgroundColor: '#DDFFDD' } //Green
+        case 'FAILED':
+          return { backgroundColor: '#FF8A80' } //Red
+      }
     }
-  }
-})
+  },
+)
 
 // @ts-ignore
 const MemberTransactionsTable = ({ transactions }) => (
