@@ -63,11 +63,18 @@ const CHARGE_MEMBER_MUTATION = gql`
     }
   }
 `
-const TableRowColored = styled(TableRow)(
-  ({ transaction }: { transaction }) => ({
-    backgroundColor: transaction.type === 'CHARGE' ? '#FFFFDD' : '#DDFFDD',
-  }),
-)
+const TableRowColored = styled(TableRow)(({ transaction }: { transaction }) => {
+  if (transaction.type === 'CHARGE') {
+    switch (transaction.status) {
+      case 'INITIATED':
+        return { backgroundColor: '#FFFFDD' } //Yellow
+      case 'COMPLETED':
+        return { backgroundColor: '#DDFFDD' } //Green
+      case 'FAILED':
+        return { backgroundColor: '#FF8A80' } //Red
+    }
+  }
+})
 
 // @ts-ignore
 const MemberTransactionsTable = ({ transactions }) => (
@@ -87,7 +94,6 @@ const MemberTransactionsTable = ({ transactions }) => (
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
             <strong>{formatMoneySE(transaction.amount)}</strong>
-            {/*{transaction.amount.amount} {transaction.amount.currency}*/}
           </Table.Cell>
           <Table.Cell>
             {moment(transaction.timestamp).format('YYYY-MM-DD HH:mm:ss')}
