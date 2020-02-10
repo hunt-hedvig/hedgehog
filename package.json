@@ -146,7 +146,7 @@
     "test": "NODE_ENV=test jest",
     "typecheck-diff-master": "tsc -p ./tsconfig-diff-master.json",
     "tdm": "./bin/pre-typecheck.js && yarn typecheck-diff-master",
-    "lint": "tslint $(./bin/diff-files.js)",
+    "lint": "tslint dummy.ts $(./bin/diff-files.js)",
     "graphql:gen": "graphql-codegen --config graphql-codegen.yml",
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",

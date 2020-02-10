@@ -17,9 +17,5 @@ script:
   - yarn tdm
   - yarn build
 
-branches:
-  except:
-    - master
-
 notifications:
   email: false
