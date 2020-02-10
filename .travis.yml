@@ -12,6 +12,7 @@ install:
   - yarn
 
 before_script:
+  - git remote set-branches
   - git fetch
 
 script:
