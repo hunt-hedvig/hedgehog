@@ -13,7 +13,7 @@ cache:
 install:
   - npm i -g yarn@1.22.0
   - yarn
-  - git remote set-branches --add origin master
+  - git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
   - git fetch
 
 script:
