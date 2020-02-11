@@ -5,7 +5,7 @@ import * as types from 'lib/messageTypes'
 import * as moment from 'moment'
 import 'moment/locale/sv'
 import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import { Label } from 'semantic-ui-react'
 import styled from 'styled-components'
 

@@ -14,7 +14,7 @@ export interface Question {
 export interface QuestionGroup {
   id: number
   memberId: string
-  date: number
+  date: string
   answerDate: number
   answer: string
   personnel: Personnel
@@ -27,7 +27,7 @@ export interface QuestionList {
 }
 
 export interface QuestionsStore {
-  errors: any[]
+  errors: any[] | null
   requesting: boolean
   answered: QuestionList
   notAnswered: QuestionList

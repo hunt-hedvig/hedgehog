@@ -79,6 +79,7 @@ const initialState: BackofficeStore = {
       requesting: false,
     },
     requesting: false,
+    errors: null,
   },
   insurance: {
     requesting: false,

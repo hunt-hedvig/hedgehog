@@ -1,9 +1,9 @@
-import * as React from 'react'
+import React from 'react'
 import { Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
-import { MembersStore } from '../../../store/storeTypes'
-import { QuestionsStore } from '../../../store/types/questionsTypes'
 import SortedList from './SortedList'
+import { FilterState } from 'components/questions/filter'
+import { isMemberIdEven } from 'utils/member'
 
 const ListContainer = styled.div`
   display: flex;
@@ -12,16 +12,13 @@ const ListContainer = styled.div`
   margin: 0 auto 50px;
 `
 
-export interface QuestionsListProps {
-  questions: QuestionsStore
-  members: MembersStore
-  sendAnswer: (answer: any) => void
-  sendDoneMsg: (id: string) => void
-  tabChange: (event, data) => void
-}
+const doFilter = (selectedFilters) => ({ memberId }) =>
+  (selectedFilters.includes(FilterState.Even) && isMemberIdEven(memberId)) ||
+  (selectedFilters.includes(FilterState.Odd) && !isMemberIdEven(memberId))
 
-const QuestionsList: React.SFC<QuestionsListProps> = ({
+const QuestionsList = ({
   questions,
+  selectedFilters,
   members,
   sendAnswer,
   tabChange,
@@ -30,7 +27,7 @@ const QuestionsList: React.SFC<QuestionsListProps> = ({
   const notAnswered = () => (
     <Tab.Pane>
       <SortedList
-        list={questions.notAnswered.questions}
+        list={questions.notAnswered.questions.filter(doFilter(selectedFilters))}
         members={members}
         sendAnswer={sendAnswer}
         sendDoneMsg={sendDoneMsg}
@@ -41,7 +38,7 @@ const QuestionsList: React.SFC<QuestionsListProps> = ({
   const answered = () => (
     <Tab.Pane>
       <SortedList
-        list={questions.answered.questions}
+        list={questions.answered.questions.filter(doFilter(selectedFilters))}
         members={members}
         sendAnswer={sendAnswer}
         sendDoneMsg={sendDoneMsg}

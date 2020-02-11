@@ -1,6 +1,6 @@
 import Pagination from 'components/shared/pagination/Pagination'
 import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import { history } from 'store'
 import styled from 'styled-components'
@@ -31,7 +31,7 @@ export default class SortedList extends React.Component {
     }
   }
 
-  public onChangePage = (listId, list) => {
+  onChangePage = (listId, list) => {
     // eslint-disable-next-line no-undef
     setTimeout(() => {
       this.setState({
@@ -43,14 +43,14 @@ export default class SortedList extends React.Component {
     })
   }
 
-  public getSender = (data) =>
+  getSender = (data) =>
     data.personnel && data.personnel.email ? `${data.personnel.email}` : 'admin'
 
-  public chatRedirectClick = (id) => {
+  chatRedirectClick = (id) => {
     history.push(`/members/${id}`)
   }
 
-  public render() {
+  render() {
     const { list, members, sendAnswer, sendDoneMsg } = this.props
     const { activeList } = this.state
     return (
@@ -59,11 +59,7 @@ export default class SortedList extends React.Component {
           <React.Fragment>
             {list.map((question) => (
               <MemberQuestionItem key={question.id}>
-                <Question
-                  activeList={activeList}
-                  question={question}
-                  membersList={members}
-                />
+                <Question activeList={activeList} question={question} />
                 {!question.answer && question.answer !== '' ? (
                   <AnswerForm
                     memberId={question.memberId}

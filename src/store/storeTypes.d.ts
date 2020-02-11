@@ -22,6 +22,7 @@ export interface BackofficeStore {
   questions: QuestionsStore
   insurance: any
   notifications: any
+  memberInsurance: any
 }
 
 type MembersSortBy = 'NAME' | 'CREATED' | 'SIGN_UP'
@@ -58,6 +59,7 @@ export interface Member {
 
 export interface MemberSearchFilter {
   includeAll?: boolean
+  status?: string
   query: string
   sortBy: MembersSortBy
   sortDirection: SortDirection

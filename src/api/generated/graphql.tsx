@@ -1,7 +1,9 @@
+import * as ApolloReactCommon from '@apollo/react-common'
+import * as ApolloReactHooks from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 export type Maybe<T> = T | null
 /** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
+export interface Scalars {
   ID: string
   String: string
   Boolean: boolean
@@ -25,7 +27,7 @@ export type Scalars = {
   ZonedDateTime: any
 }
 
-export type AccidentalDamageClaim = {
+export interface AccidentalDamageClaim {
   __typename?: 'AccidentalDamageClaim'
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
@@ -34,16 +36,16 @@ export type AccidentalDamageClaim = {
   receipt?: Maybe<Scalars['String']>
 }
 
-export type Account = {
+export interface Account {
   __typename?: 'Account'
   id: Scalars['ID']
   currentBalance: Scalars['MonetaryAmount']
   totalBalance: Scalars['MonetaryAmount']
   chargeEstimation: AccountChargeEstimation
-  entries: Array<AccountEntry>
+  entries: AccountEntry[]
 }
 
-export type AccountChargeEstimation = {
+export interface AccountChargeEstimation {
   __typename?: 'AccountChargeEstimation'
   subscription: Scalars['MonetaryAmount']
   discount: Scalars['MonetaryAmount']
@@ -51,7 +53,7 @@ export type AccountChargeEstimation = {
   discountCodes: Array<Scalars['String']>
 }
 
-export type AccountEntry = {
+export interface AccountEntry {
   __typename?: 'AccountEntry'
   id: Scalars['ID']
   type: AccountEntryType
@@ -65,7 +67,7 @@ export type AccountEntry = {
   chargedAt?: Maybe<Scalars['Instant']>
 }
 
-export type AccountEntryInput = {
+export interface AccountEntryInput {
   type: AccountEntryType
   amount: Scalars['MonetaryAmount']
   fromDate: Scalars['LocalDate']
@@ -86,7 +88,7 @@ export enum AccountEntryType {
   Loss = 'LOSS',
 }
 
-export type AllRepliesEntry = {
+export interface AllRepliesEntry {
   __typename?: 'AllRepliesEntry'
   intent: Scalars['String']
   reply: Scalars['String']
@@ -106,7 +108,7 @@ export type ApartmentQuoteData = IQuoteData & {
   subType?: Maybe<ApartmentSubType>
 }
 
-export type ApartmentQuoteDataInput = {
+export interface ApartmentQuoteDataInput {
   ssn?: Maybe<Scalars['String']>
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
@@ -118,7 +120,7 @@ export type ApartmentQuoteDataInput = {
   subType?: Maybe<ApartmentSubType>
 }
 
-export type ApartmentQuoteInput = {
+export interface ApartmentQuoteInput {
   street?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
@@ -136,26 +138,26 @@ export enum ApartmentSubType {
   StudentRent = 'STUDENT_RENT',
 }
 
-export type ApplianceClaim = {
+export interface ApplianceClaim {
   __typename?: 'ApplianceClaim'
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
 }
 
-export type AssaultClaim = {
+export interface AssaultClaim {
   __typename?: 'AssaultClaim'
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   policeReport?: Maybe<Scalars['String']>
 }
 
-export type AutoLabel = {
+export interface AutoLabel {
   __typename?: 'AutoLabel'
   message?: Maybe<Scalars['Boolean']>
 }
 
-export type BurglaryClaim = {
+export interface BurglaryClaim {
   __typename?: 'BurglaryClaim'
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
@@ -164,7 +166,7 @@ export type BurglaryClaim = {
   receipt?: Maybe<Scalars['String']>
 }
 
-export type Category = {
+export interface Category {
   __typename?: 'Category'
   id: Scalars['String']
   name: Scalars['String']
@@ -185,7 +187,7 @@ export enum ChargeStatus {
   ChargeCompleted = 'CHARGE_COMPLETED',
 }
 
-export type Claim = {
+export interface Claim {
   __typename?: 'Claim'
   id?: Maybe<Scalars['ID']>
   member?: Maybe<Member>
@@ -198,16 +200,16 @@ export type Claim = {
   payments?: Maybe<Array<Maybe<ClaimPayment>>>
   events?: Maybe<Array<Maybe<ClaimEvent>>>
   coveringEmployee: Scalars['Boolean']
-  claimFiles: Array<ClaimFileUpload>
+  claimFiles: ClaimFileUpload[]
 }
 
-export type ClaimEvent = {
+export interface ClaimEvent {
   __typename?: 'ClaimEvent'
   text?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['Instant']>
 }
 
-export type ClaimFileUpload = {
+export interface ClaimFileUpload {
   __typename?: 'ClaimFileUpload'
   claimFileId?: Maybe<Scalars['ID']>
   fileUploadUrl?: Maybe<Scalars['URL']>
@@ -217,7 +219,7 @@ export type ClaimFileUpload = {
   contentType?: Maybe<Scalars['String']>
 }
 
-export type ClaimInformationInput = {
+export interface ClaimInformationInput {
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
@@ -226,17 +228,17 @@ export type ClaimInformationInput = {
   ticket?: Maybe<Scalars['String']>
 }
 
-export type ClaimNote = {
+export interface ClaimNote {
   __typename?: 'ClaimNote'
   text?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDateTime']>
 }
 
-export type ClaimNoteInput = {
+export interface ClaimNoteInput {
   text: Scalars['String']
 }
 
-export type ClaimPayment = {
+export interface ClaimPayment {
   __typename?: 'ClaimPayment'
   id?: Maybe<Scalars['String']>
   amount?: Maybe<Scalars['MonetaryAmount']>
@@ -249,7 +251,7 @@ export type ClaimPayment = {
   status?: Maybe<ClaimPaymentStatus>
 }
 
-export type ClaimPaymentInput = {
+export interface ClaimPaymentInput {
   amount: Scalars['MonetaryAmount']
   deductible: Scalars['MonetaryAmount']
   note: Scalars['String']
@@ -334,12 +336,12 @@ export enum ClaimTypes {
   TestClaim = 'TestClaim',
 }
 
-export type ConfirmedFraudClaim = {
+export interface ConfirmedFraudClaim {
   __typename?: 'ConfirmedFraudClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type Debt = {
+export interface Debt {
   __typename?: 'Debt'
   paymentDefaults?: Maybe<Array<Maybe<PaymentDefault>>>
   debtDate?: Maybe<Scalars['LocalDate']>
@@ -352,24 +354,24 @@ export type Debt = {
   fromDateTime?: Maybe<Scalars['LocalDateTime']>
 }
 
-export type DirectDebitStatus = {
+export interface DirectDebitStatus {
   __typename?: 'DirectDebitStatus'
   activated?: Maybe<Scalars['Boolean']>
 }
 
-export type EarthquakeClaim = {
+export interface EarthquakeClaim {
   __typename?: 'EarthquakeClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type ExtraBuilding = {
+export interface ExtraBuilding {
   __typename?: 'ExtraBuilding'
   type: ExtraBuildingType
   area: Scalars['Int']
   hasWaterConnected: Scalars['Boolean']
 }
 
-export type ExtraBuildingInput = {
+export interface ExtraBuildingInput {
   type: Scalars['String']
   area: Scalars['Int']
   hasWaterConnected: Scalars['Boolean']
@@ -393,7 +395,7 @@ export enum ExtraBuildingType {
   Other = 'OTHER',
 }
 
-export type FileUpload = {
+export interface FileUpload {
   __typename?: 'FileUpload'
   fileUploadUrl?: Maybe<Scalars['URL']>
   timestamp?: Maybe<Scalars['Instant']>
@@ -401,30 +403,30 @@ export type FileUpload = {
   memberId?: Maybe<Scalars['ID']>
 }
 
-export type Filter = {
+export interface Filter {
   name: Scalars['String']
   value: Scalars['String']
 }
 
-export type FilterOutput = {
+export interface FilterOutput {
   __typename?: 'FilterOutput'
   name: Scalars['String']
   value: Scalars['String']
 }
 
-export type FilterPayload = {
-  filters: Array<Filter>
+export interface FilterPayload {
+  filters: Filter[]
   inventoryItemId: Scalars['ID']
 }
 
-export type FilterSuggestion = {
+export interface FilterSuggestion {
   __typename?: 'FilterSuggestion'
   name: Scalars['String']
   items: Array<Scalars['String']>
   others: Array<Scalars['String']>
 }
 
-export type FireDamageClaim = {
+export interface FireDamageClaim {
   __typename?: 'FireDamageClaim'
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
@@ -436,7 +438,7 @@ export enum Flag {
   Red = 'RED',
 }
 
-export type FloodingClaim = {
+export interface FloodingClaim {
   __typename?: 'FloodingClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
@@ -461,11 +463,11 @@ export type HouseQuoteData = IQuoteData & {
   ancillaryArea?: Maybe<Scalars['Int']>
   yearOfConstruction?: Maybe<Scalars['Int']>
   numberOfBathrooms?: Maybe<Scalars['Int']>
-  extraBuildings: Array<ExtraBuilding>
+  extraBuildings: ExtraBuilding[]
   isSubleted?: Maybe<Scalars['Boolean']>
 }
 
-export type HouseQuoteDataInput = {
+export interface HouseQuoteDataInput {
   ssn?: Maybe<Scalars['String']>
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
@@ -477,11 +479,11 @@ export type HouseQuoteDataInput = {
   ancillaryArea?: Maybe<Scalars['Int']>
   yearOfConstruction?: Maybe<Scalars['Int']>
   numberOfBathrooms?: Maybe<Scalars['Int']>
-  extraBuildings: Array<ExtraBuildingInput>
+  extraBuildings: ExtraBuildingInput[]
   isSubleted?: Maybe<Scalars['Boolean']>
 }
 
-export type HouseQuoteInput = {
+export interface HouseQuoteInput {
   street?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
@@ -490,18 +492,18 @@ export type HouseQuoteInput = {
   ancillaryArea?: Maybe<Scalars['Int']>
   yearOfConstruction?: Maybe<Scalars['Int']>
   numberOfBathrooms?: Maybe<Scalars['Int']>
-  extraBuildings?: Maybe<Array<ExtraBuildingInput>>
+  extraBuildings?: Maybe<ExtraBuildingInput[]>
   isSubleted?: Maybe<Scalars['Boolean']>
 }
 
-export type InstallationsClaim = {
+export interface InstallationsClaim {
   __typename?: 'InstallationsClaim'
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
   location?: Maybe<Scalars['String']>
 }
 
-export type InventoryItem = {
+export interface InventoryItem {
   __typename?: 'InventoryItem'
   inventoryItemId: Scalars['ID']
   claimId: Scalars['String']
@@ -516,7 +518,7 @@ export type InventoryItem = {
   filters?: Maybe<Array<Maybe<FilterOutput>>>
 }
 
-export type InventoryItemInput = {
+export interface InventoryItemInput {
   inventoryItemId?: Maybe<Scalars['String']>
   claimId: Scalars['String']
   itemName: Scalars['String']
@@ -530,7 +532,7 @@ export type InventoryItemInput = {
   filters?: Maybe<Array<Maybe<Filter>>>
 }
 
-export type IQuoteData = {
+export interface IQuoteData {
   id: Scalars['ID']
   ssn?: Maybe<Scalars['String']>
   firstName?: Maybe<Scalars['String']>
@@ -542,38 +544,38 @@ export type IQuoteData = {
   livingSpace?: Maybe<Scalars['Int']>
 }
 
-export type Item = {
+export interface Item {
   __typename?: 'Item'
   category: Scalars['String']
   id: Scalars['String']
   name: Scalars['String']
 }
 
-export type ItemSearch = {
+export interface ItemSearch {
   __typename?: 'ItemSearch'
-  products: Array<Item>
-  suggestions: Array<FilterSuggestion>
+  products: Item[]
+  suggestions: FilterSuggestion[]
 }
 
-export type LegalProtectionClaim = {
+export interface LegalProtectionClaim {
   __typename?: 'LegalProtectionClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type LiabilityClaim = {
+export interface LiabilityClaim {
   __typename?: 'LiabilityClaim'
   date?: Maybe<Scalars['LocalDate']>
   location?: Maybe<Scalars['String']>
 }
 
-export type LuggageDelayClaim = {
+export interface LuggageDelayClaim {
   __typename?: 'LuggageDelayClaim'
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   ticket?: Maybe<Scalars['String']>
 }
 
-export type Member = {
+export interface Member {
   __typename?: 'Member'
   memberId: Scalars['ID']
   signedOn?: Maybe<Scalars['Instant']>
@@ -591,28 +593,28 @@ export type Member = {
   fraudulentStatusDescription?: Maybe<Scalars['String']>
   sanctionStatus?: Maybe<SanctionStatus>
   account?: Maybe<Account>
-  fileUploads: Array<FileUpload>
+  fileUploads: FileUpload[]
   person?: Maybe<Person>
   numberFailedCharges?: Maybe<NumberFailedCharges>
-  quotes: Array<Quote>
+  quotes: Quote[]
 }
 
-export type MemberMonthlySubscriptionArgs = {
+export interface MemberMonthlySubscriptionArgs {
   month: Scalars['YearMonth']
 }
 
-export type MemberChargeApproval = {
+export interface MemberChargeApproval {
   memberId: Scalars['ID']
   amount: Scalars['MonetaryAmount']
 }
 
-export type MonthlySubscription = {
+export interface MonthlySubscription {
   __typename?: 'MonthlySubscription'
   amount?: Maybe<Scalars['MonetaryAmount']>
   member?: Maybe<Member>
 }
 
-export type MutationType = {
+export interface MutationType {
   __typename?: 'MutationType'
   chargeMember?: Maybe<Member>
   addAccountEntryToMember: Member
@@ -645,163 +647,163 @@ export type MutationType = {
   updateQuote: Quote
 }
 
-export type MutationTypeChargeMemberArgs = {
+export interface MutationTypeChargeMemberArgs {
   id: Scalars['ID']
   amount: Scalars['MonetaryAmount']
 }
 
-export type MutationTypeAddAccountEntryToMemberArgs = {
+export interface MutationTypeAddAccountEntryToMemberArgs {
   memberId: Scalars['ID']
   accountEntry: AccountEntryInput
 }
 
-export type MutationTypeApproveMemberChargeArgs = {
-  approvals: Array<MemberChargeApproval>
+export interface MutationTypeApproveMemberChargeArgs {
+  approvals: MemberChargeApproval[]
 }
 
-export type MutationTypeUpdateClaimStateArgs = {
+export interface MutationTypeUpdateClaimStateArgs {
   id: Scalars['ID']
   state: ClaimState
 }
 
-export type MutationTypeCreateClaimArgs = {
+export interface MutationTypeCreateClaimArgs {
   memberId: Scalars['ID']
   date: Scalars['LocalDateTime']
   source: ClaimSource
 }
 
-export type MutationTypeAddClaimNoteArgs = {
+export interface MutationTypeAddClaimNoteArgs {
   id: Scalars['ID']
   note: ClaimNoteInput
 }
 
-export type MutationTypeCreateClaimPaymentArgs = {
+export interface MutationTypeCreateClaimPaymentArgs {
   id: Scalars['ID']
   payment: ClaimPaymentInput
 }
 
-export type MutationTypeSetClaimTypeArgs = {
+export interface MutationTypeSetClaimTypeArgs {
   id: Scalars['ID']
   type: ClaimTypes
 }
 
-export type MutationTypeSetClaimInformationArgs = {
+export interface MutationTypeSetClaimInformationArgs {
   id: Scalars['ID']
   information: ClaimInformationInput
 }
 
-export type MutationTypeUpdateReserveArgs = {
+export interface MutationTypeUpdateReserveArgs {
   id: Scalars['ID']
   amount: Scalars['MonetaryAmount']
 }
 
-export type MutationTypeSetCoveringEmployeeArgs = {
+export interface MutationTypeSetCoveringEmployeeArgs {
   id: Scalars['ID']
   coveringEmployee: Scalars['Boolean']
 }
 
-export type MutationTypeCreateTicketArgs = {
+export interface MutationTypeCreateTicketArgs {
   ticket?: Maybe<TicketInput>
 }
 
-export type MutationTypeChangeTicketDescriptionArgs = {
+export interface MutationTypeChangeTicketDescriptionArgs {
   ticketId: Scalars['ID']
   newDescription?: Maybe<Scalars['String']>
 }
 
-export type MutationTypeAssignTicketToTeamMemberArgs = {
+export interface MutationTypeAssignTicketToTeamMemberArgs {
   ticketId: Scalars['ID']
   teamMemberId: Scalars['ID']
 }
 
-export type MutationTypeChangeTicketStatusArgs = {
+export interface MutationTypeChangeTicketStatusArgs {
   ticketId: Scalars['ID']
   newStatus?: Maybe<TicketStatus>
 }
 
-export type MutationTypeChangeTicketReminderArgs = {
+export interface MutationTypeChangeTicketReminderArgs {
   ticketId: Scalars['ID']
   newReminder?: Maybe<RemindNotification>
 }
 
-export type MutationTypeChangeTicketPriorityArgs = {
+export interface MutationTypeChangeTicketPriorityArgs {
   ticketId: Scalars['ID']
   newPriority?: Maybe<Scalars['Float']>
 }
 
-export type MutationTypeAutoLabelQuestionArgs = {
+export interface MutationTypeAutoLabelQuestionArgs {
   question: Scalars['String']
   label: Scalars['String']
   memberId?: Maybe<Scalars['String']>
   messageIds?: Maybe<Array<Scalars['String']>>
 }
 
-export type MutationTypeQuestionIsDoneArgs = {
+export interface MutationTypeQuestionIsDoneArgs {
   memberId: Scalars['ID']
 }
 
-export type MutationTypeWhitelistMemberArgs = {
+export interface MutationTypeWhitelistMemberArgs {
   memberId: Scalars['ID']
 }
 
-export type MutationTypeMarkClaimFileAsDeletedArgs = {
+export interface MutationTypeMarkClaimFileAsDeletedArgs {
   claimId: Scalars['ID']
   claimFileId: Scalars['ID']
 }
 
-export type MutationTypeBackfillSubscriptionsArgs = {
+export interface MutationTypeBackfillSubscriptionsArgs {
   memberId: Scalars['ID']
 }
 
-export type MutationTypeSetClaimFileCategoryArgs = {
+export interface MutationTypeSetClaimFileCategoryArgs {
   claimId: Scalars['ID']
   claimFileId: Scalars['ID']
   category?: Maybe<Scalars['String']>
 }
 
-export type MutationTypeAddInventoryItemArgs = {
+export interface MutationTypeAddInventoryItemArgs {
   item: InventoryItemInput
 }
 
-export type MutationTypeRemoveInventoryItemArgs = {
+export interface MutationTypeRemoveInventoryItemArgs {
   inventoryItemId: Scalars['ID']
 }
 
-export type MutationTypeActivateQuoteArgs = {
+export interface MutationTypeActivateQuoteArgs {
   id: Scalars['ID']
   activationDate: Scalars['LocalDate']
   terminationDate?: Maybe<Scalars['LocalDate']>
 }
 
-export type MutationTypeCreateQuoteFromProductArgs = {
+export interface MutationTypeCreateQuoteFromProductArgs {
   memberId: Scalars['ID']
   quoteData: QuoteFromProductInput
 }
 
-export type MutationTypeUpdateQuoteArgs = {
+export interface MutationTypeUpdateQuoteArgs {
   quoteId: Scalars['ID']
   quoteData: QuoteInput
   bypassUnderwritingGuidelines?: Maybe<Scalars['Boolean']>
 }
 
-export type NotCoveredClaim = {
+export interface NotCoveredClaim {
   __typename?: 'NotCoveredClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type NumberFailedCharges = {
+export interface NumberFailedCharges {
   __typename?: 'NumberFailedCharges'
   numberFailedCharges: Scalars['Int']
   lastFailedChargeAt?: Maybe<Scalars['Instant']>
 }
 
-export type Payload = {
+export interface Payload {
   category: Scalars['String']
   query: Scalars['String']
-  filters: Array<Filter>
+  filters: Filter[]
 }
 
-export type PaymentDefault = {
+export interface PaymentDefault {
   __typename?: 'PaymentDefault'
   year?: Maybe<Scalars['Int']>
   week?: Maybe<Scalars['Int']>
@@ -812,7 +814,7 @@ export type PaymentDefault = {
   claimant?: Maybe<Scalars['String']>
 }
 
-export type Person = {
+export interface Person {
   __typename?: 'Person'
   personFlags?: Maybe<Array<Maybe<Flag>>>
   debt?: Maybe<Debt>
@@ -820,13 +822,13 @@ export type Person = {
   status?: Maybe<PersonStatus>
 }
 
-export type PersonStatus = {
+export interface PersonStatus {
   __typename?: 'PersonStatus'
   flag?: Maybe<Flag>
   whitelisted?: Maybe<Scalars['Boolean']>
 }
 
-export type PricePoint = {
+export interface PricePoint {
   __typename?: 'PricePoint'
   id: Scalars['String']
   itemId: Scalars['String']
@@ -836,79 +838,79 @@ export type PricePoint = {
   upper: Scalars['Float']
 }
 
-export type QueryType = {
+export interface QueryType {
   __typename?: 'QueryType'
   monthlyPayments?: Maybe<Array<Maybe<MonthlySubscription>>>
   member?: Maybe<Member>
   claim?: Maybe<Claim>
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
-  categories?: Maybe<Array<Category>>
+  categories?: Maybe<Category[]>
   items: ItemSearch
-  prices: Array<PricePoint>
+  prices: PricePoint[]
   ticket?: Maybe<Ticket>
   getFullTicketHistory?: Maybe<TicketHistory>
-  tickets: Array<Ticket>
-  getAnswerSuggestion: Array<Suggestion>
+  tickets: Ticket[]
+  getAnswerSuggestion: Suggestion[]
   me?: Maybe<Scalars['String']>
   inventory: Array<Maybe<InventoryItem>>
-  filters: Array<FilterSuggestion>
+  filters: FilterSuggestion[]
   inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
 }
 
-export type QueryTypeMonthlyPaymentsArgs = {
+export interface QueryTypeMonthlyPaymentsArgs {
   month: Scalars['YearMonth']
 }
 
-export type QueryTypeMemberArgs = {
+export interface QueryTypeMemberArgs {
   id: Scalars['ID']
 }
 
-export type QueryTypeClaimArgs = {
+export interface QueryTypeClaimArgs {
   id: Scalars['ID']
 }
 
-export type QueryTypePaymentScheduleArgs = {
+export interface QueryTypePaymentScheduleArgs {
   status: ChargeStatus
 }
 
-export type QueryTypeItemsArgs = {
+export interface QueryTypeItemsArgs {
   payload: Payload
 }
 
-export type QueryTypePricesArgs = {
+export interface QueryTypePricesArgs {
   date: Scalars['String']
   ids: Array<Scalars['String']>
 }
 
-export type QueryTypeTicketArgs = {
+export interface QueryTypeTicketArgs {
   id: Scalars['ID']
 }
 
-export type QueryTypeGetFullTicketHistoryArgs = {
+export interface QueryTypeGetFullTicketHistoryArgs {
   id: Scalars['ID']
 }
 
-export type QueryTypeTicketsArgs = {
+export interface QueryTypeTicketsArgs {
   resolved?: Maybe<Scalars['Boolean']>
 }
 
-export type QueryTypeGetAnswerSuggestionArgs = {
+export interface QueryTypeGetAnswerSuggestionArgs {
   question?: Maybe<Scalars['String']>
 }
 
-export type QueryTypeInventoryArgs = {
+export interface QueryTypeInventoryArgs {
   claimId: Scalars['ID']
 }
 
-export type QueryTypeFiltersArgs = {
+export interface QueryTypeFiltersArgs {
   categoryId: Scalars['String']
 }
 
-export type QueryTypeInventoryItemFiltersArgs = {
+export interface QueryTypeInventoryItemFiltersArgs {
   inventoryItemId: Scalars['String']
 }
 
-export type Quote = {
+export interface Quote {
   __typename?: 'Quote'
   id: Scalars['ID']
   createdAt?: Maybe<Scalars['Instant']>
@@ -930,14 +932,14 @@ export type Quote = {
 
 export type QuoteData = ApartmentQuoteData | HouseQuoteData
 
-export type QuoteFromProductInput = {
+export interface QuoteFromProductInput {
   incompleteHouseQuoteData?: Maybe<HouseQuoteDataInput>
   incompleteApartmentQuoteData?: Maybe<ApartmentQuoteDataInput>
   originatingProductId?: Maybe<Scalars['ID']>
   currentInsurer?: Maybe<Scalars['String']>
 }
 
-export type QuoteInput = {
+export interface QuoteInput {
   productType?: Maybe<QuoteProductType>
   currentInsurer?: Maybe<Scalars['String']>
   apartmentData?: Maybe<ApartmentQuoteInput>
@@ -958,7 +960,7 @@ export enum QuoteState {
   Expired = 'EXPIRED',
 }
 
-export type RemindNotification = {
+export interface RemindNotification {
   date?: Maybe<Scalars['LocalDate']>
   time?: Maybe<Scalars['LocalTime']>
   message?: Maybe<Scalars['String']>
@@ -971,7 +973,7 @@ export enum SanctionStatus {
   FullHit = 'FullHit',
 }
 
-export type SchedulerState = {
+export interface SchedulerState {
   __typename?: 'SchedulerState'
   id: Scalars['ID']
   member?: Maybe<Member>
@@ -982,31 +984,31 @@ export type SchedulerState = {
   transactionId?: Maybe<Scalars['ID']>
 }
 
-export type SnowPressureClaim = {
+export interface SnowPressureClaim {
   __typename?: 'SnowPressureClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type StormDamageClaim = {
+export interface StormDamageClaim {
   __typename?: 'StormDamageClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type Suggestion = {
+export interface Suggestion {
   __typename?: 'Suggestion'
   intent: Scalars['String']
   reply: Scalars['String']
   text: Scalars['String']
   confidence: Scalars['Float']
-  allReplies: Array<AllRepliesEntry>
+  allReplies: AllRepliesEntry[]
 }
 
-export type TestClaim = {
+export interface TestClaim {
   __typename?: 'TestClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type TheftClaim = {
+export interface TheftClaim {
   __typename?: 'TheftClaim'
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
@@ -1015,7 +1017,7 @@ export type TheftClaim = {
   receipt?: Maybe<Scalars['String']>
 }
 
-export type Ticket = {
+export interface Ticket {
   __typename?: 'Ticket'
   id?: Maybe<Scalars['ID']>
   assignedTo?: Maybe<Scalars['String']>
@@ -1041,7 +1043,7 @@ export enum TicketChangeType {
   ChangedPriority = 'CHANGED_PRIORITY',
 }
 
-export type TicketHistory = {
+export interface TicketHistory {
   __typename?: 'TicketHistory'
   id?: Maybe<Scalars['ID']>
   createdAt?: Maybe<Scalars['Instant']>
@@ -1050,7 +1052,7 @@ export type TicketHistory = {
   revisions?: Maybe<Array<Maybe<TicketRevision>>>
 }
 
-export type TicketInput = {
+export interface TicketInput {
   assignedTo?: Maybe<Scalars['String']>
   priority?: Maybe<Scalars['Float']>
   type?: Maybe<TicketType>
@@ -1063,7 +1065,7 @@ export type TicketInput = {
   memberId?: Maybe<Scalars['String']>
 }
 
-export type TicketRevision = {
+export interface TicketRevision {
   __typename?: 'TicketRevision'
   assignedTo?: Maybe<Scalars['String']>
   manualPriority?: Maybe<Scalars['Float']>
@@ -1092,7 +1094,7 @@ export enum TicketType {
   Other = 'OTHER',
 }
 
-export type Transaction = {
+export interface Transaction {
   __typename?: 'Transaction'
   id?: Maybe<Scalars['ID']>
   amount?: Maybe<Scalars['MonetaryAmount']>
@@ -1101,7 +1103,7 @@ export type Transaction = {
   status?: Maybe<Scalars['String']>
 }
 
-export type TravelAccidentClaim = {
+export interface TravelAccidentClaim {
   __typename?: 'TravelAccidentClaim'
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
@@ -1109,41 +1111,107 @@ export type TravelAccidentClaim = {
   receipt?: Maybe<Scalars['String']>
 }
 
-export type VerminAndPestsClaim = {
+export interface VerminAndPestsClaim {
   __typename?: 'VerminAndPestsClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type WaterDamageBathroomClaim = {
+export interface WaterDamageBathroomClaim {
   __typename?: 'WaterDamageBathroomClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type WaterDamageClaim = {
+export interface WaterDamageClaim {
   __typename?: 'WaterDamageClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type WaterDamageKitchenClaim = {
+export interface WaterDamageKitchenClaim {
   __typename?: 'WaterDamageKitchenClaim'
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type Whitelisted = {
+export interface Whitelisted {
   __typename?: 'Whitelisted'
   whitelistedAt?: Maybe<Scalars['Instant']>
   whitelistedBy?: Maybe<Scalars['String']>
 }
 
+export interface MemberNameQueryVariables {
+  memberId: Scalars['ID']
+}
+
+export type MemberNameQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'>
+  >
+}
+
+export const MemberNameDocument = gql`
+  query MemberName($memberId: ID!) {
+    member(id: $memberId) {
+      firstName
+      lastName
+    }
+  }
+`
+
+/**
+ * __useMemberNameQuery__
+ *
+ * To run a query within a React component, call `useMemberNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberNameQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useMemberNameQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    MemberNameQuery,
+    MemberNameQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<MemberNameQuery, MemberNameQueryVariables>(
+    MemberNameDocument,
+    baseOptions,
+  )
+}
+export function useMemberNameLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    MemberNameQuery,
+    MemberNameQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    MemberNameQuery,
+    MemberNameQueryVariables
+  >(MemberNameDocument, baseOptions)
+}
+export type MemberNameQueryHookResult = ReturnType<typeof useMemberNameQuery>
+export type MemberNameLazyQueryHookResult = ReturnType<
+  typeof useMemberNameLazyQuery
+>
+export type MemberNameQueryResult = ApolloReactCommon.QueryResult<
+  MemberNameQuery,
+  MemberNameQueryVariables
+>
+
 export interface IntrospectionResultData {
   __schema: {
-    types: {
+    types: Array<{
       kind: string
       name: string
-      possibleTypes: {
+      possibleTypes: Array<{
         name: string
-      }[]
-    }[]
+      }>
+    }>
   }
 }
 const result: IntrospectionResultData = {

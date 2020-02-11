@@ -5,7 +5,7 @@ const filesToIgnore = require('../.typecheck-ignore.json')
 
 const getDiffFiles = (callback) => {
   childProcess.exec(
-    'git diff master --name-only *.ts *.tsx',
+    'git diff master --name-only --diff-filter ARM *.ts *.tsx',
     (err, diffFilesString, stderr) => {
       if (err) {
         console.error(stderr)

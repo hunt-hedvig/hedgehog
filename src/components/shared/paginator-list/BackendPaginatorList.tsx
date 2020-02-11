@@ -21,7 +21,8 @@ export interface BackendPaginatorListProps<T> {
 }
 
 export default class BackendPaginatorList<T> extends React.Component<
-  BackendPaginatorListProps<T>
+  BackendPaginatorListProps<T>,
+  {}
 > {
   public render() {
     const {

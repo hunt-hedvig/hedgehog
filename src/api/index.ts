@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { forceLogOut } from 'utils/auth'
 import config from './config'
 
@@ -33,9 +33,15 @@ export const refreshAccessToken = async () => {
   }
 }
 
-const callApi = async (conf, data, id, params, retryCount = 0) => {
+const callApi = async <T = any>(
+  conf: any,
+  data: any,
+  id: string | number | undefined,
+  params: any,
+  retryCount = 0,
+): Promise<AxiosResponse<T>> => {
   try {
-    return await axiosInstance.request({
+    return await axiosInstance.request<T>({
       url: `${conf.url}${id ? '/' + id : ''}`,
       method: conf.method,
       withCredentials: true,
@@ -51,12 +57,12 @@ const callApi = async (conf, data, id, params, retryCount = 0) => {
         await refreshAccessToken()
       } catch (e) {
         forceLogOut()
-        return
+        return null as any
       }
 
       if (retryCount >= 10) {
         forceLogOut()
-        return
+        return null as any
       }
 
       return callApi(conf, data, id, params, retryCount + 1)

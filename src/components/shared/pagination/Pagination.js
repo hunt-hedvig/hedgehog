@@ -1,6 +1,6 @@
 import { getPageState } from 'lib/paginator'
 import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
@@ -19,7 +19,7 @@ export default class Pagination extends React.Component {
     }
   }
 
-  public setPage = (page) => {
+  setPage = (page) => {
     const { items, onChangePage, pageSize } = this.props
 
     const newPageState = getPageState(items.length, page, pageSize)
@@ -41,20 +41,20 @@ export default class Pagination extends React.Component {
     onChangePage(pageOfItems)
   }
 
-  public componentWillMount() {
+  componentWillMount() {
     const { items, initialPage } = this.props
     if (items && items.length) {
       this.setPage(initialPage)
     }
   }
 
-  public componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.items !== prevProps.items) {
       this.setPage(this.props.initialPage)
     }
   }
 
-  public render() {
+  render() {
     const { pageState } = this.state
 
     return (

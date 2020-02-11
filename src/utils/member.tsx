@@ -1,5 +1,6 @@
-import React from 'react'
+import { colorsV2 } from '@hedviginsurance/brand'
 import { differenceInYears, parse } from 'date-fns'
+import React from 'react'
 import styled from 'react-emotion'
 import { Gender } from 'store/storeTypes'
 
@@ -30,7 +31,6 @@ export const MemberEmoji: React.FC<{
   try {
     birthDate = parse(birthDateString, 'yyyy-MM-dd', new Date())
   } catch (e) {
-    console.error(e)
     return null
   }
   const age = differenceInYears(new Date(), birthDate)
@@ -77,3 +77,16 @@ export const MemberEmoji: React.FC<{
     </>
   )
 }
+
+export const isMemberIdEven = (memberId: string) => {
+  let isMemberIdEvenReally = false
+  try {
+    isMemberIdEvenReally = parseInt(memberId, 10) % 2 === 0
+  } catch (_) {
+    // noop
+  }
+  return isMemberIdEvenReally
+}
+
+export const getMemberIdColor = (memberId: string) =>
+  isMemberIdEven(memberId) ? colorsV2.midnight500 : colorsV2.grass300

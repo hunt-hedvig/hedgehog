@@ -16,7 +16,7 @@ export const PageContainer = styled.div`
   align-items: center;
 `
 
-export const ListContainer = styled.div`
+export const ListContainer = styled.div<{ autoWidth?: string }>`
   width: ${(props) => props.autoWidth || '500px'};
   border: solid 1px #dfe0e0;
   border-radius: 5px;
