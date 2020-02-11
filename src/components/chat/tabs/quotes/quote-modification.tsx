@@ -14,17 +14,13 @@ import {
   QuoteProductType,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
+import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
-import { useState } from 'react'
 import styled from 'react-emotion'
-import {
-  Button,
-  Checkbox,
-  Dropdown,
-  Input as SuiInput,
-} from 'semantic-ui-react'
+import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
+import { noopFunction } from 'utils'
 import * as uuid from 'uuid/v4'
-import { ErrorMessage, SubmitButton } from './common'
+import { ErrorMessage } from './common'
 import { QUOTES_QUERY } from './use-quotes'
 
 const Label = styled('label')({
@@ -54,6 +50,7 @@ const InputGroup = styled('div')({
 interface EditableExtraBuilding extends ExtraBuilding {
   id: string
   area: any | string | number | undefined
+  displayName?: string
 }
 
 const UPDATE_QUOTE_MUTATION = gql`
@@ -72,7 +69,7 @@ const UPDATE_QUOTE_MUTATION = gql`
   }
 `
 
-function createQuoteData({
+const createQuoteData = ({
   productType,
   quote,
   street,
@@ -85,7 +82,7 @@ function createQuoteData({
   numberOfBathrooms,
   extraBuildings,
   isSubleted,
-}: FormState & { quote: Quote }) {
+}: FormState & { quote: Quote }) => {
   const quoteData: Partial<QuoteInput> = {
     productType: ((productType ?? quote.productType) === 'HOUSE'
       ? 'HOUSE'
@@ -95,17 +92,18 @@ function createQuoteData({
     street,
     zipCode,
     city,
-    livingSpace: parseInt(livingSpace!),
-    householdSize: parseInt(householdSize!),
+    livingSpace: parseInt(livingSpace!, 10),
+    householdSize: parseInt(householdSize!, 10),
   }
   if ((productType ?? quote.productType) === 'HOUSE') {
     quoteData.houseData = {
       ...baseData,
-      ancillaryArea: ancillaryArea !== null ? parseInt(ancillaryArea) : null,
+      ancillaryArea:
+        ancillaryArea !== null ? parseInt(ancillaryArea, 10) : null,
       yearOfConstruction:
-        yearOfConstruction !== null ? parseInt(yearOfConstruction) : null,
+        yearOfConstruction !== null ? parseInt(yearOfConstruction, 10) : null,
       numberOfBathrooms:
-        numberOfBathrooms !== null ? parseInt(numberOfBathrooms) : null,
+        numberOfBathrooms !== null ? parseInt(numberOfBathrooms, 10) : null,
       extraBuildings: extraBuildings?.map(
         ({ area, type, hasWaterConnected }) => ({
           area,
@@ -138,24 +136,24 @@ interface FormState {
   isSubleted: boolean | null
 }
 
-export const QuoteModification: React.FunctionComponent<{
+export const QuoteModification: React.FC<{
   memberId: string
   quote: Quote
   onWipChange?: (isWip: boolean) => void
   onSubmitted?: () => void
-}> = function({
+}> = ({
   memberId,
   quote,
-  onWipChange = () => {},
-  onSubmitted = () => {},
-}) {
+  onWipChange = noopFunction,
+  onSubmitted = noopFunction,
+}) => {
   const [modifyField, fieldModification] = useMutation<
     Pick<MutationType, 'updateQuote'>,
     MutationTypeUpdateQuoteArgs
   >(UPDATE_QUOTE_MUTATION, {
     refetchQueries: () => [{ query: QUOTES_QUERY, variables: { memberId } }],
   })
-  const [formState, setFormState] = useState<FormState>({
+  const [formState, setFormState] = React.useState<FormState>({
     street: null,
     city: null,
     ancillaryArea: null,
@@ -174,7 +172,7 @@ export const QuoteModification: React.FunctionComponent<{
   const [
     bypassUnderwritingGuidelines,
     setBypassUnderwritingGuidelines,
-  ] = useState(false)
+  ] = React.useState(false)
 
   const getTextInput = (
     variable: keyof FormState,
@@ -186,7 +184,9 @@ export const QuoteModification: React.FunctionComponent<{
       <Label htmlFor={`${variable}-${quote.id}`}>{label}</Label>
       <Input
         onChange={(e) => {
-          onWipChange && onWipChange(true)
+          if (onWipChange) {
+            onWipChange(true)
+          }
           setFormState({ ...formState, [variable]: e.currentTarget.value })
         }}
         value={
@@ -221,7 +221,9 @@ export const QuoteModification: React.FunctionComponent<{
             bypassUnderwritingGuidelines,
           },
         })
-        onSubmitted && onSubmitted()
+        if (onSubmitted) {
+          onSubmitted()
+        }
       }}
     >
       <InputGroup>
@@ -241,7 +243,9 @@ export const QuoteModification: React.FunctionComponent<{
               : 'HOUSE')
           }
           onChange={(_, data) => {
-            onWipChange && onWipChange(true)
+            if (onWipChange) {
+              onWipChange(true)
+            }
             setFormState({ ...formState, productType: data.value as string })
           }}
           options={[
@@ -266,7 +270,7 @@ export const QuoteModification: React.FunctionComponent<{
                 Ancillary area (m<sup>2</sup>)
               </>,
               (formState.ancillaryArea === null
-                ? quote.data!['ancillaryArea']
+                ? (quote.data as HouseQuoteData)!.ancillaryArea
                 : formState.ancillaryArea) ?? '0',
             )}
             {getNumberInput('yearOfConstruction', 'Year of construction')}
@@ -308,9 +312,13 @@ export const QuoteModification: React.FunctionComponent<{
         />
       </InputGroup>
 
-      <SubmitButton type="submit" disabled={fieldModification.loading}>
+      <Button
+        variation="success"
+        type="submit"
+        disabled={fieldModification.loading}
+      >
         Save modifications
-      </SubmitButton>
+      </Button>
 
       {fieldModification.error && (
         <ErrorMessage>
@@ -340,10 +348,10 @@ const RemoveButtonWrapper = styled('div')({
   paddingTop: '1rem',
 })
 
-const ExtraBuildingEditor: React.FunctionComponent<{
+const ExtraBuildingEditor: React.FC<{
   extraBuildings: ReadonlyArray<EditableExtraBuilding>
   onChange: (value: ReadonlyArray<EditableExtraBuilding>) => void
-}> = function({ extraBuildings, onChange }) {
+}> = ({ extraBuildings, onChange }) => {
   const handleExtraBuildingChange = (index: number) => (
     data: Partial<EditableExtraBuilding>,
   ) => {
@@ -371,7 +379,7 @@ const ExtraBuildingEditor: React.FunctionComponent<{
               onChange={(e) =>
                 handleExtraBuildingChange(i)({
                   area: e.currentTarget.value
-                    ? parseInt(e.currentTarget.value)
+                    ? parseInt(e.currentTarget.value, 10)
                     : '',
                 })
               }
@@ -412,7 +420,7 @@ const ExtraBuildingEditor: React.FunctionComponent<{
           </div>
           <RemoveButtonWrapper>
             <Button
-              color="red"
+              variation="danger"
               size="tiny"
               type="button"
               onClick={(e) => {

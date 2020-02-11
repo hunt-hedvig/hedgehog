@@ -1,12 +1,13 @@
 import { useMutation } from '@apollo/react-hooks'
 import { Quote } from 'api/generated/graphql'
-import { useState } from 'react'
-import * as React from 'react'
 import { gql } from 'apollo-boost'
-import { BottomSpacerWrapper, ErrorMessage, SubmitButton } from './common'
-import { QUOTES_QUERY } from './use-quotes'
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
-import { Button, Checkbox } from 'semantic-ui-react'
+import { Button } from 'hedvig-ui/button'
+import * as React from 'react'
+import { Checkbox } from 'semantic-ui-react'
+import { noopFunction } from 'utils'
+import { BottomSpacerWrapper, ErrorMessage } from './common'
+import { QUOTES_QUERY } from './use-quotes'
 
 const ACTIVATE_MUTATION = gql`
   mutation ActivateQuote(
@@ -25,20 +26,24 @@ const ACTIVATE_MUTATION = gql`
     }
   }
 `
-export const QuoteActivation: React.FunctionComponent<{
+export const QuoteActivation: React.FC<{
   quote: Quote
   memberId
   onSubmitted?: () => void
   onWipChange?: (isWip: boolean) => void
-}> = function({
+}> = ({
   quote,
   memberId,
-  onSubmitted = () => {},
-  onWipChange = (_) => {},
-}) {
-  const [activationDate, setActivationDate] = useState<Date | null>(new Date())
-  const [terminationDate, setTerminationDate] = useState<Date | null>(null)
-  const [useGap, setUseGap] = useState(false)
+  onSubmitted = noopFunction,
+  onWipChange = noopFunction,
+}) => {
+  const [activationDate, setActivationDate] = React.useState<Date | null>(
+    new Date(),
+  )
+  const [terminationDate, setTerminationDate] = React.useState<Date | null>(
+    null,
+  )
+  const [useGap, setUseGap] = React.useState(false)
 
   const [activateQuote, activationMutation] = useMutation(ACTIVATE_MUTATION, {
     refetchQueries: () => [
@@ -69,7 +74,9 @@ export const QuoteActivation: React.FunctionComponent<{
               : null,
           },
         })
-        onSubmitted && onSubmitted()
+        if (onSubmitted) {
+          onSubmitted()
+        }
       }}
     >
       <BottomSpacerWrapper>
@@ -80,7 +87,9 @@ export const QuoteActivation: React.FunctionComponent<{
           <BaseDatePicker
             value={activationDate}
             onChange={(value) => {
-              onWipChange && onWipChange(true)
+              if (onWipChange) {
+                onWipChange(true)
+              }
               setActivationDate(value)
             }}
           />
@@ -90,7 +99,9 @@ export const QuoteActivation: React.FunctionComponent<{
       <BottomSpacerWrapper>
         <Checkbox
           onChange={(_, { checked }) => {
-            onWipChange && onWipChange(true)
+            if (onWipChange) {
+              onWipChange(true)
+            }
             if (!checked) {
               setTerminationDate(null)
             }
@@ -110,7 +121,9 @@ export const QuoteActivation: React.FunctionComponent<{
             <BaseDatePicker
               value={terminationDate}
               onChange={(value) => {
-                onWipChange && onWipChange(true)
+                if (onWipChange) {
+                  onWipChange(true)
+                }
                 setTerminationDate(value)
               }}
               maxDate={activationDate}
@@ -120,12 +133,18 @@ export const QuoteActivation: React.FunctionComponent<{
       )}
 
       {!activationMutation.data?.activateQuote ? (
-        <SubmitButton type="submit" disabled={activationMutation.loading}>
+        <Button
+          variation="success"
+          type="submit"
+          fullWidth
+          disabled={activationMutation.loading}
+        >
           Activate
-        </SubmitButton>
+        </Button>
       ) : (
         <Button
-          type="button"
+          variation="primary"
+          fullWidth
           onClick={(e) => {
             e.preventDefault()
             window.location.reload()

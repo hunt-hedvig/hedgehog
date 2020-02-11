@@ -4,27 +4,19 @@
     "module": "esnext",
     "lib": ["dom", "es6", "es7", "es2017.object"],
     "jsx": "react",
-    "sourceMap": true,
     "strict": true,
     "noImplicitAny": false,
-    "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true,
-
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-
     "moduleResolution": "node",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["*", "node_modules/*", "src/*"]
-    },
     "typeRoots": ["./src/types", "./node_modules/@types"],
     "types": ["jest", "node"],
-
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "allowJs": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "paths": {
+      "*": ["*", "node_modules/*", "src/*", "shared/*"]
+    }
   },
-  "include": ["./src"],
   "exclude": ["node_modules"]
 }

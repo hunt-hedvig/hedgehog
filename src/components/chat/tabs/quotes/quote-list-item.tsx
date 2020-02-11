@@ -1,15 +1,14 @@
 import { colorsV2 } from '@hedviginsurance/brand'
 import { ApartmentQuoteData, Quote } from 'api/generated/graphql'
+import { Button } from 'hedvig-ui/button'
+import { formatMoneySE } from 'lib/intl'
+import * as React from 'react'
+import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
 import { BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteModification } from './quote-modification'
-import { formatMoneySE } from 'lib/intl'
-import * as React from 'react'
-import { useState } from 'react'
-import styled from 'react-emotion'
-import { Button } from 'semantic-ui-react'
 
 const OuterWrapper = styled('div')({
   ':not(:last-child)': {
@@ -51,30 +50,6 @@ const BreachedUnderwritingGuidelines = styled('div')({
 const ActionsButtonsWrapper = styled('div')({
   flexShrink: 1,
 })
-const ActivateButton = styled(Button)({
-  '&&': {
-    whiteSpace: 'nowrap',
-    width: '100%',
-    background: colorsV2.grass500,
-    color: '#fff',
-    '&:hover, &:focus': {
-      background: colorsV2.grass500,
-      color: '#fff',
-    },
-  },
-})
-const ModifyButton = styled(Button)({
-  '&&': {
-    whiteSpace: 'nowrap',
-    width: '100%',
-    background: colorsV2.violet700,
-    color: '#fff',
-    '&:hover, &:focus': {
-      background: colorsV2.violet700,
-      color: '#fff',
-    },
-  },
-})
 
 const ActionsWrapper = styled('div')({
   background: colorsV2.flamingo200,
@@ -88,45 +63,44 @@ enum Action {
   MODIFY,
 }
 
-const QuoteDetails: React.FunctionComponent<{
+const QuoteDetails: React.FC<{
   quote: Quote
-}> = function({ quote }) {
-  return (
-    <DetailsWrapper>
-      <AddressNPriceWrapper>
-        <AddressWrapper>
-          {quote.data?.street}
-          {quote.data?.street && (
-            <>
-              , <br />
-            </>
-          )}
-          {quote.data?.zipCode} {quote.data?.city ?? '🤷️'}
-        </AddressWrapper>
-        <PriceWrapper>
-          {quote.price &&
-            formatMoneySE({ amount: quote.price, currency: 'SEK' })}
-          {!quote.price && '-'}
-        </PriceWrapper>
-      </AddressNPriceWrapper>
-      <DetailWrapper>
-        Product type:{' '}
-        <strong>
-          {quote.productType}
-          {quote.productType === 'APARTMENT' &&
-            ` (${(quote.data as ApartmentQuoteData)?.subType ?? 'none'})`}
-        </strong>
-        <br />
-        Living space:
-        <strong>
-          {' '}
-          {quote.data?.livingSpace} m<sup>2</sup>
-        </strong>
-        <br />
-        Household size:
-        <strong> {quote.data?.householdSize} person(s)</strong>
-      </DetailWrapper>
-      {quote.breachedUnderwritingGuidelines?.length > 0 && (
+}> = ({ quote }) => (
+  <DetailsWrapper>
+    <AddressNPriceWrapper>
+      <AddressWrapper>
+        {quote.data?.street}
+        {quote.data?.street && (
+          <>
+            , <br />
+          </>
+        )}
+        {quote.data?.zipCode} {quote.data?.city ?? '🤷️'}
+      </AddressWrapper>
+      <PriceWrapper>
+        {quote.price && formatMoneySE({ amount: quote.price, currency: 'SEK' })}
+        {!quote.price && '-'}
+      </PriceWrapper>
+    </AddressNPriceWrapper>
+    <DetailWrapper>
+      Product type:{' '}
+      <strong>
+        {quote.productType}
+        {quote.productType === 'APARTMENT' &&
+          ` (${(quote.data as ApartmentQuoteData)?.subType ?? 'none'})`}
+      </strong>
+      <br />
+      Living space:
+      <strong>
+        {' '}
+        {quote.data?.livingSpace} m<sup>2</sup>
+      </strong>
+      <br />
+      Household size:
+      <strong> {quote.data?.householdSize} person(s)</strong>
+    </DetailWrapper>
+    {quote.breachedUnderwritingGuidelines?.length ||
+      (0 > 0 && (
         <DetailWrapper>
           <BreachedUnderwritingGuidelines>
             <h3>Important! Member breaches underwriting guidelines</h3>
@@ -137,40 +111,39 @@ const QuoteDetails: React.FunctionComponent<{
             </ul>
           </BreachedUnderwritingGuidelines>
         </DetailWrapper>
-      )}
-      <DetailWrapper>
-        <Muted>
-          Created: <strong>{quote.createdAt}</strong>
-          <br />
-          State: <strong>{quote.state}</strong>
-          <br />
-          Originating product id:{' '}
-          <strong>{quote.originatingProductId ?? '-'}</strong>
-          <br />
-          Quote id: <strong>{quote.id}</strong>
-        </Muted>
-      </DetailWrapper>
-    </DetailsWrapper>
-  )
-}
+      ))}
+    <DetailWrapper>
+      <Muted>
+        Created: <strong>{quote.createdAt}</strong>
+        <br />
+        State: <strong>{quote.state}</strong>
+        <br />
+        Originating product id:{' '}
+        <strong>{quote.originatingProductId ?? '-'}</strong>
+        <br />
+        Quote id: <strong>{quote.id}</strong>
+      </Muted>
+    </DetailWrapper>
+  </DetailsWrapper>
+)
 
-export const QuoteListItemComponent: React.FunctionComponent<{
+export const QuoteListItemComponent: React.FC<{
   quote: Quote
   inactionable?: boolean
   memberId: string
   showNotification?: (data: any) => void
   insuranceRequest?: (memberId: string) => void
   insurancesListRequest?: (memberId: string) => void
-}> = function({
+}> = ({
   quote,
   inactionable,
   memberId,
   showNotification,
   insuranceRequest,
   insurancesListRequest,
-}) {
-  const [action, setAction] = useState<Action | null>(null)
-  const [isWip, setIsWip] = useState(false)
+}) => {
+  const [action, setAction] = React.useState<Action | null>(null)
+  const [isWip, setIsWip] = React.useState(false)
 
   const toggleState = (targetAction: Action) => () => {
     const isTransitionToOpen = action === null
@@ -214,14 +187,22 @@ export const QuoteListItemComponent: React.FunctionComponent<{
         {!!inactionable || (
           <ActionsButtonsWrapper>
             <BottomSpacerWrapper>
-              <ModifyButton onClick={toggleState(Action.MODIFY)}>
+              <Button
+                fullWidth
+                type="primary"
+                onClick={toggleState(Action.MODIFY)}
+              >
                 Modify
-              </ModifyButton>
+              </Button>
             </BottomSpacerWrapper>
             <BottomSpacerWrapper>
-              <ActivateButton onClick={toggleState(Action.ACTIVATE)}>
+              <Button
+                fullWidth
+                variation="success"
+                onClick={toggleState(Action.ACTIVATE)}
+              >
                 Activate
-              </ActivateButton>
+              </Button>
             </BottomSpacerWrapper>
           </ActionsButtonsWrapper>
         )}
@@ -233,16 +214,21 @@ export const QuoteListItemComponent: React.FunctionComponent<{
             memberId={memberId}
             onWipChange={setIsWip}
             onSubmitted={() => {
-              showNotification &&
+              if (showNotification) {
                 showNotification({
                   header: 'Activated',
                   message: 'Quote activated',
                   type: 'olive',
                 })
+              }
               setIsWip(false)
               setAction(null)
-              insuranceRequest && insuranceRequest(memberId)
-              insurancesListRequest && insurancesListRequest(memberId)
+              if (insuranceRequest) {
+                insuranceRequest(memberId)
+              }
+              if (insurancesListRequest) {
+                insurancesListRequest(memberId)
+              }
             }}
           />
         </ActionsWrapper>
@@ -255,12 +241,13 @@ export const QuoteListItemComponent: React.FunctionComponent<{
             memberId={memberId}
             onWipChange={setIsWip}
             onSubmitted={() => {
-              showNotification &&
+              if (showNotification) {
                 showNotification({
                   header: 'Saved',
                   message: <>Quote saved</>,
                   type: 'olive',
                 })
+              }
               setIsWip(false)
               setAction(null)
             }}

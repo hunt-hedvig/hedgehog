@@ -1,28 +1,21 @@
 language: node_js
 
 node_js:
-- '10'
+  - '10'
 
 cache:
   directories:
-  - node_modules
+    - node_modules
 
 install:
-- npm i -g yarn@1.9.1
-- yarn install
+  - npm i -g yarn@1.22.0
+  - yarn
+  - git fetch --unshallow origin master:master
 
 script:
-#- yarn lint
-#- yarn test
-#- yarn typecheck
-- yarn build
-
-sudo: required
-services:
-  - docker
-after_success:
-  - docker_push.sh
-  - kubernetes_deploy.sh
+  - yarn lint
+  - yarn tdm
+  - yarn build
 
 notifications:
   email: false

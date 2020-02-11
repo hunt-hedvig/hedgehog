@@ -23,27 +23,27 @@ export const questionsReqSuccess = (
   listType,
 })
 
-export const questionsReqError = (error) => ({
+export const questionsReqError = (error: Error) => ({
   type: QUESTION_ERROR,
   error,
 })
 
-export const sendAnswer = (data) => ({
+export const sendAnswer = (data: any) => ({
   type: QUESTION_ANSWERING,
   data,
 })
 
-export const answerSuccess = (data) => ({
+export const answerSuccess = (data: any) => ({
   type: QUESTION_ANSWER_SUCCESS,
   data,
 })
 
-export const sendDoneMsg = (data) => ({
+export const sendDoneMsg = (data: any) => ({
   type: QUESTION_DONE_MSG,
   data,
 })
 
-export const answerError = (error) => ({
+export const answerError = (error: Error) => ({
   type: ANSWER_ERROR,
   error,
 })

@@ -7,7 +7,7 @@ import {
 } from 'store/constants/auth'
 
 export const authFailure = (): Action => ({ type: AUTH_FAILURE })
-export const authSuccess = (payload): AnyAction => ({
+export const authSuccess = (payload: any): AnyAction => ({
   type: AUTH_SUCCESS,
   payload,
 })
