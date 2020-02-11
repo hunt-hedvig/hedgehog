@@ -88,5 +88,25 @@ export const isMemberIdEven = (memberId: string) => {
   return isMemberIdEvenReally
 }
 
-export const getMemberIdColor = (memberId: string) =>
-  isMemberIdEven(memberId) ? colorsV2.midnight500 : colorsV2.grass300
+const tomasMemberId = 185188729
+export const getMemberIdColor = (memberId: string) => {
+  if (parseInt(memberId, 10) === tomasMemberId) {
+    return '#000'
+  }
+
+  if (isMemberIdEven(memberId)) {
+    return colorsV2.midnight500
+  }
+  return colorsV2.grass300
+}
+
+export const getMemberGroup = (memberId: number) => {
+  if (memberId === tomasMemberId) {
+    return 'The dark lord Sith'
+  }
+
+  if (isMemberIdEven(memberId.toString())) {
+    return 'The empire'
+  }
+  return 'The resistance'
+}

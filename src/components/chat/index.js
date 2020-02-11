@@ -5,7 +5,7 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
-import { getMemberIdColor, isMemberIdEven, MemberEmoji } from 'utils/member'
+import { getMemberGroup, getMemberIdColor, MemberEmoji } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatTab from './tabs/ChatTab'
 
@@ -139,7 +139,7 @@ export default class Chat extends React.Component {
       this.addMessageHandler,
       this.state.socket,
     )
-    console.log(messages)
+
     return (
       <ChatPageWrapper>
         <ChatPageContainer>
@@ -152,9 +152,7 @@ export default class Chat extends React.Component {
             />
             {messages.member && (
               <Badge memberId={messages.member.memberId}>
-                {isMemberIdEven(messages.member.memberId)
-                  ? 'The empire'
-                  : 'The resistance'}
+                {getMemberGroup(messages.member.memberId)}
               </Badge>
             )}
           </Header>
