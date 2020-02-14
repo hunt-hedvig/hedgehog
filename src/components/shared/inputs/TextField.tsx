@@ -1,6 +1,7 @@
 import { TextField as MuiTextField } from '@material-ui/core'
 import { FieldProps } from 'formik'
 import * as React from 'react'
+import styled from 'react-emotion'
 
 export interface TextFieldProps {
   placeholder: string

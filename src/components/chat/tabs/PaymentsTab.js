@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
-import * as moment from 'moment'
-import * as React from 'react'
+import moment from 'moment'
+import React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import { Button, Form, Input, Table } from 'semantic-ui-react'
 
@@ -62,20 +62,18 @@ const CHARGE_MEMBER_MUTATION = gql`
     }
   }
 `
-const TableRowColored = styled(Table.Row)(
-  ({ transaction }: { transaction }) => {
-    if (transaction.type === 'CHARGE') {
-      switch (transaction.status) {
-        case 'INITIATED':
-          return { backgroundColor: '#FFFFDD' } //Yellow
-        case 'COMPLETED':
-          return { backgroundColor: '#DDFFDD' } //Green
-        case 'FAILED':
-          return { backgroundColor: '#FF8A80' } //Red
-      }
+const TableRowColored = styled(Table.Row)(({ transaction }) => {
+  if (transaction.type === 'CHARGE') {
+    switch (transaction.status) {
+      case 'INITIATED':
+        return { backgroundColor: '#FFFFDD' } //Yellow
+      case 'COMPLETED':
+        return { backgroundColor: '#DDFFDD' } //Green
+      case 'FAILED':
+        return { backgroundColor: '#FF8A80' } //Red
     }
-  },
-)
+  }
+})
 
 // @ts-ignore
 const MemberTransactionsTable = ({ transactions }) => (
@@ -124,11 +122,11 @@ class PaymentsTab extends React.Component {
     }
   }
 
-  public handleChange = (e) => {
+  handleChange = (e) => {
     this.setState({ amount: e.target.value })
   }
 
-  public handleChargeSubmit = (defaultAmount: any) => (mutation) => () => {
+  handleChargeSubmit = (defaultAmount: any) => (mutation) => () => {
     mutation({
       variables: {
         id: this.variables.id,
@@ -144,17 +142,17 @@ class PaymentsTab extends React.Component {
     this.setState({ amount: null, confirming: false, confirmed: false })
   }
 
-  public handleConfirmation = () => {
+  handleConfirmation = () => {
     this.setState({ confirming: true })
   }
 
-  public handleConfirmationChange = (e) => {
+  handleConfirmationChange = (e) => {
     if (e.target.value.replace(/ /g, '').toLowerCase() === 'a') {
       this.setState({ confirming: false, confirmed: true })
     }
   }
 
-  public handleUpdate = (cache, result) => {
+  handleUpdate = (cache, result) => {
     const { transactions } = result.data.chargeMember
     cache.writeQuery({
       query: GET_MEMBER_QUERY,
@@ -166,7 +164,7 @@ class PaymentsTab extends React.Component {
     })
   }
 
-  public render() {
+  render() {
     return (
       <React.Fragment>
         <Query query={GET_MEMBER_QUERY} variables={this.variables}>
@@ -190,13 +188,13 @@ class PaymentsTab extends React.Component {
                   )}
                 </p>
                 <p>
-                  Subscrtiption cost for this month(
+                  Subscription cost for this month(
                   {this.variables.currentMonth}) is :{' '}
                   {data.member.currentMonth.amount.amount}{' '}
                   {data.member.currentMonth.amount.currency}
                 </p>
                 <p>
-                  Subscrtiption cost for the previous month (
+                  Subscription cost for the previous month (
                   {this.variables.previousMonth}) is :{' '}
                   {data.member.previousMonth.amount.amount}{' '}
                   {data.member.previousMonth.amount.currency}

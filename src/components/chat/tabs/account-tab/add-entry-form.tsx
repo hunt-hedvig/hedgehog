@@ -42,7 +42,11 @@ const TextField = withStyles({
   },
 })(MuiTextField)
 
-const Form = styled(FormikForm)({ width: '100%' })
+const Form = styled(FormikForm)({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+})
 const BottomRowWrapper = styled('div')({
   display: 'flex',
   alignItems: 'center',
