@@ -56,7 +56,7 @@ class PayoutDetails extends React.Component<
   }
 
   public render() {
-    const { payoutDetails, match, payoutRequest } = this.props
+    const { match, payoutRequest } = this.props
     const memberId = match.params.id
     return (
       <Formik

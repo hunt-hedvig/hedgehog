@@ -126,7 +126,7 @@ class PaymentsTab extends React.Component {
     this.setState({ amount: e.target.value })
   }
 
-  handleChargeSubmit = (defaultAmount: any) => (mutation) => () => {
+  handleChargeSubmit = (defaultAmount ) => (mutation) => () => {
     mutation({
       variables: {
         id: this.variables.id,
