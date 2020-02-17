@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { IOption } from '../../features/taskmanager/types'
 import { EOrder } from '../tickets/types'
 

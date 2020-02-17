@@ -1,5 +1,3 @@
-import AssetsPageRoute from 'routes/AssetsPageRoute'
-import BourdereauPageRoute from 'routes/BourdereauPageRoute'
 import ChargePageRoute from 'routes/ChargePageRoute'
 import ClaimsPageRoute from 'routes/ClaimsPageRoute'
 import DashboardPageRoute from 'routes/DashboardPageRoute'
@@ -13,7 +11,6 @@ import TicketHistoryPageRoute from 'routes/TicketHistoryPageRoute'
 import { ToolsPageRoute } from 'routes/ToolsPageRoute'
 
 export default {
-  AssetsPageRoute,
   LoginPageRoute,
   LoginProcessPageRoute,
   MembersPageRoute,
@@ -21,7 +18,6 @@ export default {
   ClaimsPageRoute,
   QuestionsPageRoute,
   ChargePageRoute,
-  BourdereauPageRoute,
   ToolsPageRoute,
   PrivateRoute,
   TaskManagerPageRoute,

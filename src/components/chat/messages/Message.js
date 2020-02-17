@@ -7,7 +7,7 @@ import 'moment/locale/sv'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Label } from 'semantic-ui-react'
-import styled from 'styled-components'
+import styled from 'react-emotion'
 
 const MessageRow = styled.div`
   display: flex;

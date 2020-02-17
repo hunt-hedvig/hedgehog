@@ -1,6 +1,5 @@
 import { gql } from 'apollo-boost'
 import { SubmitButton } from 'components/chat/tabs/account-tab/add-entry-form'
-import { GET_MEMBER_ACCOUNT_QUERY } from 'components/chat/tabs/AccountTab'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 
@@ -29,9 +28,7 @@ export class BackfillSubscriptionsButton extends React.Component<
 
   public render() {
     return (
-      <Mutation
-        mutation={BACKFILL_SUBSCRIPTIONS_MUTATION}
-      >
+      <Mutation mutation={BACKFILL_SUBSCRIPTIONS_MUTATION}>
         {(backfillSubscriptions, { loading }) => (
           <>
             {!this.state.confirmed ? (

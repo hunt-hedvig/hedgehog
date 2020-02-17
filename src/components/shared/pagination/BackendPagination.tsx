@@ -1,7 +1,7 @@
 import { getBackendPageState } from 'lib/paginator'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Button } from 'semantic-ui-react'
-import styled from 'styled-components'
 import { range } from '../../../lib/helpers'
 
 const Paginator = styled.div`

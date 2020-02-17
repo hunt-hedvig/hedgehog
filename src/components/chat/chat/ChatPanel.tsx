@@ -1,6 +1,5 @@
 import {
   Button as MuiButton,
-  Checkbox as MuiCheckbox,
   FormControlLabel as MuiFormControlLabel,
   Icon as MuiIcon,
   MenuItem as MuiMenuItem,
@@ -10,11 +9,11 @@ import {
   withStyles,
 } from '@material-ui/core'
 import { format } from 'date-fns'
+import gql from 'graphql-tag'
 import * as React from 'react'
+import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { EmojiPicker } from './EmojiPicker'
-import { Mutation, Query } from 'react-apollo'
-import gql from 'graphql-tag'
 
 const MessagesPanelContainer = styled('div')({
   display: 'flex',
@@ -310,7 +309,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       </Mutation>
     )
   }
-  private displayedText = (text: string, index: integer) => {
+  private displayedText = (text: string, index: number) => {
     return index + 1 + '. ' + this.minimizeText(text)
   }
 
@@ -324,7 +323,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
   }
 
   private confidenceColor = (confidence: number) => {
-    //colors from red to green
+    // colors from red to green
     const colors = ['#DB2929', '#F2711C', '#FBBE1C', '#E2EB44', '#23BA45']
 
     return colors[Math.round(confidence * (colors.length - 1))]
@@ -341,8 +340,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     return this.props.suggestedAnswer === text
   }
 
-  private getReply = (allReplies: object, intent: string) => {
-    const message = allReplies.find((message) => message.intent === intent)
+  private getReply = (allReplies: any[], intent: string) => {
+    const message = allReplies.find((message_) => message_.intent === intent)
     return message.reply
   }
 
@@ -384,9 +383,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       .then((r) => {
         if (r.status !== 200) {
           throw new Error(
-            `Invalid response code ${
-              r.status
-            } received when fetching autocomple suggestions`,
+            `Invalid response code ${r.status} received when fetching autocomple suggestions`,
           )
         }
         return r
@@ -401,7 +398,7 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
       })
   }
 
-  private getAllIntents = (allReplies: object) => {
+  private getAllIntents = (allReplies: any[]) => {
     const allIntents = allReplies
       ? allReplies
           .map((message) => message.intent)
@@ -415,8 +412,8 @@ export class ChatPanel extends React.PureComponent<ChatPanelProps, State> {
     this.setState({ showMoreReplies: !this.state.showMoreReplies })
   }
 
-  private selectAnswerSuggestion = (intent: string, allReplies: object) => (
-    e: React.MouseEvent<HTMLButtonElement>,
+  private selectAnswerSuggestion = (intent: string, allReplies: any[]) => (
+    _: React.MouseEvent<HTMLButtonElement>,
   ) => {
     this.setState({
       chosenIntent: intent,

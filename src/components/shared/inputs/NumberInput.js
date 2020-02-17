@@ -1,6 +1,6 @@
 import { NUMBER, TEXT } from 'lib/messageTypes'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Form, Input } from 'semantic-ui-react'
 
 const NumberInput = ({ changeHandler }) => (

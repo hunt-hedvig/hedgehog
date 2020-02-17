@@ -3,9 +3,9 @@ import DateInput from 'components/shared/inputs/DateInput'
 import { formatDistance, parse } from 'date-fns'
 import { formatMoneySE } from 'lib/intl'
 import { ACTIVATION_DATE, CANCELLATION_DATE } from 'lib/messageTypes'
-import * as moment from 'moment'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import moment from 'moment'
+import PropTypes from 'prop-types'
+import React from 'react'
 import styled from 'react-emotion'
 import { Button, Header, Icon, Radio } from 'semantic-ui-react'
 import { CreateQuote } from './insurance-tab/create-quote'
@@ -92,26 +92,26 @@ const FileButton = styled(HedvigStyledButton)({
   marginLeft: 8,
 }).withComponent('label')
 
-const timeStringToDistance = (timeString: string) =>
+const timeStringToDistance = (timeString) =>
   formatDistance(
     parse(timeString.replace(/\..*$/, ''), "yyyy-MM-dd'T'HH:mm:ss", new Date()),
     new Date(),
     { addSuffix: true },
   )
 
-export default class InsuranceTab extends React.Component<any, any> {
-  public state = {
+export default class InsuranceTab extends React.Component {
+  state = {
     activationDatePickerEnabled: false,
     cancellationDatePickerEnabled: false,
   }
-  private fileInputRef = React.createRef<HTMLInputElement>()
+  fileInputRef = React.createRef()
 
-  public hasHouseInsurance = () => {
+  hasHouseInsurance = () => {
     const { data } = this.props.insurance
     return data.insuranceType === 'HOUSE'
   }
 
-  public render() {
+  render() {
     const {
       insurance: { data },
     } = this.props
@@ -390,13 +390,13 @@ export default class InsuranceTab extends React.Component<any, any> {
     )
   }
 
-  public handleCertificateUploadedEvent = (memberId) => (e) => {
+  handleCertificateUploadedEvent = (memberId) => (e) => {
     const formData = new FormData()
     formData.set('file', e.target.files[0])
     this.props.sendCertificate(formData, memberId)
   }
 
-  public handleDateChange = (type, e, { value }) => {
+  handleDateChange = (type, e, { value }) => {
     switch (type) {
       case ACTIVATION_DATE:
         this.setState({
@@ -412,7 +412,7 @@ export default class InsuranceTab extends React.Component<any, any> {
         throw new Error(`No such date change type "${type}"`)
     }
   }
-  private changeCompanyStatus = (e, { checked }) => {
+  changeCompanyStatus = (e, { checked }) => {
     const {
       messages: { member },
       changeCompanyStatus,

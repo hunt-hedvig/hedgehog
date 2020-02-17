@@ -68,7 +68,7 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
         focused: false,
       }}
       actions={{
-        dateChangeHandler: (newDate: any) => (state) => {
+        dateChangeHandler: (newDate: any) => (_) => {
           if (moment(newDate).isValid()) {
             const parsed = newDate.toDate()
             const isoString = parsed.toISOString()
@@ -80,7 +80,7 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
             return { date: moment() }
           }
         },
-        focusHandler: (result: any) => (state) => ({ focused: result.focused }),
+        focusHandler: (result: any) => (_) => ({ focused: result.focused }),
       }}
     >
       {({ dateChangeHandler, focusHandler, focused, date }) => (
@@ -98,6 +98,7 @@ const DateInput: React.SFC<DateInputProps> = (props) => {
             <WidgetContainer className={dateInputStyles}>
               <DatePickerContainer>
                 <SingleDatePicker
+                  id="date-input"
                   date={date}
                   onDateChange={dateChangeHandler}
                   focused={focused}

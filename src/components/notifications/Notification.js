@@ -1,5 +1,5 @@
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Message } from 'semantic-ui-react'
 
 export default class Notification extends React.Component {
@@ -7,7 +7,7 @@ export default class Notification extends React.Component {
     super(props)
   }
 
-  public componentDidMount() {
+  componentDidMount() {
     const {
       content: { id },
       closeHandler,
@@ -18,7 +18,7 @@ export default class Notification extends React.Component {
     }, 10000)
   }
 
-  public render() {
+  render() {
     const {
       closeHandler,
       content: { header, id, message, type },

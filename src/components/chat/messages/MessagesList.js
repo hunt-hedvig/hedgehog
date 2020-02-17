@@ -14,7 +14,7 @@ const EmptyList = styled('h3')({
   textAlign: 'center',
 })
 
-const getAuthor = (author: string) => {
+const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
@@ -26,7 +26,7 @@ export default class MessagesList extends React.Component {
     }
   }
 
-  public componentDidUpdate() {
+  componentDidUpdate() {
     /* eslint-disable */
     const list = this.messagesList
     if (!list) {
@@ -49,7 +49,7 @@ export default class MessagesList extends React.Component {
     /* eslint-enable */
   }
 
-  public render() {
+  render() {
     const { messages, error } = this.props
     const memberId = parseInt(this.props.id, 10)
 

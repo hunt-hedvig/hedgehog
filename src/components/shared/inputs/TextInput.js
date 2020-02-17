@@ -1,6 +1,6 @@
 import { TEXT } from 'lib/messageTypes'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Form, TextArea } from 'semantic-ui-react'
 
 export default class TextInput extends React.Component {
@@ -11,22 +11,22 @@ export default class TextInput extends React.Component {
     }
   }
 
-  public textChangeHandler = (e, { value }) => {
+  textChangeHandler = (e, { value }) => {
     this.setState({ textValue: value })
     this.props.changeHandler(TEXT, null, { value })
   }
 
-  public componentWillMount() {
+  componentWillMount() {
     this.setState({ textValue: this.props.value || '' })
   }
 
-  public componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.cleanupForm) {
       this.setState({ textValue: '' })
     }
   }
 
-  public render() {
+  render() {
     return (
       <Form.Field>
         {this.props.label ? <label>Text</label> : null}

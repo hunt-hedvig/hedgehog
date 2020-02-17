@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 
 interface TableFieldsProps<T> {
   fields: T
-  fieldFormatters?: { [P in keyof T]?: (val: T[P]) => string }
+  fieldFormatters?: { [P in keyof T]?: (val: T[P]) => React.ReactNode }
 }
 
 const TableFields = <T extends {}>(props: TableFieldsProps<T>) => {

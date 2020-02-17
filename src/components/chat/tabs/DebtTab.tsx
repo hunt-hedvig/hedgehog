@@ -1,13 +1,14 @@
-import { Table } from 'semantic-ui-react'
+import { colors } from '@hedviginsurance/brand'
 import gql from 'graphql-tag'
 import * as React from 'react'
-import { Query, Mutation } from 'react-apollo'
-import { colors } from '@hedviginsurance/brand'
+import { Mutation, Query } from 'react-apollo'
 import styled from 'react-emotion'
-import actions from 'store/actions'
 import { connect } from 'react-redux'
-import { formatMoneySE } from '../../../lib/intl'
+import { RouteComponentProps } from 'react-router'
+import { Table } from 'semantic-ui-react'
+import actions from 'store/actions'
 import { dateTimeFormatter, MonetaryAmount } from '../../../lib/helpers'
+import { formatMoneySE } from '../../../lib/intl'
 
 const query = gql`
   query PersonQuery($memberId: ID!) {
@@ -59,7 +60,7 @@ interface PaymentDefault {
 }
 
 interface PaymentDefaultsTableProps {
-  paymentDefaults: Array<PaymentDefault>
+  paymentDefaults: PaymentDefault[]
 }
 
 interface DebtProfile {
@@ -67,16 +68,16 @@ interface DebtProfile {
   numberPublicDebts: BigInteger
   totalAmountPrivateDebt: MonetaryAmount
   numberPrivateDebts: BigInteger
-  fromDateTime: LocalDateTime
+  fromDateTime: string
 }
 
 interface OverallDebtProfileTableProps {
   debt: DebtProfile
 }
 
-const PaymentDefaultsTable: React.FunctionComponent<
-  PaymentDefaultsTableProps
-> = ({ paymentDefaults }) => (
+const PaymentDefaultsTable: React.FunctionComponent<PaymentDefaultsTableProps> = ({
+  paymentDefaults,
+}) => (
   <Table celled>
     <Table.Header>
       <Table.Row>
@@ -156,12 +157,12 @@ const ConfirmMessage = styled('div')({
 const sortPaymentDefaultByYear = (a, b) => {
   const aDate = new Date(a.year)
   const bDate = new Date(b.year)
-  return bDate - aDate
+  return ((bDate as any) as number) - ((aDate as any) as number)
 }
 
-const OverallDebtProfileTable: React.FunctionComponent<
-  OverallDebtProfileTableProps
-> = ({ debt }) => (
+const OverallDebtProfileTable: React.FunctionComponent<OverallDebtProfileTableProps> = ({
+  debt,
+}) => (
   <Table celled>
     <Table.Header>
       <Table.Row>
@@ -193,7 +194,7 @@ interface State {
 export class MemberDebtComponent extends React.Component<
   {
     showNotification: (data: any) => void
-  },
+  } & RouteComponentProps<{ id: string }>,
   State
 > {
   public state = {
@@ -260,14 +261,14 @@ export class MemberDebtComponent extends React.Component<
                             },
                           ]}
                         >
-                          {(mutation, { loading }) => {
+                          {(mutation, { loading: loadingMutation }) => {
                             return (
                               <Button
-                                disabled={loading}
+                                disabled={loadingMutation}
                                 onClick={
                                   this.state.confirming
                                     ? () => {
-                                        if (loading) {
+                                        if (loadingMutation) {
                                           return
                                         }
                                         this.handleClick(mutation)
@@ -332,7 +333,4 @@ export class MemberDebtComponent extends React.Component<
 
 const mapActions = { ...actions.notificationsActions }
 
-export const MemberDebt = connect(
-  null,
-  mapActions,
-)(MemberDebtComponent)
+export const MemberDebt = connect(null, mapActions)(MemberDebtComponent)

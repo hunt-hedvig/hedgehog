@@ -1,5 +1,5 @@
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import FileInput from './FileInput'
 import TextInput from './TextInput'
 

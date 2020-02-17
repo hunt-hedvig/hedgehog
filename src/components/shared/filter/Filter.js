@@ -1,6 +1,6 @@
 import { filterList } from 'lib/helpers'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Dropdown } from 'semantic-ui-react'
 
 export default class Filter extends React.Component {
@@ -11,19 +11,19 @@ export default class Filter extends React.Component {
     }
   }
 
-  public filterChangeHandler = (e, { value }) => {
+  filterChangeHandler = (e, { value }) => {
     const { filterChange, list, fieldName } = this.props
     const filteredList = filterList(value, list, fieldName)
     filterChange(value, filteredList)
   }
 
-  public componentDidMount() {
+  componentDidMount() {
     const { options, activeFilter } = this.props
     this.setState({ filters: options })
     this.filterChangeHandler(null, { value: activeFilter })
   }
 
-  public componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     const { activeFilter, list } = this.props
     if (nextProps.list.length !== list.length) {
       // eslint-disable-next-line no-undef
@@ -33,7 +33,7 @@ export default class Filter extends React.Component {
     }
   }
 
-  public render() {
+  render() {
     const { activeFilter } = this.props
     return (
       <React.Fragment>

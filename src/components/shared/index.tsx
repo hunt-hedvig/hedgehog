@@ -1,5 +1,5 @@
+import styled from 'react-emotion'
 import { List, Table } from 'semantic-ui-react'
-import styled from 'styled-components'
 
 export const ListPage = styled.div`
   display: flex;

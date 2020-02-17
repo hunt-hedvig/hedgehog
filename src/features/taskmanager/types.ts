@@ -1,8 +1,7 @@
-export interface IOption {
-  text: string
-  value: string | null
-  key?: string
-}
+// @ts-nocheck
+import { DropdownItemProps } from 'semantic-ui-react'
+
+export interface IOption extends DropdownItemProps {}
 
 export const createOptionsArray = (array: IOption[]): IOption[] => {
   const res: IOption[] = []
@@ -13,7 +12,7 @@ export const createOptionsArray = (array: IOption[]): IOption[] => {
 }
 
 export const IEX_TEAM_MEMBERS_OPTIONS: IOption[] = [
-  { text: 'Unassigned', value: null },
+  { text: 'Unassigned', value: null as any },
   { text: 'Emma', value: 'emma@hedvig.com' },
   { text: 'Kajsa', value: 'kajsa@hedvig.com' },
   { text: 'Kalle', value: 'karl.jernberg@hedvig.com' },

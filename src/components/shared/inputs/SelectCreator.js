@@ -1,8 +1,8 @@
 import { MULTIPLE_SELECT } from 'lib/messageTypes'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
+import styled from 'react-emotion'
 import { Button, Form, Icon, Input } from 'semantic-ui-react'
-import styled from 'styled-components'
 import TextInput from './TextInput'
 
 const SelectItem = styled.span`
@@ -63,7 +63,7 @@ export default class SelectCreator extends React.Component {
     }
   }
 
-  public createChoicesList = () => {
+  createChoicesList = () => {
     return this.state.choicesList.map((item) => {
       if (this.props.selectType === MULTIPLE_SELECT) {
         return {
@@ -80,20 +80,20 @@ export default class SelectCreator extends React.Component {
     })
   }
 
-  public changeHandler = () => {
+  changeHandler = () => {
     const optionsList = this.createChoicesList()
     this.props.changeHandler(this.props.selectType, null, {
       value: optionsList,
     })
   }
 
-  public setOptionName = (e, { value }) => {
+  setOptionName = (e, { value }) => {
     e.stopPropagation()
     e.preventDefault()
     this.setState({ optionName: value })
   }
 
-  public createNewOption = (e) => {
+  createNewOption = (e) => {
     e.stopPropagation()
     e.preventDefault()
     const { choicesList, optionName } = this.state
@@ -114,7 +114,7 @@ export default class SelectCreator extends React.Component {
     }
   }
 
-  public removeFromList = (id) => {
+  removeFromList = (id) => {
     const { choicesList } = this.state
     const newList = choicesList.filter((item) => item.id !== id)
     this.setState({
@@ -122,13 +122,13 @@ export default class SelectCreator extends React.Component {
     })
   }
 
-  public componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.cleanupForm) {
       this.setState({ choicesList: [] })
     }
   }
 
-  public render() {
+  render() {
     const { changeHandler, cleanupForm } = this.props
     return (
       <React.Fragment>

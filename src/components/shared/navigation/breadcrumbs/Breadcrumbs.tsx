@@ -1,9 +1,9 @@
 import { getMemberInfo } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Breadcrumb } from 'semantic-ui-react'
-import styled from 'styled-components'
 
 const BreadcrumbsContainer = styled.div`
   display: flex;

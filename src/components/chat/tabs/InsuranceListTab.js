@@ -8,7 +8,7 @@ export default class InsuranceListTab extends React.Component {
     super(props)
   }
 
-  public render() {
+  render() {
     const { insurance } = this.props
 
     return insurance.list ? (

@@ -11,10 +11,10 @@ import { Quotes } from 'components/chat/tabs/quotes'
 // @ts-ignore
 import { CreateTicketStandAlone } from 'components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Tab } from 'semantic-ui-react'
-import styled from 'styled-components'
+import styled from 'react-emotion'
 
 const TabContainer = styled(Tab.Pane)`
   &&& {

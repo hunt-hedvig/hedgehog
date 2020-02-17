@@ -1,8 +1,8 @@
 import * as types from 'lib/messageTypes'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
+import styled from 'react-emotion'
 import { Form } from 'semantic-ui-react'
-import styled from 'styled-components'
 
 const FileButton = styled.label`
   box-sizing: border-box;
@@ -21,7 +21,7 @@ export default class FileInput extends React.Component {
     this.state = { acceptType: '', fileName: '' }
   }
 
-  public changeHandler = (e) => {
+  changeHandler = (e) => {
     // eslint-disable-next-line
     const reader = new FileReader()
     const file = e.target.files[0]
@@ -39,7 +39,7 @@ export default class FileInput extends React.Component {
     reader.readAsDataURL(file)
   }
 
-  public componentDidMount() {
+  componentDidMount() {
     const { type } = this.props
     let acceptType = ''
     switch (type) {
@@ -58,18 +58,18 @@ export default class FileInput extends React.Component {
     this.setState({ acceptType })
   }
 
-  public componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.cleanupForm) {
       this.setState({ fileName: '' })
       this.fileInput.value = ''
     }
   }
 
-  public componentWillUnmount() {
+  componentWillUnmount() {
     this.setState({ acceptType: '' })
   }
 
-  public render() {
+  render() {
     const { fileName, acceptType } = this.state
     return (
       <React.Fragment>

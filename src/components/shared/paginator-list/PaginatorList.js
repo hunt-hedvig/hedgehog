@@ -1,7 +1,7 @@
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
-import styled from 'styled-components'
 import Pagination from '../pagination/Pagination'
 
 const PaginatorContainer = styled.div`
@@ -18,11 +18,11 @@ export default class PaginatorList extends React.Component {
     }
   }
 
-  public onChangePage = (activeList) => {
+  onChangePage = (activeList) => {
     this.setState({ activeList })
   }
 
-  public render() {
+  render() {
     const { activeList } = this.state
     const {
       list,

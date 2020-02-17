@@ -1,12 +1,12 @@
 import { ChatPanel } from 'components/chat/chat/ChatPanel'
 import MessagesList from 'components/chat/messages/MessagesList'
-import * as PropTypes from 'prop-types'
-import Resizable from 're-resizable'
-import * as React from 'react'
-import { Icon, Message } from 'semantic-ui-react'
-import styled from 'styled-components'
 import gql from 'graphql-tag'
-import { Mutation, Query } from 'react-apollo'
+import PropTypes from 'prop-types'
+import Resizable from 're-resizable'
+import React from 'react'
+import { Query } from 'react-apollo'
+import styled from 'react-emotion'
+import { Icon, Message } from 'semantic-ui-react'
 
 const resizableStyles = {
   display: 'flex',
@@ -56,68 +56,17 @@ export default class ChatTab extends React.Component {
     }
     window.addEventListener('resize', this.resizeControlChat)
   }
-  public componentWillUnmount() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this.resizeControlChat, false)
   }
 
-  public resizeControlChat = (e) => {
+  resizeControlChat = (e) => {
     if (!this.state.manualChange) {
       this.setState({ visible: window.innerWidth > 1500 })
     }
   }
 
-  private getQuestionToAnalyze() {
-    let lastMemberMessages = ''
-    let messageIds = []
-
-    if (
-      !this.props.messages ||
-      !this.props.messages.list ||
-      this.props.messages.list.length === 0
-    ) {
-      return { lastMemberMessages, messageIds }
-    }
-
-    const messages = this.props.messages.list
-
-    const fromIds = messages.map((message) => message.header.fromId)
-
-    const lastNonMemberIndex = fromIds
-      .map((id) => id === +this.props.match.params.id)
-      .lastIndexOf(false)
-
-    const lastMemberMessagesArray = messages.filter(
-      (message, index) =>
-        ['free.chat.message', 'free.chat.from.bo', 'free.chat.start'].includes(
-          message.id,
-        ) && index > lastNonMemberIndex,
-    )
-
-    messageIds = lastMemberMessagesArray.map(
-      (message) => message.header.messageId,
-    )
-    lastMemberMessages = lastMemberMessagesArray
-      .map((message) => message.body.text)
-      .join(' ')
-
-    return { lastMemberMessages, messageIds }
-  }
-
-  private getQuestionAndAnswer(responses: any) {
-    let question = ''
-    let answer = ''
-    let confidence = 0
-
-    if (!responses || responses.length !== 1) {
-      return { question, answer, confidence }
-    }
-    question = responses[0].text
-    answer = responses[0].reply
-    confidence = responses[0].confidence
-    return { question, answer, confidence }
-  }
-
-  public render() {
+  render() {
     const questionAndMessageIds = this.getQuestionToAnalyze()
 
     return this.state.visible ? (
@@ -198,6 +147,57 @@ export default class ChatTab extends React.Component {
         <ChatHeader ctx={this} />
       </>
     )
+  }
+
+  getQuestionToAnalyze() {
+    let lastMemberMessages = ''
+    let messageIds = []
+
+    if (
+      !this.props.messages ||
+      !this.props.messages.list ||
+      this.props.messages.list.length === 0
+    ) {
+      return { lastMemberMessages, messageIds }
+    }
+
+    const messages = this.props.messages.list
+
+    const fromIds = messages.map((message) => message.header.fromId)
+
+    const lastNonMemberIndex = fromIds
+      .map((id) => id === +this.props.match.params.id)
+      .lastIndexOf(false)
+
+    const lastMemberMessagesArray = messages.filter(
+      (message, index) =>
+        ['free.chat.message', 'free.chat.from.bo', 'free.chat.start'].includes(
+          message.id,
+        ) && index > lastNonMemberIndex,
+    )
+
+    messageIds = lastMemberMessagesArray.map(
+      (message) => message.header.messageId,
+    )
+    lastMemberMessages = lastMemberMessagesArray
+      .map((message) => message.body.text)
+      .join(' ')
+
+    return { lastMemberMessages, messageIds }
+  }
+
+  getQuestionAndAnswer(responses) {
+    let question = ''
+    let answer = ''
+    let confidence = 0
+
+    if (!responses || responses.length !== 1) {
+      return { question, answer, confidence }
+    }
+    question = responses[0].text
+    answer = responses[0].reply
+    confidence = responses[0].confidence
+    return { question, answer, confidence }
   }
 }
 
