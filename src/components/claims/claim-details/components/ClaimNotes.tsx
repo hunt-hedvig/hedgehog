@@ -6,7 +6,7 @@ import {
   Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
-import { ClaimNote } from 'api/generated/graphql'
+import { ClaimNote as ClaimNoteType } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
@@ -33,7 +33,7 @@ const ADD_CLAIM_NOTE_MUTATION = gql`
 `
 
 interface Props {
-  notes: ReadonlyArray<ClaimNote>
+  notes: ReadonlyArray<ClaimNoteType>
   claimId: string
   refetchPage: () => Promise<any>
 }
@@ -52,7 +52,7 @@ const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
   />
 )
 
-const sortNotesByDate = (notes: ReadonlyArray<ClaimNote>) =>
+const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
     return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
   })
