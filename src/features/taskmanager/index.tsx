@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react'
 import styled from 'react-emotion'
 import actions from 'store/actions'
@@ -57,7 +58,7 @@ interface ITaskManagerState {
 
 class TaskManagerPageComponent extends React.Component<
   { showNotification: (data: any) => void },
-  ITaskManagerState
+  any
 > {
   public state = {
     showModal: false,

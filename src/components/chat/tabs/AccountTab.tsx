@@ -80,7 +80,7 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
   >
     {({ data, loading }) => {
       if (!data || loading) {
-        return 'loading'
+        return <>loading</>
       }
       return (
         <>
@@ -92,18 +92,18 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
             Balance (total): {formatMoneySE(data.member.account.totalBalance)}
           </h3>
           <h3>Upcoming charge information:</h3>
-          <b4>
+          <p>
             <b>Total discount amount:</b>{' '}
             {formatMoneySE(data.member.account.chargeEstimation.discount)}
-          </b4>
-          <b4>
+          </p>
+          <p>
             <b>Subscription charge:</b>{' '}
             {formatMoneySE(data.member.account.chargeEstimation.subscription)}
-          </b4>
-          <b4>
+          </p>
+          <p>
             <b>Discount references:</b>{' '}
             {data.member.account.chargeEstimation.discountCodes}
-          </b4>
+          </p>
           <h5>
             Total charge next month:{' '}
             {formatMoneySE(data.member.account.chargeEstimation.charge)}

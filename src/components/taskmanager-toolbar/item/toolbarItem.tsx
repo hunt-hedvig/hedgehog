@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import { Button, Dropdown, Icon } from 'semantic-ui-react'
 import { EOrder } from '../../tickets/types'

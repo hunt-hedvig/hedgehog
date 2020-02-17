@@ -14,7 +14,7 @@ import { MemberSearchFilter, MembersSearchResult } from '../storeTypes'
 
 export interface SearchMemberRequestAction {
   type: 'MEMBER_SEARCH_REQUESTING'
-  searchFilter: MemberSearchFilter
+  searchFilter: Partial<MemberSearchFilter>
 }
 
 export const membersRequest = (client) => ({
@@ -39,7 +39,7 @@ export const membersRequestError = (error) => ({
 })
 
 export const searchMemberRequest = (
-  searchFilter: MemberSearchFilter,
+  searchFilter: Partial<MemberSearchFilter>,
 ): SearchMemberRequestAction => ({
   type: MEMBER_SEARCH_REQUESTING,
   searchFilter,

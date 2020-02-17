@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tab } from 'semantic-ui-react'
-import styled from 'styled-components'
+import styled from 'react-emotion'
 import SortedList from './SortedList'
 import { FilterState } from 'components/questions/filter'
 import { isMemberIdEven } from 'utils/member'

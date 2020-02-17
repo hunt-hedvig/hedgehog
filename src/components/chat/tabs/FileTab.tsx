@@ -1,7 +1,8 @@
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Query } from 'react-apollo'
-import { Table, Image } from 'semantic-ui-react'
+import { RouteComponentProps } from 'react-router'
+import { Image, Table } from 'semantic-ui-react'
 import { dateTimeFormatter } from '../../../lib/helpers'
 
 const query = gql`
@@ -20,7 +21,7 @@ const sortFileDate = (a, b) => {
   const aDate = new Date(a.timestamp)
   const bDate = new Date(b.timestamp)
 
-  return bDate - aDate
+  return ((bDate as any) as number) - ((aDate as any) as number)
 }
 
 interface FileUpload {
@@ -31,10 +32,12 @@ interface FileUpload {
 }
 
 interface MemberFileTableProps {
-  memberFiles: Array<FileUpload>
+  memberFiles: FileUpload[]
 }
 
-const MemberFileTable: React.FunctionComponent<MemberFileTableProps> = ({ memberFiles }) => (
+const MemberFileTable: React.FunctionComponent<MemberFileTableProps> = ({
+  memberFiles,
+}) => (
   <Table celled>
     <Table.Header>
       <Table.Row>
@@ -49,7 +52,9 @@ const MemberFileTable: React.FunctionComponent<MemberFileTableProps> = ({ member
           <Table.Cell>
             <Image src={memberFile.fileUploadUrl} size="medium" />
           </Table.Cell>
-          <Table.Cell>{dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}</Table.Cell>
+          <Table.Cell>
+            {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
+          </Table.Cell>
           <Table.Cell>{memberFile.mimeType}</Table.Cell>
         </Table.Row>
       ))}
@@ -57,7 +62,7 @@ const MemberFileTable: React.FunctionComponent<MemberFileTableProps> = ({ member
   </Table>
 )
 
-class MemberFile extends React.Component {
+class MemberFile extends React.Component<RouteComponentProps<{ id: string }>> {
   public render() {
     return (
       <Query query={query} variables={{ memberId: this.props.match.params.id }}>

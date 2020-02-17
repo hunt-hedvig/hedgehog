@@ -1,8 +1,9 @@
 import Modal from '@material-ui/core/Modal'
 import { withStyles } from '@material-ui/core/styles'
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles'
 import * as React from 'react'
 
-const styles = (theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   paper: {
     position: 'absolute',
     width: theme.spacing.unit * 50,
@@ -27,7 +28,7 @@ interface MaterialModalProps {
   classes: any
   open: boolean
   handleClose: () => void
-  children?: ReactNode
+  children?: React.ReactNode
 }
 
 const MaterialModal: React.SFC<MaterialModalProps> = (props) => {

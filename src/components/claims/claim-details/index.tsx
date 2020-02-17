@@ -1,8 +1,8 @@
 import Grid from '@material-ui/core/Grid'
-import { QueryType } from 'api/generated/graphql'
-import { CLAIM_PAGE_QUERY } from './data'
+import { ClaimNote, QueryType } from 'api/generated/graphql'
 import * as React from 'react'
 import { Query } from 'react-apollo'
+// @ts-ignore
 import { CreateTicketStandAlone } from '../../../components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimFileTable } from './components/ClaimFileTable'
@@ -13,6 +13,7 @@ import { ClaimTypeForm } from './components/ClaimType'
 import { FileUpload } from './components/FileUpload'
 import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { MemberInformation } from './components/MemberInformation'
+import { CLAIM_PAGE_QUERY } from './data'
 
 interface Props {
   match: {
@@ -34,14 +35,6 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         return <div>Loading</div>
       }
 
-      if (error) {
-        return (
-          <div>
-            Error: <pre>{JSON.stringify(error, null, 2)}</pre>
-          </div>
-        )
-      }
-
       const {
         member,
         recordingUrl,
@@ -54,20 +47,28 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         type,
         coveringEmployee,
         claimFiles,
-      } = data!.claim!
+      } = data?.claim || {}
 
       return (
         <Grid container spacing={8}>
+          {error && (
+            <Grid item xs={12}>
+              <div>
+                Error: <pre>{JSON.stringify(error, null, 2)}</pre>
+              </div>
+            </Grid>
+          )}
+
           <Grid item xs={12} sm={12} md={4}>
-            <MemberInformation member={member!} />
+            {member && <MemberInformation member={member} />}
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
             <ClaimInformation
-              recordingUrl={recordingUrl}
+              recordingUrl={recordingUrl!}
               registrationDate={registrationDate}
-              state={state}
+              state={state!}
               claimId={match.params.id}
-              coveringEmployee={coveringEmployee}
+              coveringEmployee={coveringEmployee!}
               refetchPage={refetch}
             />
           </Grid>
@@ -79,21 +80,25 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             />
           </Grid>
           <Grid item xs={12}>
-            <ClaimNotes
-              notes={notes}
-              claimId={match.params.id}
-              refetchPage={refetch}
-            />
+            {notes && (
+              <ClaimNotes
+                notes={(notes.filter(Boolean) as ClaimNote[]) ?? []}
+                claimId={match.params.id}
+                refetchPage={refetch}
+              />
+            )}
           </Grid>
           <ClaimItemDatabase type={type} claimId={match.params.id} />
           <Grid item xs={12}>
-            <ClaimPayments
-              payments={payments}
-              claimId={match.params.id}
-              reserves={reserves}
-              sanctionStatus={member.sanctionStatus}
-              refetchPage={refetch}
-            />
+            {payments && member && (
+              <ClaimPayments
+                payments={payments ?? []}
+                claimId={match.params.id}
+                reserves={reserves}
+                sanctionStatus={member.sanctionStatus!}
+                refetchPage={refetch}
+              />
+            )}
           </Grid>
           <Grid item xs={12}>
             <CreateTicketStandAlone
@@ -103,15 +108,22 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             />
           </Grid>
           <Grid item xs={12}>
-            <FileUpload
-              claimId={match.params.id}
-              memberId={member.memberId}
-              onUploaded={() => refetch()}
-            />
-            <ClaimFileTable claimFiles={claimFiles} claimId={match.params.id} />
+            {member && (
+              <FileUpload
+                claimId={match.params.id}
+                memberId={member.memberId}
+                onUploaded={() => refetch()}
+              />
+            )}
+            {claimFiles && (
+              <ClaimFileTable
+                claimFiles={claimFiles ?? []}
+                claimId={match.params.id}
+              />
+            )}
           </Grid>
           <Grid item xs={12}>
-            <ClaimEvents events={events} />
+            {events && <ClaimEvents events={events ?? []} />}
           </Grid>
         </Grid>
       )

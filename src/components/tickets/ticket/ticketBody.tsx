@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { gql } from 'apollo-boost'
 import format from 'date-fns/format'
 import { CHANGE_STATUS, GET_TICKETS } from 'features/taskmanager/queries'

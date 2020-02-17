@@ -1,6 +1,6 @@
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
-import styled from 'styled-components'
 import BackendPagination from '../pagination/BackendPagination'
 
 const PaginatorContainer = styled.div`
@@ -16,7 +16,7 @@ export interface BackendPaginatorListProps<T> {
   currentPage: number
   totalPages: number
   isSortable: boolean
-  keyName: keyof T
+  keyName?: keyof T
   changePage: (page: number) => void
 }
 

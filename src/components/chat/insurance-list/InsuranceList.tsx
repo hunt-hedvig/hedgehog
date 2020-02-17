@@ -1,20 +1,10 @@
 import { CreateQuote } from 'components/chat/tabs/insurance-tab/create-quote'
 import { LinkRow } from 'components/shared'
-import { WideModal } from 'components/shared/modals/WideModal'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
 import TableFields from 'components/shared/table-fields/TableFields'
 import * as moment from 'moment'
-import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import {
-  Button,
-  Form,
-  Header,
-  Icon,
-  Loader,
-  Modal,
-  Table,
-} from 'semantic-ui-react'
+import { Header, Table } from 'semantic-ui-react'
 
 const DateTypeEnum = {
   terminationDate: 1,
@@ -46,7 +36,7 @@ export interface ExtraBuilding {
   displayName?: string
 }
 
-export default class InsuranceList extends React.Component {
+export default class InsuranceList extends React.Component<any, any> {
   public insuranceFieldFormatters = {
     extraBuildings: (buildings: ExtraBuilding[]) =>
       (buildings ?? []).map((building) => (
@@ -268,9 +258,4 @@ export default class InsuranceList extends React.Component {
       <Header>No insurances found</Header>
     )
   }
-}
-
-InsuranceList.propTypes = {
-  insurance: PropTypes.object.isRequired,
-  modifyInsurance: PropTypes.func.isRequired,
 }

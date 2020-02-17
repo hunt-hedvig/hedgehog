@@ -2,7 +2,7 @@ import * as moment from 'moment'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Button, Header, Label, Segment } from 'semantic-ui-react'
-import styled from 'styled-components'
+import styled from 'react-emotion'
 
 const ChatLinkButton = styled(Button)`
   &&& {

@@ -1,19 +1,18 @@
-export interface IOption {
-  text: string
-  value: string
-  key?: string
-}
+// @ts-nocheck
+import { DropdownItemProps } from 'semantic-ui-react'
+
+export interface IOption extends DropdownItemProps {}
 
 export const createOptionsArray = (array: IOption[]): IOption[] => {
-  const res = []
+  const res: IOption[] = []
   array.map((element) => {
-    res.push({ text: element.text, value: element.value, key: element.value })
+    res.push({ text: element.text, value: element.value, key: element.value! })
   })
   return res
 }
 
-export const IEX_TEAM_MEMBERS_OPTIONS = [
-  { text: 'Unassigned', value: null },
+export const IEX_TEAM_MEMBERS_OPTIONS: IOption[] = [
+  { text: 'Unassigned', value: null as any },
   { text: 'Emma', value: 'emma@hedvig.com' },
   { text: 'Kajsa', value: 'kajsa@hedvig.com' },
   { text: 'Kalle', value: 'karl.jernberg@hedvig.com' },
@@ -29,15 +28,17 @@ export const IEX_TEAM_MEMBERS_OPTIONS = [
 ]
 
 // Purely for making it easier to read in the UI:
-const IEX_TEAM_NAME_LOOKUP = IEX_TEAM_MEMBERS_OPTIONS.reduce(
+const IEX_TEAM_NAME_LOOKUP = IEX_TEAM_MEMBERS_OPTIONS.filter(
+  ({ value }) => !!value,
+).reduce(
   (acc, val) => {
-    return { ...acc, [val.value]: val.text }
+    return { ...acc, [val.value!]: val.text }
   },
-  { [IEX_TEAM_MEMBERS_OPTIONS[0].value]: IEX_TEAM_MEMBERS_OPTIONS[0].text },
+  { [IEX_TEAM_MEMBERS_OPTIONS[0].value!]: IEX_TEAM_MEMBERS_OPTIONS[0].text },
 )
 
 export const lookupTeamMemberName = (email: string): string => {
-  return (name = IEX_TEAM_NAME_LOOKUP[email] || 'Unassigned')
+  return IEX_TEAM_NAME_LOOKUP[email] || 'Unassigned'
 }
 
 export enum TicketStatus {

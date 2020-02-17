@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import styled from 'react-emotion'
 import { Grid } from 'semantic-ui-react'
@@ -15,7 +16,7 @@ const Wrapper = styled('div')({
   width: '80%',
   maxWidth: '1000px',
   marginLeft: 'auto',
-  marginRight: 'auto'
+  marginRight: 'auto',
 })
 
 export class Toolbar extends React.Component<IToolbar, {}> {
@@ -29,9 +30,9 @@ export class Toolbar extends React.Component<IToolbar, {}> {
     return (
       <ToolbarCss>
         <Wrapper>
-        <Grid stackable columns={this.props.items.length}>
-          <Grid.Row style={{ padding: '0.5em' }}>{toolbarItems}</Grid.Row>
-        </Grid>
+          <Grid stackable columns={this.props.items.length}>
+            <Grid.Row style={{ padding: '0.5em' }}>{toolbarItems}</Grid.Row>
+          </Grid>
         </Wrapper>
       </ToolbarCss>
     )

@@ -21,21 +21,9 @@ const UPDATE_RESERVE_MUTATION = gql`
   }
 `
 
-const UPDATE_RESERVE_QUERY = gql`
-  query UpdateReserveQuery($id: ID!) {
-    claim(id: $id) {
-      reserves
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-
 interface Props {
   claimId: string
-  refetchPage: () => Promise<void>
+  refetchPage: () => Promise<any>
 }
 
 interface ReserveFormData {

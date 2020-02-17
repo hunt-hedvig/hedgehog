@@ -1,7 +1,7 @@
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Button, Form, Message, TextArea } from 'semantic-ui-react'
-import styled from 'styled-components'
+import styled from 'react-emotion'
 
 const FormGroup = styled(Form.Group)`
   &&& {

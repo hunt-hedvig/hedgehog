@@ -7,11 +7,11 @@ import {
   DialogTitle,
   TextField,
 } from '@material-ui/core'
+import { PaymentFormData } from './ClaimPayment'
 
 import { Field, Form, Formik } from 'formik'
 import React from 'react'
 import * as yup from 'yup'
-import { PaymentFormData } from './ClaimPayments'
 
 interface PaymentConfirmationDialogProps {
   onClose: () => void
@@ -33,9 +33,12 @@ interface ConfirmationData {
   confirmation: string
 }
 
-export const PaymentConfirmationDialog: React.SFC<
-  PaymentConfirmationDialogProps
-> = ({ onClose, onSubmit, payment, claimId }) => {
+export const PaymentConfirmationDialog: React.SFC<PaymentConfirmationDialogProps> = ({
+  onClose,
+  onSubmit,
+  payment,
+  claimId,
+}) => {
   return (
     <Dialog open={true} onClose={onClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Payment Confirmation</DialogTitle>
@@ -50,7 +53,7 @@ export const PaymentConfirmationDialog: React.SFC<
 
         <Formik<ConfirmationData>
           initialValues={{ confirmation: '' }}
-          onSubmit={(undefined, { resetForm }) => {
+          onSubmit={(_, { resetForm }) => {
             onSubmit({
               variables: {
                 id: claimId,

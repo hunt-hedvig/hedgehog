@@ -6,7 +6,7 @@ import { ClaimReserveForm } from './ClaimReserveForm'
 interface Props {
   reserves: MonetaryAmount
   claimId: string
-  refetchPage: () => Promise<void>
+  refetchPage: () => Promise<any>
 }
 
 const ReservesWrapper = styled('div')({

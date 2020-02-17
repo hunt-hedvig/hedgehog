@@ -61,6 +61,7 @@ interface ClaimsTabProps {
   classes: any
   memberClaims: object[]
   sortClaimsList?: () => void
+  insurance: any
 }
 
 interface State {
@@ -73,8 +74,8 @@ interface Actions {
   handleClose: () => void
   handleOpen: () => void
   handleClaimSubmit: (mutation: any) => void
-  typeChangeHandler: (event: object) => void
-  dateChangeHandler?: (type: string, e: any, value: object) => void
+  typeChangeHandler: (event: any) => void
+  dateChangeHandler?: (type: string, e: any, value: any) => void
 }
 
 const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
@@ -86,8 +87,8 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
         value: 'EMAIL',
       }}
       actions={{
-        handleClose: () => (state) => ({ open: false }),
-        handleOpen: () => (state) => ({ open: true }),
+        handleClose: () => (_) => ({ open: false }),
+        handleOpen: () => (_) => ({ open: true }),
         handleClaimSubmit: (mutation) => (state) => {
           mutation({
             variables: {
@@ -102,10 +103,10 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
           })
           return { date: moment(), value: 'EMAIL', open: false }
         },
-        typeChangeHandler: (event) => (state) => ({
+        typeChangeHandler: (event) => (_) => ({
           value: event.target.value,
         }),
-        dateChangeHandler: (type, e, { value }) => ({
+        dateChangeHandler: (_type, _e, { value }) => ({
           date: moment(value).format('YYYY-MM-DDTHH:mm:ss'),
         }),
       }}
@@ -163,7 +164,7 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
                 ))}
               </TextField>
               <DateInput
-                changeHandler={dateChangeHandler}
+                changeHandler={dateChangeHandler as any}
                 forbidFuture={true}
                 label="Notification date"
               />

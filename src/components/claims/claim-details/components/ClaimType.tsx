@@ -3,6 +3,7 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
+import { ClaimType } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
@@ -10,7 +11,7 @@ import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
-import { showNotification } from 'store/actions/notificationsActions'
+import { showNotification as createShowNotificationAction } from 'store/actions/notificationsActions'
 import { sleep } from 'utils/sleep'
 
 import { FormikDatePicker } from '../../../shared/inputs/DatePicker'
@@ -188,168 +189,6 @@ const hasTicket = (typename: ClaimTypes): boolean => {
   return typename === ClaimTypes.LuggageDelayClaim
 }
 
-interface TheftClaim {
-  location?: string
-  date?: string
-  item?: string
-  policeReport?: string
-  __typename: ClaimTypes
-}
-
-interface AccidentalDamageClaim {
-  location?: string
-  date?: string
-  item?: string
-  policeReport?: string
-  receipt?: string
-  __typename: ClaimTypes
-}
-
-interface AssaultClaim {
-  location?: string
-  date?: string
-  policeReport?: string
-  __typename: ClaimTypes
-}
-
-interface WaterDamageClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface TravelAccidentClaim {
-  location?: string
-  date?: string
-  policeReport?: string
-  receipt?: string
-  __typename: ClaimTypes
-}
-
-interface LuggageDelayClaim {
-  location?: string
-  date?: string
-  ticket?: string
-  __typename: ClaimTypes
-}
-
-interface NotCoveredClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface TestClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface ConfirmedFraudClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface LiabilityClaim {
-  date?: string
-  location?: string
-  __typename: ClaimTypes
-}
-
-interface FireDamageClaim {
-  date?: string
-  location?: string
-  __typename: ClaimTypes
-}
-
-interface ApplianceClaim {
-  date?: string
-  location?: string
-  item?: string
-  __typename: ClaimTypes
-}
-
-interface LegalProtectionClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface WaterDamageBathroomClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface WaterDamageKitchenClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface BurglaryClaim {
-  location?: string
-  date?: string
-  policeReport?: string
-  receipt?: string
-  __typename: ClaimTypes
-}
-
-interface FloodingClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface EarthquakeClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface InstallationsClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface InstallationsClaim {
-  date?: string
-  location?: string
-  item?: string
-  __typename: ClaimTypes
-}
-
-interface SnowPressureClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface StormDamageClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-interface VerminAndPestsClaim {
-  date?: string
-  __typename: ClaimTypes
-}
-
-type ClaimType =
-  | TheftClaim
-  | AccidentalDamageClaim
-  | AssaultClaim
-  | WaterDamageClaim
-  | TravelAccidentClaim
-  | LuggageDelayClaim
-  | NotCoveredClaim
-  | LiabilityClaim
-  | ConfirmedFraudClaim
-  | FireDamageClaim
-  | ApplianceClaim
-  | LegalProtectionClaim
-  | WaterDamageBathroomClaim
-  | WaterDamageKitchenClaim
-  | BurglaryClaim
-  | FloodingClaim
-  | EarthquakeClaim
-  | InstallationsClaim
-  | SnowPressureClaim
-  | StormDamageClaim
-  | VerminAndPestsClaim
-  | TestClaim
-
 export enum ClaimTypes {
   AccidentalDamageClaim = 'AccidentalDamageClaim',
   ApplianceClaim = 'ApplianceClaim',
@@ -376,9 +215,9 @@ export enum ClaimTypes {
 }
 
 interface ClaimTypeProps {
-  type?: ClaimType
+  type?: ClaimType | null
   claimId: string
-  refetchPage: () => Promise<void>
+  refetchPage: () => Promise<any>
 }
 
 const SubmitButton = withStyles({
@@ -417,7 +256,9 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
             <Paper>
               <h3>Type</h3>
               <Formik<{ selectedType?: ClaimTypes | '' }>
-                initialValues={{ selectedType: type?.__typename || '' }}
+                initialValues={{
+                  selectedType: (type?.__typename as ClaimTypes) || '',
+                }}
                 onSubmit={async (values, { setSubmitting }) => {
                   if (!values.selectedType) {
                     return
@@ -470,7 +311,7 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
               {type ? (
                 <Formik<{
                   location?: string
-                  date?: Date
+                  date: Date | null
                   item?: string
                   policeReport?: string
                   receipt?: string
@@ -500,7 +341,7 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
                 >
                   {({ isValid }) => (
                     <ClaimTypeInformationForm>
-                      {hasLocation(type.__typename) && (
+                      {hasLocation(type.__typename! as ClaimTypes) && (
                         <div>
                           <Field
                             component={TextField}
@@ -516,7 +357,7 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
                           placeholder="Date"
                         />
                       </div>
-                      {hasItem(type.__typename) && (
+                      {hasItem(type.__typename! as ClaimTypes) && (
                         <div>
                           <Field
                             component={TextField}
@@ -525,7 +366,7 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
                           />
                         </div>
                       )}
-                      {hasPoliceReport(type.__typename) && (
+                      {hasPoliceReport(type.__typename! as ClaimTypes) && (
                         <div>
                           <Field
                             component={TextField}
@@ -534,7 +375,7 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
                           />
                         </div>
                       )}
-                      {hasReceipt(type.__typename) && (
+                      {hasReceipt(type.__typename! as ClaimTypes) && (
                         <div>
                           <Field
                             component={TextField}
@@ -543,7 +384,7 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
                           />
                         </div>
                       )}
-                      {hasTicket(type.__typename) && (
+                      {hasTicket(type.__typename! as ClaimTypes) && (
                         <div>
                           <Field
                             component={TextField}
@@ -582,6 +423,8 @@ const ClaimTypeComponent: React.SFC<ClaimTypeProps & {
   )
 }
 
-const ClaimTypeForm = connect(null, { showNotification })(ClaimTypeComponent)
+const ClaimTypeForm = connect(null, {
+  showNotification: createShowNotificationAction,
+})(ClaimTypeComponent)
 
 export { ClaimTypeForm }

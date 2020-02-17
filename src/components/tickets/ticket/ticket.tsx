@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { gql } from 'apollo-boost'
 import formatDistance from 'date-fns/formatDistance'
 import isAfter from 'date-fns/isAfter'

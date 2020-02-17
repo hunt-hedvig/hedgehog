@@ -2,7 +2,7 @@ import { getPageState } from 'lib/paginator'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Button } from 'semantic-ui-react'
-import styled from 'styled-components'
+import styled from 'react-emotion'
 
 const Paginator = styled.div`
   display: flex;

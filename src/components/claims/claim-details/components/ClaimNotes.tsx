@@ -6,7 +6,7 @@ import {
   Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
-import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
+import { ClaimNote as ClaimNoteType } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
@@ -16,21 +16,6 @@ import { Mutation } from 'react-apollo'
 import { sleep } from 'utils/sleep'
 
 import { Paper } from '../../../shared/Paper'
-
-const ADD_CLAIM_NOTE_QUERY = gql`
-  query AddClaimQuery($id: ID!) {
-    claim(id: $id) {
-      notes {
-        text
-        date
-      }
-      events {
-        text
-        date
-      }
-    }
-  }
-`
 
 const ADD_CLAIM_NOTE_MUTATION = gql`
   mutation AddClaimNote($id: ID!, $note: ClaimNoteInput!) {
@@ -47,18 +32,13 @@ const ADD_CLAIM_NOTE_MUTATION = gql`
   }
 `
 
-interface Note {
-  text: string
-  date: string
-}
-
 interface Props {
-  notes: Note[]
+  notes: ReadonlyArray<ClaimNoteType>
   claimId: string
-  refetchPage: () => Promise<void>
+  refetchPage: () => Promise<any>
 }
 
-const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
+const TextArea: React.SFC<FieldProps<string>> = ({
   field: { onChange, onBlur, name, value },
 }) => (
   <MuiTextField
@@ -72,7 +52,7 @@ const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
   />
 )
 
-const sortNotesByDate = (notes: Note[]) =>
+const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
     return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
   })

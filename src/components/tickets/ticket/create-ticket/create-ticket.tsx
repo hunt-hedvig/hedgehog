@@ -1,3 +1,4 @@
+// @ts-nocheck
 import format from 'date-fns/format'
 import React from 'react'
 import { Mutation } from 'react-apollo'
@@ -38,7 +39,7 @@ const formatDateTime = (date) => {
 interface ICreateNewTicket {
   closeModal: () => void
   showNotification: (data: any) => void
-  referenceId: string
+  referenceId: string | null
   memberId: string
   type: string
 }

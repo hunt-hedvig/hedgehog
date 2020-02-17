@@ -13,9 +13,7 @@ import {
 import { MemberEmoji } from 'utils/member'
 
 export interface Props {
-  searchMemberRequest: (
-    requestArgs: Partial<MemberSearchFilter>,
-  ) => Promise<void>
+  searchMemberRequest: (requestArgs: Partial<MemberSearchFilter>) => void
   searchResult: MembersSearchResult
   searchLoading: boolean
 }
@@ -66,8 +64,11 @@ export const MembersSearch: React.FC<Props> = ({
     >
       <>
         <Search
-          onSubmit={(query, includeAll) => {
-            searchMemberRequest({ query, includeAll })
+          onSubmit={(submittedQuery, submittedIncludeAll) => {
+            searchMemberRequest({
+              query: submittedQuery,
+              includeAll: submittedIncludeAll,
+            })
             setHasDispatchedSearch(true)
           }}
           loading={searchLoading}
@@ -86,7 +87,6 @@ export const MembersSearch: React.FC<Props> = ({
             pagedItems={searchResult.items}
             itemContent={(item) => <ListItem item={item} />}
             isSortable={false}
-            keyName="memberId"
             tableHeader={<ListHeader />}
           />
         )}

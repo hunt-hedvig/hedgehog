@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { parseISO } from 'date-fns'
 import dateCompareAsc from 'date-fns/compareAsc'
 import formatDate from 'date-fns/format'

@@ -1,6 +1,5 @@
 import ChatPage from 'containers/chat-page/ChatPage'
 import { MembersSearchPage } from 'containers/member-search-page'
-import MembersPage from 'containers/members-page/MembersPage'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Route, Switch } from 'react-router'
