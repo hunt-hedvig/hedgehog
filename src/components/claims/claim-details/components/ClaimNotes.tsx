@@ -38,7 +38,7 @@ interface Props {
   refetchPage: () => Promise<any>
 }
 
-const TextArea: React.SFC<FieldProps<HTMLTextAreaElement>> = ({
+const TextArea: React.SFC<FieldProps<string>> = ({
   field: { onChange, onBlur, name, value },
 }) => (
   <MuiTextField

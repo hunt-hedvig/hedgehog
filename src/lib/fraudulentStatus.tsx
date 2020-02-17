@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Button, Dropdown, Icon, Input, Table } from 'semantic-ui-react'
