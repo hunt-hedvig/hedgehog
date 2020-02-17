@@ -6,34 +6,23 @@ import {
   TableRow as MuiTableRow,
   withStyles,
 } from '@material-ui/core'
+import { Claim, SanctionStatus } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import * as React from 'react'
 
+import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
-import { SanctionStatus } from './MemberInformation'
-import { MonetaryAmount } from '../../../../lib/helpers'
 
 interface Props {
-  payments: Payment[]
+  payments: NonNullable<Claim['payments']>
   claimId: string
   reserves: MonetaryAmount
   sanctionStatus: SanctionStatus
-  refetchPage: () => Promise<void>
-}
-
-interface Payment {
-  id: string
-  amount: MonetaryAmount
-  deductible: MonetaryAmount
-  note: string
-  timestamp: string
-  type: string
-  exGratia: boolean
-  status: string
+  refetchPage: () => Promise<any>
 }
 
 const PaymentTable = withStyles({
@@ -81,27 +70,27 @@ const ClaimPayments: React.SFC<Props> = ({
           {payments.map((payment) => (
             <MuiTableRow
               key={
-                payment.amount.amount +
-                payment.amount.currency +
-                payment.timestamp
+                payment!.amount.amount +
+                payment!.amount.currency +
+                payment!.timestamp
               }
             >
-              <PaymentTableCell>{payment.id}</PaymentTableCell>
+              <PaymentTableCell>{payment!.id}</PaymentTableCell>
               <PaymentTableCell>
-                {payment.amount.amount} {payment.amount.currency}
+                {payment!.amount.amount} {payment!.amount.currency}
               </PaymentTableCell>
               <PaymentTableCell>
-                {payment.deductible.amount} {payment.deductible.currency}
+                {payment!.deductible.amount} {payment!.deductible.currency}
               </PaymentTableCell>
-              <PaymentTableCell>{payment.note}</PaymentTableCell>
+              <PaymentTableCell>{payment!.note}</PaymentTableCell>
               <PaymentTableCell>
-                {format(parseISO(payment.timestamp), 'yyyy-MM-dd hh:mm:ss')}
+                {format(parseISO(payment!.timestamp), 'yyyy-MM-dd hh:mm:ss')}
               </PaymentTableCell>
               <PaymentTableCell>
-                {payment.exGratia ? <Checkmark /> : <Cross />}
+                {payment!.exGratia ? <Checkmark /> : <Cross />}
               </PaymentTableCell>
-              <PaymentTableCell>{payment.type}</PaymentTableCell>
-              <PaymentTableCell>{payment.status}</PaymentTableCell>
+              <PaymentTableCell>{payment!.type}</PaymentTableCell>
+              <PaymentTableCell>{payment!.status}</PaymentTableCell>
             </MuiTableRow>
           ))}
         </MuiTableBody>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 import React from 'react'
 import { Mutation } from 'react-apollo'

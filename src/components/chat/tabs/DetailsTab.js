@@ -8,8 +8,8 @@ import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
 
 const memberFieldFormatters = {
-  signedOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
-  createdOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
+  signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
+  createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
 export default class DetailsTab extends React.Component {
@@ -24,11 +24,11 @@ export default class DetailsTab extends React.Component {
     }
   }
 
-  public handleOpen = () => this.setState({ modalOpen: true })
+  handleOpen = () => this.setState({ modalOpen: true })
 
-  public handleClose = () => this.setState({ modalOpen: false })
+  handleClose = () => this.setState({ modalOpen: false })
 
-  public isDisabled = (field) => {
+  isDisabled = (field) => {
     switch (field.toLowerCase()) {
       case 'memberid':
       case 'status':
@@ -41,25 +41,25 @@ export default class DetailsTab extends React.Component {
     }
   }
 
-  public handleChange = (field) => (e) => {
+  handleChange = (field) => (e) => {
     const { member } = this.state
     member[field] = e.target.value
     this.setState({ member })
   }
 
-  public handleCancel = () => {
+  handleCancel = () => {
     this.setState({ member: [] })
     this.handleClose()
   }
 
-  public handleSubmissionButton = () => {
+  handleSubmissionButton = () => {
     const { editMemberDetails, messages } = this.props
     const submittedMember = { ...messages.member, ...this.state.member }
     editMemberDetails(submittedMember)
     this.handleClose()
   }
 
-  public render() {
+  render() {
     let traceData
     const {
       messages: { member },

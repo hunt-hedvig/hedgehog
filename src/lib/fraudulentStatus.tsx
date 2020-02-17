@@ -1,8 +1,8 @@
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Button, Dropdown, Icon, Input, Table } from 'semantic-ui-react'
-import styled from 'styled-components'
 
-const ButtonsBlock = styled('div')(() => ({
+const ButtonsBlock = styled('div')((_) => ({
   floar: 'right',
   marginTop: '10px',
 }))
@@ -74,6 +74,7 @@ const FraudulentStatusEdit = (props) => {
                   active: item === fraudulentStatusValue,
                 }
               })}
+              // @ts-ignore
               onChange={(e, d) => (fraudulentStatusValue = d.value)}
               placeholder={fraudulentStatusValue}
             />

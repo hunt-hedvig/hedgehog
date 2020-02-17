@@ -5,11 +5,11 @@ import { Button, Icon } from 'semantic-ui-react'
 import { Paper } from '../../../../shared/Paper'
 
 export class ClaimInventory extends React.Component {
-  public state = {
+  state = {
     addNew: false,
   }
 
-  public componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (!this.state.addNew) {
       if (nextProps.activeItem) {
         this.setState({ addNew: true })
@@ -17,12 +17,12 @@ export class ClaimInventory extends React.Component {
     }
   }
 
-  public closePrompt = () => {
+  closePrompt = () => {
     this.setState({ addNew: false })
     this.props.clearActiveItem()
   }
 
-  public render() {
+  render() {
     return (
       <Paper>
         <div>

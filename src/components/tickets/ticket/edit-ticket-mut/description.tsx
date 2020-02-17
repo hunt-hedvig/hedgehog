@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
@@ -77,7 +78,4 @@ class ChangeDescriptionMutation extends React.Component<
 
 const mapActions = { ...actions.notificationsActions }
 
-export default connect(
-  null,
-  mapActions,
-)(ChangeDescriptionMutation)
+export default connect(null, mapActions)(ChangeDescriptionMutation)

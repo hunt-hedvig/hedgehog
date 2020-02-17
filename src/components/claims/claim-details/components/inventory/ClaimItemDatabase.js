@@ -1,4 +1,5 @@
 import Grid from '@material-ui/core/Grid'
+import { ClaimTypes } from 'api/generated/graphql'
 import Pricing from 'features/pricing'
 import { GET_INVENTORY } from 'features/pricing/queries'
 import * as React from 'react'
@@ -6,17 +7,12 @@ import { Query } from 'react-apollo'
 import { Paper } from '../../../../shared/Paper'
 import { ClaimInventory } from './ClaimInventory'
 
-interface Props {
-  type: string
-  claimId: string
-}
-
-export class ClaimItemDatabase extends React.Component<Props> {
-  public state = {
+export class ClaimItemDatabase extends React.Component {
+  state = {
     activeItem: null,
   }
 
-  public selectItem = (refId, name, category, priceData) => {
+  selectItem = (refId, name, category, priceData) => {
     this.setState({
       activeItem: {
         name,
@@ -29,13 +25,13 @@ export class ClaimItemDatabase extends React.Component<Props> {
     })
   }
 
-  public clearActiveItem = () => {
+  clearActiveItem = () => {
     this.setState({
       activeItem: null,
     })
   }
 
-  public render() {
+  render() {
     return (
       <React.Fragment>
         <Grid item xs={12} sm={12} md={8}>

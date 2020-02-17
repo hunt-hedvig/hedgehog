@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 
 export class InventoryList extends React.Component {
-  public render() {
+  render() {
     return (
       <Table>
         {this.props.items.length !== 0 ? (

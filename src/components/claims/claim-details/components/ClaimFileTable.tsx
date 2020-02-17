@@ -1,13 +1,14 @@
+import { Claim, ClaimFileUpload } from 'api/generated/graphql'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 
-import { Table, Image, Dropdown } from 'semantic-ui-react'
-import actions from '../../../../store/actions'
 import { connect } from 'react-redux'
-import { DeleteButton } from '../components/DeleteClaimFileButton'
+import { Dropdown, Image, Table } from 'semantic-ui-react'
 import { dateTimeFormatter } from '../../../../lib/helpers'
+import actions from '../../../../store/actions'
+import { DeleteButton } from '../components/DeleteClaimFileButton'
 
 const SET_CLAIM_FILE_CATEGORY = gql`
   mutation setClaimFileCategory(
@@ -23,11 +24,11 @@ const SET_CLAIM_FILE_CATEGORY = gql`
   }
 `
 
-const sortClaimFileDate = (a, b) => {
+const sortClaimFileDate = (a: ClaimFileUpload, b: ClaimFileUpload) => {
   const aDate = new Date(a.uploadedAt)
   const bDate = new Date(b.uploadedAt)
 
-  return bDate - aDate
+  return ((bDate as any) as number) - ((aDate as any) as number)
 }
 
 const NoClaimFiles = styled('div')({
@@ -67,16 +68,8 @@ const fileUploadOptions = [
   },
 ]
 
-interface ClaimFiles {
-  claimFileId: string
-  fileUploadUrl: string
-  uploadedAt: Instant
-  category: string
-  contentType: string
-}
-
 class ClaimFileTableComponent extends React.Component<{
-  claimFiles: Array<ClaimFiles>
+  claimFiles: Claim['claimFiles']
   claimId: string
   showNotification: (data: any) => void
 }> {
@@ -99,6 +92,7 @@ class ClaimFileTableComponent extends React.Component<{
               </NoClaimFiles>
             ) : (
               [...this.props.claimFiles]
+                .filter(Boolean)
                 .sort(sortClaimFileDate)
                 .map((claimFile) => {
                   return (
@@ -150,7 +144,7 @@ class ClaimFileTableComponent extends React.Component<{
                       <Table.Cell>
                         <DeleteButton
                           claimId={this.props.claimId}
-                          claimFileId={claimFile.claimFileId}
+                          claimFileId={claimFile.claimFileId!}
                           showNotification={this.props.showNotification}
                         />
                       </Table.Cell>

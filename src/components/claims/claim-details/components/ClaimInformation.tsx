@@ -3,6 +3,7 @@ import {
   MenuItem as MuiMenuItem,
   Select as MuiSelect,
 } from '@material-ui/core'
+import { ClaimState } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import gql from 'graphql-tag'
@@ -12,30 +13,6 @@ import styled from 'react-emotion'
 import { sleep } from 'utils/sleep'
 
 import { Paper } from '../../../shared/Paper'
-
-const UPDATE_STATE_QUERY = gql`
-  query UpdateClaimState($id: ID!) {
-    claim(id: $id) {
-      state
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-
-const UPDATE_COVERING_EMPLOYEE_QUERY = gql`
-  query SetCoveringEmployee($id: ID!) {
-    claim(id: $id) {
-      coveringEmployee
-      events {
-        text
-        date
-      }
-    }
-  }
-`
 
 const UPDATE_CLAIM_STATE_MUTATION = gql`
   mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
@@ -60,26 +37,20 @@ const SET_COVERING_EMPLOYEE = gql`
   }
 `
 
-enum ClaimState {
-  OPEN = 'OPEN',
-  CLOSED = 'CLOSED',
-  REOPENED = 'REOPENED',
-}
-
 interface Props {
   recordingUrl: string | null
   registrationDate: string
   state: ClaimState
   claimId: string
   coveringEmployee: boolean
-  refetchPage: () => Promise<void>
+  refetchPage: () => Promise<any>
 }
 
 const validateSelectOption = (
   event: React.ChangeEvent<HTMLSelectElement>,
 ): ClaimState => {
   const { value } = event.target
-  if (!Object.values(ClaimState).includes(value)) {
+  if (!Object.values(ClaimState).includes(value as any)) {
     throw new Error(`invalid ClaimState: ${value}`)
   }
   return value as ClaimState

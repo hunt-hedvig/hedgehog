@@ -3,12 +3,12 @@ import { PropContainer, SubHeaderContainer } from 'features/pricing/styles'
 import { Dropdown, Header, Label } from 'semantic-ui-react'
 
 export class InventoryFilterContainer extends React.Component {
-  public isFilterActive = (value, name) => {
+  isFilterActive = (value, name) => {
     return this.props.activeFilters.some((activeFilter) => {
       return value === activeFilter.value && activeFilter.name === name
     })
   }
-  public render() {
+  render() {
     return (
       <PropContainer>
         {this.props.activeFilters.length !== 0 ? (

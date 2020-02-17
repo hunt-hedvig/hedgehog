@@ -16,7 +16,7 @@ import { Query } from 'react-apollo'
 import { Dropdown, Header, Icon, Input } from 'semantic-ui-react'
 
 export default class Pricing extends React.Component {
-  public state = {
+  state = {
     activeCategory: '',
     activeCategoryName: '',
     activeQuery: '',
@@ -27,7 +27,7 @@ export default class Pricing extends React.Component {
     batchSize: 5,
   }
 
-  public addFilter = (event, itemRow, categoryRow) => {
+  addFilter = (event, itemRow, categoryRow) => {
     this.setState((state) => {
       return {
         activeFilters: [
@@ -39,7 +39,7 @@ export default class Pricing extends React.Component {
     })
   }
 
-  public removeFilter = (event, filterRow) => {
+  removeFilter = (event, filterRow) => {
     this.setState((state) => {
       return {
         activeFilters: state.activeFilters.filter(
@@ -50,7 +50,7 @@ export default class Pricing extends React.Component {
     })
   }
 
-  public isDateValid = (attemptedDate) => {
+  isDateValid = (attemptedDate) => {
     const date = Date.parse(attemptedDate)
 
     if (!isNaN(date)) {
@@ -64,7 +64,7 @@ export default class Pricing extends React.Component {
     return false
   }
 
-  public changePage = (steps) => {
+  changePage = (steps) => {
     this.setState((prevState) => {
       return {
         offset: prevState.offset + steps,
@@ -72,7 +72,7 @@ export default class Pricing extends React.Component {
     })
   }
 
-  public switchCategory = (categoryName, categoryValue) => {
+  switchCategory = (categoryName, categoryValue) => {
     // tslint:disable-next-line:no-console
     console.log(categoryValue)
     this.setState({
@@ -85,7 +85,7 @@ export default class Pricing extends React.Component {
     this.setState({ activeCategoryName: categoryName })
   }
 
-  public handleChange = (event, { name, value }) => {
+  handleChange = (event, { name, value }) => {
     switch (name) {
       case 'activeDate':
         if (this.isDateValid(value)) {
@@ -108,7 +108,7 @@ export default class Pricing extends React.Component {
     this.setState({ [name]: value })
   }
 
-  public render() {
+  render() {
     return (
       <React.Fragment>
         <ListPage>

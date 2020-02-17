@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'

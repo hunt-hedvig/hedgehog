@@ -8,6 +8,7 @@ import InsuranceListTab from 'components/chat/tabs/InsuranceListTab'
 import InsuranceTab from 'components/chat/tabs/InsuranceTab'
 import PaymentsTab from 'components/chat/tabs/PaymentsTab'
 import { Quotes } from 'components/chat/tabs/quotes'
+// @ts-ignore
 import { CreateTicketStandAlone } from 'components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 
 import * as PropTypes from 'prop-types'

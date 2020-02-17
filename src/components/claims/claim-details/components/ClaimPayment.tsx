@@ -5,6 +5,7 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
+import { SanctionStatus } from 'api/generated/graphql'
 
 import { ActionMap, Container } from 'constate'
 import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
@@ -20,32 +21,7 @@ import {
   MutationFeedbackBlock,
   MutationStatus,
 } from '../../../shared/MutationFeedbackBlock'
-import { SanctionStatus } from './MemberInformation'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
-
-const CREATE_PAYMENT_QUERY = gql`
-  query CreatePaymentQuery($id: ID!) {
-    claim(id: $id) {
-      payments {
-        id
-        amount
-        deductible
-        note
-        type
-        timestamp
-        exGratia
-        transaction {
-          status
-        }
-        status
-      }
-      events {
-        text
-        date
-      }
-    }
-  }
-`
 
 const CREATE_PAYMENT_MUTATION = gql`
   mutation CreatePayment($id: ID!, $payment: ClaimPaymentInput!) {
@@ -74,7 +50,7 @@ const CREATE_PAYMENT_MUTATION = gql`
 interface Props {
   sanctionStatus: SanctionStatus
   claimId: string
-  refetchPage: () => Promise<void>
+  refetchPage: () => Promise<any>
 }
 
 interface State {

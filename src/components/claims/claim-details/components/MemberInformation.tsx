@@ -1,4 +1,4 @@
-import { Member } from 'api/generated/graphql'
+import { Member, SanctionStatus } from 'api/generated/graphql'
 import { formatDistance, parseISO } from 'date-fns'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import { formatMoneySE } from 'lib/intl'
@@ -16,13 +16,6 @@ import {
 } from '../../../icons'
 
 import { Paper } from '../../../shared/Paper'
-
-export enum SanctionStatus {
-  Undetermined = 'Undetermined',
-  NoHit = 'NoHit',
-  PartialHit = 'PartialHit',
-  FullHit = 'FullHit',
-}
 
 const SanctionStatusIcon: React.SFC<{ status: SanctionStatus }> = ({
   status,
@@ -65,7 +58,7 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
       </p>
       <p>
         <b>Sanction Status:</b> {member.sanctionStatus}{' '}
-        <SanctionStatusIcon status={member.sanctionStatus} />
+        <SanctionStatusIcon status={member.sanctionStatus!} />
       </p>
       <h3>Fraud Checks</h3>
       <p>

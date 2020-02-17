@@ -5,7 +5,7 @@ import { Query } from 'react-apollo'
 import { Label, Table } from 'semantic-ui-react'
 
 export class ItemTable extends React.Component {
-  public handlePriceData = (data) => {
+  handlePriceData = (data) => {
     if (data && 'prices' in data) {
       return data.prices.reduce(
         (accumulator, s) => ({ ...accumulator, [s.itemId]: s }),
@@ -16,7 +16,7 @@ export class ItemTable extends React.Component {
     return {}
   }
 
-  public getLabelColor = (loading, priceExist, expectedColor) => {
+  getLabelColor = (loading, priceExist, expectedColor) => {
     if (loading) {
       return 'grey'
     }
@@ -24,11 +24,11 @@ export class ItemTable extends React.Component {
     return priceExist ? expectedColor : 'grey'
   }
 
-  public getItemIds = (products) => {
+  getItemIds = (products) => {
     return [...products.map((item) => item.id)]
   }
 
-  public getRangeColor = (prices, row) => {
+  getRangeColor = (prices, row) => {
     if (row.id in prices) {
       const colors = ['red', 'orange', 'yellow', 'olive', 'green']
 
@@ -43,7 +43,7 @@ export class ItemTable extends React.Component {
     }
   }
 
-  public getPriceString = (prices, row, property) => {
+  getPriceString = (prices, row, property) => {
     return row.id in prices
       ? formatMoney(
           'sv-SE',
@@ -55,7 +55,7 @@ export class ItemTable extends React.Component {
       : '…'
   }
 
-  public render() {
+  render() {
     return (
       <Table celled selectable>
         <Table.Header>

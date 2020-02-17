@@ -7,7 +7,7 @@ import { Mutation, Query } from 'react-apollo'
 import { Button, Input, Loader } from 'semantic-ui-react'
 
 export class AddItemPrompt extends React.Component {
-  public constructor(props) {
+  constructor(props) {
     super(props)
     this.state = {
       itemFilters: [],
@@ -19,7 +19,7 @@ export class AddItemPrompt extends React.Component {
     }
   }
 
-  public addFilter = ({ name, value }) => {
+  addFilter = ({ name, value }) => {
     this.setState((state) => {
       return {
         itemFilters: [...state.itemFilters, { name, value }],
@@ -28,7 +28,7 @@ export class AddItemPrompt extends React.Component {
     })
   }
 
-  public removeFilter = ({ name, value }) => {
+  removeFilter = ({ name, value }) => {
     this.setState((state) => {
       return {
         itemFilters: state.itemFilters.filter(
@@ -38,7 +38,7 @@ export class AddItemPrompt extends React.Component {
     })
   }
 
-  public areFieldsPopulated = () => {
+  areFieldsPopulated = () => {
     return (
       /^[0-9]+$/.test(this.state.itemValue) &&
       this.state.itemCategory !== 'None' &&
@@ -47,25 +47,25 @@ export class AddItemPrompt extends React.Component {
     )
   }
 
-  public handleDropdownChange = (e, { value }) => {
+  handleDropdownChange = (e, { value }) => {
     this.setState({ searchQuery: e.target.textContent, itemCategory: value })
   }
 
-  public handleDropdownSearchChange = (e, { searchQuery }) => {
+  handleDropdownSearchChange = (e, { searchQuery }) => {
     this.setState({ searchQuery })
     this.setState({ itemCategory: -1 })
   }
 
-  public handleChange = (event, { name, value }) => {
+  handleChange = (event, { name, value }) => {
     this.setState({ [name]: value })
   }
 
-  public close = () => {
+  close = () => {
     this.setState({ prepopulated: false })
     this.props.closePrompt()
   }
 
-  public populate = (props) => {
+  populate = (props) => {
     if (props.activeItem) {
       this.setState({
         itemName: props.activeItem.name,
@@ -76,11 +76,11 @@ export class AddItemPrompt extends React.Component {
     }
   }
 
-  public componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.populate(nextProps)
   }
 
-  public render() {
+  render() {
     const locked = this.props.activeItem ? true : false
     const fromDatabase = this.props.activeItem !== null
 

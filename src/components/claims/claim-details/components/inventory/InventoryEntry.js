@@ -9,11 +9,11 @@ import { Mutation, Query } from 'react-apollo'
 import { Icon, Label, Popup, Table } from 'semantic-ui-react'
 
 export class InventoryEntry extends React.Component {
-  public remove = () => {
+  remove = () => {
     this.props.removeItem(this.props.item)
   }
 
-  public truncateItemName(word, n, useWordBoundary) {
+  truncateItemName(word, n, useWordBoundary) {
     if (word.length <= n) {
       return word
     }
@@ -25,7 +25,7 @@ export class InventoryEntry extends React.Component {
     )
   }
 
-  public render() {
+  render() {
     const {
       inventoryItemId,
       itemName,

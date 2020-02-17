@@ -35,7 +35,7 @@ const UPDATE_RESERVE_QUERY = gql`
 
 interface Props {
   claimId: string
-  refetchPage: () => Promise<void>
+  refetchPage: () => Promise<any>
 }
 
 interface ReserveFormData {

@@ -3,15 +3,13 @@ import {
   ListItem as MuiListItem,
   withStyles,
 } from '@material-ui/core'
+import { Claim } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import * as React from 'react'
 import { Paper } from '../../../shared/Paper'
 
 interface Props {
-  events: ReadonlyArray<{
-    text: string
-    date: string
-  }>
+  events: NonNullable<Claim['events']>
 }
 
 const ListItem = withStyles({
@@ -26,9 +24,9 @@ export const ClaimEvents: React.SFC<Props> = ({ events }) => (
   <Paper>
     <h3>Events</h3>
     <MuiList>
-      {events.map((event) => (
-        <ListItem key={event.date}>
-          {format(parseISO(event.date), 'yyyy-MM-dd hh:mm:ss')}: {event.text}
+      {events.filter(Boolean).map((event) => (
+        <ListItem key={event!.date}>
+          {format(parseISO(event!.date), 'yyyy-MM-dd hh:mm:ss')}: {event!.text}
         </ListItem>
       ))}
     </MuiList>

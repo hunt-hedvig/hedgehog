@@ -151,7 +151,7 @@
     "heroku-postbuild": "yarn build",
     "watch": "concurrently -n wds,srv 'npm:watch-client' 'npm:watch-server'",
     "watch-client": "NODE_ENV=development webpack-dev-server --config webpack/webpack.config.client.development.js",
-    "watch-server": "NODE_ENV=development BROWSER=false API_URL=https://backoffice.dev.hedvigit.com nodemon -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/serverEntry.ts",
+    "watch-server": "NODE_ENV=development BROWSER=false API_URL=http://localhost:8443 nodemon -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/serverEntry.ts",
     "test": "NODE_ENV=test jest",
     "typecheck-diff-master": "tsc -p ./tsconfig-diff-master.json",
     "tdm": "./bin/pre-typecheck.js && yarn typecheck-diff-master",

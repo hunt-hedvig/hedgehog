@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Dropdown, Header, Icon, Label } from 'semantic-ui-react'
 
 export class FilterContainer extends React.Component {
-  public render() {
+  render() {
     return (
       <PropContainer>
         {this.props.filters.length !== 0 ? (
