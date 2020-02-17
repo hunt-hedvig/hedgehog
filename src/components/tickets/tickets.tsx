@@ -56,11 +56,7 @@ export class Tickets extends React.Component<ITickets, {}> {
               return <p>Fetching tickets... </p>
             }
             if (error) {
-              return (
-                <p>
-                  Error ! : {error.message} {error.networkError}{' '}
-                </p>
-              )
+              return <p>Error ! : {JSON.stringify(error, null, 2)}</p>
             }
 
             let sortedTickets = data.tickets.slice().sort()
