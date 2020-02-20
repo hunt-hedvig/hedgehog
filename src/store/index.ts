@@ -32,9 +32,7 @@ const configureStore = () => {
     (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
   const store = createStore(
     rootReducer,
-    /* preloadedState, */ composeEnhancers(
-      applyMiddleware(sagaMiddleware, router),
-    ),
+    composeEnhancers(applyMiddleware(sagaMiddleware, router)),
   )
 
   return {
