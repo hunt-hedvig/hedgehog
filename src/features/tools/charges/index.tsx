@@ -1,5 +1,6 @@
 import { colors } from '@hedviginsurance/brand'
 import gql from 'graphql-tag'
+import { MainHeadline } from 'hedvig-ui/typography'
 import { MonetaryAmount } from 'lib/helpers'
 import { formatMoneySE } from 'lib/intl'
 import * as moment from 'moment'
@@ -10,7 +11,6 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import actions from 'store/actions'
-import { MainHeadline } from '../../../../shared/hedvig-ui/typography'
 
 const query = gql`
   query PaymentScheduleQuery($month: YearMonth!) {
