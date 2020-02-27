@@ -40,61 +40,64 @@ const Badge = styled('div')`
 `
 
 export default class Chat extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      socket: null,
-      subscription: null,
-    }
-  }
+  // constructor(props) {
+  //   super(props)
+  //   this.state = {
+  //     socket: null,
+  //     subscription: null,
+  //   }
+  // }
 
-  addMessageHandler = (message, forceSendMessage) => {
-    const { socket } = this.state
-    const { addMessage, match } = this.props
-    if (socket) {
-      addMessage(message, forceSendMessage, match.params.id, socket)
-    }
-  }
+  // //Move into ChatTab
+  // addMessageHandler = (message, forceSendMessage) => {
+  //   const { socket } = this.state
+  //   const { addMessage, match } = this.props
+  //   if (socket) {
+  //     addMessage(message, forceSendMessage, match.params.id, socket)
+  //   }
+  // }
 
-  subscribeSocket = () => {
-    const {
-      messageReceived,
-      match: {
-        params: { id },
-      },
-      messages,
-      showNotification,
-      auth,
-    } = this.props
+  //Move into ChatTab
+  // subscribeSocket = () => {
+  //   const {
+  //     messageReceived,
+  //     match: {
+  //       params: { id },
+  //     },
+  //     messages,
+  //     showNotification,
+  //     auth,
+  //   } = this.props
+  //
+  //   const { stompClient, subscription } = subscribe(
+  //     { messageReceived, showNotification },
+  //     id,
+  //     auth.email,
+  //     messages.activeConnection,
+  //   )
+  //   return { stompClient, subscription }
+  // }
 
-    const { stompClient, subscription } = subscribe(
-      { messageReceived, showNotification },
-      id,
-      auth.email,
-      messages.activeConnection,
-    )
-    return { stompClient, subscription }
-  }
-
-  reconnectSocket = () => {
-    const {
-      messageReceived,
-      match: {
-        params: { id },
-      },
-      setActiveConnection,
-      showNotification,
-      auth,
-    } = this.props
-
-    reconnect({ messageReceived, showNotification }, id, auth.email).then(
-      (result) => {
-        const { stompClient, subscription } = result
-        this.setState({ socket: stompClient, subscription })
-        setActiveConnection(stompClient)
-      },
-    )
-  }
+  //Move into ChatTab
+  // reconnectSocket = () => {
+  //   const {
+  //     messageReceived,
+  //     match: {
+  //       params: { id },
+  //     },
+  //     setActiveConnection,
+  //     showNotification,
+  //     auth,
+  //   } = this.props
+  //
+  //   reconnect({ messageReceived, showNotification }, id, auth.email).then(
+  //     (result) => {
+  //       const { stompClient, subscription } = result
+  //       this.setState({ socket: stompClient, subscription })
+  //       setActiveConnection(stompClient)
+  //     },
+  //   )
+  // }
 
   getChatTitle = (member) =>
     `Member: ${
@@ -103,28 +106,28 @@ export default class Chat extends React.Component {
         : ''
     }`
 
-  componentDidMount() {
-    const {
-      match: {
-        params: { id },
-      },
-      memberRequest,
-      insuranceRequest,
-      insurancesListRequest,
-      claimsByMember,
-    } = this.props
-
-    const { stompClient, subscription } = this.subscribeSocket()
-    if (!stompClient) {
-      this.reconnectSocket()
-    }
-    this.setState({ socket: stompClient, subscription })
-
-    memberRequest(id)
-    insuranceRequest(id)
-    claimsByMember(id)
-    insurancesListRequest(id)
-  }
+  // componentDidMount() {
+  //   const {
+  //     match: {
+  //       params: { id },
+  //     },
+  //     memberRequest,
+  //     insuranceRequest,
+  //     insurancesListRequest,
+  //     claimsByMember,
+  //   } = this.props
+  //
+  //   const { stompClient, subscription } = this.subscribeSocket()
+  //   if (!stompClient) {
+  //     this.reconnectSocket()
+  //   }
+  //   this.setState({ socket: stompClient, subscription })
+  //
+  //   memberRequest(id)
+  //   insuranceRequest(id)
+  //   claimsByMember(id)
+  //   insurancesListRequest(id)
+  // }
 
   componentWillUnmount() {
     const { subscription } = this.state
@@ -137,7 +140,7 @@ export default class Chat extends React.Component {
     const panes = memberPagePanes(
       this.props,
       this.addMessageHandler,
-      this.state.socket,
+      //TODO this.state.socket,
     )
 
     return (
@@ -170,7 +173,8 @@ export default class Chat extends React.Component {
             />
           )}
         </ChatPageContainer>
-        <ChatTab {...this.props} addMessage={this.addMessageHandler} />
+        {/*<ChatTab {...this.props} addMessage={this.addMessageHandler} />*/}
+        {/*<ChatTab {...this.props} />*/}
       </ChatPageWrapper>
     )
   }

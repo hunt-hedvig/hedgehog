@@ -1,5 +1,6 @@
 import { ChatPanel } from 'components/chat/chat/ChatPanel'
 import MessagesList from 'components/chat/messages/MessagesList'
+import { reconnect, subscribe } from 'lib/sockets/chat'
 import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
 import Resizable from 're-resizable'
@@ -53,9 +54,35 @@ export default class ChatTab extends React.Component {
     this.state = {
       visible: window.innerWidth > 1500,
       manualChange: false,
+      socket: null,
+      subscription: null,
     }
     window.addEventListener('resize', this.resizeControlChat)
   }
+
+  componentDidMount() {
+    const {
+      match: {
+        params: { id },
+      },
+      memberRequest,
+      insuranceRequest,
+      insurancesListRequest,
+      claimsByMember,
+    } = this.props
+
+    const { stompClient, subscription } = this.subscribeSocket()
+    if (!stompClient) {
+      this.reconnectSocket()
+    }
+    this.setState({ socket: stompClient, subscription })
+
+    memberRequest(id)
+    insuranceRequest(id)
+    claimsByMember(id)
+    insurancesListRequest(id)
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeControlChat, false)
   }
@@ -64,6 +91,57 @@ export default class ChatTab extends React.Component {
     if (!this.state.manualChange) {
       this.setState({ visible: window.innerWidth > 1500 })
     }
+  }
+
+  //Added from src/components/chat/index.js
+  addMessageHandler = (message, forceSendMessage) => {
+    const { socket } = this.state
+    const { addMessage, match } = this.props
+    if (socket) {
+      addMessage(message, forceSendMessage, match.params.id, socket)
+    }
+  }
+
+  //Added from src/components/chat/index.js
+  subscribeSocket = () => {
+    const {
+      messageReceived,
+      match: {
+        params: { id },
+      },
+      messages,
+      showNotification,
+      auth,
+    } = this.props
+
+    const { stompClient, subscription } = subscribe(
+      { messageReceived, showNotification },
+      id,
+      auth.email,
+      messages.activeConnection,
+    )
+    return { stompClient, subscription }
+  }
+
+  //Added from src/components/chat/index.js
+  reconnectSocket = () => {
+    const {
+      messageReceived,
+      match: {
+        params: { id },
+      },
+      setActiveConnection,
+      showNotification,
+      auth,
+    } = this.props
+
+    reconnect({ messageReceived, showNotification }, id, auth.email).then(
+      (result) => {
+        const { stompClient, subscription } = result
+        this.setState({ socket: stompClient, subscription })
+        setActiveConnection(stompClient)
+      },
+    )
   }
 
   render() {

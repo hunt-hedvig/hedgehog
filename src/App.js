@@ -14,6 +14,7 @@ import { Redirect, Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
 import Store, { history } from 'store'
 import { lightUiTheme } from './uiThemes'
+import ChatTab from "./components/chat/tabs/ChatTab";
 
 const store = Store.configureStore()
 
@@ -49,6 +50,8 @@ class App extends React.Component {
             <Router history={history}>
               <Layout>
                 <Navigation history={history} store={store} />
+                {/*How to reach props here?*/}
+                {/*<ChatTab {...this.props} />*/}
                 <Main dark={history.location.pathname.startsWith('/login')}>
                   <Breadcrumbs history={history} state={store.getState()} />
                   <Switch>
