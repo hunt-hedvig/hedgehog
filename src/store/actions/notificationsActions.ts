@@ -12,6 +12,10 @@ export interface Notification {
   message: React.ReactNode
 }
 
+export interface WithShowNotification {
+  showNotification: (data: Notification) => void
+}
+
 export const showNotification = (data: Notification) => ({
   type: NOTIFICATION_SHOW,
   data: {

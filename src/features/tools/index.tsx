@@ -21,5 +21,10 @@ export const Tools: React.FC = () => (
       <Icon>🏡</Icon>
       Switcher automation
     </CardLink>
+
+    <CardLink to="/tools/perils-editor">
+      <Icon>📝</Icon>
+      Perils editor
+    </CardLink>
   </CardsWrapper>
 )
