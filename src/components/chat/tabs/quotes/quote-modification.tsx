@@ -421,7 +421,7 @@ const ExtraBuildingEditor: React.FC<{
           <RemoveButtonWrapper>
             <Button
               variation="danger"
-              size="tiny"
+              size="small"
               type="button"
               onClick={(e) => {
                 e.preventDefault()
