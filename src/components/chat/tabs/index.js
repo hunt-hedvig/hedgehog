@@ -62,7 +62,10 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Tickets',
       render: () => (
         <TabItem
-          props={{ memberId: props.match.params.id, ticketType: 'REMIND' }}
+          props={{
+            memberId: props.match.params.memberId,
+            ticketType: 'REMIND',
+          }}
           TabContent={CreateTicketStandAlone}
         /> // FIXME: Send props like other locations
       ),
@@ -104,7 +107,7 @@ const memberPagePanes = (props, addMessage, socket) => {
     menuItem: 'Quotes',
     render: () => (
       <TabItem
-        props={{ memberId: props.match.params.id }}
+        props={{ memberId: props.match.params.memberId }}
         TabContent={Quotes}
       />
     ),

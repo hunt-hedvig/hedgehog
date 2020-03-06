@@ -16,11 +16,11 @@ const ClaimsPageRoute = ({ store }) => (
     />
     <Route
       exact
-      path="/claims/:id/members/:userId"
+      path="/claims/:claimId/members/:memberId"
       render={() => (
         <PrivateRoute
           component={ClaimDetailsPage}
-          path="/claims/:id/members/:userId"
+          path="/claims/:claimId/members/:memberId"
           store={store}
         />
       )}

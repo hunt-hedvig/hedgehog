@@ -106,28 +106,28 @@ export default class Chat extends React.Component {
         : ''
     }`
 
-  // componentDidMount() {
-  //   const {
-  //     match: {
-  //       params: { id },
-  //     },
-  //     memberRequest,
-  //     insuranceRequest,
-  //     insurancesListRequest,
-  //     claimsByMember,
-  //   } = this.props
-  //
-  //   const { stompClient, subscription } = this.subscribeSocket()
-  //   if (!stompClient) {
-  //     this.reconnectSocket()
-  //   }
-  //   this.setState({ socket: stompClient, subscription })
-  //
-  //   memberRequest(id)
-  //   insuranceRequest(id)
-  //   claimsByMember(id)
-  //   insurancesListRequest(id)
-  // }
+  componentDidMount() {
+    const {
+      match: {
+        params: { memberId },
+      },
+      memberRequest,
+      insuranceRequest,
+      insurancesListRequest,
+      claimsByMember,
+    } = this.props
+    //
+    //   const { stompClient, subscription } = this.subscribeSocket()
+    //   if (!stompClient) {
+    //     this.reconnectSocket()
+    //   }
+    //   this.setState({ socket: stompClient, subscription })
+    //
+    memberRequest(memberId)
+    insuranceRequest(memberId)
+    claimsByMember(memberId)
+    insurancesListRequest(memberId)
+  }
 
   componentWillUnmount() {
     const { subscription } = this.state
@@ -137,11 +137,7 @@ export default class Chat extends React.Component {
 
   render() {
     const { messages } = this.props
-    const panes = memberPagePanes(
-      this.props,
-      this.addMessageHandler,
-      //TODO this.state.socket,
-    )
+    const panes = memberPagePanes(this.props, this.addMessageHandler)
 
     return (
       <ChatPageWrapper>
@@ -174,7 +170,7 @@ export default class Chat extends React.Component {
           )}
         </ChatPageContainer>
         {/*<ChatTab {...this.props} addMessage={this.addMessageHandler} />*/}
-        {/*<ChatTab {...this.props} />*/}
+        <ChatTab {...this.props} />
       </ChatPageWrapper>
     )
   }

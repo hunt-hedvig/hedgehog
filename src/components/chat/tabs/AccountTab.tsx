@@ -75,7 +75,7 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
   AccountTabProps> = (props) => (
   <Query
     query={GET_MEMBER_ACCOUNT_QUERY}
-    variables={{ memberId: props.match.params.id }}
+    variables={{ memberId: props.match.params.memberId }}
     pollInterval={2000}
   >
     {({ data, loading }) => {
@@ -114,7 +114,7 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <AddEntryForm
-                memberId={props.match.params.id}
+                memberId={props.match.params.memberId}
                 firstName={data.member.firstName}
                 showNotification={props.showNotification}
               />
@@ -151,7 +151,7 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
             </Table>
           </Paper>
           <BackfillSubscriptionsButton
-            memberId={props.match.params.id}
+            memberId={props.match.params.memberId}
             showNotification={props.showNotification}
           />
         </>

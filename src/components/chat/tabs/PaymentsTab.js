@@ -109,7 +109,7 @@ class PaymentsTab extends React.Component {
   constructor(props) {
     super(props)
     this.variables = {
-      id: props.match.params.id,
+      id: props.match.params.memberId,
       currentMonth: moment().format('YYYY-MM'),
       previousMonth: moment()
         .subtract(1, 'month')
@@ -126,7 +126,7 @@ class PaymentsTab extends React.Component {
     this.setState({ amount: e.target.value })
   }
 
-  handleChargeSubmit = (defaultAmount ) => (mutation) => () => {
+  handleChargeSubmit = (defaultAmount) => (mutation) => () => {
     mutation({
       variables: {
         id: this.variables.id,

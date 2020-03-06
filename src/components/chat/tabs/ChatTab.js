@@ -19,6 +19,7 @@ const resizableStyles = {
   boxShadow: '0 5px 40px rgba(0, 0, 0, 0.16)',
   borderRadius: '8px',
   backgroundColor: '#ffffff',
+  zIndex: '999',
 }
 
 const ChatHeaderStyle = styled.div`
@@ -61,15 +62,15 @@ export default class ChatTab extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      match: {
-        params: { id },
-      },
-      memberRequest,
-      insuranceRequest,
-      insurancesListRequest,
-      claimsByMember,
-    } = this.props
+    // const {
+    //   match: {
+    //     params: { id },
+    //   },
+    //   memberRequest,
+    //   insuranceRequest,
+    //   insurancesListRequest,
+    //   claimsByMember,
+    // } = this.props
 
     const { stompClient, subscription } = this.subscribeSocket()
     if (!stompClient) {
@@ -77,10 +78,10 @@ export default class ChatTab extends React.Component {
     }
     this.setState({ socket: stompClient, subscription })
 
-    memberRequest(id)
-    insuranceRequest(id)
-    claimsByMember(id)
-    insurancesListRequest(id)
+    // memberRequest(id)
+    // insuranceRequest(id)
+    // claimsByMember(id)
+    // insurancesListRequest(id)
   }
 
   componentWillUnmount() {
@@ -98,7 +99,7 @@ export default class ChatTab extends React.Component {
     const { socket } = this.state
     const { addMessage, match } = this.props
     if (socket) {
-      addMessage(message, forceSendMessage, match.params.id, socket)
+      addMessage(message, forceSendMessage, match.params.memberId, socket)
     }
   }
 
@@ -107,7 +108,7 @@ export default class ChatTab extends React.Component {
     const {
       messageReceived,
       match: {
-        params: { id },
+        params: { memberId },
       },
       messages,
       showNotification,
@@ -116,7 +117,7 @@ export default class ChatTab extends React.Component {
 
     const { stompClient, subscription } = subscribe(
       { messageReceived, showNotification },
-      id,
+      memberId,
       auth.email,
       messages.activeConnection,
     )
@@ -128,14 +129,14 @@ export default class ChatTab extends React.Component {
     const {
       messageReceived,
       match: {
-        params: { id },
+        params: { memberId },
       },
       setActiveConnection,
       showNotification,
       auth,
     } = this.props
 
-    reconnect({ messageReceived, showNotification }, id, auth.email).then(
+    reconnect({ messageReceived, showNotification }, memberId, auth.email).then(
       (result) => {
         const { stompClient, subscription } = result
         this.setState({ socket: stompClient, subscription })
@@ -143,6 +144,21 @@ export default class ChatTab extends React.Component {
       },
     )
   }
+
+  onResizeClick = () => {
+    console.log('Hej')
+    // this.setState(
+    //   {
+    //     visible: !this.state.visible,
+    //     manualChange: true,
+    //   },
+    //   () => {
+    //     this.scroller()
+    //   },
+    // )
+  }
+
+  scroller = null
 
   render() {
     const questionAndMessageIds = this.getQuestionToAnalyze()
@@ -154,16 +170,24 @@ export default class ChatTab extends React.Component {
           defaultSize={{ width: '400px', height: '80%' }}
           enable={{ left: true }}
         >
-          <ChatHeader ctx={this} />
+          {/*<ChatHeader props={{visible: this.state.visible, onResizeClick : () => this.onResizeClick()}}*/}
+          />
+          <ChatHeader
+            visible={this.state.visible}
+            // onResizeClick={() => this.onResizeClick()}
+            onResizeClick={this.onResizeClick}
+          />
           <MessagesList
             messages={(this.props.messages && this.props.messages.list) || []}
             error={!!this.props.socket}
-            id={(this.props.match && this.props.match.params.id) || ''}
+            id={(this.props.match && this.props.match.params.memberId) || ''}
             messageId={
               (this.props.match && this.props.match.params.msgId) || ''
             }
+            attachScrollListener={(theRealScroller) => {
+              this.scroller = theRealScroller
+            }}
           />
-
           <Query
             query={GET_SUGGESTED_ANSWER_QUERY}
             variables={{ question: questionAndMessageIds.lastMemberMessages }}
@@ -177,7 +201,7 @@ export default class ChatTab extends React.Component {
                     messageIds={[]}
                     questionToLabel=""
                     confidence={0}
-                    addMessage={this.props.addMessage}
+                    addMessage={this.addMessageHandler}
                     messages={
                       (this.props.messages && this.props.messages.list) || []
                     }
@@ -194,7 +218,7 @@ export default class ChatTab extends React.Component {
                       data.getAnswerSuggestion[0].allReplies) ||
                     null
                   }
-                  memberId={this.props.match.params.id}
+                  memberId={this.props.match.params.memberId}
                   messageIds={questionAndMessageIds.messageIds}
                   questionToLabel={
                     this.getQuestionAndAnswer(data.getAnswerSuggestion).question
@@ -203,7 +227,7 @@ export default class ChatTab extends React.Component {
                     this.getQuestionAndAnswer(data.getAnswerSuggestion)
                       .confidence
                   }
-                  addMessage={this.props.addMessage}
+                  addMessage={this.addMessageHandler}
                   messages={
                     (this.props.messages && this.props.messages.list) || []
                   }
@@ -214,7 +238,6 @@ export default class ChatTab extends React.Component {
               )
             }}
           </Query>
-
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>
           )}
@@ -244,13 +267,13 @@ export default class ChatTab extends React.Component {
     const fromIds = messages.map((message) => message.header.fromId)
 
     const lastNonMemberIndex = fromIds
-      .map((id) => id === +this.props.match.params.id)
+      .map((id) => id === +this.props.match.params.memberId)
       .lastIndexOf(false)
 
     const lastMemberMessagesArray = messages.filter(
       (message, index) =>
         ['free.chat.message', 'free.chat.from.bo', 'free.chat.start'].includes(
-          message.id,
+          message.memberId,
         ) && index > lastNonMemberIndex,
     )
 
@@ -279,22 +302,27 @@ export default class ChatTab extends React.Component {
   }
 }
 
-const ChatHeader = (props) => (
-  <ChatHeaderStyle state={props.ctx.state.visible}>
-    <h4>Chat</h4>
-    <Icon
-      name={props.ctx.state.visible ? 'angle double up' : 'angle double down'}
-      size={'large'}
-      link
-      onClick={() =>
-        props.ctx.setState({
-          visible: !props.ctx.state.visible,
-          manualChange: true,
-        })
-      }
-    />
-  </ChatHeaderStyle>
-)
+
+
+class ChatHeader extends React.Component{
+  constructor(props) {
+    super(props)
+
+  }
+  render() {
+    return (
+      <ChatHeaderStyle state={this.props.visible}>
+        <h4>Chat</h4>
+        <Icon
+          name={this.props.visible ? 'angle double up' : 'angle double down'}
+          size={'large'}
+          link
+          onClick={this.props.onResizeClick}
+        />
+      </ChatHeaderStyle>
+    )
+  }
+}
 
 ChatTab.propTypes = {
   match: PropTypes.object.isRequired,

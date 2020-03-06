@@ -18,6 +18,8 @@ const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
+export function myFunction() {}
+
 export default class MessagesList extends React.Component {
   constructor(props) {
     super(props)
@@ -27,6 +29,17 @@ export default class MessagesList extends React.Component {
   }
 
   componentDidUpdate() {
+    this.theRealScroller() // TODO remove?
+    /* eslint-enable */
+  }
+
+  componentDidMount() {
+    if (this.props.attachScrollListener) {
+      this.props.attachScrollListener(this.theRealScroller)
+    }
+  }
+
+  theRealScroller = () => {
     /* eslint-disable */
     const list = this.messagesList
     if (!list) {
@@ -46,7 +59,6 @@ export default class MessagesList extends React.Component {
         })
       }
     }
-    /* eslint-enable */
   }
 
   render() {
@@ -87,4 +99,5 @@ MessagesList.propTypes = {
   messageId: PropTypes.string,
   messages: PropTypes.array,
   error: PropTypes.bool,
+  attachScrollListener: PropTypes.func,
 }

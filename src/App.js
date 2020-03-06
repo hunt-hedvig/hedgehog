@@ -14,7 +14,7 @@ import { Redirect, Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
 import Store, { history } from 'store'
 import { lightUiTheme } from './uiThemes'
-import ChatTab from "./components/chat/tabs/ChatTab";
+import ChatTab from './components/chat/tabs/ChatTab'
 
 const store = Store.configureStore()
 
