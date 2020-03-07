@@ -1,7 +1,7 @@
 import styled from 'react-emotion'
 
 export type SpacingSize = 'small' | 'medium' | 'large'
-export type SpacingDirection = 'top' | 'right' | 'bottom' | 'left'
+export type SpacingDirection = 'top' | 'right' | 'bottom' | 'left' | 'all'
 
 export interface SpacingProps
   extends Partial<Record<SpacingDirection, boolean | SpacingSize>> {}
@@ -13,28 +13,36 @@ export const spacingMap: Record<SpacingSize, string> = {
 }
 
 export const Spacing = styled('div')<SpacingProps>`
-  padding-top: ${({ top }) => {
-    if (!top) {
+  padding-top: ${({ top, all }) => {
+    if (!top && !all) {
       return 0
     }
-    return spacingMap[top === true ? 'medium' : (top as SpacingSize)]
+    return spacingMap[
+      top === true || all === true ? 'medium' : (top as SpacingSize)
+    ]
   }};
-  padding-right: ${({ right }) => {
-    if (!right) {
+  padding-right: ${({ right, all }) => {
+    if (!right && !all) {
       return 0
     }
-    return spacingMap[right === true ? 'medium' : (right as SpacingSize)]
+    return spacingMap[
+      right === true || all === true ? 'medium' : (right as SpacingSize)
+    ]
   }};
-  padding-bottom: ${({ bottom }) => {
-    if (!bottom) {
+  padding-bottom: ${({ bottom, all }) => {
+    if (!bottom && !all) {
       return 0
     }
-    return spacingMap[bottom === true ? 'medium' : (bottom as SpacingSize)]
+    return spacingMap[
+      bottom === true || all === true ? 'medium' : (bottom as SpacingSize)
+    ]
   }};
-  padding-left: ${({ left }) => {
-    if (!left) {
+  padding-left: ${({ left, all }) => {
+    if (!left && !all) {
       return 0
     }
-    return spacingMap[left === true ? 'medium' : (left as SpacingSize)]
+    return spacingMap[
+      left === true || all === true ? 'medium' : (left as SpacingSize)
+    ]
   }};
 `

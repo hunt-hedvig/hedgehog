@@ -1,17 +1,17 @@
-import { Muted } from './common'
-import { QuoteListItem } from './quote-list-item'
-import { signedOrExpiredPredicate, useQuotes } from './use-quotes'
+import { signedOrExpiredPredicate, useQuotes } from 'hooks/use-quotes'
 import * as React from 'react'
 import styled from 'react-emotion'
+import { Muted } from './common'
+import { QuoteListItem } from './quote-list-item'
 
 const Wrapper = styled('div')({
   padding: '1rem',
 })
 const Headline = styled('h1')({})
 
-export const Quotes: React.FunctionComponent<{ memberId: string }> = function({
+export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   memberId,
-}) {
+}) => {
   const [quotes, quotesLoading] = useQuotes(memberId)
 
   return (

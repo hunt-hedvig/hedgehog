@@ -20,8 +20,8 @@ import styled from 'react-emotion'
 import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import * as uuid from 'uuid/v4'
+import { QUOTES_QUERY } from '../../../../hooks/use-quotes'
 import { ErrorMessage } from './common'
-import { QUOTES_QUERY } from './use-quotes'
 
 const Label = styled('label')({
   display: 'block',
@@ -421,7 +421,7 @@ const ExtraBuildingEditor: React.FC<{
           <RemoveButtonWrapper>
             <Button
               variation="danger"
-              size="tiny"
+              size="small"
               type="button"
               onClick={(e) => {
                 e.preventDefault()
