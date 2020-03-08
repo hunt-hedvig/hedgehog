@@ -12,17 +12,17 @@ const CardLink = Card.withComponent(Link)
 
 export const Tools: React.FC = () => (
   <CardsWrapper>
-    <CardLink to="/tools/charges">
+    <CardLink to="/tools/charges" span={3}>
       <Icon>💰</Icon>
       Approve charges
     </CardLink>
 
-    <CardLink to="/tools/switcher-automation">
+    <CardLink to="/tools/switcher-automation" span={3}>
       <Icon>🏡</Icon>
       Switcher automation
     </CardLink>
 
-    <CardLink to="/tools/perils-editor">
+    <CardLink to="/tools/perils-editor" span={3}>
       <Icon>📝</Icon>
       Perils editor
     </CardLink>

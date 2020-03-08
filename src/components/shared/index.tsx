@@ -6,7 +6,7 @@ export const ListPage = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  max-width: 600px;
+  max-width: 900px;
   margin: 0 auto 50px;
 `
 

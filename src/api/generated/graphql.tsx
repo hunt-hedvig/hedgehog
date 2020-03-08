@@ -11,19 +11,19 @@ export type Scalars = {
   Float: number
   /** A String-representation of `java.time.YearMonth`. ex: `"2018-06"` */
   YearMonth: any
-  /** An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}` */
+  /** An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100  "currency": "SEK"}` */
   MonetaryAmount: any
   /** A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"` */
   Instant: any
-  /** A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"` */
+  /** A String-representation of `java.time.LocalDate` ex:  `"2018-09-26"` */
   LocalDate: any
-  /** A String-representation of `java.net.URL`, ex: "https://www.google.com/" */
+  /** A String-representation of `java.net.URL` ex: "https://www.google.com/" */
   URL: any
   /** A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"` */
   LocalDateTime: any
-  /** A String-representation of `java.time.LocalTime`, */
+  /** A String-representation of `java.time.LocalTime` */
   LocalTime: any
-  /** A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"` */
+  /** A String-representation of `java.time.ZonedDateTime` ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"` */
   ZonedDateTime: any
 }
 
@@ -86,6 +86,12 @@ export enum AccountEntryType {
   ReferralDiscount = 'REFERRAL_DISCOUNT',
   FreeMonthDiscount = 'FREE_MONTH_DISCOUNT',
   Loss = 'LOSS',
+}
+
+export type ActivatePendingAgreementInput = {
+  contractId: Scalars['ID']
+  agreementId: Scalars['ID']
+  fromDate: Scalars['LocalDate']
 }
 
 export type Address = {
@@ -200,6 +206,11 @@ export type Category = {
   __typename?: 'Category'
   id: Scalars['String']
   name: Scalars['String']
+}
+
+export type ChangeTerminationDateInput = {
+  contractId: Scalars['ID']
+  newTerminationDate: Scalars['LocalDate']
 }
 
 export enum ChargeStatus {
@@ -377,18 +388,18 @@ export type Contract = {
   holderMemberId: Scalars['ID']
   switchedFrom?: Maybe<Scalars['String']>
   masterInception?: Maybe<Scalars['LocalDate']>
-  status?: Maybe<ContractStatus>
+  status: ContractStatus
   isTerminated: Scalars['Boolean']
   terminationDate?: Maybe<Scalars['LocalDate']>
   currentAgreementId: Scalars['ID']
   hasPendingAgreement: Scalars['Boolean']
-  agreements?: Maybe<Array<Agreement>>
+  agreements: Array<Agreement>
   hasQueuedRenewal: Scalars['Boolean']
   renewal?: Maybe<Renewal>
   preferredCurrency: Scalars['String']
   signSource?: Maybe<SignSource>
   contractTypeName: Scalars['String']
-  createdAt?: Maybe<Scalars['Instant']>
+  createdAt: Scalars['Instant']
 }
 
 export enum ContractStatus {
@@ -705,6 +716,10 @@ export type MutationType = {
   createQuoteFromProduct: Quote
   updateQuote: Quote
   markSwitchableSwitcherEmailAsReminded?: Maybe<Scalars['Boolean']>
+  terminateContract: Contract
+  activatePendingAgreement: Contract
+  changeTerminationDate: Contract
+  revertTermination: Contract
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -848,6 +863,22 @@ export type MutationTypeUpdateQuoteArgs = {
 
 export type MutationTypeMarkSwitchableSwitcherEmailAsRemindedArgs = {
   id: Scalars['ID']
+}
+
+export type MutationTypeTerminateContractArgs = {
+  request?: Maybe<TerminateContractInput>
+}
+
+export type MutationTypeActivatePendingAgreementArgs = {
+  request?: Maybe<ActivatePendingAgreementInput>
+}
+
+export type MutationTypeChangeTerminationDateArgs = {
+  request?: Maybe<ChangeTerminationDateInput>
+}
+
+export type MutationTypeRevertTerminationArgs = {
+  contractId: Scalars['ID']
 }
 
 export type NorwegianHomeContent = AgreementCore & {
@@ -1136,7 +1167,7 @@ export type SwedishHouse = AgreementCore & {
   yearOfConstruction: Scalars['Int']
   numberOfBathrooms: Scalars['Int']
   extraBuildings: Array<ExtraBuilding>
-  isSubleted?: Maybe<Scalars['Boolean']>
+  isSubleted: Scalars['Boolean']
 }
 
 export type SwitchableSwitcherEmail = {
@@ -1147,6 +1178,42 @@ export type SwitchableSwitcherEmail = {
   queuedAt: Scalars['Instant']
   sentAt?: Maybe<Scalars['Instant']>
   remindedAt?: Maybe<Scalars['Instant']>
+}
+
+export type TerminateContractInput = {
+  contractId: Scalars['ID']
+  terminationDate: Scalars['LocalDate']
+  terminationReason: TerminationReason
+  comment?: Maybe<Scalars['String']>
+}
+
+export enum TerminationReason {
+  NoFeedback = 'NO_FEEDBACK',
+  DissatisfiedWithService = 'DISSATISFIED_WITH_SERVICE',
+  DissatisfiedWithApp = 'DISSATISFIED_WITH_APP',
+  DissatisfiedWithHedvig = 'DISSATISFIED_WITH_HEDVIG',
+  DissatisfiedWithOther = 'DISSATISFIED_WITH_OTHER',
+  AlreadyHaveInsurance = 'ALREADY_HAVE_INSURANCE',
+  CoveredByPartnersInsurance = 'COVERED_BY_PARTNERS_INSURANCE',
+  PartnerAlreadyHasHedvigInsurance = 'PARTNER_ALREADY_HAS_HEDVIG_INSURANCE',
+  GotOfferFromJobOrUnionOrSimilar = 'GOT_OFFER_FROM_JOB_OR_UNION_OR_SIMILAR',
+  WantToKeepOldInsurance = 'WANT_TO_KEEP_OLD_INSURANCE',
+  StuckWithOldInsurance = 'STUCK_WITH_OLD_INSURANCE',
+  DontNeedInsurance = 'DONT_NEED_INSURANCE',
+  WantedOtherTypeOfInsurance = 'WANTED_OTHER_TYPE_OF_INSURANCE',
+  RegretByRightToWithraw = 'REGRET_BY_RIGHT_TO_WITHRAW',
+  Moved = 'MOVED',
+  MovedAbroad = 'MOVED_ABROAD',
+  MovedInWithParents = 'MOVED_IN_WITH_PARENTS',
+  Price = 'PRICE',
+  MissedPayments = 'MISSED_PAYMENTS',
+  MissedPaymentsBadRisk = 'MISSED_PAYMENTS_BAD_RISK',
+  PaymentIssues = 'PAYMENT_ISSUES',
+  DiscountPeriodOver = 'DISCOUNT_PERIOD_OVER',
+  ConfirmedFraud = 'CONFIRMED_FRAUD',
+  SuspectedFraud = 'SUSPECTED_FRAUD',
+  Other = 'OTHER',
+  Unknown = 'UNKNOWN',
 }
 
 export type TestClaim = {

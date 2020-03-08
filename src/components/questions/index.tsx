@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Mount } from 'react-lifecycle-components'
 import { Header } from 'semantic-ui-react'
-import { isMemberIdEven } from 'utils/member'
 import { useInsecurePersistentState } from 'utils/state'
 import { MembersStore } from '../../store/storeTypes'
 import {

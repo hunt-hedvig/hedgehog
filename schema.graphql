@@ -10,7 +10,7 @@ type QueryType {
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   categories: [Category!]
   items(payload: Payload!): ItemSearch!
-  prices(date: String!, ids: [String!]!): [PricePoint!]!
+  prices(date: String! ids: [String!]!): [PricePoint!]!
   ticket (id: ID!): Ticket
   getFullTicketHistory( id: ID!): TicketHistory
   tickets (resolved: Boolean): [Ticket!]!
@@ -23,56 +23,59 @@ type QueryType {
 }
 
 type MutationType {
-  chargeMember(id: ID!, amount: MonetaryAmount!): Member
-  addAccountEntryToMember(memberId: ID!, accountEntry: AccountEntryInput!): Member!
+  chargeMember(id: ID! amount: MonetaryAmount!): Member
+  addAccountEntryToMember(memberId: ID! accountEntry: AccountEntryInput!): Member!
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
-  updateClaimState(id: ID!, state: ClaimState!): Claim
-  createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
-  addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
-  createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
-  setClaimType(id: ID!, type: ClaimTypes!): Claim
-  setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
-  updateReserve(id: ID!, amount: MonetaryAmount!): Claim
-  setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+  updateClaimState(id: ID! state: ClaimState!): Claim
+  createClaim(memberId: ID! date: LocalDateTime! source: ClaimSource!): ID
+  addClaimNote(id: ID! note: ClaimNoteInput!): Claim
+  createClaimPayment(id: ID! payment: ClaimPaymentInput!): Claim
+  setClaimType(id: ID! type: ClaimTypes!): Claim
+  setClaimInformation(id: ID! information: ClaimInformationInput!): Claim
+  updateReserve(id: ID! amount: MonetaryAmount!): Claim
+  setCoveringEmployee(id: ID! coveringEmployee: Boolean!): Claim
   createTicket (ticket: TicketInput): ID
-  changeTicketDescription (ticketId: ID!, newDescription : String): ID
-  assignTicketToTeamMember(ticketId: ID!, teamMemberId: ID!): ID
-  changeTicketStatus (ticketId: ID!, newStatus: TicketStatus): ID
-  changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
-  changeTicketPriority(ticketId: ID!, newPriority: Float): ID
-  autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
+  changeTicketDescription (ticketId: ID! newDescription : String): ID
+  assignTicketToTeamMember(ticketId: ID! teamMemberId: ID!): ID
+  changeTicketStatus (ticketId: ID! newStatus: TicketStatus): ID
+  changeTicketReminder(ticketId: ID! newReminder: RemindNotification): ID
+  changeTicketPriority(ticketId: ID! newPriority: Float): ID
+  autoLabelQuestion(question: String! label: String! memberId: String messageIds: [String!]): AutoLabel
   questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
-  markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
+  markClaimFileAsDeleted(claimId: ID! claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
-  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
+  setClaimFileCategory(claimId: ID! claimFileId: ID! category: String): String
   addInventoryItem(item: InventoryItemInput!): Boolean
   removeInventoryItem(inventoryItemId: ID!): Boolean
-  activateQuote(id: ID!, activationDate: LocalDate!, terminationDate: LocalDate): Quote!
+  activateQuote(id: ID! activationDate: LocalDate! terminationDate: LocalDate): Quote!
   # Creates a quote from a product and returns the quote id
-  createQuoteFromProduct(memberId: ID!, quoteData: QuoteFromProductInput!): Quote!
-  updateQuote(quoteId: ID!, quoteData: QuoteInput!, bypassUnderwritingGuidelines: Boolean): Quote!
+  createQuoteFromProduct(memberId: ID! quoteData: QuoteFromProductInput!): Quote!
+  updateQuote(quoteId: ID! quoteData: QuoteInput! bypassUnderwritingGuidelines: Boolean): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean
+  terminateContract(request: TerminateContractInput): Contract!
+  activatePendingAgreement(request: ActivatePendingAgreementInput): Contract!
+  changeTerminationDate(request: ChangeTerminationDateInput): Contract!
+  revertTermination(contractId: ID!): Contract!
 }
-
 
 type Contract {
   id: ID!
   holderMemberId: ID!
   switchedFrom: String
   masterInception: LocalDate
-  status: ContractStatus
+  status: ContractStatus!
   isTerminated: Boolean!
   terminationDate: LocalDate
   currentAgreementId: ID!
   hasPendingAgreement: Boolean!
-  agreements: [Agreement!]
+  agreements: [Agreement!]!
   hasQueuedRenewal: Boolean!
   renewal: Renewal
   preferredCurrency: String!
   signSource: SignSource
   contractTypeName: String!
-  createdAt: Instant
+  createdAt: Instant!
 }
 
 enum ContractStatus {
@@ -118,7 +121,7 @@ type SwedishHouse implements AgreementCore {
   yearOfConstruction: Int!
   numberOfBathrooms: Int!
   extraBuildings: [ExtraBuilding!]!
-  isSubleted: Boolean
+  isSubleted: Boolean!
 }
 
 type NorwegianHomeContent implements AgreementCore {
@@ -170,6 +173,53 @@ type Renewal {
   renewalDate: LocalDate!
   draftCertificateUrl: String
   draftOfAgreementId: ID
+}
+
+input TerminateContractInput {
+  contractId: ID!
+  terminationDate: LocalDate!
+  terminationReason: TerminationReason!
+  comment: String
+}
+
+input ChangeTerminationDateInput {
+  contractId: ID!
+  newTerminationDate: LocalDate!
+}
+
+input ActivatePendingAgreementInput {
+  contractId: ID!
+  agreementId: ID!
+  fromDate: LocalDate!
+}
+
+enum TerminationReason {
+  NO_FEEDBACK
+  DISSATISFIED_WITH_SERVICE
+  DISSATISFIED_WITH_APP
+  DISSATISFIED_WITH_HEDVIG
+  DISSATISFIED_WITH_OTHER
+  ALREADY_HAVE_INSURANCE
+  COVERED_BY_PARTNERS_INSURANCE
+  PARTNER_ALREADY_HAS_HEDVIG_INSURANCE
+  GOT_OFFER_FROM_JOB_OR_UNION_OR_SIMILAR
+  WANT_TO_KEEP_OLD_INSURANCE
+  STUCK_WITH_OLD_INSURANCE
+  DONT_NEED_INSURANCE
+  WANTED_OTHER_TYPE_OF_INSURANCE
+  REGRET_BY_RIGHT_TO_WITHRAW
+  MOVED
+  MOVED_ABROAD
+  MOVED_IN_WITH_PARENTS
+  PRICE
+  MISSED_PAYMENTS
+  MISSED_PAYMENTS_BAD_RISK
+  PAYMENT_ISSUES
+  DISCOUNT_PERIOD_OVER
+  CONFIRMED_FRAUD
+  SUSPECTED_FRAUD
+  OTHER
+  UNKNOWN
 }
 
 type Suggestion {
@@ -325,8 +375,8 @@ type Whitelisted {
 }
 
 enum Flag {
-  GREEN,
-  AMBER,
+  GREEN
+  AMBER
   RED
 }
 
@@ -369,8 +419,8 @@ type Member {
 }
 
 enum Gender {
-  MALE,
-  FEMALE,
+  MALE
+  FEMALE
   OTHER
 }
 
@@ -406,14 +456,14 @@ type Quote {
 }
 
 enum QuoteProductType {
-  APARTMENT,
-  HOUSE,
+  APARTMENT
+  HOUSE
   OBJECT
 }
 enum QuoteState {
-  INCOMPLETE,
-  QUOTED,
-  SIGNED,
+  INCOMPLETE
+  QUOTED
+  SIGNED
   EXPIRED
 }
 
@@ -434,11 +484,11 @@ type ApartmentQuoteData implements IQuoteData{
 }
 
 enum ApartmentSubType {
-  BRF,
-  RENT,
-  SUBLET_RENTAL,
-  SUBLET_BRF,
-  STUDENT_BRF,
+  BRF
+  RENT
+  SUBLET_RENTAL
+  SUBLET_BRF
+  STUDENT_BRF
   STUDENT_RENT
 }
 
@@ -469,19 +519,19 @@ type ExtraBuilding {
 }
 
 enum ExtraBuildingType {
-  GARAGE,
-  CARPORT,
-  SHED,
-  STOREHOUSE,
-  FRIGGEBOD,
-  ATTEFALL,
-  OUTHOUSE,
-  GUESTHOUSE,
-  GAZEBO,
-  GREENHOUSE,
-  SAUNA,
-  BARN,
-  BOATHOUSE,
+  GARAGE
+  CARPORT
+  SHED
+  STOREHOUSE
+  FRIGGEBOD
+  ATTEFALL
+  OUTHOUSE
+  GUESTHOUSE
+  GAZEBO
+  GREENHOUSE
+  SAUNA
+  BARN
+  BOATHOUSE
   OTHER
 }
 
@@ -575,9 +625,9 @@ type DirectDebitStatus {
 }
 
 enum SanctionStatus {
-  Undetermined,
-  NoHit,
-  PartialHit,
+  Undetermined
+  NoHit
+  PartialHit
   FullHit
 }
 
@@ -640,13 +690,13 @@ type AccountEntry {
 }
 
 enum AccountEntryType {
-  CORRECTION,
-  SUBSCRIPTION,
-  CAMPAIGN,
-  PAYOUT,
-  CHARGE,
-  REFERRAL_DISCOUNT,
-  FREE_MONTH_DISCOUNT,
+  CORRECTION
+  SUBSCRIPTION
+  CAMPAIGN
+  PAYOUT
+  CHARGE
+  REFERRAL_DISCOUNT
+  FREE_MONTH_DISCOUNT
   LOSS
 }
 
@@ -679,27 +729,27 @@ type ClaimNote {
 }
 
 enum ClaimTypes {
-  TheftClaim,
-  AccidentalDamageClaim,
-  AssaultClaim,
-  WaterDamageClaim,
-  TravelAccidentClaim,
-  LuggageDelayClaim,
-  NotCoveredClaim,
-  FireDamageClaim,
-  ApplianceClaim,
-  ConfirmedFraudClaim,
-  LiabilityClaim,
-  LegalProtectionClaim,
-  WaterDamageBathroomClaim,
-  WaterDamageKitchenClaim,
-  BurglaryClaim,
-  FloodingClaim,
-  EarthquakeClaim,
-  InstallationsClaim,
-  SnowPressureClaim,
-  StormDamageClaim,
-  VerminAndPestsClaim,
+  TheftClaim
+  AccidentalDamageClaim
+  AssaultClaim
+  WaterDamageClaim
+  TravelAccidentClaim
+  LuggageDelayClaim
+  NotCoveredClaim
+  FireDamageClaim
+  ApplianceClaim
+  ConfirmedFraudClaim
+  LiabilityClaim
+  LegalProtectionClaim
+  WaterDamageBathroomClaim
+  WaterDamageKitchenClaim
+  BurglaryClaim
+  FloodingClaim
+  EarthquakeClaim
+  InstallationsClaim
+  SnowPressureClaim
+  StormDamageClaim
+  VerminAndPestsClaim
   TestClaim
 }
 union ClaimType = TheftClaim
@@ -852,10 +902,10 @@ type ClaimPayment {
 }
 
 enum ClaimPaymentStatus {
-  PREPARED,
-  INITIATED,
-  SANCTION_LIST_HIT,
-  COMPLETED,
+  PREPARED
+  INITIATED
+  SANCTION_LIST_HIT
+  COMPLETED
   FAILED
 }
 
@@ -898,18 +948,18 @@ enum ClaimPaymentType {
 }
 
 enum ChargeStatus {
-  INITIATED,
-  WAITING_FOR_SUBSCRIPTION,
-  SCHEDULING_SUBSCRIPTION,
-  SCHEDULE_SUBSCRIPTION_FAILED,
-  SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL,
-  APPROVED_FOR_CHARGE,
-  SCHEDULING_CHARGE,
-  CHARGE_REQUESTING,
-  CHARGE_REQUEST_FAILED,
-  CHARGE_INITIATED,
-  CHARGE_FAILED,
-  CHARGE_COMPLETED,
+  INITIATED
+  WAITING_FOR_SUBSCRIPTION
+  SCHEDULING_SUBSCRIPTION
+  SCHEDULE_SUBSCRIPTION_FAILED
+  SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL
+  APPROVED_FOR_CHARGE
+  SCHEDULING_CHARGE
+  CHARGE_REQUESTING
+  CHARGE_REQUEST_FAILED
+  CHARGE_INITIATED
+  CHARGE_FAILED
+  CHARGE_COMPLETED
 }
 
 input TicketInput {
@@ -969,43 +1019,43 @@ input RemindNotification {
 }
 
 enum TicketChangeType {
-  TICKET_CREATED,
-  CHANGED_REMINDER,
-  CHANGED_ASSIGNED_TO,
-  CHANGED_DESCRIPTION,
-  CHANGED_STATUS,
-  CHANGED_PRIORITY,
+  TICKET_CREATED
+  CHANGED_REMINDER
+  CHANGED_ASSIGNED_TO
+  CHANGED_DESCRIPTION
+  CHANGED_STATUS
+  CHANGED_PRIORITY
 }
 
 enum TicketStatus {
-  WAITING,
-  WORKING_ON,
-  ON_HOLD,
-  RESOLVED,
+  WAITING
+  WORKING_ON
+  ON_HOLD
+  RESOLVED
 }
 
 enum TicketType {
-  REMIND,
-  MESSAGE,
-  CLAIM,
-  CALL_ME,
+  REMIND
+  MESSAGE
+  CLAIM
+  CALL_ME
   OTHER
 }
 
 
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
 scalar YearMonth
-# An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}`
+# An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100  "currency": "SEK"}`
 scalar MonetaryAmount
-# A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
+# A String-representation of `java.time.ZonedDateTime` ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
 scalar ZonedDateTime
-# A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
+# A String-representation of `java.time.LocalDate` ex:  `"2018-09-26"`
 scalar LocalDate
-# A String-representation of `java.time.LocalTime`,
+# A String-representation of `java.time.LocalTime`
 scalar LocalTime
 # A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime
 # A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"`
 scalar Instant
-# A String-representation of `java.net.URL`, ex: "https://www.google.com/"
+# A String-representation of `java.net.URL` ex: "https://www.google.com/"
 scalar URL

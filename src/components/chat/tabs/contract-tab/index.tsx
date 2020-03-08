@@ -14,7 +14,7 @@ export const Contracts: React.FunctionComponent<{
       {contractsLoading && 'Loading...'}
       {!contractsLoading && contracts.length === 0 && 'No contracts for member'}
       {contracts.map((contract) => (
-        <ContractItem contract={contract} />
+        <ContractItem key={contract.id} contract={contract} />
       ))}
     </Spacing>
   )

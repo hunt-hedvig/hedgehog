@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Card, CardsWrapper } from '../../../../../shared/hedvig-ui/card'
-import { Spacing } from '../../../../../shared/hedvig-ui/spacing'
 import {
   SecondLevelHeadline,
   ThirdLevelHeadline,
@@ -25,6 +24,11 @@ export const ContractItem: React.FunctionComponent<{
         <Card span={2}>
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
+        </Card>
+        <Card span={2}>
+          <span>
+            <b>Contract id:</b> {contract.id}
+          </span>
         </Card>
       </CardsWrapper>
     </>
