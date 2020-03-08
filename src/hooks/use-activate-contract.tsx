@@ -12,8 +12,15 @@ const ACTIVATE_PENDING_AGREMENT = gql`
   }
 `
 
-export const useActivateContract = () => {
-  const [activateContract] = useMutation(ACTIVATE_PENDING_AGREMENT)
+export const useActivateContract = (contract: Contract) => {
+  const [activateContract] = useMutation(ACTIVATE_PENDING_AGREMENT, {
+    refetchQueries: () => [
+      {
+        query: CONTRACTS_QUERY,
+        variables: { memberId: contract.holderMemberId },
+      },
+    ],
+  })
   return activateContract
 }
 
@@ -29,11 +36,5 @@ export const activateContractOptions = (
         fromDate: activeFrom.format('YYYY-MM-DD'),
       },
     },
-    refetchQueries: () => [
-      {
-        query: CONTRACTS_QUERY,
-        variables: { memberId: contract.holderMemberId },
-      },
-    ],
   }
 }

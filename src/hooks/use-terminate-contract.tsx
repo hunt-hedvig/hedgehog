@@ -19,6 +19,7 @@ const TERMINATE_CONTRACT = gql`
 `
 
 export const useTerminateContract = (
+  contract: Contract,
   onCompleted: (value?: any) => void = noopFunction,
 ): [
   (ChangeTerminationDateInput) => Promise<ExecutionResult<Contract>>,
@@ -26,6 +27,12 @@ export const useTerminateContract = (
 ] => {
   const [terminateContract, { loading }] = useMutation(TERMINATE_CONTRACT, {
     onCompleted,
+    refetchQueries: () => [
+      {
+        query: CONTRACTS_QUERY,
+        variables: { memberId: contract.holderMemberId },
+      },
+    ],
   })
   return [terminateContract, loading]
 }
@@ -34,7 +41,6 @@ export interface TerminateContractOptions {
   variables: {
     request: TerminateContractInput
   }
-  refetchQueries: () => void
 }
 
 export const terminateContractOptions = (
@@ -52,11 +58,5 @@ export const terminateContractOptions = (
         comment,
       },
     },
-    refetchQueries: () => [
-      {
-        query: CONTRACTS_QUERY,
-        variables: { memberId: contract.holderMemberId },
-      },
-    ],
   }
 }

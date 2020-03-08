@@ -95,12 +95,12 @@ export const CONTRACTS_QUERY = gql`
 
 export const useContracts = (
   memberId: string,
-): [ReadonlyArray<Contract>, boolean] => {
-  const { data, loading } = useQuery<{
+): [ReadonlyArray<Contract>, boolean, () => void] => {
+  const { data, loading, refetch } = useQuery<{
     member: { contracts: Member['contracts'] }
   }>(CONTRACTS_QUERY, {
     variables: { memberId },
   })
   const contracts = [...(data?.member.contracts ?? [])]
-  return [contracts, loading]
+  return [contracts, loading, refetch]
 }

@@ -15,6 +15,7 @@ const CHANGE_TERMINATION_DATE = gql`
 `
 
 export const useChangeTerminationDate = (
+  contract: Contract,
   onCompleted: (value?: any) => void = noopFunction,
 ): [
   (ChangeTerminationDateInput) => Promise<ExecutionResult<Contract>>,
@@ -24,6 +25,12 @@ export const useChangeTerminationDate = (
     CHANGE_TERMINATION_DATE,
     {
       onCompleted: () => onCompleted(),
+      refetchQueries: () => [
+        {
+          query: CONTRACTS_QUERY,
+          variables: { memberId: contract.holderMemberId },
+        },
+      ],
     },
   )
   return [changeTerminationDate, loading]
@@ -33,7 +40,6 @@ export interface ChangeTerminationDateOptions {
   variables: {
     request: ChangeTerminationDateInput
   }
-  refetchQueries: () => void
 }
 
 export const changeTerminationDateOptions = (
@@ -47,11 +53,5 @@ export const changeTerminationDateOptions = (
         newTerminationDate: newTerminationDate.format('YYYY-MM-DD'),
       },
     },
-    refetchQueries: () => [
-      {
-        query: CONTRACTS_QUERY,
-        variables: { memberId: contract.holderMemberId },
-      },
-    ],
   }
 }

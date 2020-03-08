@@ -52,7 +52,7 @@ const Questions: React.FC<QuestionsProps> = ({
           selectedFilters={selectedFilters}
           sendAnswer={sendAnswer}
           sendDoneMsg={sendDoneMsg}
-          tabChange={(e, data) =>
+          tabChange={(_, data) =>
             questionsRequest(data.panes[data.activeIndex].id)
           }
           members={members.list}

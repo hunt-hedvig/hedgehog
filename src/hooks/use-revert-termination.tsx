@@ -17,10 +17,10 @@ export interface RevertTerminationOptions {
   variables: {
     contractId: string
   }
-  refetchQueries: () => void
 }
 
 export const useRevertTermination = (
+  contract: Contract,
   onCompleted: (value?: any) => void = noopFunction,
 ): [
   (ChangeTerminationDateInput) => Promise<ExecutionResult<Contract>>,
@@ -28,6 +28,12 @@ export const useRevertTermination = (
 ] => {
   const [revertTermination, { loading }] = useMutation(REVERT_TERMINATION, {
     onCompleted,
+    refetchQueries: () => [
+      {
+        query: CONTRACTS_QUERY,
+        variables: { memberId: contract.holderMemberId },
+      },
+    ],
   })
   return [revertTermination, loading]
 }
@@ -39,11 +45,5 @@ export const revertTerminationOptions = (
     variables: {
       contractId: contract.id,
     },
-    refetchQueries: () => [
-      {
-        query: CONTRACTS_QUERY,
-        variables: { memberId: contract.holderMemberId },
-      },
-    ],
   }
 }

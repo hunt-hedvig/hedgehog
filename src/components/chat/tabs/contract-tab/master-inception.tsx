@@ -1,16 +1,13 @@
-import moment from 'moment'
-import * as React from 'react'
-import { Button, ButtonsGroup } from '../../../../../shared/hedvig-ui/button'
-import { DateTimePicker } from '../../../../../shared/hedvig-ui/date-time-picker'
-import {
-  FourthLevelHeadline,
-  Paragraph,
-} from '../../../../../shared/hedvig-ui/typography'
-import { Contract } from '../../../../api/generated/graphql'
+import { Contract } from 'api/generated/graphql'
+import { Button, ButtonsGroup } from 'hedvig-ui/button'
+import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import {
   activateContractOptions,
   useActivateContract,
-} from '../../../../hooks/use-activate-contract'
+} from 'hooks/use-activate-contract'
+import moment from 'moment'
+import * as React from 'react'
 
 export const MasterInception: React.FunctionComponent<{
   contract: Contract
@@ -21,7 +18,11 @@ export const MasterInception: React.FunctionComponent<{
 
   const [activeFrom, setActiveFrom] = React.useState(moment())
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
-  const activateContract = useActivateContract()
+  const reset = () => {
+    setActiveFrom(moment())
+    setDatePickerEnabled(false)
+  }
+  const activateContract = useActivateContract(contract)
 
   return (
     <>
@@ -42,20 +43,15 @@ export const MasterInception: React.FunctionComponent<{
           <ButtonsGroup>
             <Button
               onClick={() =>
-                activateContract(activateContractOptions(contract, activeFrom))
+                activateContract(
+                  activateContractOptions(contract, activeFrom),
+                ).then(reset)
               }
               variation={'success'}
             >
               Activate
             </Button>
-            <Button
-              onClick={() => {
-                setActiveFrom(moment())
-                setDatePickerEnabled(false)
-              }}
-            >
-              Cancel
-            </Button>
+            <Button onClick={() => reset()}>Cancel</Button>
           </ButtonsGroup>
         </>
       )}

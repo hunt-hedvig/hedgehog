@@ -2,12 +2,12 @@ import { Contract, TerminationReason } from 'api/generated/graphql'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { EnumDropdown } from 'hedvig-ui/dropdown'
-import { TextArea } from 'text-area.tsx'
+import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import {
   changeTerminationDateOptions,
   useChangeTerminationDate,
-} from 'hooks/use-change-contract-termination-date'
+} from 'hooks/use-change-termination-date'
 import {
   revertTerminationOptions,
   useRevertTermination,
@@ -38,12 +38,14 @@ export const TerminationDate: React.FunctionComponent<{
     setDatePickerEnabled(false)
     setIsReverting(false)
   }
-  const [terminateContract, terminationLoading] = useTerminateContract()
+  const [terminateContract, terminationLoading] = useTerminateContract(contract)
   const [
     changeTerminationDate,
     changeTerminationDateLoading,
-  ] = useChangeTerminationDate()
-  const [revertTermination, revertTerminationLoading] = useRevertTermination()
+  ] = useChangeTerminationDate(contract)
+  const [revertTermination, revertTerminationLoading] = useRevertTermination(
+    contract,
+  )
   if (contract.isTerminated) {
     return (
       <>
