@@ -24,7 +24,7 @@ const WidgetContainer = styled('div')({
 })
 
 const DatePickerContainer = styled('div')({
-  fontFamily: 'Circular Std Book !important, Arial',
+  fontFamily: 'Circular Std Book, Arial, sans-serif !important',
   '.SingleDatePickerInput': {
     textTransform: 'capitalize',
     border: '1px solid #ccc',

@@ -13,6 +13,7 @@ export const spacingMap: Record<SpacingSize, string> = {
 }
 
 export const Spacing = styled('div')<SpacingProps>`
+  width: 100%;
   padding-top: ${({ top, all }) => {
     if (!top && !all) {
       return 0

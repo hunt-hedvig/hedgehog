@@ -1,9 +1,6 @@
+import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { SecondLevelHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
-import { Card, CardsWrapper } from '../../../../../shared/hedvig-ui/card'
-import {
-  SecondLevelHeadline,
-  ThirdLevelHeadline,
-} from '../../../../../shared/hedvig-ui/typography'
 import { Contract } from '../../../../api/generated/graphql'
 import { MasterInception } from './master-inception'
 import { TerminationDate } from './termination-date'
@@ -25,9 +22,9 @@ export const ContractItem: React.FunctionComponent<{
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>
-        <Card span={2}>
+        <Card span={1}>
           <span>
-            <b>Contract id:</b> {contract.id}
+            <strong>Contract id:</strong> {contract.id}
           </span>
         </Card>
       </CardsWrapper>

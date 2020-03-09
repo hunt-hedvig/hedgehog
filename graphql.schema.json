@@ -515,7 +515,7 @@
       {
         "kind": "SCALAR",
         "name": "YearMonth",
-        "description": "A String-representation of `java.time.YearMonth`. ex: `\"2018-06\"`",
+        "description": "A String-representation of `java.time.YearMonth`, ex: `\"2018-06\"`",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -560,7 +560,7 @@
       {
         "kind": "SCALAR",
         "name": "MonetaryAmount",
-        "description": "An object-representation of `javax.money.MonetaryAmount`. ex: `{\"amount\": 100  \"currency\": \"SEK\"}`",
+        "description": "An object-representation of `javax.money.MonetaryAmount`, ex: `{\"amount\": 100  \"currency\": \"SEK\"}`",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -902,7 +902,7 @@
       {
         "kind": "SCALAR",
         "name": "Instant",
-        "description": "A String-representation of `java.time.Instant`. ex: `\"2018-06-11T20:08:30.123456\"`",
+        "description": "A String-representation of `java.time.Instant`, ex: `\"2018-06-11T20:08:30.123456\"`",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -1486,7 +1486,7 @@
       {
         "kind": "SCALAR",
         "name": "LocalDate",
-        "description": "A String-representation of `java.time.LocalDate` ex:  `\"2018-09-26\"`",
+        "description": "A String-representation of `java.time.LocalDate`, ex:  `\"2018-09-26\"`",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -1555,7 +1555,7 @@
       {
         "kind": "SCALAR",
         "name": "URL",
-        "description": "A String-representation of `java.net.URL` ex: \"https://www.google.com/\"",
+        "description": "A String-representation of `java.net.URL`, ex: \"https://www.google.com/\"",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -1885,7 +1885,7 @@
       {
         "kind": "SCALAR",
         "name": "LocalDateTime",
-        "description": "A String-representation of `java.time.LocalDateTIme`. ex: `\"2018-06-11T20:08:30.123456\"`",
+        "description": "A String-representation of `java.time.LocalDateTIme`, ex: `\"2018-06-11T20:08:30.123456\"`",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -11272,7 +11272,7 @@
       {
         "kind": "SCALAR",
         "name": "ZonedDateTime",
-        "description": "A String-representation of `java.time.ZonedDateTime` ex: `\"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]\"`",
+        "description": "A String-representation of `java.time.ZonedDateTime`, ex: `\"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]\"`",
         "fields": null,
         "inputFields": null,
         "interfaces": null,

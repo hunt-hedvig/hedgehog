@@ -10,10 +10,10 @@ type QueryType {
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   categories: [Category!]
   items(payload: Payload!): ItemSearch!
-  prices(date: String! ids: [String!]!): [PricePoint!]!
-  ticket (id: ID!): Ticket
-  getFullTicketHistory( id: ID!): TicketHistory
-  tickets (resolved: Boolean): [Ticket!]!
+  prices(date: String!, ids: [String!]!): [PricePoint!]!
+  ticket(id: ID!): Ticket
+  getFullTicketHistory(id: ID!): TicketHistory
+  tickets(resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   inventory(claimId: ID!): [InventoryItem]!
@@ -23,35 +23,54 @@ type QueryType {
 }
 
 type MutationType {
-  chargeMember(id: ID! amount: MonetaryAmount!): Member
-  addAccountEntryToMember(memberId: ID! accountEntry: AccountEntryInput!): Member!
+  chargeMember(id: ID!, amount: MonetaryAmount!): Member
+  addAccountEntryToMember(
+    memberId: ID!
+    accountEntry: AccountEntryInput!
+  ): Member!
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
-  updateClaimState(id: ID! state: ClaimState!): Claim
-  createClaim(memberId: ID! date: LocalDateTime! source: ClaimSource!): ID
-  addClaimNote(id: ID! note: ClaimNoteInput!): Claim
-  createClaimPayment(id: ID! payment: ClaimPaymentInput!): Claim
-  setClaimType(id: ID! type: ClaimTypes!): Claim
-  setClaimInformation(id: ID! information: ClaimInformationInput!): Claim
-  updateReserve(id: ID! amount: MonetaryAmount!): Claim
-  setCoveringEmployee(id: ID! coveringEmployee: Boolean!): Claim
-  createTicket (ticket: TicketInput): ID
-  changeTicketDescription (ticketId: ID! newDescription : String): ID
-  assignTicketToTeamMember(ticketId: ID! teamMemberId: ID!): ID
-  changeTicketStatus (ticketId: ID! newStatus: TicketStatus): ID
-  changeTicketReminder(ticketId: ID! newReminder: RemindNotification): ID
-  changeTicketPriority(ticketId: ID! newPriority: Float): ID
-  autoLabelQuestion(question: String! label: String! memberId: String messageIds: [String!]): AutoLabel
+  updateClaimState(id: ID!, state: ClaimState!): Claim
+  createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
+  addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
+  createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
+  setClaimType(id: ID!, type: ClaimTypes!): Claim
+  setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
+  updateReserve(id: ID!, amount: MonetaryAmount!): Claim
+  setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+  createTicket(ticket: TicketInput): ID
+  changeTicketDescription(ticketId: ID!, newDescription: String): ID
+  assignTicketToTeamMember(ticketId: ID!, teamMemberId: ID!): ID
+  changeTicketStatus(ticketId: ID!, newStatus: TicketStatus): ID
+  changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
+  changeTicketPriority(ticketId: ID!, newPriority: Float): ID
+  autoLabelQuestion(
+    question: String!
+    label: String!
+    memberId: String
+    messageIds: [String!]
+  ): AutoLabel
   questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
-  markClaimFileAsDeleted(claimId: ID! claimFileId: ID!): Boolean
+  markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
-  setClaimFileCategory(claimId: ID! claimFileId: ID! category: String): String
+  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
   addInventoryItem(item: InventoryItemInput!): Boolean
   removeInventoryItem(inventoryItemId: ID!): Boolean
-  activateQuote(id: ID! activationDate: LocalDate! terminationDate: LocalDate): Quote!
+  activateQuote(
+    id: ID!
+    activationDate: LocalDate!
+    terminationDate: LocalDate
+  ): Quote!
   # Creates a quote from a product and returns the quote id
-  createQuoteFromProduct(memberId: ID! quoteData: QuoteFromProductInput!): Quote!
-  updateQuote(quoteId: ID! quoteData: QuoteInput! bypassUnderwritingGuidelines: Boolean): Quote!
+  createQuoteFromProduct(
+    memberId: ID!
+    quoteData: QuoteFromProductInput!
+  ): Quote!
+  updateQuote(
+    quoteId: ID!
+    quoteData: QuoteInput!
+    bypassUnderwritingGuidelines: Boolean
+  ): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean
   terminateContract(request: TerminateContractInput): Contract!
   activatePendingAgreement(request: ActivatePendingAgreementInput): Contract!
@@ -84,7 +103,11 @@ enum ContractStatus {
   TERMINATED
 }
 
-union Agreement = SwedishApartment | SwedishHouse | NorwegianHomeContent | NorwegianTravel
+union Agreement =
+  SwedishApartment
+  | SwedishHouse
+  | NorwegianHomeContent
+  | NorwegianTravel
 
 interface AgreementCore {
   id: ID!
@@ -286,7 +309,7 @@ type Category {
 }
 
 input Payload {
-  category:  String!
+  category: String!
   query: String!
   filters: [Filter!]!
 }
@@ -308,7 +331,7 @@ type ItemSearch {
 
 type FilterSuggestion {
   name: String!
-  items:  [String!]!
+  items: [String!]!
   others: [String!]!
 }
 
@@ -317,7 +340,6 @@ type Item {
   id: String!
   name: String!
 }
-
 
 type FileUpload {
   fileUploadUrl: URL
@@ -426,7 +448,7 @@ enum Gender {
 
 interface IQuoteData {
   id: ID!
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
   street: String
@@ -469,9 +491,9 @@ enum QuoteState {
 
 union QuoteData = ApartmentQuoteData | HouseQuoteData
 
-type ApartmentQuoteData implements IQuoteData{
+type ApartmentQuoteData implements IQuoteData {
   id: ID!
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
   street: String
@@ -575,7 +597,7 @@ input QuoteFromProductInput {
 }
 
 input ApartmentQuoteDataInput {
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
   street: String
@@ -610,7 +632,6 @@ input ExtraBuildingInput {
   hasWaterConnected: Boolean!
   displayName: String
 }
-
 
 type Transaction {
   id: ID
@@ -752,7 +773,8 @@ enum ClaimTypes {
   VerminAndPestsClaim
   TestClaim
 }
-union ClaimType = TheftClaim
+union ClaimType =
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -888,7 +910,6 @@ type TestClaim {
   date: LocalDate
 }
 
-
 type ClaimPayment {
   id: String
   amount: MonetaryAmount
@@ -970,7 +991,7 @@ input TicketInput {
   remindNotificationTime: LocalTime
   remindMessage: String
   description: String
-  status : TicketStatus
+  status: TicketStatus
   referenceId: String
   memberId: String
 }
@@ -1042,20 +1063,19 @@ enum TicketType {
   OTHER
 }
 
-
-# A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
+# A String-representation of `java.time.YearMonth`, ex: `"2018-06"`
 scalar YearMonth
-# An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100  "currency": "SEK"}`
+# An object-representation of `javax.money.MonetaryAmount`, ex: `{"amount": 100  "currency": "SEK"}`
 scalar MonetaryAmount
-# A String-representation of `java.time.ZonedDateTime` ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
+# A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
 scalar ZonedDateTime
-# A String-representation of `java.time.LocalDate` ex:  `"2018-09-26"`
+# A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
 scalar LocalDate
 # A String-representation of `java.time.LocalTime`
 scalar LocalTime
-# A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
+# A String-representation of `java.time.LocalDateTIme`, ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime
-# A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"`
+# A String-representation of `java.time.Instant`, ex: `"2018-06-11T20:08:30.123456"`
 scalar Instant
-# A String-representation of `java.net.URL` ex: "https://www.google.com/"
+# A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL

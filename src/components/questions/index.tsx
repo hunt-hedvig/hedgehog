@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Mount } from 'react-lifecycle-components'
 import { Header } from 'semantic-ui-react'
 import { useInsecurePersistentState } from 'utils/state'
+import { Spacing } from '../../../shared/hedvig-ui/spacing'
 import { MembersStore } from '../../store/storeTypes'
 import {
   QuestionListKind,
@@ -34,18 +35,20 @@ const Questions: React.FC<QuestionsProps> = ({
       <>
         <Header size="huge">Questions</Header>
 
-        <QuestionsFilter
-          selected={selectedFilters}
-          onToggle={(newFilter) => {
-            if (selectedFilters.includes(newFilter)) {
-              setSelectedFilters(
-                selectedFilters.filter((filter) => filter !== newFilter),
-              )
-            } else {
-              setSelectedFilters([...selectedFilters, newFilter])
-            }
-          }}
-        />
+        <Spacing bottom>
+          <QuestionsFilter
+            selected={selectedFilters}
+            onToggle={(newFilter) => {
+              if (selectedFilters.includes(newFilter)) {
+                setSelectedFilters(
+                  selectedFilters.filter((filter) => filter !== newFilter),
+                )
+              } else {
+                setSelectedFilters([...selectedFilters, newFilter])
+              }
+            }}
+          />
+        </Spacing>
 
         <QuestionsList
           questions={questions}

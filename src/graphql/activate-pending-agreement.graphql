@@ -1,0 +1,5 @@
+mutation ActivatePendingAgreement($request: ActivatePendingAgreementInput) {
+  activatePendingAgreement(request: $request) {
+    id
+  }
+}

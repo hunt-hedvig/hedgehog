@@ -6,7 +6,7 @@ import {
   QuoteFromProductInput,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
-import { QUOTES_QUERY, useQuotes } from 'hooks/use-quotes'
+import { QUOTES_QUERY, useQuotes } from 'graphql/use-quotes'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Button, Modal } from 'semantic-ui-react'

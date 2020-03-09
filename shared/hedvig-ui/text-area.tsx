@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Form, TextArea as SemanticTextArea } from 'semantic-ui-react'
+import { TextArea as SemanticTextArea } from 'semantic-ui-react'
 
-const StyledForm = styled(Form)({
+const TextAreaWrapper = styled('div')({
   marginTop: '1rem',
   width: '100%',
 })
@@ -12,12 +12,12 @@ export const TextArea: React.FunctionComponent<{
   setText: (value: string) => void
 }> = ({ placeholder, setText }) => {
   return (
-    <StyledForm>
+    <TextAreaWrapper className={'ui form'}>
       <SemanticTextArea
         autoHeight
         placeholder={placeholder}
         onChange={(_, { value }) => setText(value as string)}
       />
-    </StyledForm>
+    </TextAreaWrapper>
   )
 }

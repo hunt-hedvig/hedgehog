@@ -1,0 +1,5 @@
+mutation ChangeTerminationDate($request: ChangeTerminationDateInput) {
+  changeTerminationDate(request: $request) {
+    id
+  }
+}

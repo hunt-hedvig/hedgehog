@@ -1,4 +1,4 @@
-import { signedOrExpiredPredicate, useQuotes } from 'hooks/use-quotes'
+import { signedOrExpiredPredicate, useQuotes } from 'graphql/use-quotes'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Muted } from './common'

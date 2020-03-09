@@ -14,13 +14,13 @@ import {
   QuoteProductType,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
+import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import * as uuid from 'uuid/v4'
-import { QUOTES_QUERY } from '../../../../hooks/use-quotes'
 import { ErrorMessage } from './common'
 
 const Label = styled('label')({
@@ -368,7 +368,7 @@ const ExtraBuildingEditor: React.FC<{
         <strong>Extra buildings</strong>
       </div>
       {extraBuildings.map((extraBuilding, i) => (
-        <ExtraBuildingWrapper key={extraBuilding?.id ?? uuid()}>
+        <ExtraBuildingWrapper key={extraBuilding?.id ?? undefined}>
           <div>
             <Label htmlFor={`area-${extraBuilding?.id}`}>Area</Label>
             <Input

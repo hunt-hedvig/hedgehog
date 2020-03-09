@@ -1,4 +1,4 @@
-import { useContracts } from 'hooks/use-contracts'
+import { useContracts } from 'graphql/use-contracts'
 import * as React from 'react'
 import { Icon } from 'semantic-ui-react'
 import { Button } from '../../../../../shared/hedvig-ui/button'
@@ -9,18 +9,19 @@ import { ContractItem } from './contract-item'
 export const Contracts: React.FunctionComponent<{
   memberId: string
 }> = ({ memberId }) => {
-  const [contracts, contractsLoading, refetchContracts] = useContracts(memberId)
+  const [contracts, { data, loading, refetch }] = useContracts(memberId)
+  console.log(data)
   return (
     <Spacing all>
       <MainHeadline>
         Contracts
-        <Button onClick={() => refetchContracts()} float={'right'}>
+        <Button onClick={() => refetch()} float={'right'}>
           Update
           <Icon name={'undo'} />
         </Button>
       </MainHeadline>
-      {contractsLoading && 'Loading...'}
-      {!contractsLoading && contracts.length === 0 && 'No contracts for member'}
+      {loading && 'Loading...'}
+      {!loading && contracts.length === 0 && 'No contracts for member'}
       {contracts.map((contract) => (
         <ContractItem key={contract.id} contract={contract} />
       ))}

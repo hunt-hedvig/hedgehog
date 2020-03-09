@@ -13,6 +13,7 @@ export const QuestionsFilter: React.FC<{
   return (
     <ButtonsGroup>
       <Button
+        fullWidth
         onClick={() => {
           onToggle(FilterState.Even)
         }}
@@ -20,10 +21,11 @@ export const QuestionsFilter: React.FC<{
         variation="danger"
         type="button"
       >
-        The empire
+        The Empire
       </Button>
 
       <Button
+        fullWidth
         onClick={() => {
           onToggle(FilterState.Odd)
         }}
@@ -31,7 +33,7 @@ export const QuestionsFilter: React.FC<{
         variation="success"
         type="button"
       >
-        The resistance
+        The Resistance
       </Button>
     </ButtonsGroup>
   )

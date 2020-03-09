@@ -1,12 +1,11 @@
 import { Contract } from 'api/generated/graphql'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import {
   activateContractOptions,
   useActivateContract,
-} from 'hooks/use-activate-contract'
-import moment from 'moment'
+} from 'graphql/use-activate-contract'
+import { Button, ButtonsGroup } from 'hedvig-ui/button'
+import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import * as React from 'react'
 
 export const MasterInception: React.FunctionComponent<{
@@ -16,13 +15,16 @@ export const MasterInception: React.FunctionComponent<{
     return <FourthLevelHeadline>{contract.masterInception}</FourthLevelHeadline>
   }
 
-  const [activeFrom, setActiveFrom] = React.useState(moment())
+  const [activeFrom, setActiveFrom] = React.useState(new Date())
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
   const reset = () => {
-    setActiveFrom(moment())
+    setActiveFrom(new Date())
     setDatePickerEnabled(false)
   }
-  const activateContract = useActivateContract(contract)
+  const [
+    activateContract,
+    { loading: activateContractLoading },
+  ] = useActivateContract(contract)
 
   return (
     <>
@@ -42,6 +44,8 @@ export const MasterInception: React.FunctionComponent<{
           <DateTimePicker date={activeFrom} setDate={setActiveFrom} />
           <ButtonsGroup>
             <Button
+              fullWidth
+              disabled={activateContractLoading}
               onClick={() =>
                 activateContract(
                   activateContractOptions(contract, activeFrom),
@@ -51,7 +55,9 @@ export const MasterInception: React.FunctionComponent<{
             >
               Activate
             </Button>
-            <Button onClick={() => reset()}>Cancel</Button>
+            <Button fullWidth onClick={() => reset()}>
+              Cancel
+            </Button>
           </ButtonsGroup>
         </>
       )}

@@ -1,0 +1,5 @@
+mutation TerminateContract($request: TerminateContractInput) {
+  terminateContract(request: $request) {
+    id
+  }
+}

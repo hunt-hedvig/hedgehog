@@ -14,17 +14,17 @@ enum Taste {
 }
 
 export const DropdownWithEnum: React.FunctionComponent = () => {
-  const [terminationReason, setTerminationReason] = React.useState(null)
+  const [taste, setTaste] = React.useState(null)
   return (
     <>
       <EnumDropdown
         enumToSelectFrom={Taste}
         placeholder={'Select a taste'}
-        setValue={setTerminationReason}
+        setValue={setTaste}
       />
       <h3>
-        <b>{'Selected taste:'} </b>
-        {terminationReason}
+        <strong>Selected taste:</strong>
+        {taste}
       </h3>
     </>
   )

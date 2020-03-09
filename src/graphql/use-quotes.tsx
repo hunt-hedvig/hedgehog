@@ -50,21 +50,6 @@ export const QUOTES_QUERY = gql`
   }
 `
 
-/*
-  ... on NorwegianHomeContentQuoteData {
-    street
-    zipCode
-    city
-    householdSize
-    livingSpace
-    type
-  }
-
-  ... on NorwegianTravelQuoteData {
-    householdSize
-  }
- */
-
 const latest = (a: Quote, b: Quote) =>
   Number(parseISO(b.createdAt)) - Number(parseISO(a.createdAt))
 

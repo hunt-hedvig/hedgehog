@@ -1,26 +1,25 @@
 import { Contract, TerminationReason } from 'api/generated/graphql'
+import {
+  changeTerminationDateOptions,
+  useChangeTerminationDate,
+} from 'graphql/use-change-termination-date'
+import {
+  revertTerminationOptions,
+  useRevertTermination,
+} from 'graphql/use-revert-termination'
+import {
+  terminateContractOptions,
+  useTerminateContract,
+} from 'graphql/use-terminate-contract'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
-import {
-  changeTerminationDateOptions,
-  useChangeTerminationDate,
-} from 'hooks/use-change-termination-date'
-import {
-  revertTerminationOptions,
-  useRevertTermination,
-} from 'hooks/use-revert-termination'
-import {
-  terminateContractOptions,
-  useTerminateContract,
-} from 'hooks/use-terminate-contract'
-import moment, { Moment } from 'moment'
 import * as React from 'react'
 
-const initialTerminationDate = (contract: Contract): Moment =>
-  contract.isTerminated ? moment(contract.terminationDate) : moment()
+const initialTerminationDate = (contract: Contract): Date =>
+  contract.isTerminated ? new Date(contract.terminationDate) : new Date()
 
 export const TerminationDate: React.FunctionComponent<{
   contract: Contract
@@ -38,14 +37,19 @@ export const TerminationDate: React.FunctionComponent<{
     setDatePickerEnabled(false)
     setIsReverting(false)
   }
-  const [terminateContract, terminationLoading] = useTerminateContract(contract)
+  const [
+    terminateContract,
+    { loading: terminateContractLoading },
+  ] = useTerminateContract(contract)
   const [
     changeTerminationDate,
-    changeTerminationDateLoading,
+    { loading: changeTerminationDateLoading },
   ] = useChangeTerminationDate(contract)
-  const [revertTermination, revertTerminationLoading] = useRevertTermination(
-    contract,
-  )
+  const [
+    revertTermination,
+    { loading: revertTerminationLoading },
+  ] = useRevertTermination(contract)
+
   if (contract.isTerminated) {
     return (
       <>
@@ -56,6 +60,7 @@ export const TerminationDate: React.FunctionComponent<{
             </FourthLevelHeadline>
             <ButtonsGroup>
               <Button
+                fullWidth
                 variation={'secondary'}
                 onClick={() => setDatePickerEnabled(true)}
               >
@@ -63,6 +68,7 @@ export const TerminationDate: React.FunctionComponent<{
               </Button>
               {!isReverting && (
                 <Button
+                  fullWidth
                   variation={'success'}
                   onClick={() => setIsReverting(true)}
                 >
@@ -71,12 +77,13 @@ export const TerminationDate: React.FunctionComponent<{
               )}
               {isReverting && (
                 <Button
+                  fullWidth
                   variation={'default'}
                   disabled={revertTerminationLoading}
                   onClick={() =>
-                    revertTermination(revertTerminationOptions(contract)).then(
-                      reset,
-                    )
+                    revertTermination(
+                      revertTerminationOptions(contract),
+                    ).then(() => reset())
                   }
                 >
                   Are you sure?
@@ -93,6 +100,7 @@ export const TerminationDate: React.FunctionComponent<{
             />
             <ButtonsGroup>
               <Button
+                fullWidth
                 variation={'primary'}
                 disabled={changeTerminationDateLoading}
                 onClick={() =>
@@ -103,7 +111,9 @@ export const TerminationDate: React.FunctionComponent<{
               >
                 Change
               </Button>
-              <Button onClick={() => reset()}>Cancel</Button>
+              <Button fullWidth onClick={() => reset()}>
+                Cancel
+              </Button>
             </ButtonsGroup>
           </>
         )}
@@ -131,8 +141,9 @@ export const TerminationDate: React.FunctionComponent<{
           />
           <ButtonsGroup>
             <Button
+              fullWidth
               variation={'danger'}
-              disabled={terminationReason === null || terminationLoading}
+              disabled={terminationReason === null || terminateContractLoading}
               onClick={() =>
                 terminateContract(
                   terminateContractOptions(
@@ -146,7 +157,9 @@ export const TerminationDate: React.FunctionComponent<{
             >
               Terminate
             </Button>
-            <Button onClick={() => reset()}>Cancel</Button>
+            <Button fullWidth onClick={() => reset()}>
+              Cancel
+            </Button>
           </ButtonsGroup>
         </>
       )}

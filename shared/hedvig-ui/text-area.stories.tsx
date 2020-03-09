@@ -16,7 +16,7 @@ export const TextAreaThatGrows: React.FunctionComponent = () => {
         setText={setText}
       />
       <p>
-        <b>Written text:</b> {text}
+        <strong>Written text:</strong> {text}
       </p>
     </>
   )

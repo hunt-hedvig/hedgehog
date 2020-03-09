@@ -9,21 +9,21 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
-  /** A String-representation of `java.time.YearMonth`. ex: `"2018-06"` */
+  /** A String-representation of `java.time.YearMonth`, ex: `"2018-06"` */
   YearMonth: any
-  /** An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100  "currency": "SEK"}` */
+  /** An object-representation of `javax.money.MonetaryAmount`, ex: `{"amount": 100  "currency": "SEK"}` */
   MonetaryAmount: any
-  /** A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"` */
+  /** A String-representation of `java.time.Instant`, ex: `"2018-06-11T20:08:30.123456"` */
   Instant: any
-  /** A String-representation of `java.time.LocalDate` ex:  `"2018-09-26"` */
+  /** A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"` */
   LocalDate: any
-  /** A String-representation of `java.net.URL` ex: "https://www.google.com/" */
+  /** A String-representation of `java.net.URL`, ex: "https://www.google.com/" */
   URL: any
-  /** A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"` */
+  /** A String-representation of `java.time.LocalDateTIme`, ex: `"2018-06-11T20:08:30.123456"` */
   LocalDateTime: any
   /** A String-representation of `java.time.LocalTime` */
   LocalTime: any
-  /** A String-representation of `java.time.ZonedDateTime` ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"` */
+  /** A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"` */
   ZonedDateTime: any
 }
 
@@ -1384,6 +1384,205 @@ export type MarkSwitcherEmailAsRemindedMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'markSwitchableSwitcherEmailAsReminded'>
 
+export type ActivatePendingAgreementMutationVariables = {
+  request?: Maybe<ActivatePendingAgreementInput>
+}
+
+export type ActivatePendingAgreementMutation = {
+  __typename?: 'MutationType'
+} & {
+  activatePendingAgreement: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+}
+
+export type ChangeTerminationDateMutationVariables = {
+  request?: Maybe<ChangeTerminationDateInput>
+}
+
+export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
+  changeTerminationDate: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+}
+
+export type GetContractsQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetContractsQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & {
+      contracts: Array<
+        { __typename?: 'Contract' } & Pick<
+          Contract,
+          | 'id'
+          | 'holderMemberId'
+          | 'switchedFrom'
+          | 'masterInception'
+          | 'status'
+          | 'isTerminated'
+          | 'terminationDate'
+          | 'currentAgreementId'
+          | 'hasPendingAgreement'
+          | 'hasQueuedRenewal'
+          | 'preferredCurrency'
+          | 'signSource'
+          | 'contractTypeName'
+          | 'createdAt'
+        > & {
+            agreements: Array<
+              | ({ __typename?: 'SwedishApartment' } & Pick<
+                  SwedishApartment,
+                  | 'id'
+                  | 'fromDate'
+                  | 'toDate'
+                  | 'certificateUrl'
+                  | 'status'
+                  | 'numberCoInsured'
+                  | 'squareMeters'
+                > & {
+                    address: { __typename?: 'Address' } & Pick<
+                      Address,
+                      'street' | 'postalCode' | 'city'
+                    >
+                  })
+              | ({ __typename?: 'SwedishHouse' } & Pick<
+                  SwedishHouse,
+                  | 'id'
+                  | 'fromDate'
+                  | 'toDate'
+                  | 'certificateUrl'
+                  | 'status'
+                  | 'numberCoInsured'
+                  | 'squareMeters'
+                  | 'ancillaryArea'
+                  | 'yearOfConstruction'
+                  | 'numberOfBathrooms'
+                  | 'isSubleted'
+                > & {
+                    address: { __typename?: 'Address' } & Pick<
+                      Address,
+                      'street' | 'postalCode' | 'city'
+                    >
+                    extraBuildings: Array<
+                      { __typename?: 'ExtraBuilding' } & Pick<
+                        ExtraBuilding,
+                        | 'id'
+                        | 'type'
+                        | 'area'
+                        | 'hasWaterConnected'
+                        | 'displayName'
+                      >
+                    >
+                  })
+              | ({ __typename?: 'NorwegianHomeContent' } & Pick<
+                  NorwegianHomeContent,
+                  | 'id'
+                  | 'fromDate'
+                  | 'toDate'
+                  | 'certificateUrl'
+                  | 'status'
+                  | 'numberCoInsured'
+                  | 'squareMeters'
+                > & {
+                    address: { __typename?: 'Address' } & Pick<
+                      Address,
+                      'street' | 'postalCode' | 'city'
+                    >
+                  })
+              | ({ __typename?: 'NorwegianTravel' } & Pick<
+                  NorwegianTravel,
+                  | 'id'
+                  | 'fromDate'
+                  | 'toDate'
+                  | 'certificateUrl'
+                  | 'status'
+                  | 'numberCoInsured'
+                >)
+            >
+            renewal: Maybe<
+              { __typename?: 'Renewal' } & Pick<
+                Renewal,
+                'renewalDate' | 'draftCertificateUrl' | 'draftOfAgreementId'
+              >
+            >
+          }
+      >
+    }
+  >
+}
+
+export type GetQuotesQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetQuotesQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & {
+      quotes: Array<
+        { __typename?: 'Quote' } & Pick<
+          Quote,
+          | 'id'
+          | 'price'
+          | 'productType'
+          | 'state'
+          | 'startDate'
+          | 'validity'
+          | 'isComplete'
+          | 'createdAt'
+          | 'breachedUnderwritingGuidelines'
+          | 'originatingProductId'
+          | 'signedProductId'
+        > & {
+            data: Maybe<
+              | ({ __typename?: 'ApartmentQuoteData' } & Pick<
+                  ApartmentQuoteData,
+                  | 'street'
+                  | 'zipCode'
+                  | 'city'
+                  | 'householdSize'
+                  | 'livingSpace'
+                  | 'subType'
+                >)
+              | ({ __typename?: 'HouseQuoteData' } & Pick<
+                  HouseQuoteData,
+                  | 'street'
+                  | 'zipCode'
+                  | 'city'
+                  | 'householdSize'
+                  | 'livingSpace'
+                  | 'ancillaryArea'
+                  | 'yearOfConstruction'
+                  | 'numberOfBathrooms'
+                  | 'isSubleted'
+                > & {
+                    extraBuildings: Array<
+                      { __typename?: 'ExtraBuilding' } & Pick<
+                        ExtraBuilding,
+                        'type' | 'area' | 'hasWaterConnected'
+                      >
+                    >
+                  })
+            >
+          }
+      >
+    }
+  >
+}
+
+export type RevertTerminationMutationVariables = {
+  contractId: Scalars['ID']
+}
+
+export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
+  revertTermination: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+}
+
+export type TerminateContractMutationVariables = {
+  request?: Maybe<TerminateContractInput>
+}
+
+export type TerminateContractMutation = { __typename?: 'MutationType' } & {
+  terminateContract: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+}
+
 export const MemberNameDocument = gql`
   query MemberName($memberId: ID!) {
     member(id: $memberId) {
@@ -1551,6 +1750,437 @@ export type MarkSwitcherEmailAsRemindedMutationResult = ApolloReactCommon.Mutati
 export type MarkSwitcherEmailAsRemindedMutationOptions = ApolloReactCommon.BaseMutationOptions<
   MarkSwitcherEmailAsRemindedMutation,
   MarkSwitcherEmailAsRemindedMutationVariables
+>
+export const ActivatePendingAgreementDocument = gql`
+  mutation ActivatePendingAgreement($request: ActivatePendingAgreementInput) {
+    activatePendingAgreement(request: $request) {
+      id
+    }
+  }
+`
+export type ActivatePendingAgreementMutationFn = ApolloReactCommon.MutationFunction<
+  ActivatePendingAgreementMutation,
+  ActivatePendingAgreementMutationVariables
+>
+
+/**
+ * __useActivatePendingAgreementMutation__
+ *
+ * To run a mutation, you first call `useActivatePendingAgreementMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useActivatePendingAgreementMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [activatePendingAgreementMutation, { data, loading, error }] = useActivatePendingAgreementMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useActivatePendingAgreementMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ActivatePendingAgreementMutation,
+    ActivatePendingAgreementMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ActivatePendingAgreementMutation,
+    ActivatePendingAgreementMutationVariables
+  >(ActivatePendingAgreementDocument, baseOptions)
+}
+export type ActivatePendingAgreementMutationHookResult = ReturnType<
+  typeof useActivatePendingAgreementMutation
+>
+export type ActivatePendingAgreementMutationResult = ApolloReactCommon.MutationResult<
+  ActivatePendingAgreementMutation
+>
+export type ActivatePendingAgreementMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ActivatePendingAgreementMutation,
+  ActivatePendingAgreementMutationVariables
+>
+export const ChangeTerminationDateDocument = gql`
+  mutation ChangeTerminationDate($request: ChangeTerminationDateInput) {
+    changeTerminationDate(request: $request) {
+      id
+    }
+  }
+`
+export type ChangeTerminationDateMutationFn = ApolloReactCommon.MutationFunction<
+  ChangeTerminationDateMutation,
+  ChangeTerminationDateMutationVariables
+>
+
+/**
+ * __useChangeTerminationDateMutation__
+ *
+ * To run a mutation, you first call `useChangeTerminationDateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeTerminationDateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeTerminationDateMutation, { data, loading, error }] = useChangeTerminationDateMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useChangeTerminationDateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ChangeTerminationDateMutation,
+    ChangeTerminationDateMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ChangeTerminationDateMutation,
+    ChangeTerminationDateMutationVariables
+  >(ChangeTerminationDateDocument, baseOptions)
+}
+export type ChangeTerminationDateMutationHookResult = ReturnType<
+  typeof useChangeTerminationDateMutation
+>
+export type ChangeTerminationDateMutationResult = ApolloReactCommon.MutationResult<
+  ChangeTerminationDateMutation
+>
+export type ChangeTerminationDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ChangeTerminationDateMutation,
+  ChangeTerminationDateMutationVariables
+>
+export const GetContractsDocument = gql`
+  query GetContracts($memberId: ID!) {
+    member(id: $memberId) {
+      contracts {
+        id
+        holderMemberId
+        switchedFrom
+        masterInception
+        status
+        isTerminated
+        terminationDate
+        currentAgreementId
+        hasPendingAgreement
+        agreements {
+          ... on SwedishApartment {
+            id
+            fromDate
+            toDate
+            certificateUrl
+            status
+            address {
+              street
+              postalCode
+              city
+            }
+            numberCoInsured
+            squareMeters
+          }
+          ... on SwedishHouse {
+            id
+            fromDate
+            toDate
+            certificateUrl
+            status
+            address {
+              street
+              postalCode
+              city
+            }
+            numberCoInsured
+            squareMeters
+            ancillaryArea
+            yearOfConstruction
+            numberOfBathrooms
+            extraBuildings {
+              id
+              type
+              area
+              hasWaterConnected
+              displayName
+            }
+            isSubleted
+          }
+          ... on NorwegianHomeContent {
+            id
+            fromDate
+            toDate
+            certificateUrl
+            status
+            address {
+              street
+              postalCode
+              city
+            }
+            numberCoInsured
+            squareMeters
+          }
+          ... on NorwegianTravel {
+            id
+            fromDate
+            toDate
+            certificateUrl
+            status
+            numberCoInsured
+          }
+        }
+        hasQueuedRenewal
+        renewal {
+          renewalDate
+          draftCertificateUrl
+          draftOfAgreementId
+        }
+        preferredCurrency
+        signSource
+        contractTypeName
+        createdAt
+      }
+    }
+  }
+`
+
+/**
+ * __useGetContractsQuery__
+ *
+ * To run a query within a React component, call `useGetContractsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetContractsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetContractsQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetContractsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetContractsQuery,
+    GetContractsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetContractsQuery,
+    GetContractsQueryVariables
+  >(GetContractsDocument, baseOptions)
+}
+export function useGetContractsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetContractsQuery,
+    GetContractsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetContractsQuery,
+    GetContractsQueryVariables
+  >(GetContractsDocument, baseOptions)
+}
+export type GetContractsQueryHookResult = ReturnType<
+  typeof useGetContractsQuery
+>
+export type GetContractsLazyQueryHookResult = ReturnType<
+  typeof useGetContractsLazyQuery
+>
+export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
+  GetContractsQuery,
+  GetContractsQueryVariables
+>
+export const GetQuotesDocument = gql`
+  query GetQuotes($memberId: ID!) {
+    member(id: $memberId) {
+      quotes {
+        id
+        price
+        productType
+        state
+        startDate
+        validity
+        isComplete
+        createdAt
+        breachedUnderwritingGuidelines
+        originatingProductId
+        signedProductId
+        data {
+          ... on ApartmentQuoteData {
+            street
+            zipCode
+            city
+            householdSize
+            livingSpace
+            subType
+          }
+          ... on HouseQuoteData {
+            street
+            zipCode
+            city
+            householdSize
+            livingSpace
+            ancillaryArea
+            yearOfConstruction
+            numberOfBathrooms
+            extraBuildings {
+              type
+              area
+              hasWaterConnected
+            }
+            isSubleted
+          }
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetQuotesQuery__
+ *
+ * To run a query within a React component, call `useGetQuotesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetQuotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetQuotesQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetQuotesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetQuotesQuery,
+    GetQuotesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetQuotesQuery, GetQuotesQueryVariables>(
+    GetQuotesDocument,
+    baseOptions,
+  )
+}
+export function useGetQuotesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetQuotesQuery,
+    GetQuotesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<GetQuotesQuery, GetQuotesQueryVariables>(
+    GetQuotesDocument,
+    baseOptions,
+  )
+}
+export type GetQuotesQueryHookResult = ReturnType<typeof useGetQuotesQuery>
+export type GetQuotesLazyQueryHookResult = ReturnType<
+  typeof useGetQuotesLazyQuery
+>
+export type GetQuotesQueryResult = ApolloReactCommon.QueryResult<
+  GetQuotesQuery,
+  GetQuotesQueryVariables
+>
+export const RevertTerminationDocument = gql`
+  mutation RevertTermination($contractId: ID!) {
+    revertTermination(contractId: $contractId) {
+      id
+    }
+  }
+`
+export type RevertTerminationMutationFn = ApolloReactCommon.MutationFunction<
+  RevertTerminationMutation,
+  RevertTerminationMutationVariables
+>
+
+/**
+ * __useRevertTerminationMutation__
+ *
+ * To run a mutation, you first call `useRevertTerminationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRevertTerminationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [revertTerminationMutation, { data, loading, error }] = useRevertTerminationMutation({
+ *   variables: {
+ *      contractId: // value for 'contractId'
+ *   },
+ * });
+ */
+export function useRevertTerminationMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RevertTerminationMutation,
+    RevertTerminationMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RevertTerminationMutation,
+    RevertTerminationMutationVariables
+  >(RevertTerminationDocument, baseOptions)
+}
+export type RevertTerminationMutationHookResult = ReturnType<
+  typeof useRevertTerminationMutation
+>
+export type RevertTerminationMutationResult = ApolloReactCommon.MutationResult<
+  RevertTerminationMutation
+>
+export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RevertTerminationMutation,
+  RevertTerminationMutationVariables
+>
+export const TerminateContractDocument = gql`
+  mutation TerminateContract($request: TerminateContractInput) {
+    terminateContract(request: $request) {
+      id
+    }
+  }
+`
+export type TerminateContractMutationFn = ApolloReactCommon.MutationFunction<
+  TerminateContractMutation,
+  TerminateContractMutationVariables
+>
+
+/**
+ * __useTerminateContractMutation__
+ *
+ * To run a mutation, you first call `useTerminateContractMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTerminateContractMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [terminateContractMutation, { data, loading, error }] = useTerminateContractMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useTerminateContractMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    TerminateContractMutation,
+    TerminateContractMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    TerminateContractMutation,
+    TerminateContractMutationVariables
+  >(TerminateContractDocument, baseOptions)
+}
+export type TerminateContractMutationHookResult = ReturnType<
+  typeof useTerminateContractMutation
+>
+export type TerminateContractMutationResult = ApolloReactCommon.MutationResult<
+  TerminateContractMutation
+>
+export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  TerminateContractMutation,
+  TerminateContractMutationVariables
 >
 
 export interface IntrospectionResultData {
