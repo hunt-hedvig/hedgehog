@@ -25,7 +25,6 @@ export interface ButtonProps {
   fullWidth?: boolean
   basic?: boolean
   size?: 'small' | 'medium' | 'large'
-  float?: 'none' | 'left' | 'right'
 }
 
 export const buttonColorMap: Record<
@@ -83,14 +82,7 @@ export const buttonSizeMap: Record<
 }
 
 export const Button = styled('button')<ButtonProps>(
-  ({
-    variation = 'default',
-    fullWidth,
-    basic,
-    size = 'medium',
-    float = 'none',
-  }) => ({
-    float,
+  ({ variation = 'default', fullWidth, basic, size = 'medium' }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',

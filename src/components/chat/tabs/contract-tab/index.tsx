@@ -1,10 +1,15 @@
 import { useContracts } from 'graphql/use-contracts'
 import * as React from 'react'
+import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 import { Button } from '../../../../../shared/hedvig-ui/button'
 import { Spacing } from '../../../../../shared/hedvig-ui/spacing'
 import { MainHeadline } from '../../../../../shared/hedvig-ui/typography'
 import { ContractItem } from './contract-item'
+
+const StyledButton = styled(Button)({
+  float: 'right',
+})
 
 export const Contracts: React.FunctionComponent<{
   memberId: string
@@ -15,10 +20,10 @@ export const Contracts: React.FunctionComponent<{
     <Spacing all>
       <MainHeadline>
         Contracts
-        <Button onClick={() => refetch()} float={'right'}>
+        <StyledButton onClick={() => refetch()}>
           Update
           <Icon name={'undo'} />
-        </Button>
+        </StyledButton>
       </MainHeadline>
       {loading && 'Loading...'}
       {!loading && contracts.length === 0 && 'No contracts for member'}
