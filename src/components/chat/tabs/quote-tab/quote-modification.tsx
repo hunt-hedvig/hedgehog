@@ -132,7 +132,7 @@ interface FormState {
   ancillaryArea: string | null
   yearOfConstruction: string | null
   numberOfBathrooms: string | null
-  extraBuildings: ReadonlyArray<EditableExtraBuilding>
+  extraBuildings: ReadonlyArray<ExtraBuilding>
   isSubleted: boolean | null
 }
 
@@ -169,6 +169,7 @@ export const QuoteModification: React.FC<{
     yearOfConstruction: null,
     zipCode: null,
   })
+
   const [
     bypassUnderwritingGuidelines,
     setBypassUnderwritingGuidelines,
@@ -349,8 +350,8 @@ const RemoveButtonWrapper = styled('div')({
 })
 
 const ExtraBuildingEditor: React.FC<{
-  extraBuildings: ReadonlyArray<EditableExtraBuilding>
-  onChange: (value: ReadonlyArray<EditableExtraBuilding>) => void
+  extraBuildings: ReadonlyArray<ExtraBuilding>
+  onChange: (value: ReadonlyArray<ExtraBuilding>) => void
 }> = ({ extraBuildings, onChange }) => {
   const handleExtraBuildingChange = (index: number) => (
     data: Partial<EditableExtraBuilding>,
@@ -367,7 +368,7 @@ const ExtraBuildingEditor: React.FC<{
         <strong>Extra buildings</strong>
       </div>
       {extraBuildings.map((extraBuilding, i) => (
-        <ExtraBuildingWrapper key={extraBuilding?.id}>
+        <ExtraBuildingWrapper key={extraBuilding?.id ?? uuid()}>
           <div>
             <Label htmlFor={`area-${extraBuilding?.id}`}>Area</Label>
             <Input
