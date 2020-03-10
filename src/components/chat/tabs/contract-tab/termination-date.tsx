@@ -81,7 +81,6 @@ export const TerminationDate: React.FunctionComponent<{
               >
                 Revert termination
               </Button>
-              )}
             </ButtonsGroup>
           </>
         )}
