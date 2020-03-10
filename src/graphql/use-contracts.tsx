@@ -1,7 +1,9 @@
+import { DocumentNode } from 'apollo-boost'
 import {
   Contract,
   GetContractsDocument,
   GetContractsQueryHookResult,
+  GetContractsQueryVariables,
   useGetContractsQuery,
 } from '../api/generated/graphql'
 
@@ -15,7 +17,12 @@ export const useContracts = (
   return [contracts, query]
 }
 
-export const refetchContracts = (memberId: string) => {
+export const refetchContracts = (
+  memberId: string,
+): {
+  query: DocumentNode
+  variables: GetContractsQueryVariables
+} => {
   return {
     query: GetContractsDocument,
     variables: {

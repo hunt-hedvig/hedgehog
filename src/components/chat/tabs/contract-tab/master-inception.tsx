@@ -1,4 +1,5 @@
 import { Contract } from 'api/generated/graphql'
+import { format } from 'date-fns'
 import {
   activateContractOptions,
   useActivateContract,
@@ -46,11 +47,19 @@ export const MasterInception: React.FunctionComponent<{
             <Button
               fullWidth
               disabled={activateContractLoading}
-              onClick={() =>
-                activateContract(
-                  activateContractOptions(contract, activeFrom),
-                ).then(reset)
-              }
+              onClick={() => {
+                const confirmed = window.confirm(
+                  `Are you sure you want to activate this contract with master inception of ${format(
+                    activeFrom,
+                    'yyyy-MM-dd',
+                  )}?`,
+                )
+                if (confirmed) {
+                  activateContract(
+                    activateContractOptions(contract, activeFrom),
+                  ).then(reset)
+                }
+              }}
               variation={'success'}
             >
               Activate

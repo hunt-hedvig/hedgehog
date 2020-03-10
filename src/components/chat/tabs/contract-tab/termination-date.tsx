@@ -1,4 +1,5 @@
 import { Contract, TerminationReason } from 'api/generated/graphql'
+import { format } from 'date-fns'
 import {
   changeTerminationDateOptions,
   useChangeTerminationDate,
@@ -30,12 +31,10 @@ export const TerminationDate: React.FunctionComponent<{
   )
   const [terminationReason, setTerminationReason] = React.useState(null)
   const [comment, setComment] = React.useState('')
-  const [isReverting, setIsReverting] = React.useState(false)
   const reset = () => {
     setTerminationDate(initialTerminationDate(contract))
     setTerminationReason(null)
     setDatePickerEnabled(false)
-    setIsReverting(false)
   }
   const [
     terminateContract,
@@ -66,28 +65,22 @@ export const TerminationDate: React.FunctionComponent<{
               >
                 Change termination date
               </Button>
-              {!isReverting && (
-                <Button
-                  fullWidth
-                  variation={'success'}
-                  onClick={() => setIsReverting(true)}
-                >
-                  Revert termination
-                </Button>
-              )}
-              {isReverting && (
-                <Button
-                  fullWidth
-                  variation={'default'}
-                  disabled={revertTerminationLoading}
-                  onClick={() =>
+              <Button
+                fullWidth
+                variation={'success'}
+                disabled={revertTerminationLoading}
+                onClick={() => {
+                  if (
+                    window.confirm('Are you want to revert the termination?')
+                  ) {
                     revertTermination(
                       revertTerminationOptions(contract),
                     ).then(() => reset())
                   }
-                >
-                  Are you sure?
-                </Button>
+                }}
+              >
+                Revert termination
+              </Button>
               )}
             </ButtonsGroup>
           </>
@@ -103,11 +96,18 @@ export const TerminationDate: React.FunctionComponent<{
                 fullWidth
                 variation={'primary'}
                 disabled={changeTerminationDateLoading}
-                onClick={() =>
-                  changeTerminationDate(
-                    changeTerminationDateOptions(contract, terminationDate),
-                  ).then(reset)
-                }
+                onClick={() => {
+                  const confirmed = window.confirm(
+                    `Are you sure you want to change the termination date from ${
+                      contract.terminationDate
+                    } to ${format(terminationDate, 'yyyy-MM-dd')}?`,
+                  )
+                  if (confirmed) {
+                    changeTerminationDate(
+                      changeTerminationDateOptions(contract, terminationDate),
+                    ).then(reset)
+                  }
+                }}
               >
                 Change
               </Button>
@@ -144,16 +144,24 @@ export const TerminationDate: React.FunctionComponent<{
               fullWidth
               variation={'danger'}
               disabled={terminationReason === null || terminateContractLoading}
-              onClick={() =>
-                terminateContract(
-                  terminateContractOptions(
-                    contract,
+              onClick={() => {
+                const confirmed = window.confirm(
+                  `Are you sure you want to termination this contract with the termination date ${format(
                     terminationDate,
-                    terminationReason!,
-                    comment,
-                  ),
-                ).then(reset)
-              }
+                    'yyyy-MM-dd',
+                  )}?`,
+                )
+                if (confirmed) {
+                  terminateContract(
+                    terminateContractOptions(
+                      contract,
+                      terminationDate,
+                      terminationReason!,
+                      comment,
+                    ),
+                  ).then(reset)
+                }
+              }}
             >
               Terminate
             </Button>
