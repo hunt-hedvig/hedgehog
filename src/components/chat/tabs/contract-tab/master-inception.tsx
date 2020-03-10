@@ -8,10 +8,12 @@ import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import * as React from 'react'
+import { WithShowNotification } from '../../../../store/actions/notificationsActions'
+import { withShowNotification } from '../../../../utils/notifications'
 
-export const MasterInception: React.FunctionComponent<{
+const MasterInceptionComponent: React.FunctionComponent<{
   contract: Contract
-}> = ({ contract }) => {
+} & WithShowNotification> = ({ contract, showNotification }) => {
   if (!contract.hasPendingAgreement) {
     return <FourthLevelHeadline>{contract.masterInception}</FourthLevelHeadline>
   }
@@ -57,7 +59,22 @@ export const MasterInception: React.FunctionComponent<{
                 if (confirmed) {
                   activateContract(
                     activateContractOptions(contract, activeFrom),
-                  ).then(reset)
+                  )
+                    .then(() => {
+                      showNotification({
+                        type: 'olive',
+                        header: 'Contract activated',
+                        message: 'Successfully activated the contract.',
+                      })
+                    })
+                    .catch((error) => {
+                      showNotification({
+                        type: 'red',
+                        header: 'Unable to activate the contract',
+                        message: error.message,
+                      })
+                      reset()
+                    })
                 }
               }}
               variation={'success'}
@@ -73,3 +90,5 @@ export const MasterInception: React.FunctionComponent<{
     </>
   )
 }
+
+export const MasterInception = withShowNotification(MasterInceptionComponent)

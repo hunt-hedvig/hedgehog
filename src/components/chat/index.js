@@ -164,7 +164,7 @@ export default class Chat extends React.Component {
               defaultActiveIndex={
                 !!this.props.insurance?.data ||
                 this.props.insurance?.list?.length > 0
-                  ? 5
+                  ? 7
                   : 0
               }
             />

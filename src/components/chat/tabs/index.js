@@ -83,20 +83,20 @@ const memberPagePanes = (props, addMessage, socket) => {
   }
   panes.push(
     {
+      menuItem: 'Contracts',
+      render: () => (
+        <TabItem
+          props={{ memberId: props.match.params.id }}
+          TabContent={Contracts}
+        />
+      ),
+    },
+    {
       menuItem: 'Quotes',
       render: () => (
         <TabItem
           props={{ memberId: props.match.params.id }}
           TabContent={Quotes}
-        />
-      ),
-    },
-    {
-      menuItem: 'Current Contracts',
-      render: () => (
-        <TabItem
-          props={{ memberId: props.match.params.id }}
-          TabContent={Contracts}
         />
       ),
     },

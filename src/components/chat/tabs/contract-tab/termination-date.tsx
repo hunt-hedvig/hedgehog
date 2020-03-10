@@ -18,13 +18,15 @@ import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
+import { WithShowNotification } from '../../../../store/actions/notificationsActions'
+import { withShowNotification } from '../../../../utils/notifications'
 
 const initialTerminationDate = (contract: Contract): Date =>
   contract.isTerminated ? new Date(contract.terminationDate) : new Date()
 
-export const TerminationDate: React.FunctionComponent<{
+const TerminationDateComponent: React.FunctionComponent<{
   contract: Contract
-}> = ({ contract }) => {
+} & WithShowNotification> = ({ contract, showNotification }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
   const [terminationDate, setTerminationDate] = React.useState(
     initialTerminationDate(contract),
@@ -73,9 +75,22 @@ export const TerminationDate: React.FunctionComponent<{
                   if (
                     window.confirm('Are you want to revert the termination?')
                   ) {
-                    revertTermination(
-                      revertTerminationOptions(contract),
-                    ).then(() => reset())
+                    revertTermination(revertTerminationOptions(contract))
+                      .then(() => {
+                        showNotification({
+                          type: 'olive',
+                          header: 'Termination reverted',
+                          message: 'Successfully reverted the termination.',
+                        })
+                        reset()
+                      })
+                      .catch((error) => {
+                        showNotification({
+                          type: 'red',
+                          header: 'Unable to revert termination',
+                          message: error.message,
+                        })
+                      })
                   }
                 }}
               >
@@ -104,7 +119,22 @@ export const TerminationDate: React.FunctionComponent<{
                   if (confirmed) {
                     changeTerminationDate(
                       changeTerminationDateOptions(contract, terminationDate),
-                    ).then(reset)
+                    )
+                      .then(() => {
+                        showNotification({
+                          type: 'olive',
+                          header: 'Termination date changed',
+                          message: 'Successfully changed the termination date.',
+                        })
+                        reset()
+                      })
+                      .catch((error) => {
+                        showNotification({
+                          type: 'red',
+                          header: 'Unable change termination date',
+                          message: error.message,
+                        })
+                      })
                   }
                 }}
               >
@@ -158,7 +188,22 @@ export const TerminationDate: React.FunctionComponent<{
                       terminationReason!,
                       comment,
                     ),
-                  ).then(reset)
+                  )
+                    .then(() => {
+                      showNotification({
+                        type: 'olive',
+                        header: 'Contract terminated',
+                        message: 'Successfully terminated the contract.',
+                      })
+                      reset()
+                    })
+                    .catch((error) => {
+                      showNotification({
+                        type: 'red',
+                        header: 'Unable to terminate',
+                        message: error.message,
+                      })
+                    })
                 }
               }}
             >
@@ -173,3 +218,5 @@ export const TerminationDate: React.FunctionComponent<{
     </>
   )
 }
+
+export const TerminationDate = withShowNotification(TerminationDateComponent)
