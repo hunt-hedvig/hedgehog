@@ -1,18 +1,21 @@
 import { format } from 'date-fns'
 import {
+  ActivatePendingAgreementMutation,
   ActivatePendingAgreementMutationHookResult,
   ActivatePendingAgreementMutationOptions,
+  ActivatePendingAgreementMutationVariables,
   Contract,
   useActivatePendingAgreementMutation,
 } from '../api/generated/graphql'
-import { refetchContracts } from './use-contracts'
+import { withRefetchContracts } from './use-contracts'
 
 export const useActivateContract = (
   contract: Contract,
 ): ActivatePendingAgreementMutationHookResult => {
-  return useActivatePendingAgreementMutation({
-    refetchQueries: () => [refetchContracts(contract.holderMemberId)],
-  })
+  return withRefetchContracts<
+    ActivatePendingAgreementMutation,
+    ActivatePendingAgreementMutationVariables
+  >(useActivatePendingAgreementMutation(), contract)
 }
 
 export const activateContractOptions = (

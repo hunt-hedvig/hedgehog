@@ -14,8 +14,7 @@ const StyledButton = styled(Button)({
 export const Contracts: React.FunctionComponent<{
   memberId: string
 }> = ({ memberId }) => {
-  const [contracts, { data, loading, refetch }] = useContracts(memberId)
-  console.log(data)
+  const [contracts, { loading, refetch }] = useContracts(memberId)
   return (
     <Spacing all>
       <MainHeadline>

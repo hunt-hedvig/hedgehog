@@ -80,7 +80,7 @@ const TerminationDateComponent: React.FunctionComponent<{
                         showNotification({
                           type: 'olive',
                           header: 'Termination reverted',
-                          message: 'Successfully reverted the termination.',
+                          message: 'Successfully reverted the termination',
                         })
                         reset()
                       })
@@ -124,14 +124,14 @@ const TerminationDateComponent: React.FunctionComponent<{
                         showNotification({
                           type: 'olive',
                           header: 'Termination date changed',
-                          message: 'Successfully changed the termination date.',
+                          message: 'Successfully changed termination date.',
                         })
                         reset()
                       })
                       .catch((error) => {
                         showNotification({
                           type: 'red',
-                          header: 'Unable change termination date',
+                          header: 'Unable to change termination date',
                           message: error.message,
                         })
                       })
@@ -175,7 +175,7 @@ const TerminationDateComponent: React.FunctionComponent<{
               disabled={terminationReason === null || terminateContractLoading}
               onClick={() => {
                 const confirmed = window.confirm(
-                  `Are you sure you want to termination this contract with the termination date ${format(
+                  `Are you sure you want to terminate this contract with the termination date ${format(
                     terminationDate,
                     'yyyy-MM-dd',
                   )}?`,

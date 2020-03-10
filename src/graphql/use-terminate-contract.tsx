@@ -1,19 +1,22 @@
 import { format } from 'date-fns'
 import {
   Contract,
+  TerminateContractMutation,
   TerminateContractMutationHookResult,
   TerminateContractMutationOptions,
+  TerminateContractMutationVariables,
   TerminationReason,
   useTerminateContractMutation,
 } from '../api/generated/graphql'
-import { refetchContracts } from './use-contracts'
+import { withRefetchContracts } from './use-contracts'
 
 export const useTerminateContract = (
   contract: Contract,
 ): TerminateContractMutationHookResult => {
-  return useTerminateContractMutation({
-    refetchQueries: () => [refetchContracts(contract.holderMemberId)],
-  })
+  return withRefetchContracts<
+    TerminateContractMutation,
+    TerminateContractMutationVariables
+  >(useTerminateContractMutation(), contract)
 }
 
 export const terminateContractOptions = (

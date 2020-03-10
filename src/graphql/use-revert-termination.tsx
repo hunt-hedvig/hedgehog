@@ -6,14 +6,15 @@ import {
   RevertTerminationMutationVariables,
   useRevertTerminationMutation,
 } from '../api/generated/graphql'
-import { refetchContracts } from './use-contracts'
+import { withRefetchContracts } from './use-contracts'
 
 export const useRevertTermination = (
   contract: Contract,
 ): RevertTerminationMutationHookResult => {
-  return useRevertTerminationMutation({
-    refetchQueries: () => [refetchContracts(contract.holderMemberId)],
-  })
+  return withRefetchContracts<
+    RevertTerminationMutation,
+    RevertTerminationMutationVariables
+  >(useRevertTerminationMutation(), contract)
 }
 
 export const revertTerminationOptions = (
