@@ -72,9 +72,15 @@ type MutationType {
     bypassUnderwritingGuidelines: Boolean
   ): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean
-  terminateContract(request: TerminateContractInput): Contract!
-  activatePendingAgreement(request: ActivatePendingAgreementInput): Contract!
-  changeTerminationDate(request: ChangeTerminationDateInput): Contract!
+  terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
+  activatePendingAgreement(
+    contractId: ID!
+    request: ActivatePendingAgreementInput
+  ): Contract!
+  changeTerminationDate(
+    contractId: ID!
+    request: ChangeTerminationDateInput
+  ): Contract!
   revertTermination(contractId: ID!): Contract!
 }
 
@@ -104,7 +110,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-  SwedishApartment
+    SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -199,20 +205,17 @@ type Renewal {
 }
 
 input TerminateContractInput {
-  contractId: ID!
   terminationDate: LocalDate!
   terminationReason: TerminationReason!
   comment: String
 }
 
 input ChangeTerminationDateInput {
-  contractId: ID!
   newTerminationDate: LocalDate!
 }
 
 input ActivatePendingAgreementInput {
-  contractId: ID!
-  agreementId: ID!
+  pendingAgreementId: ID!
   fromDate: LocalDate!
 }
 
@@ -774,7 +777,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

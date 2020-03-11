@@ -8533,6 +8533,20 @@
             "description": "",
             "args": [
               {
+                "name": "contractId",
+                "description": "",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "request",
                 "description": "",
                 "type": {
@@ -8560,6 +8574,20 @@
             "description": "",
             "args": [
               {
+                "name": "contractId",
+                "description": "",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "request",
                 "description": "",
                 "type": {
@@ -8586,6 +8614,20 @@
             "name": "changeTerminationDate",
             "description": "",
             "args": [
+              {
+                "name": "contractId",
+                "description": "",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
               {
                 "name": "request",
                 "description": "",
@@ -10111,20 +10153,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "contractId",
-            "description": "",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          },
-          {
             "name": "terminationDate",
             "description": "",
             "type": {
@@ -10341,21 +10369,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "contractId",
-            "description": "",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "agreementId",
+            "name": "pendingAgreementId",
             "description": "",
             "type": {
               "kind": "NON_NULL",
@@ -10393,20 +10407,6 @@
         "description": "",
         "fields": null,
         "inputFields": [
-          {
-            "name": "contractId",
-            "description": "",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          },
           {
             "name": "newTerminationDate",
             "description": "",

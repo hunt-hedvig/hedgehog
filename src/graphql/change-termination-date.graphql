@@ -1,5 +1,5 @@
-mutation ChangeTerminationDate($request: ChangeTerminationDateInput) {
-  changeTerminationDate(request: $request) {
+mutation ChangeTerminationDate($contractId: ID!, $request: ChangeTerminationDateInput) {
+  changeTerminationDate(contractId: $contractId, request: $request) {
     id
   }
 }

@@ -89,8 +89,7 @@ export enum AccountEntryType {
 }
 
 export type ActivatePendingAgreementInput = {
-  contractId: Scalars['ID']
-  agreementId: Scalars['ID']
+  pendingAgreementId: Scalars['ID']
   fromDate: Scalars['LocalDate']
 }
 
@@ -209,7 +208,6 @@ export type Category = {
 }
 
 export type ChangeTerminationDateInput = {
-  contractId: Scalars['ID']
   newTerminationDate: Scalars['LocalDate']
 }
 
@@ -866,14 +864,17 @@ export type MutationTypeMarkSwitchableSwitcherEmailAsRemindedArgs = {
 }
 
 export type MutationTypeTerminateContractArgs = {
+  contractId: Scalars['ID']
   request?: Maybe<TerminateContractInput>
 }
 
 export type MutationTypeActivatePendingAgreementArgs = {
+  contractId: Scalars['ID']
   request?: Maybe<ActivatePendingAgreementInput>
 }
 
 export type MutationTypeChangeTerminationDateArgs = {
+  contractId: Scalars['ID']
   request?: Maybe<ChangeTerminationDateInput>
 }
 
@@ -1181,7 +1182,6 @@ export type SwitchableSwitcherEmail = {
 }
 
 export type TerminateContractInput = {
-  contractId: Scalars['ID']
   terminationDate: Scalars['LocalDate']
   terminationReason: TerminationReason
   comment?: Maybe<Scalars['String']>
@@ -1385,6 +1385,7 @@ export type MarkSwitcherEmailAsRemindedMutation = {
 } & Pick<MutationType, 'markSwitchableSwitcherEmailAsReminded'>
 
 export type ActivatePendingAgreementMutationVariables = {
+  contractId: Scalars['ID']
   request?: Maybe<ActivatePendingAgreementInput>
 }
 
@@ -1395,6 +1396,7 @@ export type ActivatePendingAgreementMutation = {
 }
 
 export type ChangeTerminationDateMutationVariables = {
+  contractId: Scalars['ID']
   request?: Maybe<ChangeTerminationDateInput>
 }
 
@@ -1576,6 +1578,7 @@ export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
 }
 
 export type TerminateContractMutationVariables = {
+  contractId: Scalars['ID']
   request?: Maybe<TerminateContractInput>
 }
 
@@ -1752,8 +1755,11 @@ export type MarkSwitcherEmailAsRemindedMutationOptions = ApolloReactCommon.BaseM
   MarkSwitcherEmailAsRemindedMutationVariables
 >
 export const ActivatePendingAgreementDocument = gql`
-  mutation ActivatePendingAgreement($request: ActivatePendingAgreementInput) {
-    activatePendingAgreement(request: $request) {
+  mutation ActivatePendingAgreement(
+    $contractId: ID!
+    $request: ActivatePendingAgreementInput
+  ) {
+    activatePendingAgreement(contractId: $contractId, request: $request) {
       id
     }
   }
@@ -1776,6 +1782,7 @@ export type ActivatePendingAgreementMutationFn = ApolloReactCommon.MutationFunct
  * @example
  * const [activatePendingAgreementMutation, { data, loading, error }] = useActivatePendingAgreementMutation({
  *   variables: {
+ *      contractId: // value for 'contractId'
  *      request: // value for 'request'
  *   },
  * });
@@ -1802,8 +1809,11 @@ export type ActivatePendingAgreementMutationOptions = ApolloReactCommon.BaseMuta
   ActivatePendingAgreementMutationVariables
 >
 export const ChangeTerminationDateDocument = gql`
-  mutation ChangeTerminationDate($request: ChangeTerminationDateInput) {
-    changeTerminationDate(request: $request) {
+  mutation ChangeTerminationDate(
+    $contractId: ID!
+    $request: ChangeTerminationDateInput
+  ) {
+    changeTerminationDate(contractId: $contractId, request: $request) {
       id
     }
   }
@@ -1826,6 +1836,7 @@ export type ChangeTerminationDateMutationFn = ApolloReactCommon.MutationFunction
  * @example
  * const [changeTerminationDateMutation, { data, loading, error }] = useChangeTerminationDateMutation({
  *   variables: {
+ *      contractId: // value for 'contractId'
  *      request: // value for 'request'
  *   },
  * });
@@ -2133,8 +2144,11 @@ export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOpt
   RevertTerminationMutationVariables
 >
 export const TerminateContractDocument = gql`
-  mutation TerminateContract($request: TerminateContractInput) {
-    terminateContract(request: $request) {
+  mutation TerminateContract(
+    $contractId: ID!
+    $request: TerminateContractInput
+  ) {
+    terminateContract(contractId: $contractId, request: $request) {
       id
     }
   }
@@ -2157,6 +2171,7 @@ export type TerminateContractMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [terminateContractMutation, { data, loading, error }] = useTerminateContractMutation({
  *   variables: {
+ *      contractId: // value for 'contractId'
  *      request: // value for 'request'
  *   },
  * });

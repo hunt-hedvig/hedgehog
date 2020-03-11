@@ -1,8 +1,8 @@
+import { MutationFunctionOptions } from '@apollo/react-common'
 import { format } from 'date-fns'
 import {
   ActivatePendingAgreementMutation,
   ActivatePendingAgreementMutationHookResult,
-  ActivatePendingAgreementMutationOptions,
   ActivatePendingAgreementMutationVariables,
   Contract,
   useActivatePendingAgreementMutation,
@@ -21,12 +21,15 @@ export const useActivateContract = (
 export const activateContractOptions = (
   contract: Contract,
   activeFrom: Date,
-): ActivatePendingAgreementMutationOptions => {
+): MutationFunctionOptions<
+  ActivatePendingAgreementMutation,
+  ActivatePendingAgreementMutationVariables
+> => {
   return {
     variables: {
+      contractId: contract.id,
       request: {
-        contractId: contract.id,
-        agreementId: contract.currentAgreementId,
+        pendingAgreementId: contract.currentAgreementId,
         fromDate: format(activeFrom, 'yyyy-MM-dd'),
       },
     },

@@ -1,7 +1,7 @@
+import { MutationFunctionOptions } from '@apollo/react-common'
 import {
   ChangeTerminationDateMutation,
   ChangeTerminationDateMutationHookResult,
-  ChangeTerminationDateMutationOptions,
   ChangeTerminationDateMutationVariables,
   Contract,
   useChangeTerminationDateMutation,
@@ -21,11 +21,14 @@ export const useChangeTerminationDate = (
 export const changeTerminationDateOptions = (
   contract: Contract,
   newTerminationDate: Date,
-): ChangeTerminationDateMutationOptions => {
+): MutationFunctionOptions<
+  ChangeTerminationDateMutation,
+  ChangeTerminationDateMutationVariables
+> => {
   return {
     variables: {
+      contractId: contract.id,
       request: {
-        contractId: contract.id,
         newTerminationDate: format(newTerminationDate, 'yyyy-MM-dd'),
       },
     },

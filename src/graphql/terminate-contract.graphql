@@ -1,5 +1,5 @@
-mutation TerminateContract($request: TerminateContractInput) {
-  terminateContract(request: $request) {
+mutation TerminateContract($contractId: ID!, $request: TerminateContractInput) {
+  terminateContract(contractId: $contractId, request: $request) {
     id
   }
 }

@@ -1,9 +1,9 @@
+import { MutationFunctionOptions } from '@apollo/react-common'
 import { format } from 'date-fns'
 import {
   Contract,
   TerminateContractMutation,
   TerminateContractMutationHookResult,
-  TerminateContractMutationOptions,
   TerminateContractMutationVariables,
   TerminationReason,
   useTerminateContractMutation,
@@ -24,11 +24,14 @@ export const terminateContractOptions = (
   terminationDate: Date,
   terminationReason: TerminationReason,
   comment?: string,
-): TerminateContractMutationOptions => {
+): MutationFunctionOptions<
+  TerminateContractMutation,
+  TerminateContractMutationVariables
+> => {
   return {
     variables: {
+      contractId: contract.id,
       request: {
-        contractId: contract.id,
         terminationDate: format(terminationDate, 'yyyy-MM-dd'),
         terminationReason,
         comment,
