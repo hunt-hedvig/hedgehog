@@ -85,7 +85,7 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Contracts',
       render: () => (
         <TabItem
-          props={{ memberId: props.match.params.id }}
+          props={{ memberId: props.match.params.memberId }}
           TabContent={Contracts}
         />
       ),
@@ -94,7 +94,7 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Quotes',
       render: () => (
         <TabItem
-          props={{ memberId: props.match.params.id }}
+          props={{ memberId: props.match.params.memberId }}
           TabContent={Quotes}
         />
       ),
