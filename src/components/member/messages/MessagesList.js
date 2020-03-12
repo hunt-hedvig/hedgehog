@@ -1,5 +1,5 @@
 import animateScrollTo from 'animated-scroll-to'
-import Message from 'components/chat/messages/Message'
+import Message from 'components/member/messages/Message'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'

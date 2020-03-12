@@ -1,5 +1,5 @@
-import { ChatPanel } from 'components/chat/chat/ChatPanel'
-import MessagesList from 'components/chat/messages/MessagesList'
+import { ChatPanel } from 'components/member/chat/ChatPanel'
+import MessagesList from 'components/member/messages/MessagesList'
 import { reconnect, subscribe } from 'lib/sockets/chat'
 import gql from 'graphql-tag'
 import PropTypes from 'prop-types'

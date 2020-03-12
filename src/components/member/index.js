@@ -9,12 +9,12 @@ import { getMemberGroup, getMemberIdColor, MemberEmoji } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatPane from './tabs/ChatPane'
 
-const ChatPageWrapper = styled('div')({
+const MemberPageWrapper = styled('div')({
   display: 'flex',
   flexDirection: 'row',
 })
 
-const ChatPageContainer = styled('div')`
+const MemberPageContainer = styled('div')`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -39,8 +39,8 @@ const Badge = styled('div')`
   color: #fff;
 `
 
-export default class Chat extends React.Component {
-  getChatTitle = (member) =>
+export default class Member extends React.Component {
+  getMemberPageTitle = (member) =>
     `Member: ${
       member && (member.firstName || member.lastName)
         ? member.firstName + ' ' + (member.lastName || '')
@@ -69,11 +69,11 @@ export default class Chat extends React.Component {
     const panes = memberPagePanes(this.props, this.addMessageHandler)
 
     return (
-      <ChatPageWrapper>
-        <ChatPageContainer>
+      <MemberPageWrapper>
+        <MemberPageContainer>
           <Header size="huge">
             <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
-            {this.getChatTitle(messages.member)}
+            {this.getMemberPageTitle(messages.member)}
             <MemberEmoji
               birthDateString={messages.member?.birthDate}
               gender={messages.member?.gender}
@@ -97,9 +97,9 @@ export default class Chat extends React.Component {
               }
             />
           )}
-        </ChatPageContainer>
+        </MemberPageContainer>
         <ChatPane {...this.props} />
-      </ChatPageWrapper>
+      </MemberPageWrapper>
     )
   }
 
@@ -115,7 +115,7 @@ export default class Chat extends React.Component {
   })
 }
 
-Chat.propTypes = {
+Member.propTypes = {
   messageReceived: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   messages: PropTypes.object.isRequired,

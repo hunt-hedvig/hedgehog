@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid'
 import { ClaimNote, QueryType } from 'api/generated/graphql'
-import ChatPane from 'ChatPane.js'
+import ChatPane from 'components/member/tabs/ChatPane.js'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 // @ts-ignore

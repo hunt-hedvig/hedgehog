@@ -1,4 +1,4 @@
-import { CreateQuote } from 'components/chat/tabs/insurance-tab/create-quote'
+import { CreateQuote } from 'components/member/tabs/insurance-tab/create-quote'
 import { LinkRow } from 'components/shared'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
 import TableFields from 'components/shared/table-fields/TableFields'
