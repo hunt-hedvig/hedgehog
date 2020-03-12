@@ -6,9 +6,8 @@ import {
   QuoteFromProductInput,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
-import { QUOTES_QUERY, useQuotes } from 'components/chat/tabs/quotes/use-quotes'
+import { QUOTES_QUERY, useQuotes } from 'graphql/use-quotes'
 import * as React from 'react'
-import { useState } from 'react'
 import styled from 'react-emotion'
 import { Button, Modal } from 'semantic-ui-react'
 
@@ -68,9 +67,9 @@ const SuccessMessage = styled('h3')({
 export const CreateQuote: React.FunctionComponent<{
   memberId: string
   insurance: any
-}> = function({ memberId, insurance }) {
+}> = ({ memberId, insurance }) => {
   const [quotes, loadingQuotes] = useQuotes(memberId)
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = React.useState(false)
   const [createQuoteFromProduct, createQuoteMutation] = useMutation<
     Pick<MutationType, 'createQuoteFromProduct'>,
     MutationTypeCreateQuoteFromProductArgs

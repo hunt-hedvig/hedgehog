@@ -1,0 +1,88 @@
+query GetContracts($memberId: ID!) {
+  member(id: $memberId) {
+    contracts {
+      id
+      holderMemberId
+      switchedFrom
+      masterInception
+      status
+      isTerminated
+      terminationDate
+      currentAgreementId
+      hasPendingAgreement
+      agreements {
+        ... on SwedishApartment {
+          id
+          fromDate
+          toDate
+          certificateUrl
+          status
+          address {
+            street
+            postalCode
+            city
+          }
+          numberCoInsured
+          squareMeters
+        }
+        ... on SwedishHouse {
+          id
+          fromDate
+          toDate
+          certificateUrl
+          status
+          address {
+            street
+            postalCode
+            city
+          }
+          numberCoInsured
+          squareMeters
+          ancillaryArea
+          yearOfConstruction
+          numberOfBathrooms
+          extraBuildings {
+            id
+            type
+            area
+            hasWaterConnected
+            displayName
+          }
+          isSubleted
+        }
+        ... on NorwegianHomeContent {
+          id
+          fromDate
+          toDate
+          certificateUrl
+          status
+          address {
+            street
+            postalCode
+            city
+          }
+          numberCoInsured
+          squareMeters
+        }
+        ... on NorwegianTravel {
+          id
+          fromDate
+          toDate
+          certificateUrl
+          status
+          numberCoInsured
+        }
+      }
+      hasQueuedRenewal
+      renewal {
+        renewalDate
+        draftCertificateUrl
+        draftOfAgreementId
+      }
+      preferredCurrency
+      signSource
+      contractTypeName
+      createdAt
+    }
+  }
+}

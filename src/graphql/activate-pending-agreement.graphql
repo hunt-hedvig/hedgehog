@@ -1,0 +1,5 @@
+mutation ActivatePendingAgreement($contractId: ID!, $request: ActivatePendingAgreementInput) {
+  activatePendingAgreement(contractId: $contractId, request: $request) {
+    id
+  }
+}

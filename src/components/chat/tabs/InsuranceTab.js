@@ -396,6 +396,7 @@ export default class InsuranceTab extends React.Component {
     this.props.sendCertificate(formData, memberId)
   }
 
+
   handleDateChange = (type, e, { value }) => {
     switch (type) {
       case ACTIVATION_DATE:

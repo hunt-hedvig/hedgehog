@@ -2,12 +2,12 @@ import { useMutation } from '@apollo/react-hooks'
 import { Quote } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
+import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import { Checkbox } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
-import { QUOTES_QUERY } from './use-quotes'
 
 const ACTIVATE_MUTATION = gql`
   mutation ActivateQuote(

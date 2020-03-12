@@ -8,8 +8,8 @@ import { isMemberIdEven } from 'utils/member'
 const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 700px;
-  margin: 0 auto 50px;
+  width: 100%;
+  margin: 0;
 `
 
 const doFilter = (selectedFilters) => ({ memberId }) =>

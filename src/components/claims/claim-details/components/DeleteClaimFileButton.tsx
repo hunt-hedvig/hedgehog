@@ -45,8 +45,11 @@ export class DeleteButton extends React.Component<{
             <Button
               disabled={loading}
               onClick={() => {
-                window.confirm('Are you sure you want to delete this file?')
-                this.handleClick(mutation)
+                if (
+                  window.confirm('Are you sure you want to delete this file?')
+                ) {
+                  this.handleDeleteClick(mutation)
+                }
               }}
             >
               Delete
@@ -57,7 +60,7 @@ export class DeleteButton extends React.Component<{
     )
   }
 
-  private handleClick = (mutation) => {
+  private handleDeleteClick = (mutation) => {
     mutation({
       variables: {
         claimId: this.props.claimId,

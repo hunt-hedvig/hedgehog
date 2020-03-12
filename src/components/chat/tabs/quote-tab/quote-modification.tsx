@@ -14,6 +14,7 @@ import {
   QuoteProductType,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
+import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import styled from 'react-emotion'
@@ -21,7 +22,6 @@ import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import * as uuid from 'uuid/v4'
 import { ErrorMessage } from './common'
-import { QUOTES_QUERY } from './use-quotes'
 
 const Label = styled('label')({
   display: 'block',
@@ -51,6 +51,7 @@ interface EditableExtraBuilding extends ExtraBuilding {
   id: string
   area: any | string | number | undefined
   displayName?: string
+  hasWaterConnected: boolean
 }
 
 const UPDATE_QUOTE_MUTATION = gql`
@@ -132,7 +133,7 @@ interface FormState {
   ancillaryArea: string | null
   yearOfConstruction: string | null
   numberOfBathrooms: string | null
-  extraBuildings: ReadonlyArray<EditableExtraBuilding>
+  extraBuildings: ReadonlyArray<ExtraBuilding>
   isSubleted: boolean | null
 }
 
@@ -169,6 +170,7 @@ export const QuoteModification: React.FC<{
     yearOfConstruction: null,
     zipCode: null,
   })
+
   const [
     bypassUnderwritingGuidelines,
     setBypassUnderwritingGuidelines,
@@ -349,8 +351,8 @@ const RemoveButtonWrapper = styled('div')({
 })
 
 const ExtraBuildingEditor: React.FC<{
-  extraBuildings: ReadonlyArray<EditableExtraBuilding>
-  onChange: (value: ReadonlyArray<EditableExtraBuilding>) => void
+  extraBuildings: ReadonlyArray<ExtraBuilding>
+  onChange: (value: ReadonlyArray<ExtraBuilding>) => void
 }> = ({ extraBuildings, onChange }) => {
   const handleExtraBuildingChange = (index: number) => (
     data: Partial<EditableExtraBuilding>,
@@ -367,7 +369,7 @@ const ExtraBuildingEditor: React.FC<{
         <strong>Extra buildings</strong>
       </div>
       {extraBuildings.map((extraBuilding, i) => (
-        <ExtraBuildingWrapper key={extraBuilding?.id}>
+        <ExtraBuildingWrapper key={extraBuilding?.id ?? undefined}>
           <div>
             <Label htmlFor={`area-${extraBuilding?.id}`}>Area</Label>
             <Input
@@ -421,7 +423,7 @@ const ExtraBuildingEditor: React.FC<{
           <RemoveButtonWrapper>
             <Button
               variation="danger"
-              size="tiny"
+              size="small"
               type="button"
               onClick={(e) => {
                 e.preventDefault()
