@@ -51,6 +51,7 @@ interface EditableExtraBuilding extends ExtraBuilding {
   id: string
   area: any | string | number | undefined
   displayName?: string
+  hasWaterConnected: boolean
 }
 
 const UPDATE_QUOTE_MUTATION = gql`
