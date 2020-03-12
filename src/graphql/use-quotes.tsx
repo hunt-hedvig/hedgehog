@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/react-hooks'
-import { Member, Quote } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
 import { parseISO } from 'date-fns'
+import { Member, Quote } from 'src/api/generated/graphql'
 
 export const QUOTES_QUERY = gql`
   query Quotes($memberId: ID!) {
@@ -56,9 +56,9 @@ const latest = (a: Quote, b: Quote) =>
 export const signedOrExpiredPredicate = (quote) =>
   quote.state === 'EXPIRED' || quote.state === 'SIGNED'
 
-export const useQuotes = function(
+export const useQuotes = (
   memberId: string,
-): [ReadonlyArray<Quote>, boolean] {
+): [ReadonlyArray<Quote>, boolean] => {
   const { data, loading } = useQuery<{ member: { quotes: Member['quotes'] } }>(
     QUOTES_QUERY,
     {

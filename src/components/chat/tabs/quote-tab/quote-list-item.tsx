@@ -189,7 +189,7 @@ export const QuoteListItemComponent: React.FC<{
             <BottomSpacerWrapper>
               <Button
                 fullWidth
-                type="primary"
+                variation="primary"
                 onClick={toggleState(Action.MODIFY)}
               >
                 Modify

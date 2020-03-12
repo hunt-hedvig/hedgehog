@@ -95,7 +95,7 @@ export const getMemberIdColor = (memberId: string) => {
   }
 
   if (isMemberIdEven(memberId)) {
-    return colorsV2.midnight500
+    return colorsV2.coral500
   }
   return colorsV2.grass300
 }
@@ -106,7 +106,7 @@ export const getMemberGroup = (memberId: number) => {
   }
 
   if (isMemberIdEven(memberId.toString())) {
-    return 'The empire'
+    return 'The Empire'
   }
-  return 'The resistance'
+  return 'The Resistance'
 }

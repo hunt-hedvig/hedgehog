@@ -16,7 +16,7 @@ module.exports = ({
 }) => ({
   mode,
   resolve: {
-    extensions: ['.ts', '.tsx', '.mjs', '.js', '.json'],
+    extensions: ['.ts', '.tsx', '.mjs', '.js', '.json', '.css'],
     modules: [
       path.resolve(context, 'node_modules'),
       path.resolve(/**/ context, 'src'),
@@ -27,6 +27,13 @@ module.exports = ({
   module: {
     rules: [
       {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
         test: /\.(tsx?|js)$/,
         use: [
           'thread-loader',
@@ -35,7 +42,7 @@ module.exports = ({
             options: { ...babelrc, cacheDirectory: true },
           },
         ],
-      },
+      }
     ],
   },
   devtool: 'cheap-source-map',

@@ -7,8 +7,8 @@ import MemberFile from 'components/chat/tabs/FileTab'
 import InsuranceListTab from 'components/chat/tabs/InsuranceListTab'
 import InsuranceTab from 'components/chat/tabs/InsuranceTab'
 import PaymentsTab from 'components/chat/tabs/PaymentsTab'
-import { Quotes } from 'components/chat/tabs/quotes'
-// @ts-ignore
+import { Quotes } from 'components/chat/tabs/quote-tab'
+import { Contracts } from 'components/chat/tabs/contract-tab'
 import { CreateTicketStandAlone } from 'components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 
 import PropTypes from 'prop-types'
@@ -80,6 +80,26 @@ const memberPagePanes = (props, addMessage, socket) => {
       ),
     })
   }
+  panes.push(
+    {
+      menuItem: 'Contracts',
+      render: () => (
+        <TabItem
+          props={{ memberId: props.match.params.id }}
+          TabContent={Contracts}
+        />
+      ),
+    },
+    {
+      menuItem: 'Quotes',
+      render: () => (
+        <TabItem
+          props={{ memberId: props.match.params.id }}
+          TabContent={Quotes}
+        />
+      ),
+    },
+  )
   if (!insurance.error.length && insurance.data) {
     panes.push(
       {
@@ -100,15 +120,6 @@ const memberPagePanes = (props, addMessage, socket) => {
       },
     )
   }
-  panes.push({
-    menuItem: 'Quotes',
-    render: () => (
-      <TabItem
-        props={{ memberId: props.match.params.id }}
-        TabContent={Quotes}
-      />
-    ),
-  })
 
   return panes
 }

@@ -72,6 +72,180 @@ type MutationType {
     bypassUnderwritingGuidelines: Boolean
   ): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean
+  terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
+  activatePendingAgreement(
+    contractId: ID!
+    request: ActivatePendingAgreementInput
+  ): Contract!
+  changeTerminationDate(
+    contractId: ID!
+    request: ChangeTerminationDateInput
+  ): Contract!
+  revertTermination(contractId: ID!): Contract!
+}
+
+type Contract {
+  id: ID!
+  holderMemberId: ID!
+  switchedFrom: String
+  masterInception: LocalDate
+  status: ContractStatus!
+  isTerminated: Boolean!
+  terminationDate: LocalDate
+  currentAgreementId: ID!
+  hasPendingAgreement: Boolean!
+  agreements: [Agreement!]!
+  hasQueuedRenewal: Boolean!
+  renewal: Renewal
+  preferredCurrency: String!
+  signSource: SignSource
+  contractTypeName: String!
+  createdAt: Instant!
+}
+
+enum ContractStatus {
+  PENDING
+  ACTIVE
+  TERMINATED
+}
+
+union Agreement =
+    SwedishApartment
+  | SwedishHouse
+  | NorwegianHomeContent
+  | NorwegianTravel
+
+interface AgreementCore {
+  id: ID!
+  fromDate: LocalDate
+  toDate: LocalDate
+  basePremium: MonetaryAmount!
+  certificateUrl: String
+  status: AgreementStatus!
+}
+
+type SwedishApartment implements AgreementCore {
+  id: ID!
+  fromDate: LocalDate
+  toDate: LocalDate
+  basePremium: MonetaryAmount!
+  certificateUrl: String
+  status: AgreementStatus!
+  address: Address!
+  numberCoInsured: Int!
+  squareMeters: Int!
+}
+
+type SwedishHouse implements AgreementCore {
+  id: ID!
+  fromDate: LocalDate
+  toDate: LocalDate
+  basePremium: MonetaryAmount!
+  certificateUrl: String
+  status: AgreementStatus!
+  address: Address!
+  numberCoInsured: Int!
+  squareMeters: Int!
+  ancillaryArea: Int!
+  yearOfConstruction: Int!
+  numberOfBathrooms: Int!
+  extraBuildings: [ExtraBuilding!]!
+  isSubleted: Boolean!
+}
+
+type NorwegianHomeContent implements AgreementCore {
+  id: ID!
+  fromDate: LocalDate
+  toDate: LocalDate
+  basePremium: MonetaryAmount!
+  certificateUrl: String
+  status: AgreementStatus!
+  address: Address!
+  numberCoInsured: Int!
+  squareMeters: Int!
+}
+
+type NorwegianTravel implements AgreementCore {
+  id: ID!
+  fromDate: LocalDate
+  toDate: LocalDate
+  basePremium: MonetaryAmount!
+  certificateUrl: String
+  status: AgreementStatus!
+  numberCoInsured: Int!
+}
+
+enum AgreementStatus {
+  PENDING
+  ACTIVE_IN_FUTURE
+  ACTIVE
+  ACTIVE_IN_PAST
+  TERMINATED
+}
+
+type Address {
+  street: String!
+  postalCode: String!
+  city: String
+}
+
+enum SignSource {
+  RAPIO
+  WEBONBOARDING
+  APP
+  IOS
+  ANDROID
+  HOPE
+}
+
+type Renewal {
+  renewalDate: LocalDate!
+  draftCertificateUrl: String
+  draftOfAgreementId: ID
+}
+
+input TerminateContractInput {
+  terminationDate: LocalDate!
+  terminationReason: TerminationReason!
+  comment: String
+}
+
+input ChangeTerminationDateInput {
+  newTerminationDate: LocalDate!
+}
+
+input ActivatePendingAgreementInput {
+  pendingAgreementId: ID!
+  fromDate: LocalDate!
+}
+
+enum TerminationReason {
+  NO_FEEDBACK
+  DISSATISFIED_WITH_SERVICE
+  DISSATISFIED_WITH_APP
+  DISSATISFIED_WITH_HEDVIG
+  DISSATISFIED_WITH_OTHER
+  ALREADY_HAVE_INSURANCE
+  COVERED_BY_PARTNERS_INSURANCE
+  PARTNER_ALREADY_HAS_HEDVIG_INSURANCE
+  GOT_OFFER_FROM_JOB_OR_UNION_OR_SIMILAR
+  WANT_TO_KEEP_OLD_INSURANCE
+  STUCK_WITH_OLD_INSURANCE
+  DONT_NEED_INSURANCE
+  WANTED_OTHER_TYPE_OF_INSURANCE
+  REGRET_BY_RIGHT_TO_WITHRAW
+  MOVED
+  MOVED_ABROAD
+  MOVED_IN_WITH_PARENTS
+  PRICE
+  MISSED_PAYMENTS
+  MISSED_PAYMENTS_BAD_RISK
+  PAYMENT_ISSUES
+  DISCOUNT_PERIOD_OVER
+  CONFIRMED_FRAUD
+  SUSPECTED_FRAUD
+  OTHER
+  UNKNOWN
 }
 
 type Suggestion {
@@ -266,6 +440,7 @@ type Member {
   person: Person
   numberFailedCharges: NumberFailedCharges
   quotes: [Quote!]!
+  contracts: [Contract!]!
 }
 
 enum Gender {
@@ -361,9 +536,11 @@ type HouseQuoteData implements IQuoteData {
 }
 
 type ExtraBuilding {
+  id: ID
   type: ExtraBuildingType!
   area: Int!
   hasWaterConnected: Boolean!
+  displayName: String
 }
 
 enum ExtraBuildingType {
@@ -671,10 +848,6 @@ type LiabilityClaim {
   location: String
 }
 
-type NotCoveredClaim {
-  date: LocalDate
-}
-
 type FireDamageClaim {
   location: String
   date: LocalDate
@@ -729,6 +902,10 @@ type StormDamageClaim {
 }
 
 type VerminAndPestsClaim {
+  date: LocalDate
+}
+
+type NotCoveredClaim {
   date: LocalDate
 }
 
@@ -889,19 +1066,19 @@ enum TicketType {
   OTHER
 }
 
-# A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
+# A String-representation of `java.time.YearMonth`, ex: `"2018-06"`
 scalar YearMonth
-# An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}`
+# An object-representation of `javax.money.MonetaryAmount`, ex: `{"amount": 100  "currency": "SEK"}`
 scalar MonetaryAmount
 # A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
 scalar ZonedDateTime
 # A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
 scalar LocalDate
-# A String-representation of `java.time.LocalTime`,
+# A String-representation of `java.time.LocalTime`
 scalar LocalTime
-# A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
+# A String-representation of `java.time.LocalDateTIme`, ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime
-# A String-representation of `java.time.Instant`. ex: `"2018-06-11T20:08:30.123456"`
+# A String-representation of `java.time.Instant`, ex: `"2018-06-11T20:08:30.123456"`
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
