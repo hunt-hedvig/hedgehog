@@ -7,14 +7,14 @@ import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import { getMemberGroup, getMemberIdColor, MemberEmoji } from 'utils/member'
 import memberPagePanes from './tabs'
-import ChatTab from './tabs/ChatTab'
+import ChatPane from './tabs/ChatPane'
 
-const ChatPageWrapper = styled('div')({
+const MemberPageWrapper = styled('div')({
   display: 'flex',
   flexDirection: 'row',
 })
 
-const ChatPageContainer = styled('div')`
+const MemberPageContainer = styled('div')`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -39,64 +39,8 @@ const Badge = styled('div')`
   color: #fff;
 `
 
-export default class Chat extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      socket: null,
-      subscription: null,
-    }
-  }
-
-  addMessageHandler = (message, forceSendMessage) => {
-    const { socket } = this.state
-    const { addMessage, match } = this.props
-    if (socket) {
-      addMessage(message, forceSendMessage, match.params.id, socket)
-    }
-  }
-
-  subscribeSocket = () => {
-    const {
-      messageReceived,
-      match: {
-        params: { id },
-      },
-      messages,
-      showNotification,
-      auth,
-    } = this.props
-
-    const { stompClient, subscription } = subscribe(
-      { messageReceived, showNotification },
-      id,
-      auth.email,
-      messages.activeConnection,
-    )
-    return { stompClient, subscription }
-  }
-
-  reconnectSocket = () => {
-    const {
-      messageReceived,
-      match: {
-        params: { id },
-      },
-      setActiveConnection,
-      showNotification,
-      auth,
-    } = this.props
-
-    reconnect({ messageReceived, showNotification }, id, auth.email).then(
-      (result) => {
-        const { stompClient, subscription } = result
-        this.setState({ socket: stompClient, subscription })
-        setActiveConnection(stompClient)
-      },
-    )
-  }
-
-  getChatTitle = (member) =>
+export default class Member extends React.Component {
+  getMemberPageTitle = (member) =>
     `Member: ${
       member && (member.firstName || member.lastName)
         ? member.firstName + ' ' + (member.lastName || '')
@@ -106,7 +50,7 @@ export default class Chat extends React.Component {
   componentDidMount() {
     const {
       match: {
-        params: { id },
+        params: { memberId },
       },
       memberRequest,
       insuranceRequest,
@@ -114,38 +58,22 @@ export default class Chat extends React.Component {
       claimsByMember,
     } = this.props
 
-    const { stompClient, subscription } = this.subscribeSocket()
-    if (!stompClient) {
-      this.reconnectSocket()
-    }
-    this.setState({ socket: stompClient, subscription })
-
-    memberRequest(id)
-    insuranceRequest(id)
-    claimsByMember(id)
-    insurancesListRequest(id)
-  }
-
-  componentWillUnmount() {
-    const { subscription } = this.state
-    disconnect(null, subscription)
-    this.props.clearMessagesList()
+    memberRequest(memberId)
+    insuranceRequest(memberId)
+    claimsByMember(memberId)
+    insurancesListRequest(memberId)
   }
 
   render() {
     const { messages } = this.props
-    const panes = memberPagePanes(
-      this.props,
-      this.addMessageHandler,
-      this.state.socket,
-    )
+    const panes = memberPagePanes(this.props, this.addMessageHandler)
 
     return (
-      <ChatPageWrapper>
-        <ChatPageContainer>
+      <MemberPageWrapper>
+        <MemberPageContainer>
           <Header size="huge">
             <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
-            {this.getChatTitle(messages.member)}
+            {this.getMemberPageTitle(messages.member)}
             <MemberEmoji
               birthDateString={messages.member?.birthDate}
               gender={messages.member?.gender}
@@ -169,9 +97,9 @@ export default class Chat extends React.Component {
               }
             />
           )}
-        </ChatPageContainer>
-        <ChatTab {...this.props} addMessage={this.addMessageHandler} />
-      </ChatPageWrapper>
+        </MemberPageContainer>
+        <ChatPane {...this.props} />
+      </MemberPageWrapper>
     )
   }
 
@@ -187,7 +115,7 @@ export default class Chat extends React.Component {
   })
 }
 
-Chat.propTypes = {
+Member.propTypes = {
   messageReceived: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   messages: PropTypes.object.isRequired,

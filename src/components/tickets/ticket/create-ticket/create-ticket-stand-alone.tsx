@@ -34,14 +34,14 @@ export const CreateTicketStandAloneComponent: React.FunctionComponent<CreateTick
   ticketType,
 }) => {
   const [showModal, setShowModal] = React.useState(false)
-  const [filter, setFilter] = React.useState({
+  const [filter] = React.useState({
     assignedTo: 'Everyone',
     status: 'All',
     type: 'All',
     referenceId: referenceId ?? 'All',
     memberId: memberId ?? 'All',
   })
-  const [sort, setSort] = React.useState({
+  const [sort] = React.useState({
     category: 'priority',
     order: EOrder.DESC,
   })

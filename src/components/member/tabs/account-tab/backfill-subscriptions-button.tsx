@@ -1,5 +1,5 @@
 import { gql } from 'apollo-boost'
-import { SubmitButton } from 'components/chat/tabs/account-tab/add-entry-form'
+import { SubmitButton } from 'components/member/tabs/account-tab/add-entry-form'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 

@@ -19,11 +19,11 @@ const MessagesPageRouter = ({ store }) => (
       )}
     />
     <Route
-      path="/members/:id/:msgId?"
+      path="/members/:memberId/:msgId?"
       render={() => (
         <PrivateRoute
           component={ChatPage}
-          path="/members/:id/:msgId?"
+          path="/members/:memberId/:msgId?"
           store={store}
         />
       )}

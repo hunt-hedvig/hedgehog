@@ -1,10 +1,10 @@
-import Chat from 'components/chat'
+import Member from 'components/member'
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import actions from 'store/actions'
 
-const ChatPage = (props) => <Chat {...props} />
+const ChatPage = (props) => <Member {...props} />
 
 const mapStateToProps = ({
   messages,

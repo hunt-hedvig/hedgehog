@@ -12,10 +12,8 @@ const ClaimsPage = (props) => (
 )
 
 export default withRouter(
-  connect(
-    ({ claims }) => ({ claims }),
-    {
-      ...actions.claimsActions,
-    },
-  )(ClaimsPage),
+  // @ts-ignore
+  connect(({ claims }) => ({ claims }), {
+    ...actions.claimsActions,
+  })(ClaimsPage),
 )

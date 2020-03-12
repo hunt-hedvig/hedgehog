@@ -194,7 +194,9 @@ interface State {
 export class MemberDebtComponent extends React.Component<
   {
     showNotification: (data: any) => void
-  } & RouteComponentProps<{ id: string }>,
+  } & RouteComponentProps<{
+    memberId: string
+  }>,
   State
 > {
   public state = {
@@ -206,7 +208,7 @@ export class MemberDebtComponent extends React.Component<
       <Wrapper>
         <Query<any>
           query={query}
-          variables={{ memberId: this.props.match.params.id }}
+          variables={{ memberId: this.props.match.params.memberId }}
         >
           {({ loading, error, data }) => {
             if (error) {
@@ -256,7 +258,7 @@ export class MemberDebtComponent extends React.Component<
                             {
                               query,
                               variables: {
-                                memberId: this.props.match.params.id,
+                                memberId: this.props.match.params.memberId,
                               },
                             },
                           ]}
@@ -301,7 +303,7 @@ export class MemberDebtComponent extends React.Component<
   private handleClick = (mutation) => {
     mutation({
       variables: {
-        memberId: this.props.match.params.id,
+        memberId: this.props.match.params.memberId,
       },
     })
       .then(() => {
