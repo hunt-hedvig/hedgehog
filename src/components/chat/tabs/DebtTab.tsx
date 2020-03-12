@@ -196,7 +196,6 @@ export class MemberDebtComponent extends React.Component<
     showNotification: (data: any) => void
   } & RouteComponentProps<{
     memberId: string
-    id: string
   }>,
   State
 > {

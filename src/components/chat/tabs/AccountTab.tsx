@@ -73,7 +73,6 @@ const TableCell = withStyles({
 
 export const AccountTab: React.SFC<RouteComponentProps<{
   memberId: string
-  id: string
 }> &
   AccountTabProps> = (props) => (
   <Query

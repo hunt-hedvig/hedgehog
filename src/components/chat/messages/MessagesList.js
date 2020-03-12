@@ -28,7 +28,6 @@ export default class MessagesList extends React.Component {
 
   componentDidUpdate() {
     this.theRealScroller()
-    /* eslint-enable */
   }
 
   componentDidMount() {
