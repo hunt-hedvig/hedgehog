@@ -129,11 +129,11 @@ export default class Chat extends React.Component {
     insurancesListRequest(memberId)
   }
 
-  componentWillUnmount() {
-    const { subscription } = this.props
-    disconnect(null, subscription)
-    this.props.clearMessagesList()
-  }
+  // componentWillUnmount() {
+  //   const { subscription } = this.state
+  //   disconnect(null, subscription)
+  //   this.props.clearMessagesList()
+  // }
 
   render() {
     const { messages } = this.props

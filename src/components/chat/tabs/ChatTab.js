@@ -8,6 +8,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { Icon, Message } from 'semantic-ui-react'
+import {disconnect} from "../../../lib/sockets";
 
 const resizableStyles = {
   display: 'flex',
@@ -86,6 +87,9 @@ export default class ChatTab extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeControlChat, false)
+    const { subscription } = this.state
+    disconnect(null, subscription)
+    this.props.clearMessagesList()
   }
 
   resizeControlChat = (e) => {
@@ -114,6 +118,10 @@ export default class ChatTab extends React.Component {
       showNotification,
       auth,
     } = this.props
+
+    // Om man byter tabb -> dispatcha inte messageReceived
+
+    // const actionToSend = this.props.messages.list ? {showNotification } : {messageReceived, showNotification }
 
     const { stompClient, subscription } = subscribe(
       { messageReceived, showNotification },
@@ -170,15 +178,12 @@ export default class ChatTab extends React.Component {
           defaultSize={{ width: '400px', height: '80%' }}
           enable={{ left: true }}
         >
-          {/*<ChatHeader props={{visible: this.state.visible, onResizeClick : () => this.onResizeClick()}}*/}
-
           <ChatHeader
             visible={this.state.visible}
-            // onResizeClick={() => this.onResizeClick()}
             onResizeClick={this.onResizeClick}
           />
           <MessagesList
-            messages={(this.props.messages && this.props.messages.list) || []}
+            messages={this.props.messages?.list ?? []}
             error={!!this.props.socket}
             id={(this.props.match && this.props.match.params.memberId) || ''}
             messageId={
@@ -247,7 +252,6 @@ export default class ChatTab extends React.Component {
       <>
         <ChatHeader
           visible={this.state.visible}
-          // onResizeClick={() => this.onResizeClick()}
           onResizeClick={this.onResizeClick}
         />
       </>

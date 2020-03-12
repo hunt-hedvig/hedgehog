@@ -19,14 +19,14 @@ const responseHandler = (actions, response) => {
   actions.messageReceived(data.messages)
 }
 
-export const subscribe = (actions, id, user, stompClient) => {
+export const subscribe = (actions, memberId, auth, stompClient) => {
   if (stompClient) {
     try {
       const subscription = stompClient.subscribe(
-        `${config.ws.messagesPrefix}${user}${config.ws.messages}${id}`,
+        `${config.ws.messagesPrefix}${auth}${config.ws.messages}${memberId}`,
         responseHandler.bind(this, actions),
       )
-      stompClient.send(config.ws.history + id)
+      stompClient.send(config.ws.history + memberId)
       return { stompClient, subscription }
     } catch (error) {
       return connectError
@@ -37,14 +37,14 @@ export const subscribe = (actions, id, user, stompClient) => {
 }
 
 /* eslint-disable no-undef */
-export const reconnect = async (actions, id, user) => {
+export const reconnect = async (actions, memberId, auth) => {
   try {
-    const response = user ? user : await api(config.login.login)
+    const response = auth ? auth : await api(config.login.login)
     const connection = await connect()
     const { stompClient, subscription } = subscribe(
       actions,
-      id,
-      user || response.data.id,
+      memberId,
+      auth || response.data.id,
       connection,
     )
     return { stompClient, subscription }
