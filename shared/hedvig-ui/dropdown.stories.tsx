@@ -14,7 +14,7 @@ enum Taste {
 }
 
 export const DropdownWithEnum: React.FunctionComponent = () => {
-  const [taste, setTaste] = React.useState(null)
+  const [taste, setTaste] = React.useState<Taste | null>(null)
   return (
     <>
       <EnumDropdown

@@ -1,7 +1,7 @@
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { SecondLevelHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
-import { Contract } from '../../../../api/generated/graphql'
+import { Contract } from 'src/api/generated/graphql'
 import { MasterInception } from './master-inception'
 import { TerminationDate } from './termination-date'
 

@@ -1,6 +1,4 @@
-// @ts-nocheck
 import React from 'react'
-import { useState } from 'react'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import { Button } from 'semantic-ui-react'
@@ -35,15 +33,18 @@ export const CreateTicketStandAloneComponent: React.FunctionComponent<CreateTick
   memberId,
   ticketType,
 }) => {
-  const [showModal, setShowModal] = useState(false)
-  const [filter, setFilter] = useState({
+  const [showModal, setShowModal] = React.useState(false)
+  const [filter, setFilter] = React.useState({
     assignedTo: 'Everyone',
     status: 'All',
     type: 'All',
     referenceId: referenceId ?? 'All',
     memberId: memberId ?? 'All',
   })
-  const [sort, setSort] = useState({ category: 'priority', order: EOrder.DESC })
+  const [sort, setSort] = React.useState({
+    category: 'priority',
+    order: EOrder.DESC,
+  })
 
   return (
     <>

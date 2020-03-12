@@ -15,6 +15,13 @@ export const EnumDropdown: React.FunctionComponent<{
   const dropdownOptions: DropdownItemProps[] = Object.values(
     enumToSelectFrom,
   ).map((value, index) => {
+    if (typeof value === 'number') {
+      throw new Error(
+        `EnumDropdown does not support enums with ordinal values (yet), enumToSelectFrom: ${JSON.stringify(
+          enumToSelectFrom,
+        )}`,
+      )
+    }
     return {
       key: index + 1,
       value: value as string,

@@ -18,8 +18,8 @@ import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
-import { WithShowNotification } from '../../../../store/actions/notificationsActions'
-import { withShowNotification } from '../../../../utils/notifications'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
 const initialTerminationDate = (contract: Contract): Date =>
   contract.isTerminated ? new Date(contract.terminationDate) : new Date()
@@ -31,7 +31,10 @@ const TerminationDateComponent: React.FunctionComponent<{
   const [terminationDate, setTerminationDate] = React.useState(
     initialTerminationDate(contract),
   )
-  const [terminationReason, setTerminationReason] = React.useState(null)
+  const [
+    terminationReason,
+    setTerminationReason,
+  ] = React.useState<TerminationReason | null>(null)
   const [comment, setComment] = React.useState('')
   const reset = () => {
     setTerminationDate(initialTerminationDate(contract))
@@ -90,6 +93,7 @@ const TerminationDateComponent: React.FunctionComponent<{
                           header: 'Unable to revert termination',
                           message: error.message,
                         })
+                        throw error
                       })
                   }
                 }}
@@ -134,6 +138,7 @@ const TerminationDateComponent: React.FunctionComponent<{
                           header: 'Unable to change termination date',
                           message: error.message,
                         })
+                        throw error
                       })
                   }
                 }}
@@ -203,6 +208,7 @@ const TerminationDateComponent: React.FunctionComponent<{
                         header: 'Unable to terminate',
                         message: error.message,
                       })
+                      throw error
                     })
                 }
               }}

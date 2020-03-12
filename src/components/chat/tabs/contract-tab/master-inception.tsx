@@ -8,8 +8,8 @@ import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import * as React from 'react'
-import { WithShowNotification } from '../../../../store/actions/notificationsActions'
-import { withShowNotification } from '../../../../utils/notifications'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
 const MasterInceptionComponent: React.FunctionComponent<{
   contract: Contract
@@ -66,6 +66,7 @@ const MasterInceptionComponent: React.FunctionComponent<{
                         header: 'Contract activated',
                         message: 'Successfully activated the contract.',
                       })
+                      reset()
                     })
                     .catch((error) => {
                       showNotification({
@@ -73,7 +74,7 @@ const MasterInceptionComponent: React.FunctionComponent<{
                         header: 'Unable to activate the contract',
                         message: error.message,
                       })
-                      reset()
+                      throw error
                     })
                 }
               }}
