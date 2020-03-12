@@ -13,8 +13,8 @@ import {
 } from '@material-ui/core'
 import { ExpandMoreOutlined } from '@material-ui/icons'
 import { gql } from 'apollo-boost'
-import { AddEntryForm } from 'components/chat/tabs/account-tab/add-entry-form'
-import { BackfillSubscriptionsButton } from 'components/chat/tabs/account-tab/backfill-subscriptions-button'
+import { AddEntryForm } from 'components/member/tabs/account-tab/add-entry-form'
+import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/backfill-subscriptions-button'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import { Query } from 'react-apollo'
@@ -71,11 +71,13 @@ const TableCell = withStyles({
   },
 })(MuiTableCell)
 
-export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
+export const AccountTab: React.SFC<RouteComponentProps<{
+  memberId: string
+}> &
   AccountTabProps> = (props) => (
   <Query
     query={GET_MEMBER_ACCOUNT_QUERY}
-    variables={{ memberId: props.match.params.id }}
+    variables={{ memberId: props.match.params.memberId }}
     pollInterval={2000}
   >
     {({ data, loading }) => {
@@ -114,7 +116,7 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <AddEntryForm
-                memberId={props.match.params.id}
+                memberId={props.match.params.memberId}
                 firstName={data.member.firstName}
                 showNotification={props.showNotification}
               />
@@ -151,7 +153,7 @@ export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
             </Table>
           </Paper>
           <BackfillSubscriptionsButton
-            memberId={props.match.params.id}
+            memberId={props.match.params.memberId}
             showNotification={props.showNotification}
           />
         </>

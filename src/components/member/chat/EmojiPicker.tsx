@@ -31,9 +31,9 @@ const actions: ActionMap<State, Actions> = {
 
 const LazyEmojiPicker = React.lazy(
   () =>
-    import(/* webpackChunkName: 'emoji-mart' */ 'emoji-mart').then(
-      ({ Picker }) => ({ default: Picker }),
-    ) as any,
+    import(
+      /* webpackChunkName: 'emoji-mart' */ 'emoji-mart'
+    ).then(({ Picker }) => ({ default: Picker })) as any,
 )
 
 emojiMartStyles()

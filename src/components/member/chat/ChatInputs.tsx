@@ -7,10 +7,10 @@ import * as types from 'lib/messageTypes'
 import * as React from 'react'
 
 /**
- * returns input by message typename from boot service
+ * returns input by message typename from bot-service
  */
 export default {
-  [types.TEXT](onChangeHandler, cleanupForm) {
+  [types.TEXT](onChangeHandler, cleanupForm: boolean) {
     return (
       <TextInput
         changeHandler={onChangeHandler}
@@ -42,11 +42,7 @@ export default {
           cleanupForm={cleanupForm}
           label
         />
-        <DateInput
-          changeHandler={onChangeHandler}
-          cleanupForm={cleanupForm}
-          label
-        />
+        <DateInput changeHandler={onChangeHandler} label />
       </React.Fragment>
     )
   },

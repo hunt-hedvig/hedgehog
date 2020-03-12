@@ -1,5 +1,5 @@
 import animateScrollTo from 'animated-scroll-to'
-import Message from 'components/chat/messages/Message'
+import Message from 'components/member/messages/Message'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
@@ -27,6 +27,16 @@ export default class MessagesList extends React.Component {
   }
 
   componentDidUpdate() {
+    this.theRealScroller()
+  }
+
+  componentDidMount() {
+    if (this.props.attachScrollListener) {
+      this.props.attachScrollListener(this.theRealScroller)
+    }
+  }
+
+  theRealScroller = () => {
     /* eslint-disable */
     const list = this.messagesList
     if (!list) {
@@ -46,7 +56,6 @@ export default class MessagesList extends React.Component {
         })
       }
     }
-    /* eslint-enable */
   }
 
   render() {
@@ -87,4 +96,5 @@ MessagesList.propTypes = {
   messageId: PropTypes.string,
   messages: PropTypes.array,
   error: PropTypes.bool,
+  attachScrollListener: PropTypes.func,
 }

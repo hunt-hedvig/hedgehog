@@ -1,5 +1,5 @@
-import ImageMessage from 'components/chat/messages/ImageMessage'
-import SelectMessage from 'components/chat/messages/SelectMessage'
+import ImageMessage from 'components/member/messages/ImageMessage'
+import SelectMessage from 'components/member/messages/SelectMessage'
 import { dateTimeFormatter } from 'lib/helpers'
 import * as types from 'lib/messageTypes'
 import * as moment from 'moment'

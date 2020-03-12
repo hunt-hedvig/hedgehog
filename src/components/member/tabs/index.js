@@ -1,14 +1,14 @@
-import { AccountTab } from 'components/chat/tabs/AccountTab'
-import ChatTab from 'components/chat/tabs/ChatTab'
-import ClaimsTab from 'components/chat/tabs/ClaimsTab'
-import { MemberDebtComponent } from 'components/chat/tabs/DebtTab'
-import DetailsTab from 'components/chat/tabs/DetailsTab'
-import MemberFile from 'components/chat/tabs/FileTab'
-import InsuranceListTab from 'components/chat/tabs/InsuranceListTab'
-import InsuranceTab from 'components/chat/tabs/InsuranceTab'
-import PaymentsTab from 'components/chat/tabs/PaymentsTab'
-import { Quotes } from 'components/chat/tabs/quote-tab'
-import { Contracts } from 'components/chat/tabs/contract-tab'
+import { AccountTab } from 'components/member/tabs/AccountTab'
+import ChatPane from 'components/member/tabs/ChatPane'
+import ClaimsTab from 'components/member/tabs/ClaimsTab'
+import { MemberDebtComponent } from 'components/member/tabs/DebtTab'
+import DetailsTab from 'components/member/tabs/DetailsTab'
+import MemberFile from 'components/member/tabs/FileTab'
+import InsuranceListTab from 'components/member/tabs/InsuranceListTab'
+import InsuranceTab from 'components/member/tabs/InsuranceTab'
+import PaymentsTab from 'components/member/tabs/PaymentsTab'
+import { Quotes } from 'components/member/tabs/quote-tab'
+import { Contracts } from 'components/member/tabs/contract-tab'
 import { CreateTicketStandAlone } from 'components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 
 import PropTypes from 'prop-types'
@@ -62,7 +62,10 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Tickets',
       render: () => (
         <TabItem
-          props={{ memberId: props.match.params.id, ticketType: 'REMIND' }}
+          props={{
+            memberId: props.match.params.memberId,
+            ticketType: 'REMIND',
+          }}
           TabContent={CreateTicketStandAlone}
         /> // FIXME: Send props like other locations
       ),
@@ -73,7 +76,7 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Chat',
       render: () => (
         <TabItem
-          TabContent={ChatTab}
+          TabContent={ChatPane}
           props={{ ...props, addMessage, socket }}
           isChatTab={true}
         />

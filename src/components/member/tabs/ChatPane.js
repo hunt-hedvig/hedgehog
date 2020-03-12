@@ -1,5 +1,6 @@
-import { ChatPanel } from 'components/chat/chat/ChatPanel'
-import MessagesList from 'components/chat/messages/MessagesList'
+import { ChatPanel } from 'components/member/chat/ChatPanel'
+import MessagesList from 'components/member/messages/MessagesList'
+import { reconnect, subscribe } from 'lib/sockets/chat'
 import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
 import Resizable from 're-resizable'
@@ -7,6 +8,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { Icon, Message } from 'semantic-ui-react'
+import { disconnect } from 'lib/sockets'
 
 const resizableStyles = {
   display: 'flex',
@@ -18,6 +20,7 @@ const resizableStyles = {
   boxShadow: '0 5px 40px rgba(0, 0, 0, 0.16)',
   borderRadius: '8px',
   backgroundColor: '#ffffff',
+  zIndex: '999',
 }
 
 const ChatHeaderStyle = styled.div`
@@ -47,17 +50,31 @@ const GET_SUGGESTED_ANSWER_QUERY = gql`
   }
 `
 
-export default class ChatTab extends React.Component {
+export default class ChatPane extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       visible: window.innerWidth > 1500,
       manualChange: false,
+      socket: null,
+      subscription: null,
     }
     window.addEventListener('resize', this.resizeControlChat)
   }
+
+  componentDidMount() {
+    const { stompClient, subscription } = this.subscribeSocket()
+    if (!stompClient) {
+      this.reconnectSocket()
+    }
+    this.setState({ socket: stompClient, subscription })
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeControlChat, false)
+    const { subscription } = this.state
+    disconnect(null, subscription)
+    this.props.clearMessagesList()
   }
 
   resizeControlChat = (e) => {
@@ -65,6 +82,68 @@ export default class ChatTab extends React.Component {
       this.setState({ visible: window.innerWidth > 1500 })
     }
   }
+
+  addMessageHandler = (message, forceSendMessage) => {
+    const { socket } = this.state
+    const { addMessage, match } = this.props
+    if (socket) {
+      addMessage(message, forceSendMessage, match.params.memberId, socket)
+    }
+  }
+
+  subscribeSocket = () => {
+    const {
+      messageReceived,
+      match: {
+        params: { memberId },
+      },
+      messages,
+      showNotification,
+      auth,
+    } = this.props
+
+    const { stompClient, subscription } = subscribe(
+      { messageReceived, showNotification },
+      memberId,
+      auth.email,
+      messages.activeConnection,
+    )
+    return { stompClient, subscription }
+  }
+
+  reconnectSocket = () => {
+    const {
+      messageReceived,
+      match: {
+        params: { memberId },
+      },
+      setActiveConnection,
+      showNotification,
+      auth,
+    } = this.props
+
+    reconnect({ messageReceived, showNotification }, memberId, auth.email).then(
+      (result) => {
+        const { stompClient, subscription } = result
+        this.setState({ socket: stompClient, subscription })
+        setActiveConnection(stompClient)
+      },
+    )
+  }
+
+  onResizeClick = () => {
+    this.setState(
+      {
+        visible: !this.state.visible,
+        manualChange: true,
+      },
+      () => {
+        this.scroller()
+      },
+    )
+  }
+
+  scroller = null
 
   render() {
     const questionAndMessageIds = this.getQuestionToAnalyze()
@@ -76,16 +155,21 @@ export default class ChatTab extends React.Component {
           defaultSize={{ width: '400px', height: '80%' }}
           enable={{ left: true }}
         >
-          <ChatHeader ctx={this} />
+          <ChatHeader
+            visible={this.state.visible}
+            onResizeClick={this.onResizeClick}
+          />
           <MessagesList
-            messages={(this.props.messages && this.props.messages.list) || []}
+            messages={this.props.messages?.list ?? []}
             error={!!this.props.socket}
-            id={(this.props.match && this.props.match.params.id) || ''}
+            id={(this.props.match && this.props.match.params.memberId) || ''}
             messageId={
               (this.props.match && this.props.match.params.msgId) || ''
             }
+            attachScrollListener={(theRealScroller) => {
+              this.scroller = theRealScroller
+            }}
           />
-
           <Query
             query={GET_SUGGESTED_ANSWER_QUERY}
             variables={{ question: questionAndMessageIds.lastMemberMessages }}
@@ -99,7 +183,7 @@ export default class ChatTab extends React.Component {
                     messageIds={[]}
                     questionToLabel=""
                     confidence={0}
-                    addMessage={this.props.addMessage}
+                    addMessage={this.addMessageHandler}
                     messages={
                       (this.props.messages && this.props.messages.list) || []
                     }
@@ -116,7 +200,7 @@ export default class ChatTab extends React.Component {
                       data.getAnswerSuggestion[0].allReplies) ||
                     null
                   }
-                  memberId={this.props.match.params.id}
+                  memberId={this.props.match.params.memberId}
                   messageIds={questionAndMessageIds.messageIds}
                   questionToLabel={
                     this.getQuestionAndAnswer(data.getAnswerSuggestion).question
@@ -125,7 +209,7 @@ export default class ChatTab extends React.Component {
                     this.getQuestionAndAnswer(data.getAnswerSuggestion)
                       .confidence
                   }
-                  addMessage={this.props.addMessage}
+                  addMessage={this.addMessageHandler}
                   messages={
                     (this.props.messages && this.props.messages.list) || []
                   }
@@ -136,7 +220,6 @@ export default class ChatTab extends React.Component {
               )
             }}
           </Query>
-
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>
           )}
@@ -144,7 +227,10 @@ export default class ChatTab extends React.Component {
       </>
     ) : (
       <>
-        <ChatHeader ctx={this} />
+        <ChatHeader
+          visible={this.state.visible}
+          onResizeClick={this.onResizeClick}
+        />
       </>
     )
   }
@@ -166,7 +252,7 @@ export default class ChatTab extends React.Component {
     const fromIds = messages.map((message) => message.header.fromId)
 
     const lastNonMemberIndex = fromIds
-      .map((id) => id === +this.props.match.params.id)
+      .map((id) => id === +this.props.match.params.memberId)
       .lastIndexOf(false)
 
     const lastMemberMessagesArray = messages.filter(
@@ -202,23 +288,18 @@ export default class ChatTab extends React.Component {
 }
 
 const ChatHeader = (props) => (
-  <ChatHeaderStyle state={props.ctx.state.visible}>
+  <ChatHeaderStyle state={props.visible}>
     <h4>Chat</h4>
     <Icon
-      name={props.ctx.state.visible ? 'angle double up' : 'angle double down'}
+      name={props.visible ? 'angle double up' : 'angle double down'}
       size={'large'}
       link
-      onClick={() =>
-        props.ctx.setState({
-          visible: !props.ctx.state.visible,
-          manualChange: true,
-        })
-      }
+      onClick={props.onResizeClick}
     />
   </ChatHeaderStyle>
 )
 
-ChatTab.propTypes = {
+ChatPane.propTypes = {
   match: PropTypes.object.isRequired,
   messages: PropTypes.object.isRequired,
   addMessage: PropTypes.func.isRequired,

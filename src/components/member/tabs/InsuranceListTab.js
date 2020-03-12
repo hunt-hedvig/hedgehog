@@ -1,4 +1,4 @@
-import InsuranceList from 'components/chat/insurance-list/InsuranceList'
+import InsuranceList from 'components/member/insurance-list/InsuranceList'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Header } from 'semantic-ui-react'
