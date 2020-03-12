@@ -10,19 +10,15 @@ import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
 
 const ACTIVATE_MUTATION = gql`
-  mutation AddAgreementFromQuote(
+  mutation ActivateQuote(
     $id: ID!
-    $contractId: ID!
-    $activeFrom: LocalDate
-    $activeTo: LocalDate
-    $previousAgreementActiveTo: LocalDate
+    $activationDate: LocalDate!
+    $terminationDate: LocalDate
   ) {
-    addAgreementFromQuote(
+    activateQuote(
       id: $id
-      contractId: $contractId
-      activeFrom: $activeFrom
-      activeTo: $activeTo
-      previousAgreementActiveTo: $previousAgreementActiveTo
+      activationDate: $activationDate
+      terminationDate: $terminationDate
     ) {
       id
       originatingProductId
@@ -41,46 +37,40 @@ export const QuoteActivation: React.FC<{
   onSubmitted = noopFunction,
   onWipChange = noopFunction,
 }) => {
-  const [activeFrom, setActiveFromDate] = React.useState<Date | null>(
+  const [activationDate, setActivationDate] = React.useState<Date | null>(
     new Date(),
   )
-  const [
-    previousAgreementActiveTo,
-    setPreviousAgreementActiveToDate,
-  ] = React.useState<Date | null>(null)
+  const [terminationDate, setTerminationDate] = React.useState<Date | null>(
+    null,
+  )
   const [useGap, setUseGap] = React.useState(false)
 
-  const [addAgreementFromQuote, addAgreementFromQuoteMutation] = useMutation(
-    ACTIVATE_MUTATION,
-    {
-      refetchQueries: () => [
-        {
-          query: QUOTES_QUERY,
-          variables: { memberId },
-        },
-      ],
-    },
-  )
+  const [activateQuote, activationMutation] = useMutation(ACTIVATE_MUTATION, {
+    refetchQueries: () => [
+      {
+        query: QUOTES_QUERY,
+        variables: { memberId },
+      },
+    ],
+  })
 
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault()
         if (
-          addAgreementFromQuoteMutation.loading ||
-          !activeFrom ||
+          activationMutation.loading ||
+          !activationDate ||
           !confirm('Are you sure you want to activate?')
         ) {
           return
         }
-        await addAgreementFromQuote({
+        await activateQuote({
           variables: {
             id: quote.id,
-            contractId: null,
-            activeFrom: activeFrom.toISOString().slice(0, 10),
-            activeTo: null,
-            previousAgreementActiveTo: useGap
-              ? previousAgreementActiveTo?.toISOString()?.slice(0, 10)
+            activationDate: activationDate.toISOString().slice(0, 10),
+            terminationDate: useGap
+              ? terminationDate?.toISOString()?.slice(0, 10)
               : null,
           },
         })
@@ -91,16 +81,16 @@ export const QuoteActivation: React.FC<{
     >
       <BottomSpacerWrapper>
         <div>
-          <strong>Active from</strong>
+          <strong>Activation date</strong>
         </div>
         <div>
           <BaseDatePicker
-            value={activeFrom}
+            value={activationDate}
             onChange={(value) => {
               if (onWipChange) {
                 onWipChange(true)
               }
-              setActiveFromDate(value)
+              setActivationDate(value)
             }}
           />
         </div>
@@ -113,7 +103,7 @@ export const QuoteActivation: React.FC<{
               onWipChange(true)
             }
             if (!checked) {
-              setPreviousAgreementActiveToDate(null)
+              setTerminationDate(null)
             }
             setUseGap(checked!)
           }}
@@ -125,29 +115,29 @@ export const QuoteActivation: React.FC<{
       {useGap && (
         <BottomSpacerWrapper>
           <div>
-            <strong>Previous agreement active to</strong>
+            <strong>Terminate current insurance at</strong>
           </div>
           <div>
             <BaseDatePicker
-              value={previousAgreementActiveTo}
+              value={terminationDate}
               onChange={(value) => {
                 if (onWipChange) {
                   onWipChange(true)
                 }
-                setPreviousAgreementActiveToDate(value)
+                setTerminationDate(value)
               }}
-              maxDate={activeFrom}
+              maxDate={activationDate}
             />
           </div>
         </BottomSpacerWrapper>
       )}
 
-      {!addAgreementFromQuoteMutation.data?.activateQuote ? (
+      {!activationMutation.data?.activateQuote ? (
         <Button
           variation="success"
           type="submit"
           fullWidth
-          disabled={addAgreementFromQuoteMutation.loading}
+          disabled={activationMutation.loading}
         >
           Activate
         </Button>
@@ -164,9 +154,9 @@ export const QuoteActivation: React.FC<{
         </Button>
       )}
 
-      {addAgreementFromQuoteMutation.error && (
+      {activationMutation.error && (
         <ErrorMessage>
-          {JSON.stringify(addAgreementFromQuoteMutation.error, null, 2)}
+          {JSON.stringify(activationMutation.error, null, 2)}
         </ErrorMessage>
       )}
     </form>
