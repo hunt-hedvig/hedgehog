@@ -287,7 +287,8 @@ export default class ChatPane extends React.Component {
   }
 }
 
-const ChatHeader = (props) => ( <ChatHeaderStyle state={props.visible}>
+const ChatHeader = (props) => (
+  <ChatHeaderStyle state={props.visible}>
     <h4>Chat</h4>
     <Icon
       name={props.visible ? 'angle double up' : 'angle double down'}
@@ -297,7 +298,6 @@ const ChatHeader = (props) => ( <ChatHeaderStyle state={props.visible}>
     />
   </ChatHeaderStyle>
 )
-
 
 ChatPane.propTypes = {
   match: PropTypes.object.isRequired,
