@@ -1,9 +1,9 @@
-import * as React from 'react'
-import styled from 'react-emotion'
 import { colors } from '@hedviginsurance/brand'
+import * as React from 'react'
 import Dropzone from 'react-dropzone'
-import actions from 'store/actions'
+import styled from 'react-emotion'
 import { connect } from 'react-redux'
+import actions from 'store/actions'
 
 const UploadClaimFileWrapper = styled('div')({
   padding: '4rem',
@@ -50,7 +50,7 @@ class FileUploadComponent extends React.Component<{
   showNotification: (data: any) => void
   onUploaded: () => void
 }> {
-  render() {
+  public render() {
     return (
       <>
         <UploadClaimFileWrapper>
@@ -58,6 +58,7 @@ class FileUploadComponent extends React.Component<{
           <FileUploadContainer>
             <Dropzone onDrop={this.onDrop}>
               {({ getRootProps, getInputProps, isDragActive }) => (
+                // @ts-ignore
                 <Button {...getRootProps()}>
                   <input {...getInputProps()} />
                   {isDragActive
@@ -73,7 +74,7 @@ class FileUploadComponent extends React.Component<{
   }
 
   private onDrop = (acceptedFiles) => {
-    var claimFiles = new FormData()
+    const claimFiles = new FormData()
 
     for (const file of acceptedFiles) {
       claimFiles.append('files', file)

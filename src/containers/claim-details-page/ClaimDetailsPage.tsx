@@ -15,6 +15,7 @@ const mapStateToProps = ({ claimDetails, claims, messages, auth }) => ({
 })
 
 export default withRouter(
+  // @ts-ignore
   connect(mapStateToProps, {
     ...actions.claimDetailsActions,
     ...actions.notesActions,
