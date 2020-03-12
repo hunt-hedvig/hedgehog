@@ -62,7 +62,12 @@ const MemberFileTable: React.FunctionComponent<MemberFileTableProps> = ({
   </Table>
 )
 
-class MemberFile extends React.Component<RouteComponentProps<{ id: string }>> {
+class MemberFile extends React.Component<
+  RouteComponentProps<{
+    memberId: string
+    id: string
+  }>
+> {
   public render() {
     return (
       <Query

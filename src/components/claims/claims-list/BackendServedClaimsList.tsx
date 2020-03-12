@@ -6,7 +6,7 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
-import { getMemberIdColor, isMemberIdEven } from 'utils/member'
+import { getMemberIdColor } from 'utils/member'
 import {
   Claim,
   ClaimSearchFilter,

@@ -71,7 +71,10 @@ const TableCell = withStyles({
   },
 })(MuiTableCell)
 
-export const AccountTab: React.SFC<RouteComponentProps<{ id: string }> &
+export const AccountTab: React.SFC<RouteComponentProps<{
+  memberId: string
+  id: string
+}> &
   AccountTabProps> = (props) => (
   <Query
     query={GET_MEMBER_ACCOUNT_QUERY}

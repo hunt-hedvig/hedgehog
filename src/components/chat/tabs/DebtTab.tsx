@@ -194,7 +194,10 @@ interface State {
 export class MemberDebtComponent extends React.Component<
   {
     showNotification: (data: any) => void
-  } & RouteComponentProps<{ id: string }>,
+  } & RouteComponentProps<{
+    memberId: string
+    id: string
+  }>,
   State
 > {
   public state = {
