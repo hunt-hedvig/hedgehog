@@ -287,24 +287,17 @@ export default class ChatTab extends React.Component {
   }
 }
 
-class ChatHeader extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <ChatHeaderStyle state={this.props.visible}>
-        <h4>Chat</h4>
-        <Icon
-          name={this.props.visible ? 'angle double up' : 'angle double down'}
-          size={'large'}
-          link
-          onClick={this.props.onResizeClick}
-        />
-      </ChatHeaderStyle>
-    )
-  }
-}
+const ChatHeader = (props) => ( <ChatHeaderStyle state={props.visible}>
+    <h4>Chat</h4>
+    <Icon
+      name={props.visible ? 'angle double up' : 'angle double down'}
+      size={'large'}
+      link
+      onClick={props.onResizeClick}
+    />
+  </ChatHeaderStyle>
+)
+
 
 ChatTab.propTypes = {
   match: PropTypes.object.isRequired,
