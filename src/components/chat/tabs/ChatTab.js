@@ -146,16 +146,16 @@ export default class ChatTab extends React.Component {
   }
 
   onResizeClick = () => {
-    console.log('Hej')
-    // this.setState(
-    //   {
-    //     visible: !this.state.visible,
-    //     manualChange: true,
-    //   },
-    //   () => {
-    //     this.scroller()
-    //   },
-    // )
+    // console.log('Hej')
+    this.setState(
+      {
+        visible: !this.state.visible,
+        manualChange: true,
+      },
+      () => {
+        this.scroller()
+      },
+    )
   }
 
   scroller = null
@@ -171,7 +171,7 @@ export default class ChatTab extends React.Component {
           enable={{ left: true }}
         >
           {/*<ChatHeader props={{visible: this.state.visible, onResizeClick : () => this.onResizeClick()}}*/}
-          />
+
           <ChatHeader
             visible={this.state.visible}
             // onResizeClick={() => this.onResizeClick()}
@@ -245,7 +245,11 @@ export default class ChatTab extends React.Component {
       </>
     ) : (
       <>
-        <ChatHeader ctx={this} />
+        <ChatHeader
+          visible={this.state.visible}
+          // onResizeClick={() => this.onResizeClick()}
+          onResizeClick={this.onResizeClick}
+        />
       </>
     )
   }
@@ -302,12 +306,9 @@ export default class ChatTab extends React.Component {
   }
 }
 
-
-
-class ChatHeader extends React.Component{
+class ChatHeader extends React.Component {
   constructor(props) {
     super(props)
-
   }
   render() {
     return (

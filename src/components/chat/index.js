@@ -130,7 +130,7 @@ export default class Chat extends React.Component {
   }
 
   componentWillUnmount() {
-    const { subscription } = this.state
+    const { subscription } = this.props
     disconnect(null, subscription)
     this.props.clearMessagesList()
   }
@@ -169,7 +169,6 @@ export default class Chat extends React.Component {
             />
           )}
         </ChatPageContainer>
-        {/*<ChatTab {...this.props} addMessage={this.addMessageHandler} />*/}
         <ChatTab {...this.props} />
       </ChatPageWrapper>
     )
