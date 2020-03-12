@@ -1,5 +1,5 @@
 import { AccountTab } from 'components/chat/tabs/AccountTab'
-import ChatTab from 'components/chat/tabs/ChatTab'
+import ChatPane from 'components/chat/tabs/ChatPane'
 import ClaimsTab from 'components/chat/tabs/ClaimsTab'
 import { MemberDebtComponent } from 'components/chat/tabs/DebtTab'
 import DetailsTab from 'components/chat/tabs/DetailsTab'
@@ -76,7 +76,7 @@ const memberPagePanes = (props, addMessage, socket) => {
       menuItem: 'Chat',
       render: () => (
         <TabItem
-          TabContent={ChatTab}
+          TabContent={ChatPane}
           props={{ ...props, addMessage, socket }}
           isChatTab={true}
         />

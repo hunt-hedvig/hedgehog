@@ -50,7 +50,7 @@ const GET_SUGGESTED_ANSWER_QUERY = gql`
   }
 `
 
-export default class ChatTab extends React.Component {
+export default class ChatPane extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -299,7 +299,7 @@ const ChatHeader = (props) => ( <ChatHeaderStyle state={props.visible}>
 )
 
 
-ChatTab.propTypes = {
+ChatPane.propTypes = {
   match: PropTypes.object.isRequired,
   messages: PropTypes.object.isRequired,
   addMessage: PropTypes.func.isRequired,

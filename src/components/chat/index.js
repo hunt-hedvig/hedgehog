@@ -7,7 +7,7 @@ import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import { getMemberGroup, getMemberIdColor, MemberEmoji } from 'utils/member'
 import memberPagePanes from './tabs'
-import ChatTab from './tabs/ChatTab'
+import ChatPane from './tabs/ChatPane'
 
 const ChatPageWrapper = styled('div')({
   display: 'flex',
@@ -98,7 +98,7 @@ export default class Chat extends React.Component {
             />
           )}
         </ChatPageContainer>
-        <ChatTab {...this.props} />
+        <ChatPane {...this.props} />
       </ChatPageWrapper>
     )
   }

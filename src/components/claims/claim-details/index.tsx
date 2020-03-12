@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid'
 import { ClaimNote, QueryType } from 'api/generated/graphql'
-import ChatTab from 'components/chat/tabs/ChatTab'
+import ChatPane from 'ChatPane.js'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 // @ts-ignore
@@ -27,7 +27,7 @@ interface Props {
 
 const ClaimPage: React.SFC<Props> = ({ ...props }) => (
   <>
-    <ChatTab {...props} />
+    <ChatPane {...props} />
     <Query<Pick<QueryType, 'claim'>>
       query={CLAIM_PAGE_QUERY}
       variables={{ id: props.match.params.claimId }}
