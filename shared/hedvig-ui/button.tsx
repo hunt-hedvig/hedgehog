@@ -6,10 +6,10 @@ export const ButtonsGroup = styled('div')({
   display: 'flex',
   flexDirection: 'row',
   paddingTop: '1rem',
-  '&& button:not(:last-of-type)': {
+  'button:not(:last-of-type)': {
     marginRight: '0.5rem',
   },
-  '&& button:not(:first-of-type)': {
+  'button:not(:first-of-type)': {
     marginLeft: '0.5rem',
   },
 })
