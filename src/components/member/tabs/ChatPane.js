@@ -258,7 +258,7 @@ export default class ChatPane extends React.Component {
     const lastMemberMessagesArray = messages.filter(
       (message, index) =>
         ['free.chat.message', 'free.chat.from.bo', 'free.chat.start'].includes(
-          message.memberId,
+          message.id,
         ) && index > lastNonMemberIndex,
     )
 
