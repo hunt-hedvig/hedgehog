@@ -8,7 +8,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { Icon, Message } from 'semantic-ui-react'
-import { disconnect } from '../../../lib/sockets'
+import { disconnect } from 'lib/sockets'
 
 const resizableStyles = {
   display: 'flex',

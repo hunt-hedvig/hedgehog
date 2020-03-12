@@ -18,8 +18,6 @@ const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
-export function myFunction() {}
-
 export default class MessagesList extends React.Component {
   constructor(props) {
     super(props)
@@ -29,7 +27,7 @@ export default class MessagesList extends React.Component {
   }
 
   componentDidUpdate() {
-    this.theRealScroller() // TODO remove?
+    this.theRealScroller()
     /* eslint-enable */
   }
 

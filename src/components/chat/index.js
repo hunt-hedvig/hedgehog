@@ -40,65 +40,6 @@ const Badge = styled('div')`
 `
 
 export default class Chat extends React.Component {
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //     socket: null,
-  //     subscription: null,
-  //   }
-  // }
-
-  // //Move into ChatTab
-  // addMessageHandler = (message, forceSendMessage) => {
-  //   const { socket } = this.state
-  //   const { addMessage, match } = this.props
-  //   if (socket) {
-  //     addMessage(message, forceSendMessage, match.params.id, socket)
-  //   }
-  // }
-
-  //Move into ChatTab
-  // subscribeSocket = () => {
-  //   const {
-  //     messageReceived,
-  //     match: {
-  //       params: { id },
-  //     },
-  //     messages,
-  //     showNotification,
-  //     auth,
-  //   } = this.props
-  //
-  //   const { stompClient, subscription } = subscribe(
-  //     { messageReceived, showNotification },
-  //     id,
-  //     auth.email,
-  //     messages.activeConnection,
-  //   )
-  //   return { stompClient, subscription }
-  // }
-
-  //Move into ChatTab
-  // reconnectSocket = () => {
-  //   const {
-  //     messageReceived,
-  //     match: {
-  //       params: { id },
-  //     },
-  //     setActiveConnection,
-  //     showNotification,
-  //     auth,
-  //   } = this.props
-  //
-  //   reconnect({ messageReceived, showNotification }, id, auth.email).then(
-  //     (result) => {
-  //       const { stompClient, subscription } = result
-  //       this.setState({ socket: stompClient, subscription })
-  //       setActiveConnection(stompClient)
-  //     },
-  //   )
-  // }
-
   getChatTitle = (member) =>
     `Member: ${
       member && (member.firstName || member.lastName)

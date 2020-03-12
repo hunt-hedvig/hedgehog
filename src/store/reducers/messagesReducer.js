@@ -13,13 +13,11 @@ import initialState from '../initialState'
 export default function(state = initialState.messages, action) {
   switch (action.type) {
     case MESSAGE_RECEIVED:
-      console.log('received')
       return {
         ...state,
         list: refreshMessagesList(state.list.slice(), action.message),
       }
     case CLEAR_MESSAGES_LIST:
-      console.log('cleared')
       return {
         ...state,
         list: [],
