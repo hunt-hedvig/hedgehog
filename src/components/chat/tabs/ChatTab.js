@@ -8,7 +8,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { Icon, Message } from 'semantic-ui-react'
-import {disconnect} from "../../../lib/sockets";
+import { disconnect } from '../../../lib/sockets'
 
 const resizableStyles = {
   display: 'flex',
@@ -63,26 +63,11 @@ export default class ChatTab extends React.Component {
   }
 
   componentDidMount() {
-    // const {
-    //   match: {
-    //     params: { id },
-    //   },
-    //   memberRequest,
-    //   insuranceRequest,
-    //   insurancesListRequest,
-    //   claimsByMember,
-    // } = this.props
-
     const { stompClient, subscription } = this.subscribeSocket()
     if (!stompClient) {
       this.reconnectSocket()
     }
     this.setState({ socket: stompClient, subscription })
-
-    // memberRequest(id)
-    // insuranceRequest(id)
-    // claimsByMember(id)
-    // insurancesListRequest(id)
   }
 
   componentWillUnmount() {
@@ -98,7 +83,6 @@ export default class ChatTab extends React.Component {
     }
   }
 
-  //Added from src/components/chat/index.js
   addMessageHandler = (message, forceSendMessage) => {
     const { socket } = this.state
     const { addMessage, match } = this.props
@@ -107,7 +91,6 @@ export default class ChatTab extends React.Component {
     }
   }
 
-  //Added from src/components/chat/index.js
   subscribeSocket = () => {
     const {
       messageReceived,
@@ -119,10 +102,6 @@ export default class ChatTab extends React.Component {
       auth,
     } = this.props
 
-    // Om man byter tabb -> dispatcha inte messageReceived
-
-    // const actionToSend = this.props.messages.list ? {showNotification } : {messageReceived, showNotification }
-
     const { stompClient, subscription } = subscribe(
       { messageReceived, showNotification },
       memberId,
@@ -132,7 +111,6 @@ export default class ChatTab extends React.Component {
     return { stompClient, subscription }
   }
 
-  //Added from src/components/chat/index.js
   reconnectSocket = () => {
     const {
       messageReceived,
@@ -154,7 +132,6 @@ export default class ChatTab extends React.Component {
   }
 
   onResizeClick = () => {
-    // console.log('Hej')
     this.setState(
       {
         visible: !this.state.visible,

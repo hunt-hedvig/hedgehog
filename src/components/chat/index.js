@@ -116,24 +116,12 @@ export default class Chat extends React.Component {
       insurancesListRequest,
       claimsByMember,
     } = this.props
-    //
-    //   const { stompClient, subscription } = this.subscribeSocket()
-    //   if (!stompClient) {
-    //     this.reconnectSocket()
-    //   }
-    //   this.setState({ socket: stompClient, subscription })
-    //
+
     memberRequest(memberId)
     insuranceRequest(memberId)
     claimsByMember(memberId)
     insurancesListRequest(memberId)
   }
-
-  // componentWillUnmount() {
-  //   const { subscription } = this.state
-  //   disconnect(null, subscription)
-  //   this.props.clearMessagesList()
-  // }
 
   render() {
     const { messages } = this.props
