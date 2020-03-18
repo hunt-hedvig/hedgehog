@@ -3,7 +3,6 @@ import styled from 'react-emotion'
 import { TextArea as SemanticTextArea } from 'semantic-ui-react'
 
 const TextAreaWrapper = styled('div')({
-  marginTop: '1rem',
   width: '100%',
 })
 
