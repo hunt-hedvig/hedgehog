@@ -9,7 +9,7 @@ import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
-import { SecondLevelHeadline } from 'hedvig-ui/typography'
+import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 import {
   Notification,
@@ -39,7 +39,8 @@ const NorwegianTariffEditorComponent: React.FunctionComponent<WithShowNotificati
   ] = useCreateNorwegianGripenPriceEngineMutation()
   return (
     <>
-      <SecondLevelHeadline>BASE FACTORS</SecondLevelHeadline>
+      <MainHeadline>Create Norwegian Price Engine "Gripen"</MainHeadline>
+      <ThirdLevelHeadline>Base factors</ThirdLevelHeadline>
       <CardsWrapper>
         <Card>
           <TextArea
@@ -53,7 +54,13 @@ const NorwegianTariffEditorComponent: React.FunctionComponent<WithShowNotificati
       {factors.map((factor) => (
         <FactorEditor
           key={factor.factorType}
-          factorName={factor.factorType.replace(/_/g, ' ')}
+          factorName={
+            factor.factorType[0] +
+            factor.factorType
+              .replace(/_/g, ' ')
+              .toLowerCase()
+              .slice(1)
+          }
           setFactorString={getSetFactorStringFunction(
             factor.factorType,
             factors,
@@ -130,6 +137,6 @@ const getSetFactorStringFunction = (
   }
 }
 
-export const NorwegianTariffEditor = withShowNotification(
+export const NorwegianTariffCreator = withShowNotification(
   NorwegianTariffEditorComponent,
 )

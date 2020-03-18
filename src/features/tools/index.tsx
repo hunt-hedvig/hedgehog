@@ -27,10 +27,9 @@ export const Tools: React.FC = () => (
       Perils editor
     </CardLink>
 
-    <CardLink to="/tools/norwegian-tariff-editor" span={4}>
-      <Icon>🇳🇴</Icon>
-      <Icon>💸</Icon>
-      Norwegian Tariff Editor
+    <CardLink to="/tools/norwegian-tariff-creator" span={4}>
+      <Icon>🛩</Icon>
+      Norwegian Price Engine "Gripen"
     </CardLink>
   </CardsWrapper>
 )

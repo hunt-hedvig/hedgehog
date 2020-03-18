@@ -1,6 +1,6 @@
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { TextArea } from 'hedvig-ui/text-area'
-import { SecondLevelHeadline } from 'hedvig-ui/typography'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 
 interface FactorEditorProps {
@@ -14,7 +14,7 @@ export const FactorEditor: React.FunctionComponent<FactorEditorProps> = ({
 }) => {
   return (
     <>
-      <SecondLevelHeadline>{factorName}</SecondLevelHeadline>
+      <ThirdLevelHeadline>{factorName}</ThirdLevelHeadline>
       <CardsWrapper>
         <Card>
           <TextArea

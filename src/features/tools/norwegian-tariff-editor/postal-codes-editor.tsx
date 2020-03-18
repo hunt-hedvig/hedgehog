@@ -2,7 +2,7 @@ import { useAddNorwegainPostalCodesMutation } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
-import { SecondLevelHeadline } from 'hedvig-ui/typography'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
@@ -21,7 +21,7 @@ export const PostalCodesEditor: React.FunctionComponent<PostalCodesEditorProps> 
 
   return (
     <Spacing top>
-      <SecondLevelHeadline>POSTAL CODES</SecondLevelHeadline>
+      <ThirdLevelHeadline>Postal codes</ThirdLevelHeadline>
       <TextArea
         placeholder={
           'Add postal codes columns from excel (Columns: "Postnummer", "Poststed", "Municipality name", "Disposable income" and "Centrality group")'
