@@ -2,7 +2,6 @@ import { useAddNorwegainPostalCodesMutation } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
-import { useState } from 'react'
 import * as React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
@@ -13,7 +12,7 @@ interface PostalCodesEditorProps {
 export const PostalCodesEditor: React.FunctionComponent<PostalCodesEditorProps> = ({
   showNotification,
 }) => {
-  const [postalCodesString, setPostalCodesString] = useState<string>('')
+  const [postalCodesString, setPostalCodesString] = React.useState<string>('')
   const [
     addNorwegianPostalCodes,
     { loading },
