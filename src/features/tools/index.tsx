@@ -29,6 +29,7 @@ export const Tools: React.FC = () => (
 
     <CardLink to="/tools/norwegian-tariff-editor" span={4}>
       <Icon>🇳🇴</Icon>
+      <Icon>💸</Icon>
       Norwegian Tariff Editor
     </CardLink>
   </CardsWrapper>

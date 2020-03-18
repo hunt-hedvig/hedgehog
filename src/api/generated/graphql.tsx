@@ -909,6 +909,7 @@ export enum NorwegianGripenFactorType {
   NumberOfPeople = 'NUMBER_OF_PEOPLE',
   ApartmentSize = 'APARTMENT_SIZE',
   RentedOrOwned = 'RENTED_OR_OWNED',
+  Deductible = 'DEDUCTIBLE',
 }
 
 export type NorwegianHomeContent = AgreementCore & {

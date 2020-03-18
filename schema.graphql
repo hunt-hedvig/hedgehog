@@ -80,25 +80,6 @@ type MutationType {
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
 }
 
-input CreateNorwegianGripenInput {
-  baseFactorString: String
-  factors: [NorwegianGripenFactorInput!]!
-}
-
-input NorwegianGripenFactorInput {
-  factorType: NorwegianGripenFactorType!
-  factorString: String!
-}
-
-enum NorwegianGripenFactorType {
-  AGE
-  CENTRALITY_GROUP
-  ECONOMY_OF_MUNICIPALITY
-  NUMBER_OF_PEOPLE
-  APARTMENT_SIZE
-  RENTED_OR_OWNED
-}
-
 type Contract {
   id: ID!
   holderMemberId: ID!
@@ -1079,6 +1060,26 @@ enum TicketType {
   CLAIM
   CALL_ME
   OTHER
+}
+
+input CreateNorwegianGripenInput {
+  baseFactorString: String
+  factors: [NorwegianGripenFactorInput!]!
+}
+
+input NorwegianGripenFactorInput {
+  factorType: NorwegianGripenFactorType!
+  factorString: String!
+}
+
+enum NorwegianGripenFactorType {
+  AGE
+  CENTRALITY_GROUP
+  ECONOMY_OF_MUNICIPALITY
+  NUMBER_OF_PEOPLE
+  APARTMENT_SIZE
+  RENTED_OR_OWNED
+  DEDUCTIBLE
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`

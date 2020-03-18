@@ -15,7 +15,6 @@ import {
   Notification,
   WithShowNotification,
 } from 'store/actions/notificationsActions'
-import { getTextFromEnumValue } from 'utils/enum'
 import { withShowNotification } from 'utils/notifications'
 
 const initialFactorState: NorwegianGripenFactorInput[] = Object.keys(
@@ -40,21 +39,21 @@ const NorwegianTariffEditorComponent: React.FunctionComponent<WithShowNotificati
   ] = useCreateNorwegianGripenPriceEngineMutation()
   return (
     <>
-      <SecondLevelHeadline>Base Factors</SecondLevelHeadline>
+      <SecondLevelHeadline>BASE FACTORS</SecondLevelHeadline>
       <CardsWrapper>
-        <Card span={2}>
+        <Card>
           <TextArea
-            placeholder={'Add Base Factors from excel...'}
+            placeholder={
+              'Add Base Factors from excel including "Product" (Columns: Fire, Leakage, Other, All risk and Travel), include "Base factor" and "Index per year"...'
+            }
             setText={setBaseFactors}
           />
         </Card>
-        <Card span={2}>{baseFactors}</Card>
       </CardsWrapper>
       {factors.map((factor) => (
         <FactorEditor
           key={factor.factorType}
-          factorName={getTextFromEnumValue(factor.factorType)}
-          factorString={getFactorString(factors, factor.factorType)}
+          factorName={factor.factorType.replace(/_/g, ' ')}
           setFactorString={getSetFactorStringFunction(
             factor.factorType,
             factors,
@@ -69,34 +68,35 @@ const NorwegianTariffEditorComponent: React.FunctionComponent<WithShowNotificati
           disabled={loading}
           onClick={() => {
             if (
-              window.confirm(
+              !window.confirm(
                 'Are you sure you want to create the price engine?',
               )
             ) {
-              useCreateNorwegianGripenPriceEngine({
-                variables: {
-                  request: {
-                    baseFactorString: baseFactors,
-                    factors,
-                  },
-                },
-              })
-                .then(() => {
-                  showNotification({
-                    type: 'olive',
-                    header: 'Success',
-                    message: 'Successfully created price engine',
-                  })
-                })
-                .catch((error) => {
-                  showNotification({
-                    type: 'red',
-                    header: 'Error',
-                    message: error.message,
-                  })
-                  throw error
-                })
+              return
             }
+            useCreateNorwegianGripenPriceEngine({
+              variables: {
+                request: {
+                  baseFactorString: baseFactors,
+                  factors,
+                },
+              },
+            })
+              .then(() => {
+                showNotification({
+                  type: 'olive',
+                  header: 'Success',
+                  message: 'Successfully created price engine',
+                })
+              })
+              .catch((error) => {
+                showNotification({
+                  type: 'red',
+                  header: 'Error',
+                  message: error.message,
+                })
+                throw error
+              })
           }}
         >
           Create Norwegian Gripen Price Engine
@@ -107,14 +107,6 @@ const NorwegianTariffEditorComponent: React.FunctionComponent<WithShowNotificati
       </Spacing>
     </>
   )
-}
-
-const getFactorString = (
-  factors: NorwegianGripenFactorInput[],
-  factorType: NorwegianGripenFactorType,
-): string => {
-  return factors.find((factor) => factor.factorType === factorType)!
-    .factorString
 }
 
 const getSetFactorStringFunction = (

@@ -2,6 +2,7 @@ import { useAddNorwegainPostalCodesMutation } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
+import { SecondLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
@@ -20,6 +21,7 @@ export const PostalCodesEditor: React.FunctionComponent<PostalCodesEditorProps> 
 
   return (
     <Spacing top>
+      <SecondLevelHeadline>POSTAL CODES</SecondLevelHeadline>
       <TextArea
         placeholder={
           'Add postal codes columns from excel (Columns: "Postnummer", "Poststed", "Municipality name", "Disposable income" and "Centrality group")'
@@ -33,29 +35,30 @@ export const PostalCodesEditor: React.FunctionComponent<PostalCodesEditorProps> 
           disabled={loading}
           onClick={() => {
             if (
-              window.confirm('Are you sure you want to add the postal codes?')
+              !window.confirm('Are you sure you want to add the postal codes?')
             ) {
-              addNorwegianPostalCodes({
-                variables: {
-                  postalCodesString,
-                },
-              })
-                .then(() => {
-                  showNotification({
-                    type: 'olive',
-                    header: 'Success',
-                    message: 'Successfully added Norwegian Postal Codes',
-                  })
-                })
-                .catch((error) => {
-                  showNotification({
-                    type: 'red',
-                    header: 'Error',
-                    message: error.message,
-                  })
-                  throw error
-                })
+              return
             }
+            addNorwegianPostalCodes({
+              variables: {
+                postalCodesString,
+              },
+            })
+              .then(() => {
+                showNotification({
+                  type: 'olive',
+                  header: 'Success',
+                  message: 'Successfully added Norwegian Postal Codes',
+                })
+              })
+              .catch((error) => {
+                showNotification({
+                  type: 'red',
+                  header: 'Error',
+                  message: error.message,
+                })
+                throw error
+              })
           }}
         >
           Add Norwegian Postal Codes
