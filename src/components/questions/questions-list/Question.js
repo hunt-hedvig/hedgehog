@@ -36,7 +36,7 @@ const Question = ({ activeList, question }) => {
           <div key={data.id}>
             <Message
               content={data.message.body}
-              left={!data.answer}
+              left={data.answer}
               isQuestionMessage={true}
               timestamp={data.localDate}
               from={question.memberId}
