@@ -29,7 +29,7 @@ const MessageBody = styled.div`
   border: 1px solid #d4d4d5;
   color: #4b4b4b;
   line-height: 1.4em;
-  background: ${(props) => (props.left ? '#fff;' : '#d1f4ff')}
+  background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
   border-radius: 0.3rem;
   padding: 0.8em 1em;
   box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
@@ -40,7 +40,7 @@ const MessageBody = styled.div`
     content: '';
     width: 0.7em;
     height: 0.7em;
-    background: ${(props) => (props.left ? '#fff;' : '#d1f4ff')}
+    background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     z-index: 2;
@@ -55,6 +55,7 @@ const MessageBody = styled.div`
 
 const MessageInfo = styled.div`
   margin: 0.5em 0;
+  background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
 `
 
 const Video = styled.video`
