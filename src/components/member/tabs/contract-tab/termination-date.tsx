@@ -173,8 +173,8 @@ const TerminationDateComponent: React.FunctionComponent<{
           <Spacing top>
             <TextArea
               placeholder={'Comment on the reason of termination...'}
-              text={comment}
-              setText={setComment}
+              value={comment}
+              setValue={setComment}
             />
           </Spacing>
           <ButtonsGroup>

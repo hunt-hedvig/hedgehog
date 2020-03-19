@@ -8,16 +8,16 @@ const TextAreaWrapper = styled('div')({
 
 export const TextArea: React.FunctionComponent<{
   placeholder: string
-  text: string
-  setText: (value: string) => void
-}> = ({ placeholder, text, setText }) => {
+  value: string
+  setValue: (value: string) => void
+}> = ({ placeholder, value: inputValue, setValue: setInputValue }) => {
   return (
     <TextAreaWrapper className={'ui form'}>
       <SemanticTextArea
         autoHeight
         placeholder={placeholder}
-        value={text}
-        onChange={(_, { value }) => setText(value as string)}
+        value={inputValue}
+        onChange={(_, { value }) => setInputValue(value as string)}
       />
     </TextAreaWrapper>
   )

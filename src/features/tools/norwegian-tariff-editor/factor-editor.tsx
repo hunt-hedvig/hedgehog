@@ -22,8 +22,8 @@ export const FactorEditor: React.FunctionComponent<FactorEditorProps> = ({
         <Card>
           <TextArea
             placeholder={`Add factors of ${factorName} from excel (Including the name of the factor, its keys on the left and the columns: 'Fire', 'Leakage', 'Other', 'All risk' and 'Travel' OBS: Do not include 'Special object')...`}
-            text={factorString}
-            setText={setFactorString}
+            value={factorString}
+            setValue={setFactorString}
           />
         </Card>
       </CardsWrapper>

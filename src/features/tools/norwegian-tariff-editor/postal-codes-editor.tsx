@@ -26,8 +26,8 @@ export const PostalCodesEditor: React.FunctionComponent<PostalCodesEditorProps> 
         placeholder={
           'Add postal codes columns from excel (Columns: "Postnummer", "Poststed", "Municipality name", "Disposable income" and "Centrality group")'
         }
-        text={postalCodesString}
-        setText={setPostalCodesString}
+        value={postalCodesString}
+        setValue={setPostalCodesString}
       />
       <Spacing top>
         <Button

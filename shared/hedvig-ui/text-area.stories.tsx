@@ -13,8 +13,8 @@ export const TextAreaThatGrows: React.FunctionComponent = () => {
     <>
       <TextArea
         placeholder={'Write your life story here...'}
-        text={text}
-        setText={setText}
+        value={text}
+        setValue={setText}
       />
       <p>
         <strong>Written text:</strong> {text}
