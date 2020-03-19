@@ -55,7 +55,7 @@ const MessageBody = styled.div`
 
 const MessageInfo = styled.div`
   margin: 0.5em 0;
-  background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
+  background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')};
 `
 
 const Video = styled.video`
