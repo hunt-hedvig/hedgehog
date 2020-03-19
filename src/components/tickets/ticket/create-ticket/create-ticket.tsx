@@ -69,6 +69,12 @@ export class CreateNewTicket extends React.Component<
     type: this.props.type ?? 'REMIND',
   }
 
+  componentDidMount(): void {
+    this.setState({
+      setReminder: true,
+    })
+  }
+
   public render() {
     return (
       <NewTicketBody>
