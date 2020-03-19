@@ -12,8 +12,8 @@ export const FactorEditor: React.FunctionComponent<FactorEditorProps> = ({
   factorName,
   onChange,
 }) => {
-  const [value, setValue] = React.useState('')
-  React.useEffect(() => onChange(value), [value])
+  const [factorString, setFactorString] = React.useState('')
+  React.useEffect(() => onChange(factorString), [factorString])
 
   return (
     <>
@@ -22,8 +22,8 @@ export const FactorEditor: React.FunctionComponent<FactorEditorProps> = ({
         <Card>
           <TextArea
             placeholder={`Add factors of ${factorName} from excel (Including the name of the factor, its keys on the left and the columns: 'Fire', 'Leakage', 'Other', 'All risk' and 'Travel' OBS: Do not include 'Special object')...`}
-            value={value}
-            setText={setValue}
+            text={factorString}
+            setText={setFactorString}
           />
         </Card>
       </CardsWrapper>
