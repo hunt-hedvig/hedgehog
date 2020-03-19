@@ -61,7 +61,7 @@ const NorwegianTariffEditorComponent: React.FunctionComponent<WithShowNotificati
               .toLowerCase()
               .slice(1)
           }
-          setFactorString={getSetFactorStringFunction(
+          onChange={getSetFactorStringFunction(
             factor.factorType,
             factors,
             setFactors,
