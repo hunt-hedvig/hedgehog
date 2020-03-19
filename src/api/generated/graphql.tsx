@@ -908,7 +908,7 @@ export enum NorwegianGripenFactorType {
   EconomyOfMunicipality = 'ECONOMY_OF_MUNICIPALITY',
   NumberOfPeople = 'NUMBER_OF_PEOPLE',
   ApartmentSize = 'APARTMENT_SIZE',
-  RentedOrOwned = 'RENTED_OR_OWNED',
+  HouseholdType = 'HOUSEHOLD_TYPE',
   Deductible = 'DEDUCTIBLE',
 }
 

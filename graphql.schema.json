@@ -10605,7 +10605,7 @@
             "deprecationReason": null
           },
           {
-            "name": "RENTED_OR_OWNED",
+            "name": "HOUSEHOLD_TYPE",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
