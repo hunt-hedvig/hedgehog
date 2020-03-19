@@ -135,25 +135,6 @@ export class CreateNewTicket extends React.Component<
                     this.handleOptionChange('assignedTo', value)
                   }
                 />
-                <Divider />
-
-                <Form.Input
-                  label="Set Priority"
-                  min={0}
-                  max={1}
-                  name="priority"
-                  onChange={(event) => this.handleChange(event)}
-                  step={0.01}
-                  type="range"
-                  value={this.state.priority}
-                />
-                <p>
-                  Current priority:
-                  <ColorIndicator percentage={this.state.priority} />
-                  {this.state.priority}
-                </p>
-                <Divider />
-
                 <div>
                   <p>
                     <strong>Set reminder:</strong>
