@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { addDays } from 'date-fns'
 import format from 'date-fns/format'
 import React from 'react'
 import { Mutation } from 'react-apollo'
@@ -31,8 +32,8 @@ const NewTicketBody = styled('div')`
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 
 const formatDateTime = (date) => {
-  const fDate = format(date, 'yyyy-MM-dd')
-  const fTime = format(date, 'HH:mm:ss')
+  const fDate = format(addDays(date, 1), 'yyyy-MM-dd')
+  const fTime = '09:00:00'
   return [fDate, fTime]
 }
 
@@ -69,9 +70,12 @@ export class CreateNewTicket extends React.Component<
     type: this.props.type ?? 'REMIND',
   }
 
-  componentDidMount(): void {
+  public componentDidMount(): void {
+    const [date, time] = formatDateTime(new Date())
     this.setState({
       setReminder: true,
+      remindDate: date,
+      remindTime: time,
     })
   }
 
@@ -151,21 +155,10 @@ export class CreateNewTicket extends React.Component<
                     checked={this.state.setReminder}
                     onChange={() => {
                       const flippedState = !this.state.setReminder
-                      this.setState({ setReminder: flippedState })
-                      if (this.state.setReminder !== true) {
-                        const [date, time] = formatDateTime(new Date())
-                        this.setState({
-                          remindDate: date,
-                          remindTime: time,
-                          remindMessage: this.state.description,
-                        })
-                      } else {
-                        this.setState({
-                          remindDate: null,
-                          remindTime: null,
-                          remindMessage: null,
-                        })
-                      }
+                      this.setState({
+                        setReminder: flippedState,
+                        remindMessage: this.state.description,
+                      })
                     }}
                   />
                 </div>
