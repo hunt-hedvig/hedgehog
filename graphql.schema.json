@@ -10599,7 +10599,7 @@
             "deprecationReason": null
           },
           {
-            "name": "APARTMENT_SIZE",
+            "name": "SQUARE_METERS",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
