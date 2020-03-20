@@ -11,7 +11,7 @@ import styled from 'react-emotion'
 
 const MessageRow = styled.div`
   display: flex;
-  justify-content: ${(props) => (props.left ? 'flex-start' : 'flex-end')};
+  justify-content: ${(props) => (props.left ? 'flex-end' : 'flex-start')};
   margin: ${(props) => (props.isQuestion ? '0px' : '20px 0')};
   width: 100%;
   box-sizing: border-box;
@@ -29,7 +29,7 @@ const MessageBody = styled.div`
   border: 1px solid #d4d4d5;
   color: #4b4b4b;
   line-height: 1.4em;
-  background: ${(props) => (props.left ? '#fff;' : '#d1f4ff')}
+  background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
   border-radius: 0.3rem;
   padding: 0.8em 1em;
   box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
@@ -40,7 +40,7 @@ const MessageBody = styled.div`
     content: '';
     width: 0.7em;
     height: 0.7em;
-    background: ${(props) => (props.left ? '#fff;' : '#d1f4ff')}
+    background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     z-index: 2;
