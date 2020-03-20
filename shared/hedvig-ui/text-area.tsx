@@ -3,20 +3,21 @@ import styled from 'react-emotion'
 import { TextArea as SemanticTextArea } from 'semantic-ui-react'
 
 const TextAreaWrapper = styled('div')({
-  marginTop: '1rem',
   width: '100%',
 })
 
 export const TextArea: React.FunctionComponent<{
   placeholder: string
-  setText: (value: string) => void
-}> = ({ placeholder, setText }) => {
+  value: string
+  setValue: (value: string) => void
+}> = ({ placeholder, value: inputValue, setValue: setInputValue }) => {
   return (
     <TextAreaWrapper className={'ui form'}>
       <SemanticTextArea
         autoHeight
         placeholder={placeholder}
-        onChange={(_, { value }) => setText(value as string)}
+        value={inputValue}
+        onChange={(_, { value }) => setInputValue(value as string)}
       />
     </TextAreaWrapper>
   )

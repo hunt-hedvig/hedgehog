@@ -15,6 +15,7 @@ import {
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { EnumDropdown } from 'hedvig-ui/dropdown'
+import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
@@ -169,10 +170,13 @@ const TerminationDateComponent: React.FunctionComponent<{
             placeholder={'Termination reason'}
             setValue={setTerminationReason}
           />
-          <TextArea
-            placeholder={'Comment on the reason of termination...'}
-            setText={setComment}
-          />
+          <Spacing top>
+            <TextArea
+              placeholder={'Comment on the reason of termination...'}
+              value={comment}
+              setValue={setComment}
+            />
+          </Spacing>
           <ButtonsGroup>
             <Button
               fullWidth
