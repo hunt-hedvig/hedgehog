@@ -395,6 +395,7 @@ export type Contract = {
   hasQueuedRenewal: Scalars['Boolean']
   renewal?: Maybe<Renewal>
   preferredCurrency: Scalars['String']
+  market: Market
   signSource?: Maybe<SignSource>
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
@@ -645,6 +646,11 @@ export type LuggageDelayClaim = {
   location?: Maybe<Scalars['String']>
   date?: Maybe<Scalars['LocalDate']>
   ticket?: Maybe<Scalars['String']>
+}
+
+export enum Market {
+  Sweden = 'SWEDEN',
+  Norway = 'NORWAY',
 }
 
 export type Member = {
@@ -1145,6 +1151,7 @@ export type SchedulerState = {
 export enum SignSource {
   Rapio = 'RAPIO',
   Webonboarding = 'WEBONBOARDING',
+  Web = 'WEB',
   App = 'APP',
   Ios = 'IOS',
   Android = 'ANDROID',
@@ -1471,6 +1478,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
           | 'hasPendingAgreement'
           | 'hasQueuedRenewal'
           | 'preferredCurrency'
+          | 'market'
           | 'signSource'
           | 'contractTypeName'
           | 'createdAt'
@@ -2089,6 +2097,7 @@ export const GetContractsDocument = gql`
           draftOfAgreementId
         }
         preferredCurrency
+        market
         signSource
         contractTypeName
         createdAt
