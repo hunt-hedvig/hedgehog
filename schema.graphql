@@ -94,6 +94,7 @@ type Contract {
   hasQueuedRenewal: Boolean!
   renewal: Renewal
   preferredCurrency: String!
+  market: Market!
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
@@ -188,6 +189,7 @@ type Address {
 enum SignSource {
   RAPIO
   WEBONBOARDING
+  WEB
   APP
   IOS
   ANDROID
@@ -437,6 +439,17 @@ type Member {
   numberFailedCharges: NumberFailedCharges
   quotes: [Quote!]!
   contracts: [Contract!]!
+  contractMarketInfo: ContractMarketInfo
+}
+
+type ContractMarketInfo {
+  market: Market!
+  preferredCurrency: String!
+}
+
+enum Market {
+  SWEDEN
+  NORWAY
 }
 
 enum Gender {
