@@ -452,6 +452,11 @@ enum Market {
   NORWAY
 }
 
+enum Market {
+  SWEDEN
+  NORWAY
+}
+
 enum Gender {
   MALE
   FEMALE

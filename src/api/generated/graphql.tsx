@@ -1494,6 +1494,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
           | 'hasPendingAgreement'
           | 'hasQueuedRenewal'
           | 'preferredCurrency'
+          | 'market'
           | 'signSource'
           | 'contractTypeName'
           | 'createdAt'
@@ -2117,6 +2118,7 @@ export const GetContractsDocument = gql`
           draftOfAgreementId
         }
         preferredCurrency
+        market
         signSource
         contractTypeName
         createdAt
