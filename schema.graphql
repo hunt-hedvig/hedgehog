@@ -78,6 +78,8 @@ type MutationType {
   revertTermination(contractId: ID!): Contract!
   createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
+  changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
+  changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
 }
 
 type Contract {
@@ -244,6 +246,14 @@ enum TerminationReason {
   SUSPECTED_FRAUD
   OTHER
   UNKNOWN
+}
+
+input ChangeToDateInput {
+  newToDate: LocalDate!
+}
+
+input ChangeFromDateInput {
+  newFromDate: LocalDate!
 }
 
 type Suggestion {

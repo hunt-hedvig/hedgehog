@@ -207,8 +207,16 @@ export type Category = {
   name: Scalars['String']
 }
 
+export type ChangeFromDateInput = {
+  newFromDate: Scalars['LocalDate']
+}
+
 export type ChangeTerminationDateInput = {
   newTerminationDate: Scalars['LocalDate']
+}
+
+export type ChangeToDateInput = {
+  newToDate: Scalars['LocalDate']
 }
 
 export enum ChargeStatus {
@@ -731,6 +739,8 @@ export type MutationType = {
   revertTermination: Contract
   createNorwegianGripenPriceEngine: Scalars['Boolean']
   addNorwegianPostalCodes: Scalars['Boolean']
+  changeToDate: Scalars['ID']
+  changeFromDate: Scalars['ID']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -901,6 +911,16 @@ export type MutationTypeCreateNorwegianGripenPriceEngineArgs = {
 
 export type MutationTypeAddNorwegianPostalCodesArgs = {
   postalCodesString?: Maybe<Scalars['String']>
+}
+
+export type MutationTypeChangeToDateArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeToDateInput>
+}
+
+export type MutationTypeChangeFromDateArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeFromDateInput>
 }
 
 export type NorwegianGripenFactorInput = {
@@ -1456,6 +1476,16 @@ export type ChangeTerminationDateMutationVariables = {
 export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
   changeTerminationDate: { __typename?: 'Contract' } & Pick<Contract, 'id'>
 }
+
+export type ChangeToDateMutationVariables = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeToDateInput>
+}
+
+export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'changeToDate'
+>
 
 export type GetContractsQueryVariables = {
   memberId: Scalars['ID']
@@ -2013,6 +2043,55 @@ export type ChangeTerminationDateMutationResult = ApolloReactCommon.MutationResu
 export type ChangeTerminationDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeTerminationDateMutation,
   ChangeTerminationDateMutationVariables
+>
+export const ChangeToDateDocument = gql`
+  mutation ChangeToDate($agreementId: ID!, $request: ChangeToDateInput) {
+    changeToDate(agreementId: $agreementId, request: $request)
+  }
+`
+export type ChangeToDateMutationFn = ApolloReactCommon.MutationFunction<
+  ChangeToDateMutation,
+  ChangeToDateMutationVariables
+>
+
+/**
+ * __useChangeToDateMutation__
+ *
+ * To run a mutation, you first call `useChangeToDateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeToDateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeToDateMutation, { data, loading, error }] = useChangeToDateMutation({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useChangeToDateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ChangeToDateMutation,
+    ChangeToDateMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ChangeToDateMutation,
+    ChangeToDateMutationVariables
+  >(ChangeToDateDocument, baseOptions)
+}
+export type ChangeToDateMutationHookResult = ReturnType<
+  typeof useChangeToDateMutation
+>
+export type ChangeToDateMutationResult = ApolloReactCommon.MutationResult<
+  ChangeToDateMutation
+>
+export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ChangeToDateMutation,
+  ChangeToDateMutationVariables
 >
 export const GetContractsDocument = gql`
   query GetContracts($memberId: ID!) {
