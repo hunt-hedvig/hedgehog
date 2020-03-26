@@ -1,6 +1,4 @@
 import { FraudulentStatus } from 'lib/fraudulentStatus'
-import { disconnect } from 'lib/sockets'
-import { reconnect, subscribe } from 'lib/sockets/chat'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
@@ -31,18 +29,20 @@ const Header = styled(SemanticHeader)`
 `
 
 const Badge = styled('div')`
-  display: inline-block;
+  float: right;
+  display: inline-flex;
   padding: 0.5rem 1rem;
   line-height: 1;
   font-size: 1rem;
   ${({ memberId }) => `background: ${getMemberIdColor(memberId)}`};
   border-radius: 8px;
   color: #fff;
+  margin-left: auto;
+  margin-right: 1rem;
 `
 
 const Flag = styled('div')`
-  padding-left: 1rem;
-  display: inline-block;
+  display: inline-flex;
   font-size: 3rem
 `
 
@@ -83,12 +83,12 @@ export default class Member extends React.Component {
             />
             {messages.member && (
               <>
-                <Badge memberId={messages.member.memberId}>
-                  {getMemberGroup(messages.member.memberId)}
-                </Badge>
                 <Flag>
                   <MemberFlag memberId={messages.member.memberId} />
                 </Flag>
+                <Badge memberId={messages.member.memberId}>
+                  {getMemberGroup(messages.member.memberId)}
+                </Badge>
               </>
             )}
           </Header>
