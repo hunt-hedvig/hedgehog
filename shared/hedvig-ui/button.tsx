@@ -111,3 +111,5 @@ export const Button = styled('button')<ButtonProps>(
     },
   }),
 )
+
+export const ButtonLink = Button.withComponent('a')
