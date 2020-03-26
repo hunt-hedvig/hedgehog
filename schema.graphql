@@ -78,6 +78,8 @@ type MutationType {
   revertTermination(contractId: ID!): Contract!
   createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
+  changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
+  changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
 }
 
 type Contract {
@@ -102,7 +104,11 @@ type Contract {
 
 enum ContractStatus {
   PENDING
+  ACTIVE_IN_FUTURE
+  ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE
   ACTIVE
+  TERMINATED_TODAY
+  TERMINATED_IN_FUTURE
   TERMINATED
 }
 
@@ -244,6 +250,14 @@ enum TerminationReason {
   SUSPECTED_FRAUD
   OTHER
   UNKNOWN
+}
+
+input ChangeToDateInput {
+  newToDate: LocalDate!
+}
+
+input ChangeFromDateInput {
+  newFromDate: LocalDate!
 }
 
 type Suggestion {
@@ -445,11 +459,6 @@ type Member {
 type ContractMarketInfo {
   market: Market!
   preferredCurrency: String!
-}
-
-enum Market {
-  SWEDEN
-  NORWAY
 }
 
 enum Market {
