@@ -1,4 +1,5 @@
 import { colors } from '@hedviginsurance/brand'
+import { ContractMarketInfo, Market } from 'api/generated/graphql'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation, Query } from 'react-apollo'
@@ -194,6 +195,7 @@ interface State {
 export class MemberDebtComponent extends React.Component<
   {
     showNotification: (data: any) => void
+    contractMarketInfo: ContractMarketInfo
   } & RouteComponentProps<{
     memberId: string
   }>,
@@ -204,6 +206,9 @@ export class MemberDebtComponent extends React.Component<
   }
 
   public render() {
+    if (this.props.contractMarketInfo.market === Market.Norway) {
+      return <>Not available for Norway</>
+    }
     return (
       <Wrapper>
         <Query<any>
