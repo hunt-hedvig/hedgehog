@@ -2,10 +2,12 @@ import * as React from 'react'
 import { Table } from 'semantic-ui-react'
 import { Button, ButtonsGroup } from '../../../../../shared/hedvig-ui/button'
 import { Card } from '../../../../../shared/hedvig-ui/card'
+import { DateTimePicker } from '../../../../../shared/hedvig-ui/date-time-picker'
 import { Spacing } from '../../../../../shared/hedvig-ui/spacing'
 import { Agreement, Contract } from '../../../../api/generated/graphql'
 import { ButtonSpacing, FlexWrapper } from './contract-item'
 import { InsuranceMandate } from './InsuranceMandate'
+import { FromDate, ToDate } from './ToDateComponent'
 
 export const AgreementItemComponent: React.FunctionComponent<{
   agreement: Agreement
@@ -92,12 +94,13 @@ export const AgreementItemComponent: React.FunctionComponent<{
                 <Button>Create quote</Button>
               </ButtonSpacing>
             </Card>
-            <Card span={2}>
-              From date
-              <ButtonSpacing>
-                <Button>Edit</Button>
-              </ButtonSpacing>
-            </Card>
+            {/*<Card span={2}>*/}
+            {/*  From date*/}
+            {/*  <ButtonSpacing>*/}
+            {/*    <Button>Edit</Button>*/}
+            {/*  </ButtonSpacing>*/}
+            {/*</Card>*/}
+            <ToDate agreement={agreement} contract={contract} />
           </FlexWrapper>
           <Card span={2}>
             To date
