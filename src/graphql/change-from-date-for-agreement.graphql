@@ -1,0 +1,3 @@
+mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
+  changeFromDate(agreementId: $agreementId, request: $request)
+}

@@ -6,37 +6,38 @@ import * as React from 'react'
 import { Card } from '../../../../../shared/hedvig-ui/card'
 import { Spacing } from '../../../../../shared/hedvig-ui/spacing'
 import {
-  changeToDateOptions,
-  useChangeToDate,
-} from '../../../../graphql/use-change-to-date-for-agreement'
+  changeFromDateOptions,
+  useChangeFromDate,
+} from '../../../../graphql/use-change-from-date-for-agreement'
 import { ButtonSpacing } from './contract-item'
 
-const initialToDate = (agreement: Agreement): Date =>
-  agreement.toDate ? new Date(agreement.toDate) : new Date()
+const initialFromDate = (agreement: Agreement): Date =>
+  agreement.fromDate ? new Date(agreement.fromDate) : new Date()
 
-const ToDateComponent: React.FunctionComponent<{
+const FromDateComponent: React.FunctionComponent<{
   agreement: Agreement
   contract: Contract
 }> = ({ agreement, contract }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
-  const [toDate, setToDate] = React.useState(initialToDate(agreement))
-  const [changeToDate, { loading: changeToDateLoading }] = useChangeToDate(
-    contract,
-  )
+  const [fromDate, setFromDate] = React.useState(initialFromDate(agreement))
+  const [
+    changeFromDate,
+    { loading: changeFromDateLoading },
+  ] = useChangeFromDate(contract)
   const reset = () => {
-    setToDate(initialToDate(agreement))
+    setFromDate(initialFromDate(agreement))
     setDatePickerEnabled(false)
   }
 
   return (
     <>
       <Card span={2}>
-        To Date
+        From Date
         <Spacing all>
           <span>
-            To Date:{' '}
-            {agreement.toDate != null
-              ? format(new Date(agreement.toDate), 'yyyy-MM-dd')
+            From Date:{' '}
+            {agreement.fromDate != null
+              ? format(new Date(agreement.fromDate), 'yyyy-MM-dd')
               : 'Not set'}
           </span>
         </Spacing>
@@ -46,18 +47,18 @@ const ToDateComponent: React.FunctionComponent<{
           )}
           {datePickerEnabled && (
             <>
-              <DateTimePicker date={toDate} setDate={setToDate} />
+              <DateTimePicker date={fromDate} setDate={setFromDate} />
               <ButtonsGroup>
                 <Button
                   fullWidth
                   onClick={() => {
-                    changeToDate(
-                      changeToDateOptions(agreement, toDate),
+                    changeFromDate(
+                      changeFromDateOptions(agreement, fromDate),
                     ).then((response) => console.log(response))
                     reset()
                   }}
                 >
-                  set to date
+                  set from date
                 </Button>
                 <Button fullWidth onClick={() => reset()}>
                   Cancel
@@ -71,4 +72,4 @@ const ToDateComponent: React.FunctionComponent<{
   )
 }
 
-export const ToDate = ToDateComponent
+export const FromDate = FromDateComponent
