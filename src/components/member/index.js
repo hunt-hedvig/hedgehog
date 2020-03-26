@@ -8,6 +8,7 @@ import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import { getMemberGroup, getMemberIdColor, MemberEmoji } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatPane from './tabs/ChatPane'
+import { MemberFlag } from './shared/member-flag'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -39,13 +40,15 @@ const Badge = styled('div')`
   color: #fff;
 `
 
+const Flag = styled('div')`
+  padding-left: 1rem;
+  display: inline-block;
+  font-size: 3rem
+`
+
 export default class Member extends React.Component {
   getMemberPageTitle = (member) =>
-    `Member: ${
-      member && (member.firstName || member.lastName)
-        ? member.firstName + ' ' + (member.lastName || '')
-        : ''
-    }`
+    `${member && (member.firstName || '') + ' ' + (member.lastName || '')}`
 
   componentDidMount() {
     const {
@@ -79,9 +82,14 @@ export default class Member extends React.Component {
               gender={messages.member?.gender}
             />
             {messages.member && (
-              <Badge memberId={messages.member.memberId}>
-                {getMemberGroup(messages.member.memberId)}
-              </Badge>
+              <>
+                <Badge memberId={messages.member.memberId}>
+                  {getMemberGroup(messages.member.memberId)}
+                </Badge>
+                <Flag>
+                  <MemberFlag memberId={messages.member.memberId} />
+                </Flag>
+              </>
             )}
           </Header>
           {this.props.insurance.requesting || (
