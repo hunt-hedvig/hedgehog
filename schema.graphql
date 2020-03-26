@@ -102,7 +102,11 @@ type Contract {
 
 enum ContractStatus {
   PENDING
+  ACTIVE_IN_FUTURE
+  ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE
   ACTIVE
+  TERMINATED_TODAY
+  TERMINATED_IN_FUTURE
   TERMINATED
 }
 
@@ -445,11 +449,6 @@ type Member {
 type ContractMarketInfo {
   market: Market!
   preferredCurrency: String!
-}
-
-enum Market {
-  SWEDEN
-  NORWAY
 }
 
 enum Market {

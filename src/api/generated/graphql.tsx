@@ -409,7 +409,11 @@ export type ContractMarketInfo = {
 
 export enum ContractStatus {
   Pending = 'PENDING',
+  ActiveInFuture = 'ACTIVE_IN_FUTURE',
+  ActiveInFutureAndTerminatedInFuture = 'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE',
   Active = 'ACTIVE',
+  TerminatedToday = 'TERMINATED_TODAY',
+  TerminatedInFuture = 'TERMINATED_IN_FUTURE',
   Terminated = 'TERMINATED',
 }
 
@@ -1473,6 +1477,23 @@ export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
   changeTerminationDate: { __typename?: 'Contract' } & Pick<Contract, 'id'>
 }
 
+export type GetContractMarketInfoQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetContractMarketInfoQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & {
+      contractMarketInfo: Maybe<
+        { __typename?: 'ContractMarketInfo' } & Pick<
+          ContractMarketInfo,
+          'market' | 'preferredCurrency'
+        >
+      >
+    }
+  >
+}
+
 export type GetContractsQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -2034,6 +2055,65 @@ export type ChangeTerminationDateMutationResult = ApolloReactCommon.MutationResu
 export type ChangeTerminationDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeTerminationDateMutation,
   ChangeTerminationDateMutationVariables
+>
+export const GetContractMarketInfoDocument = gql`
+  query GetContractMarketInfo($memberId: ID!) {
+    member(id: $memberId) {
+      contractMarketInfo {
+        market
+        preferredCurrency
+      }
+    }
+  }
+`
+
+/**
+ * __useGetContractMarketInfoQuery__
+ *
+ * To run a query within a React component, call `useGetContractMarketInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetContractMarketInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetContractMarketInfoQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetContractMarketInfoQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >(GetContractMarketInfoDocument, baseOptions)
+}
+export function useGetContractMarketInfoLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >(GetContractMarketInfoDocument, baseOptions)
+}
+export type GetContractMarketInfoQueryHookResult = ReturnType<
+  typeof useGetContractMarketInfoQuery
+>
+export type GetContractMarketInfoLazyQueryHookResult = ReturnType<
+  typeof useGetContractMarketInfoLazyQuery
+>
+export type GetContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
+  GetContractMarketInfoQuery,
+  GetContractMarketInfoQueryVariables
 >
 export const GetContractsDocument = gql`
   query GetContracts($memberId: ID!) {
