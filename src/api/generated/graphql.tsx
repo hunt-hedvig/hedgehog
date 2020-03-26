@@ -401,9 +401,19 @@ export type Contract = {
   createdAt: Scalars['Instant']
 }
 
+export type ContractMarketInfo = {
+  __typename?: 'ContractMarketInfo'
+  market: Market
+  preferredCurrency: Scalars['String']
+}
+
 export enum ContractStatus {
   Pending = 'PENDING',
+  ActiveInFuture = 'ACTIVE_IN_FUTURE',
+  ActiveInFutureAndTerminatedInFuture = 'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE',
   Active = 'ACTIVE',
+  TerminatedToday = 'TERMINATED_TODAY',
+  TerminatedInFuture = 'TERMINATED_IN_FUTURE',
   Terminated = 'TERMINATED',
 }
 
@@ -676,6 +686,7 @@ export type Member = {
   numberFailedCharges?: Maybe<NumberFailedCharges>
   quotes: Array<Quote>
   contracts: Array<Contract>
+  contractMarketInfo?: Maybe<ContractMarketInfo>
 }
 
 export type MemberMonthlySubscriptionArgs = {
