@@ -207,8 +207,16 @@ export type Category = {
   name: Scalars['String']
 }
 
+export type ChangeFromDateInput = {
+  newFromDate: Scalars['LocalDate']
+}
+
 export type ChangeTerminationDateInput = {
   newTerminationDate: Scalars['LocalDate']
+}
+
+export type ChangeToDateInput = {
+  newToDate: Scalars['LocalDate']
 }
 
 export enum ChargeStatus {
@@ -742,6 +750,8 @@ export type MutationType = {
   revertTermination: Contract
   createNorwegianGripenPriceEngine: Scalars['Boolean']
   addNorwegianPostalCodes: Scalars['Boolean']
+  changeToDate: Scalars['ID']
+  changeFromDate: Scalars['ID']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -912,6 +922,16 @@ export type MutationTypeCreateNorwegianGripenPriceEngineArgs = {
 
 export type MutationTypeAddNorwegianPostalCodesArgs = {
   postalCodesString?: Maybe<Scalars['String']>
+}
+
+export type MutationTypeChangeToDateArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeToDateInput>
+}
+
+export type MutationTypeChangeFromDateArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeFromDateInput>
 }
 
 export type NorwegianGripenFactorInput = {
