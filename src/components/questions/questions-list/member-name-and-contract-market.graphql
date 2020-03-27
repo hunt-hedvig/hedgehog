@@ -1,0 +1,9 @@
+query MemberNameAndContractMarketInfo($memberId: ID!) {
+  member(id: $memberId) {
+    firstName
+    lastName
+    contractMarketInfo {
+      market
+    }
+  }
+}

@@ -207,8 +207,16 @@ export type Category = {
   name: Scalars['String']
 }
 
+export type ChangeFromDateInput = {
+  newFromDate: Scalars['LocalDate']
+}
+
 export type ChangeTerminationDateInput = {
   newTerminationDate: Scalars['LocalDate']
+}
+
+export type ChangeToDateInput = {
+  newToDate: Scalars['LocalDate']
 }
 
 export enum ChargeStatus {
@@ -742,6 +750,8 @@ export type MutationType = {
   revertTermination: Contract
   createNorwegianGripenPriceEngine: Scalars['Boolean']
   addNorwegianPostalCodes: Scalars['Boolean']
+  changeToDate: Scalars['ID']
+  changeFromDate: Scalars['ID']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -912,6 +922,16 @@ export type MutationTypeCreateNorwegianGripenPriceEngineArgs = {
 
 export type MutationTypeAddNorwegianPostalCodesArgs = {
   postalCodesString?: Maybe<Scalars['String']>
+}
+
+export type MutationTypeChangeToDateArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeToDateInput>
+}
+
+export type MutationTypeChangeFromDateArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeFromDateInput>
 }
 
 export type NorwegianGripenFactorInput = {
@@ -1398,13 +1418,22 @@ export type Whitelisted = {
   whitelistedBy?: Maybe<Scalars['String']>
 }
 
-export type MemberNameQueryVariables = {
+export type MemberNameAndContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
 }
 
-export type MemberNameQuery = { __typename?: 'QueryType' } & {
+export type MemberNameAndContractMarketInfoQuery = {
+  __typename?: 'QueryType'
+} & {
   member: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'>
+    { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'> & {
+        contractMarketInfo: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market'
+          >
+        >
+      }
   >
 }
 
@@ -1466,6 +1495,23 @@ export type ChangeTerminationDateMutationVariables = {
 
 export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
   changeTerminationDate: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+}
+
+export type GetContractMarketInfoQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetContractMarketInfoQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & {
+      contractMarketInfo: Maybe<
+        { __typename?: 'ContractMarketInfo' } & Pick<
+          ContractMarketInfo,
+          'market' | 'preferredCurrency'
+        >
+      >
+    }
+  >
 }
 
 export type GetContractsQueryVariables = {
@@ -1651,60 +1697,65 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
   terminateContract: { __typename?: 'Contract' } & Pick<Contract, 'id'>
 }
 
-export const MemberNameDocument = gql`
-  query MemberName($memberId: ID!) {
+export const MemberNameAndContractMarketInfoDocument = gql`
+  query MemberNameAndContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
       firstName
       lastName
+      contractMarketInfo {
+        market
+      }
     }
   }
 `
 
 /**
- * __useMemberNameQuery__
+ * __useMemberNameAndContractMarketInfoQuery__
  *
- * To run a query within a React component, call `useMemberNameQuery` and pass it any options that fit your needs.
- * When your component renders, `useMemberNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useMemberNameAndContractMarketInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberNameAndContractMarketInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMemberNameQuery({
+ * const { data, loading, error } = useMemberNameAndContractMarketInfoQuery({
  *   variables: {
  *      memberId: // value for 'memberId'
  *   },
  * });
  */
-export function useMemberNameQuery(
+export function useMemberNameAndContractMarketInfoQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    MemberNameQuery,
-    MemberNameQueryVariables
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<MemberNameQuery, MemberNameQueryVariables>(
-    MemberNameDocument,
-    baseOptions,
-  )
+  return ApolloReactHooks.useQuery<
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
+  >(MemberNameAndContractMarketInfoDocument, baseOptions)
 }
-export function useMemberNameLazyQuery(
+export function useMemberNameAndContractMarketInfoLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    MemberNameQuery,
-    MemberNameQueryVariables
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
   >,
 ) {
   return ApolloReactHooks.useLazyQuery<
-    MemberNameQuery,
-    MemberNameQueryVariables
-  >(MemberNameDocument, baseOptions)
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
+  >(MemberNameAndContractMarketInfoDocument, baseOptions)
 }
-export type MemberNameQueryHookResult = ReturnType<typeof useMemberNameQuery>
-export type MemberNameLazyQueryHookResult = ReturnType<
-  typeof useMemberNameLazyQuery
+export type MemberNameAndContractMarketInfoQueryHookResult = ReturnType<
+  typeof useMemberNameAndContractMarketInfoQuery
 >
-export type MemberNameQueryResult = ApolloReactCommon.QueryResult<
-  MemberNameQuery,
-  MemberNameQueryVariables
+export type MemberNameAndContractMarketInfoLazyQueryHookResult = ReturnType<
+  typeof useMemberNameAndContractMarketInfoLazyQuery
+>
+export type MemberNameAndContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
+  MemberNameAndContractMarketInfoQuery,
+  MemberNameAndContractMarketInfoQueryVariables
 >
 export const AddNorwegainPostalCodesDocument = gql`
   mutation AddNorwegainPostalCodes($postalCodesString: String) {
@@ -2024,6 +2075,65 @@ export type ChangeTerminationDateMutationResult = ApolloReactCommon.MutationResu
 export type ChangeTerminationDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeTerminationDateMutation,
   ChangeTerminationDateMutationVariables
+>
+export const GetContractMarketInfoDocument = gql`
+  query GetContractMarketInfo($memberId: ID!) {
+    member(id: $memberId) {
+      contractMarketInfo {
+        market
+        preferredCurrency
+      }
+    }
+  }
+`
+
+/**
+ * __useGetContractMarketInfoQuery__
+ *
+ * To run a query within a React component, call `useGetContractMarketInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetContractMarketInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetContractMarketInfoQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetContractMarketInfoQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >(GetContractMarketInfoDocument, baseOptions)
+}
+export function useGetContractMarketInfoLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >(GetContractMarketInfoDocument, baseOptions)
+}
+export type GetContractMarketInfoQueryHookResult = ReturnType<
+  typeof useGetContractMarketInfoQuery
+>
+export type GetContractMarketInfoLazyQueryHookResult = ReturnType<
+  typeof useGetContractMarketInfoLazyQuery
+>
+export type GetContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
+  GetContractMarketInfoQuery,
+  GetContractMarketInfoQueryVariables
 >
 export const GetContractsDocument = gql`
   query GetContracts($memberId: ID!) {

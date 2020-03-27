@@ -1,6 +1,4 @@
 import { FraudulentStatus } from 'lib/fraudulentStatus'
-import { disconnect } from 'lib/sockets'
-import { reconnect, subscribe } from 'lib/sockets/chat'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
@@ -8,6 +6,7 @@ import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import { getMemberGroup, getMemberIdColor, MemberEmoji } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatPane from './tabs/ChatPane'
+import { MemberFlag } from './shared/member-flag'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -30,22 +29,26 @@ const Header = styled(SemanticHeader)`
 `
 
 const Badge = styled('div')`
-  display: inline-block;
+  float: right;
+  display: inline-flex;
   padding: 0.5rem 1rem;
   line-height: 1;
   font-size: 1rem;
   ${({ memberId }) => `background: ${getMemberIdColor(memberId)}`};
   border-radius: 8px;
   color: #fff;
+  margin-left: auto;
+  margin-right: 1rem;
+`
+
+const Flag = styled('div')`
+  display: inline-flex;
+  font-size: 3rem
 `
 
 export default class Member extends React.Component {
   getMemberPageTitle = (member) =>
-    `Member: ${
-      member && (member.firstName || member.lastName)
-        ? member.firstName + ' ' + (member.lastName || '')
-        : ''
-    }`
+    `${member && (member.firstName || '') + ' ' + (member.lastName || '')}`
 
   componentDidMount() {
     const {
@@ -79,9 +82,14 @@ export default class Member extends React.Component {
               gender={messages.member?.gender}
             />
             {messages.member && (
-              <Badge memberId={messages.member.memberId}>
-                {getMemberGroup(messages.member.memberId)}
-              </Badge>
+              <>
+                <Flag>
+                  <MemberFlag memberId={messages.member.memberId} />
+                </Flag>
+                <Badge memberId={messages.member.memberId}>
+                  {getMemberGroup(messages.member.memberId)}
+                </Badge>
+              </>
             )}
           </Header>
           {this.props.insurance.requesting || (

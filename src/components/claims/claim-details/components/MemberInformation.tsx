@@ -1,4 +1,5 @@
 import { Member, SanctionStatus } from 'api/generated/graphql'
+import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import { formatMoneySE } from 'lib/intl'
@@ -44,7 +45,8 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
     <Paper>
       <h3>Member Information</h3>
       <MemberName>
-        {member.firstName} {member.lastName}
+        {member.firstName} {member.lastName}{' '}
+        <MemberFlag memberId={member.memberId} />
       </MemberName>
       <p>
         <b>Id:</b>{' '}
