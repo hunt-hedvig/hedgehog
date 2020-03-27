@@ -20,7 +20,6 @@ import { IRemindNotification } from '../types'
 import MessageResponseForm from './body/message-response'
 import AssignTicketToMutation from './edit-ticket-mut/assignTo'
 import ChangeDescriptionMutation from './edit-ticket-mut/description'
-import ChangePriorityMutation from './edit-ticket-mut/priority'
 import ChangeReminderMutation from './edit-ticket-mut/reminder'
 import ChangeStatusMutation from './edit-ticket-mut/status'
 import { Redirector } from './util/redirect'
@@ -173,20 +172,6 @@ export class TicketBody extends React.Component<
             </Grid.Row>
           </Grid>
         </Grid.Row>
-        {/*<Divider horizontal> </Divider>*/}
-
-        {/*<Grid.Row>*/}
-        {/*  <Grid.Column>*/}
-        {/*    <ChangePriorityMutation*/}
-        {/*      id={this.props.id}*/}
-        {/*      priority={this.state.inputs.priority}*/}
-        {/*      oldPriority={this.props.priority}*/}
-        {/*      handleChange={this.handleChange}*/}
-        {/*    />*/}
-        {/*  </Grid.Column>*/}
-        {/*</Grid.Row>*/}
-        {/*<Divider horizontal> </Divider>*/}
-
         <Grid.Row>
           <Grid.Column>
             <strong>Set reminder</strong>

@@ -83,21 +83,6 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                   value: this.props.remindTime,
                 }}
               />
-              {/*<Form.TextArea*/}
-              {/*  label="Message for the notification"*/}
-              {/*  row={4}*/}
-              {/*  col={20}*/}
-              {/*  name="remindMessage"*/}
-              {/*  placeholder="Give a short remind message (max 100 characters)"*/}
-              {/*  value={this.props.remindMessage}*/}
-              {/*  onChange={(e) => this.props.handleChange(e)}*/}
-              {/*  maxLength={100}*/}
-              {/*  error={*/}
-              {/*    (this.props.touchedDate ||*/}
-              {/*      this.props.touchedTime ||*/}
-              {/*    this.props.touchedMessage*/}
-              {/*  }*/}
-              {/*/>*/}
               <Divider horizontal> </Divider>
               <Button type="submit" compact toggle>
                 Set reminder

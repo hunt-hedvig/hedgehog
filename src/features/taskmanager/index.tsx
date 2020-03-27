@@ -74,18 +74,6 @@ class TaskManagerPageComponent extends React.Component<
       memberId: 'All',
     },
     toolbarItems: [
-      // {
-      //   id: 'priority',
-      //   itemType: 'sortingButton',
-      //   label: 'Sort by Priority',
-      //   active: true,
-      //   caret: {
-      //     direction: EOrder.DESC,
-      //   },
-      //   behaviors: {
-      //     onClicked: (id) => this.changeSortByHandler(id),
-      //   },
-      // },
       {
         id: 'type',
         itemType: 'dropdown',

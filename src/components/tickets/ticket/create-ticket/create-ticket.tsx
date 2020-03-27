@@ -168,18 +168,6 @@ export class CreateNewTicket extends React.Component<
                 {this.state.setReminder ? (
                   <div>
                     <Divider />
-                    {/*<Label htmlFor={'remindMessage'}>Message:</Label>*/}
-                    {/*<br />*/}
-                    {/*<TextArea*/}
-                    {/*  row={4}*/}
-                    {/*  col={20}*/}
-                    {/*  name="remindMessage"*/}
-                    {/*  placeholder="Give a short remind message (max 100 characters)"*/}
-                    {/*  value={this.state.remindMessage}*/}
-                    {/*  onChange={this.handleChange}*/}
-                    {/*  maxLength={100}*/}
-                    {/*/>*/}
-                    {/*<br />*/}
                     <DateTimePicker
                       handleChange={this.handleChange}
                       datepicker={{
