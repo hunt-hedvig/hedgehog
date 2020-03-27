@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { gql } from 'apollo-boost'
+import { addDays, isFriday, set } from 'date-fns'
 import format from 'date-fns/format'
 import { CHANGE_STATUS, GET_TICKETS } from 'features/taskmanager/queries'
 import React from 'react'
@@ -97,8 +98,14 @@ export class TicketBody extends React.Component<
       description: this.props.description,
       assignedTo: this.props.assignedTo,
       status: this.props.status,
-      remindDate: format(new Date(), 'yyyy-MM-dd'),
-      remindTime: format(new Date(), 'HH:mm:ss'),
+      remindDate: format(
+        addDays(new Date(), isFriday(new Date()) ? 3 : 1),
+        'yyyy-MM-dd',
+      ),
+      remindTime: format(
+        set(new Date(), { hours: 9, minutes: 0, seconds: 0 }),
+        'HH:mm:ss',
+      ),
       remindMessage: '',
       priority: this.props.priority,
       touched: {
@@ -166,19 +173,19 @@ export class TicketBody extends React.Component<
             </Grid.Row>
           </Grid>
         </Grid.Row>
-        <Divider horizontal> </Divider>
+        {/*<Divider horizontal> </Divider>*/}
 
-        <Grid.Row>
-          <Grid.Column>
-            <ChangePriorityMutation
-              id={this.props.id}
-              priority={this.state.inputs.priority}
-              oldPriority={this.props.priority}
-              handleChange={this.handleChange}
-            />
-          </Grid.Column>
-        </Grid.Row>
-        <Divider horizontal> </Divider>
+        {/*<Grid.Row>*/}
+        {/*  <Grid.Column>*/}
+        {/*    <ChangePriorityMutation*/}
+        {/*      id={this.props.id}*/}
+        {/*      priority={this.state.inputs.priority}*/}
+        {/*      oldPriority={this.props.priority}*/}
+        {/*      handleChange={this.handleChange}*/}
+        {/*    />*/}
+        {/*  </Grid.Column>*/}
+        {/*</Grid.Row>*/}
+        {/*<Divider horizontal> </Divider>*/}
 
         <Grid.Row>
           <Grid.Column>

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { addDays } from 'date-fns'
+import { addDays, isFriday, set } from 'date-fns'
 import format from 'date-fns/format'
 import React from 'react'
 import { Mutation } from 'react-apollo'
@@ -32,8 +32,11 @@ const NewTicketBody = styled('div')`
 const teamOptions = createOptionsArray(IEX_TEAM_MEMBERS_OPTIONS)
 
 const formatDateTime = (date) => {
-  const fDate = format(addDays(date, 1), 'yyyy-MM-dd')
-  const fTime = '09:00:00'
+  const fDate = format(addDays(date, isFriday(date) ? 3 : 1), 'yyyy-MM-dd')
+  const fTime = format(
+    set(new Date(), { hours: 9, minutes: 0, seconds: 0 }),
+    'HH:mm:ss',
+  )
   return [fDate, fTime]
 }
 
@@ -98,7 +101,7 @@ export class CreateNewTicket extends React.Component<
                         type: this.state.type,
                         remindNotificationDate: this.state.remindDate,
                         remindNotificationTime: this.state.remindTime,
-                        remindMessage: this.state.remindMessage,
+                        remindMessage: this.state.description,
                         description: this.state.description,
                         referenceId: this.props.referenceId,
                         memberId: this.props.memberId,
@@ -165,18 +168,18 @@ export class CreateNewTicket extends React.Component<
                 {this.state.setReminder ? (
                   <div>
                     <Divider />
-                    <Label htmlFor={'remindMessage'}>Message:</Label>
-                    <br />
-                    <TextArea
-                      row={4}
-                      col={20}
-                      name="remindMessage"
-                      placeholder="Give a short remind message (max 100 characters)"
-                      value={this.state.remindMessage}
-                      onChange={this.handleChange}
-                      maxLength={100}
-                    />
-                    <br />
+                    {/*<Label htmlFor={'remindMessage'}>Message:</Label>*/}
+                    {/*<br />*/}
+                    {/*<TextArea*/}
+                    {/*  row={4}*/}
+                    {/*  col={20}*/}
+                    {/*  name="remindMessage"*/}
+                    {/*  placeholder="Give a short remind message (max 100 characters)"*/}
+                    {/*  value={this.state.remindMessage}*/}
+                    {/*  onChange={this.handleChange}*/}
+                    {/*  maxLength={100}*/}
+                    {/*/>*/}
+                    {/*<br />*/}
                     <DateTimePicker
                       handleChange={this.handleChange}
                       datepicker={{
@@ -213,9 +216,7 @@ export class CreateNewTicket extends React.Component<
 
   private validityCheck = (): boolean => {
     const validReminder = this.state.setReminder
-      ? this.state.remindDate !== '' &&
-        this.state.remindTime !== '' &&
-        this.state.remindMessage.length > 0
+      ? this.state.remindDate !== '' && this.state.remindTime !== ''
       : true
     return (
       this.state.assignedTo !== '' &&

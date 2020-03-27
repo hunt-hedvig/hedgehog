@@ -3,7 +3,7 @@ import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
-import { Button, Form, Label, TextArea } from 'semantic-ui-react'
+import { Button, Divider, Form } from 'semantic-ui-react'
 import {
   CHANGE_REMINDER,
   GET_TICKETS,
@@ -83,30 +83,23 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                   value: this.props.remindTime,
                 }}
               />
-              <Form.TextArea
-                label="Message for the notification"
-                row={4}
-                col={20}
-                name="remindMessage"
-                placeholder="Give a short remind message (max 100 characters)"
-                value={this.props.remindMessage}
-                onChange={(e) => this.props.handleChange(e)}
-                maxLength={100}
-                error={
-                  (this.props.touchedDate ||
-                    this.props.touchedTime ||
-                    this.props.touchedMessage) &&
-                  !(this.props.remindMessage.length > 0)
-                }
-              />
-
-              <Button
-                type="submit"
-                compact
-                toggle
-                disabled={this.props.remindMessage.length > 0 ? false : true}
-                active={!this.props.remindMessage.length > 0 ? false : true}
-              >
+              {/*<Form.TextArea*/}
+              {/*  label="Message for the notification"*/}
+              {/*  row={4}*/}
+              {/*  col={20}*/}
+              {/*  name="remindMessage"*/}
+              {/*  placeholder="Give a short remind message (max 100 characters)"*/}
+              {/*  value={this.props.remindMessage}*/}
+              {/*  onChange={(e) => this.props.handleChange(e)}*/}
+              {/*  maxLength={100}*/}
+              {/*  error={*/}
+              {/*    (this.props.touchedDate ||*/}
+              {/*      this.props.touchedTime ||*/}
+              {/*    this.props.touchedMessage*/}
+              {/*  }*/}
+              {/*/>*/}
+              <Divider horizontal> </Divider>
+              <Button type="submit" compact toggle>
                 Set reminder
               </Button>
               <p>Current reminder: {this.reminderToString()}</p>
