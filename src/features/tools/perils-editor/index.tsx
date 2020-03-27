@@ -402,7 +402,7 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
 
                 <span>Add Icon</span>
                 <Dropdown
-                  placeholder={peril.icon != null ? peril.icon : 'File Type'}
+                  placeholder={peril.icon != null ? peril.icon : 'Icon name'}
                   fluid
                   selection
                   options={perilIconOptions}
