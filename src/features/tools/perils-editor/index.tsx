@@ -165,6 +165,66 @@ const perilIconOptions = [
         'https://graphql.dev.hedvigit.com/app-content-service/renovation.svg',
     },
   },
+  {
+    key: 'Cancellation coverage',
+    text: 'cancellation_coverage',
+    value: 'cancellation_coverage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/cancellation_coverage.svg',
+    },
+  },
+  {
+    key: 'Damaged luggage',
+    text: 'damaged_luggage',
+    value: 'damaged_luggage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/damaged_luggage.svg',
+    },
+  },
+  {
+    key: 'Delayed luggage',
+    text: 'delayed_luggage',
+    value: 'delayed_luggage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/delayed_luggage.svg',
+    },
+  },
+  {
+    key: 'Personal accident',
+    text: 'personal_accident',
+    value: 'personal_accident',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/personal_accident.svg',
+    },
+  },
+  {
+    key: 'Replacement housing',
+    text: 'replacement_housing',
+    value: 'replacement_housing',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/replacement_housing.svg',
+    },
+  },
+  {
+    key: 'Apartment adaption',
+    text: 'apartment_adaption',
+    value: 'apartment_adaption',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/apartment_adaption.svg',
+    },
+  },
 ]
 
 const PerilEditWrapper = styled.div`
