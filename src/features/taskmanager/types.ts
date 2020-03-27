@@ -25,6 +25,7 @@ export const IEX_TEAM_MEMBERS_OPTIONS: IOption[] = [
   { text: 'Matilda', value: 'matilda@hedvig.com' },
   { text: 'Sebastian', value: 'sebastian@hedvig.com' },
   { text: 'Elvin', value: 'elvin@hedvig.com' },
+  { text: 'Gustaf', value: 'gustaf.halvardsson@hedvig.com' },
 ]
 
 // Purely for making it easier to read in the UI:
