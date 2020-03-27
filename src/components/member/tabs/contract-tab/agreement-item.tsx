@@ -5,26 +5,34 @@ import { Card } from '../../../../../shared/hedvig-ui/card'
 import { Spacing } from '../../../../../shared/hedvig-ui/spacing'
 import { Agreement, Contract } from '../../../../api/generated/graphql'
 import { ButtonSpacing, FlexWrapper } from './contract-item'
+import { InsuranceCertificate } from './InsuranceCertificate'
 import { InsuranceMandate } from './InsuranceMandate'
+import { SwedishApartmentAgreementKeyInfo } from './swedish-apartment-agreement-key-info'
 import { ToDate } from './ToDateComponent'
 import { FromDate } from './FromDateComponent'
+import { WithShowNotification } from '../../../../store/actions/notificationsActions'
 
 export const AgreementItemComponent: React.FunctionComponent<{
   agreement: Agreement
   contract: Contract
-}> = ({ agreement, contract }) => {
-  const getAddress = () => {
+} & WithShowNotification> = ({ agreement, contract, showNotification }) => {
+  const getAgreementKeyInfo = () => {
     if (agreement.__typename.toString() === 'SwedishApartment') {
-      return agreement.address
+      return (
+        <SwedishApartmentAgreementKeyInfo
+          contract={contract}
+          agreement={agreement}
+        />
+      )
     }
     if (agreement.__typename.toString() === 'SwedishHouse') {
-      return agreement.address
+      return <div></div>
     }
     if (agreement.__typename.toString() === 'NorwegianHomeContent') {
-      return agreement.address
+      return <div></div>
     }
     if (agreement.__typename.toString() === 'NorwegianTravel') {
-      return agreement.address
+      return <div></div>
     }
   }
 
@@ -49,7 +57,7 @@ export const AgreementItemComponent: React.FunctionComponent<{
               <Table.Row>
                 <Table.Cell>{agreement.__typename}</Table.Cell>
                 <Table.Cell>
-                  {getAddress().street}, {getAddress().city}
+                  {/*{getAddress().street}, {getAddress().city}*/}
                 </Table.Cell>
                 <Table.Cell>{}</Table.Cell>
                 <Table.Cell>{agreement.numberCoInsured + 1}</Table.Cell>
@@ -60,32 +68,15 @@ export const AgreementItemComponent: React.FunctionComponent<{
               </Table.Row>
             </Table.Body>
           </Table>
-          <FlexWrapper>
-            <Card span={2}>
-              <span>name: </span>
-              <span>address line: {}</span>
-              <span>postcode: {}</span>
-              <span>Type: {agreement.__typename}</span>
-              <span>Persons in household: {agreement.numberCoInsured + 1}</span>
-              <span>Living space: </span>
-            </Card>
-            <Card span={2}>
-              <span>Current Total Price: {agreement.basePremium}</span>
-              <span>Status: {agreement.status}</span>
-              <span>State:{}</span>
-              <span>Signed: </span>
-              <span>Current Insurer:</span>
-            </Card>
-          </FlexWrapper>
+          {getAgreementKeyInfo()}
           <FlexWrapper>
             <InsuranceMandate contract={contract} />
-            <Card span={2}>
-              Insurance certificate
-              <ButtonsGroup>
-                <Button>View existing</Button>
-                <Button>Upload new</Button>
-              </ButtonsGroup>
-            </Card>
+            <InsuranceCertificate
+              contract={contract}
+              agreement={agreement}
+              showNotification={showNotification}
+              onUploaded={() => refetch()}
+            />
           </FlexWrapper>
           <FlexWrapper>
             <ToDate agreement={agreement} contract={contract} />

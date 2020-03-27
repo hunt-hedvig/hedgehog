@@ -32,14 +32,13 @@ const ToDateComponent: React.FunctionComponent<{
     <>
       <Card span={2}>
         To Date
-        <Spacing all>
-          <span>
-            To Date:{' '}
-            {agreement.toDate != null
-              ? format(new Date(agreement.toDate), 'yyyy-MM-dd')
-              : 'Not set'}
-          </span>
-        </Spacing>
+        {/*<Spacing all>*/}
+        <span>
+          {agreement.toDate != null
+            ? format(new Date(agreement.toDate), 'yyyy-MM-dd')
+            : 'Not yet set'}
+        </span>
+        {/*</Spacing>*/}
         <ButtonSpacing>
           {!datePickerEnabled && (
             <Button onClick={() => setDatePickerEnabled(true)}>Edit</Button>

@@ -4,7 +4,6 @@ import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import * as React from 'react'
 import { Card } from '../../../../../shared/hedvig-ui/card'
-import { Spacing } from '../../../../../shared/hedvig-ui/spacing'
 import {
   changeFromDateOptions,
   useChangeFromDate,
@@ -32,15 +31,12 @@ const FromDateComponent: React.FunctionComponent<{
   return (
     <>
       <Card span={2}>
-        From Date
-        <Spacing all>
-          <span>
-            From Date:{' '}
-            {agreement.fromDate != null
-              ? format(new Date(agreement.fromDate), 'yyyy-MM-dd')
-              : 'Not set'}
-          </span>
-        </Spacing>
+        <span>From Date</span>
+        <span>
+          {agreement.fromDate != null
+            ? format(new Date(agreement.fromDate), 'yyyy-MM-dd')
+            : 'Not set'}
+        </span>
         <ButtonSpacing>
           {!datePickerEnabled && (
             <Button onClick={() => setDatePickerEnabled(true)}>Edit</Button>
