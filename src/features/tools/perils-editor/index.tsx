@@ -3,12 +3,169 @@ import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 import ReactDropZone from 'react-dropzone'
 import styled from 'react-emotion'
-import { Form, TextArea } from 'semantic-ui-react'
+import { Dropdown, Form, TextArea } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 import { OnBlurChangeInput } from './inputs'
 
 const Wrapper = styled(Form)``
+
+const perilIconOptions = [
+  {
+    key: 'Fire',
+    text: 'fire',
+    value: 'Fire',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/fire.svg',
+    },
+  },
+  {
+    key: 'Water leaks',
+    text: 'water_damage',
+    value: 'Water_damage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/water_damage.svg',
+    },
+  },
+  {
+    key: 'Burglary',
+    text: 'burglary',
+    value: 'burglary',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/burglary.svg',
+    },
+  },
+  {
+    key: 'Theft and damage',
+    text: 'theft',
+    value: 'theft',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/theft.svg',
+    },
+  },
+  {
+    key: 'Criminal damage',
+    text: 'criminal_damage',
+    value: 'criminal_damage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/criminal_damage.svg',
+    },
+  },
+  {
+    key: 'Liability protection',
+    text: 'liability',
+    value: 'liability',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/liability.svg',
+    },
+  },
+  {
+    key: 'Legal protection',
+    text: 'legal_protection',
+    value: 'legal_protection',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/legal_protection.svg',
+    },
+  },
+  {
+    key: 'Travel insurance',
+    text: 'travel_insurance',
+    value: 'travel_insurance',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/travel_insurance.svg',
+    },
+  },
+  {
+    key: 'Assault',
+    text: 'assault',
+    value: 'assault',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/assault.svg',
+    },
+  },
+  {
+    key: 'Travel illness',
+    text: 'sick_on_holiday',
+    value: 'sick_on_holiday',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/sick_on_holiday.svg',
+    },
+  },
+  {
+    key: 'White goods',
+    text: 'appliance_damage',
+    value: 'appliance_damage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/appliance_damage.svg',
+    },
+  },
+  {
+    key: 'All-risk',
+    text: 'all_risk',
+    value: 'all_risk',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/all_risk.svg',
+    },
+  },
+  {
+    key: 'Tenant ownership',
+    text: 'apartment_add_on',
+    value: 'apartment_add_on',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/apartment_add_on.svg',
+    },
+  },
+  {
+    key: 'Storms',
+    text: 'nature_damage',
+    value: 'nature_damage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/nature_damage.svg',
+    },
+  },
+  {
+    key: 'Pests',
+    text: 'pest_sanitation',
+    value: 'pest_sanitation',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/pest_sanitation.svg',
+    },
+  },
+  {
+    key: 'Rebuilding',
+    text: 'renovation',
+    value: 'renovation',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/renovation.svg',
+    },
+  },
+]
 
 const PerilEditWrapper = styled.div`
   display: flex;
@@ -242,6 +399,17 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
                     </Button>
                   </Coverage>
                 </CoverageWrapper>
+
+                <span>Add Icon</span>
+                <Dropdown
+                  placeholder={peril.icon != null ? peril.icon : 'File Type'}
+                  fluid
+                  selection
+                  options={perilIconOptions}
+                  onChange={(event) =>
+                    updateField('icon')(event.currentTarget.textContent)
+                  }
+                />
 
                 <div>Info</div>
                 <TextArea
