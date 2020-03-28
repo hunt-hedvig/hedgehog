@@ -47,6 +47,7 @@ interface Peril {
   exceptions: string[]
   info: string
   icon: string
+  iconName: string
 }
 
 export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
@@ -246,12 +247,14 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
 
                 <span>Add Icon</span>
                 <Dropdown
-                  placeholder={peril.icon != null ? peril.icon : 'Icon name'}
+                  placeholder={
+                    peril.iconName != null ? peril.iconName : 'Icon name'
+                  }
                   fluid
                   selection
                   options={PerilIconOptions}
                   onChange={(event) =>
-                    updateField('icon')(event.currentTarget.textContent)
+                    updateField('iconName')(event.currentTarget.textContent)
                   }
                 />
 
@@ -297,6 +300,7 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
                   exceptions: [],
                   covered: [],
                   icon: '',
+                  iconName: '',
                 },
               ]) ?? [],
             )

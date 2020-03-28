@@ -1,97 +1,21 @@
 export const PerilIconOptions = [
   {
-    key: 'Fire',
-    text: 'fire',
-    value: 'Fire',
+    key: 'All-risk',
+    text: 'all_risk',
+    value: 'all_risk',
     image: {
       avatar: true,
-      src: 'https://graphql.dev.hedvigit.com/app-content-service/fire.svg',
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/all_risk.svg',
     },
   },
   {
-    key: 'Water leaks',
-    text: 'water_damage',
-    value: 'Water_damage',
+    key: 'Apartment adaption',
+    text: 'apartment_adaption',
+    value: 'apartment_adaption',
     image: {
       avatar: true,
       src:
-        'https://graphql.dev.hedvigit.com/app-content-service/water_damage.svg',
-    },
-  },
-  {
-    key: 'Burglary',
-    text: 'burglary',
-    value: 'burglary',
-    image: {
-      avatar: true,
-      src: 'https://graphql.dev.hedvigit.com/app-content-service/burglary.svg',
-    },
-  },
-  {
-    key: 'Theft and damage',
-    text: 'theft',
-    value: 'theft',
-    image: {
-      avatar: true,
-      src: 'https://graphql.dev.hedvigit.com/app-content-service/theft.svg',
-    },
-  },
-  {
-    key: 'Criminal damage',
-    text: 'criminal_damage',
-    value: 'criminal_damage',
-    image: {
-      avatar: true,
-      src:
-        'https://graphql.dev.hedvigit.com/app-content-service/criminal_damage.svg',
-    },
-  },
-  {
-    key: 'Liability protection',
-    text: 'liability',
-    value: 'liability',
-    image: {
-      avatar: true,
-      src: 'https://graphql.dev.hedvigit.com/app-content-service/liability.svg',
-    },
-  },
-  {
-    key: 'Legal protection',
-    text: 'legal_protection',
-    value: 'legal_protection',
-    image: {
-      avatar: true,
-      src:
-        'https://graphql.dev.hedvigit.com/app-content-service/legal_protection.svg',
-    },
-  },
-  {
-    key: 'Travel insurance',
-    text: 'travel_insurance',
-    value: 'travel_insurance',
-    image: {
-      avatar: true,
-      src:
-        'https://graphql.dev.hedvigit.com/app-content-service/travel_insurance.svg',
-    },
-  },
-  {
-    key: 'Assault',
-    text: 'assault',
-    value: 'assault',
-    image: {
-      avatar: true,
-      src: 'https://graphql.dev.hedvigit.com/app-content-service/assault.svg',
-    },
-  },
-  {
-    key: 'Travel illness',
-    text: 'sick_on_holiday',
-    value: 'sick_on_holiday',
-    image: {
-      avatar: true,
-      src:
-        'https://graphql.dev.hedvigit.com/app-content-service/sick_on_holiday.svg',
+        'https://graphql.dev.hedvigit.com/app-content-service/apartment_adaption.svg',
     },
   },
   {
@@ -105,52 +29,31 @@ export const PerilIconOptions = [
     },
   },
   {
-    key: 'All-risk',
-    text: 'all_risk',
-    value: 'all_risk',
+    key: 'Assault',
+    text: 'assault',
+    value: 'assault',
     image: {
       avatar: true,
-      src: 'https://graphql.dev.hedvigit.com/app-content-service/all_risk.svg',
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/assault.svg',
     },
   },
   {
     key: 'Tenant ownership',
-    text: 'apartment_add_on',
-    value: 'apartment_add_on',
+    text: 'brf_additional',
+    value: 'brf_additional',
     image: {
       avatar: true,
       src:
-        'https://graphql.dev.hedvigit.com/app-content-service/apartment_add_on.svg',
+        'https://graphql.dev.hedvigit.com/app-content-service/brf_additional.svg',
     },
   },
   {
-    key: 'Storms',
-    text: 'nature_damage',
-    value: 'nature_damage',
+    key: 'Burglary',
+    text: 'burglary',
+    value: 'burglary',
     image: {
       avatar: true,
-      src:
-        'https://graphql.dev.hedvigit.com/app-content-service/nature_damage.svg',
-    },
-  },
-  {
-    key: 'Pests',
-    text: 'pest_sanitation',
-    value: 'pest_sanitation',
-    image: {
-      avatar: true,
-      src:
-        'https://graphql.dev.hedvigit.com/app-content-service/pest_sanitation.svg',
-    },
-  },
-  {
-    key: 'Rebuilding',
-    text: 'renovation',
-    value: 'renovation',
-    image: {
-      avatar: true,
-      src:
-        'https://graphql.dev.hedvigit.com/app-content-service/renovation.svg',
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/burglary.svg',
     },
   },
   {
@@ -161,6 +64,16 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/cancellation_coverage.svg',
+    },
+  },
+  {
+    key: 'Criminal damage',
+    text: 'criminal_damage',
+    value: 'criminal_damage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/criminal_damage.svg',
     },
   },
   {
@@ -184,6 +97,44 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Fire',
+    text: 'fire',
+    value: 'Fire',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/fire.svg',
+    },
+  },
+  {
+    key: 'Liability protection',
+    text: 'liability',
+    value: 'liability',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/liability.svg',
+    },
+  },
+  {
+    key: 'Legal protection',
+    text: 'legal_protection',
+    value: 'legal_protection',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/legal_protection.svg',
+    },
+  },
+  {
+    key: 'Storms',
+    text: 'nature_damage',
+    value: 'nature_damage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/nature_damage.svg',
+    },
+  },
+  {
     key: 'Personal accident',
     text: 'personal_accident',
     value: 'personal_accident',
@@ -191,6 +142,26 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/personal_accident.svg',
+    },
+  },
+  {
+    key: 'Pests',
+    text: 'pest_sanitation',
+    value: 'pest_sanitation',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/pest_sanitation.svg',
+    },
+  },
+  {
+    key: 'Rebuilding',
+    text: 'renovation',
+    value: 'renovation',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/renovation.svg',
     },
   },
   {
@@ -204,13 +175,42 @@ export const PerilIconOptions = [
     },
   },
   {
-    key: 'Apartment adaption',
-    text: 'apartment_adaption',
-    value: 'apartment_adaption',
+    key: 'Travel insurance',
+    text: 'travel_insurance',
+    value: 'travel_insurance',
     image: {
       avatar: true,
       src:
-        'https://graphql.dev.hedvigit.com/app-content-service/apartment_adaption.svg',
+        'https://graphql.dev.hedvigit.com/app-content-service/travel_insurance.svg',
+    },
+  },
+  {
+    key: 'Theft and damage',
+    text: 'theft',
+    value: 'theft',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/theft.svg',
+    },
+  },
+  {
+    key: 'Travel illness',
+    text: 'sick_on_holiday',
+    value: 'sick_on_holiday',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/sick_on_holiday.svg',
+    },
+  },
+  {
+    key: 'Water leaks',
+    text: 'water_damage',
+    value: 'Water_damage',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/water_damage.svg',
     },
   },
 ]
