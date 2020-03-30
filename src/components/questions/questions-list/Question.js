@@ -3,9 +3,9 @@ import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Header } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import { useMemberNameQuery } from 'api/generated/graphql'
+import { useMemberNameAndContractMarketInfoQuery, useMemberNameQuery } from 'api/generated/graphql'
 import styled from 'react-emotion'
-import { getMemberIdColor } from 'utils/member'
+import { getMemberFlag, getMemberIdColor } from 'utils/member'
 
 const QuestionWrapper = styled('div')(({ memberId }) => ({
   display: 'flex',
@@ -15,21 +15,21 @@ const QuestionWrapper = styled('div')(({ memberId }) => ({
 }))
 
 const Question = ({ activeList, question }) => {
-  const memberNameQuery = useMemberNameQuery({
+  const memberQuery = useMemberNameAndContractMarketInfoQuery({
     variables: { memberId: question.memberId },
   })
 
-  const graphqlMemberDataMaybe = memberNameQuery?.data?.member
+  const memberDataMaybe = memberQuery?.data?.member
   return (
     <QuestionWrapper memberId={question.memberId}>
       <Header>
-        Questions from:{' '}
+        {getMemberFlag(memberDataMaybe?.contractMarketInfo?.market)}
         <Link to={`/members/${question.memberId}`}>
           {question.memberId}
-          {graphqlMemberDataMaybe
-            ? ` ${graphqlMemberDataMaybe?.firstName} ${graphqlMemberDataMaybe?.lastName}`
-            : ''}
         </Link>
+        {memberDataMaybe
+          ? ` ${memberDataMaybe?.firstName} ${memberDataMaybe?.lastName}`
+          : ''}
       </Header>
       {activeList[question.memberId] &&
         activeList[question.memberId].map((data) => (
