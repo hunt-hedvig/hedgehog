@@ -8,6 +8,7 @@ import {
   changeFromDateOptions,
   useChangeFromDate,
 } from '../../../../graphql/use-change-from-date-for-agreement'
+import { WithShowNotification } from '../../../../store/actions/notificationsActions'
 import { ButtonSpacing } from './contract-item'
 
 const initialFromDate = (agreement: Agreement): Date =>
@@ -16,6 +17,7 @@ const initialFromDate = (agreement: Agreement): Date =>
 const FromDateComponent: React.FunctionComponent<{
   agreement: Agreement
   contract: Contract
+  showNotifaction: (data: WithShowNotification) => void
 }> = ({ agreement, contract }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
   const [fromDate, setFromDate] = React.useState(initialFromDate(agreement))
@@ -54,7 +56,7 @@ const FromDateComponent: React.FunctionComponent<{
                     reset()
                   }}
                 >
-                  set from date
+                  Set from date
                 </Button>
                 <Button fullWidth onClick={() => reset()}>
                   Cancel

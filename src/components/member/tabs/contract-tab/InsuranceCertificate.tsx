@@ -11,7 +11,6 @@ const InsuranceCertificateComponent: React.FunctionComponent<{
   showNotification: (data: any) => void
   onUploaded: () => void
 }> = ({ contract, agreement, showNotification, onUploaded }) => {
-  // const [insuranceCertificate, setInsuranceCertificate] = React.useState(agreement.certificateUrl)
   const onUpload = (files, memberId) => {
     const certificateForm = new FormData()
     certificateForm.set('file', files[0])

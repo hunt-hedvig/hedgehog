@@ -32,15 +32,10 @@ export const ContractItem: React.FunctionComponent<{
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>
-        <Card span={1}>
-          <span>
-            <strong>Market:</strong> {contract.market}
-          </span>
-        </Card>
         {contract.agreements.map((agreement) => (
           <AgreementItem agreement={agreement} contract={contract} />
         ))}
-        <Card span={1}>
+        <Card>
           <h4>Debug</h4>
           <span>
             <strong>Contract id:</strong> {contract.id}

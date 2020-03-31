@@ -1,38 +1,68 @@
 import * as React from 'react'
+import { is } from 'redux-saga/utils'
 import { Table } from 'semantic-ui-react'
 import { Button, ButtonsGroup } from '../../../../../shared/hedvig-ui/button'
 import { Card } from '../../../../../shared/hedvig-ui/card'
 import { Spacing } from '../../../../../shared/hedvig-ui/spacing'
 import { Agreement, Contract } from '../../../../api/generated/graphql'
+import { useContracts } from '../../../../graphql/use-contracts'
+import { useContractMarketInfo } from '../../../../graphql/use-get-member-contract-market-info'
+import { useMemberInfo } from '../../../../graphql/use-member-info'
 import { ButtonSpacing, FlexWrapper } from './contract-item'
 import { InsuranceCertificate } from './InsuranceCertificate'
 import { InsuranceMandate } from './InsuranceMandate'
+import { NorwegianHomeContentAgreementKeyInfoComponent } from './norwegian-home-content-agreement-key-info'
+import { NorwegianTravelAgreementKeyInfoComponent } from './norwegian-travel-agreement-key-info'
 import { SwedishApartmentAgreementKeyInfo } from './swedish-apartment-agreement-key-info'
+import { SwedishHouseAgreementKeyInfoComponent } from './swedish-house-agreement-key-info'
 import { ToDate } from './ToDateComponent'
 import { FromDate } from './FromDateComponent'
 import { WithShowNotification } from '../../../../store/actions/notificationsActions'
+import { isOfType } from './type-of-contract-helper'
 
 export const AgreementItemComponent: React.FunctionComponent<{
   agreement: Agreement
   contract: Contract
 } & WithShowNotification> = ({ agreement, contract, showNotification }) => {
+  const [member, { loading, refetch }] = useMemberInfo(contract.holderMemberId)
   const getAgreementKeyInfo = () => {
-    if (agreement.__typename.toString() === 'SwedishApartment') {
+    console.log(typeof agreement)
+
+    if (agreement.__typename === 'SwedishApartment') {
       return (
         <SwedishApartmentAgreementKeyInfo
           contract={contract}
+          member={member}
           agreement={agreement}
         />
       )
     }
-    if (agreement.__typename.toString() === 'SwedishHouse') {
-      return <div></div>
+    if (agreement.__typename === 'SwedishHouse') {
+      return (
+        <SwedishHouseAgreementKeyInfoComponent
+          contract={contract}
+          agreement={agreement}
+          member={member}
+        />
+      )
     }
-    if (agreement.__typename.toString() === 'NorwegianHomeContent') {
-      return <div></div>
+    if (agreement.__typename === 'NorwegianHomeContent') {
+      return (
+        <NorwegianHomeContentAgreementKeyInfoComponent
+          contract={contract}
+          agreement={agreement}
+          member={member}
+        />
+      )
     }
-    if (agreement.__typename.toString() === 'NorwegianTravel') {
-      return <div></div>
+    if (agreement.__typename === 'NorwegianTravel') {
+      return (
+        <NorwegianTravelAgreementKeyInfoComponent
+          contract={contract}
+          agreement={agreement}
+          member={member}
+        />
+      )
     }
   }
 

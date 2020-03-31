@@ -1642,6 +1642,31 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetMemberInfoQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<
+      Member,
+      | 'memberId'
+      | 'firstName'
+      | 'lastName'
+      | 'address'
+      | 'postalNumber'
+      | 'city'
+    > & {
+        directDebitStatus: Maybe<
+          { __typename?: 'DirectDebitStatus' } & Pick<
+            DirectDebitStatus,
+            'activated'
+          >
+        >
+      }
+  >
+}
+
 export type GetQuotesQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -2392,6 +2417,70 @@ export type GetContractsLazyQueryHookResult = ReturnType<
 export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
+>
+export const GetMemberInfoDocument = gql`
+  query GetMemberInfo($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      firstName
+      lastName
+      address
+      postalNumber
+      city
+      directDebitStatus {
+        activated
+      }
+    }
+  }
+`
+
+/**
+ * __useGetMemberInfoQuery__
+ *
+ * To run a query within a React component, call `useGetMemberInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMemberInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMemberInfoQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetMemberInfoQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMemberInfoQuery,
+    GetMemberInfoQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetMemberInfoQuery,
+    GetMemberInfoQueryVariables
+  >(GetMemberInfoDocument, baseOptions)
+}
+export function useGetMemberInfoLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMemberInfoQuery,
+    GetMemberInfoQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMemberInfoQuery,
+    GetMemberInfoQueryVariables
+  >(GetMemberInfoDocument, baseOptions)
+}
+export type GetMemberInfoQueryHookResult = ReturnType<
+  typeof useGetMemberInfoQuery
+>
+export type GetMemberInfoLazyQueryHookResult = ReturnType<
+  typeof useGetMemberInfoLazyQuery
+>
+export type GetMemberInfoQueryResult = ApolloReactCommon.QueryResult<
+  GetMemberInfoQuery,
+  GetMemberInfoQueryVariables
 >
 export const GetQuotesDocument = gql`
   query GetQuotes($memberId: ID!) {
