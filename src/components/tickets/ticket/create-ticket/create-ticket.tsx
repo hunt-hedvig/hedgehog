@@ -96,6 +96,7 @@ export class CreateNewTicket extends React.Component<
             this.state.currentUser.iEXOptionsIndex = IEX_TEAM_MEMBERS_OPTIONS.findIndex(
               (user) => user.value === data.me,
             )
+            this.state.assignedTo = data.me
             return null
           }}
         </Query>
