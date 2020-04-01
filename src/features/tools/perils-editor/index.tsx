@@ -3,10 +3,11 @@ import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 import ReactDropZone from 'react-dropzone'
 import styled from 'react-emotion'
-import { Form, TextArea } from 'semantic-ui-react'
+import { Dropdown, Form, TextArea } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 import { OnBlurChangeInput } from './inputs'
+import { PerilIconOptions } from './peril-icons'
 
 const Wrapper = styled(Form)``
 
@@ -46,6 +47,7 @@ interface Peril {
   exceptions: string[]
   info: string
   icon: string
+  iconName: string
 }
 
 export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
@@ -243,6 +245,18 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
                   </Coverage>
                 </CoverageWrapper>
 
+                <span>Add Icon</span>
+                <Dropdown
+                  placeholder={'Icon Name'}
+                  value={peril.iconName}
+                  fluid
+                  selection
+                  options={PerilIconOptions}
+                  onChange={(event) =>
+                    updateField('iconName')(event.currentTarget.textContent)
+                  }
+                />
+
                 <div>Info</div>
                 <TextArea
                   value={peril.info}
@@ -285,6 +299,7 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
                   exceptions: [],
                   covered: [],
                   icon: '',
+                  iconName: '',
                 },
               ]) ?? [],
             )
