@@ -92,11 +92,17 @@ export class CreateNewTicket extends React.Component<
       <>
         <Query query={ME}>
           {({ data }) => {
-            this.state.currentUser.email = data.me
-            this.state.currentUser.iEXOptionsIndex = IEX_TEAM_MEMBERS_OPTIONS.findIndex(
+            const iEXOptionsIndex = IEX_TEAM_MEMBERS_OPTIONS.findIndex(
               (user) => user.value === data.me,
             )
-            this.state.assignedTo = data.me
+            const assignedTo = iExOptionsIndex > -1 ? data.me : null
+            setState({
+              currentUser: {
+                iEXOptionsIndex,
+                email: data.me,
+              },
+              assignedTo,
+            })
             return null
           }}
         </Query>
