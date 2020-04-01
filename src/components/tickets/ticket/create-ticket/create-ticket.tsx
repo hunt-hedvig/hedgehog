@@ -73,7 +73,7 @@ export class CreateNewTicket extends React.Component<
     setReminder: false,
     type: this.props.type ?? 'REMIND',
     currentUser: {
-      iEXOptionsIndex: 0,
+      iExOptionsIndex: 0,
       email: null,
     },
   }
@@ -91,135 +91,146 @@ export class CreateNewTicket extends React.Component<
     return (
       <>
         <Query query={ME}>
-          {({ data }) => {
-            const iEXOptionsIndex = IEX_TEAM_MEMBERS_OPTIONS.findIndex(
-              (user) => user.value === data.me,
+          {({ data, loading }) => {
+            if (!this.state.currentUser.email) {
+              const iExOptionsIndex = IEX_TEAM_MEMBERS_OPTIONS.findIndex(
+                (user) => user.value === data.me,
+              )
+              const assignedTo = iExOptionsIndex > -1 ? data.me : null
+              this.setState({
+                currentUser: {
+                  iExOptionsIndex,
+                  email: data.me,
+                },
+                assignedTo,
+              })
+            }
+
+            if (!this.state.currentUser.email) {
+              return null
+            }
+
+            return (
+              <NewTicketBody>
+                <h2>Create a new ticket</h2>
+                <Mutation mutation={CREATE_TICKET}>
+                  {(createNewTicket) => {
+                    return (
+                      <Form
+                        onSubmit={(e) => {
+                          e.preventDefault()
+
+                          createNewTicket({
+                            variables: {
+                              ticket: {
+                                assignedTo: this.state.assignedTo,
+                                priority: this.state.priority,
+                                type: this.state.type,
+                                remindNotificationDate: this.state.remindDate,
+                                remindNotificationTime: this.state.remindTime,
+                                remindMessage: this.state.description,
+                                description: this.state.description,
+                                referenceId: this.props.referenceId,
+                                memberId: this.props.memberId,
+                              },
+                            },
+                            refetchQueries: [{ query: GET_TICKETS }],
+                          })
+                            .then(() => {
+                              this.props.closeModal()
+                              this.props.showNotification({
+                                header: 'Success!',
+                                message: 'Created a new ticket.',
+                                type: 'green',
+                              })
+                            })
+                            .catch((error) => {
+                              this.props.showNotification({
+                                header: 'Error!',
+                                message: error.message,
+                                type: 'red',
+                              })
+                              throw error
+                            })
+                        }}
+                      >
+                        <Label htmlFor={'description'}>Description:</Label>
+                        <Form.TextArea
+                          row={4}
+                          col={20}
+                          name="description"
+                          placeholder="Type in a description"
+                          value={this.state.description}
+                          onChange={(e) => this.handleChange(e)}
+                        />
+                        <Divider />
+                        <Label htmlFor="assignedTo">Assign to:</Label>
+                        <Form.Dropdown
+                          name="assignedTo"
+                          defaultValue={
+                            this.state.currentUser.iExOptionsIndex > 0
+                              ? teamOptions[
+                                  this.state.currentUser.iExOptionsIndex
+                                ].value
+                              : teamOptions[0].value
+                          }
+                          search
+                          selection
+                          options={teamOptions}
+                          onChange={(event, { value }) =>
+                            this.handleOptionChange('assignedTo', value)
+                          }
+                        />
+                        <div>
+                          <p>
+                            <strong>Set reminder:</strong>
+                          </p>
+                          <Checkbox
+                            toggle
+                            label="Include a reminder"
+                            checked={this.state.setReminder}
+                            onChange={() => {
+                              this.setState({
+                                setReminder: !this.state.setReminder,
+                              })
+                            }}
+                          />
+                        </div>
+                        {this.state.setReminder ? (
+                          <div>
+                            <Divider />
+                            <DateTimePicker
+                              handleChange={this.handleChange}
+                              datepicker={{
+                                name: 'remindDate',
+                                value: this.state.remindDate,
+                              }}
+                              timepicker={{
+                                name: 'remindTime',
+                                value: this.state.remindTime,
+                              }}
+                            />
+                          </div>
+                        ) : null}
+                        <br />
+                        <Divider />
+                        <Button type="submit" disabled={!this.validityCheck()}>
+                          Create
+                        </Button>
+                      </Form>
+                    )
+                  }}
+                </Mutation>
+              </NewTicketBody>
             )
-            const assignedTo = iExOptionsIndex > -1 ? data.me : null
-            setState({
-              currentUser: {
-                iEXOptionsIndex,
-                email: data.me,
-              },
-              assignedTo,
-            })
-            return null
           }}
         </Query>
-        <NewTicketBody>
-          <h2>Create a new ticket</h2>
-          <Mutation mutation={CREATE_TICKET}>
-            {(createNewTicket) => {
-              return (
-                <Form
-                  onSubmit={(e) => {
-                    e.preventDefault()
-
-                    createNewTicket({
-                      variables: {
-                        ticket: {
-                          assignedTo: this.state.assignedTo,
-                          priority: this.state.priority,
-                          type: this.state.type,
-                          remindNotificationDate: this.state.remindDate,
-                          remindNotificationTime: this.state.remindTime,
-                          remindMessage: this.state.description,
-                          description: this.state.description,
-                          referenceId: this.props.referenceId,
-                          memberId: this.props.memberId,
-                        },
-                      },
-                      refetchQueries: [{ query: GET_TICKETS }],
-                    })
-                      .then(() => {
-                        this.props.closeModal()
-                        this.props.showNotification({
-                          header: 'Success!',
-                          message: 'Created a new ticket.',
-                          type: 'green',
-                        })
-                      })
-                      .catch((error) => {
-                        this.props.showNotification({
-                          header: 'Error!',
-                          message: error.message,
-                          type: 'red',
-                        })
-                        throw error
-                      })
-                  }}
-                >
-                  <Label htmlFor={'description'}>Description:</Label>
-                  <Form.TextArea
-                    row={4}
-                    col={20}
-                    name="description"
-                    placeholder="Type in a description"
-                    value={this.state.description}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                  <Divider />
-                  <Label htmlFor="assignedTo">Assign to:</Label>
-                  <Form.Dropdown
-                    name="assignedTo"
-                    placeholder={
-                      teamOptions[this.state.currentUser.iEXOptionsIndex].text
-                    }
-                    search
-                    selection
-                    options={teamOptions}
-                    onChange={(event, { value }) =>
-                      this.handleOptionChange('assignedTo', value)
-                    }
-                  />
-                  <div>
-                    <p>
-                      <strong>Set reminder:</strong>
-                    </p>
-                    <Checkbox
-                      toggle
-                      label="Include a reminder"
-                      checked={this.state.setReminder}
-                      onChange={() => {
-                        const flippedState = !this.state.setReminder
-                        this.setState({
-                          setReminder: flippedState,
-                          remindMessage: this.state.description,
-                        })
-                      }}
-                    />
-                  </div>
-                  {this.state.setReminder ? (
-                    <div>
-                      <Divider />
-                      <DateTimePicker
-                        handleChange={this.handleChange}
-                        datepicker={{
-                          name: 'remindDate',
-                          value: this.state.remindDate,
-                        }}
-                        timepicker={{
-                          name: 'remindTime',
-                          value: this.state.remindTime,
-                        }}
-                      />
-                    </div>
-                  ) : null}
-                  <br />
-                  <Divider />
-                  <Button type="submit" disabled={!this.validityCheck()}>
-                    Create
-                  </Button>
-                </Form>
-              )
-            }}
-          </Mutation>
-        </NewTicketBody>
       </>
     )
   }
 
   private handleOptionChange = (id: string, value: string): void => {
+    console.log(id, value)
     this.setState({ [id]: value })
   }
 

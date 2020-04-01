@@ -24,6 +24,9 @@ export const IEX_TEAM_MEMBERS_OPTIONS: IOption[] = [
   { text: 'Karl', value: 'karl@hedvig.com' },
   { text: 'Matilda', value: 'matilda@hedvig.com' },
   { text: 'Sebastian', value: 'sebastian@hedvig.com' },
+  { text: 'Ebba Altefelt', value: 'ebba.altefelt@hedvig.com' },
+  { text: 'Ebba Gustafsson', value: 'ebba.gustafsson@hedvig.com' },
+  { text: 'Claire', value: 'claire.mitsell@hedvig.com' },
   { text: 'Elvin', value: 'elvin@hedvig.com' },
   { text: 'Gustaf', value: 'gustaf.halvardsson@hedvig.com' },
 ]
