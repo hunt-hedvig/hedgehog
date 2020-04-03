@@ -97,12 +97,60 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Electric bike',
+    text: 'electric_bike',
+    value: 'electric_bike',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/electric_bike.svg',
+    },
+  },
+  {
+    key: 'Delays',
+    text: 'delays',
+    value: 'delays',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/delays.svg',
+    },
+  },
+  {
+    key: 'Evacuation',
+    text: 'evacuation',
+    value: 'evacuation',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/evacuation.svg',
+    },
+  },
+  {
     key: 'Fire',
     text: 'fire',
     value: 'Fire',
     image: {
       avatar: true,
       src: 'https://graphql.dev.hedvigit.com/app-content-service/fire.svg',
+    },
+  },
+  {
+    key: 'Home Transport',
+    text: 'home_transport',
+    value: 'home_transport',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/home_transport.svg',
+    },
+  },
+  {
+    key: 'Id Theft',
+    text: 'id_theft',
+    value: 'id_theft',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/id_theft.svg',
     },
   },
   {
@@ -122,6 +170,16 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/legal_protection.svg',
+    },
+  },
+  {
+    key: 'Lost vacation days',
+    text: 'lost_vacation_days',
+    value: 'lost_vacation_days',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/lost_vacation_days.svg',
     },
   },
   {
@@ -165,6 +223,16 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Rental Car',
+    text: 'rental_car',
+    value: 'rental_car',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/rental_car.svg',
+    },
+  },
+  {
     key: 'Replacement housing',
     text: 'replacement_housing',
     value: 'replacement_housing',
@@ -172,6 +240,16 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/replacement_housing.svg',
+    },
+  },
+  {
+    key: 'Sick travel companion',
+    text: 'sick_travel_companion',
+    value: 'sick_travel_companion',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/sick_travel_companion.svg',
     },
   },
   {
@@ -194,6 +272,16 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Travel for related',
+    text: 'travel_for_related',
+    value: 'travel_for_related',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/travel_for_related.svg',
+    },
+  },
+  {
     key: 'Travel illness',
     text: 'sick_on_holiday',
     value: 'sick_on_holiday',
@@ -204,6 +292,15 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Valuables',
+    text: 'valuables',
+    value: 'valuables',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/valuables.svg',
+    },
+  },
+  {
     key: 'Water leaks',
     text: 'water_damage',
     value: 'Water_damage',
@@ -211,6 +308,16 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/water_damage.svg',
+    },
+  },
+  {
+    key: 'Work injury',
+    text: 'work_injury',
+    value: 'work_injury',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/work_injury.svg',
     },
   },
 ]
