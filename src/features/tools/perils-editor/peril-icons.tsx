@@ -77,16 +77,6 @@ export const PerilIconOptions = [
     },
   },
   {
-    key: 'Damaged luggage',
-    text: 'damaged_luggage',
-    value: 'damaged_luggage',
-    image: {
-      avatar: true,
-      src:
-        'https://graphql.dev.hedvigit.com/app-content-service/damaged_luggage.svg',
-    },
-  },
-  {
     key: 'Delayed luggage',
     text: 'delayed_luggage',
     value: 'delayed_luggage',
@@ -128,7 +118,7 @@ export const PerilIconOptions = [
   {
     key: 'Fire',
     text: 'fire',
-    value: 'Fire',
+    value: 'fire',
     image: {
       avatar: true,
       src: 'https://graphql.dev.hedvigit.com/app-content-service/fire.svg',
@@ -190,6 +180,15 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/nature_damage.svg',
+    },
+  },
+  {
+    key: 'Other',
+    text: 'other',
+    value: 'other',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/other.svg',
     },
   },
   {
@@ -303,7 +302,7 @@ export const PerilIconOptions = [
   {
     key: 'Water leaks',
     text: 'water_damage',
-    value: 'Water_damage',
+    value: 'water_damage',
     image: {
       avatar: true,
       src:
