@@ -63,7 +63,7 @@ class TaskManagerPageComponent extends React.Component<
   public state = {
     showModal: false,
     sort: {
-      category: 'priority',
+      category: 'createdAt',
       order: EOrder.DESC,
     },
     filter: {
@@ -75,9 +75,9 @@ class TaskManagerPageComponent extends React.Component<
     },
     toolbarItems: [
       {
-        id: 'priority',
+        id: 'createdAt',
         itemType: 'sortingButton',
-        label: 'Sort by Priority',
+        label: 'Sort by Date Created',
         active: true,
         caret: {
           direction: EOrder.DESC,

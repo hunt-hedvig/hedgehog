@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { gql } from 'apollo-boost'
+import { addDays, isFriday, set } from 'date-fns'
 import format from 'date-fns/format'
 import { CHANGE_STATUS, GET_TICKETS } from 'features/taskmanager/queries'
 import React from 'react'
@@ -19,7 +20,6 @@ import { IRemindNotification } from '../types'
 import MessageResponseForm from './body/message-response'
 import AssignTicketToMutation from './edit-ticket-mut/assignTo'
 import ChangeDescriptionMutation from './edit-ticket-mut/description'
-import ChangePriorityMutation from './edit-ticket-mut/priority'
 import ChangeReminderMutation from './edit-ticket-mut/reminder'
 import ChangeStatusMutation from './edit-ticket-mut/status'
 import { Redirector } from './util/redirect'
@@ -47,7 +47,6 @@ const StyledPre = styled('pre')`
 interface ITicketBody {
   id: string
   assignedTo: string
-  priority: number
   status: TicketStatus
   description: string
   reminder: IRemindNotification
@@ -63,7 +62,6 @@ interface ITicketBodyState {
     remindDate: any
     remindTime: any
     remindMessage: string
-    priority: number
     status: TicketStatus
     touched: {
       description: boolean
@@ -97,10 +95,15 @@ export class TicketBody extends React.Component<
       description: this.props.description,
       assignedTo: this.props.assignedTo,
       status: this.props.status,
-      remindDate: format(new Date(), 'yyyy-MM-dd'),
-      remindTime: format(new Date(), 'HH:mm:ss'),
+      remindDate: format(
+        addDays(new Date(), isFriday(new Date()) ? 3 : 1),
+        'yyyy-MM-dd',
+      ),
+      remindTime: format(
+        set(new Date(), { hours: 9, minutes: 0, seconds: 0 }),
+        'HH:mm:ss',
+      ),
       remindMessage: '',
-      priority: this.props.priority,
       touched: {
         description: false,
         assignedTo: false,
@@ -166,20 +169,6 @@ export class TicketBody extends React.Component<
             </Grid.Row>
           </Grid>
         </Grid.Row>
-        <Divider horizontal> </Divider>
-
-        <Grid.Row>
-          <Grid.Column>
-            <ChangePriorityMutation
-              id={this.props.id}
-              priority={this.state.inputs.priority}
-              oldPriority={this.props.priority}
-              handleChange={this.handleChange}
-            />
-          </Grid.Column>
-        </Grid.Row>
-        <Divider horizontal> </Divider>
-
         <Grid.Row>
           <Grid.Column>
             <strong>Set reminder</strong>
