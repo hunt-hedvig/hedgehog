@@ -100,7 +100,12 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                 }
               />
               <Divider horizontal> </Divider>
-              <Button type="submit" compact toggle>
+              <Button
+                type="submit"
+                compact
+                toggle
+                disabled={this.props.remindMessage.length <= 0}
+              >
                 Set reminder
               </Button>
               <p>Current reminder: {this.reminderToString()}</p>

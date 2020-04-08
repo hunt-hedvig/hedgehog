@@ -123,9 +123,15 @@ export class CreateNewTicket extends React.Component<
                               ticket: {
                                 assignedTo: this.state.assignedTo,
                                 type: this.state.type,
-                                remindNotificationDate: this.state.remindDate,
-                                remindNotificationTime: this.state.remindTime,
-                                remindMessage: this.state.description,
+                                remindNotificationDate: this.state.setReminder
+                                  ? this.state.remindDate
+                                  : null,
+                                remindNotificationTime: this.state.setReminder
+                                  ? this.state.remindTime
+                                  : null,
+                                remindMessage: this.state.setReminder
+                                  ? this.state.description
+                                  : null,
                                 description: this.state.description,
                                 referenceId: this.props.referenceId,
                                 memberId: this.props.memberId,
