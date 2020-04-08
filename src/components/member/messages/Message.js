@@ -11,7 +11,7 @@ import styled from 'react-emotion'
 
 const MessageRow = styled.div`
   display: flex;
-  justify-content: ${(props) => (props.left ? 'flex-start' : 'flex-end')};
+  justify-content: ${(props) => (props.left ? 'flex-end' : 'flex-start')};
   margin: ${(props) => (props.isQuestion ? '0px' : '20px 0')};
   width: 100%;
   box-sizing: border-box;

@@ -1,6 +1,0 @@
-query MemberName($memberId: ID!) {
-  member(id: $memberId) {
-    firstName
-    lastName
-  }
-}

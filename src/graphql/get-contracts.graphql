@@ -80,6 +80,7 @@ query GetContracts($memberId: ID!) {
         draftOfAgreementId
       }
       preferredCurrency
+      market
       signSource
       contractTypeName
       createdAt

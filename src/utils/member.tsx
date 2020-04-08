@@ -1,4 +1,5 @@
 import { colorsV2 } from '@hedviginsurance/brand'
+import { Market } from 'api/generated/graphql'
 import { differenceInYears, parse } from 'date-fns'
 import React from 'react'
 import styled from 'react-emotion'
@@ -109,4 +110,15 @@ export const getMemberGroup = (memberId: number) => {
     return 'The Empire'
   }
   return 'The Resistance'
+}
+
+export const getMemberFlag = (market: Market): string => {
+  switch (market) {
+    case Market.Norway:
+      return '🇳🇴'
+    case Market.Sweden:
+      return '🇸🇪'
+    default:
+      return '🏳'
+  }
 }

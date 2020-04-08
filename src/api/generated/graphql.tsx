@@ -207,8 +207,16 @@ export type Category = {
   name: Scalars['String']
 }
 
+export type ChangeFromDateInput = {
+  newFromDate: Scalars['LocalDate']
+}
+
 export type ChangeTerminationDateInput = {
   newTerminationDate: Scalars['LocalDate']
+}
+
+export type ChangeToDateInput = {
+  newToDate: Scalars['LocalDate']
 }
 
 export enum ChargeStatus {
@@ -395,15 +403,31 @@ export type Contract = {
   hasQueuedRenewal: Scalars['Boolean']
   renewal?: Maybe<Renewal>
   preferredCurrency: Scalars['String']
+  market: Market
   signSource?: Maybe<SignSource>
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
 }
 
+export type ContractMarketInfo = {
+  __typename?: 'ContractMarketInfo'
+  market: Market
+  preferredCurrency: Scalars['String']
+}
+
 export enum ContractStatus {
   Pending = 'PENDING',
+  ActiveInFuture = 'ACTIVE_IN_FUTURE',
+  ActiveInFutureAndTerminatedInFuture = 'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE',
   Active = 'ACTIVE',
+  TerminatedToday = 'TERMINATED_TODAY',
+  TerminatedInFuture = 'TERMINATED_IN_FUTURE',
   Terminated = 'TERMINATED',
+}
+
+export type CreateNorwegianGripenInput = {
+  baseFactorString?: Maybe<Scalars['String']>
+  factors: Array<NorwegianGripenFactorInput>
 }
 
 export type Debt = {
@@ -642,6 +666,11 @@ export type LuggageDelayClaim = {
   ticket?: Maybe<Scalars['String']>
 }
 
+export enum Market {
+  Sweden = 'SWEDEN',
+  Norway = 'NORWAY',
+}
+
 export type Member = {
   __typename?: 'Member'
   memberId: Scalars['ID']
@@ -665,6 +694,7 @@ export type Member = {
   numberFailedCharges?: Maybe<NumberFailedCharges>
   quotes: Array<Quote>
   contracts: Array<Contract>
+  contractMarketInfo?: Maybe<ContractMarketInfo>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -713,11 +743,15 @@ export type MutationType = {
   /** Creates a quote from a product and returns the quote id */
   createQuoteFromProduct: Quote
   updateQuote: Quote
-  markSwitchableSwitcherEmailAsReminded?: Maybe<Scalars['Boolean']>
+  markSwitchableSwitcherEmailAsReminded: Scalars['Boolean']
   terminateContract: Contract
   activatePendingAgreement: Contract
   changeTerminationDate: Contract
   revertTermination: Contract
+  createNorwegianGripenPriceEngine: Scalars['Boolean']
+  addNorwegianPostalCodes: Scalars['Boolean']
+  changeToDate: Scalars['ID']
+  changeFromDate: Scalars['ID']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -880,6 +914,39 @@ export type MutationTypeChangeTerminationDateArgs = {
 
 export type MutationTypeRevertTerminationArgs = {
   contractId: Scalars['ID']
+}
+
+export type MutationTypeCreateNorwegianGripenPriceEngineArgs = {
+  request?: Maybe<CreateNorwegianGripenInput>
+}
+
+export type MutationTypeAddNorwegianPostalCodesArgs = {
+  postalCodesString?: Maybe<Scalars['String']>
+}
+
+export type MutationTypeChangeToDateArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeToDateInput>
+}
+
+export type MutationTypeChangeFromDateArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeFromDateInput>
+}
+
+export type NorwegianGripenFactorInput = {
+  factorType: NorwegianGripenFactorType
+  factorString: Scalars['String']
+}
+
+export enum NorwegianGripenFactorType {
+  Age = 'AGE',
+  CentralityGroup = 'CENTRALITY_GROUP',
+  EconomyOfMunicipality = 'ECONOMY_OF_MUNICIPALITY',
+  NumberOfPeople = 'NUMBER_OF_PEOPLE',
+  SquareMeters = 'SQUARE_METERS',
+  HouseholdType = 'HOUSEHOLD_TYPE',
+  Deductible = 'DEDUCTIBLE',
 }
 
 export type NorwegianHomeContent = AgreementCore & {
@@ -1115,6 +1182,7 @@ export type SchedulerState = {
 export enum SignSource {
   Rapio = 'RAPIO',
   Webonboarding = 'WEBONBOARDING',
+  Web = 'WEB',
   App = 'APP',
   Ios = 'IOS',
   Android = 'ANDROID',
@@ -1350,15 +1418,40 @@ export type Whitelisted = {
   whitelistedBy?: Maybe<Scalars['String']>
 }
 
-export type MemberNameQueryVariables = {
+export type MemberNameAndContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
 }
 
-export type MemberNameQuery = { __typename?: 'QueryType' } & {
+export type MemberNameAndContractMarketInfoQuery = {
+  __typename?: 'QueryType'
+} & {
   member: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'>
+    { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'> & {
+        contractMarketInfo: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market'
+          >
+        >
+      }
   >
 }
+
+export type AddNorwegainPostalCodesMutationVariables = {
+  postalCodesString?: Maybe<Scalars['String']>
+}
+
+export type AddNorwegainPostalCodesMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'addNorwegianPostalCodes'>
+
+export type CreateNorwegianGripenPriceEngineMutationVariables = {
+  request?: Maybe<CreateNorwegianGripenInput>
+}
+
+export type CreateNorwegianGripenPriceEngineMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'createNorwegianGripenPriceEngine'>
 
 export type GetSwitcherEmailsQueryVariables = {}
 
@@ -1404,6 +1497,23 @@ export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
   changeTerminationDate: { __typename?: 'Contract' } & Pick<Contract, 'id'>
 }
 
+export type GetContractMarketInfoQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetContractMarketInfoQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & {
+      contractMarketInfo: Maybe<
+        { __typename?: 'ContractMarketInfo' } & Pick<
+          ContractMarketInfo,
+          'market' | 'preferredCurrency'
+        >
+      >
+    }
+  >
+}
+
 export type GetContractsQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -1425,6 +1535,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
           | 'hasPendingAgreement'
           | 'hasQueuedRenewal'
           | 'preferredCurrency'
+          | 'market'
           | 'signSource'
           | 'contractTypeName'
           | 'createdAt'
@@ -1586,60 +1697,163 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
   terminateContract: { __typename?: 'Contract' } & Pick<Contract, 'id'>
 }
 
-export const MemberNameDocument = gql`
-  query MemberName($memberId: ID!) {
+export const MemberNameAndContractMarketInfoDocument = gql`
+  query MemberNameAndContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
       firstName
       lastName
+      contractMarketInfo {
+        market
+      }
     }
   }
 `
 
 /**
- * __useMemberNameQuery__
+ * __useMemberNameAndContractMarketInfoQuery__
  *
- * To run a query within a React component, call `useMemberNameQuery` and pass it any options that fit your needs.
- * When your component renders, `useMemberNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useMemberNameAndContractMarketInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberNameAndContractMarketInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMemberNameQuery({
+ * const { data, loading, error } = useMemberNameAndContractMarketInfoQuery({
  *   variables: {
  *      memberId: // value for 'memberId'
  *   },
  * });
  */
-export function useMemberNameQuery(
+export function useMemberNameAndContractMarketInfoQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    MemberNameQuery,
-    MemberNameQueryVariables
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<MemberNameQuery, MemberNameQueryVariables>(
-    MemberNameDocument,
-    baseOptions,
-  )
+  return ApolloReactHooks.useQuery<
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
+  >(MemberNameAndContractMarketInfoDocument, baseOptions)
 }
-export function useMemberNameLazyQuery(
+export function useMemberNameAndContractMarketInfoLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    MemberNameQuery,
-    MemberNameQueryVariables
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
   >,
 ) {
   return ApolloReactHooks.useLazyQuery<
-    MemberNameQuery,
-    MemberNameQueryVariables
-  >(MemberNameDocument, baseOptions)
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
+  >(MemberNameAndContractMarketInfoDocument, baseOptions)
 }
-export type MemberNameQueryHookResult = ReturnType<typeof useMemberNameQuery>
-export type MemberNameLazyQueryHookResult = ReturnType<
-  typeof useMemberNameLazyQuery
+export type MemberNameAndContractMarketInfoQueryHookResult = ReturnType<
+  typeof useMemberNameAndContractMarketInfoQuery
 >
-export type MemberNameQueryResult = ApolloReactCommon.QueryResult<
-  MemberNameQuery,
-  MemberNameQueryVariables
+export type MemberNameAndContractMarketInfoLazyQueryHookResult = ReturnType<
+  typeof useMemberNameAndContractMarketInfoLazyQuery
+>
+export type MemberNameAndContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
+  MemberNameAndContractMarketInfoQuery,
+  MemberNameAndContractMarketInfoQueryVariables
+>
+export const AddNorwegainPostalCodesDocument = gql`
+  mutation AddNorwegainPostalCodes($postalCodesString: String) {
+    addNorwegianPostalCodes(postalCodesString: $postalCodesString)
+  }
+`
+export type AddNorwegainPostalCodesMutationFn = ApolloReactCommon.MutationFunction<
+  AddNorwegainPostalCodesMutation,
+  AddNorwegainPostalCodesMutationVariables
+>
+
+/**
+ * __useAddNorwegainPostalCodesMutation__
+ *
+ * To run a mutation, you first call `useAddNorwegainPostalCodesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNorwegainPostalCodesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNorwegainPostalCodesMutation, { data, loading, error }] = useAddNorwegainPostalCodesMutation({
+ *   variables: {
+ *      postalCodesString: // value for 'postalCodesString'
+ *   },
+ * });
+ */
+export function useAddNorwegainPostalCodesMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddNorwegainPostalCodesMutation,
+    AddNorwegainPostalCodesMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddNorwegainPostalCodesMutation,
+    AddNorwegainPostalCodesMutationVariables
+  >(AddNorwegainPostalCodesDocument, baseOptions)
+}
+export type AddNorwegainPostalCodesMutationHookResult = ReturnType<
+  typeof useAddNorwegainPostalCodesMutation
+>
+export type AddNorwegainPostalCodesMutationResult = ApolloReactCommon.MutationResult<
+  AddNorwegainPostalCodesMutation
+>
+export type AddNorwegainPostalCodesMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddNorwegainPostalCodesMutation,
+  AddNorwegainPostalCodesMutationVariables
+>
+export const CreateNorwegianGripenPriceEngineDocument = gql`
+  mutation CreateNorwegianGripenPriceEngine(
+    $request: CreateNorwegianGripenInput
+  ) {
+    createNorwegianGripenPriceEngine(request: $request)
+  }
+`
+export type CreateNorwegianGripenPriceEngineMutationFn = ApolloReactCommon.MutationFunction<
+  CreateNorwegianGripenPriceEngineMutation,
+  CreateNorwegianGripenPriceEngineMutationVariables
+>
+
+/**
+ * __useCreateNorwegianGripenPriceEngineMutation__
+ *
+ * To run a mutation, you first call `useCreateNorwegianGripenPriceEngineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNorwegianGripenPriceEngineMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNorwegianGripenPriceEngineMutation, { data, loading, error }] = useCreateNorwegianGripenPriceEngineMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateNorwegianGripenPriceEngineMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateNorwegianGripenPriceEngineMutation,
+    CreateNorwegianGripenPriceEngineMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateNorwegianGripenPriceEngineMutation,
+    CreateNorwegianGripenPriceEngineMutationVariables
+  >(CreateNorwegianGripenPriceEngineDocument, baseOptions)
+}
+export type CreateNorwegianGripenPriceEngineMutationHookResult = ReturnType<
+  typeof useCreateNorwegianGripenPriceEngineMutation
+>
+export type CreateNorwegianGripenPriceEngineMutationResult = ApolloReactCommon.MutationResult<
+  CreateNorwegianGripenPriceEngineMutation
+>
+export type CreateNorwegianGripenPriceEngineMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateNorwegianGripenPriceEngineMutation,
+  CreateNorwegianGripenPriceEngineMutationVariables
 >
 export const GetSwitcherEmailsDocument = gql`
   query GetSwitcherEmails {
@@ -1862,6 +2076,65 @@ export type ChangeTerminationDateMutationOptions = ApolloReactCommon.BaseMutatio
   ChangeTerminationDateMutation,
   ChangeTerminationDateMutationVariables
 >
+export const GetContractMarketInfoDocument = gql`
+  query GetContractMarketInfo($memberId: ID!) {
+    member(id: $memberId) {
+      contractMarketInfo {
+        market
+        preferredCurrency
+      }
+    }
+  }
+`
+
+/**
+ * __useGetContractMarketInfoQuery__
+ *
+ * To run a query within a React component, call `useGetContractMarketInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetContractMarketInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetContractMarketInfoQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetContractMarketInfoQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >(GetContractMarketInfoDocument, baseOptions)
+}
+export function useGetContractMarketInfoLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetContractMarketInfoQuery,
+    GetContractMarketInfoQueryVariables
+  >(GetContractMarketInfoDocument, baseOptions)
+}
+export type GetContractMarketInfoQueryHookResult = ReturnType<
+  typeof useGetContractMarketInfoQuery
+>
+export type GetContractMarketInfoLazyQueryHookResult = ReturnType<
+  typeof useGetContractMarketInfoLazyQuery
+>
+export type GetContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
+  GetContractMarketInfoQuery,
+  GetContractMarketInfoQueryVariables
+>
 export const GetContractsDocument = gql`
   query GetContracts($memberId: ID!) {
     member(id: $memberId) {
@@ -1945,6 +2218,7 @@ export const GetContractsDocument = gql`
           draftOfAgreementId
         }
         preferredCurrency
+        market
         signSource
         contractTypeName
         createdAt

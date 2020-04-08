@@ -71,17 +71,15 @@ type MutationType {
     quoteData: QuoteInput!
     bypassUnderwritingGuidelines: Boolean
   ): Quote!
-  markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean
+  markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
-  activatePendingAgreement(
-    contractId: ID!
-    request: ActivatePendingAgreementInput
-  ): Contract!
-  changeTerminationDate(
-    contractId: ID!
-    request: ChangeTerminationDateInput
-  ): Contract!
+  activatePendingAgreement(contractId: ID!, request: ActivatePendingAgreementInput): Contract!
+  changeTerminationDate(contractId: ID!, request: ChangeTerminationDateInput): Contract!
   revertTermination(contractId: ID!): Contract!
+  createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
+  addNorwegianPostalCodes(postalCodesString: String): Boolean!
+  changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
+  changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
 }
 
 type Contract {
@@ -98,6 +96,7 @@ type Contract {
   hasQueuedRenewal: Boolean!
   renewal: Renewal
   preferredCurrency: String!
+  market: Market!
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
@@ -105,12 +104,16 @@ type Contract {
 
 enum ContractStatus {
   PENDING
+  ACTIVE_IN_FUTURE
+  ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE
   ACTIVE
+  TERMINATED_TODAY
+  TERMINATED_IN_FUTURE
   TERMINATED
 }
 
 union Agreement =
-    SwedishApartment
+  SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -192,6 +195,7 @@ type Address {
 enum SignSource {
   RAPIO
   WEBONBOARDING
+  WEB
   APP
   IOS
   ANDROID
@@ -246,6 +250,14 @@ enum TerminationReason {
   SUSPECTED_FRAUD
   OTHER
   UNKNOWN
+}
+
+input ChangeToDateInput {
+  newToDate: LocalDate!
+}
+
+input ChangeFromDateInput {
+  newFromDate: LocalDate!
 }
 
 type Suggestion {
@@ -441,6 +453,17 @@ type Member {
   numberFailedCharges: NumberFailedCharges
   quotes: [Quote!]!
   contracts: [Contract!]!
+  contractMarketInfo: ContractMarketInfo
+}
+
+type ContractMarketInfo {
+  market: Market!
+  preferredCurrency: String!
+}
+
+enum Market {
+  SWEDEN
+  NORWAY
 }
 
 enum Gender {
@@ -777,7 +800,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1064,6 +1087,26 @@ enum TicketType {
   CLAIM
   CALL_ME
   OTHER
+}
+
+input CreateNorwegianGripenInput {
+  baseFactorString: String
+  factors: [NorwegianGripenFactorInput!]!
+}
+
+input NorwegianGripenFactorInput {
+  factorType: NorwegianGripenFactorType!
+  factorString: String!
+}
+
+enum NorwegianGripenFactorType {
+  AGE
+  CENTRALITY_GROUP
+  ECONOMY_OF_MUNICIPALITY
+  NUMBER_OF_PEOPLE
+  SQUARE_METERS
+  HOUSEHOLD_TYPE
+  DEDUCTIBLE
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`
