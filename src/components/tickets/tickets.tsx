@@ -160,7 +160,7 @@ export class Tickets extends React.Component<ITickets, {}> {
     }
     return filteredTickets
   }
-  //Args a and b is of type string
+  // Args a and b is of type string
   private sortByCreationDate = (a, b): any => {
     return compareAsc(parseISO(b.createdAt), parseISO(a.createdAt))
   }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Grid, Label, Segment, StickyProps } from 'semantic-ui-react'
+import { Button, Grid, Label, Segment } from 'semantic-ui-react'
 import {
   lookupStatus,
   TicketChangeType,
@@ -22,6 +22,7 @@ export class TicketRevision extends React.Component<ITicketRevision, {}> {
   public state = {
     showDetails: false,
   }
+  public props: any
 
   public render() {
     return (
