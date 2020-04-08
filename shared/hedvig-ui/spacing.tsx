@@ -2,9 +2,12 @@ import styled from 'react-emotion'
 
 export type SpacingSize = 'small' | 'medium' | 'large'
 export type SpacingDirection = 'top' | 'right' | 'bottom' | 'left' | 'all'
+export type SpacingWidth = 'full' | 'auto'
 
 export interface SpacingProps
-  extends Partial<Record<SpacingDirection, boolean | SpacingSize>> {}
+  extends Partial<Record<SpacingDirection, boolean | SpacingSize>> {
+  width?: SpacingWidth
+}
 
 export const spacingMap: Record<SpacingSize, string> = {
   small: '0.5rem',
@@ -13,7 +16,7 @@ export const spacingMap: Record<SpacingSize, string> = {
 }
 
 export const Spacing = styled('div')<SpacingProps>`
-  width: 100%;
+  width: ${({ width }) => (width === 'auto' ? 'auto' : '100%')};
   padding-top: ${({ top, all }) => {
     if (!top && !all) {
       return 0

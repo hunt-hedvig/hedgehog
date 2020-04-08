@@ -33,6 +33,7 @@ const MasterInceptionComponent: React.FunctionComponent<{
     <>
       {!datePickerEnabled && !contract.isTerminated && (
         <Button
+          halfWidth
           variation={'success'}
           onClick={() => setDatePickerEnabled(true)}
         >

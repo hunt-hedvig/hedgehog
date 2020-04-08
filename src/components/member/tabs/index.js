@@ -8,7 +8,7 @@ import InsuranceListTab from 'components/member/tabs/InsuranceListTab'
 import InsuranceTab from 'components/member/tabs/InsuranceTab'
 import PaymentsTab from 'components/member/tabs/PaymentsTab'
 import { Quotes } from 'components/member/tabs/quote-tab'
-import { Contracts } from 'components/member/tabs/contract-tab'
+import { ContractTab } from 'components/member/tabs/contracts-tab'
 import { CreateTicketStandAlone } from 'components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 
 import PropTypes from 'prop-types'
@@ -89,7 +89,7 @@ const memberPagePanes = (props, addMessage, socket) => {
       render: () => (
         <TabItem
           props={{ memberId: props.match.params.memberId }}
-          TabContent={Contracts}
+          TabContent={ContractTab}
         />
       ),
     },

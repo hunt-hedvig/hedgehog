@@ -110,7 +110,7 @@ export type AgreementCore = {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
 }
@@ -706,6 +706,12 @@ export type MemberChargeApproval = {
   amount: Scalars['MonetaryAmount']
 }
 
+export type MonetaryAmountV2 = {
+  __typename?: 'MonetaryAmountV2'
+  amount: Scalars['String']
+  currency: Scalars['String']
+}
+
 export type MonthlySubscription = {
   __typename?: 'MonthlySubscription'
   amount?: Maybe<Scalars['MonetaryAmount']>
@@ -954,12 +960,20 @@ export type NorwegianHomeContent = AgreementCore & {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
+  lineOfBusiness: NorwegianHomeContentLineOfBusiness
   address: Address
   numberCoInsured: Scalars['Int']
   squareMeters: Scalars['Int']
+}
+
+export enum NorwegianHomeContentLineOfBusiness {
+  Rent = 'RENT',
+  Own = 'OWN',
+  YouthRent = 'YOUTH_RENT',
+  YouthOwn = 'YOUTH_OWN',
 }
 
 export type NorwegianTravel = AgreementCore & {
@@ -967,10 +981,16 @@ export type NorwegianTravel = AgreementCore & {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
+  lineOfBusiness: NorwegianTravelLineOfBusiness
   numberCoInsured: Scalars['Int']
+}
+
+export enum NorwegianTravelLineOfBusiness {
+  Regular = 'REGULAR',
+  Youth = 'YOUTH',
 }
 
 export type NotCoveredClaim = {
@@ -1213,12 +1233,20 @@ export type SwedishApartment = AgreementCore & {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
+  lineOfBusiness: SwedishApartmentLineOfBusiness
   address: Address
   numberCoInsured: Scalars['Int']
   squareMeters: Scalars['Int']
+}
+
+export enum SwedishApartmentLineOfBusiness {
+  Rent = 'RENT',
+  Brf = 'BRF',
+  StudentRent = 'STUDENT_RENT',
+  StudentBrf = 'STUDENT_BRF',
 }
 
 export type SwedishHouse = AgreementCore & {
@@ -1226,7 +1254,7 @@ export type SwedishHouse = AgreementCore & {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
   address: Address
@@ -1571,6 +1599,12 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberCoInsured'
                   | 'squareMeters'
                 > & {
+                    swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
+                  } & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
                     address: { __typename?: 'Address' } & Pick<
                       Address,
                       'street' | 'postalCode' | 'city'
@@ -1590,6 +1624,10 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberOfBathrooms'
                   | 'isSubleted'
                 > & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
                     address: { __typename?: 'Address' } & Pick<
                       Address,
                       'street' | 'postalCode' | 'city'
@@ -1615,6 +1653,12 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberCoInsured'
                   | 'squareMeters'
                 > & {
+                    norwegainHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
+                  } & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
                     address: { __typename?: 'Address' } & Pick<
                       Address,
                       'street' | 'postalCode' | 'city'
@@ -1628,7 +1672,14 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'certificateUrl'
                   | 'status'
                   | 'numberCoInsured'
-                >)
+                > & {
+                    norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
+                  } & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  })
             >
             renewal: Maybe<
               { __typename?: 'Renewal' } & Pick<
@@ -2298,6 +2349,11 @@ export const GetContractsDocument = gql`
             toDate
             certificateUrl
             status
+            premium {
+              amount
+              currency
+            }
+            swedishApartmentLineOfBusiness: lineOfBusiness
             address {
               street
               postalCode
@@ -2312,6 +2368,10 @@ export const GetContractsDocument = gql`
             toDate
             certificateUrl
             status
+            premium {
+              amount
+              currency
+            }
             address {
               street
               postalCode
@@ -2337,6 +2397,11 @@ export const GetContractsDocument = gql`
             toDate
             certificateUrl
             status
+            premium {
+              amount
+              currency
+            }
+            norwegainHomeContentLineOfBusiness: lineOfBusiness
             address {
               street
               postalCode
@@ -2351,6 +2416,11 @@ export const GetContractsDocument = gql`
             toDate
             certificateUrl
             status
+            premium {
+              amount
+              currency
+            }
+            norwegianTravelLineOfBusiness: lineOfBusiness
             numberCoInsured
           }
         }

@@ -3425,15 +3425,15 @@
             "deprecationReason": null
           },
           {
-            "name": "basePremium",
+            "name": "premium",
             "description": "",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -3462,6 +3462,22 @@
               "ofType": {
                 "kind": "ENUM",
                 "name": "AgreementStatus",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lineOfBusiness",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "SwedishApartmentLineOfBusiness",
                 "ofType": null
               }
             },
@@ -3574,15 +3590,15 @@
             "deprecationReason": null
           },
           {
-            "name": "basePremium",
+            "name": "premium",
             "description": "",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -3645,6 +3661,49 @@
         ]
       },
       {
+        "kind": "OBJECT",
+        "name": "MonetaryAmountV2",
+        "description": "",
+        "fields": [
+          {
+            "name": "amount",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "currency",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "ENUM",
         "name": "AgreementStatus",
         "description": "",
@@ -3678,6 +3737,41 @@
           },
           {
             "name": "TERMINATED",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "SwedishApartmentLineOfBusiness",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "RENT",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "BRF",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STUDENT_RENT",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STUDENT_BRF",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -3786,15 +3880,15 @@
             "deprecationReason": null
           },
           {
-            "name": "basePremium",
+            "name": "premium",
             "description": "",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -4023,15 +4117,15 @@
             "deprecationReason": null
           },
           {
-            "name": "basePremium",
+            "name": "premium",
             "description": "",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -4060,6 +4154,22 @@
               "ofType": {
                 "kind": "ENUM",
                 "name": "AgreementStatus",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lineOfBusiness",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "NorwegianHomeContentLineOfBusiness",
                 "ofType": null
               }
             },
@@ -4127,6 +4237,41 @@
         "possibleTypes": null
       },
       {
+        "kind": "ENUM",
+        "name": "NorwegianHomeContentLineOfBusiness",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "RENT",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "OWN",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "YOUTH_RENT",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "YOUTH_OWN",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "NorwegianTravel",
         "description": "",
@@ -4172,15 +4317,15 @@
             "deprecationReason": null
           },
           {
-            "name": "basePremium",
+            "name": "premium",
             "description": "",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -4216,6 +4361,22 @@
             "deprecationReason": null
           },
           {
+            "name": "lineOfBusiness",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "NorwegianTravelLineOfBusiness",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "numberCoInsured",
             "description": "",
             "args": [],
@@ -4241,6 +4402,29 @@
           }
         ],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "NorwegianTravelLineOfBusiness",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "REGULAR",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "YOUTH",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {
@@ -11733,11 +11917,7 @@
       {
         "name": "skip",
         "description": "Directs the executor to skip this field or fragment when the `if` argument is true.",
-        "locations": [
-          "FIELD",
-          "FRAGMENT_SPREAD",
-          "INLINE_FRAGMENT"
-        ],
+        "locations": ["FIELD", "FRAGMENT_SPREAD", "INLINE_FRAGMENT"],
         "args": [
           {
             "name": "if",
@@ -11758,11 +11938,7 @@
       {
         "name": "include",
         "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
-        "locations": [
-          "FIELD",
-          "FRAGMENT_SPREAD",
-          "INLINE_FRAGMENT"
-        ],
+        "locations": ["FIELD", "FRAGMENT_SPREAD", "INLINE_FRAGMENT"],
         "args": [
           {
             "name": "if",
@@ -11783,10 +11959,7 @@
       {
         "name": "deprecated",
         "description": "Marks an element of a GraphQL schema as no longer supported.",
-        "locations": [
-          "FIELD_DEFINITION",
-          "ENUM_VALUE"
-        ],
+        "locations": ["FIELD_DEFINITION", "ENUM_VALUE"],
         "args": [
           {
             "name": "reason",

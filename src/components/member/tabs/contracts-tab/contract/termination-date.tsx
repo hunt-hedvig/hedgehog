@@ -158,7 +158,11 @@ const TerminationDateComponent: React.FunctionComponent<{
   return (
     <>
       {!datePickerEnabled && (
-        <Button variation={'danger'} onClick={() => setDatePickerEnabled(true)}>
+        <Button
+          halfWidth
+          variation={'danger'}
+          onClick={() => setDatePickerEnabled(true)}
+        >
           Terminate contract
         </Button>
       )}
@@ -170,7 +174,7 @@ const TerminationDateComponent: React.FunctionComponent<{
             placeholder={'Termination reason'}
             setValue={setTerminationReason}
           />
-          <Spacing top>
+          <Spacing top bottom>
             <TextArea
               placeholder={'Comment on the reason of termination...'}
               value={comment}
