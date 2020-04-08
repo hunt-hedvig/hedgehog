@@ -78,6 +78,7 @@ export const AccountTab: React.FC<AccountTabProps> = ({
   contractMarketInfo,
   showNotification,
 }) => {
+  // FIXME: We should not make market specific features like this, should use NOK vs. SEK etc.
   if (contractMarketInfo.market === Market.Norway) {
     return <>Not available for Norway</>
   }

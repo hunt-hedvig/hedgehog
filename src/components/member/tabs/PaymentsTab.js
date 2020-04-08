@@ -166,6 +166,7 @@ class PaymentsTab extends React.Component {
   }
 
   render() {
+    // FIXME: We should not make market specific features like this, have Trustly vs. Not trustly, NOK vs. SEK etc.
     if (this.props.contractMarketInfo.market === Market.Norway) {
       return <>Not available for Norway</>
     }
