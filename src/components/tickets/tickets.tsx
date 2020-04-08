@@ -1,7 +1,5 @@
 // @ts-nocheck
-import { isAfter, isBefore } from 'date-fns'
-import isSameDay from 'date-fns/isSameDay'
-import parse from 'date-fns/parse'
+import { compareAsc, isAfter, isSameDay, parse, parseISO } from 'date-fns'
 import { GET_TICKETS, ME } from 'features/taskmanager/queries'
 import { TicketStatus } from 'features/taskmanager/types'
 import * as React from 'react'
@@ -61,14 +59,14 @@ export class Tickets extends React.Component<ITickets, {}> {
 
             let sortedTickets = data.tickets.slice().sort()
 
-            if (this.props.sort.category === 'priority') {
+            if (this.props.sort.category === 'createdAt') {
               if (this.props.sort.order === EOrder.DESC) {
                 sortedTickets = sortedTickets.sort((a, b) =>
-                  this.sortByPriority(a, b),
+                  this.sortByCreationDate(a, b),
                 )
               } else if (this.props.sort.order === EOrder.ASC) {
                 sortedTickets = sortedTickets.sort((a, b) =>
-                  this.sortByPriority(b, a),
+                  this.sortByCreationDate(b, a),
                 )
               }
             }
@@ -162,14 +160,8 @@ export class Tickets extends React.Component<ITickets, {}> {
     }
     return filteredTickets
   }
-
-  private sortByPriority = (a, b): number => {
-    const evaluate = a.priority - b.priority
-    if (evaluate > 0) {
-      return -1
-    } else if (evaluate === 0) {
-      return 0
-    }
-    return 1
+  // Args a and b is of type string
+  private sortByCreationDate = (a, b): any => {
+    return compareAsc(parseISO(b.createdAt), parseISO(a.createdAt))
   }
 }

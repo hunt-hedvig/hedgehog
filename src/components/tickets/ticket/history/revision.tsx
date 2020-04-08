@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Grid, Label, Segment, StickyProps } from 'semantic-ui-react'
+import { Button, Grid, Label, Segment } from 'semantic-ui-react'
 import {
   lookupStatus,
   TicketChangeType,
@@ -13,7 +13,6 @@ interface ITicketRevision {
   description?: string
   assignedTo?: string
   status?: TicketStatus
-  manualPriority?: number
   remindDate?: string
   remindTime?: string
   remindMessage?: string
@@ -23,6 +22,7 @@ export class TicketRevision extends React.Component<ITicketRevision, {}> {
   public state = {
     showDetails: false,
   }
+  public props: any
 
   public render() {
     return (
@@ -88,12 +88,6 @@ export class TicketRevision extends React.Component<ITicketRevision, {}> {
               </Grid.Column>
               <Grid.Column>{this.props.assignedTo}</Grid.Column>
             </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={4}>
-                <em>Manual priority:</em>
-              </Grid.Column>
-              <Grid.Column>{this.props.manualPriority}</Grid.Column>
-            </Grid.Row>
           </Grid>
         )
 
@@ -156,21 +150,8 @@ export class TicketRevision extends React.Component<ITicketRevision, {}> {
             </Grid.Row>
           </Grid>
         )
-
-      case TicketChangeType.CHANGED_PRIORITY:
-        return (
-          <Grid columns={2} celled>
-            <Grid.Row>
-              <Grid.Column width={4}>
-                <em>Priority was manually changed to:</em>
-              </Grid.Column>
-              <Grid.Column>{this.props.manualPriority}</Grid.Column>
-            </Grid.Row>
-          </Grid>
-        )
       default:
         return null
     }
   }
 }
-

@@ -3,7 +3,7 @@ import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { connect } from 'react-redux'
-import { Button, Form, Label, TextArea } from 'semantic-ui-react'
+import { Button, Divider, Form } from 'semantic-ui-react'
 import {
   CHANGE_REMINDER,
   GET_TICKETS,
@@ -99,13 +99,12 @@ class ChangeReminderMutation extends React.Component<IChangeReminder, {}> {
                   !(this.props.remindMessage.length > 0)
                 }
               />
-
+              <Divider horizontal> </Divider>
               <Button
                 type="submit"
                 compact
                 toggle
-                disabled={this.props.remindMessage.length > 0 ? false : true}
-                active={!this.props.remindMessage.length > 0 ? false : true}
+                disabled={this.props.remindMessage.length <= 0}
               >
                 Set reminder
               </Button>

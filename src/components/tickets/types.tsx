@@ -21,7 +21,6 @@ export interface ITicket {
   reminder?: IRemindNotification
   description: string
   status: TicketStatus
-  priority: number
   overdue: boolean
   memberId?: string
 }

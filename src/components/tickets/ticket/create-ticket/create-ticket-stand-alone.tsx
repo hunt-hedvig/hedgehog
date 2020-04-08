@@ -42,7 +42,7 @@ export const CreateTicketStandAloneComponent: React.FunctionComponent<CreateTick
     memberId: memberId ?? 'All',
   })
   const [sort] = React.useState({
-    category: 'priority',
+    category: 'createdAt',
     order: EOrder.DESC,
   })
 
