@@ -51,7 +51,6 @@ interface ICreateNewTicket {
 
 interface ICreateNewTicketState {
   assignedTo?: string
-  priority: number
   setReminder: boolean
   remindDate: any
   remindTime: any
@@ -65,7 +64,6 @@ export class CreateNewTicket extends React.Component<
 > {
   public state = {
     assignedTo: null,
-    priority: 0,
     remindDate: null,
     remindTime: null,
     remindMessage: '',
@@ -124,7 +122,6 @@ export class CreateNewTicket extends React.Component<
                             variables: {
                               ticket: {
                                 assignedTo: this.state.assignedTo,
-                                priority: this.state.priority,
                                 type: this.state.type,
                                 remindNotificationDate: this.state.remindDate,
                                 remindNotificationTime: this.state.remindTime,
@@ -244,7 +241,6 @@ export class CreateNewTicket extends React.Component<
       : true
     return (
       this.state.assignedTo !== '' &&
-      this.state.priority !== null &&
       this.state.description.length > 0 &&
       validReminder
     )

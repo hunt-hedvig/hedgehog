@@ -47,7 +47,6 @@ const StyledPre = styled('pre')`
 interface ITicketBody {
   id: string
   assignedTo: string
-  priority: number
   status: TicketStatus
   description: string
   reminder: IRemindNotification
@@ -63,7 +62,6 @@ interface ITicketBodyState {
     remindDate: any
     remindTime: any
     remindMessage: string
-    priority: number
     status: TicketStatus
     touched: {
       description: boolean
@@ -106,7 +104,6 @@ export class TicketBody extends React.Component<
         'HH:mm:ss',
       ),
       remindMessage: '',
-      priority: this.props.priority,
       touched: {
         description: false,
         assignedTo: false,
