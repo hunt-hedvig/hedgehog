@@ -24,7 +24,13 @@ export const IEX_TEAM_MEMBERS_OPTIONS: IOption[] = [
   { text: 'Karl', value: 'karl@hedvig.com' },
   { text: 'Matilda', value: 'matilda@hedvig.com' },
   { text: 'Sebastian', value: 'sebastian@hedvig.com' },
+  { text: 'Ebba Altefelt', value: 'ebba.altefelt@hedvig.com' },
+  { text: 'Ebba Gustafsson', value: 'ebba@hedvig.com' },
+  { text: 'Claire', value: 'claire.mitsell@hedvig.com' },
+  { text: 'Joel', value: 'joel@hedvig.com' },
+  { text: 'Adam', value: 'adam.aberg@hedvig.com' },
   { text: 'Elvin', value: 'elvin@hedvig.com' },
+  { text: 'Gustaf', value: 'gustaf.halvardsson@hedvig.com' },
 ]
 
 // Purely for making it easier to read in the UI:
@@ -84,7 +90,6 @@ export enum TicketChangeType {
   CHANGED_ASSIGNED_TO = 'CHANGED_ASSIGNED_TO',
   CHANGED_DESCRIPTION = 'CHANGED_DESCRIPTION',
   CHANGED_STATUS = 'CHANGED_STATUS',
-  CHANGED_PRIORITY = 'CHANGED_PRIORITY',
 }
 
 export const TICKET_TYPE_OPTIONS = [

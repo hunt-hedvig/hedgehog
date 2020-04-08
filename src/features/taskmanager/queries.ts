@@ -21,7 +21,6 @@ export const TICKET_HISTORY = gql`
       type
       revisions {
         assignedTo
-        manualPriority
         remindDate
         remindTime
         remindMessage
@@ -45,7 +44,6 @@ export const GET_TICKETS = gql`
       createdAt
       type
       status
-      priority
       remindNotificationDate
       remindNotificationTime
       remindMessage
@@ -71,12 +69,6 @@ export const ASSIGN_TO = gql`
 export const CHANGE_STATUS = gql`
   mutation ChangeTicketStatus($ticketId: ID!, $newStatus: TicketStatus) {
     changeTicketStatus(ticketId: $ticketId, newStatus: $newStatus)
-  }
-`
-
-export const CHANGE_PRIORITY = gql`
-  mutation ChangeTicketPriority($ticketId: ID!, $newPriority: Float) {
-    changeTicketPriority(ticketId: $ticketId, newPriority: $newPriority)
   }
 `
 
