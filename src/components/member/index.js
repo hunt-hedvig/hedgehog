@@ -97,12 +97,7 @@ export default class Member extends React.Component {
               style={{ height: '100%' }}
               panes={panes}
               renderActiveOnly={true}
-              defaultActiveIndex={
-                !!this.props.insurance?.data ||
-                this.props.insurance?.list?.length > 0
-                  ? 7
-                  : 0
-              }
+              defaultActiveIndex={4}
             />
           )}
         </MemberPageContainer>
