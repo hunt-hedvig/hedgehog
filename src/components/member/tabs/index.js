@@ -75,7 +75,7 @@ const memberPagePanes = (props, addMessage, socket) => {
             ticketType: 'REMIND',
           }}
           TabContent={CreateTicketStandAlone}
-        /> // FIXME: Send props like other locations
+        />
       ),
     },
   ]

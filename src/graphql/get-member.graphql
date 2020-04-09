@@ -3,11 +3,5 @@ query GetMemberInfo($memberId: ID!) {
     memberId
     firstName
     lastName
-    address
-    postalNumber
-    city
-    directDebitStatus {
-      activated
-    }
   }
 }

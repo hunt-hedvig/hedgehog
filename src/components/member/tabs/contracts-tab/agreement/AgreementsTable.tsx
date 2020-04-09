@@ -3,16 +3,23 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
 import { getLineOfBusiness } from 'utils/agreement'
+import { getEnumTitleCase } from 'utils/enum'
 
-const ClickableRow = styled(Table.Row)({
+const StyledTableRow = styled(Table.Row)({
   cursor: 'pointer',
 })
 
 export const AgreementsTable: React.FC<{
   agreements: ReadonlyArray<Agreement>
+  currentAgreement: string
   focusedAgreement: string
   setFocusedAgreement: (agreementId: string) => void
-}> = ({ agreements, focusedAgreement, setFocusedAgreement }) => {
+}> = ({
+  agreements,
+  currentAgreement,
+  focusedAgreement,
+  setFocusedAgreement,
+}) => {
   return (
     <Table celled>
       <Table.Header>
@@ -27,19 +34,23 @@ export const AgreementsTable: React.FC<{
       <Table.Body>
         {agreements.map((agreement) => {
           return (
-            <ClickableRow
+            <StyledTableRow
+              singleLine
               key={agreement.id}
               onClick={() => setFocusedAgreement(agreement.id)}
               active={agreement.id === focusedAgreement}
+              positive={agreement.id === currentAgreement}
             >
-              <Table.Cell>{getLineOfBusiness(agreement)}</Table.Cell>
+              <Table.Cell>
+                {getEnumTitleCase(getLineOfBusiness(agreement))}
+              </Table.Cell>
               <Table.Cell>{agreement.fromDate}</Table.Cell>
               <Table.Cell>{agreement.toDate}</Table.Cell>
               <Table.Cell>
                 {agreement.premium.amount + ' ' + agreement.premium.currency}{' '}
               </Table.Cell>
-              <Table.Cell>{agreement.status}</Table.Cell>
-            </ClickableRow>
+              <Table.Cell>{getEnumTitleCase(agreement.status)}</Table.Cell>
+            </StyledTableRow>
           )
         })}
       </Table.Body>

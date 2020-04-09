@@ -45,7 +45,7 @@ export const ToDate: React.FunctionComponent<{
       {!datePickerEnabled &&
         agreement.toDate &&
         agreement.toDate !== contract.terminationDate && (
-          <Button halfWidth onClick={() => setDatePickerEnabled(true)}>
+          <Button fullWidth onClick={() => setDatePickerEnabled(true)}>
             Change to date
           </Button>
         )}

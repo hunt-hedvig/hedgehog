@@ -44,7 +44,7 @@ export const FromDate: React.FunctionComponent<{
           </Spacing>
           <Button
             variation={'primary'}
-            halfWidth
+            fullWidth
             onClick={() => setDatePickerEnabled(true)}
           >
             Change from date
