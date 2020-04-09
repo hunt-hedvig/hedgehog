@@ -13,7 +13,7 @@ import {
 import * as React from 'react'
 import styled from 'react-emotion'
 import { getSignSource } from 'utils/contract'
-import { getEnumTitleCase } from 'utils/enum'
+import { getEnumTitleCase } from 'utils/text'
 
 export const InfoContainer = styled('div')`
   display: flex;
@@ -54,7 +54,7 @@ export const Contract: React.FunctionComponent<{
           <SecondLevelHeadline>{contract.contractTypeName}</SecondLevelHeadline>
         </Card>
         {member && (
-          <Card span={2}>
+          <Card span={3}>
             <InfoContainer>
               <InfoRow>
                 Holder:{' '}
@@ -79,18 +79,17 @@ export const Contract: React.FunctionComponent<{
             </InfoContainer>
           </Card>
         )}
-        <Card span={4}>
+        <Card span={3}>
           <ThirdLevelHeadline>Master Inception</ThirdLevelHeadline>
           <MasterInception contract={contract} />
         </Card>
-        <Card span={4}>
+        <Card span={3}>
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>
       </CardsWrapper>
       <AgreementsTable
         agreements={contract.agreements}
-        currentAgreement={contract.currentAgreementId}
         focusedAgreement={focusedAgreement}
         setFocusedAgreement={setFocusedAgreement}
       />

@@ -1701,20 +1701,8 @@ export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
     { __typename?: 'Member' } & Pick<
       Member,
-      | 'memberId'
-      | 'firstName'
-      | 'lastName'
-      | 'address'
-      | 'postalNumber'
-      | 'city'
-    > & {
-        directDebitStatus: Maybe<
-          { __typename?: 'DirectDebitStatus' } & Pick<
-            DirectDebitStatus,
-            'activated'
-          >
-        >
-      }
+      'memberId' | 'firstName' | 'lastName'
+    >
   >
 }
 
@@ -2494,12 +2482,6 @@ export const GetMemberInfoDocument = gql`
       memberId
       firstName
       lastName
-      address
-      postalNumber
-      city
-      directDebitStatus {
-        activated
-      }
     }
   }
 `

@@ -114,7 +114,7 @@ class ClaimFileTableComponent extends React.Component<{
                             return (
                               <Dropdown
                                 placeholder={
-                                  claimFile.category != null
+                                  claimFile.category !== null
                                     ? claimFile.category
                                     : 'File Type'
                                 }

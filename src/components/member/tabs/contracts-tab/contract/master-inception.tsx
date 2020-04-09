@@ -37,7 +37,7 @@ const MasterInceptionComponent: React.FunctionComponent<{
           variation={'success'}
           onClick={() => setDatePickerEnabled(true)}
         >
-          Activate contract
+          Activate
         </Button>
       )}
       {!datePickerEnabled && contract.isTerminated && (
@@ -81,7 +81,7 @@ const MasterInceptionComponent: React.FunctionComponent<{
               }}
               variation={'success'}
             >
-              Activate
+              Confirm
             </Button>
             <Button fullWidth onClick={() => reset()}>
               Cancel

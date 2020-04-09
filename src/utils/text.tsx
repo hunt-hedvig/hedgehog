@@ -7,3 +7,10 @@ export const getEnumTitleCase = (enumText: string) => {
     })
     .join(' ')
 }
+
+export const formatPostalCode = (postalCode: string): string => {
+  if (postalCode.length === 5) {
+    return postalCode.slice(0, 3) + ' ' + postalCode.slice(3)
+  }
+  return postalCode
+}

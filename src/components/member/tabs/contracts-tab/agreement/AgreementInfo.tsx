@@ -11,7 +11,7 @@ import {
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/agreement'
-import { getEnumTitleCase } from 'utils/enum'
+import { formatPostalCode, getEnumTitleCase } from 'utils/text'
 
 export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
   agreement,
@@ -36,12 +36,11 @@ export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
         isNorwegianHomeContent(agreement)) && (
         <>
           <InfoRow>
-            Address: <InfoText>{agreement.address.street}</InfoText>
-          </InfoRow>
-          <InfoRow>
-            Postal Code:{' '}
+            Address:{' '}
             <InfoText>
-              {agreement.address.postalCode}, {agreement.address.city}
+              {agreement.address.street},{' '}
+              {formatPostalCode(agreement.address.postalCode)}{' '}
+              {agreement.address.city}
             </InfoText>
           </InfoRow>
           <InfoRow>

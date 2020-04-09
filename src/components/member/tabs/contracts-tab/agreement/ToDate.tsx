@@ -36,7 +36,7 @@ export const ToDate: React.FunctionComponent<{
       {!datePickerEnabled && (
         <Spacing bottom width={'auto'}>
           <FourthLevelHeadline>
-            {agreement.toDate != null
+            {agreement.toDate !== null
               ? format(new Date(agreement.toDate), 'yyyy-MM-dd')
               : 'Active'}
           </FourthLevelHeadline>
@@ -46,7 +46,7 @@ export const ToDate: React.FunctionComponent<{
         agreement.toDate &&
         agreement.toDate !== contract.terminationDate && (
           <Button fullWidth onClick={() => setDatePickerEnabled(true)}>
-            Change to date
+            Change
           </Button>
         )}
       {datePickerEnabled && (
@@ -84,7 +84,7 @@ export const ToDate: React.FunctionComponent<{
                   })
               }}
             >
-              Change
+              Confirm
             </Button>
             <Button fullWidth onClick={() => reset()}>
               Cancel

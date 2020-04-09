@@ -3,25 +3,24 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
 import { getLineOfBusiness } from 'utils/agreement'
-import { getEnumTitleCase } from 'utils/enum'
+import { getEnumTitleCase } from 'utils/text'
 
-const StyledTableRow = styled(Table.Row)({
+const FocusableTableRow = styled(Table.Row)({
   cursor: 'pointer',
 })
 
+const FocusableTableCell = styled(Table.Cell)<{ active: boolean }>`
+  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
+  width: 20%;
+`
+
 export const AgreementsTable: React.FC<{
   agreements: ReadonlyArray<Agreement>
-  currentAgreement: string
   focusedAgreement: string
   setFocusedAgreement: (agreementId: string) => void
-}> = ({
-  agreements,
-  currentAgreement,
-  focusedAgreement,
-  setFocusedAgreement,
-}) => {
+}> = ({ agreements, focusedAgreement, setFocusedAgreement }) => {
   return (
-    <Table celled>
+    <Table celled unstackable>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Type</Table.HeaderCell>
@@ -33,24 +32,30 @@ export const AgreementsTable: React.FC<{
       </Table.Header>
       <Table.Body>
         {agreements.map((agreement) => {
+          const isActive = agreement.id === focusedAgreement
           return (
-            <StyledTableRow
+            <FocusableTableRow
               singleLine
               key={agreement.id}
               onClick={() => setFocusedAgreement(agreement.id)}
-              active={agreement.id === focusedAgreement}
-              positive={agreement.id === currentAgreement}
+              active={isActive}
             >
-              <Table.Cell>
+              <FocusableTableCell active={isActive}>
                 {getEnumTitleCase(getLineOfBusiness(agreement))}
-              </Table.Cell>
-              <Table.Cell>{agreement.fromDate}</Table.Cell>
-              <Table.Cell>{agreement.toDate}</Table.Cell>
-              <Table.Cell>
+              </FocusableTableCell>
+              <FocusableTableCell active={isActive}>
+                {agreement.fromDate}
+              </FocusableTableCell>
+              <FocusableTableCell active={isActive}>
+                {agreement.toDate}
+              </FocusableTableCell>
+              <FocusableTableCell active={isActive}>
                 {agreement.premium.amount + ' ' + agreement.premium.currency}{' '}
-              </Table.Cell>
-              <Table.Cell>{getEnumTitleCase(agreement.status)}</Table.Cell>
-            </StyledTableRow>
+              </FocusableTableCell>
+              <FocusableTableCell active={isActive}>
+                {getEnumTitleCase(agreement.status)}
+              </FocusableTableCell>
+            </FocusableTableRow>
           )
         })}
       </Table.Body>

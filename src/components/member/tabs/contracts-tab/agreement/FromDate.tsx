@@ -37,7 +37,7 @@ export const FromDate: React.FunctionComponent<{
         <>
           <Spacing bottom width={'auto'}>
             <FourthLevelHeadline>
-              {agreement.fromDate != null
+              {agreement.fromDate !== null
                 ? format(new Date(agreement.fromDate), 'yyyy-MM-dd')
                 : 'Not set'}
             </FourthLevelHeadline>
@@ -47,7 +47,7 @@ export const FromDate: React.FunctionComponent<{
             fullWidth
             onClick={() => setDatePickerEnabled(true)}
           >
-            Change from date
+            Change
           </Button>
         </>
       )}
@@ -86,7 +86,7 @@ export const FromDate: React.FunctionComponent<{
                   })
               }}
             >
-              Change
+              Confirm
             </Button>
             <Button fullWidth onClick={() => reset()}>
               Cancel
