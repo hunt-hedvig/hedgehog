@@ -3,6 +3,7 @@ import moment from 'moment'
 import React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import { Button, Form, Input, Table } from 'semantic-ui-react'
+import { Market } from 'api/generated/graphql'
 
 import { Checkmark, Cross } from 'components/icons'
 import PayoutDetails from 'components/payouts/payout-details'
@@ -165,6 +166,10 @@ class PaymentsTab extends React.Component {
   }
 
   render() {
+    // FIXME: We should not make market specific features like this, have Trustly vs. Not trustly, NOK vs. SEK etc.
+    if (this.props.contractMarketInfo.market === Market.Norway) {
+      return <>Not available for Norway</>
+    }
     return (
       <React.Fragment>
         <Query query={GET_MEMBER_QUERY} variables={this.variables}>
