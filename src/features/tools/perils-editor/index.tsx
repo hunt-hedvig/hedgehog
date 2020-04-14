@@ -19,6 +19,10 @@ const PerilEditWrapper = styled.div`
   margin-bottom: 1rem;
 `
 
+const TitleWrapper = styled.div`
+  padding-top: 1rem;
+`
+
 const CoverageWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -42,6 +46,7 @@ const PERIL_FILE_KEY = '_hvg:peril-file-name'
 
 interface Peril {
   title: string | { props: { children: string } }
+  shortDescription: string
   description: string
   covered: string[]
   exceptions: string[]
@@ -151,7 +156,14 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
                   }}
                   size="big"
                 />
-
+                <TitleWrapper>Short Description</TitleWrapper>
+                <TextArea
+                  value={peril.shortDescription}
+                  onChange={(_, data) => {
+                    updateField('shortDescription')(data.value)
+                  }}
+                />
+                <TitleWrapper>Full Description</TitleWrapper>
                 <TextArea
                   value={peril.description}
                   onChange={(_, data) => {
@@ -257,7 +269,7 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
                   }
                 />
 
-                <div>Info</div>
+                <TitleWrapper>Info</TitleWrapper>
                 <TextArea
                   value={peril.info}
                   onChange={(_, data) => {
@@ -294,6 +306,7 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
               parsedPerils?.concat([
                 {
                   title: '',
+                  shortDescription: '',
                   description: '',
                   info: '',
                   exceptions: [],
