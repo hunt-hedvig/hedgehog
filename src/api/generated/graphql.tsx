@@ -760,6 +760,7 @@ export type MutationType = {
   addNorwegianPostalCodes: Scalars['Boolean']
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
+  regenerateCertificate: Scalars['ID']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -940,6 +941,10 @@ export type MutationTypeChangeToDateArgs = {
 export type MutationTypeChangeFromDateArgs = {
   agreementId: Scalars['ID']
   request?: Maybe<ChangeFromDateInput>
+}
+
+export type MutationTypeRegenerateCertificateArgs = {
+  agreementId: Scalars['ID']
 }
 
 export type NorwegianGripenFactorInput = {
@@ -1663,7 +1668,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberCoInsured'
                   | 'squareMeters'
                 > & {
-                    norwegainHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
+                    norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
                   } & {
                     premium: { __typename?: 'MonetaryAmountV2' } & Pick<
                       MonetaryAmountV2,
@@ -1760,6 +1765,14 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
     }
   >
 }
+
+export type RegenerateCertificateMutationVariables = {
+  agreementId: Scalars['ID']
+}
+
+export type RegenerateCertificateMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'regenerateCertificate'>
 
 export type RevertTerminationMutationVariables = {
   contractId: Scalars['ID']
@@ -2396,7 +2409,7 @@ export const GetContractsDocument = gql`
               amount
               currency
             }
-            norwegainHomeContentLineOfBusiness: lineOfBusiness
+            norwegianHomeContentLineOfBusiness: lineOfBusiness
             address {
               street
               postalCode
@@ -2574,6 +2587,54 @@ export type GetQuotesLazyQueryHookResult = ReturnType<
 export type GetQuotesQueryResult = ApolloReactCommon.QueryResult<
   GetQuotesQuery,
   GetQuotesQueryVariables
+>
+export const RegenerateCertificateDocument = gql`
+  mutation RegenerateCertificate($agreementId: ID!) {
+    regenerateCertificate(agreementId: $agreementId)
+  }
+`
+export type RegenerateCertificateMutationFn = ApolloReactCommon.MutationFunction<
+  RegenerateCertificateMutation,
+  RegenerateCertificateMutationVariables
+>
+
+/**
+ * __useRegenerateCertificateMutation__
+ *
+ * To run a mutation, you first call `useRegenerateCertificateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegenerateCertificateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [regenerateCertificateMutation, { data, loading, error }] = useRegenerateCertificateMutation({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *   },
+ * });
+ */
+export function useRegenerateCertificateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RegenerateCertificateMutation,
+    RegenerateCertificateMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RegenerateCertificateMutation,
+    RegenerateCertificateMutationVariables
+  >(RegenerateCertificateDocument, baseOptions)
+}
+export type RegenerateCertificateMutationHookResult = ReturnType<
+  typeof useRegenerateCertificateMutation
+>
+export type RegenerateCertificateMutationResult = ApolloReactCommon.MutationResult<
+  RegenerateCertificateMutation
+>
+export type RegenerateCertificateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RegenerateCertificateMutation,
+  RegenerateCertificateMutationVariables
 >
 export const RevertTerminationDocument = gql`
   mutation RevertTermination($contractId: ID!) {

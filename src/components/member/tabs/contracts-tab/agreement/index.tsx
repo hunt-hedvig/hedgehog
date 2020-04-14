@@ -46,16 +46,16 @@ const AgreementComponent: React.FC<{
                 showNotification={showNotification}
               />
             </Card>
+            <Card span={2}>
+              <InsuranceCertificate
+                contract={contract}
+                agreement={agreement}
+                showNotification={showNotification}
+                refetch={refetch}
+              />
+            </Card>
           </>
         )}
-        <Card span={2}>
-          <InsuranceCertificate
-            contract={contract}
-            agreement={agreement}
-            showNotification={showNotification}
-            refetch={refetch}
-          />
-        </Card>
         <Card span={2}>
           <ThirdLevelHeadline>Create Quote</ThirdLevelHeadline>
           <FourthLevelHeadline>TODO</FourthLevelHeadline>

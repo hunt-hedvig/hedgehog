@@ -108,10 +108,12 @@ const TerminationDateComponent: React.FunctionComponent<{
         )}
         {datePickerEnabled && (
           <>
-            <DateTimePicker
-              date={terminationDate}
-              setDate={setTerminationDate}
-            />
+            <Spacing bottom width={'auto'}>
+              <DateTimePicker
+                date={terminationDate}
+                setDate={setTerminationDate}
+              />
+            </Spacing>
             <ButtonsGroup>
               <Button
                 fullWidth

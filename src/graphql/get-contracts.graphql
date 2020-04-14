@@ -71,7 +71,7 @@ query GetContracts($memberId: ID!) {
             amount
             currency
           }
-          norwegainHomeContentLineOfBusiness: lineOfBusiness
+          norwegianHomeContentLineOfBusiness: lineOfBusiness
           address {
             street
             postalCode

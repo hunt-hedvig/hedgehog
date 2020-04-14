@@ -88,6 +88,7 @@ type MutationType {
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
+  regenerateCertificate(agreementId: ID!): ID!
 }
 
 type Contract {

@@ -1,4 +1,8 @@
 import { Agreement, Contract } from 'api/generated/graphql'
+import {
+  regenerateCertificateOptions,
+  useRegenerateCertificate,
+} from 'graphql/use-regenerate-certificate'
 import { Button, ButtonLink, ButtonsGroup } from 'hedvig-ui/button'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
@@ -11,6 +15,10 @@ export const InsuranceCertificate: React.FunctionComponent<{
   showNotification: (data: Notification) => void
   refetch: () => Promise<void>
 }> = ({ contract, agreement, showNotification, refetch }) => {
+  const [regenerateCertificate, { loading }] = useRegenerateCertificate(
+    contract,
+  )
+
   const onUpload = (files, memberId) => {
     const certificateForm = new FormData()
     certificateForm.set('file', files[0])
@@ -48,9 +56,41 @@ export const InsuranceCertificate: React.FunctionComponent<{
             target="_blank"
             href={agreement.certificateUrl!!}
           >
-            View Existing
+            View
           </ButtonLink>
         )}
+        <Button
+          disabled={loading}
+          variation={'warning'}
+          fullWidth
+          onClick={() => {
+            if (
+              !window.confirm(
+                'Are you sure you want to regenerate the certificate?',
+              )
+            ) {
+              return
+            }
+            regenerateCertificate(regenerateCertificateOptions(agreement.id))
+              .then(() => {
+                showNotification({
+                  header: 'Success',
+                  message: 'Successfully regenerate the certificate',
+                  type: 'olive',
+                })
+              })
+              .catch((error) => {
+                showNotification({
+                  header: 'Error',
+                  message: error.message,
+                  type: 'red',
+                })
+                throw error
+              })
+          }}
+        >
+          Regenerate
+        </Button>
         <Dropzone onDrop={(files) => onUpload(files, contract.holderMemberId)}>
           {({ getRootProps, getInputProps }) => (
             // @ts-ignore
@@ -60,7 +100,7 @@ export const InsuranceCertificate: React.FunctionComponent<{
               {...getRootProps()}
             >
               <input {...getInputProps()} />
-              Upload
+              Upload New
             </Button>
           )}
         </Dropzone>
