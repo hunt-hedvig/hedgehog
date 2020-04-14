@@ -48,7 +48,7 @@ export const InsuranceCertificate: React.FunctionComponent<{
             target="_blank"
             href={agreement.certificateUrl!!}
           >
-            View existing
+            View Existing
           </ButtonLink>
         )}
         <Dropzone onDrop={(files) => onUpload(files, contract.holderMemberId)}>

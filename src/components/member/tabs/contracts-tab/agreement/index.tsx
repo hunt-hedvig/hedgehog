@@ -1,15 +1,15 @@
-import { Agreement as AgreementType, Contract } from 'api/generated/graphql'
+import {
+  Agreement as AgreementType,
+  AgreementStatus,
+  Contract,
+} from 'api/generated/graphql'
 import { AgreementInfo } from 'components/member/tabs/contracts-tab/agreement/AgreementInfo'
 import { FromDate } from 'components/member/tabs/contracts-tab/agreement/FromDate'
 import { InsuranceCertificate } from 'components/member/tabs/contracts-tab/agreement/InsuranceCertificate'
 import { InsuranceMandate } from 'components/member/tabs/contracts-tab/agreement/InsuranceMandate'
 import { ToDate } from 'components/member/tabs/contracts-tab/agreement/ToDate'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import {
-  FourthLevelHeadline,
-  SecondLevelHeadline,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
+import { FourthLevelHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
@@ -26,25 +26,28 @@ const AgreementComponent: React.FC<{
 }) => {
   return (
     <>
-      <SecondLevelHeadline></SecondLevelHeadline>
       <CardsWrapper>
         <Card span={2}>
           <AgreementInfo agreement={agreement} />
         </Card>
-        <Card span={4}>
-          <FromDate
-            agreement={agreement}
-            contract={contract}
-            showNotification={showNotification}
-          />
-        </Card>
-        <Card span={4}>
-          <ToDate
-            agreement={agreement}
-            contract={contract}
-            showNotification={showNotification}
-          />
-        </Card>
+        {agreement.status !== AgreementStatus.Pending && (
+          <>
+            <Card span={4}>
+              <FromDate
+                agreement={agreement}
+                contract={contract}
+                showNotification={showNotification}
+              />
+            </Card>
+            <Card span={4}>
+              <ToDate
+                agreement={agreement}
+                contract={contract}
+                showNotification={showNotification}
+              />
+            </Card>
+          </>
+        )}
         <Card span={2}>
           <InsuranceCertificate
             contract={contract}

@@ -392,6 +392,8 @@ export type Contract = {
   __typename?: 'Contract'
   id: Scalars['ID']
   holderMemberId: Scalars['ID']
+  holderFirstName?: Maybe<Scalars['String']>
+  holderLastName?: Maybe<Scalars['String']>
   switchedFrom?: Maybe<Scalars['String']>
   masterInception?: Maybe<Scalars['LocalDate']>
   status: ContractStatus
@@ -1513,7 +1515,10 @@ export type ActivatePendingAgreementMutationVariables = {
 export type ActivatePendingAgreementMutation = {
   __typename?: 'MutationType'
 } & {
-  activatePendingAgreement: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+  activatePendingAgreement: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId'
+  >
 }
 
 export type ChangeFromDateMutationVariables = {
@@ -1532,7 +1537,10 @@ export type ChangeTerminationDateMutationVariables = {
 }
 
 export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
-  changeTerminationDate: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+  changeTerminationDate: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId'
+  >
 }
 
 export type ChangeToDateMutationVariables = {
@@ -1574,6 +1582,8 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
           Contract,
           | 'id'
           | 'holderMemberId'
+          | 'holderFirstName'
+          | 'holderLastName'
           | 'switchedFrom'
           | 'masterInception'
           | 'status'
@@ -1693,19 +1703,6 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetMemberInfoQueryVariables = {
-  memberId: Scalars['ID']
-}
-
-export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
-  member: Maybe<
-    { __typename?: 'Member' } & Pick<
-      Member,
-      'memberId' | 'firstName' | 'lastName'
-    >
-  >
-}
-
 export type GetQuotesQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -1769,7 +1766,10 @@ export type RevertTerminationMutationVariables = {
 }
 
 export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
-  revertTermination: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+  revertTermination: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId'
+  >
 }
 
 export type TerminateContractMutationVariables = {
@@ -1778,7 +1778,10 @@ export type TerminateContractMutationVariables = {
 }
 
 export type TerminateContractMutation = { __typename?: 'MutationType' } & {
-  terminateContract: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+  terminateContract: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId'
+  >
 }
 
 export const MemberNameAndContractMarketInfoDocument = gql`
@@ -2059,6 +2062,7 @@ export const ActivatePendingAgreementDocument = gql`
   ) {
     activatePendingAgreement(contractId: $contractId, request: $request) {
       id
+      holderMemberId
     }
   }
 `
@@ -2162,6 +2166,7 @@ export const ChangeTerminationDateDocument = gql`
   ) {
     changeTerminationDate(contractId: $contractId, request: $request) {
       id
+      holderMemberId
     }
   }
 `
@@ -2323,6 +2328,8 @@ export const GetContractsDocument = gql`
       contracts {
         id
         holderMemberId
+        holderFirstName
+        holderLastName
         switchedFrom
         masterInception
         status
@@ -2476,64 +2483,6 @@ export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
 >
-export const GetMemberInfoDocument = gql`
-  query GetMemberInfo($memberId: ID!) {
-    member(id: $memberId) {
-      memberId
-      firstName
-      lastName
-    }
-  }
-`
-
-/**
- * __useGetMemberInfoQuery__
- *
- * To run a query within a React component, call `useGetMemberInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMemberInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMemberInfoQuery({
- *   variables: {
- *      memberId: // value for 'memberId'
- *   },
- * });
- */
-export function useGetMemberInfoQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetMemberInfoQuery,
-    GetMemberInfoQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<
-    GetMemberInfoQuery,
-    GetMemberInfoQueryVariables
-  >(GetMemberInfoDocument, baseOptions)
-}
-export function useGetMemberInfoLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetMemberInfoQuery,
-    GetMemberInfoQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    GetMemberInfoQuery,
-    GetMemberInfoQueryVariables
-  >(GetMemberInfoDocument, baseOptions)
-}
-export type GetMemberInfoQueryHookResult = ReturnType<
-  typeof useGetMemberInfoQuery
->
-export type GetMemberInfoLazyQueryHookResult = ReturnType<
-  typeof useGetMemberInfoLazyQuery
->
-export type GetMemberInfoQueryResult = ApolloReactCommon.QueryResult<
-  GetMemberInfoQuery,
-  GetMemberInfoQueryVariables
->
 export const GetQuotesDocument = gql`
   query GetQuotes($memberId: ID!) {
     member(id: $memberId) {
@@ -2630,6 +2579,7 @@ export const RevertTerminationDocument = gql`
   mutation RevertTermination($contractId: ID!) {
     revertTermination(contractId: $contractId) {
       id
+      holderMemberId
     }
   }
 `
@@ -2683,6 +2633,7 @@ export const TerminateContractDocument = gql`
   ) {
     terminateContract(contractId: $contractId, request: $request) {
       id
+      holderMemberId
     }
   }
 `

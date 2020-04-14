@@ -3,6 +3,8 @@ query GetContracts($memberId: ID!) {
     contracts {
       id
       holderMemberId
+      holderFirstName
+      holderLastName
       switchedFrom
       masterInception
       status

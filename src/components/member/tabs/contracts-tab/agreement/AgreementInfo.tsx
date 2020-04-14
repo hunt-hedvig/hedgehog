@@ -19,7 +19,7 @@ export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
   return (
     <InfoContainer>
       <InfoRow>
-        Type:{' '}
+        Line of Business:{' '}
         <InfoText>{getEnumTitleCase(getLineOfBusiness(agreement))}</InfoText>
       </InfoRow>
       <InfoRow>
@@ -29,7 +29,7 @@ export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
         </InfoText>
       </InfoRow>
       <InfoRow>
-        Number co-insured: <InfoText>{agreement.numberCoInsured}</InfoText>
+        Number Co-insured: <InfoText>{agreement.numberCoInsured}</InfoText>
       </InfoRow>
       {(isSwedishApartment(agreement) ||
         isSwedishHouse(agreement) ||
@@ -44,7 +44,7 @@ export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
             </InfoText>
           </InfoRow>
           <InfoRow>
-            Living space:{' '}
+            Living Space:{' '}
             <InfoText>
               {agreement.squareMeters} m<sup>2</sup>
             </InfoText>

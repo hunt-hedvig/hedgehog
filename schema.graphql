@@ -93,6 +93,8 @@ type MutationType {
 type Contract {
   id: ID!
   holderMemberId: ID!
+  holderFirstName: String
+  holderLastName: String
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!

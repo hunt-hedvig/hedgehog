@@ -1,13 +1,13 @@
 import { MutationFunction } from '@apollo/react-common'
 import { OperationVariables } from '@apollo/react-common/lib/types/types'
 import { MutationTuple } from '@apollo/react-hooks'
-import { useState } from 'react'
 import {
   Contract,
   GetContractsQueryHookResult,
   useGetContractsQuery,
-} from '../api/generated/graphql'
-import { sleep } from '../utils/sleep'
+} from 'api/generated/graphql'
+import { useState } from 'react'
+import { sleep } from 'utils/sleep'
 
 type DelayedRefetch = () => Promise<void>
 type DelayedRefetchResultTuple = [DelayedRefetch, boolean]

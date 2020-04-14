@@ -1,7 +1,0 @@
-query GetMemberInfo($memberId: ID!) {
-  member(id: $memberId) {
-    memberId
-    firstName
-    lastName
-  }
-}

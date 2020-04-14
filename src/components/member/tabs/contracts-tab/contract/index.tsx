@@ -3,7 +3,6 @@ import { Agreement } from 'components/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'components/member/tabs/contracts-tab/agreement/AgreementsTable'
 import { MasterInception } from 'components/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'components/member/tabs/contracts-tab/contract/termination-date'
-import { useMemberInfo } from 'graphql/use-member-info'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import {
   Paragraph,
@@ -37,15 +36,9 @@ export const Contract: React.FunctionComponent<{
   contract: ContractType
   refetch: () => Promise<any>
 }> = ({ contract, refetch }) => {
-  const [focusedAgreement, setFocusedAgreement] = React.useState<string>(
+  const [selectedAgreement, setSelectedAgreement] = React.useState<string>(
     contract.currentAgreementId,
   )
-
-  const [member, { loading }] = useMemberInfo(contract.holderMemberId)
-
-  if (loading) {
-    return null
-  }
 
   return (
     <>
@@ -53,32 +46,30 @@ export const Contract: React.FunctionComponent<{
         <Card>
           <SecondLevelHeadline>{contract.contractTypeName}</SecondLevelHeadline>
         </Card>
-        {member && (
-          <Card span={3}>
-            <InfoContainer>
+        <Card span={3}>
+          <InfoContainer>
+            <InfoRow>
+              Holder:{' '}
+              <InfoText>
+                {contract.holderFirstName} {contract.holderLastName}
+              </InfoText>
+            </InfoRow>
+            <InfoRow>
+              Status: <InfoText>{getEnumTitleCase(contract.status)}</InfoText>
+            </InfoRow>
+            {contract.switchedFrom && (
               <InfoRow>
-                Holder:{' '}
-                <InfoText>
-                  {member.firstName} {member.lastName}
-                </InfoText>
+                Switched From: <InfoText>{contract.switchedFrom}</InfoText>
               </InfoRow>
+            )}
+            {contract.signSource && (
               <InfoRow>
-                Status: <InfoText>{getEnumTitleCase(contract.status)}</InfoText>
+                Sign Source:{' '}
+                <InfoText>{getSignSource(contract.signSource)}</InfoText>
               </InfoRow>
-              {contract.switchedFrom && (
-                <InfoRow>
-                  Switched from: <InfoText>{contract.switchedFrom}</InfoText>
-                </InfoRow>
-              )}
-              {contract.signSource && (
-                <InfoRow>
-                  Sign source:{' '}
-                  <InfoText>{getSignSource(contract.signSource)}</InfoText>
-                </InfoRow>
-              )}
-            </InfoContainer>
-          </Card>
-        )}
+            )}
+          </InfoContainer>
+        </Card>
         <Card span={3}>
           <ThirdLevelHeadline>Master Inception</ThirdLevelHeadline>
           <MasterInception contract={contract} />
@@ -90,13 +81,13 @@ export const Contract: React.FunctionComponent<{
       </CardsWrapper>
       <AgreementsTable
         agreements={contract.agreements}
-        focusedAgreement={focusedAgreement}
-        setFocusedAgreement={setFocusedAgreement}
+        selectedAgreement={selectedAgreement}
+        setSelectedAgreement={setSelectedAgreement}
       />
       <Agreement
         agreement={
           contract.agreements.find(
-            (agreement) => agreement.id === focusedAgreement,
+            (agreement) => agreement.id === selectedAgreement,
           )!
         }
         contract={contract}

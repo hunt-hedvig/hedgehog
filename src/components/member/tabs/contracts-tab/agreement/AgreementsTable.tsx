@@ -5,57 +5,57 @@ import { Table } from 'semantic-ui-react'
 import { getLineOfBusiness } from 'utils/agreement'
 import { getEnumTitleCase } from 'utils/text'
 
-const FocusableTableRow = styled(Table.Row)({
+const SelectableTableRow = styled(Table.Row)({
   cursor: 'pointer',
 })
 
-const FocusableTableCell = styled(Table.Cell)<{ active: boolean }>`
-  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
+const SelectableTableCell = styled(Table.Cell)<{ selected: boolean }>`
+  font-weight: ${({ selected }) => (selected ? 'bold' : 'normal')};
   width: 20%;
 `
 
 export const AgreementsTable: React.FC<{
   agreements: ReadonlyArray<Agreement>
-  focusedAgreement: string
-  setFocusedAgreement: (agreementId: string) => void
-}> = ({ agreements, focusedAgreement, setFocusedAgreement }) => {
+  selectedAgreement: string
+  setSelectedAgreement: (agreementId: string) => void
+}> = ({ agreements, selectedAgreement, setSelectedAgreement }) => {
   return (
     <Table celled unstackable>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Type</Table.HeaderCell>
-          <Table.HeaderCell>Active from</Table.HeaderCell>
-          <Table.HeaderCell>Active to</Table.HeaderCell>
+          <Table.HeaderCell>Line of Business</Table.HeaderCell>
+          <Table.HeaderCell>From Date</Table.HeaderCell>
+          <Table.HeaderCell>To Date</Table.HeaderCell>
           <Table.HeaderCell>Premium</Table.HeaderCell>
           <Table.HeaderCell>Status</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {agreements.map((agreement) => {
-          const isActive = agreement.id === focusedAgreement
+          const isSelected = agreement.id === selectedAgreement
           return (
-            <FocusableTableRow
+            <SelectableTableRow
               singleLine
               key={agreement.id}
-              onClick={() => setFocusedAgreement(agreement.id)}
-              active={isActive}
+              onClick={() => setSelectedAgreement(agreement.id)}
+              active={isSelected}
             >
-              <FocusableTableCell active={isActive}>
+              <SelectableTableCell selected={isSelected}>
                 {getEnumTitleCase(getLineOfBusiness(agreement))}
-              </FocusableTableCell>
-              <FocusableTableCell active={isActive}>
+              </SelectableTableCell>
+              <SelectableTableCell selected={isSelected}>
                 {agreement.fromDate}
-              </FocusableTableCell>
-              <FocusableTableCell active={isActive}>
+              </SelectableTableCell>
+              <SelectableTableCell selected={isSelected}>
                 {agreement.toDate}
-              </FocusableTableCell>
-              <FocusableTableCell active={isActive}>
+              </SelectableTableCell>
+              <SelectableTableCell selected={isSelected}>
                 {agreement.premium.amount + ' ' + agreement.premium.currency}{' '}
-              </FocusableTableCell>
-              <FocusableTableCell active={isActive}>
+              </SelectableTableCell>
+              <SelectableTableCell selected={isSelected}>
                 {getEnumTitleCase(agreement.status)}
-              </FocusableTableCell>
-            </FocusableTableRow>
+              </SelectableTableCell>
+            </SelectableTableRow>
           )
         })}
       </Table.Body>
