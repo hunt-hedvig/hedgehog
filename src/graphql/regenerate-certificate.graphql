@@ -1,0 +1,3 @@
+mutation RegenerateCertificate($agreementId: ID!) {
+  regenerateCertificate(agreementId: $agreementId)
+}
