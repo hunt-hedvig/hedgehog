@@ -1,10 +1,13 @@
+import { colorsV2 } from '@hedviginsurance/brand/dist'
 import { Agreement } from 'api/generated/graphql'
 import {
   InfoContainer,
   InfoRow,
   InfoText,
 } from 'components/member/tabs/contracts-tab/contract'
+import { Paragraph } from 'hedvig-ui/typography'
 import * as React from 'react'
+import styled from 'react-emotion'
 import {
   getLineOfBusiness,
   isNorwegianHomeContent,
@@ -13,36 +16,30 @@ import {
 } from 'utils/agreement'
 import { formatPostalCode, getEnumTitleCase } from 'utils/text'
 
+const AddressInfoRow = styled(Paragraph)`
+  margin-left: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.35rem;
+  display: inline-block;
+  color: ${colorsV2.violet700};
+  font-weight: bold;
+`
+
 export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
   agreement,
 }) => {
   return (
     <InfoContainer>
-      <InfoRow>
-        Line of Business:{' '}
-        <InfoText>{getEnumTitleCase(getLineOfBusiness(agreement))}</InfoText>
-      </InfoRow>
-      <InfoRow>
-        Premium:{' '}
-        <InfoText>
-          {agreement.premium.amount} {agreement.premium.currency}
-        </InfoText>
-      </InfoRow>
-      <InfoRow>
-        Number Co-insured: <InfoText>{agreement.numberCoInsured}</InfoText>
-      </InfoRow>
       {(isSwedishApartment(agreement) ||
         isSwedishHouse(agreement) ||
         isNorwegianHomeContent(agreement)) && (
         <>
-          <InfoRow>
-            Address:{' '}
-            <InfoText>
-              {agreement.address.street},{' '}
-              {formatPostalCode(agreement.address.postalCode)}{' '}
-              {agreement.address.city}
-            </InfoText>
-          </InfoRow>
+          <AddressInfoRow>{agreement.address.street}</AddressInfoRow>
+          <AddressInfoRow>
+            {formatPostalCode(agreement.address.postalCode)}{' '}
+            {agreement.address.city}
+          </AddressInfoRow>
+          <br />
           <InfoRow>
             Living Space:{' '}
             <InfoText>
@@ -85,6 +82,19 @@ export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
           })}
         </>
       )}
+      <InfoRow>
+        Number Co-insured: <InfoText>{agreement.numberCoInsured}</InfoText>
+      </InfoRow>
+      <InfoRow>
+        Line of Business:{' '}
+        <InfoText>{getEnumTitleCase(getLineOfBusiness(agreement))}</InfoText>
+      </InfoRow>
+      <InfoRow>
+        Premium:{' '}
+        <InfoText>
+          {agreement.premium.amount} {agreement.premium.currency}
+        </InfoText>
+      </InfoRow>
       <InfoRow>
         Status: <InfoText>{getEnumTitleCase(agreement.status)}</InfoText>
       </InfoRow>
