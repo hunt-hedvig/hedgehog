@@ -7,7 +7,11 @@ import {
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Spacing } from 'hedvig-ui/spacing'
-import { FourthLevelHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import {
+  FourthLevelHeadline,
+  Paragraph,
+  ThirdLevelHeadline,
+} from 'hedvig-ui/typography'
 import * as React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
@@ -42,13 +46,16 @@ export const FromDate: React.FunctionComponent<{
                 : 'Not set'}
             </FourthLevelHeadline>
           </Spacing>
-          <Button
-            variation={'primary'}
-            fullWidth
-            onClick={() => setDatePickerEnabled(true)}
-          >
-            Change
-          </Button>
+          {agreement.fromDate && !contract.isTerminated && (
+            <Button
+              variation={'primary'}
+              fullWidth
+              onClick={() => setDatePickerEnabled(true)}
+            >
+              Change
+            </Button>
+          )}
+          {contract.isTerminated && <Paragraph>Terminated</Paragraph>}
         </>
       )}
       {datePickerEnabled && (

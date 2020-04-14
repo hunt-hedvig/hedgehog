@@ -1663,7 +1663,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberCoInsured'
                   | 'squareMeters'
                 > & {
-                    norwegainHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
+                    norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
                   } & {
                     premium: { __typename?: 'MonetaryAmountV2' } & Pick<
                       MonetaryAmountV2,
@@ -2396,7 +2396,7 @@ export const GetContractsDocument = gql`
               amount
               currency
             }
-            norwegainHomeContentLineOfBusiness: lineOfBusiness
+            norwegianHomeContentLineOfBusiness: lineOfBusiness
             address {
               street
               postalCode
