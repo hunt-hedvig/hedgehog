@@ -73,10 +73,18 @@ type MutationType {
   ): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
-  activatePendingAgreement(contractId: ID!, request: ActivatePendingAgreementInput): Contract!
-  changeTerminationDate(contractId: ID!, request: ChangeTerminationDateInput): Contract!
+  activatePendingAgreement(
+    contractId: ID!
+    request: ActivatePendingAgreementInput
+  ): Contract!
+  changeTerminationDate(
+    contractId: ID!
+    request: ChangeTerminationDateInput
+  ): Contract!
   revertTermination(contractId: ID!): Contract!
-  createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
+  createNorwegianGripenPriceEngine(
+    request: CreateNorwegianGripenInput
+  ): Boolean!
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
@@ -85,6 +93,8 @@ type MutationType {
 type Contract {
   id: ID!
   holderMemberId: ID!
+  holderFirstName: String
+  holderLastName: String
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!
@@ -113,7 +123,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-  SwedishApartment
+    SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -122,7 +132,7 @@ interface AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
 }
@@ -131,19 +141,27 @@ type SwedishApartment implements AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
+  lineOfBusiness: SwedishApartmentLineOfBusiness!
   address: Address!
   numberCoInsured: Int!
   squareMeters: Int!
+}
+
+enum SwedishApartmentLineOfBusiness {
+  RENT
+  BRF
+  STUDENT_RENT
+  STUDENT_BRF
 }
 
 type SwedishHouse implements AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
   address: Address!
@@ -160,22 +178,36 @@ type NorwegianHomeContent implements AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
+  lineOfBusiness: NorwegianHomeContentLineOfBusiness!
   address: Address!
   numberCoInsured: Int!
   squareMeters: Int!
+}
+
+enum NorwegianHomeContentLineOfBusiness {
+  RENT
+  OWN
+  YOUTH_RENT
+  YOUTH_OWN
 }
 
 type NorwegianTravel implements AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
+  lineOfBusiness: NorwegianTravelLineOfBusiness!
   numberCoInsured: Int!
+}
+
+enum NorwegianTravelLineOfBusiness {
+  REGULAR
+  YOUTH
 }
 
 enum AgreementStatus {
@@ -800,7 +832,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1107,6 +1139,11 @@ enum NorwegianGripenFactorType {
   SQUARE_METERS
   HOUSEHOLD_TYPE
   DEDUCTIBLE
+}
+
+type MonetaryAmountV2 {
+  amount: String!
+  currency: String!
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`

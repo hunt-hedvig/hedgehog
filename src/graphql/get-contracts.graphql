@@ -3,6 +3,8 @@ query GetContracts($memberId: ID!) {
     contracts {
       id
       holderMemberId
+      holderFirstName
+      holderLastName
       switchedFrom
       masterInception
       status
@@ -17,6 +19,11 @@ query GetContracts($memberId: ID!) {
           toDate
           certificateUrl
           status
+          premium {
+            amount
+            currency
+          }
+          swedishApartmentLineOfBusiness: lineOfBusiness
           address {
             street
             postalCode
@@ -31,6 +38,10 @@ query GetContracts($memberId: ID!) {
           toDate
           certificateUrl
           status
+          premium {
+            amount
+            currency
+          }
           address {
             street
             postalCode
@@ -56,6 +67,11 @@ query GetContracts($memberId: ID!) {
           toDate
           certificateUrl
           status
+          premium {
+            amount
+            currency
+          }
+          norwegainHomeContentLineOfBusiness: lineOfBusiness
           address {
             street
             postalCode
@@ -70,6 +86,11 @@ query GetContracts($memberId: ID!) {
           toDate
           certificateUrl
           status
+          premium {
+            amount
+            currency
+          }
+          norwegianTravelLineOfBusiness: lineOfBusiness
           numberCoInsured
         }
       }

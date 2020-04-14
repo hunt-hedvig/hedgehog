@@ -190,7 +190,7 @@ export class AddEntryForm extends React.Component<
                   <Field component={TextField} label="Comment" name="comment" />
                   <Field
                     component={FormikDatePicker}
-                    label="From date"
+                    label="From Date"
                     type="date"
                     name="fromDate"
                   />

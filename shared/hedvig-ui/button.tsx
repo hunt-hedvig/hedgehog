@@ -5,11 +5,11 @@ export const ButtonsGroup = styled('div')({
   width: '100%',
   display: 'flex',
   flexDirection: 'row',
-  paddingTop: '1rem',
-  'button:not(:last-of-type)': {
+  justifyContent: 'center',
+  '*:not(:last-child)': {
     marginRight: '0.5rem',
   },
-  'button:not(:first-of-type)': {
+  '*:not(:first-child)': {
     marginLeft: '0.5rem',
   },
 })
@@ -23,6 +23,7 @@ export interface ButtonProps {
     | 'warning'
     | 'danger'
   fullWidth?: boolean
+  halfWidth?: boolean
   basic?: boolean
   size?: 'small' | 'medium' | 'large'
 }
@@ -82,7 +83,13 @@ export const buttonSizeMap: Record<
 }
 
 export const Button = styled('button')<ButtonProps>(
-  ({ variation = 'default', fullWidth, basic, size = 'medium' }) => ({
+  ({
+    variation = 'default',
+    fullWidth,
+    halfWidth,
+    basic,
+    size = 'medium',
+  }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -90,6 +97,7 @@ export const Button = styled('button')<ButtonProps>(
     fontSize: buttonSizeMap[size].fontSize,
     padding: buttonSizeMap[size].padding,
     width: fullWidth ? '100%' : 'auto',
+    minWidth: halfWidth ? '50%' : 'auto',
     background: basic ? 'transparent' : buttonColorMap[variation].background,
     color: basic
       ? buttonColorMap[variation].background
@@ -100,7 +108,7 @@ export const Button = styled('button')<ButtonProps>(
     cursor: 'pointer',
     '&:hover, &:focus': {
       outline: 'none',
-      colors: buttonColorMap[variation].foreground,
+      color: buttonColorMap[variation].foreground,
       background: buttonColorMap[variation].highlighted,
       borderColor: buttonColorMap[variation].highlighted,
     },
@@ -111,3 +119,5 @@ export const Button = styled('button')<ButtonProps>(
     },
   }),
 )
+
+export const ButtonLink = Button.withComponent('a')

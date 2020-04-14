@@ -110,7 +110,7 @@ export type AgreementCore = {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
 }
@@ -392,6 +392,8 @@ export type Contract = {
   __typename?: 'Contract'
   id: Scalars['ID']
   holderMemberId: Scalars['ID']
+  holderFirstName?: Maybe<Scalars['String']>
+  holderLastName?: Maybe<Scalars['String']>
   switchedFrom?: Maybe<Scalars['String']>
   masterInception?: Maybe<Scalars['LocalDate']>
   status: ContractStatus
@@ -706,6 +708,12 @@ export type MemberChargeApproval = {
   amount: Scalars['MonetaryAmount']
 }
 
+export type MonetaryAmountV2 = {
+  __typename?: 'MonetaryAmountV2'
+  amount: Scalars['String']
+  currency: Scalars['String']
+}
+
 export type MonthlySubscription = {
   __typename?: 'MonthlySubscription'
   amount?: Maybe<Scalars['MonetaryAmount']>
@@ -954,12 +962,20 @@ export type NorwegianHomeContent = AgreementCore & {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
+  lineOfBusiness: NorwegianHomeContentLineOfBusiness
   address: Address
   numberCoInsured: Scalars['Int']
   squareMeters: Scalars['Int']
+}
+
+export enum NorwegianHomeContentLineOfBusiness {
+  Rent = 'RENT',
+  Own = 'OWN',
+  YouthRent = 'YOUTH_RENT',
+  YouthOwn = 'YOUTH_OWN',
 }
 
 export type NorwegianTravel = AgreementCore & {
@@ -967,10 +983,16 @@ export type NorwegianTravel = AgreementCore & {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
+  lineOfBusiness: NorwegianTravelLineOfBusiness
   numberCoInsured: Scalars['Int']
+}
+
+export enum NorwegianTravelLineOfBusiness {
+  Regular = 'REGULAR',
+  Youth = 'YOUTH',
 }
 
 export type NotCoveredClaim = {
@@ -1213,12 +1235,20 @@ export type SwedishApartment = AgreementCore & {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
+  lineOfBusiness: SwedishApartmentLineOfBusiness
   address: Address
   numberCoInsured: Scalars['Int']
   squareMeters: Scalars['Int']
+}
+
+export enum SwedishApartmentLineOfBusiness {
+  Rent = 'RENT',
+  Brf = 'BRF',
+  StudentRent = 'STUDENT_RENT',
+  StudentBrf = 'STUDENT_BRF',
 }
 
 export type SwedishHouse = AgreementCore & {
@@ -1226,7 +1256,7 @@ export type SwedishHouse = AgreementCore & {
   id: Scalars['ID']
   fromDate?: Maybe<Scalars['LocalDate']>
   toDate?: Maybe<Scalars['LocalDate']>
-  basePremium: Scalars['MonetaryAmount']
+  premium: MonetaryAmountV2
   certificateUrl?: Maybe<Scalars['String']>
   status: AgreementStatus
   address: Address
@@ -1485,8 +1515,21 @@ export type ActivatePendingAgreementMutationVariables = {
 export type ActivatePendingAgreementMutation = {
   __typename?: 'MutationType'
 } & {
-  activatePendingAgreement: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+  activatePendingAgreement: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId'
+  >
 }
+
+export type ChangeFromDateMutationVariables = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeFromDateInput>
+}
+
+export type ChangeFromDateMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'changeFromDate'
+>
 
 export type ChangeTerminationDateMutationVariables = {
   contractId: Scalars['ID']
@@ -1494,8 +1537,21 @@ export type ChangeTerminationDateMutationVariables = {
 }
 
 export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
-  changeTerminationDate: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+  changeTerminationDate: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId'
+  >
 }
+
+export type ChangeToDateMutationVariables = {
+  agreementId: Scalars['ID']
+  request?: Maybe<ChangeToDateInput>
+}
+
+export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'changeToDate'
+>
 
 export type GetContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
@@ -1526,6 +1582,8 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
           Contract,
           | 'id'
           | 'holderMemberId'
+          | 'holderFirstName'
+          | 'holderLastName'
           | 'switchedFrom'
           | 'masterInception'
           | 'status'
@@ -1551,6 +1609,12 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberCoInsured'
                   | 'squareMeters'
                 > & {
+                    swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
+                  } & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
                     address: { __typename?: 'Address' } & Pick<
                       Address,
                       'street' | 'postalCode' | 'city'
@@ -1570,6 +1634,10 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberOfBathrooms'
                   | 'isSubleted'
                 > & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
                     address: { __typename?: 'Address' } & Pick<
                       Address,
                       'street' | 'postalCode' | 'city'
@@ -1595,6 +1663,12 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberCoInsured'
                   | 'squareMeters'
                 > & {
+                    norwegainHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
+                  } & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
                     address: { __typename?: 'Address' } & Pick<
                       Address,
                       'street' | 'postalCode' | 'city'
@@ -1608,7 +1682,14 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'certificateUrl'
                   | 'status'
                   | 'numberCoInsured'
-                >)
+                > & {
+                    norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
+                  } & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  })
             >
             renewal: Maybe<
               { __typename?: 'Renewal' } & Pick<
@@ -1685,7 +1766,10 @@ export type RevertTerminationMutationVariables = {
 }
 
 export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
-  revertTermination: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+  revertTermination: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId'
+  >
 }
 
 export type TerminateContractMutationVariables = {
@@ -1694,7 +1778,10 @@ export type TerminateContractMutationVariables = {
 }
 
 export type TerminateContractMutation = { __typename?: 'MutationType' } & {
-  terminateContract: { __typename?: 'Contract' } & Pick<Contract, 'id'>
+  terminateContract: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId'
+  >
 }
 
 export const MemberNameAndContractMarketInfoDocument = gql`
@@ -1975,6 +2062,7 @@ export const ActivatePendingAgreementDocument = gql`
   ) {
     activatePendingAgreement(contractId: $contractId, request: $request) {
       id
+      holderMemberId
     }
   }
 `
@@ -2022,6 +2110,55 @@ export type ActivatePendingAgreementMutationOptions = ApolloReactCommon.BaseMuta
   ActivatePendingAgreementMutation,
   ActivatePendingAgreementMutationVariables
 >
+export const ChangeFromDateDocument = gql`
+  mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
+    changeFromDate(agreementId: $agreementId, request: $request)
+  }
+`
+export type ChangeFromDateMutationFn = ApolloReactCommon.MutationFunction<
+  ChangeFromDateMutation,
+  ChangeFromDateMutationVariables
+>
+
+/**
+ * __useChangeFromDateMutation__
+ *
+ * To run a mutation, you first call `useChangeFromDateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeFromDateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeFromDateMutation, { data, loading, error }] = useChangeFromDateMutation({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useChangeFromDateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ChangeFromDateMutation,
+    ChangeFromDateMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ChangeFromDateMutation,
+    ChangeFromDateMutationVariables
+  >(ChangeFromDateDocument, baseOptions)
+}
+export type ChangeFromDateMutationHookResult = ReturnType<
+  typeof useChangeFromDateMutation
+>
+export type ChangeFromDateMutationResult = ApolloReactCommon.MutationResult<
+  ChangeFromDateMutation
+>
+export type ChangeFromDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ChangeFromDateMutation,
+  ChangeFromDateMutationVariables
+>
 export const ChangeTerminationDateDocument = gql`
   mutation ChangeTerminationDate(
     $contractId: ID!
@@ -2029,6 +2166,7 @@ export const ChangeTerminationDateDocument = gql`
   ) {
     changeTerminationDate(contractId: $contractId, request: $request) {
       id
+      holderMemberId
     }
   }
 `
@@ -2075,6 +2213,55 @@ export type ChangeTerminationDateMutationResult = ApolloReactCommon.MutationResu
 export type ChangeTerminationDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeTerminationDateMutation,
   ChangeTerminationDateMutationVariables
+>
+export const ChangeToDateDocument = gql`
+  mutation ChangeToDate($agreementId: ID!, $request: ChangeToDateInput) {
+    changeToDate(agreementId: $agreementId, request: $request)
+  }
+`
+export type ChangeToDateMutationFn = ApolloReactCommon.MutationFunction<
+  ChangeToDateMutation,
+  ChangeToDateMutationVariables
+>
+
+/**
+ * __useChangeToDateMutation__
+ *
+ * To run a mutation, you first call `useChangeToDateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeToDateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeToDateMutation, { data, loading, error }] = useChangeToDateMutation({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useChangeToDateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ChangeToDateMutation,
+    ChangeToDateMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ChangeToDateMutation,
+    ChangeToDateMutationVariables
+  >(ChangeToDateDocument, baseOptions)
+}
+export type ChangeToDateMutationHookResult = ReturnType<
+  typeof useChangeToDateMutation
+>
+export type ChangeToDateMutationResult = ApolloReactCommon.MutationResult<
+  ChangeToDateMutation
+>
+export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ChangeToDateMutation,
+  ChangeToDateMutationVariables
 >
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
@@ -2141,6 +2328,8 @@ export const GetContractsDocument = gql`
       contracts {
         id
         holderMemberId
+        holderFirstName
+        holderLastName
         switchedFrom
         masterInception
         status
@@ -2155,6 +2344,11 @@ export const GetContractsDocument = gql`
             toDate
             certificateUrl
             status
+            premium {
+              amount
+              currency
+            }
+            swedishApartmentLineOfBusiness: lineOfBusiness
             address {
               street
               postalCode
@@ -2169,6 +2363,10 @@ export const GetContractsDocument = gql`
             toDate
             certificateUrl
             status
+            premium {
+              amount
+              currency
+            }
             address {
               street
               postalCode
@@ -2194,6 +2392,11 @@ export const GetContractsDocument = gql`
             toDate
             certificateUrl
             status
+            premium {
+              amount
+              currency
+            }
+            norwegainHomeContentLineOfBusiness: lineOfBusiness
             address {
               street
               postalCode
@@ -2208,6 +2411,11 @@ export const GetContractsDocument = gql`
             toDate
             certificateUrl
             status
+            premium {
+              amount
+              currency
+            }
+            norwegianTravelLineOfBusiness: lineOfBusiness
             numberCoInsured
           }
         }
@@ -2371,6 +2579,7 @@ export const RevertTerminationDocument = gql`
   mutation RevertTermination($contractId: ID!) {
     revertTermination(contractId: $contractId) {
       id
+      holderMemberId
     }
   }
 `
@@ -2424,6 +2633,7 @@ export const TerminateContractDocument = gql`
   ) {
     terminateContract(contractId: $contractId, request: $request) {
       id
+      holderMemberId
     }
   }
 `

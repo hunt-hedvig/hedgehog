@@ -60,16 +60,18 @@ const TerminationDateComponent: React.FunctionComponent<{
       <>
         {!datePickerEnabled && (
           <>
-            <FourthLevelHeadline>
-              {contract.terminationDate}
-            </FourthLevelHeadline>
+            <Spacing bottom width={'auto'}>
+              <FourthLevelHeadline>
+                {contract.terminationDate}
+              </FourthLevelHeadline>
+            </Spacing>
             <ButtonsGroup>
               <Button
                 fullWidth
                 variation={'secondary'}
                 onClick={() => setDatePickerEnabled(true)}
               >
-                Change termination date
+                Change
               </Button>
               <Button
                 fullWidth
@@ -99,7 +101,7 @@ const TerminationDateComponent: React.FunctionComponent<{
                   }
                 }}
               >
-                Revert termination
+                Revert
               </Button>
             </ButtonsGroup>
           </>
@@ -144,7 +146,7 @@ const TerminationDateComponent: React.FunctionComponent<{
                   }
                 }}
               >
-                Change
+                Confirm
               </Button>
               <Button fullWidth onClick={() => reset()}>
                 Cancel
@@ -158,7 +160,11 @@ const TerminationDateComponent: React.FunctionComponent<{
   return (
     <>
       {!datePickerEnabled && (
-        <Button variation={'danger'} onClick={() => setDatePickerEnabled(true)}>
+        <Button
+          halfWidth
+          variation={'danger'}
+          onClick={() => setDatePickerEnabled(true)}
+        >
           Terminate contract
         </Button>
       )}
@@ -170,7 +176,7 @@ const TerminationDateComponent: React.FunctionComponent<{
             placeholder={'Termination reason'}
             setValue={setTerminationReason}
           />
-          <Spacing top>
+          <Spacing top bottom>
             <TextArea
               placeholder={'Comment on the reason of termination...'}
               value={comment}

@@ -7,7 +7,7 @@ import InsuranceListTab from 'components/member/tabs/InsuranceListTab'
 import InsuranceTab from 'components/member/tabs/InsuranceTab'
 import PaymentsTab from 'components/member/tabs/PaymentsTab'
 import { Quotes } from 'components/member/tabs/quote-tab'
-import { Contracts } from 'components/member/tabs/contract-tab'
+import { ContractTab } from 'components/member/tabs/contracts-tab'
 import { CreateTicketStandAlone } from 'components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 
 import PropTypes from 'prop-types'
@@ -31,7 +31,7 @@ const TabItem = ({ props, TabContent }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
   return (
     <TabContainer>
-      <TabContent {...props} contractMarketInfo={contractMarketInfo}/>
+      <TabContent {...props} contractMarketInfo={contractMarketInfo} />
     </TabContainer>
   )
 }
@@ -49,21 +49,15 @@ const memberPagePanes = (props, addMessage, socket) => {
   const panes = [
     {
       menuItem: 'Member',
-      render: () => (
-        <TabItem props={props} TabContent={DetailsTab} />
-      ),
+      render: () => <TabItem props={props} TabContent={DetailsTab} />,
     },
     {
       menuItem: 'Claims',
-      render: () => (
-        <TabItem props={props} TabContent={ClaimsTab} />
-      ),
+      render: () => <TabItem props={props} TabContent={ClaimsTab} />,
     },
     {
       menuItem: 'Files',
-      render: () => (
-        <TabItem props={props} TabContent={MemberFile} />
-      ),
+      render: () => <TabItem props={props} TabContent={MemberFile} />,
     },
     {
       menuItem: 'Tickets',
@@ -75,7 +69,7 @@ const memberPagePanes = (props, addMessage, socket) => {
             ticketType: 'REMIND',
           }}
           TabContent={CreateTicketStandAlone}
-        /> // FIXME: Send props like other locations
+        />
       ),
     },
   ]
@@ -95,10 +89,7 @@ const memberPagePanes = (props, addMessage, socket) => {
     {
       menuItem: 'Contracts',
       render: () => (
-        <TabItem
-          props={{ ...props, memberId }}
-          TabContent={Contracts}
-        />
+        <TabItem props={{ ...props, memberId }} TabContent={ContractTab} />
       ),
     },
     {
@@ -112,21 +103,11 @@ const memberPagePanes = (props, addMessage, socket) => {
     panes.push(
       {
         menuItem: 'Current Insurance',
-        render: () => (
-          <TabItem
-            props={props}
-            TabContent={InsuranceTab}
-          />
-        ),
+        render: () => <TabItem props={props} TabContent={InsuranceTab} />,
       },
       {
         menuItem: 'All Insurances',
-        render: () => (
-          <TabItem
-            props={props}
-            TabContent={InsuranceListTab}
-          />
-        ),
+        render: () => <TabItem props={props} TabContent={InsuranceListTab} />,
       },
     )
   }
@@ -140,17 +121,16 @@ const memberPagePanes = (props, addMessage, socket) => {
     {
       menuItem: 'Account',
       render: () => (
-        <TabItem memberId={memberId} props={{...props, memberId}} TabContent={AccountTab} />
+        <TabItem
+          memberId={memberId}
+          props={{ ...props, memberId }}
+          TabContent={AccountTab}
+        />
       ),
     },
     {
       menuItem: 'Debt',
-      render: () => (
-        <TabItem
-          props={props}
-          TabContent={MemberDebtComponent}
-        />
-      ),
+      render: () => <TabItem props={props} TabContent={MemberDebtComponent} />,
     },
   )
 
