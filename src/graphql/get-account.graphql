@@ -1,0 +1,44 @@
+query GetAccount($memberId: ID!) {
+  member(id: $memberId) {
+    account {
+      id
+      currentBalance {
+        amount
+        currency
+      }
+      totalBalance {
+        amount
+        currency
+      }
+      chargeEstimation {
+        subscription {
+          amount
+          currency
+        }
+        discountCodes
+        charge {
+          amount
+          currency
+        }
+        discount {
+          amount
+          currency
+        }
+      }
+      entries {
+        id
+        amount {
+          amount
+          currency
+        }
+        fromDate
+        title
+        source
+        reference
+        type
+        failedAt
+        chargedAt
+      }
+    }
+  }
+}

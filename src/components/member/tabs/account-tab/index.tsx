@@ -9,47 +9,15 @@ import {
   TableHead,
   TableRow,
   Typography,
-  withStyles,
 } from '@material-ui/core'
 import { ExpandMoreOutlined } from '@material-ui/icons'
-import { ContractMarketInfo, Market } from 'api/generated/graphql'
-import { gql } from 'apollo-boost'
+import { ContractMarketInfo } from 'api/generated/graphql'
 import { AddEntryForm } from 'components/member/tabs/account-tab/add-entry-form'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/backfill-subscriptions-button'
-import { formatMoneySE } from 'lib/intl'
+import { useGetAccount } from 'graphql/use-get-account'
 import * as React from 'react'
-import { Query } from 'react-apollo'
 import styled from 'react-emotion'
-
-export const GET_MEMBER_ACCOUNT_QUERY = gql`
-  query GetMemberAccount($memberId: ID!) {
-    member(id: $memberId) {
-      firstName
-      account {
-        id
-        currentBalance
-        totalBalance
-        chargeEstimation {
-          subscription
-          discountCodes
-          charge
-          discount
-        }
-        entries {
-          id
-          amount
-          fromDate
-          title
-          source
-          reference
-          type
-          failedAt
-          chargedAt
-        }
-      }
-    }
-  }
-`
+import { formatMoney } from 'utils/money'
 
 export interface AccountTabProps {
   memberId: string
@@ -67,106 +35,89 @@ const TableRowColored = styled(TableRow)(({ entry }: { entry }) => {
   }
 })
 
-const TableCell = withStyles({
-  root: {
-    fontSize: '1rem',
-  },
-})(MuiTableCell)
+const TableCell = styled(MuiTableCell)({
+  fontSize: '1rem',
+})
 
 export const AccountTab: React.FC<AccountTabProps> = ({
   memberId,
   contractMarketInfo,
   showNotification,
 }) => {
-  // FIXME: We should not make market specific features like this, should use NOK vs. SEK etc.
-  if (contractMarketInfo.market === Market.Norway) {
-    return <>Not available for Norway</>
+  const [account, { loading }] = useGetAccount(memberId)
+  if (loading) {
+    return <>Loading...</>
+  }
+  if (!account) {
+    return <>No account found :(</>
   }
   return (
-    <Query
-      query={GET_MEMBER_ACCOUNT_QUERY}
-      variables={{ memberId }}
-      pollInterval={2000}
-    >
-      {({ data, loading }) => {
-        if (!data || loading) {
-          return <>loading</>
-        }
-        return (
-          <>
-            <h3>
-              Balance (current month):{' '}
-              {formatMoneySE(data.member.account.currentBalance)}
-            </h3>
-            <h3>
-              Balance (total): {formatMoneySE(data.member.account.totalBalance)}
-            </h3>
-            <h3>Upcoming charge information:</h3>
-            <p>
-              <b>Total discount amount:</b>{' '}
-              {formatMoneySE(data.member.account.chargeEstimation.discount)}
-            </p>
-            <p>
-              <b>Subscription charge:</b>{' '}
-              {formatMoneySE(data.member.account.chargeEstimation.subscription)}
-            </p>
-            <p>
-              <b>Discount references:</b>{' '}
-              {data.member.account.chargeEstimation.discountCodes}
-            </p>
-            <h5>
-              Total charge next month:{' '}
-              {formatMoneySE(data.member.account.chargeEstimation.charge)}
-            </h5>
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
-                <Typography>Add entry</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <AddEntryForm
-                  memberId={memberId}
-                  firstName={data.member.firstName}
-                  showNotification={showNotification}
-                />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <Paper>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Type</TableCell>
-                    <TableCell>Title</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.member.account.entries.map((entry) => (
-                    <TableRowColored key={entry.id} entry={entry}>
-                      <TableCell>{entry.fromDate}</TableCell>
-                      <TableCell>{entry.type.toLowerCase()}</TableCell>
-                      <TableCell>
-                        {entry.id}
-                        <br />
-                        {entry.title
-                          ? entry.title
-                          : `${entry.reference} (${entry.source})`}
-                      </TableCell>
-                      <TableCell align="right">
-                        <strong>{formatMoneySE(entry.amount)}</strong>
-                      </TableCell>
-                    </TableRowColored>
-                  ))}
-                </TableBody>
-              </Table>
-            </Paper>
-            <BackfillSubscriptionsButton
-              memberId={memberId}
-              showNotification={showNotification}
-            />
-          </>
-        )
-      }}
-    </Query>
+    <>
+      <h3>Balance (current month): {formatMoney(account.currentBalance)}</h3>
+      <h3>Balance (total): {formatMoney(account.totalBalance)}</h3>
+      <h3>Upcoming charge information:</h3>
+      <p>
+        <b>Total discount amount:</b>{' '}
+        {formatMoney(account.chargeEstimation.discount)}
+      </p>
+      <p>
+        <b>Subscription charge:</b>{' '}
+        {formatMoney(account.chargeEstimation.subscription)}
+      </p>
+      <p>
+        <b>Discount references:</b> {account.chargeEstimation.discountCodes}
+      </p>
+      <h5>
+        Total charge next month: {formatMoney(account.chargeEstimation.charge)}
+      </h5>
+      <ExpansionPanel>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
+          <Typography>Add entry</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <AddEntryForm
+            memberId={memberId}
+            preferredCurrency={contractMarketInfo.preferredCurrency}
+            showNotification={showNotification}
+          />
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+      <Paper>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell align="right">Amount</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {account.entries.map((entry) => (
+              <TableRowColored key={entry.id} entry={entry}>
+                <TableCell>{entry.fromDate}</TableCell>
+                <TableCell>{entry.type.toLowerCase()}</TableCell>
+                <TableCell>
+                  {entry.id}
+                  <br />
+                  {entry.title
+                    ? entry.title
+                    : `${entry.reference} (${entry.source})`}
+                </TableCell>
+                <TableCell align="right">
+                  <strong>
+                    {entry.amount.amount} {entry.amount.currency}
+                  </strong>
+                </TableCell>
+              </TableRowColored>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
+      <BackfillSubscriptionsButton
+        memberId={memberId}
+        showNotification={showNotification}
+      />
+    </>
   )
 }

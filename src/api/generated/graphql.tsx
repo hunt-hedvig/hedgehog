@@ -39,17 +39,17 @@ export type AccidentalDamageClaim = {
 export type Account = {
   __typename?: 'Account'
   id: Scalars['ID']
-  currentBalance: Scalars['MonetaryAmount']
-  totalBalance: Scalars['MonetaryAmount']
+  currentBalance: MonetaryAmountV2
+  totalBalance: MonetaryAmountV2
   chargeEstimation: AccountChargeEstimation
   entries: Array<AccountEntry>
 }
 
 export type AccountChargeEstimation = {
   __typename?: 'AccountChargeEstimation'
-  subscription: Scalars['MonetaryAmount']
-  discount: Scalars['MonetaryAmount']
-  charge: Scalars['MonetaryAmount']
+  subscription: MonetaryAmountV2
+  discount: MonetaryAmountV2
+  charge: MonetaryAmountV2
   discountCodes: Array<Scalars['String']>
 }
 
@@ -57,7 +57,7 @@ export type AccountEntry = {
   __typename?: 'AccountEntry'
   id: Scalars['ID']
   type: AccountEntryType
-  amount: Scalars['MonetaryAmount']
+  amount: MonetaryAmountV2
   fromDate: Scalars['LocalDate']
   reference: Scalars['String']
   source: Scalars['String']
@@ -1558,6 +1558,63 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   'changeToDate'
 >
 
+export type GetAccountQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetAccountQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'firstName'> & {
+        account: Maybe<
+          { __typename?: 'Account' } & Pick<Account, 'id'> & {
+              currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              chargeEstimation: {
+                __typename?: 'AccountChargeEstimation'
+              } & Pick<AccountChargeEstimation, 'discountCodes'> & {
+                  subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  charge: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  discount: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                }
+              entries: Array<
+                { __typename?: 'AccountEntry' } & Pick<
+                  AccountEntry,
+                  | 'id'
+                  | 'fromDate'
+                  | 'title'
+                  | 'source'
+                  | 'reference'
+                  | 'type'
+                  | 'failedAt'
+                  | 'chargedAt'
+                > & {
+                    amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
+      }
+  >
+}
+
 export type GetContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -2275,6 +2332,100 @@ export type ChangeToDateMutationResult = ApolloReactCommon.MutationResult<
 export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
+>
+export const GetAccountDocument = gql`
+  query GetAccount($memberId: ID!) {
+    member(id: $memberId) {
+      firstName
+      account {
+        id
+        currentBalance {
+          amount
+          currency
+        }
+        totalBalance {
+          amount
+          currency
+        }
+        chargeEstimation {
+          subscription {
+            amount
+            currency
+          }
+          discountCodes
+          charge {
+            amount
+            currency
+          }
+          discount {
+            amount
+            currency
+          }
+        }
+        entries {
+          id
+          amount {
+            amount
+            currency
+          }
+          fromDate
+          title
+          source
+          reference
+          type
+          failedAt
+          chargedAt
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetAccountQuery__
+ *
+ * To run a query within a React component, call `useGetAccountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAccountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAccountQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetAccountQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetAccountQuery,
+    GetAccountQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetAccountQuery, GetAccountQueryVariables>(
+    GetAccountDocument,
+    baseOptions,
+  )
+}
+export function useGetAccountLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetAccountQuery,
+    GetAccountQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetAccountQuery,
+    GetAccountQueryVariables
+  >(GetAccountDocument, baseOptions)
+}
+export type GetAccountQueryHookResult = ReturnType<typeof useGetAccountQuery>
+export type GetAccountLazyQueryHookResult = ReturnType<
+  typeof useGetAccountLazyQuery
+>
+export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
+  GetAccountQuery,
+  GetAccountQueryVariables
 >
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {

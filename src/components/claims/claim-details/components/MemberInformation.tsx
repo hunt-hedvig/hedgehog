@@ -2,10 +2,10 @@ import { Member, SanctionStatus } from 'api/generated/graphql'
 import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
-import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
+import { formatMoney } from 'utils/money'
 
 import {
   Ban,
@@ -82,7 +82,8 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
       </p>
       <p>
         <b>Payments Balance (Minimum):</b>{' '}
-        {formatMoneySE(member.account?.totalBalance)}
+        {member.account?.totalBalance &&
+          formatMoney(member.account.totalBalance)}
       </p>
       <p>
         <b>Failed Payments:</b>{' '}
