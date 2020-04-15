@@ -89,7 +89,9 @@ const MemberTransactionsTable = ({ transactions }) => (
         <TableRowColored key={transaction.id} transaction={transaction}>
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
-            <strong>{transaction.amount.amount} {transaction.amount.currency}</strong>
+            <strong>
+              {transaction.amount.amount} {transaction.amount.currency}
+            </strong>
           </Table.Cell>
           <Table.Cell>
             {moment(transaction.timestamp).format('YYYY-MM-DD HH:mm:ss')}

@@ -73,10 +73,18 @@ type MutationType {
   ): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
-  activatePendingAgreement(contractId: ID!, request: ActivatePendingAgreementInput): Contract!
-  changeTerminationDate(contractId: ID!, request: ChangeTerminationDateInput): Contract!
+  activatePendingAgreement(
+    contractId: ID!
+    request: ActivatePendingAgreementInput
+  ): Contract!
+  changeTerminationDate(
+    contractId: ID!
+    request: ChangeTerminationDateInput
+  ): Contract!
   revertTermination(contractId: ID!): Contract!
-  createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
+  createNorwegianGripenPriceEngine(
+    request: CreateNorwegianGripenInput
+  ): Boolean!
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
@@ -116,7 +124,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-  SwedishApartment
+    SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -825,7 +833,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1135,7 +1143,7 @@ enum NorwegianGripenFactorType {
 }
 
 type MonetaryAmountV2 {
-  amount: String!,
+  amount: String!
   currency: String!
 }
 
