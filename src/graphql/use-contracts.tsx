@@ -22,8 +22,11 @@ export const useContracts = (memberId: string): ContractReturnTuple => {
     variables: { memberId },
   })
   const contracts = (queryResult.data?.member?.contracts ?? []) as Contract[]
-  return [contracts, queryResult]
+  return [contracts.sort(compareContracts), queryResult]
 }
+
+const compareContracts = (a: Contract, b: Contract) =>
+  a.createdAt < b.createdAt ? 1 : -1
 
 export const withRefetchContracts = <
   TData extends any,
