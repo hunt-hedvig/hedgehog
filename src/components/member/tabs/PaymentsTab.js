@@ -8,6 +8,7 @@ import { Checkmark, Cross } from 'components/icons'
 import PayoutDetails from 'components/payouts/payout-details'
 import styled from 'react-emotion'
 import { Market } from 'api/generated/graphql'
+import { formatMoney } from '../../../utils/money'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -74,7 +75,6 @@ const TableRowColored = styled(Table.Row)(({ transaction }) => {
 })
 
 const MemberTransactionsTable = ({ transactions }) => (
-  // FIXME: Use formatMoney below when available
   <Table celled compact>
     <Table.Header>
       <Table.Row>
@@ -91,7 +91,7 @@ const MemberTransactionsTable = ({ transactions }) => (
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
             <strong>
-              {transaction.amount.amount} {transaction.amount.currency}
+              {formatMoney(transaction.amount)}
             </strong>
           </Table.Cell>
           <Table.Cell>
@@ -179,7 +179,6 @@ class PaymentsTab extends React.Component {
                     <Cross />
                   )}
                 </p>
-                <h3>Charge:</h3>
                 {data.member.directDebitStatus.activated && (
                   <Mutation
                     mutation={CHARGE_MEMBER_MUTATION}
@@ -187,6 +186,7 @@ class PaymentsTab extends React.Component {
                   >
                     {(chargeMember) => (
                       <div>
+                        <h3>Charge:</h3>
                         <Form>
                           <Form.Input
                             onChange={this.handleChange}
