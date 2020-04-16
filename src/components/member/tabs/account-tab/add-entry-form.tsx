@@ -5,10 +5,10 @@ import { FieldSelect } from 'components/shared/inputs/FieldSelect'
 import { TextField as MuiTextField } from 'components/shared/inputs/TextField'
 import { format, startOfDay } from 'date-fns'
 import { Field, Form as FormikForm, Formik } from 'formik'
-import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { formatMoney } from 'utils/money'
 import * as yup from 'yup'
 
 const ADD_ACCOUNT_ENTRY_MUTATION = gql`
@@ -21,10 +21,6 @@ const ADD_ACCOUNT_ENTRY_MUTATION = gql`
     }
   }
 `
-
-interface State {
-  confirmed: boolean
-}
 
 export const SubmitButton = withStyles({
   root: {
@@ -83,179 +79,186 @@ const getValidationSchema = () =>
     fromDate: yup.date().min(startOfDay(new Date())),
   })
 
-export class AddEntryForm extends React.Component<
-  {
-    memberId: string
-    firstName: string
-    showNotification: (data: any) => void
-  },
-  State
-> {
-  public state = {
-    confirmed: false,
-  }
+export const AddEntryForm: React.FC<{
+  memberId: string
+  preferredCurrency: string
+  showNotification: (data: any) => void
+}> = ({ memberId, preferredCurrency, showNotification }) => {
+  const [confirmed, setConfirmed] = React.useState<boolean>(false)
 
-  public render() {
-    return (
-      <Mutation mutation={ADD_ACCOUNT_ENTRY_MUTATION}>
-        {(mutation, { loading }) => (
-          <Formik
-            initialValues={{
-              type: '',
-              amount: '',
-              reference: '',
-              source: '',
-              title: '',
-              comment: '',
-              fromDate: new Date(),
-            }}
-            onSubmit={(formData: any, { resetForm }) => {
-              if (!this.state.confirmed || loading) {
-                return
-              }
+  return (
+    <Mutation mutation={ADD_ACCOUNT_ENTRY_MUTATION}>
+      {(mutation, { loading }) => (
+        <Formik
+          initialValues={{
+            type: '',
+            amount: '',
+            reference: '',
+            source: '',
+            title: '',
+            comment: '',
+            fromDate: new Date(),
+          }}
+          onSubmit={(formData: any, { resetForm }) => {
+            if (!confirmed || loading) {
+              return
+            }
 
-              mutation({
-                variables: {
-                  memberId: this.props.memberId,
-                  accountEntry: {
-                    type: formData.type,
-                    amount: {
-                      amount: parseAmount(formData.amount),
-                      currency: 'SEK',
-                    },
-                    fromDate: format(formData.fromDate, 'yyyy-MM-dd'),
-                    reference: formData.reference,
-                    source: formData.source,
-                    title: formData.title,
-                    comment: formData.comment,
+            mutation({
+              variables: {
+                memberId,
+                accountEntry: {
+                  type: formData.type,
+                  amount: {
+                    amount: parseAmount(formData.amount),
+                    currency: preferredCurrency,
                   },
+                  fromDate: format(formData.fromDate, 'yyyy-MM-dd'),
+                  reference: formData.reference,
+                  source: formData.source,
+                  title: formData.title,
+                  comment: formData.comment,
                 },
+              },
+            })
+              .then(() => {
+                showNotification({
+                  message: 'Account entry added.',
+                  header: 'Success',
+                  type: 'olive',
+                })
+                resetForm()
+                setConfirmed(false)
               })
-                .then(() => {
-                  this.props.showNotification({
-                    message: 'Account entry added.',
-                    header: 'Success',
-                    type: 'olive',
-                  })
-                  resetForm()
-                  this.resetConfirmed()
+              .catch((error) => {
+                showNotification({
+                  message: error.message,
+                  header: 'Error',
+                  type: 'red',
                 })
-                .catch((error) => {
-                  this.props.showNotification({
-                    message: error.message,
-                    header: 'Error',
-                    type: 'red',
-                  })
 
-                  throw error
-                })
-            }}
-            validationSchema={getValidationSchema()}
-          >
-            {({ values, isValid }) => {
-              const parsedAmount = parseAmount(values.amount)
+                throw error
+              })
+          }}
+          validationSchema={getValidationSchema()}
+        >
+          {({ values, isValid }) => {
+            const parsedAmount = parseAmount(values.amount)
 
-              return (
-                <Form onChange={this.resetConfirmed}>
-                  <Field component={FieldSelect} name="type">
-                    <MenuItem value="CAMPAIGN">Campaign</MenuItem>
-                    <MenuItem value="SUBSCRIPTION">Subscription</MenuItem>
-                    <MenuItem value="LOSS">Loss</MenuItem>
-                    <MenuItem value="CHARGE">Charge</MenuItem>
-                  </Field>
-                  <Field
-                    component={TextField}
-                    label="Amount"
-                    type="number"
-                    name="amount"
-                  />
-                  <Field
-                    component={TextField}
-                    label="Reference"
-                    name="reference"
-                    placeholder="123123"
-                  />
-                  <Field
-                    component={TextField}
-                    label="Source"
-                    name="source"
-                    placeholder="Member"
-                  />
-                  <Field
-                    component={TextField}
-                    label="Title"
-                    name="title"
-                    placeholder="Återbetalning dubbeldragning"
-                  />
-                  <Field component={TextField} label="Comment" name="comment" />
-                  <Field
-                    component={FormikDatePicker}
-                    label="From Date"
-                    type="date"
-                    name="fromDate"
-                  />
+            return (
+              <Form onChange={() => setConfirmed(false)}>
+                <Field component={FieldSelect} name="type">
+                  <MenuItem value="CAMPAIGN">
+                    <strong>Campaign</strong>: The member owes/will owe us money
+                    but we want to pay for it with marketing budget
+                  </MenuItem>
+                  <MenuItem value="SUBSCRIPTION">
+                    <strong>Subscription</strong>: The member should owe us more
+                    money, e.g. object insurance, travel insurance, incorrectly
+                    fetched premiums
+                  </MenuItem>
+                  <MenuItem value="LOSS">
+                    <strong>Loss</strong>: The member owes us money we will
+                    never get, e.g. the member terminated its insurance or we
+                    had a too early start date
+                  </MenuItem>
+                  <MenuItem value="CORRECTION">
+                    <strong>Correction</strong>: A calculation is incorrect
+                    (should hopefully never have to be used)
+                  </MenuItem>
+                </Field>
+                <Field
+                  component={TextField}
+                  label="Amount"
+                  type="number"
+                  name="amount"
+                />
+                <Field
+                  component={TextField}
+                  label="Source"
+                  name="source"
+                  placeholder="(Required) This is where we look when we want to know the source, e.g. travel insurance, object insurance, marketing, IEX"
+                />
+                <Field
+                  component={TextField}
+                  label="Reference"
+                  name="reference"
+                  placeholder="(Required) This is what we look at when we want to know which source this is referring to, e.g. object insurance id, campaign code, member ID"
+                />
+                <Field
+                  component={TextField}
+                  label="Title"
+                  name="title"
+                  placeholder="(Optional) If this is to be shown in the app at a later point, this is the title of the entry"
+                />
+                <Field
+                  component={TextField}
+                  label="Comment"
+                  name="comment"
+                  placeholder="(Optional) Notes on what happened, maybe a calculation or statement on what happened"
+                />
+                <Field
+                  component={FormikDatePicker}
+                  label="From Date"
+                  type="date"
+                  name="fromDate"
+                />
 
-                  <BottomRowWrapper>
-                    <div>
-                      {!isNaN(parsedAmount) &&
-                        parsedAmount !== 0 &&
-                        (parsedAmount < 0 ? (
-                          <>
-                            {this.props.firstName} will owe us{' '}
-                            {formatMoneySE({
-                              amount: parsedAmount * -1,
-                              currency: 'SEK',
-                            })}{' '}
-                            <strong>less</strong>
-                          </>
-                        ) : (
-                          <>
-                            {this.props.firstName} will owe us{' '}
-                            {formatMoneySE({
-                              amount: parsedAmount,
-                              currency: 'SEK',
-                            })}{' '}
-                            <strong>more</strong>
-                          </>
-                        ))}
-                    </div>
-                    <div>
-                      {!this.state.confirmed ? (
-                        <SubmitButton
-                          type="button"
-                          variant="contained"
-                          color="secondary"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            this.toggleConfirmed()
-                          }}
-                          disabled={!isValid || loading}
-                        >
-                          Confirm entry
-                        </SubmitButton>
+                <BottomRowWrapper>
+                  <div>
+                    {!isNaN(parsedAmount) &&
+                      parsedAmount !== 0 &&
+                      (parsedAmount < 0 ? (
+                        <>
+                          {memberId} will owe us{' '}
+                          {formatMoney({
+                            amount: parsedAmount * -1,
+                            currency: preferredCurrency,
+                          })}{' '}
+                          <strong>less</strong>
+                        </>
                       ) : (
-                        <SubmitButton
-                          type="submit"
-                          variant="contained"
-                          color="primary"
-                          disabled={!isValid || loading}
-                        >
-                          Create entry
-                        </SubmitButton>
-                      )}
-                    </div>
-                  </BottomRowWrapper>
-                </Form>
-              )
-            }}
-          </Formik>
-        )}
-      </Mutation>
-    )
-  }
-
-  private resetConfirmed = () => this.setState({ confirmed: false })
-
-  private toggleConfirmed = () =>
-    this.setState((state) => ({ confirmed: !state.confirmed }))
+                        <>
+                          {memberId} will owe us{' '}
+                          {formatMoney({
+                            amount: parsedAmount,
+                            currency: preferredCurrency,
+                          })}{' '}
+                          <strong>more</strong>
+                        </>
+                      ))}
+                  </div>
+                  <div>
+                    {!confirmed ? (
+                      <SubmitButton
+                        type="button"
+                        variant="contained"
+                        color="secondary"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setConfirmed(!confirmed)
+                        }}
+                        disabled={!isValid || loading}
+                      >
+                        Are you sure you want to add this entry?'
+                      </SubmitButton>
+                    ) : (
+                      <SubmitButton
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={!isValid || loading}
+                      >
+                        Click again to confirm
+                      </SubmitButton>
+                    )}
+                  </div>
+                </BottomRowWrapper>
+              </Form>
+            )
+          }}
+        </Formik>
+      )}
+    </Mutation>
+  )
 }
