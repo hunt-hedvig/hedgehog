@@ -694,7 +694,7 @@ input ExtraBuildingInput {
 
 type Transaction {
   id: ID
-  amount: MonetaryAmount
+  amount: MonetaryAmountV2
   timestamp: Instant
   type: String
   status: String

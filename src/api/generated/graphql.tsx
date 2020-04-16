@@ -1413,7 +1413,7 @@ export enum TicketType {
 export type Transaction = {
   __typename?: 'Transaction'
   id?: Maybe<Scalars['ID']>
-  amount?: Maybe<Scalars['MonetaryAmount']>
+  amount?: Maybe<MonetaryAmountV2>
   timestamp?: Maybe<Scalars['Instant']>
   type?: Maybe<Scalars['String']>
   status?: Maybe<Scalars['String']>
