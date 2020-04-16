@@ -22,6 +22,7 @@ const transactionDateSorter = (a, b) => {
   return 0
 }
 
+// TODO: "currentMonth" och "previousMonth" är borttagna, se till så att det fortfarande funkar
 const GET_MEMBER_QUERY = gql`
   query GetMemberTransactions($id: ID!) {
     member(id: $id) {
@@ -107,13 +108,7 @@ const MemberTransactionsTable = ({ transactions }) => (
 class PaymentsTab extends React.Component {
   constructor(props) {
     super(props)
-    this.variables = {
-      id: props.match.params.memberId,
-      currentMonth: moment().format('YYYY-MM'),
-      previousMonth: moment()
-        .subtract(1, 'month')
-        .format('YYYY-MM'),
-    }
+    this.memberId = props.match.params.memberId
     this.state = {
       amount: null,
       confirming: false,
@@ -128,7 +123,7 @@ class PaymentsTab extends React.Component {
   handleChargeSubmit = () => (mutation) => () => {
     mutation({
       variables: {
-        id: this.variables.id,
+        id: this.memberId,
         amount: {
           amount: +this.state.amount,
           currency: this.props.contractMarketInfo.preferredCurrency,
@@ -164,7 +159,7 @@ class PaymentsTab extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Query query={GET_MEMBER_QUERY} variables={this.variables}>
+        <Query query={GET_MEMBER_QUERY} variables={{ memberId: this.memberId }}>
           {({ loading, error, data }) => {
             if (error) {
               return <div>Error!</div>
