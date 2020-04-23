@@ -132,9 +132,6 @@ export type AllRepliesEntry = {
 export type ApartmentQuoteData = IQuoteData & {
   __typename?: 'ApartmentQuoteData'
   id: Scalars['ID']
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
   street?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
   zipCode?: Maybe<Scalars['String']>
@@ -167,8 +164,6 @@ export type ApartmentQuoteInput = {
 export enum ApartmentSubType {
   Brf = 'BRF',
   Rent = 'RENT',
-  SubletRental = 'SUBLET_RENTAL',
-  SubletBrf = 'SUBLET_BRF',
   StudentBrf = 'STUDENT_BRF',
   StudentRent = 'STUDENT_RENT',
 }
@@ -627,14 +622,7 @@ export type InventoryItemInput = {
 
 export type IQuoteData = {
   id: Scalars['ID']
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
 }
 
 export type Item = {
@@ -748,8 +736,10 @@ export type MutationType = {
   addInventoryItem?: Maybe<Scalars['Boolean']>
   removeInventoryItem?: Maybe<Scalars['Boolean']>
   activateQuote: Quote
+  addAgreementFromQuote: Quote
   /** Creates a quote from a product and returns the quote id */
   createQuoteFromProduct: Quote
+  createQuoteFromBackOffice: Quote
   updateQuote: Quote
   markSwitchableSwitcherEmailAsReminded: Scalars['Boolean']
   terminateContract: Contract
@@ -891,9 +881,22 @@ export type MutationTypeActivateQuoteArgs = {
   terminationDate?: Maybe<Scalars['LocalDate']>
 }
 
+export type MutationTypeAddAgreementFromQuoteArgs = {
+  id: Scalars['ID']
+  contractId: Scalars['ID']
+  activeFrom?: Maybe<Scalars['LocalDate']>
+  activeTo?: Maybe<Scalars['LocalDate']>
+  previousAgreementActiveTo?: Maybe<Scalars['LocalDate']>
+}
+
 export type MutationTypeCreateQuoteFromProductArgs = {
   memberId: Scalars['ID']
   quoteData: QuoteFromProductInput
+}
+
+export type MutationTypeCreateQuoteFromBackOfficeArgs = {
+  agreementId: Scalars['ID']
+  memberId: Scalars['ID']
 }
 
 export type MutationTypeUpdateQuoteArgs = {
@@ -983,6 +986,48 @@ export enum NorwegianHomeContentLineOfBusiness {
   YouthOwn = 'YOUTH_OWN',
 }
 
+export type NorwegianHomeContentQuoteData = IQuoteData & {
+  __typename?: 'NorwegianHomeContentQuoteData'
+  id: Scalars['ID']
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  type?: Maybe<NorwegianHomeContentType>
+}
+
+export type NorwegianHomeContentQuoteDataInput = {
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  type?: Maybe<NorwegianHomeContentType>
+}
+
+export type NorwegianHomeContentQuoteInput = {
+  street?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  zipCode?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+  livingSpace?: Maybe<Scalars['Int']>
+  type?: Maybe<NorwegianHomeContentType>
+}
+
+export enum NorwegianHomeContentType {
+  Own = 'OWN',
+  Rent = 'RENT',
+  StudentOwn = 'STUDENT_OWN',
+  StudentRent = 'STUDENT_RENT',
+}
+
 export type NorwegianTravel = AgreementCore & {
   __typename?: 'NorwegianTravel'
   id: Scalars['ID']
@@ -998,6 +1043,26 @@ export type NorwegianTravel = AgreementCore & {
 export enum NorwegianTravelLineOfBusiness {
   Regular = 'REGULAR',
   Youth = 'YOUTH',
+}
+
+export type NorwegianTravelQuoteData = IQuoteData & {
+  __typename?: 'NorwegianTravelQuoteData'
+  id: Scalars['ID']
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+}
+
+export type NorwegianTravelQuoteDataInput = {
+  ssn?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  householdSize?: Maybe<Scalars['Int']>
+}
+
+export type NorwegianTravelQuoteInput = {
+  householdSize?: Maybe<Scalars['Int']>
 }
 
 export type NotCoveredClaim = {
@@ -1145,11 +1210,17 @@ export type Quote = {
   originatingProductId?: Maybe<Scalars['ID']>
 }
 
-export type QuoteData = ApartmentQuoteData | HouseQuoteData
+export type QuoteData =
+  | ApartmentQuoteData
+  | HouseQuoteData
+  | NorwegianHomeContentQuoteData
+  | NorwegianTravelQuoteData
 
 export type QuoteFromProductInput = {
   incompleteHouseQuoteData?: Maybe<HouseQuoteDataInput>
   incompleteApartmentQuoteData?: Maybe<ApartmentQuoteDataInput>
+  norwegianHomeContentQuoteData?: Maybe<NorwegianHomeContentQuoteDataInput>
+  norwegianTravelQuoteData?: Maybe<NorwegianTravelQuoteDataInput>
   originatingProductId?: Maybe<Scalars['ID']>
   currentInsurer?: Maybe<Scalars['String']>
 }
@@ -1159,6 +1230,8 @@ export type QuoteInput = {
   currentInsurer?: Maybe<Scalars['String']>
   apartmentData?: Maybe<ApartmentQuoteInput>
   houseData?: Maybe<HouseQuoteInput>
+  norwegianHomeContentData?: Maybe<NorwegianHomeContentQuoteInput>
+  norwegianTravelData?: Maybe<NorwegianTravelQuoteInput>
   originatingProductId?: Maybe<Scalars['ID']>
 }
 
@@ -1166,6 +1239,8 @@ export enum QuoteProductType {
   Apartment = 'APARTMENT',
   House = 'HOUSE',
   Object = 'OBJECT',
+  HomeContent = 'HOME_CONTENT',
+  Travel = 'TRAVEL',
 }
 
 export enum QuoteState {
@@ -1558,6 +1633,15 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   'changeToDate'
 >
 
+export type CreateQuoteFromBackOfficeMutationVariables = {
+  agreementId: Scalars['ID']
+  memberId: Scalars['ID']
+}
+
+export type CreateQuoteFromBackOfficeMutation = {
+  __typename?: 'MutationType'
+} & { createQuoteFromBackOffice: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
+
 export type GetContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -1759,6 +1843,8 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
                       >
                     >
                   })
+              | { __typename?: 'NorwegianHomeContentQuoteData' }
+              | { __typename?: 'NorwegianTravelQuoteData' }
             >
           }
       >
@@ -2276,6 +2362,57 @@ export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
 >
+export const CreateQuoteFromBackOfficeDocument = gql`
+  mutation CreateQuoteFromBackOffice($agreementId: ID!, $memberId: ID!) {
+    createQuoteFromBackOffice(agreementId: $agreementId, memberId: $memberId) {
+      id
+    }
+  }
+`
+export type CreateQuoteFromBackOfficeMutationFn = ApolloReactCommon.MutationFunction<
+  CreateQuoteFromBackOfficeMutation,
+  CreateQuoteFromBackOfficeMutationVariables
+>
+
+/**
+ * __useCreateQuoteFromBackOfficeMutation__
+ *
+ * To run a mutation, you first call `useCreateQuoteFromBackOfficeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuoteFromBackOfficeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuoteFromBackOfficeMutation, { data, loading, error }] = useCreateQuoteFromBackOfficeMutation({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useCreateQuoteFromBackOfficeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateQuoteFromBackOfficeMutation,
+    CreateQuoteFromBackOfficeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateQuoteFromBackOfficeMutation,
+    CreateQuoteFromBackOfficeMutationVariables
+  >(CreateQuoteFromBackOfficeDocument, baseOptions)
+}
+export type CreateQuoteFromBackOfficeMutationHookResult = ReturnType<
+  typeof useCreateQuoteFromBackOfficeMutation
+>
+export type CreateQuoteFromBackOfficeMutationResult = ApolloReactCommon.MutationResult<
+  CreateQuoteFromBackOfficeMutation
+>
+export type CreateQuoteFromBackOfficeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateQuoteFromBackOfficeMutation,
+  CreateQuoteFromBackOfficeMutationVariables
+>
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
@@ -2767,6 +2904,12 @@ const result: IntrospectionResultData = {
           {
             name: 'HouseQuoteData',
           },
+          {
+            name: 'NorwegianHomeContentQuoteData',
+          },
+          {
+            name: 'NorwegianTravelQuoteData',
+          },
         ],
       },
       {
@@ -2778,6 +2921,12 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'HouseQuoteData',
+          },
+          {
+            name: 'NorwegianHomeContentQuoteData',
+          },
+          {
+            name: 'NorwegianTravelQuoteData',
           },
         ],
       },

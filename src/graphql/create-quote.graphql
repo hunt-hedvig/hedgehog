@@ -1,0 +1,8 @@
+mutation CreateQuoteFromBackOffice(
+  $agreementId: ID!
+  $memberId: ID!
+) {
+  createQuoteFromBackOffice(agreementId: $agreementId, memberId: $memberId) {
+    id
+  }
+}

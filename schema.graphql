@@ -56,15 +56,26 @@ type MutationType {
   setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
   addInventoryItem(item: InventoryItemInput!): Boolean
   removeInventoryItem(inventoryItemId: ID!): Boolean
-  activateQuote(
-    id: ID!
-    activationDate: LocalDate!
+  activateQuote(id: ID!,
+    activationDate: LocalDate!,
     terminationDate: LocalDate
   ): Quote!
+
+  addAgreementFromQuote(id: ID!,
+    contractId: ID!,
+    activeFrom: LocalDate,
+    activeTo: LocalDate,
+    previousAgreementActiveTo: LocalDate
+  ): Quote!
+
   # Creates a quote from a product and returns the quote id
   createQuoteFromProduct(
     memberId: ID!
     quoteData: QuoteFromProductInput!
+  ): Quote!
+  createQuoteFromBackOffice(
+    agreementId: ID!
+    memberId: ID!
   ): Quote!
   updateQuote(
     quoteId: ID!
@@ -73,18 +84,10 @@ type MutationType {
   ): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
-  activatePendingAgreement(
-    contractId: ID!
-    request: ActivatePendingAgreementInput
-  ): Contract!
-  changeTerminationDate(
-    contractId: ID!
-    request: ChangeTerminationDateInput
-  ): Contract!
+  activatePendingAgreement(contractId: ID!, request: ActivatePendingAgreementInput): Contract!
+  changeTerminationDate(contractId: ID!, request: ChangeTerminationDateInput): Contract!
   revertTermination(contractId: ID!): Contract!
-  createNorwegianGripenPriceEngine(
-    request: CreateNorwegianGripenInput
-  ): Boolean!
+  createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
@@ -124,7 +127,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-    SwedishApartment
+  SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -507,21 +510,15 @@ enum Gender {
 
 interface IQuoteData {
   id: ID!
-  ssn: String
-  firstName: String
-  lastName: String
-  street: String
-  city: String
-  zipCode: String
   householdSize: Int
-  livingSpace: Int
 }
 
 type Quote {
   id: ID!
   createdAt: Instant
   price: Float
-  productType: QuoteProductType
+  productType:
+  QuoteProductType
   state: QuoteState
   initiatedFrom: String
   attributedTo: String
@@ -537,9 +534,11 @@ type Quote {
 }
 
 enum QuoteProductType {
-  APARTMENT
-  HOUSE
-  OBJECT
+  APARTMENT,
+  HOUSE,
+  OBJECT,
+  HOME_CONTENT,
+  TRAVEL
 }
 enum QuoteState {
   INCOMPLETE
@@ -548,28 +547,22 @@ enum QuoteState {
   EXPIRED
 }
 
-union QuoteData = ApartmentQuoteData | HouseQuoteData
+union QuoteData = ApartmentQuoteData | HouseQuoteData | NorwegianHomeContentQuoteData | NorwegianTravelQuoteData
 
 type ApartmentQuoteData implements IQuoteData {
   id: ID!
-  ssn: String
-  firstName: String
-  lastName: String
   street: String
   city: String
   zipCode: String
   householdSize: Int
   livingSpace: Int
-
   subType: ApartmentSubType
 }
 
 enum ApartmentSubType {
-  BRF
-  RENT
-  SUBLET_RENTAL
-  SUBLET_BRF
-  STUDENT_BRF
+  BRF,
+  RENT,
+  STUDENT_BRF,
   STUDENT_RENT
 }
 
@@ -616,11 +609,42 @@ enum ExtraBuildingType {
   OTHER
 }
 
+type NorwegianHomeContentQuoteData implements IQuoteData{
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+  type: NorwegianHomeContentType
+}
+
+enum NorwegianHomeContentType {
+  OWN,
+  RENT,
+  STUDENT_OWN,
+  STUDENT_RENT
+}
+
+type NorwegianTravelQuoteData implements IQuoteData{
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+  householdSize: Int
+}
+
 input QuoteInput {
   productType: QuoteProductType
   currentInsurer: String
   apartmentData: ApartmentQuoteInput
   houseData: HouseQuoteInput
+  norwegianHomeContentData: NorwegianHomeContentQuoteInput
+  norwegianTravelData: NorwegianTravelQuoteInput
   originatingProductId: ID
 }
 
@@ -648,9 +672,26 @@ input HouseQuoteInput {
   isSubleted: Boolean
 }
 
+input NorwegianHomeContentQuoteInput {
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  type: NorwegianHomeContentType
+}
+
+
+input NorwegianTravelQuoteInput {
+  householdSize: Int
+}
+
 input QuoteFromProductInput {
   incompleteHouseQuoteData: HouseQuoteDataInput
   incompleteApartmentQuoteData: ApartmentQuoteDataInput
+  norwegianHomeContentQuoteData: NorwegianHomeContentQuoteDataInput
+  norwegianTravelQuoteData: NorwegianTravelQuoteDataInput
   originatingProductId: ID
   currentInsurer: String
 }
@@ -659,6 +700,7 @@ input ApartmentQuoteDataInput {
   ssn: String
   firstName: String
   lastName: String
+
   street: String
   city: String
   zipCode: String
@@ -672,6 +714,7 @@ input HouseQuoteDataInput {
   ssn: String
   firstName: String
   lastName: String
+
   street: String
   city: String
   zipCode: String
@@ -690,6 +733,28 @@ input ExtraBuildingInput {
   area: Int!
   hasWaterConnected: Boolean!
   displayName: String
+}
+
+input NorwegianHomeContentQuoteDataInput {
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  type: NorwegianHomeContentType
+}
+
+input NorwegianTravelQuoteDataInput {
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  householdSize: Int
 }
 
 type Transaction {
@@ -833,7 +898,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1143,7 +1208,7 @@ enum NorwegianGripenFactorType {
 }
 
 type MonetaryAmountV2 {
-  amount: String!
+  amount: String!,
   currency: String!
 }
 
