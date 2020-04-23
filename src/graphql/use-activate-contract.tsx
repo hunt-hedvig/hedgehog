@@ -6,7 +6,7 @@ import {
   ActivatePendingAgreementMutationVariables,
   Contract,
   useActivatePendingAgreementMutation,
-} from '../api/generated/graphql'
+} from 'api/generated/graphql'
 import { withRefetchContracts } from './use-contracts'
 
 export const useActivateContract = (

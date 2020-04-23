@@ -1,5 +1,7 @@
 import Grid from '@material-ui/core/Grid'
 import { ClaimNote, QueryType } from 'api/generated/graphql'
+import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
+import { ClaimInventory } from 'components/claims/claim-details/components/inventory/ClaimItemInventory'
 import ChatPane from 'components/member/tabs/ChatPane.js'
 import * as React from 'react'
 import { Query } from 'react-apollo'
@@ -95,6 +97,12 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
               type={type}
               claimId={props.match.params.claimId}
             />
+            <Grid item xs={12}>
+              <ClaimInventory claimId={props.match.params.claimId} />
+            </Grid>
+            <Grid item xs={12}>
+              <ClaimItems claimId={props.match.params.claimId} />
+            </Grid>
             <Grid item xs={12}>
               {payments && member && (
                 <ClaimPayments
