@@ -52,31 +52,25 @@ const customFilter = (option, rawInput) => {
   )
 }
 
-interface SelectedItemCategory {
+export interface SelectedItemCategory {
   nextKind: ItemCategoryKind
   id: string
   parentId: string | null
   displayName: string
 }
 
-export const SelectItemCategories: React.FC = () => {
-  const [selectedItemCategories, setSelectedItemCategories] = React.useState<
-    SelectedItemCategory[]
-  >([])
-
-  const currentItemCategory =
-    selectedItemCategories.length !== 0
-      ? selectedItemCategories[selectedItemCategories.length - 1]
-      : null
+export const SelectItemCategories: React.FC<{
+  selectedItemCategories: SelectedItemCategory[]
+  setSelectedItemCategories
+}> = ({ selectedItemCategories, setSelectedItemCategories }) => {
+  const currentItemCategory = selectedItemCategories?.slice(-1).pop()
 
   const [
     newItemCategories,
     { loading: loadingNewItemCategories },
   ] = useGetItemCategories(
-    currentItemCategory
-      ? currentItemCategory.nextKind
-      : ItemCategoryKind.Family,
-    currentItemCategory ? currentItemCategory.id : null,
+    currentItemCategory?.nextKind ?? ItemCategoryKind.Family,
+    currentItemCategory?.id ?? null,
   )
 
   return (
@@ -95,11 +89,9 @@ export const SelectItemCategories: React.FC = () => {
       })}
       onChange={(selections) => {
         setSelectedItemCategories(
-          selections
-            ? selections.map(({ nextKind, id, parentId, displayName }) => {
-                return { nextKind, id, parentId, displayName }
-              })
-            : [],
+          selections?.map(({ nextKind, id, parentId, displayName }) => {
+            return { nextKind, id, parentId, displayName }
+          }) ?? [],
         )
       }}
       options={
