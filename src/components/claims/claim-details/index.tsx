@@ -1,12 +1,11 @@
 import Grid from '@material-ui/core/Grid'
 import { ClaimNote, QueryType } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
-import { ClaimInventory } from 'components/claims/claim-details/components/inventory/ClaimItemInventory'
 import ChatPane from 'components/member/tabs/ChatPane.js'
 import * as React from 'react'
 import { Query } from 'react-apollo'
 // @ts-ignore
-import { CreateTicketStandAlone } from '../../../components/tickets/ticket/create-ticket/create-ticket-stand-alone'
+import { CreateTicketStandAlone } from '../../tickets/ticket/create-ticket/create-ticket-stand-alone'
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimFileTable } from './components/ClaimFileTable'
 import { ClaimInformation } from './components/ClaimInformation'
@@ -14,7 +13,6 @@ import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimTypeForm } from './components/ClaimType'
 import { FileUpload } from './components/FileUpload'
-import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { MemberInformation } from './components/MemberInformation'
 import { CLAIM_PAGE_QUERY } from './data'
 
@@ -92,13 +90,6 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                   refetchPage={refetch}
                 />
               )}
-            </Grid>
-            <ClaimItemDatabase
-              type={type}
-              claimId={props.match.params.claimId}
-            />
-            <Grid item xs={12}>
-              <ClaimInventory claimId={props.match.params.claimId} />
             </Grid>
             <Grid item xs={12}>
               <ClaimItems claimId={props.match.params.claimId} />

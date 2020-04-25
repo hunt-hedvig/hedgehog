@@ -20,7 +20,6 @@ export const useGetItemCategories = (
       parentId,
     },
   })
-  console.log(queryResult)
   const itemCategories = (queryResult.data?.itemCategories ??
     []) as ReadonlyArray<ItemCategory>
   return [itemCategories, queryResult]

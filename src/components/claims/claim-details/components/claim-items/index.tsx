@@ -1,46 +1,25 @@
-import { Grid, Paper } from '@material-ui/core'
-import { ItemCategoryKind } from 'api/generated/graphql'
-import { useGetItemCategories } from 'graphql/use-get-item-categories'
-import { Button } from 'hedvig-ui/button'
+import { Grid } from '@material-ui/core'
+import { Paper } from 'components/shared/Paper'
 import * as React from 'react'
-
-interface CurrentItemCategory {
-  kind: ItemCategoryKind
-  parentId: string | null
-}
+import { SelectItemCategories } from './SelectItemCategories'
 
 export const ClaimItems: React.FC<{ claimId: string }> = ({ claimId }) => {
-  const [currentItemCategory, setCurrentItemCategory] = React.useState<
-    CurrentItemCategory
-  >({
-    kind: ItemCategoryKind.Family,
-    parentId: null,
-  })
-
-  const [newItemCategories] = useGetItemCategories(
-    currentItemCategory.kind,
-    currentItemCategory.parentId,
-  )
-
   return (
     <Paper>
       <Grid container spacing={24}>
-        <div>
-          {newItemCategories.map((itemCategory) => (
-            <Button
-              onClick={() => {
-                if (itemCategory.nextKind != null) {
-                  setCurrentItemCategory({
-                    kind: itemCategory.nextKind,
-                    parentId: itemCategory.id,
-                  })
-                }
-              }}
-            >
-              {itemCategory.displayName}
-            </Button>
-          ))}
-        </div>
+        <Grid item xs={12}>
+          <div>
+            <h3>Inventory</h3>
+          </div>
+
+          <form>
+            <Grid container spacing={24}>
+              <Grid item xs={6}>
+                <SelectItemCategories />
+              </Grid>
+            </Grid>
+          </form>
+        </Grid>
       </Grid>
     </Paper>
   )
