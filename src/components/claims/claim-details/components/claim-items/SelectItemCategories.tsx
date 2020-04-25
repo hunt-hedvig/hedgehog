@@ -43,6 +43,15 @@ const customStyles = {
   }),
 }
 
+const customFilter = (option, rawInput) => {
+  const words = rawInput.split(' ')
+  return words.reduce(
+    (acc, cur) =>
+      acc && option.data.searchTerms.toLowerCase().includes(cur.toLowerCase()),
+    true,
+  )
+}
+
 interface SelectedItemCategory {
   nextKind: ItemCategoryKind
   id: string
@@ -55,19 +64,27 @@ export const SelectItemCategories: React.FC = () => {
     SelectedItemCategory[]
   >([])
 
-  const [newItemCategories] = useGetItemCategories(
+  const currentItemCategory =
     selectedItemCategories.length !== 0
-      ? selectedItemCategories[selectedItemCategories.length - 1].nextKind
+      ? selectedItemCategories[selectedItemCategories.length - 1]
+      : null
+
+  const [
+    newItemCategories,
+    { loading: loadingNewItemCategories },
+  ] = useGetItemCategories(
+    currentItemCategory
+      ? currentItemCategory.nextKind
       : ItemCategoryKind.Family,
-    selectedItemCategories.length !== 0
-      ? selectedItemCategories[selectedItemCategories.length - 1].id
-      : null,
+    currentItemCategory ? currentItemCategory.id : null,
   )
 
   return (
     <Select
       closeMenuOnSelect={false}
       isMulti
+      placeholder={'Bike, Phone, Pills...'}
+      filterOption={customFilter}
       styles={customStyles}
       value={selectedItemCategories?.map((itemCategory) => {
         return {
@@ -85,13 +102,18 @@ export const SelectItemCategories: React.FC = () => {
             : [],
         )
       }}
-      options={newItemCategories.map((newItemCategory) => {
-        return {
-          ...newItemCategory,
-          value: newItemCategory?.id,
-          label: newItemCategory?.displayName,
-        }
-      })}
+      options={
+        loadingNewItemCategories
+          ? []
+          : newItemCategories.map((newItemCategory) => {
+              return {
+                ...newItemCategory,
+                value: newItemCategory?.id,
+                label: newItemCategory?.displayName,
+                searchTerms: newItemCategory?.searchTerms,
+              }
+            })
+      }
     />
   )
 }
