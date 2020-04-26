@@ -1,55 +1,21 @@
 import * as React from 'react'
-import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 import { ItemCategoryKind } from '../../../../../api/generated/graphql'
 import { useGetItemCategories } from '../../../../../graphql/use-get-item-categories'
-
-const customStyles = {
-  control: (base, { isFocused }) => ({
-    ...base,
-    marginTop: '6px',
-    background: 'rgba(0, 0, 0, 0.0)',
-    // match with the menu
-    borderRadius: 0,
-    border: '0px',
-    borderBottom: isFocused ? '1px solid #0f007a' : '1px solid #999999',
-    boxShadow: 'none',
-  }),
-  menu: (base) => ({
-    ...base,
-    borderRadius: 0,
-    hyphens: 'auto',
-    marginTop: 0,
-    textAlign: 'left',
-    wordWrap: 'break-word',
-  }),
-  valueContainer: (base) => ({
-    ...base,
-    paddingLeft: '0px',
-    overflow: 'visible',
-  }),
-  multiValueRemove: (base) => ({ ...base, display: 'none' }),
-  multiValue: (base) => ({
-    ...base,
-    paddingLeft: '5px',
-    paddingRight: '10px',
-    backgroundColor: 'rgba(0, 0, 0, 0.0)',
-    border: '1px solid #5b30f5',
-    borderRadius: 20,
-  }),
-  multiValueLabel: (base) => ({
-    ...base,
-    color: '#5b30f5',
-    fontWeight: 'bold',
-  }),
-}
+import { SelectItemCategoriesStyle } from './SelectItemCategoriesStyle'
 
 const customFilter = (option, rawInput) => {
   const words = rawInput.split(' ')
   return words.reduce(
     (acc, cur) =>
-      acc && option.data.searchTerms.toLowerCase().includes(cur.toLowerCase()),
+      acc &&
+      (option.data?.searchTerms?.toLowerCase().includes(cur.toLowerCase()) ??
+        true),
     true,
   )
+}
+const customOptionsMessage = () => {
+  return <>No tags</>
 }
 
 export interface SelectedItemCategory {
@@ -66,6 +32,7 @@ export const SelectItemCategories: React.FC<{
   const currentItemCategory = selectedItemCategories?.slice(-1).pop()
   const noMoreItemCategories =
     !currentItemCategory?.nextKind && selectedItemCategories.length !== 0
+  const noSelectedCategories = selectedItemCategories.length === 0
 
   const [
     newItemCategories,
@@ -76,12 +43,20 @@ export const SelectItemCategories: React.FC<{
   )
 
   return (
-    <Select
+    <CreatableSelect
       closeMenuOnSelect={false}
       isMulti
       placeholder={''}
       filterOption={customFilter}
-      styles={customStyles}
+      styles={SelectItemCategoriesStyle}
+      noOptionsMessage={customOptionsMessage}
+      isValidNewOption={(rawInput) => {
+        return !(
+          noMoreItemCategories ||
+          noSelectedCategories ||
+          rawInput === ''
+        )
+      }}
       value={selectedItemCategories?.map((itemCategory) => {
         return {
           ...itemCategory,
