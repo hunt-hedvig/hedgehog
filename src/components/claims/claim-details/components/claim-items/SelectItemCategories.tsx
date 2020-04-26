@@ -14,9 +14,6 @@ const customFilter = (option, rawInput) => {
     true,
   )
 }
-const customOptionsMessage = () => {
-  return <>No tags</>
-}
 
 export interface SelectedItemCategory {
   nextKind: ItemCategoryKind
@@ -27,7 +24,9 @@ export interface SelectedItemCategory {
 
 export const SelectItemCategories: React.FC<{
   selectedItemCategories: SelectedItemCategory[]
-  setSelectedItemCategories
+  setSelectedItemCategories: React.Dispatch<
+    React.SetStateAction<SelectedItemCategory[]>
+  >
 }> = ({ selectedItemCategories, setSelectedItemCategories }) => {
   const currentItemCategory = selectedItemCategories?.slice(-1).pop()
   const noMoreItemCategories =
@@ -49,7 +48,7 @@ export const SelectItemCategories: React.FC<{
       placeholder={''}
       filterOption={customFilter}
       styles={SelectItemCategoriesStyle}
-      noOptionsMessage={customOptionsMessage}
+      noOptionsMessage={() => <>No tags</>}
       isValidNewOption={(rawInput) => {
         return !(
           noMoreItemCategories ||
@@ -64,7 +63,7 @@ export const SelectItemCategories: React.FC<{
           label: itemCategory?.displayName,
         }
       })}
-      onChange={(selections) => {
+      onChange={(selections: any[]) => {
         setSelectedItemCategories(
           selections?.map(({ nextKind, id, parentId, displayName }) => {
             return { nextKind, id, parentId, displayName }
