@@ -5,15 +5,15 @@ import CreatableSelect from 'react-select/creatable'
 import { SelectItemCategoriesStyle } from '../styles/SelectItemCategoriesStyle'
 import { SelectItemCategoriesPlaceholder } from './SelectItemCategoriesPlaceholder'
 
-const customFilter = (option, rawInput) => {
-  const words = rawInput.split(' ')
-  return words.reduce(
-    (acc, cur) =>
+const customFilter = (option, inputValue) => {
+  const words = inputValue.split(' ')
+  return words.reduce((acc, cur) => {
+    return (
       acc &&
       (option.data?.searchTerms?.toLowerCase().includes(cur.toLowerCase()) ??
-        true),
-    true,
-  )
+        true)
+    )
+  }, true)
 }
 
 const noOptionsMessage = (
@@ -79,11 +79,16 @@ export const SelectItemCategories: React.FC<{
       noOptionsMessage={() =>
         noOptionsMessage(currentItemCategory, noMoreItemCategories)
       }
-      isValidNewOption={(rawInput) => {
+      isValidNewOption={(inputValue, _selectValue, selectOptions) => {
+        const optionAlreadyExists = selectOptions.find(
+          (option) => option.label.toLowerCase() === inputValue.toLowerCase(),
+        )
+
         return !(
           noMoreItemCategories ||
           noSelectedCategories ||
-          rawInput === ''
+          optionAlreadyExists ||
+          inputValue === ''
         )
       }}
       value={selectedItemCategories?.map((itemCategory) => {
