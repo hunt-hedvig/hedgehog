@@ -64,6 +64,8 @@ export const SelectItemCategories: React.FC<{
   setSelectedItemCategories
 }> = ({ selectedItemCategories, setSelectedItemCategories }) => {
   const currentItemCategory = selectedItemCategories?.slice(-1).pop()
+  const noMoreItemCategories =
+    !currentItemCategory?.nextKind && selectedItemCategories.length !== 0
 
   const [
     newItemCategories,
@@ -77,7 +79,7 @@ export const SelectItemCategories: React.FC<{
     <Select
       closeMenuOnSelect={false}
       isMulti
-      placeholder={'Bike, Phone, Pills...'}
+      placeholder={''}
       filterOption={customFilter}
       styles={customStyles}
       value={selectedItemCategories?.map((itemCategory) => {
@@ -95,7 +97,7 @@ export const SelectItemCategories: React.FC<{
         )
       }}
       options={
-        loadingNewItemCategories
+        loadingNewItemCategories || noMoreItemCategories
           ? []
           : newItemCategories.map((newItemCategory) => {
               return {
