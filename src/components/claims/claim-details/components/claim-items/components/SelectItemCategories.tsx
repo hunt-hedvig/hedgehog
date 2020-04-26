@@ -1,8 +1,9 @@
+import { ItemCategoryKind } from 'api/generated/graphql'
+import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import * as React from 'react'
 import CreatableSelect from 'react-select/creatable'
-import { ItemCategoryKind } from '../../../../../api/generated/graphql'
-import { useGetItemCategories } from '../../../../../graphql/use-get-item-categories'
-import { SelectItemCategoriesStyle } from './SelectItemCategoriesStyle'
+import { SelectItemCategoriesStyle } from '../styles/SelectItemCategoriesStyle'
+import { SelectItemCategoriesPlaceholder } from './SelectItemCategoriesPlaceholder'
 
 const customFilter = (option, rawInput) => {
   const words = rawInput.split(' ')
@@ -12,6 +13,22 @@ const customFilter = (option, rawInput) => {
       (option.data?.searchTerms?.toLowerCase().includes(cur.toLowerCase()) ??
         true),
     true,
+  )
+}
+
+const noOptionsMessage = (
+  currentItemCategory: SelectedItemCategory | undefined,
+  noMoreItemCategories: boolean,
+) => {
+  const nextKind = currentItemCategory?.nextKind?.toLowerCase()
+  return (
+    <>
+      {nextKind
+        ? `No ${nextKind}s`
+        : noMoreItemCategories
+        ? 'No more categories'
+        : 'No result'}
+    </>
   )
 }
 
@@ -29,10 +46,6 @@ export const SelectItemCategories: React.FC<{
   >
 }> = ({ selectedItemCategories, setSelectedItemCategories }) => {
   const currentItemCategory = selectedItemCategories?.slice(-1).pop()
-  const noMoreItemCategories =
-    !currentItemCategory?.nextKind && selectedItemCategories.length !== 0
-  const noSelectedCategories = selectedItemCategories.length === 0
-
   const [
     newItemCategories,
     { loading: loadingNewItemCategories },
@@ -40,15 +53,32 @@ export const SelectItemCategories: React.FC<{
     currentItemCategory?.nextKind ?? ItemCategoryKind.Family,
     currentItemCategory?.id ?? null,
   )
+  const placeholderSuggestion =
+    newItemCategories
+      .slice(0, 3)
+      .map((itemCategory) => `${itemCategory.displayName}`)
+      .join(', ') + '...'
+
+  const noMoreItemCategories =
+    !currentItemCategory?.nextKind && selectedItemCategories.length !== 0
+  const noSelectedCategories = selectedItemCategories.length === 0
+  const noNewItemCategories = newItemCategories.length === 0
 
   return (
     <CreatableSelect
       closeMenuOnSelect={false}
       isMulti
-      placeholder={''}
+      placeholder={
+        noMoreItemCategories || noNewItemCategories
+          ? null
+          : placeholderSuggestion
+      }
+      components={{ ValueContainer: SelectItemCategoriesPlaceholder }}
       filterOption={customFilter}
       styles={SelectItemCategoriesStyle}
-      noOptionsMessage={() => <>No tags</>}
+      noOptionsMessage={() =>
+        noOptionsMessage(currentItemCategory, noMoreItemCategories)
+      }
       isValidNewOption={(rawInput) => {
         return !(
           noMoreItemCategories ||

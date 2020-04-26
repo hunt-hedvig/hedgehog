@@ -4,7 +4,7 @@ import * as React from 'react'
 import {
   SelectedItemCategory,
   SelectItemCategories,
-} from './SelectItemCategories'
+} from './components/SelectItemCategories'
 
 export const ClaimItems: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [selectedItemCategories, setSelectedItemCategories] = React.useState<

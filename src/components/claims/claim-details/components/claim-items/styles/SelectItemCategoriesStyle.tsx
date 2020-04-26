@@ -44,4 +44,7 @@ export const SelectItemCategoriesStyle = {
       color: isCreateOption ? '#5b30f5' : null,
     }
   },
+  placeholder: () => ({
+    display: 'none',
+  }),
 }
