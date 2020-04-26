@@ -3,6 +3,7 @@ import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import * as React from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { SelectItemCategoriesStyle } from '../styles/SelectItemCategoriesStyle'
+import { AddItemCategoryDialog } from './AddItemCategoryDialog'
 import { SelectItemCategoriesPlaceholder } from './SelectItemCategoriesPlaceholder'
 
 const customFilter = (option, inputValue) => {
@@ -26,7 +27,7 @@ const noOptionsMessage = (
       {nextKind
         ? `No ${nextKind}s`
         : noMoreItemCategories
-        ? 'No more categories'
+        ? 'No more categories available'
         : 'No result'}
     </>
   )
@@ -45,6 +46,7 @@ export const SelectItemCategories: React.FC<{
     React.SetStateAction<SelectedItemCategory[]>
   >
 }> = ({ selectedItemCategories, setSelectedItemCategories }) => {
+  const [dialogIsOpen, setDialogIsOpen] = React.useState<boolean>(true)
   const currentItemCategory = selectedItemCategories?.slice(-1).pop()
   const [
     newItemCategories,
@@ -65,58 +67,64 @@ export const SelectItemCategories: React.FC<{
   const noNewItemCategories = newItemCategories.length === 0
 
   return (
-    <CreatableSelect
-      closeMenuOnSelect={false}
-      isMulti
-      placeholder={
-        noMoreItemCategories || noNewItemCategories
-          ? null
-          : placeholderSuggestion
-      }
-      components={{ ValueContainer: SelectItemCategoriesPlaceholder }}
-      filterOption={customFilter}
-      styles={SelectItemCategoriesStyle}
-      noOptionsMessage={() =>
-        noOptionsMessage(currentItemCategory, noMoreItemCategories)
-      }
-      isValidNewOption={(inputValue, _selectValue, selectOptions) => {
-        const optionAlreadyExists = selectOptions.find(
-          (option) => option.label.toLowerCase() === inputValue.toLowerCase(),
-        )
-
-        return !(
-          noMoreItemCategories ||
-          noSelectedCategories ||
-          optionAlreadyExists ||
-          inputValue === ''
-        )
-      }}
-      value={selectedItemCategories?.map((itemCategory) => {
-        return {
-          ...itemCategory,
-          value: itemCategory?.id,
-          label: itemCategory?.displayName,
+    <>
+      {dialogIsOpen && (
+        <AddItemCategoryDialog setDialogIsOpen={setDialogIsOpen} />
+      )}
+      <CreatableSelect
+        closeMenuOnSelect={false}
+        isMulti
+        placeholder={
+          noMoreItemCategories || noNewItemCategories
+            ? null
+            : placeholderSuggestion
         }
-      })}
-      onChange={(selections: any[]) => {
-        setSelectedItemCategories(
-          selections?.map(({ nextKind, id, parentId, displayName }) => {
-            return { nextKind, id, parentId, displayName }
-          }) ?? [],
-        )
-      }}
-      options={
-        loadingNewItemCategories || noMoreItemCategories
-          ? []
-          : newItemCategories.map((newItemCategory) => {
-              return {
-                ...newItemCategory,
-                value: newItemCategory?.id,
-                label: newItemCategory?.displayName,
-                searchTerms: newItemCategory?.searchTerms,
-              }
-            })
-      }
-    />
+        components={{ ValueContainer: SelectItemCategoriesPlaceholder }}
+        filterOption={customFilter}
+        styles={SelectItemCategoriesStyle}
+        onCreateOption={null}
+        noOptionsMessage={() =>
+          noOptionsMessage(currentItemCategory, noMoreItemCategories)
+        }
+        isValidNewOption={(inputValue, _selectValue, selectOptions) => {
+          const optionAlreadyExists = selectOptions.find(
+            (option) => option.label.toLowerCase() === inputValue.toLowerCase(),
+          )
+
+          return !(
+            noMoreItemCategories ||
+            noSelectedCategories ||
+            optionAlreadyExists ||
+            inputValue === ''
+          )
+        }}
+        value={selectedItemCategories?.map((itemCategory) => {
+          return {
+            ...itemCategory,
+            value: itemCategory?.id,
+            label: itemCategory?.displayName,
+          }
+        })}
+        onChange={(selections: any[]) => {
+          setSelectedItemCategories(
+            selections?.map(({ nextKind, id, parentId, displayName }) => {
+              return { nextKind, id, parentId, displayName }
+            }) ?? [],
+          )
+        }}
+        options={
+          loadingNewItemCategories || noMoreItemCategories
+            ? []
+            : newItemCategories.map((newItemCategory) => {
+                return {
+                  ...newItemCategory,
+                  value: newItemCategory?.id,
+                  label: newItemCategory?.displayName,
+                  searchTerms: newItemCategory?.searchTerms,
+                }
+              })
+        }
+      />
+    </>
   )
 }
