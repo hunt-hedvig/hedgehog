@@ -9011,7 +9011,7 @@
             "deprecationReason": null
           },
           {
-            "name": "createQuoteFromBackOffice",
+            "name": "createQuoteFromAgreement",
             "description": "",
             "args": [
               {

@@ -739,7 +739,7 @@ export type MutationType = {
   addAgreementFromQuote: Quote
   /** Creates a quote from a product and returns the quote id */
   createQuoteFromProduct: Quote
-  createQuoteFromBackOffice: Quote
+  createQuoteFromAgreement: Quote
   updateQuote: Quote
   markSwitchableSwitcherEmailAsReminded: Scalars['Boolean']
   terminateContract: Contract
@@ -894,7 +894,7 @@ export type MutationTypeCreateQuoteFromProductArgs = {
   quoteData: QuoteFromProductInput
 }
 
-export type MutationTypeCreateQuoteFromBackOfficeArgs = {
+export type MutationTypeCreateQuoteFromAgreementArgs = {
   agreementId: Scalars['ID']
   memberId: Scalars['ID']
 }
@@ -1645,14 +1645,14 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   'changeToDate'
 >
 
-export type CreateQuoteFromBackOfficeMutationVariables = {
+export type CreateQuoteFromAgreementMutationVariables = {
   agreementId: Scalars['ID']
   memberId: Scalars['ID']
 }
 
-export type CreateQuoteFromBackOfficeMutation = {
+export type CreateQuoteFromAgreementMutation = {
   __typename?: 'MutationType'
-} & { createQuoteFromBackOffice: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
+} & { createQuoteFromAgreement: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
 
 export type GetContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
@@ -2440,56 +2440,56 @@ export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
 >
-export const CreateQuoteFromBackOfficeDocument = gql`
-  mutation CreateQuoteFromBackOffice($agreementId: ID!, $memberId: ID!) {
-    createQuoteFromBackOffice(agreementId: $agreementId, memberId: $memberId) {
+export const CreateQuoteFromAgreementDocument = gql`
+  mutation CreateQuoteFromAgreement($agreementId: ID!, $memberId: ID!) {
+    createQuoteFromAgreement(agreementId: $agreementId, memberId: $memberId) {
       id
     }
   }
 `
-export type CreateQuoteFromBackOfficeMutationFn = ApolloReactCommon.MutationFunction<
-  CreateQuoteFromBackOfficeMutation,
-  CreateQuoteFromBackOfficeMutationVariables
+export type CreateQuoteFromAgreementMutationFn = ApolloReactCommon.MutationFunction<
+  CreateQuoteFromAgreementMutation,
+  CreateQuoteFromAgreementMutationVariables
 >
 
 /**
- * __useCreateQuoteFromBackOfficeMutation__
+ * __useCreateQuoteFromAgreementMutation__
  *
- * To run a mutation, you first call `useCreateQuoteFromBackOfficeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateQuoteFromBackOfficeMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateQuoteFromAgreementMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuoteFromAgreementMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createQuoteFromBackOfficeMutation, { data, loading, error }] = useCreateQuoteFromBackOfficeMutation({
+ * const [createQuoteFromAgreementMutation, { data, loading, error }] = useCreateQuoteFromAgreementMutation({
  *   variables: {
  *      agreementId: // value for 'agreementId'
  *      memberId: // value for 'memberId'
  *   },
  * });
  */
-export function useCreateQuoteFromBackOfficeMutation(
+export function useCreateQuoteFromAgreementMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateQuoteFromBackOfficeMutation,
-    CreateQuoteFromBackOfficeMutationVariables
+    CreateQuoteFromAgreementMutation,
+    CreateQuoteFromAgreementMutationVariables
   >,
 ) {
   return ApolloReactHooks.useMutation<
-    CreateQuoteFromBackOfficeMutation,
-    CreateQuoteFromBackOfficeMutationVariables
-  >(CreateQuoteFromBackOfficeDocument, baseOptions)
+    CreateQuoteFromAgreementMutation,
+    CreateQuoteFromAgreementMutationVariables
+  >(CreateQuoteFromAgreementDocument, baseOptions)
 }
-export type CreateQuoteFromBackOfficeMutationHookResult = ReturnType<
-  typeof useCreateQuoteFromBackOfficeMutation
+export type CreateQuoteFromAgreementMutationHookResult = ReturnType<
+  typeof useCreateQuoteFromAgreementMutation
 >
-export type CreateQuoteFromBackOfficeMutationResult = ApolloReactCommon.MutationResult<
-  CreateQuoteFromBackOfficeMutation
+export type CreateQuoteFromAgreementMutationResult = ApolloReactCommon.MutationResult<
+  CreateQuoteFromAgreementMutation
 >
-export type CreateQuoteFromBackOfficeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateQuoteFromBackOfficeMutation,
-  CreateQuoteFromBackOfficeMutationVariables
+export type CreateQuoteFromAgreementMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateQuoteFromAgreementMutation,
+  CreateQuoteFromAgreementMutationVariables
 >
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {

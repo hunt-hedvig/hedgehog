@@ -3,18 +3,18 @@ import { Button } from '../../../../../../shared/hedvig-ui/button'
 import { ThirdLevelHeadline } from '../../../../../../shared/hedvig-ui/typography'
 import { Agreement, Contract } from '../../../../../api/generated/graphql'
 import {
-  createQuoteFromBackOfficeOptions,
-  useCreateQuoteFromBackOffice,
+  createQuoteFromAgreementOptions,
+  useCreateQuoteFromAgreement,
 } from '../../../../../graphql/use-create-quote'
 import { useQuotes } from '../../../../../graphql/use-quotes'
 import { Notification } from '../../../../../store/actions/notificationsActions'
 
-export const CreateQuoteFromBackOffice: React.FunctionComponent<{
+export const CreateQuoteFromAgreement: React.FunctionComponent<{
   agreement: Agreement
   contract: Contract
   showNotification: (data: Notification) => void
 }> = ({ agreement, contract, showNotification }) => {
-  const [createQuote] = useCreateQuoteFromBackOffice(contract)
+  const [createQuote] = useCreateQuoteFromAgreement(contract)
   const [quotes, loadingQuotes] = useQuotes(contract.holderMemberId)
 
   return (
@@ -33,7 +33,7 @@ export const CreateQuoteFromBackOffice: React.FunctionComponent<{
               if (!window.confirm(`Create new quote?`)) {
                 return
               }
-              createQuote(createQuoteFromBackOfficeOptions(agreement, contract))
+              createQuote(createQuoteFromAgreementOptions(agreement, contract))
                 .then(() => {
                   showNotification({
                     type: 'olive',

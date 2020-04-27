@@ -2,29 +2,29 @@ import { MutationFunctionOptions } from '@apollo/react-common'
 import {
   Agreement,
   Contract,
-  CreateQuoteFromBackOfficeMutation,
-  CreateQuoteFromBackOfficeMutationHookResult,
-  CreateQuoteFromBackOfficeMutationVariables,
-  useCreateQuoteFromBackOfficeMutation,
+  CreateQuoteFromAgreementMutation,
+  CreateQuoteFromAgreementMutationHookResult,
+  CreateQuoteFromAgreementMutationVariables,
+  useCreateQuoteFromAgreementMutation,
 } from '../api/generated/graphql'
 import { withDelayedRefetchContracts } from './use-contracts'
 import { QUOTES_QUERY } from './use-quotes'
 
-export const useCreateQuoteFromBackOffice = (
+export const useCreateQuoteFromAgreement = (
   contract: Contract,
-): CreateQuoteFromBackOfficeMutationHookResult => {
+): CreateQuoteFromAgreementMutationHookResult => {
   return withDelayedRefetchContracts<
-    CreateQuoteFromBackOfficeMutation,
-    CreateQuoteFromBackOfficeMutationVariables
-  >(useCreateQuoteFromBackOfficeMutation(), contract)
+    CreateQuoteFromAgreementMutation,
+    CreateQuoteFromAgreementMutationVariables
+  >(useCreateQuoteFromAgreementMutation(), contract)
 }
 
-export const createQuoteFromBackOfficeOptions = (
+export const createQuoteFromAgreementOptions = (
   agreement: Agreement,
   contract: Contract,
 ): MutationFunctionOptions<
-  CreateQuoteFromBackOfficeMutation,
-  CreateQuoteFromBackOfficeMutationVariables
+  CreateQuoteFromAgreementMutation,
+  CreateQuoteFromAgreementMutationVariables
 > => {
   return {
     variables: {

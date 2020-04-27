@@ -13,7 +13,7 @@ import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
-import { CreateQuoteFromBackOffice } from './CreateQuoteFromBackOffice'
+import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
 
 const AgreementComponent: React.FC<{
   agreement: AgreementType
@@ -58,7 +58,7 @@ const AgreementComponent: React.FC<{
           </>
         )}
         <Card span={2}>
-          <CreateQuoteFromBackOffice
+          <CreateQuoteFromAgreement
             agreement={agreement}
             contract={contract}
             showNotification={showNotification}
