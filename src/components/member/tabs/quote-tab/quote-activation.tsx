@@ -39,9 +39,7 @@ export const QuoteActivation: React.FC<{
     setPreviousAgreementActiveTo,
   ] = React.useState<Date | null>(null)
 
-  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote(
-    contract,
-  )
+  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
 
   return (
     <form
