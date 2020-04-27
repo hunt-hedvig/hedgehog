@@ -46,7 +46,8 @@ export const SelectItemCategories: React.FC<{
     React.SetStateAction<SelectedItemCategory[]>
   >
 }> = ({ selectedItemCategories, setSelectedItemCategories }) => {
-  const [dialogIsOpen, setDialogIsOpen] = React.useState<boolean>(true)
+  const [dialogIsOpen, setDialogIsOpen] = React.useState<boolean>(false)
+  const [creatableInput, setCreatableInput] = React.useState<string>('')
   const currentItemCategory = selectedItemCategories?.slice(-1).pop()
   const [
     newItemCategories,
@@ -69,7 +70,11 @@ export const SelectItemCategories: React.FC<{
   return (
     <>
       {dialogIsOpen && (
-        <AddItemCategoryDialog setDialogIsOpen={setDialogIsOpen} />
+        <AddItemCategoryDialog
+          setDialogIsOpen={setDialogIsOpen}
+          suggestion={creatableInput}
+          selectedItemCategories={selectedItemCategories}
+        />
       )}
       <CreatableSelect
         closeMenuOnSelect={false}
@@ -82,7 +87,10 @@ export const SelectItemCategories: React.FC<{
         components={{ ValueContainer: SelectItemCategoriesPlaceholder }}
         filterOption={customFilter}
         styles={SelectItemCategoriesStyle}
-        onCreateOption={null}
+        onCreateOption={(suggestion) => {
+          setCreatableInput(suggestion)
+          setDialogIsOpen(true)
+        }}
         noOptionsMessage={() =>
           noOptionsMessage(currentItemCategory, noMoreItemCategories)
         }
