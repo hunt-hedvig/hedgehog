@@ -56,12 +56,14 @@ type MutationType {
   setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
   addInventoryItem(item: InventoryItemInput!): Boolean
   removeInventoryItem(inventoryItemId: ID!): Boolean
-  activateQuote(id: ID!,
+  activateQuote(
+    id: ID!,
     activationDate: LocalDate!,
     terminationDate: LocalDate
   ): Quote!
 
-  addAgreementFromQuote(id: ID!,
+  addAgreementFromQuote(
+    id: ID!,
     contractId: ID!,
     activeFrom: LocalDate,
     activeTo: LocalDate,

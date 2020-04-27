@@ -13,7 +13,7 @@ import { BottomSpacerWrapper, ErrorMessage } from './common'
 
 const getContract = (contracts, quote): Contract => {
   return contracts.find((contract) =>
-    contract.agreements.flatMap(
+    contract.agreements.some(
       (agreement) => agreement.id === quote.originatingProductId,
     ),
   )
@@ -33,7 +33,7 @@ export const QuoteActivation: React.FC<{
   const [useGap, setUseGap] = React.useState(false)
   const [contracts] = useContracts(memberId)
   const contract = getContract(contracts, quote)
-  const [activeFrom, setActiveFrom] = React.useState<Date | null>(new Date())
+  const [activeFrom, setActiveFrom] = React.useState<Date>(new Date())
   const [
     previousAgreementActiveTo,
     setPreviousAgreementActiveTo,

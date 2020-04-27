@@ -5,19 +5,13 @@ import {
   CreateQuoteFromAgreementMutation,
   CreateQuoteFromAgreementMutationHookResult,
   CreateQuoteFromAgreementMutationVariables,
+  GetContractsDocument,
   useCreateQuoteFromAgreementMutation,
 } from '../api/generated/graphql'
-import { withDelayedRefetchContracts } from './use-contracts'
 import { QUOTES_QUERY } from './use-quotes'
 
-export const useCreateQuoteFromAgreement = (
-  contract: Contract,
-): CreateQuoteFromAgreementMutationHookResult => {
-  return withDelayedRefetchContracts<
-    CreateQuoteFromAgreementMutation,
-    CreateQuoteFromAgreementMutationVariables
-  >(useCreateQuoteFromAgreementMutation(), contract)
-}
+export const useCreateQuoteFromAgreement = (): CreateQuoteFromAgreementMutationHookResult =>
+  useCreateQuoteFromAgreementMutation()
 
 export const createQuoteFromAgreementOptions = (
   agreement: Agreement,
@@ -34,6 +28,10 @@ export const createQuoteFromAgreementOptions = (
     refetchQueries: () => [
       {
         query: QUOTES_QUERY,
+        variables: { memberId: contract.holderMemberId },
+      },
+      {
+        query: GetContractsDocument,
         variables: { memberId: contract.holderMemberId },
       },
     ],

@@ -5,6 +5,7 @@ import {
   AddAgreementFromQuoteMutationHookResult,
   AddAgreementFromQuoteMutationVariables,
   Contract,
+  GetContractsDocument,
   Quote,
   useAddAgreementFromQuoteMutation,
 } from '../api/generated/graphql'
@@ -36,6 +37,10 @@ export const addAgreementFromQuoteOptions = (
     refetchQueries: () => [
       {
         query: QUOTES_QUERY,
+        variables: { memberId: contract.holderMemberId },
+      },
+      {
+        query: GetContractsDocument,
         variables: { memberId: contract.holderMemberId },
       },
     ],

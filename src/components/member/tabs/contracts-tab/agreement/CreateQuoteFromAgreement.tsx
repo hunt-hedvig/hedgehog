@@ -14,7 +14,7 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
   contract: Contract
   showNotification: (data: Notification) => void
 }> = ({ agreement, contract, showNotification }) => {
-  const [createQuote] = useCreateQuoteFromAgreement(contract)
+  const [createQuote] = useCreateQuoteFromAgreement()
   const [quotes, loadingQuotes] = useQuotes(contract.holderMemberId)
 
   return (
@@ -22,6 +22,7 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
       <ThirdLevelHeadline>Create Quote</ThirdLevelHeadline>
       <>
         {quotes
+          .filter((quote) => !quote.isComplete)
           .map((quote) => quote.originatingProductId)
           .includes(agreement.id) && !loadingQuotes ? (
           <>Agreement has an existing quote</>
