@@ -28,7 +28,7 @@ export const useContracts = (memberId: string): ContractReturnTuple => {
 const compareContracts = (a: Contract, b: Contract) =>
   a.createdAt < b.createdAt ? 1 : -1
 
-export const withRefetchContracts = <
+export const withDelayedRefetchContracts = <
   TData extends any,
   TVariables extends OperationVariables
 >(
