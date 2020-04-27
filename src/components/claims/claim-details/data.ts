@@ -23,7 +23,10 @@ export const CLAIM_PAGE_QUERY = gql`
           lastFailedChargeAt
         }
         account {
-          totalBalance
+          totalBalance {
+            amount
+            currency
+          }
         }
       }
       registrationDate

@@ -1,4 +1,5 @@
-import { Agreement } from 'api/generated/graphql'
+import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
+import { Agreement, AgreementStatus } from 'api/generated/graphql'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
@@ -9,15 +10,31 @@ const SelectableTableRow = styled(Table.Row)({
   cursor: 'pointer',
 })
 
-const SelectableTableCell = styled(Table.Cell)<{ selected: boolean }>`
+const SelectableTableCell = styled(Table.Cell)<{
+  selected: boolean
+  status: AgreementStatus
+}>`
   font-weight: ${({ selected }) => (selected ? 'bold' : 'normal')};
+  font-size: 1.2rem;
+  color: ${({ status }) => {
+    if (status === AgreementStatus.Terminated) {
+      return colorsV2.coral700
+    }
+    if (status === AgreementStatus.Active) {
+      return colorsV2.ocean700
+    }
+    if (status === AgreementStatus.Pending) {
+      return colorsV2.violet700
+    }
+    return colorsV2.black
+  }};
   width: 20%;
 `
 
 export const AgreementsTable: React.FC<{
   agreements: ReadonlyArray<Agreement>
-  selectedAgreement: string
-  setSelectedAgreement: (agreementId: string) => void
+  selectedAgreement: string | undefined
+  setSelectedAgreement: (agreementId: string | undefined) => void
 }> = ({ agreements, selectedAgreement, setSelectedAgreement }) => {
   return (
     <Table celled unstackable>
@@ -37,22 +54,41 @@ export const AgreementsTable: React.FC<{
             <SelectableTableRow
               singleLine
               key={agreement.id}
-              onClick={() => setSelectedAgreement(agreement.id)}
+              onClick={() =>
+                selectedAgreement === agreement.id
+                  ? setSelectedAgreement(undefined)
+                  : setSelectedAgreement(agreement.id)
+              }
               active={isSelected}
             >
-              <SelectableTableCell selected={isSelected}>
+              <SelectableTableCell
+                selected={isSelected}
+                status={agreement.status}
+              >
                 {getEnumTitleCase(getLineOfBusiness(agreement))}
               </SelectableTableCell>
-              <SelectableTableCell selected={isSelected}>
+              <SelectableTableCell
+                selected={isSelected}
+                status={agreement.status}
+              >
                 {agreement.fromDate}
               </SelectableTableCell>
-              <SelectableTableCell selected={isSelected}>
+              <SelectableTableCell
+                selected={isSelected}
+                status={agreement.status}
+              >
                 {agreement.toDate}
               </SelectableTableCell>
-              <SelectableTableCell selected={isSelected}>
+              <SelectableTableCell
+                selected={isSelected}
+                status={agreement.status}
+              >
                 {agreement.premium.amount + ' ' + agreement.premium.currency}{' '}
               </SelectableTableCell>
-              <SelectableTableCell selected={isSelected}>
+              <SelectableTableCell
+                selected={isSelected}
+                status={agreement.status}
+              >
                 {getEnumTitleCase(agreement.status)}
               </SelectableTableCell>
             </SelectableTableRow>

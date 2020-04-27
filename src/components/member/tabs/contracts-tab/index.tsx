@@ -27,7 +27,14 @@ export const ContractTab: React.FunctionComponent<{
       {loading && 'Loading...'}
       {!loading && contracts.length === 0 && 'No contract for member'}
       {contracts.map((contract) => (
-        <Contract key={contract.id} contract={contract} refetch={refetch} />
+        <Contract
+          key={contract.id}
+          contract={contract}
+          refetch={refetch}
+          shouldPreSelectAgreement={
+            contracts.length === 1 && !contract.isTerminated
+          }
+        />
       ))}
     </Spacing>
   )

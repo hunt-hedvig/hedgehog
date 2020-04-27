@@ -982,8 +982,8 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "MonetaryAmount",
+              "kind": "OBJECT",
+              "name": "MonetaryAmountV2",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1021,6 +1021,49 @@
               "kind": "SCALAR",
               "name": "String",
               "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MonetaryAmountV2",
+        "description": "",
+        "fields": [
+          {
+            "name": "amount",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "currency",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1128,8 +1171,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -1144,8 +1187,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -1211,8 +1254,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -1227,8 +1270,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -1243,8 +1286,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -1326,8 +1369,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "MonetaryAmount",
+                "kind": "OBJECT",
+                "name": "MonetaryAmountV2",
                 "ofType": null
               }
             },
@@ -3840,49 +3883,6 @@
             "ofType": null
           }
         ]
-      },
-      {
-        "kind": "OBJECT",
-        "name": "MonetaryAmountV2",
-        "description": "",
-        "fields": [
-          {
-            "name": "amount",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "currency",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
       },
       {
         "kind": "ENUM",

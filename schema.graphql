@@ -759,7 +759,7 @@ input NorwegianTravelQuoteDataInput {
 
 type Transaction {
   id: ID
-  amount: MonetaryAmount
+  amount: MonetaryAmountV2
   timestamp: Instant
   type: String
   status: String
@@ -783,16 +783,16 @@ type NumberFailedCharges {
 
 type Account {
   id: ID!
-  currentBalance: MonetaryAmount!
-  totalBalance: MonetaryAmount!
+  currentBalance: MonetaryAmountV2!
+  totalBalance: MonetaryAmountV2!
   chargeEstimation: AccountChargeEstimation!
   entries: [AccountEntry!]!
 }
 
 type AccountChargeEstimation {
-  subscription: MonetaryAmount!
-  discount: MonetaryAmount!
-  charge: MonetaryAmount!
+  subscription: MonetaryAmountV2!
+  discount: MonetaryAmountV2!
+  charge: MonetaryAmountV2!
   discountCodes: [String!]!
 }
 
@@ -824,7 +824,7 @@ input AccountEntryInput {
 type AccountEntry {
   id: ID!
   type: AccountEntryType!
-  amount: MonetaryAmount!
+  amount: MonetaryAmountV2!
   fromDate: LocalDate!
   reference: String!
   source: String!

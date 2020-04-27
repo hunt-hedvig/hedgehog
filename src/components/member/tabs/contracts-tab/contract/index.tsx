@@ -35,9 +35,14 @@ export const InfoText = styled('span')`
 export const Contract: React.FunctionComponent<{
   contract: ContractType
   refetch: () => Promise<any>
-}> = ({ contract, refetch }) => {
-  const [selectedAgreement, setSelectedAgreement] = React.useState<string>(
-    contract.currentAgreementId,
+  shouldPreSelectAgreement: boolean
+}> = ({ contract, refetch, shouldPreSelectAgreement }) => {
+  const [selectedAgreement, setSelectedAgreement] = React.useState<
+    string | undefined
+  >(shouldPreSelectAgreement ? contract.currentAgreementId : undefined)
+
+  const agreementToShow = contract.agreements.find(
+    (agreement) => agreement.id === selectedAgreement,
   )
 
   return (
@@ -84,15 +89,13 @@ export const Contract: React.FunctionComponent<{
         selectedAgreement={selectedAgreement}
         setSelectedAgreement={setSelectedAgreement}
       />
-      <Agreement
-        agreement={
-          contract.agreements.find(
-            (agreement) => agreement.id === selectedAgreement,
-          )!
-        }
-        contract={contract}
-        refetch={refetch}
-      />
+      {agreementToShow && (
+        <Agreement
+          agreement={agreementToShow}
+          contract={contract}
+          refetch={refetch}
+        />
+      )}
     </>
   )
 }
