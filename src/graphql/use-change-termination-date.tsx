@@ -7,12 +7,12 @@ import {
   useChangeTerminationDateMutation,
 } from 'api/generated/graphql'
 import { format } from 'date-fns'
-import { withRefetchContracts } from './use-contracts'
+import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useChangeTerminationDate = (
   contract: Contract,
 ): ChangeTerminationDateMutationHookResult => {
-  return withRefetchContracts<
+  return withDelayedRefetchContracts<
     ChangeTerminationDateMutation,
     ChangeTerminationDateMutationVariables
   >(useChangeTerminationDateMutation(), contract)

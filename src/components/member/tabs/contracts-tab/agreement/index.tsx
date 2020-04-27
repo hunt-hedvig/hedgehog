@@ -13,7 +13,7 @@ import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
-import { CreateQuoteFromBackOffice } from './CreateQuoteFromProduct'
+import { CreateQuoteFromBackOffice } from './CreateQuoteFromBackOffice'
 
 const AgreementComponent: React.FC<{
   agreement: AgreementType

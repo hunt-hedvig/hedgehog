@@ -1601,6 +1601,18 @@ export type ActivatePendingAgreementMutation = {
   >
 }
 
+export type AddAgreementFromQuoteMutationVariables = {
+  id: Scalars['ID']
+  contractId: Scalars['ID']
+  activeFrom?: Maybe<Scalars['LocalDate']>
+  activeTo?: Maybe<Scalars['LocalDate']>
+  previousAgreementActiveTo?: Maybe<Scalars['LocalDate']>
+}
+
+export type AddAgreementFromQuoteMutation = { __typename?: 'MutationType' } & {
+  addAgreementFromQuote: { __typename?: 'Quote' } & Pick<Quote, 'id'>
+}
+
 export type ChangeFromDateMutationVariables = {
   agreementId: Scalars['ID']
   request?: Maybe<ChangeFromDateInput>
@@ -2208,6 +2220,72 @@ export type ActivatePendingAgreementMutationResult = ApolloReactCommon.MutationR
 export type ActivatePendingAgreementMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ActivatePendingAgreementMutation,
   ActivatePendingAgreementMutationVariables
+>
+export const AddAgreementFromQuoteDocument = gql`
+  mutation AddAgreementFromQuote(
+    $id: ID!
+    $contractId: ID!
+    $activeFrom: LocalDate
+    $activeTo: LocalDate
+    $previousAgreementActiveTo: LocalDate
+  ) {
+    addAgreementFromQuote(
+      id: $id
+      contractId: $contractId
+      activeFrom: $activeFrom
+      activeTo: $activeTo
+      previousAgreementActiveTo: $previousAgreementActiveTo
+    ) {
+      id
+    }
+  }
+`
+export type AddAgreementFromQuoteMutationFn = ApolloReactCommon.MutationFunction<
+  AddAgreementFromQuoteMutation,
+  AddAgreementFromQuoteMutationVariables
+>
+
+/**
+ * __useAddAgreementFromQuoteMutation__
+ *
+ * To run a mutation, you first call `useAddAgreementFromQuoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAgreementFromQuoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAgreementFromQuoteMutation, { data, loading, error }] = useAddAgreementFromQuoteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      contractId: // value for 'contractId'
+ *      activeFrom: // value for 'activeFrom'
+ *      activeTo: // value for 'activeTo'
+ *      previousAgreementActiveTo: // value for 'previousAgreementActiveTo'
+ *   },
+ * });
+ */
+export function useAddAgreementFromQuoteMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddAgreementFromQuoteMutation,
+    AddAgreementFromQuoteMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddAgreementFromQuoteMutation,
+    AddAgreementFromQuoteMutationVariables
+  >(AddAgreementFromQuoteDocument, baseOptions)
+}
+export type AddAgreementFromQuoteMutationHookResult = ReturnType<
+  typeof useAddAgreementFromQuoteMutation
+>
+export type AddAgreementFromQuoteMutationResult = ApolloReactCommon.MutationResult<
+  AddAgreementFromQuoteMutation
+>
+export type AddAgreementFromQuoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddAgreementFromQuoteMutation,
+  AddAgreementFromQuoteMutationVariables
 >
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {

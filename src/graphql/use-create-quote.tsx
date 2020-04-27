@@ -7,12 +7,13 @@ import {
   CreateQuoteFromBackOfficeMutationVariables,
   useCreateQuoteFromBackOfficeMutation,
 } from '../api/generated/graphql'
-import { withRefetchContracts } from './use-contracts'
+import { withDelayedRefetchContracts } from './use-contracts'
+import { QUOTES_QUERY } from './use-quotes'
 
 export const useCreateQuoteFromBackOffice = (
   contract: Contract,
 ): CreateQuoteFromBackOfficeMutationHookResult => {
-  return withRefetchContracts<
+  return withDelayedRefetchContracts<
     CreateQuoteFromBackOfficeMutation,
     CreateQuoteFromBackOfficeMutationVariables
   >(useCreateQuoteFromBackOfficeMutation(), contract)
@@ -30,5 +31,11 @@ export const createQuoteFromBackOfficeOptions = (
       agreementId: agreement.id,
       memberId: contract.holderMemberId,
     },
+    refetchQueries: () => [
+      {
+        query: QUOTES_QUERY,
+        variables: { memberId: contract.holderMemberId },
+      },
+    ],
   }
 }

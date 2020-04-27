@@ -25,7 +25,7 @@ export const useContracts = (memberId: string): ContractReturnTuple => {
   return [contracts, queryResult]
 }
 
-export const withRefetchContracts = <
+export const withDelayedRefetchContracts = <
   TData extends any,
   TVariables extends OperationVariables
 >(

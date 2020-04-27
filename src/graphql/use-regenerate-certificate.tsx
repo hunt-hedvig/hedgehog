@@ -6,12 +6,12 @@ import {
   RegenerateCertificateMutationVariables,
   useRegenerateCertificateMutation,
 } from 'api/generated/graphql'
-import { withRefetchContracts } from 'graphql/use-contracts'
+import { withDelayedRefetchContracts } from 'graphql/use-contracts'
 
 export const useRegenerateCertificate = (
   contract: Contract,
 ): RegenerateCertificateMutationHookResult => {
-  return withRefetchContracts<
+  return withDelayedRefetchContracts<
     RegenerateCertificateMutation,
     RegenerateCertificateMutationVariables
   >(useRegenerateCertificateMutation(), contract)

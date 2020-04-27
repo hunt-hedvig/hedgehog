@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Button } from '../../../../../../shared/hedvig-ui/button'
-import { Spacing } from '../../../../../../shared/hedvig-ui/spacing'
 import { ThirdLevelHeadline } from '../../../../../../shared/hedvig-ui/typography'
 import { Agreement, Contract } from '../../../../../api/generated/graphql'
 import {
@@ -22,7 +21,6 @@ export const CreateQuoteFromBackOffice: React.FunctionComponent<{
     <>
       <ThirdLevelHeadline>Create Quote</ThirdLevelHeadline>
       <>
-        <Spacing bottom width={'auto'}></Spacing>
         {quotes
           .map((quote) => quote.originatingProductId)
           .includes(agreement.id) && !loadingQuotes ? (
@@ -40,7 +38,7 @@ export const CreateQuoteFromBackOffice: React.FunctionComponent<{
                   showNotification({
                     type: 'olive',
                     header: 'Success',
-                    message: `Successfully added a quote`,
+                    message: `Successfully added a quote, go to the quotes tab to view it`,
                   })
                 })
                 .catch((error) => {
