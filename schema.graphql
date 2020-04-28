@@ -628,8 +628,8 @@ type NorwegianHomeContentQuoteData implements IQuoteData{
 enum NorwegianHomeContentType {
   OWN,
   RENT,
-  STUDENT_OWN,
-  STUDENT_RENT
+  YOUTH_OWN,
+  YOUTH_RENT
 }
 
 type NorwegianTravelQuoteData implements IQuoteData{
