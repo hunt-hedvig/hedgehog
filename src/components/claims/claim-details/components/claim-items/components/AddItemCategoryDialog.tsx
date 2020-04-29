@@ -11,6 +11,8 @@ import {
   Typography,
 } from '@material-ui/core'
 import * as React from 'react'
+import { ItemCategoryKind } from '../../../../../../api/generated/graphql'
+import { useGetItemCategories } from '../../../../../../graphql/use-get-item-categories'
 import { ItemCategoryChain } from './ItemCategoryChain'
 import { SelectedItemCategory } from './SelectItemCategories'
 
@@ -23,6 +25,7 @@ export const AddItemCategoryDialog: React.FC<{
     .slice(-1)[0]
     ?.nextKind.toLowerCase()
 
+  const [itemCompanies] = useGetItemCategories(ItemCategoryKind.Company, null)
   const [hasVerified, setHasVerified] = React.useState<boolean>(false)
   const [itemCompanyId, setItemCompanyId] = React.useState<string>('')
   const typeIsBrandButNoCompanyChosen =
@@ -42,24 +45,29 @@ export const AddItemCategoryDialog: React.FC<{
           suggestion={suggestion}
           selectedItemCategories={selectedItemCategories}
         />
-        {console.log(itemCompanyId)}
-        <Typography align={'center'} style={{ marginTop: '30px' }}>
-          Please select a <span style={{ fontWeight: 500 }}>company</span>{' '}
-          associated with <span style={{ fontWeight: 500 }}>{suggestion}</span>
-        </Typography>
+
         {proposedKind === 'brand' && (
-          <div style={{ paddingTop: '10px', textAlign: 'center' }}>
-            <TextField
-              select
-              style={{ width: '40%', textAlign: 'left' }}
-              onChange={(option) => setItemCompanyId(option.target.value)}
-              value={itemCompanyId as string}
-            >
-              <MenuItem key={'test'} value="test">
-                {'Stålhästen AB'}
-              </MenuItem>
-            </TextField>
-          </div>
+          <>
+            <Typography align={'center'} style={{ marginTop: '30px' }}>
+              Please select a <span style={{ fontWeight: 500 }}>company</span>{' '}
+              associated with{' '}
+              <span style={{ fontWeight: 500 }}>{suggestion}</span>
+            </Typography>
+            <div style={{ paddingTop: '10px', textAlign: 'center' }}>
+              <TextField
+                select
+                style={{ width: '40%', textAlign: 'left' }}
+                onChange={(option) => setItemCompanyId(option.target.value)}
+                value={itemCompanyId as string}
+              >
+                {itemCompanies.map((company) => (
+                  <MenuItem key={company.id} value={company.id}>
+                    {company.displayName}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+          </>
         )}
 
         <div style={{ paddingTop: '20px', textAlign: 'center' }}>

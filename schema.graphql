@@ -97,8 +97,8 @@ type MutationType {
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
   upsertItemCompany(request: UpsertItemCompanyInput): ID!
-  upsertItemType(request: UpserttemTypeInput): ID!
-  upsertItemBrand(request: UpserttemBrandInput): ID!
+  upsertItemType(request: UpsertItemTypeInput): ID!
+  upsertItemBrand(request: UpsertItemBrandInput): ID!
   upsertItemModel(request: UpsertItemModelInput): ID!
   upsertClaimItem(request: UpsertClaimItemInput): ID!
 }
@@ -121,13 +121,13 @@ input UpsertItemCompanyInput {
   name: String!
 }
 
-input UpserttemTypeInput {
+input UpsertItemTypeInput {
   id: ID
   name: String!
   itemFamilyId: ID!
 }
 
-input UpserttemBrandInput {
+input UpsertItemBrandInput {
   id: ID
   name: String!
   itemTypeId: ID!
