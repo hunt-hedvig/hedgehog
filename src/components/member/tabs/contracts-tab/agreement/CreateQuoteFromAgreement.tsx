@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { Button } from '../../../../../../shared/hedvig-ui/button'
 import { ThirdLevelHeadline } from '../../../../../../shared/hedvig-ui/typography'
-import { Agreement, Contract } from '../../../../../api/generated/graphql'
+import {
+  Agreement,
+  Contract,
+  QuoteState,
+} from '../../../../../api/generated/graphql'
 import {
   createQuoteFromAgreementOptions,
   useCreateQuoteFromAgreement,
@@ -22,7 +26,7 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
       <ThirdLevelHeadline>Create Quote</ThirdLevelHeadline>
       <>
         {quotes
-          .filter((quote) => !quote.isComplete)
+          .filter((quote) => quote.state === QuoteState.Quoted)
           .map((quote) => quote.originatingProductId)
           .includes(agreement.id) && !loadingQuotes ? (
           <>Agreement has an existing quote</>
