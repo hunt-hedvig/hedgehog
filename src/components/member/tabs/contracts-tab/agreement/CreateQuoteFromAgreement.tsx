@@ -1,17 +1,13 @@
-import * as React from 'react'
-import { Button } from '../../../../../../shared/hedvig-ui/button'
-import { ThirdLevelHeadline } from '../../../../../../shared/hedvig-ui/typography'
-import {
-  Agreement,
-  Contract,
-  QuoteState,
-} from '../../../../../api/generated/graphql'
+import { Agreement, Contract, QuoteState } from 'api/generated/graphql'
 import {
   createQuoteFromAgreementOptions,
   useCreateQuoteFromAgreement,
-} from '../../../../../graphql/use-create-quote'
-import { useQuotes } from '../../../../../graphql/use-quotes'
-import { Notification } from '../../../../../store/actions/notificationsActions'
+} from 'graphql/use-create-quote'
+import { useQuotes } from 'graphql/use-quotes'
+import { Button } from 'hedvig-ui/button'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import * as React from 'react'
+import { Notification } from 'store/actions/notificationsActions'
 
 export const CreateQuoteFromAgreement: React.FunctionComponent<{
   agreement: Agreement

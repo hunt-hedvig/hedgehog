@@ -519,8 +519,7 @@ type Quote {
   id: ID!
   createdAt: Instant
   price: Float
-  productType:
-  QuoteProductType
+  productType: QuoteProductType
   state: QuoteState
   initiatedFrom: String
   attributedTo: String

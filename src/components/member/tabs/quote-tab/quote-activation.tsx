@@ -1,14 +1,14 @@
 import { Contract, Quote } from 'api/generated/graphql'
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
+import {
+  addAgreementFromQuoteOptions,
+  useAddAgreementFromQuote,
+} from 'graphql/use-add-agreement-from-quote'
+import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import { Checkbox } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
-import {
-  addAgreementFromQuoteOptions,
-  useAddAgreementFromQuote,
-} from '../../../../graphql/use-add-agreement-from-quote'
-import { useContracts } from '../../../../graphql/use-contracts'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
 
 const getContract = (contracts, quote): Contract => {

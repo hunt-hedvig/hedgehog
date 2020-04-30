@@ -1,18 +1,27 @@
 import { MutationFunctionOptions } from '@apollo/react-common'
-import { format } from 'date-fns'
 import {
   AddAgreementFromQuoteMutation,
   AddAgreementFromQuoteMutationHookResult,
   AddAgreementFromQuoteMutationVariables,
   Contract,
-  GetContractsDocument,
   Quote,
   useAddAgreementFromQuoteMutation,
-} from '../api/generated/graphql'
+} from 'api/generated/graphql'
+import { format } from 'date-fns'
+import { withDelayedRefetchContracts } from './use-contracts'
 import { QUOTES_QUERY } from './use-quotes'
 
-export const useAddAgreementFromQuote = (): AddAgreementFromQuoteMutationHookResult =>
-  useAddAgreementFromQuoteMutation()
+// export const useAddAgreementFromQuote = (): AddAgreementFromQuoteMutationHookResult =>
+//   useAddAgreementFromQuoteMutation()
+
+export const useAddAgreementFromQuote = (
+  contract: Contract,
+): AddAgreementFromQuoteMutationHookResult => {
+  return withDelayedRefetchContracts<
+    AddAgreementFromQuoteMutation,
+    AddAgreementFromQuoteMutationVariables
+  >(useAddAgreementFromQuoteMutation(), contract)
+}
 
 export const addAgreementFromQuoteOptions = (
   contract: Contract,
@@ -37,10 +46,6 @@ export const addAgreementFromQuoteOptions = (
     refetchQueries: () => [
       {
         query: QUOTES_QUERY,
-        variables: { memberId: contract.holderMemberId },
-      },
-      {
-        query: GetContractsDocument,
         variables: { memberId: contract.holderMemberId },
       },
     ],
