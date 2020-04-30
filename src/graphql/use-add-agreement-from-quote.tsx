@@ -8,20 +8,10 @@ import {
   useAddAgreementFromQuoteMutation,
 } from 'api/generated/graphql'
 import { format } from 'date-fns'
-import { withDelayedRefetchContracts } from './use-contracts'
 import { QUOTES_QUERY } from './use-quotes'
 
-// export const useAddAgreementFromQuote = (): AddAgreementFromQuoteMutationHookResult =>
-//   useAddAgreementFromQuoteMutation()
-
-export const useAddAgreementFromQuote = (
-  contract: Contract,
-): AddAgreementFromQuoteMutationHookResult => {
-  return withDelayedRefetchContracts<
-    AddAgreementFromQuoteMutation,
-    AddAgreementFromQuoteMutationVariables
-  >(useAddAgreementFromQuoteMutation(), contract)
-}
+export const useAddAgreementFromQuote = (): AddAgreementFromQuoteMutationHookResult =>
+  useAddAgreementFromQuoteMutation()
 
 export const addAgreementFromQuoteOptions = (
   contract: Contract,
