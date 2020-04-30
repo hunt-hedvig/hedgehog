@@ -1,18 +1,18 @@
 import { MutationFunctionOptions } from '@apollo/react-common'
-import { format } from 'date-fns'
 import {
   ActivatePendingAgreementMutation,
   ActivatePendingAgreementMutationHookResult,
   ActivatePendingAgreementMutationVariables,
   Contract,
   useActivatePendingAgreementMutation,
-} from '../api/generated/graphql'
-import { withRefetchContracts } from './use-contracts'
+} from 'api/generated/graphql'
+import { format } from 'date-fns'
+import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useActivateContract = (
   contract: Contract,
 ): ActivatePendingAgreementMutationHookResult => {
-  return withRefetchContracts<
+  return withDelayedRefetchContracts<
     ActivatePendingAgreementMutation,
     ActivatePendingAgreementMutationVariables
   >(useActivatePendingAgreementMutation(), contract)
