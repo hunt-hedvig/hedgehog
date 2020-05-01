@@ -8,12 +8,12 @@ import {
   TerminationReason,
   useTerminateContractMutation,
 } from '../api/generated/graphql'
-import { withRefetchContracts } from './use-contracts'
+import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useTerminateContract = (
   contract: Contract,
 ): TerminateContractMutationHookResult => {
-  return withRefetchContracts<
+  return withDelayedRefetchContracts<
     TerminateContractMutation,
     TerminateContractMutationVariables
   >(useTerminateContractMutation(), contract)

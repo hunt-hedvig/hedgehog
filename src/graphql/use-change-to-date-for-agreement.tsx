@@ -8,12 +8,12 @@ import {
   Contract,
   useChangeToDateMutation,
 } from '../api/generated/graphql'
-import { withRefetchContracts } from './use-contracts'
+import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useChangeToDate = (
   contract: Contract,
 ): ChangeToDateMutationHookResult => {
-  return withRefetchContracts<
+  return withDelayedRefetchContracts<
     ChangeToDateMutation,
     ChangeToDateMutationVariables
   >(useChangeToDateMutation(), contract)

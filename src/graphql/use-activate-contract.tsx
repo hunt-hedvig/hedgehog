@@ -7,12 +7,12 @@ import {
   useActivatePendingAgreementMutation,
 } from 'api/generated/graphql'
 import { format } from 'date-fns'
-import { withRefetchContracts } from './use-contracts'
+import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useActivateContract = (
   contract: Contract,
 ): ActivatePendingAgreementMutationHookResult => {
-  return withRefetchContracts<
+  return withDelayedRefetchContracts<
     ActivatePendingAgreementMutation,
     ActivatePendingAgreementMutationVariables
   >(useActivatePendingAgreementMutation(), contract)
