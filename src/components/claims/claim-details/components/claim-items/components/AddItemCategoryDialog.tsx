@@ -10,9 +10,21 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core'
+import {
+  ItemCategoryKind,
+  useUpsertItemBrandMutation,
+  useUpsertItemCompanyMutation,
+  useUpsertItemModelMutation,
+  useUpsertItemTypeMutation,
+} from 'api/generated/graphql'
+import { useGetItemCategories } from 'graphql/use-get-item-categories'
+import {
+  useUpsertItemBrandOptions,
+  useUpsertItemCompanyOptions,
+  useUpsertItemModelOptions,
+  useUpsertItemTypeOptions,
+} from 'graphql/use-upsert-item-category'
 import * as React from 'react'
-import { ItemCategoryKind } from '../../../../../../api/generated/graphql'
-import { useGetItemCategories } from '../../../../../../graphql/use-get-item-categories'
 import { ItemCategoryChain } from './ItemCategoryChain'
 import { SelectedItemCategory } from './SelectItemCategories'
 
@@ -21,15 +33,19 @@ export const AddItemCategoryDialog: React.FC<{
   suggestion: string
   selectedItemCategories: SelectedItemCategory[]
 }> = ({ setDialogIsOpen, suggestion, selectedItemCategories }) => {
-  const proposedKind = selectedItemCategories
-    .slice(-1)[0]
-    ?.nextKind.toLowerCase()
+  const parentItemCategory = selectedItemCategories.slice(-1)[0]
+  const proposedKind = parentItemCategory?.nextKind
 
   const [itemCompanies] = useGetItemCategories(ItemCategoryKind.Company, null)
   const [hasVerified, setHasVerified] = React.useState<boolean>(false)
   const [itemCompanyId, setItemCompanyId] = React.useState<string>('')
   const typeIsBrandButNoCompanyChosen =
-    proposedKind === 'brand' && itemCompanyId === ''
+    proposedKind === ItemCategoryKind.Brand && itemCompanyId === ''
+
+  const [upsertItemType] = useUpsertItemTypeMutation()
+  const [upsertItemBrand] = useUpsertItemBrandMutation()
+  const [upsertItemModel] = useUpsertItemModelMutation()
+  const [upsertItemCompany] = useUpsertItemCompanyMutation()
 
   return (
     <Dialog
@@ -39,14 +55,14 @@ export const AddItemCategoryDialog: React.FC<{
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle>New {proposedKind}</DialogTitle>
+      <DialogTitle>New {proposedKind.toString().toLowerCase()}</DialogTitle>
       <DialogContent>
         <ItemCategoryChain
           suggestion={suggestion}
           selectedItemCategories={selectedItemCategories}
         />
 
-        {proposedKind === 'brand' && (
+        {proposedKind === ItemCategoryKind.Brand && (
           <>
             <Typography align={'center'} style={{ marginTop: '30px' }}>
               Please select a <span style={{ fontWeight: 500 }}>company</span>{' '}
@@ -85,7 +101,30 @@ export const AddItemCategoryDialog: React.FC<{
         </Button>
         <Button
           disabled={typeIsBrandButNoCompanyChosen || !hasVerified}
-          onClick={() => setDialogIsOpen(false)}
+          onClick={() => {
+            switch (proposedKind) {
+              case ItemCategoryKind.Type:
+                return upsertItemType(
+                  useUpsertItemTypeOptions(suggestion, parentItemCategory.id),
+                ).then(() => setDialogIsOpen(false))
+              case ItemCategoryKind.Brand:
+                return upsertItemBrand(
+                  useUpsertItemBrandOptions(
+                    suggestion,
+                    parentItemCategory.id,
+                    itemCompanyId,
+                  ),
+                ).then(() => setDialogIsOpen(false))
+              case ItemCategoryKind.Model:
+                return upsertItemModel(
+                  useUpsertItemModelOptions(suggestion, parentItemCategory.id),
+                ).then(() => setDialogIsOpen(false))
+              case ItemCategoryKind.Company:
+                return upsertItemCompany(
+                  useUpsertItemCompanyOptions(suggestion),
+                ).then()
+            }
+          }}
           color="primary"
         >
           Create

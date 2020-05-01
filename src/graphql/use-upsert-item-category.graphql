@@ -1,0 +1,15 @@
+mutation UpsertItemType($request: UpsertItemTypeInput) {
+  upsertItemType(request: $request)
+}
+
+mutation UpsertItemBrand($request: UpsertItemBrandInput) {
+  upsertItemBrand(request: $request)
+}
+
+mutation UpsertItemModel($request: UpsertItemModelInput) {
+  upsertItemModel(request: $request)
+}
+
+mutation UpsertItemCompany($request: UpsertItemCompanyInput) {
+  upsertItemCompany(request: $request)
+}

@@ -956,11 +956,11 @@ export type MutationTypeUpsertItemCompanyArgs = {
 }
 
 export type MutationTypeUpsertItemTypeArgs = {
-  request?: Maybe<UpserttemTypeInput>
+  request?: Maybe<UpsertItemTypeInput>
 }
 
 export type MutationTypeUpsertItemBrandArgs = {
-  request?: Maybe<UpserttemBrandInput>
+  request?: Maybe<UpsertItemBrandInput>
 }
 
 export type MutationTypeUpsertItemModelArgs = {
@@ -1432,6 +1432,13 @@ export type UpsertClaimItemInput = {
   note?: Maybe<Scalars['String']>
 }
 
+export type UpsertItemBrandInput = {
+  id?: Maybe<Scalars['ID']>
+  name: Scalars['String']
+  itemTypeId: Scalars['ID']
+  itemCompanyId: Scalars['ID']
+}
+
 export type UpsertItemCompanyInput = {
   id?: Maybe<Scalars['ID']>
   name: Scalars['String']
@@ -1443,14 +1450,7 @@ export type UpsertItemModelInput = {
   itemBrandId: Scalars['ID']
 }
 
-export type UpserttemBrandInput = {
-  id?: Maybe<Scalars['ID']>
-  name: Scalars['String']
-  itemTypeId: Scalars['ID']
-  itemCompanyId: Scalars['ID']
-}
-
-export type UpserttemTypeInput = {
+export type UpsertItemTypeInput = {
   id?: Maybe<Scalars['ID']>
   name: Scalars['String']
   itemFamilyId: Scalars['ID']
@@ -1913,6 +1913,42 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
     'id' | 'holderMemberId'
   >
 }
+
+export type UpsertItemTypeMutationVariables = {
+  request?: Maybe<UpsertItemTypeInput>
+}
+
+export type UpsertItemTypeMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertItemType'
+>
+
+export type UpsertItemBrandMutationVariables = {
+  request?: Maybe<UpsertItemBrandInput>
+}
+
+export type UpsertItemBrandMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertItemBrand'
+>
+
+export type UpsertItemModelMutationVariables = {
+  request?: Maybe<UpsertItemModelInput>
+}
+
+export type UpsertItemModelMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertItemModel'
+>
+
+export type UpsertItemCompanyMutationVariables = {
+  request?: Maybe<UpsertItemCompanyInput>
+}
+
+export type UpsertItemCompanyMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertItemCompany'
+>
 
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {
@@ -3037,6 +3073,198 @@ export type TerminateContractMutationResult = ApolloReactCommon.MutationResult<
 export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
   TerminateContractMutation,
   TerminateContractMutationVariables
+>
+export const UpsertItemTypeDocument = gql`
+  mutation UpsertItemType($request: UpsertItemTypeInput) {
+    upsertItemType(request: $request)
+  }
+`
+export type UpsertItemTypeMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertItemTypeMutation,
+  UpsertItemTypeMutationVariables
+>
+
+/**
+ * __useUpsertItemTypeMutation__
+ *
+ * To run a mutation, you first call `useUpsertItemTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertItemTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertItemTypeMutation, { data, loading, error }] = useUpsertItemTypeMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertItemTypeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertItemTypeMutation,
+    UpsertItemTypeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertItemTypeMutation,
+    UpsertItemTypeMutationVariables
+  >(UpsertItemTypeDocument, baseOptions)
+}
+export type UpsertItemTypeMutationHookResult = ReturnType<
+  typeof useUpsertItemTypeMutation
+>
+export type UpsertItemTypeMutationResult = ApolloReactCommon.MutationResult<
+  UpsertItemTypeMutation
+>
+export type UpsertItemTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertItemTypeMutation,
+  UpsertItemTypeMutationVariables
+>
+export const UpsertItemBrandDocument = gql`
+  mutation UpsertItemBrand($request: UpsertItemBrandInput) {
+    upsertItemBrand(request: $request)
+  }
+`
+export type UpsertItemBrandMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertItemBrandMutation,
+  UpsertItemBrandMutationVariables
+>
+
+/**
+ * __useUpsertItemBrandMutation__
+ *
+ * To run a mutation, you first call `useUpsertItemBrandMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertItemBrandMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertItemBrandMutation, { data, loading, error }] = useUpsertItemBrandMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertItemBrandMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertItemBrandMutation,
+    UpsertItemBrandMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertItemBrandMutation,
+    UpsertItemBrandMutationVariables
+  >(UpsertItemBrandDocument, baseOptions)
+}
+export type UpsertItemBrandMutationHookResult = ReturnType<
+  typeof useUpsertItemBrandMutation
+>
+export type UpsertItemBrandMutationResult = ApolloReactCommon.MutationResult<
+  UpsertItemBrandMutation
+>
+export type UpsertItemBrandMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertItemBrandMutation,
+  UpsertItemBrandMutationVariables
+>
+export const UpsertItemModelDocument = gql`
+  mutation UpsertItemModel($request: UpsertItemModelInput) {
+    upsertItemModel(request: $request)
+  }
+`
+export type UpsertItemModelMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertItemModelMutation,
+  UpsertItemModelMutationVariables
+>
+
+/**
+ * __useUpsertItemModelMutation__
+ *
+ * To run a mutation, you first call `useUpsertItemModelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertItemModelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertItemModelMutation, { data, loading, error }] = useUpsertItemModelMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertItemModelMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertItemModelMutation,
+    UpsertItemModelMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertItemModelMutation,
+    UpsertItemModelMutationVariables
+  >(UpsertItemModelDocument, baseOptions)
+}
+export type UpsertItemModelMutationHookResult = ReturnType<
+  typeof useUpsertItemModelMutation
+>
+export type UpsertItemModelMutationResult = ApolloReactCommon.MutationResult<
+  UpsertItemModelMutation
+>
+export type UpsertItemModelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertItemModelMutation,
+  UpsertItemModelMutationVariables
+>
+export const UpsertItemCompanyDocument = gql`
+  mutation UpsertItemCompany($request: UpsertItemCompanyInput) {
+    upsertItemCompany(request: $request)
+  }
+`
+export type UpsertItemCompanyMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertItemCompanyMutation,
+  UpsertItemCompanyMutationVariables
+>
+
+/**
+ * __useUpsertItemCompanyMutation__
+ *
+ * To run a mutation, you first call `useUpsertItemCompanyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertItemCompanyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertItemCompanyMutation, { data, loading, error }] = useUpsertItemCompanyMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertItemCompanyMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertItemCompanyMutation,
+    UpsertItemCompanyMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertItemCompanyMutation,
+    UpsertItemCompanyMutationVariables
+  >(UpsertItemCompanyDocument, baseOptions)
+}
+export type UpsertItemCompanyMutationHookResult = ReturnType<
+  typeof useUpsertItemCompanyMutation
+>
+export type UpsertItemCompanyMutationResult = ApolloReactCommon.MutationResult<
+  UpsertItemCompanyMutation
+>
+export type UpsertItemCompanyMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertItemCompanyMutation,
+  UpsertItemCompanyMutationVariables
 >
 
 export interface IntrospectionResultData {

@@ -1,9 +1,0 @@
-mutation UpsertItemType(
-  $request: UpsertItemTypeInput
-) {
-  upsertItemType(request: $request) {
-    id
-    name
-    itemFamilyId
-  }
-}
