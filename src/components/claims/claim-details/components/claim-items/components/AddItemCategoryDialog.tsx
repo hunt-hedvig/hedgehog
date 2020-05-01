@@ -6,27 +6,27 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
-  MenuItem,
-  TextField,
-  Typography,
 } from '@material-ui/core'
 import {
   ItemCategoryKind,
   useUpsertItemBrandMutation,
-  useUpsertItemCompanyMutation,
   useUpsertItemModelMutation,
   useUpsertItemTypeMutation,
 } from 'api/generated/graphql'
-import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import {
   useUpsertItemBrandOptions,
-  useUpsertItemCompanyOptions,
   useUpsertItemModelOptions,
   useUpsertItemTypeOptions,
 } from 'graphql/use-upsert-item-category'
 import * as React from 'react'
 import { ItemCategoryChain } from './ItemCategoryChain'
 import { SelectedItemCategory } from './SelectItemCategories'
+import { SelectItemCompany } from './SelectItemCompany'
+
+export interface ItemCompanySelection {
+  value: string
+  label: string
+}
 
 export const AddItemCategoryDialog: React.FC<{
   setDialogIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -36,16 +36,17 @@ export const AddItemCategoryDialog: React.FC<{
   const parentItemCategory = selectedItemCategories.slice(-1)[0]
   const proposedKind = parentItemCategory?.nextKind
 
-  const [itemCompanies] = useGetItemCategories(ItemCategoryKind.Company, null)
   const [hasVerified, setHasVerified] = React.useState<boolean>(false)
-  const [itemCompanyId, setItemCompanyId] = React.useState<string>('')
+  const [
+    itemCompany,
+    setItemCompany,
+  ] = React.useState<ItemCompanySelection | null>(null)
   const typeIsBrandButNoCompanyChosen =
-    proposedKind === ItemCategoryKind.Brand && itemCompanyId === ''
+    proposedKind === ItemCategoryKind.Brand && !!itemCompany?.value
 
   const [upsertItemType] = useUpsertItemTypeMutation()
   const [upsertItemBrand] = useUpsertItemBrandMutation()
   const [upsertItemModel] = useUpsertItemModelMutation()
-  const [upsertItemCompany] = useUpsertItemCompanyMutation()
 
   return (
     <Dialog
@@ -63,27 +64,10 @@ export const AddItemCategoryDialog: React.FC<{
         />
 
         {proposedKind === ItemCategoryKind.Brand && (
-          <>
-            <Typography align={'center'} style={{ marginTop: '30px' }}>
-              Please select a <span style={{ fontWeight: 500 }}>company</span>{' '}
-              associated with{' '}
-              <span style={{ fontWeight: 500 }}>{suggestion}</span>
-            </Typography>
-            <div style={{ paddingTop: '10px', textAlign: 'center' }}>
-              <TextField
-                select
-                style={{ width: '40%', textAlign: 'left' }}
-                onChange={(option) => setItemCompanyId(option.target.value)}
-                value={itemCompanyId as string}
-              >
-                {itemCompanies.map((company) => (
-                  <MenuItem key={company.id} value={company.id}>
-                    {company.displayName}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-          </>
+          <SelectItemCompany
+            itemCompany={itemCompany}
+            setItemCompany={setItemCompany}
+          />
         )}
 
         <div style={{ paddingTop: '20px', textAlign: 'center' }}>
@@ -108,21 +92,20 @@ export const AddItemCategoryDialog: React.FC<{
                   useUpsertItemTypeOptions(suggestion, parentItemCategory.id),
                 ).then(() => setDialogIsOpen(false))
               case ItemCategoryKind.Brand:
-                return upsertItemBrand(
-                  useUpsertItemBrandOptions(
-                    suggestion,
-                    parentItemCategory.id,
-                    itemCompanyId,
-                  ),
-                ).then(() => setDialogIsOpen(false))
+                return (
+                  itemCompany &&
+                  upsertItemBrand(
+                    useUpsertItemBrandOptions(
+                      suggestion,
+                      parentItemCategory.id,
+                      itemCompany.value,
+                    ),
+                  ).then(() => setDialogIsOpen(false))
+                )
               case ItemCategoryKind.Model:
                 return upsertItemModel(
                   useUpsertItemModelOptions(suggestion, parentItemCategory.id),
                 ).then(() => setDialogIsOpen(false))
-              case ItemCategoryKind.Company:
-                return upsertItemCompany(
-                  useUpsertItemCompanyOptions(suggestion),
-                ).then()
             }
           }}
           color="primary"
