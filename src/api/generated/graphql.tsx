@@ -1048,8 +1048,8 @@ export type NorwegianHomeContentQuoteInput = {
 export enum NorwegianHomeContentType {
   Own = 'OWN',
   Rent = 'RENT',
-  StudentOwn = 'STUDENT_OWN',
-  StudentRent = 'STUDENT_RENT',
+  YouthOwn = 'YOUTH_OWN',
+  YouthRent = 'YOUTH_RENT',
 }
 
 export type NorwegianTravel = AgreementCore & {
