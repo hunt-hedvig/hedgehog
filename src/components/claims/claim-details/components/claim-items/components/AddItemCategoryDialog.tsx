@@ -42,7 +42,7 @@ export const AddItemCategoryDialog: React.FC<{
     setItemCompany,
   ] = React.useState<ItemCompanySelection | null>(null)
   const typeIsBrandButNoCompanyChosen =
-    proposedKind === ItemCategoryKind.Brand && !!itemCompany?.value
+    proposedKind === ItemCategoryKind.Brand && !itemCompany?.value
 
   const [upsertItemType] = useUpsertItemTypeMutation()
   const [upsertItemBrand] = useUpsertItemBrandMutation()

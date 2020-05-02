@@ -58,7 +58,7 @@ export const SelectItemCategories: React.FC<{
   )
   const placeholderSuggestion =
     newItemCategories
-      .slice(0, 3)
+      .slice(0, 2)
       .map((itemCategory) => `${itemCategory.displayName}`)
       .join(', ') + '...'
 
