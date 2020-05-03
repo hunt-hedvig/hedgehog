@@ -40,6 +40,8 @@ export const ClaimItems: React.FC<{ claimId: string }> = ({ claimId }) => {
     boolean
   >(false)
 
+  const validPurchasePrice = !purchasePrice.match(/^[0-9]*$/g)
+
   return (
     <Paper>
       <Grid container spacing={24}>
@@ -80,6 +82,8 @@ export const ClaimItems: React.FC<{ claimId: string }> = ({ claimId }) => {
             <Grid item style={{ width: '16.5%' }}>
               <TextField
                 placeholder={'Purchase price'}
+                error={!!validPurchasePrice}
+                helperText={!!validPurchasePrice && 'Price should be a number'}
                 onChange={(e) => setPurchasePrice(e.target.value)}
                 InputProps={{
                   endAdornment: (
@@ -104,7 +108,12 @@ export const ClaimItems: React.FC<{ claimId: string }> = ({ claimId }) => {
             <Grid item style={{ width: '13.0%' }}>
               <DatePicker
                 keyboard
+                minDateMessage={'Invalid Date'}
+                maxDateMessage={'Invalid Date'}
                 format={'yyyy-MM-dd'}
+                labelFunc={(date: Date) =>
+                  date ? format(date, 'yyyy-MM-dd') : ''
+                }
                 fullWidth
                 autoOk
                 onFocus={() => setDateOfPurchaseActive(true)}
