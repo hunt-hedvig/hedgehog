@@ -7760,7 +7760,7 @@
             "deprecationReason": null
           },
           {
-            "name": "purchasePriceAmount",
+            "name": "purchasePrice",
             "description": "",
             "args": [],
             "type": {
@@ -11842,11 +11842,21 @@
             "defaultValue": null
           },
           {
-            "name": "purchasePrice",
+            "name": "purchasePriceAmount",
             "description": "",
             "type": {
               "kind": "SCALAR",
-              "name": "MonetaryAmount",
+              "name": "Float",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "purchasePriceCurrency",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "defaultValue": null

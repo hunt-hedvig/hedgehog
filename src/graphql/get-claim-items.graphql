@@ -14,7 +14,7 @@ query GetClaimItems($claimId: ID!) {
         displayName
     }
     dateOfPurchase
-    purchasePriceAmount {
+    purchasePrice {
       amount
       currency
     }

@@ -1,12 +1,10 @@
 import {
   Button,
-  Fade,
   Grid,
   InputAdornment,
   MenuItem,
   Select,
   TextField,
-  Typography,
   withStyles,
 } from '@material-ui/core'
 import TodayIcon from '@material-ui/icons/Today'
@@ -21,13 +19,6 @@ import {
   SelectedItemCategory,
   SelectItemCategories,
 } from './SelectItemCategories'
-
-const TableHeader = withStyles({
-  root: {
-    fontSize: '0.7rem',
-    color: '#333',
-  },
-})(Typography)
 
 const DateIcon = withStyles({
   root: {
@@ -47,9 +38,6 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [purchasePriceCurrency, setPurchasePriceCurrency] = React.useState<
     string
   >('SEK')
-  const [dateOfPurchaseActive, setDateOfPurchaseActive] = React.useState<
-    boolean
-  >(false)
 
   const validPurchasePrice = !purchasePrice.match(/^[0-9]*$/g)
 
@@ -65,11 +53,9 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
     itemBrandId: selectedItemCategories[2]?.id ?? null,
     itemModelId: selectedItemCategories[3]?.id ?? null,
     dateOfPurchase: dateOfPurchase === '' ? null : dateOfPurchase,
-    purchasePrice:
-      purchasePrice === ''
-        ? null
-        : { amount: purchasePrice, currency: purchasePriceCurrency },
-    dateOfLoss: '2001-01-01',
+    purchasePriceAmount: Number(purchasePrice),
+    purchasePriceCurrency,
+    dateOfLoss: '2020-05-01',
     note: note === '' ? null : note,
   }
 
@@ -86,30 +72,6 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
 
   return (
     <>
-      <Grid
-        container
-        style={{ marginBottom: '-18px', marginTop: '10px' }}
-        spacing={16}
-      >
-        <Grid item xs={6}>
-          <TableHeader>Item</TableHeader>
-        </Grid>
-        <Grid item style={{ width: '16.5%' }}>
-          <Fade in={purchasePrice !== ''}>
-            <TableHeader>Purchase price</TableHeader>
-          </Fade>
-        </Grid>
-        <Grid item style={{ width: '13.0%' }}>
-          <Fade in={dateOfPurchase !== '' || dateOfPurchaseActive}>
-            <TableHeader>Purchase date</TableHeader>
-          </Fade>
-        </Grid>
-        <Grid item xs={true}>
-          <Fade in={note !== ''}>
-            <TableHeader>Note</TableHeader>
-          </Fade>
-        </Grid>
-      </Grid>
       <Grid container spacing={16}>
         <Grid item xs={6}>
           <SelectItemCategories
@@ -150,8 +112,6 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
             labelFunc={(date: Date) => (date ? format(date, 'yyyy-MM-dd') : '')}
             fullWidth
             autoOk
-            onFocus={() => setDateOfPurchaseActive(true)}
-            onBlur={() => setDateOfPurchaseActive(false)}
             value={dateOfPurchase === '' ? null : dateOfPurchase}
             onChange={(date: Date) => {
               date
