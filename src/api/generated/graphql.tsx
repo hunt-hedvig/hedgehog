@@ -1741,6 +1741,37 @@ export type GetAccountQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetClaimItemsQueryVariables = {
+  claimId: Scalars['ID']
+}
+
+export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
+  claimItems: Array<
+    { __typename?: 'ClaimItem' } & Pick<
+      ClaimItem,
+      'id' | 'dateOfPurchase' | 'dateOfLoss' | 'note'
+    > & {
+        itemFamily: { __typename?: 'ItemFamily' } & Pick<
+          ItemFamily,
+          'displayName'
+        >
+        itemType: { __typename?: 'ItemType' } & Pick<ItemType, 'displayName'>
+        itemBrand: Maybe<
+          { __typename?: 'ItemBrand' } & Pick<ItemBrand, 'displayName'>
+        >
+        itemModel: Maybe<
+          { __typename?: 'ItemModel' } & Pick<ItemModel, 'displayName'>
+        >
+        purchasePriceAmount: Maybe<
+          { __typename?: 'MonetaryAmountV2' } & Pick<
+            MonetaryAmountV2,
+            'amount' | 'currency'
+          >
+        >
+      }
+  >
+}
+
 export type GetContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -2011,6 +2042,15 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
     'id' | 'holderMemberId'
   >
 }
+
+export type UpsertClaimItemMutationVariables = {
+  request?: Maybe<UpsertClaimItemInput>
+}
+
+export type UpsertClaimItemMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertClaimItem'
+>
 
 export type UpsertItemTypeMutationVariables = {
   request?: Maybe<UpsertItemTypeInput>
@@ -2737,6 +2777,81 @@ export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
   GetAccountQuery,
   GetAccountQueryVariables
 >
+export const GetClaimItemsDocument = gql`
+  query GetClaimItems($claimId: ID!) {
+    claimItems(claimId: $claimId) {
+      id
+      itemFamily {
+        displayName
+      }
+      itemType {
+        displayName
+      }
+      itemBrand {
+        displayName
+      }
+      itemModel {
+        displayName
+      }
+      dateOfPurchase
+      purchasePriceAmount {
+        amount
+        currency
+      }
+      dateOfLoss
+      note
+    }
+  }
+`
+
+/**
+ * __useGetClaimItemsQuery__
+ *
+ * To run a query within a React component, call `useGetClaimItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimItemsQuery({
+ *   variables: {
+ *      claimId: // value for 'claimId'
+ *   },
+ * });
+ */
+export function useGetClaimItemsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimItemsQuery,
+    GetClaimItemsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetClaimItemsQuery,
+    GetClaimItemsQueryVariables
+  >(GetClaimItemsDocument, baseOptions)
+}
+export function useGetClaimItemsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimItemsQuery,
+    GetClaimItemsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimItemsQuery,
+    GetClaimItemsQueryVariables
+  >(GetClaimItemsDocument, baseOptions)
+}
+export type GetClaimItemsQueryHookResult = ReturnType<
+  typeof useGetClaimItemsQuery
+>
+export type GetClaimItemsLazyQueryHookResult = ReturnType<
+  typeof useGetClaimItemsLazyQuery
+>
+export type GetClaimItemsQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimItemsQuery,
+  GetClaimItemsQueryVariables
+>
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
@@ -3288,6 +3403,54 @@ export type TerminateContractMutationResult = ApolloReactCommon.MutationResult<
 export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
   TerminateContractMutation,
   TerminateContractMutationVariables
+>
+export const UpsertClaimItemDocument = gql`
+  mutation UpsertClaimItem($request: UpsertClaimItemInput) {
+    upsertClaimItem(request: $request)
+  }
+`
+export type UpsertClaimItemMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertClaimItemMutation,
+  UpsertClaimItemMutationVariables
+>
+
+/**
+ * __useUpsertClaimItemMutation__
+ *
+ * To run a mutation, you first call `useUpsertClaimItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertClaimItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertClaimItemMutation, { data, loading, error }] = useUpsertClaimItemMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertClaimItemMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertClaimItemMutation,
+    UpsertClaimItemMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertClaimItemMutation,
+    UpsertClaimItemMutationVariables
+  >(UpsertClaimItemDocument, baseOptions)
+}
+export type UpsertClaimItemMutationHookResult = ReturnType<
+  typeof useUpsertClaimItemMutation
+>
+export type UpsertClaimItemMutationResult = ApolloReactCommon.MutationResult<
+  UpsertClaimItemMutation
+>
+export type UpsertClaimItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertClaimItemMutation,
+  UpsertClaimItemMutationVariables
 >
 export const UpsertItemTypeDocument = gql`
   mutation UpsertItemType($request: UpsertItemTypeInput) {
