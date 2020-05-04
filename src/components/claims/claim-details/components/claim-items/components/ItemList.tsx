@@ -10,9 +10,9 @@ import {
 } from '@material-ui/core'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
 import * as React from 'react'
-import { useDeleteClaimItemMutation } from '../../../../../../api/generated/graphql'
 
 const SmallArrowRight = withStyles({
   root: {
