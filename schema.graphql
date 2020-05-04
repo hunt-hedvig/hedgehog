@@ -106,6 +106,7 @@ type MutationType {
   upsertItemBrand(request: UpsertItemBrandInput): ID!
   upsertItemModel(request: UpsertItemModelInput): ID!
   upsertClaimItem(request: UpsertClaimItemInput): ID!
+  deleteClaimItem(claimItemId: ID!): ID
 }
 
 input UpsertClaimItemInput {

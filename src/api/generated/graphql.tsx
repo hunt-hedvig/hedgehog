@@ -763,6 +763,7 @@ export type MutationType = {
   upsertItemBrand: Scalars['ID']
   upsertItemModel: Scalars['ID']
   upsertClaimItem: Scalars['ID']
+  deleteClaimItem?: Maybe<Scalars['ID']>
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -972,6 +973,10 @@ export type MutationTypeUpsertItemModelArgs = {
 
 export type MutationTypeUpsertClaimItemArgs = {
   request?: Maybe<UpsertClaimItemInput>
+}
+
+export type MutationTypeDeleteClaimItemArgs = {
+  claimItemId: Scalars['ID']
 }
 
 export type NorwegianGripenFactorInput = {
@@ -2043,6 +2048,15 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
     'id' | 'holderMemberId'
   >
 }
+
+export type DeleteClaimItemMutationVariables = {
+  claimItemId: Scalars['ID']
+}
+
+export type DeleteClaimItemMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'deleteClaimItem'
+>
 
 export type UpsertClaimItemMutationVariables = {
   request?: Maybe<UpsertClaimItemInput>
@@ -3404,6 +3418,54 @@ export type TerminateContractMutationResult = ApolloReactCommon.MutationResult<
 export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
   TerminateContractMutation,
   TerminateContractMutationVariables
+>
+export const DeleteClaimItemDocument = gql`
+  mutation DeleteClaimItem($claimItemId: ID!) {
+    deleteClaimItem(claimItemId: $claimItemId)
+  }
+`
+export type DeleteClaimItemMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteClaimItemMutation,
+  DeleteClaimItemMutationVariables
+>
+
+/**
+ * __useDeleteClaimItemMutation__
+ *
+ * To run a mutation, you first call `useDeleteClaimItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteClaimItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteClaimItemMutation, { data, loading, error }] = useDeleteClaimItemMutation({
+ *   variables: {
+ *      claimItemId: // value for 'claimItemId'
+ *   },
+ * });
+ */
+export function useDeleteClaimItemMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteClaimItemMutation,
+    DeleteClaimItemMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DeleteClaimItemMutation,
+    DeleteClaimItemMutationVariables
+  >(DeleteClaimItemDocument, baseOptions)
+}
+export type DeleteClaimItemMutationHookResult = ReturnType<
+  typeof useDeleteClaimItemMutation
+>
+export type DeleteClaimItemMutationResult = ApolloReactCommon.MutationResult<
+  DeleteClaimItemMutation
+>
+export type DeleteClaimItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteClaimItemMutation,
+  DeleteClaimItemMutationVariables
 >
 export const UpsertClaimItemDocument = gql`
   mutation UpsertClaimItem($request: UpsertClaimItemInput) {

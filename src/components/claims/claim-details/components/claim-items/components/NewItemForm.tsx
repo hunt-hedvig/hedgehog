@@ -39,7 +39,7 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
     string
   >('SEK')
 
-  const validPurchasePrice = !purchasePrice.match(/^[0-9]*$/g)
+  const validPurchasePrice = purchasePrice.match(/^[0-9]*$/g)
 
   const [
     upsertClaimItem,
@@ -53,14 +53,18 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
     itemBrandId: selectedItemCategories[2]?.id ?? null,
     itemModelId: selectedItemCategories[3]?.id ?? null,
     dateOfPurchase: dateOfPurchase === '' ? null : dateOfPurchase,
-    purchasePriceAmount: Number(purchasePrice),
-    purchasePriceCurrency,
-    dateOfLoss: '2020-05-01',
+    purchasePriceAmount:
+      purchasePrice !== ('0' && '') ? Number(purchasePrice) : null,
+    purchasePriceCurrency:
+      purchasePrice !== ('0' && '') ? purchasePriceCurrency : null,
+    dateOfLoss: format(new Date(), 'yyyy-MM-dd'),
     note: note === '' ? null : note,
   }
 
   const formLooksGood =
-    addNewClaimItemRequest.itemFamilyId && addNewClaimItemRequest.itemTypeId
+    addNewClaimItemRequest.itemFamilyId &&
+    addNewClaimItemRequest.itemTypeId &&
+    validPurchasePrice
 
   const resetForm = () => {
     setPurchasePrice('')
@@ -80,28 +84,29 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
           />
         </Grid>
         <Grid item style={{ width: '16.5%' }}>
-          <TextField
-            placeholder={'Purchase price'}
-            error={!!validPurchasePrice}
-            helperText={!!validPurchasePrice && 'Price should be a number'}
-            onChange={(e) => setPurchasePrice(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Select
-                    style={{ color: '#888' }}
-                    disableUnderline
-                    value={purchasePriceCurrency}
-                    onChange={(e) => setPurchasePriceCurrency(e.target.value)}
-                  >
-                    <MenuItem value={'SEK'}>SEK</MenuItem>
-                    <MenuItem value={'NOK'}>NOK</MenuItem>
-                  </Select>
-                </InputAdornment>
-              ),
-            }}
-            fullWidth
-          />
+          <Grid container spacing={0}>
+            <Grid item style={{ width: '60%' }}>
+              <TextField
+                placeholder={'Purchase price'}
+                error={!validPurchasePrice}
+                value={purchasePrice}
+                helperText={!validPurchasePrice && 'Only numbers'}
+                onChange={(e) => setPurchasePrice(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+            <Grid item style={{ width: '40%', marginTop: '-1px' }}>
+              <Select
+                error={!validPurchasePrice}
+                style={{ color: '#888', textAlign: 'right' }}
+                value={purchasePriceCurrency}
+                onChange={(e) => setPurchasePriceCurrency(e.target.value)}
+              >
+                <MenuItem value={'SEK'}>SEK</MenuItem>
+                <MenuItem value={'NOK'}>NOK</MenuItem>
+              </Select>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item style={{ width: '13.0%' }}>
           <DatePicker
