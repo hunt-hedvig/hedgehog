@@ -8,6 +8,7 @@ import {
   HouseQuoteData,
   MutationType,
   MutationTypeUpdateQuoteArgs,
+  NorwegianHomeContentType,
   Quote,
   QuoteData,
   QuoteInput,
@@ -70,6 +71,19 @@ const UPDATE_QUOTE_MUTATION = gql`
   }
 `
 
+// @ts-ignore
+const getProductTypeValue = (quote: Quote): string => {
+  if (quote.productType === 'APARTMENT') {
+    return (quote.data as ApartmentQuoteData).subType!.toString()
+  }
+  if (quote.productType === 'HOUSE') {
+    return 'HOUSE'
+  }
+  if (quote.productType === 'TRAVEL') {
+    return 'TRAVEL'
+  }
+}
+
 const createQuoteData = ({
   productType,
   quote,
@@ -113,6 +127,18 @@ const createQuoteData = ({
         }),
       ),
       isSubleted: isSubleted ?? false,
+    }
+  }
+  if ((productType ?? quote.productType) === 'HOME_CONTENT') {
+    quoteData.norwegianHomeContentData = {
+      ...baseData,
+      type: productType as NorwegianHomeContentType,
+    }
+  }
+
+  if ((productType ?? quote.productType) === 'TRAVEL') {
+    quoteData.norwegianTravelData = {
+      householdSize: parseInt(householdSize!, 10),
     }
   } else {
     quoteData.apartmentData = {
@@ -176,6 +202,29 @@ export const QuoteModification: React.FC<{
     setBypassUnderwritingGuidelines,
   ] = React.useState(false)
 
+  const getProductTypeDropdown = () => (
+    <Dropdown
+      fluid
+      selection
+      value={formState.productType ?? getProductTypeValue(quote)}
+      onChange={(_, data) => {
+        if (onWipChange) {
+          onWipChange(true)
+        }
+        setFormState({ ...formState, productType: data.value as string })
+      }}
+      options={[
+        { text: 'Apartment (rent)', value: 'RENT' },
+        { text: 'Apartment (brf)', value: 'BRF' },
+        { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
+        { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
+        { text: 'House', value: 'HOUSE' },
+        { text: 'Norwegian Home Content', value: 'HOME_CONTENT' },
+        { text: 'Norwegian Travel', value: 'TRAVEL' },
+      ]}
+    />
+  )
+
   const getTextInput = (
     variable: keyof FormState,
     label: React.ReactNode,
@@ -228,40 +277,28 @@ export const QuoteModification: React.FC<{
         }
       }}
     >
-      <InputGroup>
-        {getTextInput('street', 'Street')}
-        {getTextInput('zipCode', 'Zip code')}
-        {getTextInput('city', 'City')}
-      </InputGroup>
-      <InputGroup>
-        <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
-        <Dropdown
-          fluid
-          selection
-          value={
-            formState.productType ??
-            (quote.productType === 'APARTMENT'
-              ? ((quote.data as ApartmentQuoteData).subType as ApartmentSubType)
-              : 'HOUSE')
-          }
-          onChange={(_, data) => {
-            if (onWipChange) {
-              onWipChange(true)
-            }
-            setFormState({ ...formState, productType: data.value as string })
-          }}
-          options={[
-            { text: 'Apartment (rent)', value: 'RENT' },
-            { text: 'Apartment (brf)', value: 'BRF' },
-            { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
-            { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
-            { text: 'House', value: 'HOUSE' },
-          ]}
-        />
-
-        {getNumberInput('livingSpace', 'Living space (m2)')}
-        {getNumberInput('householdSize', 'Household size (# of people)')}
-      </InputGroup>
+      {(formState.productType ?? quote.productType) === 'TRAVEL' && (
+        <InputGroup>
+          <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
+          {getProductTypeDropdown()}
+          {getNumberInput('householdSize', 'Household size (# of people)')}
+        </InputGroup>
+      )}
+      {(formState.productType ?? quote.productType) !== 'TRAVEL' && (
+        <>
+          <InputGroup>
+            {getTextInput('street', 'Street')}
+            {getTextInput('zipCode', 'Zip code')}
+            {getTextInput('city', 'City')}
+          </InputGroup>
+          <InputGroup>
+            <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
+            {getProductTypeDropdown()}
+            {getNumberInput('livingSpace', 'Living space (m2)')}
+            {getNumberInput('householdSize', 'Household size (# of people)')}
+          </InputGroup>
+        </>
+      )}
 
       {(formState.productType ?? quote.productType) === 'HOUSE' && (
         <>
