@@ -15,10 +15,7 @@ import {
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import moment from 'moment'
 import * as React from 'react'
-import {
-  SelectedItemCategory,
-  SelectItemCategories,
-} from './SelectItemCategories'
+import { CategorySelect, SelectedItemCategory } from './CategorySelect'
 
 const DateIcon = withStyles({
   root: {
@@ -33,7 +30,7 @@ const isValidDate = (date: string) =>
     : moment(date, 'YYYY-MM-DD', true).isValid() &&
       !moment(date, 'YYYY-MM-DD', true).isAfter(moment())
 
-export const NewItemForm: React.FC<{
+export const ItemForm: React.FC<{
   claimId: string
   memberId: string | null
 }> = ({ claimId, memberId }) => {
@@ -93,7 +90,7 @@ export const NewItemForm: React.FC<{
     <>
       <Grid container spacing={16}>
         <Grid item xs={6}>
-          <SelectItemCategories
+          <CategorySelect
             selectedItemCategories={selectedItemCategories}
             setSelectedItemCategories={setSelectedItemCategories}
           />

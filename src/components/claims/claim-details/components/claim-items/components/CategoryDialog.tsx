@@ -19,16 +19,16 @@ import {
   useUpsertItemTypeOptions,
 } from 'graphql/use-upsert-item-category'
 import * as React from 'react'
-import { ItemCategoryChain } from './ItemCategoryChain'
-import { SelectedItemCategory } from './SelectItemCategories'
-import { SelectItemCompany } from './SelectItemCompany'
+import { CategoryChain } from './CategoryChain'
+import { SelectedItemCategory } from './CategorySelect'
+import { CompanySelect } from './CompanySelect'
 
 export interface ItemCompanySelection {
   value: string
   label: string
 }
 
-export const AddItemCategoryDialog: React.FC<{
+export const CategoryDialog: React.FC<{
   setDialogIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   suggestion: string
   selectedItemCategories: SelectedItemCategory[]
@@ -58,13 +58,13 @@ export const AddItemCategoryDialog: React.FC<{
     >
       <DialogTitle>New {proposedKind.toString().toLowerCase()}</DialogTitle>
       <DialogContent>
-        <ItemCategoryChain
+        <CategoryChain
           suggestion={suggestion}
           selectedItemCategories={selectedItemCategories}
         />
 
         {proposedKind === ItemCategoryKind.Brand && (
-          <SelectItemCompany
+          <CompanySelect
             itemCompany={itemCompany}
             setItemCompany={setItemCompany}
           />

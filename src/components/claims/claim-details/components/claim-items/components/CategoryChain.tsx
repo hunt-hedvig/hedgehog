@@ -1,14 +1,14 @@
 import { Typography } from '@material-ui/core'
 import { ItemCategoryKind } from 'api/generated/graphql'
 import * as React from 'react'
+import { SelectedItemCategory } from './CategorySelect'
 import {
   CurrentChip,
   MultipleArrowsRight,
   PreviousChip,
   SmallArrowRight,
   UpcomingChip,
-} from '../styles/ItemCategoryChainStyle'
-import { SelectedItemCategory } from './SelectItemCategories'
+} from './styles'
 
 const getTypeInfoSentence = (remainingTypes: string[]) => {
   if (remainingTypes.length === 0) {
@@ -44,7 +44,7 @@ const getTypeInfoSentence = (remainingTypes: string[]) => {
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
-export const ItemCategoryChain: React.FC<{
+export const CategoryChain: React.FC<{
   suggestion: string
   selectedItemCategories: SelectedItemCategory[]
 }> = ({ suggestion, selectedItemCategories }) => {

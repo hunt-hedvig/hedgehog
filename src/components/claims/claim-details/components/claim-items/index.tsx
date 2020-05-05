@@ -1,8 +1,8 @@
 import { Grid } from '@material-ui/core'
 import { Paper } from 'components/shared/Paper'
 import * as React from 'react'
+import { ItemForm } from './components/ItemForm'
 import { ItemList } from './components/ItemList'
-import { NewItemForm } from './components/NewItemForm'
 
 export const ClaimItems: React.FC<{
   claimId: string
@@ -16,7 +16,7 @@ export const ClaimItems: React.FC<{
             <h3>Inventory</h3>
           </div>
           <ItemList claimId={claimId} />
-          <NewItemForm claimId={claimId} memberId={memberId} />
+          <ItemForm claimId={claimId} memberId={memberId} />
         </Grid>
       </Grid>
     </Paper>

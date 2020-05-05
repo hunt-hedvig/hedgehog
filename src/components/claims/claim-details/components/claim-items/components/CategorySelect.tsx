@@ -1,10 +1,26 @@
 import { ItemCategoryKind } from 'api/generated/graphql'
 import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import * as React from 'react'
+import { components } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import { SelectItemCategoriesStyle } from '../styles/SelectItemCategoriesStyle'
-import { AddItemCategoryDialog } from './AddItemCategoryDialog'
-import { SelectItemCategoriesPlaceholder } from './SelectItemCategoriesPlaceholder'
+import { CategoryDialog } from './CategoryDialog'
+import { categorySelectStyle } from './styles'
+
+const SelectItemCategoriesPlaceholder = (props) => {
+  const [selectedOptions, rawInput] = props.children
+  const showPlaceholder =
+    !props.selectProps.menuIsOpen || rawInput.props.value === ''
+
+  return (
+    <components.ValueContainer {...props}>
+      {selectedOptions}
+      {rawInput}
+      {showPlaceholder && (
+        <div style={{ color: '#919191' }}>{props.selectProps.placeholder}</div>
+      )}
+    </components.ValueContainer>
+  )
+}
 
 const customFilter = (option, inputValue) => {
   const words = inputValue.split(' ')
@@ -40,7 +56,7 @@ export interface SelectedItemCategory {
   displayName: string
 }
 
-export const SelectItemCategories: React.FC<{
+export const CategorySelect: React.FC<{
   selectedItemCategories: SelectedItemCategory[]
   setSelectedItemCategories: React.Dispatch<
     React.SetStateAction<SelectedItemCategory[]>
@@ -70,7 +86,7 @@ export const SelectItemCategories: React.FC<{
   return (
     <>
       {dialogIsOpen && (
-        <AddItemCategoryDialog
+        <CategoryDialog
           setDialogIsOpen={setDialogIsOpen}
           suggestion={creatableInput}
           selectedItemCategories={selectedItemCategories}
@@ -86,7 +102,7 @@ export const SelectItemCategories: React.FC<{
         }
         components={{ ValueContainer: SelectItemCategoriesPlaceholder }}
         filterOption={customFilter}
-        styles={SelectItemCategoriesStyle}
+        styles={categorySelectStyle}
         onCreateOption={(suggestion) => {
           setCreatableInput(suggestion)
           setDialogIsOpen(true)
