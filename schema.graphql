@@ -27,7 +27,6 @@ type ClaimItem {
   itemCompany: ItemCompany
   dateOfPurchase: LocalDate
   purchasePrice: MonetaryAmountV2
-  dateOfLoss: LocalDate!
   note: String
 }
 
@@ -119,7 +118,6 @@ input UpsertClaimItemInput {
   dateOfPurchase: LocalDate
   purchasePriceAmount: Float
   purchasePriceCurrency: String
-  dateOfLoss: LocalDate!
   note: String
 }
 

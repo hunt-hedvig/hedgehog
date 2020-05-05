@@ -12,7 +12,6 @@ import {
   UpsertClaimItemInput,
   useUpsertClaimItemMutation,
 } from 'api/generated/graphql'
-import format from 'date-fns/format'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import moment from 'moment'
 import * as React from 'react'
@@ -51,6 +50,7 @@ export const NewItemForm: React.FC<{
 
   const [contractMarketInfo] = useContractMarketInfo(memberId ?? '')
   const validPurchasePrice = purchasePrice.match(/^[0-9]*$/g)
+  const defaultCurrency = contractMarketInfo?.preferredCurrency ?? 'SEK'
 
   const [
     upsertClaimItem,
@@ -68,7 +68,6 @@ export const NewItemForm: React.FC<{
       purchasePrice !== ('0' && '') ? Number(purchasePrice) : null,
     purchasePriceCurrency:
       purchasePrice !== ('0' && '') ? purchasePriceCurrency : null,
-    dateOfLoss: format(new Date(), 'yyyy-MM-dd'),
     note: note === '' ? null : note,
   }
 
@@ -80,14 +79,14 @@ export const NewItemForm: React.FC<{
 
   const resetForm = () => {
     setPurchasePrice('')
-    setPurchasePriceCurrency(contractMarketInfo?.preferredCurrency ?? 'SEK')
+    setPurchasePriceCurrency(defaultCurrency)
     setDateOfPurchase('')
     setSelectedItemCategories([])
     setNote('')
   }
 
   React.useEffect(() => {
-    setPurchasePriceCurrency(contractMarketInfo?.preferredCurrency ?? 'SEK')
+    setPurchasePriceCurrency(defaultCurrency)
   }, [contractMarketInfo])
 
   return (
