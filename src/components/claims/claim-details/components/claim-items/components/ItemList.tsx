@@ -1,5 +1,12 @@
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
+  Link,
   Table,
   TableBody,
   TableCell as MuiTableCell,
@@ -38,7 +45,7 @@ const TableCell = withStyles({
   },
 })(MuiTableCell)
 
-export const NotSpecified: React.FC = () => (
+const NotSpecified: React.FC = () => (
   <Typography style={{ color: '#aaa' }}>Not specified</Typography>
 )
 
@@ -48,9 +55,22 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
     refetchQueries: ['GetClaimItems'],
   })
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null)
+  const [showNoteDialog, setShowNoteDialog] = React.useState<boolean>(false)
+  const [currentNote, setCurrentNote] = React.useState<string>('')
 
   return (
     <Table style={{ marginBottom: '7px' }}>
+      <Dialog open={showNoteDialog} onClose={() => setShowNoteDialog(false)}>
+        <DialogTitle>Note</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{currentNote}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowNoteDialog(false)} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       <colgroup>
         <col style={{ width: '50.7%' }} />
         <col style={{ width: '16.6%' }} />
@@ -101,13 +121,27 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               </TableCell>
               <TableCell>{purchasePriceString ?? <NotSpecified />}</TableCell>
               <TableCell>{item.dateOfPurchase ?? <NotSpecified />}</TableCell>
-              <TableCell>{noteString ?? <NotSpecified />}</TableCell>
+              <TableCell>
+                {noteString ? (
+                  <Typography>
+                    <Link
+                      color="inherit"
+                      style={{ textDecoration: 'none', cursor: 'pointer' }}
+                      onClick={() => {
+                        setCurrentNote(item?.note ?? '')
+                        setShowNoteDialog(true)
+                      }}
+                    >
+                      {noteString}
+                    </Link>
+                  </Typography>
+                ) : (
+                  <NotSpecified />
+                )}
+              </TableCell>
               <TableCell>
                 <IconButton
-                  style={{
-                    marginRight: '-30px',
-                    color: toBeDeleted ? '#aaa' : '#555',
-                  }}
+                  style={{ marginRight: '-30px' }}
                   disabled={toBeDeleted}
                   onClick={() => {
                     deleteClaimItem({
