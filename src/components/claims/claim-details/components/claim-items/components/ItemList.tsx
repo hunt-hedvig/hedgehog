@@ -101,9 +101,7 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               </TableCell>
               <TableCell>{purchasePriceString ?? <NotSpecified />}</TableCell>
               <TableCell>{item.dateOfPurchase ?? <NotSpecified />}</TableCell>
-              <TableCell aria-label={'Test'}>
-                {noteString ?? <NotSpecified />}
-              </TableCell>
+              <TableCell>{noteString ?? <NotSpecified />}</TableCell>
               <TableCell>
                 <IconButton
                   style={{

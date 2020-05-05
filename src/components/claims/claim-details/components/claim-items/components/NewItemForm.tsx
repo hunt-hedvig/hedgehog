@@ -13,7 +13,7 @@ import {
   useUpsertClaimItemMutation,
 } from 'api/generated/graphql'
 import format from 'date-fns/format'
-import { DatePicker } from 'material-ui-pickers'
+import moment from 'moment'
 import * as React from 'react'
 import {
   SelectedItemCategory,
@@ -26,6 +26,12 @@ const DateIcon = withStyles({
     color: '#555',
   },
 })(TodayIcon)
+
+const isValidDate = (date: string) =>
+  date === ''
+    ? true
+    : moment(date, 'YYYY-MM-DD', true).isValid() &&
+      !moment(date, 'YYYY-MM-DD', true).isAfter(moment())
 
 export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [selectedItemCategories, setSelectedItemCategories] = React.useState<
@@ -64,7 +70,8 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
   const formLooksGood =
     addNewClaimItemRequest.itemFamilyId &&
     addNewClaimItemRequest.itemTypeId &&
-    validPurchasePrice
+    validPurchasePrice &&
+    isValidDate(dateOfPurchase)
 
   const resetForm = () => {
     setPurchasePrice('')
@@ -91,7 +98,7 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
                 error={!validPurchasePrice}
                 value={purchasePrice}
                 helperText={!validPurchasePrice && 'Only numbers'}
-                onChange={(e) => setPurchasePrice(e.target.value)}
+                onChange={({ target: { value } }) => setPurchasePrice(value)}
                 fullWidth
               />
             </Grid>
@@ -100,7 +107,9 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
                 error={!validPurchasePrice}
                 style={{ color: '#888', textAlign: 'right' }}
                 value={purchasePriceCurrency}
-                onChange={(e) => setPurchasePriceCurrency(e.target.value)}
+                onChange={({ target: { value } }) =>
+                  setPurchasePriceCurrency(value)
+                }
               >
                 <MenuItem value={'SEK'}>SEK</MenuItem>
                 <MenuItem value={'NOK'}>NOK</MenuItem>
@@ -109,20 +118,12 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
           </Grid>
         </Grid>
         <Grid item style={{ width: '13.0%' }}>
-          <DatePicker
-            keyboard
-            minDateMessage={'Invalid Date'}
-            maxDateMessage={'Invalid Date'}
-            format={'yyyy-MM-dd'}
-            labelFunc={(date: Date) => (date ? format(date, 'yyyy-MM-dd') : '')}
-            fullWidth
-            autoOk
-            value={dateOfPurchase === '' ? null : dateOfPurchase}
-            onChange={(date: Date) => {
-              date
-                ? setDateOfPurchase(format(date, 'yyyy-MM-dd'))
-                : setDateOfPurchase('')
-            }}
+          <TextField
+            value={dateOfPurchase}
+            error={!isValidDate(dateOfPurchase)}
+            helperText={!isValidDate(dateOfPurchase) && 'Invalid date'}
+            onChange={({ target: { value } }) => setDateOfPurchase(value)}
+            onBlur={() => !isValidDate(dateOfPurchase) && setDateOfPurchase('')}
             placeholder="Purchase date"
             InputProps={{
               endAdornment: (
@@ -136,8 +137,8 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
         <Grid item xs={true}>
           <TextField
             value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder={'Note'}
+            onChange={({ target: { value } }) => setNote(value)}
+            placeholder={'Note (optional)'}
             fullWidth
             helperText={' '}
           />
