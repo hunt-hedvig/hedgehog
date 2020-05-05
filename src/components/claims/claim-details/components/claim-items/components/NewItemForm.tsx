@@ -13,6 +13,7 @@ import {
   useUpsertClaimItemMutation,
 } from 'api/generated/graphql'
 import format from 'date-fns/format'
+import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import moment from 'moment'
 import * as React from 'react'
 import {
@@ -33,7 +34,10 @@ const isValidDate = (date: string) =>
     : moment(date, 'YYYY-MM-DD', true).isValid() &&
       !moment(date, 'YYYY-MM-DD', true).isAfter(moment())
 
-export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
+export const NewItemForm: React.FC<{
+  claimId: string
+  memberId: string | null
+}> = ({ claimId, memberId }) => {
   const [selectedItemCategories, setSelectedItemCategories] = React.useState<
     SelectedItemCategory[]
   >([])
@@ -43,8 +47,9 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [note, setNote] = React.useState<string>('')
   const [purchasePriceCurrency, setPurchasePriceCurrency] = React.useState<
     string
-  >('SEK')
+  >('')
 
+  const [contractMarketInfo] = useContractMarketInfo(memberId ?? '')
   const validPurchasePrice = purchasePrice.match(/^[0-9]*$/g)
 
   const [
@@ -75,11 +80,15 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
 
   const resetForm = () => {
     setPurchasePrice('')
-    setPurchasePriceCurrency('SEK')
+    setPurchasePriceCurrency(contractMarketInfo?.preferredCurrency ?? 'SEK')
     setDateOfPurchase('')
     setSelectedItemCategories([])
     setNote('')
   }
+
+  React.useEffect(() => {
+    setPurchasePriceCurrency(contractMarketInfo?.preferredCurrency ?? 'SEK')
+  }, [contractMarketInfo])
 
   return (
     <>
@@ -113,6 +122,9 @@ export const NewItemForm: React.FC<{ claimId: string }> = ({ claimId }) => {
               >
                 <MenuItem value={'SEK'}>SEK</MenuItem>
                 <MenuItem value={'NOK'}>NOK</MenuItem>
+                <MenuItem value={'EUR'}>EUR</MenuItem>
+                <MenuItem value={'USD'}>USD</MenuItem>
+                <MenuItem value={'GBP'}>GBP</MenuItem>
               </Select>
             </Grid>
           </Grid>

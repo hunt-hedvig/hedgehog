@@ -4,7 +4,10 @@ import * as React from 'react'
 import { ItemList } from './components/ItemList'
 import { NewItemForm } from './components/NewItemForm'
 
-export const ClaimItems: React.FC<{ claimId: string }> = ({ claimId }) => {
+export const ClaimItems: React.FC<{
+  claimId: string
+  memberId: string | null
+}> = ({ claimId, memberId }) => {
   return (
     <Paper>
       <Grid container spacing={24}>
@@ -13,7 +16,7 @@ export const ClaimItems: React.FC<{ claimId: string }> = ({ claimId }) => {
             <h3>Inventory</h3>
           </div>
           <ItemList claimId={claimId} />
-          <NewItemForm claimId={claimId} />
+          <NewItemForm claimId={claimId} memberId={memberId} />
         </Grid>
       </Grid>
     </Paper>

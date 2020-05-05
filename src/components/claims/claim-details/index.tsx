@@ -92,7 +92,10 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
               )}
             </Grid>
             <Grid item xs={12}>
-              <ClaimItems claimId={props.match.params.claimId} />
+              <ClaimItems
+                claimId={props.match.params.claimId}
+                memberId={member?.memberId ?? null}
+              />
             </Grid>
             <Grid item xs={12}>
               {payments && member && (
