@@ -1530,6 +1530,24 @@
             "deprecationReason": null
           },
           {
+            "name": "PERCENTAGE_MONTH_DISCOUNT",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "BUNDLE_DISCOUNT_COST_DEDUCTION",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "LOSS",
             "description": "",
             "isDeprecated": false,
@@ -3129,13 +3147,13 @@
             "deprecationReason": null
           },
           {
-            "name": "STUDENT_OWN",
+            "name": "YOUTH_OWN",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "STUDENT_RENT",
+            "name": "YOUTH_RENT",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -3207,6 +3225,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isYouth",
+            "description": "travelType: NorwegianTravelType",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -11201,6 +11231,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "isYouth",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "defaultValue": null

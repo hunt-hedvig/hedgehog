@@ -85,6 +85,9 @@ export enum AccountEntryType {
   Charge = 'CHARGE',
   ReferralDiscount = 'REFERRAL_DISCOUNT',
   FreeMonthDiscount = 'FREE_MONTH_DISCOUNT',
+  PercentageMonthDiscount = 'PERCENTAGE_MONTH_DISCOUNT',
+  BundleDiscountCostDeduction = 'BUNDLE_DISCOUNT_COST_DEDUCTION',
+  BundleDiscountPercentageDeduction = 'BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION',
   Loss = 'LOSS',
 }
 
@@ -1024,8 +1027,8 @@ export type NorwegianHomeContentQuoteInput = {
 export enum NorwegianHomeContentType {
   Own = 'OWN',
   Rent = 'RENT',
-  StudentOwn = 'STUDENT_OWN',
-  StudentRent = 'STUDENT_RENT',
+  YouthOwn = 'YOUTH_OWN',
+  YouthRent = 'YOUTH_RENT',
 }
 
 export type NorwegianTravel = AgreementCore & {
@@ -1052,6 +1055,8 @@ export type NorwegianTravelQuoteData = IQuoteData & {
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
+  /** travelType: NorwegianTravelType */
+  isYouth?: Maybe<Scalars['Boolean']>
 }
 
 export type NorwegianTravelQuoteDataInput = {
@@ -1063,6 +1068,7 @@ export type NorwegianTravelQuoteDataInput = {
 
 export type NorwegianTravelQuoteInput = {
   householdSize?: Maybe<Scalars['Int']>
+  isYouth?: Maybe<Scalars['Boolean']>
 }
 
 export type NotCoveredClaim = {
@@ -1913,8 +1919,19 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
                       >
                     >
                   })
-              | { __typename?: 'NorwegianHomeContentQuoteData' }
-              | { __typename?: 'NorwegianTravelQuoteData' }
+              | ({ __typename?: 'NorwegianHomeContentQuoteData' } & Pick<
+                  NorwegianHomeContentQuoteData,
+                  | 'street'
+                  | 'zipCode'
+                  | 'city'
+                  | 'householdSize'
+                  | 'livingSpace'
+                  | 'type'
+                >)
+              | ({ __typename?: 'NorwegianTravelQuoteData' } & Pick<
+                  NorwegianTravelQuoteData,
+                  'householdSize' | 'isYouth'
+                >)
             >
           }
       >
@@ -2901,6 +2918,18 @@ export const GetQuotesDocument = gql`
               hasWaterConnected
             }
             isSubleted
+          }
+          ... on NorwegianHomeContentQuoteData {
+            street
+            zipCode
+            city
+            householdSize
+            livingSpace
+            type
+          }
+          ... on NorwegianTravelQuoteData {
+            householdSize
+            isYouth
           }
         }
       }

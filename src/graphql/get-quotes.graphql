@@ -38,6 +38,20 @@ query GetQuotes($memberId: ID!) {
           }
           isSubleted
         }
+
+        ... on NorwegianHomeContentQuoteData {
+          street
+          zipCode
+          city
+          householdSize
+          livingSpace
+          type
+        }
+
+        ... on NorwegianTravelQuoteData {
+          householdSize
+          isYouth
+        }
       }
     }
   }

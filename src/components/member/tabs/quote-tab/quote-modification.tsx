@@ -8,6 +8,7 @@ import {
   HouseQuoteData,
   MutationType,
   MutationTypeUpdateQuoteArgs,
+  NorwegianHomeContentQuoteData,
   NorwegianHomeContentType,
   Quote,
   QuoteData,
@@ -22,6 +23,12 @@ import styled from 'react-emotion'
 import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import * as uuid from 'uuid/v4'
+import {
+  isNorwegianHomeContent,
+  isNorwegianTravel,
+  isSwedishApartment,
+  isSwedishHouse,
+} from '../../../../utils/quote'
 import { ErrorMessage } from './common'
 
 const Label = styled('label')({
@@ -80,8 +87,54 @@ const getProductTypeValue = (quote: Quote): string => {
     return 'HOUSE'
   }
   if (quote.productType === 'TRAVEL') {
-    return 'TRAVEL'
+    if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
+      return quote.data.isYouth ? 'YOUTH' : 'REGULAR'
+    }
   }
+  if (quote.productType === 'HOME_CONTENT') {
+    console.log('what')
+    // (quote.data as NorwegianHomeContentQuoteData).type === 'RENT' ? 'HOME_CONTENT' : "b")
+  }
+}
+
+// @ts-ignore
+const getProductType = (quote: Quote): QuoteProductType => {
+  if (isSwedishApartment(quote)) {
+    return QuoteProductType.Apartment
+  }
+  if (isSwedishHouse(quote)) {
+    return QuoteProductType.House
+  }
+  if (isNorwegianHomeContent(quote)) {
+    return QuoteProductType.HomeContent
+  }
+  if (isNorwegianTravel(quote)) {
+    return QuoteProductType.Travel
+  }
+}
+
+const isNorwegianTravelFormStateProductType = (
+  productType: string | null,
+): boolean => {
+  return productType === 'YOUTH' || productType === 'REGULAR'
+}
+
+const isNorwegianTravelProductType = (productType: string | null): boolean => {
+  return productType === 'TRAVEL'
+}
+
+const isSwedishHouseProductType = (productType: string | null): boolean => {
+  return productType === 'HOUSE'
+}
+
+const isSwedishApartmentProductType = (productType: string | null): boolean => {
+  return productType === 'APARTMENT'
+}
+
+const isNorwegianHomeContentProductType = (
+  productType: string | null,
+): boolean => {
+  return productType === 'HOME_CONTENT'
 }
 
 const createQuoteData = ({
@@ -99,10 +152,9 @@ const createQuoteData = ({
   isSubleted,
 }: FormState & { quote: Quote }) => {
   const quoteData: Partial<QuoteInput> = {
-    productType: ((productType ?? quote.productType) === 'HOUSE'
-      ? 'HOUSE'
-      : 'APARTMENT') as QuoteProductType,
+    productType: getProductType(quote),
   }
+
   const baseData = {
     street,
     zipCode,
@@ -110,7 +162,13 @@ const createQuoteData = ({
     livingSpace: parseInt(livingSpace!, 10),
     householdSize: parseInt(householdSize!, 10),
   }
-  if ((productType ?? quote.productType) === 'HOUSE') {
+
+  console.log('product type', productType)
+  console.log('quote product type', quote.productType)
+
+  if (
+    productType ? isSwedishHouseProductType(productType) : isSwedishHouse(quote)
+  ) {
     quoteData.houseData = {
       ...baseData,
       ancillaryArea:
@@ -130,6 +188,7 @@ const createQuoteData = ({
     }
   }
   if ((productType ?? quote.productType) === 'HOME_CONTENT') {
+    console.log('do we get to home content?')
     quoteData.norwegianHomeContentData = {
       ...baseData,
       type: productType as NorwegianHomeContentType,
@@ -137,15 +196,28 @@ const createQuoteData = ({
   }
 
   if ((productType ?? quote.productType) === 'TRAVEL') {
+    {
+      console.log('do we get to here?')
+    }
+    {
+      console.log(householdSize)
+    }
+    {
+      console.log('product type is', productType)
+    }
     quoteData.norwegianTravelData = {
       householdSize: parseInt(householdSize!, 10),
+      isYouth: productType === 'YOUTH',
     }
-  } else {
+  }
+  if (productType ?? isSwedishApartment(quote)) {
     quoteData.apartmentData = {
       ...baseData,
       subType: productType as ApartmentSubType,
     }
   }
+  console.log('quote data is ')
+  console.log(quoteData)
   return quoteData
 }
 
@@ -203,26 +275,39 @@ export const QuoteModification: React.FC<{
   ] = React.useState(false)
 
   const getProductTypeDropdown = () => (
-    <Dropdown
-      fluid
-      selection
-      value={formState.productType ?? getProductTypeValue(quote)}
-      onChange={(_, data) => {
-        if (onWipChange) {
-          onWipChange(true)
-        }
-        setFormState({ ...formState, productType: data.value as string })
-      }}
-      options={[
-        { text: 'Apartment (rent)', value: 'RENT' },
-        { text: 'Apartment (brf)', value: 'BRF' },
-        { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
-        { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
-        { text: 'House', value: 'HOUSE' },
-        { text: 'Norwegian Home Content', value: 'HOME_CONTENT' },
-        { text: 'Norwegian Travel', value: 'TRAVEL' },
-      ]}
-    />
+    <>
+      {console.log('here', getProductTypeValue(quote))}
+      <Dropdown
+        fluid
+        selection
+        value={formState.productType ?? getProductTypeValue(quote)}
+        onChange={(_, data) => {
+          if (onWipChange) {
+            onWipChange(true)
+          }
+          setFormState({ ...formState, productType: data.value as string })
+        }}
+        options={[
+          { text: 'Apartment (rent)', value: 'RENT' },
+          { text: 'Apartment (brf)', value: 'BRF' },
+          { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
+          { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
+          { text: 'House', value: 'HOUSE' },
+          { text: 'Norwegian Home Content (own)', value: 'OWN' },
+          { text: 'Norwegian Home Content (rent)', value: 'HOME_CONTENT_RENT' },
+          {
+            text: 'Norwegian Home Content (youth own)',
+            value: 'HOME_CONTENT_YOUTH_OWN',
+          },
+          {
+            text: 'Norwegian Home Content (youth rent)',
+            value: 'HOME_CONTENT_YOUTH_RENT',
+          },
+          { text: 'Norwegian Travel', value: 'REGULAR' },
+          { text: 'Norwegian Travel (youth)', value: 'YOUTH' },
+        ]}
+      />
+    </>
   )
 
   const getTextInput = (
@@ -262,6 +347,8 @@ export const QuoteModification: React.FC<{
         if (fieldModification.loading) {
           return
         }
+        console.log('here it is')
+        console.log(quote)
 
         const quoteData = createQuoteData({ ...formState, quote })
 
@@ -277,14 +364,18 @@ export const QuoteModification: React.FC<{
         }
       }}
     >
-      {(formState.productType ?? quote.productType) === 'TRAVEL' && (
+      {(formState.productType
+        ? isNorwegianTravelFormStateProductType(formState.productType)
+        : isNorwegianTravel(quote)) && (
         <InputGroup>
           <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
           {getProductTypeDropdown()}
           {getNumberInput('householdSize', 'Household size (# of people)')}
         </InputGroup>
       )}
-      {(formState.productType ?? quote.productType) !== 'TRAVEL' && (
+      {(formState.productType
+        ? !isNorwegianTravelFormStateProductType(formState.productType)
+        : !isNorwegianTravel(quote)) && (
         <>
           <InputGroup>
             {getTextInput('street', 'Street')}

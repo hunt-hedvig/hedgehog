@@ -1,11 +1,23 @@
 import { colorsV2 } from '@hedviginsurance/brand'
-import { ApartmentQuoteData, Quote } from 'api/generated/graphql'
+import {
+  ApartmentQuoteData,
+  NorwegianHomeContentQuoteData,
+  NorwegianTravelQuoteData,
+  Quote,
+  QuoteProductType,
+} from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
+import {
+  isNorwegianHomeContent,
+  isNorwegianTravel,
+  isSwedishApartment,
+  isSwedishHouse,
+} from '../../../../utils/quote'
 import { BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteModification } from './quote-modification'
@@ -63,20 +75,47 @@ enum Action {
   MODIFY,
 }
 
+const getProductType = (quote: Quote): string => {
+  if (quote.data?.__typename === 'ApartmentQuoteData') {
+    return `${QuoteProductType.Apartment} (${
+      (quote.data as ApartmentQuoteData)?.subType
+    })`
+  }
+  if (isSwedishHouse(quote)) {
+    return QuoteProductType.House
+  }
+  if (quote.data?.__typename === 'NorwegianHomeContentQuoteData') {
+    return `${QuoteProductType.HomeContent} (${
+      (quote.data as NorwegianHomeContentQuoteData)?.type
+    })`
+  }
+  if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
+    return `${QuoteProductType.Travel} ${
+      (quote.data as NorwegianTravelQuoteData).isYouth ? '(YOUTH)' : ''
+    }`
+  }
+  return ''
+}
+
 const QuoteDetails: React.FC<{
   quote: Quote
 }> = ({ quote }) => (
   <DetailsWrapper>
     <AddressNPriceWrapper>
-      <AddressWrapper>
-        {quote.data?.street}
-        {quote.data?.street && (
-          <>
-            , <br />
-          </>
-        )}
-        {quote.data?.zipCode} {quote.data?.city ?? '🤷️'}
-      </AddressWrapper>
+      {!isNorwegianTravel(quote) ? (
+        <AddressWrapper>
+          {console.log(quote)}
+          {quote.data?.street}
+          {quote.data?.street && (
+            <>
+              , <br />
+            </>
+          )}
+          {quote.data?.zipCode} {quote.data?.city ?? '🤷️'}
+        </AddressWrapper>
+      ) : (
+        <br />
+      )}
       <PriceWrapper>
         {quote.price && formatMoneySE({ amount: quote.price, currency: 'SEK' })}
         {!quote.price && '-'}
@@ -85,20 +124,28 @@ const QuoteDetails: React.FC<{
     <DetailWrapper>
       Product type:{' '}
       <strong>
-        {quote.productType}
-        {quote.productType === 'APARTMENT' &&
-          ` (${(quote.data as ApartmentQuoteData)?.subType ?? 'none'})`}
+        {getProductType(quote)}
+        {/*{quote.productType}*/}
+        {/*{quote.productType === 'APARTMENT' &&*/}
+        {/*  ` (${(quote.data as ApartmentQuoteData)?.subType ?? 'none'})`}*/}
       </strong>
-      <br />
-      Living space:
-      <strong>
-        {' '}
-        {quote.data?.livingSpace} m<sup>2</sup>
-      </strong>
-      <br />
+      {!isNorwegianTravel(quote) ? (
+        <>
+          <br />
+          Living space:
+          <strong>
+            {' '}
+            {quote.data?.livingSpace} m<sup>2</sup>
+          </strong>
+          <br />
+        </>
+      ) : (
+        <br />
+      )}
       Household size:
       <strong> {quote.data?.householdSize} person(s)</strong>
     </DetailWrapper>
+
     {quote.breachedUnderwritingGuidelines?.length ||
       (0 > 0 && (
         <DetailWrapper>

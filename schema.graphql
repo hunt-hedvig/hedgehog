@@ -631,12 +631,19 @@ enum NorwegianHomeContentType {
   YOUTH_RENT
 }
 
+#enum NorwegianTravelType {
+#  REGULAR,
+#  YOUTH
+#}
+
 type NorwegianTravelQuoteData implements IQuoteData{
   id: ID!
   ssn:  String
   firstName: String
   lastName: String
   householdSize: Int
+  #  travelType: NorwegianTravelType
+  isYouth: Boolean
 }
 
 input QuoteInput {
@@ -686,6 +693,8 @@ input NorwegianHomeContentQuoteInput {
 
 input NorwegianTravelQuoteInput {
   householdSize: Int
+  isYouth: Boolean
+  #  travelType: NorwegianTravelType
 }
 
 input QuoteFromProductInput {
@@ -756,6 +765,7 @@ input NorwegianTravelQuoteDataInput {
   lastName: String
 
   householdSize: Int
+  #  travelType: NorwegianTravelType
 }
 
 type Transaction {
@@ -843,6 +853,9 @@ enum AccountEntryType {
   CHARGE
   REFERRAL_DISCOUNT
   FREE_MONTH_DISCOUNT
+  PERCENTAGE_MONTH_DISCOUNT
+  BUNDLE_DISCOUNT_COST_DEDUCTION
+  BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION
   LOSS
 }
 
