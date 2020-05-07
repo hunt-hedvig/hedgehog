@@ -99,7 +99,6 @@ const QuoteDetails: React.FC<{
     <AddressNPriceWrapper>
       {!isNorwegianTravel(quote) ? (
         <AddressWrapper>
-          {console.log(quote)}
           {quote.data?.street}
           {quote.data?.street && (
             <>
