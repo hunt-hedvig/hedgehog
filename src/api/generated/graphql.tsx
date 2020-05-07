@@ -1000,7 +1000,7 @@ export type NorwegianHomeContentQuoteData = IQuoteData & {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  type?: Maybe<NorwegianHomeContentType>
+  subType?: Maybe<NorwegianHomeContentType>
 }
 
 export type NorwegianHomeContentQuoteDataInput = {
@@ -1012,7 +1012,7 @@ export type NorwegianHomeContentQuoteDataInput = {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  type?: Maybe<NorwegianHomeContentType>
+  subType?: Maybe<NorwegianHomeContentType>
 }
 
 export type NorwegianHomeContentQuoteInput = {
@@ -1021,7 +1021,7 @@ export type NorwegianHomeContentQuoteInput = {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  type?: Maybe<NorwegianHomeContentType>
+  subType?: Maybe<NorwegianHomeContentType>
 }
 
 export enum NorwegianHomeContentType {
@@ -1055,7 +1055,6 @@ export type NorwegianTravelQuoteData = IQuoteData & {
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
-  /** travelType: NorwegianTravelType */
   isYouth?: Maybe<Scalars['Boolean']>
 }
 
@@ -1926,8 +1925,9 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
                   | 'city'
                   | 'householdSize'
                   | 'livingSpace'
-                  | 'type'
-                >)
+                > & {
+                    norwegianSubType: NorwegianHomeContentQuoteData['subType']
+                  })
               | ({ __typename?: 'NorwegianTravelQuoteData' } & Pick<
                   NorwegianTravelQuoteData,
                   'householdSize' | 'isYouth'
@@ -2925,7 +2925,7 @@ export const GetQuotesDocument = gql`
             city
             householdSize
             livingSpace
-            type
+            norwegianSubType: subType
           }
           ... on NorwegianTravelQuoteData {
             householdSize

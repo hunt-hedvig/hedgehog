@@ -50,7 +50,7 @@ export const QUOTES_QUERY = gql`
             city
             householdSize
             livingSpace
-            type
+            norwegianSubType: subType
           }
 
           ... on NorwegianTravelQuoteData {

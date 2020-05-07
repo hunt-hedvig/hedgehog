@@ -3103,7 +3103,7 @@
             "deprecationReason": null
           },
           {
-            "name": "type",
+            "name": "subType",
             "description": "",
             "args": [],
             "type": {
@@ -3232,7 +3232,7 @@
           },
           {
             "name": "isYouth",
-            "description": "travelType: NorwegianTravelType",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -10812,7 +10812,7 @@
             "defaultValue": null
           },
           {
-            "name": "type",
+            "name": "subType",
             "description": "",
             "type": {
               "kind": "ENUM",
@@ -11205,7 +11205,7 @@
             "defaultValue": null
           },
           {
-            "name": "type",
+            "name": "subType",
             "description": "",
             "type": {
               "kind": "ENUM",

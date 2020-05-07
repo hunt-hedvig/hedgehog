@@ -12,12 +12,7 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
-import {
-  isNorwegianHomeContent,
-  isNorwegianTravel,
-  isSwedishApartment,
-  isSwedishHouse,
-} from '../../../../utils/quote'
+import { isNorwegianTravel, isSwedishHouse } from 'utils/quote'
 import { BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteModification } from './quote-modification'
@@ -75,7 +70,7 @@ enum Action {
   MODIFY,
 }
 
-const getProductType = (quote: Quote): string => {
+const getProductTypeValue = (quote: Quote): string => {
   if (quote.data?.__typename === 'ApartmentQuoteData') {
     return `${QuoteProductType.Apartment} (${
       (quote.data as ApartmentQuoteData)?.subType
@@ -86,7 +81,7 @@ const getProductType = (quote: Quote): string => {
   }
   if (quote.data?.__typename === 'NorwegianHomeContentQuoteData') {
     return `${QuoteProductType.HomeContent} (${
-      (quote.data as NorwegianHomeContentQuoteData)?.type
+      (quote.data as NorwegianHomeContentQuoteData)?.norwegianSubType
     })`
   }
   if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
@@ -122,13 +117,7 @@ const QuoteDetails: React.FC<{
       </PriceWrapper>
     </AddressNPriceWrapper>
     <DetailWrapper>
-      Product type:{' '}
-      <strong>
-        {getProductType(quote)}
-        {/*{quote.productType}*/}
-        {/*{quote.productType === 'APARTMENT' &&*/}
-        {/*  ` (${(quote.data as ApartmentQuoteData)?.subType ?? 'none'})`}*/}
-      </strong>
+      Product type: <strong>{getProductTypeValue(quote)}</strong>
       {!isNorwegianTravel(quote) ? (
         <>
           <br />

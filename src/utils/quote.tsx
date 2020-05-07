@@ -2,21 +2,20 @@ import {
   NorwegianHomeContent,
   NorwegianTravel,
   Quote,
-  QuoteProductType,
   SwedishApartment,
   SwedishHouse,
 } from '../api/generated/graphql'
 
 export const isSwedishApartment = (quote: Quote): quote is SwedishApartment =>
-  quote.productType === QuoteProductType.Apartment
+  quote.data?.__typename === 'ApartmentQuoteData'
 
 export const isSwedishHouse = (quote: Quote): quote is SwedishHouse =>
-  quote.productType === QuoteProductType.House
+  quote.data?.__typename === 'HouseQuoteData'
 
 export const isNorwegianHomeContent = (
   quote: Quote,
 ): quote is NorwegianHomeContent =>
-  quote.productType === QuoteProductType.HomeContent
+  quote.data?.__typename === 'NorwegianHomeContentQuoteData'
 
 export const isNorwegianTravel = (quote: Quote): quote is NorwegianTravel =>
-  quote.productType === QuoteProductType.Travel
+  quote.data?.__typename === 'NorwegianTravelQuoteData'

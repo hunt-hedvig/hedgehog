@@ -78,8 +78,18 @@ const UPDATE_QUOTE_MUTATION = gql`
   }
 `
 
-// @ts-ignore
-const getProductTypeValue = (quote: Quote): string => {
+const getDropDownSubTypeValue = (quote: Quote): string => {
+  if (quote.productType === 'HOME_CONTENT') {
+    return (quote.data as NorwegianHomeContentQuoteData)?.norwegianSubType ===
+      NorwegianHomeContentType.Rent
+      ? 'HOME_CONTENT_RENT'
+      : (quote.data as NorwegianHomeContentQuoteData)?.norwegianSubType?.toString()
+  }
+
+  return getProductSubTypeValue(quote)
+}
+
+const getProductSubTypeValue = (quote: Quote): string => {
   if (quote.productType === 'APARTMENT') {
     return (quote.data as ApartmentQuoteData).subType!.toString()
   }
@@ -92,9 +102,18 @@ const getProductTypeValue = (quote: Quote): string => {
     }
   }
   if (quote.productType === 'HOME_CONTENT') {
-    console.log('what')
-    // (quote.data as NorwegianHomeContentQuoteData).type === 'RENT' ? 'HOME_CONTENT' : "b")
+    return (quote.data as NorwegianHomeContentQuoteData)?.norwegianSubType?.toString()
   }
+  return ''
+}
+
+const norwegianHomeContentFormStateProductSubType = (
+  productType: string,
+): string => {
+  if (productType === 'HOME_CONTENT_RENT') {
+    return 'RENT'
+  }
+  return productType as NorwegianHomeContentType
 }
 
 // @ts-ignore
@@ -131,10 +150,19 @@ const isSwedishApartmentProductType = (productType: string | null): boolean => {
   return productType === 'APARTMENT'
 }
 
-const isNorwegianHomeContentProductType = (
+const isNorwegianHomeContentFormStateProductSubType = (
   productType: string | null,
 ): boolean => {
-  return productType === 'HOME_CONTENT'
+  if (productType === null) {
+    return false
+  }
+  const subTypes: string[] = [
+    NorwegianHomeContentType.Own.valueOf(),
+    'HOME_CONTENT_RENT',
+    NorwegianHomeContentType.YouthOwn.valueOf(),
+    NorwegianHomeContentType.YouthRent.valueOf(),
+  ]
+  return subTypes.includes(productType)
 }
 
 const createQuoteData = ({
@@ -162,10 +190,6 @@ const createQuoteData = ({
     livingSpace: parseInt(livingSpace!, 10),
     householdSize: parseInt(householdSize!, 10),
   }
-
-  console.log('product type', productType)
-  console.log('quote product type', quote.productType)
-
   if (
     productType ? isSwedishHouseProductType(productType) : isSwedishHouse(quote)
   ) {
@@ -187,37 +211,39 @@ const createQuoteData = ({
       isSubleted: isSubleted ?? false,
     }
   }
-  if ((productType ?? quote.productType) === 'HOME_CONTENT') {
-    console.log('do we get to home content?')
+  if (
+    productType
+      ? isNorwegianHomeContentFormStateProductSubType(productType)
+      : isNorwegianHomeContent(quote)
+  ) {
     quoteData.norwegianHomeContentData = {
       ...baseData,
-      type: productType as NorwegianHomeContentType,
+      subType: productType
+        ? norwegianHomeContentFormStateProductSubType(productType)
+        : getProductSubTypeValue(quote),
     }
   }
 
-  if ((productType ?? quote.productType) === 'TRAVEL') {
-    {
-      console.log('do we get to here?')
-    }
-    {
-      console.log(householdSize)
-    }
-    {
-      console.log('product type is', productType)
-    }
+  if (
+    productType
+      ? isNorwegianTravelProductType(productType)
+      : isNorwegianTravel(quote)
+  ) {
     quoteData.norwegianTravelData = {
       householdSize: parseInt(householdSize!, 10),
       isYouth: productType === 'YOUTH',
     }
   }
-  if (productType ?? isSwedishApartment(quote)) {
+  if (
+    productType
+      ? isSwedishApartmentProductType(productType)
+      : isSwedishApartment(quote)
+  ) {
     quoteData.apartmentData = {
       ...baseData,
       subType: productType as ApartmentSubType,
     }
   }
-  console.log('quote data is ')
-  console.log(quoteData)
   return quoteData
 }
 
@@ -276,11 +302,10 @@ export const QuoteModification: React.FC<{
 
   const getProductTypeDropdown = () => (
     <>
-      {console.log('here', getProductTypeValue(quote))}
       <Dropdown
         fluid
         selection
-        value={formState.productType ?? getProductTypeValue(quote)}
+        value={formState.productType ?? getDropDownSubTypeValue(quote)}
         onChange={(_, data) => {
           if (onWipChange) {
             onWipChange(true)
@@ -297,11 +322,11 @@ export const QuoteModification: React.FC<{
           { text: 'Norwegian Home Content (rent)', value: 'HOME_CONTENT_RENT' },
           {
             text: 'Norwegian Home Content (youth own)',
-            value: 'HOME_CONTENT_YOUTH_OWN',
+            value: 'YOUTH_OWN',
           },
           {
             text: 'Norwegian Home Content (youth rent)',
-            value: 'HOME_CONTENT_YOUTH_RENT',
+            value: 'YOUTH_RENT',
           },
           { text: 'Norwegian Travel', value: 'REGULAR' },
           { text: 'Norwegian Travel (youth)', value: 'YOUTH' },
@@ -347,8 +372,6 @@ export const QuoteModification: React.FC<{
         if (fieldModification.loading) {
           return
         }
-        console.log('here it is')
-        console.log(quote)
 
         const quoteData = createQuoteData({ ...formState, quote })
 

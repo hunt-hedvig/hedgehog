@@ -45,7 +45,7 @@ query GetQuotes($memberId: ID!) {
           city
           householdSize
           livingSpace
-          type
+          norwegianSubType: subType
         }
 
         ... on NorwegianTravelQuoteData {

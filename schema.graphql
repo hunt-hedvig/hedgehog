@@ -621,7 +621,7 @@ type NorwegianHomeContentQuoteData implements IQuoteData{
   zipCode: String
   householdSize: Int
   livingSpace: Int
-  type: NorwegianHomeContentType
+  subType: NorwegianHomeContentType
 }
 
 enum NorwegianHomeContentType {
@@ -631,18 +631,12 @@ enum NorwegianHomeContentType {
   YOUTH_RENT
 }
 
-#enum NorwegianTravelType {
-#  REGULAR,
-#  YOUTH
-#}
-
 type NorwegianTravelQuoteData implements IQuoteData{
   id: ID!
   ssn:  String
   firstName: String
   lastName: String
   householdSize: Int
-  #  travelType: NorwegianTravelType
   isYouth: Boolean
 }
 
@@ -687,14 +681,13 @@ input NorwegianHomeContentQuoteInput {
   householdSize: Int
   livingSpace: Int
 
-  type: NorwegianHomeContentType
+  subType: NorwegianHomeContentType
 }
 
 
 input NorwegianTravelQuoteInput {
   householdSize: Int
   isYouth: Boolean
-  #  travelType: NorwegianTravelType
 }
 
 input QuoteFromProductInput {
@@ -756,7 +749,7 @@ input NorwegianHomeContentQuoteDataInput {
   householdSize: Int
   livingSpace: Int
 
-  type: NorwegianHomeContentType
+  subType: NorwegianHomeContentType
 }
 
 input NorwegianTravelQuoteDataInput {
@@ -765,7 +758,6 @@ input NorwegianTravelQuoteDataInput {
   lastName: String
 
   householdSize: Int
-  #  travelType: NorwegianTravelType
 }
 
 type Transaction {
