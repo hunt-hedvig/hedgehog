@@ -28,7 +28,7 @@ import {
   isNorwegianTravel,
   isSwedishApartment,
   isSwedishHouse,
-} from '../../../../utils/quote'
+} from 'utils/quote'
 import { ErrorMessage } from './common'
 
 const Label = styled('label')({
