@@ -1,4 +1,4 @@
-import { SignSource } from 'api/generated/graphql'
+import { ContractMarketInfo, SignSource } from 'api/generated/graphql'
 
 export const getSignSource = (signSource: SignSource): string => {
   if (signSource === SignSource.App) {
@@ -23,4 +23,12 @@ export const getSignSource = (signSource: SignSource): string => {
     return 'Web On-boarding'
   }
   return signSource
+}
+
+export const isSwedishMarket = (market: ContractMarketInfo): boolean => {
+  return market.market === 'SWEDEN'
+}
+
+export const isNorwegianMarket = (market: ContractMarketInfo): boolean => {
+  return market.market === 'NORWAY'
 }

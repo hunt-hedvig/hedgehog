@@ -3,6 +3,7 @@ import { colorsV2 } from '@hedviginsurance/brand/dist'
 import {
   ApartmentQuoteData,
   ApartmentSubType,
+  ContractMarketInfo,
   ExtraBuilding,
   ExtraBuildingType,
   HouseQuoteData,
@@ -16,19 +17,21 @@ import {
   QuoteProductType,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
+import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
-import * as uuid from 'uuid/v4'
+import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
 import {
   isNorwegianHomeContent,
   isNorwegianTravel,
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/quote'
+import * as uuid from 'uuid/v4'
 import { ErrorMessage } from './common'
 
 const Label = styled('label')({
@@ -78,17 +81,6 @@ const UPDATE_QUOTE_MUTATION = gql`
   }
 `
 
-const getDropDownSubTypeValue = (quote: Quote): string => {
-  if (quote.productType === 'HOME_CONTENT') {
-    return (quote.data as NorwegianHomeContentQuoteData)?.norwegianSubType ===
-      NorwegianHomeContentType.Rent
-      ? 'HOME_CONTENT_RENT'
-      : (quote.data as NorwegianHomeContentQuoteData)?.norwegianSubType?.toString()
-  }
-
-  return getProductSubTypeValue(quote)
-}
-
 const getProductSubTypeValue = (quote: Quote): string => {
   if (quote.productType === 'APARTMENT') {
     return (quote.data as ApartmentQuoteData).subType!.toString()
@@ -107,29 +99,22 @@ const getProductSubTypeValue = (quote: Quote): string => {
   return ''
 }
 
-const norwegianHomeContentFormStateProductSubType = (
+const getProductType = (
+  quote: Quote,
   productType: string,
-): string => {
-  if (productType === 'HOME_CONTENT_RENT') {
-    return 'RENT'
+  contractMarket: ContractMarketInfo,
+): QuoteProductType => {
+  if (isSwedishMarket(contractMarket)) {
+    return isSwedishHouseProductType(productType)
+      ? QuoteProductType.House
+      : QuoteProductType.Apartment
   }
-  return productType as NorwegianHomeContentType
-}
-
-// @ts-ignore
-const getProductType = (quote: Quote): QuoteProductType => {
-  if (isSwedishApartment(quote)) {
-    return QuoteProductType.Apartment
+  if (isNorwegianMarket(contractMarket)) {
+    return isNorwegianHomeContent(quote)
+      ? QuoteProductType.HomeContent
+      : QuoteProductType.Travel
   }
-  if (isSwedishHouse(quote)) {
-    return QuoteProductType.House
-  }
-  if (isNorwegianHomeContent(quote)) {
-    return QuoteProductType.HomeContent
-  }
-  if (isNorwegianTravel(quote)) {
-    return QuoteProductType.Travel
-  }
+  throw Error(`Expected ${contractMarket.market} to be either Sweden or Norway`)
 }
 
 const isNorwegianTravelFormStateProductType = (
@@ -146,10 +131,6 @@ const isSwedishHouseProductType = (productType: string | null): boolean => {
   return productType === 'HOUSE'
 }
 
-const isSwedishApartmentProductType = (productType: string | null): boolean => {
-  return productType === 'APARTMENT'
-}
-
 const isNorwegianHomeContentFormStateProductSubType = (
   productType: string | null,
 ): boolean => {
@@ -158,14 +139,30 @@ const isNorwegianHomeContentFormStateProductSubType = (
   }
   const subTypes: string[] = [
     NorwegianHomeContentType.Own.valueOf(),
-    'HOME_CONTENT_RENT',
+    NorwegianHomeContentType.Rent.valueOf(),
     NorwegianHomeContentType.YouthOwn.valueOf(),
     NorwegianHomeContentType.YouthRent.valueOf(),
   ]
   return subTypes.includes(productType)
 }
 
+const isSwedishApartmentContentFormStateProductSubType = (
+  productType: string | null,
+): boolean => {
+  if (productType === null) {
+    return false
+  }
+  const subTypes: string[] = [
+    ApartmentSubType.Brf.valueOf(),
+    ApartmentSubType.Rent.valueOf(),
+    ApartmentSubType.StudentBrf.valueOf(),
+    ApartmentSubType.StudentRent.valueOf(),
+  ]
+  return subTypes.includes(productType)
+}
+
 const createQuoteData = ({
+  contractMarket,
   productType,
   quote,
   street,
@@ -178,11 +175,10 @@ const createQuoteData = ({
   numberOfBathrooms,
   extraBuildings,
   isSubleted,
-}: FormState & { quote: Quote }) => {
+}: FormState & { quote: Quote; contractMarket: ContractMarketInfo }) => {
   const quoteData: Partial<QuoteInput> = {
-    productType: getProductType(quote),
+    productType: getProductType(quote, productType, contractMarket),
   }
-
   const baseData = {
     street,
     zipCode,
@@ -218,9 +214,7 @@ const createQuoteData = ({
   ) {
     quoteData.norwegianHomeContentData = {
       ...baseData,
-      subType: productType
-        ? norwegianHomeContentFormStateProductSubType(productType)
-        : getProductSubTypeValue(quote),
+      subType: productType as NorwegianHomeContentType,
     }
   }
 
@@ -236,7 +230,7 @@ const createQuoteData = ({
   }
   if (
     productType
-      ? isSwedishApartmentProductType(productType)
+      ? isSwedishApartmentContentFormStateProductSubType(productType)
       : isSwedishApartment(quote)
   ) {
     quoteData.apartmentData = {
@@ -295,45 +289,65 @@ export const QuoteModification: React.FC<{
     zipCode: null,
   })
 
+  const [contractMarket] = useContractMarketInfo(memberId)
   const [
     bypassUnderwritingGuidelines,
     setBypassUnderwritingGuidelines,
   ] = React.useState(false)
 
-  const getProductTypeDropdown = () => (
-    <>
-      <Dropdown
-        fluid
-        selection
-        value={formState.productType ?? getDropDownSubTypeValue(quote)}
-        onChange={(_, data) => {
-          if (onWipChange) {
-            onWipChange(true)
-          }
-          setFormState({ ...formState, productType: data.value as string })
-        }}
-        options={[
-          { text: 'Apartment (rent)', value: 'RENT' },
-          { text: 'Apartment (brf)', value: 'BRF' },
-          { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
-          { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
-          { text: 'House', value: 'HOUSE' },
-          { text: 'Norwegian Home Content (own)', value: 'OWN' },
-          { text: 'Norwegian Home Content (rent)', value: 'HOME_CONTENT_RENT' },
-          {
-            text: 'Norwegian Home Content (youth own)',
-            value: 'YOUTH_OWN',
-          },
-          {
-            text: 'Norwegian Home Content (youth rent)',
-            value: 'YOUTH_RENT',
-          },
-          { text: 'Norwegian Travel', value: 'REGULAR' },
-          { text: 'Norwegian Travel (youth)', value: 'YOUTH' },
-        ]}
-      />
-    </>
+  const getSwedishDropdown = () => (
+    <Dropdown
+      fluid
+      selection
+      value={formState.productType ?? getProductSubTypeValue(quote)}
+      onChange={(_, data) => {
+        if (onWipChange) {
+          onWipChange(true)
+        }
+        setFormState({ ...formState, productType: data.value as string })
+      }}
+      options={[
+        { text: 'Apartment (rent)', value: 'RENT' },
+        { text: 'Apartment (brf)', value: 'BRF' },
+        { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
+        { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
+        { text: 'House', value: 'HOUSE' },
+      ]}
+    />
   )
+
+  const getNorwegianDropDown = () => (
+    <Dropdown
+      fluid
+      selection
+      value={formState.productType ?? getProductSubTypeValue(quote)}
+      onChange={(_, data) => {
+        if (onWipChange) {
+          onWipChange(true)
+        }
+        setFormState({ ...formState, productType: data.value as string })
+      }}
+      options={[
+        { text: 'Norwegian Home Content (own)', value: 'OWN' },
+        { text: 'Norwegian Home Content (rent)', value: 'RENT' },
+        {
+          text: 'Norwegian Home Content (youth own)',
+          value: 'YOUTH_OWN',
+        },
+        {
+          text: 'Norwegian Home Content (youth rent)',
+          value: 'YOUTH_RENT',
+        },
+        { text: 'Norwegian Travel', value: 'REGULAR' },
+        { text: 'Norwegian Travel (youth)', value: 'YOUTH' },
+      ]}
+    />
+  )
+
+  const getProductTypeDropdown = () =>
+    isSwedishMarket(contractMarket)
+      ? getSwedishDropdown()
+      : getNorwegianDropDown()
 
   const getTextInput = (
     variable: keyof FormState,
@@ -373,7 +387,11 @@ export const QuoteModification: React.FC<{
           return
         }
 
-        const quoteData = createQuoteData({ ...formState, quote })
+        const quoteData = createQuoteData({
+          ...formState,
+          quote,
+          contractMarket,
+        })
 
         await modifyField({
           variables: {
