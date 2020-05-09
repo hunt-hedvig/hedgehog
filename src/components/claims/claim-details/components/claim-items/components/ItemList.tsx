@@ -20,7 +20,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
 import * as React from 'react'
-import { formatMoney } from '../../../../../../utils/money'
+import { formatMoney } from 'utils/money'
 
 const SmallArrowRight = withStyles({
   root: {
