@@ -7,5 +7,12 @@ type Money =
       currency: string
     }
 
-export const formatMoney = (amount: Money): string =>
-  amount.amount + ' ' + amount.currency
+export const formatMoney = (
+  amount: Money,
+  options: Intl.NumberFormatOptions | null = null,
+): string =>
+  (options
+    ? Number(amount.amount).toLocaleString(undefined, options)
+    : amount.amount) +
+  ' ' +
+  amount.currency

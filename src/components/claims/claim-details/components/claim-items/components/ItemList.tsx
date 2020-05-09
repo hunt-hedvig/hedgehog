@@ -20,6 +20,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
 import * as React from 'react'
+import { formatMoney } from '../../../../../../utils/money'
 
 const SmallArrowRight = withStyles({
   root: {
@@ -90,9 +91,16 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
       <TableBody>
         {claimItems.map((item) => {
           const purchasePriceString = item.purchasePrice?.amount
-            ? Number(item.purchasePrice?.amount).toLocaleString('en') +
-              ' ' +
-              item.purchasePrice?.currency
+            ? formatMoney(
+                {
+                  amount: item.purchasePrice?.amount,
+                  currency: item.purchasePrice?.currency,
+                },
+                {
+                  minimumFractionDigits: 0,
+                  useGrouping: true,
+                },
+              )
             : null
 
           const noteString =
