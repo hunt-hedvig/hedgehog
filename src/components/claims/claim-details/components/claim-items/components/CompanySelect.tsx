@@ -66,7 +66,7 @@ export const CompanySelect: React.FC<{
         fullWidth
         maxWidth="xs"
       >
-        <DialogTitle>{'Create new company?'}</DialogTitle>
+        <DialogTitle>Create new company?</DialogTitle>
         <DialogContent>
           <DialogContentText>
             The company 

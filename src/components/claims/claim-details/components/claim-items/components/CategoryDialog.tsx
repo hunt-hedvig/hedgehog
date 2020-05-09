@@ -36,7 +36,7 @@ export const CategoryDialog: React.FC<{
   const parentItemCategory = selectedItemCategories.slice(-1)[0]
   const proposedKind = parentItemCategory?.nextKind
 
-  const [hasVerified, setHasVerified] = React.useState<boolean>(false)
+  const [hasVerified, setHasVerified] = React.useState(false)
   const [
     itemCompany,
     setItemCompany,

@@ -5,30 +5,23 @@ import {
   MenuItem,
   Select,
   TextField,
-  withStyles,
 } from '@material-ui/core'
-import TodayIcon from '@material-ui/icons/Today'
 import {
   UpsertClaimItemInput,
   useUpsertClaimItemMutation,
 } from 'api/generated/graphql'
+import { isAfter, isValid, parseISO } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
-import moment from 'moment'
 import * as React from 'react'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
-
-const DateIcon = withStyles({
-  root: {
-    fontSize: '1.2rem',
-    color: '#555',
-  },
-})(TodayIcon)
+import { DateIcon } from './styles'
 
 const isValidDate = (date: string) =>
   date === ''
     ? true
-    : moment(date, 'YYYY-MM-DD', true).isValid() &&
-      !moment(date, 'YYYY-MM-DD', true).isAfter(moment())
+    : isValid(parseISO(date)) &&
+      date.length === 10 &&
+      !isAfter(parseISO(date), new Date())
 
 export const ItemForm: React.FC<{
   claimId: string
@@ -38,15 +31,13 @@ export const ItemForm: React.FC<{
     SelectedItemCategory[]
   >([])
 
-  const [purchasePrice, setPurchasePrice] = React.useState<string>('')
-  const [dateOfPurchase, setDateOfPurchase] = React.useState<string>('')
-  const [note, setNote] = React.useState<string>('')
-  const [purchasePriceCurrency, setPurchasePriceCurrency] = React.useState<
-    string
-  >('')
+  const [purchasePrice, setPurchasePrice] = React.useState('')
+  const [dateOfPurchase, setDateOfPurchase] = React.useState('')
+  const [note, setNote] = React.useState('')
+  const [purchasePriceCurrency, setPurchasePriceCurrency] = React.useState('')
 
   const [contractMarketInfo] = useContractMarketInfo(memberId ?? '')
-  const validPurchasePrice = purchasePrice.match(/^[0-9]*$/g)
+  const validPurchasePrice = /^[0-9]*$/g.test(purchasePrice)
   const defaultCurrency = contractMarketInfo?.preferredCurrency ?? 'SEK'
 
   const [
@@ -61,10 +52,8 @@ export const ItemForm: React.FC<{
     itemBrandId: selectedItemCategories[2]?.id ?? null,
     itemModelId: selectedItemCategories[3]?.id ?? null,
     dateOfPurchase: dateOfPurchase === '' ? null : dateOfPurchase,
-    purchasePriceAmount:
-      purchasePrice !== ('0' && '') ? Number(purchasePrice) : null,
-    purchasePriceCurrency:
-      purchasePrice !== ('0' && '') ? purchasePriceCurrency : null,
+    purchasePriceAmount: purchasePrice !== '' ? Number(purchasePrice) : null,
+    purchasePriceCurrency: purchasePrice !== '' ? purchasePriceCurrency : null,
     note: note === '' ? null : note,
   }
 

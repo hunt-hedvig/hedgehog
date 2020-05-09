@@ -28,13 +28,11 @@ const getTypeInfoSentence = (remainingTypes: string[]) => {
     <>
       which will be able to append
       <span style={{ fontWeight: 500 }}>
-        {remainingTypes.slice(0, -1).map((type, iteration) => {
-          if (iteration === 0) {
-            return ' ' + type + 's'
-          } else {
-            return ', ' + type + 's'
-          }
-        })}
+        {' ' +
+          remainingTypes
+            .slice(0, -1)
+            .map((type) => ` ${type}s`)
+            .join(', ')}
       </span>
       {' and '}
       <span style={{ fontWeight: 500 }}>{remainingTypes.slice(-1) + 's.'}</span>
@@ -48,19 +46,19 @@ export const CategoryChain: React.FC<{
   suggestion: string
   selectedItemCategories: SelectedItemCategory[]
 }> = ({ suggestion, selectedItemCategories }) => {
-  const excludedTypes: string[] = ['family', 'company']
-  const availableTypes: string[] = Object.keys(ItemCategoryKind).map((kind) =>
+  const excludedTypes = ['family', 'company']
+  const availableTypes = Object.keys(ItemCategoryKind).map((kind) =>
     kind.toLowerCase(),
   )
-  const selectedTypes: string[] = selectedItemCategories.map(({ nextKind }) =>
+  const selectedTypes = selectedItemCategories.map(({ nextKind }) =>
     nextKind.toLowerCase(),
   )
-  const remainingTypes: string[] = availableTypes
+  const remainingTypes = availableTypes
     .filter((type) => !selectedTypes.includes(type))
     .filter((type) => !excludedTypes.includes(type))
 
-  const currentType: string[] = selectedTypes.splice(-1)
-  const existsMoreTypes: boolean = remainingTypes.length > 0
+  const currentType = selectedTypes.splice(-1)
+  const existsMoreTypes = remainingTypes.length > 0
 
   return (
     <>

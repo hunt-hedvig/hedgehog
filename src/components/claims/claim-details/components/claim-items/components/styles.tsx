@@ -1,6 +1,7 @@
 import { Chip, withStyles } from '@material-ui/core'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import CallSplitIcon from '@material-ui/icons/CallSplit'
+import TodayIcon from '@material-ui/icons/Today'
 
 export const categorySelectStyle = {
   control: (base, { isFocused }) => ({
@@ -93,3 +94,10 @@ export const SmallArrowRight = withStyles({
     fontSize: 'medium',
   },
 })(ArrowRightIcon)
+
+export const DateIcon = withStyles({
+  root: {
+    fontSize: '1.2rem',
+    color: '#555',
+  },
+})(TodayIcon)
