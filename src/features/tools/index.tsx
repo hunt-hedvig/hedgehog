@@ -31,5 +31,10 @@ export const Tools: React.FC = () => (
       <Icon>🛩</Icon>
       Norwegian Price Engine "Gripen"
     </CardLink>
+
+    <CardLink to="/tools/itemizer" span={4}>
+      <Icon>📱</Icon>
+      Itemizer
+    </CardLink>
   </CardsWrapper>
 )

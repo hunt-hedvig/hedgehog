@@ -3,6 +3,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { Tools } from '../features/tools'
 import { ChargePage } from '../features/tools/charges'
+import { ItemizerComponent } from '../features/tools/itemizer'
 import { PerilsEditor } from '../features/tools/perils-editor'
 import { SwitcherAutomation } from '../features/tools/switcher-automation'
 
@@ -16,5 +17,6 @@ export const ToolsPageRoute: React.FunctionComponent = () => (
       component={NorwegianTariffCreator}
       path="/tools/norwegian-tariff-creator"
     />
+    <Route component={ItemizerComponent} path="/tools/itemizer" />
   </Switch>
 )
