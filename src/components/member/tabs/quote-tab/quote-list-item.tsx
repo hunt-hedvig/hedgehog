@@ -2,6 +2,7 @@ import { colorsV2 } from '@hedviginsurance/brand'
 import {
   ApartmentQuoteData,
   NorwegianHomeContentQuoteData,
+  NorwegianTravelLineOfBusiness,
   NorwegianTravelQuoteData,
   Quote,
   QuoteProductType,
@@ -81,12 +82,15 @@ const getProductTypeValue = (quote: Quote): string => {
   }
   if (quote.data?.__typename === 'NorwegianHomeContentQuoteData') {
     return `${QuoteProductType.HomeContent} (${
-      (quote.data as NorwegianHomeContentQuoteData)?.norwegianSubType
+      (quote.data as NorwegianHomeContentQuoteData)?.norwegianHomeContentSubType
     })`
   }
   if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
     return `${QuoteProductType.Travel} ${
-      (quote.data as NorwegianTravelQuoteData).isYouth ? '(YOUTH)' : ''
+      (quote.data as NorwegianTravelQuoteData).subType ===
+      NorwegianTravelLineOfBusiness.Youth
+        ? '(YOUTH)'
+        : ''
     }`
   }
   return ''

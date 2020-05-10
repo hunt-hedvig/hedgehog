@@ -1000,7 +1000,7 @@ export type NorwegianHomeContentQuoteData = IQuoteData & {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianHomeContentType>
+  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
 }
 
 export type NorwegianHomeContentQuoteDataInput = {
@@ -1012,7 +1012,7 @@ export type NorwegianHomeContentQuoteDataInput = {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianHomeContentType>
+  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
 }
 
 export type NorwegianHomeContentQuoteInput = {
@@ -1021,14 +1021,7 @@ export type NorwegianHomeContentQuoteInput = {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianHomeContentType>
-}
-
-export enum NorwegianHomeContentType {
-  Own = 'OWN',
-  Rent = 'RENT',
-  YouthOwn = 'YOUTH_OWN',
-  YouthRent = 'YOUTH_RENT',
+  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
 }
 
 export type NorwegianTravel = AgreementCore & {
@@ -1055,7 +1048,7 @@ export type NorwegianTravelQuoteData = IQuoteData & {
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
-  isYouth?: Maybe<Scalars['Boolean']>
+  subType?: Maybe<NorwegianTravelLineOfBusiness>
 }
 
 export type NorwegianTravelQuoteDataInput = {
@@ -1063,11 +1056,12 @@ export type NorwegianTravelQuoteDataInput = {
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
+  subType?: Maybe<NorwegianTravelLineOfBusiness>
 }
 
 export type NorwegianTravelQuoteInput = {
   householdSize?: Maybe<Scalars['Int']>
-  isYouth?: Maybe<Scalars['Boolean']>
+  subType?: Maybe<NorwegianTravelLineOfBusiness>
 }
 
 export type NotCoveredClaim = {
@@ -1926,12 +1920,14 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
                   | 'householdSize'
                   | 'livingSpace'
                 > & {
-                    norwegianSubType: NorwegianHomeContentQuoteData['subType']
+                    norwegianHomeContentSubType: NorwegianHomeContentQuoteData['subType']
                   })
               | ({ __typename?: 'NorwegianTravelQuoteData' } & Pick<
                   NorwegianTravelQuoteData,
-                  'householdSize' | 'isYouth'
-                >)
+                  'householdSize'
+                > & {
+                    norwegianTravelSubType: NorwegianTravelQuoteData['subType']
+                  })
             >
           }
       >
@@ -2925,11 +2921,11 @@ export const GetQuotesDocument = gql`
             city
             householdSize
             livingSpace
-            norwegianSubType: subType
+            norwegianHomeContentSubType: subType
           }
           ... on NorwegianTravelQuoteData {
             householdSize
-            isYouth
+            norwegianTravelSubType: subType
           }
         }
       }

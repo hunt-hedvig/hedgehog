@@ -9,12 +9,15 @@ import {
   HouseQuoteData,
   MutationType,
   MutationTypeUpdateQuoteArgs,
+  NorwegianHomeContentLineOfBusiness,
   NorwegianHomeContentQuoteData,
-  NorwegianHomeContentType,
+  NorwegianTravelLineOfBusiness,
+  NorwegianTravelQuoteData,
   Quote,
   QuoteData,
   QuoteInput,
   QuoteProductType,
+  SwedishApartmentLineOfBusiness,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
@@ -90,18 +93,22 @@ const getProductSubTypeValue = (quote: Quote): string => {
   }
   if (quote.productType === 'TRAVEL') {
     if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
-      return quote.data.isYouth ? 'YOUTH' : 'REGULAR'
+      // @ts-ignore
+      return (quote.data as NorwegianTravelQuoteData).norwegianTravelSubType?.toString()
     }
   }
   if (quote.productType === 'HOME_CONTENT') {
-    return (quote.data as NorwegianHomeContentQuoteData)?.norwegianSubType?.toString()
+    // @ts-ignore
+    return (quote.data as NorwegianHomeContentQuoteData)
+      ?.norwegianHomeContentSubType === NorwegianHomeContentLineOfBusiness.Rent
+      ? 'HOME_CONTENT_RENT'
+      : (quote.data as NorwegianHomeContentQuoteData)?.norwegianHomeContentSubType?.toString()
   }
   return ''
 }
 
 const getProductType = (
-  quote: Quote,
-  productType: string,
+  productType: string | null,
   contractMarket: ContractMarketInfo,
 ): QuoteProductType => {
   if (isSwedishMarket(contractMarket)) {
@@ -110,21 +117,20 @@ const getProductType = (
       : QuoteProductType.Apartment
   }
   if (isNorwegianMarket(contractMarket)) {
-    return isNorwegianHomeContent(quote)
-      ? QuoteProductType.HomeContent
-      : QuoteProductType.Travel
+    return isNorwegianTravelFormStateProductSubType(productType)
+      ? QuoteProductType.Travel
+      : QuoteProductType.HomeContent
   }
   throw Error(`Expected ${contractMarket.market} to be either Sweden or Norway`)
 }
 
-const isNorwegianTravelFormStateProductType = (
+const isNorwegianTravelFormStateProductSubType = (
   productType: string | null,
 ): boolean => {
-  return productType === 'YOUTH' || productType === 'REGULAR'
-}
-
-const isNorwegianTravelProductType = (productType: string | null): boolean => {
-  return productType === 'TRAVEL'
+  return (
+    productType === NorwegianTravelLineOfBusiness.Youth ||
+    productType === NorwegianTravelLineOfBusiness.Regular
+  )
 }
 
 const isSwedishHouseProductType = (productType: string | null): boolean => {
@@ -138,10 +144,10 @@ const isNorwegianHomeContentFormStateProductSubType = (
     return false
   }
   const subTypes: string[] = [
-    NorwegianHomeContentType.Own.valueOf(),
-    NorwegianHomeContentType.Rent.valueOf(),
-    NorwegianHomeContentType.YouthOwn.valueOf(),
-    NorwegianHomeContentType.YouthRent.valueOf(),
+    NorwegianHomeContentLineOfBusiness.Own,
+    'HOME_CONTENT_RENT',
+    NorwegianHomeContentLineOfBusiness.YouthOwn,
+    NorwegianHomeContentLineOfBusiness.YouthRent,
   ]
   return subTypes.includes(productType)
 }
@@ -153,10 +159,10 @@ const isSwedishApartmentContentFormStateProductSubType = (
     return false
   }
   const subTypes: string[] = [
-    ApartmentSubType.Brf.valueOf(),
-    ApartmentSubType.Rent.valueOf(),
-    ApartmentSubType.StudentBrf.valueOf(),
-    ApartmentSubType.StudentRent.valueOf(),
+    ApartmentSubType.Brf,
+    ApartmentSubType.Rent,
+    ApartmentSubType.StudentBrf,
+    ApartmentSubType.StudentRent,
   ]
   return subTypes.includes(productType)
 }
@@ -177,8 +183,9 @@ const createQuoteData = ({
   isSubleted,
 }: FormState & { quote: Quote; contractMarket: ContractMarketInfo }) => {
   const quoteData: Partial<QuoteInput> = {
-    productType: getProductType(quote, productType, contractMarket),
+    productType: getProductType(productType, contractMarket),
   }
+
   const baseData = {
     street,
     zipCode,
@@ -214,18 +221,21 @@ const createQuoteData = ({
   ) {
     quoteData.norwegianHomeContentData = {
       ...baseData,
-      subType: productType as NorwegianHomeContentType,
+      subType:
+        productType === 'HOME_CONTENT_RENT'
+          ? NorwegianHomeContentLineOfBusiness.Rent
+          : (productType as NorwegianHomeContentLineOfBusiness),
     }
   }
 
   if (
     productType
-      ? isNorwegianTravelProductType(productType)
+      ? isNorwegianTravelFormStateProductSubType(productType)
       : isNorwegianTravel(quote)
   ) {
     quoteData.norwegianTravelData = {
       householdSize: parseInt(householdSize!, 10),
-      isYouth: productType === 'YOUTH',
+      subType: productType as NorwegianTravelLineOfBusiness,
     }
   }
   if (
@@ -307,10 +317,19 @@ export const QuoteModification: React.FC<{
         setFormState({ ...formState, productType: data.value as string })
       }}
       options={[
-        { text: 'Apartment (rent)', value: 'RENT' },
-        { text: 'Apartment (brf)', value: 'BRF' },
-        { text: 'Apartment (student rent)', value: 'STUDENT_RENT' },
-        { text: 'Apartment (student brf)', value: 'STUDENT_BRF' },
+        {
+          text: 'Apartment (rent)',
+          value: SwedishApartmentLineOfBusiness.Rent,
+        },
+        { text: 'Apartment (brf)', value: SwedishApartmentLineOfBusiness.Brf },
+        {
+          text: 'Apartment (student rent)',
+          value: SwedishApartmentLineOfBusiness.StudentRent,
+        },
+        {
+          text: 'Apartment (student brf)',
+          value: SwedishApartmentLineOfBusiness.StudentBrf,
+        },
         { text: 'House', value: 'HOUSE' },
       ]}
     />
@@ -328,24 +347,36 @@ export const QuoteModification: React.FC<{
         setFormState({ ...formState, productType: data.value as string })
       }}
       options={[
-        { text: 'Norwegian Home Content (own)', value: 'OWN' },
-        { text: 'Norwegian Home Content (rent)', value: 'RENT' },
+        {
+          text: 'Norwegian Home Content (own)',
+          value: NorwegianHomeContentLineOfBusiness.Own,
+        },
+        {
+          text: 'Norwegian Home Content (rent)',
+          value: 'HOME_CONTENT_RENT',
+        },
         {
           text: 'Norwegian Home Content (youth own)',
-          value: 'YOUTH_OWN',
+          value: NorwegianHomeContentLineOfBusiness.YouthOwn,
         },
         {
           text: 'Norwegian Home Content (youth rent)',
-          value: 'YOUTH_RENT',
+          value: NorwegianHomeContentLineOfBusiness.YouthRent,
         },
-        { text: 'Norwegian Travel', value: 'REGULAR' },
-        { text: 'Norwegian Travel (youth)', value: 'YOUTH' },
+        {
+          text: 'Norwegian Travel',
+          value: NorwegianTravelLineOfBusiness.Regular,
+        },
+        {
+          text: 'Norwegian Travel (youth)',
+          value: NorwegianTravelLineOfBusiness.Youth,
+        },
       ]}
     />
   )
 
   const getProductTypeDropdown = () =>
-    isSwedishMarket(contractMarket)
+    isSwedishMarket(contractMarket!!)
       ? getSwedishDropdown()
       : getNorwegianDropDown()
 
@@ -406,7 +437,7 @@ export const QuoteModification: React.FC<{
       }}
     >
       {(formState.productType
-        ? isNorwegianTravelFormStateProductType(formState.productType)
+        ? isNorwegianTravelFormStateProductSubType(formState.productType)
         : isNorwegianTravel(quote)) && (
         <InputGroup>
           <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
@@ -415,7 +446,7 @@ export const QuoteModification: React.FC<{
         </InputGroup>
       )}
       {(formState.productType
-        ? !isNorwegianTravelFormStateProductType(formState.productType)
+        ? !isNorwegianTravelFormStateProductSubType(formState.productType)
         : !isNorwegianTravel(quote)) && (
         <>
           <InputGroup>
@@ -442,7 +473,7 @@ export const QuoteModification: React.FC<{
               </>,
               (formState.ancillaryArea === null
                 ? (quote.data as HouseQuoteData)!.ancillaryArea
-                : formState.ancillaryArea) ?? '0',
+                : formState.ancillaryArea) ?? '',
             )}
             {getNumberInput('yearOfConstruction', 'Year of construction')}
             {getNumberInput('numberOfBathrooms', 'Number of bathrooms')}

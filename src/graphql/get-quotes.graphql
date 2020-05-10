@@ -45,12 +45,12 @@ query GetQuotes($memberId: ID!) {
           city
           householdSize
           livingSpace
-          norwegianSubType: subType
+          norwegianHomeContentSubType: subType
         }
 
         ... on NorwegianTravelQuoteData {
           householdSize
-          isYouth
+          norwegianTravelSubType: subType
         }
       }
     }
