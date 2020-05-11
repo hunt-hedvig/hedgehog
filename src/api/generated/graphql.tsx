@@ -96,6 +96,10 @@ export type ActivatePendingAgreementInput = {
   fromDate: Scalars['LocalDate']
 }
 
+export type AddItemCategoriesInput = {
+  itemCategoriesString: Scalars['String']
+}
+
 export type Address = {
   __typename?: 'Address'
   street: Scalars['String']
@@ -763,6 +767,7 @@ export type MutationType = {
   upsertItemModel: Scalars['ID']
   upsertClaimItem: Scalars['ID']
   deleteClaimItem?: Maybe<Scalars['ID']>
+  addItemCategories: Array<Scalars['Boolean']>
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -978,6 +983,10 @@ export type MutationTypeDeleteClaimItemArgs = {
   claimItemId: Scalars['ID']
 }
 
+export type MutationTypeAddItemCategoriesArgs = {
+  request?: Maybe<AddItemCategoriesInput>
+}
+
 export type NorwegianGripenFactorInput = {
   factorType: NorwegianGripenFactorType
   factorString: Scalars['String']
@@ -1142,6 +1151,7 @@ export type QueryType = {
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   itemCategories: Array<ItemCategory>
+  validateCategoryChain: Array<Scalars['String']>
   claimItems: Array<ClaimItem>
 }
 
@@ -1180,6 +1190,14 @@ export type QueryTypeGetAnswerSuggestionArgs = {
 export type QueryTypeItemCategoriesArgs = {
   kind: ItemCategoryKind
   parentId?: Maybe<Scalars['ID']>
+}
+
+export type QueryTypeValidateCategoryChainArgs = {
+  itemFamilyName: Scalars['String']
+  itemTypeName?: Maybe<Scalars['String']>
+  itemCompanyName?: Maybe<Scalars['String']>
+  itemBrandName?: Maybe<Scalars['String']>
+  itemModelName?: Maybe<Scalars['String']>
 }
 
 export type QueryTypeClaimItemsArgs = {
@@ -1579,6 +1597,15 @@ export type MemberNameAndContractMarketInfoQuery = {
       }
   >
 }
+
+export type AddItemCategoriesMutationVariables = {
+  request?: Maybe<AddItemCategoriesInput>
+}
+
+export type AddItemCategoriesMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'addItemCategories'
+>
 
 export type AddNorwegainPostalCodesMutationVariables = {
   postalCodesString?: Maybe<Scalars['String']>
@@ -2160,6 +2187,54 @@ export type MemberNameAndContractMarketInfoLazyQueryHookResult = ReturnType<
 export type MemberNameAndContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
   MemberNameAndContractMarketInfoQuery,
   MemberNameAndContractMarketInfoQueryVariables
+>
+export const AddItemCategoriesDocument = gql`
+  mutation AddItemCategories($request: AddItemCategoriesInput) {
+    addItemCategories(request: $request)
+  }
+`
+export type AddItemCategoriesMutationFn = ApolloReactCommon.MutationFunction<
+  AddItemCategoriesMutation,
+  AddItemCategoriesMutationVariables
+>
+
+/**
+ * __useAddItemCategoriesMutation__
+ *
+ * To run a mutation, you first call `useAddItemCategoriesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddItemCategoriesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addItemCategoriesMutation, { data, loading, error }] = useAddItemCategoriesMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddItemCategoriesMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddItemCategoriesMutation,
+    AddItemCategoriesMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddItemCategoriesMutation,
+    AddItemCategoriesMutationVariables
+  >(AddItemCategoriesDocument, baseOptions)
+}
+export type AddItemCategoriesMutationHookResult = ReturnType<
+  typeof useAddItemCategoriesMutation
+>
+export type AddItemCategoriesMutationResult = ApolloReactCommon.MutationResult<
+  AddItemCategoriesMutation
+>
+export type AddItemCategoriesMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddItemCategoriesMutation,
+  AddItemCategoriesMutationVariables
 >
 export const AddNorwegainPostalCodesDocument = gql`
   mutation AddNorwegainPostalCodes($postalCodesString: String) {
