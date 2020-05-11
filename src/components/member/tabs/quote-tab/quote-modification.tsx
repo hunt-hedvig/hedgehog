@@ -29,6 +29,7 @@ import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
 import {
+  getSubType,
   isNorwegianHomeContent,
   isNorwegianTravel,
   isSwedishApartment,
@@ -98,11 +99,10 @@ const getProductSubTypeValue = (quote: Quote): string => {
     }
   }
   if (quote.productType === 'HOME_CONTENT') {
-    // @ts-ignore
-    return (quote.data as NorwegianHomeContentQuoteData)
-      ?.norwegianHomeContentSubType === NorwegianHomeContentLineOfBusiness.Rent
+    const subType = getSubType(quote.data as NorwegianHomeContentQuoteData)
+    return subType === NorwegianHomeContentLineOfBusiness.Rent
       ? 'HOME_CONTENT_RENT'
-      : (quote.data as NorwegianHomeContentQuoteData)?.norwegianHomeContentSubType?.toString()
+      : subType
   }
   return ''
 }
@@ -194,7 +194,9 @@ const createQuoteData = ({
     householdSize: parseInt(householdSize!, 10),
   }
   if (
-    productType ? isSwedishHouseProductType(productType) : isSwedishHouse(quote)
+    productType
+      ? isSwedishHouseProductType(productType)
+      : isSwedishHouse(quote?.data)
   ) {
     quoteData.houseData = {
       ...baseData,
@@ -217,7 +219,7 @@ const createQuoteData = ({
   if (
     productType
       ? isNorwegianHomeContentFormStateProductSubType(productType)
-      : isNorwegianHomeContent(quote)
+      : isNorwegianHomeContent(quote?.data)
   ) {
     quoteData.norwegianHomeContentData = {
       ...baseData,
@@ -231,7 +233,7 @@ const createQuoteData = ({
   if (
     productType
       ? isNorwegianTravelFormStateProductSubType(productType)
-      : isNorwegianTravel(quote)
+      : isNorwegianTravel(quote?.data)
   ) {
     quoteData.norwegianTravelData = {
       householdSize: parseInt(householdSize!, 10),
@@ -241,7 +243,7 @@ const createQuoteData = ({
   if (
     productType
       ? isSwedishApartmentContentFormStateProductSubType(productType)
-      : isSwedishApartment(quote)
+      : isSwedishApartment(quote?.data)
   ) {
     quoteData.apartmentData = {
       ...baseData,
@@ -299,7 +301,16 @@ export const QuoteModification: React.FC<{
     zipCode: null,
   })
 
-  const [contractMarket] = useContractMarketInfo(memberId)
+  const [contractMarket, { loading }] = useContractMarketInfo(memberId)
+
+  if (loading) {
+    return null
+  }
+
+  if (!contractMarket) {
+    return <>Unable to get Market, please contract Tech</>
+  }
+
   const [
     bypassUnderwritingGuidelines,
     setBypassUnderwritingGuidelines,
@@ -376,7 +387,7 @@ export const QuoteModification: React.FC<{
   )
 
   const getProductTypeDropdown = () =>
-    isSwedishMarket(contractMarket!!)
+    isSwedishMarket(contractMarket)
       ? getSwedishDropdown()
       : getNorwegianDropDown()
 
@@ -438,7 +449,7 @@ export const QuoteModification: React.FC<{
     >
       {(formState.productType
         ? isNorwegianTravelFormStateProductSubType(formState.productType)
-        : isNorwegianTravel(quote)) && (
+        : isNorwegianTravel(quote?.data)) && (
         <InputGroup>
           <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
           {getProductTypeDropdown()}
@@ -447,7 +458,7 @@ export const QuoteModification: React.FC<{
       )}
       {(formState.productType
         ? !isNorwegianTravelFormStateProductSubType(formState.productType)
-        : !isNorwegianTravel(quote)) && (
+        : !isNorwegianTravel(quote?.data)) && (
         <>
           <InputGroup>
             {getTextInput('street', 'Street')}

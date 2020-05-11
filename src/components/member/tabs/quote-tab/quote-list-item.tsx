@@ -1,19 +1,18 @@
 import { colorsV2 } from '@hedviginsurance/brand'
-import {
-  ApartmentQuoteData,
-  NorwegianHomeContentQuoteData,
-  NorwegianTravelLineOfBusiness,
-  NorwegianTravelQuoteData,
-  Quote,
-  QuoteProductType,
-} from 'api/generated/graphql'
+import { Quote, QuoteProductType } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
 import { formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
-import { isNorwegianTravel, isSwedishHouse } from 'utils/quote'
+import {
+  getSubType,
+  isNorwegianHomeContent,
+  isNorwegianTravel,
+  isSwedishApartment,
+  isSwedishHouse,
+} from 'utils/quote'
 import { BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteModification } from './quote-modification'
@@ -73,25 +72,16 @@ enum Action {
 
 const getProductTypeValue = (quote: Quote): string => {
   if (quote.data?.__typename === 'ApartmentQuoteData') {
-    return `${QuoteProductType.Apartment} (${
-      (quote.data as ApartmentQuoteData)?.subType
-    })`
+    return `${QuoteProductType.Apartment} (${getSubType(quote.data)})`
   }
-  if (isSwedishHouse(quote)) {
+  if (isSwedishHouse(quote?.data)) {
     return QuoteProductType.House
   }
-  if (quote.data?.__typename === 'NorwegianHomeContentQuoteData') {
-    return `${QuoteProductType.HomeContent} (${
-      (quote.data as NorwegianHomeContentQuoteData)?.norwegianHomeContentSubType
-    })`
+  if (isNorwegianHomeContent(quote?.data)) {
+    return `${QuoteProductType.HomeContent} (${getSubType(quote.data)})`
   }
-  if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
-    return `${QuoteProductType.Travel} ${
-      (quote.data as NorwegianTravelQuoteData)?.norwegianTravelSubType ===
-      NorwegianTravelLineOfBusiness.Youth
-        ? '(YOUTH)'
-        : ''
-    }`
+  if (isNorwegianTravel(quote?.data)) {
+    return `${QuoteProductType.Travel} ${getSubType(quote.data)}`
   }
   return ''
 }
@@ -101,10 +91,12 @@ const QuoteDetails: React.FC<{
 }> = ({ quote }) => (
   <DetailsWrapper>
     <AddressNPriceWrapper>
-      {!isNorwegianTravel(quote) ? (
+      {isSwedishHouse(quote?.data) ||
+      isSwedishApartment(quote?.data) ||
+      isNorwegianHomeContent(quote?.data) ? (
         <AddressWrapper>
-          {quote.data?.street}
-          {quote.data?.street && (
+          {quote.data.street}
+          {quote.data.street && (
             <>
               , <br />
             </>
@@ -121,7 +113,7 @@ const QuoteDetails: React.FC<{
     </AddressNPriceWrapper>
     <DetailWrapper>
       Product type: <strong>{getProductTypeValue(quote)}</strong>
-      {!isNorwegianTravel(quote) ? (
+      {!isNorwegianTravel(quote?.data) ? (
         <>
           <br />
           Living space:

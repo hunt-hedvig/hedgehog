@@ -1,21 +1,43 @@
 import {
-  NorwegianHomeContent,
-  NorwegianTravel,
-  Quote,
-  SwedishApartment,
-  SwedishHouse,
-} from '../api/generated/graphql'
+  ApartmentQuoteData,
+  HouseQuoteData,
+  NorwegianHomeContentQuoteData,
+  NorwegianTravelQuoteData,
+  QuoteData,
+} from 'api/generated/graphql'
 
-export const isSwedishApartment = (quote: Quote): quote is SwedishApartment =>
-  quote.data?.__typename === 'ApartmentQuoteData'
+type QuoteDataMaybe = QuoteData | null | undefined
 
-export const isSwedishHouse = (quote: Quote): quote is SwedishHouse =>
-  quote.data?.__typename === 'HouseQuoteData'
+export const isSwedishApartment = (
+  quoteData: QuoteDataMaybe,
+): quoteData is ApartmentQuoteData =>
+  quoteData?.__typename === 'ApartmentQuoteData'
+
+export const isSwedishHouse = (
+  quoteData: QuoteDataMaybe,
+): quoteData is HouseQuoteData => quoteData?.__typename === 'HouseQuoteData'
 
 export const isNorwegianHomeContent = (
-  quote: Quote,
-): quote is NorwegianHomeContent =>
-  quote.data?.__typename === 'NorwegianHomeContentQuoteData'
+  quoteData: QuoteDataMaybe,
+): quoteData is NorwegianHomeContentQuoteData =>
+  quoteData?.__typename === 'NorwegianHomeContentQuoteData'
 
-export const isNorwegianTravel = (quote: Quote): quote is NorwegianTravel =>
-  quote.data?.__typename === 'NorwegianTravelQuoteData'
+export const isNorwegianTravel = (
+  quoteData: QuoteDataMaybe,
+): quoteData is NorwegianTravelQuoteData =>
+  quoteData?.__typename === 'NorwegianTravelQuoteData'
+
+export const getSubType = (quoteData: QuoteData): string => {
+  if (isSwedishApartment(quoteData)) {
+    return quoteData?.subType!
+  }
+  if (isNorwegianHomeContent(quoteData)) {
+    // @ts-ignore
+    return quoteData?.norwegianHomeContentSubType!
+  }
+  if (isNorwegianTravel(quoteData)) {
+    // @ts-ignore
+    return quoteData?.norwegianTravelSubType!
+  }
+  throw Error(`Unable to return subType of quoteData=${quoteData}`)
+}
