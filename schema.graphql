@@ -624,13 +624,6 @@ type NorwegianHomeContentQuoteData implements IQuoteData{
   subType: NorwegianHomeContentLineOfBusiness
 }
 
-#enum NorwegianHomeContentType {
-#  OWN,
-#  RENT,
-#  YOUTH_OWN,
-#  YOUTH_RENT
-#}
-
 type NorwegianTravelQuoteData implements IQuoteData{
   id: ID!
   ssn:  String
@@ -638,7 +631,6 @@ type NorwegianTravelQuoteData implements IQuoteData{
   lastName: String
   householdSize: Int
   subType: NorwegianTravelLineOfBusiness
-  #  isYouth: Boolean
 }
 
 input QuoteInput {
@@ -689,7 +681,6 @@ input NorwegianHomeContentQuoteInput {
 input NorwegianTravelQuoteInput {
   householdSize: Int
   subType: NorwegianTravelLineOfBusiness
-  #  isYouth: Boolean
 }
 
 input QuoteFromProductInput {
