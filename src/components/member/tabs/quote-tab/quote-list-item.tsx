@@ -87,7 +87,7 @@ const getProductTypeValue = (quote: Quote): string => {
   }
   if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
     return `${QuoteProductType.Travel} ${
-      (quote.data as NorwegianTravelQuoteData).subType ===
+      (quote.data as NorwegianTravelQuoteData)?.norwegianTravelSubType ===
       NorwegianTravelLineOfBusiness.Youth
         ? '(YOUTH)'
         : ''
