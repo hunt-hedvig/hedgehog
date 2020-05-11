@@ -621,14 +621,7 @@ type NorwegianHomeContentQuoteData implements IQuoteData{
   zipCode: String
   householdSize: Int
   livingSpace: Int
-  type: NorwegianHomeContentType
-}
-
-enum NorwegianHomeContentType {
-  OWN,
-  RENT,
-  YOUTH_OWN,
-  YOUTH_RENT
+  subType: NorwegianHomeContentLineOfBusiness
 }
 
 type NorwegianTravelQuoteData implements IQuoteData{
@@ -637,6 +630,7 @@ type NorwegianTravelQuoteData implements IQuoteData{
   firstName: String
   lastName: String
   householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
 }
 
 input QuoteInput {
@@ -680,12 +674,13 @@ input NorwegianHomeContentQuoteInput {
   householdSize: Int
   livingSpace: Int
 
-  type: NorwegianHomeContentType
+  subType: NorwegianHomeContentLineOfBusiness
 }
 
 
 input NorwegianTravelQuoteInput {
   householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
 }
 
 input QuoteFromProductInput {
@@ -747,7 +742,7 @@ input NorwegianHomeContentQuoteDataInput {
   householdSize: Int
   livingSpace: Int
 
-  type: NorwegianHomeContentType
+  subType: NorwegianHomeContentLineOfBusiness
 }
 
 input NorwegianTravelQuoteDataInput {
@@ -756,6 +751,7 @@ input NorwegianTravelQuoteDataInput {
   lastName: String
 
   householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
 }
 
 type Transaction {
@@ -843,6 +839,9 @@ enum AccountEntryType {
   CHARGE
   REFERRAL_DISCOUNT
   FREE_MONTH_DISCOUNT
+  PERCENTAGE_MONTH_DISCOUNT
+  BUNDLE_DISCOUNT_COST_DEDUCTION
+  BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION
   LOSS
 }
 
