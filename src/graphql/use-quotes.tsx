@@ -44,6 +44,19 @@ export const QUOTES_QUERY = gql`
             }
             isSubleted
           }
+          ... on NorwegianHomeContentQuoteData {
+            street
+            zipCode
+            city
+            householdSize
+            livingSpace
+            norwegianHomeContentSubType: subType
+          }
+
+          ... on NorwegianTravelQuoteData {
+            householdSize
+            norwegianTravelSubType: subType
+          }
         }
       }
     }

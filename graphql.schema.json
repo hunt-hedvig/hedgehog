@@ -2974,12 +2974,12 @@
             "deprecationReason": null
           },
           {
-            "name": "type",
+            "name": "subType",
             "description": "",
             "args": [],
             "type": {
               "kind": "ENUM",
-              "name": "NorwegianHomeContentType",
+              "name": "NorwegianHomeContentLineOfBusiness",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2999,18 +2999,12 @@
       },
       {
         "kind": "ENUM",
-        "name": "NorwegianHomeContentType",
+        "name": "NorwegianHomeContentLineOfBusiness",
         "description": "",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
         "enumValues": [
-          {
-            "name": "OWN",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "RENT",
             "description": "",
@@ -3018,13 +3012,20 @@
             "deprecationReason": null
           },
           {
-            "name": "YOUTH_OWN",
+            "name": "OWN",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
+
             "name": "YOUTH_RENT",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "YOUTH_OWN",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -3100,6 +3101,18 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "subType",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "NorwegianTravelLineOfBusiness",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -3111,6 +3124,29 @@
           }
         ],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "NorwegianTravelLineOfBusiness",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "REGULAR",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "YOUTH",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {
@@ -4307,41 +4343,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "ENUM",
-        "name": "NorwegianHomeContentLineOfBusiness",
-        "description": "",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "RENT",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "OWN",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "YOUTH_RENT",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "YOUTH_OWN",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
         "name": "NorwegianTravel",
         "description": "",
@@ -4472,29 +4473,6 @@
           }
         ],
         "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "ENUM",
-        "name": "NorwegianTravelLineOfBusiness",
-        "description": "",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "REGULAR",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "YOUTH",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
         "possibleTypes": null
       },
       {
@@ -10979,29 +10957,11 @@
             "defaultValue": null
           },
           {
-            "name": "extraBuildings",
+            "name": "subType",
             "description": "",
             "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "ExtraBuildingInput",
-                  "ofType": null
-                }
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "isSubleted",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
+              "kind": "ENUM",
+              "name": "NorwegianHomeContentLineOfBusiness",
               "ofType": null
             },
             "defaultValue": null
@@ -11053,6 +11013,37 @@
             "type": {
               "kind": "SCALAR",
               "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "subType",
+            "description": "",
+            "type": {
+              "kind": "ENUM",
+              "name": "NorwegianTravelLineOfBusiness",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "QuoteInput",
+        "description": "",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "productType",
+            "description": "",
+            "type": {
+              "kind": "ENUM",
+              "name": "QuoteProductType",
               "ofType": null
             },
             "defaultValue": null
@@ -11365,16 +11356,62 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "newTerminationDate",
+            "name": "street",
             "description": "",
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "LocalDate",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "city",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "zipCode",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "householdSize",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "livingSpace",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "subType",
+            "description": "",
+            "type": {
+              "kind": "ENUM",
+              "name": "NorwegianHomeContentLineOfBusiness",
+              "ofType": null
             },
             "defaultValue": null
           }
@@ -11400,24 +11437,12 @@
             "defaultValue": null
           },
           {
-            "name": "factors",
+            "name": "subType",
             "description": "",
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "NorwegianGripenFactorInput",
-                    "ofType": null
-                  }
-                }
-              }
+              "kind": "ENUM",
+              "name": "NorwegianTravelLineOfBusiness",
+              "ofType": null
             },
             "defaultValue": null
           }

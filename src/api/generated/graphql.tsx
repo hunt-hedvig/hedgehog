@@ -1025,7 +1025,7 @@ export type NorwegianHomeContentQuoteData = IQuoteData & {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  type?: Maybe<NorwegianHomeContentType>
+  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
 }
 
 export type NorwegianHomeContentQuoteDataInput = {
@@ -1037,7 +1037,7 @@ export type NorwegianHomeContentQuoteDataInput = {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  type?: Maybe<NorwegianHomeContentType>
+  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
 }
 
 export type NorwegianHomeContentQuoteInput = {
@@ -1046,14 +1046,7 @@ export type NorwegianHomeContentQuoteInput = {
   zipCode?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
-  type?: Maybe<NorwegianHomeContentType>
-}
-
-export enum NorwegianHomeContentType {
-  Own = 'OWN',
-  Rent = 'RENT',
-  YouthOwn = 'YOUTH_OWN',
-  YouthRent = 'YOUTH_RENT',
+  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
 }
 
 export type NorwegianTravel = AgreementCore & {
@@ -1080,6 +1073,7 @@ export type NorwegianTravelQuoteData = IQuoteData & {
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
+  subType?: Maybe<NorwegianTravelLineOfBusiness>
 }
 
 export type NorwegianTravelQuoteDataInput = {
@@ -1087,10 +1081,12 @@ export type NorwegianTravelQuoteDataInput = {
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   householdSize?: Maybe<Scalars['Int']>
+  subType?: Maybe<NorwegianTravelLineOfBusiness>
 }
 
 export type NorwegianTravelQuoteInput = {
   householdSize?: Maybe<Scalars['Int']>
+  subType?: Maybe<NorwegianTravelLineOfBusiness>
 }
 
 export type NotCoveredClaim = {
@@ -2007,8 +2003,22 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
                       >
                     >
                   })
-              | { __typename?: 'NorwegianHomeContentQuoteData' }
-              | { __typename?: 'NorwegianTravelQuoteData' }
+              | ({ __typename?: 'NorwegianHomeContentQuoteData' } & Pick<
+                  NorwegianHomeContentQuoteData,
+                  | 'street'
+                  | 'zipCode'
+                  | 'city'
+                  | 'householdSize'
+                  | 'livingSpace'
+                > & {
+                    norwegianHomeContentSubType: NorwegianHomeContentQuoteData['subType']
+                  })
+              | ({ __typename?: 'NorwegianTravelQuoteData' } & Pick<
+                  NorwegianTravelQuoteData,
+                  'householdSize'
+                > & {
+                    norwegianTravelSubType: NorwegianTravelQuoteData['subType']
+                  })
             >
           }
       >
@@ -3209,6 +3219,18 @@ export const GetQuotesDocument = gql`
               hasWaterConnected
             }
             isSubleted
+          }
+          ... on NorwegianHomeContentQuoteData {
+            street
+            zipCode
+            city
+            householdSize
+            livingSpace
+            norwegianHomeContentSubType: subType
+          }
+          ... on NorwegianTravelQuoteData {
+            householdSize
+            norwegianTravelSubType: subType
           }
         }
       }
