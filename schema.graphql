@@ -112,10 +112,10 @@ type MutationType {
   upsertItemModel(request: UpsertItemModelInput): ID!
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
-  addItemCategories(request: AddItemCategoriesInput): [Boolean!]!
+  insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
 }
 
-input AddItemCategoriesInput {
+input InsertItemCategoriesInput {
   itemCategoriesString: String!
 }
 

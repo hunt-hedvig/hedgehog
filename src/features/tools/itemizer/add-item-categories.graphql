@@ -1,3 +1,0 @@
-mutation AddItemCategories($request: AddItemCategoriesInput) {
-  addItemCategories(request: $request)
-}

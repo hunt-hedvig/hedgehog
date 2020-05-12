@@ -96,10 +96,6 @@ export type ActivatePendingAgreementInput = {
   fromDate: Scalars['LocalDate']
 }
 
-export type AddItemCategoriesInput = {
-  itemCategoriesString: Scalars['String']
-}
-
 export type Address = {
   __typename?: 'Address'
   street: Scalars['String']
@@ -575,6 +571,10 @@ export type HouseQuoteInput = {
   isSubleted?: Maybe<Scalars['Boolean']>
 }
 
+export type InsertItemCategoriesInput = {
+  itemCategoriesString: Scalars['String']
+}
+
 export type InstallationsClaim = {
   __typename?: 'InstallationsClaim'
   date?: Maybe<Scalars['LocalDate']>
@@ -767,7 +767,7 @@ export type MutationType = {
   upsertItemModel: Scalars['ID']
   upsertClaimItem: Scalars['ID']
   deleteClaimItem?: Maybe<Scalars['ID']>
-  addItemCategories: Array<Scalars['Boolean']>
+  insertItemCategories: Array<Scalars['Boolean']>
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -983,8 +983,8 @@ export type MutationTypeDeleteClaimItemArgs = {
   claimItemId: Scalars['ID']
 }
 
-export type MutationTypeAddItemCategoriesArgs = {
-  request?: Maybe<AddItemCategoriesInput>
+export type MutationTypeInsertItemCategoriesArgs = {
+  request?: Maybe<InsertItemCategoriesInput>
 }
 
 export type NorwegianGripenFactorInput = {
@@ -1598,14 +1598,13 @@ export type MemberNameAndContractMarketInfoQuery = {
   >
 }
 
-export type AddItemCategoriesMutationVariables = {
-  request?: Maybe<AddItemCategoriesInput>
+export type InsertItemCategoriesMutationVariables = {
+  request?: Maybe<InsertItemCategoriesInput>
 }
 
-export type AddItemCategoriesMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'addItemCategories'
->
+export type InsertItemCategoriesMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'insertItemCategories'>
 
 export type AddNorwegainPostalCodesMutationVariables = {
   postalCodesString?: Maybe<Scalars['String']>
@@ -2188,53 +2187,53 @@ export type MemberNameAndContractMarketInfoQueryResult = ApolloReactCommon.Query
   MemberNameAndContractMarketInfoQuery,
   MemberNameAndContractMarketInfoQueryVariables
 >
-export const AddItemCategoriesDocument = gql`
-  mutation AddItemCategories($request: AddItemCategoriesInput) {
-    addItemCategories(request: $request)
+export const InsertItemCategoriesDocument = gql`
+  mutation InsertItemCategories($request: InsertItemCategoriesInput) {
+    insertItemCategories(request: $request)
   }
 `
-export type AddItemCategoriesMutationFn = ApolloReactCommon.MutationFunction<
-  AddItemCategoriesMutation,
-  AddItemCategoriesMutationVariables
+export type InsertItemCategoriesMutationFn = ApolloReactCommon.MutationFunction<
+  InsertItemCategoriesMutation,
+  InsertItemCategoriesMutationVariables
 >
 
 /**
- * __useAddItemCategoriesMutation__
+ * __useInsertItemCategoriesMutation__
  *
- * To run a mutation, you first call `useAddItemCategoriesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddItemCategoriesMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useInsertItemCategoriesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertItemCategoriesMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addItemCategoriesMutation, { data, loading, error }] = useAddItemCategoriesMutation({
+ * const [insertItemCategoriesMutation, { data, loading, error }] = useInsertItemCategoriesMutation({
  *   variables: {
  *      request: // value for 'request'
  *   },
  * });
  */
-export function useAddItemCategoriesMutation(
+export function useInsertItemCategoriesMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AddItemCategoriesMutation,
-    AddItemCategoriesMutationVariables
+    InsertItemCategoriesMutation,
+    InsertItemCategoriesMutationVariables
   >,
 ) {
   return ApolloReactHooks.useMutation<
-    AddItemCategoriesMutation,
-    AddItemCategoriesMutationVariables
-  >(AddItemCategoriesDocument, baseOptions)
+    InsertItemCategoriesMutation,
+    InsertItemCategoriesMutationVariables
+  >(InsertItemCategoriesDocument, baseOptions)
 }
-export type AddItemCategoriesMutationHookResult = ReturnType<
-  typeof useAddItemCategoriesMutation
+export type InsertItemCategoriesMutationHookResult = ReturnType<
+  typeof useInsertItemCategoriesMutation
 >
-export type AddItemCategoriesMutationResult = ApolloReactCommon.MutationResult<
-  AddItemCategoriesMutation
+export type InsertItemCategoriesMutationResult = ApolloReactCommon.MutationResult<
+  InsertItemCategoriesMutation
 >
-export type AddItemCategoriesMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AddItemCategoriesMutation,
-  AddItemCategoriesMutationVariables
+export type InsertItemCategoriesMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InsertItemCategoriesMutation,
+  InsertItemCategoriesMutationVariables
 >
 export const AddNorwegainPostalCodesDocument = gql`
   mutation AddNorwegainPostalCodes($postalCodesString: String) {

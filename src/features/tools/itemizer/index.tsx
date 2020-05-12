@@ -11,7 +11,7 @@ import * as React from 'react'
 import { TextArea } from '../../../../shared/hedvig-ui/text-area'
 import {
   ItemCategoryKind,
-  useAddItemCategoriesMutation,
+  useInsertItemCategoriesMutation,
 } from '../../../api/generated/graphql'
 
 interface DataRow {
@@ -27,14 +27,14 @@ const interpretDataString = (s: string): DataTable | null => {
   const rows: DataRow[] = s.split('\n').map((row) => {
     return { cells: row.split('\t') }
   })
-
   const header: DataRow = rows[0] ?? []
+  const table = { header, rows: rows.slice(1) }
 
-  const consistentTable = !rows.find(
-    (row) => row.cells.length !== Object.keys(ItemCategoryKind).length,
+  const tableIsConsistent = !rows.find(
+    ({ cells }) => cells.length !== Object.keys(ItemCategoryKind).length,
   )
 
-  return consistentTable ? { header, rows: rows.slice(1) } : null
+  return tableIsConsistent ? table : null
 }
 
 export const ItemizerComponent: React.FC = () => {
@@ -42,10 +42,9 @@ export const ItemizerComponent: React.FC = () => {
   const [validity, setValidity] = React.useState<boolean[]>([])
   const tablePreview = interpretDataString(dataString)
   const [resetRequired, setResetRequired] = React.useState(false)
+  const [insertItemCategories] = useInsertItemCategoriesMutation()
 
   const validityExists = validity.length !== 0
-
-  const [addItemCategories] = useAddItemCategoriesMutation()
 
   return (
     <>
@@ -59,11 +58,11 @@ export const ItemizerComponent: React.FC = () => {
       <Button
         disabled={resetRequired || !tablePreview}
         onClick={() =>
-          addItemCategories({
+          insertItemCategories({
             variables: { request: { itemCategoriesString: dataString } },
           }).then(({ data }) => {
             setResetRequired(true)
-            setValidity(data?.addItemCategories ?? [])
+            setValidity(data?.insertItemCategories ?? [])
           })
         }
         style={{ marginTop: '15px' }}

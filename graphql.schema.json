@@ -9584,7 +9584,7 @@
             "deprecationReason": null
           },
           {
-            "name": "addItemCategories",
+            "name": "insertItemCategories",
             "description": "",
             "args": [
               {
@@ -9592,7 +9592,7 @@
                 "description": "",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "AddItemCategoriesInput",
+                  "name": "InsertItemCategoriesInput",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -12003,7 +12003,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "AddItemCategoriesInput",
+        "name": "InsertItemCategoriesInput",
         "description": "",
         "fields": null,
         "inputFields": [
