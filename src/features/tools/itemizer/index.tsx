@@ -50,11 +50,13 @@ export const ItemizerComponent: React.FC = () => {
     <>
       <MainHeadline>Itemizer</MainHeadline>
       <ThirdLevelHeadline>Data input</ThirdLevelHeadline>
-      <TextArea
-        placeholder={'Tab separated table'}
-        value={dataString}
-        setValue={setDataString}
-      />
+      {!resetRequired && (
+        <TextArea
+          placeholder={'Tab & newline separated table (i.e. Excel)'}
+          value={dataString}
+          setValue={setDataString}
+        />
+      )}
       <Button
         disabled={resetRequired || !tablePreview}
         onClick={() =>
@@ -87,7 +89,14 @@ export const ItemizerComponent: React.FC = () => {
       {tablePreview && (
         <>
           <ThirdLevelHeadline style={{ marginTop: '20px' }}>
-            Preview
+            {resetRequired ? (
+              <>
+                Result (<span style={{ color: 'green' }}>Added</span>,{' '}
+                <span style={{ color: 'red' }}>Not added</span>)
+              </>
+            ) : (
+              'Preview'
+            )}
           </ThirdLevelHeadline>
           <Table>
             <TableHead style={{ padding: '0px' }}>
@@ -103,7 +112,7 @@ export const ItemizerComponent: React.FC = () => {
               {tablePreview.rows.map((row, rowIndex) => (
                 <TableRow key={row + rowIndex.toString()}>
                   {row.cells.map((cell, cellIndex) => {
-                    const rowColor = validity[rowIndex] ? '#c1ffc2' : '#ffa9b8'
+                    const rowColor = validity[rowIndex] ? 'green' : 'red'
                     return (
                       <TableCell
                         style={{
