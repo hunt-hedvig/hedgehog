@@ -754,6 +754,8 @@ export type MutationType = {
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
   regenerateCertificate: Scalars['ID']
+  createQuoteForNewContract: Quote
+  signQuoteForNewContract: Quote
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -953,6 +955,17 @@ export type MutationTypeRegenerateCertificateArgs = {
   agreementId: Scalars['ID']
 }
 
+export type MutationTypeCreateQuoteForNewContractArgs = {
+  memberId: Scalars['ID']
+  quoteInput: QuoteInput
+  bypassUnderwritingGuidelines: Scalars['Boolean']
+}
+
+export type MutationTypeSignQuoteForNewContractArgs = {
+  quoteId: Scalars['ID']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
 export type NorwegianGripenFactorInput = {
   factorType: NorwegianGripenFactorType
   factorString: Scalars['String']
@@ -1134,6 +1147,7 @@ export type QueryType = {
   filters: Array<FilterSuggestion>
   inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  availableSignableContractType?: Maybe<SignableContractType>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1187,6 +1201,10 @@ export type QueryTypeFiltersArgs = {
 
 export type QueryTypeInventoryItemFiltersArgs = {
   inventoryItemId: Scalars['String']
+}
+
+export type QueryTypeAvailableSignableContractTypeArgs = {
+  memberId: Scalars['ID']
 }
 
 export type Quote = {
@@ -1278,6 +1296,13 @@ export type SchedulerState = {
   changedAt: Scalars['Instant']
   amount?: Maybe<Scalars['MonetaryAmount']>
   transactionId?: Maybe<Scalars['ID']>
+}
+
+export enum SignableContractType {
+  SwedishApartment = 'SWEDISH_APARTMENT',
+  SwedishHouse = 'SWEDISH_HOUSE',
+  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
+  NorwegianTravel = 'NORWEGIAN_TRAVEL',
 }
 
 export enum SignSource {
@@ -1644,6 +1669,16 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   'changeToDate'
 >
 
+export type CreateQuoteForNewContractMutationVariables = {
+  id: Scalars['ID']
+  quoteInput: QuoteInput
+  bypassUnderwritingGuidelines: Scalars['Boolean']
+}
+
+export type CreateQuoteForNewContractMutation = {
+  __typename?: 'MutationType'
+} & { createQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
+
 export type CreateQuoteFromAgreementMutationVariables = {
   agreementId: Scalars['ID']
   memberId: Scalars['ID']
@@ -1854,80 +1889,6 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                 Renewal,
                 'renewalDate' | 'draftCertificateUrl' | 'draftOfAgreementId'
               >
-            >
-          }
-      >
-    }
-  >
-}
-
-export type GetQuotesQueryVariables = {
-  memberId: Scalars['ID']
-}
-
-export type GetQuotesQuery = { __typename?: 'QueryType' } & {
-  member: Maybe<
-    { __typename?: 'Member' } & {
-      quotes: Array<
-        { __typename?: 'Quote' } & Pick<
-          Quote,
-          | 'id'
-          | 'price'
-          | 'productType'
-          | 'state'
-          | 'startDate'
-          | 'validity'
-          | 'isComplete'
-          | 'createdAt'
-          | 'breachedUnderwritingGuidelines'
-          | 'originatingProductId'
-          | 'signedProductId'
-        > & {
-            data: Maybe<
-              | ({ __typename?: 'ApartmentQuoteData' } & Pick<
-                  ApartmentQuoteData,
-                  | 'street'
-                  | 'zipCode'
-                  | 'city'
-                  | 'householdSize'
-                  | 'livingSpace'
-                  | 'subType'
-                >)
-              | ({ __typename?: 'HouseQuoteData' } & Pick<
-                  HouseQuoteData,
-                  | 'street'
-                  | 'zipCode'
-                  | 'city'
-                  | 'householdSize'
-                  | 'livingSpace'
-                  | 'ancillaryArea'
-                  | 'yearOfConstruction'
-                  | 'numberOfBathrooms'
-                  | 'isSubleted'
-                > & {
-                    extraBuildings: Array<
-                      { __typename?: 'ExtraBuilding' } & Pick<
-                        ExtraBuilding,
-                        'type' | 'area' | 'hasWaterConnected'
-                      >
-                    >
-                  })
-              | ({ __typename?: 'NorwegianHomeContentQuoteData' } & Pick<
-                  NorwegianHomeContentQuoteData,
-                  | 'street'
-                  | 'zipCode'
-                  | 'city'
-                  | 'householdSize'
-                  | 'livingSpace'
-                > & {
-                    norwegianHomeContentSubType: NorwegianHomeContentQuoteData['subType']
-                  })
-              | ({ __typename?: 'NorwegianTravelQuoteData' } & Pick<
-                  NorwegianTravelQuoteData,
-                  'householdSize'
-                > & {
-                    norwegianTravelSubType: NorwegianTravelQuoteData['subType']
-                  })
             >
           }
       >
@@ -2511,6 +2472,66 @@ export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
 >
+export const CreateQuoteForNewContractDocument = gql`
+  mutation CreateQuoteForNewContract(
+    $id: ID!
+    $quoteInput: QuoteInput!
+    $bypassUnderwritingGuidelines: Boolean!
+  ) {
+    createQuoteForNewContract(
+      memberId: $id
+      quoteInput: $quoteInput
+      bypassUnderwritingGuidelines: $bypassUnderwritingGuidelines
+    ) {
+      id
+    }
+  }
+`
+export type CreateQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunction<
+  CreateQuoteForNewContractMutation,
+  CreateQuoteForNewContractMutationVariables
+>
+
+/**
+ * __useCreateQuoteForNewContractMutation__
+ *
+ * To run a mutation, you first call `useCreateQuoteForNewContractMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuoteForNewContractMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuoteForNewContractMutation, { data, loading, error }] = useCreateQuoteForNewContractMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      quoteInput: // value for 'quoteInput'
+ *      bypassUnderwritingGuidelines: // value for 'bypassUnderwritingGuidelines'
+ *   },
+ * });
+ */
+export function useCreateQuoteForNewContractMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateQuoteForNewContractMutation,
+    CreateQuoteForNewContractMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateQuoteForNewContractMutation,
+    CreateQuoteForNewContractMutationVariables
+  >(CreateQuoteForNewContractDocument, baseOptions)
+}
+export type CreateQuoteForNewContractMutationHookResult = ReturnType<
+  typeof useCreateQuoteForNewContractMutation
+>
+export type CreateQuoteForNewContractMutationResult = ApolloReactCommon.MutationResult<
+  CreateQuoteForNewContractMutation
+>
+export type CreateQuoteForNewContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateQuoteForNewContractMutation,
+  CreateQuoteForNewContractMutationVariables
+>
 export const CreateQuoteFromAgreementDocument = gql`
   mutation CreateQuoteFromAgreement($agreementId: ID!, $memberId: ID!) {
     createQuoteFromAgreement(agreementId: $agreementId, memberId: $memberId) {
@@ -2874,110 +2895,6 @@ export type GetContractsLazyQueryHookResult = ReturnType<
 export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
->
-export const GetQuotesDocument = gql`
-  query GetQuotes($memberId: ID!) {
-    member(id: $memberId) {
-      quotes {
-        id
-        price
-        productType
-        state
-        startDate
-        validity
-        isComplete
-        createdAt
-        breachedUnderwritingGuidelines
-        originatingProductId
-        signedProductId
-        data {
-          ... on ApartmentQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            subType
-          }
-          ... on HouseQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            ancillaryArea
-            yearOfConstruction
-            numberOfBathrooms
-            extraBuildings {
-              type
-              area
-              hasWaterConnected
-            }
-            isSubleted
-          }
-          ... on NorwegianHomeContentQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            norwegianHomeContentSubType: subType
-          }
-          ... on NorwegianTravelQuoteData {
-            householdSize
-            norwegianTravelSubType: subType
-          }
-        }
-      }
-    }
-  }
-`
-
-/**
- * __useGetQuotesQuery__
- *
- * To run a query within a React component, call `useGetQuotesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetQuotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetQuotesQuery({
- *   variables: {
- *      memberId: // value for 'memberId'
- *   },
- * });
- */
-export function useGetQuotesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetQuotesQuery,
-    GetQuotesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<GetQuotesQuery, GetQuotesQueryVariables>(
-    GetQuotesDocument,
-    baseOptions,
-  )
-}
-export function useGetQuotesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetQuotesQuery,
-    GetQuotesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<GetQuotesQuery, GetQuotesQueryVariables>(
-    GetQuotesDocument,
-    baseOptions,
-  )
-}
-export type GetQuotesQueryHookResult = ReturnType<typeof useGetQuotesQuery>
-export type GetQuotesLazyQueryHookResult = ReturnType<
-  typeof useGetQuotesLazyQuery
->
-export type GetQuotesQueryResult = ApolloReactCommon.QueryResult<
-  GetQuotesQuery,
-  GetQuotesQueryVariables
 >
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {
