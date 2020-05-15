@@ -1670,7 +1670,7 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
 >
 
 export type CreateQuoteForNewContractMutationVariables = {
-  id: Scalars['ID']
+  memberId: Scalars['ID']
   quoteInput: QuoteInput
   bypassUnderwritingGuidelines: Scalars['Boolean']
 }
@@ -2474,12 +2474,12 @@ export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
 >
 export const CreateQuoteForNewContractDocument = gql`
   mutation CreateQuoteForNewContract(
-    $id: ID!
+    $memberId: ID!
     $quoteInput: QuoteInput!
     $bypassUnderwritingGuidelines: Boolean!
   ) {
     createQuoteForNewContract(
-      memberId: $id
+      memberId: $memberId
       quoteInput: $quoteInput
       bypassUnderwritingGuidelines: $bypassUnderwritingGuidelines
     ) {
@@ -2505,7 +2505,7 @@ export type CreateQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunc
  * @example
  * const [createQuoteForNewContractMutation, { data, loading, error }] = useCreateQuoteForNewContractMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      memberId: // value for 'memberId'
  *      quoteInput: // value for 'quoteInput'
  *      bypassUnderwritingGuidelines: // value for 'bypassUnderwritingGuidelines'
  *   },

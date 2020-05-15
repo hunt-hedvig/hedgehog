@@ -1,10 +1,10 @@
 mutation CreateQuoteForNewContract(
-  $id: ID!,
+  $memberId: ID!,
   $quoteInput: QuoteInput!
   $bypassUnderwritingGuidelines: Boolean!
 ) {
   createQuoteForNewContract(
-    memberId: $id,
+    memberId: $memberId,
     quoteInput: $quoteInput,
     bypassUnderwritingGuidelines: $bypassUnderwritingGuidelines
   ) {
