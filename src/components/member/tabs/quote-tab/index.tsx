@@ -1,15 +1,16 @@
+import { Quote } from 'api/generated/graphql'
 import { useContracts } from 'graphql/use-contracts'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { signedOrExpiredPredicate, useQuotes } from 'graphql/use-quotes'
+import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Action } from 'redux'
-import { Button, Tab } from 'semantic-ui-react'
-import { ExtraBuilding, Quote } from '../../../../api/generated/graphql'
-import { showNotification } from '../../../../store/actions/notificationsActions'
-import { isNorwegianMarket, isSwedishMarket } from '../../../../utils/contract'
+import { Tab } from 'semantic-ui-react'
+import { showNotification } from 'store/actions/notificationsActions'
+import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
 import { Muted } from './common'
-import { QuoteListItem } from './quote-list-item'
+import { ActionsWrapper, QuoteListItem } from './quote-list-item'
 import { QuoteModification } from './quote-modification'
 
 const Wrapper = styled('div')({
@@ -99,52 +100,35 @@ export const QuotesSubSection: React.FunctionComponent<{
   memberId: string
   quotes: ReadonlyArray<Quote>
 }> = ({ memberId, quotes }) => {
-  const [action, setAction] = React.useState<Action | null>(null)
   const [isWip, setIsWip] = React.useState(false)
-
-  const handleClick = (): any => {
-    return (
-      <>
-        {console.log('here')}
-        <QuoteModification
-          quote={null}
-          memberId={memberId}
-          onWipChange={setIsWip}
-          onSubmitted={() => {
-            if (showNotification) {
-              showNotification({
-                header: 'Saved',
-                message: <>Quote saved</>,
-                type: 'olive',
-              })
-            }
-            setIsWip(false)
-            setAction(null)
-          }}
-        />
-      </>
-    )
-  }
+  const [action, setAction] = React.useState<Action | null>(null)
 
   return (
     <Wrapper>
-      <QuoteModification
-        quote={null}
-        memberId={memberId}
-        onWipChange={setIsWip}
-        onSubmitted={() => {
-          if (showNotification) {
-            showNotification({
-              header: 'Saved',
-              message: <>Quote saved</>,
-              type: 'olive',
-            })
-          }
-          setIsWip(false)
-          setAction(null)
-        }}
-      />
-      {quotes.length === 0 && <Button onClick={handleClick()}>Create</Button>}
+      {quotes.length === 0 && (
+        <Button onClick={() => setIsWip(!isWip)}>Create</Button>
+      )}
+      {quotes.length === 0 && isWip && (
+        <ActionsWrapper>
+          <QuoteModification
+            quote={null}
+            memberId={memberId}
+            shouldCreateContract={true}
+            onWipChange={setIsWip}
+            onSubmitted={() => {
+              if (showNotification) {
+                showNotification({
+                  header: 'Saved',
+                  message: <>Quote saved</>,
+                  type: 'olive',
+                })
+              }
+              setIsWip(false)
+              setAction(null)
+            }}
+          />
+        </ActionsWrapper>
+      )}
       <Headline>Quotes</Headline>
       {quotes
         .filter((quote) => !signedOrExpiredPredicate(quote))

@@ -58,7 +58,7 @@ const ActionsButtonsWrapper = styled('div')({
   flexShrink: 1,
 })
 
-const ActionsWrapper = styled('div')({
+export const ActionsWrapper = styled('div')({
   background: colorsV2.flamingo200,
   padding: '1rem',
   width: '100%',
@@ -270,6 +270,7 @@ export const QuoteListItemComponent: React.FC<{
           <QuoteModification
             quote={quote}
             memberId={memberId}
+            shouldCreateContract={false}
             onWipChange={setIsWip}
             onSubmitted={() => {
               if (showNotification) {
@@ -279,6 +280,7 @@ export const QuoteListItemComponent: React.FC<{
                   type: 'olive',
                 })
               }
+
               setIsWip(false)
               setAction(null)
             }}

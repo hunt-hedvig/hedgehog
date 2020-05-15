@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/react-hooks'
-import { colorsV2 } from '@hedviginsurance/brand/dist'
+import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
 import {
   ApartmentQuoteData,
   ApartmentSubType,
@@ -18,6 +18,7 @@ import {
   QuoteInput,
   QuoteProductType,
   SwedishApartmentLineOfBusiness,
+  useCreateQuoteForNewContractMutation,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
@@ -36,6 +37,8 @@ import {
   isSwedishHouse,
 } from 'utils/quote'
 import * as uuid from 'uuid/v4'
+import { createQuoteForNewContractOptions } from '../../../../graphql/use-create-quote-for-new-contract'
+import { showNotification } from '../../../../store/actions/notificationsActions'
 import { ErrorMessage } from './common'
 
 const Label = styled('label')({
@@ -270,14 +273,17 @@ interface FormState {
 export const QuoteModification: React.FC<{
   memberId: string
   quote: Quote | null
+  shouldCreateContract: boolean
   onWipChange?: (isWip: boolean) => void
   onSubmitted?: () => void
 }> = ({
   memberId,
   quote,
+  shouldCreateContract,
   onWipChange = noopFunction,
   onSubmitted = noopFunction,
 }) => {
+  const [createQuoteForNewContract] = useCreateQuoteForNewContractMutation()
   const [modifyField, fieldModification] = useMutation<
     Pick<MutationType, 'updateQuote'>,
     MutationTypeUpdateQuoteArgs
@@ -437,13 +443,47 @@ export const QuoteModification: React.FC<{
           contractMarket,
         })
 
-        await modifyField({
-          variables: {
-            quoteId: quote!!.id,
-            quoteData,
-            bypassUnderwritingGuidelines,
-          },
-        })
+        console.log(
+          'QuoteData',
+          quoteData,
+          memberId,
+          bypassUnderwritingGuidelines,
+        )
+
+        if (shouldCreateContract === true) {
+          createQuoteForNewContract(
+            createQuoteForNewContractOptions(
+              memberId,
+              quoteData,
+              bypassUnderwritingGuidelines,
+            ),
+          )
+            .then(() => {
+              showNotification({
+                type: 'olive',
+                header: 'Success',
+                message: `Successfully created quote for a new contract`,
+              })
+              // reset()
+            })
+            .catch((error) => {
+              showNotification({
+                type: 'red',
+                header: 'Error',
+                message: error.message,
+              })
+              throw error
+            })
+        } else {
+          await modifyField({
+            variables: {
+              quoteId: quote!!.id,
+              quoteData,
+              bypassUnderwritingGuidelines,
+            },
+          })
+        }
+
         if (onSubmitted) {
           onSubmitted()
         }

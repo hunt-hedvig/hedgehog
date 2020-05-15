@@ -1,10 +1,8 @@
 import { MutationFunctionOptions } from '@apollo/react-common'
 import {
-  Contract,
   CreateQuoteForNewContractMutation,
   CreateQuoteForNewContractMutationHookResult,
   CreateQuoteForNewContractMutationVariables,
-  GetContractsDocument,
   QuoteInput,
   Scalars,
   useCreateQuoteForNewContractMutation,
@@ -15,7 +13,7 @@ export const createQuoteForNewContract = (): CreateQuoteForNewContractMutationHo
   useCreateQuoteForNewContractMutation()
 
 export const createQuoteForNewContractOptions = (
-  contract: Contract,
+  memberId: string,
   quoteInput: QuoteInput,
   bypassUnderwritingGuidelines: Scalars['Boolean'],
 ): MutationFunctionOptions<
@@ -24,18 +22,14 @@ export const createQuoteForNewContractOptions = (
 > => {
   return {
     variables: {
-      memberId: contract.holderMemberId,
+      memberId,
       quoteInput,
       bypassUnderwritingGuidelines,
     },
     refetchQueries: () => [
       {
         query: QUOTES_QUERY,
-        variables: { memberId: contract.holderMemberId },
-      },
-      {
-        query: GetContractsDocument,
-        variables: { memberId: contract.holderMemberId },
+        variables: { memberId },
       },
     ],
   }
