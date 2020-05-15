@@ -3,11 +3,14 @@ import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-in
 import { signedOrExpiredPredicate, useQuotes } from 'graphql/use-quotes'
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Tab } from 'semantic-ui-react'
+import { Action } from 'redux'
+import { Button, Tab } from 'semantic-ui-react'
 import { ExtraBuilding, Quote } from '../../../../api/generated/graphql'
+import { showNotification } from '../../../../store/actions/notificationsActions'
 import { isNorwegianMarket, isSwedishMarket } from '../../../../utils/contract'
 import { Muted } from './common'
 import { QuoteListItem } from './quote-list-item'
+import { QuoteModification } from './quote-modification'
 
 const Wrapper = styled('div')({
   padding: '1rem',
@@ -96,8 +99,52 @@ export const QuotesSubSection: React.FunctionComponent<{
   memberId: string
   quotes: ReadonlyArray<Quote>
 }> = ({ memberId, quotes }) => {
+  const [action, setAction] = React.useState<Action | null>(null)
+  const [isWip, setIsWip] = React.useState(false)
+
+  const handleClick = (): any => {
+    return (
+      <>
+        {console.log('here')}
+        <QuoteModification
+          quote={null}
+          memberId={memberId}
+          onWipChange={setIsWip}
+          onSubmitted={() => {
+            if (showNotification) {
+              showNotification({
+                header: 'Saved',
+                message: <>Quote saved</>,
+                type: 'olive',
+              })
+            }
+            setIsWip(false)
+            setAction(null)
+          }}
+        />
+      </>
+    )
+  }
+
   return (
     <Wrapper>
+      <QuoteModification
+        quote={null}
+        memberId={memberId}
+        onWipChange={setIsWip}
+        onSubmitted={() => {
+          if (showNotification) {
+            showNotification({
+              header: 'Saved',
+              message: <>Quote saved</>,
+              type: 'olive',
+            })
+          }
+          setIsWip(false)
+          setAction(null)
+        }}
+      />
+      {quotes.length === 0 && <Button onClick={handleClick()}>Create</Button>}
       <Headline>Quotes</Headline>
       {quotes
         .filter((quote) => !signedOrExpiredPredicate(quote))

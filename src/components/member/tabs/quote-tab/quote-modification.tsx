@@ -85,20 +85,20 @@ const UPDATE_QUOTE_MUTATION = gql`
   }
 `
 
-const getProductSubTypeValue = (quote: Quote): string => {
-  if (quote.productType === 'APARTMENT') {
+const getProductSubTypeValue = (quote: Quote | null): string => {
+  if (quote?.productType === 'APARTMENT') {
     return (quote.data as ApartmentQuoteData).subType!.toString()
   }
-  if (quote.productType === 'HOUSE') {
+  if (quote?.productType === 'HOUSE') {
     return 'HOUSE'
   }
-  if (quote.productType === 'TRAVEL') {
+  if (quote?.productType === 'TRAVEL') {
     if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
       // @ts-ignore
       return (quote.data as NorwegianTravelQuoteData).norwegianTravelSubType?.toString()
     }
   }
-  if (quote.productType === 'HOME_CONTENT') {
+  if (quote?.productType === 'HOME_CONTENT') {
     const subType = getSubType(quote.data as NorwegianHomeContentQuoteData)
     return subType === NorwegianHomeContentLineOfBusiness.Rent
       ? 'HOME_CONTENT_RENT'
@@ -269,7 +269,7 @@ interface FormState {
 
 export const QuoteModification: React.FC<{
   memberId: string
-  quote: Quote
+  quote: Quote | null
   onWipChange?: (isWip: boolean) => void
   onSubmitted?: () => void
 }> = ({
@@ -289,7 +289,7 @@ export const QuoteModification: React.FC<{
     city: null,
     ancillaryArea: null,
     extraBuildings:
-      (quote.data as HouseQuoteData | null)?.extraBuildings?.map(
+      (quote?.data as HouseQuoteData | null)?.extraBuildings?.map(
         (extraBuilding) => ({ ...extraBuilding, id: uuid() }),
       ) ?? [],
     householdSize: null,
@@ -398,7 +398,7 @@ export const QuoteModification: React.FC<{
     value?: any,
   ) => (
     <>
-      <Label htmlFor={`${variable}-${quote.id}`}>{label}</Label>
+      <Label htmlFor={`${variable}-${quote?.id}`}>{label}</Label>
       <Input
         onChange={(e) => {
           if (onWipChange) {
@@ -407,9 +407,11 @@ export const QuoteModification: React.FC<{
           setFormState({ ...formState, [variable]: e.currentTarget.value })
         }}
         value={
-          value ?? formState[variable] ?? (quote.data as QuoteData)[variable]
+          value ??
+          formState[variable] ??
+          (quote ? (quote.data as QuoteData)[variable] : '')
         }
-        id={`${variable}-${quote.id}`}
+        id={`${variable}-${quote?.id}`}
         type={inputType}
       />
     </>
@@ -437,7 +439,7 @@ export const QuoteModification: React.FC<{
 
         await modifyField({
           variables: {
-            quoteId: quote.id,
+            quoteId: quote!!.id,
             quoteData,
             bypassUnderwritingGuidelines,
           },
@@ -451,7 +453,7 @@ export const QuoteModification: React.FC<{
         ? isNorwegianTravelFormStateProductSubType(formState.productType)
         : isNorwegianTravel(quote?.data)) && (
         <InputGroup>
-          <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
+          <Label htmlFor={`producttype-${quote?.id}`}>Product type</Label>
           {getProductTypeDropdown()}
           {getNumberInput('householdSize', 'Household size (# of people)')}
         </InputGroup>
@@ -466,7 +468,7 @@ export const QuoteModification: React.FC<{
             {getTextInput('city', 'City')}
           </InputGroup>
           <InputGroup>
-            <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
+            <Label htmlFor={`producttype-${quote?.id}`}>Product type</Label>
             {getProductTypeDropdown()}
             {getNumberInput('livingSpace', 'Living space (m2)')}
             {getNumberInput('householdSize', 'Household size (# of people)')}
@@ -474,7 +476,7 @@ export const QuoteModification: React.FC<{
         </>
       )}
 
-      {(formState.productType ?? quote.productType) === 'HOUSE' && (
+      {(formState.productType ?? quote?.productType) === 'HOUSE' && (
         <>
           <InputGroup>
             {getNumberInput(
@@ -483,7 +485,7 @@ export const QuoteModification: React.FC<{
                 Ancillary area (m<sup>2</sup>)
               </>,
               (formState.ancillaryArea === null
-                ? (quote.data as HouseQuoteData)!.ancillaryArea
+                ? (quote?.data as HouseQuoteData)!.ancillaryArea
                 : formState.ancillaryArea) ?? '',
             )}
             {getNumberInput('yearOfConstruction', 'Year of construction')}
@@ -499,7 +501,7 @@ export const QuoteModification: React.FC<{
               label="Is subleted"
               checked={
                 formState.isSubleted ??
-                (quote.data as HouseQuoteData).isSubleted ??
+                (quote?.data as HouseQuoteData).isSubleted ??
                 false
               }
             />
