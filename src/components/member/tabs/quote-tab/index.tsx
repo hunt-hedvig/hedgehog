@@ -5,6 +5,7 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { Tab } from 'semantic-ui-react'
 import { ExtraBuilding, Quote } from '../../../../api/generated/graphql'
+import { isNorwegianMarket, isSwedishMarket } from '../../../../utils/contract'
 import { Muted } from './common'
 import { QuoteListItem } from './quote-list-item'
 
@@ -38,11 +39,34 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   }
 
   const getUniqueContractTypeNames = () => {
-    const contractTypes = contracts.map((contract) => {
-      return contract.contractTypeName
-    })
+    const contractTypes: string[] = []
+    if (isSwedishMarket(contractMarket)) {
+      contractTypes.push('Swedish Apartment', 'Swedish House')
+    }
 
-    return Array.from(new Set(contractTypes))
+    if (isNorwegianMarket(contractMarket)) {
+      contractTypes.push('Norwegian Home Content', 'Norwegian Travel')
+    }
+    return contractTypes
+  }
+
+  const getCategorisedQuotesBasedOnContractType = (
+    contractType: string,
+  ): Quote[] => {
+    return quotes.filter((quote) => {
+      if (quote.productType === 'HOME_CONTENT') {
+        return contractType === 'Norwegian Home Content'
+      }
+      if (quote.productType === 'TRAVEL') {
+        return contractType === 'Norwegian Travel'
+      }
+      if (quote.productType === 'APARTMENT') {
+        return contractType === 'Swedish Apartment'
+      }
+      if (quote.productType === 'HOUSE') {
+        return contractType === 'Swedish House'
+      }
+    })
   }
 
   const getTabs = (): any => {
@@ -50,7 +74,10 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
 
     getUniqueContractTypeNames().forEach((contractType) => {
       const subSection = (
-        <QuotesSubSection memberId={memberId} quotes={quotes} />
+        <QuotesSubSection
+          memberId={memberId}
+          quotes={getCategorisedQuotesBasedOnContractType(contractType)}
+        />
       )
       panes.push({
         menuItem: `${contractType}`,
@@ -60,16 +87,9 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
 
     return panes
   }
+  console.log('Quote', quotes)
 
   return <Tab panes={getTabs()} />
-
-  // const categoriseQuotesBasedOnContractType = (
-  //   contractType: String,
-  // ): Quote[] => {
-  //   return quotes.filter((quote) => {
-  //     quote.productType === contractType
-  //   })
-  // }
 }
 
 export const QuotesSubSection: React.FunctionComponent<{
