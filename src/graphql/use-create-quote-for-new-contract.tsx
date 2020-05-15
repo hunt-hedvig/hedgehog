@@ -25,8 +25,8 @@ export const createQuoteForNewContractOptions = (
   return {
     variables: {
       memberId: contract.holderMemberId,
-      quoteInput: quoteInput,
-      bypassUnderwritingGuidelines: bypassUnderwritingGuidelines,
+      quoteInput,
+      bypassUnderwritingGuidelines,
     },
     refetchQueries: () => [
       {

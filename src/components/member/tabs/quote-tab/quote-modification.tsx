@@ -308,7 +308,7 @@ export const QuoteModification: React.FC<{
   }
 
   if (!contractMarket) {
-    return <>Unable to get Market, please contract Tech</>
+    return <>Unable to get Market, please contact Tech</>
   }
 
   const [
