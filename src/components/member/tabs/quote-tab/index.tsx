@@ -1,29 +1,15 @@
 import { Quote } from 'api/generated/graphql'
-import { useContracts } from 'graphql/use-contracts'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
-import { signedOrExpiredPredicate, useQuotes } from 'graphql/use-quotes'
-import { Button } from 'hedvig-ui/button'
+import { useQuotes } from 'graphql/use-quotes'
 import * as React from 'react'
-import styled from 'react-emotion'
-import { Action } from 'redux'
 import { Tab } from 'semantic-ui-react'
-import { showNotification } from 'store/actions/notificationsActions'
 import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
-import { Muted } from './common'
-import { ActionsWrapper, QuoteListItem } from './quote-list-item'
-import { QuoteModification } from './quote-modification'
-
-const Wrapper = styled('div')({
-  padding: '1rem',
-})
-const Headline = styled('h1')({})
+import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   memberId,
 }) => {
   const [quotes, quotesLoading] = useQuotes(memberId)
-
-  const [contracts] = useContracts(memberId)
   const [contractMarket, { loading }] = useContractMarketInfo(memberId)
 
   if (loading) {
@@ -94,59 +80,4 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   console.log('Quote', quotes)
 
   return <Tab panes={getTabs()} />
-}
-
-export const QuotesSubSection: React.FunctionComponent<{
-  memberId: string
-  quotes: ReadonlyArray<Quote>
-}> = ({ memberId, quotes }) => {
-  const [isWip, setIsWip] = React.useState(false)
-  const [action, setAction] = React.useState<Action | null>(null)
-
-  return (
-    <Wrapper>
-      {quotes.length === 0 && (
-        <Button onClick={() => setIsWip(!isWip)}>Create</Button>
-      )}
-      {quotes.length === 0 && isWip && (
-        <ActionsWrapper>
-          <QuoteModification
-            quote={null}
-            memberId={memberId}
-            shouldCreateContract={true}
-            onWipChange={setIsWip}
-            onSubmitted={() => {
-              if (showNotification) {
-                showNotification({
-                  header: 'Saved',
-                  message: <>Quote saved</>,
-                  type: 'olive',
-                })
-              }
-              setIsWip(false)
-              setAction(null)
-            }}
-          />
-        </ActionsWrapper>
-      )}
-      <Headline>Quotes</Headline>
-      {quotes
-        .filter((quote) => !signedOrExpiredPredicate(quote))
-        .map((quote) => (
-          <QuoteListItem key={quote.id} quote={quote} memberId={memberId} />
-        ))}
-
-      <Headline>Signed/Expired quotes</Headline>
-      <Muted>
-        {quotes.filter(signedOrExpiredPredicate).map((quote) => (
-          <QuoteListItem
-            key={quote.id}
-            quote={quote}
-            memberId={memberId}
-            inactionable
-          />
-        ))}
-      </Muted>
-    </Wrapper>
-  )
 }
