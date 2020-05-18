@@ -337,12 +337,11 @@ export const QuoteModification: React.FC<{
         }
         setFormState({ ...formState, productType: data.value as string })
       }}
-      options={getDropdownOptions(contractMarket, contracts)}
+      options={getDropdownOptions(contractMarket)}
     />
   )
 
   const getSwedishDropDownOptions = (): DropdownItemProps[] => {
-    console.log('BEFORE', formState.productType)
     const productType = formState.productType ?? getProductSubTypeValue(quote)
     if (productType !== '') {
       if (productType === 'HOUSE') {
@@ -397,41 +396,73 @@ export const QuoteModification: React.FC<{
     throw new Error('Cannot return dropDownItems')
   }
 
+  const norwegianTravelDropdownItemProps = (): DropdownItemProps[] => [
+    {
+      text: 'Norwegian Travel',
+      value: NorwegianTravelLineOfBusiness.Regular,
+    },
+    {
+      text: 'Norwegian Travel (youth)',
+      value: NorwegianTravelLineOfBusiness.Youth,
+    },
+  ]
+
+  const norwegianHomeContentDropdownItemProps = (): DropdownItemProps[] => [
+    {
+      text: 'Norwegian Home Content (own)',
+      value: NorwegianHomeContentLineOfBusiness.Own,
+    },
+    {
+      text: 'Norwegian Home Content (rent)',
+      value: 'HOME_CONTENT_RENT',
+    },
+    {
+      text: 'Norwegian Home Content (youth own)',
+      value: NorwegianHomeContentLineOfBusiness.YouthOwn,
+    },
+    {
+      text: 'Norwegian Home Content (youth rent)',
+      value: NorwegianHomeContentLineOfBusiness.YouthRent,
+    },
+  ]
+
+  const getNorwegianDropDownOptions = (): DropdownItemProps[] => {
+    const productType = formState.productType ?? getProductSubTypeValue(quote)
+    console.log(
+      'productType',
+      productType,
+      'state',
+      formState.productType,
+      'subtype',
+      getProductSubTypeValue(quote),
+    )
+    if (productType !== '') {
+      if (isNorwegianTravelFormStateProductSubType(productType)) {
+        return norwegianTravelDropdownItemProps()
+      } else {
+        return norwegianHomeContentDropdownItemProps()
+      }
+    } else {
+      if (contracts.length === 1) {
+        if (contracts[0].contractTypeName === 'Norwegian Travel') {
+          return norwegianHomeContentDropdownItemProps()
+        } else {
+          return norwegianTravelDropdownItemProps()
+        }
+      }
+    }
+    throw new Error('Cannot return dropDownItems')
+  }
+
   const getDropdownOptions = (
     contractMarketInfo: ContractMarketInfo,
-    contracts: ReadonlyArray<Contract>,
   ): DropdownItemProps[] => {
     if (isSwedishMarket(contractMarketInfo)) {
       console.log('I am here', getSwedishDropDownOptions())
       return getSwedishDropDownOptions()
     }
     if (isNorwegianMarket(contractMarketInfo)) {
-      return [
-        {
-          text: 'Norwegian Home Content (own)',
-          value: NorwegianHomeContentLineOfBusiness.Own,
-        },
-        {
-          text: 'Norwegian Home Content (rent)',
-          value: 'HOME_CONTENT_RENT',
-        },
-        {
-          text: 'Norwegian Home Content (youth own)',
-          value: NorwegianHomeContentLineOfBusiness.YouthOwn,
-        },
-        {
-          text: 'Norwegian Home Content (youth rent)',
-          value: NorwegianHomeContentLineOfBusiness.YouthRent,
-        },
-        {
-          text: 'Norwegian Travel',
-          value: NorwegianTravelLineOfBusiness.Regular,
-        },
-        {
-          text: 'Norwegian Travel (youth)',
-          value: NorwegianTravelLineOfBusiness.Youth,
-        },
-      ]
+      return getNorwegianDropDownOptions()
     }
     throw new Error('Unknown market while generating dropdown options')
   }
@@ -443,6 +474,16 @@ export const QuoteModification: React.FC<{
     value?: any,
   ) => (
     <>
+      {console.log(
+        'Variable',
+        variable,
+        'Label',
+        label,
+        'inputType',
+        inputType,
+        'value',
+        value,
+      )}
       <Label htmlFor={`${variable}-${quote?.id}`}>{label}</Label>
       <Input
         onChange={(e) => {
@@ -531,11 +572,13 @@ export const QuoteModification: React.FC<{
       {(formState.productType
         ? isNorwegianTravelFormStateProductSubType(formState.productType)
         : isNorwegianTravel(quote?.data)) && (
-        <InputGroup>
-          <Label htmlFor={`producttype-${quote?.id}`}>Product type</Label>
-          {getProductTypeDropdown()}
-          {getNumberInput('householdSize', 'Household size (# of people)')}
-        </InputGroup>
+        <>
+          <InputGroup>
+            <Label htmlFor={`producttype-${quote?.id}`}>Product type</Label>
+            {getProductTypeDropdown()}
+            {getNumberInput('householdSize', 'Household size (# of people)')}
+          </InputGroup>
+        </>
       )}
       {(formState.productType
         ? !isNorwegianTravelFormStateProductSubType(formState.productType)
@@ -564,7 +607,7 @@ export const QuoteModification: React.FC<{
                 Ancillary area (m<sup>2</sup>)
               </>,
               (formState.ancillaryArea === null
-                ? (quote?.data as HouseQuoteData)!.ancillaryArea
+                ? (quote?.data as HouseQuoteData)?.ancillaryArea
                 : formState.ancillaryArea) ?? '',
             )}
             {getNumberInput('yearOfConstruction', 'Year of construction')}
@@ -574,13 +617,13 @@ export const QuoteModification: React.FC<{
               onChange={(_, { checked }) => {
                 setFormState({
                   ...formState,
-                  isSubleted: checked!,
+                  isSubleted: checked ?? false,
                 })
               }}
               label="Is subleted"
               checked={
                 formState.isSubleted ??
-                (quote?.data as HouseQuoteData).isSubleted ??
+                (quote?.data as HouseQuoteData)?.isSubleted ??
                 false
               }
             />
