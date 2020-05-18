@@ -5,3 +5,4 @@ yarn-error.log
 .idea
 .env
 /tsconfig-diff-master.json
+*.iml
