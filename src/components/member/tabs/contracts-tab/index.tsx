@@ -19,9 +19,6 @@ export const ContractTab: React.FunctionComponent<{
     <Spacing all>
       <MainHeadline>
         Contracts
-        <Button onClick={() => create()}>
-          <Icon name={'add'} />
-        </Button>
         <StyledButton onClick={() => refetch()}>
           Update
           <Icon name={'undo'} />
