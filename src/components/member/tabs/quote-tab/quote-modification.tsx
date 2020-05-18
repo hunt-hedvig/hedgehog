@@ -3,7 +3,6 @@ import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
 import {
   ApartmentQuoteData,
   ApartmentSubType,
-  Contract,
   ContractMarketInfo,
   ExtraBuilding,
   ExtraBuildingType,
@@ -18,7 +17,6 @@ import {
   QuoteData,
   QuoteInput,
   QuoteProductType,
-  SwedishApartmentLineOfBusiness,
   useCreateQuoteForNewContractMutation,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
@@ -43,6 +41,12 @@ import { showNotification } from '../../../../store/actions/notificationsActions
 import { ErrorMessage } from './common'
 import { useContracts } from '../../../../graphql/use-contracts'
 import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
+import {
+  norwegianHomeContentDropdownItemProps,
+  norwegianTravelDropdownItemProps,
+  swedishApartmentDropdownItemProps,
+  swedishHouseDropdownItemProps,
+} from './quote-modification-utils'
 
 const Label = styled('label')({
   display: 'block',
@@ -341,101 +345,41 @@ export const QuoteModification: React.FC<{
     />
   )
 
+  const getDropdownOptions = (
+    contractMarketInfo: ContractMarketInfo,
+  ): DropdownItemProps[] => {
+    if (isSwedishMarket(contractMarketInfo)) {
+      return getSwedishDropDownOptions()
+    }
+    if (isNorwegianMarket(contractMarketInfo)) {
+      return getNorwegianDropDownOptions()
+    }
+    throw new Error('Unknown market while generating dropdown options')
+  }
+
   const getSwedishDropDownOptions = (): DropdownItemProps[] => {
     const productType = formState.productType ?? getProductSubTypeValue(quote)
     if (productType !== '') {
       if (productType === 'HOUSE') {
-        return [{ text: 'House', value: 'HOUSE' }]
+        return swedishHouseDropdownItemProps()
       } else {
-        return [
-          {
-            text: 'Apartment (rent)',
-            value: SwedishApartmentLineOfBusiness.Rent,
-          },
-          {
-            text: 'Apartment (brf)',
-            value: SwedishApartmentLineOfBusiness.Brf,
-          },
-          {
-            text: 'Apartment (student rent)',
-            value: SwedishApartmentLineOfBusiness.StudentRent,
-          },
-          {
-            text: 'Apartment (student brf)',
-            value: SwedishApartmentLineOfBusiness.StudentBrf,
-          },
-        ]
+        return swedishApartmentDropdownItemProps()
       }
     } else {
       if (contracts.length === 1) {
         if (contracts[0].contractTypeName === 'Swedish Apartment') {
-          return [{ text: 'House', value: 'HOUSE' }]
+          return swedishHouseDropdownItemProps()
         }
         if (contracts[0].contractTypeName === 'Swedish House') {
-          return [
-            {
-              text: 'Apartment (rent)',
-              value: SwedishApartmentLineOfBusiness.Rent,
-            },
-            {
-              text: 'Apartment (brf)',
-              value: SwedishApartmentLineOfBusiness.Brf,
-            },
-            {
-              text: 'Apartment (student rent)',
-              value: SwedishApartmentLineOfBusiness.StudentRent,
-            },
-            {
-              text: 'Apartment (student brf)',
-              value: SwedishApartmentLineOfBusiness.StudentBrf,
-            },
-          ]
+          return swedishApartmentDropdownItemProps()
         }
       }
     }
     throw new Error('Cannot return dropDownItems')
   }
 
-  const norwegianTravelDropdownItemProps = (): DropdownItemProps[] => [
-    {
-      text: 'Norwegian Travel',
-      value: NorwegianTravelLineOfBusiness.Regular,
-    },
-    {
-      text: 'Norwegian Travel (youth)',
-      value: NorwegianTravelLineOfBusiness.Youth,
-    },
-  ]
-
-  const norwegianHomeContentDropdownItemProps = (): DropdownItemProps[] => [
-    {
-      text: 'Norwegian Home Content (own)',
-      value: NorwegianHomeContentLineOfBusiness.Own,
-    },
-    {
-      text: 'Norwegian Home Content (rent)',
-      value: 'HOME_CONTENT_RENT',
-    },
-    {
-      text: 'Norwegian Home Content (youth own)',
-      value: NorwegianHomeContentLineOfBusiness.YouthOwn,
-    },
-    {
-      text: 'Norwegian Home Content (youth rent)',
-      value: NorwegianHomeContentLineOfBusiness.YouthRent,
-    },
-  ]
-
   const getNorwegianDropDownOptions = (): DropdownItemProps[] => {
     const productType = formState.productType ?? getProductSubTypeValue(quote)
-    console.log(
-      'productType',
-      productType,
-      'state',
-      formState.productType,
-      'subtype',
-      getProductSubTypeValue(quote),
-    )
     if (productType !== '') {
       if (isNorwegianTravelFormStateProductSubType(productType)) {
         return norwegianTravelDropdownItemProps()
@@ -454,19 +398,6 @@ export const QuoteModification: React.FC<{
     throw new Error('Cannot return dropDownItems')
   }
 
-  const getDropdownOptions = (
-    contractMarketInfo: ContractMarketInfo,
-  ): DropdownItemProps[] => {
-    if (isSwedishMarket(contractMarketInfo)) {
-      console.log('I am here', getSwedishDropDownOptions())
-      return getSwedishDropDownOptions()
-    }
-    if (isNorwegianMarket(contractMarketInfo)) {
-      return getNorwegianDropDownOptions()
-    }
-    throw new Error('Unknown market while generating dropdown options')
-  }
-
   const getTextInput = (
     variable: keyof FormState,
     label: React.ReactNode,
@@ -474,16 +405,6 @@ export const QuoteModification: React.FC<{
     value?: any,
   ) => (
     <>
-      {console.log(
-        'Variable',
-        variable,
-        'Label',
-        label,
-        'inputType',
-        inputType,
-        'value',
-        value,
-      )}
       <Label htmlFor={`${variable}-${quote?.id}`}>{label}</Label>
       <Input
         onChange={(e) => {
@@ -502,6 +423,7 @@ export const QuoteModification: React.FC<{
       />
     </>
   )
+
   const getNumberInput = (
     variable: keyof FormState,
     label: React.ReactNode,
@@ -522,13 +444,6 @@ export const QuoteModification: React.FC<{
           quote,
           contractMarket,
         })
-
-        console.log(
-          'QuoteData',
-          quoteData,
-          memberId,
-          bypassUnderwritingGuidelines,
-        )
 
         if (shouldCreateContract === true) {
           createQuoteForNewContract(
