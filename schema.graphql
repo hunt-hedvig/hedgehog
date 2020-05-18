@@ -20,7 +20,6 @@ type QueryType {
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
-  availableSignableContractType(memberId: ID!): SignableContractType
 }
 
 type MutationType {
@@ -542,6 +541,7 @@ type Quote {
   data: QuoteData
   signedProductId: ID
   originatingProductId: ID
+  isReadyToSign: Boolean
 }
 
 enum QuoteProductType {
@@ -1220,13 +1220,6 @@ enum NorwegianGripenFactorType {
 type MonetaryAmountV2 {
   amount: String!,
   currency: String!
-}
-
-enum SignableContractType {
-  SWEDISH_APARTMENT,
-  SWEDISH_HOUSE,
-  NORWEGIAN_HOME_CONTENT,
-  NORWEGIAN_TRAVEL
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`

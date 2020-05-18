@@ -1147,7 +1147,6 @@ export type QueryType = {
   filters: Array<FilterSuggestion>
   inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
-  availableSignableContractType?: Maybe<SignableContractType>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1203,10 +1202,6 @@ export type QueryTypeInventoryItemFiltersArgs = {
   inventoryItemId: Scalars['String']
 }
 
-export type QueryTypeAvailableSignableContractTypeArgs = {
-  memberId: Scalars['ID']
-}
-
 export type Quote = {
   __typename?: 'Quote'
   id: Scalars['ID']
@@ -1225,6 +1220,7 @@ export type Quote = {
   data?: Maybe<QuoteData>
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
+  isReadyToSign?: Maybe<Scalars['Boolean']>
 }
 
 export type QuoteData =
@@ -1296,13 +1292,6 @@ export type SchedulerState = {
   changedAt: Scalars['Instant']
   amount?: Maybe<Scalars['MonetaryAmount']>
   transactionId?: Maybe<Scalars['ID']>
-}
-
-export enum SignableContractType {
-  SwedishApartment = 'SWEDISH_APARTMENT',
-  SwedishHouse = 'SWEDISH_HOUSE',
-  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
-  NorwegianTravel = 'NORWEGIAN_TRAVEL',
 }
 
 export enum SignSource {
@@ -1914,6 +1903,15 @@ export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
     'id' | 'holderMemberId'
   >
 }
+
+export type SignQuoteForNewContractMutationVariables = {
+  quoteId: Scalars['ID']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type SignQuoteForNewContractMutation = {
+  __typename?: 'MutationType'
+} & { signQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
 
 export type TerminateContractMutationVariables = {
   contractId: Scalars['ID']
@@ -2994,6 +2992,60 @@ export type RevertTerminationMutationResult = ApolloReactCommon.MutationResult<
 export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RevertTerminationMutation,
   RevertTerminationMutationVariables
+>
+export const SignQuoteForNewContractDocument = gql`
+  mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {
+    signQuoteForNewContract(
+      quoteId: $quoteId
+      activationDate: $activationDate
+    ) {
+      id
+    }
+  }
+`
+export type SignQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunction<
+  SignQuoteForNewContractMutation,
+  SignQuoteForNewContractMutationVariables
+>
+
+/**
+ * __useSignQuoteForNewContractMutation__
+ *
+ * To run a mutation, you first call `useSignQuoteForNewContractMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignQuoteForNewContractMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signQuoteForNewContractMutation, { data, loading, error }] = useSignQuoteForNewContractMutation({
+ *   variables: {
+ *      quoteId: // value for 'quoteId'
+ *      activationDate: // value for 'activationDate'
+ *   },
+ * });
+ */
+export function useSignQuoteForNewContractMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SignQuoteForNewContractMutation,
+    SignQuoteForNewContractMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SignQuoteForNewContractMutation,
+    SignQuoteForNewContractMutationVariables
+  >(SignQuoteForNewContractDocument, baseOptions)
+}
+export type SignQuoteForNewContractMutationHookResult = ReturnType<
+  typeof useSignQuoteForNewContractMutation
+>
+export type SignQuoteForNewContractMutationResult = ApolloReactCommon.MutationResult<
+  SignQuoteForNewContractMutation
+>
+export type SignQuoteForNewContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SignQuoteForNewContractMutation,
+  SignQuoteForNewContractMutationVariables
 >
 export const TerminateContractDocument = gql`
   mutation TerminateContract(
