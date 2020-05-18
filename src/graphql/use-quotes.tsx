@@ -18,6 +18,7 @@ export const QUOTES_QUERY = gql`
         breachedUnderwritingGuidelines
         originatingProductId
         signedProductId
+        isReadyToSign
         data {
           ... on ApartmentQuoteData {
             street

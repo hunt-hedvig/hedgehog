@@ -16,6 +16,7 @@ import {
 import { BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteModification } from './quote-modification'
+import { QuoteContractCreation } from './quote-contract-creation'
 
 const OuterWrapper = styled('div')({
   ':not(:last-child)': {
@@ -68,6 +69,7 @@ export const ActionsWrapper = styled('div')({
 enum Action {
   ACTIVATE,
   MODIFY,
+  SIGN,
 }
 
 const getProductTypeValue = (quote: Quote): string => {
@@ -226,15 +228,28 @@ export const QuoteListItemComponent: React.FC<{
                 Modify
               </Button>
             </BottomSpacerWrapper>
-            <BottomSpacerWrapper>
-              <Button
-                fullWidth
-                variation="success"
-                onClick={toggleState(Action.ACTIVATE)}
-              >
-                Activate
-              </Button>
-            </BottomSpacerWrapper>
+            {!quote.isReadyToSign && (
+              <BottomSpacerWrapper>
+                <Button
+                  fullWidth
+                  variation="success"
+                  onClick={toggleState(Action.ACTIVATE)}
+                >
+                  Activate
+                </Button>
+              </BottomSpacerWrapper>
+            )}
+            {quote.isReadyToSign && (
+              <BottomSpacerWrapper>
+                <Button
+                  fullWidth
+                  variation="success"
+                  onClick={toggleState(Action.SIGN)}
+                >
+                  Sign
+                </Button>
+              </BottomSpacerWrapper>
+            )}
           </ActionsButtonsWrapper>
         )}
       </QuoteWrapper>
@@ -259,6 +274,25 @@ export const QuoteListItemComponent: React.FC<{
               }
               if (insurancesListRequest) {
                 insurancesListRequest(memberId)
+              }
+            }}
+          />
+        </ActionsWrapper>
+      )}
+
+      {action === Action.SIGN && (
+        <ActionsWrapper>
+          <QuoteContractCreation
+            quote={quote}
+            memberId={memberId}
+            onWipChange={setIsWip}
+            onSubmitted={() => {
+              if (showNotification) {
+                showNotification({
+                  header: 'Contract Created',
+                  message: 'Contract created successfully!!',
+                  type: 'olive',
+                })
               }
             }}
           />
