@@ -1,9 +1,102 @@
 import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
 import {
+  ApartmentQuoteData,
+  ApartmentSubType,
+  ContractMarketInfo,
   NorwegianHomeContentLineOfBusiness,
+  NorwegianHomeContentQuoteData,
   NorwegianTravelLineOfBusiness,
+  NorwegianTravelQuoteData,
+  Quote,
+  QuoteProductType,
   SwedishApartmentLineOfBusiness,
 } from '../../../../api/generated/graphql'
+import { getSubType } from '../../../../utils/quote'
+import { isNorwegianMarket, isSwedishMarket } from '../../../../utils/contract'
+
+export const getProductSubTypeValue = (quote: Quote | null): string => {
+  if (quote?.productType === 'APARTMENT') {
+    return (quote.data as ApartmentQuoteData).subType!.toString()
+  }
+  if (quote?.productType === 'HOUSE') {
+    return 'HOUSE'
+  }
+  if (quote?.productType === 'TRAVEL') {
+    if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
+      // @ts-ignore
+      return (quote.data as NorwegianTravelQuoteData).norwegianTravelSubType?.toString()
+    }
+  }
+  if (quote?.productType === 'HOME_CONTENT') {
+    const subType = getSubType(quote.data as NorwegianHomeContentQuoteData)
+    return subType === NorwegianHomeContentLineOfBusiness.Rent
+      ? 'HOME_CONTENT_RENT'
+      : subType
+  }
+  return ''
+}
+
+export const getProductType = (
+  productType: string | null,
+  contractMarket: ContractMarketInfo,
+): QuoteProductType => {
+  if (isSwedishMarket(contractMarket)) {
+    return isSwedishHouseProductType(productType)
+      ? QuoteProductType.House
+      : QuoteProductType.Apartment
+  }
+  if (isNorwegianMarket(contractMarket)) {
+    return isNorwegianTravelFormStateProductSubType(productType)
+      ? QuoteProductType.Travel
+      : QuoteProductType.HomeContent
+  }
+  throw Error(`Expected ${contractMarket.market} to be either Sweden or Norway`)
+}
+
+export const isNorwegianTravelFormStateProductSubType = (
+  productType: string | null,
+): boolean => {
+  return (
+    productType === NorwegianTravelLineOfBusiness.Youth ||
+    productType === NorwegianTravelLineOfBusiness.Regular
+  )
+}
+
+export const isSwedishHouseProductType = (
+  productType: string | null,
+): boolean => {
+  return productType === 'HOUSE'
+}
+
+export const isNorwegianHomeContentFormStateProductSubType = (
+  productType: string | null,
+): boolean => {
+  if (productType === null) {
+    return false
+  }
+  const subTypes: string[] = [
+    NorwegianHomeContentLineOfBusiness.Own,
+    'HOME_CONTENT_RENT',
+    NorwegianHomeContentLineOfBusiness.YouthOwn,
+    NorwegianHomeContentLineOfBusiness.YouthRent,
+  ]
+  return subTypes.includes(productType)
+}
+
+export const isSwedishApartmentContentFormStateProductSubType = (
+  productType: string | null,
+): boolean => {
+  if (productType === null) {
+    return false
+  }
+  const subTypes: string[] = [
+    ApartmentSubType.Brf,
+    ApartmentSubType.Rent,
+    ApartmentSubType.StudentBrf,
+    ApartmentSubType.StudentRent,
+  ]
+  return subTypes.includes(productType)
+}
 
 export const swedishHouseDropdownItemProps = (): DropdownItemProps[] => [
   { text: 'House', value: 'HOUSE' },

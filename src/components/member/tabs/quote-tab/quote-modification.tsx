@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/react-hooks'
 import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
 import {
-  ApartmentQuoteData,
   ApartmentSubType,
   ContractMarketInfo,
   ExtraBuilding,
@@ -10,13 +9,10 @@ import {
   MutationType,
   MutationTypeUpdateQuoteArgs,
   NorwegianHomeContentLineOfBusiness,
-  NorwegianHomeContentQuoteData,
   NorwegianTravelLineOfBusiness,
-  NorwegianTravelQuoteData,
   Quote,
   QuoteData,
   QuoteInput,
-  QuoteProductType,
   useCreateQuoteForNewContractMutation,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
@@ -29,7 +25,6 @@ import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
 import {
-  getSubType,
   isNorwegianHomeContent,
   isNorwegianTravel,
   isSwedishApartment,
@@ -42,6 +37,12 @@ import { ErrorMessage } from './common'
 import { useContracts } from '../../../../graphql/use-contracts'
 import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
 import {
+  getProductSubTypeValue,
+  getProductType,
+  isNorwegianHomeContentFormStateProductSubType,
+  isNorwegianTravelFormStateProductSubType,
+  isSwedishApartmentContentFormStateProductSubType,
+  isSwedishHouseProductType,
   norwegianHomeContentDropdownItemProps,
   norwegianTravelDropdownItemProps,
   swedishApartmentDropdownItemProps,
@@ -94,88 +95,6 @@ const UPDATE_QUOTE_MUTATION = gql`
     }
   }
 `
-
-const getProductSubTypeValue = (quote: Quote | null): string => {
-  if (quote?.productType === 'APARTMENT') {
-    return (quote.data as ApartmentQuoteData).subType!.toString()
-  }
-  if (quote?.productType === 'HOUSE') {
-    return 'HOUSE'
-  }
-  if (quote?.productType === 'TRAVEL') {
-    if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
-      // @ts-ignore
-      return (quote.data as NorwegianTravelQuoteData).norwegianTravelSubType?.toString()
-    }
-  }
-  if (quote?.productType === 'HOME_CONTENT') {
-    const subType = getSubType(quote.data as NorwegianHomeContentQuoteData)
-    return subType === NorwegianHomeContentLineOfBusiness.Rent
-      ? 'HOME_CONTENT_RENT'
-      : subType
-  }
-  return ''
-}
-
-const getProductType = (
-  productType: string | null,
-  contractMarket: ContractMarketInfo,
-): QuoteProductType => {
-  if (isSwedishMarket(contractMarket)) {
-    return isSwedishHouseProductType(productType)
-      ? QuoteProductType.House
-      : QuoteProductType.Apartment
-  }
-  if (isNorwegianMarket(contractMarket)) {
-    return isNorwegianTravelFormStateProductSubType(productType)
-      ? QuoteProductType.Travel
-      : QuoteProductType.HomeContent
-  }
-  throw Error(`Expected ${contractMarket.market} to be either Sweden or Norway`)
-}
-
-const isNorwegianTravelFormStateProductSubType = (
-  productType: string | null,
-): boolean => {
-  return (
-    productType === NorwegianTravelLineOfBusiness.Youth ||
-    productType === NorwegianTravelLineOfBusiness.Regular
-  )
-}
-
-const isSwedishHouseProductType = (productType: string | null): boolean => {
-  return productType === 'HOUSE'
-}
-
-const isNorwegianHomeContentFormStateProductSubType = (
-  productType: string | null,
-): boolean => {
-  if (productType === null) {
-    return false
-  }
-  const subTypes: string[] = [
-    NorwegianHomeContentLineOfBusiness.Own,
-    'HOME_CONTENT_RENT',
-    NorwegianHomeContentLineOfBusiness.YouthOwn,
-    NorwegianHomeContentLineOfBusiness.YouthRent,
-  ]
-  return subTypes.includes(productType)
-}
-
-const isSwedishApartmentContentFormStateProductSubType = (
-  productType: string | null,
-): boolean => {
-  if (productType === null) {
-    return false
-  }
-  const subTypes: string[] = [
-    ApartmentSubType.Brf,
-    ApartmentSubType.Rent,
-    ApartmentSubType.StudentBrf,
-    ApartmentSubType.StudentRent,
-  ]
-  return subTypes.includes(productType)
-}
 
 const createQuoteData = ({
   contractMarket,
