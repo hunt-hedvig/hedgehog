@@ -3,6 +3,7 @@ import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
 import {
   ApartmentQuoteData,
   ApartmentSubType,
+  Contract,
   ContractMarketInfo,
   ExtraBuilding,
   ExtraBuildingType,
@@ -40,6 +41,8 @@ import * as uuid from 'uuid/v4'
 import { createQuoteForNewContractOptions } from '../../../../graphql/use-create-quote-for-new-contract'
 import { showNotification } from '../../../../store/actions/notificationsActions'
 import { ErrorMessage } from './common'
+import { useContracts } from '../../../../graphql/use-contracts'
+import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
 
 const Label = styled('label')({
   display: 'block',
@@ -308,6 +311,7 @@ export const QuoteModification: React.FC<{
   })
 
   const [contractMarket, { loading }] = useContractMarketInfo(memberId)
+  const [contracts] = useContracts(memberId)
 
   if (loading) {
     return null
@@ -322,7 +326,7 @@ export const QuoteModification: React.FC<{
     setBypassUnderwritingGuidelines,
   ] = React.useState(false)
 
-  const getSwedishDropdown = () => (
+  const getProductTypeDropdown = () => (
     <Dropdown
       fluid
       selection
@@ -333,37 +337,76 @@ export const QuoteModification: React.FC<{
         }
         setFormState({ ...formState, productType: data.value as string })
       }}
-      options={[
-        {
-          text: 'Apartment (rent)',
-          value: SwedishApartmentLineOfBusiness.Rent,
-        },
-        { text: 'Apartment (brf)', value: SwedishApartmentLineOfBusiness.Brf },
-        {
-          text: 'Apartment (student rent)',
-          value: SwedishApartmentLineOfBusiness.StudentRent,
-        },
-        {
-          text: 'Apartment (student brf)',
-          value: SwedishApartmentLineOfBusiness.StudentBrf,
-        },
-        { text: 'House', value: 'HOUSE' },
-      ]}
+      options={getDropdownOptions(contractMarket, contracts)}
     />
   )
 
-  const getNorwegianDropDown = () => (
-    <Dropdown
-      fluid
-      selection
-      value={formState.productType ?? getProductSubTypeValue(quote)}
-      onChange={(_, data) => {
-        if (onWipChange) {
-          onWipChange(true)
+  const getSwedishDropDownOptions = (): DropdownItemProps[] => {
+    console.log('BEFORE', formState.productType)
+    const productType = formState.productType ?? getProductSubTypeValue(quote)
+    if (productType !== '') {
+      if (productType === 'HOUSE') {
+        return [{ text: 'House', value: 'HOUSE' }]
+      } else {
+        return [
+          {
+            text: 'Apartment (rent)',
+            value: SwedishApartmentLineOfBusiness.Rent,
+          },
+          {
+            text: 'Apartment (brf)',
+            value: SwedishApartmentLineOfBusiness.Brf,
+          },
+          {
+            text: 'Apartment (student rent)',
+            value: SwedishApartmentLineOfBusiness.StudentRent,
+          },
+          {
+            text: 'Apartment (student brf)',
+            value: SwedishApartmentLineOfBusiness.StudentBrf,
+          },
+        ]
+      }
+    } else {
+      if (contracts.length === 1) {
+        if (contracts[0].contractTypeName === 'Swedish Apartment') {
+          return [{ text: 'House', value: 'HOUSE' }]
         }
-        setFormState({ ...formState, productType: data.value as string })
-      }}
-      options={[
+        if (contracts[0].contractTypeName === 'Swedish House') {
+          return [
+            {
+              text: 'Apartment (rent)',
+              value: SwedishApartmentLineOfBusiness.Rent,
+            },
+            {
+              text: 'Apartment (brf)',
+              value: SwedishApartmentLineOfBusiness.Brf,
+            },
+            {
+              text: 'Apartment (student rent)',
+              value: SwedishApartmentLineOfBusiness.StudentRent,
+            },
+            {
+              text: 'Apartment (student brf)',
+              value: SwedishApartmentLineOfBusiness.StudentBrf,
+            },
+          ]
+        }
+      }
+    }
+    throw new Error('Cannot return dropDownItems')
+  }
+
+  const getDropdownOptions = (
+    contractMarketInfo: ContractMarketInfo,
+    contracts: ReadonlyArray<Contract>,
+  ): DropdownItemProps[] => {
+    if (isSwedishMarket(contractMarketInfo)) {
+      console.log('I am here', getSwedishDropDownOptions())
+      return getSwedishDropDownOptions()
+    }
+    if (isNorwegianMarket(contractMarketInfo)) {
+      return [
         {
           text: 'Norwegian Home Content (own)',
           value: NorwegianHomeContentLineOfBusiness.Own,
@@ -388,14 +431,10 @@ export const QuoteModification: React.FC<{
           text: 'Norwegian Travel (youth)',
           value: NorwegianTravelLineOfBusiness.Youth,
         },
-      ]}
-    />
-  )
-
-  const getProductTypeDropdown = () =>
-    isSwedishMarket(contractMarket)
-      ? getSwedishDropdown()
-      : getNorwegianDropDown()
+      ]
+    }
+    throw new Error('Unknown market while generating dropdown options')
+  }
 
   const getTextInput = (
     variable: keyof FormState,
