@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { Quote } from '../../../../api/generated/graphql'
+import styled from 'react-emotion'
 import { Button } from '../../../../../shared/hedvig-ui/button'
+import { Quote } from '../../../../api/generated/graphql'
+import { signedOrExpiredPredicate } from '../../../../graphql/use-quotes'
+import { showNotification } from '../../../../store/actions/notificationsActions'
+import { Muted } from './common'
 import { ActionsWrapper, QuoteListItem } from './quote-list-item'
 import { QuoteModification } from './quote-modification'
-import { showNotification } from '../../../../store/actions/notificationsActions'
-import { signedOrExpiredPredicate } from '../../../../graphql/use-quotes'
-import { Muted } from './common'
-import styled from 'react-emotion'
 
 export const QuotesSubSection: React.FunctionComponent<{
   memberId: string

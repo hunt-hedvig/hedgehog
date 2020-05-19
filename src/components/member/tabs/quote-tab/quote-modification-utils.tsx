@@ -11,8 +11,8 @@ import {
   QuoteProductType,
   SwedishApartmentLineOfBusiness,
 } from '../../../../api/generated/graphql'
-import { getSubType } from '../../../../utils/quote'
 import { isNorwegianMarket, isSwedishMarket } from '../../../../utils/contract'
+import { getSubType } from '../../../../utils/quote'
 
 export const getProductSubTypeValue = (quote: Quote | null): string => {
   if (quote?.productType === 'APARTMENT') {

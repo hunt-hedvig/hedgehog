@@ -1,3 +1,5 @@
+import { MutationFunctionOptions } from '@apollo/react-common'
+import { format } from 'date-fns'
 import {
   GetContractsDocument,
   SignQuoteForNewContractMutation,
@@ -5,9 +7,7 @@ import {
   SignQuoteForNewContractMutationVariables,
   useSignQuoteForNewContractMutation,
 } from '../api/generated/graphql'
-import { MutationFunctionOptions } from '@apollo/react-common'
 import { QUOTES_QUERY } from './use-quotes'
-import { format } from 'date-fns'
 
 export const useSignQuoteForNewContract = (): SignQuoteForNewContractMutationHookResult =>
   useSignQuoteForNewContractMutation()
@@ -22,17 +22,17 @@ export const signQuoteForNewContractOptions = (
 > => {
   return {
     variables: {
-      quoteId: quoteId,
+      quoteId,
       activationDate: format(activationDate, 'yyyy-MM-dd'),
     },
     refetchQueries: () => [
       {
         query: QUOTES_QUERY,
-        variables: { memberId: memberId },
+        variables: { memberId },
       },
       {
         query: GetContractsDocument,
-        variables: { memberId: memberId },
+        variables: { memberId },
       },
     ],
   }

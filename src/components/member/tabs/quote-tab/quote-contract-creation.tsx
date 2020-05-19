@@ -3,11 +3,11 @@ import {
   useSignQuoteForNewContractMutation,
 } from 'api/generated/graphql'
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
+import { signQuoteForNewContractOptions } from 'graphql/use-sign-quote-for-new-contract'
 import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
-import { signQuoteForNewContractOptions } from 'graphql/use-sign-quote-for-new-contract'
 
 export const QuoteContractCreation: React.FC<{
   quote: Quote

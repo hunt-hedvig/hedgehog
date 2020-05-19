@@ -15,8 +15,8 @@ import {
 } from 'utils/quote'
 import { BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
-import { QuoteModification } from './quote-modification'
 import { QuoteContractCreation } from './quote-contract-creation'
+import { QuoteModification } from './quote-modification'
 
 const OuterWrapper = styled('div')({
   ':not(:last-child)': {
