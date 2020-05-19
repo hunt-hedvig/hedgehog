@@ -69,10 +69,13 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
           quotes={getCategorisedQuotesBasedOnContractType(contractType)}
         />
       )
+
       panes.push({
-        menuItem: `${contractType}` as never,
-        render: (() => <Tab.Pane>{subSection}</Tab.Pane>) as never,
-      } as never)
+        // @ts-ignore
+        menuItem: `${contractType}`,
+        // @ts-ignore
+        render: () => <Tab.Pane>{subSection}</Tab.Pane>,
+      })
     })
 
     return panes
