@@ -66,7 +66,7 @@ export const QuoteContractCreation: React.FC<{
           fullWidth
           disabled={setSignQuoteMutation.loading}
         >
-          Activate
+          Create contract
         </Button>
       ) : (
         <Button

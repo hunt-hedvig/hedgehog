@@ -70,9 +70,9 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
         />
       )
       panes.push({
-        menuItem: `${contractType}`,
-        render: () => <Tab.Pane>{subSection}</Tab.Pane>,
-      })
+        menuItem: `${contractType}` as never,
+        render: (() => <Tab.Pane>{subSection}</Tab.Pane>) as never,
+      } as never)
     })
 
     return panes

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Quote } from '../../../../api/generated/graphql'
-import { Action } from 'redux'
 import { Button } from '../../../../../shared/hedvig-ui/button'
 import { ActionsWrapper, QuoteListItem } from './quote-list-item'
 import { QuoteModification } from './quote-modification'
@@ -18,7 +17,6 @@ export const QuotesSubSection: React.FunctionComponent<{
     padding: '1rem',
   })
   const [isWip, setIsWip] = React.useState(false)
-  const [action, setAction] = React.useState<Action | null>(null)
 
   return (
     <Wrapper>
@@ -41,7 +39,6 @@ export const QuotesSubSection: React.FunctionComponent<{
                 })
               }
               setIsWip(false)
-              setAction(null)
             }}
           />
         </ActionsWrapper>
