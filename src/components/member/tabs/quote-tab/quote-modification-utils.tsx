@@ -37,9 +37,13 @@ export const getProductSubTypeValue = (quote: Quote | null): string => {
 }
 
 export const getProductType = (
+  quote: Quote,
   productType: string | null,
   contractMarket: ContractMarketInfo,
 ): QuoteProductType => {
+  if (productType === null) {
+    return quote.productType
+  }
   if (isSwedishMarket(contractMarket)) {
     return isSwedishHouseProductType(productType)
       ? QuoteProductType.House

@@ -112,7 +112,7 @@ const createQuoteData = ({
   isSubleted,
 }: FormState & { quote: Quote; contractMarket: ContractMarketInfo }) => {
   const quoteData: Partial<QuoteInput> = {
-    productType: getProductType(productType, contractMarket),
+    productType: getProductType(quote, productType, contractMarket),
   }
 
   const baseData = {

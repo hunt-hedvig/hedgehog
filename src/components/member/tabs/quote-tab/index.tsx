@@ -29,57 +29,56 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   }
 
   const getUniqueContractTypeNames = () => {
-    const contractTypes: string[] = []
     if (isSwedishMarket(contractMarket)) {
-      contractTypes.push('Swedish Apartment', 'Swedish House')
+      return ['Swedish Apartment', 'Swedish House']
     }
 
     if (isNorwegianMarket(contractMarket)) {
-      contractTypes.push('Norwegian Home Content', 'Norwegian Travel')
+      return ['Norwegian Home Content', 'Norwegian Travel']
     }
-    return contractTypes
+
+    return []
+  }
+
+  const shouldShowInContractTypeSubSection = (
+    quote: Quote,
+    contractType,
+  ): boolean => {
+    if (quote.productType === 'HOME_CONTENT') {
+      return contractType === 'Norwegian Home Content'
+    }
+    if (quote.productType === 'TRAVEL') {
+      return contractType === 'Norwegian Travel'
+    }
+    if (quote.productType === 'APARTMENT') {
+      return contractType === 'Swedish Apartment'
+    }
+    if (quote.productType === 'HOUSE') {
+      return contractType === 'Swedish House'
+    }
   }
 
   const getCategorisedQuotesBasedOnContractType = (
     contractType: string,
   ): Quote[] => {
-    return quotes.filter((quote) => {
-      if (quote.productType === 'HOME_CONTENT') {
-        return contractType === 'Norwegian Home Content'
-      }
-      if (quote.productType === 'TRAVEL') {
-        return contractType === 'Norwegian Travel'
-      }
-      if (quote.productType === 'APARTMENT') {
-        return contractType === 'Swedish Apartment'
-      }
-      if (quote.productType === 'HOUSE') {
-        return contractType === 'Swedish House'
-      }
-    })
+    return quotes.filter((quote) =>
+      shouldShowInContractTypeSubSection(quote, contractType),
+    )
   }
 
-  const getTabs = (): any => {
-    const panes = []
+  const getTabs = () =>
+    getUniqueContractTypeNames().map((contractType) => ({
+      menuItem: contractType,
+      render: () => (
+        <Tab.Pane>
+          <QuotesSubSection
+            memberId={memberId}
+            quotes={getCategorisedQuotesBasedOnContractType(contractType)}
+          />
+        </Tab.Pane>
+      ),
+    }))
 
-    getUniqueContractTypeNames().forEach((contractType) => {
-      const subSection = (
-        <QuotesSubSection
-          memberId={memberId}
-          quotes={getCategorisedQuotesBasedOnContractType(contractType)}
-        />
-      )
-
-      panes.push({
-        // @ts-ignore
-        menuItem: `${contractType}`,
-        // @ts-ignore
-        render: () => <Tab.Pane>{subSection}</Tab.Pane>,
-      })
-    })
-
-    return panes
-  }
   console.log('Quote', quotes)
 
   return <Tab panes={getTabs()} />
