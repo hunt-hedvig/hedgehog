@@ -754,6 +754,8 @@ export type MutationType = {
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
   regenerateCertificate: Scalars['ID']
+  createQuoteForNewContract: Quote
+  signQuoteForNewContract: Quote
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -953,6 +955,17 @@ export type MutationTypeRegenerateCertificateArgs = {
   agreementId: Scalars['ID']
 }
 
+export type MutationTypeCreateQuoteForNewContractArgs = {
+  memberId: Scalars['ID']
+  quoteInput: QuoteInput
+  bypassUnderwritingGuidelines: Scalars['Boolean']
+}
+
+export type MutationTypeSignQuoteForNewContractArgs = {
+  quoteId: Scalars['ID']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
 export type NorwegianGripenFactorInput = {
   factorType: NorwegianGripenFactorType
   factorString: Scalars['String']
@@ -1134,6 +1147,7 @@ export type QueryType = {
   filters: Array<FilterSuggestion>
   inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  findPartnerCampaigns: Array<VoucherCampaign>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1207,6 +1221,7 @@ export type Quote = {
   data?: Maybe<QuoteData>
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
+  isReadyToSign?: Maybe<Scalars['Boolean']>
 }
 
 export type QuoteData =
@@ -1504,6 +1519,15 @@ export type TravelAccidentClaim = {
 export type VerminAndPestsClaim = {
   __typename?: 'VerminAndPestsClaim'
   date?: Maybe<Scalars['LocalDate']>
+}
+
+export type VoucherCampaign = {
+  __typename?: 'VoucherCampaign'
+  id: Scalars['ID']
+  campaignCode: Scalars['String']
+  partnerId: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validTo?: Maybe<Scalars['Instant']>
 }
 
 export type WaterDamageBathroomClaim = {
@@ -1861,77 +1885,14 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetQuotesQueryVariables = {
-  memberId: Scalars['ID']
-}
+export type FindPartnerCampaignsQueryVariables = {}
 
-export type GetQuotesQuery = { __typename?: 'QueryType' } & {
-  member: Maybe<
-    { __typename?: 'Member' } & {
-      quotes: Array<
-        { __typename?: 'Quote' } & Pick<
-          Quote,
-          | 'id'
-          | 'price'
-          | 'productType'
-          | 'state'
-          | 'startDate'
-          | 'validity'
-          | 'isComplete'
-          | 'createdAt'
-          | 'breachedUnderwritingGuidelines'
-          | 'originatingProductId'
-          | 'signedProductId'
-        > & {
-            data: Maybe<
-              | ({ __typename?: 'ApartmentQuoteData' } & Pick<
-                  ApartmentQuoteData,
-                  | 'street'
-                  | 'zipCode'
-                  | 'city'
-                  | 'householdSize'
-                  | 'livingSpace'
-                  | 'subType'
-                >)
-              | ({ __typename?: 'HouseQuoteData' } & Pick<
-                  HouseQuoteData,
-                  | 'street'
-                  | 'zipCode'
-                  | 'city'
-                  | 'householdSize'
-                  | 'livingSpace'
-                  | 'ancillaryArea'
-                  | 'yearOfConstruction'
-                  | 'numberOfBathrooms'
-                  | 'isSubleted'
-                > & {
-                    extraBuildings: Array<
-                      { __typename?: 'ExtraBuilding' } & Pick<
-                        ExtraBuilding,
-                        'type' | 'area' | 'hasWaterConnected'
-                      >
-                    >
-                  })
-              | ({ __typename?: 'NorwegianHomeContentQuoteData' } & Pick<
-                  NorwegianHomeContentQuoteData,
-                  | 'street'
-                  | 'zipCode'
-                  | 'city'
-                  | 'householdSize'
-                  | 'livingSpace'
-                > & {
-                    norwegianHomeContentSubType: NorwegianHomeContentQuoteData['subType']
-                  })
-              | ({ __typename?: 'NorwegianTravelQuoteData' } & Pick<
-                  NorwegianTravelQuoteData,
-                  'householdSize'
-                > & {
-                    norwegianTravelSubType: NorwegianTravelQuoteData['subType']
-                  })
-            >
-          }
-      >
-    }
+export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
+  findPartnerCampaigns: Array<
+    { __typename?: 'VoucherCampaign' } & Pick<
+      VoucherCampaign,
+      'id' | 'campaignCode' | 'partnerId' | 'validFrom' | 'validTo'
+    >
   >
 }
 
@@ -2875,109 +2836,64 @@ export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
 >
-export const GetQuotesDocument = gql`
-  query GetQuotes($memberId: ID!) {
-    member(id: $memberId) {
-      quotes {
-        id
-        price
-        productType
-        state
-        startDate
-        validity
-        isComplete
-        createdAt
-        breachedUnderwritingGuidelines
-        originatingProductId
-        signedProductId
-        data {
-          ... on ApartmentQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            subType
-          }
-          ... on HouseQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            ancillaryArea
-            yearOfConstruction
-            numberOfBathrooms
-            extraBuildings {
-              type
-              area
-              hasWaterConnected
-            }
-            isSubleted
-          }
-          ... on NorwegianHomeContentQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            norwegianHomeContentSubType: subType
-          }
-          ... on NorwegianTravelQuoteData {
-            householdSize
-            norwegianTravelSubType: subType
-          }
-        }
-      }
+export const FindPartnerCampaignsDocument = gql`
+  query FindPartnerCampaigns {
+    findPartnerCampaigns {
+      id
+      campaignCode
+      partnerId
+      validFrom
+      validTo
     }
   }
 `
 
 /**
- * __useGetQuotesQuery__
+ * __useFindPartnerCampaignsQuery__
  *
- * To run a query within a React component, call `useGetQuotesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetQuotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useFindPartnerCampaignsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindPartnerCampaignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetQuotesQuery({
+ * const { data, loading, error } = useFindPartnerCampaignsQuery({
  *   variables: {
- *      memberId: // value for 'memberId'
  *   },
  * });
  */
-export function useGetQuotesQuery(
+export function useFindPartnerCampaignsQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetQuotesQuery,
-    GetQuotesQueryVariables
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<GetQuotesQuery, GetQuotesQueryVariables>(
-    GetQuotesDocument,
-    baseOptions,
-  )
+  return ApolloReactHooks.useQuery<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >(FindPartnerCampaignsDocument, baseOptions)
 }
-export function useGetQuotesLazyQuery(
+export function useFindPartnerCampaignsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetQuotesQuery,
-    GetQuotesQueryVariables
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<GetQuotesQuery, GetQuotesQueryVariables>(
-    GetQuotesDocument,
-    baseOptions,
-  )
+  return ApolloReactHooks.useLazyQuery<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >(FindPartnerCampaignsDocument, baseOptions)
 }
-export type GetQuotesQueryHookResult = ReturnType<typeof useGetQuotesQuery>
-export type GetQuotesLazyQueryHookResult = ReturnType<
-  typeof useGetQuotesLazyQuery
+export type FindPartnerCampaignsQueryHookResult = ReturnType<
+  typeof useFindPartnerCampaignsQuery
 >
-export type GetQuotesQueryResult = ApolloReactCommon.QueryResult<
-  GetQuotesQuery,
-  GetQuotesQueryVariables
+export type FindPartnerCampaignsLazyQueryHookResult = ReturnType<
+  typeof useFindPartnerCampaignsLazyQuery
+>
+export type FindPartnerCampaignsQueryResult = ApolloReactCommon.QueryResult<
+  FindPartnerCampaignsQuery,
+  FindPartnerCampaignsQueryVariables
 >
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {

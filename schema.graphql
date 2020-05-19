@@ -20,6 +20,7 @@ type QueryType {
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  findPartnerCampaigns: [VoucherCampaign!]!
 }
 
 type MutationType {
@@ -94,6 +95,15 @@ type MutationType {
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
+  createQuoteForNewContract(
+    memberId: ID!,
+    quoteInput: QuoteInput!,
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  signQuoteForNewContract(
+    quoteId: ID!,
+    activationDate: LocalDate
+  ): Quote!
 }
 
 type Contract {
@@ -314,6 +324,14 @@ type AutoLabel {
   message: Boolean
 }
 
+type VoucherCampaign {
+  id: ID!
+  campaignCode: String!
+  partnerId: String!
+  validFrom: Instant
+  validTo: Instant
+}
+
 input FilterPayload {
   filters: [Filter!]!
   inventoryItemId: ID!
@@ -532,6 +550,7 @@ type Quote {
   data: QuoteData
   signedProductId: ID
   originatingProductId: ID
+  isReadyToSign: Boolean
 }
 
 enum QuoteProductType {
@@ -1228,3 +1247,4 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
+

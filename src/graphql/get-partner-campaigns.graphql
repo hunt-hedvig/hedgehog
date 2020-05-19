@@ -1,0 +1,9 @@
+query FindPartnerCampaigns {
+  findPartnerCampaigns {
+    id
+    campaignCode
+    partnerId
+    validFrom
+    validTo
+  }
+}
