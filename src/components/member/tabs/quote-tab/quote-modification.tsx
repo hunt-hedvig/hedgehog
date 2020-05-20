@@ -110,7 +110,7 @@ const createQuoteData = ({
   numberOfBathrooms,
   extraBuildings,
   isSubleted,
-}: FormState & { quote: Quote; contractMarket: ContractMarketInfo }) => {
+}: FormState & { quote: Quote | null; contractMarket: ContractMarketInfo }) => {
   const quoteData: Partial<QuoteInput> = {
     productType: getProductType(quote, productType, contractMarket),
   }
