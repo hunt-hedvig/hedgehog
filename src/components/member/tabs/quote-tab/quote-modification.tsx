@@ -360,12 +360,11 @@ export const QuoteModification: React.FC<{
 
         const quoteData = createQuoteData({
           ...formState,
-          // @ts-ignore
           quote,
           contractMarket,
         })
 
-        if (shouldCreateContract === true) {
+        if (shouldCreateContract) {
           createQuoteForNewContract(
             getCreateQuoteForNewContractOptions(
               memberId,

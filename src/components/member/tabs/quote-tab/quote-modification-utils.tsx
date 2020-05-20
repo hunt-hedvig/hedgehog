@@ -23,7 +23,6 @@ export const getProductSubTypeValue = (quote: Quote | null): string => {
   }
   if (quote?.productType === 'TRAVEL') {
     if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
-      // @ts-ignore
       return (quote.data as NorwegianTravelQuoteData).norwegianTravelSubType?.toString()
     }
   }
