@@ -207,7 +207,7 @@ export class MemberDebtComponent extends React.Component<
 
   public render() {
     // FIXME: We should not make market specific features like this, should use "have debt" or "don't have debt" instead
-    if (this.props.contractMarketInfo.market === Market.Norway) {
+    if (this.props.contractMarketInfo?.market === Market.Norway) {
       return <>Not available for Norway</>
     }
     return (
