@@ -78,8 +78,5 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
         </Tab.Pane>
       ),
     }))
-
-  console.log('Quote', quotes)
-
   return <Tab panes={getTabs()} />
 }
