@@ -23,7 +23,7 @@ export const getProductSubTypeValue = (quote: Quote | null): string => {
   }
   if (quote?.productType === 'TRAVEL') {
     if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
-      return (quote.data as NorwegianTravelQuoteData).norwegianTravelSubType?.toString()
+      return (quote.data as NorwegianTravelQuoteData).subType?.toString()
     }
   }
   if (quote?.productType === 'HOME_CONTENT') {
@@ -41,7 +41,7 @@ export const getProductType = (
   contractMarket: ContractMarketInfo,
 ): QuoteProductType => {
   if (productType === null) {
-    return quote.productType
+    return quote.productType!!
   }
   if (isSwedishMarket(contractMarket)) {
     return isSwedishHouseProductType(productType)

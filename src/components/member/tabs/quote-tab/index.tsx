@@ -56,6 +56,7 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
     if (quote.productType === 'HOUSE') {
       return contractType === 'Swedish House'
     }
+    return false
   }
 
   const getCategorisedQuotesBasedOnContractType = (
