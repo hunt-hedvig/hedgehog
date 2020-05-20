@@ -1,4 +1,3 @@
-import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
 import {
   ApartmentQuoteData,
   ApartmentSubType,
@@ -10,9 +9,10 @@ import {
   Quote,
   QuoteProductType,
   SwedishApartmentLineOfBusiness,
-} from '../../../../api/generated/graphql'
-import { isNorwegianMarket, isSwedishMarket } from '../../../../utils/contract'
-import { getSubType } from '../../../../utils/quote'
+} from 'api/generated/graphql'
+import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
+import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
+import { getSubType } from 'utils/quote'
 
 export const getProductSubTypeValue = (quote: Quote | null): string => {
   if (quote?.productType === 'APARTMENT') {

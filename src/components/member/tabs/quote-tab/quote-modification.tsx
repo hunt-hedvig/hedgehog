@@ -16,6 +16,8 @@ import {
   useCreateQuoteForNewContractMutation,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
+import { useContracts } from 'graphql/use-contracts'
+import { createQuoteForNewContractOptions } from 'graphql/use-create-quote-for-new-contract'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
@@ -23,6 +25,7 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
+import { showNotification } from 'store/actions/notificationsActions'
 import { noopFunction } from 'utils'
 import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
 import {
@@ -32,9 +35,6 @@ import {
   isSwedishHouse,
 } from 'utils/quote'
 import * as uuid from 'uuid/v4'
-import { useContracts } from '../../../../graphql/use-contracts'
-import { createQuoteForNewContractOptions } from '../../../../graphql/use-create-quote-for-new-contract'
-import { showNotification } from '../../../../store/actions/notificationsActions'
 import { ErrorMessage } from './common'
 import {
   getProductSubTypeValue,
