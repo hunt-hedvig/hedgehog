@@ -94,6 +94,15 @@ type MutationType {
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
+  createQuoteForNewContract(
+    memberId: ID!,
+    quoteInput: QuoteInput!,
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  signQuoteForNewContract(
+    quoteId: ID!,
+    activationDate: LocalDate
+  ): Quote!
 }
 
 type Contract {
@@ -532,6 +541,7 @@ type Quote {
   data: QuoteData
   signedProductId: ID
   originatingProductId: ID
+  isReadyToSign: Boolean
 }
 
 enum QuoteProductType {

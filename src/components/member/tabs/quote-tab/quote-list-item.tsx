@@ -13,8 +13,9 @@ import {
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/quote'
-import { BottomSpacerWrapper, Muted } from './common'
+import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
+import { QuoteContractCreation } from './quote-contract-creation'
 import { QuoteModification } from './quote-modification'
 
 const OuterWrapper = styled('div')({
@@ -58,16 +59,10 @@ const ActionsButtonsWrapper = styled('div')({
   flexShrink: 1,
 })
 
-const ActionsWrapper = styled('div')({
-  background: colorsV2.flamingo200,
-  padding: '1rem',
-  width: '100%',
-  marginBottom: '1rem',
-})
-
 enum Action {
   ACTIVATE,
   MODIFY,
+  SIGN,
 }
 
 const getProductTypeValue = (quote: Quote): string => {
@@ -226,15 +221,28 @@ export const QuoteListItemComponent: React.FC<{
                 Modify
               </Button>
             </BottomSpacerWrapper>
-            <BottomSpacerWrapper>
-              <Button
-                fullWidth
-                variation="success"
-                onClick={toggleState(Action.ACTIVATE)}
-              >
-                Activate
-              </Button>
-            </BottomSpacerWrapper>
+            {!quote.isReadyToSign && (
+              <BottomSpacerWrapper>
+                <Button
+                  fullWidth
+                  variation="success"
+                  onClick={toggleState(Action.ACTIVATE)}
+                >
+                  Activate
+                </Button>
+              </BottomSpacerWrapper>
+            )}
+            {quote.isReadyToSign && (
+              <BottomSpacerWrapper>
+                <Button
+                  fullWidth
+                  variation="success"
+                  onClick={toggleState(Action.SIGN)}
+                >
+                  Sign
+                </Button>
+              </BottomSpacerWrapper>
+            )}
           </ActionsButtonsWrapper>
         )}
       </QuoteWrapper>
@@ -265,11 +273,31 @@ export const QuoteListItemComponent: React.FC<{
         </ActionsWrapper>
       )}
 
+      {action === Action.SIGN && (
+        <ActionsWrapper>
+          <QuoteContractCreation
+            quote={quote}
+            memberId={memberId}
+            onWipChange={setIsWip}
+            onSubmitted={() => {
+              if (showNotification) {
+                showNotification({
+                  header: 'Contract Created',
+                  message: 'Contract created successfully!!',
+                  type: 'olive',
+                })
+              }
+            }}
+          />
+        </ActionsWrapper>
+      )}
+
       {action === Action.MODIFY && (
         <ActionsWrapper>
           <QuoteModification
             quote={quote}
             memberId={memberId}
+            shouldCreateContract={false}
             onWipChange={setIsWip}
             onSubmitted={() => {
               if (showNotification) {
@@ -279,6 +307,7 @@ export const QuoteListItemComponent: React.FC<{
                   type: 'olive',
                 })
               }
+
               setIsWip(false)
               setAction(null)
             }}
