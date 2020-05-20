@@ -12,7 +12,7 @@ import { QUOTES_QUERY } from './use-quotes'
 export const useSignQuoteForNewContract = (): SignQuoteForNewContractMutationHookResult =>
   useSignQuoteForNewContractMutation()
 
-export const signQuoteForNewContractOptions = (
+export const getSignQuoteForNewContractOptions = (
   quoteId: string,
   activationDate: Date,
   memberId: string,

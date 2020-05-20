@@ -13,7 +13,7 @@ import {
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/quote'
-import { BottomSpacerWrapper, Muted } from './common'
+import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
 import { QuoteModification } from './quote-modification'
@@ -57,13 +57,6 @@ const BreachedUnderwritingGuidelines = styled('div')({
 
 const ActionsButtonsWrapper = styled('div')({
   flexShrink: 1,
-})
-
-export const ActionsWrapper = styled('div')({
-  background: colorsV2.flamingo200,
-  padding: '1rem',
-  width: '100%',
-  marginBottom: '1rem',
 })
 
 enum Action {

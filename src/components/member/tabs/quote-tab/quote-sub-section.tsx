@@ -4,8 +4,8 @@ import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { showNotification } from 'store/actions/notificationsActions'
-import { Muted } from './common'
-import { ActionsWrapper, QuoteListItem } from './quote-list-item'
+import { ActionsWrapper, Muted } from './common'
+import { QuoteListItem } from './quote-list-item'
 import { QuoteModification } from './quote-modification'
 
 export const QuotesSubSection: React.FunctionComponent<{

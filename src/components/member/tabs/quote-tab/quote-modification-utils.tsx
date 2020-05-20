@@ -10,7 +10,7 @@ import {
   QuoteProductType,
   SwedishApartmentLineOfBusiness,
 } from 'api/generated/graphql'
-import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
+import { DropdownItemProps } from 'semantic-ui-react'
 import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
 import { getSubType } from 'utils/quote'
 

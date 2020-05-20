@@ -6,13 +6,13 @@ import {
   QuoteInput,
   Scalars,
   useCreateQuoteForNewContractMutation,
-} from '../api/generated/graphql'
+} from 'api/generated/graphql'
 import { QUOTES_QUERY } from './use-quotes'
 
 export const createQuoteForNewContract = (): CreateQuoteForNewContractMutationHookResult =>
   useCreateQuoteForNewContractMutation()
 
-export const createQuoteForNewContractOptions = (
+export const getCreateQuoteForNewContractOptions = (
   memberId: string,
   quoteInput: QuoteInput,
   bypassUnderwritingGuidelines: Scalars['Boolean'],

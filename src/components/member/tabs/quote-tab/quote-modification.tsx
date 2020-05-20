@@ -17,7 +17,7 @@ import {
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
 import { useContracts } from 'graphql/use-contracts'
-import { createQuoteForNewContractOptions } from 'graphql/use-create-quote-for-new-contract'
+import { getCreateQuoteForNewContractOptions } from 'graphql/use-create-quote-for-new-contract'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
@@ -367,7 +367,7 @@ export const QuoteModification: React.FC<{
 
         if (shouldCreateContract === true) {
           createQuoteForNewContract(
-            createQuoteForNewContractOptions(
+            getCreateQuoteForNewContractOptions(
               memberId,
               quoteData,
               bypassUnderwritingGuidelines,
@@ -379,7 +379,6 @@ export const QuoteModification: React.FC<{
                 header: 'Success',
                 message: `Successfully created quote for a new contract`,
               })
-              // reset()
             })
             .catch((error) => {
               showNotification({
