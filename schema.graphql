@@ -21,6 +21,7 @@ type QueryType {
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   findPartnerCampaigns: [VoucherCampaign!]!
+  getPartnerCampaignOwners: [CampaignOwnerPartner!]!
 }
 
 type MutationType {
@@ -104,6 +105,9 @@ type MutationType {
     quoteId: ID!,
     activationDate: LocalDate
   ): Quote!
+  assignCampaignToPartnerPercentageDiscount(
+    request: AssignVoucherPercentageDiscount
+  ): Boolean!
 }
 
 type Contract {
@@ -306,6 +310,20 @@ input ChangeToDateInput {
 
 input ChangeFromDateInput {
   newFromDate: LocalDate!
+}
+
+input AssignVoucherPercentageDiscount {
+  partnerId: String!
+  numberOfMonths: Int!
+  #  what to use instead of BigDecimal?
+  percentageDiscount: Float
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+}
+
+type CampaignOwnerPartner {
+  partnerId: String!
 }
 
 type Suggestion {
@@ -1247,4 +1265,3 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
-

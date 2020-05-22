@@ -185,6 +185,16 @@ export type AssaultClaim = {
   policeReport?: Maybe<Scalars['String']>
 }
 
+export type AssignVoucherPercentageDiscount = {
+  partnerId: Scalars['String']
+  numberOfMonths: Scalars['Int']
+  /** what to use instead of BigDecimal? */
+  percentageDiscount?: Maybe<Scalars['Float']>
+  code: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validUntil?: Maybe<Scalars['Instant']>
+}
+
 export type AutoLabel = {
   __typename?: 'AutoLabel'
   message?: Maybe<Scalars['Boolean']>
@@ -197,6 +207,11 @@ export type BurglaryClaim = {
   item?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
+}
+
+export type CampaignOwnerPartner = {
+  __typename?: 'CampaignOwnerPartner'
+  partnerId: Scalars['String']
 }
 
 export type Category = {
@@ -756,6 +771,7 @@ export type MutationType = {
   regenerateCertificate: Scalars['ID']
   createQuoteForNewContract: Quote
   signQuoteForNewContract: Quote
+  assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -966,6 +982,10 @@ export type MutationTypeSignQuoteForNewContractArgs = {
   activationDate?: Maybe<Scalars['LocalDate']>
 }
 
+export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
+  request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
 export type NorwegianGripenFactorInput = {
   factorType: NorwegianGripenFactorType
   factorString: Scalars['String']
@@ -1148,6 +1168,7 @@ export type QueryType = {
   inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   findPartnerCampaigns: Array<VoucherCampaign>
+  getPartnerCampaignOwners: Array<CampaignOwnerPartner>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1882,6 +1903,17 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
           }
       >
     }
+  >
+}
+
+export type GetPartnerCampaignOwnersQueryVariables = {}
+
+export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
+  getPartnerCampaignOwners: Array<
+    { __typename?: 'CampaignOwnerPartner' } & Pick<
+      CampaignOwnerPartner,
+      'partnerId'
+    >
   >
 }
 
@@ -2835,6 +2867,61 @@ export type GetContractsLazyQueryHookResult = ReturnType<
 export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
+>
+export const GetPartnerCampaignOwnersDocument = gql`
+  query GetPartnerCampaignOwners {
+    getPartnerCampaignOwners {
+      partnerId
+    }
+  }
+`
+
+/**
+ * __useGetPartnerCampaignOwnersQuery__
+ *
+ * To run a query within a React component, call `useGetPartnerCampaignOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPartnerCampaignOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPartnerCampaignOwnersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPartnerCampaignOwnersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, baseOptions)
+}
+export function useGetPartnerCampaignOwnersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, baseOptions)
+}
+export type GetPartnerCampaignOwnersQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersQuery
+>
+export type GetPartnerCampaignOwnersLazyQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersLazyQuery
+>
+export type GetPartnerCampaignOwnersQueryResult = ApolloReactCommon.QueryResult<
+  GetPartnerCampaignOwnersQuery,
+  GetPartnerCampaignOwnersQueryVariables
 >
 export const FindPartnerCampaignsDocument = gql`
   query FindPartnerCampaigns {
