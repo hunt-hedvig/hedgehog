@@ -8,28 +8,27 @@ import { ActionsWrapper, Muted } from './common'
 import { QuoteListItem } from './quote-list-item'
 import { QuoteModification } from './quote-modification'
 
+const Headline = styled('h1')({})
+const Wrapper = styled('div')({
+  padding: '1rem',
+})
+
 export const QuotesSubSection: React.FunctionComponent<{
   memberId: string
   quotes: ReadonlyArray<Quote>
 }> = ({ memberId, quotes }) => {
-  const Headline = styled('h1')({})
-  const Wrapper = styled('div')({
-    padding: '1rem',
-  })
   const [isWip, setIsWip] = React.useState(false)
-
-  const hasNoActiveQuotes = () => {
-    return (
-      quotes.filter((quote) => !signedOrExpiredPredicate(quote)).length === 0
-    )
-  }
+  const activeQuotes = quotes.filter(
+    (quote) => !signedOrExpiredPredicate(quote),
+  )
+  const hasActiveQuotes = activeQuotes.length > 0
 
   return (
     <Wrapper>
-      {hasNoActiveQuotes && (
+      {!hasActiveQuotes && (
         <Button onClick={() => setIsWip(!isWip)}>Create</Button>
       )}
-      {hasNoActiveQuotes && isWip && (
+      {!hasActiveQuotes && isWip && (
         <ActionsWrapper>
           <QuoteModification
             quote={null}
@@ -50,11 +49,9 @@ export const QuotesSubSection: React.FunctionComponent<{
         </ActionsWrapper>
       )}
       <Headline>Quotes</Headline>
-      {quotes
-        .filter((quote) => !signedOrExpiredPredicate(quote))
-        .map((quote) => (
-          <QuoteListItem key={quote.id} quote={quote} memberId={memberId} />
-        ))}
+      {activeQuotes.map((quote) => (
+        <QuoteListItem key={quote.id} quote={quote} memberId={memberId} />
+      ))}
 
       <Headline>Signed/Expired quotes</Headline>
       <Muted>
