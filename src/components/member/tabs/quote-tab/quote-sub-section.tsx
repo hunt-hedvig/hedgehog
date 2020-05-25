@@ -20,29 +20,30 @@ export const QuotesSubSection: React.FunctionComponent<{
 
   return (
     <Wrapper>
-      {quotes.length === 0 && (
-        <Button onClick={() => setIsWip(!isWip)}>Create</Button>
-      )}
-      {quotes.length === 0 && isWip && (
-        <ActionsWrapper>
-          <QuoteModification
-            quote={null}
-            memberId={memberId}
-            shouldCreateContract={true}
-            onWipChange={setIsWip}
-            onSubmitted={() => {
-              if (showNotification) {
-                showNotification({
-                  header: 'Saved',
-                  message: <>Quote saved</>,
-                  type: 'olive',
-                })
-              }
-              setIsWip(false)
-            }}
-          />
-        </ActionsWrapper>
-      )}
+      {quotes.filter((quote) => !signedOrExpiredPredicate(quote)).length ===
+        0 && <Button onClick={() => setIsWip(!isWip)}>Create</Button>}
+      {quotes.filter((quote) => !signedOrExpiredPredicate(quote)).length ===
+        0 &&
+        isWip && (
+          <ActionsWrapper>
+            <QuoteModification
+              quote={null}
+              memberId={memberId}
+              shouldCreateContract={true}
+              onWipChange={setIsWip}
+              onSubmitted={() => {
+                if (showNotification) {
+                  showNotification({
+                    header: 'Saved',
+                    message: <>Quote saved</>,
+                    type: 'olive',
+                  })
+                }
+                setIsWip(false)
+              }}
+            />
+          </ActionsWrapper>
+        )}
       <Headline>Quotes</Headline>
       {quotes
         .filter((quote) => !signedOrExpiredPredicate(quote))
