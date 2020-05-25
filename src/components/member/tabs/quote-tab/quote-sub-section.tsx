@@ -20,10 +20,10 @@ export const QuotesSubSection: React.FunctionComponent<{
 
   return (
     <Wrapper>
-      {quotes.length === 0 && (
+      {quotes.filter(signedOrExpiredPredicate).length === 0 && (
         <Button onClick={() => setIsWip(!isWip)}>Create</Button>
       )}
-      {quotes.length === 0 && isWip && (
+      {quotes.filter(signedOrExpiredPredicate).length === 0 && isWip && (
         <ActionsWrapper>
           <QuoteModification
             quote={null}
