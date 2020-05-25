@@ -18,32 +18,37 @@ export const QuotesSubSection: React.FunctionComponent<{
   })
   const [isWip, setIsWip] = React.useState(false)
 
+  const hasNoActiveQuotes = () => {
+    return (
+      quotes.filter((quote) => !signedOrExpiredPredicate(quote)).length === 0
+    )
+  }
+
   return (
     <Wrapper>
-      {quotes.filter((quote) => !signedOrExpiredPredicate(quote)).length ===
-        0 && <Button onClick={() => setIsWip(!isWip)}>Create</Button>}
-      {quotes.filter((quote) => !signedOrExpiredPredicate(quote)).length ===
-        0 &&
-        isWip && (
-          <ActionsWrapper>
-            <QuoteModification
-              quote={null}
-              memberId={memberId}
-              shouldCreateContract={true}
-              onWipChange={setIsWip}
-              onSubmitted={() => {
-                if (showNotification) {
-                  showNotification({
-                    header: 'Saved',
-                    message: <>Quote saved</>,
-                    type: 'olive',
-                  })
-                }
-                setIsWip(false)
-              }}
-            />
-          </ActionsWrapper>
-        )}
+      {hasNoActiveQuotes && (
+        <Button onClick={() => setIsWip(!isWip)}>Create</Button>
+      )}
+      {hasNoActiveQuotes && isWip && (
+        <ActionsWrapper>
+          <QuoteModification
+            quote={null}
+            memberId={memberId}
+            shouldCreateContract={true}
+            onWipChange={setIsWip}
+            onSubmitted={() => {
+              if (showNotification) {
+                showNotification({
+                  header: 'Saved',
+                  message: <>Quote saved</>,
+                  type: 'olive',
+                })
+              }
+              setIsWip(false)
+            }}
+          />
+        </ActionsWrapper>
+      )}
       <Headline>Quotes</Headline>
       {quotes
         .filter((quote) => !signedOrExpiredPredicate(quote))
