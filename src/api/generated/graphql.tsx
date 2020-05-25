@@ -1657,6 +1657,14 @@ export type AddAgreementFromQuoteMutation = { __typename?: 'MutationType' } & {
   addAgreementFromQuote: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
 
+export type AssignCampaignToPartnerPercentageDiscountMutationVariables = {
+  request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type AssignCampaignToPartnerPercentageDiscountMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerPercentageDiscount'>
+
 export type ChangeFromDateMutationVariables = {
   agreementId: Scalars['ID']
   request?: Maybe<ChangeFromDateInput>
@@ -2350,6 +2358,56 @@ export type AddAgreementFromQuoteMutationResult = ApolloReactCommon.MutationResu
 export type AddAgreementFromQuoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddAgreementFromQuoteMutation,
   AddAgreementFromQuoteMutationVariables
+>
+export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
+  mutation AssignCampaignToPartnerPercentageDiscount(
+    $request: AssignVoucherPercentageDiscount
+  ) {
+    assignCampaignToPartnerPercentageDiscount(request: $request)
+  }
+`
+export type AssignCampaignToPartnerPercentageDiscountMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerPercentageDiscountMutation,
+  AssignCampaignToPartnerPercentageDiscountMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerPercentageDiscountMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerPercentageDiscountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerPercentageDiscountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerPercentageDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerPercentageDiscountMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerPercentageDiscountMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >(AssignCampaignToPartnerPercentageDiscountDocument, baseOptions)
+}
+export type AssignCampaignToPartnerPercentageDiscountMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerPercentageDiscountMutation
+>
+export type AssignCampaignToPartnerPercentageDiscountMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerPercentageDiscountMutation
+>
+export type AssignCampaignToPartnerPercentageDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerPercentageDiscountMutation,
+  AssignCampaignToPartnerPercentageDiscountMutationVariables
 >
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {

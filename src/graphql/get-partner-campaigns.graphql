@@ -3,7 +3,9 @@ query FindPartnerCampaigns {
     id
     campaignCode
     partnerId
+#    partnerName
     validFrom
     validTo
+#    incentive
   }
 }
