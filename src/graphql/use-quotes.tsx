@@ -70,6 +70,8 @@ const latest = (a: Quote, b: Quote) =>
 export const signedOrExpiredPredicate = (quote) =>
   quote.state === 'EXPIRED' || quote.state === 'SIGNED'
 
+export const signedPredicate = (quote) => quote.state === 'SIGNED'
+
 export const useQuotes = (
   memberId: string,
 ): [ReadonlyArray<Quote>, boolean] => {

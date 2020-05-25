@@ -1,5 +1,5 @@
 import { Quote } from 'api/generated/graphql'
-import { signedOrExpiredPredicate } from 'graphql/use-quotes'
+import { signedOrExpiredPredicate, signedPredicate } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import styled from 'react-emotion'
@@ -21,14 +21,16 @@ export const QuotesSubSection: React.FunctionComponent<{
   const activeQuotes = quotes.filter(
     (quote) => !signedOrExpiredPredicate(quote),
   )
+  const signedQuotes = quotes.filter(signedPredicate)
   const hasActiveQuotes = activeQuotes.length > 0
+  const hasSignedQuotes = signedQuotes.length > 0
 
   return (
     <Wrapper>
-      {!hasActiveQuotes && (
+      {!hasActiveQuotes && !hasSignedQuotes && (
         <Button onClick={() => setIsWip(!isWip)}>Create</Button>
       )}
-      {!hasActiveQuotes && isWip && (
+      {!hasActiveQuotes && !hasSignedQuotes && isWip && (
         <ActionsWrapper>
           <QuoteModification
             quote={null}
