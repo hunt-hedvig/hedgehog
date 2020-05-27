@@ -95,6 +95,7 @@ export const Button = styled('button')<ButtonProps>(
     justifyContent: 'center',
     whiteSpace: 'nowrap',
     fontSize: buttonSizeMap[size].fontSize,
+    fontFamily: 'inherit',
     padding: buttonSizeMap[size].padding,
     width: fullWidth ? '100%' : 'auto',
     minWidth: halfWidth ? '50%' : 'auto',

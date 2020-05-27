@@ -65,7 +65,8 @@ injectGlobal`
   h3,
   h4,
   h5,
-  h6 {
+  h6,
+   .ui.header{
     font-family: ${fonts.FAVORIT}, sans-serif;
     font-kerning: none;
     font-weight: 400;
