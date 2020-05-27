@@ -1,4 +1,4 @@
-import { colorsV2 } from '@hedviginsurance/brand'
+import { colorsV3 } from '@hedviginsurance/brand'
 import styled from 'react-emotion'
 
 export const ButtonsGroup = styled('div')({
@@ -33,34 +33,34 @@ export const buttonColorMap: Record<
   { foreground: string; background: string; highlighted: string }
 > = {
   default: {
-    foreground: colorsV2.white,
-    background: colorsV2.darkgray,
-    highlighted: colorsV2.gray,
+    foreground: colorsV3.white,
+    background: colorsV3.gray900,
+    highlighted: colorsV3.gray700,
   },
   primary: {
-    foreground: colorsV2.white,
-    background: colorsV2.violet500,
-    highlighted: colorsV2.violet300,
+    foreground: colorsV3.white,
+    background: colorsV3.purple500,
+    highlighted: colorsV3.purple300,
   },
   secondary: {
-    foreground: colorsV2.white,
-    background: colorsV2.midnight500,
-    highlighted: colorsV2.midnight300,
+    foreground: colorsV3.white,
+    background: colorsV3.gray900,
+    highlighted: colorsV3.gray900,
   },
   success: {
-    foreground: colorsV2.white,
-    background: colorsV2.ocean500,
-    highlighted: colorsV2.ocean300,
+    foreground: colorsV3.gray900,
+    background: colorsV3.pistachio700,
+    highlighted: colorsV3.pistachio500,
   },
   danger: {
-    foreground: colorsV2.white,
-    background: colorsV2.coral500,
-    highlighted: colorsV2.coral300,
+    foreground: colorsV3.white,
+    background: colorsV3.orange,
+    highlighted: colorsV3.orange,
   },
   warning: {
     foreground: '#000',
-    background: colorsV2.sunflower500,
-    highlighted: colorsV2.sunflower300,
+    background: colorsV3.canary,
+    highlighted: colorsV3.canary,
   },
 }
 
@@ -99,9 +99,10 @@ export const Button = styled('button')<ButtonProps>(
     width: fullWidth ? '100%' : 'auto',
     minWidth: halfWidth ? '50%' : 'auto',
     background: basic ? 'transparent' : buttonColorMap[variation].background,
-    color: basic
-      ? buttonColorMap[variation].background
-      : buttonColorMap[variation].foreground,
+    color:
+      (basic
+        ? buttonColorMap[variation].background
+        : buttonColorMap[variation].foreground) + ' !important',
     border: `1px solid ${buttonColorMap[variation].background}`,
     boxShadow: 'none !important',
     borderRadius: 5,
@@ -113,9 +114,9 @@ export const Button = styled('button')<ButtonProps>(
       borderColor: buttonColorMap[variation].highlighted,
     },
     '&:disabled': {
-      background: colorsV2.semilightgray,
-      color: colorsV2.white,
-      borderColor: colorsV2.semilightgray,
+      background: colorsV3.gray500,
+      color: colorsV3.white,
+      borderColor: colorsV3.gray500,
     },
   }),
 )

@@ -24,20 +24,20 @@ const fadeIn = (max: number) =>
     to: { opacity: max, transform: 'translateY(0)' },
   })
 
-const Instructions = styled('div')({
+const Instructions = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   textAlign: 'center',
   code: {
-    background: 'rgba(0, 0, 0, .1)',
+    background: theme.backgroundTransparent,
     padding: '1px 2px',
     borderRadius: 1,
   },
   opacity: 0,
   animation: `${fadeIn(0.5)} 1000ms forwards`,
   animationDelay: '1000ms',
-})
+}))
 
 const ExtraInstruction = styled('div')({
   opacity: 0,
@@ -94,9 +94,8 @@ export const MembersSearch: React.FC<Props> = ({
           <Instructions>
             <h1>Search for members</h1>
             <div>
-              Search by <strong>member id</strong>,{' '}
-              <strong>personnummer</strong>, <strong>email</strong>,{' '}
-              <strong>phone</strong> or <strong>name</strong>
+              Search by <em>member id</em>, <em>personnummer</em>,{' '}
+              <em>email</em>, <em>phone</em> or <em>name</em>
             </div>
             <div>
               <code>%</code> is a wildcard character, it can be used to search
@@ -145,14 +144,14 @@ const SearchInput = styled(Input)({
     border: '1px solid ' + colorsV2.violet300,
   },
 })
-const SearchButton = styled(Button)({
+const SearchButton = styled(Button)(({ theme }) => ({
   '&&&': {
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
-    background: colorsV2.violet300,
+    background: theme.highlight,
     color: '#fff',
   },
-})
+}))
 
 const Search: React.FC<{
   onSubmit: (query: string, includeAll: boolean) => void

@@ -1,4 +1,4 @@
-import { colorsV2 } from '@hedviginsurance/brand'
+import { colorsV3 } from '@hedviginsurance/brand'
 import { Market } from 'api/generated/graphql'
 import { differenceInYears, parse } from 'date-fns'
 import React from 'react'
@@ -96,9 +96,9 @@ export const getMemberIdColor = (memberId: string) => {
   }
 
   if (isMemberIdEven(memberId)) {
-    return colorsV2.coral500
+    return colorsV3.orange
   }
-  return colorsV2.grass300
+  return colorsV3.pistachio700
 }
 
 export const getMemberGroup = (memberId: number) => {

@@ -26,10 +26,11 @@ const MessageBody = styled.div`
   word-wrap: break-word;
   z-index: 2000;
   position: relative;
-  border: 1px solid #d4d4d5;
-  color: #4b4b4b;
+  border: 1px solid ${({ theme }) => theme.border};
+  color: ${({ theme }) => theme.foreground};
   line-height: 1.4em;
-  background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
+  background: ${(props) =>
+    props.left ? props.theme.highlight : props.theme.backgroundLight};
   border-radius: 0.3rem;
   padding: 0.8em 1em;
   box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
@@ -40,11 +41,13 @@ const MessageBody = styled.div`
     content: '';
     width: 0.7em;
     height: 0.7em;
-    background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
+    background: ${(props) =>
+      props.left ? props.theme.highlight : props.theme.backgroundLight};
+
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     z-index: 2;
-    box-shadow: 1px 1px 0 0 #bababc;
+    box-shadow: 1px 1px 0 0 ${({ theme }) => theme.border};
     bottom: -0.3em;
     left: 1em;
     top: auto;

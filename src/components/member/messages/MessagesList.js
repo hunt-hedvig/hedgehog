@@ -4,11 +4,13 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 
-const MessagesListContainer = styled('div')({
+const MessagesListContainer = styled('div')(({ theme }) => ({
+  flex: 1,
   boxSizing: 'border-box',
   overflowY: 'auto',
   padding: '20px 20px 20px',
-})
+  background: theme.background,
+}))
 
 const EmptyList = styled('h3')({
   textAlign: 'center',

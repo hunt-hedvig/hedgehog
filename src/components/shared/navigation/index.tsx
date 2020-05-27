@@ -5,5 +5,5 @@ const menuIsHidden = (path) => path.startsWith('/login')
 
 export const Navigation = ({ history, store }) =>
   !menuIsHidden(history.location.pathname) ? (
-    <VerticalMenu store={store} />
+    <VerticalMenu store={store} history={history} />
   ) : null

@@ -1,180 +1,275 @@
-import { colors } from '@hedviginsurance/brand'
-import * as React from 'react'
+import { colorsV3 } from '@hedviginsurance/brand'
+import React, { useContext, useState } from 'react'
+import {
+  ChevronLeft,
+  House,
+  Inbox,
+  ListCheck,
+  Search,
+  ShieldShaded,
+  Tools,
+} from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
+import { DarkmodeContext } from 'utils/darkmode-context'
 import { Logo } from './elements'
 
-const Wrapper = styled('div')(({ collapsed }: { collapsed: boolean }) => ({
-  flex: 1,
-  background: colors.OFF_BLACK_DARK,
-  color: '#fff',
-  overflowX: 'hidden',
-  transition: 'max-width 300ms',
-  maxWidth: collapsed ? 16 * 3 : 250,
-  minWidth: 16 * 3,
-}))
+const Wrapper = styled('div')<{ collapsed: boolean }>(
+  ({ collapsed, theme }) => ({
+    display: 'inline-block',
+    position: 'relative',
+    flex: 1,
+    background: colorsV3.gray900,
+    color: colorsV3.white,
+    transition: 'max-width 300ms',
+    maxWidth: collapsed ? '6rem' : 300,
+    borderRight: theme.type === 'dark' ? '1px solid ' + theme.border : '',
+
+    [Menu as any]: {
+      padding: collapsed ? '0 1rem' : '0 2rem',
+    },
+    [BottomSection as any]: {
+      padding: collapsed ? '0 1rem' : '0 2rem',
+    },
+    [DarkmodeSwitch as any]: {
+      display: collapsed ? 'none' : 'block',
+    },
+    [MenuItem as any]: {
+      padding: collapsed ? '1rem' : undefined,
+      width: collapsed ? undefined : '100%',
+      justifyContent: collapsed ? 'center' : 'flex-start',
+
+      svg: {
+        width: collapsed ? 24 : 18,
+        height: collapsed ? 24 : 18,
+        marginRight: collapsed ? 0 : '1rem',
+      },
+    },
+    [MenuText as any]: {
+      width: collapsed ? 0 : 'auto',
+    },
+  }),
+)
 const InnerWrapper = styled('div')({
-  position: 'sticky',
+  position: 'absolute',
+  display: 'flex',
+  flexDirection: 'column',
   top: 0,
+  height: '100vh',
+  width: '100%',
 })
 
 const Header = styled('div')({
   position: 'relative',
-  paddingRight: 32,
 })
 
-const CollapseToggle = styled('button')(
-  ({ collapsed }: { collapsed?: boolean }) => ({
-    background: 'transparent',
-    height: 30 + 16 * 2,
+const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
+  ({ collapsed, theme }) => ({
+    background: colorsV3.gray900,
+    height: 'calc(0.75rem + 1.5rem)',
+    width: '1.5rem',
     position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    right: 16,
-    fontSize: 20,
+    top: '50vh',
+    transform: 'translateY(-50%) translateX(100%)',
+    right: 0,
     color: '#fff',
-    border: 0,
-    '> *': {
+    borderTopRightRadius: '0.5rem',
+    borderBottomRightRadius: '0.5rem',
+    padding: 0,
+    border: theme.type === 'dark' ? '1px solid ' + theme.border : 0,
+    borderLeftColor: 'transparent',
+
+    '&& > *': {
       transition: 'transform 200ms',
       transform: `rotate(${collapsed ? 180 : 0}deg)`,
+      margin: 0,
+      width: '0.75rem',
+      height: '0.75rem',
     },
   }),
 )
 
-const HeaderLogo = styled(Logo)(({ collapsed }: { collapsed?: boolean }) => ({
-  maxWidth: 100,
-  margin: '32px 16px',
-  opacity: collapsed ? 0 : 1,
-  transition: 'opacity 200ms',
+const HeaderLogo = styled(Logo)<{ collapsed: boolean }>(({ collapsed }) => ({
+  width: '3rem !important',
+  margin: '2rem',
+  marginLeft: collapsed ? '1.5rem' : '2rem',
+  transition: 'margin 200ms',
 }))
+
+const MenuGroup = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  paddingBottom: '4rem',
+})
+
+const MenuItem = styled(NavLink)({
+  display: 'inline-flex',
+  alignItems: 'center',
+  padding: '0.5rem 1rem',
+  margin: '0.5rem 0',
+  color: '#fff !important',
+  borderRadius: '0.5rem',
+  transition: 'background 200ms, font-size 300ms, width 300ms',
+
+  '&:hover, &:focus, &.active': {
+    color: colorsV3.gray100 + ' !important',
+    textDecoration: 'none',
+    background: colorsV3.gray700,
+  },
+  '&:hover:not(.active), &:focus:not(.active)': {
+    background: colorsV3.gray800,
+  },
+
+  svg: {
+    fill: colorsV3.gray100,
+    marginRight: 16,
+    textAlign: 'center',
+    transition: 'width 300ms, weight 300ms, margin 300ms',
+  },
+})
 
 const Menu = styled('div')({
   display: 'flex',
   flexDirection: 'column',
+  flex: 1,
 })
 
-const MenuItem = styled(NavLink)({
-  display: 'flex',
-  alignItems: 'center',
-  padding: 16,
-  borderBottom: '1px solid #fff',
-  borderTop: '1px solid #fff',
-  marginBottom: -1,
-  color: '#fff',
-  fontSize: 18,
-
-  '&:hover, &:focus, &.active': {
-    background: colors.DARK_PURPLE,
-    color: '#fff',
-    textDecoration: 'none',
-  },
-})
-
-const MenuIcon = styled('i')({
-  color: '#fff',
-  fontSize: 16,
-  marginRight: 8,
-  width: 16,
-  textAlign: 'center',
-})
-
-const MenuText = styled('div')(({ collapsed }: { collapsed?: boolean }) => ({
-  maxWidth: collapsed ? 0 : '100%',
-  opacity: collapsed ? 0 : 1,
-  transition: 'max-width: 200ms, opacity 200ms',
-  overflow: 'hidden',
+const MenuText = styled('div')({
+  transition: 'width 200ms',
   whiteSpace: 'nowrap',
-}))
+  overflowX: 'hidden',
+})
 
-export class VerticalMenuComponent extends React.Component<
-  any,
-  { isCollapsed: boolean }
-> {
-  public state = {
-    isCollapsed: localStorage.getItem('hedvig:menu:collapse') === 'true',
+const BottomSection = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  padding: '0 2rem 2rem 2rem',
+  opacity: 0.5,
+})
+
+const DarkmodeSwitch = styled('label')(({ theme }) => ({
+  display: 'inline-block',
+  textAlign: 'center',
+  marginTop: '1rem',
+  padding: '0.5rem',
+  fontSize: '0.8rem',
+  borderRadius: 8,
+  color: theme.background,
+  backgroundColor: theme.foreground,
+  border: theme.type === 'dark' ? '1px solid transparent' : '1px solid #fff',
+  cursor: 'pointer',
+}))
+const DarkmodeInnerSwitch = styled('input')({
+  width: 0,
+  height: 0,
+  visibility: 'hidden',
+})
+
+export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
+  authLogOut: authLogOut_,
+  loginState,
+  history,
+}) => {
+  const [isCollapsed, setCollapsed] = useState(
+    () => localStorage.getItem('hedvig:menu:collapse') === 'true',
+  )
+  const [updateCount, setUpdateCount] = useState(0)
+  const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
+
+  const toggleOpen = () => {
+    setCollapsed(!isCollapsed)
+    localStorage.setItem('hedvig:menu:collapse', JSON.stringify(!isCollapsed))
+  }
+  const toggleDarkmode = () => {
+    setIsDarkmode(!isDarkmode)
   }
 
-  public render() {
-    return (
-      <Wrapper collapsed={this.state.isCollapsed}>
-        <InnerWrapper>
-          <Header>
-            <HeaderLogo collapsed={this.state.isCollapsed} />
+  React.useEffect(() => {
+    history.listen(() => {
+      setUpdateCount(updateCount + 1)
+    })
+  }, [])
 
-            <CollapseToggle
-              onClick={this.toggleOpen}
-              collapsed={this.state.isCollapsed}
-            >
-              <i className="fa fa-chevron-left" />
-            </CollapseToggle>
-          </Header>
+  return (
+    <Wrapper collapsed={isCollapsed}>
+      <CollapseToggle onClick={toggleOpen} collapsed={isCollapsed}>
+        <ChevronLeft />
+      </CollapseToggle>
 
-          <Menu>
+      <InnerWrapper>
+        <Header>
+          <HeaderLogo collapsed={isCollapsed} />
+        </Header>
+
+        <Menu>
+          <MenuGroup>
             <MenuItem to="/dashboard">
-              <MenuIcon className="fa fa-skull-crossbones" />
-              <MenuText collapsed={this.state.isCollapsed}>Dashborad</MenuText>
+              <House />
+              <MenuText>Dashborad</MenuText>
             </MenuItem>
+          </MenuGroup>
+          <MenuGroup>
             <MenuItem
               to="/members"
               isActive={(_match, location) =>
                 location.pathname.startsWith('/members')
               }
             >
-              <MenuIcon className="fa fa-users" />
-              <MenuText collapsed={this.state.isCollapsed}>Members</MenuText>
+              <Search />
+              <MenuText>Member Search</MenuText>
             </MenuItem>
+          </MenuGroup>
+          <MenuGroup>
             <MenuItem to="/questions">
-              <MenuIcon className="fa fa-question" />
-              <MenuText collapsed={this.state.isCollapsed}>Questions</MenuText>
+              <Inbox />
+              <MenuText>Questions</MenuText>
             </MenuItem>
             <MenuItem to="/claims">
-              <MenuIcon className="fa fa-exclamation" />
-              <MenuText collapsed={this.state.isCollapsed}>Claims</MenuText>
+              <ShieldShaded />
+              <MenuText>Claims</MenuText>
             </MenuItem>
+          </MenuGroup>
+          <MenuGroup>
             <MenuItem to="/taskmanager">
-              <MenuIcon className="fa fa-clipboard-check" />
-              <MenuText collapsed={this.state.isCollapsed}>Tickets</MenuText>
+              <ListCheck />
+              <MenuText>Tickets</MenuText>
             </MenuItem>
             <MenuItem to="/tools">
-              <MenuIcon className="fa fa-toolbox" />
-              <MenuText collapsed={this.state.isCollapsed}>Tools</MenuText>
+              <Tools />
+              <MenuText>Tools</MenuText>
             </MenuItem>
-            <MenuItem
-              onClick={(e) => {
-                e.preventDefault()
-                console.log(this.props)
-                this.props.authLogOut()
-              }}
-              to="#"
-            >
-              <MenuIcon className="fa fa-sign-out-alt" />
-              <MenuText collapsed={this.state.isCollapsed}>
-                {this.props.loginState === AuthState.LOGOUT_LOADING
-                  ? '...'
-                  : 'Log out'}
-              </MenuText>
-            </MenuItem>
-          </Menu>
-        </InnerWrapper>
-      </Wrapper>
-    )
-  }
+          </MenuGroup>
+        </Menu>
 
-  private toggleOpen = () => {
-    this.setState(
-      ({ isCollapsed }) => ({ isCollapsed: !isCollapsed }),
-      () => {
-        localStorage.setItem(
-          'hedvig:menu:collapse',
-          JSON.stringify(this.state.isCollapsed),
-        )
-      },
-    )
-  }
+        <BottomSection>
+          <DarkmodeSwitch>
+            <DarkmodeInnerSwitch
+              type="checkbox"
+              onChange={() => toggleDarkmode()}
+            />
+            {isDarkmode ? 'Regular H.OPE.' : 'Darkmode 👽'}
+          </DarkmodeSwitch>
+          <MenuItem
+            onClick={(e) => {
+              e.preventDefault()
+              authLogOut_()
+            }}
+            to="#"
+          >
+            <MenuText>
+              {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Log out'}
+            </MenuText>
+          </MenuItem>
+        </BottomSection>
+      </InnerWrapper>
+    </Wrapper>
+  )
 }
 
 export const VerticalMenu = connect(
@@ -185,4 +280,6 @@ export const VerticalMenu = connect(
     authLogOut,
     ...actions.clientActions,
   },
+  null,
+  { pure: false },
 )(VerticalMenuComponent)

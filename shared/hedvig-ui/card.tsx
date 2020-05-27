@@ -1,4 +1,4 @@
-import { colorsV2 } from '@hedviginsurance/brand'
+import { colorsV3 } from '@hedviginsurance/brand'
 import styled from 'react-emotion'
 
 export const CardsWrapper = styled('div')`
@@ -21,6 +21,7 @@ export const Card = styled('div')<CardProps>`
   align-items: center;
   flex-direction: column;
   flex-grow: 1;
-  background-color: ${colorsV2.white};
-  border: 1px solid ${colorsV2.lightgray};
+  color: ${({ theme }) => theme.foreground ?? colorsV3.gray900};
+  background-color: ${({ theme }) => theme.background ?? colorsV3.white};
+  border: 1px solid ${({ theme }) => theme.border ?? colorsV3.gray300};
 `
