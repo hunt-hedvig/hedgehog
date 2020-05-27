@@ -14,6 +14,7 @@ import {
   MembersSearchResult,
 } from 'store/storeTypes'
 import { MemberAge } from 'utils/member'
+import { MemberSuggestions } from './member-suggestions'
 
 export interface Props {
   searchMemberRequest: (requestArgs: Partial<MemberSearchFilter>) => void
@@ -41,8 +42,24 @@ const Instructions = styled('div')(({ theme }) => ({
   },
   opacity: 0,
   animation: `${fadeIn(0.3)} 1000ms forwards`,
-  animationDelay: '1000ms',
+  animationDelay: '500ms',
 }))
+
+const MemberSuggestionsWrapper = styled(Instructions)({
+  paddingTop: '25vh',
+  width: '100%',
+  maxWidth: '50rem',
+  animation: `${fadeIn(1)} 1000ms forwards`,
+  animationDelay: '750ms',
+})
+
+const NoMembers = styled(Instructions)({
+  width: '100%',
+  flex: 1,
+  alignItems: 'center',
+  fontSize: '1.5rem',
+  paddingTop: '25vh',
+})
 
 const ExtraInstruction = styled('div')({
   opacity: 0,
@@ -101,35 +118,40 @@ export const MembersSearch: React.FC<Props> = ({
         </ListWrapper>
       )}
       {searchResult.items.length === 0 && (!hasDispatchedSearch || !query) && (
-        <Instructions>
-          <h1>Search for members</h1>
-          <div>
-            Search by <em>member id</em>, <em>personnummer</em>, <em>email</em>,{' '}
-            <em>phone</em> or <em>name</em>
-          </div>
-          <div>
-            <br />
-            <code>%</code> is a wildcard character, it can be used to search for
-            anything
-          </div>
-          <div>
-            Example: <code>He%g</code> will match both <code>Hedvig</code> and{' '}
-            <code>Hedgehog</code>
-          </div>
-          {query && <ExtraInstruction>Press enter to search</ExtraInstruction>}
-        </Instructions>
+        <>
+          <Instructions>
+            <h1>Search for members</h1>
+            <div>
+              Search by <em>member id</em>, <em>personnummer</em>,{' '}
+              <em>email</em>, <em>phone</em> or <em>name</em>
+            </div>
+            <div>
+              <br />
+              <code>%</code> is a wildcard character, it can be used to search
+              for anything
+            </div>
+            <div>
+              Example: <code>He%g</code> will match both <code>Hedvig</code> and{' '}
+              <code>Hedgehog</code>
+            </div>
+            {query && (
+              <ExtraInstruction>Press enter to search</ExtraInstruction>
+            )}
+          </Instructions>
+
+          <MemberSuggestionsWrapper>
+            <MemberSuggestions />
+          </MemberSuggestionsWrapper>
+        </>
       )}
 
       {searchResult.items.length === 0 &&
         hasDispatchedSearch &&
         query &&
         !searchLoading && (
-          <Instructions>
-            <div>D*shborad 🤬!</div>
-            <div>
-              <strong>No members found</strong>
-            </div>
-          </Instructions>
+          <NoMembers>
+            <div>D*shborad! No members found</div>
+          </NoMembers>
         )}
     </>
   )

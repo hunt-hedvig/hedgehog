@@ -1579,10 +1579,10 @@
     tslib "1.10.0"
     valid-url "1.0.9"
 
-"@hedviginsurance/brand@^3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@hedviginsurance/brand/-/brand-3.0.6.tgz#3d2e963207686d78863702e7d7c2f670dcf66971"
-  integrity sha512-GAgkWY5vdRqVuKt5BZjiFCTEg1gNemAahuW6Zi04RYbqS9Ii4QfBNTqJoCBhS5fP1ATyFNHE6RMB2/Cx4TKHVA==
+"@hedviginsurance/brand@^3.0.7":
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/@hedviginsurance/brand/-/brand-3.0.7.tgz#5d27831b41a7edfe678190f57e7e9b790842fd50"
+  integrity sha512-RJAzXXqYGpsz6DK9St9Zb7Y4DdhBXF9rBx4ZINtxiAJrFGiBry7Hfnq0RbiBnR/USJR0P5GQYKe4VgLa98uAYg==
 
 "@icons/material@^0.2.4":
   version "0.2.4"

@@ -23,6 +23,7 @@ import {
   lightUiTheme,
   SemanticOverrides,
 } from './themes'
+import { MemberHistoryProvider } from './utils/member-history'
 
 const store = Store.configureStore()
 
@@ -99,70 +100,77 @@ class App extends React.Component {
               theme={this.state.isDarkmode ? darkTheme : lightTheme}
             >
               <Provider store={store}>
-                <Router history={history}>
-                  <Layout>
-                    <Navigation history={history} store={store} />
-                    <Main dark={history.location.pathname.startsWith('/login')}>
-                      <Breadcrumbs history={history} state={store.getState()} />
-                      <Switch>
-                        <Route
-                          path="/login"
-                          exact
-                          component={Routes.LoginPageRoute}
+                <MemberHistoryProvider>
+                  <Router history={history}>
+                    <Layout>
+                      <Navigation history={history} store={store} />
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
+                        <Breadcrumbs
+                          history={history}
+                          state={store.getState()}
                         />
-                        <Routes.PrivateRoute
-                          path="/dashboard"
-                          store={store}
-                          component={Routes.DashboardPageRoute}
-                        />
-                        <Routes.PrivateRoute
-                          path="/questions"
-                          store={store}
-                          component={Routes.QuestionsPageRoute}
-                        />
-                        <Route
-                          path="/claims"
-                          render={(routeProps) => (
-                            <Routes.ClaimsPageRoute
-                              {...routeProps}
-                              store={store}
-                            />
-                          )}
-                        />
-                        <Route
-                          path="/members"
-                          render={(routeProps) => (
-                            <Routes.MembersPageRoute
-                              {...routeProps}
-                              store={store}
-                            />
-                          )}
-                        />
-                        <Routes.PrivateRoute
-                          path="/tools"
-                          store={store}
-                          component={Routes.ToolsPageRoute}
-                        />
-                        <Routes.PrivateRoute
-                          path="/taskmanager"
-                          store={store}
-                          component={Routes.TaskManagerPageRoute}
-                        />
-                        <Route
-                          path="/ticket_history/:id"
-                          render={(routeProps) => (
-                            <Routes.TicketHistoryPageRoute
-                              {...routeProps}
-                              store={store}
-                            />
-                          )}
-                        />
-                        <Redirect from="*" to="/dashboard" />
-                      </Switch>
-                      <Notifications />
-                    </Main>
-                  </Layout>
-                </Router>
+                        <Switch>
+                          <Route
+                            path="/login"
+                            exact
+                            component={Routes.LoginPageRoute}
+                          />
+                          <Routes.PrivateRoute
+                            path="/dashboard"
+                            store={store}
+                            component={Routes.DashboardPageRoute}
+                          />
+                          <Routes.PrivateRoute
+                            path="/questions"
+                            store={store}
+                            component={Routes.QuestionsPageRoute}
+                          />
+                          <Route
+                            path="/claims"
+                            render={(routeProps) => (
+                              <Routes.ClaimsPageRoute
+                                {...routeProps}
+                                store={store}
+                              />
+                            )}
+                          />
+                          <Route
+                            path="/members"
+                            render={(routeProps) => (
+                              <Routes.MembersPageRoute
+                                {...routeProps}
+                                store={store}
+                              />
+                            )}
+                          />
+                          <Routes.PrivateRoute
+                            path="/tools"
+                            store={store}
+                            component={Routes.ToolsPageRoute}
+                          />
+                          <Routes.PrivateRoute
+                            path="/taskmanager"
+                            store={store}
+                            component={Routes.TaskManagerPageRoute}
+                          />
+                          <Route
+                            path="/ticket_history/:id"
+                            render={(routeProps) => (
+                              <Routes.TicketHistoryPageRoute
+                                {...routeProps}
+                                store={store}
+                              />
+                            )}
+                          />
+                          <Redirect from="*" to="/dashboard" />
+                        </Switch>
+                        <Notifications />
+                      </Main>
+                    </Layout>
+                  </Router>
+                </MemberHistoryProvider>
               </Provider>
             </ThemeProvider>
           </MuiPickersUtilsProvider>

@@ -25,12 +25,11 @@ const Wrapper = styled('div')<{ collapsed: boolean }>(
     display: 'inline-block',
     position: 'relative',
     flex: 1,
-    background: colorsV3.gray900,
+    background: theme.type === 'dark' ? colorsV3.gray800 : colorsV3.gray900,
     color: colorsV3.white,
     transition: 'max-width 300ms',
     maxWidth: collapsed ? '6rem' : 300,
     minWidth: '6rem',
-    borderRight: theme.type === 'dark' ? '1px solid ' + theme.border : '',
 
     [Menu as any]: {
       padding: collapsed ? '0 1rem' : '0 2rem',
@@ -72,7 +71,7 @@ const Header = styled('div')({
 
 const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
   ({ collapsed, theme }) => ({
-    background: colorsV3.gray900,
+    background: theme.type === 'dark' ? colorsV3.gray800 : colorsV3.gray900,
     height: 'calc(0.75rem + 1.5rem)',
     width: '1.5rem',
     position: 'absolute',
@@ -83,7 +82,7 @@ const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
     borderTopRightRadius: '0.5rem',
     borderBottomRightRadius: '0.5rem',
     padding: 0,
-    border: theme.type === 'dark' ? '1px solid ' + theme.border : 0,
+    border: 0,
     borderLeftColor: 'transparent',
 
     '&& > *': {
@@ -110,7 +109,7 @@ const MenuGroup = styled('div')({
   paddingBottom: '4rem',
 })
 
-const MenuItem = styled(NavLink)({
+const MenuItem = styled(NavLink)(({ theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   padding: '0.5rem 1rem',
@@ -122,10 +121,10 @@ const MenuItem = styled(NavLink)({
   '&:hover, &:focus, &.active': {
     color: colorsV3.gray100 + ' !important',
     textDecoration: 'none',
-    background: colorsV3.gray700,
+    background: theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray700,
   },
   '&:hover:not(.active), &:focus:not(.active)': {
-    background: colorsV3.gray800,
+    background: colorsV3.gray900,
   },
 
   svg: {
@@ -135,7 +134,7 @@ const MenuItem = styled(NavLink)({
     transition: 'width 300ms, weight 300ms, margin 300ms',
     flexShrink: 0,
   },
-})
+}))
 
 const Menu = styled('div')({
   display: 'flex',

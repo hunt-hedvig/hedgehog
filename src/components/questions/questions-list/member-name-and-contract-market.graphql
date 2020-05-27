@@ -1,5 +1,6 @@
 query MemberNameAndContractMarketInfo($memberId: ID!) {
   member(id: $memberId) {
+    memberId
     firstName
     lastName
     contractMarketInfo {

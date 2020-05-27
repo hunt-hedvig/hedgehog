@@ -7,6 +7,8 @@ import { getMemberGroup, getMemberIdColor, MemberAge } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatPane from './tabs/ChatPane'
 import { MemberFlag } from './shared/member-flag'
+import { MemberHistoryContext } from '../../utils/member-history'
+import { Mount } from 'react-lifecycle-components/dist'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -72,37 +74,45 @@ export default class Member extends React.Component {
     const panes = memberPagePanes(this.props, this.addMessageHandler)
 
     return (
-      <MemberPageWrapper>
-        <MemberPageContainer>
-          <Header size="huge">
-            <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
-            {this.getMemberPageTitle(messages.member)}
-            <MemberAge
-              birthDateString={messages.member?.birthDate}
-              gender={messages.member?.gender}
-            />
-            {messages.member && (
-              <>
-                <Flag>
-                  <MemberFlag memberId={messages.member.memberId} />
-                </Flag>
-                <Badge memberId={messages.member.memberId}>
-                  {getMemberGroup(messages.member.memberId)}
-                </Badge>
-              </>
-            )}
-          </Header>
-          {this.props.insurance.requesting || (
-            <Tab
-              style={{ height: '100%' }}
-              panes={panes}
-              renderActiveOnly={true}
-              defaultActiveIndex={4}
-            />
-          )}
-        </MemberPageContainer>
-        <ChatPane {...this.props} />
-      </MemberPageWrapper>
+      <MemberHistoryContext.Consumer>
+        {({ pushToMemberHistory }) => (
+          <Mount
+            on={() => pushToMemberHistory(this.props.match.params.memberId)}
+          >
+            <MemberPageWrapper>
+              <MemberPageContainer>
+                <Header size="huge">
+                  <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
+                  {this.getMemberPageTitle(messages.member)}
+                  {' ('}
+                  <MemberAge
+                    birthDateString={messages.member?.birthDate}
+                  />){' '}
+                  {messages.member && (
+                    <>
+                      <Flag>
+                        <MemberFlag memberId={messages.member.memberId} />
+                      </Flag>
+                      <Badge memberId={messages.member.memberId}>
+                        {getMemberGroup(messages.member.memberId)}
+                      </Badge>
+                    </>
+                  )}
+                </Header>
+                {this.props.insurance.requesting || (
+                  <Tab
+                    style={{ height: '100%' }}
+                    panes={panes}
+                    renderActiveOnly={true}
+                    defaultActiveIndex={4}
+                  />
+                )}
+              </MemberPageContainer>
+              <ChatPane {...this.props} />
+            </MemberPageWrapper>
+          </Mount>
+        )}
+      </MemberHistoryContext.Consumer>
     )
   }
 
