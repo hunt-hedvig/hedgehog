@@ -1,16 +1,19 @@
-import { colorsV2 } from '@hedviginsurance/brand/dist'
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
-import * as React from 'react'
+import { Button } from 'hedvig-ui/button'
+import { Checkbox } from 'hedvig-ui/checkbox'
+import { Input } from 'hedvig-ui/input'
+import { match } from 'matchly'
+import React, { useEffect } from 'react'
+import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import styled, { keyframes } from 'react-emotion'
-import { Mount } from 'react-lifecycle-components'
 import { Link } from 'react-router-dom'
-import { Button, Checkbox, Input, Label, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import {
   MemberSearchFilter,
   MemberSearchResultItem,
   MembersSearchResult,
 } from 'store/storeTypes'
-import { MemberEmoji } from 'utils/member'
+import { MemberAge } from 'utils/member'
 
 export interface Props {
   searchMemberRequest: (requestArgs: Partial<MemberSearchFilter>) => void
@@ -28,14 +31,16 @@ const Instructions = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  textAlign: 'center',
+  textAlign: 'left',
+  paddingLeft: '1rem',
+  paddingTop: '2rem',
   code: {
     background: theme.backgroundTransparent,
     padding: '1px 2px',
     borderRadius: 1,
   },
   opacity: 0,
-  animation: `${fadeIn(0.5)} 1000ms forwards`,
+  animation: `${fadeIn(0.3)} 1000ms forwards`,
   animationDelay: '1000ms',
 }))
 
@@ -43,6 +48,10 @@ const ExtraInstruction = styled('div')({
   opacity: 0,
   animation: `${fadeIn(1)} 1000ms forwards`,
   animationDelay: '1000ms',
+})
+
+const ListWrapper = styled('div')({
+  paddingLeft: '1rem',
 })
 
 export const MembersSearch: React.FC<Props> = ({
@@ -54,30 +63,30 @@ export const MembersSearch: React.FC<Props> = ({
   const [includeAll, setIncludeAll] = React.useState(false)
   const [hasDispatchedSearch, setHasDispatchedSearch] = React.useState(false)
 
+  useEffect(() => {
+    if (searchResult.items.length === 0) {
+      searchMemberRequest({})
+    }
+  }, [])
+
   return (
-    <Mount
-      on={() => {
-        if (searchResult.items.length === 0) {
-          searchMemberRequest({})
-        }
-      }}
-    >
-      <>
-        <Search
-          onSubmit={(submittedQuery, submittedIncludeAll) => {
-            searchMemberRequest({
-              query: submittedQuery,
-              includeAll: submittedIncludeAll,
-            })
-            setHasDispatchedSearch(true)
-          }}
-          loading={searchLoading}
-          query={query}
-          setQuery={setQuery}
-          includeAll={includeAll}
-          setIncludeAll={setIncludeAll}
-        />
-        {searchResult.items.length > 0 && (
+    <>
+      <Search
+        onSubmit={(submittedQuery, submittedIncludeAll) => {
+          searchMemberRequest({
+            query: submittedQuery,
+            includeAll: submittedIncludeAll,
+          })
+          setHasDispatchedSearch(true)
+        }}
+        loading={searchLoading}
+        query={query}
+        setQuery={setQuery}
+        includeAll={includeAll}
+        setIncludeAll={setIncludeAll}
+      />
+      {searchResult.items.length > 0 && (
+        <ListWrapper>
           <BackendPaginatorList<MemberSearchResultItem>
             currentPage={searchResult.page}
             totalPages={searchResult.totalPages}
@@ -89,68 +98,80 @@ export const MembersSearch: React.FC<Props> = ({
             isSortable={false}
             tableHeader={<ListHeader />}
           />
-        )}
-        {searchResult.items.length === 0 && (!hasDispatchedSearch || !query) && (
+        </ListWrapper>
+      )}
+      {searchResult.items.length === 0 && (!hasDispatchedSearch || !query) && (
+        <Instructions>
+          <h1>Search for members</h1>
+          <div>
+            Search by <em>member id</em>, <em>personnummer</em>, <em>email</em>,{' '}
+            <em>phone</em> or <em>name</em>
+          </div>
+          <div>
+            <br />
+            <code>%</code> is a wildcard character, it can be used to search for
+            anything
+          </div>
+          <div>
+            Example: <code>He%g</code> will match both <code>Hedvig</code> and{' '}
+            <code>Hedgehog</code>
+          </div>
+          {query && <ExtraInstruction>Press enter to search</ExtraInstruction>}
+        </Instructions>
+      )}
+
+      {searchResult.items.length === 0 &&
+        hasDispatchedSearch &&
+        query &&
+        !searchLoading && (
           <Instructions>
-            <h1>Search for members</h1>
+            <div>D*shborad 🤬!</div>
             <div>
-              Search by <em>member id</em>, <em>personnummer</em>,{' '}
-              <em>email</em>, <em>phone</em> or <em>name</em>
+              <strong>No members found</strong>
             </div>
-            <div>
-              <code>%</code> is a wildcard character, it can be used to search
-              for anything
-            </div>
-            <div>
-              Example: <code>He%g</code> will match both <code>Hedvig</code> and{' '}
-              <code>Hedgehog</code>
-            </div>
-            {query && (
-              <ExtraInstruction>Press enter to search</ExtraInstruction>
-            )}
           </Instructions>
         )}
-
-        {searchResult.items.length === 0 &&
-          hasDispatchedSearch &&
-          query &&
-          !searchLoading && (
-            <Instructions>
-              <div>D*shborad 🤬!</div>
-              <div>
-                <strong>No members found</strong>
-              </div>
-            </Instructions>
-          )}
-      </>
-    </Mount>
+    </>
   )
 }
 
-const Group = styled('div')({
+const Group = styled('div')<{ pushLeft?: boolean }>(({ pushLeft }) => ({
   paddingBottom: '1rem',
-})
+  paddingLeft: pushLeft ? '1rem' : 0,
+}))
 const SearchInputGroup = styled('div')({
   display: 'flex',
+  position: 'relative',
+  fontSize: '1rem',
+  maxWidth: '40rem',
 })
+const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
+  ({ muted, theme }) => ({
+    position: 'absolute',
+    top: '50%',
+    left: '1rem',
+    transform: 'translateY(-50%)',
+    zIndex: 1,
+    fill: muted ? theme.mutedText : undefined,
+    transition: 'fill 300ms',
+  }),
+)
+
 const SearchInput = styled(Input)({
-  '&& input, &&': {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    width: '100%',
-    border: 0,
+  marginRight: '1rem',
+
+  '&&': {
+    width: 'calc(100% - 1rem)',
   },
+
   '&& input': {
-    border: '1px solid ' + colorsV2.violet300,
+    borderRadius: '0.5rem',
+    paddingLeft: '3rem',
   },
 })
-const SearchButton = styled(Button)(({ theme }) => ({
-  '&&&': {
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    background: theme.highlight,
-    color: '#fff',
-  },
+const SearchButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
+  opacity: visible ? 1 : 0,
+  transition: 'opacity 400ms',
 }))
 
 const Search: React.FC<{
@@ -169,12 +190,8 @@ const Search: React.FC<{
       }}
     >
       <Group>
-        <div>
-          <Label htmlFor="query" size="big">
-            Query
-          </Label>
-        </div>
         <SearchInputGroup>
+          <SearchIcon muted={!query} />
           <SearchInput
             onChange={(_, { value }) => setQuery(value)}
             placeholder="Looking for someone...?"
@@ -184,13 +201,20 @@ const Search: React.FC<{
             size="big"
             type="search"
             autoFocus
+            muted={!query}
           />
-          <SearchButton type="submit" disabled={loading} size="big">
+          <SearchButton
+            type="submit"
+            disabled={loading}
+            variation="primary"
+            size="large"
+            visible={Boolean(query)}
+          >
             Search
           </SearchButton>
         </SearchInputGroup>
       </Group>
-      <Group>
+      <Group pushLeft>
         <Checkbox
           onChange={(_, { checked }) => {
             setIncludeAll(checked!)
@@ -215,35 +239,65 @@ const ListHeader: React.FC = () => (
   </Table.Header>
 )
 
-const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => (
-  <Table.Row>
-    <Table.Cell>
-      {item.member.memberId ? (
-        <Link to={`/members/${item.member.memberId}`}>
-          {item.member.memberId}
-        </Link>
-      ) : (
-        '-'
-      )}
-    </Table.Cell>
-    <Table.Cell>
-      {item.member.firstName ?? '-'} {item.member.lastName ?? '-'}
-      <MemberEmoji
-        birthDateString={item.member.birthDate}
-        gender={item.member.gender}
-      />
-    </Table.Cell>
-    <Table.Cell>{item.member.signedOn}</Table.Cell>
-    <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>
-    <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
-    <Table.Cell>
-      {(item.member.status !== 'SIGNED'
-        ? item.member.status
-        : item.productStatus) ?? '-'}
-    </Table.Cell>
-    <Table.Cell>
-      {item.householdSize ?? '-'} people / {item.livingSpace ?? '-'} m
-      <sup>2</sup>
-    </Table.Cell>
-  </Table.Row>
-)
+const MemberAgeWrapper = styled('div')(({ theme }) => ({
+  color: theme.mutedText,
+  fontSize: '0.8rem',
+}))
+
+const StatusBadge = styled('div')<{ status: string }>(({ theme, status }) => ({
+  display: 'inline-block',
+  fontSize: '0.8rem',
+  padding: '0.25rem 0.8rem',
+  backgroundColor: match([
+    ['ACTIVE', theme.activeInsuranceBackground],
+    ['PENDING', theme.pendingInsuranceBackground],
+    ['TERMINATED', theme.terminatedInsuranceBackground],
+    [match.any(), theme.mutedBackground],
+  ])(status),
+  color: match([
+    ['ACTIVE', theme.activeInsuranceForeground],
+    ['PENDING', theme.pendingInsuranceForeground],
+    ['TERMINATED', theme.terminatedInsuranceForeground],
+    [match.any(), theme.mutedText],
+  ])(status),
+  textTransform: 'capitalize',
+  borderRadius: '1000px',
+}))
+
+const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => {
+  const memberStatus =
+    item.member.status !== 'SIGNED' ? item.member.status : item.productStatus
+  return (
+    <Table.Row>
+      <Table.Cell>
+        {item.member.memberId ? (
+          <Link to={`/members/${item.member.memberId}`}>
+            {item.member.memberId}
+          </Link>
+        ) : (
+          '-'
+        )}
+      </Table.Cell>
+      <Table.Cell>
+        {item.member.firstName ?? '-'} {item.member.lastName ?? '-'}
+        <MemberAgeWrapper>
+          <MemberAge birthDateString={item.member.birthDate} />
+        </MemberAgeWrapper>
+      </Table.Cell>
+      <Table.Cell>{item.member.signedOn}</Table.Cell>
+      <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>
+      <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
+      <Table.Cell>
+        {memberStatus && (
+          <StatusBadge status={memberStatus}>
+            {memberStatus?.toLowerCase()}
+          </StatusBadge>
+        )}
+      </Table.Cell>
+      <Table.Cell>
+        {item.householdSize ?? '-'} people / {item.livingSpace ?? '-'} m
+        <sup>2</sup>
+      </Table.Cell>
+    </Table.Row>
+  )
+}

@@ -40,7 +40,7 @@ const Main = styled('div')(({ dark, theme }) => ({
   backgroundColor: dark ? colorsV3.gray900 : theme.background,
   color: theme.foreground,
   flex: 1,
-  padding: 16,
+  padding: '3rem 4rem',
 }))
 
 injectGlobal`

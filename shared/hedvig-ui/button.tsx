@@ -38,8 +38,8 @@ export const buttonColorMap: Record<
     highlighted: colorsV3.gray700,
   },
   primary: {
-    foreground: colorsV3.white,
-    background: colorsV3.purple500,
+    foreground: colorsV3.gray900,
+    background: colorsV3.purple300,
     highlighted: colorsV3.purple300,
   },
   secondary: {
@@ -106,7 +106,7 @@ export const Button = styled('button')<ButtonProps>(
         : buttonColorMap[variation].foreground) + ' !important',
     border: `1px solid ${buttonColorMap[variation].background}`,
     boxShadow: 'none !important',
-    borderRadius: 5,
+    borderRadius: 8,
     cursor: 'pointer',
     '&:hover, &:focus': {
       outline: 'none',

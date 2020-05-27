@@ -1,6 +1,6 @@
 import { getBackendPageState } from 'lib/paginator'
 import * as React from 'react'
-import styled from 'react-emotion'
+import styled, { css } from 'react-emotion'
 import { Button } from 'semantic-ui-react'
 import { range } from '../../../lib/helpers'
 
@@ -9,6 +9,17 @@ const Paginator = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+
+  .buttons button.ui.button {
+    ${({ theme }) => css`
+      background: ${theme.defaultButtonBackground};
+      color: ${theme.foreground};
+
+      &.active {
+        background: ${theme.highlightedButtonBackground};
+      }
+    `}
+  }
 `
 
 export interface BackendPaginationProps {
@@ -18,7 +29,8 @@ export interface BackendPaginationProps {
 }
 
 export default class BackendPagination extends React.Component<
-  BackendPaginationProps
+  BackendPaginationProps,
+  {}
 > {
   constructor(props: BackendPaginationProps) {
     super(props)

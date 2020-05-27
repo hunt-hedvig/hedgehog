@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { boolean, select, withKnobs } from '@storybook/addon-knobs'
 import { Button, buttonColorMap, ButtonProps } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 import { WithStory } from './story-utils'
 
 export default {

@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
-import { getMemberGroup, getMemberIdColor, MemberEmoji } from 'utils/member'
+import { getMemberGroup, getMemberIdColor, MemberAge } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatPane from './tabs/ChatPane'
 import { MemberFlag } from './shared/member-flag'
@@ -43,7 +43,7 @@ const Badge = styled('div')`
 
 const Flag = styled('div')`
   display: inline-flex;
-  font-size: 3rem
+  font-size: 3rem;
 `
 
 export default class Member extends React.Component {
@@ -77,7 +77,7 @@ export default class Member extends React.Component {
           <Header size="huge">
             <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
             {this.getMemberPageTitle(messages.member)}
-            <MemberEmoji
+            <MemberAge
               birthDateString={messages.member?.birthDate}
               gender={messages.member?.gender}
             />

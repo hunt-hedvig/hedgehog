@@ -5,7 +5,7 @@ import {
   SecondLevelHeadline,
   ThirdLevelHeadline,
 } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 
 export default {
   title: 'Typography',

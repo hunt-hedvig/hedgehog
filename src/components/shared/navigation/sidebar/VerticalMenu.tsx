@@ -1,6 +1,7 @@
 import { colorsV3 } from '@hedviginsurance/brand'
 import React, { useContext, useState } from 'react'
 import {
+  BoxArrowLeft,
   ChevronLeft,
   House,
   Inbox,
@@ -10,6 +11,7 @@ import {
   Tools,
 } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
+import MediaQuery from 'react-media'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import actions from 'store/actions'
@@ -27,6 +29,7 @@ const Wrapper = styled('div')<{ collapsed: boolean }>(
     color: colorsV3.white,
     transition: 'max-width 300ms',
     maxWidth: collapsed ? '6rem' : 300,
+    minWidth: '6rem',
     borderRight: theme.type === 'dark' ? '1px solid ' + theme.border : '',
 
     [Menu as any]: {
@@ -73,8 +76,8 @@ const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
     height: 'calc(0.75rem + 1.5rem)',
     width: '1.5rem',
     position: 'absolute',
-    top: '50vh',
-    transform: 'translateY(-50%) translateX(100%)',
+    top: '4rem',
+    transform: 'translateX(100%)',
     right: 0,
     color: '#fff',
     borderTopRightRadius: '0.5rem',
@@ -130,6 +133,7 @@ const MenuItem = styled(NavLink)({
     marginRight: 16,
     textAlign: 'center',
     transition: 'width 300ms, weight 300ms, margin 300ms',
+    flexShrink: 0,
   },
 })
 
@@ -197,78 +201,86 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   }, [])
 
   return (
-    <Wrapper collapsed={isCollapsed}>
-      <CollapseToggle onClick={toggleOpen} collapsed={isCollapsed}>
-        <ChevronLeft />
-      </CollapseToggle>
-
-      <InnerWrapper>
-        <Header>
-          <HeaderLogo collapsed={isCollapsed} />
-        </Header>
-
-        <Menu>
-          <MenuGroup>
-            <MenuItem to="/dashboard">
-              <House />
-              <MenuText>Dashborad</MenuText>
-            </MenuItem>
-          </MenuGroup>
-          <MenuGroup>
-            <MenuItem
-              to="/members"
-              isActive={(_match, location) =>
-                location.pathname.startsWith('/members')
-              }
-            >
-              <Search />
-              <MenuText>Member Search</MenuText>
-            </MenuItem>
-          </MenuGroup>
-          <MenuGroup>
-            <MenuItem to="/questions">
-              <Inbox />
-              <MenuText>Questions</MenuText>
-            </MenuItem>
-            <MenuItem to="/claims">
-              <ShieldShaded />
-              <MenuText>Claims</MenuText>
-            </MenuItem>
-          </MenuGroup>
-          <MenuGroup>
-            <MenuItem to="/taskmanager">
-              <ListCheck />
-              <MenuText>Tickets</MenuText>
-            </MenuItem>
-            <MenuItem to="/tools">
-              <Tools />
-              <MenuText>Tools</MenuText>
-            </MenuItem>
-          </MenuGroup>
-        </Menu>
-
-        <BottomSection>
-          <DarkmodeSwitch>
-            <DarkmodeInnerSwitch
-              type="checkbox"
-              onChange={() => toggleDarkmode()}
-            />
-            {isDarkmode ? 'Regular H.OPE.' : 'Darkmode 👽'}
-          </DarkmodeSwitch>
-          <MenuItem
-            onClick={(e) => {
-              e.preventDefault()
-              authLogOut_()
-            }}
-            to="#"
+    <MediaQuery query="(max-width: 1300px)">
+      {(shouldAlwaysCollapse) => (
+        <Wrapper collapsed={shouldAlwaysCollapse || isCollapsed}>
+          <CollapseToggle
+            onClick={toggleOpen}
+            collapsed={shouldAlwaysCollapse || isCollapsed}
           >
-            <MenuText>
-              {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Log out'}
-            </MenuText>
-          </MenuItem>
-        </BottomSection>
-      </InnerWrapper>
-    </Wrapper>
+            <ChevronLeft />
+          </CollapseToggle>
+
+          <InnerWrapper>
+            <Header>
+              <HeaderLogo collapsed={shouldAlwaysCollapse || isCollapsed} />
+            </Header>
+
+            <Menu>
+              <MenuGroup>
+                <MenuItem to="/dashboard">
+                  <House />
+                  <MenuText>Dashborad</MenuText>
+                </MenuItem>
+              </MenuGroup>
+              <MenuGroup>
+                <MenuItem
+                  to="/members"
+                  isActive={(_match, location) =>
+                    location.pathname.startsWith('/members')
+                  }
+                >
+                  <Search />
+                  <MenuText>Member Search</MenuText>
+                </MenuItem>
+              </MenuGroup>
+              <MenuGroup>
+                <MenuItem to="/questions">
+                  <Inbox />
+                  <MenuText>Questions</MenuText>
+                </MenuItem>
+                <MenuItem to="/claims">
+                  <ShieldShaded />
+                  <MenuText>Claims</MenuText>
+                </MenuItem>
+              </MenuGroup>
+              <MenuGroup>
+                <MenuItem to="/taskmanager">
+                  <ListCheck />
+                  <MenuText>Tickets</MenuText>
+                </MenuItem>
+                <MenuItem to="/tools">
+                  <Tools />
+                  <MenuText>Tools</MenuText>
+                </MenuItem>
+              </MenuGroup>
+            </Menu>
+
+            <BottomSection>
+              <DarkmodeSwitch>
+                <DarkmodeInnerSwitch
+                  type="checkbox"
+                  onChange={() => toggleDarkmode()}
+                />
+                {isDarkmode ? 'Regular H.OPE.' : 'Darkmode 👽'}
+              </DarkmodeSwitch>
+              <MenuItem
+                onClick={(e) => {
+                  e.preventDefault()
+                  authLogOut_()
+                }}
+                to="#"
+              >
+                <BoxArrowLeft />
+                <MenuText>
+                  {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Log out'}
+                </MenuText>
+              </MenuItem>
+            </BottomSection>
+          </InnerWrapper>
+        </Wrapper>
+      )}
+    </MediaQuery>
   )
 }
 
