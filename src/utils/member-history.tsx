@@ -3,7 +3,7 @@ import React, { createContext, useEffect, useState } from 'react'
 const MEMBER_HISTORY_KEY = 'hedvig:members:history'
 export const getDefaultHistory = (): ReadonlyArray<string> => {
   try {
-    return JSON.parse(window.sessionStorage.getItem(MEMBER_HISTORY_KEY)!)
+    return JSON.parse(window.sessionStorage.getItem(MEMBER_HISTORY_KEY)!) ?? []
   } catch {
     return []
   }
@@ -20,12 +20,12 @@ export const MemberHistoryProvider: React.FC = ({ children }) => {
   const [memberHistory, setMemberHistory] = useState(() => getDefaultHistory())
 
   useEffect(() => {
-    if (memberHistory.length === 0) {
+    if (!memberHistory?.length) {
       return
     }
 
     sessionStorage.setItem(MEMBER_HISTORY_KEY, JSON.stringify(memberHistory))
-  }, [memberHistory.length])
+  }, [memberHistory?.length])
 
   return (
     <MemberHistoryContext.Provider

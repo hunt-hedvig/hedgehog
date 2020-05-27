@@ -12,11 +12,21 @@ const MemberHistoryWrapper = styled.div`
   width: calc(100% + 1rem);
 `
 
+const EmptyState = styled.div`
+  font-style: italic;
+  margin-left: 1rem;
+  color: ${({ theme }) => theme.mutedText};
+`
+
 export const MemberSuggestions: React.FC = () => {
   const { memberHistory } = useContext(MemberHistoryContext)
 
   return (
     <MemberHistoryWrapper>
+      {memberHistory.length === 0 && (
+        <EmptyState>No suggested members yet</EmptyState>
+      )}
+
       {memberHistory.map((memberId) => (
         <MemberHistoryCard key={memberId} memberId={memberId} />
       ))}
