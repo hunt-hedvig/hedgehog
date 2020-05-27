@@ -10,7 +10,7 @@ import { InsuranceMandate } from 'components/member/tabs/contracts-tab/agreement
 import { ToDate } from 'components/member/tabs/contracts-tab/agreement/ToDate'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'

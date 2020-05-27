@@ -11,7 +11,7 @@ import {
   InputContainer,
   PropContainer,
 } from 'features/pricing/styles'
-import * as React from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { Dropdown, Header, Icon, Input } from 'semantic-ui-react'
 

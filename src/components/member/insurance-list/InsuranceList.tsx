@@ -3,8 +3,8 @@ import { LinkRow } from 'components/shared'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
 import TableFields from 'components/shared/table-fields/TableFields'
 import { Button } from 'hedvig-ui/button'
-import * as moment from 'moment'
-import * as React from 'react'
+import moment from 'moment'
+import React from 'react'
 import { Header, Table } from 'semantic-ui-react'
 
 const DateTypeEnum = {

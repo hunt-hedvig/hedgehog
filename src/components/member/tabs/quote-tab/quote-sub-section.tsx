@@ -1,7 +1,7 @@
 import { Quote } from 'api/generated/graphql'
 import { signedOrExpiredPredicate } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { showNotification } from 'store/actions/notificationsActions'
 import { ActionsWrapper, Muted } from './common'

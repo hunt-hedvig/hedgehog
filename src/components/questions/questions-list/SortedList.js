@@ -1,5 +1,5 @@
 import Pagination from 'components/shared/pagination/Pagination'
-import * as PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import { history } from 'store'

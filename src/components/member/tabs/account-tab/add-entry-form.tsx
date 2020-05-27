@@ -5,11 +5,11 @@ import { FieldSelect } from 'components/shared/inputs/FieldSelect'
 import { TextField as MuiTextField } from 'components/shared/inputs/TextField'
 import { format, startOfDay } from 'date-fns'
 import { Field, Form as FormikForm, Formik } from 'formik'
-import * as React from 'react'
+import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
-import * as yup from 'yup'
+import yup from 'yup'
 
 const ADD_ACCOUNT_ENTRY_MUTATION = gql`
   mutation addAccountEntryToMember(

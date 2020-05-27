@@ -6,7 +6,7 @@ import {
   InfoText,
 } from 'components/member/tabs/contracts-tab/contract'
 import { Paragraph } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import {
   getLineOfBusiness,

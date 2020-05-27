@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { VerticalMenu } from './sidebar/VerticalMenu'
 
 const menuIsHidden = (path) => path.startsWith('/login')

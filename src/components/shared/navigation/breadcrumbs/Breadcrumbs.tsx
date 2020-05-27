@@ -1,5 +1,5 @@
 import { getMemberInfo } from 'lib/helpers'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Breadcrumb } from 'semantic-ui-react'

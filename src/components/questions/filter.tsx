@@ -1,5 +1,5 @@
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 
 export enum FilterState {
   Even,

@@ -2,6 +2,7 @@ import BackendPaginatorList from 'components/shared/paginator-list/BackendPagina
 import { Button } from 'hedvig-ui/button'
 import { Checkbox } from 'hedvig-ui/checkbox'
 import { Input } from 'hedvig-ui/input'
+import { MainHeadline } from 'hedvig-ui/typography'
 import { match } from 'matchly'
 import React, { useEffect } from 'react'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
@@ -140,6 +141,7 @@ export const MembersSearch: React.FC<Props> = ({
           </Instructions>
 
           <MemberSuggestionsWrapper>
+            <MainHeadline>Suggestions</MainHeadline>
             <MemberSuggestions />
           </MemberSuggestionsWrapper>
         </>

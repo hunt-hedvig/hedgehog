@@ -5,7 +5,7 @@ import {
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
 import { getSignQuoteForNewContractOptions } from 'graphql/use-sign-quote-for-new-contract'
 import { Button } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
 

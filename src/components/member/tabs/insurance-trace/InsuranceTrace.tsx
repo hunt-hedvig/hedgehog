@@ -1,6 +1,6 @@
 import { ScrollList } from 'components/shared'
 import { getFieldName } from 'lib/helpers'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { List } from 'semantic-ui-react'
 

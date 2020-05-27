@@ -1,5 +1,5 @@
 import { colorsV3 } from '@hedviginsurance/brand'
-import * as React from 'react'
+import React from 'react'
 
 export const Logo: React.FunctionComponent<{ className?: string }> = ({
   className,

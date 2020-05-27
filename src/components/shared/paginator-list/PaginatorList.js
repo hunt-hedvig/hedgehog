@@ -1,5 +1,5 @@
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
 import Pagination from '../pagination/Pagination'

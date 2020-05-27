@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core'
 import { Claim } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
-import * as React from 'react'
+import React from 'react'
 import { Paper } from '../../../shared/Paper'
 
 interface Props {

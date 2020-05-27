@@ -1,6 +1,6 @@
 import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
 import { Agreement, AgreementStatus } from 'api/generated/graphql'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
 import { getLineOfBusiness } from 'utils/agreement'

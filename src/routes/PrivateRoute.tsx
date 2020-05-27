@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { Redirect, Route } from 'react-router'
-import { authCheck, AuthState } from 'store/actions/auth'
+import { authCheck as authCheckAction, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 
 const PrivateRouteComponent = ({
@@ -45,7 +45,7 @@ const mapState = (state: BackofficeStore) => ({
   authState: state.auth.state,
 })
 
-const mapActions = { authCheck }
+const mapActions = { authCheck: authCheckAction }
 
 const PrivateRoute = connect(mapState, mapActions)(PrivateRouteComponent)
 

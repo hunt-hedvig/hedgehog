@@ -9,7 +9,7 @@ import {
   SecondLevelHeadline,
   ThirdLevelHeadline,
 } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { getSignSource } from 'utils/contract'
 import { getEnumTitleCase } from 'utils/text'

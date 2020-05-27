@@ -15,7 +15,7 @@ import { ContractMarketInfo } from 'api/generated/graphql'
 import { AddEntryForm } from 'components/member/tabs/account-tab/add-entry-form'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/backfill-subscriptions-button'
 import { useGetAccount } from 'graphql/use-get-account'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
 

@@ -4,9 +4,9 @@ import {
   withStyles,
 } from '@material-ui/core'
 import { Field, Form, Formik } from 'formik'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
-import * as yup from 'yup'
+import yup from 'yup'
 import { FieldSelect } from '../../shared/inputs/FieldSelect'
 import { TextField } from '../../shared/inputs/TextField'
 

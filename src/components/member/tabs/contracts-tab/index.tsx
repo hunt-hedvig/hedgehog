@@ -3,7 +3,7 @@ import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 

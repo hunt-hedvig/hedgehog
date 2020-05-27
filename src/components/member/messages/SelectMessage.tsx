@@ -1,6 +1,6 @@
 import * as types from 'lib/messageTypes'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Checkbox, List } from 'semantic-ui-react'
 
 const SelectList = ({ content }) => {

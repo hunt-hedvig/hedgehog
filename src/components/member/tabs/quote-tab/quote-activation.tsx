@@ -6,7 +6,7 @@ import {
 } from 'graphql/use-add-agreement-from-quote'
 import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 import { Checkbox } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'

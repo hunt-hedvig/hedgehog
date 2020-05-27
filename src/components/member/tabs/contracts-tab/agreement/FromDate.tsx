@@ -12,7 +12,7 @@ import {
   Paragraph,
   ThirdLevelHeadline,
 } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
 const initialFromDate = (agreement: Agreement): Date =>

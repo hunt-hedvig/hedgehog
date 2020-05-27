@@ -1,5 +1,5 @@
 import { GET_CATEGORIES } from 'features/pricing/queries'
-import * as React from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { Dropdown } from 'semantic-ui-react'
 

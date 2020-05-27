@@ -1,5 +1,5 @@
 import { colors } from '@hedviginsurance/brand'
-import * as React from 'react'
+import React from 'react'
 import Dropzone from 'react-dropzone'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
