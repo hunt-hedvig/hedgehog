@@ -21,7 +21,7 @@ import { getCreateQuoteForNewContractOptions } from 'graphql/use-create-quote-fo
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
@@ -34,7 +34,7 @@ import {
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/quote'
-import * as uuid from 'uuid/v4'
+import uuid from 'uuid/v4'
 import { ErrorMessage } from './common'
 import {
   getProductSubTypeValue,
