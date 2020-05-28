@@ -365,23 +365,29 @@ export const SemanticOverrides = styled.div`
     }
 
     .ui.tabular.menu {
-      padding-bottom: 4rem;
-      border-bottom: 0;
+      margin-bottom: 4rem;
+      padding-bottom: 0;
+      border-bottom: 2px solid ${theme.border};
+
       .item {
         padding: 0;
-        margin-bottom: 1rem;
+        margin-bottom: -2px;
         border: 0;
+        border-bottom: 2px solid transparent;
         margin-right: 3rem;
         line-height: 1.5;
 
         background: transparent;
         color: ${theme.semiStrongForeground};
-      }
-      .item.active {
-        font-weight: normal;
-        border-bottom: 2px solid ${theme.foreground};
-        background: transparent;
-        color: ${theme.foreground};
+
+        &.active,
+        &:hover,
+        &:focus {
+          font-weight: normal;
+          border-bottom-color: ${theme.semiStrongForeground};
+          background: transparent;
+          color: ${theme.foreground};
+        }
       }
     }
 

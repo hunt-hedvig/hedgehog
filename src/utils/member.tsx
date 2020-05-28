@@ -62,3 +62,17 @@ export const getMemberFlag = (market: Market): string => {
       return '🏳'
   }
 }
+
+const SWEDISH_SSN_LENGTH = 12
+const NORWEGIAN_SSN_LENGTH = 11
+export const formatSsn = (ssn: string) => {
+  if (ssn.length === SWEDISH_SSN_LENGTH) {
+    return ssn.slice(0, 8) + '-' + ssn.slice(8, 12)
+  }
+
+  if (ssn.length === NORWEGIAN_SSN_LENGTH) {
+    return ssn.slice(0, 6) + '-' + ssn.slice(6, 11)
+  }
+
+  return ssn
+}

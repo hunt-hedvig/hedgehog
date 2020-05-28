@@ -9,6 +9,7 @@ import ChatPane from './tabs/ChatPane'
 import { MemberFlag } from './shared/member-flag'
 import { MemberHistoryContext } from '../../utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
+import { formatSsn } from 'utils/member'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -47,6 +48,15 @@ const Flag = styled('div')`
   display: inline-flex;
   font-size: 3rem;
 `
+
+const MemberDetails = styled.div`
+color: ${({ theme }) => theme.mutedText};
+padding-bottom: 4rem;
+`
+const MemberDetail = styled.span`
+padding-right: 1rem;
+`
+const MemberDetailLink = MemberDetail.withComponent('a')
 
 export default class Member extends React.Component {
   getMemberPageTitle = (member) =>
@@ -99,12 +109,18 @@ export default class Member extends React.Component {
                     </>
                   )}
                 </Header>
+                <MemberDetails>
+                  {messages.member.status === 'SIGNED' && messages.member.ssn && <MemberDetail>{formatSsn(messages.member.ssn)}</MemberDetail>}
+                  {messages.member.email && <MemberDetailLink href={`mailto:${messages.member.email}`}>{messages.member.email}</MemberDetailLink>}
+                  {messages.member.phone && <MemberDetail href={`tel:${messages.member.phone}`}>{messages.member.phoneNumber}</MemberDetail>}
+
+                </MemberDetails>
                 {this.props.insurance.requesting || (
                   <Tab
                     style={{ height: '100%' }}
                     panes={panes}
                     renderActiveOnly={true}
-                    defaultActiveIndex={4}
+                    defaultActiveIndex={3}
                   />
                 )}
               </MemberPageContainer>
