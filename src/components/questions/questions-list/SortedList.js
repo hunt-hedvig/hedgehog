@@ -11,15 +11,28 @@ import Question from './Question'
 const List = styled(Segment)`
   &&& {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     margin: 0 auto;
-    padding: 30px;
   }
 `
 
 const MemberQuestionItem = styled.div`
-  border-bottom: solid 1px #22242626;
-  padding: 10px 0;
+  padding: 3rem 1.5rem;
+  margin-left: -1.5rem;
+  margin-bottom: 3rem;
+  margin-right: 3rem;
+  border-radius: 0.5rem;
+  max-width: 50rem;
+  width: 50%;
+
+  background: ${({ theme }) => theme.backgroundLight};
+  @media (max-width: 1650px) {
+    width: 100%;
+    &:nth-child(odd) {
+      background: transparent;
+    }
+  }
 `
 
 export default class SortedList extends React.Component {

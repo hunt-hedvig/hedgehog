@@ -3,16 +3,20 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Header } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import { useMemberNameAndContractMarketInfoQuery, useMemberNameQuery } from 'api/generated/graphql'
+import { useMemberNameAndContractMarketInfoQuery } from 'api/generated/graphql'
 import styled from 'react-emotion'
 import { getMemberFlag, getMemberIdColor } from 'utils/member'
 
-const QuestionWrapper = styled('div')(({ memberId }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  paddingLeft: '1rem',
-  borderLeft: '7px solid ' + getMemberIdColor(memberId),
-}))
+const QuestionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 1.5rem;
+  border-left: 7px solid ${({ memberId }) => getMemberIdColor(memberId)};
+`
+
+const MemberInfoWrapper = styled.div`
+  font-size: 1.5rem;
+`
 
 const Question = ({ activeList, question }) => {
   const memberQuery = useMemberNameAndContractMarketInfoQuery({
@@ -22,15 +26,6 @@ const Question = ({ activeList, question }) => {
   const memberDataMaybe = memberQuery?.data?.member
   return (
     <QuestionWrapper memberId={question.memberId}>
-      <Header>
-        {getMemberFlag(memberDataMaybe?.contractMarketInfo?.market)}
-        <Link to={`/members/${question.memberId}`}>
-          {question.memberId}
-        </Link>
-        {memberDataMaybe
-          ? ` ${memberDataMaybe?.firstName} ${memberDataMaybe?.lastName}`
-          : ''}
-      </Header>
       {activeList[question.memberId] &&
         activeList[question.memberId].map((data) => (
           <div key={data.id}>
@@ -52,6 +47,16 @@ const Question = ({ activeList, question }) => {
             ) : null}
           </div>
         ))}
+
+      <MemberInfoWrapper>
+        {memberDataMaybe ? (
+          <>
+            {memberDataMaybe?.firstName} {memberDataMaybe?.lastName}{' '}
+            {getMemberFlag(memberDataMaybe?.contractMarketInfo?.market)},{' '}
+          </>
+        ) : null}
+        <Link to={`/members/${question.memberId}`}>{question.memberId}</Link>
+      </MemberInfoWrapper>
     </QuestionWrapper>
   )
 }

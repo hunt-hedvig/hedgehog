@@ -6,7 +6,6 @@ import moment from 'moment'
 import 'moment/locale/sv'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Label } from 'semantic-ui-react'
 import styled from 'react-emotion'
 
 const MessageRow = styled.div`
@@ -26,15 +25,12 @@ const MessageBody = styled.div`
   word-wrap: break-word;
   z-index: 2000;
   position: relative;
-  border: 1px solid ${({ theme }) => theme.border};
   color: ${({ theme }) => theme.foreground};
   line-height: 1.4em;
   background: ${(props) =>
-    props.left ? props.theme.highlight : props.theme.backgroundLight};
+    props.left ? props.theme.highlightLight : props.theme.highlightBackground};
   border-radius: 0.3rem;
   padding: 0.8em 1em;
-  box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
-    0 2px 10px 0 rgba(34, 36, 38, 0.15);
 
   &:before {
     position: absolute;
@@ -42,7 +38,9 @@ const MessageBody = styled.div`
     width: 0.7em;
     height: 0.7em;
     background: ${(props) =>
-      props.left ? props.theme.highlight : props.theme.backgroundLight};
+      props.left
+        ? props.theme.highlightLight
+        : props.theme.highlightBackground};
 
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
@@ -58,6 +56,11 @@ const MessageBody = styled.div`
 
 const MessageInfo = styled.div`
   margin: 0.5em 0;
+  font-size: 0.9rem;
+`
+const Timestamp = styled.div`
+  color: ${({ theme }) => theme.mutedText};
+  font-size: 0.8rem;
 `
 
 const Video = styled.video`
@@ -81,12 +84,10 @@ const Message = ({
       </MessageBody>
       {timestamp ? (
         <MessageInfo>
-          <Label>
-            {from}
-            <Label.Detail>
-              {dateTimeFormatter(timestamp, 'HH:mm:ss dd MMMM yyyy')}
-            </Label.Detail>
-          </Label>
+          {from}
+          <Timestamp>
+            {dateTimeFormatter(timestamp, "MMM dd ''yy, HH:mm")}
+          </Timestamp>
         </MessageInfo>
       ) : null}
     </MessageBox>

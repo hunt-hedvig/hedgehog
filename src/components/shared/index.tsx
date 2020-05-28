@@ -4,10 +4,9 @@ import { List, Table } from 'semantic-ui-react'
 export const ListPage = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
-  max-width: 900px;
-  margin: 0 auto 50px;
+  margin: 0;
 `
 
 export const PageContainer = styled.div`

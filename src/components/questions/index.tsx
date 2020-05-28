@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Mount } from 'react-lifecycle-components'
-import { Header } from 'semantic-ui-react'
 import { useInsecurePersistentState } from 'utils/state'
 import { Spacing } from '../../../shared/hedvig-ui/spacing'
 import { MembersStore } from '../../store/storeTypes'
@@ -33,9 +32,7 @@ const Questions: React.FC<QuestionsProps> = ({
   return (
     <Mount on={() => questionsRequest('NOT_ANSWERED')}>
       <>
-        <Header size="huge">Questions</Header>
-
-        <Spacing bottom>
+        <Spacing bottom="large">
           <QuestionsFilter
             selected={selectedFilters}
             onToggle={(newFilter) => {

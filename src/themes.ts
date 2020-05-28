@@ -84,7 +84,7 @@ export const lightTheme = {
   type: 'light',
   background: colorsV3.gray100,
   backgroundLight: colorsV3.white,
-  highlightBackground: colorsV3.gray200,
+  highlightBackground: colorsV3.gray300,
   foreground: colorsV3.gray900,
   semiStrongForeground: colorsV3.gray700,
   placeholderColor: colorsV3.gray500,
@@ -94,7 +94,7 @@ export const lightTheme = {
   highlight: colorsV3.purple500,
   highlightLight: colorsV3.purple300,
   highlightDark: colorsV3.purple700,
-  highlightContrast: colorsV3.white,
+  highlightContrast: colorsV3.gray900,
   mutedText: colorsV3.gray500,
   mutedBackground: colorsV3.gray300,
   defaultButtonBackground: colorsV3.gray300,
@@ -121,7 +121,7 @@ export const darkTheme: typeof lightTheme = {
   highlight: colorsV3.purple500,
   highlightLight: colorsV3.purple700,
   highlightDark: colorsV3.purple300,
-  highlightContrast: colorsV3.white,
+  highlightContrast: colorsV3.gray900,
   mutedText: colorsV3.gray500,
   mutedBackground: colorsV3.gray700,
   defaultButtonBackground: colorsV3.gray800,
@@ -197,13 +197,18 @@ export const SemanticOverrides = styled.div`
         border-color: ${theme.borderStrong};
         background: ${theme.backgroundLight};
         color: ${theme.foreground};
+        border: 1px solid ${theme.border};
+        border-radius: 0.5rem;
       }
     }
 
     .ui.button {
       font-weight: normal;
+      font-family: ${fonts.FAVORIT}, sans-serif;
       background: ${theme.foreground};
       color: ${theme.background};
+      border-radius: 0.5rem;
+
       &:hover,
       &:focus {
         background: ${theme.foreground};
@@ -249,15 +254,28 @@ export const SemanticOverrides = styled.div`
 
     .ui.segment {
       background: ${theme.background};
+      padding: 0;
+      border: 0;
+      box-shadow: none;
     }
 
     .ui.tabular.menu {
+      padding-bottom: 4rem;
+      border-bottom: 0;
       .item {
-        background: ${theme.backgroundLight};
-        color: ${theme.foreground};
+        padding: 0;
+        margin-bottom: 1rem;
+        border: 0;
+        margin-right: 3rem;
+        line-height: 1.5;
+
+        background: transparent;
+        color: ${theme.semiStrongForeground};
       }
       .item.active {
-        background: ${theme.background};
+        font-weight: normal;
+        border-bottom: 2px solid ${theme.foreground};
+        background: transparent;
         color: ${theme.foreground};
       }
     }

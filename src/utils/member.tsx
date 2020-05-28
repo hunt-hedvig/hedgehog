@@ -1,4 +1,3 @@
-import { colorsV3 } from '@hedviginsurance/brand'
 import { Market } from 'api/generated/graphql'
 import { differenceInYears, parse } from 'date-fns'
 import React from 'react'
@@ -37,9 +36,9 @@ export const getMemberIdColor = (memberId: string) => {
   }
 
   if (isMemberIdEven(memberId)) {
-    return colorsV3.orange
+    return '#e24646'
   }
-  return colorsV3.pistachio700
+  return '#1cb09b'
 }
 
 export const getMemberGroup = (memberId: number) => {
@@ -48,9 +47,9 @@ export const getMemberGroup = (memberId: number) => {
   }
 
   if (isMemberIdEven(memberId.toString())) {
-    return 'The Empire'
+    return 'Red team'
   }
-  return 'The Resistance'
+  return 'Green team'
 }
 
 export const getMemberFlag = (market: Market): string => {

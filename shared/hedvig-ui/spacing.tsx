@@ -10,9 +10,9 @@ export interface SpacingProps
 }
 
 export const spacingMap: Record<SpacingSize, string> = {
-  small: '0.5rem',
-  medium: '1rem',
-  large: '2rem',
+  small: '1rem',
+  medium: '2rem',
+  large: '3rem',
 }
 
 export const Spacing = styled('div')<SpacingProps>`
