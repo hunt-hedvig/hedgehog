@@ -7,6 +7,7 @@ import 'moment/locale/sv'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'react-emotion'
+import { css } from 'emotion'
 
 const MessageRow = styled.div`
   display: flex;
@@ -47,9 +48,10 @@ const MessageBody = styled.div`
     z-index: 2;
     box-shadow: 1px 1px 0 0 ${({ theme }) => theme.border};
     bottom: -0.3em;
-    left: 1em;
+    ${({ left }) => css`
+      ${left ? `right: 1em;` : `left: 1em;`};
+    `};
     top: auto;
-    right: auto;
     margin-left: 0;
   }
 `
@@ -57,6 +59,7 @@ const MessageBody = styled.div`
 const MessageInfo = styled.div`
   margin: 0.5em 0;
   font-size: 0.9rem;
+  ${({ left}) => left && `text-align: right;`};
 `
 const Timestamp = styled.div`
   color: ${({ theme }) => theme.mutedText};
@@ -83,7 +86,7 @@ const Message = ({
         <MessageContent content={content} />
       </MessageBody>
       {timestamp ? (
-        <MessageInfo>
+        <MessageInfo left={left}>
           {from}
           <Timestamp>
             {dateTimeFormatter(timestamp, "MMM dd ''yy, HH:mm")}
