@@ -24,6 +24,20 @@ const Checkbox = styled(StandardCheckbox)`
   }
 `
 
+const Label = styled.label`
+  padding: 0.5rem 1rem 0.5rem 3rem !important;
+  border-radius: 100px;
+  transition: background 300ms;
+  &:hover {
+    background: ${({ theme }) => theme.highlightBackground};
+  }
+
+  &:before,
+  &:after {
+    left: 1rem !important;
+  }
+`
+
 const TeamBadge = styled.div`
   display: inline-block;
   width: 1.5em;
@@ -48,20 +62,20 @@ export const QuestionsFilter: React.FC<{
     <>
       <Checkbox
         label={
-          <label>
+          <Label>
             Red team
             <RedTeamBadge />
-          </label>
+          </Label>
         }
         checked={selected.includes(FilterState.Even)}
         onChange={() => onToggle(FilterState.Even)}
       />
       <Checkbox
         label={
-          <label>
+          <Label>
             Green team
             <GreenTeamBadge />
-          </label>
+          </Label>
         }
         checked={selected.includes(FilterState.Odd)}
         onChange={() => onToggle(FilterState.Odd)}
