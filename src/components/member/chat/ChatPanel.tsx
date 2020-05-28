@@ -23,6 +23,10 @@ const MessagesPanelContainer = styled('div')(({ theme }) => ({
   marginTop: 'auto',
   padding: '0.5rem',
   backgroundColor: theme.backgroundLight,
+  border: '1px solid ' + theme.borderStrong,
+  borderTop: 0,
+  borderBottomRightRadius: '0.5rem',
+  borderBottomLeftRadius: '0.5rem',
 }))
 
 const ChatForm = styled('form')({

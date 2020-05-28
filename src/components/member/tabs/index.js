@@ -2,8 +2,6 @@ import ChatPane from 'components/member/tabs/ChatPane'
 import ClaimsTab from 'components/member/tabs/ClaimsTab'
 import { MemberDebtComponent } from 'components/member/tabs/DebtTab'
 import MemberFile from 'components/member/tabs/FileTab'
-import InsuranceListTab from 'components/member/tabs/InsuranceListTab'
-import InsuranceTab from 'components/member/tabs/InsuranceTab'
 import PaymentsTab from 'components/member/tabs/PaymentsTab'
 import { Quotes } from 'components/member/tabs/quote-tab'
 import { ContractTab } from 'components/member/tabs/contracts-tab'
@@ -94,18 +92,6 @@ const memberPagePanes = (props, addMessage, socket) => {
       ),
     },
   )
-  if (!insurance.error.length && insurance.data) {
-    panes.push(
-      {
-        menuItem: 'Current Insurance',
-        render: () => <TabItem props={props} TabContent={InsuranceTab} />,
-      },
-      {
-        menuItem: 'All Insurances',
-        render: () => <TabItem props={props} TabContent={InsuranceListTab} />,
-      },
-    )
-  }
   panes.push(
     {
       menuItem: 'Payments',

@@ -10,6 +10,9 @@ const MessagesListContainer = styled('div')(({ theme }) => ({
   overflowY: 'auto',
   padding: '20px 20px 20px',
   background: theme.background,
+  border: '1px solid ' + theme.borderStrong,
+  borderTop: 0,
+  borderBottom: 0,
 }))
 
 const EmptyList = styled('h3')({

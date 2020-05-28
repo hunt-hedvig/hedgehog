@@ -50,11 +50,11 @@ const Flag = styled('div')`
 `
 
 const MemberDetails = styled.div`
-color: ${({ theme }) => theme.mutedText};
-padding-bottom: 4rem;
+  color: ${({ theme }) => theme.mutedText};
+  padding-bottom: 4rem;
 `
 const MemberDetail = styled.span`
-padding-right: 1rem;
+  padding-right: 1rem;
 `
 const MemberDetailLink = MemberDetail.withComponent('a')
 
@@ -110,10 +110,22 @@ export default class Member extends React.Component {
                   )}
                 </Header>
                 <MemberDetails>
-                  {messages.member.status === 'SIGNED' && messages.member.ssn && <MemberDetail>{formatSsn(messages.member.ssn)}</MemberDetail>}
-                  {messages.member.email && <MemberDetailLink href={`mailto:${messages.member.email}`}>{messages.member.email}</MemberDetailLink>}
-                  {messages.member.phone && <MemberDetail href={`tel:${messages.member.phone}`}>{messages.member.phoneNumber}</MemberDetail>}
-
+                  {messages?.member?.status === 'SIGNED' &&
+                    messages?.member?.ssn && (
+                      <MemberDetail>
+                        {formatSsn(messages.member.ssn)}
+                      </MemberDetail>
+                    )}
+                  {messages?.member?.email && (
+                    <MemberDetailLink href={`mailto:${messages.member.email}`}>
+                      {messages.member.email}
+                    </MemberDetailLink>
+                  )}
+                  {messages?.member?.phone && (
+                    <MemberDetail href={`tel:${messages.member.phone}`}>
+                      {messages.member.phoneNumber}
+                    </MemberDetail>
+                  )}
                 </MemberDetails>
                 {this.props.insurance.requesting || (
                   <Tab
