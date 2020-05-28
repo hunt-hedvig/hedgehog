@@ -136,7 +136,6 @@ export const darkTheme: typeof lightTheme = {
 
 export const SemanticOverrides = styled.div`
   ${({ theme }) => css`
-    .ui.breadcrumb a,
     a {
       color: ${theme.highlightDark};
       transition: color 200ms;
@@ -147,6 +146,13 @@ export const SemanticOverrides = styled.div`
     }
 
     .ui.breadcrumb {
+      a {
+        color: ${theme.mutedText};
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+      }
       .divider {
         color: ${theme.mutedText};
       }
