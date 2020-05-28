@@ -121,8 +121,8 @@ export default class Member extends React.Component {
                       {messages.member.email}
                     </MemberDetailLink>
                   )}
-                  {messages?.member?.phone && (
-                    <MemberDetail href={`tel:${messages.member.phone}`}>
+                  {messages?.member?.phoneNumber && (
+                    <MemberDetail href={`tel:${messages.member.phoneNumber}`}>
                       {messages.member.phoneNumber}
                     </MemberDetail>
                   )}
