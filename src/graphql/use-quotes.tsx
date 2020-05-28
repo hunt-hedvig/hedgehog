@@ -68,7 +68,18 @@ const latest = (a: Quote, b: Quote) =>
   Number(parseISO(b.createdAt)) - Number(parseISO(a.createdAt))
 
 export const signedOrExpiredPredicate = (quote) =>
-  quote.state === 'EXPIRED' || quote.state === 'SIGNED'
+  expiredPredicate(quote) || signedPredicate(quote)
+
+export const expiredPredicate = (quote) => {
+  const createdAt = new Date(quote.createdAt)
+  const now = new Date()
+
+  createdAt.setSeconds(quote.validity)
+
+  return now > createdAt
+}
+
+export const signedPredicate = (quote) => quote.state === 'SIGNED'
 
 export const useQuotes = (
   memberId: string,
