@@ -1,5 +1,6 @@
 import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
+import { css } from 'emotion'
 import { dateTimeFormatter } from 'lib/helpers'
 import * as types from 'lib/messageTypes'
 import moment from 'moment'
@@ -7,7 +8,6 @@ import 'moment/locale/sv'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'react-emotion'
-import { css } from 'emotion'
 
 const MessageRow = styled.div`
   display: flex;
@@ -59,7 +59,7 @@ const MessageBody = styled.div`
 const MessageInfo = styled.div`
   margin: 0.5em 0;
   font-size: 0.9rem;
-  ${({ left}) => left && `text-align: right;`};
+  ${({ left }) => left && `text-align: right;`};
 `
 const Timestamp = styled.div`
   color: ${({ theme }) => theme.mutedText};

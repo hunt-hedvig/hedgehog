@@ -87,7 +87,7 @@ export default class AnswerForm extends React.Component {
                 </div>
               </FormGroup>
               <MarkAsResolvedWrapper>
-                <Checkbox label="Mark as resolved" />
+                <Checkbox label="Mark as resolved" onClick={this.doneClick.bind(this, memberId)}/>
               </MarkAsResolvedWrapper>
               {error ? <Message negative>{error}</Message> : null}
             </Form>
