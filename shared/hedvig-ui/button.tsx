@@ -34,8 +34,8 @@ export const buttonColorMap: Record<
 > = {
   default: {
     foreground: colorsV3.white,
-    background: colorsV3.gray900,
-    highlighted: colorsV3.gray700,
+    background: colorsV3.gray700,
+    highlighted: colorsV3.gray500,
   },
   primary: {
     foreground: colorsV3.gray900,

@@ -158,6 +158,7 @@ const BottomSection = styled('div')({
 })
 
 const DarkmodeSwitch = styled('label')(({ theme }) => ({
+  position: 'relative',
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -174,6 +175,7 @@ const DarkmodeSwitch = styled('label')(({ theme }) => ({
   cursor: 'pointer',
 }))
 const DarkmodeInnerSwitch = styled('input')({
+  position: 'absolute',
   width: 0,
   height: 0,
   visibility: 'hidden',

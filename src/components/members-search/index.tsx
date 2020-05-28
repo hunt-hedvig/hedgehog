@@ -102,6 +102,7 @@ export const MembersSearch: React.FC<Props> = ({
         setQuery={setQuery}
         includeAll={includeAll}
         setIncludeAll={setIncludeAll}
+        currentResultSize={searchResult.items.length}
       />
       {searchResult.items.length > 0 && (
         <ListWrapper>
@@ -185,7 +186,7 @@ const SearchInput = styled(Input)({
   marginRight: '1rem',
 
   '&&': {
-    width: 'calc(100% - 1rem)',
+    width: '100%',
   },
 
   '&& input': {
@@ -198,6 +199,12 @@ const SearchButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
   transition: 'opacity 400ms',
 }))
 
+const EscapeButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
+  opacity: visible ? 1 : 0,
+  transition: 'opacity 300ms',
+  marginLeft: '2rem',
+}))
+
 const Search: React.FC<{
   onSubmit: (query: string, includeAll: boolean) => void
   loading: boolean
@@ -205,7 +212,16 @@ const Search: React.FC<{
   includeAll: boolean
   setQuery: (query: string) => void
   setIncludeAll: (includeAll: boolean) => void
-}> = ({ onSubmit, loading, query, setQuery, includeAll, setIncludeAll }) => {
+  currentResultSize: number
+}> = ({
+  onSubmit,
+  loading,
+  query,
+  setQuery,
+  includeAll,
+  setIncludeAll,
+  currentResultSize,
+}) => {
   return (
     <form
       onSubmit={(e) => {
@@ -247,6 +263,14 @@ const Search: React.FC<{
           checked={includeAll}
           label="Wide search"
         />
+
+        <EscapeButton
+          size="small"
+          visible={!query && currentResultSize > 0}
+          onClick={() => onSubmit('', false)}
+        >
+          Clear
+        </EscapeButton>
       </Group>
     </form>
   )
