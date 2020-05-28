@@ -36,9 +36,7 @@ const Wrapper = styled('div')<{ collapsed: boolean }>(
     },
     [BottomSection as any]: {
       padding: collapsed ? '0 1rem' : '0 2rem',
-    },
-    [DarkmodeSwitch as any]: {
-      display: collapsed ? 'none' : 'block',
+      alignItems: collapsed ? 'center' : 'flex-start',
     },
     [MenuItem as any]: {
       padding: collapsed ? '1rem' : undefined,
@@ -109,32 +107,36 @@ const MenuGroup = styled('div')({
   paddingBottom: '4rem',
 })
 
-const MenuItem = styled(NavLink)(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  padding: '0.5rem 1rem',
-  margin: '0.5rem 0',
-  color: '#fff !important',
-  borderRadius: '0.5rem',
-  transition: 'background 200ms, font-size 300ms, width 300ms',
+const MenuItem = styled(NavLink)<{ transparent?: boolean }>(
+  ({ theme, transparent }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    padding: '0.5rem 1rem',
+    margin: '0.5rem 0',
+    color: '#fff !important',
+    borderRadius: '0.5rem',
+    transition: 'background 200ms, font-size 300ms, width 300ms',
 
-  '&:hover, &:focus, &.active': {
-    color: colorsV3.gray100 + ' !important',
-    textDecoration: 'none',
-    background: theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray700,
-  },
-  '&:hover:not(.active), &:focus:not(.active)': {
-    background: colorsV3.gray900,
-  },
+    '&:hover, &:focus, &.active': {
+      color: colorsV3.gray100 + ' !important',
+      textDecoration: 'none',
+      background: theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray700,
+    },
+    '&:hover:not(.active), &:focus:not(.active)': {
+      background: colorsV3.gray900,
+    },
 
-  svg: {
-    fill: colorsV3.gray100,
-    marginRight: 16,
-    textAlign: 'center',
-    transition: 'width 300ms, weight 300ms, margin 300ms',
-    flexShrink: 0,
-  },
-}))
+    opacity: transparent ? 0.5 : 1,
+
+    svg: {
+      fill: colorsV3.gray100,
+      marginRight: 16,
+      textAlign: 'center',
+      transition: 'width 300ms, weight 300ms, margin 300ms',
+      flexShrink: 0,
+    },
+  }),
+)
 
 const Menu = styled('div')({
   display: 'flex',
@@ -153,15 +155,18 @@ const BottomSection = styled('div')({
   flexDirection: 'column',
   width: '100%',
   padding: '0 2rem 2rem 2rem',
-  opacity: 0.5,
 })
 
 const DarkmodeSwitch = styled('label')(({ theme }) => ({
-  display: 'inline-block',
-  textAlign: 'center',
+  display: 'inline-flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   marginTop: '1rem',
-  padding: '0.5rem',
-  fontSize: '0.8rem',
+  padding: '0.75rem',
+  fontSize: '1rem',
+  lineHeight: 1,
+  width: '3rem',
+  height: '3rem',
   borderRadius: 8,
   color: theme.background,
   backgroundColor: theme.foreground,
@@ -261,7 +266,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   type="checkbox"
                   onChange={() => toggleDarkmode()}
                 />
-                {isDarkmode ? 'Regular H.OPE.' : 'Darkmode 👽'}
+                {isDarkmode ? '🌞' : '🌚'}
               </DarkmodeSwitch>
               <MenuItem
                 onClick={(e) => {
@@ -269,6 +274,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   authLogOut_()
                 }}
                 to="#"
+                transparent
               >
                 <BoxArrowLeft />
                 <MenuText>
