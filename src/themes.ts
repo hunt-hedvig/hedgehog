@@ -2,84 +2,6 @@ import { colorsV3, fonts } from '@hedviginsurance/brand'
 import { createMuiTheme } from '@material-ui/core/styles'
 import styled, { css } from 'react-emotion'
 
-export const lightUiTheme = createMuiTheme({
-  palette: {
-    type: 'light',
-    primary: {
-      main: colorsV3.purple500,
-      dark: colorsV3.purple700,
-    },
-    secondary: {
-      main: colorsV3.gray900,
-      dark: colorsV3.black,
-    },
-    common: {
-      black: colorsV3.gray900,
-      white: colorsV3.gray100,
-    },
-    text: {
-      primary: colorsV3.gray900,
-      secondary: colorsV3.gray900,
-    },
-    background: {
-      paper: colorsV3.white,
-      default: colorsV3.gray100,
-    },
-  },
-  typography: {
-    fontFamily: [fonts.FAVORIT, 'sans-serif'].join(','),
-  },
-  overrides: {
-    MuiInput: {
-      root: {
-        width: '100%',
-      },
-      input: {
-        padding: '1rem 0',
-      },
-    },
-  },
-})
-
-export const darkUiTheme = createMuiTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: colorsV3.purple500,
-      dark: colorsV3.purple700,
-    },
-    secondary: {
-      main: colorsV3.gray900,
-      dark: colorsV3.black,
-    },
-    common: {
-      black: colorsV3.gray900,
-      white: colorsV3.gray100,
-    },
-    text: {
-      primary: colorsV3.white,
-      secondary: colorsV3.white,
-    },
-    background: {
-      paper: colorsV3.gray700,
-      default: colorsV3.gray900,
-    },
-  },
-  typography: {
-    fontFamily: [fonts.FAVORIT, 'sans-serif'].join(','),
-  },
-  overrides: {
-    MuiInput: {
-      root: {
-        width: '100%',
-      },
-      input: {
-        padding: '1rem 0',
-      },
-    },
-  },
-})
-
 export const lightTheme = {
   type: 'light',
   background: colorsV3.gray100,
@@ -133,6 +55,141 @@ export const darkTheme: typeof lightTheme = {
   terminatedInsuranceBackground: 'rgba(235, 126, 126, 0.2)',
   terminatedInsuranceForeground: '#eb7e7e',
 }
+
+export const lightUiTheme = createMuiTheme({
+  palette: {
+    type: 'light',
+    primary: {
+      main: colorsV3.purple500,
+      dark: colorsV3.purple700,
+    },
+    secondary: {
+      main: colorsV3.gray900,
+      dark: colorsV3.black,
+    },
+    common: {
+      black: colorsV3.gray900,
+      white: colorsV3.gray100,
+    },
+    text: {
+      primary: colorsV3.gray900,
+      secondary: colorsV3.gray900,
+    },
+    background: {
+      paper: colorsV3.white,
+      default: colorsV3.gray100,
+    },
+  },
+  typography: {
+    fontFamily: [fonts.FAVORIT, 'sans-serif'].join(','),
+  },
+  props: {
+    MuiInput: {
+      disableUnderline: true,
+    },
+  },
+  overrides: {
+    MuiPaper: {
+      rounded: {
+        borderRadius: '0.5rem',
+      },
+    },
+    MuiInput: {
+      root: {
+        width: '100%',
+        background: lightTheme.backgroundLight,
+        border: '1px solid ' + lightTheme.border,
+        borderRadius: '0.5rem',
+        marginBottom: '1rem',
+        padding: 0,
+      },
+      input: {
+        padding: '1rem 1.5rem',
+      },
+    },
+    MuiSelect: {
+      select: {
+        padding: '1rem 1.5rem',
+      },
+      selectMenu: {
+        borderRadius: '0.5rem',
+      },
+    },
+    MuiButton: {
+      contained: {
+        boxShadow: 'none',
+        borderRadius: '0.5rem',
+        padding: '0.75rem 1.5rem',
+        backgroundColor: colorsV3.purple300,
+      },
+    },
+  },
+})
+
+export const darkUiTheme = createMuiTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: colorsV3.purple500,
+      dark: colorsV3.purple700,
+    },
+    secondary: {
+      main: colorsV3.gray900,
+      dark: colorsV3.black,
+    },
+    common: {
+      black: colorsV3.gray900,
+      white: colorsV3.gray100,
+    },
+    text: {
+      primary: colorsV3.white,
+      secondary: colorsV3.white,
+    },
+    background: {
+      paper: colorsV3.gray800,
+      default: colorsV3.gray900,
+    },
+  },
+  typography: {
+    fontFamily: [fonts.FAVORIT, 'sans-serif'].join(','),
+  },
+  props: {
+    MuiInput: {
+      disableUnderline: true,
+    },
+  },
+  overrides: {
+    MuiInput: {
+      root: {
+        width: '100%',
+        background: darkTheme.backgroundLight,
+        border: '1px solid ' + darkTheme.border,
+        borderRadius: '0.5rem',
+        marginBottom: '1rem',
+        padding: 0,
+      },
+      input: {
+        padding: '1rem 1.5rem',
+      },
+    },
+    MuiSelect: {
+      select: {
+        padding: '1rem 1.5rem',
+      },
+      selectMenu: {
+        borderRadius: '0.5rem',
+      },
+    },
+    MuiButton: {
+      contained: {
+        boxShadow: 'none',
+        borderRadius: '0.5rem',
+        padding: '0.75rem 1.5rem',
+        backgroundColor: colorsV3.purple300,
+      },
+    },
+  },
+})
 
 export const SemanticOverrides = styled.div`
   ${({ theme }) => css`
