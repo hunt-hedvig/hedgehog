@@ -872,6 +872,7 @@ type Claim {
   reserves: MonetaryAmount
   registrationDate: Instant
   notes: [ClaimNote]
+  transcriptions: [ClaimTranscription]
   payments: [ClaimPayment]
   events: [ClaimEvent]
   coveringEmployee: Boolean!
@@ -881,6 +882,11 @@ type Claim {
 type ClaimNote {
   text: String
   date: LocalDateTime
+}
+
+type ClaimTranscription {
+  text: String!
+  confidenceScore: Float!
 }
 
 enum ClaimTypes {

@@ -9,6 +9,7 @@ import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimFileTable } from './components/ClaimFileTable'
 import { ClaimInformation } from './components/ClaimInformation'
 import { ClaimNotes } from './components/ClaimNotes'
+import { ClaimTranscriptions } from './components/ClaimTranscriptions'
 import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimTypeForm } from './components/ClaimType'
 import { FileUpload } from './components/FileUpload'
@@ -23,6 +24,12 @@ interface Props {
       memberId: string
     }
   }
+}
+
+const TestTranscription: ClaimTranscription = {
+  text:
+    'Lorem ipsum dolor sit amet, consectetur adipisciit eu, sodales lectus. Donec tempor elit arcu, sit amet volutpat augue mattis et. Suspendisse fringilla nulla id metus posuere accumsan. Suspendisse cursus risus ut eleifend feugiat. In vel justo sed lectus tristique luctus quis eu augue.\n\n Fusce nec lacus semper, maximus tellus eget, fringilla orci. Nam nulla risus, condimentum ut vestibulum non, gravida vitae risus. Vivamus sed risus eu ante tristique tempus eu sed purus. \n In tempor',
+  confidenceScore: 1.9,
 }
 
 const ClaimPage: React.SFC<Props> = ({ ...props }) => (
@@ -44,6 +51,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
           registrationDate,
           state,
           notes,
+          transitions,
           events,
           payments,
           reserves,
@@ -88,6 +96,15 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                   notes={(notes.filter(Boolean) as ClaimNote[]) ?? []}
                   claimId={props.match.params.claimId}
                   refetchPage={refetch}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              {transitions && (
+                <ClaimTranscriptions
+                  transcriptions={
+                    (transitions.filter(Boolean) as ClaimTranscription) ?? []
+                  }
                 />
               )}
             </Grid>
