@@ -16,6 +16,7 @@ const QuestionWrapper = styled.div`
 
 const MemberInfoWrapper = styled.div`
   font-size: 1.5rem;
+  padding-bottom: 1rem;
 `
 
 const Question = ({ activeList, question }) => {
@@ -26,6 +27,16 @@ const Question = ({ activeList, question }) => {
   const memberDataMaybe = memberQuery?.data?.member
   return (
     <QuestionWrapper memberId={question.memberId}>
+      <MemberInfoWrapper>
+        {memberDataMaybe ? (
+          <>
+            {memberDataMaybe?.firstName} {memberDataMaybe?.lastName}{' '}
+            {getMemberFlag(memberDataMaybe?.contractMarketInfo?.market)},{' '}
+          </>
+        ) : null}
+        <Link to={`/members/${question.memberId}`}>{question.memberId}</Link>
+      </MemberInfoWrapper>
+
       {activeList[question.memberId] &&
         activeList[question.memberId].map((data) => (
           <div key={data.id}>
@@ -34,7 +45,7 @@ const Question = ({ activeList, question }) => {
               left={data.answer}
               isQuestionMessage={true}
               timestamp={data.localDate}
-              from={question.memberId}
+              from={null}
             />
             {data.answer ? (
               <Message
@@ -47,16 +58,6 @@ const Question = ({ activeList, question }) => {
             ) : null}
           </div>
         ))}
-
-      <MemberInfoWrapper>
-        {memberDataMaybe ? (
-          <>
-            {memberDataMaybe?.firstName} {memberDataMaybe?.lastName}{' '}
-            {getMemberFlag(memberDataMaybe?.contractMarketInfo?.market)},{' '}
-          </>
-        ) : null}
-        <Link to={`/members/${question.memberId}`}>{question.memberId}</Link>
-      </MemberInfoWrapper>
     </QuestionWrapper>
   )
 }

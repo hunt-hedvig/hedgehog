@@ -1,11 +1,14 @@
 import { colorsV3 } from '@hedviginsurance/brand'
 import React, { useContext, useState } from 'react'
 import {
+  ArrowUpRight,
   BoxArrowLeft,
   ChevronLeft,
+  CreditCard,
   House,
   Inbox,
   ListCheck,
+  PersonBoundingBox,
   Search,
   ShieldShaded,
   Tools,
@@ -18,7 +21,7 @@ import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 import { DarkmodeContext } from 'utils/darkmode-context'
-import { Logo } from './elements'
+import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
   ({ collapsed, theme }) => ({
@@ -30,6 +33,7 @@ const Wrapper = styled('div')<{ collapsed: boolean }>(
     transition: 'max-width 300ms',
     maxWidth: collapsed ? '6rem' : 300,
     minWidth: '6rem',
+    minHeight: '100vh',
 
     [Menu as any]: {
       padding: collapsed ? '0 1rem' : '0 2rem',
@@ -38,7 +42,7 @@ const Wrapper = styled('div')<{ collapsed: boolean }>(
       padding: collapsed ? '0 1rem' : '0 2rem',
       alignItems: collapsed ? 'center' : 'flex-start',
     },
-    [MenuItem as any]: {
+    a: {
       padding: collapsed ? '1rem' : undefined,
       width: collapsed ? undefined : '100%',
       justifyContent: collapsed ? 'center' : 'flex-start',
@@ -55,17 +59,45 @@ const Wrapper = styled('div')<{ collapsed: boolean }>(
   }),
 )
 const InnerWrapper = styled('div')({
-  position: 'absolute',
+  position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
   top: 0,
   height: '100vh',
+  overflowY: 'scroll',
   width: '100%',
+  margin: 'auto',
+
+  '&::-webkit-scrollbar, &::-moz-scrollbar': {
+    appearance: 'none',
+    width: 0,
+    display: 'none',
+  },
 })
 
 const Header = styled('div')({
   position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  padding: '2rem 0',
+  flexShrink: 0,
 })
+const HeaderLogo = styled(Logo)<{ collapsed: boolean }>(({ collapsed }) => ({
+  width: collapsed ? 0 : '7rem',
+  opacity: collapsed ? 0 : 1,
+  marginRight: 0,
+  marginLeft: collapsed ? 0 : '2rem',
+  transition: 'margin 500ms, width 500ms, opacity: 500ms',
+  fill: colorsV3.gray100,
+}))
+const HeaderLogoIcon = styled(LogoIcon)<{ collapsed: boolean }>(
+  ({ collapsed }) => ({
+    width: collapsed ? '2rem' : '1rem',
+    fill: colorsV3.gray100,
+    transition: 'margin-left 500ms, width 500ms',
+  }),
+)
 
 const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
   ({ collapsed, theme }) => ({
@@ -84,7 +116,7 @@ const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
     borderLeftColor: 'transparent',
 
     '&& > *': {
-      transition: 'transform 200ms',
+      transition: 'transform 500ms',
       transform: `rotate(${collapsed ? 180 : 0}deg)`,
       margin: 0,
       width: '0.75rem',
@@ -93,16 +125,10 @@ const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
   }),
 )
 
-const HeaderLogo = styled(Logo)<{ collapsed: boolean }>(({ collapsed }) => ({
-  width: '3rem !important',
-  margin: '2rem',
-  marginLeft: collapsed ? '1.5rem' : '2rem',
-  transition: 'margin 200ms',
-}))
-
 const MenuGroup = styled('div')({
   display: 'flex',
   flexDirection: 'column',
+  flexShrink: 0,
   width: '100%',
   paddingBottom: '4rem',
 })
@@ -110,12 +136,13 @@ const MenuGroup = styled('div')({
 const MenuItem = styled(NavLink)<{ transparent?: boolean }>(
   ({ theme, transparent }) => ({
     display: 'inline-flex',
+    flexShrink: 0,
     alignItems: 'center',
     padding: '0.5rem 1rem',
     margin: '0.5rem 0',
     color: '#fff !important',
     borderRadius: '0.5rem',
-    transition: 'background 200ms, font-size 300ms, width 300ms',
+    transition: 'background 500ms, font-size 300ms, width 300ms',
 
     '&:hover, &:focus, &.active': {
       color: colorsV3.gray100 + ' !important',
@@ -137,15 +164,17 @@ const MenuItem = styled(NavLink)<{ transparent?: boolean }>(
     },
   }),
 )
+const MenuItemExternalLink = MenuItem.withComponent('a')
 
 const Menu = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   flex: 1,
+  minHeight: 'fit-content',
 })
 
 const MenuText = styled('div')({
-  transition: 'width 200ms',
+  transition: 'width 500ms',
   whiteSpace: 'nowrap',
   overflowX: 'hidden',
 })
@@ -161,13 +190,13 @@ const DarkmodeSwitch = styled('label')(({ theme }) => ({
   position: 'relative',
   display: 'inline-flex',
   justifyContent: 'center',
+  flexShrink: 0,
   alignItems: 'center',
   marginTop: '1rem',
   padding: '0.75rem',
   fontSize: '1rem',
   lineHeight: 1,
   width: '3rem',
-  height: '3rem',
   borderRadius: 8,
   color: theme.background,
   backgroundColor: theme.foreground,
@@ -220,6 +249,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
           <InnerWrapper>
             <Header>
               <HeaderLogo collapsed={shouldAlwaysCollapse || isCollapsed} />
+              <HeaderLogoIcon collapsed={shouldAlwaysCollapse || isCollapsed} />
             </Header>
 
             <Menu>
@@ -259,6 +289,27 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   <Tools />
                   <MenuText>Tools</MenuText>
                 </MenuItem>
+              </MenuGroup>
+
+              <MenuGroup>
+                <MenuItemExternalLink
+                  href="https://backoffice.trustly.com/?Locale=en_GB#/tab_orders"
+                  target="_blank"
+                >
+                  <CreditCard />
+                  <MenuText>
+                    Trustly <ArrowUpRight />
+                  </MenuText>
+                </MenuItemExternalLink>
+                <MenuItemExternalLink
+                  href="https://www.gsr.infodata.se/incident/lookupPage"
+                  target="_blank"
+                >
+                  <PersonBoundingBox />
+                  <MenuText>
+                    GSR <ArrowUpRight />
+                  </MenuText>
+                </MenuItemExternalLink>
               </MenuGroup>
             </Menu>
 

@@ -16,7 +16,7 @@ const UploadClaimFileWrapper = styled('div')({
 
 const UploadClaimFileHeader = styled('h3')({})
 
-export const Button = styled('button')({
+export const Button = styled('button')(({ theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -24,10 +24,10 @@ export const Button = styled('button')({
   font: 'inherit',
   padding: '4rem',
   border: '1px solid',
-  borderColor: colors.DARK_GRAY,
+  borderColor: theme.border,
   borderRadius: '5px',
   color: colors.BLACK,
-  background: colors.WHITE,
+  background: theme.backgroundLight,
   cursor: 'pointer',
   textDecoration: 'none',
   '&:hover, &:focus': {
@@ -38,7 +38,7 @@ export const Button = styled('button')({
     outline: 'none',
     boxShadow: 'none',
   },
-})
+}))
 
 const FileUploadContainer = styled('div')({
   padding: '2rem',
