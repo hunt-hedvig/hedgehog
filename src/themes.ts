@@ -87,11 +87,32 @@ export const lightUiTheme = createMuiTheme({
     MuiInput: {
       disableUnderline: true,
     },
+    MuiExpansionPanel: {
+      elevation: 0,
+    },
+    MuiInputLabel: {
+      disableAnimation: true,
+      shrink: false,
+    },
   },
   overrides: {
     MuiPaper: {
       rounded: {
         borderRadius: '0.5rem',
+      },
+    },
+    MuiExpansionPanel: {
+      rounded: {
+        borderRadius: '0.5rem',
+      },
+    },
+    MuiInputLabel: {
+      formControl: {
+        zIndex: 1,
+        transform: 'translateY(0)',
+      },
+      focused: {
+        color: lightTheme.foreground + '!important',
       },
     },
     MuiInput: {
@@ -157,8 +178,29 @@ export const darkUiTheme = createMuiTheme({
     MuiInput: {
       disableUnderline: true,
     },
+    MuiExpansionPanel: {
+      elevation: 0,
+    },
+    MuiInputLabel: {
+      disableAnimation: true,
+      shrink: false,
+    },
   },
   overrides: {
+    MuiExpansionPanel: {
+      rounded: {
+        borderRadius: '0.5rem',
+      },
+    },
+    MuiInputLabel: {
+      formControl: {
+        zIndex: 1,
+        transform: 'translateY(0)',
+      },
+      focused: {
+        color: darkTheme.foreground + '!important',
+      },
+    },
     MuiInput: {
       root: {
         width: '100%',

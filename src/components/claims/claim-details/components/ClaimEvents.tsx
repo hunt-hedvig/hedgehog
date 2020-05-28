@@ -4,9 +4,9 @@ import {
   withStyles,
 } from '@material-ui/core'
 import { Claim } from 'api/generated/graphql'
+import { Paper } from 'components/shared/Paper'
 import { format, parseISO } from 'date-fns'
 import React from 'react'
-import { Paper } from '../../../shared/Paper'
 
 interface Props {
   events: NonNullable<Claim['events']>

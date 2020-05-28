@@ -9,7 +9,7 @@ import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
-import yup from 'yup'
+import * as yup from 'yup'
 
 const ADD_ACCOUNT_ENTRY_MUTATION = gql`
   mutation addAccountEntryToMember(
