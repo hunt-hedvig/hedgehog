@@ -45,7 +45,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
           registrationDate,
           state,
           notes,
-          transitions,
+          transcriptions,
           events,
           payments,
           reserves,
@@ -85,20 +85,21 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
               />
             </Grid>
             <Grid item xs={12}>
+              {transcriptions && (
+                <ClaimTranscriptions
+                  transcriptions={
+                    (transcriptions.filter(Boolean) as ClaimTranscription[]) ??
+                    []
+                  }
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
               {notes && (
                 <ClaimNotes
                   notes={(notes.filter(Boolean) as ClaimNote[]) ?? []}
                   claimId={props.match.params.claimId}
                   refetchPage={refetch}
-                />
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              {transitions && (
-                <ClaimTranscriptions
-                  transcriptions={
-                    (transitions.filter(Boolean) as ClaimTranscription) ?? []
-                  }
                 />
               )}
             </Grid>
