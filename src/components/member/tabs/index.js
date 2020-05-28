@@ -1,6 +1,7 @@
 import ChatPane from 'components/member/tabs/ChatPane'
 import ClaimsTab from 'components/member/tabs/ClaimsTab'
 import { MemberDebtComponent } from 'components/member/tabs/DebtTab'
+import DetailsTab from 'components/member/tabs/DetailsTab'
 import MemberFile from 'components/member/tabs/FileTab'
 import PaymentsTab from 'components/member/tabs/PaymentsTab'
 import { Quotes } from 'components/member/tabs/quote-tab'
@@ -44,6 +45,10 @@ const memberPagePanes = (props, addMessage, socket) => {
   const { insurance } = props
   const memberId = props.match.params.memberId
   const panes = [
+    {
+      menuItem: 'Member',
+      render: () => <TabItem props={props} TabContent={DetailsTab} />,
+    },
     {
       menuItem: 'Claims',
       render: () => <TabItem props={props} TabContent={ClaimsTab} />,

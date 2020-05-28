@@ -3,13 +3,12 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
-import { getMemberGroup, getMemberIdColor, MemberAge } from 'utils/member'
+import {formatSsn, getMemberGroup, getMemberIdColor, MemberAge } from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatPane from './tabs/ChatPane'
 import { MemberFlag } from './shared/member-flag'
 import { MemberHistoryContext } from '../../utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
-import { formatSsn } from 'utils/member'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -132,7 +131,7 @@ export default class Member extends React.Component {
                     style={{ height: '100%' }}
                     panes={panes}
                     renderActiveOnly={true}
-                    defaultActiveIndex={3}
+                    defaultActiveIndex={4}
                   />
                 )}
               </MemberPageContainer>
