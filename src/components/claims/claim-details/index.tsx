@@ -26,12 +26,6 @@ interface Props {
   }
 }
 
-const TestTranscription: ClaimTranscription = {
-  text:
-    'Lorem ipsum dolor sit amet, consectetur adipisciit eu, sodales lectus. Donec tempor elit arcu, sit amet volutpat augue mattis et. Suspendisse fringilla nulla id metus posuere accumsan. Suspendisse cursus risus ut eleifend feugiat. In vel justo sed lectus tristique luctus quis eu augue.\n\n Fusce nec lacus semper, maximus tellus eget, fringilla orci. Nam nulla risus, condimentum ut vestibulum non, gravida vitae risus. Vivamus sed risus eu ante tristique tempus eu sed purus. \n In tempor',
-  confidenceScore: 1.9,
-}
-
 const ClaimPage: React.SFC<Props> = ({ ...props }) => (
   <>
     <ChatPane {...props} />
