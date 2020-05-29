@@ -398,14 +398,21 @@ export const SemanticOverrides = styled.div`
       overflow: hidden;
 
       thead th {
-        background: ${theme.accentLight};
-        color: ${theme.foreground};
-        border: 0;
-        color: ${theme.semiStrongForeground};
-        font-weight: normal;
-        padding: 1rem 2rem 0.5rem 2rem;
-        text-transform: uppercase;
-        font-size: 0.75rem;
+        &,
+        &.sorted,
+        &.sorted:hover,
+        &.sorted:focus,
+        &:hover,
+        &:focus {
+          background: ${theme.accentLight};
+          color: ${theme.foreground};
+          border: 0;
+          color: ${theme.semiStrongForeground};
+          font-weight: normal;
+          padding: 1rem 2rem 0.5rem 2rem;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+        }
       }
 
       tbody td {
