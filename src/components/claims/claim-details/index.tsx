@@ -87,10 +87,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
             <Grid item xs={12}>
               {transcriptions && (
                 <ClaimTranscriptions
-                  transcriptions={
-                    (transcriptions.filter(Boolean) as ClaimTranscription[]) ??
-                    []
-                  }
+                  transcriptions={transcriptions as ClaimTranscription[]}
                 />
               )}
             </Grid>

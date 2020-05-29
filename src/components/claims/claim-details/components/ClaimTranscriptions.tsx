@@ -50,7 +50,8 @@ const ClaimTranscriptions: React.SFC<Props> = ({ transcriptions }) => (
           </ClaimTranscription>
           <MuiList>
             <ClaimTranscriptionMetaData component="span">
-              Confidence: {transcription.confidenceScore}\n Language code:
+              Confidence: {transcription.confidenceScore}
+              <br /> Language code:
               {transcription.languageCode}
             </ClaimTranscriptionMetaData>
           </MuiList>
