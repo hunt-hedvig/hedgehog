@@ -22,6 +22,7 @@ export const Card = styled('div')<CardProps>`
   flex-direction: column;
   flex-grow: 1;
   color: ${({ theme }) => theme.foreground ?? colorsV3.gray900};
-  background-color: ${({ theme }) => theme.background ?? colorsV3.white};
+  background-color: ${({ theme }) => theme.accentLighter ?? colorsV3.white};
   border: 1px solid ${({ theme }) => theme.border ?? colorsV3.gray300};
+  border-radius: 0.5rem;
 `

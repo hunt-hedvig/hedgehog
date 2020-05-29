@@ -29,7 +29,7 @@ const Label = styled.label`
   border-radius: 100px;
   transition: background 300ms;
   &:hover {
-    background: ${({ theme }) => theme.highlightBackground};
+    background: ${({ theme }) => theme.accentBackground};
   }
 
   &:before,
@@ -48,10 +48,10 @@ const TeamBadge = styled.div`
 `
 
 const RedTeamBadge = styled(TeamBadge)`
-  background-color: #e24646;
+  background-color: ${({ theme }) => theme.danger};
 `
 const GreenTeamBadge = styled(TeamBadge)`
-  background-color: #1cb09b;
+  background-color: ${({ theme }) => theme.success};
 `
 
 export const QuestionsFilter: React.FC<{

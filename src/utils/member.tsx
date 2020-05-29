@@ -1,5 +1,6 @@
 import { Market } from 'api/generated/graphql'
 import { differenceInYears, parse } from 'date-fns'
+import { lightTheme } from 'hedvig-ui/themes'
 import React from 'react'
 
 export const MemberAge: React.FC<{
@@ -36,9 +37,9 @@ export const getMemberIdColor = (memberId: string) => {
   }
 
   if (isMemberIdEven(memberId)) {
-    return '#e24646'
+    return lightTheme.danger
   }
-  return '#1cb09b'
+  return lightTheme.success
 }
 
 export const getMemberGroup = (memberId: number) => {

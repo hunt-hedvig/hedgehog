@@ -22,7 +22,7 @@ import {
   lightTheme,
   lightUiTheme,
   SemanticOverrides,
-} from './themes'
+} from 'hedvig-ui/themes'
 import { MemberHistoryProvider } from './utils/member-history'
 
 const store = Store.configureStore()

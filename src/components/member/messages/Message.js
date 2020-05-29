@@ -29,7 +29,7 @@ const MessageBody = styled.div`
   color: ${({ theme }) => theme.foreground};
   line-height: 1.4em;
   background: ${(props) =>
-    props.left ? props.theme.highlightLight : props.theme.highlightBackground};
+    props.left ? props.theme.accentLight : props.theme.accentBackground};
   border-radius: 0.3rem;
   padding: 0.8em 1em;
 
@@ -39,9 +39,7 @@ const MessageBody = styled.div`
     width: 0.7em;
     height: 0.7em;
     background: ${(props) =>
-      props.left
-        ? props.theme.highlightLight
-        : props.theme.highlightBackground};
+      props.left ? props.theme.accentLight : props.theme.accentBackground};
 
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);

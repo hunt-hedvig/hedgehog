@@ -6,78 +6,98 @@ export const lightTheme = {
   type: 'light',
   background: colorsV3.gray100,
   backgroundLight: colorsV3.white,
-  highlightBackground: colorsV3.gray300,
+  accentBackground: colorsV3.gray300,
+  accentBackgroundHighlight: colorsV3.gray100,
   foreground: colorsV3.gray900,
   semiStrongForeground: colorsV3.gray700,
   placeholderColor: colorsV3.gray500,
-  border: colorsV3.gray300,
-  borderStrong: colorsV3.gray500,
+  border: '#e0eaf3',
+  borderStrong: '#c6d6e4',
   backgroundTransparent: 'rgba(0, 0, 0, .1)',
-  highlight: colorsV3.purple500,
-  highlightLight: colorsV3.purple300,
-  highlightDark: colorsV3.purple700,
-  highlightContrast: colorsV3.gray900,
+  accent: '#36658f',
+  accentLight: '#c6d6e4',
+  accentLighter: '#e0eaf3',
+  accentContrast: colorsV3.white,
+  accentSecondary: colorsV3.gray300,
+  accentSecondaryLight: colorsV3.gray100,
+  accentSecondaryContrast: colorsV3.gray900,
+  accentThird: '#c6d6e4',
+  accentThirdLight: '#e0eaf3',
+  accentThirdContrast: colorsV3.gray900,
+  danger: '#e24646',
+  success: '#199381',
+  warning: '#fbd45b',
   mutedText: colorsV3.gray500,
   mutedBackground: colorsV3.gray300,
   defaultButtonBackground: colorsV3.gray300,
   highlightedButtonBackground: colorsV3.gray500,
-  activeInsuranceBackground: '#8dd7cd',
-  activeInsuranceForeground: 'rgba(18, 18, 18, 0.73)',
-  pendingInsuranceBackground: '#ffe38a',
-  pendingInsuranceForeground: 'rgba(18, 18, 18, 0.73)',
-  terminatedInsuranceBackground: '#eb7e7e',
-  terminatedInsuranceForeground: 'rgba(18, 18, 18, 0.73)',
+  activeInsuranceBackground: '#199381',
+  activeInsuranceForeground: '#fff',
+  pendingInsuranceBackground: '#fbd45b',
+  pendingInsuranceForeground: '#fff',
+  terminatedInsuranceBackground: '#e24646',
+  terminatedInsuranceForeground: '#fff',
 }
 
 export const darkTheme: typeof lightTheme = {
   type: 'dark',
   background: colorsV3.gray900,
   backgroundLight: colorsV3.gray800,
-  highlightBackground: colorsV3.gray700,
+  accentBackground: colorsV3.gray700,
+  accentBackgroundHighlight: colorsV3.gray900,
   foreground: colorsV3.white,
   semiStrongForeground: colorsV3.gray300,
   placeholderColor: colorsV3.gray500,
-  border: colorsV3.gray700,
-  borderStrong: colorsV3.gray300,
+  border: '#192b3c',
+  borderStrong: '#203446',
   backgroundTransparent: 'rgba(255, 255, 255, .1)',
-  highlight: colorsV3.purple500,
-  highlightLight: colorsV3.purple700,
-  highlightDark: colorsV3.purple300,
-  highlightContrast: colorsV3.gray900,
+  accent: '#4581b5',
+  accentLight: '#203446',
+  accentLighter: '#192b3c',
+  accentContrast: colorsV3.white,
+  accentSecondary: colorsV3.gray500,
+  accentSecondaryLight: colorsV3.gray700,
+  accentSecondaryContrast: colorsV3.gray900,
+  accentThird: '#203446',
+  accentThirdLight: '#192b3c',
+  accentThirdContrast: colorsV3.white,
+  danger: '#e24646',
+  success: '#199381',
+  warning: '#fbd45b',
   mutedText: colorsV3.gray500,
   mutedBackground: colorsV3.gray700,
   defaultButtonBackground: colorsV3.gray800,
   highlightedButtonBackground: colorsV3.gray500,
-  activeInsuranceBackground: 'rgba(141, 215, 205, 0.2)',
-  activeInsuranceForeground: '#8dd7cd',
-  pendingInsuranceBackground: 'rgba(255, 253, 162, 0.2)',
-  pendingInsuranceForeground: '#fffda2',
-  terminatedInsuranceBackground: 'rgba(235, 126, 126, 0.2)',
-  terminatedInsuranceForeground: '#eb7e7e',
+  activeInsuranceBackground: '#199381',
+  activeInsuranceForeground: '#fff',
+  pendingInsuranceBackground: '#fbd45b',
+  pendingInsuranceForeground: '#fff',
+  terminatedInsuranceBackground: '#e24646',
+  terminatedInsuranceForeground: '#fff',
 }
 
 export const lightUiTheme = createMuiTheme({
   palette: {
     type: 'light',
     primary: {
-      main: colorsV3.purple500,
-      dark: colorsV3.purple700,
+      main: lightTheme.accent,
+      dark: lightTheme.accentLight,
     },
     secondary: {
-      main: colorsV3.gray900,
-      dark: colorsV3.black,
+      main: lightTheme.accentSecondary,
+      dark: lightTheme.accentSecondaryLight,
     },
     common: {
-      black: colorsV3.gray900,
-      white: colorsV3.gray100,
+      black: lightTheme.background,
+      white: lightTheme.foreground,
     },
     text: {
-      primary: colorsV3.gray900,
-      secondary: colorsV3.gray900,
+      primary: lightTheme.foreground,
+      secondary: lightTheme.foreground,
     },
     background: {
-      paper: colorsV3.white,
-      default: colorsV3.gray100,
+      paper: lightTheme.accentLighter,
+      default: lightTheme.background,
     },
   },
   typography: {
@@ -99,6 +119,11 @@ export const lightUiTheme = createMuiTheme({
     MuiPaper: {
       rounded: {
         borderRadius: '0.5rem',
+      },
+    },
+    MuiMenu: {
+      paper: {
+        background: lightTheme.background,
       },
     },
     MuiExpansionPanel: {
@@ -141,7 +166,7 @@ export const lightUiTheme = createMuiTheme({
         boxShadow: 'none',
         borderRadius: '0.5rem',
         padding: '0.75rem 1.5rem',
-        backgroundColor: colorsV3.purple300,
+        backgroundColor: lightTheme.accent,
       },
     },
   },
@@ -151,24 +176,24 @@ export const darkUiTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: colorsV3.purple500,
-      dark: colorsV3.purple700,
+      main: darkTheme.accent,
+      dark: darkTheme.accentLight,
     },
     secondary: {
-      main: colorsV3.gray900,
-      dark: colorsV3.black,
+      main: darkTheme.accentSecondary,
+      dark: darkTheme.accentSecondaryLight,
     },
     common: {
-      black: colorsV3.gray900,
-      white: colorsV3.gray100,
+      black: darkTheme.background,
+      white: darkTheme.foreground,
     },
     text: {
-      primary: colorsV3.white,
-      secondary: colorsV3.white,
+      primary: darkTheme.foreground,
+      secondary: darkTheme.foreground,
     },
     background: {
-      paper: colorsV3.gray800,
-      default: colorsV3.gray900,
+      paper: darkTheme.accentLighter,
+      default: darkTheme.background,
     },
   },
   typography: {
@@ -187,6 +212,16 @@ export const darkUiTheme = createMuiTheme({
     },
   },
   overrides: {
+    MuiPaper: {
+      rounded: {
+        borderRadius: '0.5rem',
+      },
+    },
+    MuiMenu: {
+      paper: {
+        background: darkTheme.background,
+      },
+    },
     MuiExpansionPanel: {
       rounded: {
         borderRadius: '0.5rem',
@@ -227,7 +262,7 @@ export const darkUiTheme = createMuiTheme({
         boxShadow: 'none',
         borderRadius: '0.5rem',
         padding: '0.75rem 1.5rem',
-        backgroundColor: colorsV3.purple300,
+        backgroundColor: darkTheme.accent,
       },
     },
   },
@@ -236,11 +271,11 @@ export const darkUiTheme = createMuiTheme({
 export const SemanticOverrides = styled.div`
   ${({ theme }) => css`
     a {
-      color: ${theme.highlightDark};
+      color: ${theme.accent};
       transition: color 200ms;
       &:hover,
       &:focus {
-        color: ${theme.highlightLight};
+        color: ${theme.accentLight};
       }
     }
 
@@ -261,7 +296,7 @@ export const SemanticOverrides = styled.div`
     }
 
     .ui.label {
-      background: ${theme.highlightBackground};
+      background: ${theme.accentBackground};
       color: ${theme.foreground};
     }
 
@@ -321,14 +356,19 @@ export const SemanticOverrides = styled.div`
       }
 
       &.primary {
-        background: ${theme.highlight};
-        color: ${theme.highlightContrast};
+        background: ${theme.accent};
+        color: ${theme.accentContrast};
 
         &:hover,
         &:focus {
-          background: ${theme.highlightLight};
-          color: ${theme.highlightContrast};
+          background: ${theme.accentLight};
+          color: ${theme.accentContrast};
         }
+      }
+
+      .buttons &:not(:last-of-type),
+      .buttons &:not(:first-of-type) {
+        border-radius: 0;
       }
     }
 
@@ -338,7 +378,7 @@ export const SemanticOverrides = styled.div`
       overflow: hidden;
 
       thead th {
-        background: ${theme.highlightBackground};
+        background: ${theme.accentLight};
         color: ${theme.foreground};
         border: 0;
         color: ${theme.semiStrongForeground};
@@ -348,7 +388,7 @@ export const SemanticOverrides = styled.div`
       tbody td {
         color: ${theme.foreground};
         border: ${theme.borderStrong};
-        background: ${theme.backgroundLight};
+        background: ${theme.accentLighter};
         padding: 0.5rem 2rem;
       }
 

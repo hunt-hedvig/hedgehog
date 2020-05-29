@@ -3,7 +3,12 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
-import {formatSsn, getMemberGroup, getMemberIdColor, MemberAge } from 'utils/member'
+import {
+  formatSsn,
+  getMemberGroup,
+  getMemberIdColor,
+  MemberAge,
+} from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatPane from './tabs/ChatPane'
 import { MemberFlag } from './shared/member-flag'

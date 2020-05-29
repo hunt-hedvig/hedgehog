@@ -1,5 +1,6 @@
 import { colorsV3 } from '@hedviginsurance/brand'
 import styled from 'react-emotion'
+import { lightTheme } from './themes'
 
 export const ButtonsGroup = styled('div')({
   width: '100%',
@@ -19,6 +20,7 @@ export interface ButtonProps {
     | 'default'
     | 'primary'
     | 'secondary'
+    | 'third'
     | 'success'
     | 'warning'
     | 'danger'
@@ -28,41 +30,48 @@ export interface ButtonProps {
   size?: 'small' | 'medium' | 'large'
 }
 
-export const buttonColorMap: Record<
+export const buttonColorMap: (
+  theme: typeof lightTheme,
+) => Record<
   NonNullable<ButtonProps['variation']>,
   { foreground: string; background: string; highlighted: string }
-> = {
+> = (theme = lightTheme) => ({
   default: {
-    foreground: colorsV3.white,
-    background: colorsV3.gray700,
-    highlighted: colorsV3.gray500,
+    foreground: theme.foreground,
+    background: theme.accentBackground,
+    highlighted: theme.accentBackgroundHighlight,
   },
   primary: {
-    foreground: colorsV3.gray900,
-    background: colorsV3.purple300,
-    highlighted: colorsV3.purple300,
+    foreground: theme.accentContrast,
+    background: theme.accent,
+    highlighted: theme.accentLight,
   },
   secondary: {
-    foreground: colorsV3.white,
-    background: colorsV3.gray900,
-    highlighted: colorsV3.gray900,
+    foreground: theme.accentSecondaryContrast,
+    background: theme.accentSecondary,
+    highlighted: theme.accentLight,
+  },
+  third: {
+    foreground: theme.accentThirdContrast,
+    background: theme.accentThird,
+    highlighted: theme.accentThirdLight,
   },
   success: {
-    foreground: colorsV3.gray900,
-    background: colorsV3.pistachio700,
-    highlighted: colorsV3.pistachio500,
+    foreground: colorsV3.white,
+    background: theme.success,
+    highlighted: theme.success,
   },
   danger: {
     foreground: colorsV3.white,
-    background: colorsV3.orange,
-    highlighted: colorsV3.orange,
+    background: theme.danger,
+    highlighted: theme.danger,
   },
   warning: {
     foreground: '#000',
-    background: colorsV3.canary,
-    highlighted: colorsV3.canary,
+    background: theme.warning,
+    highlighted: theme.warning,
   },
-}
+})
 
 export const buttonSizeMap: Record<
   NonNullable<ButtonProps['size']>,
@@ -89,37 +98,38 @@ export const Button = styled('button')<ButtonProps>(
     halfWidth,
     basic,
     size = 'medium',
-  }) => ({
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    whiteSpace: 'nowrap',
-    fontSize: buttonSizeMap[size].fontSize,
-    fontFamily: 'inherit',
-    padding: buttonSizeMap[size].padding,
-    width: fullWidth ? '100%' : 'auto',
-    minWidth: halfWidth ? '50%' : 'auto',
-    background: basic ? 'transparent' : buttonColorMap[variation].background,
-    color:
-      (basic
-        ? buttonColorMap[variation].background
-        : buttonColorMap[variation].foreground) + ' !important',
-    border: `1px solid ${buttonColorMap[variation].background}`,
-    boxShadow: 'none !important',
-    borderRadius: 8,
-    cursor: 'pointer',
-    '&:hover, &:focus': {
-      outline: 'none',
-      color: buttonColorMap[variation].foreground,
-      background: buttonColorMap[variation].highlighted,
-      borderColor: buttonColorMap[variation].highlighted,
-    },
-    '&:disabled': {
-      background: colorsV3.gray500,
-      color: colorsV3.white,
-      borderColor: colorsV3.gray500,
-    },
-  }),
+    theme,
+  }) => {
+    const colors = buttonColorMap(theme)[variation]
+    return {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      whiteSpace: 'nowrap',
+      fontSize: buttonSizeMap[size].fontSize,
+      fontFamily: 'inherit',
+      padding: buttonSizeMap[size].padding,
+      width: fullWidth ? '100%' : 'auto',
+      minWidth: halfWidth ? '50%' : 'auto',
+      background: basic ? 'transparent' : colors.background,
+      color: (basic ? colors.background : colors.foreground) + ' !important',
+      border: `1px solid ${colors.background}`,
+      boxShadow: 'none !important',
+      borderRadius: 8,
+      cursor: 'pointer',
+      '&:hover, &:focus': {
+        outline: 'none',
+        color: colors.foreground,
+        background: colors.highlighted,
+        borderColor: colors.highlighted,
+      },
+      '&:disabled': {
+        background: colorsV3.gray500,
+        color: colorsV3.white,
+        borderColor: colorsV3.gray500,
+      },
+    }
+  },
 )
 
 export const ButtonLink = Button.withComponent('a')

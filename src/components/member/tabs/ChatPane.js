@@ -26,7 +26,7 @@ const ChatHeaderStyle = styled.div`
   position: ${(props) => (!props.state ? 'fixed' : '')};
   right: ${(props) => (!props.state ? 0 : '')};
   height: 40px;
-  background-color: ${({ theme }) => theme.highlightBackground};
+  background-color: ${({ theme }) => theme.accentBackground};
   color: ${({ theme }) => theme.foreground};
   border: 1px solid ${({ theme }) => theme.borderStrong};
   border-bottom: 0;

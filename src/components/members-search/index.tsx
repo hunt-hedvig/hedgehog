@@ -1,4 +1,5 @@
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
+import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import { Checkbox } from 'hedvig-ui/checkbox'
 import { Input } from 'hedvig-ui/input'
@@ -332,7 +333,10 @@ const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => {
           <MemberAge birthDateString={item.member.birthDate} />
         </MemberAgeWrapper>
       </Table.Cell>
-      <Table.Cell>{item.member.signedOn}</Table.Cell>
+      <Table.Cell>
+        {item.member.signedOn &&
+          format(parseISO(item.member.signedOn), 'MMM d, yyy, HH:ii')}
+      </Table.Cell>
       <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>
       <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
       <Table.Cell>
