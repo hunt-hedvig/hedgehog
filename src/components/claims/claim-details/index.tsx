@@ -65,7 +65,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                 <Grid container spacing={8}>
                   <Prompt
                     when={Boolean(data?.claim) && !reserves}
-                    message="You're about to leave a claim without reserves. Are you sure you want to exit?"
+                    message="This claim has no reserves, do you want leave it it without?"
                   />
                   {error && (
                     <Grid item xs={12}>
