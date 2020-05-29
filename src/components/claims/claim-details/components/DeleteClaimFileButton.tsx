@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
+import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
-import { Button } from 'hedvig-ui/button'
 
 const CLAIM_FILES_QUERY = gql`
   query ClaimFilesQuery($id: ID!) {
