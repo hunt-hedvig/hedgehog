@@ -85,7 +85,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
               />
             </Grid>
             <Grid item xs={12}>
-              {transcriptions && (
+              {transcriptions && transcriptions.length > 0 && (
                 <ClaimTranscriptions
                   transcriptions={transcriptions as ClaimTranscription[]}
                 />
