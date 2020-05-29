@@ -17,7 +17,7 @@ import { sleep } from 'utils/sleep'
 import { Paper } from '../../../shared/Paper'
 
 interface Props {
-  transcription: ReadonlyArray<ClaimTranscriptionType>
+  transcriptions: ReadonlyArray<ClaimTranscriptionType>
 }
 
 const ListItem = withStyles({
