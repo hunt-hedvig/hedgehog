@@ -42,6 +42,7 @@ export const CLAIM_PAGE_QUERY = gql`
       transcriptions {
         text
         confidenceScore
+        languageCode
       }
       reserves
       payments {
