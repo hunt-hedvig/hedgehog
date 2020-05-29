@@ -1557,7 +1557,10 @@ export type MemberNameAndContractMarketInfoQuery = {
   __typename?: 'QueryType'
 } & {
   member: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'> & {
+    { __typename?: 'Member' } & Pick<
+      Member,
+      'memberId' | 'firstName' | 'lastName'
+    > & {
         contractMarketInfo: Maybe<
           { __typename?: 'ContractMarketInfo' } & Pick<
             ContractMarketInfo,
@@ -1936,6 +1939,7 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       firstName
       lastName
       contractMarketInfo {
