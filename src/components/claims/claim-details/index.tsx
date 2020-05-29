@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid'
-import { ClaimNote, QueryType } from 'api/generated/graphql'
+import { ClaimNote, ClaimTranscription, QueryType } from 'api/generated/graphql'
 import ChatPane from 'components/member/tabs/ChatPane.js'
 import * as React from 'react'
 import { Query } from 'react-apollo'
@@ -12,6 +12,7 @@ import { ClaimFileTable } from './components/ClaimFileTable'
 import { ClaimInformation } from './components/ClaimInformation'
 import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
+import { ClaimTranscriptions } from './components/ClaimTranscriptions'
 import { ClaimTypeForm } from './components/ClaimType'
 import { FileUpload } from './components/FileUpload'
 import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
@@ -49,6 +50,8 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                 registrationDate,
                 state,
                 notes,
+                transcriptions,
+
                 events,
                 payments,
                 reserves,
@@ -86,6 +89,13 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                       claimId={props.match.params.claimId}
                       refetchPage={refetch}
                     />
+                  </Grid>
+                  <Grid item xs={12}>
+                    {transcriptions && transcriptions.length > 0 && (
+                      <ClaimTranscriptions
+                        transcriptions={transcriptions as ClaimTranscription[]}
+                      />
+                    )}
                   </Grid>
                   <Grid item xs={12}>
                     {notes && (

@@ -242,6 +242,7 @@ export type Claim = {
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate?: Maybe<Scalars['Instant']>
   notes?: Maybe<Array<Maybe<ClaimNote>>>
+  transcriptions?: Maybe<Array<Maybe<ClaimTranscription>>>
   payments?: Maybe<Array<Maybe<ClaimPayment>>>
   events?: Maybe<Array<Maybe<ClaimEvent>>>
   coveringEmployee: Scalars['Boolean']
@@ -330,6 +331,13 @@ export enum ClaimState {
   Open = 'OPEN',
   Closed = 'CLOSED',
   Reopened = 'REOPENED',
+}
+
+export type ClaimTranscription = {
+  __typename?: 'ClaimTranscription'
+  text: Scalars['String']
+  confidenceScore: Scalars['Float']
+  languageCode: Scalars['String']
 }
 
 export type ClaimType =

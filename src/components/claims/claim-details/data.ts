@@ -39,6 +39,11 @@ export const CLAIM_PAGE_QUERY = gql`
         text
         date
       }
+      transcriptions {
+        text
+        confidenceScore
+        languageCode
+      }
       reserves
       payments {
         id
