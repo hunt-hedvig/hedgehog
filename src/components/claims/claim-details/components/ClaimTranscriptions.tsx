@@ -17,7 +17,7 @@ import { sleep } from 'utils/sleep'
 import { Paper } from '../../../shared/Paper'
 
 interface Props {
-  transitions: ReadonlyArray<ClaimTranscriptionType>
+  transcription: ReadonlyArray<ClaimTranscriptionType>
 }
 
 const ListItem = withStyles({
@@ -47,7 +47,7 @@ const ClaimTranscriptionMetaData = withStyles({
 
 const ClaimTranscriptions: React.SFC<Props> = ({ transcriptions }) => (
   <Paper>
-    <h3>Transitions</h3>
+    <h3>Transcription</h3>
     <MuiList>
       {transcriptions.map((transcription) => (
         <ListItem>
