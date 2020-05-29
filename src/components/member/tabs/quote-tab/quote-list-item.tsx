@@ -1,11 +1,10 @@
-import { colorsV2 } from '@hedviginsurance/brand'
 import { Quote, QuoteProductType } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
-import { formatMoneySE } from 'lib/intl'
 import React from 'react'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
+import { formatMoney } from 'utils/money'
 import {
   getSubType,
   isNorwegianHomeContent,
@@ -18,18 +17,18 @@ import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
 import { QuoteModification } from './quote-modification'
 
-const OuterWrapper = styled('div')({
+const OuterWrapper = styled('div')(({}) => ({
   ':not(:last-child)': {
-    borderBottom: '1px solid ' + colorsV2.lightgray,
+    // borderBottom: '1px solid ' + theme.border,
   },
-})
+  width: '100%',
+}))
 
-const QuoteWrapper = styled('div')({
+const QuoteWrapper = styled('div')(() => ({
   display: 'flex',
   width: '100%',
   padding: '1rem 0',
-  background: '#fff',
-})
+}))
 const DetailsWrapper = styled('div')({
   width: '100%',
 })
@@ -38,22 +37,21 @@ const AddressNPriceWrapper = styled('div')({
   paddingBottom: '1rem',
   lineHeight: 1.2,
 })
-const AddressWrapper = styled('div')({
+const AddressWrapper = styled('div')(({}) => ({
   fontStyle: 'italic',
-  color: colorsV2.midnight500,
   fontSize: '1.5rem',
   width: '50%',
-})
+}))
 const PriceWrapper = styled('div')({
-  color: colorsV2.coral700,
   fontSize: '2rem',
 })
-const DetailWrapper = styled('div')({
+const DetailWrapper = styled('div')(({ theme }) => ({
+  color: theme.semiStrongForeground,
   paddingBottom: '1rem',
-})
-const BreachedUnderwritingGuidelines = styled('div')({
-  color: colorsV2.coral700,
-})
+}))
+const BreachedUnderwritingGuidelines = styled('div')(({ theme }) => ({
+  color: theme.danger,
+}))
 
 const ActionsButtonsWrapper = styled('div')({
   flexShrink: 1,
@@ -102,7 +100,7 @@ const QuoteDetails: React.FC<{
         <br />
       )}
       <PriceWrapper>
-        {quote.price && formatMoneySE({ amount: quote.price, currency: 'SEK' })}
+        {quote.price && formatMoney({ amount: quote.price, currency: 'SEK' })}
         {!quote.price && '-'}
       </PriceWrapper>
     </AddressNPriceWrapper>

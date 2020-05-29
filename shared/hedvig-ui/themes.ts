@@ -11,8 +11,8 @@ export const lightTheme = {
   foreground: colorsV3.gray900,
   semiStrongForeground: colorsV3.gray700,
   placeholderColor: colorsV3.gray500,
-  border: '#e0eaf3',
-  borderStrong: '#c6d6e4',
+  border: '#c6d6e4',
+  borderStrong: '#36658f',
   backgroundTransparent: 'rgba(0, 0, 0, .1)',
   accent: '#36658f',
   accentLight: '#c6d6e4',
@@ -46,10 +46,10 @@ export const darkTheme: typeof lightTheme = {
   accentBackground: colorsV3.gray700,
   accentBackgroundHighlight: colorsV3.gray900,
   foreground: colorsV3.white,
-  semiStrongForeground: colorsV3.gray300,
+  semiStrongForeground: colorsV3.gray500,
   placeholderColor: colorsV3.gray500,
-  border: '#192b3c',
-  borderStrong: '#203446',
+  border: '#203446',
+  borderStrong: '#4581b5',
   backgroundTransparent: 'rgba(255, 255, 255, .1)',
   accent: '#4581b5',
   accentLight: '#203446',
@@ -135,9 +135,9 @@ export const lightUiTheme = createMuiTheme({
       formControl: {
         zIndex: 1,
         transform: 'translateY(0)',
-      },
-      focused: {
-        color: lightTheme.foreground + '!important',
+        '&$focused': {
+          color: lightTheme.foreground + '!important',
+        },
       },
     },
     MuiInput: {
@@ -231,9 +231,9 @@ export const darkUiTheme = createMuiTheme({
       formControl: {
         zIndex: 1,
         transform: 'translateY(0)',
-      },
-      focused: {
-        color: darkTheme.foreground + '!important',
+        '&$focused': {
+          color: darkTheme.foreground + '!important',
+        },
       },
     },
     MuiInput: {
@@ -279,6 +279,10 @@ export const SemanticOverrides = styled.div`
       }
     }
 
+    strong {
+      color: ${theme.foreground};
+    }
+
     .ui.breadcrumb {
       a {
         color: ${theme.mutedText};
@@ -303,12 +307,28 @@ export const SemanticOverrides = styled.div`
     .ui.input {
       input {
         font-family: ${fonts.FAVORIT}, sans-serif;
-        background: ${theme.backgroundLight};
+        background: ${theme.background};
         color: ${theme.foreground};
         border-color: ${theme.border};
         &::placeholder {
           color: ${theme.placeholderColor};
         }
+      }
+    }
+
+    .ui.dropdown {
+      background: ${theme.background};
+      border-color: ${theme.border};
+      color: ${theme.foreground};
+
+      &.visible .text,
+      .text {
+        color: ${theme.foreground} !important;
+      }
+      &.selection .menu .item {
+        background: ${theme.background};
+        color: ${theme.foreground};
+        border-color: ${theme.border};
       }
     }
 
@@ -334,8 +354,8 @@ export const SemanticOverrides = styled.div`
     .ui.form {
       textarea,
       input {
-        border-color: ${theme.borderStrong};
-        background: ${theme.backgroundLight};
+        border-color: ${theme.border};
+        background: ${theme.background};
         color: ${theme.foreground};
         border: 1px solid ${theme.border};
         border-radius: 0.5rem;
@@ -382,18 +402,26 @@ export const SemanticOverrides = styled.div`
         color: ${theme.foreground};
         border: 0;
         color: ${theme.semiStrongForeground};
+        font-weight: normal;
         padding: 1rem 2rem 0.5rem 2rem;
+        text-transform: uppercase;
+        font-size: 0.75rem;
       }
 
       tbody td {
         color: ${theme.foreground};
         border: ${theme.borderStrong};
         background: ${theme.accentLighter};
-        padding: 0.5rem 2rem;
+        padding: 1.125rem;
+        border: 0;
+        border-top: 1px solid ${theme.border};
+        border-left: 1px solid ${theme.border};
       }
-
-      tr:not(:last-of-type) td {
-        border-bottom: 1px solid ${theme.border};
+      td:first-of-type {
+        border-left: 0;
+      }
+      tr:first-of-type td {
+        border-top: 0;
       }
     }
 

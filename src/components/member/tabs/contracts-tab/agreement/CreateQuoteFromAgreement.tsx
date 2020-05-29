@@ -31,8 +31,7 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
           <>Agreement has an existing quote</>
         ) : (
           <Button
-            variation={'secondary'}
-            fullWidth
+            variation="primary"
             onClick={() => {
               if (!window.confirm(`Create new quote?`)) {
                 return
@@ -55,7 +54,7 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
                 })
             }}
           >
-            Create Quote
+            Create a new quote
           </Button>
         )}
       </>

@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/react-hooks'
-import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
 import {
   ApartmentSubType,
   ContractMarketInfo,
@@ -499,20 +498,19 @@ export const QuoteModification: React.FC<{
   )
 }
 
-const ExtraBuildingEditorWrapper = styled('div')({
-  border: '1px solid ' + colorsV2.semilightgray,
+const ExtraBuildingEditorWrapper = styled('div')(({ theme }) => ({
+  border: '1px solid ' + theme.border,
   padding: '1rem 0',
-})
-const ExtraBuildingWrapper = styled('div')({
-  borderBottom: '1px solid ' + colorsV2.semilightgray,
+}))
+const ExtraBuildingWrapper = styled('div')(({ theme }) => ({
+  borderBottom: '1px solid ' + theme.border,
   marginBottom: '1rem',
   padding: '1rem',
-  paddingTop: 0,
 
   ':nth-child(odd)': {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: theme.backgroundTransparent,
   },
-})
+}))
 const RemoveButtonWrapper = styled('div')({
   textAlign: 'right',
   paddingTop: '1rem',

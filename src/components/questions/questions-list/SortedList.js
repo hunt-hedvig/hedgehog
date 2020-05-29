@@ -26,13 +26,8 @@ const MemberQuestionItem = styled.div`
   max-width: 50rem;
   width: 50%;
 
-  background: ${({ theme }) => theme.backgroundLight};
-  @media (max-width: 1650px) {
-    width: 100%;
-    &:nth-child(odd) {
-      background: transparent;
-    }
-  }
+  background: ${({ theme }) => theme.accentLighter};
+  border: 1px solid ${({ theme }) => theme.border};
 `
 
 export default class SortedList extends React.Component {

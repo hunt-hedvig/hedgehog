@@ -4,7 +4,6 @@ import { Button } from 'hedvig-ui/button'
 import { Checkbox } from 'hedvig-ui/checkbox'
 import { Input } from 'hedvig-ui/input'
 import { MainHeadline } from 'hedvig-ui/typography'
-import { match } from 'matchly'
 import React, { useEffect } from 'react'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import styled, { keyframes } from 'react-emotion'
@@ -16,6 +15,7 @@ import {
   MembersSearchResult,
 } from 'store/storeTypes'
 import { MemberAge } from 'utils/member'
+import { InsuranceStatusBadge } from '../../utils/agreement'
 import { MemberSuggestions } from './member-suggestions'
 
 export interface Props {
@@ -293,26 +293,6 @@ const MemberAgeWrapper = styled('div')(({ theme }) => ({
   fontSize: '0.8rem',
 }))
 
-const StatusBadge = styled('div')<{ status: string }>(({ theme, status }) => ({
-  display: 'inline-block',
-  fontSize: '0.8rem',
-  padding: '0.25rem 0.8rem',
-  backgroundColor: match([
-    ['ACTIVE', theme.activeInsuranceBackground],
-    ['PENDING', theme.pendingInsuranceBackground],
-    ['TERMINATED', theme.terminatedInsuranceBackground],
-    [match.any(), theme.mutedBackground],
-  ])(status),
-  color: match([
-    ['ACTIVE', theme.activeInsuranceForeground],
-    ['PENDING', theme.pendingInsuranceForeground],
-    ['TERMINATED', theme.terminatedInsuranceForeground],
-    [match.any(), theme.mutedText],
-  ])(status),
-  textTransform: 'capitalize',
-  borderRadius: '1000px',
-}))
-
 const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => {
   const memberStatus =
     item.member.status !== 'SIGNED' ? item.member.status : item.productStatus
@@ -341,9 +321,9 @@ const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => {
       <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
       <Table.Cell>
         {memberStatus && (
-          <StatusBadge status={memberStatus}>
+          <InsuranceStatusBadge status={memberStatus}>
             {memberStatus?.toLowerCase()}
-          </StatusBadge>
+          </InsuranceStatusBadge>
         )}
       </Table.Cell>
       <Table.Cell>

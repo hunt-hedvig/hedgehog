@@ -4,15 +4,19 @@ import { AgreementsTable } from 'components/member/tabs/contracts-tab/agreement/
 import { MasterInception } from 'components/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'components/member/tabs/contracts-tab/contract/termination-date'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import {
-  Paragraph,
-  SecondLevelHeadline,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
+import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { getSignSource } from 'utils/contract'
 import { getEnumTitleCase } from 'utils/text'
+
+const ContractWrapper = styled('div')`
+  &:not(:first-of-type) {
+    margin-top: 5rem;
+    border-top: 1px solid ${({ theme }) => theme.border};
+    padding-top: 5rem;
+  }
+`
 
 export const InfoContainer = styled('div')`
   display: flex;
@@ -21,15 +25,15 @@ export const InfoContainer = styled('div')`
 `
 
 export const InfoRow = styled(Paragraph)`
-  margin-left: 0.5rem;
   margin-bottom: 0.25rem;
-  font-size: 1.15rem;
-  display: inline-block;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  color: ${({ theme }) => theme.semiStrongForeground};
 `
 
 export const InfoText = styled('span')`
-  font-weight: bold;
-  margin: 0.5rem;
+  color: ${({ theme }) => theme.foreground};
 `
 
 export const Contract: React.FunctionComponent<{
@@ -46,30 +50,32 @@ export const Contract: React.FunctionComponent<{
   )
 
   return (
-    <>
+    <ContractWrapper>
       <CardsWrapper>
-        <Card>
-          <SecondLevelHeadline>{contract.contractTypeName}</SecondLevelHeadline>
-        </Card>
         <Card span={3}>
           <InfoContainer>
             <InfoRow>
-              Holder:{' '}
+              <ThirdLevelHeadline>
+                {contract.contractTypeName}
+              </ThirdLevelHeadline>
+            </InfoRow>
+            <InfoRow>
+              Holder{' '}
               <InfoText>
                 {contract.holderFirstName} {contract.holderLastName}
               </InfoText>
             </InfoRow>
             <InfoRow>
-              Status: <InfoText>{getEnumTitleCase(contract.status)}</InfoText>
+              Status <InfoText>{getEnumTitleCase(contract.status)}</InfoText>
             </InfoRow>
             {contract.switchedFrom && (
               <InfoRow>
-                Switched From: <InfoText>{contract.switchedFrom}</InfoText>
+                Switched From <InfoText>{contract.switchedFrom}</InfoText>
               </InfoRow>
             )}
             {contract.signSource && (
               <InfoRow>
-                Sign Source:{' '}
+                Sign Source{' '}
                 <InfoText>{getSignSource(contract.signSource)}</InfoText>
               </InfoRow>
             )}
@@ -96,6 +102,6 @@ export const Contract: React.FunctionComponent<{
           refetch={refetch}
         />
       )}
-    </>
+    </ContractWrapper>
   )
 }

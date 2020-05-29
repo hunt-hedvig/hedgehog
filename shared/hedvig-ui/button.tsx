@@ -6,7 +6,6 @@ export const ButtonsGroup = styled('div')({
   width: '100%',
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'center',
   '*:not(:last-child)': {
     marginRight: '0.5rem',
   },
@@ -49,7 +48,7 @@ export const buttonColorMap: (
   secondary: {
     foreground: theme.accentSecondaryContrast,
     background: theme.accentSecondary,
-    highlighted: theme.accentLight,
+    highlighted: theme.accentSecondaryLight,
   },
   third: {
     foreground: theme.accentThirdContrast,
@@ -117,6 +116,7 @@ export const Button = styled('button')<ButtonProps>(
       boxShadow: 'none !important',
       borderRadius: 8,
       cursor: 'pointer',
+      transition: 'background 200ms, border 200ms, color 200ms',
       '&:hover, &:focus': {
         outline: 'none',
         color: colors.foreground,

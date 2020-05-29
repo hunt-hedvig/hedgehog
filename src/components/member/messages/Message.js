@@ -26,12 +26,17 @@ const MessageBody = styled.div`
   word-wrap: break-word;
   z-index: 2000;
   position: relative;
-  color: ${({ theme }) => theme.foreground};
+  &,
+  & label {
+    color: ${({ left, theme }) =>
+      left ? theme.accentContrast : theme.foreground} !important;
+  }
+
   line-height: 1.4em;
   background: ${(props) =>
-    props.left ? props.theme.accentLight : props.theme.accentBackground};
-  border-radius: 0.3rem;
-  padding: 0.8em 1em;
+    props.left ? props.theme.accent : props.theme.accentLight};
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
 
   &:before {
     position: absolute;
@@ -39,7 +44,7 @@ const MessageBody = styled.div`
     width: 0.7em;
     height: 0.7em;
     background: ${(props) =>
-      props.left ? props.theme.accentLight : props.theme.accentBackground};
+      props.left ? props.theme.accent : props.theme.accentLight};
 
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);

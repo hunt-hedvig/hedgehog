@@ -1,4 +1,3 @@
-import { colorsV2 } from '@hedviginsurance/brand/dist'
 import { Agreement } from 'api/generated/graphql'
 import {
   InfoContainer,
@@ -14,15 +13,13 @@ import {
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/agreement'
+import { formatMoney } from 'utils/money'
 import { formatPostalCode, getEnumTitleCase } from 'utils/text'
 
 const AddressInfoRow = styled(Paragraph)`
-  margin-left: 0.5rem;
-  margin-bottom: 0.25rem;
-  font-size: 1.35rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
   display: inline-block;
-  color: ${colorsV2.violet700};
-  font-weight: bold;
 `
 
 export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
@@ -34,14 +31,15 @@ export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
         isSwedishHouse(agreement) ||
         isNorwegianHomeContent(agreement)) && (
         <>
-          <AddressInfoRow>{agreement.address.street}</AddressInfoRow>
           <AddressInfoRow>
+            {agreement.address.street}
+            <br />
             {formatPostalCode(agreement.address.postalCode)}{' '}
             {agreement.address.city}
           </AddressInfoRow>
           <br />
           <InfoRow>
-            Living Space:{' '}
+            Living Space{' '}
             <InfoText>
               {agreement.squareMeters} m<sup>2</sup>
             </InfoText>
@@ -51,27 +49,27 @@ export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
       {isSwedishHouse(agreement) && (
         <>
           <InfoRow>
-            Ancillary area:{' '}
+            Ancillary area{' '}
             <InfoText>
               {agreement.ancillaryArea} m<sup>2</sup>
             </InfoText>
           </InfoRow>
           <InfoRow>
-            Year of construction:{' '}
+            Year of construction{' '}
             <InfoText>{agreement.yearOfConstruction}</InfoText>
           </InfoRow>
           <InfoRow>
-            Number of bathrooms:{' '}
+            Number of bathrooms{' '}
             <InfoText>{agreement.numberOfBathrooms}</InfoText>
           </InfoRow>
           <InfoRow>
-            Is subleted:{' '}
+            Is subleted{' '}
             <InfoText>{agreement.isSubleted ? 'Yes' : 'No'}</InfoText>
           </InfoRow>
           {agreement.extraBuildings.map((extraBuilding, index) => {
             return (
               <InfoRow key={extraBuilding.id!}>
-                Extra building {index + 1}:{' '}
+                Extra building {index + 1}{' '}
                 <InfoText>
                   {extraBuilding.displayName}, {extraBuilding.area} m
                   <sup>2</sup>{' '}
@@ -83,20 +81,17 @@ export const AgreementInfo: React.FC<{ agreement: Agreement }> = ({
         </>
       )}
       <InfoRow>
-        Number Co-insured: <InfoText>{agreement.numberCoInsured}</InfoText>
+        Number Co-insured <InfoText>{agreement.numberCoInsured}</InfoText>
       </InfoRow>
       <InfoRow>
-        Line of Business:{' '}
+        Line of Business{' '}
         <InfoText>{getEnumTitleCase(getLineOfBusiness(agreement))}</InfoText>
       </InfoRow>
       <InfoRow>
-        Premium:{' '}
-        <InfoText>
-          {agreement.premium.amount} {agreement.premium.currency}
-        </InfoText>
+        Premium <InfoText>{formatMoney(agreement.premium)}</InfoText>
       </InfoRow>
       <InfoRow>
-        Status: <InfoText>{getEnumTitleCase(agreement.status)}</InfoText>
+        Status <InfoText>{getEnumTitleCase(agreement.status)}</InfoText>
       </InfoRow>
     </InfoContainer>
   )

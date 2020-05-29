@@ -8,7 +8,7 @@ interface CustomInputProps {
 }
 
 const StyledSemanticInput = styled(SemanticInput)<CustomInputProps>`
-  &&& {
+  &&&& {
     width: 100%;
     input {
       font-family: ${fonts.FAVORIT};

@@ -61,7 +61,7 @@ export const InsuranceCertificate: React.FunctionComponent<{
         )}
         <Button
           disabled={loading}
-          variation={'warning'}
+          variation="third"
           fullWidth
           onClick={() => {
             if (
@@ -93,11 +93,11 @@ export const InsuranceCertificate: React.FunctionComponent<{
         </Button>
         <Dropzone onDrop={(files) => onUpload(files, contract.holderMemberId)}>
           {({ getRootProps, getInputProps }) => (
-            // @ts-ignore
             <Button
               fullWidth={!!agreement.certificateUrl}
               halfWidth={!agreement.certificateUrl}
-              {...getRootProps()}
+              variation="third"
+              {...(getRootProps() as any)}
             >
               <input {...getInputProps()} />
               Upload New

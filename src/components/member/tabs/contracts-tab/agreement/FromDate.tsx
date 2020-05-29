@@ -48,11 +48,10 @@ export const FromDate: React.FunctionComponent<{
           </Spacing>
           {agreement.fromDate && !contract.isTerminated && (
             <Button
-              variation={'primary'}
-              fullWidth
+              variation="primary"
               onClick={() => setDatePickerEnabled(true)}
             >
-              Change
+              Edit
             </Button>
           )}
           {contract.isTerminated && <Paragraph>Terminated</Paragraph>}
@@ -65,8 +64,7 @@ export const FromDate: React.FunctionComponent<{
           </Spacing>
           <ButtonsGroup>
             <Button
-              variation={'secondary'}
-              fullWidth
+              variation="secondary"
               onClick={() => {
                 const formattedFromDate = format(fromDate, 'yyyy-MM-dd')
                 if (
@@ -95,9 +93,7 @@ export const FromDate: React.FunctionComponent<{
             >
               Confirm
             </Button>
-            <Button fullWidth onClick={() => reset()}>
-              Cancel
-            </Button>
+            <Button onClick={() => reset()}>Cancel</Button>
           </ButtonsGroup>
         </>
       )}

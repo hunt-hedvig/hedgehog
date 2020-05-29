@@ -17,8 +17,8 @@ export const Card = styled('div')<CardProps>`
   display: inline-flex;
   min-width: ${({ span }) => `calc(100%/${span ?? 1} - 1rem)`};
   margin: 0.5rem;
-  padding: 1rem;
-  align-items: center;
+  padding: 2rem;
+  align-items: flex-start;
   flex-direction: column;
   flex-grow: 1;
   color: ${({ theme }) => theme.foreground ?? colorsV3.gray900};

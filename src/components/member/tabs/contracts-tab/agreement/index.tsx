@@ -11,9 +11,20 @@ import { ToDate } from 'components/member/tabs/contracts-tab/agreement/ToDate'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
+import styled from 'react-emotion'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
+import { InfoRow, InfoText } from '../contract'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
+
+const Divider = styled.hr`
+  background: transparent;
+  border: 0;
+  border-top: 1px solid ${({ theme }) => theme.borderStrong};
+  margin: 2rem 0;
+  height: 0;
+  width: 100%;
+`
 
 const AgreementComponent: React.FC<{
   agreement: AgreementType
@@ -33,19 +44,20 @@ const AgreementComponent: React.FC<{
         </Card>
         {agreement.status !== AgreementStatus.Pending && (
           <>
-            <Card span={4}>
+            <Card span={2}>
               <FromDate
                 agreement={agreement}
                 contract={contract}
                 showNotification={showNotification}
               />
-            </Card>
-            <Card span={4}>
-              <ToDate
-                agreement={agreement}
-                contract={contract}
-                showNotification={showNotification}
-              />
+              <Divider />
+              <div>
+                <ToDate
+                  agreement={agreement}
+                  contract={contract}
+                  showNotification={showNotification}
+                />
+              </div>
             </Card>
             <Card span={2}>
               <InsuranceCertificate
@@ -64,20 +76,23 @@ const AgreementComponent: React.FC<{
             showNotification={showNotification}
           />
         </Card>
-        <Card span={2}>
-          <ThirdLevelHeadline>Debug</ThirdLevelHeadline>
-          <span>
-            <strong>Contract id:</strong> {contract.id}
-          </span>
-          <span>
-            <strong>Member id:</strong> {contract.holderMemberId}
-          </span>
-          <span>
-            <strong>Agreement id:</strong> {agreement.id}
-          </span>
-        </Card>
+
         <Card span={2}>
           <InsuranceMandate contract={contract} />
+        </Card>
+
+        <Card span={2}>
+          <ThirdLevelHeadline>Debuging</ThirdLevelHeadline>
+          <InfoRow>
+            Contract id
+            <InfoText>{contract.id}</InfoText>
+          </InfoRow>
+          <InfoRow>
+            Member id <InfoText>{contract.holderMemberId}</InfoText>
+          </InfoRow>
+          <InfoRow>
+            Agreement id <InfoText>{agreement.id}</InfoText>
+          </InfoRow>
         </Card>
       </CardsWrapper>
     </>
