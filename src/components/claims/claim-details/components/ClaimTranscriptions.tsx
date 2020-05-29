@@ -1,18 +1,12 @@
 import {
-  Button as MuiButton,
   List as MuiList,
   ListItem as MuiListItem,
-  TextField as MuiTextField,
   Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
 import { ClaimTranscription as ClaimTranscriptionType } from 'api/generated/graphql'
-import { format, parseISO } from 'date-fns'
 
-import { Field, FieldProps, Form, Formik } from 'formik'
-import gql from 'graphql-tag'
 import * as React from 'react'
-import { sleep } from 'utils/sleep'
 
 import { Paper } from '../../../shared/Paper'
 
