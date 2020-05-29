@@ -396,6 +396,8 @@ export const SemanticOverrides = styled.div`
       border: 0;
       border-radius: 0.5rem;
       overflow: hidden;
+      background: ${theme.accentLighter};
+      color: ${theme.foreground};
 
       thead th {
         &,

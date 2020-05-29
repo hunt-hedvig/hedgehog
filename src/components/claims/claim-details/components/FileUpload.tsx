@@ -1,4 +1,3 @@
-import { colors } from '@hedviginsurance/brand'
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import styled from 'react-emotion'
@@ -26,12 +25,12 @@ export const Button = styled('button')(({ theme }) => ({
   border: '1px solid',
   borderColor: theme.border,
   borderRadius: '5px',
-  color: colors.BLACK,
-  background: theme.backgroundLight,
+  color: theme.foreground,
+  background: theme.backgroundTransparent,
   cursor: 'pointer',
   textDecoration: 'none',
   '&:hover, &:focus': {
-    color: colors.GREEN,
+    color: theme.accent,
     textDecoration: 'none',
   },
   '&:focus, &:hover': {
