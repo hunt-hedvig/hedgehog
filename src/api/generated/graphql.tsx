@@ -337,6 +337,7 @@ export type ClaimTranscription = {
   __typename?: 'ClaimTranscription'
   text: Scalars['String']
   confidenceScore: Scalars['Float']
+  languageCode: Scalars['String']
 }
 
 export type ClaimType =

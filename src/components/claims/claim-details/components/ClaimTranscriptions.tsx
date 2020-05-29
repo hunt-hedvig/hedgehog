@@ -39,7 +39,7 @@ const ClaimTranscription = withStyles({
   },
 })(MuiTypography)
 
-const ClaimTranscriptionConfidenceScore = withStyles({
+const ClaimTranscriptionMetaData = withStyles({
   root: {
     fontSize: '0.875rem',
   },
@@ -54,9 +54,11 @@ const ClaimTranscriptions: React.SFC<Props> = ({ transcriptions }) => (
           <ClaimTranscription component="p">
             {transcription.text}
           </ClaimTranscription>
-          <ClaimTranscriptionConfidenceScore component="span">
-            {transcription.confidenceScore}
-          </ClaimTranscriptionConfidenceScore>
+          <MuiList>
+            <ClaimTranscriptionMetaData component="span">
+              {transcription.confidenceScore}/{transcription.languageCode}
+            </ClaimTranscriptionMetaData>
+          </MuiList>
         </ListItem>
       ))}
     </MuiList>
