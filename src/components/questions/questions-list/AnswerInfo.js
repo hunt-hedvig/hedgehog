@@ -1,5 +1,5 @@
-import * as moment from 'moment'
-import * as PropTypes from 'prop-types'
+import moment from 'moment'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Button, Header, Label, Segment } from 'semantic-ui-react'
 import styled from 'react-emotion'

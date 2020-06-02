@@ -1,13 +1,13 @@
-import * as dotenv from 'dotenv'
+import dotenv from 'dotenv'
 dotenv.config()
 
-import * as Koa from 'koa'
-import * as Router from 'koa-router'
-import * as compress from 'koa-compress'
-import * as mount from 'koa-mount'
-import * as serve from 'koa-static'
-import * as proxy from 'koa-server-http-proxy'
-import * as path from 'path'
+import Koa from 'koa'
+import Router from 'koa-router'
+import compress from 'koa-compress'
+import mount from 'koa-mount'
+import serve from 'koa-static'
+import proxy from 'koa-server-http-proxy'
+import path from 'path'
 import 'source-map-support/register'
 import { loginCallback, logout, refreshTokenCallback } from './auth'
 import { config } from './config'
@@ -17,8 +17,8 @@ import {
   setLoggerMiddleware,
   setRequestUuidMiddleware,
 } from './request-enhancers'
-import * as tls from 'tls'
-import * as url from 'url'
+import tls from 'tls'
+import url from 'url'
 import { readFileSync } from 'fs'
 
 const template = () => `

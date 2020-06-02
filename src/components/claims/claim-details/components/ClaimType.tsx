@@ -1,13 +1,9 @@
-import {
-  Button as MuiButton,
-  MenuItem as MuiMenuItem,
-  withStyles,
-} from '@material-ui/core'
+import { Button as MuiButton, MenuItem as MuiMenuItem } from '@material-ui/core'
 import { ClaimType } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
-import * as React from 'react'
+import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
@@ -220,11 +216,7 @@ interface ClaimTypeProps {
   refetchPage: () => Promise<any>
 }
 
-const SubmitButton = withStyles({
-  root: {
-    marginTop: '1rem',
-  },
-})(MuiButton)
+const SubmitButton = MuiButton
 
 const ClaimTypeInformationForm = styled(Form)({
   marginTop: '1rem',

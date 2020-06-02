@@ -17,3 +17,56 @@ href="https://fonts.googleapis.com/icon?family=Material+Icons"=>
   href="https://use.fontawesome.com/releases/v5.10.1/css/all.css"
   crossorigin="anonymous"
 />
+
+<style>
+  @font-face {
+    font-family: 'FavoritStd';
+    font-style: normal;
+    font-weight: 600;
+    src: url('https://cdn.hedvig.com/identity/fonts/FavoritStd-Bold.woff2')
+        format('woff2'),
+      url('https://cdn.hedvig.com/identity/fonts/FavoritStd-Bold.woff')
+        format('woff');
+  }
+  @font-face {
+    font-family: 'FavoritStd';
+    font-style: italic;
+    font-weight: 400;
+    src: url('https://cdn.hedvig.com/identity/fonts/FavoritStd-BookItalic.woff2')
+        format('woff2'),
+      url('https://cdn.hedvig.com/identity/fonts/FavoritStd-BookItalic.woff')
+        format('woff');
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: FavoritStd, sans-serif;
+    transition: background 1000ms, color 1000ms;
+  }
+
+  body {
+    font-family: FavoritStd, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a1a;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .ui.header {
+    font-family: 'FavoritStd', sans-serif;
+    font-kerning: none;
+    font-weight: 400;
+  }
+
+  strong {
+    font-weight: 400;
+    color: #000;
+  }
+</style>

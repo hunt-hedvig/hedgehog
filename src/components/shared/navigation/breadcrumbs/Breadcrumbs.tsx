@@ -1,6 +1,5 @@
 import { getMemberInfo } from 'lib/helpers'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Breadcrumb } from 'semantic-ui-react'
@@ -8,10 +7,16 @@ import { Breadcrumb } from 'semantic-ui-react'
 const BreadcrumbsContainer = styled.div`
   display: flex;
   margin: 20px 0;
+  text-transform: capitalize;
+  padding-bottom: 6rem;
+
+  &,
+  a {
+    color: ${({ theme }) => theme.mutedText};
+  }
 `
 
-const Breadcrumbs = ({ state, history }) => {
-  // eslint-disable-next-line no-undef
+const Breadcrumbs: React.FC<any> = ({ state, history }) => {
   const pathname = history.location.pathname
   if (pathname.startsWith('/login')) {
     return null
@@ -21,7 +26,7 @@ const Breadcrumbs = ({ state, history }) => {
     if (i === 0) {
       return {
         key: i,
-        content: <Link to={'/dashboard'}>dashborad</Link>,
+        content: <span>Dashborad</span>,
         active: true,
       }
     }
@@ -53,11 +58,6 @@ const Breadcrumbs = ({ state, history }) => {
       <Breadcrumb sections={paths} />
     </BreadcrumbsContainer>
   )
-}
-
-Breadcrumbs.propTypes = {
-  state: PropTypes.object,
-  history: PropTypes.object,
 }
 
 export default Breadcrumbs

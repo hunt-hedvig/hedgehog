@@ -1,5 +1,5 @@
 import Pagination from 'components/shared/pagination/Pagination'
-import * as PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import { history } from 'store'
@@ -11,15 +11,23 @@ import Question from './Question'
 const List = styled(Segment)`
   &&& {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     margin: 0 auto;
-    padding: 30px;
   }
 `
 
 const MemberQuestionItem = styled.div`
-  border-bottom: solid 1px #22242626;
-  padding: 10px 0;
+  padding: 3rem 1.5rem;
+  margin-left: -1.5rem;
+  margin-bottom: 3rem;
+  margin-right: 3rem;
+  border-radius: 0.5rem;
+  max-width: 50rem;
+  width: 50%;
+
+  background: ${({ theme }) => theme.accentLighter};
+  border: 1px solid ${({ theme }) => theme.border};
 `
 
 export default class SortedList extends React.Component {

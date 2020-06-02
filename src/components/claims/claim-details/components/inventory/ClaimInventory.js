@@ -1,6 +1,6 @@
 import { AddItemPrompt } from 'components/claims/claim-details/components/inventory/AddItemPrompt'
 import { InventoryList } from 'components/claims/claim-details/components/inventory/InventoryList'
-import * as React from 'react'
+import React from 'react'
 import { Button, Icon } from 'semantic-ui-react'
 import { Paper } from '../../../../shared/Paper'
 

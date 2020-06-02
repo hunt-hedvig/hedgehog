@@ -1,7 +1,8 @@
 import { Quote } from 'api/generated/graphql'
 import { signedOrExpiredPredicate, signedPredicate } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
-import * as React from 'react'
+import { Card, CardsWrapper } from 'hedvig-ui/card'
+import React from 'react'
 import styled from 'react-emotion'
 import { showNotification } from 'store/actions/notificationsActions'
 import { ActionsWrapper, Muted } from './common'
@@ -9,9 +10,7 @@ import { QuoteListItem } from './quote-list-item'
 import { QuoteModification } from './quote-modification'
 
 const Headline = styled('h1')({})
-const Wrapper = styled('div')({
-  padding: '1rem',
-})
+const Wrapper = styled('div')({})
 
 export const QuotesSubSection: React.FunctionComponent<{
   memberId: string
@@ -51,20 +50,23 @@ export const QuotesSubSection: React.FunctionComponent<{
         </ActionsWrapper>
       )}
       <Headline>Quotes</Headline>
-      {activeQuotes.map((quote) => (
-        <QuoteListItem key={quote.id} quote={quote} memberId={memberId} />
-      ))}
+      <CardsWrapper>
+        {activeQuotes.map((quote) => (
+          <Card key={quote.id}>
+            <QuoteListItem quote={quote} memberId={memberId} />
+          </Card>
+        ))}
+      </CardsWrapper>
 
       <Headline>Signed/Expired quotes</Headline>
       <Muted>
-        {quotes.filter(signedOrExpiredPredicate).map((quote) => (
-          <QuoteListItem
-            key={quote.id}
-            quote={quote}
-            memberId={memberId}
-            inactionable
-          />
-        ))}
+        <CardsWrapper>
+          {quotes.filter(signedOrExpiredPredicate).map((quote) => (
+            <Card key={quote.id}>
+              <QuoteListItem quote={quote} memberId={memberId} inactionable />
+            </Card>
+          ))}
+        </CardsWrapper>
       </Muted>
     </Wrapper>
   )

@@ -1,5 +1,5 @@
 import enGB from 'date-fns/locale/en-GB'
-import * as React from 'react'
+import React from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styled from 'react-emotion'

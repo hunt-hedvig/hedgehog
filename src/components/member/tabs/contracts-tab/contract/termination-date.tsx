@@ -18,7 +18,7 @@ import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 

@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/react-hooks'
-import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
 import {
   ApartmentSubType,
   ContractMarketInfo,
@@ -21,7 +20,7 @@ import { getCreateQuoteForNewContractOptions } from 'graphql/use-create-quote-fo
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
 import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
@@ -34,7 +33,7 @@ import {
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/quote'
-import * as uuid from 'uuid/v4'
+import uuid from 'uuid/v4'
 import { ErrorMessage } from './common'
 import {
   getProductSubTypeValue,
@@ -499,20 +498,19 @@ export const QuoteModification: React.FC<{
   )
 }
 
-const ExtraBuildingEditorWrapper = styled('div')({
-  border: '1px solid ' + colorsV2.semilightgray,
+const ExtraBuildingEditorWrapper = styled('div')(({ theme }) => ({
+  border: '1px solid ' + theme.border,
   padding: '1rem 0',
-})
-const ExtraBuildingWrapper = styled('div')({
-  borderBottom: '1px solid ' + colorsV2.semilightgray,
+}))
+const ExtraBuildingWrapper = styled('div')(({ theme }) => ({
+  borderBottom: '1px solid ' + theme.border,
   marginBottom: '1rem',
   padding: '1rem',
-  paddingTop: 0,
 
   ':nth-child(odd)': {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: theme.backgroundTransparent,
   },
-})
+}))
 const RemoveButtonWrapper = styled('div')({
   textAlign: 'right',
   paddingTop: '1rem',

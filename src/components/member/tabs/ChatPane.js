@@ -19,7 +19,6 @@ const resizableStyles = {
   right: '10px',
   boxShadow: '0 5px 40px rgba(0, 0, 0, 0.16)',
   borderRadius: '8px',
-  backgroundColor: '#ffffff',
   zIndex: '999',
 }
 
@@ -27,7 +26,10 @@ const ChatHeaderStyle = styled.div`
   position: ${(props) => (!props.state ? 'fixed' : '')};
   right: ${(props) => (!props.state ? 0 : '')};
   height: 40px;
-  background-color: #cccccc;
+  background-color: ${({ theme }) => theme.accentBackground};
+  color: ${({ theme }) => theme.foreground};
+  border: 1px solid ${({ theme }) => theme.borderStrong};
+  border-bottom: 0;
   padding: 10px;
   display: flex;
   flex-direction: row;
