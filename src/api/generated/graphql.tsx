@@ -1752,14 +1752,14 @@ export type GetContractMarketInfoQueryVariables = {
 
 export type GetContractMarketInfoQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      contractMarketInfo: Maybe<
-        { __typename?: 'ContractMarketInfo' } & Pick<
-          ContractMarketInfo,
-          'market' | 'preferredCurrency'
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        contractMarketInfo: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market' | 'preferredCurrency'
+          >
         >
-      >
-    }
+      }
   >
 }
 
@@ -2689,6 +2689,7 @@ export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       contractMarketInfo {
         market
         preferredCurrency
