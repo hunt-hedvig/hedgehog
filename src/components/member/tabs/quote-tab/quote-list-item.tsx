@@ -18,9 +18,6 @@ import { QuoteContractCreation } from './quote-contract-creation'
 import { QuoteModification } from './quote-modification'
 
 const OuterWrapper = styled('div')(({}) => ({
-  ':not(:last-child)': {
-    // borderBottom: '1px solid ' + theme.border,
-  },
   width: '100%',
 }))
 
