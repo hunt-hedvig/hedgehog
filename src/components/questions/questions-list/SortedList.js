@@ -11,8 +11,7 @@ import Question from './Question'
 const List = styled(Segment)`
   &&& {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     margin: 0 auto;
   }
 `
