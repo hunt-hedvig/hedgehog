@@ -234,7 +234,6 @@ export const QuoteModification: React.FC<{
 
   const [contractMarket, { loading }] = useContractMarketInfo(memberId)
   const [contracts] = useContracts(memberId)
-  console.log(contractMarket, contracts)
 
   const [
     bypassUnderwritingGuidelines,
