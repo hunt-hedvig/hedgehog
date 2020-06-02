@@ -209,6 +209,13 @@ export type BurglaryClaim = {
   receipt?: Maybe<Scalars['String']>
 }
 
+export type CampaignFilter = {
+  code?: Maybe<Scalars['String']>
+  partnerId?: Maybe<Scalars['String']>
+  activeFrom?: Maybe<Scalars['LocalDate']>
+  activeTo?: Maybe<Scalars['LocalDate']>
+}
+
 export type CampaignOwnerPartner = {
   __typename?: 'CampaignOwnerPartner'
   partnerId: Scalars['String']
@@ -440,6 +447,11 @@ export enum ContractStatus {
   Terminated = 'TERMINATED',
 }
 
+export type CostDeduction = {
+  __typename?: 'CostDeduction'
+  amount?: Maybe<Scalars['MonetaryAmount']>
+}
+
 export type CreateNorwegianGripenInput = {
   baseFactorString?: Maybe<Scalars['String']>
   factors: Array<NorwegianGripenFactorInput>
@@ -549,6 +561,11 @@ export type FloodingClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export type FreeMonths = {
+  __typename?: 'FreeMonths'
+  numberOfMonths?: Maybe<Scalars['Int']>
+}
+
 export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE',
@@ -600,6 +617,26 @@ export type HouseQuoteInput = {
   numberOfBathrooms?: Maybe<Scalars['Int']>
   extraBuildings?: Maybe<Array<ExtraBuildingInput>>
   isSubleted?: Maybe<Scalars['Boolean']>
+}
+
+export type Incentive =
+  | MonthlyPercentageDiscountFixedPeriod
+  | FreeMonths
+  | CostDeduction
+  | NoDiscount
+  | IndefinitePercentageDiscount
+
+export enum IncentiveType {
+  CostDeduction = 'COST_DEDUCTION',
+  FreeMonths = 'FREE_MONTHS',
+  NoDiscount = 'NO_DISCOUNT',
+  MonthlyPercentageDiscountFixedPeriod = 'MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD',
+  IndefinitePercentageDiscount = 'INDEFINITE_PERCENTAGE_DISCOUNT',
+}
+
+export type IndefinitePercentageDiscount = {
+  __typename?: 'IndefinitePercentageDiscount'
+  percentageDiscount?: Maybe<Scalars['Float']>
 }
 
 export type InstallationsClaim = {
@@ -718,6 +755,12 @@ export type MonetaryAmountV2 = {
   __typename?: 'MonetaryAmountV2'
   amount: Scalars['String']
   currency: Scalars['String']
+}
+
+export type MonthlyPercentageDiscountFixedPeriod = {
+  __typename?: 'MonthlyPercentageDiscountFixedPeriod'
+  numberOfMonths?: Maybe<Scalars['Int']>
+  percentage?: Maybe<Scalars['Float']>
 }
 
 export type MonthlySubscription = {
@@ -986,6 +1029,11 @@ export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
   request?: Maybe<AssignVoucherPercentageDiscount>
 }
 
+export type NoDiscount = {
+  __typename?: 'NoDiscount'
+  _?: Maybe<Scalars['Boolean']>
+}
+
 export type NorwegianGripenFactorInput = {
   factorType: NorwegianGripenFactorType
   factorString: Scalars['String']
@@ -998,6 +1046,8 @@ export enum NorwegianGripenFactorType {
   NumberOfPeople = 'NUMBER_OF_PEOPLE',
   SquareMeters = 'SQUARE_METERS',
   HouseholdType = 'HOUSEHOLD_TYPE',
+  ObjectValue = 'OBJECT_VALUE',
+  TypeOfObject = 'TYPE_OF_OBJECT',
   Deductible = 'DEDUCTIBLE',
 }
 
@@ -1222,6 +1272,10 @@ export type QueryTypeFiltersArgs = {
 
 export type QueryTypeInventoryItemFiltersArgs = {
   inventoryItemId: Scalars['String']
+}
+
+export type QueryTypeFindPartnerCampaignsArgs = {
+  input?: Maybe<CampaignFilter>
 }
 
 export type Quote = {
@@ -1547,8 +1601,10 @@ export type VoucherCampaign = {
   id: Scalars['ID']
   campaignCode: Scalars['String']
   partnerId: Scalars['String']
+  partnerName: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validTo?: Maybe<Scalars['Instant']>
+  incentive?: Maybe<Incentive>
 }
 
 export type WaterDamageBathroomClaim = {
@@ -1925,14 +1981,29 @@ export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type FindPartnerCampaignsQueryVariables = {}
+export type FindPartnerCampaignsQueryVariables = {
+  input?: Maybe<CampaignFilter>
+}
 
 export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
   findPartnerCampaigns: Array<
     { __typename?: 'VoucherCampaign' } & Pick<
       VoucherCampaign,
-      'id' | 'campaignCode' | 'partnerId' | 'validFrom' | 'validTo'
-    >
+      | 'id'
+      | 'campaignCode'
+      | 'partnerId'
+      | 'partnerName'
+      | 'validFrom'
+      | 'validTo'
+    > & {
+        incentive: Maybe<
+          | { __typename: 'MonthlyPercentageDiscountFixedPeriod' }
+          | { __typename: 'FreeMonths' }
+          | { __typename: 'CostDeduction' }
+          | { __typename: 'NoDiscount' }
+          | { __typename: 'IndefinitePercentageDiscount' }
+        >
+      }
   >
 }
 
@@ -2982,13 +3053,17 @@ export type GetPartnerCampaignOwnersQueryResult = ApolloReactCommon.QueryResult<
   GetPartnerCampaignOwnersQueryVariables
 >
 export const FindPartnerCampaignsDocument = gql`
-  query FindPartnerCampaigns {
-    findPartnerCampaigns {
+  query FindPartnerCampaigns($input: CampaignFilter) {
+    findPartnerCampaigns(input: $input) {
       id
       campaignCode
       partnerId
+      partnerName
       validFrom
       validTo
+      incentive {
+        __typename
+      }
     }
   }
 `
@@ -3005,6 +3080,7 @@ export const FindPartnerCampaignsDocument = gql`
  * @example
  * const { data, loading, error } = useFindPartnerCampaignsQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
@@ -3350,6 +3426,27 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'TestClaim',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'Incentive',
+        possibleTypes: [
+          {
+            name: 'MonthlyPercentageDiscountFixedPeriod',
+          },
+          {
+            name: 'FreeMonths',
+          },
+          {
+            name: 'CostDeduction',
+          },
+          {
+            name: 'NoDiscount',
+          },
+          {
+            name: 'IndefinitePercentageDiscount',
           },
         ],
       },

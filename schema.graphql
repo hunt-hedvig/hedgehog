@@ -20,7 +20,7 @@ type QueryType {
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
-  findPartnerCampaigns: [VoucherCampaign!]!
+  findPartnerCampaigns(input: CampaignFilter): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
 }
 
@@ -342,13 +342,55 @@ type AutoLabel {
   message: Boolean
 }
 
+enum IncentiveType {
+  COST_DEDUCTION
+  FREE_MONTHS
+  NO_DISCOUNT
+  MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD
+  INDEFINITE_PERCENTAGE_DISCOUNT
+}
+
 type VoucherCampaign {
   id: ID!
   campaignCode: String!
   partnerId: String!
+  partnerName: String!
   validFrom: Instant
   validTo: Instant
+  incentive: Incentive
 }
+
+#type Incentive {
+#  numberOfMonths: Int,
+#  amount: Float,
+#  percentageDiscount: Float,
+#  currency: String,
+#  type: IncentiveType
+#}
+
+type MonthlyPercentageDiscountFixedPeriod {
+  numberOfMonths: Int,
+  percentage: Float
+}
+
+type FreeMonths {
+  numberOfMonths: Int
+}
+
+type CostDeduction {
+  amount: MonetaryAmount
+}
+
+type NoDiscount {
+_: Boolean
+}
+
+
+type IndefinitePercentageDiscount {
+  percentageDiscount: Float
+}
+
+union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount
 
 input FilterPayload {
   filters: [Filter!]!
@@ -621,6 +663,20 @@ type HouseQuoteData implements IQuoteData {
   extraBuildings: [ExtraBuilding!]!
   isSubleted: Boolean
 }
+
+input CampaignFilter {
+  code: String
+  partnerId: String
+  activeFrom: LocalDate
+  activeTo: LocalDate
+}
+
+#type CampaignFilter {
+#  code: String
+#  partnerId: String
+#  activeFrom: LocalDate
+#  activeTo: LocalDate
+#}
 
 type ExtraBuilding {
   id: ID
@@ -1241,6 +1297,8 @@ enum NorwegianGripenFactorType {
   NUMBER_OF_PEOPLE
   SQUARE_METERS
   HOUSEHOLD_TYPE
+  OBJECT_VALUE
+  TYPE_OF_OBJECT
   DEDUCTIBLE
 }
 

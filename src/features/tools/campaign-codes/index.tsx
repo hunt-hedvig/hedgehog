@@ -1,8 +1,10 @@
 import { format } from 'date-fns'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
+import { Button, ButtonsGroup } from 'hedvig-ui/button'
+import * as moment from 'moment'
 import * as React from 'react'
 import styled from 'react-emotion'
-import { Button, Dropdown, Form, Input, Table } from 'semantic-ui-react'
+import { Dropdown, Form, Input, Table } from 'semantic-ui-react'
 import { DateTimePicker } from '../../../../shared/hedvig-ui/date-time-picker'
 import { Spacing } from '../../../../shared/hedvig-ui/spacing'
 import { MainHeadline } from '../../../../shared/hedvig-ui/typography'
@@ -13,8 +15,79 @@ import {
 } from '../../../graphql/use-add-partner-percentage-discount-code'
 import { usePartnerCampaignOwners } from '../../../graphql/use-get-partner-campaign-owners'
 
+interface CampaignQueryFormState {
+  code: string | null
+  partnerId: string | null
+  activeFrom: Date | null
+  activeTo: Date | null
+}
+
+// export const CampaignCodeTable: React.FC<{
+//   // campaignQueryFormState: CampaignQueryFormState
+// }> = () => {
+//   // interface CampaignQueryFormState {
+//   //   code: string | null
+//   //   partnerId: string | null
+//   //   validFrom: Date | null
+//   //   validUntil: Date | null
+//   // }
+//   //
+//   // const [campaignQueryFormState, setCampaignQueryFormState] = React.useState<
+//   //   CampaignQueryFormState
+//   // >({
+//   //   code: null,
+//   //   partnerId: null,
+//   //   validFrom: null,
+//   //   validUntil: null,
+//   // })
+//   //
+//   //
+//   const [partnerCampaigns, { loading }] = usePartnerCampaigns()
+//
+//   return (
+//     <Spacing>
+//       {loading && 'loading...'}
+//       {!loading && partnerCampaigns.length === 0 && 'No partner campaigns :('}
+//       <Table celled>
+//         <Table.Header>
+//           <Table.Row>
+//             <Table.HeaderCell>Valid From</Table.HeaderCell>
+//             <Table.HeaderCell>Valid To</Table.HeaderCell>
+//             <Table.HeaderCell>Campaign Code</Table.HeaderCell>
+//             <Table.HeaderCell>Incentive</Table.HeaderCell>
+//             <Table.HeaderCell>Campaign Owner</Table.HeaderCell>
+//             <Table.HeaderCell>Campaign Owner Name</Table.HeaderCell>
+//           </Table.Row>
+//         </Table.Header>
+//         <Table.Body>
+//           <>
+//             {partnerCampaigns.map((campaign) => (
+//               <Table.Row key={campaign.id}>
+//                 <Table.Cell>
+//                   {campaign.validFrom ?? '-'}
+//                   {/*? format(campaign.validFrom, 'yyyy-MM-dd')*/}
+//                   {/*  : '-'}*/}
+//                 </Table.Cell>
+//                 <Table.Cell>
+//                   {campaign.validTo ?? '-'}
+//                   {/*{campaign.validTo*/}
+//                   {/*  ? format(campaign.validTo, 'yyyy-MM-dd')*/}
+//                   {/*  : '-'}*/}
+//                 </Table.Cell>
+//                 <Table.Cell>{campaign.campaignCode}</Table.Cell>
+//                 <Table.Cell>{campaign.incentive?.__typename}</Table.Cell>
+//                 <Table.Cell>{campaign.partnerId}</Table.Cell>
+//                 <Table.Cell>{campaign.partnerName}</Table.Cell>
+//               </Table.Row>
+//             ))}
+//           </>
+//         </Table.Body>
+//       </Table>
+//     </Spacing>
+//   )
+// }
+
 export const CampaignCodeInfo: React.FC = () => {
-  const [partnerCampaigns, { loading, refetch }] = usePartnerCampaigns()
   const [filter, setFilter] = React.useState(false)
   const [shouldCreate, setShouldCreate] = React.useState(false)
 
@@ -22,12 +95,29 @@ export const CampaignCodeInfo: React.FC = () => {
     padding: 10px;
   `
 
+  const [campaignQueryFormState, setCampaignQueryFormState] = React.useState<
+    CampaignQueryFormState
+  >({
+    code: null,
+    partnerId: null,
+    activeFrom: null,
+    activeTo: null,
+  })
+
+  const [partnerCampaigns, { loading, refetch }] = usePartnerCampaigns(
+    campaignQueryFormState,
+  )
+
+  React.useEffect(() => {
+    refetch()
+  }, [campaignQueryFormState.partnerId])
+
   const [
     partnerCampaignOwners,
     { loading: partnerCampaignOwnersLoading },
   ] = usePartnerCampaignOwners()
 
-  const partnerIdOptions = partnerCampaignOwners.map(
+  const partnerIdOptions: PartnerIdOptions[] = partnerCampaignOwners.map(
     (partnerCampaignOwner) => ({
       key: partnerCampaignOwner.partnerId,
       value: partnerCampaignOwner.partnerId,
@@ -35,21 +125,138 @@ export const CampaignCodeInfo: React.FC = () => {
     }),
   )
 
+  const [
+    activeFromDatePickerEnabled,
+    setActiveFromDatePickerEnabled,
+  ] = React.useState(false)
+  const [
+    activeToDatePickerEnabled,
+    setActiveToDatePickerEnabled,
+  ] = React.useState(false)
+  const [isWip, setIsWip] = React.useState(false)
+
+  const getTextInput = (
+    variable: keyof FilterFormState,
+    inputType = 'text',
+  ) => (
+    <>
+      <Input
+        onChange={(e) => {
+          if (isWip) {
+            setIsWip(true)
+          }
+          setCampaignQueryFormState({
+            ...campaignQueryFormState,
+            [variable]: e.currentTarget.value,
+          })
+        }}
+        type={inputType}
+      />
+    </>
+  )
+
   if (partnerCampaignOwnersLoading) {
     return 'loading...'
+  }
+
+  const formatDate = (dateToFormat: any) => {
+    const date = moment(dateToFormat).local()
+    return date.isValid() ? date.format('DD MMMM YYYY') : '-'
   }
 
   return (
     <>
       <MainHeadline>Campaign Codes</MainHeadline>
       <ButtonWrapper>
-        <Button onClick={() => setFilter(!filter)}>Filter codes</Button>
-        <Button onClick={() => setShouldCreate(!shouldCreate)}>
-          Create new code
-        </Button>
+        <ButtonsGroup>
+          <Button onClick={() => setFilter(!filter)}>Filter codes</Button>
+          <Button onClick={() => setShouldCreate(!shouldCreate)}>
+            Create new code
+          </Button>
+        </ButtonsGroup>
       </ButtonWrapper>
-      {filter && <FilterCodes />}
-      {shouldCreate && <CreateNewCampaignCode />}
+      {filter && (
+        <Form>
+          <Form.Field>
+            <label>Code</label>
+            {getTextInput('code', 'Code')}
+          </Form.Field>
+          <Form.Field>
+            <label>Campaign owner id</label>
+            <Dropdown
+              placeholder="partnerId"
+              fluid
+              search
+              selection
+              options={partnerIdOptions}
+              onChange={(_, data) => {
+                if (isWip) {
+                  setIsWip(true)
+                }
+                setCampaignQueryFormState({
+                  ...campaignQueryFormState,
+                  partnerId: data.value as string,
+                })
+              }}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Campaign code active from</label>
+            <input
+              onClick={() =>
+                setActiveFromDatePickerEnabled(!activeFromDatePickerEnabled)
+              }
+              placeholder={
+                campaignQueryFormState.activeFrom
+                  ? format(campaignQueryFormState.activeFrom, 'yyyy-MM-dd')
+                  : ''
+              }
+            />
+            {activeFromDatePickerEnabled && (
+              <>
+                <DateTimePicker
+                  date={campaignQueryFormState.activeFrom!!}
+                  setDate={(data) => {
+                    setCampaignQueryFormState({
+                      ...campaignQueryFormState,
+                      activeFrom: data,
+                    })
+                  }}
+                />
+              </>
+            )}
+          </Form.Field>
+          <Form.Field>
+            <label>Campaign code active to</label>
+            <input
+              onClick={() =>
+                setActiveToDatePickerEnabled(!activeToDatePickerEnabled)
+              }
+              placeholder={
+                campaignQueryFormState.activeFrom
+                  ? format(campaignQueryFormState.activeFrom, 'yyyy-MM-dd')
+                  : ''
+              }
+            />
+            {activeToDatePickerEnabled && (
+              <>
+                <DateTimePicker
+                  date={campaignQueryFormState.activeTo!!}
+                  setDate={(data) => {
+                    setCampaignQueryFormState({
+                      ...campaignQueryFormState,
+                      activeTo: data,
+                    })
+                  }}
+                />
+              </>
+            )}
+          </Form.Field>
+        </Form>
+      )}
+      {shouldCreate && (
+        <CreateNewCampaignCode partnerIdOptions={partnerIdOptions} />
+      )}
       <Spacing>
         {loading && 'loading...'}
         {!loading && partnerCampaigns.length === 0 && 'No partner campaigns :('}
@@ -61,17 +268,23 @@ export const CampaignCodeInfo: React.FC = () => {
               <Table.HeaderCell>Campaign Code</Table.HeaderCell>
               <Table.HeaderCell>Incentive</Table.HeaderCell>
               <Table.HeaderCell>Campaign Owner</Table.HeaderCell>
+              <Table.HeaderCell>Campaign Owner Name</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             <>
               {partnerCampaigns.map((campaign) => (
                 <Table.Row key={campaign.id}>
-                  <Table.Cell>{campaign.validFrom ?? '-'}</Table.Cell>
-                  <Table.Cell>{campaign.validTo ?? '-'}</Table.Cell>
+                  <Table.Cell>
+                    {campaign.validFrom ? formatDate(campaign.validFrom) : '-'}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {campaign.validTo ? formatDate(campaign.validTo) : '-'}
+                  </Table.Cell>
                   <Table.Cell>{campaign.campaignCode}</Table.Cell>
-                  <Table.Cell>{'TODO'}</Table.Cell>
+                  <Table.Cell>{campaign.incentive?.__typename}</Table.Cell>
                   <Table.Cell>{campaign.partnerId}</Table.Cell>
+                  <Table.Cell>{campaign.partnerName}</Table.Cell>
                 </Table.Row>
               ))}
             </>
@@ -87,142 +300,153 @@ interface FilterFormState {
   campaignOwnerId: string | null
 }
 
-export const FilterCodes: React.FC = () => {
-  const [
-    activeFromDatePickerEnabled,
-    setActiveFromDatePickerEnabled,
-  ] = React.useState(false)
-  const [
-    activeToDatePickerEnabled,
-    setActiveToDatePickerEnabled,
-  ] = React.useState(false)
-  const [activeFromFilterDate, setActiveFromFilterDate] = React.useState(
-    new Date(),
-  )
-  const [activeToFilterDate, setActiveToFilterDate] = React.useState(new Date())
-  const [isWip, setIsWip] = React.useState(false)
-  const [filterFormState, setFilterFormState] = React.useState<FilterFormState>(
-    {
-      code: null,
-      campaignOwnerId: null,
-    },
-  )
-  const [
-    partnerCampaignOwners,
-    { loading: partnerCampaignOwnersLoading },
-  ] = usePartnerCampaignOwners()
-
-  const partnerIdOptions = partnerCampaignOwners.map(
-    (partnerCampaignOwner) => ({
-      key: partnerCampaignOwner.partnerId,
-      value: partnerCampaignOwner.partnerId,
-      text: partnerCampaignOwner.partnerId,
-    }),
-  )
-
-  if (partnerCampaignOwnersLoading) {
-    return 'loading...'
-  }
-
-  interface CampaignQueryFormState {
-    code: string | null
-    partnerId: string | null
-    validFrom: Date | null
-    validUntil: Date | null
-  }
-
-  const [campaignQueryFormState, setCampaignQueryFormState] = React.useState<
-    CampaignQueryFormState
-  >({
-    code: null,
-    partnerId: null,
-    validFrom: null,
-    validUntil: null,
-  })
-
-  const getTextInput = (
-    variable: keyof FilterFormState,
-    inputType = 'text',
-  ) => (
-    <>
-      <Input
-        onChange={(e) => {
-          if (isWip) {
-            setIsWip(true)
-          }
-          setFilterFormState({
-            ...filterFormState,
-            [variable]: e.currentTarget.value,
-          })
-        }}
-        type={inputType}
-      />
-    </>
-  )
-
-  return (
-    <Form>
-      <Form.Field>
-        <label>Code</label>
-        {getTextInput('code', 'Code')}
-      </Form.Field>
-      <Form.Field>
-        <label>Campaign owner id</label>
-        <Dropdown
-          placeholder="partnerId"
-          fluid
-          search
-          selection
-          options={partnerIdOptions}
-          onChange={(_, data) => {
-            if (isWip) {
-              setIsWip(true)
-            }
-            setCampaignQueryFormState({
-              ...campaignQueryFormState,
-              partnerId: data.value as string,
-            })
-          }}
-        />
-      </Form.Field>
-      <Form.Field>
-        <label>Campaign code active from</label>
-        <input
-          onClick={() =>
-            setActiveFromDatePickerEnabled(!activeFromDatePickerEnabled)
-          }
-          placeholder={format(activeFromFilterDate, 'yyyy-MM-dd')}
-        />
-        {activeFromDatePickerEnabled && (
-          <>
-            <DateTimePicker
-              date={activeFromFilterDate}
-              setDate={setActiveFromFilterDate}
-            />
-          </>
-        )}
-      </Form.Field>
-      <Form.Field>
-        <label>Campaign code active to</label>
-        <input
-          onClick={() =>
-            setActiveToDatePickerEnabled(!activeToDatePickerEnabled)
-          }
-          placeholder={format(activeToFilterDate, 'yyyy-MM-dd')}
-        />
-        {activeToDatePickerEnabled && (
-          <>
-            <DateTimePicker
-              date={activeToFilterDate}
-              setDate={setActiveToFilterDate}
-            />
-          </>
-        )}
-      </Form.Field>
-      <Button type="submit">Filter</Button>
-    </Form>
-  )
+interface PartnerIdOptions {
+  key: string
+  value: string
+  text: string
 }
+
+// export const FilterCodes: React.FC<{
+//   partnerIdOptions: PartnerIdOptions[]
+// }> = ({ partnerIdOptions }) => {
+//   const [
+//     activeFromDatePickerEnabled,
+//     setActiveFromDatePickerEnabled,
+//   ] = React.useState(false)
+//   const [
+//     activeToDatePickerEnabled,
+//     setActiveToDatePickerEnabled,
+//   ] = React.useState(false)
+//   const [isWip, setIsWip] = React.useState(false)
+//
+//   interface CampaignQueryFormState {
+//     code: string | null
+//     partnerId: string | null
+//     validFrom: Date | null
+//     validUntil: Date | null
+//   }
+//
+//   const [campaignQueryFormState, setCampaignQueryFormState] = React.useState<
+//     CampaignQueryFormState
+//   >({
+//     code: null,
+//     partnerId: null,
+//     validFrom: null,
+//     validUntil: null,
+//   })
+//
+//   const [partnerCampaigns, { loading }] = usePartnerCampaigns(
+//     campaignQueryFormState,
+//   )
+//
+//   const getTextInput = (
+//     variable: keyof FilterFormState,
+//     inputType = 'text',
+//   ) => (
+//     <>
+//       <Input
+//         onChange={(e) => {
+//           if (isWip) {
+//             setIsWip(true)
+//           }
+//           setCampaignQueryFormState({
+//             ...campaignQueryFormState,
+//             [variable]: e.currentTarget.value,
+//           })
+//         }}
+//         type={inputType}
+//       />
+//     </>
+//   )
+//
+//   return (
+//     <Form>
+//       <Form.Field>
+//         <label>Code</label>
+//         {getTextInput('code', 'Code')}
+//       </Form.Field>
+//       <Form.Field>
+//         <label>Campaign owner id</label>
+//         <Dropdown
+//           placeholder="partnerId"
+//           fluid
+//           search
+//           selection
+//           options={partnerIdOptions}
+//           onChange={(_, data) => {
+//             if (isWip) {
+//               setIsWip(true)
+//             }
+//             setCampaignQueryFormState({
+//               ...campaignQueryFormState,
+//               partnerId: data.value as string,
+//             })
+//           }}
+//         />
+//       </Form.Field>
+//       <Form.Field>
+//         <label>Campaign code active from</label>
+//         <input
+//           onClick={() =>
+//             setActiveFromDatePickerEnabled(!activeFromDatePickerEnabled)
+//           }
+//           placeholder={
+//             campaignQueryFormState.validFrom
+//               ? format(campaignQueryFormState.validFrom, 'yyyy-MM-dd')
+//               : ''
+//           }
+//         />
+//         {activeFromDatePickerEnabled && (
+//           <>
+//             <DateTimePicker
+//               date={campaignQueryFormState.validFrom!!}
+//               setDate={(data) => {
+//                 setCampaignQueryFormState({
+//                   ...campaignQueryFormState,
+//                   validFrom: data,
+//                 })
+//               }}
+//             />
+//           </>
+//         )}
+//       </Form.Field>
+//       <Form.Field>
+//         <label>Campaign code active to</label>
+//         <input
+//           onClick={() =>
+//             setActiveToDatePickerEnabled(!activeToDatePickerEnabled)
+//           }
+//           placeholder={
+//             campaignQueryFormState.validUntil
+//               ? format(campaignQueryFormState.validUntil, 'yyyy-MM-dd')
+//               : ''
+//           }
+//         />
+//         {activeToDatePickerEnabled && (
+//           <>
+//             <DateTimePicker
+//               date={campaignQueryFormState.validUntil!!}
+//               setDate={(data) => {
+//                 setCampaignQueryFormState({
+//                   ...campaignQueryFormState,
+//                   validUntil: data,
+//                 })
+//               }}
+//             />
+//           </>
+//         )}
+//       </Form.Field>
+//       {/*<Button*/}
+//       {/*  type="submit"*/}
+//       {/*  onClick={() => {*/}
+//       {/*    partnerCampaigns*/}
+//       {/*  }}*/}
+//       {/*>*/}
+//       {/*  Filter*/}
+//       {/*</Button>*/}
+//     </Form>
+//   )
+// }
 
 interface NewCampaignCodeFormState {
   code: string | null
@@ -233,7 +457,9 @@ interface NewCampaignCodeFormState {
   validUntil: Date | null
 }
 
-export const CreateNewCampaignCode: React.FC = () => {
+export const CreateNewCampaignCode: React.FC<{
+  partnerIdOptions: PartnerIdOptions[]
+}> = ({ partnerIdOptions }) => {
   const [
     setPartnerPercentageDiscount,
     { loading: addPartnerPercentageDiscountLoading },
@@ -249,23 +475,6 @@ export const CreateNewCampaignCode: React.FC = () => {
     activeToDatePickerEnabled,
     setActiveToDatePickerEnabled,
   ] = React.useState(false)
-
-  const [
-    partnerCampaignOwners,
-    { loading: partnerCampaignOwnersLoading },
-  ] = usePartnerCampaignOwners()
-
-  const partnerIdOptions = partnerCampaignOwners.map(
-    (partnerCampaignOwner) => ({
-      key: partnerCampaignOwner.partnerId,
-      value: partnerCampaignOwner.partnerId,
-      text: partnerCampaignOwner.partnerId,
-    }),
-  )
-
-  if (partnerCampaignOwnersLoading) {
-    return 'loading...'
-  }
 
   const [newCampaignCodeFormState, setCampaignCodeFormState] = React.useState<
     NewCampaignCodeFormState

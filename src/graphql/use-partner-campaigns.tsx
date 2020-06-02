@@ -1,4 +1,5 @@
 import {
+  CampaignFilter,
   FindPartnerCampaignsQueryResult,
   useFindPartnerCampaignsQuery,
   VoucherCampaign,
@@ -9,8 +10,12 @@ type VoucherCampaignReturnTuple = [
   FindPartnerCampaignsQueryResult,
 ]
 
-export const usePartnerCampaigns = (): VoucherCampaignReturnTuple => {
-  const queryResult = useFindPartnerCampaignsQuery()
+export const usePartnerCampaigns = (
+  campaignFilter: CampaignFilter,
+): VoucherCampaignReturnTuple => {
+  const queryResult = useFindPartnerCampaignsQuery({
+    variables: { input: campaignFilter },
+  })
   const voucherCampaigns = (queryResult.data?.findPartnerCampaigns ??
     []) as VoucherCampaign[]
   return [voucherCampaigns, queryResult]
