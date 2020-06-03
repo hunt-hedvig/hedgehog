@@ -251,7 +251,7 @@ export const QuoteModification: React.FC<{
         }
         setFormState({ ...formState, productType: data.value as string })
       }}
-      options={getDropdownOptions(contractMarket)}
+      options={contractMarket ? getDropdownOptions(contractMarket) : []}
     />
   )
 
