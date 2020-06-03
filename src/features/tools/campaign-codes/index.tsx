@@ -40,11 +40,6 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
     text: string
   }
 
-  interface FilterFormState {
-    code: string | null
-    campaignOwnerId: string | null
-  }
-
   const [campaignQueryFormState, setCampaignQueryFormState] = React.useState<
     CampaignQueryFormState
   >({
@@ -54,21 +49,20 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
     activeTo: null,
   })
 
-  const [
-    partnerCampaigns,
-    { loading: partnerCampaignsLoading, refetch },
-  ] = usePartnerCampaigns(campaignQueryFormState)
+  const [partnerCampaigns, { refetch }] = usePartnerCampaigns(
+    campaignQueryFormState,
+  )
 
-  console.log(campaignQueryFormState, campaignQueryFormState.partnerId)
+  React.useEffect(() => {
+    refetch()
+  }, [
+    campaignQueryFormState.partnerId,
+    campaignQueryFormState.code,
+    campaignQueryFormState.activeFrom,
+    campaignQueryFormState.activeTo,
+  ])
 
-  // React.useEffect(() => {
-  //   refetch().then((r) => console.log('refetched'))
-  // }, [campaignQueryFormState.partnerId])
-
-  const [
-    partnerCampaignOwners,
-    { loading: partnerCampaignOwnersLoading },
-  ] = usePartnerCampaignOwners()
+  const [partnerCampaignOwners] = usePartnerCampaignOwners()
 
   const partnerIdOptions: PartnerIdOptions[] = partnerCampaignOwners.map(
     (partnerCampaignOwner) => ({
@@ -77,9 +71,6 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
       text: partnerCampaignOwner.partnerId,
     }),
   )
-
-  console.log(campaignQueryFormState)
-
   const [
     activeFromDatePickerEnabled,
     setActiveFromDatePickerEnabled,
@@ -88,24 +79,6 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
     activeToDatePickerEnabled,
     setActiveToDatePickerEnabled,
   ] = React.useState(false)
-
-  const getTextInput = (
-    variable: keyof FilterFormState,
-    inputType = 'text',
-  ) => (
-    <>
-      <Input
-        onChange={(e) => {
-          setCampaignQueryFormState({
-            ...campaignQueryFormState,
-            [variable]: e.currentTarget.value,
-          })
-        }}
-        value={campaignQueryFormState[variable]}
-        type={inputType}
-      />
-    </>
-  )
 
   const formatDate = (dateToFormat: any) => {
     const date = moment(dateToFormat).local()
@@ -124,80 +97,89 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
         </ButtonsGroup>
       </ButtonWrapper>
       {filter && (
-        <Form>
-          <Form.Field>
-            <label>Code</label>
-            {getTextInput('code', 'Code')}
-          </Form.Field>
-          <Form.Field>
-            <label>Campaign owner id</label>
-            <Dropdown
-              placeholder="partnerId"
-              fluid
-              search
-              selection
-              options={partnerIdOptions}
-              onChange={(_, data) => {
-                setCampaignQueryFormState({
-                  ...campaignQueryFormState,
-                  partnerId: data.value as string,
-                })
-              }}
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>Campaign code active from</label>
-            <input
-              onClick={() =>
-                setActiveFromDatePickerEnabled(!activeFromDatePickerEnabled)
-              }
-              placeholder={
-                campaignQueryFormState.activeFrom
-                  ? format(campaignQueryFormState.activeFrom, 'yyyy-MM-dd')
-                  : ''
-              }
-            />
-            {activeFromDatePickerEnabled && (
-              <>
-                <DateTimePicker
-                  date={campaignQueryFormState.activeFrom!!}
-                  setDate={(data) => {
-                    setCampaignQueryFormState({
-                      ...campaignQueryFormState,
-                      activeFrom: data,
-                    })
-                  }}
-                />
-              </>
-            )}
-          </Form.Field>
-          <Form.Field>
-            <label>Campaign code active to</label>
-            <input
-              onClick={() =>
-                setActiveToDatePickerEnabled(!activeToDatePickerEnabled)
-              }
-              placeholder={
-                campaignQueryFormState.activeFrom
-                  ? format(campaignQueryFormState.activeFrom, 'yyyy-MM-dd')
-                  : ''
-              }
-            />
-            {activeToDatePickerEnabled && (
-              <>
-                <DateTimePicker
-                  date={campaignQueryFormState.activeTo!}
-                  setDate={(data) => {
-                    setCampaignQueryFormState({
-                      ...campaignQueryFormState,
-                      activeTo: data,
-                    })
-                  }}
-                />
-              </>
-            )}
-          </Form.Field>
-        </Form>
+        <Spacing bottom>
+          <Form>
+            <Form.Field>
+              <label>Code</label>
+              <Input
+                onChange={(e) => {
+                  setCampaignQueryFormState({
+                    ...campaignQueryFormState,
+                    code: e.currentTarget.value,
+                  })
+                }}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>Campaign owner id</label>
+              <Dropdown
+                placeholder="partnerId"
+                fluid
+                search
+                selection
+                options={partnerIdOptions}
+                onChange={(_, data) => {
+                  setCampaignQueryFormState({
+                    ...campaignQueryFormState,
+                    partnerId: data.value as string,
+                  })
+                }}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>Campaign code active from</label>
+              <input
+                onClick={() =>
+                  setActiveFromDatePickerEnabled(!activeFromDatePickerEnabled)
+                }
+                placeholder={
+                  campaignQueryFormState.activeFrom
+                    ? format(campaignQueryFormState.activeFrom, 'yyyy-MM-dd')
+                    : ''
+                }
+              />
+              {activeFromDatePickerEnabled && (
+                <>
+                  <DateTimePicker
+                    date={campaignQueryFormState.activeFrom!!}
+                    setDate={(data) => {
+                      setCampaignQueryFormState({
+                        ...campaignQueryFormState,
+                        activeFrom: data,
+                      })
+                    }}
+                  />
+                </>
+              )}
+            </Form.Field>
+            <Form.Field>
+              <label>Campaign code active to</label>
+              <input
+                onClick={() =>
+                  setActiveToDatePickerEnabled(!activeToDatePickerEnabled)
+                }
+                placeholder={
+                  campaignQueryFormState.activeFrom
+                    ? format(campaignQueryFormState.activeFrom, 'yyyy-MM-dd')
+                    : ''
+                }
+              />
+              {activeToDatePickerEnabled && (
+                <>
+                  <DateTimePicker
+                    date={campaignQueryFormState.activeTo!}
+                    setDate={(data) => {
+                      setCampaignQueryFormState({
+                        ...campaignQueryFormState,
+                        activeTo: data,
+                      })
+                    }}
+                  />
+                </>
+              )}
+            </Form.Field>
+          </Form>
+        </Spacing>
       )}
       {shouldCreate && (
         <CreateNewCampaignCode
@@ -205,62 +187,56 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
           showNotification={showNotification}
         />
       )}
-      <Spacing>
-        {partnerCampaignsLoading && 'loading...'}
-        {!partnerCampaignsLoading &&
-          partnerCampaigns.length === 0 &&
-          'No partner campaigns :('}
-        <Table celled>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Valid From</Table.HeaderCell>
-              <Table.HeaderCell>Valid To</Table.HeaderCell>
-              <Table.HeaderCell>Campaign Code</Table.HeaderCell>
-              <Table.HeaderCell>Incentive</Table.HeaderCell>
-              <Table.HeaderCell>Campaign Owner</Table.HeaderCell>
-              <Table.HeaderCell>Campaign Owner Name</Table.HeaderCell>
-              <Table.HeaderCell>Percentage Discount %</Table.HeaderCell>
-              <Table.HeaderCell>Number of Months</Table.HeaderCell>
-              <Table.HeaderCell>Discounted Amount</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <>
-              {partnerCampaigns.map((campaign) => (
-                <Table.Row key={campaign.id}>
-                  <Table.Cell>
-                    {campaign.validFrom ? formatDate(campaign.validFrom) : '-'}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {campaign.validTo ? formatDate(campaign.validTo) : '-'}
-                  </Table.Cell>
-                  <Table.Cell>{campaign.campaignCode}</Table.Cell>
-                  <Table.Cell>{campaign.incentive?.__typename}</Table.Cell>
-                  <Table.Cell>{campaign.partnerId}</Table.Cell>
-                  <Table.Cell>{campaign.partnerName}</Table.Cell>
-                  <Table.Cell>
-                    {isMonthlyPercentageDiscountFixedPeriod(
-                      campaign.incentive,
-                    ) && campaign.incentive.percentage
-                      ? campaign.incentive.percentage / 0.01
-                      : '-'}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {(isFreeMonths(campaign.incentive) &&
-                      campaign.incentive.numberOfMonths) ??
-                      '-'}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {(isCostDeduction(campaign.incentive) &&
-                      campaign.incentive.amount) ??
-                      '-'}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </>
-          </Table.Body>
-        </Table>
-      </Spacing>
+      {partnerCampaigns.length === 0 && 'No partner campaigns :('}
+      <Table celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Valid From</Table.HeaderCell>
+            <Table.HeaderCell>Valid To</Table.HeaderCell>
+            <Table.HeaderCell>Campaign Code</Table.HeaderCell>
+            <Table.HeaderCell>Incentive</Table.HeaderCell>
+            <Table.HeaderCell>Campaign Owner</Table.HeaderCell>
+            <Table.HeaderCell>Campaign Owner Name</Table.HeaderCell>
+            <Table.HeaderCell>Percentage Discount %</Table.HeaderCell>
+            <Table.HeaderCell>Number of Months</Table.HeaderCell>
+            <Table.HeaderCell>Discounted Amount</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <>
+            {partnerCampaigns.map((campaign) => (
+              <Table.Row key={campaign.id}>
+                <Table.Cell>
+                  {campaign.validFrom ? formatDate(campaign.validFrom) : '-'}
+                </Table.Cell>
+                <Table.Cell>
+                  {campaign.validTo ? formatDate(campaign.validTo) : '-'}
+                </Table.Cell>
+                <Table.Cell>{campaign.campaignCode}</Table.Cell>
+                <Table.Cell>{campaign.incentive?.__typename}</Table.Cell>
+                <Table.Cell>{campaign.partnerId}</Table.Cell>
+                <Table.Cell>{campaign.partnerName}</Table.Cell>
+                <Table.Cell>
+                  {isMonthlyPercentageDiscountFixedPeriod(campaign.incentive) &&
+                  campaign.incentive.percentage
+                    ? campaign.incentive.percentage / 0.01
+                    : '-'}
+                </Table.Cell>
+                <Table.Cell>
+                  {(isFreeMonths(campaign.incentive) &&
+                    campaign.incentive.numberOfMonths) ??
+                    '-'}
+                </Table.Cell>
+                <Table.Cell>
+                  {(isCostDeduction(campaign.incentive) &&
+                    campaign.incentive.amount) ??
+                    '-'}
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </>
+        </Table.Body>
+      </Table>
     </>
   )
 }
