@@ -27,6 +27,8 @@ const transactionDateSorter = (a, b) => {
 const GET_MEMBER_QUERY = gql`
   query GetMemberTransactions($id: ID!) {
     member(id: $id) {
+      memberId
+
       directDebitStatus {
         activated
       }

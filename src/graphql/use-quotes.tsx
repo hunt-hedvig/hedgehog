@@ -6,6 +6,8 @@ import { Member, Quote } from 'src/api/generated/graphql'
 export const QUOTES_QUERY = gql`
   query Quotes($memberId: ID!) {
     member(id: $memberId) {
+      memberId
+
       quotes {
         id
         price

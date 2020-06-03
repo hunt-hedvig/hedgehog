@@ -8,6 +8,8 @@ import { dateTimeFormatter } from '../../../lib/helpers'
 const query = gql`
   query FileUploadsQuery($memberId: ID!) {
     member(id: $memberId) {
+      memberId
+
       fileUploads {
         fileUploadUrl
         memberId

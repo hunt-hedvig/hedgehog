@@ -45,6 +45,7 @@ const SmallText = styled('div')`
 const GET_MEMBER_NAME_QUERY = gql`
   query GetMember($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       firstName
       lastName
     }

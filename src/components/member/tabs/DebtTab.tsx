@@ -14,6 +14,7 @@ import { formatMoneySE } from '../../../lib/intl'
 const query = gql`
   query PersonQuery($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       person {
         personFlags
         status {
