@@ -24,6 +24,12 @@ export const addPartnerPercentageDiscountCodeOptions = (
     refetchQueries: () => [
       {
         query: FindPartnerCampaignsDocument,
+        variables: {
+          code: request.code,
+          partnerId: request.partnerId,
+          activeFrom: request.validFrom,
+          activeTo: request.validUntil,
+        },
       },
     ],
   }

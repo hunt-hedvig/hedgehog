@@ -315,7 +315,6 @@ input ChangeFromDateInput {
 input AssignVoucherPercentageDiscount {
   partnerId: String!
   numberOfMonths: Int!
-  #  what to use instead of BigDecimal?
   percentageDiscount: Float
   code: String!
   validFrom: Instant
@@ -359,14 +358,6 @@ type VoucherCampaign {
   validTo: Instant
   incentive: Incentive
 }
-
-#type Incentive {
-#  numberOfMonths: Int,
-#  amount: Float,
-#  percentageDiscount: Float,
-#  currency: String,
-#  type: IncentiveType
-#}
 
 type MonthlyPercentageDiscountFixedPeriod {
   numberOfMonths: Int,
@@ -670,13 +661,6 @@ input CampaignFilter {
   activeFrom: LocalDate
   activeTo: LocalDate
 }
-
-#type CampaignFilter {
-#  code: String
-#  partnerId: String
-#  activeFrom: LocalDate
-#  activeTo: LocalDate
-#}
 
 type ExtraBuilding {
   id: ID

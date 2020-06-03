@@ -3,7 +3,6 @@ import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import * as moment from 'moment'
 import * as React from 'react'
-import styled from 'react-emotion'
 import { Dropdown, Form, Input, Table } from 'semantic-ui-react'
 import { withShowNotification } from 'utils/notifications'
 import { DateTimePicker } from '../../../../shared/hedvig-ui/date-time-picker'
@@ -25,20 +24,17 @@ interface CampaignQueryFormState {
   activeTo: Date | null
 }
 
+interface PartnerIdOptions {
+  key: string
+  value: string
+  text: string
+}
+
 const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
   const [filter, setFilter] = React.useState(false)
   const [shouldCreate, setShouldCreate] = React.useState(false)
-
-  const ButtonWrapper = styled('div')`
-    padding: 10px;
-  `
-  interface PartnerIdOptions {
-    key: string
-    value: string
-    text: string
-  }
 
   const [campaignQueryFormState, setCampaignQueryFormState] = React.useState<
     CampaignQueryFormState
@@ -88,14 +84,14 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
   return (
     <>
       <MainHeadline>Campaign Codes</MainHeadline>
-      <ButtonWrapper>
+      <Spacing all>
         <ButtonsGroup>
           <Button onClick={() => setFilter(!filter)}>Filter codes</Button>
           <Button onClick={() => setShouldCreate(!shouldCreate)}>
             Create new code
           </Button>
         </ButtonsGroup>
-      </ButtonWrapper>
+      </Spacing>
       {filter && (
         <Spacing bottom>
           <Form>

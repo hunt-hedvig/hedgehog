@@ -1,14 +1,9 @@
 import {
-  Agreement,
   CostDeduction,
   FreeMonths,
   Incentive,
   IndefinitePercentageDiscount,
   MonthlyPercentageDiscountFixedPeriod,
-  NorwegianHomeContent,
-  NorwegianTravel,
-  SwedishApartment,
-  SwedishHouse,
 } from '../api/generated/graphql'
 
 type IncentiveDataMaybe = Incentive | null | undefined
@@ -32,19 +27,26 @@ export const isIndefinitePercentageDiscount = (
 ): incentiveData is IndefinitePercentageDiscount =>
   incentiveData?.__typename === 'IndefinitePercentageDiscount'
 
-// export const isSwedishApartment = (
-//   agreement: Agreement,
-// ): agreement is SwedishApartment => agreement.__typename === 'SwedishApartment'
-//
-// export const isSwedishHouse = (
-//   agreement: Agreement,
-// ): agreement is SwedishHouse => agreement.__typename === 'SwedishHouse'
-//
-// export const isNorwegianHomeContent = (
-//   agreement: Agreement,
-// ): agreement is NorwegianHomeContent =>
-//   agreement.__typename === 'NorwegianHomeContent'
-//
-// export const isNorwegianTravel = (
-//   agreement: Agreement,
-// ): agreement is NorwegianTravel => agreement.__typename === 'NorwegianTravel'
+const generateRange = (min: number, max: number, step: number): number[] => {
+  const numberArray: number[] = []
+  for (let num = min; num <= max; num += step) {
+    numberArray.push(num)
+  }
+  return numberArray
+}
+
+export const numberOfMonthsOptions = generateRange(1, 12, 1).map(
+  (noOfMonths) => ({
+    key: noOfMonths,
+    value: noOfMonths,
+    text: noOfMonths,
+  }),
+)
+
+export const percentageDiscountOptions = generateRange(5, 100, 5).map(
+  (percentage) => ({
+    key: percentage + '%',
+    value: percentage,
+    text: percentage + '%',
+  }),
+)

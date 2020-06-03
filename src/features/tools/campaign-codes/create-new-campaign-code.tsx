@@ -9,6 +9,10 @@ import {
   useAddPartnerPercentageDiscountCode,
 } from '../../../graphql/use-add-partner-percentage-discount-code'
 import { Notification } from '../../../store/actions/notificationsActions'
+import {
+  numberOfMonthsOptions,
+  percentageDiscountOptions,
+} from '../../../utils/campaignCodes'
 
 interface PartnerIdOptions {
   key: string
@@ -56,51 +60,9 @@ export const CreateNewCampaignCode: React.FC<{
     validUntil: null,
   })
 
-  const getTextInput = (
-    variable: keyof NewCampaignCodeFormState,
-    inputType = 'text',
-  ) => (
-    <>
-      <Input
-        onChange={(e) => {
-          if (isWip) {
-            setIsWip(true)
-          }
-          setCampaignCodeFormState({
-            ...newCampaignCodeFormState,
-            [variable]: e.currentTarget.value,
-          })
-        }}
-        type={inputType}
-      />
-    </>
-  )
-
   if (addPartnerPercentageDiscountLoading) {
     return 'loading...'
   }
-
-  const generateRange = (min: number, max: number, step: number): number[] => {
-    const numberArray: number[] = []
-    for (let num = min; num <= max; num += step) {
-      numberArray.push(num)
-    }
-    return numberArray
-  }
-
-  const numberOfMonthsOptions = generateRange(1, 12, 1).map((noOfMonths) => ({
-    key: noOfMonths,
-    value: noOfMonths,
-    text: noOfMonths,
-  }))
-
-  const percentageDiscountOptions = generateRange(5, 100, 5).map(
-    (percentage) => ({
-      key: percentage + '%',
-      value: percentage,
-      text: percentage + '%',
-    }),
-  )
 
   const getVoucherPercentageDiscountData = (
     formState: NewCampaignCodeFormState,
@@ -132,7 +94,17 @@ export const CreateNewCampaignCode: React.FC<{
       <Form>
         <Form.Field>
           <label>Code</label>
-          {getTextInput('code', 'Code')}
+          <Input
+            onChange={(e) => {
+              if (isWip) {
+                setIsWip(true)
+              }
+              setCampaignCodeFormState({
+                ...newCampaignCodeFormState,
+                code: e.currentTarget.value,
+              })
+            }}
+          />
         </Form.Field>
         <Form.Field>
           <label>Partner id</label>
@@ -246,7 +218,11 @@ export const CreateNewCampaignCode: React.FC<{
         <Button
           type="submit"
           onClick={() => {
-            if (!window.confirm('Create new campaign code?')) {
+            if (
+              !window.confirm(
+                `Create new campaign code "${newCampaignCodeFormState.code}"?`,
+              )
+            ) {
               return
             }
             setPartnerPercentageDiscount(
