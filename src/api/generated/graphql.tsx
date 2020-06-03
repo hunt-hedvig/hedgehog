@@ -1997,11 +1997,17 @@ export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
       | 'validTo'
     > & {
         incentive: Maybe<
-          | { __typename: 'MonthlyPercentageDiscountFixedPeriod' }
-          | { __typename: 'FreeMonths' }
-          | { __typename: 'CostDeduction' }
+          | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
+              MonthlyPercentageDiscountFixedPeriod,
+              'numberOfMonths' | 'percentage'
+            >)
+          | ({ __typename?: 'FreeMonths' } & Pick<FreeMonths, 'numberOfMonths'>)
+          | ({ __typename?: 'CostDeduction' } & Pick<CostDeduction, 'amount'>)
           | { __typename: 'NoDiscount' }
-          | { __typename: 'IndefinitePercentageDiscount' }
+          | ({ __typename?: 'IndefinitePercentageDiscount' } & Pick<
+              IndefinitePercentageDiscount,
+              'percentageDiscount'
+            >)
         >
       }
   >
@@ -3062,7 +3068,22 @@ export const FindPartnerCampaignsDocument = gql`
       validFrom
       validTo
       incentive {
-        __typename
+        ... on MonthlyPercentageDiscountFixedPeriod {
+          numberOfMonths
+          percentage
+        }
+        ... on FreeMonths {
+          numberOfMonths
+        }
+        ... on CostDeduction {
+          amount
+        }
+        ... on NoDiscount {
+          __typename
+        }
+        ... on IndefinitePercentageDiscount {
+          percentageDiscount
+        }
       }
     }
   }
