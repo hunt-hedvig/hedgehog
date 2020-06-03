@@ -1694,55 +1694,54 @@ export type GetAccountQueryVariables = {
 
 export type GetAccountQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      account: Maybe<
-        { __typename?: 'Account' } & Pick<Account, 'id'> & {
-            currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-            totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-            chargeEstimation: { __typename?: 'AccountChargeEstimation' } & Pick<
-              AccountChargeEstimation,
-              'discountCodes'
-            > & {
-                subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-                charge: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-                discount: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-              }
-            entries: Array<
-              { __typename?: 'AccountEntry' } & Pick<
-                AccountEntry,
-                | 'id'
-                | 'fromDate'
-                | 'title'
-                | 'source'
-                | 'reference'
-                | 'type'
-                | 'failedAt'
-                | 'chargedAt'
-              > & {
-                  amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        account: Maybe<
+          { __typename?: 'Account' } & Pick<Account, 'id'> & {
+              currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              chargeEstimation: {
+                __typename?: 'AccountChargeEstimation'
+              } & Pick<AccountChargeEstimation, 'discountCodes'> & {
+                  subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  charge: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  discount: { __typename?: 'MonetaryAmountV2' } & Pick<
                     MonetaryAmountV2,
                     'amount' | 'currency'
                   >
                 }
-            >
-          }
-      >
-    }
+              entries: Array<
+                { __typename?: 'AccountEntry' } & Pick<
+                  AccountEntry,
+                  | 'id'
+                  | 'fromDate'
+                  | 'title'
+                  | 'source'
+                  | 'reference'
+                  | 'type'
+                  | 'failedAt'
+                  | 'chargedAt'
+                > & {
+                    amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
+      }
   >
 }
 
@@ -1769,130 +1768,130 @@ export type GetContractsQueryVariables = {
 
 export type GetContractsQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      contracts: Array<
-        { __typename?: 'Contract' } & Pick<
-          Contract,
-          | 'id'
-          | 'holderMemberId'
-          | 'holderFirstName'
-          | 'holderLastName'
-          | 'switchedFrom'
-          | 'masterInception'
-          | 'status'
-          | 'isTerminated'
-          | 'terminationDate'
-          | 'currentAgreementId'
-          | 'hasPendingAgreement'
-          | 'hasQueuedRenewal'
-          | 'preferredCurrency'
-          | 'market'
-          | 'signSource'
-          | 'contractTypeName'
-          | 'createdAt'
-        > & {
-            agreements: Array<
-              | ({ __typename?: 'SwedishApartment' } & Pick<
-                  SwedishApartment,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                > & {
-                    swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                  })
-              | ({ __typename?: 'SwedishHouse' } & Pick<
-                  SwedishHouse,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                  | 'ancillaryArea'
-                  | 'yearOfConstruction'
-                  | 'numberOfBathrooms'
-                  | 'isSubleted'
-                > & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                    extraBuildings: Array<
-                      { __typename?: 'ExtraBuilding' } & Pick<
-                        ExtraBuilding,
-                        | 'id'
-                        | 'type'
-                        | 'area'
-                        | 'hasWaterConnected'
-                        | 'displayName'
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        contracts: Array<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'holderMemberId'
+            | 'holderFirstName'
+            | 'holderLastName'
+            | 'switchedFrom'
+            | 'masterInception'
+            | 'status'
+            | 'isTerminated'
+            | 'terminationDate'
+            | 'currentAgreementId'
+            | 'hasPendingAgreement'
+            | 'hasQueuedRenewal'
+            | 'preferredCurrency'
+            | 'market'
+            | 'signSource'
+            | 'contractTypeName'
+            | 'createdAt'
+          > & {
+              agreements: Array<
+                | ({ __typename?: 'SwedishApartment' } & Pick<
+                    SwedishApartment,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                  > & {
+                      swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
                       >
-                    >
-                  })
-              | ({ __typename?: 'NorwegianHomeContent' } & Pick<
-                  NorwegianHomeContent,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                > & {
-                    norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                  })
-              | ({ __typename?: 'NorwegianTravel' } & Pick<
-                  NorwegianTravel,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                > & {
-                    norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                  })
-            >
-            renewal: Maybe<
-              { __typename?: 'Renewal' } & Pick<
-                Renewal,
-                'renewalDate' | 'draftCertificateUrl' | 'draftOfAgreementId'
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    })
+                | ({ __typename?: 'SwedishHouse' } & Pick<
+                    SwedishHouse,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                    | 'ancillaryArea'
+                    | 'yearOfConstruction'
+                    | 'numberOfBathrooms'
+                    | 'isSubleted'
+                  > & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                      extraBuildings: Array<
+                        { __typename?: 'ExtraBuilding' } & Pick<
+                          ExtraBuilding,
+                          | 'id'
+                          | 'type'
+                          | 'area'
+                          | 'hasWaterConnected'
+                          | 'displayName'
+                        >
+                      >
+                    })
+                | ({ __typename?: 'NorwegianHomeContent' } & Pick<
+                    NorwegianHomeContent,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                  > & {
+                      norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    })
+                | ({ __typename?: 'NorwegianTravel' } & Pick<
+                    NorwegianTravel,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                  > & {
+                      norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                    })
               >
-            >
-          }
-      >
-    }
+              renewal: Maybe<
+                { __typename?: 'Renewal' } & Pick<
+                  Renewal,
+                  'renewalDate' | 'draftCertificateUrl' | 'draftOfAgreementId'
+                >
+              >
+            }
+        >
+      }
   >
 }
 
@@ -2596,6 +2595,7 @@ export type CreateQuoteFromAgreementMutationOptions = ApolloReactCommon.BaseMuta
 export const GetAccountDocument = gql`
   query GetAccount($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       account {
         id
         currentBalance {
@@ -2749,6 +2749,7 @@ export type GetContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
 export const GetContractsDocument = gql`
   query GetContracts($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       contracts {
         id
         holderMemberId

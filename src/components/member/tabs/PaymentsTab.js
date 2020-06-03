@@ -27,6 +27,8 @@ const transactionDateSorter = (a, b) => {
 const GET_MEMBER_QUERY = gql`
   query GetMemberTransactions($id: ID!) {
     member(id: $id) {
+      memberId
+
       directDebitStatus {
         activated
       }
@@ -61,18 +63,20 @@ const CHARGE_MEMBER_MUTATION = gql`
   }
 `
 
-const TableRowColored = styled(Table.Row)(({ transaction }) => {
-  if (transaction.type === 'CHARGE') {
-    switch (transaction.status) {
-      case 'INITIATED':
-        return { backgroundColor: '#FFFFDD' } //Yellow
-      case 'COMPLETED':
-        return { backgroundColor: '#DDFFDD' } //Green
-      case 'FAILED':
-        return { backgroundColor: '#FF8A80' } //Red
+const TableRowColored = styled(Table.Row)(({ transaction }) => ({
+  td: (() => {
+    if (transaction.type === 'CHARGE') {
+      switch (transaction.status) {
+        case 'INITIATED':
+          return { backgroundColor: '#FFFFDD !important' } //Yellow
+        case 'COMPLETED':
+          return { backgroundColor: '#DDFFDD !important' } //Green
+        case 'FAILED':
+          return { backgroundColor: '#FF8A80 !important' } //Red
+      }
     }
-  }
-})
+  })(),
+}))
 
 const MemberTransactionsTable = ({ transactions }) => (
   <Table celled compact>
@@ -90,9 +94,7 @@ const MemberTransactionsTable = ({ transactions }) => (
         <TableRowColored key={transaction.id} transaction={transaction}>
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
-            <strong>
-              {formatMoney(transaction.amount)}
-            </strong>
+            <strong>{formatMoney(transaction.amount)}</strong>
           </Table.Cell>
           <Table.Cell>
             {moment(transaction.timestamp).format('YYYY-MM-DD HH:mm:ss')}

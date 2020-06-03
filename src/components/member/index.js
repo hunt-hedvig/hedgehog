@@ -126,10 +126,17 @@ export default class Member extends React.Component {
                     </MemberDetailLink>
                   )}
                   {messages?.member?.phoneNumber && (
-                    <MemberDetail href={`tel:${messages.member.phoneNumber}`}>
+                    <MemberDetailLink
+                      href={`tel:${messages.member.phoneNumber}`}
+                    >
                       {messages.member.phoneNumber}
-                    </MemberDetail>
+                    </MemberDetailLink>
                   )}
+                  <MemberDetailLink
+                    href={`${window.location.protocol}//${window.location.host}/members/${messages?.member?.memberId}`}
+                  >
+                    {messages?.member?.memberId}
+                  </MemberDetailLink>
                 </MemberDetails>
                 {this.props.insurance.requesting || (
                   <Tab

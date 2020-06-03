@@ -235,14 +235,6 @@ export const QuoteModification: React.FC<{
   const [contractMarket, { loading }] = useContractMarketInfo(memberId)
   const [contracts] = useContracts(memberId)
 
-  if (loading) {
-    return null
-  }
-
-  if (!contractMarket) {
-    return <>Unable to get Market, please contact Tech</>
-  }
-
   const [
     bypassUnderwritingGuidelines,
     setBypassUnderwritingGuidelines,
@@ -259,7 +251,7 @@ export const QuoteModification: React.FC<{
         }
         setFormState({ ...formState, productType: data.value as string })
       }}
-      options={getDropdownOptions(contractMarket)}
+      options={contractMarket ? getDropdownOptions(contractMarket) : []}
     />
   )
 
@@ -272,7 +264,7 @@ export const QuoteModification: React.FC<{
     if (isNorwegianMarket(contractMarketInfo)) {
       return getNorwegianDropDownOptions()
     }
-    throw new Error('Unknown market while generating dropdown options')
+    throw new Error(`Unknown market while generating dropdown options`)
   }
 
   const getSwedishDropDownOptions = (): DropdownItemProps[] => {
@@ -293,7 +285,9 @@ export const QuoteModification: React.FC<{
         }
       }
     }
-    throw new Error('Cannot return dropDownItems')
+    throw new Error(
+      `Cannot return dropDownItems for swedish product type "${productType}"`,
+    )
   }
 
   const getNorwegianDropDownOptions = (): DropdownItemProps[] => {
@@ -313,7 +307,9 @@ export const QuoteModification: React.FC<{
         }
       }
     }
-    throw new Error('Cannot return dropDownItems')
+    throw new Error(
+      `Cannot return dropDownItems for norwegian product type "${productType}"`,
+    )
   }
 
   const getTextInput = (
@@ -347,6 +343,14 @@ export const QuoteModification: React.FC<{
     label: React.ReactNode,
     value?: any,
   ) => getTextInput(variable, label, 'number', value)
+
+  if (loading) {
+    return null
+  }
+
+  if (!contractMarket) {
+    return <>Unable to get Market, please contact Tech</>
+  }
 
   return (
     <Wrapper
