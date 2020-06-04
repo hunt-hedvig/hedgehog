@@ -1,3 +1,4 @@
+import { Scalars } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
@@ -5,7 +6,6 @@ import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
-import * as moment from 'moment'
 import * as React from 'react'
 import { Dropdown, Form, Input, Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
@@ -76,9 +76,9 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
     setActiveToDatePickerEnabled,
   ] = React.useState(false)
 
-  const formatDate = (dateToFormat: any) => {
-    const date = moment(dateToFormat).local()
-    return date.isValid() ? date.format('DD MMMM YYYY') : '-'
+  const formatDate = (dateToFormat: Scalars['Instant']) => {
+    const parsedDate = Date.parse(dateToFormat)
+    return format(parsedDate, 'yyyy-MM-dd')
   }
 
   return (
