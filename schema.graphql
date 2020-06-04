@@ -20,7 +20,7 @@ type QueryType {
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
-  findPartnerCampaigns(input: CampaignFilter): [VoucherCampaign!]!
+  findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
 }
 
@@ -315,7 +315,7 @@ input ChangeFromDateInput {
 input AssignVoucherPercentageDiscount {
   partnerId: String!
   numberOfMonths: Int!
-  percentageDiscount: Float
+  percentageDiscount: Float!
   code: String!
   validFrom: Instant
   validUntil: Instant
@@ -375,7 +375,6 @@ type CostDeduction {
 type NoDiscount {
 _: Boolean
 }
-
 
 type IndefinitePercentageDiscount {
   percentageDiscount: Float
@@ -1281,8 +1280,6 @@ enum NorwegianGripenFactorType {
   NUMBER_OF_PEOPLE
   SQUARE_METERS
   HOUSEHOLD_TYPE
-  OBJECT_VALUE
-  TYPE_OF_OBJECT
   DEDUCTIBLE
 }
 

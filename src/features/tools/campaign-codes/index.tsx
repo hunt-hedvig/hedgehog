@@ -1,20 +1,20 @@
 import { format } from 'date-fns'
+import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
+import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { Spacing } from 'hedvig-ui/spacing'
+import { MainHeadline } from 'hedvig-ui/typography'
 import * as moment from 'moment'
 import * as React from 'react'
 import { Dropdown, Form, Input, Table } from 'semantic-ui-react'
-import { withShowNotification } from 'utils/notifications'
-import { DateTimePicker } from '../../../../shared/hedvig-ui/date-time-picker'
-import { Spacing } from '../../../../shared/hedvig-ui/spacing'
-import { MainHeadline } from '../../../../shared/hedvig-ui/typography'
-import { usePartnerCampaignOwners } from '../../../graphql/use-get-partner-campaign-owners'
-import { WithShowNotification } from '../../../store/actions/notificationsActions'
+import { WithShowNotification } from 'store/actions/notificationsActions'
 import {
   isCostDeduction,
   isFreeMonths,
   isMonthlyPercentageDiscountFixedPeriod,
-} from '../../../utils/campaignCodes'
+} from 'utils/campaignCodes'
+import { withShowNotification } from 'utils/notifications'
 import { CreateNewCampaignCode } from './create-new-campaign-code'
 
 interface CampaignQueryFormState {

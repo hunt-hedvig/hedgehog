@@ -1,18 +1,18 @@
+import { AssignVoucherPercentageDiscount } from 'api/generated/graphql'
 import { format } from 'date-fns'
-import React from 'react'
-import { Dropdown, Form, Input } from 'semantic-ui-react'
-import { Button } from '../../../../shared/hedvig-ui/button'
-import { DateTimePicker } from '../../../../shared/hedvig-ui/date-time-picker'
-import { AssignVoucherPercentageDiscount } from '../../../api/generated/graphql'
 import {
   addPartnerPercentageDiscountCodeOptions,
   useAddPartnerPercentageDiscountCode,
-} from '../../../graphql/use-add-partner-percentage-discount-code'
-import { Notification } from '../../../store/actions/notificationsActions'
+} from 'graphql/use-add-partner-percentage-discount-code'
+import { Button } from 'hedvig-ui/button'
+import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import React from 'react'
+import { Dropdown, Form, Input } from 'semantic-ui-react'
+import { Notification } from 'store/actions/notificationsActions'
 import {
   numberOfMonthsOptions,
   percentageDiscountOptions,
-} from '../../../utils/campaignCodes'
+} from 'utils/campaignCodes'
 
 interface PartnerIdOptions {
   key: string
@@ -145,8 +145,9 @@ export const CreateNewCampaignCode: React.FC<{
           />
         </Form.Field>
         <Form.Field>
-          <label>Percentage discount</label>
+          <label id="percentageDropDown">Percentage discount</label>
           <Dropdown
+            for="percentageDropDown"
             placeholder="Percentage discount %"
             fluid
             search
