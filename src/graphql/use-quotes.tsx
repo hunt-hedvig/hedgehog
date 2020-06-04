@@ -6,6 +6,8 @@ import { Member, Quote } from 'src/api/generated/graphql'
 export const QUOTES_QUERY = gql`
   query Quotes($memberId: ID!) {
     member(id: $memberId) {
+      memberId
+
       quotes {
         id
         price
@@ -18,6 +20,7 @@ export const QUOTES_QUERY = gql`
         breachedUnderwritingGuidelines
         originatingProductId
         signedProductId
+        isReadyToSign
         data {
           ... on ApartmentQuoteData {
             street
@@ -67,7 +70,18 @@ const latest = (a: Quote, b: Quote) =>
   Number(parseISO(b.createdAt)) - Number(parseISO(a.createdAt))
 
 export const signedOrExpiredPredicate = (quote) =>
-  quote.state === 'EXPIRED' || quote.state === 'SIGNED'
+  expiredPredicate(quote) || signedPredicate(quote)
+
+export const expiredPredicate = (quote) => {
+  const createdAt = new Date(quote.createdAt)
+  const now = new Date()
+
+  createdAt.setSeconds(quote.validity)
+
+  return now > createdAt
+}
+
+export const signedPredicate = (quote) => quote.state === 'SIGNED'
 
 export const useQuotes = (
   memberId: string,

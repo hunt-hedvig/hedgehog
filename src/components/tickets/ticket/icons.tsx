@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Icon } from 'semantic-ui-react'
 
 export const CALL_ME = <Icon name="phone square" size="big" />

@@ -188,8 +188,7 @@ export type AssaultClaim = {
 export type AssignVoucherPercentageDiscount = {
   partnerId: Scalars['String']
   numberOfMonths: Scalars['Int']
-  /** what to use instead of BigDecimal? */
-  percentageDiscount?: Maybe<Scalars['Float']>
+  percentageDiscount: Scalars['Float']
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
@@ -264,6 +263,7 @@ export type Claim = {
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate?: Maybe<Scalars['Instant']>
   notes?: Maybe<Array<Maybe<ClaimNote>>>
+  transcriptions?: Maybe<Array<Maybe<ClaimTranscription>>>
   payments?: Maybe<Array<Maybe<ClaimPayment>>>
   events?: Maybe<Array<Maybe<ClaimEvent>>>
   coveringEmployee: Scalars['Boolean']
@@ -352,6 +352,13 @@ export enum ClaimState {
   Open = 'OPEN',
   Closed = 'CLOSED',
   Reopened = 'REOPENED',
+}
+
+export type ClaimTranscription = {
+  __typename?: 'ClaimTranscription'
+  text: Scalars['String']
+  confidenceScore: Scalars['Float']
+  languageCode: Scalars['String']
 }
 
 export type ClaimType =
@@ -1046,8 +1053,6 @@ export enum NorwegianGripenFactorType {
   NumberOfPeople = 'NUMBER_OF_PEOPLE',
   SquareMeters = 'SQUARE_METERS',
   HouseholdType = 'HOUSEHOLD_TYPE',
-  ObjectValue = 'OBJECT_VALUE',
-  TypeOfObject = 'TYPE_OF_OBJECT',
   Deductible = 'DEDUCTIBLE',
 }
 
@@ -1275,7 +1280,7 @@ export type QueryTypeInventoryItemFiltersArgs = {
 }
 
 export type QueryTypeFindPartnerCampaignsArgs = {
-  input?: Maybe<CampaignFilter>
+  input: CampaignFilter
 }
 
 export type Quote = {
@@ -1636,7 +1641,10 @@ export type MemberNameAndContractMarketInfoQuery = {
   __typename?: 'QueryType'
 } & {
   member: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'> & {
+    { __typename?: 'Member' } & Pick<
+      Member,
+      'memberId' | 'firstName' | 'lastName'
+    > & {
         contractMarketInfo: Maybe<
           { __typename?: 'ContractMarketInfo' } & Pick<
             ContractMarketInfo,
@@ -1753,6 +1761,16 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   'changeToDate'
 >
 
+export type CreateQuoteForNewContractMutationVariables = {
+  memberId: Scalars['ID']
+  quoteInput: QuoteInput
+  bypassUnderwritingGuidelines: Scalars['Boolean']
+}
+
+export type CreateQuoteForNewContractMutation = {
+  __typename?: 'MutationType'
+} & { createQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
+
 export type CreateQuoteFromAgreementMutationVariables = {
   agreementId: Scalars['ID']
   memberId: Scalars['ID']
@@ -1768,55 +1786,54 @@ export type GetAccountQueryVariables = {
 
 export type GetAccountQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      account: Maybe<
-        { __typename?: 'Account' } & Pick<Account, 'id'> & {
-            currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-            totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-            chargeEstimation: { __typename?: 'AccountChargeEstimation' } & Pick<
-              AccountChargeEstimation,
-              'discountCodes'
-            > & {
-                subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-                charge: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-                discount: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-              }
-            entries: Array<
-              { __typename?: 'AccountEntry' } & Pick<
-                AccountEntry,
-                | 'id'
-                | 'fromDate'
-                | 'title'
-                | 'source'
-                | 'reference'
-                | 'type'
-                | 'failedAt'
-                | 'chargedAt'
-              > & {
-                  amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        account: Maybe<
+          { __typename?: 'Account' } & Pick<Account, 'id'> & {
+              currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              chargeEstimation: {
+                __typename?: 'AccountChargeEstimation'
+              } & Pick<AccountChargeEstimation, 'discountCodes'> & {
+                  subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  charge: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  discount: { __typename?: 'MonetaryAmountV2' } & Pick<
                     MonetaryAmountV2,
                     'amount' | 'currency'
                   >
                 }
-            >
-          }
-      >
-    }
+              entries: Array<
+                { __typename?: 'AccountEntry' } & Pick<
+                  AccountEntry,
+                  | 'id'
+                  | 'fromDate'
+                  | 'title'
+                  | 'source'
+                  | 'reference'
+                  | 'type'
+                  | 'failedAt'
+                  | 'chargedAt'
+                > & {
+                    amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
+      }
   >
 }
 
@@ -1826,14 +1843,14 @@ export type GetContractMarketInfoQueryVariables = {
 
 export type GetContractMarketInfoQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      contractMarketInfo: Maybe<
-        { __typename?: 'ContractMarketInfo' } & Pick<
-          ContractMarketInfo,
-          'market' | 'preferredCurrency'
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        contractMarketInfo: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market' | 'preferredCurrency'
+          >
         >
-      >
-    }
+      }
   >
 }
 
@@ -1843,130 +1860,130 @@ export type GetContractsQueryVariables = {
 
 export type GetContractsQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      contracts: Array<
-        { __typename?: 'Contract' } & Pick<
-          Contract,
-          | 'id'
-          | 'holderMemberId'
-          | 'holderFirstName'
-          | 'holderLastName'
-          | 'switchedFrom'
-          | 'masterInception'
-          | 'status'
-          | 'isTerminated'
-          | 'terminationDate'
-          | 'currentAgreementId'
-          | 'hasPendingAgreement'
-          | 'hasQueuedRenewal'
-          | 'preferredCurrency'
-          | 'market'
-          | 'signSource'
-          | 'contractTypeName'
-          | 'createdAt'
-        > & {
-            agreements: Array<
-              | ({ __typename?: 'SwedishApartment' } & Pick<
-                  SwedishApartment,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                > & {
-                    swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                  })
-              | ({ __typename?: 'SwedishHouse' } & Pick<
-                  SwedishHouse,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                  | 'ancillaryArea'
-                  | 'yearOfConstruction'
-                  | 'numberOfBathrooms'
-                  | 'isSubleted'
-                > & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                    extraBuildings: Array<
-                      { __typename?: 'ExtraBuilding' } & Pick<
-                        ExtraBuilding,
-                        | 'id'
-                        | 'type'
-                        | 'area'
-                        | 'hasWaterConnected'
-                        | 'displayName'
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        contracts: Array<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'holderMemberId'
+            | 'holderFirstName'
+            | 'holderLastName'
+            | 'switchedFrom'
+            | 'masterInception'
+            | 'status'
+            | 'isTerminated'
+            | 'terminationDate'
+            | 'currentAgreementId'
+            | 'hasPendingAgreement'
+            | 'hasQueuedRenewal'
+            | 'preferredCurrency'
+            | 'market'
+            | 'signSource'
+            | 'contractTypeName'
+            | 'createdAt'
+          > & {
+              agreements: Array<
+                | ({ __typename?: 'SwedishApartment' } & Pick<
+                    SwedishApartment,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                  > & {
+                      swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
                       >
-                    >
-                  })
-              | ({ __typename?: 'NorwegianHomeContent' } & Pick<
-                  NorwegianHomeContent,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                > & {
-                    norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                  })
-              | ({ __typename?: 'NorwegianTravel' } & Pick<
-                  NorwegianTravel,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                > & {
-                    norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                  })
-            >
-            renewal: Maybe<
-              { __typename?: 'Renewal' } & Pick<
-                Renewal,
-                'renewalDate' | 'draftCertificateUrl' | 'draftOfAgreementId'
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    })
+                | ({ __typename?: 'SwedishHouse' } & Pick<
+                    SwedishHouse,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                    | 'ancillaryArea'
+                    | 'yearOfConstruction'
+                    | 'numberOfBathrooms'
+                    | 'isSubleted'
+                  > & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                      extraBuildings: Array<
+                        { __typename?: 'ExtraBuilding' } & Pick<
+                          ExtraBuilding,
+                          | 'id'
+                          | 'type'
+                          | 'area'
+                          | 'hasWaterConnected'
+                          | 'displayName'
+                        >
+                      >
+                    })
+                | ({ __typename?: 'NorwegianHomeContent' } & Pick<
+                    NorwegianHomeContent,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                  > & {
+                      norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    })
+                | ({ __typename?: 'NorwegianTravel' } & Pick<
+                    NorwegianTravel,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                  > & {
+                      norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                    })
               >
-            >
-          }
-      >
-    }
+              renewal: Maybe<
+                { __typename?: 'Renewal' } & Pick<
+                  Renewal,
+                  'renewalDate' | 'draftCertificateUrl' | 'draftOfAgreementId'
+                >
+              >
+            }
+        >
+      }
   >
 }
 
@@ -1982,7 +1999,7 @@ export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
 }
 
 export type FindPartnerCampaignsQueryVariables = {
-  input?: Maybe<CampaignFilter>
+  input: CampaignFilter
 }
 
 export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
@@ -2032,6 +2049,15 @@ export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
   >
 }
 
+export type SignQuoteForNewContractMutationVariables = {
+  quoteId: Scalars['ID']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type SignQuoteForNewContractMutation = {
+  __typename?: 'MutationType'
+} & { signQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
+
 export type TerminateContractMutationVariables = {
   contractId: Scalars['ID']
   request?: Maybe<TerminateContractInput>
@@ -2047,6 +2073,7 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       firstName
       lastName
       contractMarketInfo {
@@ -2639,6 +2666,66 @@ export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
 >
+export const CreateQuoteForNewContractDocument = gql`
+  mutation CreateQuoteForNewContract(
+    $memberId: ID!
+    $quoteInput: QuoteInput!
+    $bypassUnderwritingGuidelines: Boolean!
+  ) {
+    createQuoteForNewContract(
+      memberId: $memberId
+      quoteInput: $quoteInput
+      bypassUnderwritingGuidelines: $bypassUnderwritingGuidelines
+    ) {
+      id
+    }
+  }
+`
+export type CreateQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunction<
+  CreateQuoteForNewContractMutation,
+  CreateQuoteForNewContractMutationVariables
+>
+
+/**
+ * __useCreateQuoteForNewContractMutation__
+ *
+ * To run a mutation, you first call `useCreateQuoteForNewContractMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuoteForNewContractMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuoteForNewContractMutation, { data, loading, error }] = useCreateQuoteForNewContractMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      quoteInput: // value for 'quoteInput'
+ *      bypassUnderwritingGuidelines: // value for 'bypassUnderwritingGuidelines'
+ *   },
+ * });
+ */
+export function useCreateQuoteForNewContractMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateQuoteForNewContractMutation,
+    CreateQuoteForNewContractMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateQuoteForNewContractMutation,
+    CreateQuoteForNewContractMutationVariables
+  >(CreateQuoteForNewContractDocument, baseOptions)
+}
+export type CreateQuoteForNewContractMutationHookResult = ReturnType<
+  typeof useCreateQuoteForNewContractMutation
+>
+export type CreateQuoteForNewContractMutationResult = ApolloReactCommon.MutationResult<
+  CreateQuoteForNewContractMutation
+>
+export type CreateQuoteForNewContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateQuoteForNewContractMutation,
+  CreateQuoteForNewContractMutationVariables
+>
 export const CreateQuoteFromAgreementDocument = gql`
   mutation CreateQuoteFromAgreement($agreementId: ID!, $memberId: ID!) {
     createQuoteFromAgreement(agreementId: $agreementId, memberId: $memberId) {
@@ -2693,6 +2780,7 @@ export type CreateQuoteFromAgreementMutationOptions = ApolloReactCommon.BaseMuta
 export const GetAccountDocument = gql`
   query GetAccount($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       account {
         id
         currentBalance {
@@ -2786,6 +2874,7 @@ export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       contractMarketInfo {
         market
         preferredCurrency
@@ -2845,6 +2934,7 @@ export type GetContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
 export const GetContractsDocument = gql`
   query GetContracts($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       contracts {
         id
         holderMemberId
@@ -3059,7 +3149,7 @@ export type GetPartnerCampaignOwnersQueryResult = ApolloReactCommon.QueryResult<
   GetPartnerCampaignOwnersQueryVariables
 >
 export const FindPartnerCampaignsDocument = gql`
-  query FindPartnerCampaigns($input: CampaignFilter) {
+  query FindPartnerCampaigns($input: CampaignFilter!) {
     findPartnerCampaigns(input: $input) {
       id
       campaignCode
@@ -3235,6 +3325,60 @@ export type RevertTerminationMutationResult = ApolloReactCommon.MutationResult<
 export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RevertTerminationMutation,
   RevertTerminationMutationVariables
+>
+export const SignQuoteForNewContractDocument = gql`
+  mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {
+    signQuoteForNewContract(
+      quoteId: $quoteId
+      activationDate: $activationDate
+    ) {
+      id
+    }
+  }
+`
+export type SignQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunction<
+  SignQuoteForNewContractMutation,
+  SignQuoteForNewContractMutationVariables
+>
+
+/**
+ * __useSignQuoteForNewContractMutation__
+ *
+ * To run a mutation, you first call `useSignQuoteForNewContractMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignQuoteForNewContractMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signQuoteForNewContractMutation, { data, loading, error }] = useSignQuoteForNewContractMutation({
+ *   variables: {
+ *      quoteId: // value for 'quoteId'
+ *      activationDate: // value for 'activationDate'
+ *   },
+ * });
+ */
+export function useSignQuoteForNewContractMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SignQuoteForNewContractMutation,
+    SignQuoteForNewContractMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SignQuoteForNewContractMutation,
+    SignQuoteForNewContractMutationVariables
+  >(SignQuoteForNewContractDocument, baseOptions)
+}
+export type SignQuoteForNewContractMutationHookResult = ReturnType<
+  typeof useSignQuoteForNewContractMutation
+>
+export type SignQuoteForNewContractMutationResult = ApolloReactCommon.MutationResult<
+  SignQuoteForNewContractMutation
+>
+export type SignQuoteForNewContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SignQuoteForNewContractMutation,
+  SignQuoteForNewContractMutationVariables
 >
 export const TerminateContractDocument = gql`
   mutation TerminateContract(

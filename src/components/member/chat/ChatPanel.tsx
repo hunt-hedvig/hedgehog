@@ -15,15 +15,19 @@ import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { EmojiPicker } from './EmojiPicker'
 
-const MessagesPanelContainer = styled('div')({
+const MessagesPanelContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   flexShrink: 0,
   flexWrap: 'wrap',
   marginTop: 'auto',
   padding: '0.5rem',
-  border: '2px solid #cccccc',
-})
+  backgroundColor: theme.backgroundLight,
+  border: '1px solid ' + theme.borderStrong,
+  borderTop: 0,
+  borderBottomRightRadius: '0.5rem',
+  borderBottomLeftRadius: '0.5rem',
+}))
 
 const ChatForm = styled('form')({
   marginLeft: '16px',

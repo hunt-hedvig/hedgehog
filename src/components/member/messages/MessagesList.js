@@ -1,14 +1,19 @@
 import animateScrollTo from 'animated-scroll-to'
 import Message from 'components/member/messages/Message'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import styled from 'react-emotion'
 
-const MessagesListContainer = styled('div')({
+const MessagesListContainer = styled('div')(({ theme }) => ({
+  flex: 1,
   boxSizing: 'border-box',
   overflowY: 'auto',
   padding: '20px 20px 20px',
-})
+  background: theme.background,
+  border: '1px solid ' + theme.borderStrong,
+  borderTop: 0,
+  borderBottom: 0,
+}))
 
 const EmptyList = styled('h3')({
   textAlign: 'center',
@@ -73,9 +78,7 @@ export default class MessagesList extends React.Component {
               msgId={item.globalId}
               timestamp={item.localTimestamp}
               from={
-                item.header.fromId !== memberId
-                  ? getAuthor(item.author)
-                  : 'member'
+                item.header.fromId === memberId ? null : getAuthor(item.author)
               }
             />
           ))

@@ -3,10 +3,17 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
-import { getMemberGroup, getMemberIdColor, MemberEmoji } from 'utils/member'
+import {
+  formatSsn,
+  getMemberGroup,
+  getMemberIdColor,
+  MemberAge,
+} from 'utils/member'
 import memberPagePanes from './tabs'
 import ChatPane from './tabs/ChatPane'
 import { MemberFlag } from './shared/member-flag'
+import { MemberHistoryContext } from '../../utils/member-history'
+import { Mount } from 'react-lifecycle-components/dist'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -43,8 +50,17 @@ const Badge = styled('div')`
 
 const Flag = styled('div')`
   display: inline-flex;
-  font-size: 3rem
+  font-size: 3rem;
 `
+
+const MemberDetails = styled.div`
+  color: ${({ theme }) => theme.mutedText};
+  padding-bottom: 4rem;
+`
+const MemberDetail = styled.span`
+  padding-right: 1rem;
+`
+const MemberDetailLink = MemberDetail.withComponent('a')
 
 export default class Member extends React.Component {
   getMemberPageTitle = (member) =>
@@ -72,37 +88,70 @@ export default class Member extends React.Component {
     const panes = memberPagePanes(this.props, this.addMessageHandler)
 
     return (
-      <MemberPageWrapper>
-        <MemberPageContainer>
-          <Header size="huge">
-            <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
-            {this.getMemberPageTitle(messages.member)}
-            <MemberEmoji
-              birthDateString={messages.member?.birthDate}
-              gender={messages.member?.gender}
-            />
-            {messages.member && (
-              <>
-                <Flag>
-                  <MemberFlag memberId={messages.member.memberId} />
-                </Flag>
-                <Badge memberId={messages.member.memberId}>
-                  {getMemberGroup(messages.member.memberId)}
-                </Badge>
-              </>
-            )}
-          </Header>
-          {this.props.insurance.requesting || (
-            <Tab
-              style={{ height: '100%' }}
-              panes={panes}
-              renderActiveOnly={true}
-              defaultActiveIndex={4}
-            />
-          )}
-        </MemberPageContainer>
-        <ChatPane {...this.props} />
-      </MemberPageWrapper>
+      <MemberHistoryContext.Consumer>
+        {({ pushToMemberHistory }) => (
+          <Mount
+            on={() => pushToMemberHistory(this.props.match.params.memberId)}
+          >
+            <MemberPageWrapper>
+              <MemberPageContainer>
+                <Header size="huge">
+                  <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
+                  {this.getMemberPageTitle(messages.member)}
+                  {' ('}
+                  <MemberAge
+                    birthDateString={messages.member?.birthDate}
+                  />){' '}
+                  {messages.member && (
+                    <>
+                      <Flag>
+                        <MemberFlag memberId={messages.member.memberId} />
+                      </Flag>
+                      <Badge memberId={messages.member.memberId}>
+                        {getMemberGroup(messages.member.memberId)}
+                      </Badge>
+                    </>
+                  )}
+                </Header>
+                <MemberDetails>
+                  {messages?.member?.status === 'SIGNED' &&
+                    messages?.member?.ssn && (
+                      <MemberDetail>
+                        {formatSsn(messages.member.ssn)}
+                      </MemberDetail>
+                    )}
+                  {messages?.member?.email && (
+                    <MemberDetailLink href={`mailto:${messages.member.email}`}>
+                      {messages.member.email}
+                    </MemberDetailLink>
+                  )}
+                  {messages?.member?.phoneNumber && (
+                    <MemberDetailLink
+                      href={`tel:${messages.member.phoneNumber}`}
+                    >
+                      {messages.member.phoneNumber}
+                    </MemberDetailLink>
+                  )}
+                  <MemberDetailLink
+                    href={`${window.location.protocol}//${window.location.host}/members/${messages?.member?.memberId}`}
+                  >
+                    {messages?.member?.memberId}
+                  </MemberDetailLink>
+                </MemberDetails>
+                {this.props.insurance.requesting || (
+                  <Tab
+                    style={{ height: '100%' }}
+                    panes={panes}
+                    renderActiveOnly={true}
+                    defaultActiveIndex={4}
+                  />
+                )}
+              </MemberPageContainer>
+              <ChatPane {...this.props} />
+            </MemberPageWrapper>
+          </Mount>
+        )}
+      </MemberHistoryContext.Consumer>
     )
   }
 

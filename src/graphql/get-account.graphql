@@ -1,5 +1,7 @@
 query GetAccount($memberId: ID!) {
   member(id: $memberId) {
+    memberId
+
     account {
       id
       currentBalance {

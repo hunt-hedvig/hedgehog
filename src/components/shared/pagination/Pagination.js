@@ -1,5 +1,5 @@
 import { getPageState } from 'lib/paginator'
-import * as PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Button } from 'semantic-ui-react'
 import styled from 'react-emotion'

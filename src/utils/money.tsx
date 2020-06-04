@@ -8,4 +8,10 @@ type Money =
     }
 
 export const formatMoney = (amount: Money): string =>
-  amount.amount + ' ' + amount.currency
+  Math.round(
+    typeof amount.amount === 'string'
+      ? parseInt(amount.amount, 10)
+      : amount.amount,
+  ) +
+  ' ' +
+  amount.currency

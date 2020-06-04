@@ -1,5 +1,5 @@
 import { EnumDropdown } from 'hedvig-ui/dropdown'
-import * as React from 'react'
+import React from 'react'
 
 export default {
   title: 'EnumDropdown',

@@ -1,4 +1,4 @@
-query FindPartnerCampaigns($input: CampaignFilter) {
+query FindPartnerCampaigns($input: CampaignFilter!) {
   findPartnerCampaigns(input: $input) {
     id
     campaignCode
@@ -11,7 +11,7 @@ query FindPartnerCampaigns($input: CampaignFilter) {
         numberOfMonths
         percentage
       }
-      ... on FreeMonths {
+      ... on FreeMonths {q
         numberOfMonths
       }
       ... on CostDeduction {
