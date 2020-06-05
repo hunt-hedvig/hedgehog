@@ -3,6 +3,7 @@ import styled, { css } from 'react-emotion'
 
 const PopoverWrapper = styled.div`
   position: relative;
+  display: inline-block;
 `
 
 const Contents = styled.div`
@@ -32,12 +33,14 @@ const Triangle = styled.div`
 
 interface PopoverProps {
   contents: React.ReactNode
+  className?: string
   disable?: boolean
   onOpen?: () => void
   onClose?: () => void
 }
 export const Popover: React.FC<PopoverProps> = ({
   contents,
+  className,
   disable,
   onOpen,
   onClose,
@@ -47,6 +50,7 @@ export const Popover: React.FC<PopoverProps> = ({
 
   return (
     <PopoverWrapper
+      className={className}
       onMouseOver={() => {
         setIsOpen(true)
         if (onOpen) {
