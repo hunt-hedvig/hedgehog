@@ -1,18 +1,18 @@
 import { action } from '@storybook/addon-actions'
-import { boolean, select, withKnobs } from '@storybook/addon-knobs'
+import { boolean, select } from '@storybook/addon-knobs'
 import { Button, buttonColorMap, ButtonProps } from 'hedvig-ui/button'
-import React from 'react'
 import { WithStory } from './story-utils'
+import { lightTheme } from 'hedvig-ui/themes'
+import React from 'react'
 
 export default {
   title: 'Button',
   component: Button,
-  decorators: [withKnobs],
 }
 
 const colors: ReadonlyArray<NonNullable<
   ButtonProps['variation']
->> = Object.keys(buttonColorMap) as any
+>> = Object.keys(buttonColorMap(lightTheme)) as any
 const sizes: ReadonlyArray<NonNullable<ButtonProps['size']>> = [
   'small',
   'medium',
