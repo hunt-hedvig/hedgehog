@@ -1,5 +1,5 @@
 import { colorsV2 } from '@hedviginsurance/brand'
-import { boolean, select } from '@storybook/addon-knobs'
+import { boolean, select, withKnobs } from '@storybook/addon-knobs'
 import { Spacing, SpacingSize } from 'hedvig-ui/spacing'
 import React from 'react'
 import styled from 'react-emotion'
@@ -7,6 +7,7 @@ import styled from 'react-emotion'
 export default {
   title: 'Spacing',
   component: Spacing,
+  decorators: [withKnobs],
 }
 
 const SpacingColored = styled(Spacing)`

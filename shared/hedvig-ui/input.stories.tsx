@@ -1,10 +1,11 @@
-import { boolean } from '@storybook/addon-knobs'
+import { boolean, withKnobs } from '@storybook/addon-knobs'
 import { Input } from 'hedvig-ui/input'
 import React from 'react'
 
 export default {
   title: 'Input',
   component: Input,
+  decorators: [withKnobs],
 }
 
 export const StandardInput: React.FunctionComponent = () => {

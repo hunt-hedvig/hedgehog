@@ -1,3 +1,5 @@
 export interface WithStory {
-  story: { name: string }
+  story?: {
+    name: string
+  }
 }

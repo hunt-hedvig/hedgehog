@@ -724,7 +724,6 @@ export type MutationType = {
   chargeMember?: Maybe<Member>
   addAccountEntryToMember: Member
   approveMemberCharge?: Maybe<Scalars['Boolean']>
-  createPaymentCompletionLink: PaymentCompletionResponse
   updateClaimState?: Maybe<Claim>
   createClaim?: Maybe<Scalars['ID']>
   addClaimNote?: Maybe<Claim>
@@ -779,10 +778,6 @@ export type MutationTypeAddAccountEntryToMemberArgs = {
 
 export type MutationTypeApproveMemberChargeArgs = {
   approvals: Array<MemberChargeApproval>
-}
-
-export type MutationTypeCreatePaymentCompletionLinkArgs = {
-  memberId: Scalars['ID']
 }
 
 export type MutationTypeUpdateClaimStateArgs = {
@@ -1105,12 +1100,6 @@ export type Payload = {
   category: Scalars['String']
   query: Scalars['String']
   filters: Array<Filter>
-}
-
-export type PaymentCompletionResponse = {
-  __typename?: 'PaymentCompletionResponse'
-  member: Member
-  url: Scalars['String']
 }
 
 export type PaymentDefault = {
@@ -1679,18 +1668,6 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   MutationType,
   'changeToDate'
 >
-
-export type CreatePaymentCompletionLinkMutationVariables = {
-  memberId: Scalars['ID']
-}
-
-export type CreatePaymentCompletionLinkMutation = {
-  __typename?: 'MutationType'
-} & {
-  createPaymentCompletionLink: {
-    __typename?: 'PaymentCompletionResponse'
-  } & Pick<PaymentCompletionResponse, 'url'>
-}
 
 export type CreateQuoteForNewContractMutationVariables = {
   memberId: Scalars['ID']
@@ -2503,56 +2480,6 @@ export type ChangeToDateMutationResult = ApolloReactCommon.MutationResult<
 export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
->
-export const CreatePaymentCompletionLinkDocument = gql`
-  mutation CreatePaymentCompletionLink($memberId: ID!) {
-    createPaymentCompletionLink(memberId: $memberId) {
-      url
-    }
-  }
-`
-export type CreatePaymentCompletionLinkMutationFn = ApolloReactCommon.MutationFunction<
-  CreatePaymentCompletionLinkMutation,
-  CreatePaymentCompletionLinkMutationVariables
->
-
-/**
- * __useCreatePaymentCompletionLinkMutation__
- *
- * To run a mutation, you first call `useCreatePaymentCompletionLinkMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePaymentCompletionLinkMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createPaymentCompletionLinkMutation, { data, loading, error }] = useCreatePaymentCompletionLinkMutation({
- *   variables: {
- *      memberId: // value for 'memberId'
- *   },
- * });
- */
-export function useCreatePaymentCompletionLinkMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreatePaymentCompletionLinkMutation,
-    CreatePaymentCompletionLinkMutationVariables
-  >,
-) {
-  return ApolloReactHooks.useMutation<
-    CreatePaymentCompletionLinkMutation,
-    CreatePaymentCompletionLinkMutationVariables
-  >(CreatePaymentCompletionLinkDocument, baseOptions)
-}
-export type CreatePaymentCompletionLinkMutationHookResult = ReturnType<
-  typeof useCreatePaymentCompletionLinkMutation
->
-export type CreatePaymentCompletionLinkMutationResult = ApolloReactCommon.MutationResult<
-  CreatePaymentCompletionLinkMutation
->
-export type CreatePaymentCompletionLinkMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreatePaymentCompletionLinkMutation,
-  CreatePaymentCompletionLinkMutationVariables
 >
 export const CreateQuoteForNewContractDocument = gql`
   mutation CreateQuoteForNewContract(

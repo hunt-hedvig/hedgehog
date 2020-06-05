@@ -1,7 +1,4 @@
 import { colorsV3 } from '@hedviginsurance/brand'
-import { Spinner } from 'hedvig-ui/sipnner'
-import { Spacing } from 'hedvig-ui/spacing'
-import React from 'react'
 import styled from 'react-emotion'
 import { lightTheme } from './themes'
 
@@ -30,8 +27,6 @@ export interface ButtonProps {
   halfWidth?: boolean
   basic?: boolean
   size?: 'small' | 'medium' | 'large'
-  loading?: boolean
-  disabled?: boolean
 }
 
 export const buttonColorMap: (
@@ -95,7 +90,7 @@ export const buttonSizeMap: Record<
   },
 }
 
-export const ButtonComponent = styled.button<ButtonProps>(
+export const Button = styled('button')<ButtonProps>(
   ({
     variation = 'default',
     fullWidth,
@@ -121,7 +116,7 @@ export const ButtonComponent = styled.button<ButtonProps>(
       boxShadow: 'none !important',
       borderRadius: 8,
       cursor: 'pointer',
-      transition: 'background 200ms, border 200ms, color 200ms, opacity 200ms',
+      transition: 'background 200ms, border 200ms, color 200ms',
       '&:hover, &:focus': {
         outline: 'none',
         color: colors.foreground,
@@ -129,37 +124,12 @@ export const ButtonComponent = styled.button<ButtonProps>(
         borderColor: colors.highlighted,
       },
       '&:disabled': {
-        opacity: 0.5,
+        background: colorsV3.gray500,
+        color: colorsV3.white,
+        borderColor: colorsV3.gray500,
       },
     }
   },
 )
 
-const withLoader = <TElementAttributes extends object>(
-  Component: React.ComponentType<ButtonProps | TElementAttributes>,
-): React.FC<ButtonProps & TElementAttributes> => ({
-  loading,
-  children,
-  ...props
-}) => {
-  return (
-    <Component {...props} disabled={props.disabled || loading}>
-      <>
-        {children}
-        {loading && (
-          <Spacing inline left="small">
-            <Spinner />
-          </Spacing>
-        )}
-      </>
-    </Component>
-  )
-}
-
-export const Button = withLoader<React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  ButtonComponent,
-)
-
-export const ButtonLink = withLoader<
-  React.AnchorHTMLAttributes<HTMLAnchorElement>
->(ButtonComponent.withComponent('a'))
+export const ButtonLink = Button.withComponent('a')

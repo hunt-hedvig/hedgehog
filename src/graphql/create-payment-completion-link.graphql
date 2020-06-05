@@ -1,5 +1,0 @@
-mutation CreatePaymentCompletionLink($memberId: ID!) {
-  createPaymentCompletionLink(memberId: $memberId) {
-    url
-  }
-}

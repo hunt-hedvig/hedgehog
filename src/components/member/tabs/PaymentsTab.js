@@ -1,30 +1,14 @@
 import gql from 'graphql-tag'
-import { format, parseISO } from 'date-fns'
+import moment from 'moment'
 import React from 'react'
 import { Mutation, Query } from 'react-apollo'
-import { Form, Input, Table } from 'semantic-ui-react'
-import PayoutDetails from 'components/payouts/payout-details'
-import { CheckCircle, XCircle } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
-import { Spacing } from 'hedvig-ui/spacing'
-import { Button } from 'hedvig-ui/button'
-import { Market } from 'api/generated/graphql'
-import { formatMoney } from 'utils/money'
-import { GenerateSetupDirectDebitLink } from './generate-setup-direct-debit-link'
+import { Button, Form, Input, Table } from 'semantic-ui-react'
 
-const IconWrapper = styled.span`
-  display: inline-block;
-  vertical-align: top;
-  font-size: 1.5rem;
-  padding-left: 0.5rem;
-  margin-top: -0.1rem;
-`
-const SuccessText = styled(IconWrapper)`
-  color: ${({ theme }) => theme.success};
-`
-const DangerText = styled(IconWrapper)`
-  color: ${({ theme }) => theme.danger};
-`
+import { Checkmark, Cross } from 'components/icons'
+import PayoutDetails from 'components/payouts/payout-details'
+import styled from 'react-emotion'
+import { Market } from 'api/generated/graphql'
+import { formatMoney } from '../../../utils/money'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -39,6 +23,7 @@ const transactionDateSorter = (a, b) => {
   return 0
 }
 
+// TODO: "currentMonth" och "previousMonth" är borttagna, se till så att det fortfarande funkar
 const GET_MEMBER_QUERY = gql`
   query GetMemberTransactions($id: ID!) {
     member(id: $id) {
@@ -112,7 +97,7 @@ const MemberTransactionsTable = ({ transactions }) => (
             <strong>{formatMoney(transaction.amount)}</strong>
           </Table.Cell>
           <Table.Cell>
-            {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
+            {moment(transaction.timestamp).format('YYYY-MM-DD HH:mm:ss')}
           </Table.Cell>
           <Table.Cell>{transaction.type}</Table.Cell>
           <Table.Cell>{transaction.status}</Table.Cell>
@@ -143,7 +128,7 @@ class PaymentsTab extends React.Component {
         id: this.memberId,
         amount: {
           amount: +this.state.amount,
-          currency: this.props.contractMarketInfo?.preferredCurrency,
+          currency: this.props.contractMarketInfo.preferredCurrency,
         },
       },
     })
@@ -191,22 +176,11 @@ class PaymentsTab extends React.Component {
                 <p>
                   Direct Debit activated:{' '}
                   {data.member.directDebitStatus.activated ? (
-                    <SuccessText>
-                      <CheckCircle />
-                    </SuccessText>
+                    <Checkmark />
                   ) : (
-                    <DangerText>
-                      <XCircle />
-                    </DangerText>
+                    <Cross />
                   )}
                 </p>
-
-                {!data.member.directDebitStatus.activated && (
-                  <Spacing bottom>
-                    <GenerateSetupDirectDebitLink memberId={this.memberId} />
-                  </Spacing>
-                )}
-
                 {data.member.directDebitStatus.activated && (
                   <Mutation
                     mutation={CHARGE_MEMBER_MUTATION}
@@ -218,16 +192,13 @@ class PaymentsTab extends React.Component {
                         <Form>
                           <Form.Input
                             onChange={this.handleChange}
-                            label={`Charge amount (${this.props.contractMarketInfo?.preferredCurrency})`}
+                            label={`Charge amount (${this.props.contractMarketInfo.preferredCurrency})`}
                             placeholder="ex. 100"
                             value={this.state.amount}
                           />
                           <br />
                           {!this.state.confirmed && (
-                            <Button
-                              variation="primary"
-                              onClick={this.handleConfirmation}
-                            >
+                            <Button onClick={this.handleConfirmation}>
                               Charge
                             </Button>
                           )}
@@ -265,7 +236,7 @@ class PaymentsTab extends React.Component {
                   </Mutation>
                 )}
                 <br />
-                {this.props.contractMarketInfo?.market === Market.Sweden &&
+                {this.props.contractMarketInfo.market === Market.Sweden &&
                   data.member.directDebitStatus.activated && (
                     <>
                       <h3>Payout:</h3>
