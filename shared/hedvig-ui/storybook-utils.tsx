@@ -1,7 +1,7 @@
 import { select } from '@storybook/addon-knobs'
+import { ThemeProvider } from 'emotion-theming'
 import { darkTheme, lightTheme } from 'hedvig-ui/themes'
 import React from 'react'
-import { ThemeProvider } from 'emotion-theming'
 import styled from 'react-emotion'
 
 const ThemeWrapper = styled.div`
