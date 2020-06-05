@@ -1,4 +1,7 @@
 import { colorsV3 } from '@hedviginsurance/brand'
+import { Spinner } from 'hedvig-ui/sipnner'
+import { Spacing } from 'hedvig-ui/spacing'
+import React from 'react'
 import styled from 'react-emotion'
 import { lightTheme } from './themes'
 
@@ -14,7 +17,8 @@ export const ButtonsGroup = styled('div')({
   },
 })
 
-export interface ButtonProps {
+export interface ButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'css'> {
   variation?:
     | 'default'
     | 'primary'
@@ -27,6 +31,7 @@ export interface ButtonProps {
   halfWidth?: boolean
   basic?: boolean
   size?: 'small' | 'medium' | 'large'
+  loading?: boolean
 }
 
 export const buttonColorMap: (
@@ -90,7 +95,7 @@ export const buttonSizeMap: Record<
   },
 }
 
-export const Button = styled('button')<ButtonProps>(
+export const ButtonComponent = styled.button<ButtonProps>(
   ({
     variation = 'default',
     fullWidth,
@@ -132,4 +137,21 @@ export const Button = styled('button')<ButtonProps>(
   },
 )
 
-export const ButtonLink = Button.withComponent('a')
+const withLoader = (
+  Component: React.ComponentType<Omit<ButtonProps, 'loading'>>,
+): React.FC<ButtonProps> => ({ loading, children, ...props }) => (
+  <Component {...props} disabled={props.disabled || loading}>
+    {children}
+    {loading && (
+      <Spacing inline left="small">
+        <Spinner />
+      </Spacing>
+    )}
+  </Component>
+)
+
+export const Button = withLoader(ButtonComponent)
+
+export const ButtonLinkComponent = withLoader(
+  ButtonComponent.withComponent('a') as React.ComponentType<ButtonProps>,
+)

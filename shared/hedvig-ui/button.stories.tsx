@@ -26,6 +26,7 @@ export const Text = () => {
       variation={select('variation', colors, 'primary')}
       size={select('Size', sizes, 'medium')}
       basic={boolean('Basic', false)}
+      loading={boolean('Loading', false)}
     >
       Hello Button
     </Button>
