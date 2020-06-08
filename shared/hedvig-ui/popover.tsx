@@ -1,10 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled, { css } from 'react-emotion'
-
-const PopoverWrapper = styled.div`
-  position: relative;
-  display: inline-block;
-`
 
 const Contents = styled.div`
   position: absolute;
@@ -19,6 +14,24 @@ const Contents = styled.div`
     color: ${theme.background};
   `}
 `
+
+const PopoverWrapper = styled.div<{ disableHover: boolean }>`
+  position: relative;
+  display: inline-block;
+
+  ${Contents} {
+    display: none;
+  }
+
+  ${({ disableHover }) =>
+    !disableHover &&
+    css`
+      &:hover ${Contents} {
+        display: block;
+      }
+    `};
+`
+
 const Triangle = styled.div`
   position: absolute;
   left: 50%;
@@ -46,30 +59,25 @@ export const Popover: React.FC<PopoverProps> = ({
   onClose,
   children,
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
-
   return (
     <PopoverWrapper
       className={className}
       onMouseOver={() => {
-        setIsOpen(true)
         if (onOpen) {
           onOpen()
         }
       }}
       onMouseLeave={() => {
-        setIsOpen(false)
         if (onClose) {
           onClose()
         }
       }}
+      disableHover={!!disable}
     >
-      {isOpen && !disable && (
-        <Contents>
-          {contents}
-          <Triangle />
-        </Contents>
-      )}
+      <Contents>
+        {contents}
+        <Triangle />
+      </Contents>
       {children}
     </PopoverWrapper>
   )
