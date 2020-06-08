@@ -1,5 +1,5 @@
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import * as React from 'react'
+import React from 'react'
 
 export default {
   title: 'DateTimePicker',

@@ -1,5 +1,7 @@
 query GetContractMarketInfo($memberId: ID!) {
   member(id: $memberId) {
+    memberId
+
     contractMarketInfo {
       market
       preferredCurrency

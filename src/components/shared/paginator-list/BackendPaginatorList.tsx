@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
 import BackendPagination from '../pagination/BackendPagination'

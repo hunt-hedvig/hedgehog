@@ -1,12 +1,12 @@
 import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
+import { css } from 'emotion'
 import { dateTimeFormatter } from 'lib/helpers'
 import * as types from 'lib/messageTypes'
-import * as moment from 'moment'
+import moment from 'moment'
 import 'moment/locale/sv'
-import * as PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import React from 'react'
-import { Label } from 'semantic-ui-react'
 import styled from 'react-emotion'
 
 const MessageRow = styled.div`
@@ -26,35 +26,47 @@ const MessageBody = styled.div`
   word-wrap: break-word;
   z-index: 2000;
   position: relative;
-  border: 1px solid #d4d4d5;
-  color: #4b4b4b;
+  &,
+  & label {
+    color: ${({ left, theme }) =>
+      left ? theme.accentContrast : theme.foreground} !important;
+  }
+
   line-height: 1.4em;
-  background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
-  border-radius: 0.3rem;
-  padding: 0.8em 1em;
-  box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
-    0 2px 10px 0 rgba(34, 36, 38, 0.15);
+  background: ${(props) =>
+    props.left ? props.theme.accent : props.theme.accentLight};
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
 
   &:before {
     position: absolute;
     content: '';
     width: 0.7em;
     height: 0.7em;
-    background: ${(props) => (props.left ? '#d1f4ff;' : '#fff;')}
+    background: ${(props) =>
+      props.left ? props.theme.accent : props.theme.accentLight};
+
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     z-index: 2;
-    box-shadow: 1px 1px 0 0 #bababc;
+    box-shadow: 1px 1px 0 0 ${({ theme }) => theme.border};
     bottom: -0.3em;
-    left: 1em;
+    ${({ left }) => css`
+      ${left ? `right: 1em;` : `left: 1em;`};
+    `};
     top: auto;
-    right: auto;
     margin-left: 0;
   }
 `
 
 const MessageInfo = styled.div`
   margin: 0.5em 0;
+  font-size: 0.9rem;
+  ${({ left }) => left && `text-align: right;`};
+`
+const Timestamp = styled.div`
+  color: ${({ theme }) => theme.mutedText};
+  font-size: 0.8rem;
 `
 
 const Video = styled.video`
@@ -77,13 +89,11 @@ const Message = ({
         <MessageContent content={content} />
       </MessageBody>
       {timestamp ? (
-        <MessageInfo>
-          <Label>
-            {from}
-            <Label.Detail>
-              {dateTimeFormatter(timestamp, 'HH:mm:ss dd MMMM yyyy')}
-            </Label.Detail>
-          </Label>
+        <MessageInfo left={left}>
+          {from}
+          <Timestamp>
+            {dateTimeFormatter(timestamp, "MMM dd ''yy, HH:mm")}
+          </Timestamp>
         </MessageInfo>
       ) : null}
     </MessageBox>

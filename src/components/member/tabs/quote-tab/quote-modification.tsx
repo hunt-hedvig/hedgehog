@@ -1,7 +1,5 @@
 import { useMutation } from '@apollo/react-hooks'
-import { colorsV2 } from '@hedviginsurance/brand/dist'
 import {
-  ApartmentQuoteData,
   ApartmentSubType,
   ContractMarketInfo,
   ExtraBuilding,
@@ -10,33 +8,45 @@ import {
   MutationType,
   MutationTypeUpdateQuoteArgs,
   NorwegianHomeContentLineOfBusiness,
-  NorwegianHomeContentQuoteData,
   NorwegianTravelLineOfBusiness,
-  NorwegianTravelQuoteData,
   Quote,
   QuoteData,
   QuoteInput,
-  QuoteProductType,
-  SwedishApartmentLineOfBusiness,
+  useCreateQuoteForNewContractMutation,
 } from 'api/generated/graphql'
 import { gql } from 'apollo-boost'
+import { useContracts } from 'graphql/use-contracts'
+import { getCreateQuoteForNewContractOptions } from 'graphql/use-create-quote-for-new-contract'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { QUOTES_QUERY } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Checkbox, Dropdown, Input as SuiInput } from 'semantic-ui-react'
+import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem'
+import { showNotification } from 'store/actions/notificationsActions'
 import { noopFunction } from 'utils'
 import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
 import {
-  getSubType,
   isNorwegianHomeContent,
   isNorwegianTravel,
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/quote'
-import * as uuid from 'uuid/v4'
+import uuid from 'uuid/v4'
 import { ErrorMessage } from './common'
+import {
+  getProductSubTypeValue,
+  getProductType,
+  isNorwegianHomeContentFormStateProductSubType,
+  isNorwegianTravelFormStateProductSubType,
+  isSwedishApartmentContentFormStateProductSubType,
+  isSwedishHouseProductType,
+  norwegianHomeContentDropdownItemProps,
+  norwegianTravelDropdownItemProps,
+  swedishApartmentDropdownItemProps,
+  swedishHouseDropdownItemProps,
+} from './quote-modification-utils'
 
 const Label = styled('label')({
   display: 'block',
@@ -85,88 +95,6 @@ const UPDATE_QUOTE_MUTATION = gql`
   }
 `
 
-const getProductSubTypeValue = (quote: Quote): string => {
-  if (quote.productType === 'APARTMENT') {
-    return (quote.data as ApartmentQuoteData).subType!.toString()
-  }
-  if (quote.productType === 'HOUSE') {
-    return 'HOUSE'
-  }
-  if (quote.productType === 'TRAVEL') {
-    if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
-      // @ts-ignore
-      return (quote.data as NorwegianTravelQuoteData).norwegianTravelSubType?.toString()
-    }
-  }
-  if (quote.productType === 'HOME_CONTENT') {
-    const subType = getSubType(quote.data as NorwegianHomeContentQuoteData)
-    return subType === NorwegianHomeContentLineOfBusiness.Rent
-      ? 'HOME_CONTENT_RENT'
-      : subType
-  }
-  return ''
-}
-
-const getProductType = (
-  productType: string | null,
-  contractMarket: ContractMarketInfo,
-): QuoteProductType => {
-  if (isSwedishMarket(contractMarket)) {
-    return isSwedishHouseProductType(productType)
-      ? QuoteProductType.House
-      : QuoteProductType.Apartment
-  }
-  if (isNorwegianMarket(contractMarket)) {
-    return isNorwegianTravelFormStateProductSubType(productType)
-      ? QuoteProductType.Travel
-      : QuoteProductType.HomeContent
-  }
-  throw Error(`Expected ${contractMarket.market} to be either Sweden or Norway`)
-}
-
-const isNorwegianTravelFormStateProductSubType = (
-  productType: string | null,
-): boolean => {
-  return (
-    productType === NorwegianTravelLineOfBusiness.Youth ||
-    productType === NorwegianTravelLineOfBusiness.Regular
-  )
-}
-
-const isSwedishHouseProductType = (productType: string | null): boolean => {
-  return productType === 'HOUSE'
-}
-
-const isNorwegianHomeContentFormStateProductSubType = (
-  productType: string | null,
-): boolean => {
-  if (productType === null) {
-    return false
-  }
-  const subTypes: string[] = [
-    NorwegianHomeContentLineOfBusiness.Own,
-    'HOME_CONTENT_RENT',
-    NorwegianHomeContentLineOfBusiness.YouthOwn,
-    NorwegianHomeContentLineOfBusiness.YouthRent,
-  ]
-  return subTypes.includes(productType)
-}
-
-const isSwedishApartmentContentFormStateProductSubType = (
-  productType: string | null,
-): boolean => {
-  if (productType === null) {
-    return false
-  }
-  const subTypes: string[] = [
-    ApartmentSubType.Brf,
-    ApartmentSubType.Rent,
-    ApartmentSubType.StudentBrf,
-    ApartmentSubType.StudentRent,
-  ]
-  return subTypes.includes(productType)
-}
-
 const createQuoteData = ({
   contractMarket,
   productType,
@@ -181,9 +109,9 @@ const createQuoteData = ({
   numberOfBathrooms,
   extraBuildings,
   isSubleted,
-}: FormState & { quote: Quote; contractMarket: ContractMarketInfo }) => {
+}: FormState & { quote: Quote | null; contractMarket: ContractMarketInfo }) => {
   const quoteData: Partial<QuoteInput> = {
-    productType: getProductType(productType, contractMarket),
+    productType: getProductType(quote, productType, contractMarket),
   }
 
   const baseData = {
@@ -269,15 +197,18 @@ interface FormState {
 
 export const QuoteModification: React.FC<{
   memberId: string
-  quote: Quote
+  quote: Quote | null
+  shouldCreateContract: boolean
   onWipChange?: (isWip: boolean) => void
   onSubmitted?: () => void
 }> = ({
   memberId,
   quote,
+  shouldCreateContract,
   onWipChange = noopFunction,
   onSubmitted = noopFunction,
 }) => {
+  const [createQuoteForNewContract] = useCreateQuoteForNewContractMutation()
   const [modifyField, fieldModification] = useMutation<
     Pick<MutationType, 'updateQuote'>,
     MutationTypeUpdateQuoteArgs
@@ -289,7 +220,7 @@ export const QuoteModification: React.FC<{
     city: null,
     ancillaryArea: null,
     extraBuildings:
-      (quote.data as HouseQuoteData | null)?.extraBuildings?.map(
+      (quote?.data as HouseQuoteData | null)?.extraBuildings?.map(
         (extraBuilding) => ({ ...extraBuilding, id: uuid() }),
       ) ?? [],
     householdSize: null,
@@ -302,21 +233,14 @@ export const QuoteModification: React.FC<{
   })
 
   const [contractMarket, { loading }] = useContractMarketInfo(memberId)
-
-  if (loading) {
-    return null
-  }
-
-  if (!contractMarket) {
-    return <>Unable to get Market, please contract Tech</>
-  }
+  const [contracts] = useContracts(memberId)
 
   const [
     bypassUnderwritingGuidelines,
     setBypassUnderwritingGuidelines,
   ] = React.useState(false)
 
-  const getSwedishDropdown = () => (
+  const getProductTypeDropdown = () => (
     <Dropdown
       fluid
       selection
@@ -327,69 +251,66 @@ export const QuoteModification: React.FC<{
         }
         setFormState({ ...formState, productType: data.value as string })
       }}
-      options={[
-        {
-          text: 'Apartment (rent)',
-          value: SwedishApartmentLineOfBusiness.Rent,
-        },
-        { text: 'Apartment (brf)', value: SwedishApartmentLineOfBusiness.Brf },
-        {
-          text: 'Apartment (student rent)',
-          value: SwedishApartmentLineOfBusiness.StudentRent,
-        },
-        {
-          text: 'Apartment (student brf)',
-          value: SwedishApartmentLineOfBusiness.StudentBrf,
-        },
-        { text: 'House', value: 'HOUSE' },
-      ]}
+      options={contractMarket ? getDropdownOptions(contractMarket) : []}
     />
   )
 
-  const getNorwegianDropDown = () => (
-    <Dropdown
-      fluid
-      selection
-      value={formState.productType ?? getProductSubTypeValue(quote)}
-      onChange={(_, data) => {
-        if (onWipChange) {
-          onWipChange(true)
+  const getDropdownOptions = (
+    contractMarketInfo: ContractMarketInfo,
+  ): DropdownItemProps[] => {
+    if (isSwedishMarket(contractMarketInfo)) {
+      return getSwedishDropDownOptions()
+    }
+    if (isNorwegianMarket(contractMarketInfo)) {
+      return getNorwegianDropDownOptions()
+    }
+    throw new Error(`Unknown market while generating dropdown options`)
+  }
+
+  const getSwedishDropDownOptions = (): DropdownItemProps[] => {
+    const productType = formState.productType ?? getProductSubTypeValue(quote)
+    if (productType !== '') {
+      if (productType === 'HOUSE') {
+        return swedishHouseDropdownItemProps()
+      } else {
+        return swedishApartmentDropdownItemProps()
+      }
+    } else {
+      if (contracts.length === 1) {
+        if (contracts[0].contractTypeName === 'Swedish Apartment') {
+          return swedishHouseDropdownItemProps()
         }
-        setFormState({ ...formState, productType: data.value as string })
-      }}
-      options={[
-        {
-          text: 'Norwegian Home Content (own)',
-          value: NorwegianHomeContentLineOfBusiness.Own,
-        },
-        {
-          text: 'Norwegian Home Content (rent)',
-          value: 'HOME_CONTENT_RENT',
-        },
-        {
-          text: 'Norwegian Home Content (youth own)',
-          value: NorwegianHomeContentLineOfBusiness.YouthOwn,
-        },
-        {
-          text: 'Norwegian Home Content (youth rent)',
-          value: NorwegianHomeContentLineOfBusiness.YouthRent,
-        },
-        {
-          text: 'Norwegian Travel',
-          value: NorwegianTravelLineOfBusiness.Regular,
-        },
-        {
-          text: 'Norwegian Travel (youth)',
-          value: NorwegianTravelLineOfBusiness.Youth,
-        },
-      ]}
-    />
-  )
+        if (contracts[0].contractTypeName === 'Swedish House') {
+          return swedishApartmentDropdownItemProps()
+        }
+      }
+    }
+    throw new Error(
+      `Cannot return dropDownItems for swedish product type "${productType}"`,
+    )
+  }
 
-  const getProductTypeDropdown = () =>
-    isSwedishMarket(contractMarket)
-      ? getSwedishDropdown()
-      : getNorwegianDropDown()
+  const getNorwegianDropDownOptions = (): DropdownItemProps[] => {
+    const productType = formState.productType ?? getProductSubTypeValue(quote)
+    if (productType !== '') {
+      if (isNorwegianTravelFormStateProductSubType(productType)) {
+        return norwegianTravelDropdownItemProps()
+      } else {
+        return norwegianHomeContentDropdownItemProps()
+      }
+    } else {
+      if (contracts.length === 1) {
+        if (contracts[0].contractTypeName === 'Norwegian Travel') {
+          return norwegianHomeContentDropdownItemProps()
+        } else {
+          return norwegianTravelDropdownItemProps()
+        }
+      }
+    }
+    throw new Error(
+      `Cannot return dropDownItems for norwegian product type "${productType}"`,
+    )
+  }
 
   const getTextInput = (
     variable: keyof FormState,
@@ -398,7 +319,7 @@ export const QuoteModification: React.FC<{
     value?: any,
   ) => (
     <>
-      <Label htmlFor={`${variable}-${quote.id}`}>{label}</Label>
+      <Label htmlFor={`${variable}-${quote?.id}`}>{label}</Label>
       <Input
         onChange={(e) => {
           if (onWipChange) {
@@ -407,18 +328,29 @@ export const QuoteModification: React.FC<{
           setFormState({ ...formState, [variable]: e.currentTarget.value })
         }}
         value={
-          value ?? formState[variable] ?? (quote.data as QuoteData)[variable]
+          value ??
+          formState[variable] ??
+          (quote ? (quote.data as QuoteData)[variable] : '')
         }
-        id={`${variable}-${quote.id}`}
+        id={`${variable}-${quote?.id}`}
         type={inputType}
       />
     </>
   )
+
   const getNumberInput = (
     variable: keyof FormState,
     label: React.ReactNode,
     value?: any,
   ) => getTextInput(variable, label, 'number', value)
+
+  if (loading) {
+    return null
+  }
+
+  if (!contractMarket) {
+    return <>Unable to get Market, please contact Tech</>
+  }
 
   return (
     <Wrapper
@@ -435,13 +367,39 @@ export const QuoteModification: React.FC<{
           contractMarket,
         })
 
-        await modifyField({
-          variables: {
-            quoteId: quote.id,
-            quoteData,
-            bypassUnderwritingGuidelines,
-          },
-        })
+        if (shouldCreateContract) {
+          createQuoteForNewContract(
+            getCreateQuoteForNewContractOptions(
+              memberId,
+              quoteData,
+              bypassUnderwritingGuidelines,
+            ),
+          )
+            .then(() => {
+              showNotification({
+                type: 'olive',
+                header: 'Success',
+                message: `Successfully created quote for a new contract`,
+              })
+            })
+            .catch((error) => {
+              showNotification({
+                type: 'red',
+                header: 'Error',
+                message: error.message,
+              })
+              throw error
+            })
+        } else {
+          await modifyField({
+            variables: {
+              quoteId: quote!!.id,
+              quoteData,
+              bypassUnderwritingGuidelines,
+            },
+          })
+        }
+
         if (onSubmitted) {
           onSubmitted()
         }
@@ -450,11 +408,13 @@ export const QuoteModification: React.FC<{
       {(formState.productType
         ? isNorwegianTravelFormStateProductSubType(formState.productType)
         : isNorwegianTravel(quote?.data)) && (
-        <InputGroup>
-          <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
-          {getProductTypeDropdown()}
-          {getNumberInput('householdSize', 'Household size (# of people)')}
-        </InputGroup>
+        <>
+          <InputGroup>
+            <Label htmlFor={`producttype-${quote?.id}`}>Product type</Label>
+            {getProductTypeDropdown()}
+            {getNumberInput('householdSize', 'Household size (# of people)')}
+          </InputGroup>
+        </>
       )}
       {(formState.productType
         ? !isNorwegianTravelFormStateProductSubType(formState.productType)
@@ -466,7 +426,7 @@ export const QuoteModification: React.FC<{
             {getTextInput('city', 'City')}
           </InputGroup>
           <InputGroup>
-            <Label htmlFor={`producttype-${quote.id}`}>Product type</Label>
+            <Label htmlFor={`producttype-${quote?.id}`}>Product type</Label>
             {getProductTypeDropdown()}
             {getNumberInput('livingSpace', 'Living space (m2)')}
             {getNumberInput('householdSize', 'Household size (# of people)')}
@@ -474,7 +434,7 @@ export const QuoteModification: React.FC<{
         </>
       )}
 
-      {(formState.productType ?? quote.productType) === 'HOUSE' && (
+      {(formState.productType ?? quote?.productType) === 'HOUSE' && (
         <>
           <InputGroup>
             {getNumberInput(
@@ -483,7 +443,7 @@ export const QuoteModification: React.FC<{
                 Ancillary area (m<sup>2</sup>)
               </>,
               (formState.ancillaryArea === null
-                ? (quote.data as HouseQuoteData)!.ancillaryArea
+                ? (quote?.data as HouseQuoteData)?.ancillaryArea
                 : formState.ancillaryArea) ?? '',
             )}
             {getNumberInput('yearOfConstruction', 'Year of construction')}
@@ -493,13 +453,13 @@ export const QuoteModification: React.FC<{
               onChange={(_, { checked }) => {
                 setFormState({
                   ...formState,
-                  isSubleted: checked!,
+                  isSubleted: checked ?? false,
                 })
               }}
               label="Is subleted"
               checked={
                 formState.isSubleted ??
-                (quote.data as HouseQuoteData).isSubleted ??
+                (quote?.data as HouseQuoteData)?.isSubleted ??
                 false
               }
             />
@@ -542,20 +502,19 @@ export const QuoteModification: React.FC<{
   )
 }
 
-const ExtraBuildingEditorWrapper = styled('div')({
-  border: '1px solid ' + colorsV2.semilightgray,
+const ExtraBuildingEditorWrapper = styled('div')(({ theme }) => ({
+  border: '1px solid ' + theme.border,
   padding: '1rem 0',
-})
-const ExtraBuildingWrapper = styled('div')({
-  borderBottom: '1px solid ' + colorsV2.semilightgray,
+}))
+const ExtraBuildingWrapper = styled('div')(({ theme }) => ({
+  borderBottom: '1px solid ' + theme.border,
   marginBottom: '1rem',
   padding: '1rem',
-  paddingTop: 0,
 
   ':nth-child(odd)': {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: theme.backgroundTransparent,
   },
-})
+}))
 const RemoveButtonWrapper = styled('div')({
   textAlign: 'right',
   paddingTop: '1rem',

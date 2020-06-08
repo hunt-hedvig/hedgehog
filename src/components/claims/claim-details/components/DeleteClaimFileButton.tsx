@@ -1,8 +1,7 @@
 import gql from 'graphql-tag'
+import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
-
-import { Button } from 'semantic-ui-react'
 
 const CLAIM_FILES_QUERY = gql`
   query ClaimFilesQuery($id: ID!) {
@@ -44,6 +43,7 @@ export class DeleteButton extends React.Component<{
           <>
             <Button
               disabled={loading}
+              variation="danger"
               onClick={() => {
                 if (
                   window.confirm('Are you sure you want to delete this file?')

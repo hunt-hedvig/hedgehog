@@ -7,7 +7,7 @@ import {
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 

@@ -1,8 +1,8 @@
 import { LinkRow } from 'components/shared'
 import PaginatorList from 'components/shared/paginator-list/PaginatorList'
-import * as moment from 'moment'
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import moment from 'moment'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { history } from 'store'
 

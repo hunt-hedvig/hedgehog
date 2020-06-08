@@ -2,7 +2,6 @@ import {
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Paper,
   Table,
   TableBody,
   TableCell as MuiTableCell,
@@ -14,8 +13,9 @@ import { ExpandMoreOutlined } from '@material-ui/icons'
 import { ContractMarketInfo } from 'api/generated/graphql'
 import { AddEntryForm } from 'components/member/tabs/account-tab/add-entry-form'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/backfill-subscriptions-button'
+import { Paper } from 'components/shared/Paper'
 import { useGetAccount } from 'graphql/use-get-account'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
 
@@ -70,7 +70,7 @@ export const AccountTab: React.FC<AccountTabProps> = ({
       <h5>
         Total charge next month: {formatMoney(account.chargeEstimation.charge)}
       </h5>
-      <ExpansionPanel>
+      <ExpansionPanel elevation={0}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
           <Typography>Add entry</Typography>
         </ExpansionPanelSummary>

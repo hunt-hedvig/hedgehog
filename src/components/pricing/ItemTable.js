@@ -1,6 +1,6 @@
 import { GET_PRICES } from 'features/pricing/queries'
 import { formatMoney } from 'lib/intl'
-import * as React from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { Label, Table } from 'semantic-ui-react'
 

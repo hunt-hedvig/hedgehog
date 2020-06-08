@@ -1,5 +1,5 @@
-import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Dimmer, Loader } from 'semantic-ui-react'
 
 export default class LoginProcess extends React.Component {
@@ -7,11 +7,11 @@ export default class LoginProcess extends React.Component {
     super(props)
   }
 
-  public componentDidMount() {
+  componentDidMount() {
     this.props.loginProcess()
   }
 
-  public render() {
+  render() {
     return (
       <Dimmer active inverted>
         <Loader />

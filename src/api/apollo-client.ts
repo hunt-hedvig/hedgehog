@@ -23,12 +23,15 @@ export const apolloClient = (() => {
 
   return new ApolloClient({
     uri: '/api/graphql',
+    connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
     cache: new InMemoryCache({
       fragmentMatcher,
       dataIdFromObject: (object) => {
         switch (object.__typename) {
           case 'Member':
-            return (object as any).memberId
+            return `Member(${(object as any).memberId})`
+          case 'Renewal':
+            return `Renewal(${(object as any).draftOfAgreementId})`
           default:
             return defaultDataIdFromObject(object)
         }

@@ -1,21 +1,38 @@
-import * as PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import React from 'react'
-import { Button, Form, Message, TextArea } from 'semantic-ui-react'
+import {
+  Button,
+  Form as StandardForm,
+  Message,
+  TextArea,
+} from 'semantic-ui-react'
 import styled from 'react-emotion'
+import { MemberHistoryContext } from '../../../utils/member-history'
+import { Checkbox } from 'hedvig-ui/checkbox'
 
-const FormGroup = styled(Form.Group)`
+const Form = styled(StandardForm)`
+  max-width: 35rem !important;
+  padding-left: calc(1.5rem + 7px);
+`
+
+const FormGroup = styled(StandardForm.Group)`
   &&& {
     display: flex;
     align-items: flex-end;
     width: 100%;
     margin-top: 10px;
+    padding-top: 2rem;
   }
 `
 
-const FormTextArea = styled(Form.Field)`
+const FormTextArea = styled(StandardForm.Field)`
   &&& {
     width: 100%;
   }
+`
+
+const MarkAsResolvedWrapper = styled.div`
+  padding-left: 1rem;
 `
 
 export default class AnswerForm extends React.Component {
@@ -30,9 +47,10 @@ export default class AnswerForm extends React.Component {
     this.setState({ answer: value })
   }
 
-  answerClick = (id) => {
+  answerClick = (id, pushToMemberHistory) => {
     if (this.state.answer.trim().length) {
       this.props.sendAnswer({ msg: this.state.answer, id })
+      pushToMemberHistory(id)
     }
   }
 
@@ -43,38 +61,42 @@ export default class AnswerForm extends React.Component {
   render() {
     const { memberId, redirectClick, error } = this.props
     return (
-      <React.Fragment>
-        <Form>
-          <FormGroup>
-            <FormTextArea
-              control={TextArea}
-              label="Answer"
-              placeholder="Answer text..."
-              onChange={this.answerChangeHandler}
-              value={this.state.answer}
-            />
-            <div>
-              <Button
-                style={{ marginBottom: '3px' }}
-                content="Open Chat"
-                onClick={redirectClick.bind(this, memberId)}
-              />
-              <Button
-                content="Send"
-                onClick={this.answerClick.bind(this, memberId)}
-                primary
-                disabled={!this.state.answer.trim().length}
-              />
-              <Button
-                content="Done"
-                onClick={this.doneClick.bind(this, memberId)}
-                primary
-              />
-            </div>
-          </FormGroup>
-        </Form>
-        {error ? <Message negative>{error}</Message> : null}
-      </React.Fragment>
+      <MemberHistoryContext.Consumer>
+        {({ pushToMemberHistory }) => (
+          <>
+            <Form>
+              <FormGroup>
+                <FormTextArea
+                  control={TextArea}
+                  placeholder="Write reply..."
+                  onChange={this.answerChangeHandler}
+                  value={this.state.answer}
+                  rows={1}
+                />
+                <div>
+                  <Button
+                    content="Send"
+                    onClick={this.answerClick.bind(
+                      this,
+                      memberId,
+                      pushToMemberHistory,
+                    )}
+                    primary
+                    disabled={!this.state.answer.trim().length}
+                  />
+                </div>
+              </FormGroup>
+              <MarkAsResolvedWrapper>
+                <Checkbox
+                  label="Mark as resolved"
+                  onClick={this.doneClick.bind(this, memberId)}
+                />
+              </MarkAsResolvedWrapper>
+              {error ? <Message negative>{error}</Message> : null}
+            </Form>
+          </>
+        )}
+      </MemberHistoryContext.Consumer>
     )
   }
 }

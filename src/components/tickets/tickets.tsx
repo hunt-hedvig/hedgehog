@@ -2,7 +2,7 @@
 import { compareAsc, isAfter, isSameDay, parse, parseISO } from 'date-fns'
 import { GET_TICKETS, ME } from 'features/taskmanager/queries'
 import { TicketStatus } from 'features/taskmanager/types'
-import * as React from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { Ticket } from './ticket/ticket'
 import { EOrder, ITickets } from './types'

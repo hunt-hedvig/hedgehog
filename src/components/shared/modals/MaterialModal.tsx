@@ -1,7 +1,7 @@
 import Modal from '@material-ui/core/Modal'
 import { withStyles } from '@material-ui/core/styles'
 import { StyleRulesCallback } from '@material-ui/core/styles/withStyles'
-import * as React from 'react'
+import React from 'react'
 
 const styles: StyleRulesCallback = (theme) => ({
   paper: {

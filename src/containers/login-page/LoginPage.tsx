@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Header, Segment } from 'semantic-ui-react'
 

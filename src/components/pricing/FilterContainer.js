@@ -1,5 +1,5 @@
 import { PropContainer, SubHeaderContainer } from 'features/pricing/styles'
-import * as React from 'react'
+import React from 'react'
 import { Dropdown, Header, Icon, Label } from 'semantic-ui-react'
 
 export class FilterContainer extends React.Component {
