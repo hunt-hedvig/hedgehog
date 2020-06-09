@@ -45,17 +45,30 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
     activeTo: null,
   })
 
+  const getCampaignQueryData = (formState: CampaignQueryFormState) => {
+    return {
+      code: formState.code,
+      partnerId: formState.partnerId,
+      activeFrom: formState.activeFrom
+        ? format(formState.activeFrom!!, 'yyyy-MM-dd')
+        : null,
+      activeTo: formState.activeTo
+        ? format(formState.activeTo!!, 'yyyy-MM-dd')
+        : null,
+    }
+  }
+
   const [partnerCampaigns, { refetch }] = usePartnerCampaigns(
-    campaignQueryFormState,
+    getCampaignQueryData(campaignQueryFormState),
   )
 
   React.useEffect(() => {
     refetch()
   }, [
-    campaignQueryFormState.partnerId,
-    campaignQueryFormState.code,
-    campaignQueryFormState.activeFrom,
-    campaignQueryFormState.activeTo,
+    getCampaignQueryData(campaignQueryFormState).partnerId,
+    getCampaignQueryData(campaignQueryFormState).code,
+    getCampaignQueryData(campaignQueryFormState).activeFrom,
+    getCampaignQueryData(campaignQueryFormState).activeTo,
   ])
 
   const [partnerCampaignOwners] = usePartnerCampaignOwners()
@@ -219,11 +232,20 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
                     : '-'}
                 </Table.Cell>
                 <Table.Cell>
-                  {(isFreeMonths(campaign.incentive) &&
+                  {!isFreeMonths(campaign.incentive) &&
+                    !isMonthlyPercentageDiscountFixedPeriod(
+                      campaign.incentive,
+                    ) &&
+                    '-'}
+                  {((isMonthlyPercentageDiscountFixedPeriod(
+                    campaign.incentive,
+                  ) ||
+                    isFreeMonths(campaign.incentive)) &&
                     campaign.incentive.numberOfMonths) ??
                     '-'}
                 </Table.Cell>
                 <Table.Cell>
+                  {!isCostDeduction(campaign.incentive) && '-'}
                   {(isCostDeduction(campaign.incentive) &&
                     campaign.incentive.amount) ??
                     '-'}

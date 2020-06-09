@@ -29,16 +29,14 @@ interface NewCampaignCodeFormState {
   validUntil: Date | null
 }
 
-export const CreateNewCampaignCode: React.FC<{
-  showNotification: (data: Notification) => void
+export const CreateNewCampaignCode: React.FunctionComponent<{
   partnerIdOptions: PartnerIdOptions[]
+  showNotification: (data: Notification) => void
 }> = ({ partnerIdOptions, showNotification }) => {
   const [
     setPartnerPercentageDiscount,
     { loading: addPartnerPercentageDiscountLoading },
   ] = useAddPartnerPercentageDiscountCode()
-
-  const [isWip, setIsWip] = React.useState(false)
 
   const [
     activeFromDatePickerEnabled,
@@ -61,7 +59,7 @@ export const CreateNewCampaignCode: React.FC<{
   })
 
   if (addPartnerPercentageDiscountLoading) {
-    return 'loading...'
+    return <>loading...</>
   }
 
   const getVoucherPercentageDiscountData = (
@@ -79,7 +77,6 @@ export const CreateNewCampaignCode: React.FC<{
 
   const reset = () => {
     setCampaignCodeFormState({
-      ...newCampaignCodeFormState,
       code: null,
       partnerId: null,
       numberOfMonths: null,
@@ -96,9 +93,6 @@ export const CreateNewCampaignCode: React.FC<{
           <label>Code</label>
           <Input
             onChange={(e) => {
-              if (isWip) {
-                setIsWip(true)
-              }
               setCampaignCodeFormState({
                 ...newCampaignCodeFormState,
                 code: e.currentTarget.value,
@@ -115,9 +109,6 @@ export const CreateNewCampaignCode: React.FC<{
             selection
             options={partnerIdOptions}
             onChange={(_, data) => {
-              if (isWip) {
-                setIsWip(true)
-              }
               setCampaignCodeFormState({
                 ...newCampaignCodeFormState,
                 partnerId: data.value as string,
@@ -134,9 +125,6 @@ export const CreateNewCampaignCode: React.FC<{
             selection
             options={numberOfMonthsOptions}
             onChange={(_, data) => {
-              if (isWip) {
-                setIsWip(true)
-              }
               setCampaignCodeFormState({
                 ...newCampaignCodeFormState,
                 numberOfMonths: data.value as number,
@@ -154,9 +142,6 @@ export const CreateNewCampaignCode: React.FC<{
             selection
             options={percentageDiscountOptions}
             onChange={(_, data) => {
-              if (isWip) {
-                setIsWip(true)
-              }
               setCampaignCodeFormState({
                 ...newCampaignCodeFormState,
                 percentageDiscount: (data.value as number) * 0.01,

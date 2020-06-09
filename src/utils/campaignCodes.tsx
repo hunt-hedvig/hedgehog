@@ -28,11 +28,7 @@ export const isIndefinitePercentageDiscount = (
   incentiveData?.__typename === 'IndefinitePercentageDiscount'
 
 const generateRange = (min: number, max: number, step: number): number[] => {
-  const numberArray: number[] = []
-  for (let num = min; num <= max; num += step) {
-    numberArray.push(num)
-  }
-  return numberArray
+  return new Array(max).fill(0).map((_, index) => min + index * step)
 }
 
 export const numberOfMonthsOptions = generateRange(1, 12, 1).map(
