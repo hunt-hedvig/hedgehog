@@ -66,12 +66,12 @@ export const CreateNewCampaignCode: React.FunctionComponent<{
     formState: NewCampaignCodeFormState,
   ): AssignVoucherPercentageDiscount => {
     return {
-      code: formState.code!!,
-      partnerId: formState.partnerId!!,
-      numberOfMonths: formState.numberOfMonths!!,
-      percentageDiscount: formState.percentageDiscount!!,
-      validFrom: formState.validFrom!!,
-      validUntil: formState.validUntil!!,
+      code: formState.code!,
+      partnerId: formState.partnerId!,
+      numberOfMonths: formState.numberOfMonths!,
+      percentageDiscount: formState.percentageDiscount!,
+      validFrom: formState.validFrom,
+      validUntil: formState.validUntil,
     }
   }
 

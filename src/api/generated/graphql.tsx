@@ -781,6 +781,7 @@ export type MutationType = {
   chargeMember?: Maybe<Member>
   addAccountEntryToMember: Member
   approveMemberCharge?: Maybe<Scalars['Boolean']>
+  createPaymentCompletionLink: PaymentCompletionResponse
   updateClaimState?: Maybe<Claim>
   createClaim?: Maybe<Scalars['ID']>
   addClaimNote?: Maybe<Claim>
@@ -836,6 +837,10 @@ export type MutationTypeAddAccountEntryToMemberArgs = {
 
 export type MutationTypeApproveMemberChargeArgs = {
   approvals: Array<MemberChargeApproval>
+}
+
+export type MutationTypeCreatePaymentCompletionLinkArgs = {
+  memberId: Scalars['ID']
 }
 
 export type MutationTypeUpdateClaimStateArgs = {
@@ -1167,6 +1172,11 @@ export type Payload = {
   category: Scalars['String']
   query: Scalars['String']
   filters: Array<Filter>
+}
+
+export type PaymentCompletionResponse = {
+  __typename?: 'PaymentCompletionResponse'
+  url: Scalars['String']
 }
 
 export type PaymentDefault = {

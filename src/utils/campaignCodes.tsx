@@ -39,7 +39,7 @@ export const numberOfMonthsOptions = generateRange(1, 12, 1).map(
   }),
 )
 
-export const percentageDiscountOptions = generateRange(5, 100, 5).map(
+export const percentageDiscountOptions = generateRange(5, 20, 5).map(
   (percentage) => ({
     key: percentage + '%',
     value: percentage,

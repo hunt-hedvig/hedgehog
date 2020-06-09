@@ -1,5 +1,5 @@
 import { Scalars } from 'api/generated/graphql'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
@@ -90,7 +90,7 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
   ] = React.useState(false)
 
   const formatDate = (dateToFormat: Scalars['Instant']) => {
-    const parsedDate = Date.parse(dateToFormat)
+    const parsedDate = parseISO(dateToFormat)
     return format(parsedDate, 'yyyy-MM-dd')
   }
 
