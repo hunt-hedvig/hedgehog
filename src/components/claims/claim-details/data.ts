@@ -22,6 +22,7 @@ export const CLAIM_PAGE_QUERY = gql`
           numberFailedCharges
           lastFailedChargeAt
         }
+        totalNumberOfClaims
         account {
           totalBalance {
             amount

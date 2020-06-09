@@ -89,6 +89,10 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
         <b>Failed Payments:</b>{' '}
         {member.numberFailedCharges?.numberFailedCharges} payment(s) in a row
       </p>
+      <p>
+        <b>Total Number of Claims Made:</b> {member.totalNumberOfClaims}
+        {member.totalNumberOfClaims === 1 ? ' claim' : ' claims'}
+      </p>
     </Paper>
   )
 }

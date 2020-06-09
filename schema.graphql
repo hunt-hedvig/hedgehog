@@ -140,7 +140,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-    SwedishApartment
+  SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -500,6 +500,7 @@ type Member {
   fileUploads: [FileUpload!]!
   person: Person
   numberFailedCharges: NumberFailedCharges
+  totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
@@ -561,7 +562,7 @@ enum QuoteState {
 }
 
 union QuoteData =
-    ApartmentQuoteData
+  ApartmentQuoteData
   | HouseQuoteData
   | NorwegianHomeContentQuoteData
   | NorwegianTravelQuoteData
@@ -920,7 +921,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
