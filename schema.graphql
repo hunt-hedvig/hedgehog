@@ -832,6 +832,7 @@ input NorwegianTravelQuoteDataInput {
 }
 
 type PaymentCompletionResponse {
+  member: Member!
   url: String!
 }
 

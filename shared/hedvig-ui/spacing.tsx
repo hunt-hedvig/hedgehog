@@ -7,6 +7,7 @@ export type SpacingWidth = 'full' | 'auto'
 export interface SpacingProps
   extends Partial<Record<SpacingDirection, boolean | SpacingSize>> {
   width?: SpacingWidth
+  inline?: boolean
 }
 
 export const spacingMap: Record<SpacingSize, string> = {
@@ -16,6 +17,7 @@ export const spacingMap: Record<SpacingSize, string> = {
 }
 
 export const Spacing = styled('div')<SpacingProps>`
+  ${({ inline }) => inline && 'display: inline-block;'};
   width: ${({ width }) => (width === 'auto' ? 'auto' : '100%')};
   padding-top: ${({ top, all }) => {
     if (!top && !all) {
