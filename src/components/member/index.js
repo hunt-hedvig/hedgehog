@@ -1,3 +1,5 @@
+import copy from 'copy-to-clipboard'
+import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
@@ -132,11 +134,22 @@ export default class Member extends React.Component {
                       {messages.member.phoneNumber}
                     </MemberDetailLink>
                   )}
-                  <MemberDetailLink
-                    href={`${window.location.protocol}//${window.location.host}/members/${messages?.member?.memberId}`}
-                  >
-                    {messages?.member?.memberId}
-                  </MemberDetailLink>
+                  <Popover contents={<>Click to copy</>}>
+                    <MemberDetailLink
+                      href={`${window.location.protocol}//${window.location.host}/members/${messages?.member?.memberId}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        copy(
+                          `${window.location.protocol}//${window.location.host}/members/${messages?.member?.memberId}`,
+                          {
+                            format: 'text/plain',
+                          },
+                        )
+                      }}
+                    >
+                      {messages?.member?.memberId}
+                    </MemberDetailLink>
+                  </Popover>
                 </MemberDetails>
                 {this.props.insurance.requesting || (
                   <Tab
