@@ -9,6 +9,9 @@ export const CLAIM_PAGE_QUERY = gql`
         signedOn
         firstName
         lastName
+        person {
+          debtFlag
+        }
         personalNumber
         address
         postalNumber
@@ -22,6 +25,7 @@ export const CLAIM_PAGE_QUERY = gql`
           numberFailedCharges
           lastFailedChargeAt
         }
+        totalNumberOfClaims
         account {
           totalBalance {
             amount

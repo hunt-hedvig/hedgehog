@@ -31,7 +31,6 @@ type MutationType {
     accountEntry: AccountEntryInput!
   ): Member!
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
-  createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
@@ -502,7 +501,7 @@ type Debt {
 }
 
 type Person {
-  personFlags: [Flag]
+  debtFlag: Flag
   debt: Debt
   whitelisted: Whitelisted
   status: PersonStatus
@@ -558,6 +557,7 @@ type Member {
   fileUploads: [FileUpload!]!
   person: Person
   numberFailedCharges: NumberFailedCharges
+  totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
@@ -829,11 +829,6 @@ input NorwegianTravelQuoteDataInput {
 
   householdSize: Int
   subType: NorwegianTravelLineOfBusiness
-}
-
-type PaymentCompletionResponse {
-  member: Member!
-  url: String!
 }
 
 type Transaction {

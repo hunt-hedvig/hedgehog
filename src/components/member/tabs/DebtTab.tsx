@@ -16,7 +16,7 @@ const query = gql`
     member(id: $memberId) {
       memberId
       person {
-        personFlags
+        debtFlag
         status {
           flag
           whitelisted
