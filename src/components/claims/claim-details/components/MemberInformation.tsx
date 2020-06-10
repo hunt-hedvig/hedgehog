@@ -90,8 +90,21 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
         {member.numberFailedCharges?.numberFailedCharges} payment(s) in a row
       </p>
       <p>
-        <b>Total Number of Claims Made:</b> {member.totalNumberOfClaims}
+        <b>Total Number of Claims:</b> {member.totalNumberOfClaims}
         {member.totalNumberOfClaims === 1 ? ' claim' : ' claims'}
+      </p>
+      <p style={{ marginTop: '-7px' }}>
+        <b>Debt Status:</b>
+        <span style={{ fontSize: '32px' }}>
+          <FraudulentStatus
+            stateInfo={{
+              state: member.person.debtFlag
+                .replace('GREEN', 'NOT_FRAUD')
+                .replace('AMBER', 'SUSPECTED_FRAUD')
+                .replace('RED', 'CONFIRMED_FRAUD'),
+            }}
+          />
+        </span>
       </p>
     </Paper>
   )

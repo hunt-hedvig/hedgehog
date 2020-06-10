@@ -9,6 +9,9 @@ export const CLAIM_PAGE_QUERY = gql`
         signedOn
         firstName
         lastName
+        person {
+          debtFlag
+        }
         personalNumber
         address
         postalNumber
