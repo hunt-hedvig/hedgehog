@@ -693,6 +693,7 @@ export type Member = {
   fileUploads: Array<FileUpload>
   person?: Maybe<Person>
   numberFailedCharges?: Maybe<NumberFailedCharges>
+  totalNumberOfClaims?: Maybe<Scalars['Int']>
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
@@ -1126,7 +1127,7 @@ export type PaymentDefault = {
 
 export type Person = {
   __typename?: 'Person'
-  personFlags?: Maybe<Array<Maybe<Flag>>>
+  debtFlag?: Maybe<Scalars['String']>
   debt?: Maybe<Debt>
   whitelisted?: Maybe<Whitelisted>
   status?: Maybe<PersonStatus>
