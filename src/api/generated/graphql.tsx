@@ -185,6 +185,15 @@ export type AssaultClaim = {
   policeReport?: Maybe<Scalars['String']>
 }
 
+export type AssignVoucherPercentageDiscount = {
+  partnerId: Scalars['String']
+  numberOfMonths: Scalars['Int']
+  percentageDiscount: Scalars['Float']
+  code: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validUntil?: Maybe<Scalars['Instant']>
+}
+
 export type AutoLabel = {
   __typename?: 'AutoLabel'
   message?: Maybe<Scalars['Boolean']>
@@ -197,6 +206,18 @@ export type BurglaryClaim = {
   item?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
+}
+
+export type CampaignFilter = {
+  code?: Maybe<Scalars['String']>
+  partnerId?: Maybe<Scalars['String']>
+  activeFrom?: Maybe<Scalars['LocalDate']>
+  activeTo?: Maybe<Scalars['LocalDate']>
+}
+
+export type CampaignOwnerPartner = {
+  __typename?: 'CampaignOwnerPartner'
+  partnerId: Scalars['String']
 }
 
 export type Category = {
@@ -433,6 +454,11 @@ export enum ContractStatus {
   Terminated = 'TERMINATED',
 }
 
+export type CostDeduction = {
+  __typename?: 'CostDeduction'
+  amount?: Maybe<Scalars['MonetaryAmount']>
+}
+
 export type CreateNorwegianGripenInput = {
   baseFactorString?: Maybe<Scalars['String']>
   factors: Array<NorwegianGripenFactorInput>
@@ -542,6 +568,11 @@ export type FloodingClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export type FreeMonths = {
+  __typename?: 'FreeMonths'
+  numberOfMonths?: Maybe<Scalars['Int']>
+}
+
 export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE',
@@ -593,6 +624,26 @@ export type HouseQuoteInput = {
   numberOfBathrooms?: Maybe<Scalars['Int']>
   extraBuildings?: Maybe<Array<ExtraBuildingInput>>
   isSubleted?: Maybe<Scalars['Boolean']>
+}
+
+export type Incentive =
+  | MonthlyPercentageDiscountFixedPeriod
+  | FreeMonths
+  | CostDeduction
+  | NoDiscount
+  | IndefinitePercentageDiscount
+
+export enum IncentiveType {
+  CostDeduction = 'COST_DEDUCTION',
+  FreeMonths = 'FREE_MONTHS',
+  NoDiscount = 'NO_DISCOUNT',
+  MonthlyPercentageDiscountFixedPeriod = 'MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD',
+  IndefinitePercentageDiscount = 'INDEFINITE_PERCENTAGE_DISCOUNT',
+}
+
+export type IndefinitePercentageDiscount = {
+  __typename?: 'IndefinitePercentageDiscount'
+  percentageDiscount?: Maybe<Scalars['Float']>
 }
 
 export type InstallationsClaim = {
@@ -714,6 +765,12 @@ export type MonetaryAmountV2 = {
   currency: Scalars['String']
 }
 
+export type MonthlyPercentageDiscountFixedPeriod = {
+  __typename?: 'MonthlyPercentageDiscountFixedPeriod'
+  numberOfMonths?: Maybe<Scalars['Int']>
+  percentage?: Maybe<Scalars['Float']>
+}
+
 export type MonthlySubscription = {
   __typename?: 'MonthlySubscription'
   amount?: Maybe<Scalars['MonetaryAmount']>
@@ -766,6 +823,7 @@ export type MutationType = {
   regenerateCertificate: Scalars['ID']
   createQuoteForNewContract: Quote
   signQuoteForNewContract: Quote
+  assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -980,6 +1038,15 @@ export type MutationTypeSignQuoteForNewContractArgs = {
   activationDate?: Maybe<Scalars['LocalDate']>
 }
 
+export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
+  request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type NoDiscount = {
+  __typename?: 'NoDiscount'
+  _?: Maybe<Scalars['Boolean']>
+}
+
 export type NorwegianGripenFactorInput = {
   factorType: NorwegianGripenFactorType
   factorString: Scalars['String']
@@ -1167,6 +1234,8 @@ export type QueryType = {
   filters: Array<FilterSuggestion>
   inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  findPartnerCampaigns: Array<VoucherCampaign>
+  getPartnerCampaignOwners: Array<CampaignOwnerPartner>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1220,6 +1289,10 @@ export type QueryTypeFiltersArgs = {
 
 export type QueryTypeInventoryItemFiltersArgs = {
   inventoryItemId: Scalars['String']
+}
+
+export type QueryTypeFindPartnerCampaignsArgs = {
+  input: CampaignFilter
 }
 
 export type Quote = {
@@ -1540,6 +1613,17 @@ export type VerminAndPestsClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export type VoucherCampaign = {
+  __typename?: 'VoucherCampaign'
+  id: Scalars['ID']
+  campaignCode: Scalars['String']
+  partnerId: Scalars['String']
+  partnerName: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validTo?: Maybe<Scalars['Instant']>
+  incentive?: Maybe<Incentive>
+}
+
 export type WaterDamageBathroomClaim = {
   __typename?: 'WaterDamageBathroomClaim'
   date?: Maybe<Scalars['LocalDate']>
@@ -1648,6 +1732,14 @@ export type AddAgreementFromQuoteMutationVariables = {
 export type AddAgreementFromQuoteMutation = { __typename?: 'MutationType' } & {
   addAgreementFromQuote: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
+
+export type AssignCampaignToPartnerPercentageDiscountMutationVariables = {
+  request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type AssignCampaignToPartnerPercentageDiscountMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerPercentageDiscount'>
 
 export type ChangeFromDateMutationVariables = {
   agreementId: Scalars['ID']
@@ -1914,6 +2006,49 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                 >
               >
             }
+        >
+      }
+  >
+}
+
+export type GetPartnerCampaignOwnersQueryVariables = {}
+
+export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
+  getPartnerCampaignOwners: Array<
+    { __typename?: 'CampaignOwnerPartner' } & Pick<
+      CampaignOwnerPartner,
+      'partnerId'
+    >
+  >
+}
+
+export type FindPartnerCampaignsQueryVariables = {
+  input: CampaignFilter
+}
+
+export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
+  findPartnerCampaigns: Array<
+    { __typename?: 'VoucherCampaign' } & Pick<
+      VoucherCampaign,
+      | 'id'
+      | 'campaignCode'
+      | 'partnerId'
+      | 'partnerName'
+      | 'validFrom'
+      | 'validTo'
+    > & {
+        incentive: Maybe<
+          | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
+              MonthlyPercentageDiscountFixedPeriod,
+              'numberOfMonths' | 'percentage'
+            >)
+          | ({ __typename?: 'FreeMonths' } & Pick<FreeMonths, 'numberOfMonths'>)
+          | ({ __typename?: 'CostDeduction' } & Pick<CostDeduction, 'amount'>)
+          | { __typename: 'NoDiscount' }
+          | ({ __typename?: 'IndefinitePercentageDiscount' } & Pick<
+              IndefinitePercentageDiscount,
+              'percentageDiscount'
+            >)
         >
       }
   >
@@ -2351,6 +2486,56 @@ export type AddAgreementFromQuoteMutationResult = ApolloReactCommon.MutationResu
 export type AddAgreementFromQuoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddAgreementFromQuoteMutation,
   AddAgreementFromQuoteMutationVariables
+>
+export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
+  mutation AssignCampaignToPartnerPercentageDiscount(
+    $request: AssignVoucherPercentageDiscount
+  ) {
+    assignCampaignToPartnerPercentageDiscount(request: $request)
+  }
+`
+export type AssignCampaignToPartnerPercentageDiscountMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerPercentageDiscountMutation,
+  AssignCampaignToPartnerPercentageDiscountMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerPercentageDiscountMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerPercentageDiscountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerPercentageDiscountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerPercentageDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerPercentageDiscountMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerPercentageDiscountMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >(AssignCampaignToPartnerPercentageDiscountDocument, baseOptions)
+}
+export type AssignCampaignToPartnerPercentageDiscountMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerPercentageDiscountMutation
+>
+export type AssignCampaignToPartnerPercentageDiscountMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerPercentageDiscountMutation
+>
+export type AssignCampaignToPartnerPercentageDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerPercentageDiscountMutation,
+  AssignCampaignToPartnerPercentageDiscountMutationVariables
 >
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
@@ -2982,6 +3167,140 @@ export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
 >
+export const GetPartnerCampaignOwnersDocument = gql`
+  query GetPartnerCampaignOwners {
+    getPartnerCampaignOwners {
+      partnerId
+    }
+  }
+`
+
+/**
+ * __useGetPartnerCampaignOwnersQuery__
+ *
+ * To run a query within a React component, call `useGetPartnerCampaignOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPartnerCampaignOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPartnerCampaignOwnersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPartnerCampaignOwnersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, baseOptions)
+}
+export function useGetPartnerCampaignOwnersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, baseOptions)
+}
+export type GetPartnerCampaignOwnersQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersQuery
+>
+export type GetPartnerCampaignOwnersLazyQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersLazyQuery
+>
+export type GetPartnerCampaignOwnersQueryResult = ApolloReactCommon.QueryResult<
+  GetPartnerCampaignOwnersQuery,
+  GetPartnerCampaignOwnersQueryVariables
+>
+export const FindPartnerCampaignsDocument = gql`
+  query FindPartnerCampaigns($input: CampaignFilter!) {
+    findPartnerCampaigns(input: $input) {
+      id
+      campaignCode
+      partnerId
+      partnerName
+      validFrom
+      validTo
+      incentive {
+        ... on MonthlyPercentageDiscountFixedPeriod {
+          numberOfMonths
+          percentage
+        }
+        ... on FreeMonths {
+          numberOfMonths
+        }
+        ... on CostDeduction {
+          amount
+        }
+        ... on NoDiscount {
+          __typename
+        }
+        ... on IndefinitePercentageDiscount {
+          percentageDiscount
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useFindPartnerCampaignsQuery__
+ *
+ * To run a query within a React component, call `useFindPartnerCampaignsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindPartnerCampaignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindPartnerCampaignsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFindPartnerCampaignsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >(FindPartnerCampaignsDocument, baseOptions)
+}
+export function useFindPartnerCampaignsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >(FindPartnerCampaignsDocument, baseOptions)
+}
+export type FindPartnerCampaignsQueryHookResult = ReturnType<
+  typeof useFindPartnerCampaignsQuery
+>
+export type FindPartnerCampaignsLazyQueryHookResult = ReturnType<
+  typeof useFindPartnerCampaignsLazyQuery
+>
+export type FindPartnerCampaignsQueryResult = ApolloReactCommon.QueryResult<
+  FindPartnerCampaignsQuery,
+  FindPartnerCampaignsQueryVariables
+>
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {
     regenerateCertificate(agreementId: $agreementId)
@@ -3346,6 +3665,27 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'TestClaim',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'Incentive',
+        possibleTypes: [
+          {
+            name: 'MonthlyPercentageDiscountFixedPeriod',
+          },
+          {
+            name: 'FreeMonths',
+          },
+          {
+            name: 'CostDeduction',
+          },
+          {
+            name: 'NoDiscount',
+          },
+          {
+            name: 'IndefinitePercentageDiscount',
           },
         ],
       },
