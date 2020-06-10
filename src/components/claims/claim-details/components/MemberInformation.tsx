@@ -96,14 +96,16 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
       <p style={{ marginTop: '-7px' }}>
         <b>Debt Status:</b>
         <span style={{ fontSize: '32px' }}>
-          <FraudulentStatus
-            stateInfo={{
-              state: member.person.debtFlag
-                .replace('GREEN', 'NOT_FRAUD')
-                .replace('AMBER', 'SUSPECTED_FRAUD')
-                .replace('RED', 'CONFIRMED_FRAUD'),
-            }}
-          />
+          {member.person?.debtFlag && (
+            <FraudulentStatus
+              stateInfo={{
+                state: member.person.debtFlag
+                  .replace('GREEN', 'NOT_FRAUD')
+                  .replace('AMBER', 'SUSPECTED_FRAUD')
+                  .replace('RED', 'CONFIRMED_FRAUD'),
+              }}
+            />
+          )}
         </span>
       </p>
     </Paper>
