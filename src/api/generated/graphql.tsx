@@ -693,6 +693,7 @@ export type Member = {
   fileUploads: Array<FileUpload>
   person?: Maybe<Person>
   numberFailedCharges?: Maybe<NumberFailedCharges>
+  totalNumberOfClaims?: Maybe<Scalars['Int']>
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
