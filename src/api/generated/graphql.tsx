@@ -220,12 +220,6 @@ export type CampaignOwnerPartner = {
   partnerId: Scalars['String']
 }
 
-export type Category = {
-  __typename?: 'Category'
-  id: Scalars['String']
-  name: Scalars['String']
-}
-
 export type ChangeFromDateInput = {
   newFromDate: Scalars['LocalDate']
 }
@@ -636,6 +630,10 @@ export type IndefinitePercentageDiscount = {
   percentageDiscount?: Maybe<Scalars['Float']>
 }
 
+export type InsertItemCategoriesInput = {
+  itemCategoriesString: Scalars['String']
+}
+
 export type InstallationsClaim = {
   __typename?: 'InstallationsClaim'
   date?: Maybe<Scalars['LocalDate']>
@@ -755,7 +753,7 @@ export type Member = {
   fileUploads: Array<FileUpload>
   person?: Maybe<Person>
   numberFailedCharges?: Maybe<NumberFailedCharges>
-  totalNumberOfClaims?: Maybe<Scalars['Int']>
+  totalNumberOfClaims: Scalars['Int']
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
@@ -832,13 +830,14 @@ export type MutationType = {
   regenerateCertificate: Scalars['ID']
   createQuoteForNewContract: Quote
   signQuoteForNewContract: Quote
-  assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   upsertItemCompany: Scalars['ID']
   upsertItemType: Scalars['ID']
   upsertItemBrand: Scalars['ID']
   upsertItemModel: Scalars['ID']
   upsertClaimItem: Scalars['ID']
   deleteClaimItem?: Maybe<Scalars['ID']>
+  insertItemCategories: Array<Scalars['Boolean']>
+  assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1045,15 +1044,6 @@ export type MutationTypeSignQuoteForNewContractArgs = {
   activationDate?: Maybe<Scalars['LocalDate']>
 }
 
-export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
-  request?: Maybe<AssignVoucherPercentageDiscount>
-}
-
-export type NoDiscount = {
-  __typename?: 'NoDiscount'
-  _?: Maybe<Scalars['Boolean']>
-}
-
 export type MutationTypeUpsertItemCompanyArgs = {
   request?: Maybe<UpsertItemCompanyInput>
 }
@@ -1076,6 +1066,19 @@ export type MutationTypeUpsertClaimItemArgs = {
 
 export type MutationTypeDeleteClaimItemArgs = {
   claimItemId: Scalars['ID']
+}
+
+export type MutationTypeInsertItemCategoriesArgs = {
+  request?: Maybe<InsertItemCategoriesInput>
+}
+
+export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
+  request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type NoDiscount = {
+  __typename?: 'NoDiscount'
+  _?: Maybe<Scalars['Boolean']>
 }
 
 export type NorwegianGripenFactorInput = {
@@ -1202,7 +1205,6 @@ export type NumberFailedCharges = {
 
 export type PaymentCompletionResponse = {
   __typename?: 'PaymentCompletionResponse'
-  member: Member
   url: Scalars['String']
 }
 
@@ -1219,7 +1221,7 @@ export type PaymentDefault = {
 
 export type Person = {
   __typename?: 'Person'
-  debtFlag?: Maybe<Scalars['String']>
+  debtFlag?: Maybe<Flag>
   debt?: Maybe<Debt>
   whitelisted?: Maybe<Whitelisted>
   status?: Maybe<PersonStatus>
@@ -1243,10 +1245,10 @@ export type QueryType = {
   getAnswerSuggestion: Array<Suggestion>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
-  findPartnerCampaigns: Array<VoucherCampaign>
-  getPartnerCampaignOwners: Array<CampaignOwnerPartner>
   itemCategories: Array<ItemCategory>
   claimItems: Array<ClaimItem>
+  findPartnerCampaigns: Array<VoucherCampaign>
+  getPartnerCampaignOwners: Array<CampaignOwnerPartner>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1408,11 +1410,11 @@ export type StormDamageClaim = {
 
 export type Suggestion = {
   __typename?: 'Suggestion'
+  allReplies: Array<AllRepliesEntry>
+  confidence: Scalars['Float']
   intent: Scalars['String']
   reply: Scalars['String']
   text: Scalars['String']
-  confidence: Scalars['Float']
-  allReplies: Array<AllRepliesEntry>
 }
 
 export type SwedishApartment = AgreementCore & {
@@ -1846,55 +1848,85 @@ export type GetAccountQueryVariables = {
 
 export type GetAccountQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      account: Maybe<
-        { __typename?: 'Account' } & Pick<Account, 'id'> & {
-            currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-            totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-            chargeEstimation: { __typename?: 'AccountChargeEstimation' } & Pick<
-              AccountChargeEstimation,
-              'discountCodes'
-            > & {
-                subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-                charge: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-                discount: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-              }
-            entries: Array<
-              { __typename?: 'AccountEntry' } & Pick<
-                AccountEntry,
-                | 'id'
-                | 'fromDate'
-                | 'title'
-                | 'source'
-                | 'reference'
-                | 'type'
-                | 'failedAt'
-                | 'chargedAt'
-              > & {
-                  amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        account: Maybe<
+          { __typename?: 'Account' } & Pick<Account, 'id'> & {
+              currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              chargeEstimation: {
+                __typename?: 'AccountChargeEstimation'
+              } & Pick<AccountChargeEstimation, 'discountCodes'> & {
+                  subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  charge: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  discount: { __typename?: 'MonetaryAmountV2' } & Pick<
                     MonetaryAmountV2,
                     'amount' | 'currency'
                   >
                 }
-            >
-          }
-      >
-    }
+              entries: Array<
+                { __typename?: 'AccountEntry' } & Pick<
+                  AccountEntry,
+                  | 'id'
+                  | 'fromDate'
+                  | 'title'
+                  | 'source'
+                  | 'reference'
+                  | 'type'
+                  | 'failedAt'
+                  | 'chargedAt'
+                > & {
+                    amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
+      }
+  >
+}
+
+export type GetClaimItemsQueryVariables = {
+  claimId: Scalars['ID']
+}
+
+export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
+  claimItems: Array<
+    { __typename?: 'ClaimItem' } & Pick<
+      ClaimItem,
+      'id' | 'dateOfPurchase' | 'note'
+    > & {
+        itemFamily: { __typename?: 'ItemFamily' } & Pick<
+          ItemFamily,
+          'displayName'
+        >
+        itemType: { __typename?: 'ItemType' } & Pick<ItemType, 'displayName'>
+        itemBrand: Maybe<
+          { __typename?: 'ItemBrand' } & Pick<ItemBrand, 'displayName'>
+        >
+        itemModel: Maybe<
+          { __typename?: 'ItemModel' } & Pick<ItemModel, 'displayName'>
+        >
+        purchasePrice: Maybe<
+          { __typename?: 'MonetaryAmountV2' } & Pick<
+            MonetaryAmountV2,
+            'amount' | 'currency'
+          >
+        >
+      }
   >
 }
 
@@ -2048,8 +2080,45 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetQuotesQueryVariables = {
-  memberId: Scalars['ID']
+export type GetItemCategoriesQueryVariables = {
+  kind: ItemCategoryKind
+  parentId?: Maybe<Scalars['ID']>
+}
+
+export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
+  itemCategories: Array<
+    | ({ __typename?: 'ItemFamily' } & Pick<
+        ItemFamily,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+    | ({ __typename?: 'ItemType' } & Pick<
+        ItemType,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+    | ({ __typename?: 'ItemBrand' } & Pick<
+        ItemBrand,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+    | ({ __typename?: 'ItemModel' } & Pick<
+        ItemModel,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+    | ({ __typename?: 'ItemCompany' } & Pick<
+        ItemCompany,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+  >
+}
+
+export type GetPartnerCampaignOwnersQueryVariables = {}
+
+export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
+  getPartnerCampaignOwners: Array<
+    { __typename?: 'CampaignOwnerPartner' } & Pick<
+      CampaignOwnerPartner,
+      'partnerId'
+    >
+  >
 }
 
 export type FindPartnerCampaignsQueryVariables = {
@@ -3325,58 +3394,163 @@ export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
 >
-export const GetQuotesDocument = gql`
-  query GetQuotes($memberId: ID!) {
-    member(id: $memberId) {
-      quotes {
+export const GetItemCategoriesDocument = gql`
+  query GetItemCategories($kind: ItemCategoryKind!, $parentId: ID) {
+    itemCategories(kind: $kind, parentId: $parentId) {
+      ... on ItemFamily {
         id
-        price
-        productType
-        state
-        startDate
-        validity
-        isComplete
-        createdAt
-        breachedUnderwritingGuidelines
-        originatingProductId
-        signedProductId
-        data {
-          ... on ApartmentQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            subType
-          }
-          ... on HouseQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            ancillaryArea
-            yearOfConstruction
-            numberOfBathrooms
-            extraBuildings {
-              type
-              area
-              hasWaterConnected
-            }
-            isSubleted
-          }
-          ... on NorwegianHomeContentQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            norwegianHomeContentSubType: subType
-          }
-          ... on NorwegianTravelQuoteData {
-            householdSize
-            norwegianTravelSubType: subType
-          }
+        displayName
+        searchTerms
+        nextKind
+      }
+      ... on ItemType {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+      ... on ItemBrand {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+      ... on ItemModel {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+      ... on ItemCompany {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+    }
+  }
+`
+
+/**
+ * __useGetItemCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetItemCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetItemCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetItemCategoriesQuery({
+ *   variables: {
+ *      kind: // value for 'kind'
+ *      parentId: // value for 'parentId'
+ *   },
+ * });
+ */
+export function useGetItemCategoriesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetItemCategoriesQuery,
+    GetItemCategoriesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetItemCategoriesQuery,
+    GetItemCategoriesQueryVariables
+  >(GetItemCategoriesDocument, baseOptions)
+}
+export function useGetItemCategoriesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetItemCategoriesQuery,
+    GetItemCategoriesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetItemCategoriesQuery,
+    GetItemCategoriesQueryVariables
+  >(GetItemCategoriesDocument, baseOptions)
+}
+export type GetItemCategoriesQueryHookResult = ReturnType<
+  typeof useGetItemCategoriesQuery
+>
+export type GetItemCategoriesLazyQueryHookResult = ReturnType<
+  typeof useGetItemCategoriesLazyQuery
+>
+export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
+  GetItemCategoriesQuery,
+  GetItemCategoriesQueryVariables
+>
+export const GetPartnerCampaignOwnersDocument = gql`
+  query GetPartnerCampaignOwners {
+    getPartnerCampaignOwners {
+      partnerId
+    }
+  }
+`
+
+/**
+ * __useGetPartnerCampaignOwnersQuery__
+ *
+ * To run a query within a React component, call `useGetPartnerCampaignOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPartnerCampaignOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPartnerCampaignOwnersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPartnerCampaignOwnersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, baseOptions)
+}
+export function useGetPartnerCampaignOwnersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, baseOptions)
+}
+export type GetPartnerCampaignOwnersQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersQuery
+>
+export type GetPartnerCampaignOwnersLazyQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersLazyQuery
+>
+export type GetPartnerCampaignOwnersQueryResult = ApolloReactCommon.QueryResult<
+  GetPartnerCampaignOwnersQuery,
+  GetPartnerCampaignOwnersQueryVariables
+>
+export const FindPartnerCampaignsDocument = gql`
+  query FindPartnerCampaigns($input: CampaignFilter!) {
+    findPartnerCampaigns(input: $input) {
+      id
+      campaignCode
+      partnerId
+      partnerName
+      validFrom
+      validTo
+      incentive {
+        ... on MonthlyPercentageDiscountFixedPeriod {
+          numberOfMonths
+          percentage
+        }
+        ... on FreeMonths {
+          numberOfMonths
         }
         ... on CostDeduction {
           amount
@@ -4092,6 +4266,69 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'TestClaim',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'ItemCategory',
+        possibleTypes: [
+          {
+            name: 'ItemFamily',
+          },
+          {
+            name: 'ItemType',
+          },
+          {
+            name: 'ItemBrand',
+          },
+          {
+            name: 'ItemModel',
+          },
+          {
+            name: 'ItemCompany',
+          },
+        ],
+      },
+      {
+        kind: 'INTERFACE',
+        name: 'ItemCategoryCore',
+        possibleTypes: [
+          {
+            name: 'ItemFamily',
+          },
+          {
+            name: 'ItemType',
+          },
+          {
+            name: 'ItemBrand',
+          },
+          {
+            name: 'ItemModel',
+          },
+          {
+            name: 'ItemCompany',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'Incentive',
+        possibleTypes: [
+          {
+            name: 'MonthlyPercentageDiscountFixedPeriod',
+          },
+          {
+            name: 'FreeMonths',
+          },
+          {
+            name: 'CostDeduction',
+          },
+          {
+            name: 'NoDiscount',
+          },
+          {
+            name: 'IndefinitePercentageDiscount',
           },
         ],
       },
