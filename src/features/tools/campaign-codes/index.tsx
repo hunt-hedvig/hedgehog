@@ -6,7 +6,6 @@ import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
-import { formatMoneyNO, formatMoneySE } from 'lib/intl'
 import * as React from 'react'
 import { Dropdown, Form, Input, Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
@@ -15,6 +14,7 @@ import {
   isFreeMonths,
   isMonthlyPercentageDiscountFixedPeriod,
 } from 'utils/campaignCodes'
+import { formatMoney } from 'utils/money'
 import { withShowNotification } from 'utils/notifications'
 import { CreateNewCampaignCode } from './create-new-campaign-code'
 
@@ -249,9 +249,7 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
                   {!isCostDeduction(campaign.incentive) && '-'}
                   {(isCostDeduction(campaign.incentive) &&
                     campaign.incentive.amount &&
-                    (campaign.incentive.amount.currency === 'NOK'
-                      ? formatMoneyNO(campaign.incentive.amount)
-                      : formatMoneySE(campaign.incentive.amount))) ??
+                    formatMoney(campaign.incentive.amount)) ??
                     '-'}
                 </Table.Cell>
               </Table.Row>

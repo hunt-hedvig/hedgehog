@@ -1,9 +1,9 @@
 export interface Money {
   amount: number | string
-  currency: string | string
+  currency: 'SEK' | string
 }
 
-export const formatMoney = (locale: string) => (money: Money) =>
+export const formatMoney = (locale: 'sv-SE') => (money: Money) =>
   new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: money.currency,
@@ -12,5 +12,3 @@ export const formatMoney = (locale: string) => (money: Money) =>
   )
 
 export const formatMoneySE = formatMoney('sv-SE')
-
-export const formatMoneyNO = formatMoney('nb-NO')
