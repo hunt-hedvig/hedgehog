@@ -3,10 +3,10 @@ import {
   GET_INVENTORY,
   GET_INVENTORY_ITEM_FILTERS,
 } from 'features/pricing/queries'
-import { formatMoney } from 'lib/intl'
 import * as React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import { Icon, Label, Popup, Table } from 'semantic-ui-react'
+import { formatMoney } from 'utils/money';
 
 export class InventoryEntry extends React.Component {
   remove = () => {
