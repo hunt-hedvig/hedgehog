@@ -7,7 +7,7 @@ import {
   LogGroupRule,
   LogLevel,
 } from 'typescript-logging'
-import * as uuidV4 from 'uuid/v4'
+import uuidV4 from 'uuid/v4'
 
 export interface LoggingMiddleware {
   getLogger: (name: string) => Logger

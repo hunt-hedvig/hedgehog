@@ -3,10 +3,10 @@ import {
   createQuoteFromAgreementOptions,
   useCreateQuoteFromAgreement,
 } from 'graphql/use-create-quote'
-import { useQuotes } from 'graphql/use-quotes'
+import { expiredPredicate, useQuotes } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
 export const CreateQuoteFromAgreement: React.FunctionComponent<{
@@ -22,14 +22,16 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
       <ThirdLevelHeadline>Create Quote</ThirdLevelHeadline>
       <>
         {quotes
-          .filter((quote) => quote.state === QuoteState.Quoted)
+          .filter(
+            (quote) =>
+              quote.state === QuoteState.Quoted && !expiredPredicate(quote),
+          )
           .map((quote) => quote.originatingProductId)
           .includes(agreement.id) && !loadingQuotes ? (
           <>Agreement has an existing quote</>
         ) : (
           <Button
-            variation={'secondary'}
-            fullWidth
+            variation="primary"
             onClick={() => {
               if (!window.confirm(`Create new quote?`)) {
                 return
@@ -52,7 +54,7 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
                 })
             }}
           >
-            Create Quote
+            Create a new quote
           </Button>
         )}
       </>

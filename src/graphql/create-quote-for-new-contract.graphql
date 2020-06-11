@@ -1,0 +1,13 @@
+mutation CreateQuoteForNewContract(
+  $memberId: ID!,
+  $quoteInput: QuoteInput!
+  $bypassUnderwritingGuidelines: Boolean!
+) {
+  createQuoteForNewContract(
+    memberId: $memberId,
+    quoteInput: $quoteInput,
+    bypassUnderwritingGuidelines: $bypassUnderwritingGuidelines
+  ) {
+    id
+  }
+}

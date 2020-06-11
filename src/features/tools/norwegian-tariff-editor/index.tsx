@@ -10,7 +10,7 @@ import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import {
   Notification,
   WithShowNotification,

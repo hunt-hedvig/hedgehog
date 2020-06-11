@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import * as React from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { RouteComponentProps } from 'react-router'
 import { Image, Table } from 'semantic-ui-react'
@@ -8,6 +8,8 @@ import { dateTimeFormatter } from '../../../lib/helpers'
 const query = gql`
   query FileUploadsQuery($memberId: ID!) {
     member(id: $memberId) {
+      memberId
+
       fileUploads {
         fileUploadUrl
         memberId

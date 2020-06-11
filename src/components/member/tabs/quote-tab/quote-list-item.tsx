@@ -1,11 +1,10 @@
-import { colorsV2 } from '@hedviginsurance/brand'
 import { Quote, QuoteProductType } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
-import { formatMoneySE } from 'lib/intl'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
+import { formatMoney } from 'utils/money'
 import {
   getSubType,
   isNorwegianHomeContent,
@@ -13,22 +12,20 @@ import {
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/quote'
-import { BottomSpacerWrapper, Muted } from './common'
+import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
+import { QuoteContractCreation } from './quote-contract-creation'
 import { QuoteModification } from './quote-modification'
 
-const OuterWrapper = styled('div')({
-  ':not(:last-child)': {
-    borderBottom: '1px solid ' + colorsV2.lightgray,
-  },
-})
+const OuterWrapper = styled('div')(({}) => ({
+  width: '100%',
+}))
 
-const QuoteWrapper = styled('div')({
+const QuoteWrapper = styled('div')(() => ({
   display: 'flex',
   width: '100%',
   padding: '1rem 0',
-  background: '#fff',
-})
+}))
 const DetailsWrapper = styled('div')({
   width: '100%',
 })
@@ -37,37 +34,30 @@ const AddressNPriceWrapper = styled('div')({
   paddingBottom: '1rem',
   lineHeight: 1.2,
 })
-const AddressWrapper = styled('div')({
+const AddressWrapper = styled('div')(({}) => ({
   fontStyle: 'italic',
-  color: colorsV2.midnight500,
   fontSize: '1.5rem',
   width: '50%',
-})
+}))
 const PriceWrapper = styled('div')({
-  color: colorsV2.coral700,
   fontSize: '2rem',
 })
-const DetailWrapper = styled('div')({
+const DetailWrapper = styled('div')(({ theme }) => ({
+  color: theme.semiStrongForeground,
   paddingBottom: '1rem',
-})
-const BreachedUnderwritingGuidelines = styled('div')({
-  color: colorsV2.coral700,
-})
+}))
+const BreachedUnderwritingGuidelines = styled('div')(({ theme }) => ({
+  color: theme.danger,
+}))
 
 const ActionsButtonsWrapper = styled('div')({
   flexShrink: 1,
 })
 
-const ActionsWrapper = styled('div')({
-  background: colorsV2.flamingo200,
-  padding: '1rem',
-  width: '100%',
-  marginBottom: '1rem',
-})
-
 enum Action {
   ACTIVATE,
   MODIFY,
+  SIGN,
 }
 
 const getProductTypeValue = (quote: Quote): string => {
@@ -107,7 +97,7 @@ const QuoteDetails: React.FC<{
         <br />
       )}
       <PriceWrapper>
-        {quote.price && formatMoneySE({ amount: quote.price, currency: 'SEK' })}
+        {quote.price && formatMoney({ amount: quote.price, currency: 'SEK' })}
         {!quote.price && '-'}
       </PriceWrapper>
     </AddressNPriceWrapper>
@@ -226,15 +216,28 @@ export const QuoteListItemComponent: React.FC<{
                 Modify
               </Button>
             </BottomSpacerWrapper>
-            <BottomSpacerWrapper>
-              <Button
-                fullWidth
-                variation="success"
-                onClick={toggleState(Action.ACTIVATE)}
-              >
-                Activate
-              </Button>
-            </BottomSpacerWrapper>
+            {!quote.isReadyToSign && (
+              <BottomSpacerWrapper>
+                <Button
+                  fullWidth
+                  variation="success"
+                  onClick={toggleState(Action.ACTIVATE)}
+                >
+                  Activate
+                </Button>
+              </BottomSpacerWrapper>
+            )}
+            {quote.isReadyToSign && (
+              <BottomSpacerWrapper>
+                <Button
+                  fullWidth
+                  variation="success"
+                  onClick={toggleState(Action.SIGN)}
+                >
+                  Sign
+                </Button>
+              </BottomSpacerWrapper>
+            )}
           </ActionsButtonsWrapper>
         )}
       </QuoteWrapper>
@@ -265,11 +268,31 @@ export const QuoteListItemComponent: React.FC<{
         </ActionsWrapper>
       )}
 
+      {action === Action.SIGN && (
+        <ActionsWrapper>
+          <QuoteContractCreation
+            quote={quote}
+            memberId={memberId}
+            onWipChange={setIsWip}
+            onSubmitted={() => {
+              if (showNotification) {
+                showNotification({
+                  header: 'Contract Created',
+                  message: 'Contract created successfully!!',
+                  type: 'olive',
+                })
+              }
+            }}
+          />
+        </ActionsWrapper>
+      )}
+
       {action === Action.MODIFY && (
         <ActionsWrapper>
           <QuoteModification
             quote={quote}
             memberId={memberId}
+            shouldCreateContract={false}
             onWipChange={setIsWip}
             onSubmitted={() => {
               if (showNotification) {
@@ -279,6 +302,7 @@ export const QuoteListItemComponent: React.FC<{
                   type: 'olive',
                 })
               }
+
               setIsWip(false)
               setAction(null)
             }}

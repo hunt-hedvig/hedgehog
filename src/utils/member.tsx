@@ -1,30 +1,11 @@
-import { colorsV2 } from '@hedviginsurance/brand'
 import { Market } from 'api/generated/graphql'
 import { differenceInYears, parse } from 'date-fns'
+import { lightTheme } from 'hedvig-ui/themes'
 import React from 'react'
-import styled from 'react-emotion'
-import { Gender } from 'store/storeTypes'
 
-const OLD_MAN = '👴🏼'
-const MIDDLE_AGED_MAN = '👱🏼‍♂️'
-const YOUNG_MAN = '🧑🏽'
-const REALLY_YOUNG_MAN = '🧒🏻'
-const BABY = '👶🏻'
-
-const OLD_WOMAN = '👵🏾'
-const MIDDLE_AGED_WOMAN = '👱🏼‍♀️️'
-const YOUNG_WOMAN = '👩🏾'
-const REALLY_YOUNG_WOMAN = '👧🏼'
-
-const EmojiWrapper = styled('span')({
-  fontSize: '1.5em',
-  verticalAlign: 'text-bottom',
-})
-
-export const MemberEmoji: React.FC<{
+export const MemberAge: React.FC<{
   birthDateString: string
-  gender: Gender
-}> = ({ birthDateString, gender }) => {
+}> = ({ birthDateString }) => {
   if (!birthDateString) {
     return null
   }
@@ -36,47 +17,7 @@ export const MemberEmoji: React.FC<{
   }
   const age = differenceInYears(new Date(), birthDate)
 
-  return (
-    <>
-      &nbsp; ({age} years) &nbsp;
-      <EmojiWrapper>
-        {(() => {
-          if (gender === 'MALE') {
-            switch (true) {
-              case age < 20:
-                return BABY
-              case age < 25:
-                return REALLY_YOUNG_MAN
-              case age < 30:
-                return YOUNG_MAN
-              case age < 50:
-                return MIDDLE_AGED_MAN
-              default:
-                return OLD_MAN
-            }
-          }
-
-          if (gender === 'FEMALE') {
-            switch (true) {
-              case age < 20:
-                return BABY
-              case age < 25:
-                return REALLY_YOUNG_WOMAN
-              case age < 30:
-                return YOUNG_WOMAN
-              case age < 50:
-                return MIDDLE_AGED_WOMAN
-              default:
-                return OLD_WOMAN
-            }
-          }
-
-          return '🐺'
-        })()}
-      </EmojiWrapper>
-      &nbsp;
-    </>
-  )
+  return <>{age} years</>
 }
 
 export const isMemberIdEven = (memberId: string) => {
@@ -96,9 +37,9 @@ export const getMemberIdColor = (memberId: string) => {
   }
 
   if (isMemberIdEven(memberId)) {
-    return colorsV2.coral500
+    return lightTheme.danger
   }
-  return colorsV2.grass300
+  return lightTheme.success
 }
 
 export const getMemberGroup = (memberId: number) => {
@@ -107,9 +48,9 @@ export const getMemberGroup = (memberId: number) => {
   }
 
   if (isMemberIdEven(memberId.toString())) {
-    return 'The Empire'
+    return 'Red team'
   }
-  return 'The Resistance'
+  return 'Green team'
 }
 
 export const getMemberFlag = (market: Market): string => {
@@ -121,4 +62,18 @@ export const getMemberFlag = (market: Market): string => {
     default:
       return '🏳'
   }
+}
+
+const SWEDISH_SSN_LENGTH = 12
+const NORWEGIAN_SSN_LENGTH = 11
+export const formatSsn = (ssn: string) => {
+  if (ssn.length === SWEDISH_SSN_LENGTH) {
+    return ssn.slice(0, 8) + '-' + ssn.slice(8, 12)
+  }
+
+  if (ssn.length === NORWEGIAN_SSN_LENGTH) {
+    return ssn.slice(0, 6) + '-' + ssn.slice(6, 11)
+  }
+
+  return ssn
 }

@@ -1,16 +1,22 @@
-import { colorsV2 } from '@hedviginsurance/brand/dist'
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
-import * as React from 'react'
+import { format, parseISO } from 'date-fns'
+import { Button } from 'hedvig-ui/button'
+import { Checkbox } from 'hedvig-ui/checkbox'
+import { Input } from 'hedvig-ui/input'
+import { MainHeadline } from 'hedvig-ui/typography'
+import React, { useEffect } from 'react'
+import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import styled, { keyframes } from 'react-emotion'
-import { Mount } from 'react-lifecycle-components'
 import { Link } from 'react-router-dom'
-import { Button, Checkbox, Input, Label, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import {
   MemberSearchFilter,
   MemberSearchResultItem,
   MembersSearchResult,
 } from 'store/storeTypes'
-import { MemberEmoji } from 'utils/member'
+import { MemberAge } from 'utils/member'
+import { InsuranceStatusBadge } from '../../utils/agreement'
+import { MemberSuggestions } from './member-suggestions'
 
 export interface Props {
   searchMemberRequest: (requestArgs: Partial<MemberSearchFilter>) => void
@@ -24,25 +30,47 @@ const fadeIn = (max: number) =>
     to: { opacity: max, transform: 'translateY(0)' },
   })
 
-const Instructions = styled('div')({
+const Instructions = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  textAlign: 'center',
+  textAlign: 'left',
+  paddingLeft: '1rem',
+  paddingTop: '2rem',
   code: {
-    background: 'rgba(0, 0, 0, .1)',
+    background: theme.backgroundTransparent,
     padding: '1px 2px',
     borderRadius: 1,
   },
   opacity: 0,
-  animation: `${fadeIn(0.5)} 1000ms forwards`,
-  animationDelay: '1000ms',
+  animation: `${fadeIn(0.3)} 1000ms forwards`,
+  animationDelay: '500ms',
+}))
+
+const MemberSuggestionsWrapper = styled(Instructions)({
+  paddingTop: '25vh',
+  width: '100%',
+  maxWidth: '50rem',
+  animation: `${fadeIn(1)} 1000ms forwards`,
+  animationDelay: '750ms',
+})
+
+const NoMembers = styled(Instructions)({
+  width: '100%',
+  flex: 1,
+  alignItems: 'center',
+  fontSize: '1.5rem',
+  paddingTop: '25vh',
 })
 
 const ExtraInstruction = styled('div')({
   opacity: 0,
   animation: `${fadeIn(1)} 1000ms forwards`,
   animationDelay: '1000ms',
+})
+
+const ListWrapper = styled('div')({
+  paddingLeft: '1rem',
 })
 
 export const MembersSearch: React.FC<Props> = ({
@@ -54,30 +82,31 @@ export const MembersSearch: React.FC<Props> = ({
   const [includeAll, setIncludeAll] = React.useState(false)
   const [hasDispatchedSearch, setHasDispatchedSearch] = React.useState(false)
 
+  useEffect(() => {
+    if (searchResult.items.length === 0) {
+      searchMemberRequest({})
+    }
+  }, [])
+
   return (
-    <Mount
-      on={() => {
-        if (searchResult.items.length === 0) {
-          searchMemberRequest({})
-        }
-      }}
-    >
-      <>
-        <Search
-          onSubmit={(submittedQuery, submittedIncludeAll) => {
-            searchMemberRequest({
-              query: submittedQuery,
-              includeAll: submittedIncludeAll,
-            })
-            setHasDispatchedSearch(true)
-          }}
-          loading={searchLoading}
-          query={query}
-          setQuery={setQuery}
-          includeAll={includeAll}
-          setIncludeAll={setIncludeAll}
-        />
-        {searchResult.items.length > 0 && (
+    <>
+      <Search
+        onSubmit={(submittedQuery, submittedIncludeAll) => {
+          searchMemberRequest({
+            query: submittedQuery,
+            includeAll: submittedIncludeAll,
+          })
+          setHasDispatchedSearch(true)
+        }}
+        loading={searchLoading}
+        query={query}
+        setQuery={setQuery}
+        includeAll={includeAll}
+        setIncludeAll={setIncludeAll}
+        currentResultSize={searchResult.items.length}
+      />
+      {searchResult.items.length > 0 && (
+        <ListWrapper>
           <BackendPaginatorList<MemberSearchResultItem>
             currentPage={searchResult.page}
             totalPages={searchResult.totalPages}
@@ -89,16 +118,18 @@ export const MembersSearch: React.FC<Props> = ({
             isSortable={false}
             tableHeader={<ListHeader />}
           />
-        )}
-        {searchResult.items.length === 0 && (!hasDispatchedSearch || !query) && (
+        </ListWrapper>
+      )}
+      {searchResult.items.length === 0 && (!hasDispatchedSearch || !query) && (
+        <>
           <Instructions>
             <h1>Search for members</h1>
             <div>
-              Search by <strong>member id</strong>,{' '}
-              <strong>personnummer</strong>, <strong>email</strong>,{' '}
-              <strong>phone</strong> or <strong>name</strong>
+              Search by <em>member id</em>, <em>personnummer</em>,{' '}
+              <em>email</em>, <em>phone</em> or <em>name</em>
             </div>
             <div>
+              <br />
               <code>%</code> is a wildcard character, it can be used to search
               for anything
             </div>
@@ -110,49 +141,70 @@ export const MembersSearch: React.FC<Props> = ({
               <ExtraInstruction>Press enter to search</ExtraInstruction>
             )}
           </Instructions>
-        )}
 
-        {searchResult.items.length === 0 &&
-          hasDispatchedSearch &&
-          query &&
-          !searchLoading && (
-            <Instructions>
-              <div>D*shborad 🤬!</div>
-              <div>
-                <strong>No members found</strong>
-              </div>
-            </Instructions>
-          )}
-      </>
-    </Mount>
+          <MemberSuggestionsWrapper>
+            <MainHeadline>Suggestions</MainHeadline>
+            <MemberSuggestions />
+          </MemberSuggestionsWrapper>
+        </>
+      )}
+
+      {searchResult.items.length === 0 &&
+        hasDispatchedSearch &&
+        query &&
+        !searchLoading && (
+          <NoMembers>
+            <div>D*shborad! No members found</div>
+          </NoMembers>
+        )}
+    </>
   )
 }
 
-const Group = styled('div')({
+const Group = styled('div')<{ pushLeft?: boolean }>(({ pushLeft }) => ({
   paddingBottom: '1rem',
-})
+  paddingLeft: pushLeft ? '1rem' : 0,
+}))
 const SearchInputGroup = styled('div')({
   display: 'flex',
+  position: 'relative',
+  fontSize: '1rem',
+  maxWidth: '40rem',
 })
+const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
+  ({ muted, theme }) => ({
+    position: 'absolute',
+    top: '50%',
+    left: '1rem',
+    transform: 'translateY(-50%)',
+    zIndex: 1,
+    fill: muted ? theme.mutedText : undefined,
+    transition: 'fill 300ms',
+  }),
+)
+
 const SearchInput = styled(Input)({
-  '&& input, &&': {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
+  marginRight: '1rem',
+
+  '&&': {
     width: '100%',
-    border: 0,
   },
+
   '&& input': {
-    border: '1px solid ' + colorsV2.violet300,
+    borderRadius: '0.5rem',
+    paddingLeft: '3rem',
   },
 })
-const SearchButton = styled(Button)({
-  '&&&': {
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    background: colorsV2.violet300,
-    color: '#fff',
-  },
-})
+const SearchButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
+  opacity: visible ? 1 : 0,
+  transition: 'opacity 400ms',
+}))
+
+const EscapeButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
+  opacity: visible ? 1 : 0,
+  transition: 'opacity 300ms',
+  marginLeft: '2rem',
+}))
 
 const Search: React.FC<{
   onSubmit: (query: string, includeAll: boolean) => void
@@ -161,7 +213,16 @@ const Search: React.FC<{
   includeAll: boolean
   setQuery: (query: string) => void
   setIncludeAll: (includeAll: boolean) => void
-}> = ({ onSubmit, loading, query, setQuery, includeAll, setIncludeAll }) => {
+  currentResultSize: number
+}> = ({
+  onSubmit,
+  loading,
+  query,
+  setQuery,
+  includeAll,
+  setIncludeAll,
+  currentResultSize,
+}) => {
   return (
     <form
       onSubmit={(e) => {
@@ -170,12 +231,8 @@ const Search: React.FC<{
       }}
     >
       <Group>
-        <div>
-          <Label htmlFor="query" size="big">
-            Query
-          </Label>
-        </div>
         <SearchInputGroup>
+          <SearchIcon muted={!query} />
           <SearchInput
             onChange={(_, { value }) => setQuery(value)}
             placeholder="Looking for someone...?"
@@ -185,13 +242,20 @@ const Search: React.FC<{
             size="big"
             type="search"
             autoFocus
+            muted={!query}
           />
-          <SearchButton type="submit" disabled={loading} size="big">
+          <SearchButton
+            type="submit"
+            disabled={loading}
+            variation="primary"
+            size="large"
+            visible={Boolean(query)}
+          >
             Search
           </SearchButton>
         </SearchInputGroup>
       </Group>
-      <Group>
+      <Group pushLeft>
         <Checkbox
           onChange={(_, { checked }) => {
             setIncludeAll(checked!)
@@ -200,6 +264,14 @@ const Search: React.FC<{
           checked={includeAll}
           label="Wide search"
         />
+
+        <EscapeButton
+          size="small"
+          visible={!query && currentResultSize > 0}
+          onClick={() => onSubmit('', false)}
+        >
+          Clear
+        </EscapeButton>
       </Group>
     </form>
   )
@@ -216,35 +288,48 @@ const ListHeader: React.FC = () => (
   </Table.Header>
 )
 
-const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => (
-  <Table.Row>
-    <Table.Cell>
-      {item.member.memberId ? (
-        <Link to={`/members/${item.member.memberId}`}>
-          {item.member.memberId}
-        </Link>
-      ) : (
-        '-'
-      )}
-    </Table.Cell>
-    <Table.Cell>
-      {item.member.firstName ?? '-'} {item.member.lastName ?? '-'}
-      <MemberEmoji
-        birthDateString={item.member.birthDate}
-        gender={item.member.gender}
-      />
-    </Table.Cell>
-    <Table.Cell>{item.member.signedOn}</Table.Cell>
-    <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>
-    <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
-    <Table.Cell>
-      {(item.member.status !== 'SIGNED'
-        ? item.member.status
-        : item.productStatus) ?? '-'}
-    </Table.Cell>
-    <Table.Cell>
-      {item.householdSize ?? '-'} people / {item.livingSpace ?? '-'} m
-      <sup>2</sup>
-    </Table.Cell>
-  </Table.Row>
-)
+const MemberAgeWrapper = styled('div')(({ theme }) => ({
+  color: theme.mutedText,
+  fontSize: '0.8rem',
+}))
+
+const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => {
+  const memberStatus =
+    item.member.status !== 'SIGNED' ? item.member.status : item.productStatus
+  return (
+    <Table.Row>
+      <Table.Cell>
+        {item.member.memberId ? (
+          <Link to={`/members/${item.member.memberId}`}>
+            {item.member.memberId}
+          </Link>
+        ) : (
+          '-'
+        )}
+      </Table.Cell>
+      <Table.Cell>
+        {item.member.firstName ?? '-'} {item.member.lastName ?? '-'}
+        <MemberAgeWrapper>
+          <MemberAge birthDateString={item.member.birthDate} />
+        </MemberAgeWrapper>
+      </Table.Cell>
+      <Table.Cell>
+        {item.member.signedOn &&
+          format(parseISO(item.member.signedOn), 'MMM d, yyy, HH:ii')}
+      </Table.Cell>
+      <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>
+      <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
+      <Table.Cell>
+        {memberStatus && (
+          <InsuranceStatusBadge status={memberStatus}>
+            {memberStatus?.toLowerCase()}
+          </InsuranceStatusBadge>
+        )}
+      </Table.Cell>
+      <Table.Cell>
+        {item.householdSize ?? '-'} people / {item.livingSpace ?? '-'} m
+        <sup>2</sup>
+      </Table.Cell>
+    </Table.Row>
+  )
+}

@@ -1,5 +1,5 @@
 import { getFieldName, getFieldValue } from 'lib/helpers'
-import * as React from 'react'
+import React from 'react'
 import { Table } from 'semantic-ui-react'
 
 interface TableFieldsProps<T> {

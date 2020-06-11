@@ -1,9 +1,9 @@
-import { colorsV2 } from '@hedviginsurance/brand/dist/colors'
 import { Agreement, AgreementStatus } from 'api/generated/graphql'
-import * as React from 'react'
-import styled from 'react-emotion'
+import React from 'react'
+import styled, { css } from 'react-emotion'
 import { Table } from 'semantic-ui-react'
-import { getLineOfBusiness } from 'utils/agreement'
+import { getLineOfBusiness, InsuranceStatusBadge } from 'utils/agreement'
+import { formatMoney } from 'utils/money'
 import { getEnumTitleCase } from 'utils/text'
 
 const SelectableTableRow = styled(Table.Row)({
@@ -14,20 +14,13 @@ const SelectableTableCell = styled(Table.Cell)<{
   selected: boolean
   status: AgreementStatus
 }>`
-  font-weight: ${({ selected }) => (selected ? 'bold' : 'normal')};
   font-size: 1.2rem;
-  color: ${({ status }) => {
-    if (status === AgreementStatus.Terminated) {
-      return colorsV2.coral700
-    }
-    if (status === AgreementStatus.Active) {
-      return colorsV2.ocean700
-    }
-    if (status === AgreementStatus.Pending) {
-      return colorsV2.violet700
-    }
-    return colorsV2.black
-  }};
+  ${({ selected, theme }) =>
+    selected &&
+    css`
+      background: ${theme.accent} !important;
+      color: ${theme.accentContrast} !important;
+    `};
   width: 20%;
 `
 
@@ -83,13 +76,15 @@ export const AgreementsTable: React.FC<{
                 selected={isSelected}
                 status={agreement.status}
               >
-                {agreement.premium.amount + ' ' + agreement.premium.currency}{' '}
+                {formatMoney(agreement.premium)}
               </SelectableTableCell>
               <SelectableTableCell
                 selected={isSelected}
                 status={agreement.status}
               >
-                {getEnumTitleCase(agreement.status)}
+                <InsuranceStatusBadge status={agreement.status}>
+                  {getEnumTitleCase(agreement.status)}
+                </InsuranceStatusBadge>
               </SelectableTableCell>
             </SelectableTableRow>
           )

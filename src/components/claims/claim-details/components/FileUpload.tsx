@@ -1,5 +1,4 @@
-import { colors } from '@hedviginsurance/brand'
-import * as React from 'react'
+import React from 'react'
 import Dropzone from 'react-dropzone'
 import styled from 'react-emotion'
 import { connect } from 'react-redux'
@@ -16,7 +15,7 @@ const UploadClaimFileWrapper = styled('div')({
 
 const UploadClaimFileHeader = styled('h3')({})
 
-export const Button = styled('button')({
+export const Button = styled('button')(({ theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -24,21 +23,21 @@ export const Button = styled('button')({
   font: 'inherit',
   padding: '4rem',
   border: '1px solid',
-  borderColor: colors.DARK_GRAY,
+  borderColor: theme.border,
   borderRadius: '5px',
-  color: colors.BLACK,
-  background: colors.WHITE,
+  color: theme.foreground,
+  background: theme.backgroundTransparent,
   cursor: 'pointer',
   textDecoration: 'none',
   '&:hover, &:focus': {
-    color: colors.GREEN,
+    color: theme.accent,
     textDecoration: 'none',
   },
   '&:focus, &:hover': {
     outline: 'none',
     boxShadow: 'none',
   },
-})
+}))
 
 const FileUploadContainer = styled('div')({
   padding: '2rem',

@@ -12,7 +12,7 @@ import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { sleep } from 'utils/sleep'
 
-import { Paper } from '../../../shared/Paper'
+import { Paper } from 'components/shared/Paper'
 
 const UPDATE_CLAIM_STATE_MUTATION = gql`
   mutation UpdateClaimState($id: ID!, $state: ClaimState!) {

@@ -9,7 +9,7 @@ import {
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import { MainHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import styled, { css } from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'

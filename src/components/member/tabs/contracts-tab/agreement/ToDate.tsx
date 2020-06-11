@@ -12,7 +12,7 @@ import {
   Paragraph,
   ThirdLevelHeadline,
 } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
 const initialToDate = (agreement: Agreement): Date =>
@@ -47,8 +47,8 @@ export const ToDate: React.FunctionComponent<{
         </Spacing>
       )}
       {!datePickerEnabled && agreement.toDate && !contract.isTerminated && (
-        <Button fullWidth onClick={() => setDatePickerEnabled(true)}>
-          Change
+        <Button variation="primary" onClick={() => setDatePickerEnabled(true)}>
+          Edit
         </Button>
       )}
       {!datePickerEnabled && contract.isTerminated && (
@@ -61,8 +61,7 @@ export const ToDate: React.FunctionComponent<{
           </Spacing>
           <ButtonsGroup>
             <Button
-              variation={'secondary'}
-              fullWidth
+              variation="secondary"
               onClick={() => {
                 const formattedToDate = format(toDate, 'yyyy-MM-dd')
                 if (
@@ -91,9 +90,7 @@ export const ToDate: React.FunctionComponent<{
             >
               Confirm
             </Button>
-            <Button fullWidth onClick={() => reset()}>
-              Cancel
-            </Button>
+            <Button onClick={() => reset()}>Cancel</Button>
           </ButtonsGroup>
         </>
       )}

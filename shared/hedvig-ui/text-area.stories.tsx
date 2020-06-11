@@ -1,5 +1,5 @@
 import { TextArea } from 'hedvig-ui/text-area'
-import * as React from 'react'
+import React from 'react'
 
 export default {
   title: 'TextArea',

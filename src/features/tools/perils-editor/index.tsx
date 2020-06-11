@@ -1,6 +1,6 @@
 import { Button } from 'hedvig-ui/button'
 import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import ReactDropZone from 'react-dropzone'
 import styled from 'react-emotion'
 import { Dropdown, Form, TextArea } from 'semantic-ui-react'

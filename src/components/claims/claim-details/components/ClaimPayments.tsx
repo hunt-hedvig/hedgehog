@@ -9,7 +9,7 @@ import {
 import { Claim, SanctionStatus } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
-import * as React from 'react'
+import React from 'react'
 
 import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'

@@ -1,6 +1,6 @@
 import { gql } from 'apollo-boost'
 import { SubmitButton } from 'components/member/tabs/account-tab/add-entry-form'
-import * as React from 'react'
+import React from 'react'
 import { Mutation } from 'react-apollo'
 
 const BACKFILL_SUBSCRIPTIONS_MUTATION = gql`

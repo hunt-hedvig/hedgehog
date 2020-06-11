@@ -1,5 +1,5 @@
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 
@@ -30,6 +30,11 @@ export const Tools: React.FC = () => (
     <CardLink to="/tools/norwegian-tariff-creator" span={4}>
       <Icon>🛩</Icon>
       Norwegian Price Engine "Gripen"
+    </CardLink>
+
+    <CardLink to="/tools/campaign-codes" span={4}>
+      <Icon>💵</Icon>
+      Campaign Codes
     </CardLink>
   </CardsWrapper>
 )

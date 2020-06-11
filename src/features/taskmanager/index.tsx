@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as React from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import actions from 'store/actions'
 import { connect } from 'react-redux'
