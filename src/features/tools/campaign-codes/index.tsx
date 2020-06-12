@@ -14,6 +14,7 @@ import {
   isFreeMonths,
   isMonthlyPercentageDiscountFixedPeriod,
 } from 'utils/campaignCodes'
+import { formatMoney } from 'utils/money'
 import { withShowNotification } from 'utils/notifications'
 import { CreateNewCampaignCode } from './create-new-campaign-code'
 
@@ -247,7 +248,8 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
                 <Table.Cell>
                   {!isCostDeduction(campaign.incentive) && '-'}
                   {(isCostDeduction(campaign.incentive) &&
-                    campaign.incentive.amount) ??
+                    campaign.incentive.amount &&
+                    formatMoney(campaign.incentive.amount)) ??
                     '-'}
                 </Table.Cell>
               </Table.Row>
