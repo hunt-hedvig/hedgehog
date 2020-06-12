@@ -4,7 +4,7 @@ import React from 'react'
 import { components } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import { CategoryDialog } from './CategoryDialog'
-import { categorySelectStyle } from './styles'
+import { categorySelectStyle, Placeholder } from './styles'
 
 const SelectItemCategoriesPlaceholder = (props) => {
   const [selectedOptions, rawInput] = props.children
@@ -16,7 +16,7 @@ const SelectItemCategoriesPlaceholder = (props) => {
       {selectedOptions}
       {rawInput}
       {showPlaceholder && (
-        <div style={{ color: '#919191' }}>{props.selectProps.placeholder}</div>
+        <Placeholder>{props.selectProps.placeholder}</Placeholder>
       )}
     </components.ValueContainer>
   )

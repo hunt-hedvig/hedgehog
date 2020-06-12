@@ -15,30 +15,12 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core'
-import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-import DeleteIcon from '@material-ui/icons/Delete'
 import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
 import React from 'react'
+import { Trash } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'
-
-const SmallArrowRight = withStyles({
-  root: {
-    marginBottom: '-4px',
-    marginRight: '2px',
-    marginLeft: '2px',
-    color: '#222',
-    fontSize: 'medium',
-  },
-})(ArrowRightIcon)
-
-const DeleteItemIcon = withStyles({
-  root: {
-    marginTop: '3px',
-    color: '#555',
-    fontSize: 'medium',
-  },
-})(DeleteIcon)
+import { SmallArrowRight, TrashIconWrapper } from './styles'
 
 const TableCell = withStyles({
   root: {
@@ -157,7 +139,9 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
                     }).then(() => setItemToDelete(null))
                   }}
                 >
-                  <DeleteItemIcon />
+                  <TrashIconWrapper>
+                    <Trash />
+                  </TrashIconWrapper>
                 </IconButton>
               </TableCell>
             </TableRow>

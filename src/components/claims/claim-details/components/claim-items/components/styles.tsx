@@ -1,17 +1,20 @@
-import { Chip, withStyles } from '@material-ui/core'
+import { Chip, Select, withStyles } from '@material-ui/core'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import CallSplitIcon from '@material-ui/icons/CallSplit'
 import TodayIcon from '@material-ui/icons/Today'
+import styled from 'react-emotion'
+
+export const categorySelectTheme = {
+  borderRadius: 0,
+}
 
 export const categorySelectStyle = {
-  control: (base, { isFocused }) => ({
+  control: (base) => ({
     ...base,
     marginTop: '6px',
-    background: 'rgba(0, 0, 0, 0.0)',
-    // match with the menu
-    borderRadius: 0,
+    borderRadius: 1,
     border: '0px',
-    borderBottom: isFocused ? '1px solid #0f007a' : '1px solid #999999',
+    borderBottom: `1px solid white`,
     boxShadow: 'none',
   }),
   menu: (base) => ({
@@ -32,68 +35,48 @@ export const categorySelectStyle = {
     ...base,
     paddingLeft: '5px',
     paddingRight: '10px',
-    backgroundColor: 'rgba(0, 0, 0, 0.0)',
-    border: '1px solid #5b30f5',
+    border: '1px solid',
     borderRadius: 20,
   }),
-  multiValueLabel: (base) => ({
-    ...base,
-    color: '#5b30f5',
-    fontWeight: 'bold',
-  }),
-  option: (base, { data }) => {
-    const isCreateOption = typeof data?.nextKind === 'undefined'
-
-    return {
-      ...base,
-      color: isCreateOption ? '#5b30f5' : null,
-    }
-  },
   placeholder: () => ({
     display: 'none',
   }),
 }
 
-export const PreviousChip = withStyles({
-  root: {
-    fontWeight: 500,
-    color: '#555',
-  },
-})(Chip)
+export const UpcomingChip = styled(Chip)`
+  font-weight: bold;
+  color: ${({ theme }) => theme.accentContrast};
+  border: 1px solid ${({ theme }) => theme.accentContrast};
+`
 
-export const CurrentChip = withStyles({
-  root: {
-    fontWeight: 500,
-  },
-})(Chip)
+export const CurrentChip = styled(Chip)`
+  font-weight: bold;
+  color: ${({ theme }) => theme.accentContrast};
+  border: 1px solid ${({ theme }) => theme.accentContrast};
+`
 
-export const UpcomingChip = withStyles({
-  root: {
-    fontWeight: 500,
-    color: '#bbb',
-  },
-})(Chip)
+export const PreviousChip = styled(Chip)`
+  font-weight: bold;
+  color: ${({ theme }) => theme.accentContrast};
+  border: 1px solid ${({ theme }) => theme.accentContrast};
+`
 
-export const MultipleArrowsRight = withStyles({
-  root: {
-    marginBottom: '-6px',
-    marginRight: '3px',
-    marginLeft: '3px',
-    color: '#555',
-    transform: 'rotate(90deg)',
-    fontSize: 'medium',
-  },
-})(CallSplitIcon)
+export const MultipleArrowsRight = styled(CallSplitIcon)`
+  margin-bottom: -6px;
+  margin-right: 3px;
+  margin-left: 3px;
+  color: ${({ theme }) => theme.accentContrast};
+  transform: rotate(90deg);
+  font-size: medium;
+`
 
-export const SmallArrowRight = withStyles({
-  root: {
-    marginBottom: '-5px',
-    marginRight: '3px',
-    marginLeft: '3px',
-    color: '#555',
-    fontSize: 'medium',
-  },
-})(ArrowRightIcon)
+export const SmallArrowRight = styled(ArrowRightIcon)`
+  margin-bottom: -5px;
+  margin-right: 3px;
+  margin-left: 3px;
+  color: ${({ theme }) => theme.accentContrast};
+  font-size: medium;
+`
 
 export const DateIcon = withStyles({
   root: {
@@ -101,3 +84,25 @@ export const DateIcon = withStyles({
     color: '#555',
   },
 })(TodayIcon)
+
+export const DateIconWrapper = styled.span`
+  color: ${({ theme }) => theme.danger};
+`
+
+export const TrashIconWrapper = styled.span`
+  color: ${({ theme }) => theme.danger};
+  font-size: 0.9rem;
+`
+
+export const Bold = styled.span`
+  font-weight: bold;
+`
+
+export const Placeholder = styled.div`
+  color: ${({ theme }) => theme.placeholderColor};
+`
+
+export const CurrencySelect = styled(Select)`
+  color: ${({ theme }) => theme.foreground};
+  text-align: right;
+`
