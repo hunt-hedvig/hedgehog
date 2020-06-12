@@ -2,7 +2,6 @@ import { colors } from '@hedviginsurance/brand'
 import gql from 'graphql-tag'
 import { MainHeadline } from 'hedvig-ui/typography'
 import { MonetaryAmount } from 'lib/helpers'
-import { formatMoneySE } from 'lib/intl'
 import moment from 'moment'
 import React from 'react'
 import { Mutation, Query } from 'react-apollo'
@@ -11,6 +10,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import actions from 'store/actions'
+import { formatMoney } from 'utils/money'
 
 const query = gql`
   query PaymentScheduleQuery($month: YearMonth!) {
@@ -114,10 +114,10 @@ const Row: React.FunctionComponent<RowProps> = ({ paymentSchedule }) => (
           </Link>
         </Table.Cell>
         <Table.Cell>
-          {formatMoneySE(payment.member.monthlySubscription.amount)}
+          {formatMoney(payment.member.monthlySubscription.amount)}
         </Table.Cell>
         <Table.Cell>
-          {formatMoneySE(payment.member.account.currentBalance)}
+          {formatMoney(payment.member.account.currentBalance)}
           {parseFloat(payment.member.account.currentBalance.amount) <= 0 &&
             " (Won't be charged)"}
         </Table.Cell>
