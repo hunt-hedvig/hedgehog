@@ -1,4 +1,3 @@
-import { colorsV2 } from '@hedviginsurance/brand'
 import {
   GetSwitcherEmailsDocument,
   Member,
@@ -10,71 +9,13 @@ import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled, { css } from 'react-emotion'
+import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 
-const ONE_DAY_IN_MILLIS = 3600 * 24 * 1000
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
 
-export const shouldHighlight = (
-  sentAt?: Date | null,
-  remindedAt?: Date | null,
-): boolean => {
-  if (!sentAt) {
-    return false
-  }
-  const sentAtLongAgo = Date.now() - (sentAt as any) > ONE_DAY_IN_MILLIS * 7
-
-  if (!remindedAt) {
-    return sentAtLongAgo
-  }
-
-  const remindedAtLongAgo =
-    Date.now() - (remindedAt as any) > ONE_DAY_IN_MILLIS * 7
-
-  return remindedAtLongAgo
-}
-
-export const shouldMute = (
-  sentAt?: Date | null,
-  remindedAt?: Date | null,
-): boolean => {
-  if (!sentAt) {
-    return false
-  }
-
-  const sentAtRecently = Date.now() - (sentAt as any) <= ONE_DAY_IN_MILLIS * 3
-
-  if (!remindedAt) {
-    return sentAtRecently
-  }
-
-  const remindedRecently =
-    Date.now() - (remindedAt as any) <= ONE_DAY_IN_MILLIS * 3
-
-  return remindedRecently
-}
-
-export const StatusTableRow = styled(Table.Row, {
-  shouldForwardProp: (prop) => !['highlighted', 'muted'].includes(prop),
-})<{
-  muted?: boolean
-  highlighted?: boolean
-}>`
-  ${({ muted }) =>
-    muted
-      ? css`
-          opacity: 0.5;
-        `
-      : ''};
-  ${({ highlighted }) =>
-    highlighted
-      ? css`
-          background-color: ${colorsV2.sunflower300};
-        `
-      : ''};
-`
+export const StatusTableRow = styled(Table.Row)()
 
 export const SwitcherEmailRow: React.FC<Pick<
   SwitchableSwitcherEmail,
@@ -93,10 +34,7 @@ export const SwitcherEmailRow: React.FC<Pick<
   const signedDate = member.signedOn && parseISO(member.signedOn)
 
   return (
-    <StatusTableRow
-      highlighted={shouldHighlight(sentAtDate, remindedAtDate)}
-      muted={shouldMute(sentAtDate, remindedAtDate)}
-    >
+    <StatusTableRow>
       <Table.Cell>
         <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
         <>

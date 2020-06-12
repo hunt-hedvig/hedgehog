@@ -4,7 +4,6 @@ import {
   MarkSwitcherEmailAsRemindedDocument,
   Member,
 } from 'api/generated/graphql'
-import { subDays } from 'date-fns'
 import { mount } from 'enzyme'
 import { Button } from 'hedvig-ui/button'
 import * as React from 'react'
@@ -12,28 +11,7 @@ import { act } from 'react-dom/test-utils'
 import { StaticRouter } from 'react-router'
 import { Table } from 'semantic-ui-react'
 import { sleep } from 'utils/sleep'
-import {
-  shouldHighlight,
-  shouldMute,
-  SwitcherAutomation,
-  SwitcherEmailRow,
-} from './index'
-
-it('checks dates correctly for highlighting', () => {
-  expect(shouldHighlight(null, null)).toBe(false)
-  expect(shouldHighlight(subDays(new Date(), 8), null)).toBe(true)
-  expect(shouldHighlight(subDays(new Date(), 8), subDays(new Date(), 2))).toBe(
-    false,
-  )
-  expect(shouldHighlight(subDays(new Date(), 8), subDays(new Date(), 8))).toBe(
-    true,
-  )
-
-  expect(shouldMute(null, null)).toBe(false)
-  expect(shouldMute(new Date(), null)).toBe(true)
-  expect(shouldMute(subDays(new Date(), 8), subDays(new Date(), 4))).toBe(false)
-  expect(shouldMute(subDays(new Date(), 2), subDays(new Date(), 2))).toBe(true)
-})
+import { SwitcherAutomation, SwitcherEmailRow } from './index'
 
 it('renders without 💥', async () => {
   const switchableSwitcherEmails = [
