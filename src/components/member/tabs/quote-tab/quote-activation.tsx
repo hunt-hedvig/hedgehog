@@ -6,7 +6,7 @@ import {
 } from 'graphql/use-add-agreement-from-quote'
 import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
-import React from 'react'
+import React, { useState } from 'react'
 import { Checkbox } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
@@ -33,19 +33,19 @@ export const QuoteActivation: React.FC<{
   onSubmitted = noopFunction,
   onWipChange = noopFunction,
 }) => {
-  const [useGap, setUseGap] = React.useState(false)
+  const [useGap, setUseGap] = useState(false)
   const [contracts, { loading }] = useContracts(memberId)
   const contract = getContract(contracts, quote)
   if (!loading && !contract) {
     return <>Cannot active quote without Originating product id</>
   }
-  const [activeFrom, setActiveFrom] = React.useState<Date | null>(
+  const [activeFrom, setActiveFrom] = useState(() =>
     getInitialActiveFrom(contract),
   )
   const [
     previousAgreementActiveTo,
     setPreviousAgreementActiveTo,
-  ] = React.useState<Date | null>(null)
+  ] = useState<Date | null>(null)
 
   const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
 
@@ -103,7 +103,7 @@ export const QuoteActivation: React.FC<{
                 if (!checked) {
                   setPreviousAgreementActiveTo(null)
                 }
-                setUseGap(checked!)
+                setUseGap(!!checked)
               }}
               label="Create gap between insurances"
               checked={useGap}
