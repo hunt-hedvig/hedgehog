@@ -15,7 +15,7 @@ export const useAddAgreementFromQuote = (): AddAgreementFromQuoteMutationHookRes
 
 export const addAgreementFromQuoteOptions = (
   contract: Contract,
-  activeFrom: Date,
+  activeFrom: Date | null,
   activeTo: Date | null,
   previousAgreementActiveTo: Date | null,
   quote: Quote,
@@ -26,7 +26,7 @@ export const addAgreementFromQuoteOptions = (
   return {
     variables: {
       id: quote.id,
-      activeFrom: format(activeFrom, 'yyyy-MM-dd'),
+      activeFrom: activeFrom ? format(activeFrom, 'yyyy-MM-dd') : null,
       activeTo: activeTo ? format(activeTo, 'yyy-MM-dd') : null,
       contractId: contract.id,
       previousAgreementActiveTo: previousAgreementActiveTo
