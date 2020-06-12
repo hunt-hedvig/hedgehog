@@ -13,7 +13,7 @@ import {
 } from 'api/generated/graphql'
 import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import { useUpsertItemCompanyOptions } from 'graphql/use-upsert-item-category'
-import * as React from 'react'
+import React from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { ItemCompanySelection } from './CategoryDialog'
 import { categorySelectStyle } from './styles'

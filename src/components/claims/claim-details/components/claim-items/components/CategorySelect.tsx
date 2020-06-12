@@ -1,6 +1,6 @@
 import { ItemCategoryKind } from 'api/generated/graphql'
 import { useGetItemCategories } from 'graphql/use-get-item-categories'
-import * as React from 'react'
+import React from 'react'
 import { components } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import { CategoryDialog } from './CategoryDialog'

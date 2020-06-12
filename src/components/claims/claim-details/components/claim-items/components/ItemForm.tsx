@@ -12,7 +12,7 @@ import {
 } from 'api/generated/graphql'
 import { isAfter, isValid, parseISO } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
-import * as React from 'react'
+import React from 'react'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
 import { DateIcon } from './styles'
 

@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core'
 import { ItemCategoryKind } from 'api/generated/graphql'
-import * as React from 'react'
+import React from 'react'
 import { SelectedItemCategory } from './CategorySelect'
 import {
   CurrentChip,
