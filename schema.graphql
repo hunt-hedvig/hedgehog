@@ -15,27 +15,9 @@ type QueryType {
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
-  validateCategoryChain(
-      itemFamilyName: String!,
-      itemTypeName: String,
-      itemCompanyName: String,
-      itemBrandName: String,
-      itemModelName: String): [String!]!
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
-}
-
-type ClaimItem {
-  id: ID!
-  itemFamily: ItemFamily!
-  itemType: ItemType!
-  itemBrand: ItemBrand
-  itemModel: ItemModel
-  itemCompany: ItemCompany
-  dateOfPurchase: LocalDate
-  purchasePrice: MonetaryAmountV2
-  note: String
 }
 
 type MutationType {
@@ -126,12 +108,24 @@ type MutationType {
   deleteClaimItem(claimItemId: ID!): ID
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
   assignCampaignToPartnerPercentageDiscount(
-      request: AssignVoucherPercentageDiscount
-    ): Boolean!
+    request: AssignVoucherPercentageDiscount
+  ): Boolean!
 }
 
 input InsertItemCategoriesInput {
   itemCategoriesString: String!
+}
+
+type ClaimItem {
+  id: ID!
+  itemFamily: ItemFamily!
+  itemType: ItemType!
+  itemBrand: ItemBrand
+  itemModel: ItemModel
+  itemCompany: ItemCompany
+  dateOfPurchase: LocalDate
+  purchasePrice: MonetaryAmountV2
+  note: String
 }
 
 input UpsertClaimItemInput {
@@ -651,6 +645,7 @@ type Quote {
   data: QuoteData
   signedProductId: ID
   originatingProductId: ID
+  isReadyToSign: Boolean
 }
 
 enum QuoteProductType {
@@ -992,6 +987,7 @@ type Claim {
   reserves: MonetaryAmount
   registrationDate: Instant
   notes: [ClaimNote]
+  transcriptions: [ClaimTranscription]
   payments: [ClaimPayment]
   events: [ClaimEvent]
   coveringEmployee: Boolean!
@@ -1001,6 +997,12 @@ type Claim {
 type ClaimNote {
   text: String
   date: LocalDateTime
+}
+
+type ClaimTranscription {
+  text: String!
+  confidenceScore: Float!
+  languageCode: String!
 }
 
 enum ClaimTypes {

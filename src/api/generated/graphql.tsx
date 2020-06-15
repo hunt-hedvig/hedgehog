@@ -257,6 +257,7 @@ export type Claim = {
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate?: Maybe<Scalars['Instant']>
   notes?: Maybe<Array<Maybe<ClaimNote>>>
+  transcriptions?: Maybe<Array<Maybe<ClaimTranscription>>>
   payments?: Maybe<Array<Maybe<ClaimPayment>>>
   events?: Maybe<Array<Maybe<ClaimEvent>>>
   coveringEmployee: Scalars['Boolean']
@@ -358,6 +359,13 @@ export enum ClaimState {
   Open = 'OPEN',
   Closed = 'CLOSED',
   Reopened = 'REOPENED',
+}
+
+export type ClaimTranscription = {
+  __typename?: 'ClaimTranscription'
+  text: Scalars['String']
+  confidenceScore: Scalars['Float']
+  languageCode: Scalars['String']
 }
 
 export type ClaimType =
@@ -1238,7 +1246,6 @@ export type QueryType = {
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   itemCategories: Array<ItemCategory>
-  validateCategoryChain: Array<Scalars['String']>
   claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
@@ -1281,14 +1288,6 @@ export type QueryTypeItemCategoriesArgs = {
   parentId?: Maybe<Scalars['ID']>
 }
 
-export type QueryTypeValidateCategoryChainArgs = {
-  itemFamilyName: Scalars['String']
-  itemTypeName?: Maybe<Scalars['String']>
-  itemCompanyName?: Maybe<Scalars['String']>
-  itemBrandName?: Maybe<Scalars['String']>
-  itemModelName?: Maybe<Scalars['String']>
-}
-
 export type QueryTypeClaimItemsArgs = {
   claimId: Scalars['ID']
 }
@@ -1315,6 +1314,7 @@ export type Quote = {
   data?: Maybe<QuoteData>
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
+  isReadyToSign?: Maybe<Scalars['Boolean']>
 }
 
 export type QuoteData =
@@ -1691,7 +1691,10 @@ export type MemberNameAndContractMarketInfoQuery = {
   __typename?: 'QueryType'
 } & {
   member: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'> & {
+    { __typename?: 'Member' } & Pick<
+      Member,
+      'memberId' | 'firstName' | 'lastName'
+    > & {
         contractMarketInfo: Maybe<
           { __typename?: 'ContractMarketInfo' } & Pick<
             ContractMarketInfo,
@@ -1853,55 +1856,54 @@ export type GetAccountQueryVariables = {
 
 export type GetAccountQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      account: Maybe<
-        { __typename?: 'Account' } & Pick<Account, 'id'> & {
-            currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-            totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-            chargeEstimation: { __typename?: 'AccountChargeEstimation' } & Pick<
-              AccountChargeEstimation,
-              'discountCodes'
-            > & {
-                subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-                charge: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-                discount: { __typename?: 'MonetaryAmountV2' } & Pick<
-                  MonetaryAmountV2,
-                  'amount' | 'currency'
-                >
-              }
-            entries: Array<
-              { __typename?: 'AccountEntry' } & Pick<
-                AccountEntry,
-                | 'id'
-                | 'fromDate'
-                | 'title'
-                | 'source'
-                | 'reference'
-                | 'type'
-                | 'failedAt'
-                | 'chargedAt'
-              > & {
-                  amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        account: Maybe<
+          { __typename?: 'Account' } & Pick<Account, 'id'> & {
+              currentBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+              chargeEstimation: {
+                __typename?: 'AccountChargeEstimation'
+              } & Pick<AccountChargeEstimation, 'discountCodes'> & {
+                  subscription: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  charge: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                  discount: { __typename?: 'MonetaryAmountV2' } & Pick<
                     MonetaryAmountV2,
                     'amount' | 'currency'
                   >
                 }
-            >
-          }
-      >
-    }
+              entries: Array<
+                { __typename?: 'AccountEntry' } & Pick<
+                  AccountEntry,
+                  | 'id'
+                  | 'fromDate'
+                  | 'title'
+                  | 'source'
+                  | 'reference'
+                  | 'type'
+                  | 'failedAt'
+                  | 'chargedAt'
+                > & {
+                    amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
+      }
   >
 }
 
@@ -1945,14 +1947,14 @@ export type GetContractMarketInfoQueryVariables = {
 
 export type GetContractMarketInfoQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      contractMarketInfo: Maybe<
-        { __typename?: 'ContractMarketInfo' } & Pick<
-          ContractMarketInfo,
-          'market' | 'preferredCurrency'
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        contractMarketInfo: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market' | 'preferredCurrency'
+          >
         >
-      >
-    }
+      }
   >
 }
 
@@ -2181,6 +2183,15 @@ export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
   >
 }
 
+export type SignQuoteForNewContractMutationVariables = {
+  quoteId: Scalars['ID']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type SignQuoteForNewContractMutation = {
+  __typename?: 'MutationType'
+} & { signQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
+
 export type TerminateContractMutationVariables = {
   contractId: Scalars['ID']
   request?: Maybe<TerminateContractInput>
@@ -2250,6 +2261,7 @@ export type UpsertItemCompanyMutation = { __typename?: 'MutationType' } & Pick<
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       firstName
       lastName
       contractMarketInfo {
@@ -3054,6 +3066,7 @@ export type CreateQuoteFromAgreementMutationOptions = ApolloReactCommon.BaseMuta
 export const GetAccountDocument = gql`
   query GetAccount($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       account {
         id
         currentBalance {
@@ -3225,6 +3238,7 @@ export type GetClaimItemsQueryResult = ApolloReactCommon.QueryResult<
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       contractMarketInfo {
         market
         preferredCurrency
@@ -3284,6 +3298,7 @@ export type GetContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
 export const GetContractsDocument = gql`
   query GetContracts($memberId: ID!) {
     member(id: $memberId) {
+      memberId
       contracts {
         id
         holderMemberId
@@ -3760,6 +3775,60 @@ export type RevertTerminationMutationResult = ApolloReactCommon.MutationResult<
 export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RevertTerminationMutation,
   RevertTerminationMutationVariables
+>
+export const SignQuoteForNewContractDocument = gql`
+  mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {
+    signQuoteForNewContract(
+      quoteId: $quoteId
+      activationDate: $activationDate
+    ) {
+      id
+    }
+  }
+`
+export type SignQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunction<
+  SignQuoteForNewContractMutation,
+  SignQuoteForNewContractMutationVariables
+>
+
+/**
+ * __useSignQuoteForNewContractMutation__
+ *
+ * To run a mutation, you first call `useSignQuoteForNewContractMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignQuoteForNewContractMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signQuoteForNewContractMutation, { data, loading, error }] = useSignQuoteForNewContractMutation({
+ *   variables: {
+ *      quoteId: // value for 'quoteId'
+ *      activationDate: // value for 'activationDate'
+ *   },
+ * });
+ */
+export function useSignQuoteForNewContractMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SignQuoteForNewContractMutation,
+    SignQuoteForNewContractMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SignQuoteForNewContractMutation,
+    SignQuoteForNewContractMutationVariables
+  >(SignQuoteForNewContractDocument, baseOptions)
+}
+export type SignQuoteForNewContractMutationHookResult = ReturnType<
+  typeof useSignQuoteForNewContractMutation
+>
+export type SignQuoteForNewContractMutationResult = ApolloReactCommon.MutationResult<
+  SignQuoteForNewContractMutation
+>
+export type SignQuoteForNewContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SignQuoteForNewContractMutation,
+  SignQuoteForNewContractMutationVariables
 >
 export const TerminateContractDocument = gql`
   mutation TerminateContract(
