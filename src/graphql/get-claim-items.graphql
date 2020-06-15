@@ -1,0 +1,27 @@
+query GetClaimItems($claimId: ID!) {
+  claimItems(claimId: $claimId) {
+    id
+    itemFamily {
+        id
+        displayName
+    }
+    itemType {
+        id
+        displayName
+    }
+    itemBrand {
+        id
+         displayName
+     }
+    itemModel {
+        id
+        displayName
+    }
+    dateOfPurchase
+    purchasePrice {
+      amount
+      currency
+    }
+    note
+  }
+}

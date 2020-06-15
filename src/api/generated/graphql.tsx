@@ -220,12 +220,6 @@ export type CampaignOwnerPartner = {
   partnerId: Scalars['String']
 }
 
-export type Category = {
-  __typename?: 'Category'
-  id: Scalars['String']
-  name: Scalars['String']
-}
-
 export type ChangeFromDateInput = {
   newFromDate: Scalars['LocalDate']
 }
@@ -293,6 +287,19 @@ export type ClaimInformationInput = {
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
   ticket?: Maybe<Scalars['String']>
+}
+
+export type ClaimItem = {
+  __typename?: 'ClaimItem'
+  id: Scalars['ID']
+  itemFamily: ItemFamily
+  itemType: ItemType
+  itemBrand?: Maybe<ItemBrand>
+  itemModel?: Maybe<ItemModel>
+  itemCompany?: Maybe<ItemCompany>
+  dateOfPurchase?: Maybe<Scalars['LocalDate']>
+  purchasePrice?: Maybe<MonetaryAmountV2>
+  note?: Maybe<Scalars['String']>
 }
 
 export type ClaimNote = {
@@ -528,29 +535,6 @@ export type FileUpload = {
   memberId?: Maybe<Scalars['ID']>
 }
 
-export type Filter = {
-  name: Scalars['String']
-  value: Scalars['String']
-}
-
-export type FilterOutput = {
-  __typename?: 'FilterOutput'
-  name: Scalars['String']
-  value: Scalars['String']
-}
-
-export type FilterPayload = {
-  filters: Array<Filter>
-  inventoryItemId: Scalars['ID']
-}
-
-export type FilterSuggestion = {
-  __typename?: 'FilterSuggestion'
-  name: Scalars['String']
-  items: Array<Scalars['String']>
-  others: Array<Scalars['String']>
-}
-
 export type FireDamageClaim = {
   __typename?: 'FireDamageClaim'
   location?: Maybe<Scalars['String']>
@@ -646,6 +630,10 @@ export type IndefinitePercentageDiscount = {
   percentageDiscount?: Maybe<Scalars['Float']>
 }
 
+export type InsertItemCategoriesInput = {
+  itemCategoriesString: Scalars['String']
+}
+
 export type InstallationsClaim = {
   __typename?: 'InstallationsClaim'
   date?: Maybe<Scalars['LocalDate']>
@@ -653,51 +641,72 @@ export type InstallationsClaim = {
   location?: Maybe<Scalars['String']>
 }
 
-export type InventoryItem = {
-  __typename?: 'InventoryItem'
-  inventoryItemId: Scalars['ID']
-  claimId: Scalars['String']
-  itemName: Scalars['String']
-  categoryName: Scalars['String']
-  categoryId: Scalars['String']
-  value: Scalars['Float']
-  source: Scalars['String']
-  upperRange?: Maybe<Scalars['Float']>
-  lowerRange?: Maybe<Scalars['Float']>
-  itemId?: Maybe<Scalars['String']>
-  filters?: Maybe<Array<Maybe<FilterOutput>>>
-}
-
-export type InventoryItemInput = {
-  inventoryItemId?: Maybe<Scalars['String']>
-  claimId: Scalars['String']
-  itemName: Scalars['String']
-  categoryName: Scalars['String']
-  categoryId: Scalars['String']
-  value: Scalars['Float']
-  source: Scalars['String']
-  upperRange?: Maybe<Scalars['Float']>
-  lowerRange?: Maybe<Scalars['Float']>
-  itemId?: Maybe<Scalars['String']>
-  filters?: Maybe<Array<Maybe<Filter>>>
-}
-
 export type IQuoteData = {
   id: Scalars['ID']
   householdSize?: Maybe<Scalars['Int']>
 }
 
-export type Item = {
-  __typename?: 'Item'
-  category: Scalars['String']
-  id: Scalars['String']
-  name: Scalars['String']
+export type ItemBrand = ItemCategoryCore & {
+  __typename?: 'ItemBrand'
+  id: Scalars['ID']
+  nextKind?: Maybe<ItemCategoryKind>
+  displayName: Scalars['String']
+  searchTerms: Scalars['String']
+  companyName: Scalars['String']
 }
 
-export type ItemSearch = {
-  __typename?: 'ItemSearch'
-  products: Array<Item>
-  suggestions: Array<FilterSuggestion>
+export type ItemCategory =
+  | ItemFamily
+  | ItemType
+  | ItemBrand
+  | ItemModel
+  | ItemCompany
+
+export type ItemCategoryCore = {
+  id: Scalars['ID']
+  nextKind?: Maybe<ItemCategoryKind>
+  displayName: Scalars['String']
+  searchTerms: Scalars['String']
+}
+
+export enum ItemCategoryKind {
+  Family = 'FAMILY',
+  Type = 'TYPE',
+  Brand = 'BRAND',
+  Model = 'MODEL',
+  Company = 'COMPANY',
+}
+
+export type ItemCompany = ItemCategoryCore & {
+  __typename?: 'ItemCompany'
+  id: Scalars['ID']
+  nextKind?: Maybe<ItemCategoryKind>
+  displayName: Scalars['String']
+  searchTerms: Scalars['String']
+}
+
+export type ItemFamily = ItemCategoryCore & {
+  __typename?: 'ItemFamily'
+  id: Scalars['ID']
+  nextKind?: Maybe<ItemCategoryKind>
+  displayName: Scalars['String']
+  searchTerms: Scalars['String']
+}
+
+export type ItemModel = ItemCategoryCore & {
+  __typename?: 'ItemModel'
+  id: Scalars['ID']
+  nextKind?: Maybe<ItemCategoryKind>
+  displayName: Scalars['String']
+  searchTerms: Scalars['String']
+}
+
+export type ItemType = ItemCategoryCore & {
+  __typename?: 'ItemType'
+  id: Scalars['ID']
+  nextKind?: Maybe<ItemCategoryKind>
+  displayName: Scalars['String']
+  searchTerms: Scalars['String']
 }
 
 export type LegalProtectionClaim = {
@@ -744,7 +753,7 @@ export type Member = {
   fileUploads: Array<FileUpload>
   person?: Maybe<Person>
   numberFailedCharges?: Maybe<NumberFailedCharges>
-  totalNumberOfClaims?: Maybe<Scalars['Int']>
+  totalNumberOfClaims: Scalars['Int']
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
@@ -803,8 +812,6 @@ export type MutationType = {
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
   setClaimFileCategory?: Maybe<Scalars['String']>
-  addInventoryItem?: Maybe<Scalars['Boolean']>
-  removeInventoryItem?: Maybe<Scalars['Boolean']>
   activateQuote: Quote
   addAgreementFromQuote: Quote
   /** Creates a quote from a product and returns the quote id */
@@ -823,6 +830,13 @@ export type MutationType = {
   regenerateCertificate: Scalars['ID']
   createQuoteForNewContract: Quote
   signQuoteForNewContract: Quote
+  upsertItemCompany: Scalars['ID']
+  upsertItemType: Scalars['ID']
+  upsertItemBrand: Scalars['ID']
+  upsertItemModel: Scalars['ID']
+  upsertClaimItem: Scalars['ID']
+  deleteClaimItem?: Maybe<Scalars['ID']>
+  insertItemCategories: Array<Scalars['Boolean']>
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
 }
 
@@ -944,14 +958,6 @@ export type MutationTypeSetClaimFileCategoryArgs = {
   category?: Maybe<Scalars['String']>
 }
 
-export type MutationTypeAddInventoryItemArgs = {
-  item: InventoryItemInput
-}
-
-export type MutationTypeRemoveInventoryItemArgs = {
-  inventoryItemId: Scalars['ID']
-}
-
 export type MutationTypeActivateQuoteArgs = {
   id: Scalars['ID']
   activationDate: Scalars['LocalDate']
@@ -1036,6 +1042,34 @@ export type MutationTypeCreateQuoteForNewContractArgs = {
 export type MutationTypeSignQuoteForNewContractArgs = {
   quoteId: Scalars['ID']
   activationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type MutationTypeUpsertItemCompanyArgs = {
+  request?: Maybe<UpsertItemCompanyInput>
+}
+
+export type MutationTypeUpsertItemTypeArgs = {
+  request?: Maybe<UpsertItemTypeInput>
+}
+
+export type MutationTypeUpsertItemBrandArgs = {
+  request?: Maybe<UpsertItemBrandInput>
+}
+
+export type MutationTypeUpsertItemModelArgs = {
+  request?: Maybe<UpsertItemModelInput>
+}
+
+export type MutationTypeUpsertClaimItemArgs = {
+  request?: Maybe<UpsertClaimItemInput>
+}
+
+export type MutationTypeDeleteClaimItemArgs = {
+  claimItemId: Scalars['ID']
+}
+
+export type MutationTypeInsertItemCategoriesArgs = {
+  request?: Maybe<InsertItemCategoriesInput>
 }
 
 export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
@@ -1169,15 +1203,8 @@ export type NumberFailedCharges = {
   lastFailedChargeAt?: Maybe<Scalars['Instant']>
 }
 
-export type Payload = {
-  category: Scalars['String']
-  query: Scalars['String']
-  filters: Array<Filter>
-}
-
 export type PaymentCompletionResponse = {
   __typename?: 'PaymentCompletionResponse'
-  member: Member
   url: Scalars['String']
 }
 
@@ -1194,7 +1221,7 @@ export type PaymentDefault = {
 
 export type Person = {
   __typename?: 'Person'
-  debtFlag?: Maybe<Scalars['String']>
+  debtFlag?: Maybe<Flag>
   debt?: Maybe<Debt>
   whitelisted?: Maybe<Whitelisted>
   status?: Maybe<PersonStatus>
@@ -1206,34 +1233,20 @@ export type PersonStatus = {
   whitelisted?: Maybe<Scalars['Boolean']>
 }
 
-export type PricePoint = {
-  __typename?: 'PricePoint'
-  id: Scalars['String']
-  itemId: Scalars['String']
-  date: Scalars['String']
-  lower: Scalars['Float']
-  mean: Scalars['Float']
-  upper: Scalars['Float']
-}
-
 export type QueryType = {
   __typename?: 'QueryType'
   monthlyPayments?: Maybe<Array<Maybe<MonthlySubscription>>>
   member?: Maybe<Member>
   claim?: Maybe<Claim>
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
-  categories?: Maybe<Array<Category>>
-  items: ItemSearch
-  prices: Array<PricePoint>
   ticket?: Maybe<Ticket>
   getFullTicketHistory?: Maybe<TicketHistory>
   tickets: Array<Ticket>
   getAnswerSuggestion: Array<Suggestion>
   me?: Maybe<Scalars['String']>
-  inventory: Array<Maybe<InventoryItem>>
-  filters: Array<FilterSuggestion>
-  inventoryItemFilters?: Maybe<Array<Maybe<FilterOutput>>>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  itemCategories: Array<ItemCategory>
+  claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
 }
@@ -1254,15 +1267,6 @@ export type QueryTypePaymentScheduleArgs = {
   status: ChargeStatus
 }
 
-export type QueryTypeItemsArgs = {
-  payload: Payload
-}
-
-export type QueryTypePricesArgs = {
-  date: Scalars['String']
-  ids: Array<Scalars['String']>
-}
-
 export type QueryTypeTicketArgs = {
   id: Scalars['ID']
 }
@@ -1279,16 +1283,13 @@ export type QueryTypeGetAnswerSuggestionArgs = {
   question?: Maybe<Scalars['String']>
 }
 
-export type QueryTypeInventoryArgs = {
+export type QueryTypeItemCategoriesArgs = {
+  kind: ItemCategoryKind
+  parentId?: Maybe<Scalars['ID']>
+}
+
+export type QueryTypeClaimItemsArgs = {
   claimId: Scalars['ID']
-}
-
-export type QueryTypeFiltersArgs = {
-  categoryId: Scalars['String']
-}
-
-export type QueryTypeInventoryItemFiltersArgs = {
-  inventoryItemId: Scalars['String']
 }
 
 export type QueryTypeFindPartnerCampaignsArgs = {
@@ -1409,11 +1410,11 @@ export type StormDamageClaim = {
 
 export type Suggestion = {
   __typename?: 'Suggestion'
+  allReplies: Array<AllRepliesEntry>
+  confidence: Scalars['Float']
   intent: Scalars['String']
   reply: Scalars['String']
   text: Scalars['String']
-  confidence: Scalars['Float']
-  allReplies: Array<AllRepliesEntry>
 }
 
 export type SwedishApartment = AgreementCore & {
@@ -1606,6 +1607,43 @@ export type TravelAccidentClaim = {
   date?: Maybe<Scalars['LocalDate']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
+}
+
+export type UpsertClaimItemInput = {
+  id?: Maybe<Scalars['ID']>
+  claimId: Scalars['ID']
+  itemFamilyId: Scalars['ID']
+  itemTypeId: Scalars['ID']
+  itemBrandId?: Maybe<Scalars['ID']>
+  itemModelId?: Maybe<Scalars['ID']>
+  dateOfPurchase?: Maybe<Scalars['LocalDate']>
+  purchasePriceAmount?: Maybe<Scalars['Float']>
+  purchasePriceCurrency?: Maybe<Scalars['String']>
+  note?: Maybe<Scalars['String']>
+}
+
+export type UpsertItemBrandInput = {
+  id?: Maybe<Scalars['ID']>
+  name: Scalars['String']
+  itemTypeId: Scalars['ID']
+  itemCompanyId: Scalars['ID']
+}
+
+export type UpsertItemCompanyInput = {
+  id?: Maybe<Scalars['ID']>
+  name: Scalars['String']
+}
+
+export type UpsertItemModelInput = {
+  id?: Maybe<Scalars['ID']>
+  name: Scalars['String']
+  itemBrandId: Scalars['ID']
+}
+
+export type UpsertItemTypeInput = {
+  id?: Maybe<Scalars['ID']>
+  name: Scalars['String']
+  itemFamilyId: Scalars['ID']
 }
 
 export type VerminAndPestsClaim = {
@@ -1861,6 +1899,40 @@ export type GetAccountQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetClaimItemsQueryVariables = {
+  claimId: Scalars['ID']
+}
+
+export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
+  claimItems: Array<
+    { __typename?: 'ClaimItem' } & Pick<
+      ClaimItem,
+      'id' | 'dateOfPurchase' | 'note'
+    > & {
+        itemFamily: { __typename?: 'ItemFamily' } & Pick<
+          ItemFamily,
+          'id' | 'displayName'
+        >
+        itemType: { __typename?: 'ItemType' } & Pick<
+          ItemType,
+          'id' | 'displayName'
+        >
+        itemBrand: Maybe<
+          { __typename?: 'ItemBrand' } & Pick<ItemBrand, 'id' | 'displayName'>
+        >
+        itemModel: Maybe<
+          { __typename?: 'ItemModel' } & Pick<ItemModel, 'id' | 'displayName'>
+        >
+        purchasePrice: Maybe<
+          { __typename?: 'MonetaryAmountV2' } & Pick<
+            MonetaryAmountV2,
+            'amount' | 'currency'
+          >
+        >
+      }
+  >
+}
+
 export type GetContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -2011,6 +2083,36 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetItemCategoriesQueryVariables = {
+  kind: ItemCategoryKind
+  parentId?: Maybe<Scalars['ID']>
+}
+
+export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
+  itemCategories: Array<
+    | ({ __typename?: 'ItemFamily' } & Pick<
+        ItemFamily,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+    | ({ __typename?: 'ItemType' } & Pick<
+        ItemType,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+    | ({ __typename?: 'ItemBrand' } & Pick<
+        ItemBrand,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+    | ({ __typename?: 'ItemModel' } & Pick<
+        ItemModel,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+    | ({ __typename?: 'ItemCompany' } & Pick<
+        ItemCompany,
+        'id' | 'displayName' | 'searchTerms' | 'nextKind'
+      >)
+  >
+}
+
 export type GetPartnerCampaignOwnersQueryVariables = {}
 
 export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
@@ -2093,6 +2195,60 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
     'id' | 'holderMemberId'
   >
 }
+
+export type DeleteClaimItemMutationVariables = {
+  claimItemId: Scalars['ID']
+}
+
+export type DeleteClaimItemMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'deleteClaimItem'
+>
+
+export type UpsertClaimItemMutationVariables = {
+  request?: Maybe<UpsertClaimItemInput>
+}
+
+export type UpsertClaimItemMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertClaimItem'
+>
+
+export type UpsertItemTypeMutationVariables = {
+  request?: Maybe<UpsertItemTypeInput>
+}
+
+export type UpsertItemTypeMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertItemType'
+>
+
+export type UpsertItemBrandMutationVariables = {
+  request?: Maybe<UpsertItemBrandInput>
+}
+
+export type UpsertItemBrandMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertItemBrand'
+>
+
+export type UpsertItemModelMutationVariables = {
+  request?: Maybe<UpsertItemModelInput>
+}
+
+export type UpsertItemModelMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertItemModel'
+>
+
+export type UpsertItemCompanyMutationVariables = {
+  request?: Maybe<UpsertItemCompanyInput>
+}
+
+export type UpsertItemCompanyMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'upsertItemCompany'
+>
 
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {
@@ -2945,6 +3101,84 @@ export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
   GetAccountQuery,
   GetAccountQueryVariables
 >
+export const GetClaimItemsDocument = gql`
+  query GetClaimItems($claimId: ID!) {
+    claimItems(claimId: $claimId) {
+      id
+      itemFamily {
+        id
+        displayName
+      }
+      itemType {
+        id
+        displayName
+      }
+      itemBrand {
+        id
+        displayName
+      }
+      itemModel {
+        id
+        displayName
+      }
+      dateOfPurchase
+      purchasePrice {
+        amount
+        currency
+      }
+      note
+    }
+  }
+`
+
+/**
+ * __useGetClaimItemsQuery__
+ *
+ * To run a query within a React component, call `useGetClaimItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimItemsQuery({
+ *   variables: {
+ *      claimId: // value for 'claimId'
+ *   },
+ * });
+ */
+export function useGetClaimItemsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimItemsQuery,
+    GetClaimItemsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetClaimItemsQuery,
+    GetClaimItemsQueryVariables
+  >(GetClaimItemsDocument, baseOptions)
+}
+export function useGetClaimItemsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimItemsQuery,
+    GetClaimItemsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimItemsQuery,
+    GetClaimItemsQueryVariables
+  >(GetClaimItemsDocument, baseOptions)
+}
+export type GetClaimItemsQueryHookResult = ReturnType<
+  typeof useGetClaimItemsQuery
+>
+export type GetClaimItemsLazyQueryHookResult = ReturnType<
+  typeof useGetClaimItemsLazyQuery
+>
+export type GetClaimItemsQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimItemsQuery,
+  GetClaimItemsQueryVariables
+>
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
@@ -3166,6 +3400,92 @@ export type GetContractsLazyQueryHookResult = ReturnType<
 export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
+>
+export const GetItemCategoriesDocument = gql`
+  query GetItemCategories($kind: ItemCategoryKind!, $parentId: ID) {
+    itemCategories(kind: $kind, parentId: $parentId) {
+      ... on ItemFamily {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+      ... on ItemType {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+      ... on ItemBrand {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+      ... on ItemModel {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+      ... on ItemCompany {
+        id
+        displayName
+        searchTerms
+        nextKind
+      }
+    }
+  }
+`
+
+/**
+ * __useGetItemCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetItemCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetItemCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetItemCategoriesQuery({
+ *   variables: {
+ *      kind: // value for 'kind'
+ *      parentId: // value for 'parentId'
+ *   },
+ * });
+ */
+export function useGetItemCategoriesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetItemCategoriesQuery,
+    GetItemCategoriesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetItemCategoriesQuery,
+    GetItemCategoriesQueryVariables
+  >(GetItemCategoriesDocument, baseOptions)
+}
+export function useGetItemCategoriesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetItemCategoriesQuery,
+    GetItemCategoriesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetItemCategoriesQuery,
+    GetItemCategoriesQueryVariables
+  >(GetItemCategoriesDocument, baseOptions)
+}
+export type GetItemCategoriesQueryHookResult = ReturnType<
+  typeof useGetItemCategoriesQuery
+>
+export type GetItemCategoriesLazyQueryHookResult = ReturnType<
+  typeof useGetItemCategoriesLazyQuery
+>
+export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
+  GetItemCategoriesQuery,
+  GetItemCategoriesQueryVariables
 >
 export const GetPartnerCampaignOwnersDocument = gql`
   query GetPartnerCampaignOwners {
@@ -3509,6 +3829,294 @@ export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOpt
   TerminateContractMutation,
   TerminateContractMutationVariables
 >
+export const DeleteClaimItemDocument = gql`
+  mutation DeleteClaimItem($claimItemId: ID!) {
+    deleteClaimItem(claimItemId: $claimItemId)
+  }
+`
+export type DeleteClaimItemMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteClaimItemMutation,
+  DeleteClaimItemMutationVariables
+>
+
+/**
+ * __useDeleteClaimItemMutation__
+ *
+ * To run a mutation, you first call `useDeleteClaimItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteClaimItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteClaimItemMutation, { data, loading, error }] = useDeleteClaimItemMutation({
+ *   variables: {
+ *      claimItemId: // value for 'claimItemId'
+ *   },
+ * });
+ */
+export function useDeleteClaimItemMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteClaimItemMutation,
+    DeleteClaimItemMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DeleteClaimItemMutation,
+    DeleteClaimItemMutationVariables
+  >(DeleteClaimItemDocument, baseOptions)
+}
+export type DeleteClaimItemMutationHookResult = ReturnType<
+  typeof useDeleteClaimItemMutation
+>
+export type DeleteClaimItemMutationResult = ApolloReactCommon.MutationResult<
+  DeleteClaimItemMutation
+>
+export type DeleteClaimItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteClaimItemMutation,
+  DeleteClaimItemMutationVariables
+>
+export const UpsertClaimItemDocument = gql`
+  mutation UpsertClaimItem($request: UpsertClaimItemInput) {
+    upsertClaimItem(request: $request)
+  }
+`
+export type UpsertClaimItemMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertClaimItemMutation,
+  UpsertClaimItemMutationVariables
+>
+
+/**
+ * __useUpsertClaimItemMutation__
+ *
+ * To run a mutation, you first call `useUpsertClaimItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertClaimItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertClaimItemMutation, { data, loading, error }] = useUpsertClaimItemMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertClaimItemMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertClaimItemMutation,
+    UpsertClaimItemMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertClaimItemMutation,
+    UpsertClaimItemMutationVariables
+  >(UpsertClaimItemDocument, baseOptions)
+}
+export type UpsertClaimItemMutationHookResult = ReturnType<
+  typeof useUpsertClaimItemMutation
+>
+export type UpsertClaimItemMutationResult = ApolloReactCommon.MutationResult<
+  UpsertClaimItemMutation
+>
+export type UpsertClaimItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertClaimItemMutation,
+  UpsertClaimItemMutationVariables
+>
+export const UpsertItemTypeDocument = gql`
+  mutation UpsertItemType($request: UpsertItemTypeInput) {
+    upsertItemType(request: $request)
+  }
+`
+export type UpsertItemTypeMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertItemTypeMutation,
+  UpsertItemTypeMutationVariables
+>
+
+/**
+ * __useUpsertItemTypeMutation__
+ *
+ * To run a mutation, you first call `useUpsertItemTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertItemTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertItemTypeMutation, { data, loading, error }] = useUpsertItemTypeMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertItemTypeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertItemTypeMutation,
+    UpsertItemTypeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertItemTypeMutation,
+    UpsertItemTypeMutationVariables
+  >(UpsertItemTypeDocument, baseOptions)
+}
+export type UpsertItemTypeMutationHookResult = ReturnType<
+  typeof useUpsertItemTypeMutation
+>
+export type UpsertItemTypeMutationResult = ApolloReactCommon.MutationResult<
+  UpsertItemTypeMutation
+>
+export type UpsertItemTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertItemTypeMutation,
+  UpsertItemTypeMutationVariables
+>
+export const UpsertItemBrandDocument = gql`
+  mutation UpsertItemBrand($request: UpsertItemBrandInput) {
+    upsertItemBrand(request: $request)
+  }
+`
+export type UpsertItemBrandMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertItemBrandMutation,
+  UpsertItemBrandMutationVariables
+>
+
+/**
+ * __useUpsertItemBrandMutation__
+ *
+ * To run a mutation, you first call `useUpsertItemBrandMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertItemBrandMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertItemBrandMutation, { data, loading, error }] = useUpsertItemBrandMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertItemBrandMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertItemBrandMutation,
+    UpsertItemBrandMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertItemBrandMutation,
+    UpsertItemBrandMutationVariables
+  >(UpsertItemBrandDocument, baseOptions)
+}
+export type UpsertItemBrandMutationHookResult = ReturnType<
+  typeof useUpsertItemBrandMutation
+>
+export type UpsertItemBrandMutationResult = ApolloReactCommon.MutationResult<
+  UpsertItemBrandMutation
+>
+export type UpsertItemBrandMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertItemBrandMutation,
+  UpsertItemBrandMutationVariables
+>
+export const UpsertItemModelDocument = gql`
+  mutation UpsertItemModel($request: UpsertItemModelInput) {
+    upsertItemModel(request: $request)
+  }
+`
+export type UpsertItemModelMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertItemModelMutation,
+  UpsertItemModelMutationVariables
+>
+
+/**
+ * __useUpsertItemModelMutation__
+ *
+ * To run a mutation, you first call `useUpsertItemModelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertItemModelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertItemModelMutation, { data, loading, error }] = useUpsertItemModelMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertItemModelMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertItemModelMutation,
+    UpsertItemModelMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertItemModelMutation,
+    UpsertItemModelMutationVariables
+  >(UpsertItemModelDocument, baseOptions)
+}
+export type UpsertItemModelMutationHookResult = ReturnType<
+  typeof useUpsertItemModelMutation
+>
+export type UpsertItemModelMutationResult = ApolloReactCommon.MutationResult<
+  UpsertItemModelMutation
+>
+export type UpsertItemModelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertItemModelMutation,
+  UpsertItemModelMutationVariables
+>
+export const UpsertItemCompanyDocument = gql`
+  mutation UpsertItemCompany($request: UpsertItemCompanyInput) {
+    upsertItemCompany(request: $request)
+  }
+`
+export type UpsertItemCompanyMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertItemCompanyMutation,
+  UpsertItemCompanyMutationVariables
+>
+
+/**
+ * __useUpsertItemCompanyMutation__
+ *
+ * To run a mutation, you first call `useUpsertItemCompanyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertItemCompanyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertItemCompanyMutation, { data, loading, error }] = useUpsertItemCompanyMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertItemCompanyMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertItemCompanyMutation,
+    UpsertItemCompanyMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpsertItemCompanyMutation,
+    UpsertItemCompanyMutationVariables
+  >(UpsertItemCompanyDocument, baseOptions)
+}
+export type UpsertItemCompanyMutationHookResult = ReturnType<
+  typeof useUpsertItemCompanyMutation
+>
+export type UpsertItemCompanyMutationResult = ApolloReactCommon.MutationResult<
+  UpsertItemCompanyMutation
+>
+export type UpsertItemCompanyMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertItemCompanyMutation,
+  UpsertItemCompanyMutationVariables
+>
 
 export interface IntrospectionResultData {
   __schema: {
@@ -3665,6 +4273,48 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'TestClaim',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'ItemCategory',
+        possibleTypes: [
+          {
+            name: 'ItemFamily',
+          },
+          {
+            name: 'ItemType',
+          },
+          {
+            name: 'ItemBrand',
+          },
+          {
+            name: 'ItemModel',
+          },
+          {
+            name: 'ItemCompany',
+          },
+        ],
+      },
+      {
+        kind: 'INTERFACE',
+        name: 'ItemCategoryCore',
+        possibleTypes: [
+          {
+            name: 'ItemFamily',
+          },
+          {
+            name: 'ItemType',
+          },
+          {
+            name: 'ItemBrand',
+          },
+          {
+            name: 'ItemModel',
+          },
+          {
+            name: 'ItemCompany',
           },
         ],
       },

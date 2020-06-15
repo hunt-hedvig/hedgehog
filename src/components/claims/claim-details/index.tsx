@@ -1,7 +1,8 @@
 import Grid from '@material-ui/core/Grid'
 import { ClaimNote, ClaimTranscription, QueryType } from 'api/generated/graphql'
+import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import ChatPane from 'components/member/tabs/ChatPane.js'
-import * as React from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { Mount } from 'react-lifecycle-components/dist'
 import { Prompt } from 'react-router'
@@ -16,7 +17,6 @@ import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimTranscriptions } from './components/ClaimTranscriptions'
 import { ClaimTypeForm } from './components/ClaimType'
 import { FileUpload } from './components/FileUpload'
-import { ClaimItemDatabase } from './components/inventory/ClaimItemDatabase'
 import { MemberInformation } from './components/MemberInformation'
 import { CLAIM_PAGE_QUERY } from './data'
 
@@ -111,10 +111,12 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                       />
                     )}
                   </Grid>
-                  <ClaimItemDatabase
-                    type={type}
-                    claimId={props.match.params.claimId}
-                  />
+                  <Grid item xs={12}>
+                    <ClaimItems
+                      claimId={props.match.params.claimId}
+                      memberId={member?.memberId ?? null}
+                    />
+                  </Grid>
                   <Grid item xs={12}>
                     {payments && member && (
                       <ClaimPayments
