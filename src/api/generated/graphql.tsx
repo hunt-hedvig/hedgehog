@@ -1911,14 +1911,17 @@ export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
     > & {
         itemFamily: { __typename?: 'ItemFamily' } & Pick<
           ItemFamily,
-          'displayName'
+          'id' | 'displayName'
         >
-        itemType: { __typename?: 'ItemType' } & Pick<ItemType, 'displayName'>
+        itemType: { __typename?: 'ItemType' } & Pick<
+          ItemType,
+          'id' | 'displayName'
+        >
         itemBrand: Maybe<
-          { __typename?: 'ItemBrand' } & Pick<ItemBrand, 'displayName'>
+          { __typename?: 'ItemBrand' } & Pick<ItemBrand, 'id' | 'displayName'>
         >
         itemModel: Maybe<
-          { __typename?: 'ItemModel' } & Pick<ItemModel, 'displayName'>
+          { __typename?: 'ItemModel' } & Pick<ItemModel, 'id' | 'displayName'>
         >
         purchasePrice: Maybe<
           { __typename?: 'MonetaryAmountV2' } & Pick<
@@ -3103,15 +3106,19 @@ export const GetClaimItemsDocument = gql`
     claimItems(claimId: $claimId) {
       id
       itemFamily {
+        id
         displayName
       }
       itemType {
+        id
         displayName
       }
       itemBrand {
+        id
         displayName
       }
       itemModel {
+        id
         displayName
       }
       dateOfPurchase
