@@ -1,13 +1,13 @@
 import { Typography } from '@material-ui/core'
 import { ItemCategoryKind } from 'api/generated/graphql'
 import React from 'react'
+import { ChevronDoubleRight, ChevronRight } from 'react-bootstrap-icons'
 import { SelectedItemCategory } from './CategorySelect'
 import {
   Bold,
+  ChevronRightWrapper,
   CurrentChip,
-  MultipleArrowsRight,
   PreviousChip,
-  SmallArrowRight,
   UpcomingChip,
 } from './styles'
 
@@ -75,7 +75,9 @@ export const CategoryChain: React.FC<{
           return (
             <React.Fragment key={id}>
               <PreviousChip variant="outlined" label={displayName} />
-              <SmallArrowRight />
+              <ChevronRightWrapper>
+                <ChevronRight />
+              </ChevronRightWrapper>
             </React.Fragment>
           )
         })}
@@ -83,7 +85,9 @@ export const CategoryChain: React.FC<{
         {remainingTypes.map((type) => {
           return (
             <React.Fragment key={type}>
-              <MultipleArrowsRight />
+              <ChevronRightWrapper>
+                <ChevronDoubleRight />
+              </ChevronRightWrapper>
               <UpcomingChip variant="outlined" label={capitalize(type) + 's'} />
             </React.Fragment>
           )

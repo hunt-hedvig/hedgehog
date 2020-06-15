@@ -79,9 +79,9 @@ export const ItemForm: React.FC<{
         </Grid>
         <Grid item style={{ width: '16.5%' }}>
           <Grid container spacing={0}>
-            <Grid item style={{ width: '60%' }}>
+            <Grid item style={{ width: '50%' }}>
               <TextField
-                placeholder={'Purchase price'}
+                placeholder={'Price'}
                 error={!validPurchasePrice}
                 value={purchasePrice}
                 helperText={!validPurchasePrice && 'Only numbers'}
@@ -89,7 +89,7 @@ export const ItemForm: React.FC<{
                 fullWidth
               />
             </Grid>
-            <Grid item style={{ width: '40%', marginTop: '-1px' }}>
+            <Grid item style={{ width: '50%', marginTop: '-1px' }}>
               <CurrencySelect
                 error={!validPurchasePrice}
                 value={purchasePriceCurrency}

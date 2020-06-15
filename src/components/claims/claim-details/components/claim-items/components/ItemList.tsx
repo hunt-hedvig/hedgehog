@@ -18,9 +18,10 @@ import {
 import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
 import React from 'react'
-import { Trash } from 'react-bootstrap-icons'
+import { ChevronRight, Trash } from 'react-bootstrap-icons'
+import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
-import { SmallArrowRight, TrashIconWrapper } from './styles'
+import { ChevronRightWrapper, TrashIconWrapper } from './styles'
 
 const TableCell = withStyles({
   root: {
@@ -28,8 +29,12 @@ const TableCell = withStyles({
   },
 })(MuiTableCell)
 
+const NotSpecifiedLabel = styled(Typography)`
+  color: ${({ theme }) => theme.accentBackground};
+`
+
 const NotSpecified: React.FC = () => (
-  <Typography style={{ color: '#aaa' }}>Not specified</Typography>
+  <NotSpecifiedLabel>Not specified</NotSpecifiedLabel>
 )
 
 export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
@@ -96,16 +101,25 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
             <TableRow key={item.id}>
               <TableCell>
                 {item.itemFamily.displayName}
-                <SmallArrowRight />
+                <ChevronRightWrapper>
+                  <ChevronRight />
+                </ChevronRightWrapper>
+
                 {item.itemType.displayName}
                 {item.itemBrand && (
                   <>
-                    <SmallArrowRight /> {item.itemBrand.displayName}
+                    <ChevronRightWrapper>
+                      <ChevronRight />
+                    </ChevronRightWrapper>
+                    {item.itemBrand.displayName}
                   </>
                 )}
                 {item.itemModel && (
                   <>
-                    <SmallArrowRight /> {item.itemModel.displayName}
+                    <ChevronRightWrapper>
+                      <ChevronRight />
+                    </ChevronRightWrapper>{' '}
+                    {item.itemModel.displayName}
                   </>
                 )}
               </TableCell>

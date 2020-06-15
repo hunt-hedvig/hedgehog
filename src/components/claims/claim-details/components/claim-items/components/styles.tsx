@@ -1,7 +1,4 @@
-import { Chip, Select, withStyles } from '@material-ui/core'
-import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-import CallSplitIcon from '@material-ui/icons/CallSplit'
-import TodayIcon from '@material-ui/icons/Today'
+import { Chip, Select } from '@material-ui/core'
 import styled from 'react-emotion'
 import CreatableSelect from 'react-select/creatable'
 
@@ -86,32 +83,12 @@ export const PreviousChip = styled(Chip)`
 };
 `
 
-export const MultipleArrowsRight = styled(CallSplitIcon)`
-  margin-bottom: -6px;
+export const ChevronRightWrapper = styled.span`
   margin-right: 3px;
   margin-left: 3px;
   color: ${({ theme }) => theme.foreground};
-  transform: rotate(90deg);
-  font-size: medium;
-`
-
-export const SmallArrowRight = styled(ArrowRightIcon)`
-  margin-bottom: -5px;
-  margin-right: 3px;
-  margin-left: 3px;
-  color: ${({ theme }) => theme.foreground};
-  font-size: medium;
-`
-
-export const DateIcon = withStyles({
-  root: {
-    fontSize: '1.2rem',
-    color: '#555',
-  },
-})(TodayIcon)
-
-export const DateIconWrapper = styled.span`
-  color: ${({ theme }) => theme.danger};
+  font-size: 0.68rem;
+  font-weight: 500;
 `
 
 export const TrashIconWrapper = styled.span`
