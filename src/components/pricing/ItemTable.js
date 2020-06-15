@@ -1,8 +1,8 @@
 import { GET_PRICES } from 'features/pricing/queries'
-import { formatMoney } from 'lib/intl'
 import React from 'react'
 import { Query } from 'react-apollo'
 import { Label, Table } from 'semantic-ui-react'
+import { formatMoney } from 'utils/money';
 
 export class ItemTable extends React.Component {
   handlePriceData = (data) => {
@@ -45,10 +45,7 @@ export class ItemTable extends React.Component {
 
   getPriceString = (prices, row, property) => {
     return row.id in prices
-      ? formatMoney(
-          'sv-SE',
-          0,
-        )({
+      ? formatMoney({
           amount: Math.max(prices[row.id][property], 0),
           currency: 'SEK',
         })
