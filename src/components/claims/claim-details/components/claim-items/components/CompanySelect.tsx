@@ -14,9 +14,8 @@ import {
 import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import { useUpsertItemCompanyOptions } from 'graphql/use-upsert-item-category'
 import React from 'react'
-import CreatableSelect from 'react-select/creatable'
 import { ItemCompanySelection } from './CategoryDialog'
-import { Bold, categorySelectStyle } from './styles'
+import { Bold, StyledCreatableSelect } from './styles'
 
 export const CompanySelect: React.FC<{
   itemCompany: ItemCompanySelection | null
@@ -44,9 +43,9 @@ export const CompanySelect: React.FC<{
           margin: '0 auto',
         }}
       >
-        <CreatableSelect
+        <StyledCreatableSelect
+          classNamePrefix="custom-select"
           closeMenuOnSelect={true}
-          styles={categorySelectStyle}
           value={itemCompany}
           onChange={(option) => setItemCompany(option)}
           options={itemCompanies.map(({ id, displayName }) => {

@@ -3,6 +3,7 @@ import { ItemCategoryKind } from 'api/generated/graphql'
 import React from 'react'
 import { SelectedItemCategory } from './CategorySelect'
 import {
+  Bold,
   CurrentChip,
   MultipleArrowsRight,
   PreviousChip,
@@ -19,7 +20,7 @@ const getTypeInfoSentence = (remainingTypes: string[]) => {
     return (
       <>
         which will be able to append
-        <span style={{ fontWeight: 500 }}>{' ' + remainingTypes[0]}s</span>.
+        <Bold>{' ' + remainingTypes[0]}s</Bold>.
       </>
     )
   }
@@ -27,15 +28,15 @@ const getTypeInfoSentence = (remainingTypes: string[]) => {
   return (
     <>
       which will be able to append
-      <span style={{ fontWeight: 500 }}>
+      <Bold>
         {' ' +
           remainingTypes
             .slice(0, -1)
             .map((type) => ` ${type}s`)
             .join(', ')}
-      </span>
+      </Bold>
       {' and '}
-      <span style={{ fontWeight: 500 }}>{remainingTypes.slice(-1) + 's.'}</span>
+      <Bold>{remainingTypes.slice(-1) + 's.'}</Bold>
     </>
   )
 }
@@ -63,8 +64,7 @@ export const CategoryChain: React.FC<{
   return (
     <>
       <Typography align={'center'} style={{ marginTop: '5px' }}>
-        You are about to create the {currentType}{' '}
-        <span style={{ fontWeight: 500 }}>{suggestion}</span>
+        You are about to create the {currentType} <Bold>{suggestion}</Bold>
         {!existsMoreTypes && '.'}
       </Typography>
       <Typography align={'center'} style={{ marginTop: '1px' }}>
