@@ -7,11 +7,12 @@ type Money =
       currency: string
     }
 
-export const formatMoney = (amount: Money): string =>
-  Math.round(
-    typeof amount.amount === 'string'
-      ? parseInt(amount.amount, 10)
-      : amount.amount,
-  ) +
+export const formatMoney = (
+  amount: Money,
+  options: Intl.NumberFormatOptions | null = null,
+): string =>
+  (options
+    ? Number(amount.amount).toLocaleString(undefined, options)
+    : amount.amount) +
   ' ' +
   amount.currency

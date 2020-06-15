@@ -1,0 +1,34 @@
+query GetItemCategories($kind: ItemCategoryKind!, $parentId: ID) {
+  itemCategories(kind: $kind, parentId: $parentId) {
+    ... on ItemFamily {
+      id
+      displayName
+      searchTerms
+      nextKind
+    }
+    ... on ItemType {
+      id
+      displayName
+      searchTerms
+      nextKind
+    }
+    ... on ItemBrand {
+      id
+      displayName
+      searchTerms
+      nextKind
+    }
+    ... on ItemModel {
+      id
+      displayName
+      searchTerms
+      nextKind
+    }
+    ... on ItemCompany {
+      id
+      displayName
+      searchTerms
+      nextKind
+    }
+  }
+}

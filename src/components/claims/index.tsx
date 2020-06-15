@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Mount } from 'react-lifecycle-components/dist'
 import { Header } from 'semantic-ui-react'
 import { ClaimSearchFilter, ClaimsStore } from '../../store/types/claimsTypes'
