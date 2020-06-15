@@ -110,13 +110,13 @@ export const ItemForm: React.FC<{
             error={!isValidDate(dateOfPurchase)}
             helperText={!isValidDate(dateOfPurchase) && 'Invalid date'}
             onChange={({ target: { value } }) => setDateOfPurchase(value)}
-            onBlur={() => {
-              !isValidDate(dateOfPurchase)
+            onBlur={() =>
+              dateOfPurchase === '' || !isValidDate(dateOfPurchase)
                 ? setDateOfPurchase('')
                 : setDateOfPurchase(
                     format(parseISO(dateOfPurchase), 'yyyy-MM-dd'),
                   )
-            }}
+            }
             placeholder="Purchase date"
           />
         </Grid>
