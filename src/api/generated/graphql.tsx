@@ -1705,6 +1705,14 @@ export type MemberNameAndContractMarketInfoQuery = {
   >
 }
 
+export type InsertItemCategoriesMutationVariables = {
+  request?: Maybe<InsertItemCategoriesInput>
+}
+
+export type InsertItemCategoriesMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'insertItemCategories'>
+
 export type AddNorwegainPostalCodesMutationVariables = {
   postalCodesString?: Maybe<Scalars['String']>
 }
@@ -2310,6 +2318,54 @@ export type MemberNameAndContractMarketInfoLazyQueryHookResult = ReturnType<
 export type MemberNameAndContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
   MemberNameAndContractMarketInfoQuery,
   MemberNameAndContractMarketInfoQueryVariables
+>
+export const InsertItemCategoriesDocument = gql`
+  mutation InsertItemCategories($request: InsertItemCategoriesInput) {
+    insertItemCategories(request: $request)
+  }
+`
+export type InsertItemCategoriesMutationFn = ApolloReactCommon.MutationFunction<
+  InsertItemCategoriesMutation,
+  InsertItemCategoriesMutationVariables
+>
+
+/**
+ * __useInsertItemCategoriesMutation__
+ *
+ * To run a mutation, you first call `useInsertItemCategoriesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertItemCategoriesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertItemCategoriesMutation, { data, loading, error }] = useInsertItemCategoriesMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useInsertItemCategoriesMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    InsertItemCategoriesMutation,
+    InsertItemCategoriesMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    InsertItemCategoriesMutation,
+    InsertItemCategoriesMutationVariables
+  >(InsertItemCategoriesDocument, baseOptions)
+}
+export type InsertItemCategoriesMutationHookResult = ReturnType<
+  typeof useInsertItemCategoriesMutation
+>
+export type InsertItemCategoriesMutationResult = ApolloReactCommon.MutationResult<
+  InsertItemCategoriesMutation
+>
+export type InsertItemCategoriesMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InsertItemCategoriesMutation,
+  InsertItemCategoriesMutationVariables
 >
 export const AddNorwegainPostalCodesDocument = gql`
   mutation AddNorwegainPostalCodes($postalCodesString: String) {

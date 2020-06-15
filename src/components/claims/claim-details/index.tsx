@@ -6,9 +6,9 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import { Mount } from 'react-lifecycle-components/dist'
 import { Prompt } from 'react-router'
-// @ts-ignore
-import { CreateTicketStandAlone } from '../../../components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 import { MemberHistoryContext } from '../../../utils/member-history'
+// @ts-ignore
+import { CreateTicketStandAlone } from '../../tickets/ticket/create-ticket/create-ticket-stand-alone'
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimFileTable } from './components/ClaimFileTable'
 import { ClaimInformation } from './components/ClaimInformation'
@@ -52,7 +52,6 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                 state,
                 notes,
                 transcriptions,
-
                 events,
                 payments,
                 reserves,

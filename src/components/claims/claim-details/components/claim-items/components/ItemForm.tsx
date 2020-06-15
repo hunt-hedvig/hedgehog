@@ -3,7 +3,7 @@ import {
   UpsertClaimItemInput,
   useUpsertClaimItemMutation,
 } from 'api/generated/graphql'
-import { isAfter, isValid, parseISO } from 'date-fns'
+import { format, isAfter, isValid, parseISO } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import React from 'react'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
@@ -12,9 +12,7 @@ import { CurrencySelect } from './styles'
 const isValidDate = (date: string) =>
   date === ''
     ? true
-    : isValid(parseISO(date)) &&
-      date.length === 10 &&
-      !isAfter(parseISO(date), new Date())
+    : isValid(parseISO(date)) && !isAfter(parseISO(date), new Date())
 
 export const ItemForm: React.FC<{
   claimId: string
@@ -112,9 +110,14 @@ export const ItemForm: React.FC<{
             error={!isValidDate(dateOfPurchase)}
             helperText={!isValidDate(dateOfPurchase) && 'Invalid date'}
             onChange={({ target: { value } }) => setDateOfPurchase(value)}
-            onBlur={() => !isValidDate(dateOfPurchase) && setDateOfPurchase('')}
+            onBlur={() =>
+              dateOfPurchase === '' || !isValidDate(dateOfPurchase)
+                ? setDateOfPurchase('')
+                : setDateOfPurchase(
+                    format(parseISO(dateOfPurchase), 'yyyy-MM-dd'),
+                  )
+            }
             placeholder="Purchase date"
-            style={{ padding: 0 }}
           />
         </Grid>
         <Grid item xs={true}>
