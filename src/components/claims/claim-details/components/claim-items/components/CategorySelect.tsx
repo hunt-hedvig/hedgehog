@@ -1,10 +1,9 @@
 import { ItemCategoryKind } from 'api/generated/graphql'
 import { useGetItemCategories } from 'graphql/use-get-item-categories'
-import * as React from 'react'
+import React from 'react'
 import { components } from 'react-select'
-import CreatableSelect from 'react-select/creatable'
 import { CategoryDialog } from './CategoryDialog'
-import { categorySelectStyle } from './styles'
+import { Placeholder, StyledCreatableSelect } from './styles'
 
 const SelectItemCategoriesPlaceholder = (props) => {
   const [selectedOptions, rawInput] = props.children
@@ -16,7 +15,7 @@ const SelectItemCategoriesPlaceholder = (props) => {
       {selectedOptions}
       {rawInput}
       {showPlaceholder && (
-        <div style={{ color: '#919191' }}>{props.selectProps.placeholder}</div>
+        <Placeholder>{props.selectProps.placeholder}</Placeholder>
       )}
     </components.ValueContainer>
   )
@@ -92,7 +91,8 @@ export const CategorySelect: React.FC<{
           selectedItemCategories={selectedItemCategories}
         />
       )}
-      <CreatableSelect
+      <StyledCreatableSelect
+        classNamePrefix="custom-select"
         closeMenuOnSelect={false}
         isMulti
         placeholder={
@@ -102,7 +102,6 @@ export const CategorySelect: React.FC<{
         }
         components={{ ValueContainer: SelectItemCategoriesPlaceholder }}
         filterOption={customFilter}
-        styles={categorySelectStyle}
         onCreateOption={(suggestion) => {
           setCreatableInput(suggestion)
           setDialogIsOpen(true)

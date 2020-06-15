@@ -18,7 +18,7 @@ import {
   useUpsertItemModelOptions,
   useUpsertItemTypeOptions,
 } from 'graphql/use-upsert-item-category'
-import * as React from 'react'
+import React from 'react'
 import { CategoryChain } from './CategoryChain'
 import { SelectedItemCategory } from './CategorySelect'
 import { CompanySelect } from './CompanySelect'

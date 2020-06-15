@@ -13,10 +13,9 @@ import {
 } from 'api/generated/graphql'
 import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import { useUpsertItemCompanyOptions } from 'graphql/use-upsert-item-category'
-import * as React from 'react'
-import CreatableSelect from 'react-select/creatable'
+import React from 'react'
 import { ItemCompanySelection } from './CategoryDialog'
-import { categorySelectStyle } from './styles'
+import { Bold, StyledCreatableSelect } from './styles'
 
 export const CompanySelect: React.FC<{
   itemCompany: ItemCompanySelection | null
@@ -34,8 +33,7 @@ export const CompanySelect: React.FC<{
   return (
     <>
       <Typography align={'center'} style={{ marginTop: '30px' }}>
-        Please select an associated{' '}
-        <span style={{ fontWeight: 500 }}>company</span>
+        Please select an associated <Bold>company</Bold>
       </Typography>
       <div
         style={{
@@ -45,9 +43,9 @@ export const CompanySelect: React.FC<{
           margin: '0 auto',
         }}
       >
-        <CreatableSelect
+        <StyledCreatableSelect
+          classNamePrefix="custom-select"
           closeMenuOnSelect={true}
-          styles={categorySelectStyle}
           value={itemCompany}
           onChange={(option) => setItemCompany(option)}
           options={itemCompanies.map(({ id, displayName }) => {
@@ -70,9 +68,8 @@ export const CompanySelect: React.FC<{
         <DialogContent>
           <DialogContentText>
             The company 
-            <span style={{ fontWeight: 500 }}>{proposedCompany}</span> does not
-            exist, and will therefore be created and added{' '}
-            <span style={{ fontWeight: 500 }}>permanently</span>.
+            <Bold>{proposedCompany}</Bold> does not exist, and will therefore be
+            created and added <Bold>permanently</Bold>.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

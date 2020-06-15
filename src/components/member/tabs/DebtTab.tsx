@@ -1,6 +1,7 @@
 import { colors } from '@hedviginsurance/brand'
 import { ContractMarketInfo, Market } from 'api/generated/graphql'
 import gql from 'graphql-tag'
+import { dateTimeFormatter, MonetaryAmount } from 'lib/helpers'
 import * as React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import styled from 'react-emotion'
@@ -8,15 +9,14 @@ import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import { Table } from 'semantic-ui-react'
 import actions from 'store/actions'
-import { dateTimeFormatter, MonetaryAmount } from '../../../lib/helpers'
-import { formatMoneySE } from '../../../lib/intl'
+import { formatMoney } from 'utils/money'
 
 const query = gql`
   query PersonQuery($memberId: ID!) {
     member(id: $memberId) {
       memberId
       person {
-        personFlags
+        debtFlag
         status {
           flag
           whitelisted
@@ -96,7 +96,7 @@ const PaymentDefaultsTable: React.FunctionComponent<PaymentDefaultsTableProps> =
           <Table.Row key={paymentDefault.caseId}>
             <Table.Cell>{paymentDefault.year}</Table.Cell>
             <Table.Cell>{paymentDefault.paymentDefaultTypeText}</Table.Cell>
-            <Table.Cell>{formatMoneySE(paymentDefault.amount)}</Table.Cell>
+            <Table.Cell>{formatMoney(paymentDefault.amount)}</Table.Cell>
             <Table.Cell>{paymentDefault.claimant}</Table.Cell>
           </Table.Row>
         ))}
@@ -177,9 +177,9 @@ const OverallDebtProfileTable: React.FunctionComponent<OverallDebtProfileTablePr
     </Table.Header>
     <Table.Body>
       <Table.Row>
-        <Table.Cell>{formatMoneySE(debt.totalAmountPublicDebt)}</Table.Cell>
+        <Table.Cell>{formatMoney(debt.totalAmountPublicDebt)}</Table.Cell>
         <Table.Cell>{debt.numberPublicDebts}</Table.Cell>
-        <Table.Cell>{formatMoneySE(debt.totalAmountPrivateDebt)}</Table.Cell>
+        <Table.Cell>{formatMoney(debt.totalAmountPrivateDebt)}</Table.Cell>
         <Table.Cell>{debt.numberPrivateDebts}</Table.Cell>
         <Table.Cell>
           {dateTimeFormatter(debt.fromDateTime, 'yyyy-MM-dd')}

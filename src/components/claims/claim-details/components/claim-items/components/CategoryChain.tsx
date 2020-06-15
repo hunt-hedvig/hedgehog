@@ -1,12 +1,13 @@
 import { Typography } from '@material-ui/core'
 import { ItemCategoryKind } from 'api/generated/graphql'
-import * as React from 'react'
+import React from 'react'
+import { ChevronDoubleRight, ChevronRight } from 'react-bootstrap-icons'
 import { SelectedItemCategory } from './CategorySelect'
 import {
+  Bold,
+  ChevronRightWrapper,
   CurrentChip,
-  MultipleArrowsRight,
   PreviousChip,
-  SmallArrowRight,
   UpcomingChip,
 } from './styles'
 
@@ -19,7 +20,7 @@ const getTypeInfoSentence = (remainingTypes: string[]) => {
     return (
       <>
         which will be able to append
-        <span style={{ fontWeight: 500 }}>{' ' + remainingTypes[0]}s</span>.
+        <Bold>{' ' + remainingTypes[0]}s</Bold>.
       </>
     )
   }
@@ -27,15 +28,15 @@ const getTypeInfoSentence = (remainingTypes: string[]) => {
   return (
     <>
       which will be able to append
-      <span style={{ fontWeight: 500 }}>
+      <Bold>
         {' ' +
           remainingTypes
             .slice(0, -1)
             .map((type) => ` ${type}s`)
             .join(', ')}
-      </span>
+      </Bold>
       {' and '}
-      <span style={{ fontWeight: 500 }}>{remainingTypes.slice(-1) + 's.'}</span>
+      <Bold>{remainingTypes.slice(-1) + 's.'}</Bold>
     </>
   )
 }
@@ -63,8 +64,7 @@ export const CategoryChain: React.FC<{
   return (
     <>
       <Typography align={'center'} style={{ marginTop: '5px' }}>
-        You are about to create the {currentType}{' '}
-        <span style={{ fontWeight: 500 }}>{suggestion}</span>
+        You are about to create the {currentType} <Bold>{suggestion}</Bold>
         {!existsMoreTypes && '.'}
       </Typography>
       <Typography align={'center'} style={{ marginTop: '1px' }}>
@@ -75,7 +75,9 @@ export const CategoryChain: React.FC<{
           return (
             <React.Fragment key={id}>
               <PreviousChip variant="outlined" label={displayName} />
-              <SmallArrowRight />
+              <ChevronRightWrapper>
+                <ChevronRight />
+              </ChevronRightWrapper>
             </React.Fragment>
           )
         })}
@@ -83,7 +85,9 @@ export const CategoryChain: React.FC<{
         {remainingTypes.map((type) => {
           return (
             <React.Fragment key={type}>
-              <MultipleArrowsRight />
+              <ChevronRightWrapper>
+                <ChevronDoubleRight />
+              </ChevronRightWrapper>
               <UpcomingChip variant="outlined" label={capitalize(type) + 's'} />
             </React.Fragment>
           )

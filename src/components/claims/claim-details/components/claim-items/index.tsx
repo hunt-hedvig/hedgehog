@@ -1,6 +1,6 @@
 import { Grid } from '@material-ui/core'
 import { Paper } from 'components/shared/Paper'
-import * as React from 'react'
+import React from 'react'
 import { ItemForm } from './components/ItemForm'
 import { ItemList } from './components/ItemList'
 

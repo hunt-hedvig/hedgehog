@@ -32,6 +32,11 @@ export const Tools: React.FC = () => (
       Norwegian Price Engine "Gripen"
     </CardLink>
 
+    <CardLink to="/tools/campaign-codes" span={4}>
+      <Icon>💵</Icon>
+      Campaign Codes
+    </CardLink>
+
     <CardLink to="/tools/itemizer" span={4}>
       <Icon>📱</Icon>
       Itemizer

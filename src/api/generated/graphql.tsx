@@ -185,6 +185,15 @@ export type AssaultClaim = {
   policeReport?: Maybe<Scalars['String']>
 }
 
+export type AssignVoucherPercentageDiscount = {
+  partnerId: Scalars['String']
+  numberOfMonths: Scalars['Int']
+  percentageDiscount: Scalars['Float']
+  code: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validUntil?: Maybe<Scalars['Instant']>
+}
+
 export type AutoLabel = {
   __typename?: 'AutoLabel'
   message?: Maybe<Scalars['Boolean']>
@@ -197,6 +206,18 @@ export type BurglaryClaim = {
   item?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
+}
+
+export type CampaignFilter = {
+  code?: Maybe<Scalars['String']>
+  partnerId?: Maybe<Scalars['String']>
+  activeFrom?: Maybe<Scalars['LocalDate']>
+  activeTo?: Maybe<Scalars['LocalDate']>
+}
+
+export type CampaignOwnerPartner = {
+  __typename?: 'CampaignOwnerPartner'
+  partnerId: Scalars['String']
 }
 
 export type ChangeFromDateInput = {
@@ -432,6 +453,11 @@ export enum ContractStatus {
   Terminated = 'TERMINATED',
 }
 
+export type CostDeduction = {
+  __typename?: 'CostDeduction'
+  amount?: Maybe<Scalars['MonetaryAmount']>
+}
+
 export type CreateNorwegianGripenInput = {
   baseFactorString?: Maybe<Scalars['String']>
   factors: Array<NorwegianGripenFactorInput>
@@ -518,6 +544,11 @@ export type FloodingClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export type FreeMonths = {
+  __typename?: 'FreeMonths'
+  numberOfMonths?: Maybe<Scalars['Int']>
+}
+
 export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE',
@@ -569,6 +600,26 @@ export type HouseQuoteInput = {
   numberOfBathrooms?: Maybe<Scalars['Int']>
   extraBuildings?: Maybe<Array<ExtraBuildingInput>>
   isSubleted?: Maybe<Scalars['Boolean']>
+}
+
+export type Incentive =
+  | MonthlyPercentageDiscountFixedPeriod
+  | FreeMonths
+  | CostDeduction
+  | NoDiscount
+  | IndefinitePercentageDiscount
+
+export enum IncentiveType {
+  CostDeduction = 'COST_DEDUCTION',
+  FreeMonths = 'FREE_MONTHS',
+  NoDiscount = 'NO_DISCOUNT',
+  MonthlyPercentageDiscountFixedPeriod = 'MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD',
+  IndefinitePercentageDiscount = 'INDEFINITE_PERCENTAGE_DISCOUNT',
+}
+
+export type IndefinitePercentageDiscount = {
+  __typename?: 'IndefinitePercentageDiscount'
+  percentageDiscount?: Maybe<Scalars['Float']>
 }
 
 export type InsertItemCategoriesInput = {
@@ -694,6 +745,7 @@ export type Member = {
   fileUploads: Array<FileUpload>
   person?: Maybe<Person>
   numberFailedCharges?: Maybe<NumberFailedCharges>
+  totalNumberOfClaims: Scalars['Int']
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
@@ -714,6 +766,12 @@ export type MonetaryAmountV2 = {
   currency: Scalars['String']
 }
 
+export type MonthlyPercentageDiscountFixedPeriod = {
+  __typename?: 'MonthlyPercentageDiscountFixedPeriod'
+  numberOfMonths?: Maybe<Scalars['Int']>
+  percentage?: Maybe<Scalars['Float']>
+}
+
 export type MonthlySubscription = {
   __typename?: 'MonthlySubscription'
   amount?: Maybe<Scalars['MonetaryAmount']>
@@ -725,6 +783,7 @@ export type MutationType = {
   chargeMember?: Maybe<Member>
   addAccountEntryToMember: Member
   approveMemberCharge?: Maybe<Scalars['Boolean']>
+  createPaymentCompletionLink: PaymentCompletionResponse
   updateClaimState?: Maybe<Claim>
   createClaim?: Maybe<Scalars['ID']>
   addClaimNote?: Maybe<Claim>
@@ -761,6 +820,8 @@ export type MutationType = {
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
   regenerateCertificate: Scalars['ID']
+  createQuoteForNewContract: Quote
+  signQuoteForNewContract: Quote
   upsertItemCompany: Scalars['ID']
   upsertItemType: Scalars['ID']
   upsertItemBrand: Scalars['ID']
@@ -768,6 +829,7 @@ export type MutationType = {
   upsertClaimItem: Scalars['ID']
   deleteClaimItem?: Maybe<Scalars['ID']>
   insertItemCategories: Array<Scalars['Boolean']>
+  assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -782,6 +844,10 @@ export type MutationTypeAddAccountEntryToMemberArgs = {
 
 export type MutationTypeApproveMemberChargeArgs = {
   approvals: Array<MemberChargeApproval>
+}
+
+export type MutationTypeCreatePaymentCompletionLinkArgs = {
+  memberId: Scalars['ID']
 }
 
 export type MutationTypeUpdateClaimStateArgs = {
@@ -959,6 +1025,17 @@ export type MutationTypeRegenerateCertificateArgs = {
   agreementId: Scalars['ID']
 }
 
+export type MutationTypeCreateQuoteForNewContractArgs = {
+  memberId: Scalars['ID']
+  quoteInput: QuoteInput
+  bypassUnderwritingGuidelines: Scalars['Boolean']
+}
+
+export type MutationTypeSignQuoteForNewContractArgs = {
+  quoteId: Scalars['ID']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
 export type MutationTypeUpsertItemCompanyArgs = {
   request?: Maybe<UpsertItemCompanyInput>
 }
@@ -985,6 +1062,15 @@ export type MutationTypeDeleteClaimItemArgs = {
 
 export type MutationTypeInsertItemCategoriesArgs = {
   request?: Maybe<InsertItemCategoriesInput>
+}
+
+export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
+  request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type NoDiscount = {
+  __typename?: 'NoDiscount'
+  _?: Maybe<Scalars['Boolean']>
 }
 
 export type NorwegianGripenFactorInput = {
@@ -1109,6 +1195,11 @@ export type NumberFailedCharges = {
   lastFailedChargeAt?: Maybe<Scalars['Instant']>
 }
 
+export type PaymentCompletionResponse = {
+  __typename?: 'PaymentCompletionResponse'
+  url: Scalars['String']
+}
+
 export type PaymentDefault = {
   __typename?: 'PaymentDefault'
   year?: Maybe<Scalars['Int']>
@@ -1122,7 +1213,7 @@ export type PaymentDefault = {
 
 export type Person = {
   __typename?: 'Person'
-  personFlags?: Maybe<Array<Maybe<Flag>>>
+  debtFlag?: Maybe<Flag>
   debt?: Maybe<Debt>
   whitelisted?: Maybe<Whitelisted>
   status?: Maybe<PersonStatus>
@@ -1149,6 +1240,8 @@ export type QueryType = {
   itemCategories: Array<ItemCategory>
   validateCategoryChain: Array<Scalars['String']>
   claimItems: Array<ClaimItem>
+  findPartnerCampaigns: Array<VoucherCampaign>
+  getPartnerCampaignOwners: Array<CampaignOwnerPartner>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1198,6 +1291,10 @@ export type QueryTypeValidateCategoryChainArgs = {
 
 export type QueryTypeClaimItemsArgs = {
   claimId: Scalars['ID']
+}
+
+export type QueryTypeFindPartnerCampaignsArgs = {
+  input: CampaignFilter
 }
 
 export type Quote = {
@@ -1313,11 +1410,11 @@ export type StormDamageClaim = {
 
 export type Suggestion = {
   __typename?: 'Suggestion'
+  allReplies: Array<AllRepliesEntry>
+  confidence: Scalars['Float']
   intent: Scalars['String']
   reply: Scalars['String']
   text: Scalars['String']
-  confidence: Scalars['Float']
-  allReplies: Array<AllRepliesEntry>
 }
 
 export type SwedishApartment = AgreementCore & {
@@ -1554,6 +1651,17 @@ export type VerminAndPestsClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export type VoucherCampaign = {
+  __typename?: 'VoucherCampaign'
+  id: Scalars['ID']
+  campaignCode: Scalars['String']
+  partnerId: Scalars['String']
+  partnerName: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validTo?: Maybe<Scalars['Instant']>
+  incentive?: Maybe<Incentive>
+}
+
 export type WaterDamageBathroomClaim = {
   __typename?: 'WaterDamageBathroomClaim'
   date?: Maybe<Scalars['LocalDate']>
@@ -1668,6 +1776,14 @@ export type AddAgreementFromQuoteMutation = { __typename?: 'MutationType' } & {
   addAgreementFromQuote: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
 
+export type AssignCampaignToPartnerPercentageDiscountMutationVariables = {
+  request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type AssignCampaignToPartnerPercentageDiscountMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerPercentageDiscount'>
+
 export type ChangeFromDateMutationVariables = {
   agreementId: Scalars['ID']
   request?: Maybe<ChangeFromDateInput>
@@ -1699,6 +1815,28 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   MutationType,
   'changeToDate'
 >
+
+export type CreatePaymentCompletionLinkMutationVariables = {
+  memberId: Scalars['ID']
+}
+
+export type CreatePaymentCompletionLinkMutation = {
+  __typename?: 'MutationType'
+} & {
+  createPaymentCompletionLink: {
+    __typename?: 'PaymentCompletionResponse'
+  } & Pick<PaymentCompletionResponse, 'url'>
+}
+
+export type CreateQuoteForNewContractMutationVariables = {
+  memberId: Scalars['ID']
+  quoteInput: QuoteInput
+  bypassUnderwritingGuidelines: Scalars['Boolean']
+}
+
+export type CreateQuoteForNewContractMutation = {
+  __typename?: 'MutationType'
+} & { createQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
 
 export type CreateQuoteFromAgreementMutationVariables = {
   agreementId: Scalars['ID']
@@ -1779,14 +1917,17 @@ export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
     > & {
         itemFamily: { __typename?: 'ItemFamily' } & Pick<
           ItemFamily,
-          'displayName'
+          'id' | 'displayName'
         >
-        itemType: { __typename?: 'ItemType' } & Pick<ItemType, 'displayName'>
+        itemType: { __typename?: 'ItemType' } & Pick<
+          ItemType,
+          'id' | 'displayName'
+        >
         itemBrand: Maybe<
-          { __typename?: 'ItemBrand' } & Pick<ItemBrand, 'displayName'>
+          { __typename?: 'ItemBrand' } & Pick<ItemBrand, 'id' | 'displayName'>
         >
         itemModel: Maybe<
-          { __typename?: 'ItemModel' } & Pick<ItemModel, 'displayName'>
+          { __typename?: 'ItemModel' } & Pick<ItemModel, 'id' | 'displayName'>
         >
         purchasePrice: Maybe<
           { __typename?: 'MonetaryAmountV2' } & Pick<
@@ -1821,130 +1962,130 @@ export type GetContractsQueryVariables = {
 
 export type GetContractsQuery = { __typename?: 'QueryType' } & {
   member: Maybe<
-    { __typename?: 'Member' } & {
-      contracts: Array<
-        { __typename?: 'Contract' } & Pick<
-          Contract,
-          | 'id'
-          | 'holderMemberId'
-          | 'holderFirstName'
-          | 'holderLastName'
-          | 'switchedFrom'
-          | 'masterInception'
-          | 'status'
-          | 'isTerminated'
-          | 'terminationDate'
-          | 'currentAgreementId'
-          | 'hasPendingAgreement'
-          | 'hasQueuedRenewal'
-          | 'preferredCurrency'
-          | 'market'
-          | 'signSource'
-          | 'contractTypeName'
-          | 'createdAt'
-        > & {
-            agreements: Array<
-              | ({ __typename?: 'SwedishApartment' } & Pick<
-                  SwedishApartment,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                > & {
-                    swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                  })
-              | ({ __typename?: 'SwedishHouse' } & Pick<
-                  SwedishHouse,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                  | 'ancillaryArea'
-                  | 'yearOfConstruction'
-                  | 'numberOfBathrooms'
-                  | 'isSubleted'
-                > & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                    extraBuildings: Array<
-                      { __typename?: 'ExtraBuilding' } & Pick<
-                        ExtraBuilding,
-                        | 'id'
-                        | 'type'
-                        | 'area'
-                        | 'hasWaterConnected'
-                        | 'displayName'
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        contracts: Array<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'holderMemberId'
+            | 'holderFirstName'
+            | 'holderLastName'
+            | 'switchedFrom'
+            | 'masterInception'
+            | 'status'
+            | 'isTerminated'
+            | 'terminationDate'
+            | 'currentAgreementId'
+            | 'hasPendingAgreement'
+            | 'hasQueuedRenewal'
+            | 'preferredCurrency'
+            | 'market'
+            | 'signSource'
+            | 'contractTypeName'
+            | 'createdAt'
+          > & {
+              agreements: Array<
+                | ({ __typename?: 'SwedishApartment' } & Pick<
+                    SwedishApartment,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                  > & {
+                      swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
                       >
-                    >
-                  })
-              | ({ __typename?: 'NorwegianHomeContent' } & Pick<
-                  NorwegianHomeContent,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                  | 'squareMeters'
-                > & {
-                    norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                    address: { __typename?: 'Address' } & Pick<
-                      Address,
-                      'street' | 'postalCode' | 'city'
-                    >
-                  })
-              | ({ __typename?: 'NorwegianTravel' } & Pick<
-                  NorwegianTravel,
-                  | 'id'
-                  | 'fromDate'
-                  | 'toDate'
-                  | 'certificateUrl'
-                  | 'status'
-                  | 'numberCoInsured'
-                > & {
-                    norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
-                  } & {
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                  })
-            >
-            renewal: Maybe<
-              { __typename?: 'Renewal' } & Pick<
-                Renewal,
-                'renewalDate' | 'draftCertificateUrl' | 'draftOfAgreementId'
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    })
+                | ({ __typename?: 'SwedishHouse' } & Pick<
+                    SwedishHouse,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                    | 'ancillaryArea'
+                    | 'yearOfConstruction'
+                    | 'numberOfBathrooms'
+                    | 'isSubleted'
+                  > & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                      extraBuildings: Array<
+                        { __typename?: 'ExtraBuilding' } & Pick<
+                          ExtraBuilding,
+                          | 'id'
+                          | 'type'
+                          | 'area'
+                          | 'hasWaterConnected'
+                          | 'displayName'
+                        >
+                      >
+                    })
+                | ({ __typename?: 'NorwegianHomeContent' } & Pick<
+                    NorwegianHomeContent,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                    | 'squareMeters'
+                  > & {
+                      norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                      address: { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    })
+                | ({ __typename?: 'NorwegianTravel' } & Pick<
+                    NorwegianTravel,
+                    | 'id'
+                    | 'fromDate'
+                    | 'toDate'
+                    | 'certificateUrl'
+                    | 'status'
+                    | 'numberCoInsured'
+                  > & {
+                      norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
+                    } & {
+                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                        MonetaryAmountV2,
+                        'amount' | 'currency'
+                      >
+                    })
               >
-            >
-          }
-      >
-    }
+              renewal: Maybe<
+                { __typename?: 'Renewal' } & Pick<
+                  Renewal,
+                  'renewalDate' | 'draftCertificateUrl' | 'draftOfAgreementId'
+                >
+              >
+            }
+        >
+      }
   >
 }
 
@@ -1975,6 +2116,49 @@ export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
         ItemCompany,
         'id' | 'displayName' | 'searchTerms' | 'nextKind'
       >)
+  >
+}
+
+export type GetPartnerCampaignOwnersQueryVariables = {}
+
+export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
+  getPartnerCampaignOwners: Array<
+    { __typename?: 'CampaignOwnerPartner' } & Pick<
+      CampaignOwnerPartner,
+      'partnerId'
+    >
+  >
+}
+
+export type FindPartnerCampaignsQueryVariables = {
+  input: CampaignFilter
+}
+
+export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
+  findPartnerCampaigns: Array<
+    { __typename?: 'VoucherCampaign' } & Pick<
+      VoucherCampaign,
+      | 'id'
+      | 'campaignCode'
+      | 'partnerId'
+      | 'partnerName'
+      | 'validFrom'
+      | 'validTo'
+    > & {
+        incentive: Maybe<
+          | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
+              MonthlyPercentageDiscountFixedPeriod,
+              'numberOfMonths' | 'percentage'
+            >)
+          | ({ __typename?: 'FreeMonths' } & Pick<FreeMonths, 'numberOfMonths'>)
+          | ({ __typename?: 'CostDeduction' } & Pick<CostDeduction, 'amount'>)
+          | { __typename: 'NoDiscount' }
+          | ({ __typename?: 'IndefinitePercentageDiscount' } & Pick<
+              IndefinitePercentageDiscount,
+              'percentageDiscount'
+            >)
+        >
+      }
   >
 }
 
@@ -2503,6 +2687,56 @@ export type AddAgreementFromQuoteMutationOptions = ApolloReactCommon.BaseMutatio
   AddAgreementFromQuoteMutation,
   AddAgreementFromQuoteMutationVariables
 >
+export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
+  mutation AssignCampaignToPartnerPercentageDiscount(
+    $request: AssignVoucherPercentageDiscount
+  ) {
+    assignCampaignToPartnerPercentageDiscount(request: $request)
+  }
+`
+export type AssignCampaignToPartnerPercentageDiscountMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerPercentageDiscountMutation,
+  AssignCampaignToPartnerPercentageDiscountMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerPercentageDiscountMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerPercentageDiscountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerPercentageDiscountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerPercentageDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerPercentageDiscountMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerPercentageDiscountMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >(AssignCampaignToPartnerPercentageDiscountDocument, baseOptions)
+}
+export type AssignCampaignToPartnerPercentageDiscountMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerPercentageDiscountMutation
+>
+export type AssignCampaignToPartnerPercentageDiscountMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerPercentageDiscountMutation
+>
+export type AssignCampaignToPartnerPercentageDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerPercentageDiscountMutation,
+  AssignCampaignToPartnerPercentageDiscountMutationVariables
+>
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
     changeFromDate(agreementId: $agreementId, request: $request)
@@ -2656,6 +2890,116 @@ export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
 >
+export const CreatePaymentCompletionLinkDocument = gql`
+  mutation CreatePaymentCompletionLink($memberId: ID!) {
+    createPaymentCompletionLink(memberId: $memberId) {
+      url
+    }
+  }
+`
+export type CreatePaymentCompletionLinkMutationFn = ApolloReactCommon.MutationFunction<
+  CreatePaymentCompletionLinkMutation,
+  CreatePaymentCompletionLinkMutationVariables
+>
+
+/**
+ * __useCreatePaymentCompletionLinkMutation__
+ *
+ * To run a mutation, you first call `useCreatePaymentCompletionLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePaymentCompletionLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPaymentCompletionLinkMutation, { data, loading, error }] = useCreatePaymentCompletionLinkMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useCreatePaymentCompletionLinkMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreatePaymentCompletionLinkMutation,
+    CreatePaymentCompletionLinkMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreatePaymentCompletionLinkMutation,
+    CreatePaymentCompletionLinkMutationVariables
+  >(CreatePaymentCompletionLinkDocument, baseOptions)
+}
+export type CreatePaymentCompletionLinkMutationHookResult = ReturnType<
+  typeof useCreatePaymentCompletionLinkMutation
+>
+export type CreatePaymentCompletionLinkMutationResult = ApolloReactCommon.MutationResult<
+  CreatePaymentCompletionLinkMutation
+>
+export type CreatePaymentCompletionLinkMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreatePaymentCompletionLinkMutation,
+  CreatePaymentCompletionLinkMutationVariables
+>
+export const CreateQuoteForNewContractDocument = gql`
+  mutation CreateQuoteForNewContract(
+    $memberId: ID!
+    $quoteInput: QuoteInput!
+    $bypassUnderwritingGuidelines: Boolean!
+  ) {
+    createQuoteForNewContract(
+      memberId: $memberId
+      quoteInput: $quoteInput
+      bypassUnderwritingGuidelines: $bypassUnderwritingGuidelines
+    ) {
+      id
+    }
+  }
+`
+export type CreateQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunction<
+  CreateQuoteForNewContractMutation,
+  CreateQuoteForNewContractMutationVariables
+>
+
+/**
+ * __useCreateQuoteForNewContractMutation__
+ *
+ * To run a mutation, you first call `useCreateQuoteForNewContractMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuoteForNewContractMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuoteForNewContractMutation, { data, loading, error }] = useCreateQuoteForNewContractMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      quoteInput: // value for 'quoteInput'
+ *      bypassUnderwritingGuidelines: // value for 'bypassUnderwritingGuidelines'
+ *   },
+ * });
+ */
+export function useCreateQuoteForNewContractMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateQuoteForNewContractMutation,
+    CreateQuoteForNewContractMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateQuoteForNewContractMutation,
+    CreateQuoteForNewContractMutationVariables
+  >(CreateQuoteForNewContractDocument, baseOptions)
+}
+export type CreateQuoteForNewContractMutationHookResult = ReturnType<
+  typeof useCreateQuoteForNewContractMutation
+>
+export type CreateQuoteForNewContractMutationResult = ApolloReactCommon.MutationResult<
+  CreateQuoteForNewContractMutation
+>
+export type CreateQuoteForNewContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateQuoteForNewContractMutation,
+  CreateQuoteForNewContractMutationVariables
+>
 export const CreateQuoteFromAgreementDocument = gql`
   mutation CreateQuoteFromAgreement($agreementId: ID!, $memberId: ID!) {
     createQuoteFromAgreement(agreementId: $agreementId, memberId: $memberId) {
@@ -2805,15 +3149,19 @@ export const GetClaimItemsDocument = gql`
     claimItems(claimId: $claimId) {
       id
       itemFamily {
+        id
         displayName
       }
       itemType {
+        id
         displayName
       }
       itemBrand {
+        id
         displayName
       }
       itemModel {
+        id
         displayName
       }
       dateOfPurchase
@@ -3179,6 +3527,140 @@ export type GetItemCategoriesLazyQueryHookResult = ReturnType<
 export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
   GetItemCategoriesQuery,
   GetItemCategoriesQueryVariables
+>
+export const GetPartnerCampaignOwnersDocument = gql`
+  query GetPartnerCampaignOwners {
+    getPartnerCampaignOwners {
+      partnerId
+    }
+  }
+`
+
+/**
+ * __useGetPartnerCampaignOwnersQuery__
+ *
+ * To run a query within a React component, call `useGetPartnerCampaignOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPartnerCampaignOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPartnerCampaignOwnersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPartnerCampaignOwnersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, baseOptions)
+}
+export function useGetPartnerCampaignOwnersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, baseOptions)
+}
+export type GetPartnerCampaignOwnersQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersQuery
+>
+export type GetPartnerCampaignOwnersLazyQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersLazyQuery
+>
+export type GetPartnerCampaignOwnersQueryResult = ApolloReactCommon.QueryResult<
+  GetPartnerCampaignOwnersQuery,
+  GetPartnerCampaignOwnersQueryVariables
+>
+export const FindPartnerCampaignsDocument = gql`
+  query FindPartnerCampaigns($input: CampaignFilter!) {
+    findPartnerCampaigns(input: $input) {
+      id
+      campaignCode
+      partnerId
+      partnerName
+      validFrom
+      validTo
+      incentive {
+        ... on MonthlyPercentageDiscountFixedPeriod {
+          numberOfMonths
+          percentage
+        }
+        ... on FreeMonths {
+          numberOfMonths
+        }
+        ... on CostDeduction {
+          amount
+        }
+        ... on NoDiscount {
+          __typename
+        }
+        ... on IndefinitePercentageDiscount {
+          percentageDiscount
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useFindPartnerCampaignsQuery__
+ *
+ * To run a query within a React component, call `useFindPartnerCampaignsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindPartnerCampaignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindPartnerCampaignsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFindPartnerCampaignsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >(FindPartnerCampaignsDocument, baseOptions)
+}
+export function useFindPartnerCampaignsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >(FindPartnerCampaignsDocument, baseOptions)
+}
+export type FindPartnerCampaignsQueryHookResult = ReturnType<
+  typeof useFindPartnerCampaignsQuery
+>
+export type FindPartnerCampaignsLazyQueryHookResult = ReturnType<
+  typeof useFindPartnerCampaignsLazyQuery
+>
+export type FindPartnerCampaignsQueryResult = ApolloReactCommon.QueryResult<
+  FindPartnerCampaignsQuery,
+  FindPartnerCampaignsQueryVariables
 >
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {
@@ -3820,6 +4302,27 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'ItemCompany',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'Incentive',
+        possibleTypes: [
+          {
+            name: 'MonthlyPercentageDiscountFixedPeriod',
+          },
+          {
+            name: 'FreeMonths',
+          },
+          {
+            name: 'CostDeduction',
+          },
+          {
+            name: 'NoDiscount',
+          },
+          {
+            name: 'IndefinitePercentageDiscount',
           },
         ],
       },

@@ -1,20 +1,13 @@
-import {
-  Button,
-  Grid,
-  InputAdornment,
-  MenuItem,
-  Select,
-  TextField,
-} from '@material-ui/core'
+import { Button, Grid, MenuItem, TextField } from '@material-ui/core'
 import {
   UpsertClaimItemInput,
   useUpsertClaimItemMutation,
 } from 'api/generated/graphql'
 import { isAfter, isValid, parseISO } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
-import * as React from 'react'
+import React from 'react'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
-import { DateIcon } from './styles'
+import { CurrencySelect } from './styles'
 
 const isValidDate = (date: string) =>
   date === ''
@@ -73,7 +66,7 @@ export const ItemForm: React.FC<{
 
   React.useEffect(() => {
     setPurchasePriceCurrency(defaultCurrency)
-  }, [contractMarketInfo])
+  }, [contractMarketInfo?.preferredCurrency])
 
   return (
     <>
@@ -86,9 +79,9 @@ export const ItemForm: React.FC<{
         </Grid>
         <Grid item style={{ width: '16.5%' }}>
           <Grid container spacing={0}>
-            <Grid item style={{ width: '60%' }}>
+            <Grid item style={{ width: '50%' }}>
               <TextField
-                placeholder={'Purchase price'}
+                placeholder={'Price'}
                 error={!validPurchasePrice}
                 value={purchasePrice}
                 helperText={!validPurchasePrice && 'Only numbers'}
@@ -96,10 +89,9 @@ export const ItemForm: React.FC<{
                 fullWidth
               />
             </Grid>
-            <Grid item style={{ width: '40%', marginTop: '-1px' }}>
-              <Select
+            <Grid item style={{ width: '50%', marginTop: '-1px' }}>
+              <CurrencySelect
                 error={!validPurchasePrice}
-                style={{ color: '#888', textAlign: 'right' }}
                 value={purchasePriceCurrency}
                 onChange={({ target: { value } }) =>
                   setPurchasePriceCurrency(value)
@@ -110,7 +102,7 @@ export const ItemForm: React.FC<{
                 <MenuItem value={'EUR'}>EUR</MenuItem>
                 <MenuItem value={'USD'}>USD</MenuItem>
                 <MenuItem value={'GBP'}>GBP</MenuItem>
-              </Select>
+              </CurrencySelect>
             </Grid>
           </Grid>
         </Grid>
@@ -122,13 +114,7 @@ export const ItemForm: React.FC<{
             onChange={({ target: { value } }) => setDateOfPurchase(value)}
             onBlur={() => !isValidDate(dateOfPurchase) && setDateOfPurchase('')}
             placeholder="Purchase date"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <DateIcon />
-                </InputAdornment>
-              ),
-            }}
+            style={{ padding: 0 }}
           />
         </Grid>
         <Grid item xs={true}>
