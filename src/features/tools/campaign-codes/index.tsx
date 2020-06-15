@@ -229,7 +229,7 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
                 <Table.Cell>
                   {isMonthlyPercentageDiscountFixedPeriod(campaign.incentive) &&
                   campaign.incentive.percentage
-                    ? campaign.incentive.percentage / 0.01
+                    ? campaign.incentive.percentage
                     : '-'}
                 </Table.Cell>
                 <Table.Cell>

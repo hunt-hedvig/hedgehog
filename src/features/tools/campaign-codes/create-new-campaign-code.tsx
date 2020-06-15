@@ -144,7 +144,7 @@ export const CreateNewCampaignCode: React.FunctionComponent<{
             onChange={(_, data) => {
               setCampaignCodeFormState({
                 ...newCampaignCodeFormState,
-                percentageDiscount: (data.value as number) * 0.01,
+                percentageDiscount: data.value as number,
               })
             }}
           />
