@@ -6,7 +6,7 @@ import {
 } from 'graphql/use-add-agreement-from-quote'
 import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
-import React from 'react'
+import React, { useState } from 'react'
 import { Checkbox } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
@@ -19,6 +19,9 @@ const getContract = (contracts, quote): Contract => {
   )
 }
 
+const getInitialActiveFrom = (contract: Contract): Date | null =>
+  contract.hasPendingAgreement ? null : new Date()
+
 export const QuoteActivation: React.FC<{
   quote: Quote
   memberId
@@ -30,14 +33,19 @@ export const QuoteActivation: React.FC<{
   onSubmitted = noopFunction,
   onWipChange = noopFunction,
 }) => {
-  const [useGap, setUseGap] = React.useState(false)
-  const [contracts] = useContracts(memberId)
+  const [useGap, setUseGap] = useState(false)
+  const [contracts, { loading }] = useContracts(memberId)
   const contract = getContract(contracts, quote)
-  const [activeFrom, setActiveFrom] = React.useState<Date>(new Date())
+  if (!loading && !contract) {
+    return <>Cannot active quote without Originating product id</>
+  }
+  const [activeFrom, setActiveFrom] = useState(() =>
+    getInitialActiveFrom(contract),
+  )
   const [
     previousAgreementActiveTo,
     setPreviousAgreementActiveTo,
-  ] = React.useState<Date | null>(null)
+  ] = useState<Date | null>(null)
 
   const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
 
@@ -47,7 +55,8 @@ export const QuoteActivation: React.FC<{
         e.preventDefault()
         if (
           addAgreementMutation.loading ||
-          !activeFrom ||
+          (contract.hasPendingAgreement && activeFrom) ||
+          (!contract.hasPendingAgreement && !activeFrom) ||
           !confirm('Are you sure you want to activate?')
         ) {
           return
@@ -66,57 +75,67 @@ export const QuoteActivation: React.FC<{
         }
       }}
     >
-      <BottomSpacerWrapper>
-        <div>
-          <strong>Activation date</strong>
-        </div>
-        <div>
-          <BaseDatePicker
-            value={activeFrom}
-            onChange={(value) => {
-              if (onWipChange) {
-                onWipChange(true)
-              }
-              setActiveFrom(value)
-            }}
-          />
-        </div>
-      </BottomSpacerWrapper>
+      {!contract.hasPendingAgreement && (
+        <>
+          <BottomSpacerWrapper>
+            <div>
+              <strong>Activation date</strong>
+            </div>
+            <div>
+              <BaseDatePicker
+                value={activeFrom}
+                onChange={(value) => {
+                  if (onWipChange) {
+                    onWipChange(true)
+                  }
+                  setActiveFrom(value)
+                }}
+              />
+            </div>
+          </BottomSpacerWrapper>
 
-      <BottomSpacerWrapper>
-        <Checkbox
-          onChange={(_, { checked }) => {
-            if (onWipChange) {
-              onWipChange(true)
-            }
-            if (!checked) {
-              setPreviousAgreementActiveTo(null)
-            }
-            setUseGap(checked!)
-          }}
-          label="Create gap between insurances"
-          checked={useGap}
-        />
-      </BottomSpacerWrapper>
-
-      {useGap && (
-        <BottomSpacerWrapper>
-          <div>
-            <strong>Terminate current insurance at</strong>
-          </div>
-          <div>
-            <BaseDatePicker
-              value={previousAgreementActiveTo}
-              onChange={(value) => {
+          <BottomSpacerWrapper>
+            <Checkbox
+              onChange={(_, { checked }) => {
                 if (onWipChange) {
                   onWipChange(true)
                 }
-                setPreviousAgreementActiveTo(value)
+                if (!checked) {
+                  setPreviousAgreementActiveTo(null)
+                }
+                setUseGap(!!checked)
               }}
-              maxDate={activeFrom}
+              label="Create gap between insurances"
+              checked={useGap}
             />
-          </div>
-        </BottomSpacerWrapper>
+          </BottomSpacerWrapper>
+
+          {useGap && (
+            <BottomSpacerWrapper>
+              <div>
+                <strong>Terminate current insurance at</strong>
+              </div>
+              <div>
+                <BaseDatePicker
+                  value={previousAgreementActiveTo}
+                  onChange={(value) => {
+                    if (onWipChange) {
+                      onWipChange(true)
+                    }
+                    setPreviousAgreementActiveTo(value)
+                  }}
+                  maxDate={activeFrom}
+                />
+              </div>
+            </BottomSpacerWrapper>
+          )}
+        </>
+      )}
+      {contract.hasPendingAgreement && (
+        <div>
+          With a <strong>Pending</strong> contract the <strong>Pending</strong>{' '}
+          agreement will be replaced upon activation.
+        </div>
       )}
 
       {!addAgreementMutation.data?.addAgreementFromQuote ? (
@@ -126,7 +145,7 @@ export const QuoteActivation: React.FC<{
           fullWidth
           disabled={addAgreementMutation.loading}
         >
-          Activate
+          {contract.hasPendingAgreement ? 'Replace' : 'Activate'}
         </Button>
       ) : (
         <Button
