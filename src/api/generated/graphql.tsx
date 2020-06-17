@@ -807,7 +807,6 @@ export type MutationType = {
   changeTicketReminder?: Maybe<Scalars['ID']>
   changeTicketPriority?: Maybe<Scalars['ID']>
   autoLabelQuestion?: Maybe<AutoLabel>
-  questionIsDone?: Maybe<Scalars['Boolean']>
   whitelistMember?: Maybe<Scalars['Boolean']>
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
@@ -828,6 +827,8 @@ export type MutationType = {
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
   regenerateCertificate: Scalars['ID']
+  markQuestionAsDone: Scalars['Boolean']
+  answerQuestion: Scalars['Boolean']
   createQuoteForNewContract: Quote
   signQuoteForNewContract: Quote
   upsertItemCompany: Scalars['ID']
@@ -935,10 +936,6 @@ export type MutationTypeAutoLabelQuestionArgs = {
   messageIds?: Maybe<Array<Scalars['String']>>
 }
 
-export type MutationTypeQuestionIsDoneArgs = {
-  memberId: Scalars['ID']
-}
-
 export type MutationTypeWhitelistMemberArgs = {
   memberId: Scalars['ID']
 }
@@ -1031,6 +1028,15 @@ export type MutationTypeChangeFromDateArgs = {
 
 export type MutationTypeRegenerateCertificateArgs = {
   agreementId: Scalars['ID']
+}
+
+export type MutationTypeMarkQuestionAsDoneArgs = {
+  memberId: Scalars['ID']
+}
+
+export type MutationTypeAnswerQuestionArgs = {
+  memberId: Scalars['ID']
+  answer: Scalars['String']
 }
 
 export type MutationTypeCreateQuoteForNewContractArgs = {
@@ -1245,6 +1251,7 @@ export type QueryType = {
   getAnswerSuggestion: Array<Suggestion>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  questionGroups: Array<QuestionGroup>
   itemCategories: Array<ItemCategory>
   claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
@@ -1294,6 +1301,20 @@ export type QueryTypeClaimItemsArgs = {
 
 export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
+}
+
+export type Question = {
+  __typename?: 'Question'
+  id: Scalars['ID']
+  timestamp: Scalars['Instant']
+  messageJsonString: Scalars['String']
+}
+
+export type QuestionGroup = {
+  __typename?: 'QuestionGroup'
+  id: Scalars['ID']
+  memberId: Scalars['ID']
+  questions: Array<Question>
 }
 
 export type Quote = {
@@ -1410,11 +1431,11 @@ export type StormDamageClaim = {
 
 export type Suggestion = {
   __typename?: 'Suggestion'
-  allReplies: Array<AllRepliesEntry>
-  confidence: Scalars['Float']
   intent: Scalars['String']
   reply: Scalars['String']
   text: Scalars['String']
+  confidence: Scalars['Float']
+  allReplies: Array<AllRepliesEntry>
 }
 
 export type SwedishApartment = AgreementCore & {
