@@ -6,7 +6,7 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { formatMoney } from 'utils/money'
-import { OrbIndicator } from '../../../../../shared/hedvig-ui/orb-indicator'
+import { OrbIndicator } from 'hedvig-ui/orb-indicator'
 
 import {
   Ban,
