@@ -39,6 +39,9 @@ export const QuoteActivation: React.FC<{
   if (!loading && !contract) {
     return <>Cannot active quote without Originating product id</>
   }
+  if (contract.hasPendingAgreement && contract.isTerminated) {
+    return <>Cannot active quote for a pending contract that is terminated</>
+  }
   const [activeFrom, setActiveFrom] = useState(() =>
     getInitialActiveFrom(contract),
   )
