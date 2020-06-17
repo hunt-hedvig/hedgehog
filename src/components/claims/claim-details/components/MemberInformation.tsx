@@ -6,6 +6,7 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { formatMoney } from 'utils/money'
+import { OrbIndicator } from '../../../../../shared/hedvig-ui/orb-indicator'
 
 import {
   Ban,
@@ -93,21 +94,11 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
         <b>Total Number of Claims:</b> {member.totalNumberOfClaims}
       </p>
       {member.person && (
-        <p style={{ marginTop: '-7px' }}>
-          <b>Debt Status:</b>
-          <span style={{ fontSize: '32px' }}>
-            {member.person?.debtFlag && (
-              <FraudulentStatus
-                stateInfo={{
-                  state: member.person.debtFlag
-                    .replace('GREEN', 'NOT_FRAUD')
-                    .replace('AMBER', 'SUSPECTED_FRAUD')
-                    .replace('RED', 'CONFIRMED_FRAUD'),
-                }}
-              />
-            )}
-          </span>
-        </p>
+        <OrbIndicator
+          text={'Debt Status: '}
+          color={member.person.debtFlag.toLowerCase()}
+          size={'tiny'}
+        />
       )}
     </Paper>
   )
