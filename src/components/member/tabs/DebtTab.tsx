@@ -105,12 +105,6 @@ const PaymentDefaultsTable: React.FunctionComponent<PaymentDefaultsTableProps> =
   </Table>
 )
 
-enum Flag {
-  GREEN,
-  AMBER,
-  RED,
-}
-
 const ButtonWrapper = styled('div')({
   display: 'flex',
   justifyContent: 'flex-end',
@@ -120,14 +114,6 @@ const PersonStatusWrapper = styled('div')({
   padding: '10px 15px',
   fontWeight: 700,
   fontSize: '1.5rem',
-})
-
-const GreenFlagWrapper = styled('span')({
-  color: colors.GREEN,
-})
-
-const RedFlagWrapper = styled('span')({
-  color: colors.PINK,
 })
 
 const Button = styled('button')({
@@ -237,16 +223,6 @@ export class MemberDebtComponent extends React.Component<
                           color={data.member.person.status.flag.toLowerCase()}
                           text={'Member flag: '}
                         />
-
-                        {/*{data.member.person.status.flag === Flag.GREEN ? (*/}
-                        {/*  <GreenFlagWrapper>*/}
-                        {/*    {data.member.person.status.flag}*/}
-                        {/*  </GreenFlagWrapper>*/}
-                        {/*) : (*/}
-                        {/*  <RedFlagWrapper>*/}
-                        {/*    {data.member.person.status.flag}*/}
-                        {/*  </RedFlagWrapper>*/}
-                        {/*)}*/}
                       </div>
                     </PersonStatusWrapper>
                     <PersonStatusWrapper>

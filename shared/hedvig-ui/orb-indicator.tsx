@@ -1,4 +1,3 @@
-import { FraudulentStatus } from 'lib/fraudulentStatus'
 import React from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
