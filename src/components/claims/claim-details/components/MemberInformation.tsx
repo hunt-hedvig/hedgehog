@@ -93,13 +93,12 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
       <p>
         <b>Total Number of Claims:</b> {member.totalNumberOfClaims}
       </p>
-      {member.person && (
-        <OrbIndicator
-          text={'Debt Status: '}
-          color={member.person.debtFlag?.toLowerCase()}
-          size={'tiny'}
-        />
-      )}
+      <p>
+        <b>Debt Status:</b>{' '}
+        {member.person && (
+          <OrbIndicator color={member.person?.debtFlag} size={'tiny'} />
+        )}
+      </p>
     </Paper>
   )
 }

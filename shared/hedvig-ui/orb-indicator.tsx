@@ -1,23 +1,44 @@
 import React from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
+import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs'
+import { IconSizeProp } from 'semantic-ui-react/dist/commonjs/elements/Icon/Icon'
 
 const IconStyled = styled(Icon)(() => ({
   verticalAlign: 'middle',
+  paddingLeft: '4px',
 }))
 
-export function OrbIndicator(props) {
+const Container = styled('p')(() => ({
+  marginTop: '-7px',
+  display: 'inline',
+}))
+
+interface OrbProps {
+  color?: any
+  size?: any
+}
+
+export const OrbIndicator: React.FunctionComponent<OrbProps> = ({
+  color,
+  size,
+}) => {
   return (
-    <p style={{ marginTop: '-7px' }}>
-      <b>{props.text}</b>
+    <Container>
       <span style={{ fontSize: '32px' }}>
         <IconStyled
           name="circle"
-          // Sets default to grey and tiny
-          color={props.color.replace('amber', 'orange') || 'grey'}
-          size={props.size || 'tiny'}
+          color={
+            color?.toLowerCase().replace('amber', 'orange') as SemanticCOLORS
+          }
+          size={size as IconSizeProp}
         />
       </span>
-    </p>
+    </Container>
   )
+}
+
+OrbIndicator.defaultProps = {
+  color: 'grey',
+  size: 'tiny',
 }

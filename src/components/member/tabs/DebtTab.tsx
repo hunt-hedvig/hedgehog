@@ -53,6 +53,7 @@ const whitelistMember = gql`
     whitelistMember(memberId: $memberId)
   }
 `
+
 interface PaymentDefault {
   year: BigInteger
   paymentDefaultType: string
@@ -219,10 +220,13 @@ export class MemberDebtComponent extends React.Component<
                   <>
                     <PersonStatusWrapper>
                       <div>
-                        <OrbIndicator
-                          color={data.member.person.status.flag.toLowerCase()}
-                          text={'Member flag: '}
-                        />
+                        Member flag:
+                        {data.member.person.status.flag && (
+                          <OrbIndicator
+                            color={data.member.person.status.flag}
+                            size={'tiny'}
+                          />
+                        )}
                       </div>
                     </PersonStatusWrapper>
                     <PersonStatusWrapper>
