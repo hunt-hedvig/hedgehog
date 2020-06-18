@@ -96,7 +96,10 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
       <p>
         <b>Debt Status:</b>{' '}
         {member.person && (
-          <OrbIndicator color={member.person?.debtFlag} size={'tiny'} />
+          <OrbIndicator
+            color={member.person?.debtFlag || 'grey'}
+            size={'tiny'}
+          />
         )}
       </p>
     </Paper>
