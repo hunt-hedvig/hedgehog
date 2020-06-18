@@ -3,7 +3,7 @@ import styled from 'react-emotion'
 import { FilteredQuestionGroups } from './FilteredQuestionGroups'
 import { FilterState } from 'components/questions/filter'
 import { isMemberIdEven } from 'utils/member'
-import { useQuestionGroups } from '../../../graphql/use-question-groups'
+import { useQuestionGroups } from 'graphql/use-question-groups'
 
 const ListContainer = styled.div`
   display: flex;

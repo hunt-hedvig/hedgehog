@@ -3,20 +3,18 @@ import React from 'react'
 import {
   Button,
   Form as StandardForm,
-  Message,
   TextArea,
 } from 'semantic-ui-react'
 import styled from 'react-emotion'
-import { MemberHistoryContext } from '../../../utils/member-history'
 import { Checkbox } from 'hedvig-ui/checkbox'
 import {
   getAnswerQuestionOptions,
   useAnswerQuestion,
-} from '../../../graphql/use-answer-question'
+} from 'graphql/use-answer-question'
 import {
   getMarkQuestionAsResolvedOptions,
   useMarkQuestionAsResolved,
-} from '../../../graphql/use-mark-question-as-resolved'
+} from 'graphql/use-mark-question-as-resolved'
 
 const Form = styled(StandardForm)`
   max-width: 35rem !important;
