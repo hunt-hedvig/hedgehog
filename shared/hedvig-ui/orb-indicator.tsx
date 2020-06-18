@@ -44,8 +44,3 @@ export const OrbIndicator: React.FunctionComponent<OrbProps> = ({
     </Container>
   )
 }
-
-// OrbIndicator.defaultProps = {
-//   color: 'grey',
-//   size: 'tiny',
-// }
