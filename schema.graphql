@@ -96,7 +96,7 @@ type MutationType {
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
-  markQuestionAsDone(memberId: ID!): Boolean!
+  markQuestionAsResolved(memberId: ID!): Boolean!
   answerQuestion(memberId: ID!, answer: String!): Boolean!
   createQuoteForNewContract(
     memberId: ID!

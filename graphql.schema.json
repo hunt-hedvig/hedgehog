@@ -9988,7 +9988,7 @@
             "deprecationReason": null
           },
           {
-            "name": "markQuestionAsDone",
+            "name": "markQuestionAsResolved",
             "description": "",
             "args": [
               {

@@ -3,23 +3,11 @@ import { ListPage } from 'components/shared'
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import actions from 'store/actions'
 
-const QuestionsPage = (props) => (
+const QuestionsPage = () => (
   <ListPage>
-    <Questions {...props} />
+    <Questions />
   </ListPage>
 )
 
-const mapStateToProps = ({ questions, members }) => ({
-  questions,
-  members,
-})
-
-export default withRouter(
-  connect(mapStateToProps, {
-    ...actions.clientActions,
-    ...actions.questionsActions,
-    ...actions.membersActions,
-  })(QuestionsPage),
-)
+export default withRouter(connect()(QuestionsPage))
