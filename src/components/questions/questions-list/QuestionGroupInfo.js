@@ -39,7 +39,7 @@ const QuestionGroupInfo = ({ questionGroup }) => {
       </MemberInfoWrapper>
 
       {questionGroup.questions.map((question) => {
-        return <Question question={question} />
+        return <Question key={question.id} question={question} />
       })}
     </QuestionGroupInfoWrapper>
   )

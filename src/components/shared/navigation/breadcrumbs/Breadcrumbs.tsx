@@ -32,13 +32,9 @@ const Breadcrumbs: React.FC<any> = ({ state, history }) => {
     }
 
     if (i === arr.length - 1) {
-      const content =
-        pathname.indexOf('members/') >= 0
-          ? getMemberInfo(state.members.list, path)
-          : path.toLowerCase()
       return {
         key: i,
-        content,
+        content: path.toLowerCase(),
         active: false,
       }
     }
