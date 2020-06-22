@@ -1,0 +1,3 @@
+mutation MarkQuestionAsResolved($memberId: ID!) {
+  markQuestionAsResolved(memberId: $memberId)
+}

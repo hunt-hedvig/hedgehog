@@ -3,12 +3,18 @@ import React from 'react'
 import {
   Button,
   Form as StandardForm,
-  Message,
   TextArea,
 } from 'semantic-ui-react'
 import styled from 'react-emotion'
-import { MemberHistoryContext } from '../../../utils/member-history'
 import { Checkbox } from 'hedvig-ui/checkbox'
+import {
+  getAnswerQuestionOptions,
+  useAnswerQuestion,
+} from 'graphql/use-answer-question'
+import {
+  getMarkQuestionAsResolvedOptions,
+  useMarkQuestionAsResolved,
+} from 'graphql/use-mark-question-as-resolved'
 
 const Form = styled(StandardForm)`
   max-width: 35rem !important;
@@ -35,76 +41,67 @@ const MarkAsResolvedWrapper = styled.div`
   padding-left: 1rem;
 `
 
-export default class AnswerForm extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      answer: '',
+export const AnswerForm = ({ memberId }) => {
+  const [answer, setAnswer] = React.useState('')
+
+  const [
+    answerQuestion,
+    { loading: loadingAnswerQuestion },
+  ] = useAnswerQuestion()
+
+  const [
+    markQuestionAsResolved,
+    { loading: loadingMarkQuestionAsResolved },
+  ] = useMarkQuestionAsResolved()
+
+  const loading = loadingAnswerQuestion || loadingMarkQuestionAsResolved
+
+  const answerChangeHandler = (e, { value }) => {
+    setAnswer(value)
+  }
+
+  const answerClick = () => {
+    if (answer.trim().length) {
+      answerQuestion(getAnswerQuestionOptions(memberId, answer.trim()))
     }
   }
 
-  answerChangeHandler = (e, { value }) => {
-    this.setState({ answer: value })
+  const doneClick = () => {
+    markQuestionAsResolved(getMarkQuestionAsResolvedOptions(memberId))
   }
 
-  answerClick = (id, pushToMemberHistory) => {
-    if (this.state.answer.trim().length) {
-      this.props.sendAnswer({ msg: this.state.answer, id })
-      pushToMemberHistory(id)
-    }
-  }
-
-  doneClick = (id) => {
-    this.props.sendDoneMsg({ id })
-  }
-
-  render() {
-    const { memberId, redirectClick, error } = this.props
-    return (
-      <MemberHistoryContext.Consumer>
-        {({ pushToMemberHistory }) => (
-          <>
-            <Form>
-              <FormGroup>
-                <FormTextArea
-                  control={TextArea}
-                  placeholder="Write reply..."
-                  onChange={this.answerChangeHandler}
-                  value={this.state.answer}
-                  rows={1}
-                />
-                <div>
-                  <Button
-                    content="Send"
-                    onClick={this.answerClick.bind(
-                      this,
-                      memberId,
-                      pushToMemberHistory,
-                    )}
-                    primary
-                    disabled={!this.state.answer.trim().length}
-                  />
-                </div>
-              </FormGroup>
-              <MarkAsResolvedWrapper>
-                <Checkbox
-                  label="Mark as resolved"
-                  onClick={this.doneClick.bind(this, memberId)}
-                />
-              </MarkAsResolvedWrapper>
-              {error ? <Message negative>{error}</Message> : null}
-            </Form>
-          </>
-        )}
-      </MemberHistoryContext.Consumer>
-    )
-  }
+  return (
+    <>
+      <Form>
+        <FormGroup>
+          <FormTextArea
+            control={TextArea}
+            placeholder="Write reply..."
+            onChange={answerChangeHandler}
+            value={answer}
+            rows={1}
+          />
+          <div>
+            <Button
+              content="Send"
+              onClick={() => answerClick()}
+              primary
+              disabled={loading || !answer.trim().length}
+            />
+          </div>
+        </FormGroup>
+        <MarkAsResolvedWrapper>
+          <Checkbox
+            label="Mark as resolved"
+            onClick={() => doneClick()}
+            disabled={loading}
+          />
+        </MarkAsResolvedWrapper>
+      </Form>
+    </>
+  )
 }
 
 AnswerForm.propTypes = {
   memberId: PropTypes.string.isRequired,
-  sendAnswer: PropTypes.func.isRequired,
-  sendDoneMsg: PropTypes.func.isRequired,
-  redirectClick: PropTypes.func.isRequired,
-  error: PropTypes.string,
 }
