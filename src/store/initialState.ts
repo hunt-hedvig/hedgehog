@@ -24,7 +24,7 @@ const initialState: BackofficeStore = {
     member: null,
   },
   members: {
-    questionGroups: [],
+    list: [],
     searchResult: {
       items: [],
       page: 0,
