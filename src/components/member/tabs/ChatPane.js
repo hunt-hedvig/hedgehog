@@ -38,19 +38,6 @@ const ChatHeaderStyle = styled.div`
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 `
-const GET_SUGGESTED_ANSWER_QUERY = gql`
-  query GetSuggestedAnswer($question: String) {
-    getAnswerSuggestion(question: $question) {
-      reply
-      text
-      confidence
-      allReplies {
-        reply
-        intent
-      }
-    }
-  }
-`
 
 export default class ChatPane extends React.Component {
   constructor(props) {
@@ -172,56 +159,14 @@ export default class ChatPane extends React.Component {
               this.scroller = theRealScroller
             }}
           />
-          <Query
-            query={GET_SUGGESTED_ANSWER_QUERY}
-            variables={{ question: questionAndMessageIds.lastMemberMessages }}
-          >
-            {({ data, loading, error }) => {
-              if (loading || error) {
-                return (
-                  <ChatPanel
-                    allReplies={null}
-                    memberId=""
-                    messageIds={[]}
-                    questionToLabel=""
-                    confidence={0}
-                    addMessage={this.addMessageHandler}
-                    messages={
-                      (this.props.messages && this.props.messages.list) || []
-                    }
-                    suggestedAnswer=""
-                  />
-                )
-              }
-
-              return (
-                <ChatPanel
-                  allReplies={
-                    (data.getAnswerSuggestion &&
-                      data.getAnswerSuggestion.length > 0 &&
-                      data.getAnswerSuggestion[0].allReplies) ||
-                    null
-                  }
-                  memberId={this.props.match.params.memberId}
-                  messageIds={questionAndMessageIds.messageIds}
-                  questionToLabel={
-                    this.getQuestionAndAnswer(data.getAnswerSuggestion).question
-                  }
-                  confidence={
-                    this.getQuestionAndAnswer(data.getAnswerSuggestion)
-                      .confidence
-                  }
-                  addMessage={this.addMessageHandler}
-                  messages={
-                    (this.props.messages && this.props.messages.list) || []
-                  }
-                  suggestedAnswer={
-                    this.getQuestionAndAnswer(data.getAnswerSuggestion).answer
-                  }
-                />
-              )
-            }}
-          </Query>
+          <ChatPanel
+            memberId={this.props.match.params.memberId}
+            messageIds={questionAndMessageIds.messageIds}
+            addMessage={this.addMessageHandler}
+            messages={
+              (this.props.messages && this.props.messages.list) || []
+            }
+          />
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>
           )}
