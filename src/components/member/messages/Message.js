@@ -70,11 +70,11 @@ const Timestamp = styled.div`
 `
 
 const Video = styled.video`
-  width: 350px;
+  max-width: 350px;
 `
 
 const Image = styled.img`
-  width: 350px;
+  max-width: 350px;
 `
 
 const isImage = (text) => {

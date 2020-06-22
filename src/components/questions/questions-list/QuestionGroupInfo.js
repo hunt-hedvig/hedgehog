@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { useMemberNameAndContractMarketInfoQuery } from 'api/generated/graphql'
 import styled from 'react-emotion'
 import { getMemberFlag, getMemberIdColor } from 'utils/member'
-import { Question } from './Question'
+import { QuestionInfo } from './QuestionInfo'
 
 const QuestionGroupInfoWrapper = styled.div`
   display: flex;
@@ -39,7 +39,7 @@ const QuestionGroupInfo = ({ questionGroup }) => {
       </MemberInfoWrapper>
 
       {questionGroup.questions.map((question) => {
-        return <Question key={question.id} question={question} />
+        return <QuestionInfo key={question.id} question={question} />
       })}
     </QuestionGroupInfoWrapper>
   )
