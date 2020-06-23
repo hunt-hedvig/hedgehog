@@ -89,10 +89,9 @@ export const ChatPanel = ({ memberId }) => {
     }
     sendMessage(
       getSendMessageOptions(memberId, currentMessage, forceSendMessage),
-    ).then(() => {
-      setCurrentMessage('')
-      setForceSendMessage(false)
-    })
+    )
+    setCurrentMessage('')
+    setForceSendMessage(false)
   }
 
   const selectEmoji = (emoji: string) => {

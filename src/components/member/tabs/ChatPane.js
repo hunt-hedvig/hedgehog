@@ -60,14 +60,9 @@ export default class ChatPane extends React.Component {
       {
         visible: !this.state.visible,
         manualChange: true,
-      },
-      () => {
-        this.scroller()
-      },
+      }
     )
   }
-
-  scroller = null
 
   render() {
     return this.state.visible ? (
@@ -85,9 +80,6 @@ export default class ChatPane extends React.Component {
             memberId={
               (this.props.match && this.props.match.params.memberId) || ''
             }
-            attachScrollListener={(theRealScroller) => {
-              this.scroller = theRealScroller
-            }}
           />
           <ChatPanel memberId={this.props.match.params.memberId} />
           {this.props.error && (

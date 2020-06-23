@@ -25,33 +25,28 @@ const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
-export const MessagesList = ({ memberId, attachScrollListener }) => {
-  const [messagesLength, setMessagesLength] = useState(0)
+export const MessagesList = ({ memberId }) => {
   const [messages] = useMessageHistory(memberId)
   const [messagesList, setMessagesList] = useState(null)
 
   const scrollToBottom = () => {
-    if (!messages) {
-      return
-    }
-    if (messages.length !== messagesLength) {
-      setMessagesLength(messages.length)
-      const lastMessage = messages[messagesLength - 1]
-      const lastMessageElement = document.getElementById(
-        `msg-${lastMessage.globalId}`,
-      )
-      if (lastMessageElement) {
-        animateScrollTo(lastMessageElement, {
-          elementToScroll: messagesList,
-          maxDuration: 500,
-        })
-      }
+    const lastMessage = messages[messages.length - 1]
+    const lastMessageElement = document.getElementById(
+      `msg-${lastMessage.globalId}`,
+    )
+    if (lastMessageElement) {
+      animateScrollTo(lastMessageElement, {
+        elementToScroll: messagesList,
+        maxDuration: 500,
+      })
     }
   }
 
   useEffect(() => {
-    attachScrollListener(scrollToBottom)
-  })
+    if (messages && messagesList) {
+      scrollToBottom()
+    }
+  }, [messages])
 
   return (
     <MessagesListContainer innerRef={(el) => setMessagesList(el)}>
@@ -62,11 +57,11 @@ export const MessagesList = ({ memberId, attachScrollListener }) => {
               <Message
                 key={item.globalId}
                 content={item.body}
-                left={item.header.fromId.toString() !== memberId}
+                left={item.header.fromId !== +memberId}
                 msgId={item.globalId}
                 timestamp={item.timestamp ? fromUnixTime(item.timestamp) : null}
                 from={
-                  item.header.fromId === memberId
+                  item.header.fromId === +memberId
                     ? null
                     : getAuthor(item.author)
                 }
@@ -83,5 +78,4 @@ export const MessagesList = ({ memberId, attachScrollListener }) => {
 
 MessagesList.propTypes = {
   memberId: PropTypes.string.isRequired,
-  attachScrollListener: PropTypes.func,
 }

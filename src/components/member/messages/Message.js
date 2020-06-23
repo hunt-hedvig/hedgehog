@@ -112,7 +112,7 @@ Message.propTypes = {
   content: PropTypes.object.isRequired,
   isQuestionMessage: PropTypes.bool,
   msgId: PropTypes.number,
-  timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  timestamp: PropTypes.instanceOf(Date),
   from: PropTypes.string,
 }
 
