@@ -26,7 +26,7 @@ const getAuthor = (author) => {
 }
 
 export const MessagesList = ({ memberId }) => {
-  const [messages] = useMessageHistory(memberId)
+  const [messages, {loading}] = useMessageHistory(memberId)
   const [messagesList, setMessagesList] = useState(null)
 
   const scrollToBottom = () => {
@@ -47,6 +47,10 @@ export const MessagesList = ({ memberId }) => {
       scrollToBottom()
     }
   }, [messages])
+
+  if (loading) {
+    return null
+  }
 
   return (
     <MessagesListContainer innerRef={(el) => setMessagesList(el)}>
@@ -70,7 +74,7 @@ export const MessagesList = ({ memberId }) => {
           )
         })
       ) : (
-        <EmptyList>No messages with this Member</EmptyList>
+        <EmptyList>No messages</EmptyList>
       )}
     </MessagesListContainer>
   )
