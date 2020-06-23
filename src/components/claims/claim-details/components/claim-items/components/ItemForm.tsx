@@ -1,4 +1,4 @@
-import { Button, Grid, MenuItem, TextField } from '@material-ui/core'
+import { Button, Chip, Grid, MenuItem, TextField } from '@material-ui/core'
 import {
   UpsertClaimItemInput,
   useUpsertClaimItemMutation,
@@ -7,7 +7,12 @@ import { format, isAfter, isValid, parseISO } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import React from 'react'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
-import { CurrencySelect } from './styles'
+import {
+  CurrencySelect,
+  LightningWrapper,
+  QuestionCircleWrapper,
+} from './styles'
+import { LightningFill, QuestionCircleFill } from 'react-bootstrap-icons'
 
 const isValidDate = (date: string) =>
   date === ''
@@ -131,7 +136,38 @@ export const ItemForm: React.FC<{
         </Grid>
       </Grid>
       <Grid container spacing={16}>
-        <Grid item style={{ width: '79.5%' }} />
+        <Grid item style={{ width: '79.5%' }}>
+          <Chip
+            style={{
+              backgroundColor: '#36658f',
+              color: 'white',
+              fontWeight: 'bold',
+              marginTop: '8px',
+            }}
+            avatar={
+              <LightningWrapper>
+                <LightningFill />
+              </LightningWrapper>
+            }
+            clickable
+            onDelete={() => console.log('delete')}
+            onClick={() => console.log('click')}
+            deleteIcon={<Chip label="4 800 SEK" />}
+            label="The depreciated valuation would be:"
+          />
+          <Chip
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0)',
+              border: '2px solid #36658f',
+              color: '#36658f',
+              fontWeight: 'bold',
+              marginTop: '8px',
+              marginLeft: '5px',
+            }}
+            label="4 800 SEK"
+          />
+        </Grid>
+
         <Grid item xs={true}>
           <Button
             disabled={!formLooksGood || loadingUpsertClaimItem}
