@@ -247,6 +247,11 @@ export enum ChargeStatus {
   ChargeCompleted = 'CHARGE_COMPLETED',
 }
 
+export type ChatMessage = {
+  __typename?: 'ChatMessage'
+  messageAsJson: Scalars['String']
+}
+
 export type Claim = {
   __typename?: 'Claim'
   id?: Maybe<Scalars['ID']>
@@ -827,6 +832,7 @@ export type MutationType = {
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
   regenerateCertificate: Scalars['ID']
+  sendMessage: SendMessageResponse
   markQuestionAsResolved: Scalars['Boolean']
   answerQuestion: Scalars['Boolean']
   createQuoteForNewContract: Quote
@@ -1028,6 +1034,10 @@ export type MutationTypeChangeFromDateArgs = {
 
 export type MutationTypeRegenerateCertificateArgs = {
   agreementId: Scalars['ID']
+}
+
+export type MutationTypeSendMessageArgs = {
+  input: SendMessageInput
 }
 
 export type MutationTypeMarkQuestionAsResolvedArgs = {
@@ -1251,6 +1261,7 @@ export type QueryType = {
   getAnswerSuggestion: Array<Suggestion>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
   itemCategories: Array<ItemCategory>
   claimItems: Array<ClaimItem>
@@ -1288,6 +1299,10 @@ export type QueryTypeTicketsArgs = {
 
 export type QueryTypeGetAnswerSuggestionArgs = {
   question?: Maybe<Scalars['String']>
+}
+
+export type QueryTypeMessageHistoryArgs = {
+  memberId: Scalars['ID']
 }
 
 export type QueryTypeItemCategoriesArgs = {
@@ -1407,6 +1422,26 @@ export type SchedulerState = {
   changedAt: Scalars['Instant']
   amount?: Maybe<Scalars['MonetaryAmount']>
   transactionId?: Maybe<Scalars['ID']>
+}
+
+export type SendMessageFailed = {
+  __typename?: 'SendMessageFailed'
+  memberId: Scalars['String']
+  errorCode: Scalars['Int']
+  errorMessage: Scalars['String']
+}
+
+export type SendMessageInput = {
+  memberId: Scalars['ID']
+  message: Scalars['String']
+  forceSendMessage: Scalars['Boolean']
+}
+
+export type SendMessageResponse = SendMessageSuccessful | SendMessageFailed
+
+export type SendMessageSuccessful = {
+  __typename?: 'SendMessageSuccessful'
+  memberId: Scalars['String']
 }
 
 export enum SignSource {
@@ -2152,6 +2187,16 @@ export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetMessageHistoryQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetMessageHistoryQuery = { __typename?: 'QueryType' } & {
+  messageHistory: Array<
+    { __typename?: 'ChatMessage' } & Pick<ChatMessage, 'messageAsJson'>
+  >
+}
+
 export type GetPartnerCampaignOwnersQueryVariables = {}
 
 export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
@@ -2238,6 +2283,22 @@ export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
     Contract,
     'id' | 'holderMemberId'
   >
+}
+
+export type SendMessageMutationVariables = {
+  input: SendMessageInput
+}
+
+export type SendMessageMutation = { __typename?: 'MutationType' } & {
+  sendMessage:
+    | ({ __typename?: 'SendMessageSuccessful' } & Pick<
+        SendMessageSuccessful,
+        'memberId'
+      >)
+    | ({ __typename?: 'SendMessageFailed' } & Pick<
+        SendMessageFailed,
+        'memberId' | 'errorCode' | 'errorMessage'
+      >)
 }
 
 export type SignQuoteForNewContractMutationVariables = {
@@ -3649,6 +3710,62 @@ export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
   GetItemCategoriesQuery,
   GetItemCategoriesQueryVariables
 >
+export const GetMessageHistoryDocument = gql`
+  query GetMessageHistory($memberId: ID!) {
+    messageHistory(memberId: $memberId) {
+      messageAsJson
+    }
+  }
+`
+
+/**
+ * __useGetMessageHistoryQuery__
+ *
+ * To run a query within a React component, call `useGetMessageHistoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessageHistoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessageHistoryQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetMessageHistoryQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMessageHistoryQuery,
+    GetMessageHistoryQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetMessageHistoryQuery,
+    GetMessageHistoryQueryVariables
+  >(GetMessageHistoryDocument, baseOptions)
+}
+export function useGetMessageHistoryLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMessageHistoryQuery,
+    GetMessageHistoryQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMessageHistoryQuery,
+    GetMessageHistoryQueryVariables
+  >(GetMessageHistoryDocument, baseOptions)
+}
+export type GetMessageHistoryQueryHookResult = ReturnType<
+  typeof useGetMessageHistoryQuery
+>
+export type GetMessageHistoryLazyQueryHookResult = ReturnType<
+  typeof useGetMessageHistoryLazyQuery
+>
+export type GetMessageHistoryQueryResult = ApolloReactCommon.QueryResult<
+  GetMessageHistoryQuery,
+  GetMessageHistoryQueryVariables
+>
 export const GetPartnerCampaignOwnersDocument = gql`
   query GetPartnerCampaignOwners {
     getPartnerCampaignOwners {
@@ -3990,6 +4107,63 @@ export type RevertTerminationMutationResult = ApolloReactCommon.MutationResult<
 export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RevertTerminationMutation,
   RevertTerminationMutationVariables
+>
+export const SendMessageDocument = gql`
+  mutation SendMessage($input: SendMessageInput!) {
+    sendMessage(input: $input) {
+      ... on SendMessageFailed {
+        memberId
+        errorCode
+        errorMessage
+      }
+      ... on SendMessageSuccessful {
+        memberId
+      }
+    }
+  }
+`
+export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
+  SendMessageMutation,
+  SendMessageMutationVariables
+>
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >(SendMessageDocument, baseOptions)
+}
+export type SendMessageMutationHookResult = ReturnType<
+  typeof useSendMessageMutation
+>
+export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
+  SendMessageMutation
+>
+export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SendMessageMutation,
+  SendMessageMutationVariables
 >
 export const SignQuoteForNewContractDocument = gql`
   mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {
@@ -4607,6 +4781,18 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'IndefinitePercentageDiscount',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'SendMessageResponse',
+        possibleTypes: [
+          {
+            name: 'SendMessageSuccessful',
+          },
+          {
+            name: 'SendMessageFailed',
           },
         ],
       },

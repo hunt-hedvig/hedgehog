@@ -1,14 +1,10 @@
 import { ChatPanel } from 'components/member/chat/ChatPanel'
-import MessagesList from 'components/member/messages/MessagesList'
-import { reconnect, subscribe } from 'lib/sockets/chat'
-import gql from 'graphql-tag'
+import { MessagesList } from 'components/member/messages/MessagesList'
 import PropTypes from 'prop-types'
 import Resizable from 're-resizable'
 import React from 'react'
-import { Query } from 'react-apollo'
 import styled from 'react-emotion'
 import { Icon, Message } from 'semantic-ui-react'
-import { disconnect } from 'lib/sockets'
 
 const resizableStyles = {
   display: 'flex',
@@ -45,79 +41,18 @@ export default class ChatPane extends React.Component {
     this.state = {
       visible: window.innerWidth > 1500,
       manualChange: false,
-      socket: null,
-      subscription: null,
     }
     window.addEventListener('resize', this.resizeControlChat)
   }
 
-  componentDidMount() {
-    const { stompClient, subscription } = this.subscribeSocket()
-    if (!stompClient) {
-      this.reconnectSocket()
-    }
-    this.setState({ socket: stompClient, subscription })
-  }
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeControlChat, false)
-    const { subscription } = this.state
-    disconnect(null, subscription)
-    this.props.clearMessagesList()
   }
 
   resizeControlChat = (e) => {
     if (!this.state.manualChange) {
       this.setState({ visible: window.innerWidth > 1500 })
     }
-  }
-
-  addMessageHandler = (message, forceSendMessage) => {
-    const { socket } = this.state
-    const { addMessage, match } = this.props
-    if (socket) {
-      addMessage(message, forceSendMessage, match.params.memberId, socket)
-    }
-  }
-
-  subscribeSocket = () => {
-    const {
-      messageReceived,
-      match: {
-        params: { memberId },
-      },
-      messages,
-      showNotification,
-      auth,
-    } = this.props
-
-    const { stompClient, subscription } = subscribe(
-      { messageReceived, showNotification },
-      memberId,
-      auth.email,
-      messages.activeConnection,
-    )
-    return { stompClient, subscription }
-  }
-
-  reconnectSocket = () => {
-    const {
-      messageReceived,
-      match: {
-        params: { memberId },
-      },
-      setActiveConnection,
-      showNotification,
-      auth,
-    } = this.props
-
-    reconnect({ messageReceived, showNotification }, memberId, auth.email).then(
-      (result) => {
-        const { stompClient, subscription } = result
-        this.setState({ socket: stompClient, subscription })
-        setActiveConnection(stompClient)
-      },
-    )
   }
 
   onResizeClick = () => {
@@ -135,8 +70,6 @@ export default class ChatPane extends React.Component {
   scroller = null
 
   render() {
-    const questionAndMessageIds = this.getQuestionToAnalyze()
-
     return this.state.visible ? (
       <>
         <Resizable
@@ -149,24 +82,14 @@ export default class ChatPane extends React.Component {
             onResizeClick={this.onResizeClick}
           />
           <MessagesList
-            messages={this.props.messages?.list ?? []}
-            error={!!this.props.socket}
-            id={(this.props.match && this.props.match.params.memberId) || ''}
-            messageId={
-              (this.props.match && this.props.match.params.msgId) || ''
+            memberId={
+              (this.props.match && this.props.match.params.memberId) || ''
             }
             attachScrollListener={(theRealScroller) => {
               this.scroller = theRealScroller
             }}
           />
-          <ChatPanel
-            memberId={this.props.match.params.memberId}
-            messageIds={questionAndMessageIds.messageIds}
-            addMessage={this.addMessageHandler}
-            messages={
-              (this.props.messages && this.props.messages.list) || []
-            }
-          />
+          <ChatPanel memberId={this.props.match.params.memberId} />
           {this.props.error && (
             <Message negative>{this.props.error.message}</Message>
           )}
@@ -180,57 +103,6 @@ export default class ChatPane extends React.Component {
         />
       </>
     )
-  }
-
-  getQuestionToAnalyze() {
-    let lastMemberMessages = ''
-    let messageIds = []
-
-    if (
-      !this.props.messages ||
-      !this.props.messages.list ||
-      this.props.messages.list.length === 0
-    ) {
-      return { lastMemberMessages, messageIds }
-    }
-
-    const messages = this.props.messages.list
-
-    const fromIds = messages.map((message) => message.header.fromId)
-
-    const lastNonMemberIndex = fromIds
-      .map((id) => id === +this.props.match.params.memberId)
-      .lastIndexOf(false)
-
-    const lastMemberMessagesArray = messages.filter(
-      (message, index) =>
-        ['free.chat.message', 'free.chat.from.bo', 'free.chat.start'].includes(
-          message.id,
-        ) && index > lastNonMemberIndex,
-    )
-
-    messageIds = lastMemberMessagesArray.map(
-      (message) => message.header.messageId,
-    )
-    lastMemberMessages = lastMemberMessagesArray
-      .map((message) => message.body.text)
-      .join(' ')
-
-    return { lastMemberMessages, messageIds }
-  }
-
-  getQuestionAndAnswer(responses) {
-    let question = ''
-    let answer = ''
-    let confidence = 0
-
-    if (!responses || responses.length !== 1) {
-      return { question, answer, confidence }
-    }
-    question = responses[0].text
-    answer = responses[0].reply
-    confidence = responses[0].confidence
-    return { question, answer, confidence }
   }
 }
 
@@ -248,8 +120,4 @@ const ChatHeader = (props) => (
 
 ChatPane.propTypes = {
   match: PropTypes.object.isRequired,
-  messages: PropTypes.object.isRequired,
-  addMessage: PropTypes.func.isRequired,
-  error: PropTypes.object,
-  socket: PropTypes.object,
 }

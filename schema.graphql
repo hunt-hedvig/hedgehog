@@ -14,6 +14,7 @@ type QueryType {
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
   claimItems(claimId: ID!): [ClaimItem!]!
@@ -96,6 +97,7 @@ type MutationType {
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
+  sendMessage(input: SendMessageInput!): SendMessageResponse!
   markQuestionAsResolved(memberId: ID!): Boolean!
   answerQuestion(memberId: ID!, answer: String!): Boolean!
   createQuoteForNewContract(
@@ -1345,6 +1347,28 @@ enum NorwegianGripenFactorType {
   SQUARE_METERS
   HOUSEHOLD_TYPE
   DEDUCTIBLE
+}
+
+type ChatMessage {
+  messageAsJson: String!
+}
+
+union SendMessageResponse = SendMessageSuccessful | SendMessageFailed
+
+type SendMessageSuccessful {
+  memberId: String!
+}
+
+type SendMessageFailed {
+  memberId: String!
+  errorCode: Int!
+  errorMessage: String!
+}
+
+input SendMessageInput {
+  memberId: ID!
+  message: String!
+  forceSendMessage: Boolean!
 }
 
 type MonetaryAmountV2 {

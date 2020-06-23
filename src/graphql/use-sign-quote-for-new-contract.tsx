@@ -1,12 +1,12 @@
 import { MutationFunctionOptions } from '@apollo/react-common'
-import { format } from 'date-fns'
 import {
   GetContractsDocument,
   SignQuoteForNewContractMutation,
   SignQuoteForNewContractMutationHookResult,
   SignQuoteForNewContractMutationVariables,
   useSignQuoteForNewContractMutation,
-} from '../api/generated/graphql'
+} from 'api/generated/graphql'
+import { format } from 'date-fns'
 import { QUOTES_QUERY } from './use-quotes'
 
 export const useSignQuoteForNewContract = (): SignQuoteForNewContractMutationHookResult =>

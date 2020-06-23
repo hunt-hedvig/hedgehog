@@ -1,8 +1,10 @@
 import animateScrollTo from 'animated-scroll-to'
 import Message from 'components/member/messages/Message'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
+import { useMessageHistory } from '../../../graphql/use-message-history'
+import { fromUnixTime, format } from 'date-fns'
 
 const MessagesListContainer = styled('div')(({ theme }) => ({
   flex: 1,
@@ -23,81 +25,63 @@ const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
-export default class MessagesList extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      messagesLength: 0,
-    }
-  }
+export const MessagesList = ({ memberId, attachScrollListener }) => {
+  const [messagesLength, setMessagesLength] = useState(0)
+  const [messages] = useMessageHistory(memberId)
+  const [messagesList, setMessagesList] = useState(null)
 
-  componentDidUpdate() {
-    this.theRealScroller()
-  }
-
-  componentDidMount() {
-    if (this.props.attachScrollListener) {
-      this.props.attachScrollListener(this.theRealScroller)
-    }
-  }
-
-  theRealScroller = () => {
-    /* eslint-disable */
-    const list = this.messagesList
-    if (!list) {
+  const scrollToBottom = () => {
+    if (!messages) {
       return
     }
-    const { messages } = this.props
-    if (messages.length !== this.state.messagesLength) {
-      this.setState({ messagesLength: messages.length })
-      const lastMessage = messages[messages.length - 1]
+    if (messages.length !== messagesLength) {
+      setMessagesLength(messages.length)
+      const lastMessage = messages[messagesLength - 1]
       const lastMessageElement = document.getElementById(
         `msg-${lastMessage.globalId}`,
       )
       if (lastMessageElement) {
         animateScrollTo(lastMessageElement, {
-          elementToScroll: list,
+          elementToScroll: messagesList,
           maxDuration: 500,
         })
       }
     }
   }
 
-  render() {
-    const { messages, error } = this.props
-    const memberId = parseInt(this.props.id, 10)
+  useEffect(() => {
+    attachScrollListener(scrollToBottom)
+  })
 
-    return (
-      <MessagesListContainer innerRef={(el) => (this.messagesList = el)}>
-        {messages.length ? (
-          messages.map((item, key) => (
-            <Message
-              key={key}
-              content={item.body}
-              left={item.header.fromId !== memberId}
-              msgId={item.globalId}
-              timestamp={item.localTimestamp}
-              from={
-                item.header.fromId === memberId ? null : getAuthor(item.author)
-              }
-            />
-          ))
-        ) : (
-          <EmptyList>
-            {error
-              ? 'No messages with this Member'
-              : 'Lost connection to server'}
-          </EmptyList>
-        )}
-      </MessagesListContainer>
-    )
-  }
+  return (
+    <MessagesListContainer innerRef={(el) => setMessagesList(el)}>
+      {messages ? (
+        messages.map((item) => {
+          return (
+            <div key={item.globalId}>
+              <Message
+                key={item.globalId}
+                content={item.body}
+                left={item.header.fromId.toString() !== memberId}
+                msgId={item.globalId}
+                timestamp={item.timestamp ? fromUnixTime(item.timestamp) : null}
+                from={
+                  item.header.fromId === memberId
+                    ? null
+                    : getAuthor(item.author)
+                }
+              />
+            </div>
+          )
+        })
+      ) : (
+        <EmptyList>No messages with this Member</EmptyList>
+      )}
+    </MessagesListContainer>
+  )
 }
 
 MessagesList.propTypes = {
-  id: PropTypes.string.isRequired,
-  messageId: PropTypes.string,
-  messages: PropTypes.array,
-  error: PropTypes.bool,
+  memberId: PropTypes.string.isRequired,
   attachScrollListener: PropTypes.func,
 }

@@ -1,0 +1,5 @@
+query GetMessageHistory($memberId: ID!) {
+  messageHistory(memberId: $memberId) {
+    messageAsJson
+  }
+}

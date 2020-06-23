@@ -1,13 +1,13 @@
 import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
 import { css } from 'emotion'
-import { dateTimeFormatter } from 'lib/helpers'
 import * as types from 'lib/messageTypes'
 import moment from 'moment'
 import 'moment/locale/sv'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'react-emotion'
+import { format } from 'date-fns'
 
 const MessageRow = styled.div`
   display: flex;
@@ -97,14 +97,12 @@ const Message = ({
         <br />
         <MessageContent content={content} />
       </MessageBody>
-      {timestamp ? (
-        <MessageInfo left={left}>
-          {from}
-          <Timestamp>
-            {dateTimeFormatter(timestamp, "MMM dd ''yy, HH:mm")}
-          </Timestamp>
-        </MessageInfo>
-      ) : null}
+      <MessageInfo left={left}>
+        {from}
+        {timestamp ? (
+          <Timestamp>{format(timestamp, "MMM dd ''yy, HH:mm")}</Timestamp>
+        ) : null}
+      </MessageInfo>
     </MessageBox>
   </MessageRow>
 )
