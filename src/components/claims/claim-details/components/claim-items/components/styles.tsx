@@ -100,12 +100,20 @@ export const LightningWrapper = styled.span`
 `
 
 export const QuestionCircleWrapper = styled.span`
-  color: ${({ theme }) => theme.accent};
+  color: ${({ theme }) => theme.accentLighter};
   font-size: 1rem;
   padding: 8px;
   padding-left: 5px;
-  margin-left: -10px;
   margin-top: 4px;
+`
+
+export const CheckWrapper = styled.span`
+  color: white;
+  font-size: 1rem;
+  padding: 5px;
+  padding-left: 5px;
+  margin-left: -10px;
+  margin-top: 5px;
 `
 
 export const TrashIconWrapper = styled.span`

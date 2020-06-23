@@ -6,13 +6,14 @@ import {
 import { format, isAfter, isValid, parseISO } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import React from 'react'
+import { Check, LightningFill, QuestionCircleFill } from 'react-bootstrap-icons'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
 import {
+  CheckWrapper,
   CurrencySelect,
   LightningWrapper,
   QuestionCircleWrapper,
 } from './styles'
-import { LightningFill, QuestionCircleFill } from 'react-bootstrap-icons'
 
 const isValidDate = (date: string) =>
   date === ''
@@ -141,8 +142,8 @@ export const ItemForm: React.FC<{
             style={{
               backgroundColor: '#36658f',
               color: 'white',
-              fontWeight: 'bold',
               marginTop: '8px',
+              fontWeight: 'bold',
             }}
             avatar={
               <LightningWrapper>
@@ -152,19 +153,40 @@ export const ItemForm: React.FC<{
             clickable
             onDelete={() => console.log('delete')}
             onClick={() => console.log('click')}
-            deleteIcon={<Chip label="4 800 SEK" />}
-            label="The depreciated valuation would be:"
+            deleteIcon={
+              <>
+                <Chip
+                  label="4 800 SEK"
+                  style={{
+                    height: '70%',
+                    background: 'rgba(255, 255, 255, .2)',
+                    color: 'white',
+                  }}
+                />
+                <QuestionCircleWrapper>
+                  <QuestionCircleFill />
+                </QuestionCircleWrapper>
+              </>
+            }
+            label="The depreciated valuation would be"
           />
           <Chip
             style={{
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              border: '2px solid #36658f',
-              color: '#36658f',
+              backgroundColor: '#199381',
+              color: 'white',
               fontWeight: 'bold',
               marginTop: '8px',
               marginLeft: '5px',
             }}
-            label="4 800 SEK"
+            label="Use"
+            clickable
+            onClick={() => console.log('click')}
+            onDelete={() => console.log('delete')}
+            deleteIcon={
+              <CheckWrapper>
+                <Check />
+              </CheckWrapper>
+            }
           />
         </Grid>
 
