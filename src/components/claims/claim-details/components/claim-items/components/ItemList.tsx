@@ -5,8 +5,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
   IconButton,
-  Link,
   Table,
   TableBody,
   TableCell as MuiTableCell,
@@ -18,10 +18,10 @@ import {
 import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
 import React from 'react'
-import { ChevronRight, Trash } from 'react-bootstrap-icons'
+import { ChevronRight, InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
-import { ChevronRightWrapper, TrashIconWrapper } from './styles'
+import { ChevronRightWrapper, InfoWrapper, TrashIconWrapper } from './styles'
 
 const TableCell = withStyles({
   root: {
@@ -60,10 +60,10 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
         </DialogActions>
       </Dialog>
       <colgroup>
-        <col style={{ width: '50.7%' }} />
-        <col style={{ width: '16.6%' }} />
-        <col style={{ width: '13.4%' }} />
-        <col style={{ width: '16.3%' }} />
+        <col style={{ width: '51.7%' }} />
+        <col style={{ width: '17.5%' }} />
+        <col style={{ width: '14.3%' }} />
+        <col style={{ width: '13.5%' }} />
         <col style={{ width: '3.0%' }} />
       </colgroup>
       <TableHead style={{ padding: '0px' }}>
@@ -71,7 +71,7 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
           <TableCell>Item</TableCell>
           <TableCell>Purchase price</TableCell>
           <TableCell>Purchase date</TableCell>
-          <TableCell>Note</TableCell>
+          <TableCell>Valuation</TableCell>
           <TableCell />
         </TableRow>
       </TableHead>
@@ -126,37 +126,39 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               <TableCell>{purchasePriceString ?? <NotSpecified />}</TableCell>
               <TableCell>{item.dateOfPurchase ?? <NotSpecified />}</TableCell>
               <TableCell>
-                {noteString ? (
-                  <Typography>
-                    <Link
-                      color="inherit"
-                      style={{ textDecoration: 'none', cursor: 'pointer' }}
-                      onClick={() => {
-                        setCurrentNote(item?.note ?? '')
-                        setShowNoteDialog(true)
-                      }}
-                    >
-                      {noteString}
-                    </Link>
-                  </Typography>
-                ) : (
-                  <NotSpecified />
-                )}
+                <NotSpecified />
               </TableCell>
               <TableCell>
-                <IconButton
-                  style={{ marginRight: '-30px' }}
-                  disabled={toBeDeleted}
-                  onClick={() => {
-                    deleteClaimItem({
-                      variables: { claimItemId: item.id },
-                    }).then(() => setItemToDelete(null))
-                  }}
-                >
-                  <TrashIconWrapper>
-                    <Trash />
-                  </TrashIconWrapper>
-                </IconButton>
+                <Grid container spacing={8}>
+                  <Grid item xs={6}>
+                    <IconButton
+                      disabled={toBeDeleted}
+                      onClick={() => {
+                        deleteClaimItem({
+                          variables: { claimItemId: item.id },
+                        }).then(() => setItemToDelete(null))
+                      }}
+                    >
+                      <InfoWrapper>
+                        <InfoCircleFill />
+                      </InfoWrapper>
+                    </IconButton>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <IconButton
+                      disabled={toBeDeleted}
+                      onClick={() => {
+                        deleteClaimItem({
+                          variables: { claimItemId: item.id },
+                        }).then(() => setItemToDelete(null))
+                      }}
+                    >
+                      <TrashIconWrapper>
+                        <Trash />
+                      </TrashIconWrapper>
+                    </IconButton>
+                  </Grid>
+                </Grid>
               </TableCell>
             </TableRow>
           )

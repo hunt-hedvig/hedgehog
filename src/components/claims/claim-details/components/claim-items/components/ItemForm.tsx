@@ -8,12 +8,7 @@ import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-in
 import React from 'react'
 import { Check, LightningFill, QuestionCircleFill } from 'react-bootstrap-icons'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
-import {
-  CheckWrapper,
-  CurrencySelect,
-  LightningWrapper,
-  QuestionCircleWrapper,
-} from './styles'
+import { CheckWrapper, LightningWrapper, QuestionCircleWrapper } from './styles'
 
 const isValidDate = (date: string) =>
   date === ''
@@ -74,43 +69,46 @@ export const ItemForm: React.FC<{
 
   return (
     <>
-      <Grid container spacing={16}>
+      <Grid container spacing={8}>
         <Grid item xs={6}>
           <CategorySelect
             selectedItemCategories={selectedItemCategories}
             setSelectedItemCategories={setSelectedItemCategories}
           />
         </Grid>
-        <Grid item style={{ width: '16.5%' }}>
-          <Grid container spacing={0}>
-            <Grid item style={{ width: '50%' }}>
-              <TextField
-                placeholder={'Price'}
-                error={!validPurchasePrice}
-                value={purchasePrice}
-                helperText={!validPurchasePrice && 'Only numbers'}
-                onChange={({ target: { value } }) => setPurchasePrice(value)}
-                fullWidth
-              />
-            </Grid>
-            <Grid item style={{ width: '50%', marginTop: '-1px' }}>
-              <CurrencySelect
-                error={!validPurchasePrice}
-                value={purchasePriceCurrency}
-                onChange={({ target: { value } }) =>
-                  setPurchasePriceCurrency(value)
-                }
-              >
-                <MenuItem value={'SEK'}>SEK</MenuItem>
-                <MenuItem value={'NOK'}>NOK</MenuItem>
-                <MenuItem value={'EUR'}>EUR</MenuItem>
-                <MenuItem value={'USD'}>USD</MenuItem>
-                <MenuItem value={'GBP'}>GBP</MenuItem>
-              </CurrencySelect>
-            </Grid>
-          </Grid>
+        <Grid item xs={1}>
+          <TextField
+            placeholder="Price"
+            error={!validPurchasePrice}
+            value={purchasePrice}
+            helperText={!validPurchasePrice && 'Only numbers'}
+            onChange={({ target: { value } }) => setPurchasePrice(value)}
+            fullWidth
+            inputProps={{
+              style: {
+                paddingLeft: '10px',
+              },
+            }}
+          />
         </Grid>
-        <Grid item style={{ width: '13.0%' }}>
+        <Grid item xs={1}>
+          <TextField
+            select
+            error={!validPurchasePrice}
+            value={purchasePriceCurrency}
+            onChange={({ target: { value } }) =>
+              setPurchasePriceCurrency(value)
+            }
+            fullWidth
+          >
+            <MenuItem value={'SEK'}>SEK</MenuItem>
+            <MenuItem value={'NOK'}>NOK</MenuItem>
+            <MenuItem value={'EUR'}>EUR</MenuItem>
+            <MenuItem value={'USD'}>USD</MenuItem>
+            <MenuItem value={'GBP'}>GBP</MenuItem>
+          </TextField>
+        </Grid>
+        <Grid item style={{ width: '13.2%' }}>
           <TextField
             value={dateOfPurchase}
             error={!isValidDate(dateOfPurchase)}
@@ -124,6 +122,12 @@ export const ItemForm: React.FC<{
                   )
             }
             placeholder="Purchase date"
+            inputProps={{
+              style: {
+                paddingLeft: '10px',
+                paddingRight: '10px',
+              },
+            }}
           />
         </Grid>
         <Grid item xs={true}>
@@ -133,6 +137,11 @@ export const ItemForm: React.FC<{
             placeholder={'Note (optional)'}
             fullWidth
             helperText={' '}
+            inputProps={{
+              style: {
+                paddingLeft: '10px',
+              },
+            }}
           />
         </Grid>
       </Grid>
