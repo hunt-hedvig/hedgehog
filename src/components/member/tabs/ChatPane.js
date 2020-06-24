@@ -56,12 +56,10 @@ export default class ChatPane extends React.Component {
   }
 
   onResizeClick = () => {
-    this.setState(
-      {
-        visible: !this.state.visible,
-        manualChange: true,
-      }
-    )
+    this.setState({
+      visible: !this.state.visible,
+      manualChange: true,
+    })
   }
 
   render() {

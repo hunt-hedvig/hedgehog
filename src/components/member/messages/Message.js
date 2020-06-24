@@ -12,7 +12,7 @@ import { format } from 'date-fns'
 const MessageRow = styled.div`
   display: flex;
   justify-content: ${(props) => (props.left ? 'flex-end' : 'flex-start')};
-  margin: ${(props) => (props.isQuestion ? '0px' : '20px 0')};
+  margin: ${(props) => (props.isQuestion ? '0px' : '0.5rem 0')};
   width: 100%;
   box-sizing: border-box;
 `
@@ -111,7 +111,7 @@ Message.propTypes = {
   left: PropTypes.bool.isRequired,
   content: PropTypes.object.isRequired,
   isQuestionMessage: PropTypes.bool,
-  msgId: PropTypes.number,
+  msgId: PropTypes.string,
   timestamp: PropTypes.instanceOf(Date),
   from: PropTypes.string,
 }

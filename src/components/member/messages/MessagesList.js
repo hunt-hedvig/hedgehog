@@ -1,13 +1,12 @@
 import animateScrollTo from 'animated-scroll-to'
 import Message from 'components/member/messages/Message'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'react-emotion'
 import { useMessageHistory } from '../../../graphql/use-message-history'
-import { fromUnixTime, format } from 'date-fns'
+import { parseISO } from 'date-fns'
 
 const MessagesListContainer = styled('div')(({ theme }) => ({
-  flex: 1,
   boxSizing: 'border-box',
   overflowY: 'auto',
   padding: '20px 20px 20px',
@@ -15,6 +14,8 @@ const MessagesListContainer = styled('div')(({ theme }) => ({
   border: '1px solid ' + theme.borderStrong,
   borderTop: 0,
   borderBottom: 0,
+  display: 'flex',
+  flexDirection: 'column-reverse',
 }))
 
 const EmptyList = styled('h3')({
@@ -26,16 +27,16 @@ const getAuthor = (author) => {
 }
 
 export const MessagesList = ({ memberId }) => {
-  const [messages, {loading}] = useMessageHistory(memberId)
+  const [messages, { loading }] = useMessageHistory(memberId)
   const [messagesList, setMessagesList] = useState(null)
 
   const scrollToBottom = () => {
-    const lastMessage = messages[messages.length - 1]
-    const lastMessageElement = document.getElementById(
-      `msg-${lastMessage.globalId}`,
+    const bottomMessage = messages[0]
+    const bottomMessageElement = document.getElementById(
+      `msg-${bottomMessage.globalId.toString()}`,
     )
-    if (lastMessageElement) {
-      animateScrollTo(lastMessageElement, {
+    if (bottomMessageElement) {
+      animateScrollTo(bottomMessageElement, {
         elementToScroll: messagesList,
         maxDuration: 500,
       })
@@ -46,9 +47,9 @@ export const MessagesList = ({ memberId }) => {
     if (messages && messagesList) {
       scrollToBottom()
     }
-  }, [messages])
+  }, [messages?.length])
 
-  if (loading) {
+  if (loading && !messages) {
     return null
   }
 
@@ -61,14 +62,10 @@ export const MessagesList = ({ memberId }) => {
               <Message
                 key={item.globalId}
                 content={item.body}
-                left={item.header.fromId !== +memberId}
+                left={item.fromId !== memberId}
                 msgId={item.globalId}
-                timestamp={item.timestamp ? fromUnixTime(item.timestamp) : null}
-                from={
-                  item.header.fromId === +memberId
-                    ? null
-                    : getAuthor(item.author)
-                }
+                timestamp={item.timestamp ? parseISO(item.timestamp) : null}
+                from={item.fromId === memberId ? null : getAuthor(item.author)}
               />
             </div>
           )

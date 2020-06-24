@@ -249,7 +249,11 @@ export enum ChargeStatus {
 
 export type ChatMessage = {
   __typename?: 'ChatMessage'
-  messageAsJson: Scalars['String']
+  globalId: Scalars['ID']
+  author: Scalars['String']
+  fromId: Scalars['String']
+  timestamp?: Maybe<Scalars['Instant']>
+  messageBodyJsonString: Scalars['String']
 }
 
 export type Claim = {
@@ -2193,7 +2197,10 @@ export type GetMessageHistoryQueryVariables = {
 
 export type GetMessageHistoryQuery = { __typename?: 'QueryType' } & {
   messageHistory: Array<
-    { __typename?: 'ChatMessage' } & Pick<ChatMessage, 'messageAsJson'>
+    { __typename?: 'ChatMessage' } & Pick<
+      ChatMessage,
+      'globalId' | 'author' | 'fromId' | 'timestamp' | 'messageBodyJsonString'
+    >
   >
 }
 
@@ -3713,7 +3720,11 @@ export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
 export const GetMessageHistoryDocument = gql`
   query GetMessageHistory($memberId: ID!) {
     messageHistory(memberId: $memberId) {
-      messageAsJson
+      globalId
+      author
+      fromId
+      timestamp
+      messageBodyJsonString
     }
   }
 `

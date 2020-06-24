@@ -1,10 +1,15 @@
 import {
+  ChatMessage,
   GetMessageHistoryQueryHookResult,
   useGetMessageHistoryQuery,
 } from 'api/generated/graphql'
 
+export type Message = ChatMessage & {
+  body: object
+}
+
 type MessageHistoryReturnTuple = [
-  object[] | undefined,
+  Message[] | undefined,
   GetMessageHistoryQueryHookResult,
 ]
 
@@ -17,8 +22,13 @@ export const useMessageHistory = (
     },
     pollInterval: 2000,
   })
-  const messageHistory = queryResult?.data?.messageHistory
-    ?.map((message) => JSON.parse(message.messageAsJson))
-    ?.reverse()
+  const messageHistory = queryResult?.data?.messageHistory as
+    | Message[]
+    | undefined
+
+  messageHistory?.forEach(
+    (message) =>
+      ((message as Message).body = JSON.parse(message.messageBodyJsonString)),
+  )
   return [messageHistory, queryResult]
 }

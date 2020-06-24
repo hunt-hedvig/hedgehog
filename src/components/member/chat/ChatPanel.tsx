@@ -64,7 +64,7 @@ export const ChatPanel = ({ memberId }) => {
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [sendMessage, { loading }] = useSendMessage()
 
-  const shouldSubmit = (e: React.KeyboardEvent<any>) => {
+  const shouldSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     return (
       !window.matchMedia('(max-width: 800px)').matches &&
       e.keyCode === 13 &&
