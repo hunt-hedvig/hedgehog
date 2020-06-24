@@ -81,30 +81,29 @@ const isImage = (text) => {
   return text.match(/\.(jpeg|jpg|gif|png)$/) != null
 }
 
-const Message = ({
-  left,
-  content,
-  isQuestionMessage,
-  msgId,
-  timestamp,
-  from,
-}) => (
-  <MessageRow left={left} isQuestion={isQuestionMessage} id={`msg-${msgId}`}>
-    <MessageBox>
-      <MessageBody left={left}>
-        {isImage(content.text) && <Image src={content.text} />}
-        {!isImage(content.text) && <>{content.text}</>}
-        <br />
-        <MessageContent content={content} />
-      </MessageBody>
-      <MessageInfo left={left}>
-        {from}
-        {timestamp ? (
-          <Timestamp>{format(timestamp, "MMM dd ''yy, HH:mm")}</Timestamp>
-        ) : null}
-      </MessageInfo>
-    </MessageBox>
-  </MessageRow>
+const Message = React.forwardRef(
+  ({ left, content, isQuestionMessage, msgId, timestamp, from }, ref) => (
+    <MessageRow
+      left={left}
+      isQuestion={isQuestionMessage}
+      innerRef={ref}
+    >
+      <MessageBox>
+        <MessageBody left={left}>
+          {isImage(content.text) && <Image src={content.text} />}
+          {!isImage(content.text) && <>{content.text}</>}
+          <br />
+          <MessageContent content={content} />
+        </MessageBody>
+        <MessageInfo left={left}>
+          {from}
+          {timestamp ? (
+            <Timestamp>{format(timestamp, "MMM dd ''yy, HH:mm")}</Timestamp>
+          ) : null}
+        </MessageInfo>
+      </MessageBox>
+    </MessageRow>
+  ),
 )
 
 Message.propTypes = {

@@ -28,23 +28,18 @@ const getAuthor = (author) => {
 
 export const MessagesList = ({ memberId }) => {
   const [messages, { loading }] = useMessageHistory(memberId)
-  const [messagesList, setMessagesList] = useState(null)
+  const messagesList = useRef()
+  const latestMessage = useRef()
 
   const scrollToBottom = () => {
-    const bottomMessage = messages[0]
-    const bottomMessageElement = document.getElementById(
-      `msg-${bottomMessage.globalId.toString()}`,
-    )
-    if (bottomMessageElement) {
-      animateScrollTo(bottomMessageElement, {
-        elementToScroll: messagesList,
-        maxDuration: 500,
-      })
-    }
+    animateScrollTo(latestMessage.current, {
+      elementToScroll: messagesList.current,
+      maxDuration: 500,
+    })
   }
 
   useEffect(() => {
-    if (messages && messagesList) {
+    if (messages && messagesList.current && latestMessage.current) {
       scrollToBottom()
     }
   }, [messages?.length])
@@ -54,20 +49,19 @@ export const MessagesList = ({ memberId }) => {
   }
 
   return (
-    <MessagesListContainer innerRef={(el) => setMessagesList(el)}>
+    <MessagesListContainer innerRef={messagesList}>
       {messages ? (
-        messages.map((item) => {
+        messages.map((item, key) => {
           return (
-            <div key={item.globalId}>
-              <Message
-                key={item.globalId}
-                content={item.body}
-                left={item.fromId !== memberId}
-                msgId={item.globalId}
-                timestamp={item.timestamp ? parseISO(item.timestamp) : null}
-                from={item.fromId === memberId ? null : getAuthor(item.author)}
-              />
-            </div>
+            <Message
+              ref={key === 0 ? latestMessage : undefined}
+              key={item.globalId}
+              content={item.body}
+              left={item.fromId !== memberId}
+              msgId={item.globalId}
+              timestamp={item.timestamp ? parseISO(item.timestamp) : null}
+              from={item.fromId === memberId ? null : getAuthor(item.author)}
+            />
           )
         })
       ) : (
