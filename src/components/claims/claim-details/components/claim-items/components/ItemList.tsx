@@ -90,11 +90,6 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               )
             : null
 
-          const noteString =
-            item.note && item.note.length >= 25
-              ? item.note?.slice(0, 25) + '...'
-              : item.note
-
           const toBeDeleted = itemToDelete ? itemToDelete === item.id : false
 
           return (
@@ -131,18 +126,19 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               <TableCell>
                 <Grid container spacing={8}>
                   <Grid item xs={6}>
-                    <IconButton
-                      disabled={toBeDeleted}
-                      onClick={() => {
-                        deleteClaimItem({
-                          variables: { claimItemId: item.id },
-                        }).then(() => setItemToDelete(null))
-                      }}
-                    >
-                      <InfoWrapper>
-                        <InfoCircleFill />
-                      </InfoWrapper>
-                    </IconButton>
+                    {item?.note && (
+                      <IconButton
+                        disabled={toBeDeleted}
+                        onClick={() => {
+                          setCurrentNote(item?.note ?? '')
+                          setShowNoteDialog(true)
+                        }}
+                      >
+                        <InfoWrapper>
+                          <InfoCircleFill />
+                        </InfoWrapper>
+                      </IconButton>
+                    )}
                   </Grid>
                   <Grid item xs={6}>
                     <IconButton

@@ -1,4 +1,4 @@
-import { Chip, Select, TextField } from '@material-ui/core'
+import { Chip } from '@material-ui/core'
 import styled from 'react-emotion'
 import CreatableSelect from 'react-select/creatable'
 
