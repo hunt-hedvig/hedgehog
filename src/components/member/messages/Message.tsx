@@ -1,15 +1,13 @@
 import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
+import { format } from 'date-fns'
 import { css } from 'emotion'
 import * as types from 'lib/messageTypes'
-import moment from 'moment'
-import 'moment/locale/sv'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'react-emotion'
-import { format } from 'date-fns'
 
-const MessageRow = styled.div`
+const MessageRow = styled.div<WithLeft & { isQuestion?: boolean }>`
   display: flex;
   justify-content: ${(props) => (props.left ? 'flex-end' : 'flex-start')};
   margin: ${(props) => (props.isQuestion ? '0px' : '0.5rem 0')};
@@ -21,7 +19,11 @@ const MessageBox = styled.div`
   max-width: 400px;
 `
 
-const MessageBody = styled.div`
+interface WithLeft {
+  left: boolean
+}
+
+const MessageBody = styled.div<WithLeft>`
   white-space: pre-wrap;
   word-wrap: break-word;
   z-index: 2000;
@@ -59,7 +61,7 @@ const MessageBody = styled.div`
   }
 `
 
-const MessageInfo = styled.div`
+const MessageInfo = styled.div<WithLeft>`
   margin: 0.5em 0;
   font-size: 0.9rem;
   ${({ left }) => left && `text-align: right;`};
@@ -81,44 +83,38 @@ const isImage = (text) => {
   return text.match(/\.(jpeg|jpg|gif|png)$/) != null
 }
 
-const Message = React.forwardRef(
-  ({ left, content, isQuestionMessage, msgId, timestamp, from }, ref) => (
-    <MessageRow
-      left={left}
-      isQuestion={isQuestionMessage}
-      innerRef={ref}
-    >
-      <MessageBox>
-        <MessageBody left={left}>
-          {isImage(content.text) && <Image src={content.text} />}
-          {!isImage(content.text) && <>{content.text}</>}
-          <br />
-          <MessageContent content={content} />
-        </MessageBody>
-        <MessageInfo left={left}>
-          {from}
-          {timestamp ? (
-            <Timestamp>{format(timestamp, "MMM dd ''yy, HH:mm")}</Timestamp>
-          ) : null}
-        </MessageInfo>
-      </MessageBox>
-    </MessageRow>
-  ),
-)
-
-Message.propTypes = {
-  left: PropTypes.bool.isRequired,
-  content: PropTypes.object.isRequired,
-  isQuestionMessage: PropTypes.bool,
-  msgId: PropTypes.string,
-  timestamp: PropTypes.instanceOf(Date),
-  from: PropTypes.string,
-}
+const Message = React.forwardRef<
+  React.ReactNode,
+  {
+    left: boolean
+    content: any
+    isQuestionMessage?: boolean
+    timestamp: Date
+    from?: string
+  }
+>(({ left, content, isQuestionMessage, timestamp, from }, ref) => (
+  <MessageRow left={left} isQuestion={isQuestionMessage} innerRef={ref}>
+    <MessageBox>
+      <MessageBody left={left}>
+        {isImage(content.text) && <Image src={content.text} />}
+        {!isImage(content.text) && <>{content.text}</>}
+        <br />
+        <MessageContent content={content} />
+      </MessageBody>
+      <MessageInfo left={left}>
+        {from}
+        {timestamp ? (
+          <Timestamp>{format(timestamp, "MMM dd ''yy, HH:mm")}</Timestamp>
+        ) : null}
+      </MessageInfo>
+    </MessageBox>
+  </MessageRow>
+))
 
 const MessageContent = ({ content }) => {
   switch (content.type) {
     case types.DATE:
-      return <p>Date: {moment(content.date).format('MMMM Do YYYY')}</p>
+      return <p>Date: {content.date}</p>
     case types.AUDIO:
       return <audio src={content.URL} controls />
     case types.VIDEO:

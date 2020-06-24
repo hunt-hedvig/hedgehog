@@ -58,7 +58,6 @@ export const MessagesList = ({ memberId }) => {
               key={item.globalId}
               content={item.body}
               left={item.fromId !== memberId}
-              msgId={item.globalId}
               timestamp={item.timestamp ? parseISO(item.timestamp) : null}
               from={item.fromId === memberId ? null : getAuthor(item.author)}
             />
