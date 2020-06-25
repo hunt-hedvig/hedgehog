@@ -32,6 +32,8 @@ export const apolloClient = (() => {
             return `Member(${(object as any).memberId})`
           case 'Renewal':
             return `Renewal(${(object as any).draftOfAgreementId})`
+          case 'ChatMessage':
+            return `ChatMessage(${(object as any).globalId})`
           default:
             return defaultDataIdFromObject(object)
         }
