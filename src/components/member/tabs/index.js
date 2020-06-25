@@ -41,8 +41,7 @@ TabItem.propTypes = {
   hideTab: PropTypes.bool,
 }
 
-const memberPagePanes = (props, addMessage, socket) => {
-  const { insurance } = props
+const memberPagePanes = (props) => {
   const memberId = props.match.params.memberId
   const panes = [
     {
@@ -71,18 +70,6 @@ const memberPagePanes = (props, addMessage, socket) => {
       ),
     },
   ]
-  if (props.showChatTab) {
-    panes.push({
-      menuItem: 'Chat',
-      render: () => (
-        <TabItem
-          TabContent={ChatPane}
-          props={{ ...props, addMessage, socket }}
-          isChatTab={true}
-        />
-      ),
-    })
-  }
   panes.push(
     {
       menuItem: 'Contracts',

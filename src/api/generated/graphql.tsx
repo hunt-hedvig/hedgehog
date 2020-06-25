@@ -250,7 +250,7 @@ export enum ChargeStatus {
 export type ChatMessage = {
   __typename?: 'ChatMessage'
   globalId: Scalars['ID']
-  author: Scalars['String']
+  author?: Maybe<Scalars['String']>
   fromId: Scalars['String']
   timestamp?: Maybe<Scalars['Instant']>
   messageBodyJsonString: Scalars['String']
@@ -478,6 +478,12 @@ export type CostDeduction = {
 export type CreateNorwegianGripenInput = {
   baseFactorString?: Maybe<Scalars['String']>
   factors: Array<NorwegianGripenFactorInput>
+}
+
+export type DashboardNumbers = {
+  __typename?: 'DashboardNumbers'
+  numberOfClaims: Scalars['Int']
+  numberOfQuestions: Scalars['Int']
 }
 
 export type Debt = {
@@ -1271,6 +1277,7 @@ export type QueryType = {
   claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
+  dashboardNumbers?: Maybe<DashboardNumbers>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -2158,6 +2165,17 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
             }
         >
       }
+  >
+}
+
+export type GetDashboardNumbersQueryVariables = {}
+
+export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
+  dashboardNumbers: Maybe<
+    { __typename?: 'DashboardNumbers' } & Pick<
+      DashboardNumbers,
+      'numberOfClaims' | 'numberOfQuestions'
+    >
   >
 }
 
@@ -3630,6 +3648,62 @@ export type GetContractsLazyQueryHookResult = ReturnType<
 export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
+>
+export const GetDashboardNumbersDocument = gql`
+  query GetDashboardNumbers {
+    dashboardNumbers {
+      numberOfClaims
+      numberOfQuestions
+    }
+  }
+`
+
+/**
+ * __useGetDashboardNumbersQuery__
+ *
+ * To run a query within a React component, call `useGetDashboardNumbersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDashboardNumbersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDashboardNumbersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDashboardNumbersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >(GetDashboardNumbersDocument, baseOptions)
+}
+export function useGetDashboardNumbersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >(GetDashboardNumbersDocument, baseOptions)
+}
+export type GetDashboardNumbersQueryHookResult = ReturnType<
+  typeof useGetDashboardNumbersQuery
+>
+export type GetDashboardNumbersLazyQueryHookResult = ReturnType<
+  typeof useGetDashboardNumbersLazyQuery
+>
+export type GetDashboardNumbersQueryResult = ApolloReactCommon.QueryResult<
+  GetDashboardNumbersQuery,
+  GetDashboardNumbersQueryVariables
 >
 export const GetItemCategoriesDocument = gql`
   query GetItemCategories($kind: ItemCategoryKind!, $parentId: ID) {
