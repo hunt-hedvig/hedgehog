@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'react-emotion'
-import { Icon } from 'semantic-ui-react'
-import { SemanticCOLORS } from 'semantic-ui-react'
+import { Icon, SemanticCOLORS } from 'semantic-ui-react'
 import { IconSizeProp } from 'semantic-ui-react/dist/commonjs/elements/Icon/Icon'
 
 const IconStyled = styled(Icon)(() => ({
