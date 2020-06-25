@@ -1,18 +1,22 @@
 import animateScrollTo from 'animated-scroll-to'
 import Message from 'components/member/messages/Message'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'react-emotion'
+import { useMessageHistory } from '../../../graphql/use-message-history'
+import { parseISO } from 'date-fns'
 
 const MessagesListContainer = styled('div')(({ theme }) => ({
-  flex: 1,
   boxSizing: 'border-box',
   overflowY: 'auto',
-  padding: '20px 20px 20px',
+  padding: '0 20px',
   background: theme.background,
   border: '1px solid ' + theme.borderStrong,
   borderTop: 0,
   borderBottom: 0,
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column-reverse',
 }))
 
 const EmptyList = styled('h3')({
@@ -23,81 +27,50 @@ const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
-export default class MessagesList extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      messagesLength: 0,
-    }
+export const MessagesList = ({ memberId }) => {
+  const [messages, { loading }] = useMessageHistory(memberId)
+  const messagesList = useRef()
+  const latestMessage = useRef()
+
+  const scrollToBottom = () => {
+    animateScrollTo(latestMessage.current, {
+      elementToScroll: messagesList.current,
+      maxDuration: 1000,
+    })
   }
 
-  componentDidUpdate() {
-    this.theRealScroller()
+  useEffect(() => {
+    if (messages && messagesList.current && latestMessage.current) {
+      scrollToBottom()
+    }
+  }, [messages?.length])
+
+  if (loading && !messages) {
+    return null
   }
 
-  componentDidMount() {
-    if (this.props.attachScrollListener) {
-      this.props.attachScrollListener(this.theRealScroller)
-    }
-  }
-
-  theRealScroller = () => {
-    /* eslint-disable */
-    const list = this.messagesList
-    if (!list) {
-      return
-    }
-    const { messages } = this.props
-    if (messages.length !== this.state.messagesLength) {
-      this.setState({ messagesLength: messages.length })
-      const lastMessage = messages[messages.length - 1]
-      const lastMessageElement = document.getElementById(
-        `msg-${lastMessage.globalId}`,
-      )
-      if (lastMessageElement) {
-        animateScrollTo(lastMessageElement, {
-          elementToScroll: list,
-          maxDuration: 500,
-        })
-      }
-    }
-  }
-
-  render() {
-    const { messages, error } = this.props
-    const memberId = parseInt(this.props.id, 10)
-
-    return (
-      <MessagesListContainer innerRef={(el) => (this.messagesList = el)}>
-        {messages.length ? (
-          messages.map((item, key) => (
+  return (
+    <MessagesListContainer innerRef={messagesList}>
+      {messages ? (
+        messages.map((item, key) => {
+          return (
             <Message
-              key={key}
+              ref={key === 0 ? latestMessage : undefined}
+              key={item.globalId}
               content={item.body}
-              left={item.header.fromId !== memberId}
-              msgId={item.globalId}
-              timestamp={item.localTimestamp}
-              from={
-                item.header.fromId === memberId ? null : getAuthor(item.author)
-              }
+              left={item.fromId !== memberId}
+              timestamp={item.timestamp ? parseISO(item.timestamp) : null}
+              from={item.fromId === memberId ? null : getAuthor(item.author)}
             />
-          ))
-        ) : (
-          <EmptyList>
-            {error
-              ? 'No messages with this Member'
-              : 'Lost connection to server'}
-          </EmptyList>
-        )}
-      </MessagesListContainer>
-    )
-  }
+          )
+        })
+      ) : (
+        <EmptyList>No messages</EmptyList>
+      )}
+    </MessagesListContainer>
+  )
 }
 
 MessagesList.propTypes = {
-  id: PropTypes.string.isRequired,
-  messageId: PropTypes.string,
-  messages: PropTypes.array,
-  error: PropTypes.bool,
-  attachScrollListener: PropTypes.func,
+  memberId: PropTypes.string.isRequired,
 }

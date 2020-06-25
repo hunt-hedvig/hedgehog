@@ -1,6 +1,7 @@
 import { Member, SanctionStatus } from 'api/generated/graphql'
 import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
+import { OrbIndicator } from 'hedvig-ui/orb-indicator'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
 import styled from 'react-emotion'
@@ -92,23 +93,12 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
       <p>
         <b>Total Number of Claims:</b> {member.totalNumberOfClaims}
       </p>
-      {member.person && (
-        <p style={{ marginTop: '-7px' }}>
-          <b>Debt Status:</b>
-          <span style={{ fontSize: '32px' }}>
-            {member.person?.debtFlag && (
-              <FraudulentStatus
-                stateInfo={{
-                  state: member.person.debtFlag
-                    .replace('GREEN', 'NOT_FRAUD')
-                    .replace('AMBER', 'SUSPECTED_FRAUD')
-                    .replace('RED', 'CONFIRMED_FRAUD'),
-                }}
-              />
-            )}
-          </span>
-        </p>
-      )}
+      <p>
+        <b>Debt Status:</b>{' '}
+        {member.person && (
+          <OrbIndicator color={member.person?.debtFlag} size={'tiny'} />
+        )}
+      </p>
     </Paper>
   )
 }
