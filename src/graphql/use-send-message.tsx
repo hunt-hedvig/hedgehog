@@ -34,5 +34,6 @@ export const getSendMessageOptions = (
         },
       },
     ],
+    awaitRefetchQueries: true,
   }
 }

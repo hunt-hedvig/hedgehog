@@ -7,12 +7,18 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'react-emotion'
 
-const MessageRow = styled.div<WithLeft & { isQuestion?: boolean }>`
+const MessageRow = styled.div<
+  WithLeft & { isQuestion?: boolean; isVisible: boolean }
+>`
   display: flex;
   justify-content: ${(props) => (props.left ? 'flex-end' : 'flex-start')};
   margin: ${(props) => (props.isQuestion ? '0px' : '0.5rem 0')};
   width: 100%;
   box-sizing: border-box;
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  transform: ${(props) => (props.isVisible ? 'scale(1)' : 'scale(0.6)')};
+  transform-origin: ${(props) => (props.left ? 'right' : 'left')} bottom;
+  transition: all 0.25s ease-out;
 `
 
 const MessageBox = styled.div`
@@ -92,24 +98,37 @@ const Message = React.forwardRef<
     timestamp: Date
     from?: string
   }
->(({ left, content, isQuestionMessage, timestamp, from }, ref) => (
-  <MessageRow left={left} isQuestion={isQuestionMessage} innerRef={ref}>
-    <MessageBox>
-      <MessageBody left={left}>
-        {isImage(content.text) && <Image src={content.text} />}
-        {!isImage(content.text) && <>{content.text}</>}
-        <br />
-        <MessageContent content={content} />
-      </MessageBody>
-      <MessageInfo left={left}>
-        {from}
-        {timestamp ? (
-          <Timestamp>{format(timestamp, "MMM dd ''yy, HH:mm")}</Timestamp>
-        ) : null}
-      </MessageInfo>
-    </MessageBox>
-  </MessageRow>
-))
+>(({ left, content, isQuestionMessage, timestamp, from }, ref) => {
+  const [isVisible, setVisible] = React.useState(false)
+
+  React.useEffect(() => {
+    setVisible(true)
+  })
+
+  return (
+    <MessageRow
+      left={left}
+      isQuestion={isQuestionMessage}
+      innerRef={ref}
+      isVisible={isVisible}
+    >
+      <MessageBox>
+        <MessageBody left={left}>
+          {isImage(content.text) && <Image src={content.text} />}
+          {!isImage(content.text) && <>{content.text}</>}
+          <br />
+          <MessageContent content={content} />
+        </MessageBody>
+        <MessageInfo left={left}>
+          {from}
+          {timestamp ? (
+            <Timestamp>{format(timestamp, "MMM dd ''yy, HH:mm")}</Timestamp>
+          ) : null}
+        </MessageInfo>
+      </MessageBox>
+    </MessageRow>
+  )
+})
 
 const MessageContent = ({ content }) => {
   switch (content.type) {

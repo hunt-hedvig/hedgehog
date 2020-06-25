@@ -5,7 +5,7 @@ import {
 } from 'api/generated/graphql'
 
 export type Message = ChatMessage & {
-  body: object
+  body: any
 }
 
 type MessageHistoryReturnTuple = [
@@ -22,13 +22,10 @@ export const useMessageHistory = (
     },
     pollInterval: 2000,
   })
-  const messageHistory = queryResult?.data?.messageHistory as
-    | Message[]
-    | undefined
+  const messageHistory = queryResult?.data?.messageHistory?.map((message) => ({
+    ...message,
+    body: JSON.parse(message.messageBodyJsonString),
+  })) as Message[] | undefined
 
-  messageHistory?.forEach(
-    (message) =>
-      ((message as Message).body = JSON.parse(message.messageBodyJsonString)),
-  )
   return [messageHistory, queryResult]
 }

@@ -17,7 +17,8 @@ export const spacingMap: Record<SpacingSize, string> = {
 }
 
 export const Spacing = styled('div')<SpacingProps>`
-  ${({ inline }) => inline && 'display: inline-block;'};
+  ${({ inline }) => inline && 'display: inline-flex;'};
+  align-items: center;
   width: ${({ width }) => (width === 'auto' ? 'auto' : '100%')};
   padding-top: ${({ top, all }) => {
     if (!top && !all) {

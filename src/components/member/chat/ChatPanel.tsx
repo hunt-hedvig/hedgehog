@@ -7,6 +7,7 @@ import {
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
+import { ChevronRight } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { EmojiPicker } from './EmojiPicker'
 
@@ -136,6 +137,8 @@ export const ChatPanel = ({ memberId }) => {
         />
 
         <SubmitButton
+          loading={loading}
+          icon={<ChevronRight />}
           variation="primary"
           onClick={(event) => {
             event.preventDefault()

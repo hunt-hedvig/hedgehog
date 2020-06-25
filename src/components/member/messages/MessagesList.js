@@ -1,7 +1,7 @@
 import animateScrollTo from 'animated-scroll-to'
 import Message from 'components/member/messages/Message'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'react-emotion'
 import { useMessageHistory } from '../../../graphql/use-message-history'
 import { parseISO } from 'date-fns'
@@ -9,11 +9,12 @@ import { parseISO } from 'date-fns'
 const MessagesListContainer = styled('div')(({ theme }) => ({
   boxSizing: 'border-box',
   overflowY: 'auto',
-  padding: '20px 20px 20px',
+  padding: '0 20px',
   background: theme.background,
   border: '1px solid ' + theme.borderStrong,
   borderTop: 0,
   borderBottom: 0,
+  height: '100%',
   display: 'flex',
   flexDirection: 'column-reverse',
 }))
@@ -34,7 +35,7 @@ export const MessagesList = ({ memberId }) => {
   const scrollToBottom = () => {
     animateScrollTo(latestMessage.current, {
       elementToScroll: messagesList.current,
-      maxDuration: 500,
+      maxDuration: 1000,
     })
   }
 
