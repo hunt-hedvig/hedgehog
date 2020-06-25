@@ -1,4 +1,4 @@
-import { Button, Chip, Grid, MenuItem, TextField } from '@material-ui/core'
+import { Button, Grid, MenuItem, TextField } from '@material-ui/core'
 import {
   UpsertClaimItemInput,
   useUpsertClaimItemMutation,
@@ -42,7 +42,10 @@ export const ItemForm: React.FC<{
     itemTypeId: selectedItemCategories[1]?.id ?? null,
     itemBrandId: selectedItemCategories[2]?.id ?? null,
     itemModelId: selectedItemCategories[3]?.id ?? null,
-    dateOfPurchase: dateOfPurchase === '' ? null : dateOfPurchase,
+    dateOfPurchase:
+      dateOfPurchase !== '' && dateOfPurchase.length === 10
+        ? dateOfPurchase
+        : null,
     purchasePriceAmount: purchasePrice !== '' ? Number(purchasePrice) : null,
     purchasePriceCurrency: purchasePrice !== '' ? purchasePriceCurrency : null,
     note: note === '' ? null : note,
@@ -146,7 +149,7 @@ export const ItemForm: React.FC<{
       </Grid>
       <Grid container spacing={16}>
         <Grid item style={{ width: '79.5%' }}>
-          <MessageChip />
+          <MessageChip formData={addNewClaimItemRequest} />
         </Grid>
 
         <Grid item xs={true}>

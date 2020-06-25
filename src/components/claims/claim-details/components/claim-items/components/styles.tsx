@@ -91,7 +91,7 @@ export const ChevronRightWrapper = styled.span`
   font-weight: 500;
 `
 
-export const LightningWrapper = styled.span`
+export const ChipIconBase = styled.span`
   color: ${({ theme }) => theme.accentLighter};
   font-size: 0.9rem;
   padding: 9px;
