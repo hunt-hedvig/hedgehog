@@ -20,6 +20,12 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
+  dashboardNumbers: DashboardNumbers
+}
+
+type DashboardNumbers {
+  numberOfClaims: Int!
+  numberOfQuestions: Int!
 }
 
 type MutationType {
@@ -1351,7 +1357,7 @@ enum NorwegianGripenFactorType {
 
 type ChatMessage {
   globalId: ID!
-  author: String!
+  author: String
   fromId: String!
   timestamp: Instant
   messageBodyJsonString: String!
