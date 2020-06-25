@@ -1,0 +1,3 @@
+mutation AnswerQuestion($memberId: ID!, $answer: String!) {
+  answerQuestion(memberId: $memberId, answer: $answer)
+}

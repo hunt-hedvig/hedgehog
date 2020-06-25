@@ -807,7 +807,6 @@ export type MutationType = {
   changeTicketReminder?: Maybe<Scalars['ID']>
   changeTicketPriority?: Maybe<Scalars['ID']>
   autoLabelQuestion?: Maybe<AutoLabel>
-  questionIsDone?: Maybe<Scalars['Boolean']>
   whitelistMember?: Maybe<Scalars['Boolean']>
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
@@ -828,6 +827,8 @@ export type MutationType = {
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
   regenerateCertificate: Scalars['ID']
+  markQuestionAsResolved: Scalars['Boolean']
+  answerQuestion: Scalars['Boolean']
   createQuoteForNewContract: Quote
   signQuoteForNewContract: Quote
   upsertItemCompany: Scalars['ID']
@@ -935,10 +936,6 @@ export type MutationTypeAutoLabelQuestionArgs = {
   messageIds?: Maybe<Array<Scalars['String']>>
 }
 
-export type MutationTypeQuestionIsDoneArgs = {
-  memberId: Scalars['ID']
-}
-
 export type MutationTypeWhitelistMemberArgs = {
   memberId: Scalars['ID']
 }
@@ -1031,6 +1028,15 @@ export type MutationTypeChangeFromDateArgs = {
 
 export type MutationTypeRegenerateCertificateArgs = {
   agreementId: Scalars['ID']
+}
+
+export type MutationTypeMarkQuestionAsResolvedArgs = {
+  memberId: Scalars['ID']
+}
+
+export type MutationTypeAnswerQuestionArgs = {
+  memberId: Scalars['ID']
+  answer: Scalars['String']
 }
 
 export type MutationTypeCreateQuoteForNewContractArgs = {
@@ -1245,6 +1251,7 @@ export type QueryType = {
   getAnswerSuggestion: Array<Suggestion>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  questionGroups: Array<QuestionGroup>
   itemCategories: Array<ItemCategory>
   claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
@@ -1294,6 +1301,20 @@ export type QueryTypeClaimItemsArgs = {
 
 export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
+}
+
+export type Question = {
+  __typename?: 'Question'
+  id: Scalars['ID']
+  timestamp: Scalars['Instant']
+  messageJsonString: Scalars['String']
+}
+
+export type QuestionGroup = {
+  __typename?: 'QuestionGroup'
+  id: Scalars['ID']
+  memberId: Scalars['ID']
+  questions: Array<Question>
 }
 
 export type Quote = {
@@ -1410,11 +1431,11 @@ export type StormDamageClaim = {
 
 export type Suggestion = {
   __typename?: 'Suggestion'
-  allReplies: Array<AllRepliesEntry>
-  confidence: Scalars['Float']
   intent: Scalars['String']
   reply: Scalars['String']
   text: Scalars['String']
+  confidence: Scalars['Float']
+  allReplies: Array<AllRepliesEntry>
 }
 
 export type SwedishApartment = AgreementCore & {
@@ -1786,6 +1807,16 @@ export type AssignCampaignToPartnerPercentageDiscountMutationVariables = {
 export type AssignCampaignToPartnerPercentageDiscountMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'assignCampaignToPartnerPercentageDiscount'>
+
+export type AnswerQuestionMutationVariables = {
+  memberId: Scalars['ID']
+  answer: Scalars['String']
+}
+
+export type AnswerQuestionMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'answerQuestion'
+>
 
 export type ChangeFromDateMutationVariables = {
   agreementId: Scalars['ID']
@@ -2163,6 +2194,32 @@ export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
       }
   >
 }
+
+export type GetQuestionsGroupsQueryVariables = {}
+
+export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
+  questionGroups: Array<
+    { __typename?: 'QuestionGroup' } & Pick<
+      QuestionGroup,
+      'id' | 'memberId'
+    > & {
+        questions: Array<
+          { __typename?: 'Question' } & Pick<
+            Question,
+            'id' | 'messageJsonString' | 'timestamp'
+          >
+        >
+      }
+  >
+}
+
+export type MarkQuestionAsResolvedMutationVariables = {
+  memberId: Scalars['ID']
+}
+
+export type MarkQuestionAsResolvedMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'markQuestionAsResolved'>
 
 export type RegenerateCertificateMutationVariables = {
   agreementId: Scalars['ID']
@@ -2748,6 +2805,55 @@ export type AssignCampaignToPartnerPercentageDiscountMutationResult = ApolloReac
 export type AssignCampaignToPartnerPercentageDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AssignCampaignToPartnerPercentageDiscountMutation,
   AssignCampaignToPartnerPercentageDiscountMutationVariables
+>
+export const AnswerQuestionDocument = gql`
+  mutation AnswerQuestion($memberId: ID!, $answer: String!) {
+    answerQuestion(memberId: $memberId, answer: $answer)
+  }
+`
+export type AnswerQuestionMutationFn = ApolloReactCommon.MutationFunction<
+  AnswerQuestionMutation,
+  AnswerQuestionMutationVariables
+>
+
+/**
+ * __useAnswerQuestionMutation__
+ *
+ * To run a mutation, you first call `useAnswerQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAnswerQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [answerQuestionMutation, { data, loading, error }] = useAnswerQuestionMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      answer: // value for 'answer'
+ *   },
+ * });
+ */
+export function useAnswerQuestionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AnswerQuestionMutation,
+    AnswerQuestionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AnswerQuestionMutation,
+    AnswerQuestionMutationVariables
+  >(AnswerQuestionDocument, baseOptions)
+}
+export type AnswerQuestionMutationHookResult = ReturnType<
+  typeof useAnswerQuestionMutation
+>
+export type AnswerQuestionMutationResult = ApolloReactCommon.MutationResult<
+  AnswerQuestionMutation
+>
+export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AnswerQuestionMutation,
+  AnswerQuestionMutationVariables
 >
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
@@ -3676,6 +3782,115 @@ export type FindPartnerCampaignsLazyQueryHookResult = ReturnType<
 export type FindPartnerCampaignsQueryResult = ApolloReactCommon.QueryResult<
   FindPartnerCampaignsQuery,
   FindPartnerCampaignsQueryVariables
+>
+export const GetQuestionsGroupsDocument = gql`
+  query GetQuestionsGroups {
+    questionGroups {
+      id
+      memberId
+      questions {
+        id
+        messageJsonString
+        timestamp
+      }
+    }
+  }
+`
+
+/**
+ * __useGetQuestionsGroupsQuery__
+ *
+ * To run a query within a React component, call `useGetQuestionsGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetQuestionsGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetQuestionsGroupsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetQuestionsGroupsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetQuestionsGroupsQuery,
+    GetQuestionsGroupsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetQuestionsGroupsQuery,
+    GetQuestionsGroupsQueryVariables
+  >(GetQuestionsGroupsDocument, baseOptions)
+}
+export function useGetQuestionsGroupsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetQuestionsGroupsQuery,
+    GetQuestionsGroupsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetQuestionsGroupsQuery,
+    GetQuestionsGroupsQueryVariables
+  >(GetQuestionsGroupsDocument, baseOptions)
+}
+export type GetQuestionsGroupsQueryHookResult = ReturnType<
+  typeof useGetQuestionsGroupsQuery
+>
+export type GetQuestionsGroupsLazyQueryHookResult = ReturnType<
+  typeof useGetQuestionsGroupsLazyQuery
+>
+export type GetQuestionsGroupsQueryResult = ApolloReactCommon.QueryResult<
+  GetQuestionsGroupsQuery,
+  GetQuestionsGroupsQueryVariables
+>
+export const MarkQuestionAsResolvedDocument = gql`
+  mutation MarkQuestionAsResolved($memberId: ID!) {
+    markQuestionAsResolved(memberId: $memberId)
+  }
+`
+export type MarkQuestionAsResolvedMutationFn = ApolloReactCommon.MutationFunction<
+  MarkQuestionAsResolvedMutation,
+  MarkQuestionAsResolvedMutationVariables
+>
+
+/**
+ * __useMarkQuestionAsResolvedMutation__
+ *
+ * To run a mutation, you first call `useMarkQuestionAsResolvedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkQuestionAsResolvedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markQuestionAsResolvedMutation, { data, loading, error }] = useMarkQuestionAsResolvedMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useMarkQuestionAsResolvedMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    MarkQuestionAsResolvedMutation,
+    MarkQuestionAsResolvedMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    MarkQuestionAsResolvedMutation,
+    MarkQuestionAsResolvedMutationVariables
+  >(MarkQuestionAsResolvedDocument, baseOptions)
+}
+export type MarkQuestionAsResolvedMutationHookResult = ReturnType<
+  typeof useMarkQuestionAsResolvedMutation
+>
+export type MarkQuestionAsResolvedMutationResult = ApolloReactCommon.MutationResult<
+  MarkQuestionAsResolvedMutation
+>
+export type MarkQuestionAsResolvedMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  MarkQuestionAsResolvedMutation,
+  MarkQuestionAsResolvedMutationVariables
 >
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {

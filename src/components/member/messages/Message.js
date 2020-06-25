@@ -70,8 +70,16 @@ const Timestamp = styled.div`
 `
 
 const Video = styled.video`
-  width: 350px;
+  max-width: 350px;
 `
+
+const Image = styled.img`
+  max-width: 350px;
+`
+
+const isImage = (text) => {
+  return text.match(/\.(jpeg|jpg|gif|png)$/) != null
+}
 
 const Message = ({
   left,
@@ -84,7 +92,8 @@ const Message = ({
   <MessageRow left={left} isQuestion={isQuestionMessage} id={`msg-${msgId}`}>
     <MessageBox>
       <MessageBody left={left}>
-        {content.text}
+        {isImage(content.text) && <Image src={content.text} />}
+        {!isImage(content.text) && <>{content.text}</>}
         <br />
         <MessageContent content={content} />
       </MessageBody>

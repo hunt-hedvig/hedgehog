@@ -1,0 +1,11 @@
+query GetQuestionsGroups {
+  questionGroups {
+    id
+    memberId
+    questions {
+      id
+      messageJsonString
+      timestamp
+    }
+  }
+}

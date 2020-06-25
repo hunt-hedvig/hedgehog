@@ -14,6 +14,7 @@ type QueryType {
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  questionGroups: [QuestionGroup!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
@@ -48,22 +49,21 @@ type MutationType {
     memberId: String
     messageIds: [String!]
   ): AutoLabel
-  questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
   setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
   activateQuote(
-    id: ID!,
-    activationDate: LocalDate!,
+    id: ID!
+    activationDate: LocalDate!
     terminationDate: LocalDate
   ): Quote!
 
   addAgreementFromQuote(
-    id: ID!,
-    contractId: ID!,
-    activeFrom: LocalDate,
-    activeTo: LocalDate,
+    id: ID!
+    contractId: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
     previousAgreementActiveTo: LocalDate
   ): Quote!
 
@@ -72,10 +72,7 @@ type MutationType {
     memberId: ID!
     quoteData: QuoteFromProductInput!
   ): Quote!
-  createQuoteFromAgreement(
-    agreementId: ID!
-    memberId: ID!
-  ): Quote!
+  createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
   updateQuote(
     quoteId: ID!
     quoteData: QuoteInput!
@@ -83,23 +80,30 @@ type MutationType {
   ): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
-  activatePendingAgreement(contractId: ID!, request: ActivatePendingAgreementInput): Contract!
-  changeTerminationDate(contractId: ID!, request: ChangeTerminationDateInput): Contract!
+  activatePendingAgreement(
+    contractId: ID!
+    request: ActivatePendingAgreementInput
+  ): Contract!
+  changeTerminationDate(
+    contractId: ID!
+    request: ChangeTerminationDateInput
+  ): Contract!
   revertTermination(contractId: ID!): Contract!
-  createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
+  createNorwegianGripenPriceEngine(
+    request: CreateNorwegianGripenInput
+  ): Boolean!
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
+  markQuestionAsResolved(memberId: ID!): Boolean!
+  answerQuestion(memberId: ID!, answer: String!): Boolean!
   createQuoteForNewContract(
-    memberId: ID!,
-    quoteInput: QuoteInput!,
+    memberId: ID!
+    quoteInput: QuoteInput!
     bypassUnderwritingGuidelines: Boolean!
   ): Quote!
-  signQuoteForNewContract(
-    quoteId: ID!,
-    activationDate: LocalDate
-  ): Quote!
+  signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
   upsertItemCompany(request: UpsertItemCompanyInput): ID!
   upsertItemType(request: UpsertItemTypeInput): ID!
   upsertItemBrand(request: UpsertItemBrandInput): ID!
@@ -198,7 +202,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-  SwedishApartment
+    SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -389,22 +393,6 @@ type CampaignOwnerPartner {
   partnerId: String!
 }
 
-type Suggestion {
-  intent: String!
-  reply: String!
-  text: String!
-  confidence: Float!
-  allReplies: [AllRepliesEntry!]!
-}
-type AllRepliesEntry {
-  intent: String!
-  reply: String!
-}
-
-type AutoLabel {
-  message: Boolean
-}
-
 enum IncentiveType {
   COST_DEDUCTION
   FREE_MONTHS
@@ -424,7 +412,7 @@ type VoucherCampaign {
 }
 
 type MonthlyPercentageDiscountFixedPeriod {
-  numberOfMonths: Int,
+  numberOfMonths: Int
   percentage: Float
 }
 
@@ -444,7 +432,12 @@ type IndefinitePercentageDiscount {
   percentageDiscount: Float
 }
 
-union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount
+union Incentive =
+    MonthlyPercentageDiscountFixedPeriod
+  | FreeMonths
+  | CostDeduction
+  | NoDiscount
+  | IndefinitePercentageDiscount
 
 type ItemFamily implements ItemCategoryCore {
   id: ID!
@@ -649,10 +642,10 @@ type Quote {
 }
 
 enum QuoteProductType {
-  APARTMENT,
-  HOUSE,
-  OBJECT,
-  HOME_CONTENT,
+  APARTMENT
+  HOUSE
+  OBJECT
+  HOME_CONTENT
   TRAVEL
 }
 enum QuoteState {
@@ -662,7 +655,11 @@ enum QuoteState {
   EXPIRED
 }
 
-union QuoteData = ApartmentQuoteData | HouseQuoteData | NorwegianHomeContentQuoteData | NorwegianTravelQuoteData
+union QuoteData =
+    ApartmentQuoteData
+  | HouseQuoteData
+  | NorwegianHomeContentQuoteData
+  | NorwegianTravelQuoteData
 
 type ApartmentQuoteData implements IQuoteData {
   id: ID!
@@ -675,9 +672,9 @@ type ApartmentQuoteData implements IQuoteData {
 }
 
 enum ApartmentSubType {
-  BRF,
-  RENT,
-  STUDENT_BRF,
+  BRF
+  RENT
+  STUDENT_BRF
   STUDENT_RENT
 }
 
@@ -731,9 +728,9 @@ enum ExtraBuildingType {
   OTHER
 }
 
-type NorwegianHomeContentQuoteData implements IQuoteData{
+type NorwegianHomeContentQuoteData implements IQuoteData {
   id: ID!
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
 
@@ -745,9 +742,9 @@ type NorwegianHomeContentQuoteData implements IQuoteData{
   subType: NorwegianHomeContentLineOfBusiness
 }
 
-type NorwegianTravelQuoteData implements IQuoteData{
+type NorwegianTravelQuoteData implements IQuoteData {
   id: ID!
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
   householdSize: Int
@@ -797,7 +794,6 @@ input NorwegianHomeContentQuoteInput {
 
   subType: NorwegianHomeContentLineOfBusiness
 }
-
 
 input NorwegianTravelQuoteInput {
   householdSize: Int
@@ -853,7 +849,7 @@ input ExtraBuildingInput {
 }
 
 input NorwegianHomeContentQuoteDataInput {
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
 
@@ -867,7 +863,7 @@ input NorwegianHomeContentQuoteDataInput {
 }
 
 input NorwegianTravelQuoteDataInput {
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
 
@@ -1030,7 +1026,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1239,6 +1235,18 @@ enum ChargeStatus {
   CHARGE_COMPLETED
 }
 
+type QuestionGroup {
+  id: ID!
+  memberId: ID!
+  questions: [Question!]!
+}
+
+type Question {
+  id: ID!
+  timestamp: Instant!
+  messageJsonString: String!
+}
+
 input TicketInput {
   assignedTo: String
   priority: Float
@@ -1340,7 +1348,7 @@ enum NorwegianGripenFactorType {
 }
 
 type MonetaryAmountV2 {
-  amount: String!,
+  amount: String!
   currency: String!
 }
 
