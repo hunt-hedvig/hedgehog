@@ -1,6 +1,7 @@
 import { colors } from '@hedviginsurance/brand'
 import { ContractMarketInfo, Market } from 'api/generated/graphql'
 import gql from 'graphql-tag'
+import { OrbIndicator } from 'hedvig-ui/orb-indicator'
 import { dateTimeFormatter, MonetaryAmount } from 'lib/helpers'
 import * as React from 'react'
 import { Mutation, Query } from 'react-apollo'
@@ -10,7 +11,6 @@ import { RouteComponentProps } from 'react-router'
 import { Table } from 'semantic-ui-react'
 import actions from 'store/actions'
 import { formatMoney } from 'utils/money'
-import { OrbIndicator } from '../../../../shared/hedvig-ui/orb-indicator'
 
 const query = gql`
   query PersonQuery($memberId: ID!) {

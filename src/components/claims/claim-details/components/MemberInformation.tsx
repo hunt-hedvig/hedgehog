@@ -1,12 +1,12 @@
 import { Member, SanctionStatus } from 'api/generated/graphql'
 import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
+import { OrbIndicator } from 'hedvig-ui/orb-indicator'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { formatMoney } from 'utils/money'
-import { OrbIndicator } from '../../../../../shared/hedvig-ui/orb-indicator'
 
 import {
   Ban,
