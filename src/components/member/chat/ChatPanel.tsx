@@ -137,6 +137,7 @@ export const ChatPanel = ({ memberId }) => {
         />
 
         <SubmitButton
+          disabled={currentMessage === ''}
           loading={loading}
           icon={<ChevronRight />}
           variation="primary"
