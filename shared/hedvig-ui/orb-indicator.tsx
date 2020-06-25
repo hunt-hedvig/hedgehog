@@ -15,7 +15,7 @@ const Container = styled('p')(() => ({
 }))
 
 interface OrbProps {
-  color?: Flag | string
+  color?: Flag | string | null
   size?: IconSizeProp
 }
 
@@ -34,10 +34,7 @@ export const OrbIndicator: React.FunctionComponent<OrbProps> = ({
       <span style={{ fontSize: '32px' }}>
         <IconStyled
           name="circle"
-          color={
-            (color?.toLowerCase() as SemanticCOLORS) ||
-            ('grey' as SemanticCOLORS)
-          }
+          color={(color?.toLowerCase() || 'grey') as SemanticCOLORS}
           size={size || 'tiny'}
         />
       </span>
