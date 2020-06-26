@@ -1,4 +1,5 @@
 import { Chip as MuiChip } from '@material-ui/core'
+import { useCanEvaluate } from 'graphql/use-can-evaluate'
 import React from 'react'
 import { EyeFill, Gem, Pencil, PlusCircle } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
@@ -6,6 +7,7 @@ import {
   MonetaryAmountV2,
   UpsertClaimItemInput,
 } from '../../../../../../api/generated/graphql'
+import { useGetEvaluation } from '../../../../../../graphql/use-get-evaluation'
 import { formatMoney } from '../../../../../../utils/money'
 import { ChipIconBase } from './styles'
 
@@ -38,7 +40,7 @@ const EditChip: React.FC = ({}) => {
     margin-left: 7px;
   `
 
-  return <Chip label={'Edit'} icon={<Pencil />} />
+  return <Chip label={'Custom valuation'} icon={<Pencil />} />
 }
 
 const AddChip: React.FC = ({}) => {
@@ -49,7 +51,23 @@ const AddChip: React.FC = ({}) => {
     font-weight: bold;
     margin-left: 7px;
   `
-  return <Chip label={'Add'} icon={<PlusCircle />} />
+  return <Chip label={'Add custom'} icon={<PlusCircle />} />
+}
+
+const InfoChip: React.FC = ({}) => {
+  const StyledChip = styled(ChipBase)`
+    background: #36658f;
+    color: white;
+    margin-top: 8px;
+    font-weight: bold;
+    margin-left: 7px;
+  `
+  return (
+    <StyledChip
+      label={'Enter price and purchase date to get a valuation for this item'}
+      icon={<EyeFill />}
+    />
+  )
 }
 
 const NoValuationChip: React.FC = ({}) => {
@@ -62,7 +80,7 @@ const NoValuationChip: React.FC = ({}) => {
   `
   return (
     <StyledChip
-      label={'Would you like to add a valuation?'}
+      label={"There's no valuation available for this item"}
       icon={<EyeFill />}
     />
   )
@@ -97,21 +115,47 @@ const ValuationChip: React.FC<{ valuation: MonetaryAmountV2 }> = ({
 export const MessageChip: React.FC<{
   formData: UpsertClaimItemInput
 }> = ({ formData }) => {
-  const showValuation =
+  const priceAndDateAvailable =
     formData.purchasePriceAmount != null && formData.dateOfPurchase != null
+
+  const [evaluationStatus] = useCanEvaluate(
+    'SE_APARTMENT_RENT',
+    formData.itemFamilyId,
+    formData.itemTypeId,
+  )
+
+  const [evaluation] = useGetEvaluation(
+    formData.purchasePriceAmount ?? 0,
+    formData.itemFamilyId,
+    'SE_APARTMENT_RENT',
+    formData.dateOfPurchase,
+    formData.itemTypeId,
+    null,
+  )
+
+  const canEvaluate = !!formData.itemFamilyId && !!evaluationStatus?.canEvaluate
 
   return (
     <>
-      {showValuation && (
+      {canEvaluate && priceAndDateAvailable ? (
         <>
           <ValuationChip
             valuation={{
-              amount: '4800',
-              currency: formData.purchasePriceCurrency ?? 'SEK',
+              amount: evaluation?.depreciatedValue?.toString() ?? '-',
+              currency: formData?.purchasePriceCurrency ?? 'SEK',
             }}
           />
           <EditChip />
         </>
+      ) : canEvaluate ? (
+        <InfoChip />
+      ) : priceAndDateAvailable && !!formData.itemFamilyId ? (
+        <>
+          <NoValuationChip />
+          <AddChip />
+        </>
+      ) : (
+        <></>
       )}
     </>
   )
