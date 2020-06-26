@@ -91,14 +91,6 @@ export const ChevronRightWrapper = styled.span`
   font-weight: 500;
 `
 
-export const ChipIconBase = styled.span`
-  color: ${({ theme }) => theme.accentLighter};
-  font-size: 0.9rem;
-  padding: 9px;
-  padding-right: 0px;
-  margin-right: -15px;
-`
-
 export const QuestionCircleWrapper = styled.span`
   color: ${({ theme }) => theme.accentLighter};
   font-size: 1rem;
