@@ -81,7 +81,6 @@
     "uuid": "^3.3.2",
     "webpack": "^4.19.1",
     "webpack-node-externals": "^1.7.2",
-    "websocket": "^1.0.28",
     "ws": "^6.1.0",
     "yup": "^0.26.6"
   },

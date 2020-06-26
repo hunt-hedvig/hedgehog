@@ -14,6 +14,7 @@ const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`
   border-radius: 0.5rem;
   max-width: 50rem;
   width: 50%;
+  min-width: 350px;
 
   background: ${({ theme }) => theme.accentLighter};
   border: 1px solid ${({ theme }) => theme.border};

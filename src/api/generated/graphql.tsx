@@ -2269,6 +2269,17 @@ export type GetEvaluationQuery = { __typename?: 'QueryType' } & {
     }
 }
 
+export type GetDashboardNumbersQueryVariables = {}
+
+export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
+  dashboardNumbers: Maybe<
+    { __typename?: 'DashboardNumbers' } & Pick<
+      DashboardNumbers,
+      'numberOfClaims' | 'numberOfQuestions'
+    >
+  >
+}
+
 export type GetItemCategoriesQueryVariables = {
   kind: ItemCategoryKind
   parentId?: Maybe<Scalars['ID']>
@@ -3804,6 +3815,62 @@ export type GetContractsLazyQueryHookResult = ReturnType<
 export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
+>
+export const GetDashboardNumbersDocument = gql`
+  query GetDashboardNumbers {
+    dashboardNumbers {
+      numberOfClaims
+      numberOfQuestions
+    }
+  }
+`
+
+/**
+ * __useGetDashboardNumbersQuery__
+ *
+ * To run a query within a React component, call `useGetDashboardNumbersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDashboardNumbersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDashboardNumbersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDashboardNumbersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >(GetDashboardNumbersDocument, baseOptions)
+}
+export function useGetDashboardNumbersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >(GetDashboardNumbersDocument, baseOptions)
+}
+export type GetDashboardNumbersQueryHookResult = ReturnType<
+  typeof useGetDashboardNumbersQuery
+>
+export type GetDashboardNumbersLazyQueryHookResult = ReturnType<
+  typeof useGetDashboardNumbersLazyQuery
+>
+export type GetDashboardNumbersQueryResult = ApolloReactCommon.QueryResult<
+  GetDashboardNumbersQuery,
+  GetDashboardNumbersQueryVariables
 >
 export const GetEvaluationDocument = gql`
   query GetEvaluation(
