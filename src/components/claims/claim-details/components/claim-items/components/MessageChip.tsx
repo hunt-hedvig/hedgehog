@@ -18,7 +18,10 @@ export const MessageChip: React.FC<{
   const priceAndDateAvailable =
     formData.purchasePriceAmount != null && formData.dateOfPurchase != null
 
-  const [evaluationStatus] = useCanEvaluate(
+  const [
+    evaluationStatus,
+    { loading: loadingEvaluationStatus },
+  ] = useCanEvaluate(
     'SE_APARTMENT_RENT',
     formData.itemFamilyId,
     formData.itemTypeId,
@@ -36,9 +39,12 @@ export const MessageChip: React.FC<{
   const canEvaluate = !!formData.itemFamilyId && !!evaluationStatus?.canEvaluate
   const evaluationType = evaluation?.evaluationRule?.evaluationType ?? ''
 
+  React.useEffect(() => {
+    setCustomValuation('')
+  }, [formData?.itemFamilyId, formData?.itemTypeId])
+
   return (
     <>
-      {console.log('Hello?')}
       {canEvaluate && priceAndDateAvailable ? (
         evaluationType === 'MARKET_PRICE' ? (
           <>
@@ -53,24 +59,27 @@ export const MessageChip: React.FC<{
               }}
               ignored={customValuation !== ''}
             />
-            <InputChip
-              value={customValuation}
-              placeholder="Edit"
-              onChange={({ target: { value } }) => setCustomValuation(value)}
-            />
-            {customValuation !== '' && (
-              <DiscardChip onClick={() => setCustomValuation('')} />
-            )}
           </>
         )
       ) : canEvaluate ? (
         <InfoChip />
-      ) : priceAndDateAvailable && !!formData.itemFamilyId ? (
-        <>
-          <NoValuationChip />
-        </>
       ) : (
-        <></>
+        formData?.itemFamilyId &&
+        !loadingEvaluationStatus && <NoValuationChip />
+      )}
+
+      {formData?.itemFamilyId && (
+        <>
+          <InputChip
+            value={customValuation}
+            currency={formData?.purchasePriceCurrency ?? 'SEK'}
+            placeholder="Custom valuation"
+            onChange={({ target: { value } }) => setCustomValuation(value)}
+          />
+          {customValuation !== '' && (
+            <DiscardChip onClick={() => setCustomValuation('')} />
+          )}
+        </>
       )}
     </>
   )

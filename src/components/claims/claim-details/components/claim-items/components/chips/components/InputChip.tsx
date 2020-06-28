@@ -11,15 +11,16 @@ const Chip = styled(BaseChip)`
   margin-top: 8px;
   font-weight: bold;
   margin-left: 7px;
-  width: 100px;
+  width: 130px;
   cursor: pointer;
 `
 
 const InputChip: React.FC<{
   value: string
+  currency: string
   placeholder: string
   onChange: React.EventHandler<any>
-}> = ({ value, placeholder, onChange }) => {
+}> = ({ value, currency, placeholder, onChange }) => {
   const [isActive, setIsActive] = React.useState(false)
 
   return (
@@ -30,13 +31,18 @@ const InputChip: React.FC<{
         adornment={
           <TextField
             style={{
-              marginLeft: '-28%',
+              marginLeft: isActive
+                ? '-30px'
+                : value !== ''
+                ? '-30px'
+                : '-130px',
               width: 'auto',
             }}
             value={value}
             onChange={onChange}
             onFocus={() => setIsActive(true)}
             onBlur={() => setIsActive(false)}
+            inputProps={{ maxLength: 5 }}
             InputProps={{
               style: {
                 border: '0px',
@@ -44,8 +50,11 @@ const InputChip: React.FC<{
                 marginTop: '14px',
                 color: 'white',
                 fontSize: '0.85rem',
-                paddingRight: '0px',
+                paddingRight: '10px',
+                paddingLeft: '0px',
+                width: 'inherit',
               },
+              endAdornment: isActive || value !== '' ? currency : null,
             }}
           />
         }
