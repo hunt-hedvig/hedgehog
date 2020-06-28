@@ -516,18 +516,6 @@
             "deprecationReason": null
           },
           {
-            "name": "dashboardNumbers",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "DashboardNumbers",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "getEvaluation",
             "description": "",
             "args": [

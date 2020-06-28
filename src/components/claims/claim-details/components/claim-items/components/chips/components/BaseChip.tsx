@@ -3,10 +3,10 @@ import React from 'react'
 import styled from 'react-emotion'
 
 export const ChipIconBase = styled.span`
-  color: ${({ theme }) => theme.accentLighter};
+  color: white;
   font-size: 0.9rem;
   padding: 9px;
-  padding-right: 0px;
+  padding-right: 8px;
   margin-right: -15px;
 `
 
@@ -18,6 +18,7 @@ export const BaseChip: React.FC<{
   className?: string
   onDelete?: React.EventHandler<any>
   onClick?: React.EventHandler<any>
+  ignored?: boolean
 }> = ({
   label,
   icon,

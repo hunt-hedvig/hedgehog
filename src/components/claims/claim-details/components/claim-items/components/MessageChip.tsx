@@ -14,6 +14,7 @@ import {
 export const MessageChip: React.FC<{
   formData: UpsertClaimItemInput
 }> = ({ formData }) => {
+  const [customValuation, setCustomValuation] = React.useState('')
   const priceAndDateAvailable =
     formData.purchasePriceAmount != null && formData.dateOfPurchase != null
 
@@ -37,22 +38,29 @@ export const MessageChip: React.FC<{
 
   return (
     <>
-      <DiscardChip />
+      {console.log('Hello?')}
       {canEvaluate && priceAndDateAvailable ? (
-        evaluationType !== 'MARKET_PRICE' ? (
+        evaluationType === 'MARKET_PRICE' ? (
+          <>
+            <MarketValuationChip />
+          </>
+        ) : (
           <>
             <ValuationChip
               valuation={{
                 amount: evaluation?.depreciatedValue?.toString() ?? '-',
                 currency: formData?.purchasePriceCurrency ?? 'SEK',
               }}
-              ignored={true}
+              ignored={customValuation !== ''}
             />
-            <InputChip />
-          </>
-        ) : (
-          <>
-            <MarketValuationChip />
+            <InputChip
+              value={customValuation}
+              placeholder="Edit"
+              onChange={({ target: { value } }) => setCustomValuation(value)}
+            />
+            {customValuation !== '' && (
+              <DiscardChip onClick={() => setCustomValuation('')} />
+            )}
           </>
         )
       ) : canEvaluate ? (

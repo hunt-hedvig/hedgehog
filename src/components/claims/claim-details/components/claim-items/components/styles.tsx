@@ -91,23 +91,6 @@ export const ChevronRightWrapper = styled.span`
   font-weight: 500;
 `
 
-export const QuestionCircleWrapper = styled.span`
-  color: ${({ theme }) => theme.accentLighter};
-  font-size: 1rem;
-  padding: 8px;
-  padding-left: 5px;
-  margin-top: 4px;
-`
-
-export const CheckWrapper = styled.span`
-  color: white;
-  font-size: 1rem;
-  padding: 5px;
-  padding-left: 5px;
-  margin-left: -10px;
-  margin-top: 5px;
-`
-
 export const TrashIconWrapper = styled.span`
   color: ${({ theme }) => theme.danger};
   font-size: 0.9rem;

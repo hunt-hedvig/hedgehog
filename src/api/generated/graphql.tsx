@@ -2240,6 +2240,17 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetDashboardNumbersQueryVariables = {}
+
+export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
+  dashboardNumbers: Maybe<
+    { __typename?: 'DashboardNumbers' } & Pick<
+      DashboardNumbers,
+      'numberOfClaims' | 'numberOfQuestions'
+    >
+  >
+}
+
 export type GetEvaluationQueryVariables = {
   purchasePrice: Scalars['Float']
   itemFamilyId: Scalars['String']
@@ -2267,17 +2278,6 @@ export type GetEvaluationQuery = { __typename?: 'QueryType' } & {
         >
       >
     }
-}
-
-export type GetDashboardNumbersQueryVariables = {}
-
-export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
-  dashboardNumbers: Maybe<
-    { __typename?: 'DashboardNumbers' } & Pick<
-      DashboardNumbers,
-      'numberOfClaims' | 'numberOfQuestions'
-    >
-  >
 }
 
 export type GetItemCategoriesQueryVariables = {
