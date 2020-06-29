@@ -1,4 +1,8 @@
-import { MonetaryAmountV2, UpsertClaimItemInput } from 'api/generated/graphql'
+import {
+  EvaluationRule,
+  MonetaryAmountV2,
+  UpsertClaimItemInput,
+} from 'api/generated/graphql'
 import { useCanEvaluate } from 'graphql/use-can-evaluate'
 import { useGetEvaluation } from 'graphql/use-get-evaluation'
 import React from 'react'
@@ -67,8 +71,30 @@ export const MessageChip: React.FC<{
     setCustomValuation('')
   }, [itemFamilyId, itemTypeId])
 
-  const getExplanation = () => {
-    return 'The item The item The item The item The item The item The item The item The item The item The item '
+  const getExplanation = (
+    evaluationRule: EvaluationRule | null | undefined,
+  ) => {
+    if (typeof evaluationRule === 'undefined' || evaluationRule === null) {
+      return null
+    }
+
+    const evaluationName = evaluationRule?.evaluationName
+    const deprecitation = (
+      Number(evaluationRule?.depreciation) * 100
+    ).toString()
+    const ageLimit = evaluationRule?.ageLimit
+
+    return (
+      'Using the table ' +
+      evaluationName +
+      ', the item has been depreciated with ' +
+      deprecitation +
+      '% since it is at least ' +
+      ageLimit +
+      ' year' +
+      (ageLimit > 1.0 ? 's' : '') +
+      ' old.'
+    )
   }
 
   const getCurrentChip = () => {
@@ -78,7 +104,9 @@ export const MessageChip: React.FC<{
 
     if (canEvaluate && priceAndDateAvailable) {
       return (
-        <ExplanationPopover contents={<>{getExplanation()}</>}>
+        <ExplanationPopover
+          contents={<>{getExplanation(evaluation?.evaluationRule)}</>}
+        >
           <ValuationChip
             valuation={valuation}
             ignored={customValuation !== ''}
