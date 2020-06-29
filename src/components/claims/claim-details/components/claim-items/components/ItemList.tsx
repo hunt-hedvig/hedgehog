@@ -89,6 +89,19 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               )
             : null
 
+          const valuationString = item.valuation?.amount
+            ? formatMoney(
+                {
+                  amount: item.valuation?.amount,
+                  currency: item.valuation?.currency,
+                },
+                {
+                  minimumFractionDigits: 0,
+                  useGrouping: true,
+                },
+              )
+            : null
+
           const toBeDeleted = itemToDelete ? itemToDelete === item.id : false
 
           return (
@@ -119,9 +132,7 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               </TableCell>
               <TableCell>{purchasePriceString ?? <NotSpecified />}</TableCell>
               <TableCell>{item.dateOfPurchase ?? <NotSpecified />}</TableCell>
-              <TableCell>
-                <NotSpecified />
-              </TableCell>
+              <TableCell>{valuationString ?? <NotSpecified />}</TableCell>
               <TableCell>
                 <Grid container spacing={8}>
                   <Grid item xs={6}>

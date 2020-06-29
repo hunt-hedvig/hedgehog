@@ -315,6 +315,7 @@ export type ClaimItem = {
   itemCompany?: Maybe<ItemCompany>
   dateOfPurchase?: Maybe<Scalars['LocalDate']>
   purchasePrice?: Maybe<MonetaryAmountV2>
+  valuation?: Maybe<MonetaryAmountV2>
   note?: Maybe<Scalars['String']>
 }
 
@@ -1732,6 +1733,8 @@ export type UpsertClaimItemInput = {
   dateOfPurchase?: Maybe<Scalars['LocalDate']>
   purchasePriceAmount?: Maybe<Scalars['Float']>
   purchasePriceCurrency?: Maybe<Scalars['String']>
+  valuationAmount?: Maybe<Scalars['Float']>
+  valuationCurrency?: Maybe<Scalars['String']>
   note?: Maybe<Scalars['String']>
 }
 
@@ -2081,6 +2084,12 @@ export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
           { __typename?: 'ItemModel' } & Pick<ItemModel, 'id' | 'displayName'>
         >
         purchasePrice: Maybe<
+          { __typename?: 'MonetaryAmountV2' } & Pick<
+            MonetaryAmountV2,
+            'amount' | 'currency'
+          >
+        >
+        valuation: Maybe<
           { __typename?: 'MonetaryAmountV2' } & Pick<
             MonetaryAmountV2,
             'amount' | 'currency'
@@ -3538,6 +3547,10 @@ export const GetClaimItemsDocument = gql`
       }
       dateOfPurchase
       purchasePrice {
+        amount
+        currency
+      }
+      valuation {
         amount
         currency
       }

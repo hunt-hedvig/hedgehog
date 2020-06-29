@@ -22,18 +22,18 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
   getEvaluation(
-      purchasePrice: Float!,
-      itemFamilyId: String!,
-      itemTypeId: ID,
-      typeOfContract: String!,
-      purchaseDate: LocalDate!,
-      baseDate: LocalDate
-    ): Evaluation!
-    canEvaluate(
-      typeOfContract: String!,
-      itemFamilyId: String!,
-      itemTypeId: ID
-    ): CanEvaluate
+    purchasePrice: Float!,
+    itemFamilyId: String!,
+    itemTypeId: ID,
+    typeOfContract: String!,
+    purchaseDate: LocalDate!,
+    baseDate: LocalDate
+  ): Evaluation!
+  canEvaluate(
+    typeOfContract: String!,
+    itemFamilyId: String!,
+    itemTypeId: ID
+  ): CanEvaluate
 }
 
 type DashboardNumbers {
@@ -149,6 +149,7 @@ type ClaimItem {
   itemCompany: ItemCompany
   dateOfPurchase: LocalDate
   purchasePrice: MonetaryAmountV2
+  valuation: MonetaryAmountV2
   note: String
 }
 
@@ -183,6 +184,8 @@ input UpsertClaimItemInput {
   dateOfPurchase: LocalDate
   purchasePriceAmount: Float
   purchasePriceCurrency: String
+  valuationAmount: Float
+  valuationCurrency: String
   note: String
 }
 
@@ -1393,9 +1396,9 @@ enum NorwegianGripenFactorType {
 
 type ChatMessage {
   globalId: ID!
-  author: String
-  fromId: String!
-  timestamp: Instant
+  author: String,
+  fromId: String!,
+  timestamp: Instant,
   messageBodyJsonString: String!
 }
 

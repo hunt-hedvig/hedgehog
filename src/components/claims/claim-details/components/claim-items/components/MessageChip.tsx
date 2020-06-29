@@ -13,9 +13,10 @@ import {
 
 export const MessageChip: React.FC<{
   formData: UpsertClaimItemInput
+  setAutoValuation: React.EventHandler<any>
   customValuation: string
   setCustomValuation: React.EventHandler<any>
-}> = ({ formData, customValuation, setCustomValuation }) => {
+}> = ({ formData, setAutoValuation, customValuation, setCustomValuation }) => {
   const {
     itemFamilyId,
     itemTypeId,
@@ -37,6 +38,10 @@ export const MessageChip: React.FC<{
     itemTypeId,
     null,
   )
+
+  React.useEffect(() => {
+    setAutoValuation(evaluation?.depreciatedValue)
+  }, [evaluation?.depreciatedValue])
 
   const priceAndDateAvailable = price && dateOfPurchase
   const canEvaluate = !!itemFamilyId && !!evaluationStatus?.canEvaluate

@@ -8339,6 +8339,18 @@
             "deprecationReason": null
           },
           {
+            "name": "valuation",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MonetaryAmountV2",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "note",
             "description": "",
             "args": [],
@@ -13534,6 +13546,26 @@
           },
           {
             "name": "purchasePriceCurrency",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "valuationAmount",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "valuationCurrency",
             "description": "",
             "type": {
               "kind": "SCALAR",
