@@ -73,7 +73,8 @@ export const ItemForm: React.FC<{
     formData.itemFamilyId &&
     formData.itemTypeId &&
     isValidNumber(purchasePrice) &&
-    isValidDate(dateOfPurchase)
+    isValidDate(dateOfPurchase) &&
+    isValidNumber(customValuation)
 
   const resetForm = () => {
     setPurchasePrice('')
