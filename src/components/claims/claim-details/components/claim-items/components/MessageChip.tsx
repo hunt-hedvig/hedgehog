@@ -1,4 +1,4 @@
-import { UpsertClaimItemInput } from 'api/generated/graphql'
+import { MonetaryAmountV2, UpsertClaimItemInput } from 'api/generated/graphql'
 import { useCanEvaluate } from 'graphql/use-can-evaluate'
 import { useGetEvaluation } from 'graphql/use-get-evaluation'
 import React from 'react'
@@ -13,67 +13,80 @@ import {
 
 export const MessageChip: React.FC<{
   formData: UpsertClaimItemInput
-}> = ({ formData }) => {
-  const [customValuation, setCustomValuation] = React.useState('')
-  const priceAndDateAvailable =
-    formData.purchasePriceAmount != null && formData.dateOfPurchase != null
+  customValuation: string
+  setCustomValuation: React.EventHandler<any>
+}> = ({ formData, customValuation, setCustomValuation }) => {
+  const {
+    itemFamilyId,
+    itemTypeId,
+    dateOfPurchase,
+    purchasePriceAmount: price,
+    purchasePriceCurrency: currency,
+  } = formData
 
   const [
     evaluationStatus,
     { loading: loadingEvaluationStatus },
-  ] = useCanEvaluate(
-    'SE_APARTMENT_RENT',
-    formData.itemFamilyId,
-    formData.itemTypeId,
-  )
+  ] = useCanEvaluate('SE_APARTMENT_RENT', itemFamilyId, itemTypeId)
 
-  const [evaluation] = useGetEvaluation(
-    formData.purchasePriceAmount ?? 0,
-    formData.itemFamilyId,
+  const [evaluation, { loading: loadingEvaluation }] = useGetEvaluation(
+    price ?? 0,
+    itemFamilyId,
     'SE_APARTMENT_RENT',
-    formData.dateOfPurchase,
-    formData.itemTypeId,
+    dateOfPurchase,
+    itemTypeId,
     null,
   )
 
-  const canEvaluate = !!formData.itemFamilyId && !!evaluationStatus?.canEvaluate
+  const priceAndDateAvailable = price && dateOfPurchase
+  const canEvaluate = !!itemFamilyId && !!evaluationStatus?.canEvaluate
   const evaluationType = evaluation?.evaluationRule?.evaluationType ?? ''
+  const marketEvaluation = evaluationType === 'MARKET_PRICE'
+
+  const valuation: MonetaryAmountV2 = {
+    amount: loadingEvaluation
+      ? '...'
+      : evaluation?.depreciatedValue?.toString() ?? '-',
+    currency: currency ?? 'SEK',
+  }
 
   React.useEffect(() => {
     setCustomValuation('')
-  }, [formData?.itemFamilyId, formData?.itemTypeId])
+  }, [itemFamilyId, itemTypeId])
+
+  const getCurrentChip = () => {
+    if (canEvaluate && priceAndDateAvailable && marketEvaluation) {
+      return <MarketValuationChip />
+    }
+
+    if (canEvaluate && priceAndDateAvailable) {
+      return (
+        <ValuationChip valuation={valuation} ignored={customValuation !== ''} />
+      )
+    }
+
+    if (canEvaluate) {
+      return <InfoChip />
+    }
+
+    if (itemFamilyId && !loadingEvaluationStatus) {
+      return <NoValuationChip />
+    }
+  }
 
   return (
     <>
-      {canEvaluate && priceAndDateAvailable ? (
-        evaluationType === 'MARKET_PRICE' ? (
-          <>
-            <MarketValuationChip />
-          </>
-        ) : (
-          <>
-            <ValuationChip
-              valuation={{
-                amount: evaluation?.depreciatedValue?.toString() ?? '-',
-                currency: formData?.purchasePriceCurrency ?? 'SEK',
-              }}
-              ignored={customValuation !== ''}
-            />
-          </>
-        )
-      ) : canEvaluate ? (
-        <InfoChip />
-      ) : (
-        formData?.itemFamilyId &&
-        !loadingEvaluationStatus && <NoValuationChip />
-      )}
-
-      {formData?.itemFamilyId && (
+      {getCurrentChip()}
+      {itemFamilyId && (
         <>
           <InputChip
             value={customValuation}
-            currency={formData?.purchasePriceCurrency ?? 'SEK'}
-            placeholder="Custom valuation"
+            currency={currency ?? 'SEK'}
+            placeholder={
+              evaluationType === 'MARKET_PRICE'
+                ? 'Add valuation'
+                : 'Custom valuation'
+            }
             onChange={({ target: { value } }) => setCustomValuation(value)}
           />
           {customValuation !== '' && (

@@ -15,6 +15,17 @@ const Chip = styled(BaseChip)`
   cursor: pointer;
 `
 
+const textFieldStyle = {
+  border: '0px',
+  backgroundColor: 'rgba(0,0,0,0)',
+  marginTop: '14px',
+  color: 'white',
+  fontSize: '0.85rem',
+  paddingRight: '10px',
+  paddingLeft: '0px',
+  width: 'inherit',
+}
+
 const InputChip: React.FC<{
   value: string
   currency: string
@@ -31,11 +42,7 @@ const InputChip: React.FC<{
         adornment={
           <TextField
             style={{
-              marginLeft: isActive
-                ? '-30px'
-                : value !== ''
-                ? '-30px'
-                : '-130px',
+              marginLeft: isActive || value !== '' ? '-30px' : '-130px',
               width: 'auto',
             }}
             value={value}
@@ -44,16 +51,7 @@ const InputChip: React.FC<{
             onBlur={() => setIsActive(false)}
             inputProps={{ maxLength: 5 }}
             InputProps={{
-              style: {
-                border: '0px',
-                backgroundColor: 'rgba(0,0,0,0)',
-                marginTop: '14px',
-                color: 'white',
-                fontSize: '0.85rem',
-                paddingRight: '10px',
-                paddingLeft: '0px',
-                width: 'inherit',
-              },
+              style: textFieldStyle,
               endAdornment: isActive || value !== '' ? currency : null,
             }}
           />

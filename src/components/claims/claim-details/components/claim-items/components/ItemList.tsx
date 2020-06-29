@@ -60,11 +60,10 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
         </DialogActions>
       </Dialog>
       <colgroup>
-        <col style={{ width: '51.7%' }} />
-        <col style={{ width: '17.5%' }} />
-        <col style={{ width: '14.3%' }} />
-        <col style={{ width: '13.5%' }} />
-        <col style={{ width: '3.0%' }} />
+        <col style={{ width: '50.5%' }} />
+        <col style={{ width: '17.0%' }} />
+        <col style={{ width: '9.0%' }} />
+        <col style={{ width: '20.0%' }} />
       </colgroup>
       <TableHead style={{ padding: '0px' }}>
         <TableRow>

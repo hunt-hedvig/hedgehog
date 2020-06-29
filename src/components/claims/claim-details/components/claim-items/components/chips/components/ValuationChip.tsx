@@ -5,16 +5,16 @@ import { MonetaryAmountV2 } from 'src/api/generated/graphql'
 import { formatMoney } from 'utils/money'
 import { BaseChip } from './BaseChip'
 
+interface BaseChipProps {
+  ignored: boolean
+}
+
 const Chip = styled(BaseChip)`
   background-color: ${({ theme }) => theme.success};
   color: white;
   margin-top: 8px;
   font-weight: bold;
 `
-
-interface BaseChipProps {
-  ignored: boolean
-}
 
 const AdornmentChip = styled(BaseChip)`
   height: 70%;

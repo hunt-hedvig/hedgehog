@@ -26,6 +26,7 @@ export const ItemForm: React.FC<{
   const [dateOfPurchase, setDateOfPurchase] = React.useState('')
   const [note, setNote] = React.useState('')
   const [purchasePriceCurrency, setPurchasePriceCurrency] = React.useState('')
+  const [customValuation, setCustomValuation] = React.useState('')
 
   const [contractMarketInfo] = useContractMarketInfo(memberId ?? '')
   const validPurchasePrice = /^[0-9]*$/g.test(purchasePrice)
@@ -110,7 +111,7 @@ export const ItemForm: React.FC<{
             <MenuItem value={'GBP'}>GBP</MenuItem>
           </TextField>
         </Grid>
-        <Grid item style={{ width: '13.2%' }}>
+        <Grid item>
           <TextField
             value={dateOfPurchase}
             error={!isValidDate(dateOfPurchase)}
@@ -149,7 +150,11 @@ export const ItemForm: React.FC<{
       </Grid>
       <Grid container spacing={16}>
         <Grid item style={{ width: '79.5%' }}>
-          <MessageChip formData={addNewClaimItemRequest} />
+          <MessageChip
+            formData={addNewClaimItemRequest}
+            customValuation={customValuation}
+            setCustomValuation={setCustomValuation}
+          />
         </Grid>
 
         <Grid item xs={true}>
