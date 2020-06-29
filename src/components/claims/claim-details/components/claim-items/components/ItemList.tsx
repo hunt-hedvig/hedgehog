@@ -1,10 +1,4 @@
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Grid,
   IconButton,
   Table,
@@ -21,7 +15,12 @@ import React from 'react'
 import { ChevronRight, InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
-import { ChevronRightWrapper, InfoWrapper, TrashIconWrapper } from './styles'
+import {
+  ChevronRightWrapper,
+  InfoWrapper,
+  NotePopover,
+  TrashIconWrapper,
+} from './styles'
 
 const TableCell = withStyles({
   root: {
@@ -43,22 +42,9 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
     refetchQueries: ['GetClaimItems'],
   })
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null)
-  const [showNoteDialog, setShowNoteDialog] = React.useState<boolean>(false)
-  const [currentNote, setCurrentNote] = React.useState<string>('')
 
   return (
     <Table style={{ marginBottom: '7px' }}>
-      <Dialog open={showNoteDialog} onClose={() => setShowNoteDialog(false)}>
-        <DialogTitle>Note</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{currentNote}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowNoteDialog(false)} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
       <colgroup>
         <col style={{ width: '50.5%' }} />
         <col style={{ width: '17.0%' }} />
@@ -137,17 +123,11 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
                 <Grid container spacing={8}>
                   <Grid item xs={6}>
                     {item?.note && (
-                      <IconButton
-                        disabled={toBeDeleted}
-                        onClick={() => {
-                          setCurrentNote(item?.note ?? '')
-                          setShowNoteDialog(true)
-                        }}
-                      >
+                      <NotePopover contents={<>{item?.note}</>}>
                         <InfoWrapper>
                           <InfoCircleFill />
                         </InfoWrapper>
-                      </IconButton>
+                      </NotePopover>
                     )}
                   </Grid>
                   <Grid item xs={6}>

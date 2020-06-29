@@ -1,6 +1,7 @@
 import { Chip } from '@material-ui/core'
 import styled from 'react-emotion'
 import CreatableSelect from 'react-select/creatable'
+import { Popover } from '../../../../../../../shared/hedvig-ui/popover'
 
 export const StyledCreatableSelect = styled(CreatableSelect)`
   .custom-select__control {
@@ -107,4 +108,14 @@ export const Bold = styled.span`
 
 export const Placeholder = styled.div`
   color: ${({ theme }) => theme.placeholderColor};
+`
+
+export const ExplanationPopover = styled(Popover)`
+  font-size: 0.85rem;
+  width: auto;
+`
+
+export const NotePopover = styled(Popover)`
+  font-size: 0.85rem;
+  margin-top: 12px;
 `

@@ -10,6 +10,7 @@ import {
   NoValuationChip,
   ValuationChip,
 } from './chips'
+import { ExplanationPopover } from './styles'
 
 export const MessageChip: React.FC<{
   formData: UpsertClaimItemInput
@@ -66,6 +67,10 @@ export const MessageChip: React.FC<{
     setCustomValuation('')
   }, [itemFamilyId, itemTypeId])
 
+  const getExplanation = () => {
+    return 'The item The item The item The item The item The item The item The item The item The item The item '
+  }
+
   const getCurrentChip = () => {
     if (canEvaluate && priceAndDateAvailable && marketEvaluation) {
       return <MarketValuationChip />
@@ -73,7 +78,12 @@ export const MessageChip: React.FC<{
 
     if (canEvaluate && priceAndDateAvailable) {
       return (
-        <ValuationChip valuation={valuation} ignored={customValuation !== ''} />
+        <ExplanationPopover contents={<>{getExplanation()}</>}>
+          <ValuationChip
+            valuation={valuation}
+            ignored={customValuation !== ''}
+          />
+        </ExplanationPopover>
       )
     }
 
