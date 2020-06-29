@@ -16,15 +16,13 @@ import { getSubType } from 'utils/quote'
 
 export const getProductSubTypeValue = (quote: Quote | null): string => {
   if (quote?.productType === 'APARTMENT') {
-    return (quote.data as ApartmentQuoteData).subType!.toString()
+    return getSubType(quote.data as ApartmentQuoteData)
   }
   if (quote?.productType === 'HOUSE') {
     return 'HOUSE'
   }
   if (quote?.productType === 'TRAVEL') {
-    if (quote.data?.__typename === 'NorwegianTravelQuoteData') {
-      return (quote.data as NorwegianTravelQuoteData).subType!.toString()
-    }
+    return getSubType(quote.data as NorwegianTravelQuoteData)
   }
   if (quote?.productType === 'HOME_CONTENT') {
     const subType = getSubType(quote.data as NorwegianHomeContentQuoteData)
