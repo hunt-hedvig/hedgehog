@@ -16,7 +16,14 @@ export const MessageChip: React.FC<{
   setAutoValuation: React.EventHandler<any>
   customValuation: string
   setCustomValuation: React.EventHandler<any>
-}> = ({ formData, setAutoValuation, customValuation, setCustomValuation }) => {
+  defaultCurrency: string
+}> = ({
+  formData,
+  setAutoValuation,
+  customValuation,
+  setCustomValuation,
+  defaultCurrency,
+}) => {
   const {
     itemFamilyId,
     itemTypeId,
@@ -52,7 +59,7 @@ export const MessageChip: React.FC<{
     amount: loadingEvaluation
       ? '...'
       : evaluation?.depreciatedValue?.toString() ?? '-',
-    currency: currency ?? 'SEK',
+    currency: currency ?? defaultCurrency,
   }
 
   React.useEffect(() => {
@@ -86,7 +93,7 @@ export const MessageChip: React.FC<{
         <>
           <InputChip
             value={customValuation}
-            currency={currency ?? 'SEK'}
+            currency={currency ?? defaultCurrency}
             placeholder={
               evaluationType === 'MARKET_PRICE'
                 ? 'Add valuation'

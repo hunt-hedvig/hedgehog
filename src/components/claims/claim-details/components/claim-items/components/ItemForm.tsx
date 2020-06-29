@@ -172,6 +172,7 @@ export const ItemForm: React.FC<{
             setAutoValuation={setAutoValuation}
             customValuation={customValuation}
             setCustomValuation={setCustomValuation}
+            defaultCurrency={defaultCurrency}
           />
         </Grid>
 
