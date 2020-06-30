@@ -85,9 +85,9 @@ export const MessageChip: React.FC<{
     const ageLimit = evaluationRule?.ageLimit
 
     return (
-      'Using the table ' +
+      "Considering the item belongs to '" +
       evaluationName +
-      ', the item has been depreciated with ' +
+      "' it has been depreciated with " +
       deprecitation +
       '% since it is at least ' +
       ageLimit +

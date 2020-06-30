@@ -31,14 +31,22 @@ const ValuationChip: React.FC<{
   valuation: MonetaryAmountV2
   ignored?: boolean
 }> = ({ valuation, ignored = false }) => {
+  const valuationLabel =
+    valuation?.amount !== '...'
+      ? formatMoney(valuation, {
+          useGrouping: true,
+          maximumFractionDigits: 0,
+        })
+      : '...'
+
   return (
-    <Chip
-      label={'The depreciated valuation is'}
-      icon={<Gem />}
-      adornment={
-        <AdornmentChip ignored={ignored} label={formatMoney(valuation)} />
-      }
-    />
+    <>
+      <Chip
+        label={'The depreciated valuation is'}
+        icon={<Gem />}
+        adornment={<AdornmentChip ignored={ignored} label={valuationLabel} />}
+      />
+    </>
   )
 }
 
