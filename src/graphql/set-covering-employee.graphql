@@ -1,0 +1,9 @@
+mutation SetCoveringEmployee($id: ID!, $coveringEmployee: Boolean!) {
+  setCoveringEmployee(id: $id, coveringEmployee: $coveringEmployee) {
+    coveringEmployee
+    events {
+      text
+      date
+    }
+  }
+}
