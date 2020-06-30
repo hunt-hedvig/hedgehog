@@ -74,7 +74,7 @@ const DonloadClaimFile = styled('a')({
   marginTop: '0.5rem',
 })
 
-const StatusWrapper = styled('div')({
+const SelectWrapper = styled('div')({
   marginTop: '1rem',
 })
 
@@ -141,7 +141,7 @@ const ClaimInformation: React.SFC<Props> = ({
           </DonloadClaimFile>
         </AudioWrapper>
       )}
-      <StatusWrapper>
+      <SelectWrapper>
         <MuiInputLabel shrink>Status</MuiInputLabel>
         <MuiSelect
           value={state}
@@ -158,8 +158,8 @@ const ClaimInformation: React.SFC<Props> = ({
             </MuiMenuItem>
           ))}
         </MuiSelect>
-      </StatusWrapper>
-      <StatusWrapper>
+      </SelectWrapper>
+      <SelectWrapper>
         <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
         <MuiSelect
           value={coveringEmployee ? 'True' : 'False'}
@@ -181,9 +181,9 @@ const ClaimInformation: React.SFC<Props> = ({
             False
           </MuiMenuItem>
         </MuiSelect>
-      </StatusWrapper>
+      </SelectWrapper>
       {contracts && (
-        <StatusWrapper>
+        <SelectWrapper>
           <MuiInputLabel shrink>Select Contract for Claim</MuiInputLabel>
 
           <MuiSelect
@@ -213,7 +213,7 @@ const ClaimInformation: React.SFC<Props> = ({
               </MuiMenuItem>
             ))}
           </MuiSelect>
-        </StatusWrapper>
+        </SelectWrapper>
       )}
     </Paper>
   )
