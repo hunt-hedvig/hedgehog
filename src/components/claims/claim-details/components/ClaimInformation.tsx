@@ -3,7 +3,7 @@ import {
   MenuItem as MuiMenuItem,
   Select as MuiSelect,
 } from '@material-ui/core'
-import { ClaimState } from 'api/generated/graphql'
+import { ClaimState, Contract } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import gql from 'graphql-tag'
@@ -17,8 +17,12 @@ import {
   addContractIdToClaimOptions,
   useAddContractIdToClaim,
 } from 'graphql/use-add-contract-id-to-claim'
-import { useClaims } from 'graphql/use-claims'
 import { useContracts } from 'graphql/use-contracts'
+import {
+  isNorwegianHomeContent,
+  isSwedishApartment,
+  isSwedishHouse,
+} from 'utils/agreement'
 
 const UPDATE_CLAIM_STATE_MUTATION = gql`
   mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
@@ -51,6 +55,7 @@ interface Props {
   coveringEmployee: boolean
   memberId: string
   refetchPage: () => Promise<any>
+  contract: Contract | null
 }
 
 const validateSelectOption = (
@@ -94,6 +99,23 @@ const EmployeeClaimWrapper = styled('div')({
   marginTop: '1rem',
 })
 
+const getAddressFromContract = (contract: Contract): string => {
+  console.log('the contract', contract)
+  const activeAgreement = contract.agreements.filter(
+    (agreement) => agreement.id === contract.currentAgreementId,
+  )[0]
+
+  if (
+    isSwedishApartment(activeAgreement) ||
+    isSwedishHouse(activeAgreement) ||
+    isNorwegianHomeContent(activeAgreement)
+  ) {
+    return `${activeAgreement.address.street}`
+  } else {
+    return ''
+  }
+}
+
 const ClaimInformation: React.SFC<Props> = ({
   recordingUrl,
   registrationDate,
@@ -102,8 +124,8 @@ const ClaimInformation: React.SFC<Props> = ({
   coveringEmployee,
   memberId,
   refetchPage,
+  contract,
 }) => {
-  const [claim] = useClaims(claimId)
   const [contracts] = useContracts(memberId)
   const [setAddContractIdToClaim] = useAddContractIdToClaim()
 
@@ -195,39 +217,35 @@ const ClaimInformation: React.SFC<Props> = ({
                     </MuiMenuItem>
                   </MuiSelect>
                 </EmployeeClaimWrapper>
-                <EmployeeClaimWrapper>
-                  <MuiInputLabel shrink>Add Contract Id to Claim</MuiInputLabel>
-                  <MuiSelect
-                    value={
-                      claim && claim.contract
-                        ? claim.contract.contractTypeName
-                        : 'Select contract Id'
-                    }
-                    onChange={async (event) => {
-                      await setAddContractIdToClaim(
-                        addContractIdToClaimOptions({
-                          claimId,
-                          memberId,
-                          contractId: event.target.value,
-                        }),
-                      )
-                      await sleep(1000)
-                      await refetchPage()
-                    }}
-                  >
-                    {contracts
-                      .filter((contract) => !contract.isTerminated)
-                      .map((contract) => (
-                        <MuiMenuItem
-                          key={`${contract.contractTypeName} (${contract.currentAgreementId}`}
-                          value={contract.id}
-                        >
-                          {contract.contractTypeName} (
-                          {contract.currentAgreementId})
+                {contracts && (
+                  <EmployeeClaimWrapper>
+                    <MuiInputLabel shrink>
+                      Select Contract for Claim
+                    </MuiInputLabel>
+
+                    <MuiSelect
+                      value={contract?.id}
+                      onChange={async (event) => {
+                        await setAddContractIdToClaim(
+                          addContractIdToClaimOptions({
+                            claimId,
+                            memberId,
+                            contractId: event.target.value,
+                          }),
+                        )
+                        await sleep(1000)
+                        await refetchPage()
+                      }}
+                    >
+                      {contracts.map((_contract) => (
+                        <MuiMenuItem key={_contract.id} value={_contract.id}>
+                          {_contract.contractTypeName} (
+                          {getAddressFromContract(_contract)})
                         </MuiMenuItem>
                       ))}
-                  </MuiSelect>
-                </EmployeeClaimWrapper>
+                    </MuiSelect>
+                  </EmployeeClaimWrapper>
+                )}
               </Paper>
             )}
           </Mutation>
