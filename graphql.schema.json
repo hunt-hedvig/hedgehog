@@ -10608,7 +10608,7 @@
             "deprecationReason": null
           },
           {
-            "name": "addContractIdToClaim",
+            "name": "setContractForClaim",
             "description": "",
             "args": [
               {
@@ -10619,7 +10619,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "AddContractIdToClaim",
+                    "name": "SetContractForClaim",
                     "ofType": null
                   }
                 },
@@ -13342,7 +13342,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "AddContractIdToClaim",
+        "name": "SetContractForClaim",
         "description": "",
         "fields": null,
         "inputFields": [

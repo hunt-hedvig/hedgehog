@@ -120,8 +120,8 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  addContractIdToClaim(
-    request: AddContractIdToClaim!
+  setContractForClaim(
+    request: SetContractForClaim!
   ): Boolean!
 }
 
@@ -328,7 +328,7 @@ type Renewal {
   draftOfAgreementId: ID
 }
 
-input AddContractIdToClaim {
+input SetContractForClaim {
   claimId: String!
   memberId: String!
   contractId: String!
