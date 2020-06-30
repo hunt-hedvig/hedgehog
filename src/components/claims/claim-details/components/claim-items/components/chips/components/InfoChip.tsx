@@ -5,19 +5,19 @@ import { BaseChip } from './BaseChip'
 
 const Chip = styled(BaseChip)`
   background: ${({ theme }) => theme.success};
-  color: white;
+  color: ${({ theme }) => theme.accentContrast};
   margin-top: 8px;
   font-weight: bold;
   margin-left: 7px;
 `
 
-const InfoChip: React.FC = ({}) => {
+export const InfoChip: React.FC = ({}) => {
   return (
     <Chip
-      label={'Enter price and purchase date to get a valuation automatically'}
+      props={{
+        label: 'Enter price and purchase date to get a valuation automatically',
+      }}
       icon={<LightningFill />}
     />
   )
 }
-
-export default InfoChip

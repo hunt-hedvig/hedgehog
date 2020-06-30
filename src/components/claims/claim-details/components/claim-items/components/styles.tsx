@@ -1,7 +1,7 @@
 import { Chip } from '@material-ui/core'
+import { Popover } from 'hedvig-ui/popover'
 import styled from 'react-emotion'
 import CreatableSelect from 'react-select/creatable'
-import { Popover } from '../../../../../../../shared/hedvig-ui/popover'
 
 export const StyledCreatableSelect = styled(CreatableSelect)`
   .custom-select__control {
@@ -49,7 +49,7 @@ export const StyledCreatableSelect = styled(CreatableSelect)`
     padding-right: 10px;
     border: 1px solid;
     border-radius: 20px;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
   }
 
   .custom-select__multi-value__label {

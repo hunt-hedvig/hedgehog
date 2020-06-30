@@ -4,7 +4,7 @@ import styled from 'react-emotion'
 import { BaseChip } from './BaseChip'
 
 const Chip = styled(BaseChip)`
-  background-color: rgba(0, 0, 0, 0);
+  background-color: transparent;
   color: ${({ theme }) => theme.accent};
   margin-top: 8px;
   font-weight: bold;
@@ -13,10 +13,8 @@ const Chip = styled(BaseChip)`
   border: 1px solid ${({ theme }) => theme.accent};
 `
 
-const DiscardChip: React.FC<{ onClick: React.EventHandler<any> }> = ({
+export const DiscardChip: React.FC<{ onClick: React.EventHandler<any> }> = ({
   onClick,
 }) => {
-  return <Chip label={'Reset'} onClick={onClick} />
+  return <Chip props={{ label: 'Reset', onClick }} />
 }
-
-export default DiscardChip

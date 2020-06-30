@@ -11,7 +11,7 @@ interface BaseChipProps {
 
 const Chip = styled(BaseChip)`
   background-color: ${({ theme }) => theme.success};
-  color: white;
+  color: ${({ theme }) => theme.accentContrast};
   margin-top: 8px;
   font-weight: bold;
 `
@@ -19,7 +19,7 @@ const Chip = styled(BaseChip)`
 const AdornmentChip = styled(BaseChip)`
   height: 70%;
   background: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: ${({ theme }) => theme.accentContrast};
   margin-left: -6px;
   margin-right: 6px;
   padding-left: 0px;
@@ -27,7 +27,7 @@ const AdornmentChip = styled(BaseChip)`
     props.ignored ? 'line-through' : 'none'};
 `
 
-const ValuationChip: React.FC<{
+export const ValuationChip: React.FC<{
   valuation: MonetaryAmountV2
   ignored?: boolean
 }> = ({ valuation, ignored = false }) => {
@@ -42,12 +42,12 @@ const ValuationChip: React.FC<{
   return (
     <>
       <Chip
-        label={'The depreciated valuation is'}
+        props={{ label: 'The depreciated valuation is' }}
         icon={<Gem />}
-        adornment={<AdornmentChip ignored={ignored} label={valuationLabel} />}
+        adornment={
+          <AdornmentChip ignored={ignored} props={{ label: valuationLabel }} />
+        }
       />
     </>
   )
 }
-
-export default ValuationChip

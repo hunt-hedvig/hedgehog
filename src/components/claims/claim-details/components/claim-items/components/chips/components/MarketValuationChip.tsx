@@ -5,18 +5,16 @@ import { BaseChip } from './BaseChip'
 
 const Chip = styled(BaseChip)`
   background-color: ${({ theme }) => theme.success};
-  color: white;
+  color: ${({ theme }) => theme.accentContrast};
   margin-top: 8px;
   font-weight: bold;
 `
 
-const MarketValuationChip: React.FC = ({}) => {
+export const MarketValuationChip: React.FC = ({}) => {
   return (
     <Chip
-      label={'This item should be valued at the as-new price'}
+      props={{ label: 'This item should be valued at the as-new price' }}
       icon={<Gem />}
     />
   )
 }
-
-export default MarketValuationChip

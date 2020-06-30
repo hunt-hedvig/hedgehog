@@ -7,7 +7,7 @@ import { BaseChip } from './BaseChip'
 
 const Chip = styled(BaseChip)`
   background-color: ${({ theme }) => theme.accent};
-  color: white;
+  color: ${({ theme }) => theme.accentContrast};
   margin-top: 8px;
   font-weight: bold;
   margin-left: 7px;
@@ -17,7 +17,7 @@ const Chip = styled(BaseChip)`
 
 const textFieldStyle = {
   border: '0px',
-  backgroundColor: 'rgba(0,0,0,0)',
+  backgroundColor: 'transparent',
   marginTop: '14px',
   color: 'white',
   fontSize: '0.85rem',
@@ -26,7 +26,7 @@ const textFieldStyle = {
   width: 'inherit',
 }
 
-const InputChip: React.FC<{
+export const InputChip: React.FC<{
   value: string
   currency: string
   placeholder: string
@@ -37,7 +37,7 @@ const InputChip: React.FC<{
   return (
     <>
       <Chip
-        label={isActive || value !== '' ? '' : placeholder}
+        props={{ label: isActive || value !== '' ? '' : placeholder }}
         icon={<Pencil />}
         adornment={
           <TextField
@@ -60,5 +60,3 @@ const InputChip: React.FC<{
     </>
   )
 }
-
-export default InputChip
