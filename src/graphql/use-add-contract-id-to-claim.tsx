@@ -4,9 +4,9 @@ import {
   AddContractIdToClaimMutation,
   AddContractIdToClaimMutationHookResult,
   AddContractIdToClaimMutationVariables,
-  GetClaimsDocument,
   useAddContractIdToClaimMutation,
 } from 'api/generated/graphql'
+import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 
 export const useAddContractIdToClaim = (): AddContractIdToClaimMutationHookResult =>
   useAddContractIdToClaimMutation()
@@ -23,7 +23,7 @@ export const addContractIdToClaimOptions = (
     },
     refetchQueries: () => [
       {
-        query: GetClaimsDocument,
+        query: CLAIM_PAGE_QUERY,
         variables: { id: request.claimId },
       },
     ],
