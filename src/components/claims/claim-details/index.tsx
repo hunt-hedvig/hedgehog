@@ -85,7 +85,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                       state={state!}
                       claimId={props.match.params.claimId}
                       coveringEmployee={coveringEmployee!}
-                      memberId={member!.memberId}
+                      memberId={props.match.params.memberId}
                       refetchPage={refetch}
                       contract={contract!}
                     />
