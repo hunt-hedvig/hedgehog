@@ -28,6 +28,7 @@ import {
   isSwedishApartment,
   isSwedishHouse,
 } from 'utils/agreement'
+import { currentAgreementForContract } from 'utils/contract'
 
 interface Props {
   recordingUrl: string | null
@@ -77,21 +78,15 @@ const StatusWrapper = styled('div')({
   marginTop: '1rem',
 })
 
-const EmployeeClaimWrapper = styled('div')({
-  marginTop: '1rem',
-})
-
 const getAddressFromContract = (contract: Contract): string => {
-  const activeAgreement = contract.agreements.filter(
-    (agreement) => agreement.id === contract.currentAgreementId,
-  )[0]
-
+  const currentAgreement = currentAgreementForContract(contract)
   if (
-    isSwedishApartment(activeAgreement) ||
-    isSwedishHouse(activeAgreement) ||
-    isNorwegianHomeContent(activeAgreement)
+    currentAgreement != null &&
+    (isSwedishApartment(currentAgreement) ||
+      isSwedishHouse(currentAgreement) ||
+      isNorwegianHomeContent(currentAgreement))
   ) {
-    return `${activeAgreement.address.street}`
+    return currentAgreement.address.street
   } else {
     return ''
   }
@@ -113,110 +108,114 @@ const ClaimInformation: React.SFC<Props> = ({
   const [updateClaimState] = useUpdateClaimState()
 
   return (
-    <>
-      <Paper>
-        <h3>Claim Information</h3>
-        {recordingUrl && (
-          <AudioWrapper>
-            <p>
-              Registered at:{' '}
-              {format(parseISO(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
-            </p>
-            <Audio controls>
-              <source src={recordingUrl} type="audio/aac" />
-            </Audio>
-            <Audio controls>
-              <source
-                src={getUrlWithoutParameters(recordingUrl)}
-                type="audio/aac"
-              />
-            </Audio>
-            <DonloadClaimFile
-              href={recordingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Download claim file
-            </DonloadClaimFile>
-            <DonloadClaimFile
-              href={getUrlWithoutParameters(recordingUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Download claim file
-            </DonloadClaimFile>
-          </AudioWrapper>
-        )}
-        <StatusWrapper>
-          <MuiInputLabel shrink>Status</MuiInputLabel>
-          <MuiSelect
-            value={state}
-            onChange={async (event) => {
-              await updateClaimState(
-                updateClaimStateOptions(claimId, validateSelectOption(event)),
-              )
-              await refetchPage()
-            }}
+    <Paper>
+      <h3>Claim Information</h3>
+      {recordingUrl && (
+        <AudioWrapper>
+          <p>
+            Registered at:{' '}
+            {format(parseISO(registrationDate), 'yyyy-MM-dd hh:mm:ss')}
+          </p>
+          <Audio controls>
+            <source src={recordingUrl} type="audio/aac" />
+          </Audio>
+          <Audio controls>
+            <source
+              src={getUrlWithoutParameters(recordingUrl)}
+              type="audio/aac"
+            />
+          </Audio>
+          <DonloadClaimFile
+            href={recordingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            {Object.values(ClaimState).map((s) => (
-              <MuiMenuItem key={s} value={s}>
-                {s}
-              </MuiMenuItem>
-            ))}
-          </MuiSelect>
-        </StatusWrapper>
-        <EmployeeClaimWrapper>
-          <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
+            Download claim file
+          </DonloadClaimFile>
+          <DonloadClaimFile
+            href={getUrlWithoutParameters(recordingUrl)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download claim file
+          </DonloadClaimFile>
+        </AudioWrapper>
+      )}
+      <StatusWrapper>
+        <MuiInputLabel shrink>Status</MuiInputLabel>
+        <MuiSelect
+          value={state}
+          onChange={async (event) => {
+            await updateClaimState(
+              updateClaimStateOptions(claimId, validateSelectOption(event)),
+            )
+            await refetchPage()
+          }}
+        >
+          {Object.values(ClaimState).map((s) => (
+            <MuiMenuItem key={s} value={s}>
+              {s}
+            </MuiMenuItem>
+          ))}
+        </MuiSelect>
+      </StatusWrapper>
+      <StatusWrapper>
+        <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
+        <MuiSelect
+          value={coveringEmployee ? 'True' : 'False'}
+          onChange={async (event) => {
+            await setCoveringEmployee(
+              setCoveringEmployeeOptions(
+                claimId,
+                validateSelectEmployeeClaimOption(event),
+              ),
+            )
+            await sleep(1000)
+            await refetchPage()
+          }}
+        >
+          <MuiMenuItem key={'True'} value={'True'}>
+            True
+          </MuiMenuItem>
+          <MuiMenuItem key={'False'} value={'False'}>
+            False
+          </MuiMenuItem>
+        </MuiSelect>
+      </StatusWrapper>
+      {contracts && (
+        <StatusWrapper>
+          <MuiInputLabel shrink>Select Contract for Claim</MuiInputLabel>
+
           <MuiSelect
-            value={coveringEmployee ? 'True' : 'False'}
+            value={contract?.id ? contract.id : 'none'}
             onChange={async (event) => {
-              await setCoveringEmployee(
-                setCoveringEmployeeOptions(
+              if (event.target.value === 'none') {
+                return
+              }
+              await setContractForClaim(
+                setContractForClaimOptions({
                   claimId,
-                  validateSelectEmployeeClaimOption(event),
-                ),
+                  memberId,
+                  contractId: event.target.value,
+                }),
               )
               await sleep(1000)
               await refetchPage()
             }}
           >
-            <MuiMenuItem key={'True'} value={'True'}>
-              True
+            <MuiMenuItem disabled value={'none'} divider>
+              None selected
             </MuiMenuItem>
-            <MuiMenuItem key={'False'} value={'False'}>
-              False
-            </MuiMenuItem>
+            {contracts.map((_contract) => (
+              <MuiMenuItem key={_contract.id} value={_contract.id}>
+                {_contract.contractTypeName} (
+                {getAddressFromContract(_contract)}}
+              </MuiMenuItem>
+            ))}
           </MuiSelect>
-        </EmployeeClaimWrapper>
-        {contracts && (
-          <EmployeeClaimWrapper>
-            <MuiInputLabel shrink>Select Contract for Claim</MuiInputLabel>
-
-            <MuiSelect
-              value={contract?.id}
-              onChange={async (event) => {
-                await setContractForClaim(
-                  setContractForClaimOptions({
-                    claimId,
-                    memberId,
-                    contractId: event.target.value,
-                  }),
-                )
-                await sleep(1000)
-                await refetchPage()
-              }}
-            >
-              {contracts.map((_contract) => (
-                <MuiMenuItem key={_contract.id} value={_contract.id}>
-                  {_contract.contractTypeName} (
-                  {getAddressFromContract(_contract)})
-                </MuiMenuItem>
-              ))}
-            </MuiSelect>
-          </EmployeeClaimWrapper>
-        )}
-      </Paper>
-    </>
+        </StatusWrapper>
+      )}
+    </Paper>
   )
 }
 

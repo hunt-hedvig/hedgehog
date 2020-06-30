@@ -1,4 +1,9 @@
-import { ContractMarketInfo, SignSource } from 'api/generated/graphql'
+import {
+  Agreement,
+  Contract,
+  ContractMarketInfo,
+  SignSource,
+} from 'api/generated/graphql'
 
 export const getSignSource = (signSource: SignSource): string => {
   if (signSource === SignSource.App) {
@@ -31,4 +36,12 @@ export const isSwedishMarket = (market: ContractMarketInfo): boolean => {
 
 export const isNorwegianMarket = (market: ContractMarketInfo): boolean => {
   return market.market === 'NORWAY'
+}
+
+export const currentAgreementForContract = (
+  contract: Contract,
+): Agreement | undefined | null => {
+  return contract.agreements.find(
+    (agreement) => agreement.id === contract.currentAgreementId,
+  )
 }

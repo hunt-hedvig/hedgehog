@@ -1,6 +1,5 @@
 import { MutationFunctionOptions } from '@apollo/react-common'
 import {
-  Scalars,
   SetCoveringEmployeeMutation,
   SetCoveringEmployeeMutationHookResult,
   SetCoveringEmployeeMutationVariables,
@@ -11,8 +10,8 @@ export const useSetCoveringEmployee = (): SetCoveringEmployeeMutationHookResult 
   useSetCoveringEmployeeMutation()
 
 export const setCoveringEmployeeOptions = (
-  id: Scalars['ID'],
-  coveringEmployee: Scalars['Boolean'],
+  id: string,
+  coveringEmployee: boolean,
 ): MutationFunctionOptions<
   SetCoveringEmployeeMutation,
   SetCoveringEmployeeMutationVariables
