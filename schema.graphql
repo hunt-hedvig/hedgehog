@@ -185,6 +185,7 @@ input UpsertClaimItemInput {
   purchasePriceAmount: Float
   purchasePriceCurrency: String
   valuationAmount: Float
+  customValuationAmount: Float
   valuationCurrency: String
   note: String
 }

@@ -13565,6 +13565,16 @@
             "defaultValue": null
           },
           {
+            "name": "customValuationAmount",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "valuationCurrency",
             "description": "",
             "type": {

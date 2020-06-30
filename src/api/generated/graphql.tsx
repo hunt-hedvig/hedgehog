@@ -1734,6 +1734,7 @@ export type UpsertClaimItemInput = {
   purchasePriceAmount?: Maybe<Scalars['Float']>
   purchasePriceCurrency?: Maybe<Scalars['String']>
   valuationAmount?: Maybe<Scalars['Float']>
+  customValuationAmount?: Maybe<Scalars['Float']>
   valuationCurrency?: Maybe<Scalars['String']>
   note?: Maybe<Scalars['String']>
 }

@@ -58,10 +58,11 @@ export const ItemForm: React.FC<{
     purchasePriceCurrency: isNotEmpty(purchasePrice)
       ? purchasePriceCurrency
       : null,
-    valuationAmount:
+    valuationAmount: Number(autoValuation) ?? null,
+    customValuationAmount:
       isNotEmpty(customValuation) && isValidNumber(customValuation)
         ? Number(customValuation)
-        : Number(autoValuation) ?? null,
+        : null,
     valuationCurrency:
       isNotEmpty(customValuation) || isNotEmpty(autoValuation)
         ? purchasePriceCurrency
@@ -82,6 +83,8 @@ export const ItemForm: React.FC<{
     setDateOfPurchase('')
     setSelectedItemCategories([])
     setNote('')
+    setCustomValuation('')
+    setAutoValuation(null)
   }
 
   React.useEffect(() => {
