@@ -54,10 +54,9 @@ export const ItemForm: React.FC<{
       ? purchasePriceCurrency
       : null,
     valuationAmount: Number(autoValuation) ?? null,
-    customValuationAmount:
-      !isEmpty(customValuation) && isValidNumber(customValuation)
-        ? Number(customValuation)
-        : null,
+    customValuationAmount: !isEmpty(customValuation)
+      ? Number(customValuation)
+      : null,
     valuationCurrency:
       !isEmpty(customValuation) || !isEmpty(autoValuation)
         ? purchasePriceCurrency
