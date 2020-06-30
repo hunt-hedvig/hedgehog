@@ -82,7 +82,6 @@ const EmployeeClaimWrapper = styled('div')({
 })
 
 const getAddressFromContract = (contract: Contract): string => {
-  console.log('the contract', contract)
   const activeAgreement = contract.agreements.filter(
     (agreement) => agreement.id === contract.currentAgreementId,
   )[0]
