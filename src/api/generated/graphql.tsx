@@ -96,6 +96,12 @@ export type ActivatePendingAgreementInput = {
   fromDate: Scalars['LocalDate']
 }
 
+export type AddContractIdToClaim = {
+  memberId: Scalars['String']
+  claimId: Scalars['String']
+  contractId: Scalars['String']
+}
+
 export type Address = {
   __typename?: 'Address'
   street: Scalars['String']
@@ -271,6 +277,7 @@ export type Claim = {
   events?: Maybe<Array<Maybe<ClaimEvent>>>
   coveringEmployee: Scalars['Boolean']
   claimFiles: Array<ClaimFileUpload>
+  contract?: Maybe<Contract>
 }
 
 export type ClaimEvent = {
@@ -855,6 +862,7 @@ export type MutationType = {
   deleteClaimItem?: Maybe<Scalars['ID']>
   insertItemCategories: Array<Scalars['Boolean']>
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
+  addContractIdToClaim: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1100,6 +1108,10 @@ export type MutationTypeInsertItemCategoriesArgs = {
 
 export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
   request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type MutationTypeAddContractIdToClaimArgs = {
+  request: AddContractIdToClaim
 }
 
 export type NoDiscount = {
@@ -1846,6 +1858,14 @@ export type AddAgreementFromQuoteMutation = { __typename?: 'MutationType' } & {
   addAgreementFromQuote: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
 
+export type AddContractIdToClaimMutationVariables = {
+  request: AddContractIdToClaim
+}
+
+export type AddContractIdToClaimMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'addContractIdToClaim'>
+
 export type AssignCampaignToPartnerPercentageDiscountMutationVariables = {
   request?: Maybe<AssignVoucherPercentageDiscount>
 }
@@ -2012,6 +2032,223 @@ export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
           { __typename?: 'MonetaryAmountV2' } & Pick<
             MonetaryAmountV2,
             'amount' | 'currency'
+          >
+        >
+      }
+  >
+}
+
+export type GetClaimsQueryVariables = {
+  id: Scalars['ID']
+}
+
+export type GetClaimsQuery = { __typename?: 'QueryType' } & {
+  claim: Maybe<
+    { __typename: 'Claim' } & Pick<
+      Claim,
+      | 'registrationDate'
+      | 'recordingUrl'
+      | 'state'
+      | 'reserves'
+      | 'coveringEmployee'
+    > & {
+        contract: Maybe<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'holderMemberId'
+            | 'contractTypeName'
+            | 'switchedFrom'
+            | 'masterInception'
+            | 'status'
+            | 'isTerminated'
+            | 'terminationDate'
+            | 'currentAgreementId'
+            | 'hasPendingAgreement'
+            | 'hasQueuedRenewal'
+            | 'preferredCurrency'
+            | 'market'
+            | 'signSource'
+            | 'createdAt'
+          > & {
+              agreements: Array<
+                | { __typename: 'SwedishApartment' }
+                | { __typename: 'SwedishHouse' }
+                | { __typename: 'NorwegianHomeContent' }
+                | { __typename: 'NorwegianTravel' }
+              >
+              renewal: Maybe<
+                { __typename?: 'Renewal' } & Pick<
+                  Renewal,
+                  'renewalDate' | 'draftOfAgreementId' | 'draftCertificateUrl'
+                >
+              >
+            }
+        >
+        member: Maybe<
+          { __typename?: 'Member' } & Pick<
+            Member,
+            | 'memberId'
+            | 'signedOn'
+            | 'firstName'
+            | 'lastName'
+            | 'personalNumber'
+            | 'address'
+            | 'postalNumber'
+            | 'city'
+            | 'fraudulentStatus'
+            | 'sanctionStatus'
+            | 'totalNumberOfClaims'
+          > & {
+              person: Maybe<
+                { __typename?: 'Person' } & Pick<Person, 'debtFlag'>
+              >
+              directDebitStatus: Maybe<
+                { __typename?: 'DirectDebitStatus' } & Pick<
+                  DirectDebitStatus,
+                  'activated'
+                >
+              >
+              numberFailedCharges: Maybe<
+                { __typename?: 'NumberFailedCharges' } & Pick<
+                  NumberFailedCharges,
+                  'numberFailedCharges' | 'lastFailedChargeAt'
+                >
+              >
+              account: Maybe<
+                { __typename?: 'Account' } & {
+                  totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                    MonetaryAmountV2,
+                    'amount' | 'currency'
+                  >
+                }
+              >
+            }
+        >
+        type: Maybe<
+          | ({ __typename: 'TheftClaim' } & Pick<
+              TheftClaim,
+              'location' | 'date' | 'item' | 'policeReport' | 'receipt'
+            >)
+          | ({ __typename: 'AccidentalDamageClaim' } & Pick<
+              AccidentalDamageClaim,
+              'location' | 'date' | 'item' | 'policeReport' | 'receipt'
+            >)
+          | ({ __typename: 'AssaultClaim' } & Pick<
+              AssaultClaim,
+              'location' | 'date' | 'policeReport'
+            >)
+          | ({ __typename: 'WaterDamageClaim' } & Pick<
+              WaterDamageClaim,
+              'date'
+            >)
+          | ({ __typename: 'TravelAccidentClaim' } & Pick<
+              TravelAccidentClaim,
+              'location' | 'date' | 'policeReport' | 'receipt'
+            >)
+          | ({ __typename: 'LuggageDelayClaim' } & Pick<
+              LuggageDelayClaim,
+              'location' | 'date' | 'ticket'
+            >)
+          | ({ __typename: 'NotCoveredClaim' } & Pick<NotCoveredClaim, 'date'>)
+          | ({ __typename: 'FireDamageClaim' } & Pick<
+              FireDamageClaim,
+              'date' | 'location'
+            >)
+          | ({ __typename: 'ConfirmedFraudClaim' } & Pick<
+              ConfirmedFraudClaim,
+              'date'
+            >)
+          | ({ __typename: 'LiabilityClaim' } & Pick<
+              LiabilityClaim,
+              'date' | 'location'
+            >)
+          | ({ __typename: 'ApplianceClaim' } & Pick<
+              ApplianceClaim,
+              'date' | 'location' | 'item'
+            >)
+          | ({ __typename: 'LegalProtectionClaim' } & Pick<
+              LegalProtectionClaim,
+              'date'
+            >)
+          | ({ __typename: 'WaterDamageBathroomClaim' } & Pick<
+              WaterDamageBathroomClaim,
+              'date'
+            >)
+          | { __typename: 'WaterDamageKitchenClaim' }
+          | ({ __typename: 'BurglaryClaim' } & Pick<
+              BurglaryClaim,
+              'location' | 'date' | 'item' | 'policeReport' | 'receipt'
+            >)
+          | ({ __typename: 'FloodingClaim' } & Pick<FloodingClaim, 'date'>)
+          | ({ __typename: 'EarthquakeClaim' } & Pick<EarthquakeClaim, 'date'>)
+          | ({ __typename: 'InstallationsClaim' } & Pick<
+              InstallationsClaim,
+              'date' | 'location' | 'item'
+            >)
+          | ({ __typename: 'SnowPressureClaim' } & Pick<
+              SnowPressureClaim,
+              'date'
+            >)
+          | ({ __typename: 'StormDamageClaim' } & Pick<
+              StormDamageClaim,
+              'date'
+            >)
+          | ({ __typename: 'VerminAndPestsClaim' } & Pick<
+              VerminAndPestsClaim,
+              'date'
+            >)
+          | ({ __typename: 'TestClaim' } & Pick<TestClaim, 'date'>)
+        >
+        notes: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'ClaimNote' } & Pick<ClaimNote, 'text' | 'date'>
+            >
+          >
+        >
+        transcriptions: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'ClaimTranscription' } & Pick<
+                ClaimTranscription,
+                'text' | 'confidenceScore' | 'languageCode'
+              >
+            >
+          >
+        >
+        payments: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'ClaimPayment' } & Pick<
+                ClaimPayment,
+                | 'id'
+                | 'amount'
+                | 'deductible'
+                | 'note'
+                | 'timestamp'
+                | 'exGratia'
+                | 'type'
+                | 'status'
+              >
+            >
+          >
+        >
+        events: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+            >
+          >
+        >
+        claimFiles: Array<
+          { __typename?: 'ClaimFileUpload' } & Pick<
+            ClaimFileUpload,
+            | 'claimFileId'
+            | 'fileUploadUrl'
+            | 'uploadedAt'
+            | 'category'
+            | 'contentType'
           >
         >
       }
@@ -2842,6 +3079,54 @@ export type AddAgreementFromQuoteMutationOptions = ApolloReactCommon.BaseMutatio
   AddAgreementFromQuoteMutation,
   AddAgreementFromQuoteMutationVariables
 >
+export const AddContractIdToClaimDocument = gql`
+  mutation AddContractIdToClaim($request: AddContractIdToClaim!) {
+    addContractIdToClaim(request: $request)
+  }
+`
+export type AddContractIdToClaimMutationFn = ApolloReactCommon.MutationFunction<
+  AddContractIdToClaimMutation,
+  AddContractIdToClaimMutationVariables
+>
+
+/**
+ * __useAddContractIdToClaimMutation__
+ *
+ * To run a mutation, you first call `useAddContractIdToClaimMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddContractIdToClaimMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addContractIdToClaimMutation, { data, loading, error }] = useAddContractIdToClaimMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddContractIdToClaimMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddContractIdToClaimMutation,
+    AddContractIdToClaimMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddContractIdToClaimMutation,
+    AddContractIdToClaimMutationVariables
+  >(AddContractIdToClaimDocument, baseOptions)
+}
+export type AddContractIdToClaimMutationHookResult = ReturnType<
+  typeof useAddContractIdToClaimMutation
+>
+export type AddContractIdToClaimMutationResult = ApolloReactCommon.MutationResult<
+  AddContractIdToClaimMutation
+>
+export type AddContractIdToClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddContractIdToClaimMutation,
+  AddContractIdToClaimMutationVariables
+>
 export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
   mutation AssignCampaignToPartnerPercentageDiscount(
     $request: AssignVoucherPercentageDiscount
@@ -3426,6 +3711,244 @@ export type GetClaimItemsLazyQueryHookResult = ReturnType<
 export type GetClaimItemsQueryResult = ApolloReactCommon.QueryResult<
   GetClaimItemsQuery,
   GetClaimItemsQueryVariables
+>
+export const GetClaimsDocument = gql`
+  query GetClaims($id: ID!) {
+    claim(id: $id) {
+      contract {
+        id
+        holderMemberId
+        contractTypeName
+        switchedFrom
+        masterInception
+        status
+        isTerminated
+        terminationDate
+        currentAgreementId
+        hasPendingAgreement
+        agreements {
+          __typename
+        }
+        hasQueuedRenewal
+        renewal {
+          renewalDate
+          draftOfAgreementId
+          draftCertificateUrl
+        }
+        preferredCurrency
+        market
+        signSource
+        contractTypeName
+        createdAt
+      }
+      member {
+        memberId
+        signedOn
+        firstName
+        lastName
+        person {
+          debtFlag
+        }
+        personalNumber
+        address
+        postalNumber
+        city
+        directDebitStatus {
+          activated
+        }
+        fraudulentStatus
+        sanctionStatus
+        numberFailedCharges {
+          numberFailedCharges
+          lastFailedChargeAt
+        }
+        totalNumberOfClaims
+        account {
+          totalBalance {
+            amount
+            currency
+          }
+        }
+      }
+      registrationDate
+      recordingUrl
+      state
+      type {
+        __typename
+        ... on TheftClaim {
+          location
+          date
+          item
+          policeReport
+          receipt
+        }
+        ... on AccidentalDamageClaim {
+          location
+          date
+          item
+          policeReport
+          receipt
+        }
+        ... on AssaultClaim {
+          location
+          date
+          policeReport
+        }
+        ... on WaterDamageClaim {
+          date
+        }
+        ... on TravelAccidentClaim {
+          location
+          date
+          policeReport
+          receipt
+        }
+        ... on LuggageDelayClaim {
+          location
+          date
+          ticket
+        }
+        ... on NotCoveredClaim {
+          date
+        }
+        ... on ConfirmedFraudClaim {
+          date
+        }
+        ... on TestClaim {
+          date
+        }
+        ... on LiabilityClaim {
+          date
+          location
+        }
+        ... on FireDamageClaim {
+          date
+          location
+        }
+        ... on ApplianceClaim {
+          date
+          location
+          item
+        }
+        ... on LegalProtectionClaim {
+          date
+        }
+        ... on WaterDamageBathroomClaim {
+          date
+        }
+        ... on WaterDamageBathroomClaim {
+          date
+        }
+        ... on BurglaryClaim {
+          location
+          date
+          item
+          policeReport
+          receipt
+        }
+        ... on FloodingClaim {
+          date
+        }
+        ... on EarthquakeClaim {
+          date
+        }
+        ... on InstallationsClaim {
+          date
+          location
+          item
+        }
+        ... on SnowPressureClaim {
+          date
+        }
+        ... on StormDamageClaim {
+          date
+        }
+        ... on VerminAndPestsClaim {
+          date
+        }
+      }
+      notes {
+        text
+        date
+      }
+      transcriptions {
+        text
+        confidenceScore
+        languageCode
+      }
+      reserves
+      payments {
+        id
+        amount
+        deductible
+        note
+        timestamp
+        exGratia
+        type
+        status
+      }
+      events {
+        text
+        date
+      }
+      claimFiles {
+        claimFileId
+        fileUploadUrl
+        uploadedAt
+        category
+        contentType
+      }
+      coveringEmployee
+      __typename
+    }
+  }
+`
+
+/**
+ * __useGetClaimsQuery__
+ *
+ * To run a query within a React component, call `useGetClaimsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetClaimsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimsQuery,
+    GetClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetClaimsQuery, GetClaimsQueryVariables>(
+    GetClaimsDocument,
+    baseOptions,
+  )
+}
+export function useGetClaimsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimsQuery,
+    GetClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<GetClaimsQuery, GetClaimsQueryVariables>(
+    GetClaimsDocument,
+    baseOptions,
+  )
+}
+export type GetClaimsQueryHookResult = ReturnType<typeof useGetClaimsQuery>
+export type GetClaimsLazyQueryHookResult = ReturnType<
+  typeof useGetClaimsLazyQuery
+>
+export type GetClaimsQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimsQuery,
+  GetClaimsQueryVariables
 >
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {

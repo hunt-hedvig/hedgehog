@@ -4,6 +4,32 @@ import { TYPE_FRAGMENT } from './components/ClaimType'
 export const CLAIM_PAGE_QUERY = gql`
   query ClaimPage($id: ID!) {
     claim(id: $id) {
+      contract {
+        id
+        holderMemberId
+        contractTypeName
+        switchedFrom
+        masterInception
+        status
+        isTerminated
+        terminationDate
+        currentAgreementId
+        hasPendingAgreement
+        agreements {
+          __typename
+        }
+        hasQueuedRenewal
+        renewal {
+          renewalDate
+          draftOfAgreementId
+          draftCertificateUrl
+        }
+        preferredCurrency
+        market
+        signSource
+        contractTypeName
+        createdAt
+      }
       member {
         memberId
         signedOn

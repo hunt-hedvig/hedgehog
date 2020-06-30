@@ -1,0 +1,5 @@
+mutation AddContractIdToClaim(
+  $request: AddContractIdToClaim!
+) {
+  addContractIdToClaim(request: $request)
+}
