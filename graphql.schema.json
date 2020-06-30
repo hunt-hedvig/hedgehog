@@ -13347,7 +13347,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "memberId",
+            "name": "claimId",
             "description": "",
             "type": {
               "kind": "NON_NULL",
@@ -13361,7 +13361,7 @@
             "defaultValue": null
           },
           {
-            "name": "claimId",
+            "name": "memberId",
             "description": "",
             "type": {
               "kind": "NON_NULL",

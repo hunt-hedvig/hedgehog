@@ -97,8 +97,8 @@ export type ActivatePendingAgreementInput = {
 }
 
 export type AddContractIdToClaim = {
-  memberId: Scalars['String']
   claimId: Scalars['String']
+  memberId: Scalars['String']
   contractId: Scalars['String']
 }
 

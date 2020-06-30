@@ -206,8 +206,8 @@ const ClaimInformation: React.SFC<Props> = ({
                     onChange={async (event) => {
                       await setAddContractIdToClaim(
                         addContractIdToClaimOptions({
-                          memberId,
                           claimId,
+                          memberId,
                           contractId: event.target.value,
                         }),
                       )
