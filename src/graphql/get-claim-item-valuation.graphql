@@ -1,0 +1,14 @@
+query GetClaimItemValuation($purchasePrice: Float!, $itemFamilyId: String!, $itemTypeId: ID, $typeOfContract: String!, $purchaseDate: LocalDate!, $baseDate: LocalDate) {
+  getClaimItemValuation(purchasePrice: $purchasePrice, itemFamilyId: $itemFamilyId, itemTypeId: $itemTypeId, typeOfContract: $typeOfContract, purchaseDate: $purchaseDate, baseDate: $baseDate) {
+    depreciatedValue
+    valuationRule {
+        valuationName
+        itemFamily
+        itemTypeId
+        ageLimit
+        typeOfContract
+        valuationType
+        depreciation
+    }
+  }
+}

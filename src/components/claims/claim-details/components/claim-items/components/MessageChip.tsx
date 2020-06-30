@@ -1,11 +1,11 @@
 import {
-  EvaluationRule,
   MonetaryAmountV2,
   UpsertClaimItemInput,
+  ValuationRule,
 } from 'api/generated/graphql'
-import { useCanEvaluate } from 'graphql/use-can-evaluate'
-import { useGetEvaluation } from 'graphql/use-get-evaluation'
 import React from 'react'
+import { useCanValuateClaimItem } from '../../../../../../graphql/use-can-valuate-claim-item'
+import { useGetClaimItemValuation } from '../../../../../../graphql/use-get-claim-item-valuation'
 import {
   DiscardChip,
   InfoChip,
@@ -38,11 +38,11 @@ export const MessageChip: React.FC<{
   } = formData
 
   const [
-    evaluationStatus,
-    { loading: loadingEvaluationStatus },
-  ] = useCanEvaluate('SE_APARTMENT_RENT', itemFamilyId, itemTypeId)
+    valuationStatus,
+    { loading: loadingValuationStatus },
+  ] = useCanValuateClaimItem('SE_APARTMENT_RENT', itemFamilyId, itemTypeId)
 
-  const [evaluation, { loading: loadingEvaluation }] = useGetEvaluation(
+  const [valuation, { loading: loadingValuation }] = useGetClaimItemValuation(
     price ?? 0,
     itemFamilyId,
     'SE_APARTMENT_RENT',
@@ -52,18 +52,18 @@ export const MessageChip: React.FC<{
   )
 
   React.useEffect(() => {
-    setAutoValuation(evaluation?.depreciatedValue)
-  }, [evaluation?.depreciatedValue])
+    setAutoValuation(valuation?.depreciatedValue)
+  }, [valuation?.depreciatedValue])
 
   const priceAndDateAvailable = price && dateOfPurchase
-  const canEvaluate = !!itemFamilyId && !!evaluationStatus?.canEvaluate
-  const evaluationType = evaluation?.evaluationRule?.evaluationType ?? ''
-  const marketEvaluation = evaluationType === 'MARKET_PRICE'
+  const canValuateClaimItem = !!itemFamilyId && !!valuationStatus?.canValuate
+  const valuationType = valuation?.valuationRule?.valuationType ?? ''
+  const marketValuation = valuationType === 'MARKET_PRICE'
 
-  const valuation: MonetaryAmountV2 = {
-    amount: loadingEvaluation
+  const formattedValuation: MonetaryAmountV2 = {
+    amount: loadingValuation
       ? '...'
-      : evaluation?.depreciatedValue?.toString() ?? '-',
+      : valuation?.depreciatedValue?.toString() ?? '-',
     currency: currency ?? defaultCurrency,
   }
 
@@ -71,24 +71,20 @@ export const MessageChip: React.FC<{
     setCustomValuation('')
   }, [itemFamilyId, itemTypeId])
 
-  const getExplanation = (
-    evaluationRule: EvaluationRule | null | undefined,
-  ) => {
-    if (typeof evaluationRule === 'undefined' || evaluationRule === null) {
+  const getExplanation = (valuationRule: ValuationRule | null | undefined) => {
+    if (typeof valuationRule === 'undefined' || valuationRule === null) {
       return null
     }
 
-    const evaluationName = evaluationRule?.evaluationName
-    const deprecitation = (
-      Number(evaluationRule?.depreciation) * 100
-    ).toString()
-    const ageLimit = evaluationRule?.ageLimit
+    const valuationName = valuationRule?.valuationName
+    const depreciation = (Number(valuationRule?.depreciation) * 100).toString()
+    const ageLimit = valuationRule?.ageLimit
 
     return (
       "Considering the item belongs to '" +
-      evaluationName +
+      valuationName +
       "' it has been depreciated with " +
-      deprecitation +
+      depreciation +
       '% since it is at least ' +
       ageLimit +
       ' year' +
@@ -98,28 +94,28 @@ export const MessageChip: React.FC<{
   }
 
   const getCurrentChip = () => {
-    if (canEvaluate && priceAndDateAvailable && marketEvaluation) {
+    if (canValuateClaimItem && priceAndDateAvailable && marketValuation) {
       return <MarketValuationChip />
     }
 
-    if (canEvaluate && priceAndDateAvailable) {
+    if (canValuateClaimItem && priceAndDateAvailable) {
       return (
         <ExplanationPopover
-          contents={<>{getExplanation(evaluation?.evaluationRule)}</>}
+          contents={<>{getExplanation(valuation?.valuationRule)}</>}
         >
           <ValuationChip
-            valuation={valuation}
+            valuation={formattedValuation}
             ignored={customValuation !== ''}
           />
         </ExplanationPopover>
       )
     }
 
-    if (canEvaluate) {
+    if (canValuateClaimItem) {
       return <InfoChip />
     }
 
-    if (itemFamilyId && !loadingEvaluationStatus) {
+    if (itemFamilyId && !loadingValuationStatus) {
       return <NoValuationChip />
     }
   }
@@ -133,7 +129,7 @@ export const MessageChip: React.FC<{
             value={customValuation}
             currency={currency ?? defaultCurrency}
             placeholder={
-              evaluationType === 'MARKET_PRICE'
+              valuationType === 'MARKET_PRICE'
                 ? 'Add valuation'
                 : 'Custom valuation'
             }

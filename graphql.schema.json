@@ -516,7 +516,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getEvaluation",
+            "name": "getClaimItemValuation",
             "description": "",
             "args": [
               {
@@ -601,7 +601,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Evaluation",
+                "name": "ClaimItemValuation",
                 "ofType": null
               }
             },
@@ -609,7 +609,7 @@
             "deprecationReason": null
           },
           {
-            "name": "canEvaluate",
+            "name": "canValuateClaimItem",
             "description": "",
             "args": [
               {
@@ -653,7 +653,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "CanEvaluate",
+              "name": "CanValuateClaimItem",
               "ofType": null
             },
             "isDeprecated": false,
@@ -8765,7 +8765,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "Evaluation",
+        "name": "ClaimItemValuation",
         "description": "",
         "fields": [
           {
@@ -8781,12 +8781,12 @@
             "deprecationReason": null
           },
           {
-            "name": "evaluationRule",
+            "name": "valuationRule",
             "description": "",
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "EvaluationRule",
+              "name": "ValuationRule",
               "ofType": null
             },
             "isDeprecated": false,
@@ -8800,11 +8800,11 @@
       },
       {
         "kind": "OBJECT",
-        "name": "EvaluationRule",
+        "name": "ValuationRule",
         "description": "",
         "fields": [
           {
-            "name": "evaluationName",
+            "name": "valuationName",
             "description": "",
             "args": [],
             "type": {
@@ -8880,7 +8880,7 @@
             "deprecationReason": null
           },
           {
-            "name": "evaluationType",
+            "name": "valuationType",
             "description": "",
             "args": [],
             "type": {
@@ -8915,11 +8915,11 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CanEvaluate",
+        "name": "CanValuateClaimItem",
         "description": "",
         "fields": [
           {
-            "name": "canEvaluate",
+            "name": "canValuate",
             "description": "",
             "args": [],
             "type": {
@@ -10926,7 +10926,7 @@
             "deprecationReason": null
           },
           {
-            "name": "upsertEvaluationRule",
+            "name": "upsertValuationRule",
             "description": "",
             "args": [
               {
@@ -10934,7 +10934,7 @@
                 "description": "",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "UpsertEvaluationRuleInput",
+                  "name": "UpsertValuationRuleInput",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -13626,7 +13626,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "UpsertEvaluationRuleInput",
+        "name": "UpsertValuationRuleInput",
         "description": "",
         "fields": null,
         "inputFields": [
@@ -13707,7 +13707,7 @@
             "defaultValue": null
           },
           {
-            "name": "evaluationType",
+            "name": "valuationType",
             "description": "",
             "type": {
               "kind": "NON_NULL",

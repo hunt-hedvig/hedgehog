@@ -1,7 +1,0 @@
-query CanEvaluate($typeOfContract: String!, $itemFamilyId: String!, $itemTypeId: ID) {
-  canEvaluate(typeOfContract: $typeOfContract, itemFamilyId: $itemFamilyId, itemTypeId: $itemTypeId) {
-    canEvaluate
-    itemFamily
-    itemTypeId
-  }
-}

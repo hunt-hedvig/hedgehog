@@ -220,9 +220,9 @@ export type CampaignOwnerPartner = {
   partnerId: Scalars['String']
 }
 
-export type CanEvaluate = {
-  __typename?: 'CanEvaluate'
-  canEvaluate: Scalars['Boolean']
+export type CanValuateClaimItem = {
+  __typename?: 'CanValuateClaimItem'
+  canValuate: Scalars['Boolean']
   itemFamily?: Maybe<Scalars['String']>
   itemTypeId?: Maybe<Scalars['ID']>
 }
@@ -317,6 +317,12 @@ export type ClaimItem = {
   purchasePrice?: Maybe<MonetaryAmountV2>
   valuation?: Maybe<MonetaryAmountV2>
   note?: Maybe<Scalars['String']>
+}
+
+export type ClaimItemValuation = {
+  __typename?: 'ClaimItemValuation'
+  depreciatedValue?: Maybe<Scalars['Float']>
+  valuationRule?: Maybe<ValuationRule>
 }
 
 export type ClaimNote = {
@@ -515,23 +521,6 @@ export type DirectDebitStatus = {
 export type EarthquakeClaim = {
   __typename?: 'EarthquakeClaim'
   date?: Maybe<Scalars['LocalDate']>
-}
-
-export type Evaluation = {
-  __typename?: 'Evaluation'
-  depreciatedValue?: Maybe<Scalars['Float']>
-  evaluationRule?: Maybe<EvaluationRule>
-}
-
-export type EvaluationRule = {
-  __typename?: 'EvaluationRule'
-  evaluationName: Scalars['String']
-  itemFamily: Scalars['String']
-  itemTypeId?: Maybe<Scalars['ID']>
-  ageLimit: Scalars['Float']
-  typeOfContract: Scalars['String']
-  evaluationType: Scalars['String']
-  depreciation?: Maybe<Scalars['Float']>
 }
 
 export type ExtraBuilding = {
@@ -879,7 +868,7 @@ export type MutationType = {
   upsertClaimItem: Scalars['ID']
   deleteClaimItem?: Maybe<Scalars['ID']>
   insertItemCategories: Array<Scalars['Boolean']>
-  upsertEvaluationRule: Scalars['ID']
+  upsertValuationRule: Scalars['ID']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
 }
 
@@ -1124,8 +1113,8 @@ export type MutationTypeInsertItemCategoriesArgs = {
   request?: Maybe<InsertItemCategoriesInput>
 }
 
-export type MutationTypeUpsertEvaluationRuleArgs = {
-  request?: Maybe<UpsertEvaluationRuleInput>
+export type MutationTypeUpsertValuationRuleArgs = {
+  request?: Maybe<UpsertValuationRuleInput>
 }
 
 export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
@@ -1308,8 +1297,8 @@ export type QueryType = {
   findPartnerCampaigns: Array<VoucherCampaign>
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
   dashboardNumbers?: Maybe<DashboardNumbers>
-  getEvaluation: Evaluation
-  canEvaluate?: Maybe<CanEvaluate>
+  getClaimItemValuation: ClaimItemValuation
+  canValuateClaimItem?: Maybe<CanValuateClaimItem>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1361,7 +1350,7 @@ export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
 }
 
-export type QueryTypeGetEvaluationArgs = {
+export type QueryTypeGetClaimItemValuationArgs = {
   purchasePrice: Scalars['Float']
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
@@ -1370,7 +1359,7 @@ export type QueryTypeGetEvaluationArgs = {
   baseDate?: Maybe<Scalars['LocalDate']>
 }
 
-export type QueryTypeCanEvaluateArgs = {
+export type QueryTypeCanValuateClaimItemArgs = {
   typeOfContract: Scalars['String']
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
@@ -1739,17 +1728,6 @@ export type UpsertClaimItemInput = {
   note?: Maybe<Scalars['String']>
 }
 
-export type UpsertEvaluationRuleInput = {
-  id?: Maybe<Scalars['ID']>
-  name: Scalars['String']
-  ageLimit: Scalars['Float']
-  typeOfContract: Scalars['String']
-  itemFamilyId: Scalars['String']
-  itemTypeId?: Maybe<Scalars['String']>
-  evaluationType: Scalars['String']
-  depreciation?: Maybe<Scalars['Float']>
-}
-
 export type UpsertItemBrandInput = {
   id?: Maybe<Scalars['ID']>
   name: Scalars['String']
@@ -1772,6 +1750,28 @@ export type UpsertItemTypeInput = {
   id?: Maybe<Scalars['ID']>
   name: Scalars['String']
   itemFamilyId: Scalars['ID']
+}
+
+export type UpsertValuationRuleInput = {
+  id?: Maybe<Scalars['ID']>
+  name: Scalars['String']
+  ageLimit: Scalars['Float']
+  typeOfContract: Scalars['String']
+  itemFamilyId: Scalars['String']
+  itemTypeId?: Maybe<Scalars['String']>
+  valuationType: Scalars['String']
+  depreciation?: Maybe<Scalars['Float']>
+}
+
+export type ValuationRule = {
+  __typename?: 'ValuationRule'
+  valuationName: Scalars['String']
+  itemFamily: Scalars['String']
+  itemTypeId?: Maybe<Scalars['ID']>
+  ageLimit: Scalars['Float']
+  typeOfContract: Scalars['String']
+  valuationType: Scalars['String']
+  depreciation?: Maybe<Scalars['Float']>
 }
 
 export type VerminAndPestsClaim = {
@@ -1925,17 +1925,17 @@ export type AnswerQuestionMutation = { __typename?: 'MutationType' } & Pick<
   'answerQuestion'
 >
 
-export type CanEvaluateQueryVariables = {
+export type CanValuateClaimItemQueryVariables = {
   typeOfContract: Scalars['String']
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
 }
 
-export type CanEvaluateQuery = { __typename?: 'QueryType' } & {
-  canEvaluate: Maybe<
-    { __typename?: 'CanEvaluate' } & Pick<
-      CanEvaluate,
-      'canEvaluate' | 'itemFamily' | 'itemTypeId'
+export type CanValuateClaimItemQuery = { __typename?: 'QueryType' } & {
+  canValuateClaimItem: Maybe<
+    { __typename?: 'CanValuateClaimItem' } & Pick<
+      CanValuateClaimItem,
+      'canValuate' | 'itemFamily' | 'itemTypeId'
     >
   >
 }
@@ -2058,6 +2058,35 @@ export type GetAccountQuery = { __typename?: 'QueryType' } & {
         >
       }
   >
+}
+
+export type GetClaimItemValuationQueryVariables = {
+  purchasePrice: Scalars['Float']
+  itemFamilyId: Scalars['String']
+  itemTypeId?: Maybe<Scalars['ID']>
+  typeOfContract: Scalars['String']
+  purchaseDate: Scalars['LocalDate']
+  baseDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type GetClaimItemValuationQuery = { __typename?: 'QueryType' } & {
+  getClaimItemValuation: { __typename?: 'ClaimItemValuation' } & Pick<
+    ClaimItemValuation,
+    'depreciatedValue'
+  > & {
+      valuationRule: Maybe<
+        { __typename?: 'ValuationRule' } & Pick<
+          ValuationRule,
+          | 'valuationName'
+          | 'itemFamily'
+          | 'itemTypeId'
+          | 'ageLimit'
+          | 'typeOfContract'
+          | 'valuationType'
+          | 'depreciation'
+        >
+      >
+    }
 }
 
 export type GetClaimItemsQueryVariables = {
@@ -2259,35 +2288,6 @@ export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
       'numberOfClaims' | 'numberOfQuestions'
     >
   >
-}
-
-export type GetEvaluationQueryVariables = {
-  purchasePrice: Scalars['Float']
-  itemFamilyId: Scalars['String']
-  itemTypeId?: Maybe<Scalars['ID']>
-  typeOfContract: Scalars['String']
-  purchaseDate: Scalars['LocalDate']
-  baseDate?: Maybe<Scalars['LocalDate']>
-}
-
-export type GetEvaluationQuery = { __typename?: 'QueryType' } & {
-  getEvaluation: { __typename?: 'Evaluation' } & Pick<
-    Evaluation,
-    'depreciatedValue'
-  > & {
-      evaluationRule: Maybe<
-        { __typename?: 'EvaluationRule' } & Pick<
-          EvaluationRule,
-          | 'evaluationName'
-          | 'itemFamily'
-          | 'itemTypeId'
-          | 'ageLimit'
-          | 'typeOfContract'
-          | 'evaluationType'
-          | 'depreciation'
-        >
-      >
-    }
 }
 
 export type GetItemCategoriesQueryVariables = {
@@ -3052,18 +3052,18 @@ export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOption
   AnswerQuestionMutation,
   AnswerQuestionMutationVariables
 >
-export const CanEvaluateDocument = gql`
-  query CanEvaluate(
+export const CanValuateClaimItemDocument = gql`
+  query CanValuateClaimItem(
     $typeOfContract: String!
     $itemFamilyId: String!
     $itemTypeId: ID
   ) {
-    canEvaluate(
+    canValuateClaimItem(
       typeOfContract: $typeOfContract
       itemFamilyId: $itemFamilyId
       itemTypeId: $itemTypeId
     ) {
-      canEvaluate
+      canValuate
       itemFamily
       itemTypeId
     }
@@ -3071,16 +3071,16 @@ export const CanEvaluateDocument = gql`
 `
 
 /**
- * __useCanEvaluateQuery__
+ * __useCanValuateClaimItemQuery__
  *
- * To run a query within a React component, call `useCanEvaluateQuery` and pass it any options that fit your needs.
- * When your component renders, `useCanEvaluateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCanValuateClaimItemQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCanValuateClaimItemQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useCanEvaluateQuery({
+ * const { data, loading, error } = useCanValuateClaimItemQuery({
  *   variables: {
  *      typeOfContract: // value for 'typeOfContract'
  *      itemFamilyId: // value for 'itemFamilyId'
@@ -3088,35 +3088,37 @@ export const CanEvaluateDocument = gql`
  *   },
  * });
  */
-export function useCanEvaluateQuery(
+export function useCanValuateClaimItemQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    CanEvaluateQuery,
-    CanEvaluateQueryVariables
+    CanValuateClaimItemQuery,
+    CanValuateClaimItemQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<CanEvaluateQuery, CanEvaluateQueryVariables>(
-    CanEvaluateDocument,
-    baseOptions,
-  )
+  return ApolloReactHooks.useQuery<
+    CanValuateClaimItemQuery,
+    CanValuateClaimItemQueryVariables
+  >(CanValuateClaimItemDocument, baseOptions)
 }
-export function useCanEvaluateLazyQuery(
+export function useCanValuateClaimItemLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    CanEvaluateQuery,
-    CanEvaluateQueryVariables
+    CanValuateClaimItemQuery,
+    CanValuateClaimItemQueryVariables
   >,
 ) {
   return ApolloReactHooks.useLazyQuery<
-    CanEvaluateQuery,
-    CanEvaluateQueryVariables
-  >(CanEvaluateDocument, baseOptions)
+    CanValuateClaimItemQuery,
+    CanValuateClaimItemQueryVariables
+  >(CanValuateClaimItemDocument, baseOptions)
 }
-export type CanEvaluateQueryHookResult = ReturnType<typeof useCanEvaluateQuery>
-export type CanEvaluateLazyQueryHookResult = ReturnType<
-  typeof useCanEvaluateLazyQuery
+export type CanValuateClaimItemQueryHookResult = ReturnType<
+  typeof useCanValuateClaimItemQuery
 >
-export type CanEvaluateQueryResult = ApolloReactCommon.QueryResult<
-  CanEvaluateQuery,
-  CanEvaluateQueryVariables
+export type CanValuateClaimItemLazyQueryHookResult = ReturnType<
+  typeof useCanValuateClaimItemLazyQuery
+>
+export type CanValuateClaimItemQueryResult = ApolloReactCommon.QueryResult<
+  CanValuateClaimItemQuery,
+  CanValuateClaimItemQueryVariables
 >
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
@@ -3526,6 +3528,90 @@ export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
   GetAccountQuery,
   GetAccountQueryVariables
 >
+export const GetClaimItemValuationDocument = gql`
+  query GetClaimItemValuation(
+    $purchasePrice: Float!
+    $itemFamilyId: String!
+    $itemTypeId: ID
+    $typeOfContract: String!
+    $purchaseDate: LocalDate!
+    $baseDate: LocalDate
+  ) {
+    getClaimItemValuation(
+      purchasePrice: $purchasePrice
+      itemFamilyId: $itemFamilyId
+      itemTypeId: $itemTypeId
+      typeOfContract: $typeOfContract
+      purchaseDate: $purchaseDate
+      baseDate: $baseDate
+    ) {
+      depreciatedValue
+      valuationRule {
+        valuationName
+        itemFamily
+        itemTypeId
+        ageLimit
+        typeOfContract
+        valuationType
+        depreciation
+      }
+    }
+  }
+`
+
+/**
+ * __useGetClaimItemValuationQuery__
+ *
+ * To run a query within a React component, call `useGetClaimItemValuationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimItemValuationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimItemValuationQuery({
+ *   variables: {
+ *      purchasePrice: // value for 'purchasePrice'
+ *      itemFamilyId: // value for 'itemFamilyId'
+ *      itemTypeId: // value for 'itemTypeId'
+ *      typeOfContract: // value for 'typeOfContract'
+ *      purchaseDate: // value for 'purchaseDate'
+ *      baseDate: // value for 'baseDate'
+ *   },
+ * });
+ */
+export function useGetClaimItemValuationQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimItemValuationQuery,
+    GetClaimItemValuationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetClaimItemValuationQuery,
+    GetClaimItemValuationQueryVariables
+  >(GetClaimItemValuationDocument, baseOptions)
+}
+export function useGetClaimItemValuationLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimItemValuationQuery,
+    GetClaimItemValuationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimItemValuationQuery,
+    GetClaimItemValuationQueryVariables
+  >(GetClaimItemValuationDocument, baseOptions)
+}
+export type GetClaimItemValuationQueryHookResult = ReturnType<
+  typeof useGetClaimItemValuationQuery
+>
+export type GetClaimItemValuationLazyQueryHookResult = ReturnType<
+  typeof useGetClaimItemValuationLazyQuery
+>
+export type GetClaimItemValuationQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimItemValuationQuery,
+  GetClaimItemValuationQueryVariables
+>
 export const GetClaimItemsDocument = gql`
   query GetClaimItems($claimId: ID!) {
     claimItems(claimId: $claimId) {
@@ -3885,90 +3971,6 @@ export type GetDashboardNumbersLazyQueryHookResult = ReturnType<
 export type GetDashboardNumbersQueryResult = ApolloReactCommon.QueryResult<
   GetDashboardNumbersQuery,
   GetDashboardNumbersQueryVariables
->
-export const GetEvaluationDocument = gql`
-  query GetEvaluation(
-    $purchasePrice: Float!
-    $itemFamilyId: String!
-    $itemTypeId: ID
-    $typeOfContract: String!
-    $purchaseDate: LocalDate!
-    $baseDate: LocalDate
-  ) {
-    getEvaluation(
-      purchasePrice: $purchasePrice
-      itemFamilyId: $itemFamilyId
-      itemTypeId: $itemTypeId
-      typeOfContract: $typeOfContract
-      purchaseDate: $purchaseDate
-      baseDate: $baseDate
-    ) {
-      depreciatedValue
-      evaluationRule {
-        evaluationName
-        itemFamily
-        itemTypeId
-        ageLimit
-        typeOfContract
-        evaluationType
-        depreciation
-      }
-    }
-  }
-`
-
-/**
- * __useGetEvaluationQuery__
- *
- * To run a query within a React component, call `useGetEvaluationQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetEvaluationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetEvaluationQuery({
- *   variables: {
- *      purchasePrice: // value for 'purchasePrice'
- *      itemFamilyId: // value for 'itemFamilyId'
- *      itemTypeId: // value for 'itemTypeId'
- *      typeOfContract: // value for 'typeOfContract'
- *      purchaseDate: // value for 'purchaseDate'
- *      baseDate: // value for 'baseDate'
- *   },
- * });
- */
-export function useGetEvaluationQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetEvaluationQuery,
-    GetEvaluationQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<
-    GetEvaluationQuery,
-    GetEvaluationQueryVariables
-  >(GetEvaluationDocument, baseOptions)
-}
-export function useGetEvaluationLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetEvaluationQuery,
-    GetEvaluationQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    GetEvaluationQuery,
-    GetEvaluationQueryVariables
-  >(GetEvaluationDocument, baseOptions)
-}
-export type GetEvaluationQueryHookResult = ReturnType<
-  typeof useGetEvaluationQuery
->
-export type GetEvaluationLazyQueryHookResult = ReturnType<
-  typeof useGetEvaluationLazyQuery
->
-export type GetEvaluationQueryResult = ApolloReactCommon.QueryResult<
-  GetEvaluationQuery,
-  GetEvaluationQueryVariables
 >
 export const GetItemCategoriesDocument = gql`
   query GetItemCategories($kind: ItemCategoryKind!, $parentId: ID) {

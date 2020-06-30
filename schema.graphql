@@ -21,19 +21,19 @@ type QueryType {
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
-  getEvaluation(
+  getClaimItemValuation(
     purchasePrice: Float!,
     itemFamilyId: String!,
     itemTypeId: ID,
     typeOfContract: String!,
     purchaseDate: LocalDate!,
     baseDate: LocalDate
-  ): Evaluation!
-  canEvaluate(
+  ): ClaimItemValuation!
+  canValuateClaimItem(
     typeOfContract: String!,
     itemFamilyId: String!,
     itemTypeId: ID
-  ): CanEvaluate
+  ): CanValuateClaimItem
 }
 
 type DashboardNumbers {
@@ -130,7 +130,7 @@ type MutationType {
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
-  upsertEvaluationRule(request: UpsertEvaluationRuleInput): ID!
+  upsertValuationRule(request: UpsertValuationRuleInput): ID!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
@@ -153,23 +153,24 @@ type ClaimItem {
   note: String
 }
 
-type Evaluation {
+type ClaimItemValuation {
   depreciatedValue: Float
-  evaluationRule: EvaluationRule
+  valuationRule: ValuationRule
 }
 
-type EvaluationRule {
-  evaluationName: String!
+type ValuationRule {
+  valuationName: String!
   itemFamily: String!
   itemTypeId: ID
   ageLimit: Float!
   typeOfContract: String!
-  evaluationType: String!
+  valuationType: String!
   depreciation: Float
 }
 
-type CanEvaluate {
-  canEvaluate: Boolean!
+type CanValuateClaimItem
+{
+  canValuate: Boolean!
   itemFamily: String
   itemTypeId: ID
 }
@@ -214,14 +215,14 @@ input UpsertItemModelInput {
   itemBrandId: ID!
 }
 
-input UpsertEvaluationRuleInput {
+input UpsertValuationRuleInput {
   id: ID
   name: String!
   ageLimit: Float!
   typeOfContract: String!
   itemFamilyId: String!
   itemTypeId: String
-  evaluationType: String!
+  valuationType: String!
   depreciation: Float
 }
 
