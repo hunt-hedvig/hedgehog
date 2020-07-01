@@ -45,10 +45,7 @@ export const ItemForm: React.FC<{
     itemTypeId: selectedItemCategories[1]?.id ?? null,
     itemBrandId: selectedItemCategories[2]?.id ?? null,
     itemModelId: selectedItemCategories[3]?.id ?? null,
-    dateOfPurchase:
-      dateOfPurchase !== '' && dateOfPurchase.length === 10
-        ? dateOfPurchase
-        : null,
+    dateOfPurchase: dateOfPurchase !== '' ? dateOfPurchase : null,
     purchasePriceAmount: !isEmpty(purchasePrice) ? Number(purchasePrice) : null,
     purchasePriceCurrency: !isEmpty(purchasePrice)
       ? purchasePriceCurrency

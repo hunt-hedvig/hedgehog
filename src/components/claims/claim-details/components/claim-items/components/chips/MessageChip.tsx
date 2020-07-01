@@ -17,7 +17,7 @@ export const MessageChip: React.FC<{
   itemFamilyId: string
   price: number | undefined | null
   currency: string
-  dateOfPurchase: Date
+  dateOfPurchase: string
   customValuation: string
 }> = ({
   valuation,
@@ -29,7 +29,7 @@ export const MessageChip: React.FC<{
   customValuation,
 }) => {
   const loadingValuation = valuation === undefined
-  const priceAndDateAvailable = price && dateOfPurchase
+  const priceAndDateAvailable = price && dateOfPurchase.length === 10
   const canValuateClaimItem = !!itemFamilyId && !!valuationStatus?.canValuate
   const valuationType = valuation?.valuationRule?.valuationType ?? ''
   const marketValuation = valuationType === 'MARKET_PRICE'
