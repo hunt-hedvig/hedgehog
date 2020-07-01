@@ -184,7 +184,9 @@ const ClaimInformation: React.SFC<Props> = ({
       </SelectWrapper>
       {contracts && (
         <SelectWrapper>
-          <MuiInputLabel shrink>Select Contract for Claim</MuiInputLabel>
+          <MuiInputLabel shrink error={!contract}>
+            Select Contract for Claim
+          </MuiInputLabel>
 
           <MuiSelect
             value={contract?.id ? contract.id : 'none'}
@@ -209,7 +211,7 @@ const ClaimInformation: React.SFC<Props> = ({
             {contracts.map((_contract) => (
               <MuiMenuItem key={_contract.id} value={_contract.id}>
                 {_contract.contractTypeName} (
-                {getAddressFromContract(_contract)}}
+                {getAddressFromContract(_contract)})
               </MuiMenuItem>
             ))}
           </MuiSelect>
