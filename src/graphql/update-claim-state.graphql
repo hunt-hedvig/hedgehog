@@ -1,0 +1,9 @@
+mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
+  updateClaimState(id: $id, state: $state) {
+    state
+    events {
+      text
+      date
+    }
+  }
+}

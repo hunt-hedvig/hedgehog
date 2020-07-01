@@ -278,6 +278,7 @@ export type Claim = {
   events?: Maybe<Array<Maybe<ClaimEvent>>>
   coveringEmployee: Scalars['Boolean']
   claimFiles: Array<ClaimFileUpload>
+  contract?: Maybe<Contract>
 }
 
 export type ClaimEvent = {
@@ -870,6 +871,7 @@ export type MutationType = {
   insertItemCategories: Array<Scalars['Boolean']>
   upsertValuationRule: Scalars['ID']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
+  setContractForClaim: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1119,6 +1121,10 @@ export type MutationTypeUpsertValuationRuleArgs = {
 
 export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
   request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type MutationTypeSetContractForClaimArgs = {
+  request: SetContractForClaim
 }
 
 export type NoDiscount = {
@@ -1489,6 +1495,12 @@ export type SendMessageResponse = SendMessageSuccessful | SendMessageFailed
 export type SendMessageSuccessful = {
   __typename?: 'SendMessageSuccessful'
   memberId: Scalars['String']
+}
+
+export type SetContractForClaim = {
+  claimId: Scalars['String']
+  memberId: Scalars['String']
+  contractId: Scalars['String']
 }
 
 export enum SignSource {
@@ -2437,6 +2449,33 @@ export type SendMessageMutation = { __typename?: 'MutationType' } & {
       >)
 }
 
+export type SetContractForClaimMutationVariables = {
+  request: SetContractForClaim
+}
+
+export type SetContractForClaimMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'setContractForClaim'>
+
+export type SetCoveringEmployeeMutationVariables = {
+  id: Scalars['ID']
+  coveringEmployee: Scalars['Boolean']
+}
+
+export type SetCoveringEmployeeMutation = { __typename?: 'MutationType' } & {
+  setCoveringEmployee: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'coveringEmployee'> & {
+        events: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+            >
+          >
+        >
+      }
+  >
+}
+
 export type SignQuoteForNewContractMutationVariables = {
   quoteId: Scalars['ID']
   activationDate?: Maybe<Scalars['LocalDate']>
@@ -2455,6 +2494,25 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
   terminateContract: { __typename?: 'Contract' } & Pick<
     Contract,
     'id' | 'holderMemberId'
+  >
+}
+
+export type UpdateClaimStateMutationVariables = {
+  id: Scalars['ID']
+  state: ClaimState
+}
+
+export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
+  updateClaimState: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'state'> & {
+        events: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+            >
+          >
+        >
+      }
   >
 }
 
@@ -4517,6 +4575,109 @@ export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SendMessageMutation,
   SendMessageMutationVariables
 >
+export const SetContractForClaimDocument = gql`
+  mutation SetContractForClaim($request: SetContractForClaim!) {
+    setContractForClaim(request: $request)
+  }
+`
+export type SetContractForClaimMutationFn = ApolloReactCommon.MutationFunction<
+  SetContractForClaimMutation,
+  SetContractForClaimMutationVariables
+>
+
+/**
+ * __useSetContractForClaimMutation__
+ *
+ * To run a mutation, you first call `useSetContractForClaimMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetContractForClaimMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setContractForClaimMutation, { data, loading, error }] = useSetContractForClaimMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSetContractForClaimMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetContractForClaimMutation,
+    SetContractForClaimMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SetContractForClaimMutation,
+    SetContractForClaimMutationVariables
+  >(SetContractForClaimDocument, baseOptions)
+}
+export type SetContractForClaimMutationHookResult = ReturnType<
+  typeof useSetContractForClaimMutation
+>
+export type SetContractForClaimMutationResult = ApolloReactCommon.MutationResult<
+  SetContractForClaimMutation
+>
+export type SetContractForClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetContractForClaimMutation,
+  SetContractForClaimMutationVariables
+>
+export const SetCoveringEmployeeDocument = gql`
+  mutation SetCoveringEmployee($id: ID!, $coveringEmployee: Boolean!) {
+    setCoveringEmployee(id: $id, coveringEmployee: $coveringEmployee) {
+      coveringEmployee
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+export type SetCoveringEmployeeMutationFn = ApolloReactCommon.MutationFunction<
+  SetCoveringEmployeeMutation,
+  SetCoveringEmployeeMutationVariables
+>
+
+/**
+ * __useSetCoveringEmployeeMutation__
+ *
+ * To run a mutation, you first call `useSetCoveringEmployeeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetCoveringEmployeeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setCoveringEmployeeMutation, { data, loading, error }] = useSetCoveringEmployeeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      coveringEmployee: // value for 'coveringEmployee'
+ *   },
+ * });
+ */
+export function useSetCoveringEmployeeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetCoveringEmployeeMutation,
+    SetCoveringEmployeeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SetCoveringEmployeeMutation,
+    SetCoveringEmployeeMutationVariables
+  >(SetCoveringEmployeeDocument, baseOptions)
+}
+export type SetCoveringEmployeeMutationHookResult = ReturnType<
+  typeof useSetCoveringEmployeeMutation
+>
+export type SetCoveringEmployeeMutationResult = ApolloReactCommon.MutationResult<
+  SetCoveringEmployeeMutation
+>
+export type SetCoveringEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetCoveringEmployeeMutation,
+  SetCoveringEmployeeMutationVariables
+>
 export const SignQuoteForNewContractDocument = gql`
   mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {
     signQuoteForNewContract(
@@ -4625,6 +4786,61 @@ export type TerminateContractMutationResult = ApolloReactCommon.MutationResult<
 export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
   TerminateContractMutation,
   TerminateContractMutationVariables
+>
+export const UpdateClaimStateDocument = gql`
+  mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
+    updateClaimState(id: $id, state: $state) {
+      state
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+export type UpdateClaimStateMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateClaimStateMutation,
+  UpdateClaimStateMutationVariables
+>
+
+/**
+ * __useUpdateClaimStateMutation__
+ *
+ * To run a mutation, you first call `useUpdateClaimStateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClaimStateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClaimStateMutation, { data, loading, error }] = useUpdateClaimStateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      state: // value for 'state'
+ *   },
+ * });
+ */
+export function useUpdateClaimStateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateClaimStateMutation,
+    UpdateClaimStateMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateClaimStateMutation,
+    UpdateClaimStateMutationVariables
+  >(UpdateClaimStateDocument, baseOptions)
+}
+export type UpdateClaimStateMutationHookResult = ReturnType<
+  typeof useUpdateClaimStateMutation
+>
+export type UpdateClaimStateMutationResult = ApolloReactCommon.MutationResult<
+  UpdateClaimStateMutation
+>
+export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateClaimStateMutation,
+  UpdateClaimStateMutationVariables
 >
 export const DeleteClaimItemDocument = gql`
   mutation DeleteClaimItem($claimItemId: ID!) {

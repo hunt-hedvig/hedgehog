@@ -134,6 +134,9 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
+  setContractForClaim(
+    request: SetContractForClaim!
+  ): Boolean!
 }
 
 input InsertItemCategoriesInput {
@@ -374,6 +377,12 @@ type Renewal {
   renewalDate: LocalDate!
   draftCertificateUrl: String
   draftOfAgreementId: ID
+}
+
+input SetContractForClaim {
+  claimId: String!
+  memberId: String!
+  contractId: String!
 }
 
 input TerminateContractInput {
@@ -1037,6 +1046,7 @@ type Claim {
   events: [ClaimEvent]
   coveringEmployee: Boolean!
   claimFiles: [ClaimFileUpload!]!
+  contract: Contract
 }
 
 type ClaimNote {
