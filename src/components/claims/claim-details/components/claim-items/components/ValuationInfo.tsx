@@ -7,15 +7,15 @@ import { MessageChip } from './chips/MessageChip'
 
 export const ValuationInfo: React.FC<{
   request: UpsertClaimItemInput
-  setAutoValuation: React.EventHandler<any>
-  customValuation: string
-  setCustomValuation: React.EventHandler<any>
+  setValuationAmount: React.EventHandler<any>
+  customValuationAmount: string
+  setCustomValuationAmount: React.EventHandler<any>
   defaultCurrency: string
 }> = ({
   request,
-  setAutoValuation,
-  customValuation,
-  setCustomValuation,
+  setValuationAmount,
+  customValuationAmount,
+  setCustomValuationAmount,
   defaultCurrency,
 }) => {
   const TYPE_OF_CONTRACT = 'SE_APARTMENT_RENT' // To be changed
@@ -27,7 +27,7 @@ export const ValuationInfo: React.FC<{
   )
 
   const [valuation] = useGetClaimItemValuation(
-    request?.purchasePriceAmount ?? 0,
+    request?.purchasePrice?.amount ?? 0,
     request.itemFamilyId,
     TYPE_OF_CONTRACT,
     request.dateOfPurchase,
@@ -36,11 +36,11 @@ export const ValuationInfo: React.FC<{
   )
 
   React.useEffect(() => {
-    setAutoValuation(valuation?.depreciatedValue)
+    setValuationAmount(valuation?.depreciatedValue)
   }, [valuation?.depreciatedValue])
 
   React.useEffect(() => {
-    setCustomValuation('')
+    setCustomValuationAmount('')
   }, [request.itemFamilyId, request.itemTypeId])
 
   return (
@@ -49,18 +49,18 @@ export const ValuationInfo: React.FC<{
         valuation={valuation}
         valuationStatus={valuationStatus}
         itemFamilyId={request.itemFamilyId}
-        price={request.purchasePriceAmount}
-        currency={request.purchasePriceCurrency ?? defaultCurrency}
+        price={request.purchasePrice?.amount}
+        currency={request.purchasePrice?.currency ?? defaultCurrency}
         dateOfPurchase={request.dateOfPurchase}
-        customValuation={customValuation}
+        customValuation={customValuationAmount}
       />
       <CustomValuationChip
         request={request}
-        customValuation={customValuation}
+        customValuationAmount={customValuationAmount}
         customValuationCurrency={
-          request.purchasePriceCurrency ?? defaultCurrency
+          request.purchasePrice?.currency ?? defaultCurrency
         }
-        setCustomValuation={setCustomValuation}
+        setCustomValuationAmount={setCustomValuationAmount}
         valuation={valuation}
       />
     </>

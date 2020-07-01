@@ -5,15 +5,15 @@ import { InputChip } from './components/InputChip'
 
 export const CustomValuationChip: React.FC<{
   request: UpsertClaimItemInput
-  customValuation: string
+  customValuationAmount: string
   customValuationCurrency: string
-  setCustomValuation: React.EventHandler<any>
+  setCustomValuationAmount: React.EventHandler<any>
   valuation: ClaimItemValuation | undefined
 }> = ({
   request,
-  customValuation,
+  customValuationAmount,
   customValuationCurrency,
-  setCustomValuation,
+  setCustomValuationAmount,
   valuation,
 }) => {
   return (
@@ -21,17 +21,19 @@ export const CustomValuationChip: React.FC<{
       {request.itemFamilyId && (
         <>
           <InputChip
-            value={customValuation}
+            value={customValuationAmount}
             currency={customValuationCurrency}
             placeholder={
               valuation?.valuationRule?.valuationType === 'MARKET_PRICE'
                 ? 'Add valuation'
                 : 'Custom valuation'
             }
-            onChange={({ target: { value } }) => setCustomValuation(value)}
+            onChange={({ target: { value } }) =>
+              setCustomValuationAmount(value)
+            }
           />
-          {customValuation !== '' && (
-            <DiscardChip onClick={() => setCustomValuation('')} />
+          {customValuationAmount !== '' && (
+            <DiscardChip onClick={() => setCustomValuationAmount('')} />
           )}
         </>
       )}

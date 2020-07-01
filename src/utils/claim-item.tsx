@@ -12,6 +12,6 @@ export const getValuationExplanation = (
   const ageLimit = valuationRule.ageLimit
 
   return `Considering the item belongs to '${valuationName}'
-  it has been depreciated with ${depreciation} since it is
-  at least ${ageLimit} year${ageLimit > 1.0 ? 's' : ''}`
+  it has been depreciated with ${depreciation}% since it is
+  at least ${ageLimit} year${ageLimit > 1.0 ? 's' : ''} old.`
 }

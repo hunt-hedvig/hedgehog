@@ -11,7 +11,6 @@ type QueryType {
   ticket(id: ID!): Ticket
   getFullTicketHistory(id: ID!): TicketHistory
   tickets(resolved: Boolean): [Ticket!]!
-  getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
@@ -63,12 +62,6 @@ type MutationType {
   changeTicketStatus(ticketId: ID!, newStatus: TicketStatus): ID
   changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
   changeTicketPriority(ticketId: ID!, newPriority: Float): ID
-  autoLabelQuestion(
-    question: String!
-    label: String!
-    memberId: String
-    messageIds: [String!]
-  ): AutoLabel
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
@@ -186,11 +179,9 @@ input UpsertClaimItemInput {
   itemBrandId: ID
   itemModelId: ID
   dateOfPurchase: LocalDate
-  purchasePriceAmount: Float
-  purchasePriceCurrency: String
-  valuationAmount: Float
-  customValuationAmount: Float
-  valuationCurrency: String
+  purchasePrice: MonetaryAmount
+  valuation: MonetaryAmount
+  customValuation: MonetaryAmount
   note: String
 }
 
@@ -542,22 +533,6 @@ enum ItemCategoryKind {
   BRAND
   MODEL
   COMPANY
-}
-
-type Suggestion {
-  intent: String!
-  reply: String!
-  text: String!
-  confidence: Float!
-  allReplies: [AllRepliesEntry!]!
-}
-type AllRepliesEntry {
-  intent: String!
-  reply: String!
-}
-
-type AutoLabel {
-  message: Boolean
 }
 
 type FileUpload {

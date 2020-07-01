@@ -25,12 +25,14 @@ export const ItemForm: React.FC<{
     SelectedItemCategory[]
   >([])
 
-  const [purchasePrice, setPurchasePrice] = React.useState('')
+  const [purchasePriceAmount, setPurchasePriceAmount] = React.useState('')
   const [dateOfPurchase, setDateOfPurchase] = React.useState('')
   const [note, setNote] = React.useState('')
   const [purchasePriceCurrency, setPurchasePriceCurrency] = React.useState('')
-  const [autoValuation, setAutoValuation] = React.useState<string | null>('')
-  const [customValuation, setCustomValuation] = React.useState('')
+  const [valuationAmount, setValuationAmount] = React.useState<string | null>(
+    '',
+  )
+  const [customValuationAmount, setCustomValuationAmount] = React.useState('')
   const [contractMarketInfo] = useContractMarketInfo(memberId ?? '')
   const defaultCurrency = contractMarketInfo?.preferredCurrency ?? 'SEK'
 
@@ -46,36 +48,42 @@ export const ItemForm: React.FC<{
     itemBrandId: selectedItemCategories[2]?.id ?? null,
     itemModelId: selectedItemCategories[3]?.id ?? null,
     dateOfPurchase: dateOfPurchase !== '' ? dateOfPurchase : null,
-    purchasePriceAmount: !isEmpty(purchasePrice) ? Number(purchasePrice) : null,
-    purchasePriceCurrency: !isEmpty(purchasePrice)
-      ? purchasePriceCurrency
+    purchasePrice: !isEmpty(purchasePriceAmount)
+      ? {
+          amount: Number(purchasePriceAmount),
+          currency: purchasePriceCurrency,
+        }
       : null,
-    valuationAmount: Number(autoValuation) ?? null,
-    customValuationAmount: !isEmpty(customValuation)
-      ? Number(customValuation)
+    valuation: !isEmpty(valuationAmount)
+      ? {
+          amount: Number(valuationAmount),
+          currency: purchasePriceCurrency,
+        }
       : null,
-    valuationCurrency:
-      !isEmpty(customValuation) || !isEmpty(autoValuation)
-        ? purchasePriceCurrency
-        : null,
+    customValuation: !isEmpty(customValuationAmount)
+      ? {
+          amount: Number(customValuationAmount),
+          currency: purchasePriceCurrency,
+        }
+      : null,
     note: note === '' ? null : note,
   }
 
   const formLooksGood =
     request.itemFamilyId &&
     request.itemTypeId &&
-    isValidNumber(purchasePrice) &&
+    isValidNumber(purchasePriceAmount) &&
     isValidDate(dateOfPurchase) &&
-    isValidNumber(customValuation)
+    isValidNumber(customValuationAmount)
 
   const resetForm = () => {
-    setPurchasePrice('')
+    setPurchasePriceAmount('')
     setPurchasePriceCurrency(defaultCurrency)
     setDateOfPurchase('')
     setSelectedItemCategories([])
     setNote('')
-    setCustomValuation('')
-    setAutoValuation(null)
+    setCustomValuationAmount('')
+    setValuationAmount(null)
   }
 
   React.useEffect(() => {
@@ -94,10 +102,10 @@ export const ItemForm: React.FC<{
         <Grid item xs={1}>
           <TextField
             placeholder="Price"
-            error={!isValidNumber(purchasePrice)}
-            value={purchasePrice}
-            helperText={!isValidNumber(purchasePrice) && 'Only numbers'}
-            onChange={({ target: { value } }) => setPurchasePrice(value)}
+            error={!isValidNumber(purchasePriceAmount)}
+            value={purchasePriceAmount}
+            helperText={!isValidNumber(purchasePriceAmount) && 'Only numbers'}
+            onChange={({ target: { value } }) => setPurchasePriceAmount(value)}
             fullWidth
             inputProps={{
               style: {
@@ -109,7 +117,7 @@ export const ItemForm: React.FC<{
         <Grid item xs={1}>
           <TextField
             select
-            error={!isValidNumber(purchasePrice)}
+            error={!isValidNumber(purchasePriceAmount)}
             value={purchasePriceCurrency}
             onChange={({ target: { value } }) =>
               setPurchasePriceCurrency(value)
@@ -164,9 +172,9 @@ export const ItemForm: React.FC<{
         <Grid item xs={10}>
           <ValuationInfo
             request={request}
-            setAutoValuation={setAutoValuation}
-            customValuation={customValuation}
-            setCustomValuation={setCustomValuation}
+            setValuationAmount={setValuationAmount}
+            customValuationAmount={customValuationAmount}
+            setCustomValuationAmount={setCustomValuationAmount}
             defaultCurrency={defaultCurrency}
           />
         </Grid>

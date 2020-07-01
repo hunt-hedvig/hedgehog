@@ -126,12 +126,6 @@ export enum AgreementStatus {
   Terminated = 'TERMINATED',
 }
 
-export type AllRepliesEntry = {
-  __typename?: 'AllRepliesEntry'
-  intent: Scalars['String']
-  reply: Scalars['String']
-}
-
 export type ApartmentQuoteData = IQuoteData & {
   __typename?: 'ApartmentQuoteData'
   id: Scalars['ID']
@@ -192,11 +186,6 @@ export type AssignVoucherPercentageDiscount = {
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
-}
-
-export type AutoLabel = {
-  __typename?: 'AutoLabel'
-  message?: Maybe<Scalars['Boolean']>
 }
 
 export type BurglaryClaim = {
@@ -836,7 +825,6 @@ export type MutationType = {
   changeTicketStatus?: Maybe<Scalars['ID']>
   changeTicketReminder?: Maybe<Scalars['ID']>
   changeTicketPriority?: Maybe<Scalars['ID']>
-  autoLabelQuestion?: Maybe<AutoLabel>
   whitelistMember?: Maybe<Scalars['Boolean']>
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
@@ -960,13 +948,6 @@ export type MutationTypeChangeTicketReminderArgs = {
 export type MutationTypeChangeTicketPriorityArgs = {
   ticketId: Scalars['ID']
   newPriority?: Maybe<Scalars['Float']>
-}
-
-export type MutationTypeAutoLabelQuestionArgs = {
-  question: Scalars['String']
-  label: Scalars['String']
-  memberId?: Maybe<Scalars['String']>
-  messageIds?: Maybe<Array<Scalars['String']>>
 }
 
 export type MutationTypeWhitelistMemberArgs = {
@@ -1293,7 +1274,6 @@ export type QueryType = {
   ticket?: Maybe<Ticket>
   getFullTicketHistory?: Maybe<TicketHistory>
   tickets: Array<Ticket>
-  getAnswerSuggestion: Array<Suggestion>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   messageHistory: Array<ChatMessage>
@@ -1333,10 +1313,6 @@ export type QueryTypeGetFullTicketHistoryArgs = {
 
 export type QueryTypeTicketsArgs = {
   resolved?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryTypeGetAnswerSuggestionArgs = {
-  question?: Maybe<Scalars['String']>
 }
 
 export type QueryTypeMessageHistoryArgs = {
@@ -1521,15 +1497,6 @@ export type SnowPressureClaim = {
 export type StormDamageClaim = {
   __typename?: 'StormDamageClaim'
   date?: Maybe<Scalars['LocalDate']>
-}
-
-export type Suggestion = {
-  __typename?: 'Suggestion'
-  intent: Scalars['String']
-  reply: Scalars['String']
-  text: Scalars['String']
-  confidence: Scalars['Float']
-  allReplies: Array<AllRepliesEntry>
 }
 
 export type SwedishApartment = AgreementCore & {
@@ -1732,11 +1699,9 @@ export type UpsertClaimItemInput = {
   itemBrandId?: Maybe<Scalars['ID']>
   itemModelId?: Maybe<Scalars['ID']>
   dateOfPurchase?: Maybe<Scalars['LocalDate']>
-  purchasePriceAmount?: Maybe<Scalars['Float']>
-  purchasePriceCurrency?: Maybe<Scalars['String']>
-  valuationAmount?: Maybe<Scalars['Float']>
-  customValuationAmount?: Maybe<Scalars['Float']>
-  valuationCurrency?: Maybe<Scalars['String']>
+  purchasePrice?: Maybe<Scalars['MonetaryAmount']>
+  valuation?: Maybe<Scalars['MonetaryAmount']>
+  customValuation?: Maybe<Scalars['MonetaryAmount']>
   note?: Maybe<Scalars['String']>
 }
 
