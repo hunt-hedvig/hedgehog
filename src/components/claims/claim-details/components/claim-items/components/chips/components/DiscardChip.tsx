@@ -16,5 +16,5 @@ const Chip = styled(BaseChip)`
 export const DiscardChip: React.FC<{ onClick: React.EventHandler<any> }> = ({
   onClick,
 }) => {
-  return <Chip props={{ label: 'Reset', onClick }} />
+  return <Chip label={'Reset'} onClick={onClick} />
 }

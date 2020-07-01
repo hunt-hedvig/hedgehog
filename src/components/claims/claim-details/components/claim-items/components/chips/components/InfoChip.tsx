@@ -14,9 +14,7 @@ const Chip = styled(BaseChip)`
 export const InfoChip: React.FC = ({}) => {
   return (
     <Chip
-      props={{
-        label: 'Enter price and purchase date to get a valuation automatically',
-      }}
+      label={'Enter price and purchase date to get a valuation automatically'}
       icon={<LightningFill />}
     />
   )

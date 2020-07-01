@@ -13,7 +13,7 @@ const Chip = styled(BaseChip)`
 export const MarketValuationChip: React.FC = ({}) => {
   return (
     <Chip
-      props={{ label: 'This item should be valued at the as-new price' }}
+      label={'This item should be valued at the as-new price'}
       icon={<Gem />}
     />
   )

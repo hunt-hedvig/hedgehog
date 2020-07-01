@@ -37,7 +37,7 @@ export const InputChip: React.FC<{
   return (
     <>
       <Chip
-        props={{ label: isActive || value !== '' ? '' : placeholder }}
+        label={isActive || value !== '' ? '' : placeholder}
         icon={<Pencil />}
         adornment={
           <TextField

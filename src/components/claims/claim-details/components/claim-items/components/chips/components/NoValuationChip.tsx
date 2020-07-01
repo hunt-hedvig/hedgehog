@@ -14,7 +14,7 @@ const StyledChip = styled(BaseChip)`
 export const NoValuationChip: React.FC = ({}) => {
   return (
     <StyledChip
-      props={{ label: "There's no valuation available for this item" }}
+      label={"There's no valuation available for this item"}
       icon={<EyeFill />}
     />
   )

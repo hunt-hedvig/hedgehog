@@ -3,11 +3,7 @@ import { Gem } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { MonetaryAmountV2 } from 'src/api/generated/graphql'
 import { formatMoney } from 'utils/money'
-import { BaseChip } from './BaseChip'
-
-interface BaseChipProps {
-  ignored: boolean
-}
+import { BaseChip, BaseChipProps } from './BaseChip'
 
 const Chip = styled(BaseChip)`
   background-color: ${({ theme }) => theme.success};
@@ -42,11 +38,9 @@ export const ValuationChip: React.FC<{
   return (
     <>
       <Chip
-        props={{ label: 'The depreciated valuation is' }}
+        label={'The depreciated valuation is'}
         icon={<Gem />}
-        adornment={
-          <AdornmentChip ignored={ignored} props={{ label: valuationLabel }} />
-        }
+        adornment={<AdornmentChip ignored={ignored} label={valuationLabel} />}
       />
     </>
   )

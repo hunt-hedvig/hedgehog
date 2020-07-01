@@ -11,21 +11,29 @@ const ChipIconBase = styled.span`
   margin-right: -15px;
 `
 
-export const BaseChip: React.FC<{
-  icon?: React.ReactElement | undefined
+export interface BaseChipProps extends ChipProps {
   adornment?: React.ReactElement | undefined
   ignored?: boolean
-  props: ChipProps
-  className?: string
-}> = ({ icon, adornment, props, className }) => {
-  const { onDelete, ...chipProps } = props
+}
+
+export const BaseChip: React.FC<BaseChipProps> = ({
+  label,
+  icon,
+  adornment,
+  onDelete,
+  onClick,
+  clickable,
+  className,
+}) => {
   return (
     <Chip
+      label={label}
       avatar={icon ? <ChipIconBase>{icon}</ChipIconBase> : undefined}
       onDelete={onDelete ?? (adornment && (() => void 0))}
+      onClick={onClick}
+      clickable={clickable}
       deleteIcon={<>{adornment}</>}
       className={className}
-      {...chipProps}
     />
   )
 }
