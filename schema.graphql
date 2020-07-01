@@ -163,7 +163,7 @@ type ValuationRule {
   ageLimit: Float!
   typeOfContract: String!
   valuationType: String!
-  depreciation: Float
+  depreciation: Int
 }
 
 type CanValuateClaimItem

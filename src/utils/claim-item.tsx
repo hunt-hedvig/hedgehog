@@ -8,7 +8,7 @@ export const getValuationExplanation = (
   }
 
   const valuationName = valuationRule.valuationName
-  const depreciation = (Number(valuationRule.depreciation) * 100).toString()
+  const depreciation = Number(valuationRule.depreciation).toString()
   const ageLimit = valuationRule.ageLimit
 
   return `Considering the item belongs to '${valuationName}'

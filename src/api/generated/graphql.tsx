@@ -1752,7 +1752,7 @@ export type ValuationRule = {
   ageLimit: Scalars['Float']
   typeOfContract: Scalars['String']
   valuationType: Scalars['String']
-  depreciation?: Maybe<Scalars['Float']>
+  depreciation?: Maybe<Scalars['Int']>
 }
 
 export type VerminAndPestsClaim = {

@@ -4,7 +4,7 @@ import {
   MonetaryAmountV2,
 } from 'api/generated/graphql'
 import React from 'react'
-import { getValuationExplanation } from '../../../../../../../utils/claim-item'
+import { getValuationExplanation } from 'utils/claim-item'
 import { ExplanationPopover } from '../styles'
 import { InfoChip } from './components/InfoChip'
 import { MarketValuationChip } from './components/MarketValuationChip'
