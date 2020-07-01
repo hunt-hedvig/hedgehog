@@ -311,7 +311,7 @@ export type ClaimItem = {
 
 export type ClaimItemValuation = {
   __typename?: 'ClaimItemValuation'
-  depreciatedValue?: Maybe<Scalars['Float']>
+  depreciatedValue?: Maybe<MonetaryAmountV2>
   valuationRule?: Maybe<ValuationRule>
 }
 
@@ -580,6 +580,15 @@ export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE',
   Other = 'OTHER',
+}
+
+export type GetValuationInput = {
+  purchasePrice: Scalars['MonetaryAmount']
+  itemFamilyId: Scalars['String']
+  itemTypeId?: Maybe<Scalars['ID']>
+  typeOfContract: Scalars['String']
+  purchaseDate: Scalars['LocalDate']
+  baseDate?: Maybe<Scalars['LocalDate']>
 }
 
 export type HouseQuoteData = IQuoteData & {
@@ -1333,12 +1342,7 @@ export type QueryTypeFindPartnerCampaignsArgs = {
 }
 
 export type QueryTypeGetClaimItemValuationArgs = {
-  purchasePrice: Scalars['Float']
-  itemFamilyId: Scalars['String']
-  itemTypeId?: Maybe<Scalars['ID']>
-  typeOfContract: Scalars['String']
-  purchaseDate: Scalars['LocalDate']
-  baseDate?: Maybe<Scalars['LocalDate']>
+  request?: Maybe<GetValuationInput>
 }
 
 export type QueryTypeCanValuateClaimItemArgs = {
@@ -2038,32 +2042,30 @@ export type GetAccountQuery = { __typename?: 'QueryType' } & {
 }
 
 export type GetClaimItemValuationQueryVariables = {
-  purchasePrice: Scalars['Float']
-  itemFamilyId: Scalars['String']
-  itemTypeId?: Maybe<Scalars['ID']>
-  typeOfContract: Scalars['String']
-  purchaseDate: Scalars['LocalDate']
-  baseDate?: Maybe<Scalars['LocalDate']>
+  request?: Maybe<GetValuationInput>
 }
 
 export type GetClaimItemValuationQuery = { __typename?: 'QueryType' } & {
-  getClaimItemValuation: { __typename?: 'ClaimItemValuation' } & Pick<
-    ClaimItemValuation,
-    'depreciatedValue'
-  > & {
-      valuationRule: Maybe<
-        { __typename?: 'ValuationRule' } & Pick<
-          ValuationRule,
-          | 'valuationName'
-          | 'itemFamily'
-          | 'itemTypeId'
-          | 'ageLimit'
-          | 'typeOfContract'
-          | 'valuationType'
-          | 'depreciation'
-        >
+  getClaimItemValuation: { __typename?: 'ClaimItemValuation' } & {
+    depreciatedValue: Maybe<
+      { __typename?: 'MonetaryAmountV2' } & Pick<
+        MonetaryAmountV2,
+        'amount' | 'currency'
       >
-    }
+    >
+    valuationRule: Maybe<
+      { __typename?: 'ValuationRule' } & Pick<
+        ValuationRule,
+        | 'valuationName'
+        | 'itemFamily'
+        | 'itemTypeId'
+        | 'ageLimit'
+        | 'typeOfContract'
+        | 'valuationType'
+        | 'depreciation'
+      >
+    >
+  }
 }
 
 export type GetClaimItemsQueryVariables = {
@@ -3552,23 +3554,12 @@ export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
   GetAccountQueryVariables
 >
 export const GetClaimItemValuationDocument = gql`
-  query GetClaimItemValuation(
-    $purchasePrice: Float!
-    $itemFamilyId: String!
-    $itemTypeId: ID
-    $typeOfContract: String!
-    $purchaseDate: LocalDate!
-    $baseDate: LocalDate
-  ) {
-    getClaimItemValuation(
-      purchasePrice: $purchasePrice
-      itemFamilyId: $itemFamilyId
-      itemTypeId: $itemTypeId
-      typeOfContract: $typeOfContract
-      purchaseDate: $purchaseDate
-      baseDate: $baseDate
-    ) {
-      depreciatedValue
+  query GetClaimItemValuation($request: GetValuationInput) {
+    getClaimItemValuation(request: $request) {
+      depreciatedValue {
+        amount
+        currency
+      }
       valuationRule {
         valuationName
         itemFamily
@@ -3594,12 +3585,7 @@ export const GetClaimItemValuationDocument = gql`
  * @example
  * const { data, loading, error } = useGetClaimItemValuationQuery({
  *   variables: {
- *      purchasePrice: // value for 'purchasePrice'
- *      itemFamilyId: // value for 'itemFamilyId'
- *      itemTypeId: // value for 'itemTypeId'
- *      typeOfContract: // value for 'typeOfContract'
- *      purchaseDate: // value for 'purchaseDate'
- *      baseDate: // value for 'baseDate'
+ *      request: // value for 'request'
  *   },
  * });
  */

@@ -1,5 +1,6 @@
 import { Button, Grid, MenuItem, TextField } from '@material-ui/core'
 import {
+  MonetaryAmountV2,
   UpsertClaimItemInput,
   useUpsertClaimItemMutation,
 } from 'api/generated/graphql'
@@ -29,8 +30,8 @@ export const ItemForm: React.FC<{
   const [dateOfPurchase, setDateOfPurchase] = React.useState('')
   const [note, setNote] = React.useState('')
   const [purchasePriceCurrency, setPurchasePriceCurrency] = React.useState('')
-  const [valuationAmount, setValuationAmount] = React.useState<string | null>(
-    '',
+  const [valuation, setValuation] = React.useState<MonetaryAmountV2 | null>(
+    null,
   )
   const [customValuationAmount, setCustomValuationAmount] = React.useState('')
   const [contractMarketInfo] = useContractMarketInfo(memberId ?? '')
@@ -54,12 +55,7 @@ export const ItemForm: React.FC<{
           currency: purchasePriceCurrency,
         }
       : null,
-    valuation: !isEmpty(valuationAmount)
-      ? {
-          amount: Number(valuationAmount),
-          currency: purchasePriceCurrency,
-        }
-      : null,
+    valuation,
     customValuation: !isEmpty(customValuationAmount)
       ? {
           amount: Number(customValuationAmount),
@@ -83,7 +79,7 @@ export const ItemForm: React.FC<{
     setSelectedItemCategories([])
     setNote('')
     setCustomValuationAmount('')
-    setValuationAmount(null)
+    setValuation(null)
   }
 
   React.useEffect(() => {
@@ -172,7 +168,7 @@ export const ItemForm: React.FC<{
         <Grid item xs={10}>
           <ValuationInfo
             request={request}
-            setValuationAmount={setValuationAmount}
+            setValuation={setValuation}
             customValuationAmount={customValuationAmount}
             setCustomValuationAmount={setCustomValuationAmount}
             defaultCurrency={defaultCurrency}

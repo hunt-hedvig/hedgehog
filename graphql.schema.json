@@ -485,77 +485,11 @@
             "description": "",
             "args": [
               {
-                "name": "purchasePrice",
+                "name": "request",
                 "description": "",
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Float",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "itemFamilyId",
-                "description": "",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "itemTypeId",
-                "description": "",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "typeOfContract",
-                "description": "",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "purchaseDate",
-                "description": "",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "LocalDate",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "baseDate",
-                "description": "",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "LocalDate",
+                  "kind": "INPUT_OBJECT",
+                  "name": "GetValuationInput",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -8599,6 +8533,93 @@
         "possibleTypes": null
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "GetValuationInput",
+        "description": "",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "purchasePrice",
+            "description": "",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "MonetaryAmount",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "itemFamilyId",
+            "description": "",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "itemTypeId",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "ID",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "typeOfContract",
+            "description": "",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "purchaseDate",
+            "description": "",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "LocalDate",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "baseDate",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "LocalDate",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "ClaimItemValuation",
         "description": "",
@@ -8608,8 +8629,8 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "Float",
+              "kind": "OBJECT",
+              "name": "MonetaryAmountV2",
               "ofType": null
             },
             "isDeprecated": false,

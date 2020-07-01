@@ -34,7 +34,7 @@ export const MessageChip: React.FC<{
   const valuationType = valuation?.valuationRule?.valuationType ?? ''
   const marketValuation = valuationType === 'MARKET_PRICE'
   const formattedValuation: MonetaryAmountV2 = {
-    amount: valuation?.depreciatedValue?.toString() ?? '...',
+    amount: valuation?.depreciatedValue?.amount.toString() ?? '...',
     currency,
   }
 

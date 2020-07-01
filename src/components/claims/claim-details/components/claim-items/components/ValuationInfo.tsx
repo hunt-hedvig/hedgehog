@@ -7,61 +7,61 @@ import { MessageChip } from './chips/MessageChip'
 
 export const ValuationInfo: React.FC<{
   request: UpsertClaimItemInput
-  setValuationAmount: React.EventHandler<any>
+  setValuation: React.EventHandler<any>
   customValuationAmount: string
   setCustomValuationAmount: React.EventHandler<any>
   defaultCurrency: string
 }> = ({
   request,
-  setValuationAmount,
+  setValuation,
   customValuationAmount,
   setCustomValuationAmount,
   defaultCurrency,
 }) => {
   const TYPE_OF_CONTRACT = 'SE_APARTMENT_RENT' // To be changed
 
+  const { itemFamilyId, itemTypeId, purchasePrice, dateOfPurchase } = request
+
   const [valuationStatus] = useCanValuateClaimItem(
     TYPE_OF_CONTRACT,
-    request.itemFamilyId,
-    request.itemTypeId,
+    itemFamilyId,
+    itemTypeId,
   )
 
-  const [valuation] = useGetClaimItemValuation(
-    request?.purchasePrice?.amount ?? 0,
-    request.itemFamilyId,
-    TYPE_OF_CONTRACT,
-    request.dateOfPurchase,
-    request.itemTypeId,
-    null,
-  )
+  const [claimItemValuation] = useGetClaimItemValuation({
+    purchasePrice: purchasePrice ?? 0,
+    itemFamilyId: itemFamilyId ?? null,
+    typeOfContract: TYPE_OF_CONTRACT,
+    purchaseDate: dateOfPurchase,
+    itemTypeId: itemTypeId ?? null,
+    baseDate: null,
+  })
 
   React.useEffect(() => {
-    setValuationAmount(valuation?.depreciatedValue)
-  }, [valuation?.depreciatedValue])
+    setValuation(claimItemValuation?.depreciatedValue)
+  }, [claimItemValuation?.depreciatedValue])
 
   React.useEffect(() => {
     setCustomValuationAmount('')
-  }, [request.itemFamilyId, request.itemTypeId])
+  }, [itemFamilyId, itemTypeId])
 
   return (
     <>
       <MessageChip
-        valuation={valuation}
+        valuation={claimItemValuation}
         valuationStatus={valuationStatus}
-        itemFamilyId={request.itemFamilyId}
-        price={request.purchasePrice?.amount}
-        currency={request.purchasePrice?.currency ?? defaultCurrency}
-        dateOfPurchase={request.dateOfPurchase}
+        itemFamilyId={itemFamilyId}
+        price={purchasePrice?.amount}
+        currency={purchasePrice?.currency ?? defaultCurrency}
+        dateOfPurchase={dateOfPurchase}
         customValuation={customValuationAmount}
       />
       <CustomValuationChip
         request={request}
         customValuationAmount={customValuationAmount}
-        customValuationCurrency={
-          request.purchasePrice?.currency ?? defaultCurrency
-        }
+        customValuationCurrency={purchasePrice?.currency ?? defaultCurrency}
         setCustomValuationAmount={setCustomValuationAmount}
-        valuation={valuation}
+        valuation={claimItemValuation}
       />
     </>
   )

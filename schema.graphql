@@ -20,14 +20,7 @@ type QueryType {
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
-  getClaimItemValuation(
-    purchasePrice: Float!,
-    itemFamilyId: String!,
-    itemTypeId: ID,
-    typeOfContract: String!,
-    purchaseDate: LocalDate!,
-    baseDate: LocalDate
-  ): ClaimItemValuation!
+  getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
   canValuateClaimItem(
     typeOfContract: String!,
     itemFamilyId: String!,
@@ -149,8 +142,17 @@ type ClaimItem {
   note: String
 }
 
+input GetValuationInput {
+  purchasePrice: MonetaryAmount!,
+  itemFamilyId: String!,
+  itemTypeId: ID,
+  typeOfContract: String!,
+  purchaseDate: LocalDate!,
+  baseDate: LocalDate
+}
+
 type ClaimItemValuation {
-  depreciatedValue: Float
+  depreciatedValue: MonetaryAmountV2
   valuationRule: ValuationRule
 }
 
