@@ -6,7 +6,6 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core'
-import { ItemCategoryKind } from 'api/generated/graphql'
 import { TextArea } from 'hedvig-ui/text-area'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
@@ -20,7 +19,10 @@ export interface DataTable {
   rows: DataRow[]
 }
 
-export const interpretDataString = (s: string): DataTable | null => {
+export const interpretDataString = (
+  s: string,
+  tableWidth: number,
+): DataTable | null => {
   const rows: DataRow[] = s.split('\n').map((row) => {
     return { cells: row.split('\t') }
   })
@@ -28,7 +30,7 @@ export const interpretDataString = (s: string): DataTable | null => {
   const table = { header, rows: rows.slice(1) }
 
   const tableIsConsistent = !rows.find(
-    ({ cells }) => cells.length !== Object.keys(ItemCategoryKind).length,
+    ({ cells }) => cells.length !== tableWidth,
   )
 
   return tableIsConsistent ? table : null
@@ -45,7 +47,7 @@ export const TableInput: React.FC<{
 }> = ({ title, headers, onSubmit }) => {
   const [dataString, setDataString] = React.useState('')
   const [validity, setValidity] = React.useState<boolean[]>([])
-  const tablePreview = interpretDataString(dataString)
+  const tablePreview = interpretDataString(dataString, headers.length)
   const [resetRequired, setResetRequired] = React.useState(false)
 
   const validityExists = validity.length !== 0
