@@ -663,6 +663,10 @@ export type InsertItemCategoriesInput = {
   itemCategoriesString: Scalars['String']
 }
 
+export type InsertValuationRulesInput = {
+  valuationRulesString: Scalars['String']
+}
+
 export type InstallationsClaim = {
   __typename?: 'InstallationsClaim'
   date?: Maybe<Scalars['LocalDate']>
@@ -867,6 +871,7 @@ export type MutationType = {
   upsertClaimItem: Scalars['ID']
   deleteClaimItem?: Maybe<Scalars['ID']>
   insertItemCategories: Array<Scalars['Boolean']>
+  insertValuationRules: Array<Scalars['Boolean']>
   upsertValuationRule: Scalars['ID']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   setContractForClaim: Scalars['Boolean']
@@ -1104,6 +1109,10 @@ export type MutationTypeDeleteClaimItemArgs = {
 
 export type MutationTypeInsertItemCategoriesArgs = {
   request?: Maybe<InsertItemCategoriesInput>
+}
+
+export type MutationTypeInsertValuationRulesArgs = {
+  request?: Maybe<InsertValuationRulesInput>
 }
 
 export type MutationTypeUpsertValuationRuleArgs = {
@@ -1822,6 +1831,14 @@ export type InsertItemCategoriesMutationVariables = {
 export type InsertItemCategoriesMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'insertItemCategories'>
+
+export type InsertValuationRulesMutationVariables = {
+  request?: Maybe<InsertValuationRulesInput>
+}
+
+export type InsertValuationRulesMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'insertValuationRules'>
 
 export type AddNorwegainPostalCodesMutationVariables = {
   postalCodesString?: Maybe<Scalars['String']>
@@ -2646,6 +2663,54 @@ export type InsertItemCategoriesMutationResult = ApolloReactCommon.MutationResul
 export type InsertItemCategoriesMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InsertItemCategoriesMutation,
   InsertItemCategoriesMutationVariables
+>
+export const InsertValuationRulesDocument = gql`
+  mutation InsertValuationRules($request: InsertValuationRulesInput) {
+    insertValuationRules(request: $request)
+  }
+`
+export type InsertValuationRulesMutationFn = ApolloReactCommon.MutationFunction<
+  InsertValuationRulesMutation,
+  InsertValuationRulesMutationVariables
+>
+
+/**
+ * __useInsertValuationRulesMutation__
+ *
+ * To run a mutation, you first call `useInsertValuationRulesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertValuationRulesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertValuationRulesMutation, { data, loading, error }] = useInsertValuationRulesMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useInsertValuationRulesMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    InsertValuationRulesMutation,
+    InsertValuationRulesMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    InsertValuationRulesMutation,
+    InsertValuationRulesMutationVariables
+  >(InsertValuationRulesDocument, baseOptions)
+}
+export type InsertValuationRulesMutationHookResult = ReturnType<
+  typeof useInsertValuationRulesMutation
+>
+export type InsertValuationRulesMutationResult = ApolloReactCommon.MutationResult<
+  InsertValuationRulesMutation
+>
+export type InsertValuationRulesMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InsertValuationRulesMutation,
+  InsertValuationRulesMutationVariables
 >
 export const AddNorwegainPostalCodesDocument = gql`
   mutation AddNorwegainPostalCodes($postalCodesString: String) {
