@@ -212,6 +212,7 @@ export type CampaignOwnerPartner = {
 export type CanValuateClaimItem = {
   __typename?: 'CanValuateClaimItem'
   canValuate: Scalars['Boolean']
+  typeOfContract?: Maybe<Scalars['String']>
   itemFamily?: Maybe<Scalars['String']>
   itemTypeId?: Maybe<Scalars['ID']>
 }
@@ -586,7 +587,7 @@ export type GetValuationInput = {
   purchasePrice: Scalars['MonetaryAmount']
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
-  typeOfContract: Scalars['String']
+  typeOfContract?: Maybe<Scalars['String']>
   purchaseDate: Scalars['LocalDate']
   baseDate?: Maybe<Scalars['LocalDate']>
 }
@@ -1346,7 +1347,7 @@ export type QueryTypeGetClaimItemValuationArgs = {
 }
 
 export type QueryTypeCanValuateClaimItemArgs = {
-  typeOfContract: Scalars['String']
+  typeOfContract?: Maybe<Scalars['String']>
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
 }
@@ -1704,7 +1705,7 @@ export type UpsertClaimItemInput = {
   itemModelId?: Maybe<Scalars['ID']>
   dateOfPurchase?: Maybe<Scalars['LocalDate']>
   purchasePrice?: Maybe<Scalars['MonetaryAmount']>
-  valuation?: Maybe<Scalars['MonetaryAmount']>
+  automaticValuation?: Maybe<Scalars['MonetaryAmount']>
   customValuation?: Maybe<Scalars['MonetaryAmount']>
   note?: Maybe<Scalars['String']>
 }
@@ -1750,7 +1751,7 @@ export type ValuationRule = {
   itemFamily: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
   ageLimit: Scalars['Float']
-  typeOfContract: Scalars['String']
+  typeOfContract?: Maybe<Scalars['String']>
   valuationType: Scalars['String']
   depreciation?: Maybe<Scalars['Int']>
 }
@@ -1907,7 +1908,7 @@ export type AnswerQuestionMutation = { __typename?: 'MutationType' } & Pick<
 >
 
 export type CanValuateClaimItemQueryVariables = {
-  typeOfContract: Scalars['String']
+  typeOfContract?: Maybe<Scalars['String']>
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
 }
@@ -1916,7 +1917,7 @@ export type CanValuateClaimItemQuery = { __typename?: 'QueryType' } & {
   canValuateClaimItem: Maybe<
     { __typename?: 'CanValuateClaimItem' } & Pick<
       CanValuateClaimItem,
-      'canValuate' | 'itemFamily' | 'itemTypeId'
+      'canValuate' | 'typeOfContract' | 'itemFamily' | 'itemTypeId'
     >
   >
 }
@@ -3079,7 +3080,7 @@ export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOption
 >
 export const CanValuateClaimItemDocument = gql`
   query CanValuateClaimItem(
-    $typeOfContract: String!
+    $typeOfContract: String
     $itemFamilyId: String!
     $itemTypeId: ID
   ) {
@@ -3089,6 +3090,7 @@ export const CanValuateClaimItemDocument = gql`
       itemTypeId: $itemTypeId
     ) {
       canValuate
+      typeOfContract
       itemFamily
       itemTypeId
     }

@@ -21,11 +21,7 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
-  canValuateClaimItem(
-    typeOfContract: String!,
-    itemFamilyId: String!,
-    itemTypeId: ID
-  ): CanValuateClaimItem
+  canValuateClaimItem(typeOfContract: String, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
 }
 
 type DashboardNumbers {
@@ -146,7 +142,7 @@ input GetValuationInput {
   purchasePrice: MonetaryAmount!,
   itemFamilyId: String!,
   itemTypeId: ID,
-  typeOfContract: String!,
+  typeOfContract: String,
   purchaseDate: LocalDate!,
   baseDate: LocalDate
 }
@@ -161,7 +157,7 @@ type ValuationRule {
   itemFamily: String!
   itemTypeId: ID
   ageLimit: Float!
-  typeOfContract: String!
+  typeOfContract: String
   valuationType: String!
   depreciation: Int
 }
@@ -169,6 +165,7 @@ type ValuationRule {
 type CanValuateClaimItem
 {
   canValuate: Boolean!
+  typeOfContract: String
   itemFamily: String
   itemTypeId: ID
 }
@@ -182,7 +179,7 @@ input UpsertClaimItemInput {
   itemModelId: ID
   dateOfPurchase: LocalDate
   purchasePrice: MonetaryAmount
-  valuation: MonetaryAmount
+  automaticValuation: MonetaryAmount
   customValuation: MonetaryAmount
   note: String
 }
