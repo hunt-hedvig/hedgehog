@@ -24,11 +24,11 @@ const AdornmentChip = styled(BaseChip)`
 `
 
 export const ValuationChip: React.FC<{
-  valuation: MonetaryAmountV2
+  valuation: MonetaryAmountV2 | string
   ignored?: boolean
 }> = ({ valuation, ignored = false }) => {
   const valuationLabel =
-    valuation?.amount !== '...'
+    typeof valuation !== 'string'
       ? formatMoney(valuation, {
           useGrouping: true,
           maximumFractionDigits: 0,

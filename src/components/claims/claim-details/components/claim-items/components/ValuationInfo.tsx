@@ -18,20 +18,18 @@ export const ValuationInfo: React.FC<{
   setCustomValuationAmount,
   defaultCurrency,
 }) => {
-  const TYPE_OF_CONTRACT = 'SE_APARTMENT_RENT' // To be changed
-
   const { itemFamilyId, itemTypeId, purchasePrice, dateOfPurchase } = request
 
   const [valuationStatus] = useCanValuateClaimItem(
-    TYPE_OF_CONTRACT,
     itemFamilyId,
     itemTypeId,
+    null,
   )
 
   const [claimItemValuation] = useGetClaimItemValuation({
     purchasePrice: purchasePrice ?? 0,
     itemFamilyId: itemFamilyId ?? null,
-    typeOfContract: TYPE_OF_CONTRACT,
+    typeOfContract: null,
     purchaseDate: dateOfPurchase,
     itemTypeId: itemTypeId ?? null,
     baseDate: null,

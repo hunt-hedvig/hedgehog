@@ -10,9 +10,9 @@ type CanValuateClaimItemReturnTuple = [
 ]
 
 export const useCanValuateClaimItem = (
-  typeOfContract: string,
   itemFamilyId: string,
   itemTypeId: string | null,
+  typeOfContract?: string | null,
 ): CanValuateClaimItemReturnTuple => {
   const queryResult = useCanValuateClaimItemQuery({
     variables: {
