@@ -21,7 +21,7 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
-  canValuateClaimItem(typeOfContract: String, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
+  canValuateClaimItem(typeOfContract: TypeOfContract!, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
 }
 
 type DashboardNumbers {
@@ -112,6 +112,7 @@ type MutationType {
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
+  insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
   upsertValuationRule(request: UpsertValuationRuleInput): ID!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
@@ -119,10 +120,6 @@ type MutationType {
   setContractForClaim(
     request: SetContractForClaim!
   ): Boolean!
-}
-
-input InsertItemCategoriesInput {
-  itemCategoriesString: String!
 }
 
 type ClaimItem {
@@ -138,12 +135,20 @@ type ClaimItem {
   note: String
 }
 
+input InsertItemCategoriesInput {
+  itemCategoriesString: String!
+}
+
+input InsertValuationRulesInput {
+  valuationRulesString: String!
+}
+
 input GetValuationInput {
-  purchasePrice: MonetaryAmount!,
-  itemFamilyId: String!,
-  itemTypeId: ID,
-  typeOfContract: String,
-  purchaseDate: LocalDate!,
+  purchasePrice: MonetaryAmount!
+  itemFamilyId: String!
+  itemTypeId: ID
+  typeOfContract: TypeOfContract!
+  purchaseDate: LocalDate!
   baseDate: LocalDate
 }
 
@@ -157,7 +162,7 @@ type ValuationRule {
   itemFamily: String!
   itemTypeId: ID
   ageLimit: Float!
-  typeOfContract: String
+  valuationTable: String!
   valuationType: String!
   depreciation: Int
 }
@@ -165,7 +170,7 @@ type ValuationRule {
 type CanValuateClaimItem
 {
   canValuate: Boolean!
-  typeOfContract: String
+  typeOfContract: TypeOfContract
   itemFamily: String
   itemTypeId: ID
 }
@@ -212,7 +217,7 @@ input UpsertValuationRuleInput {
   id: ID
   name: String!
   ageLimit: Float!
-  typeOfContract: String!
+  typeOfContract: TypeOfContract!
   itemFamilyId: String!
   itemTypeId: String
   valuationType: String!
@@ -227,6 +232,7 @@ type Contract {
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!
+  typeOfContract: TypeOfContract!
   isTerminated: Boolean!
   terminationDate: LocalDate
   currentAgreementId: ID!
@@ -239,6 +245,20 @@ type Contract {
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
+}
+
+enum TypeOfContract {
+  SE_HOUSE
+  SE_APARTMENT_BRF
+  SE_APARTMENT_RENT
+  SE_APARTMENT_STUDENT_BRF
+  SE_APARTMENT_STUDENT_RENT
+  NO_HOME_CONTENT_OWN
+  NO_HOME_CONTENT_RENT
+  NO_HOME_CONTENT_YOUTH_OWN
+  NO_HOME_CONTENT_YOUTH_RENT
+  NO_TRAVEL
+  NO_TRAVEL_YOUTH
 }
 
 enum ContractStatus {
@@ -1272,6 +1292,7 @@ type QuestionGroup {
   id: ID!
   memberId: ID!
   questions: [Question!]!
+  member: Member
 }
 
 type Question {

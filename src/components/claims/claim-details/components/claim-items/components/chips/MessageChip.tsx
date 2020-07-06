@@ -8,8 +8,8 @@ import { NoValuationChip } from './components/NoValuationChip'
 import { ValuationChip } from './components/ValuationChip'
 
 export const MessageChip: React.FC<{
-  valuation?: ClaimItemValuation
-  valuationStatus?: CanValuateClaimItem
+  valuation: ClaimItemValuation | null
+  valuationStatus: CanValuateClaimItem | null
   itemFamilyId: string
   price?: number | null
   currency: string

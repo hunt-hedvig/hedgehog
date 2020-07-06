@@ -1,4 +1,4 @@
-import { UpsertClaimItemInput } from 'api/generated/graphql'
+import { TypeOfContract, UpsertClaimItemInput } from 'api/generated/graphql'
 import { useCanValuateClaimItem } from 'graphql/use-can-valuate-claim-item'
 import { useGetClaimItemValuation } from 'graphql/use-get-claim-item-valuation'
 import React from 'react'
@@ -11,29 +11,31 @@ export const ValuationInfo: React.FC<{
   customValuationAmount: string
   setCustomValuationAmount: React.EventHandler<any>
   defaultCurrency: string
+  typeOfContract?: TypeOfContract
 }> = ({
   request,
   setValuation,
   customValuationAmount,
   setCustomValuationAmount,
   defaultCurrency,
+  typeOfContract,
 }) => {
   const { itemFamilyId, itemTypeId, purchasePrice, dateOfPurchase } = request
 
-  const [valuationStatus] = useCanValuateClaimItem(
-    itemFamilyId,
-    itemTypeId,
-    null,
-  )
+  const valuationStatus =
+    typeOfContract &&
+    useCanValuateClaimItem(itemFamilyId, itemTypeId, typeOfContract)[0]
 
-  const [claimItemValuation] = useGetClaimItemValuation({
-    purchasePrice: purchasePrice ?? 0,
-    itemFamilyId: itemFamilyId ?? null,
-    typeOfContract: null,
-    purchaseDate: dateOfPurchase,
-    itemTypeId: itemTypeId ?? null,
-    baseDate: null,
-  })
+  const claimItemValuation =
+    typeOfContract &&
+    useGetClaimItemValuation({
+      purchasePrice: purchasePrice ?? 0,
+      itemFamilyId: itemFamilyId ?? null,
+      typeOfContract,
+      purchaseDate: dateOfPurchase,
+      itemTypeId: itemTypeId ?? null,
+      baseDate: null,
+    })[0]
 
   React.useEffect(() => {
     setValuation(claimItemValuation?.depreciatedValue)
@@ -46,8 +48,8 @@ export const ValuationInfo: React.FC<{
   return (
     <>
       <MessageChip
-        valuation={claimItemValuation}
-        valuationStatus={valuationStatus}
+        valuation={claimItemValuation ?? null}
+        valuationStatus={valuationStatus ?? null}
         itemFamilyId={itemFamilyId}
         price={purchasePrice?.amount}
         currency={purchasePrice?.currency ?? defaultCurrency}
@@ -59,7 +61,7 @@ export const ValuationInfo: React.FC<{
         customValuationAmount={customValuationAmount}
         customValuationCurrency={purchasePrice?.currency ?? defaultCurrency}
         setCustomValuationAmount={setCustomValuationAmount}
-        valuation={claimItemValuation}
+        valuation={claimItemValuation ?? null}
       />
     </>
   )
