@@ -11,7 +11,7 @@ export const ValuationInfo: React.FC<{
   customValuationAmount: string
   setCustomValuationAmount: React.EventHandler<any>
   defaultCurrency: string
-  typeOfContract?: TypeOfContract
+  typeOfContract: TypeOfContract
 }> = ({
   request,
   setValuation,
@@ -22,20 +22,20 @@ export const ValuationInfo: React.FC<{
 }) => {
   const { itemFamilyId, itemTypeId, purchasePrice, dateOfPurchase } = request
 
-  const valuationStatus =
-    typeOfContract &&
-    useCanValuateClaimItem(itemFamilyId, itemTypeId, typeOfContract)[0]
+  const [valuationStatus] = useCanValuateClaimItem(
+    itemFamilyId,
+    itemTypeId,
+    typeOfContract,
+  )
 
-  const claimItemValuation =
-    typeOfContract &&
-    useGetClaimItemValuation({
-      purchasePrice: purchasePrice ?? 0,
-      itemFamilyId: itemFamilyId ?? null,
-      typeOfContract,
-      purchaseDate: dateOfPurchase,
-      itemTypeId: itemTypeId ?? null,
-      baseDate: null,
-    })[0]
+  const [claimItemValuation] = useGetClaimItemValuation({
+    purchasePrice: purchasePrice ?? 0,
+    itemFamilyId: itemFamilyId ?? null,
+    typeOfContract,
+    purchaseDate: dateOfPurchase,
+    itemTypeId: itemTypeId ?? null,
+    baseDate: null,
+  })
 
   React.useEffect(() => {
     setValuation(claimItemValuation?.depreciatedValue)
