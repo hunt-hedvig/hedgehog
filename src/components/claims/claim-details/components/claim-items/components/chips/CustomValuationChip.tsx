@@ -8,7 +8,7 @@ export const CustomValuationChip: React.FC<{
   customValuationAmount: string
   customValuationCurrency: string
   setCustomValuationAmount: React.EventHandler<any>
-  valuation: ClaimItemValuation | undefined
+  valuation: ClaimItemValuation | null
 }> = ({
   request,
   customValuationAmount,

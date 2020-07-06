@@ -117,6 +117,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                     <ClaimItems
                       claimId={props.match.params.claimId}
                       memberId={member?.memberId ?? null}
+                      contract={contract}
                     />
                   </Grid>
                   <Grid item xs={12}>

@@ -50,6 +50,7 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
         <col style={{ width: '17.0%' }} />
         <col style={{ width: '9.0%' }} />
         <col style={{ width: '20.0%' }} />
+        <col style={{ width: '3.5%' }} />
       </colgroup>
       <TableHead style={{ padding: '0px' }}>
         <TableRow>

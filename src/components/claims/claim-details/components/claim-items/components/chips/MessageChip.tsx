@@ -1,8 +1,4 @@
-import {
-  CanValuateClaimItem,
-  ClaimItemValuation,
-  MonetaryAmountV2,
-} from 'api/generated/graphql'
+import { CanValuateClaimItem, ClaimItemValuation } from 'api/generated/graphql'
 import React from 'react'
 import { getValuationExplanation } from 'utils/claim-item'
 import { ExplanationPopover } from '../styles'
@@ -12,10 +8,10 @@ import { NoValuationChip } from './components/NoValuationChip'
 import { ValuationChip } from './components/ValuationChip'
 
 export const MessageChip: React.FC<{
-  valuation: ClaimItemValuation | undefined
-  valuationStatus: CanValuateClaimItem | undefined
+  valuation: ClaimItemValuation | null
+  valuationStatus: CanValuateClaimItem | null
   itemFamilyId: string
-  price: number | undefined | null
+  price?: number | null
   currency: string
   dateOfPurchase: string
   customValuation: string
@@ -33,10 +29,12 @@ export const MessageChip: React.FC<{
   const canValuateClaimItem = !!itemFamilyId && !!valuationStatus?.canValuate
   const valuationType = valuation?.valuationRule?.valuationType ?? ''
   const marketValuation = valuationType === 'MARKET_PRICE'
-  const formattedValuation: MonetaryAmountV2 = {
-    amount: valuation?.depreciatedValue?.amount.toString() ?? '...',
-    currency,
-  }
+  const formattedValuation = valuation?.depreciatedValue?.amount
+    ? {
+        amount: valuation?.depreciatedValue?.amount,
+        currency,
+      }
+    : '...'
 
   if (canValuateClaimItem && priceAndDateAvailable && marketValuation) {
     return <MarketValuationChip />

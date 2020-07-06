@@ -1,5 +1,6 @@
 import { Button, Grid, MenuItem, TextField } from '@material-ui/core'
 import {
+  Contract,
   MonetaryAmountV2,
   UpsertClaimItemInput,
   useUpsertClaimItemMutation,
@@ -21,7 +22,8 @@ const isEmpty = (s: string | null) => s === '' || s === null
 export const ItemForm: React.FC<{
   claimId: string
   memberId: string | null
-}> = ({ claimId, memberId }) => {
+  contract?: Contract | null
+}> = ({ claimId, memberId, contract }) => {
   const [selectedItemCategories, setSelectedItemCategories] = React.useState<
     SelectedItemCategory[]
   >([])
@@ -172,6 +174,7 @@ export const ItemForm: React.FC<{
             customValuationAmount={customValuationAmount}
             setCustomValuationAmount={setCustomValuationAmount}
             defaultCurrency={defaultCurrency}
+            typeOfContract={contract?.typeOfContract}
           />
         </Grid>
 

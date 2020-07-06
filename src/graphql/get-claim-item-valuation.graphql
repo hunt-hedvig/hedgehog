@@ -9,7 +9,7 @@ query GetClaimItemValuation($request: GetValuationInput) {
         itemFamily
         itemTypeId
         ageLimit
-        typeOfContract
+        valuationTable
         valuationType
         depreciation
     }

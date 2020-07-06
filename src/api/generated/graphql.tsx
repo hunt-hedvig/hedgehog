@@ -212,7 +212,7 @@ export type CampaignOwnerPartner = {
 export type CanValuateClaimItem = {
   __typename?: 'CanValuateClaimItem'
   canValuate: Scalars['Boolean']
-  typeOfContract?: Maybe<Scalars['String']>
+  typeOfContract?: Maybe<TypeOfContract>
   itemFamily?: Maybe<Scalars['String']>
   itemTypeId?: Maybe<Scalars['ID']>
 }
@@ -445,6 +445,7 @@ export type Contract = {
   switchedFrom?: Maybe<Scalars['String']>
   masterInception?: Maybe<Scalars['LocalDate']>
   status: ContractStatus
+  typeOfContract: TypeOfContract
   isTerminated: Scalars['Boolean']
   terminationDate?: Maybe<Scalars['LocalDate']>
   currentAgreementId: Scalars['ID']
@@ -587,7 +588,7 @@ export type GetValuationInput = {
   purchasePrice: Scalars['MonetaryAmount']
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
-  typeOfContract?: Maybe<Scalars['String']>
+  typeOfContract: TypeOfContract
   purchaseDate: Scalars['LocalDate']
   baseDate?: Maybe<Scalars['LocalDate']>
 }
@@ -1356,7 +1357,7 @@ export type QueryTypeGetClaimItemValuationArgs = {
 }
 
 export type QueryTypeCanValuateClaimItemArgs = {
-  typeOfContract?: Maybe<Scalars['String']>
+  typeOfContract: TypeOfContract
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
 }
@@ -1373,6 +1374,7 @@ export type QuestionGroup = {
   id: Scalars['ID']
   memberId: Scalars['ID']
   questions: Array<Question>
+  member?: Maybe<Member>
 }
 
 export type Quote = {
@@ -1705,6 +1707,20 @@ export type TravelAccidentClaim = {
   receipt?: Maybe<Scalars['String']>
 }
 
+export enum TypeOfContract {
+  SeHouse = 'SE_HOUSE',
+  SeApartmentBrf = 'SE_APARTMENT_BRF',
+  SeApartmentRent = 'SE_APARTMENT_RENT',
+  SeApartmentStudentBrf = 'SE_APARTMENT_STUDENT_BRF',
+  SeApartmentStudentRent = 'SE_APARTMENT_STUDENT_RENT',
+  NoHomeContentOwn = 'NO_HOME_CONTENT_OWN',
+  NoHomeContentRent = 'NO_HOME_CONTENT_RENT',
+  NoHomeContentYouthOwn = 'NO_HOME_CONTENT_YOUTH_OWN',
+  NoHomeContentYouthRent = 'NO_HOME_CONTENT_YOUTH_RENT',
+  NoTravel = 'NO_TRAVEL',
+  NoTravelYouth = 'NO_TRAVEL_YOUTH',
+}
+
 export type UpsertClaimItemInput = {
   id?: Maybe<Scalars['ID']>
   claimId: Scalars['ID']
@@ -1747,7 +1763,7 @@ export type UpsertValuationRuleInput = {
   id?: Maybe<Scalars['ID']>
   name: Scalars['String']
   ageLimit: Scalars['Float']
-  typeOfContract: Scalars['String']
+  typeOfContract: TypeOfContract
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['String']>
   valuationType: Scalars['String']
@@ -1760,7 +1776,7 @@ export type ValuationRule = {
   itemFamily: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
   ageLimit: Scalars['Float']
-  typeOfContract?: Maybe<Scalars['String']>
+  valuationTable: Scalars['String']
   valuationType: Scalars['String']
   depreciation?: Maybe<Scalars['Int']>
 }
@@ -1925,7 +1941,7 @@ export type AnswerQuestionMutation = { __typename?: 'MutationType' } & Pick<
 >
 
 export type CanValuateClaimItemQueryVariables = {
-  typeOfContract?: Maybe<Scalars['String']>
+  typeOfContract: TypeOfContract
   itemFamilyId: Scalars['String']
   itemTypeId?: Maybe<Scalars['ID']>
 }
@@ -2078,7 +2094,7 @@ export type GetClaimItemValuationQuery = { __typename?: 'QueryType' } & {
         | 'itemFamily'
         | 'itemTypeId'
         | 'ageLimit'
-        | 'typeOfContract'
+        | 'valuationTable'
         | 'valuationType'
         | 'depreciation'
       >
@@ -3145,7 +3161,7 @@ export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOption
 >
 export const CanValuateClaimItemDocument = gql`
   query CanValuateClaimItem(
-    $typeOfContract: String
+    $typeOfContract: TypeOfContract!
     $itemFamilyId: String!
     $itemTypeId: ID
   ) {
@@ -3632,7 +3648,7 @@ export const GetClaimItemValuationDocument = gql`
         itemFamily
         itemTypeId
         ageLimit
-        typeOfContract
+        valuationTable
         valuationType
         depreciation
       }

@@ -1,6 +1,7 @@
 import {
   CanValuateClaimItem,
   CanValuateClaimItemQueryHookResult,
+  TypeOfContract,
   useCanValuateClaimItemQuery,
 } from 'api/generated/graphql'
 
@@ -10,9 +11,9 @@ type CanValuateClaimItemReturnTuple = [
 ]
 
 export const useCanValuateClaimItem = (
-  typeOfContract: string,
   itemFamilyId: string,
   itemTypeId: string | null,
+  typeOfContract: TypeOfContract,
 ): CanValuateClaimItemReturnTuple => {
   const queryResult = useCanValuateClaimItemQuery({
     variables: {
