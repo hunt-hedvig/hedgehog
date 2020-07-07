@@ -2,9 +2,6 @@ import {
   ClaimItemValuation,
   GetClaimItemValuationQueryHookResult,
   GetValuationInput,
-  Maybe,
-  Scalars,
-  TypeOfContract,
   useGetClaimItemValuationQuery,
 } from 'api/generated/graphql'
 
@@ -13,24 +10,12 @@ type GetClaimItemValuationReturnTuple = [
   GetClaimItemValuationQueryHookResult | undefined,
 ]
 
-interface GetClaimItemValuationInput {
-  purchasePrice?: Scalars['MonetaryAmount'] | null
-  itemFamilyId?: Scalars['String'] | null
-  itemTypeId?: Maybe<Scalars['ID']>
-  typeOfContract: TypeOfContract
-  purchaseDate: Scalars['LocalDate']
-  baseDate?: Maybe<Scalars['LocalDate']>
-}
-
 export const useGetClaimItemValuation = (
-  request: GetClaimItemValuationInput,
+  request: GetValuationInput,
 ): GetClaimItemValuationReturnTuple => {
-  if (!request.purchasePrice || !request.itemFamilyId) {
-    return [undefined, undefined]
-  }
   const queryResult = useGetClaimItemValuationQuery({
     variables: {
-      request: request as GetValuationInput,
+      request,
     },
   })
   const valuation = queryResult.data?.getClaimItemValuation as

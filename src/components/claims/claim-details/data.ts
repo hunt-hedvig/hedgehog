@@ -97,6 +97,7 @@ export const CLAIM_PAGE_QUERY = gql`
           }
         }
         contractTypeName
+        typeOfContract
       }
       coveringEmployee
       __typename
