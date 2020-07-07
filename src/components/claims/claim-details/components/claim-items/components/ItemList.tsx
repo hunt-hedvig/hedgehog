@@ -1,12 +1,6 @@
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  Grid,
   IconButton,
-  Link,
   Table,
   TableBody,
   TableCell as MuiTableCell,
@@ -18,10 +12,15 @@ import {
 import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
 import React from 'react'
-import { ChevronRight, Trash } from 'react-bootstrap-icons'
+import { ChevronRight, InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
-import { ChevronRightWrapper, TrashIconWrapper } from './styles'
+import {
+  ChevronRightWrapper,
+  InfoWrapper,
+  NotePopover,
+  TrashIconWrapper,
+} from './styles'
 
 const TableCell = withStyles({
   root: {
@@ -30,7 +29,7 @@ const TableCell = withStyles({
 })(MuiTableCell)
 
 const NotSpecifiedLabel = styled(Typography)`
-  color: ${({ theme }) => theme.accentBackground};
+  color: ${({ theme }) => theme.placeholderColor};
 `
 
 const NotSpecified: React.FC = () => (
@@ -43,35 +42,22 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
     refetchQueries: ['GetClaimItems'],
   })
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null)
-  const [showNoteDialog, setShowNoteDialog] = React.useState<boolean>(false)
-  const [currentNote, setCurrentNote] = React.useState<string>('')
 
   return (
     <Table style={{ marginBottom: '7px' }}>
-      <Dialog open={showNoteDialog} onClose={() => setShowNoteDialog(false)}>
-        <DialogTitle>Note</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{currentNote}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowNoteDialog(false)} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
       <colgroup>
-        <col style={{ width: '50.7%' }} />
-        <col style={{ width: '16.6%' }} />
-        <col style={{ width: '13.4%' }} />
-        <col style={{ width: '16.3%' }} />
-        <col style={{ width: '3.0%' }} />
+        <col style={{ width: '50.5%' }} />
+        <col style={{ width: '17.0%' }} />
+        <col style={{ width: '9.0%' }} />
+        <col style={{ width: '20.0%' }} />
+        <col style={{ width: '3.5%' }} />
       </colgroup>
       <TableHead style={{ padding: '0px' }}>
         <TableRow>
           <TableCell>Item</TableCell>
           <TableCell>Purchase price</TableCell>
           <TableCell>Purchase date</TableCell>
-          <TableCell>Note</TableCell>
+          <TableCell>Valuation</TableCell>
           <TableCell />
         </TableRow>
       </TableHead>
@@ -90,10 +76,18 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               )
             : null
 
-          const noteString =
-            item.note && item.note.length >= 25
-              ? item.note?.slice(0, 25) + '...'
-              : item.note
+          const valuationString = item.valuation?.amount
+            ? formatMoney(
+                {
+                  amount: item.valuation?.amount,
+                  currency: item.valuation?.currency,
+                },
+                {
+                  minimumFractionDigits: 0,
+                  useGrouping: true,
+                },
+              )
+            : null
 
           const toBeDeleted = itemToDelete ? itemToDelete === item.id : false
 
@@ -125,38 +119,33 @@ export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
               </TableCell>
               <TableCell>{purchasePriceString ?? <NotSpecified />}</TableCell>
               <TableCell>{item.dateOfPurchase ?? <NotSpecified />}</TableCell>
+              <TableCell>{valuationString ?? <NotSpecified />}</TableCell>
               <TableCell>
-                {noteString ? (
-                  <Typography>
-                    <Link
-                      color="inherit"
-                      style={{ textDecoration: 'none', cursor: 'pointer' }}
+                <Grid container spacing={8}>
+                  <Grid item xs={6}>
+                    {item?.note && (
+                      <NotePopover contents={<>{item?.note}</>}>
+                        <InfoWrapper>
+                          <InfoCircleFill />
+                        </InfoWrapper>
+                      </NotePopover>
+                    )}
+                  </Grid>
+                  <Grid item xs={6}>
+                    <IconButton
+                      disabled={toBeDeleted}
                       onClick={() => {
-                        setCurrentNote(item?.note ?? '')
-                        setShowNoteDialog(true)
+                        deleteClaimItem({
+                          variables: { claimItemId: item.id },
+                        }).then(() => setItemToDelete(null))
                       }}
                     >
-                      {noteString}
-                    </Link>
-                  </Typography>
-                ) : (
-                  <NotSpecified />
-                )}
-              </TableCell>
-              <TableCell>
-                <IconButton
-                  style={{ marginRight: '-30px' }}
-                  disabled={toBeDeleted}
-                  onClick={() => {
-                    deleteClaimItem({
-                      variables: { claimItemId: item.id },
-                    }).then(() => setItemToDelete(null))
-                  }}
-                >
-                  <TrashIconWrapper>
-                    <Trash />
-                  </TrashIconWrapper>
-                </IconButton>
+                      <TrashIconWrapper>
+                        <Trash />
+                      </TrashIconWrapper>
+                    </IconButton>
+                  </Grid>
+                </Grid>
               </TableCell>
             </TableRow>
           )

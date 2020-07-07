@@ -11,7 +11,6 @@ type QueryType {
   ticket(id: ID!): Ticket
   getFullTicketHistory(id: ID!): TicketHistory
   tickets(resolved: Boolean): [Ticket!]!
-  getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
@@ -21,6 +20,8 @@ type QueryType {
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
+  getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
+  canValuateClaimItem(typeOfContract: TypeOfContract!, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
 }
 
 type DashboardNumbers {
@@ -50,12 +51,6 @@ type MutationType {
   changeTicketStatus(ticketId: ID!, newStatus: TicketStatus): ID
   changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
   changeTicketPriority(ticketId: ID!, newPriority: Float): ID
-  autoLabelQuestion(
-    question: String!
-    label: String!
-    memberId: String
-    messageIds: [String!]
-  ): AutoLabel
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
@@ -117,16 +112,14 @@ type MutationType {
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
+  insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
+  upsertValuationRule(request: UpsertValuationRuleInput): ID!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
   setContractForClaim(
     request: SetContractForClaim!
   ): Boolean!
-}
-
-input InsertItemCategoriesInput {
-  itemCategoriesString: String!
 }
 
 type ClaimItem {
@@ -138,7 +131,48 @@ type ClaimItem {
   itemCompany: ItemCompany
   dateOfPurchase: LocalDate
   purchasePrice: MonetaryAmountV2
+  valuation: MonetaryAmountV2
   note: String
+}
+
+input InsertItemCategoriesInput {
+  itemCategoriesString: String!
+}
+
+input InsertValuationRulesInput {
+  valuationRulesString: String!
+}
+
+input GetValuationInput {
+  purchasePrice: MonetaryAmount!
+  itemFamilyId: String!
+  itemTypeId: ID
+  typeOfContract: TypeOfContract!
+  purchaseDate: LocalDate!
+  baseDate: LocalDate
+}
+
+type ClaimItemValuation {
+  depreciatedValue: MonetaryAmountV2
+  valuationRule: ValuationRule
+}
+
+type ValuationRule {
+  valuationName: String!
+  itemFamily: String!
+  itemTypeId: ID
+  ageLimit: Float!
+  valuationTable: String!
+  valuationType: String!
+  depreciation: Int
+}
+
+type CanValuateClaimItem
+{
+  canValuate: Boolean!
+  typeOfContract: TypeOfContract
+  itemFamily: String
+  itemTypeId: ID
 }
 
 input UpsertClaimItemInput {
@@ -149,8 +183,9 @@ input UpsertClaimItemInput {
   itemBrandId: ID
   itemModelId: ID
   dateOfPurchase: LocalDate
-  purchasePriceAmount: Float
-  purchasePriceCurrency: String
+  purchasePrice: MonetaryAmount
+  automaticValuation: MonetaryAmount
+  customValuation: MonetaryAmount
   note: String
 }
 
@@ -178,6 +213,17 @@ input UpsertItemModelInput {
   itemBrandId: ID!
 }
 
+input UpsertValuationRuleInput {
+  id: ID
+  name: String!
+  ageLimit: Float!
+  typeOfContract: TypeOfContract!
+  itemFamilyId: String!
+  itemTypeId: String
+  valuationType: String!
+  depreciation: Float
+}
+
 type Contract {
   id: ID!
   holderMemberId: ID!
@@ -186,6 +232,7 @@ type Contract {
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!
+  typeOfContract: TypeOfContract!
   isTerminated: Boolean!
   terminationDate: LocalDate
   currentAgreementId: ID!
@@ -198,6 +245,20 @@ type Contract {
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
+}
+
+enum TypeOfContract {
+  SE_HOUSE
+  SE_APARTMENT_BRF
+  SE_APARTMENT_RENT
+  SE_APARTMENT_STUDENT_BRF
+  SE_APARTMENT_STUDENT_RENT
+  NO_HOME_CONTENT_OWN
+  NO_HOME_CONTENT_RENT
+  NO_HOME_CONTENT_YOUTH_OWN
+  NO_HOME_CONTENT_YOUTH_RENT
+  NO_TRAVEL
+  NO_TRAVEL_YOUTH
 }
 
 enum ContractStatus {
@@ -491,22 +552,6 @@ enum ItemCategoryKind {
   BRAND
   MODEL
   COMPANY
-}
-
-type Suggestion {
-  intent: String!
-  reply: String!
-  text: String!
-  confidence: Float!
-  allReplies: [AllRepliesEntry!]!
-}
-type AllRepliesEntry {
-  intent: String!
-  reply: String!
-}
-
-type AutoLabel {
-  message: Boolean
 }
 
 type FileUpload {
@@ -1247,6 +1292,7 @@ type QuestionGroup {
   id: ID!
   memberId: ID!
   questions: [Question!]!
+  member: Member
 }
 
 type Question {

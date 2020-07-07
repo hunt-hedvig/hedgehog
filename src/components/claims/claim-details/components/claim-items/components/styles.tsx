@@ -1,4 +1,5 @@
-import { Chip, Select } from '@material-ui/core'
+import { Chip } from '@material-ui/core'
+import { Popover } from 'hedvig-ui/popover'
 import styled from 'react-emotion'
 import CreatableSelect from 'react-select/creatable'
 
@@ -48,7 +49,7 @@ export const StyledCreatableSelect = styled(CreatableSelect)`
     padding-right: 10px;
     border: 1px solid;
     border-radius: 20px;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
   }
 
   .custom-select__multi-value__label {
@@ -96,6 +97,11 @@ export const TrashIconWrapper = styled.span`
   font-size: 0.9rem;
 `
 
+export const InfoWrapper = styled.span`
+  color: ${({ theme }) => theme.accent};
+  font-size: 0.9rem;
+`
+
 export const Bold = styled.span`
   font-weight: bold;
 `
@@ -104,7 +110,12 @@ export const Placeholder = styled.div`
   color: ${({ theme }) => theme.placeholderColor};
 `
 
-export const CurrencySelect = styled(Select)`
-  color: ${({ theme }) => theme.foreground};
-  text-align: right;
+export const ExplanationPopover = styled(Popover)`
+  font-size: 0.85rem;
+  width: auto;
+`
+
+export const NotePopover = styled(Popover)`
+  font-size: 0.85rem;
+  margin-top: 12px;
 `
