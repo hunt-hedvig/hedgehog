@@ -1,14 +1,17 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
+import { readFileSync } from 'fs'
 import Koa from 'koa'
-import Router from 'koa-router'
 import compress from 'koa-compress'
 import mount from 'koa-mount'
-import serve from 'koa-static'
+import Router from 'koa-router'
 import proxy from 'koa-server-http-proxy'
+import serve from 'koa-static'
 import path from 'path'
 import 'source-map-support/register'
+import tls from 'tls'
+import url from 'url'
 import { loginCallback, logout, refreshTokenCallback } from './auth'
 import { config } from './config'
 import {
@@ -17,9 +20,6 @@ import {
   setLoggerMiddleware,
   setRequestUuidMiddleware,
 } from './request-enhancers'
-import tls from 'tls'
-import url from 'url'
-import { readFileSync } from 'fs'
 
 const template = () => `
 <!doctype html>

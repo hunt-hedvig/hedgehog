@@ -2,8 +2,10 @@ import { Store } from 'redux'
 import { authCheck, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 
-export function getAuthState(getState: Store['getState']): AuthState {
-  const state = getState<BackofficeStore>()
+export function getAuthState(
+  getState: Store<BackofficeStore>['getState'],
+): AuthState {
+  const state = getState()
   return state.auth.state
 }
 

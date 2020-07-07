@@ -77,7 +77,7 @@ export interface MemberSearchResultItem {
 }
 
 export interface MembersSearchResult {
-  items: Array<MemberSearchResultItem>
+  items: MemberSearchResultItem[]
   totalPages: number
   page: number
 }

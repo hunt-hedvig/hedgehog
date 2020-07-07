@@ -1,6 +1,6 @@
 import { ActionMap, Container } from 'constate'
 import { DATE } from 'lib/messageTypes'
-import * as moment from 'moment'
+import moment from 'moment'
 import 'moment/locale/sv'
 import * as React from 'react'
 import { isInclusivelyAfterDay, SingleDatePicker } from 'react-dates'
