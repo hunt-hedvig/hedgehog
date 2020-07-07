@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'react-emotion'

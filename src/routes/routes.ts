@@ -3,18 +3,11 @@ import Routes from './index'
 export const reactPageRoutes = [
   { path: '/login', Component: Routes.LoginPageRoute, exact: true },
   { path: '/login/**', Component: Routes.LoginPageRoute, exact: true },
-  {
-    path: '/login/process',
-    Component: Routes.LoginProcessPageRoute,
-    exact: true,
-  },
-  { path: '/assets', Component: Routes.AssetsPageRoute, exact: true },
   { path: '/members', Component: Routes.MembersPageRoute },
   { path: '/claims/**', Component: Routes.ClaimsPageRoute, exact: true },
   { path: '/claims', Component: Routes.ClaimsPageRoute, exact: true },
   { path: '/questions/**', Component: Routes.QuestionsPageRoute, exact: true },
   { path: '/questions', Component: Routes.QuestionsPageRoute, exact: true },
-  { path: '/charges', Component: Routes.ChargePageRoute, exact: true },
   { path: '/taskmanager', Component: Routes.TaskManagerPageRoute, exact: true },
   {
     path: '/ticket_history/:id',

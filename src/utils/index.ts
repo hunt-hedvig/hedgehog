@@ -1,7 +1,4 @@
-export interface NoopFunction {
-  (): void
-  (arg0): void
-}
+export type NoopFunction = (...args: any) => void
 
 export const noopFunction: NoopFunction = () => {
   /* noop */

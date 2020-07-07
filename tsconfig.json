@@ -21,6 +21,6 @@
       "*": ["*", "node_modules/*", "src/*", "shared/*"]
     }
   },
-  "include": ["./shared"],
-  "exclude": ["node_modules", "src/components/tickets"]
+  "include": ["./shared", "./src"],
+  "exclude": ["node_modules", "./src/components/tickets", "./src/containers/ticket-history-page"]
 }

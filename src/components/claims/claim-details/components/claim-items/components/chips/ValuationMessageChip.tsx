@@ -7,7 +7,7 @@ import { MarketValuationChip } from './components/MarketValuationChip'
 import { NoValuationChip } from './components/NoValuationChip'
 import { ValuationChip } from './components/ValuationChip'
 
-export const MessageChip: React.FC<{
+export const ValuationMessageChip: React.FC<{
   valuation: ClaimItemValuation | null
   valuationStatus: CanValuateClaimItem | null
   itemFamilyId: string
@@ -15,6 +15,7 @@ export const MessageChip: React.FC<{
   currency: string
   dateOfPurchase: string
   customValuation: string
+  loadingValuation: boolean
 }> = ({
   valuation,
   valuationStatus,
@@ -23,8 +24,8 @@ export const MessageChip: React.FC<{
   currency,
   dateOfPurchase,
   customValuation,
+  loadingValuation,
 }) => {
-  const loadingValuation = valuation === undefined
   const priceAndDateAvailable = price && dateOfPurchase?.length === 10
   const canValuateClaimItem = !!itemFamilyId && !!valuationStatus?.canValuate
   const valuationType = valuation?.valuationRule?.valuationType ?? ''

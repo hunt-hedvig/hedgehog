@@ -1,6 +1,0 @@
-export * from './components/DiscardChip'
-export * from './components/InfoChip'
-export * from './components/InputChip'
-export * from './components/MarketValuationChip'
-export * from './components/NoValuationChip'
-export * from './components/ValuationChip'

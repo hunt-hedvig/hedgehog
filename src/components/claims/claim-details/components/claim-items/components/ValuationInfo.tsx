@@ -3,7 +3,7 @@ import { useCanValuateClaimItem } from 'graphql/use-can-valuate-claim-item'
 import { useGetClaimItemValuation } from 'graphql/use-get-claim-item-valuation'
 import React from 'react'
 import { CustomValuationChip } from './chips/CustomValuationChip'
-import { MessageChip } from './chips/MessageChip'
+import { ValuationMessageChip } from './chips/ValuationMessageChip'
 
 export const ValuationInfo: React.FC<{
   request: UpsertClaimItemInput
@@ -21,12 +21,11 @@ export const ValuationInfo: React.FC<{
   typeOfContract,
 }) => {
   const { itemFamilyId, itemTypeId, purchasePrice, dateOfPurchase } = request
-
-  const [valuationStatus] = useCanValuateClaimItem(
-    itemFamilyId,
-    itemTypeId,
-    typeOfContract,
-  )
+        
+  const [
+    valuationStatus,
+    { loading: loadingValuation },
+  ] = useCanValuateClaimItem(itemFamilyId, itemTypeId, typeOfContract)
 
   const [claimItemValuation] = useGetClaimItemValuation({
     purchasePrice: purchasePrice ?? 0,
@@ -47,9 +46,10 @@ export const ValuationInfo: React.FC<{
 
   return (
     <>
-      <MessageChip
+      <ValuationMessageChip
         valuation={claimItemValuation ?? null}
         valuationStatus={valuationStatus ?? null}
+        loadingValuation={loadingValuation}
         itemFamilyId={itemFamilyId}
         price={purchasePrice?.amount}
         currency={purchasePrice?.currency ?? defaultCurrency}
