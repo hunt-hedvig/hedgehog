@@ -10,11 +10,10 @@ cache:
 install:
   - npm i -g yarn@1.22.0
   - yarn
-  - git fetch --unshallow origin master:master
 
 script:
   - yarn lint
-  - yarn tdm
+  - yarn typecheck
   - yarn test
   - yarn build
 

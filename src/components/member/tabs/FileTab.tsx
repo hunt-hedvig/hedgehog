@@ -71,7 +71,7 @@ class MemberFile extends React.Component<
 > {
   public render() {
     return (
-      <Query
+      <Query<any>
         query={query}
         variables={{ memberId: this.props.match.params.memberId }}
       >

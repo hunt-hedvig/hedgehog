@@ -1,8 +1,8 @@
-import { ExtendableContext, Middleware } from 'koa'
 import { addDays, addMinutes } from 'date-fns'
+import { ExtendableContext, Middleware } from 'koa'
 import fetch from 'node-fetch'
-import { LoggingMiddleware } from './request-enhancers'
 import { config } from './config'
+import { LoggingMiddleware } from './request-enhancers'
 
 interface Tokens {
   accessToken: string
@@ -73,8 +73,8 @@ export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
     return
   }
   setTokenCookies(ctx, {
-    accessToken: body['access_token'],
-    refreshToken: body['refresh_token'],
+    accessToken: body.access_token,
+    refreshToken: body.refresh_token,
   })
 
   ctx.status = 200
