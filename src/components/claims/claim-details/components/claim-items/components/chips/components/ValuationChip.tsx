@@ -6,21 +6,25 @@ import { formatMoney } from 'utils/money'
 import { BaseChip, BaseChipProps } from './BaseChip'
 
 const Chip = styled(BaseChip)`
-  background-color: ${({ theme }) => theme.success};
-  color: ${({ theme }) => theme.accentContrast};
-  margin-top: 8px;
-  font-weight: bold;
+  && {
+    background-color: ${({ theme }) => theme.success};
+    color: ${({ theme }) => theme.accentContrast};
+    margin-top: 8px;
+    font-weight: bold;
+  }
 `
 
 const AdornmentChip = styled(BaseChip)`
-  height: 70%;
-  background: rgba(255, 255, 255, 0.2);
-  color: ${({ theme }) => theme.accentContrast};
-  margin-left: -6px;
-  margin-right: 6px;
-  padding-left: 0px;
-  text-decoration: ${(props: BaseChipProps) =>
-    props.ignored ? 'line-through' : 'none'};
+  && {
+    height: 70%;
+    background: rgba(255, 255, 255, 0.2);
+    color: ${({ theme }) => theme.accentContrast};
+    margin-left: -6px;
+    margin-right: 6px;
+    padding-left: 0px;
+    text-decoration: ${(props: BaseChipProps) =>
+      props.ignored ? 'line-through' : 'none'};
+  }
 `
 
 export const ValuationChip: React.FC<{
