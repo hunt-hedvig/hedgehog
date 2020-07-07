@@ -4,11 +4,13 @@ import React from 'react'
 import styled from 'react-emotion'
 
 const ChipIconBase = styled.span`
-  color: ${({ theme }) => theme.accentContrast};
-  font-size: 0.9rem;
-  padding: 9px;
-  padding-right: 8px;
-  margin-right: -15px;
+  && {
+    color: ${({ theme }) => theme.accentContrast};
+    font-size: 0.9rem;
+    padding: 9px;
+    padding-right: 8px;
+    margin-right: -15px;
+  }
 `
 
 export interface BaseChipProps extends ChipProps {

@@ -4,10 +4,12 @@ import styled from 'react-emotion'
 import { BaseChip } from './BaseChip'
 
 const Chip = styled(BaseChip)`
-  background-color: ${({ theme }) => theme.success};
-  color: ${({ theme }) => theme.accentContrast};
-  margin-top: 8px;
-  font-weight: bold;
+  && {
+    background-color: ${({ theme }) => theme.success};
+    color: ${({ theme }) => theme.accentContrast};
+    margin-top: 8px;
+    font-weight: bold;
+  }
 `
 
 export const MarketValuationChip: React.FC = ({}) => {

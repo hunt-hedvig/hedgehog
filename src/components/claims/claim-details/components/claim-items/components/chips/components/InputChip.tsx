@@ -6,13 +6,15 @@ import { TextField } from '@material-ui/core'
 import { BaseChip } from './BaseChip'
 
 const Chip = styled(BaseChip)`
-  background-color: ${({ theme }) => theme.accent};
-  color: ${({ theme }) => theme.accentContrast};
-  margin-top: 8px;
-  font-weight: bold;
-  margin-left: 7px;
-  width: 130px;
-  cursor: pointer;
+  && {
+    background-color: ${({ theme }) => theme.accent};
+    color: ${({ theme }) => theme.accentContrast};
+    margin-top: 8px;
+    font-weight: bold;
+    margin-left: 7px;
+    width: 130px;
+    cursor: pointer;
+  }
 `
 
 const textFieldStyle = {
