@@ -29,7 +29,9 @@ const TableCell = withStyles({
 })(MuiTableCell)
 
 const NotSpecifiedLabel = styled(Typography)`
-  color: ${({ theme }) => theme.placeholderColor};
+  && {
+    color: ${({ theme }) => theme.placeholderColor};
+  }
 `
 
 const NotSpecified: React.FC = () => (
