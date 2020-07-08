@@ -1,4 +1,3 @@
-import ChatPane from 'components/member/tabs/ChatPane'
 import ClaimsTab from 'components/member/tabs/ClaimsTab'
 import { MemberDebtComponent } from 'components/member/tabs/DebtTab'
 import DetailsTab from 'components/member/tabs/DetailsTab'
@@ -43,7 +42,7 @@ TabItem.propTypes = {
 
 const memberPagePanes = (props) => {
   const memberId = props.match.params.memberId
-  const panes = [
+  return [
     {
       menuItem: 'Member',
       render: () => <TabItem props={props} TabContent={DetailsTab} />,
@@ -69,8 +68,6 @@ const memberPagePanes = (props) => {
         />
       ),
     },
-  ]
-  panes.push(
     {
       menuItem: 'Contracts',
       render: () => (
@@ -83,8 +80,6 @@ const memberPagePanes = (props) => {
         <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
       ),
     },
-  )
-  panes.push(
     {
       menuItem: 'Payments',
       render: () => (
@@ -105,8 +100,6 @@ const memberPagePanes = (props) => {
       menuItem: 'Debt',
       render: () => <TabItem props={props} TabContent={MemberDebtComponent} />,
     },
-  )
-
-  return panes
+  ]
 }
 export default memberPagePanes
