@@ -63,6 +63,7 @@ const TextField = withStyles({
 export const ChatPanel = ({ memberId }) => {
   const [currentMessage, setCurrentMessage] = useState('')
   const [forceSendMessage, setForceSendMessage] = useState(false)
+  const [error, setError] = useState(false)
   const [sendMessage, { loading }] = useSendMessage()
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -79,6 +80,7 @@ export const ChatPanel = ({ memberId }) => {
     }
     const message = e.currentTarget.value
     setCurrentMessage(message)
+    setError(false)
   }
 
   const handleForceSendMessageCheckboxChange = (
@@ -93,10 +95,16 @@ export const ChatPanel = ({ memberId }) => {
     }
     sendMessage(
       getSendMessageOptions(memberId, currentMessage, forceSendMessage),
-    ).then(() => {
-      setCurrentMessage('')
-      setForceSendMessage(false)
-    })
+    )
+      .then(() => {
+        setCurrentMessage('')
+        setForceSendMessage(false)
+        setError(false)
+      })
+      .catch((e) => {
+        setError(true)
+        console.error(e)
+      })
   }
 
   const selectEmoji = (emoji: string) => {
@@ -107,6 +115,7 @@ export const ChatPanel = ({ memberId }) => {
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>
         <TextField
+          error={error}
           multiline
           rows={4}
           rowsMax="12"
