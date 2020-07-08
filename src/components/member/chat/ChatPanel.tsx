@@ -74,6 +74,9 @@ export const ChatPanel = ({ memberId }) => {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (loading) {
+      return
+    }
     const message = e.currentTarget.value
     setCurrentMessage(message)
   }
@@ -90,9 +93,10 @@ export const ChatPanel = ({ memberId }) => {
     }
     sendMessage(
       getSendMessageOptions(memberId, currentMessage, forceSendMessage),
-    )
-    setCurrentMessage('')
-    setForceSendMessage(false)
+    ).then(() => {
+      setCurrentMessage('')
+      setForceSendMessage(false)
+    })
   }
 
   const selectEmoji = (emoji: string) => {
