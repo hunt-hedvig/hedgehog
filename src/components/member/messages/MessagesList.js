@@ -17,7 +17,6 @@ const MessagesListContainer = styled('div')(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column-reverse',
-  flex: '1 1 0%'
 }))
 
 const EmptyList = styled('h3')({
