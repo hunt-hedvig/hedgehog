@@ -1,0 +1,41 @@
+query GetReferralInformation($memberId: ID!) {
+  member(id: $memberId) {
+    memberId
+
+    referralInformation {
+          eligible
+          campaign {
+            code
+            incentive {
+              __typename
+              ... on MonthlyPercentageDiscountFixedPeriod {
+                numberOfMonths
+                percentage
+              }
+              ... on FreeMonths {
+                numberOfMonths
+              }
+              ... on CostDeduction {
+                amount
+              }
+              ... on NoDiscount {
+                _
+              }
+              ... on IndefinitePercentageDiscount {
+                percentageDiscount
+              }
+            }
+          }
+          referredBy {
+            memberId
+    				name
+    				status
+          }
+          hasReferred {
+            memberId
+    				name
+    				status
+          }
+    }
+  }
+}

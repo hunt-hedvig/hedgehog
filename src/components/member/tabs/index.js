@@ -13,6 +13,7 @@ import { Tab } from 'semantic-ui-react'
 import styled from 'react-emotion'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { AccountTab } from './account-tab'
+import { ReferralsTab } from 'components/member/tabs/referrals-tab'
 
 const TabContainer = styled(Tab.Pane)`
   &&& {
@@ -93,6 +94,12 @@ const memberPagePanes = (props) => {
     {
       menuItem: 'Debt',
       render: () => <TabItem props={props} TabContent={MemberDebtComponent} />,
+    },
+    {
+      menuItem: 'Referrals',
+      render: () => (
+        <TabItem props={{ ...props, memberId }} TabContent={ReferralsTab} />
+      ),
     },
   ]
 }

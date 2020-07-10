@@ -791,6 +791,7 @@ export type Member = {
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
+  referralInformation?: Maybe<ReferralInformation>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -800,6 +801,14 @@ export type MemberMonthlySubscriptionArgs = {
 export type MemberChargeApproval = {
   memberId: Scalars['ID']
   amount: Scalars['MonetaryAmount']
+}
+
+export type MemberReferral = {
+  __typename?: 'MemberReferral'
+  memberId: Scalars['String']
+  name?: Maybe<Scalars['String']>
+  status: Scalars['String']
+  incentive: Incentive
 }
 
 export type MonetaryAmountV2 = {
@@ -1436,6 +1445,20 @@ export enum QuoteState {
   Quoted = 'QUOTED',
   Signed = 'SIGNED',
   Expired = 'EXPIRED',
+}
+
+export type ReferralCampaign = {
+  __typename?: 'ReferralCampaign'
+  code: Scalars['String']
+  incentive?: Maybe<Incentive>
+}
+
+export type ReferralInformation = {
+  __typename?: 'ReferralInformation'
+  eligible: Scalars['Boolean']
+  campaign: ReferralCampaign
+  referredBy?: Maybe<MemberReferral>
+  hasReferred: Array<MemberReferral>
 }
 
 export type RemindNotification = {
@@ -2402,6 +2425,62 @@ export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
             Question,
             'id' | 'messageJsonString' | 'timestamp'
           >
+        >
+      }
+  >
+}
+
+export type GetReferralInformationQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        referralInformation: Maybe<
+          { __typename?: 'ReferralInformation' } & Pick<
+            ReferralInformation,
+            'eligible'
+          > & {
+              campaign: { __typename?: 'ReferralCampaign' } & Pick<
+                ReferralCampaign,
+                'code'
+              > & {
+                  incentive: Maybe<
+                    | ({
+                        __typename: 'MonthlyPercentageDiscountFixedPeriod'
+                      } & Pick<
+                        MonthlyPercentageDiscountFixedPeriod,
+                        'numberOfMonths' | 'percentage'
+                      >)
+                    | ({ __typename: 'FreeMonths' } & Pick<
+                        FreeMonths,
+                        'numberOfMonths'
+                      >)
+                    | ({ __typename: 'CostDeduction' } & Pick<
+                        CostDeduction,
+                        'amount'
+                      >)
+                    | ({ __typename: 'NoDiscount' } & Pick<NoDiscount, '_'>)
+                    | ({ __typename: 'IndefinitePercentageDiscount' } & Pick<
+                        IndefinitePercentageDiscount,
+                        'percentageDiscount'
+                      >)
+                  >
+                }
+              referredBy: Maybe<
+                { __typename?: 'MemberReferral' } & Pick<
+                  MemberReferral,
+                  'memberId' | 'name' | 'status'
+                >
+              >
+              hasReferred: Array<
+                { __typename?: 'MemberReferral' } & Pick<
+                  MemberReferral,
+                  'memberId' | 'name' | 'status'
+                >
+              >
+            }
         >
       }
   >
@@ -4405,6 +4484,97 @@ export type GetQuestionsGroupsQueryResult = ApolloReactCommon.QueryResult<
   GetQuestionsGroupsQuery,
   GetQuestionsGroupsQueryVariables
 >
+export const GetReferralInformationDocument = gql`
+  query GetReferralInformation($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      referralInformation {
+        eligible
+        campaign {
+          code
+          incentive {
+            __typename
+            ... on MonthlyPercentageDiscountFixedPeriod {
+              numberOfMonths
+              percentage
+            }
+            ... on FreeMonths {
+              numberOfMonths
+            }
+            ... on CostDeduction {
+              amount
+            }
+            ... on NoDiscount {
+              _
+            }
+            ... on IndefinitePercentageDiscount {
+              percentageDiscount
+            }
+          }
+        }
+        referredBy {
+          memberId
+          name
+          status
+        }
+        hasReferred {
+          memberId
+          name
+          status
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetReferralInformationQuery__
+ *
+ * To run a query within a React component, call `useGetReferralInformationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReferralInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReferralInformationQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetReferralInformationQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >(GetReferralInformationDocument, baseOptions)
+}
+export function useGetReferralInformationLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >(GetReferralInformationDocument, baseOptions)
+}
+export type GetReferralInformationQueryHookResult = ReturnType<
+  typeof useGetReferralInformationQuery
+>
+export type GetReferralInformationLazyQueryHookResult = ReturnType<
+  typeof useGetReferralInformationLazyQuery
+>
+export type GetReferralInformationQueryResult = ApolloReactCommon.QueryResult<
+  GetReferralInformationQuery,
+  GetReferralInformationQueryVariables
+>
 export const MarkQuestionAsResolvedDocument = gql`
   mutation MarkQuestionAsResolved($memberId: ID!) {
     markQuestionAsResolved(memberId: $memberId)
@@ -5253,6 +5423,27 @@ const result: IntrospectionResultData = {
       },
       {
         kind: 'UNION',
+        name: 'Incentive',
+        possibleTypes: [
+          {
+            name: 'MonthlyPercentageDiscountFixedPeriod',
+          },
+          {
+            name: 'FreeMonths',
+          },
+          {
+            name: 'CostDeduction',
+          },
+          {
+            name: 'NoDiscount',
+          },
+          {
+            name: 'IndefinitePercentageDiscount',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
         name: 'ClaimType',
         possibleTypes: [
           {
@@ -5362,27 +5553,6 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'ItemCompany',
-          },
-        ],
-      },
-      {
-        kind: 'UNION',
-        name: 'Incentive',
-        possibleTypes: [
-          {
-            name: 'MonthlyPercentageDiscountFixedPeriod',
-          },
-          {
-            name: 'FreeMonths',
-          },
-          {
-            name: 'CostDeduction',
-          },
-          {
-            name: 'NoDiscount',
-          },
-          {
-            name: 'IndefinitePercentageDiscount',
           },
         ],
       },
