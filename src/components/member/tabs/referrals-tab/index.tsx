@@ -7,7 +7,7 @@ import { useGetReferralInformation } from 'graphql/use-get-referral-information'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Input } from 'hedvig-ui/input'
-import { MainHeadline } from 'hedvig-ui/typography'
+import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
@@ -53,6 +53,25 @@ export const ReferralsTab: React.FunctionComponent<{ memberId: string }> = ({
   const [referralInformation] = useGetReferralInformation(memberId)
   const [referralCode, setReferralCode] = React.useState('')
 
+  /* MOCK DATA
+  const referralInformation = {
+    eligible: true,
+    campaign: { code: 'Meletis' },
+    hasReferred: [
+      {
+        memberId: '123',
+        name: 'Rasmus',
+        status: 'OFFER',
+      },
+      {
+        memberId: '654321',
+        name: 'Elvin',
+        status: 'OFFER',
+      },
+    ],
+  }
+   */
+
   return (
     <>
       <Headline>Referrals</Headline>
@@ -71,13 +90,11 @@ export const ReferralsTab: React.FunctionComponent<{ memberId: string }> = ({
                 </InfoText>
               </InfoRow>
               <InfoRow style={{ marginTop: '1.5rem' }}>
-                <span style={{ marginTop: '0.3rem' }}>
-                  Hedvig Forever status
-                </span>
+                <span style={{ marginTop: '0.3rem' }}>Hedvig Forever</span>
                 <InfoText>
                   {referralInformation ? (
                     <ForeverStatusBadge eligible={referralInformation.eligible}>
-                      {referralInformation.eligible ? 'Active' : 'Inactive'}
+                      {referralInformation.eligible ? 'Activated' : 'Disabled'}
                     </ForeverStatusBadge>
                   ) : (
                     'Not available'
@@ -124,26 +141,26 @@ export const ReferralsTab: React.FunctionComponent<{ memberId: string }> = ({
           </Card>
         </CardsWrapper>
       </ReferralsWrapper>
-
-      <Table celled selectable sortable={true}>
+      <ThirdLevelHeadline style={{ marginBottom: '-0.2rem' }}>
+        Members referred
+      </ThirdLevelHeadline>
+      <Table celled>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell width={6}>Member id</Table.HeaderCell>
-            <Table.HeaderCell width={6}>Date</Table.HeaderCell>
-            <Table.HeaderCell width={6}>Type</Table.HeaderCell>
-            <Table.HeaderCell width={6}>State</Table.HeaderCell>
-            <Table.HeaderCell width={6}>Reserves</Table.HeaderCell>
+            <Table.HeaderCell width={6}>Name</Table.HeaderCell>
+            <Table.HeaderCell width={6}>Status</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          <Table.Row>
-            <Table.Cell>hello</Table.Cell>
-            <Table.Cell>123</Table.Cell>
-            <Table.Cell>456</Table.Cell>
-            <Table.Cell>789</Table.Cell>
-            <Table.Cell>10234</Table.Cell>
-          </Table.Row>
+          {referralInformation?.hasReferred?.map((member) => (
+            <Table.Row key={member.memberId}>
+              <Table.Cell>{member.memberId}</Table.Cell>
+              <Table.Cell>{member.name}</Table.Cell>
+              <Table.Cell>{member.status}</Table.Cell>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
     </>
