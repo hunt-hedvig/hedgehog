@@ -110,12 +110,6 @@ export default {
       method: 'post',
     },
   },
-  reports: {
-    getBDX: {
-      method: 'get',
-      url: 'reports/bdx',
-    },
-  },
   ws: {
     endpoint: '/chat',
     messagesPrefix: '/user/',
