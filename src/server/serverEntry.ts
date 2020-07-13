@@ -73,8 +73,21 @@ const scriptLocation =
     ? '/static/' +
       JSON.parse(readFileSync(path.resolve(buildDir, 'stats.json'), 'UTF8'))
         .assetsByChunkName.app[0]
-    : 'http://localhost:9443/static/app.js'
+    : '/static/app.js'
 app.use(mount('/static', serve(buildDir, { maxage: 86400 * 365 })))
+if (process.env.NODE_ENV !== 'production') {
+  app.use(
+    proxy('/static', {
+      target: 'http://localhost:9001',
+    }),
+  )
+  app.use(
+    proxy('/sockjs-node', {
+      target: 'http://localhost:9001',
+      ws: true,
+    }),
+  )
+}
 
 app.use(setRequestUuidMiddleware)
 app.use(setLoggerMiddleware)

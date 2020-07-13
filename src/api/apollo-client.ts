@@ -24,7 +24,6 @@ export const apolloClient = (() => {
 
   return new ApolloClient({
     link: ApolloLink.from([
-      new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
       onError((error) => {
         if ((error?.networkError as ServerError)?.response?.status !== 403) {
           return
@@ -54,6 +53,7 @@ export const apolloClient = (() => {
             forceLogOut()
           })
       }),
+      new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
     ]),
     connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
     cache: new InMemoryCache({
