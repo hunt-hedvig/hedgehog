@@ -153,16 +153,7 @@ export const QuoteListItemComponent: React.FC<{
   inactionable?: boolean
   memberId: string
   showNotification?: (data: any) => void
-  insuranceRequest?: (memberId: string) => void
-  insurancesListRequest?: (memberId: string) => void
-}> = ({
-  quote,
-  inactionable,
-  memberId,
-  showNotification,
-  insuranceRequest,
-  insurancesListRequest,
-}) => {
+}> = ({ quote, inactionable, memberId, showNotification }) => {
   const [action, setAction] = React.useState<Action | null>(null)
   const [isWip, setIsWip] = React.useState(false)
 
@@ -257,12 +248,6 @@ export const QuoteListItemComponent: React.FC<{
               }
               setIsWip(false)
               setAction(null)
-              if (insuranceRequest) {
-                insuranceRequest(memberId)
-              }
-              if (insurancesListRequest) {
-                insurancesListRequest(memberId)
-              }
             }}
           />
         </ActionsWrapper>
@@ -315,7 +300,6 @@ export const QuoteListItemComponent: React.FC<{
 
 const mapActions = {
   ...actions.notificationsActions,
-  ...actions.insuranceActions,
 }
 
 export const QuoteListItem = connect(null, mapActions)(QuoteListItemComponent)

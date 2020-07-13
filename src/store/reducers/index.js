@@ -4,7 +4,6 @@ import claimDetails from './claimDetailsReducer'
 import claims from './claimsReducer'
 import client from './clientReducer'
 import dashboard from './dashboardReducer'
-import insurance from './insuranceReducer'
 import login from './loginReducer'
 import members from './membersReducer'
 import messages from './messagesReducer'
@@ -26,6 +25,5 @@ export default {
   claimDetails,
   payoutDetails,
   questions,
-  insurance,
   notifications,
 }

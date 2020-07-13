@@ -110,36 +110,6 @@ export default {
       method: 'post',
     },
   },
-  insurance: {
-    get: {
-      url: 'member/insurance',
-      method: 'get',
-    },
-    setDate: {
-      url: 'member/insurance',
-      method: 'post',
-    },
-    cancel: {
-      url: 'member/insurance',
-      method: 'post',
-    },
-    cert: {
-      url: 'member/insurance',
-      method: 'post',
-    },
-    companyStatus: {
-      url: 'member/insurance',
-      method: 'post',
-    },
-    getInsurancesByMember: {
-      url: 'member/insurance',
-      method: 'get',
-    },
-    modifyProduct: {
-      url: 'member/insurance',
-      method: 'post',
-    },
-  },
   reports: {
     getBDX: {
       method: 'get',

@@ -74,15 +74,11 @@ export default class Member extends React.Component {
         params: { memberId },
       },
       memberRequest,
-      insuranceRequest,
-      insurancesListRequest,
       claimsByMember,
     } = this.props
 
     memberRequest(memberId)
-    insuranceRequest(memberId)
     claimsByMember(memberId)
-    insurancesListRequest(memberId)
   }
 
   render() {
@@ -98,7 +94,7 @@ export default class Member extends React.Component {
             <MemberPageWrapper>
               <MemberPageContainer>
                 <Header size="huge">
-                  <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
+                  <FraudulentStatus stateInfo={this.getFraudulentStatus()}/>
                   {this.getMemberPageTitle(messages.member)}
                   {' ('}
                   <MemberAge
@@ -107,7 +103,7 @@ export default class Member extends React.Component {
                   {messages.member && (
                     <>
                       <Flag>
-                        <MemberFlag memberId={messages.member.memberId} />
+                        <MemberFlag memberId={messages.member.memberId}/>
                       </Flag>
                       <Badge memberId={messages.member.memberId}>
                         {getMemberGroup(messages.member.memberId)}
@@ -117,11 +113,11 @@ export default class Member extends React.Component {
                 </Header>
                 <MemberDetails>
                   {messages?.member?.status === 'SIGNED' &&
-                    messages?.member?.ssn && (
-                      <MemberDetail>
-                        {formatSsn(messages.member.ssn)}
-                      </MemberDetail>
-                    )}
+                  messages?.member?.ssn && (
+                    <MemberDetail>
+                      {formatSsn(messages.member.ssn)}
+                    </MemberDetail>
+                  )}
                   {messages?.member?.email && (
                     <MemberDetailLink href={`mailto:${messages.member.email}`}>
                       {messages.member.email}
@@ -151,14 +147,12 @@ export default class Member extends React.Component {
                     </MemberDetailLink>
                   </Popover>
                 </MemberDetails>
-                {this.props.insurance.requesting || (
-                  <Tab
-                    style={{ height: '100%' }}
-                    panes={panes}
-                    renderActiveOnly={true}
-                    defaultActiveIndex={4}
-                  />
-                )}
+                <Tab
+                  style={{ height: '100%' }}
+                  panes={panes}
+                  renderActiveOnly={true}
+                  defaultActiveIndex={4}
+                />
               </MemberPageContainer>
               <ChatPane {...this.props} />
             </MemberPageWrapper>
@@ -191,7 +185,5 @@ Member.propTypes = {
   memberRequest: PropTypes.func.isRequired,
   clearMessagesList: PropTypes.func.isRequired,
   claimsByMember: PropTypes.func.isRequired,
-  insuranceRequest: PropTypes.func.isRequired,
-  insurancesListRequest: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 }

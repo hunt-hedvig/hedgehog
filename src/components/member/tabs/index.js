@@ -1,4 +1,3 @@
-import ChatPane from 'components/member/tabs/ChatPane'
 import ClaimsTab from 'components/member/tabs/ClaimsTab'
 import { MemberDebtComponent } from 'components/member/tabs/DebtTab'
 import DetailsTab from 'components/member/tabs/DetailsTab'
@@ -50,7 +49,7 @@ const memberPagePanes = (props) => {
     },
     {
       menuItem: 'Claims',
-      render: () => <TabItem props={props} TabContent={ClaimsTab} />,
+      render: () => <TabItem props={{...props, memberId}} TabContent={ClaimsTab} />,
     },
     {
       menuItem: 'Files',

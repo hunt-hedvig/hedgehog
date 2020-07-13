@@ -20,7 +20,6 @@ export interface BackofficeStore {
   claimDetails: any
   payoutDetails: any
   questions: QuestionsStore
-  insurance: any
   notifications: any
   memberInsurance: any
 }
