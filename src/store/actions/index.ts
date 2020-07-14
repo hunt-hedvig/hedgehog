@@ -3,7 +3,6 @@ import * as claimDetailsActions from './claimDetailsActions'
 import * as claimsActions from './claimsActions'
 import * as clientActions from './clientActions'
 import * as dashboardActions from './dashboardActions'
-import * as insuranceActions from './insuranceActions'
 import * as loginActions from './loginActions'
 import * as membersActions from './membersActions'
 import * as messagesActions from './messagesActions'
@@ -28,6 +27,5 @@ export default {
   payoutDetailsActions,
   notesActions,
   questionsActions,
-  insuranceActions,
   notificationsActions,
 }

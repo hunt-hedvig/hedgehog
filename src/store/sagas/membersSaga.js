@@ -61,7 +61,7 @@ function* saveFraudulentStatusFlow({
   try {
     const path = `${memberId}/setFraudulentStatus`
 
-    const response = yield call(
+    yield call(
       api,
       config.members.fraudulentStatus,
       { fraudulentStatus, fraudulentStatusDescription },
