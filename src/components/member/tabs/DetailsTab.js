@@ -32,9 +32,10 @@ export default class DetailsTab extends React.Component {
     switch (field.toLowerCase()) {
       case 'memberid':
       case 'status':
-      case 'ssn':
+      case 'personalnumber':
       case 'birthdate':
-      case 'signedOn':
+      case 'signedon':
+      case 'createdon':
         return true
       default:
         return false
@@ -61,14 +62,11 @@ export default class DetailsTab extends React.Component {
 
   render() {
     let traceData
-    const {
-      messages: { member },
-      saveFraudulentStatus,
-    } = this.props
+    const { member, saveFraudulentStatus } = this.props
 
     const {
       traceMemberInfo,
-      fraudulentDescription,
+      fraudulentStatusDescription,
       fraudulentStatus,
       ...memberInfo
     } = member || {}
@@ -77,8 +75,11 @@ export default class DetailsTab extends React.Component {
 
     const memberInfoWithoutSsn = {
       ...memberInfo,
-      ssn: memberInfo.status !== 'SIGNED' ? '' : memberInfo.ssn,
+      personalNumber:
+        memberInfo.status !== 'SIGNED' ? '' : memberInfo.personalNumber,
     }
+
+    delete memberInfoWithoutSsn.__typename
 
     return member ? (
       <>
@@ -92,7 +93,7 @@ export default class DetailsTab extends React.Component {
               getFraudStatusInfo={() => ({
                 status: this.state.fraudStatus || fraudulentStatus,
                 description:
-                  this.state.fraudDescription || fraudulentDescription,
+                  this.state.fraudDescription || fraudulentStatusDescription,
               })}
               setState={(val, fs, desc) => {
                 this.setState({
@@ -178,7 +179,7 @@ export default class DetailsTab extends React.Component {
 }
 
 DetailsTab.propTypes = {
-  messages: PropTypes.object.isRequired,
+  member: PropTypes.object.isRequired,
   editMemberDetails: PropTypes.func.isRequired,
   saveFraudulentStatus: PropTypes.func.isRequired,
 }

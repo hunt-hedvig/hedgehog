@@ -1,9 +1,7 @@
 // @ts-nocheck
 import { parseISO } from 'date-fns'
-import dateCompareAsc from 'date-fns/compareAsc'
 import formatDate from 'date-fns/format'
 import moment from 'moment'
-import { QuestionGroup, QuestionsStore } from '../store/types/questionsTypes'
 
 export const filterList = (filter: string, list: any[], fieldName: string) =>
   list.filter((item) => item[fieldName] === filter)
@@ -27,22 +25,6 @@ export const updateList = (list: any[], msg: any[]) => {
   }
 }
 
-export const sliceList = (list: any[], size = 100) =>
-  list.length > size ? list.slice(-size) : list
-
-export const refreshMessagesList = (
-  list: any[],
-  message: any,
-  size: number,
-) => {
-  const slicedList = sliceList(list, size)
-  const sorted = slicedList.sort(sortByKey('globalId'))
-  return updateList(sorted, message)
-}
-
-// TODO append field "newMessagesCounter" to each member
-export const setNewMessagesCounter = (members /* counters */) => members
-
 /**
  * Hidding inactive members on first render && sort by signup date
  * @param {object} param0 -
@@ -51,71 +33,6 @@ export const filterMembersList = ({ type, members }) =>
   type !== 'MEMBERS_REQUEST_SUCCESS'
     ? members
     : members.filter((item) => item.status !== 'INACTIVATED').reverse()
-
-/**
- * Updating state of claims details fields
- * @param {array} fieldsData current active fields
- * @param {array} currentType current active type
- * @param {string} fieldName field name to update
- * @param {string} value new value of field
- */
-export const getClaimFieldsData = (
-  fieldsData,
-  currentType,
-  fieldName,
-  value,
-) => {
-  const existFieldObj = fieldsData.find((item) => item.name === fieldName)
-  const fieldObj = currentType.find((item) => item.name === fieldName)
-  if (!fieldsData.length) {
-    return [{ ...fieldObj, value }]
-  }
-  return existFieldObj
-    ? fieldsData.map((item) =>
-        item.name === fieldName ? { ...existFieldObj, value } : item,
-      )
-    : [...fieldsData, { ...fieldObj, value }]
-}
-
-/**
- * Sort array of questions by dates and answers
- * @param {object} questions arrays of answered/not answered questions
- */
-export const sortQuestions = (questions: QuestionGroup[]): QuestionGroup[] =>
-  questions.sort((a, b) => dateCompareAsc(parseISO(a.date), parseISO(b.date)))
-
-/**
- * Replacing question from not answered to answered array
- * @param {object} questions arrays of answered/not answered questions
- * @param {object} data answered question
- */
-export const replaceAnswer = (
-  questions: QuestionsStore,
-  data,
-): QuestionsStore => {
-  let newAnswered
-  const newNotAnswered = questions.notAnswered.questions.filter((item) => {
-    if (item.memberId !== data.id) {
-      return true
-    } else {
-      newAnswered = { ...item, answer: data.msg }
-      return false
-    }
-  })
-  return {
-    ...questions,
-    answered: {
-      ...questions.answered,
-      questions: newAnswered
-        ? [...questions.answered.questions, newAnswered]
-        : questions.answered.questions,
-    },
-    notAnswered: {
-      ...questions.notAnswered,
-      questions: newNotAnswered,
-    },
-  }
-}
 
 /**
  * Returns string with member first+last name || member Id
@@ -131,20 +48,6 @@ export const getMemberInfo = (members, id) => {
 
 const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
-}
-
-/**
- * Returns string with member first+last name || member Id
- * @param {member object} members
- */
-export const getMemberFullName = (member) => {
-  if (member) {
-    if (member.firstName) {
-      return `${member.firstName} ${member.lastName || ''}`
-    } else {
-      return `${member.memberId ? 'Member-' + member.memberId : 'No id'}`
-    }
-  }
 }
 
 /**
@@ -245,22 +148,6 @@ export const range = (
   }
 
   return res
-}
-
-function sortMembersByBool(list, fieldName, isReverse) {
-  const withoutVal: any[] = []
-  const filteredList = list.filter((item) => {
-    if (!item[fieldName]) {
-      withoutVal.push(item)
-    }
-    return !!item[fieldName]
-  })
-  const sortedList = filteredList.sort((a, b) =>
-    a[fieldName] > b[fieldName] ? 1 : -1,
-  )
-  const resultList = isReverse ? sortedList.reverse() : sortedList
-
-  return [...resultList, ...withoutVal]
 }
 
 function sortListByText(list, fieldName, isReverse) {

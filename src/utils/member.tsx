@@ -42,11 +42,7 @@ export const getMemberIdColor = (memberId: string) => {
   return lightTheme.success
 }
 
-export const getMemberGroup = (memberId: number) => {
-  if (memberId === tomasMemberId) {
-    return 'The dark lord Sith'
-  }
-
+export const getMemberGroup = (memberId: string) => {
   if (isMemberIdEven(memberId.toString())) {
     return 'Red team'
   }

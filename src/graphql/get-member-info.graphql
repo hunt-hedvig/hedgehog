@@ -1,0 +1,20 @@
+query GetMemberInfo($memberId: ID!) {
+  member(id: $memberId) {
+    memberId
+    email
+    phoneNumber
+    firstName
+    lastName
+    birthDate
+    personalNumber
+    fraudulentStatus
+    fraudulentStatusDescription
+    signedOn
+    createdOn
+    pickedLocale
+    contractMarketInfo {
+      market
+      preferredCurrency
+    }
+  }
+}

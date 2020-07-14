@@ -4,7 +4,6 @@ import {
   MEMBERS_REQUEST_SUCCESS,
   MEMBERS_REQUESTING,
   MEMBERS_SEARCH_SUCCESS,
-  NEW_MESSAGES_RECEIVED,
   SET_FRAUDULENT_STATUS,
   SET_FRAUDULENT_STATUS_SUCCESS,
   SET_MEMBER_FILTER,
@@ -48,11 +47,6 @@ export const searchMemberRequest = (
 export const searchMembersSuccess = (searchResult: MembersSearchResult) => ({
   type: MEMBERS_SEARCH_SUCCESS,
   searchResult,
-})
-
-export const newMessagesReceived = (messagesCounters) => ({
-  type: NEW_MESSAGES_RECEIVED,
-  messagesCounters,
 })
 
 export const setFilter = (query: MemberSearchFilter) => ({

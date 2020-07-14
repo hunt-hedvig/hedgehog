@@ -1,4 +1,4 @@
-import { Member, SanctionStatus } from 'api/generated/graphql'
+import { Contract, Member, SanctionStatus } from 'api/generated/graphql'
 import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { OrbIndicator } from 'hedvig-ui/orb-indicator'
@@ -6,6 +6,7 @@ import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
+import { getAddressFromContract } from 'utils/contract'
 import { formatMoney } from 'utils/money'
 
 import {
@@ -41,7 +42,12 @@ const MemberName = styled('h2')({
   marginBottom: '2rem',
 })
 
-const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
+const MemberInformation: React.SFC<{
+  member: Member
+  contract: Contract | undefined
+}> = ({ member, contract }) => {
+  const address = contract ? getAddressFromContract(contract) : undefined
+
   return (
     <Paper>
       <h3>Member Information</h3>
@@ -56,9 +62,13 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
       <p>
         <b>Personal Number:</b> {member.personalNumber}
       </p>
-      <p>
-        <b>Address:</b> {member.address}, {member.postalNumber} {member.city}
-      </p>
+      {address && (
+        <p>
+          <b>Address:</b> {address?.street}, {address?.postalCode}{' '}
+          {address.city}
+        </p>
+      )}
+
       <p>
         <b>Sanction Status:</b> {member.sanctionStatus}{' '}
         <SanctionStatusIcon status={member.sanctionStatus!} />

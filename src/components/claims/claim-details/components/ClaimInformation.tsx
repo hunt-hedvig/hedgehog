@@ -23,12 +23,7 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
-import {
-  isNorwegianHomeContent,
-  isSwedishApartment,
-  isSwedishHouse,
-} from 'utils/agreement'
-import { currentAgreementForContract } from 'utils/contract'
+import { getAddressFromContract } from 'utils/contract'
 
 interface Props {
   recordingUrl: string | null
@@ -69,7 +64,7 @@ const Audio = styled('audio')({
   width: '100%',
 })
 
-const DonloadClaimFile = styled('a')({
+const DownloadClaimFile = styled('a')({
   display: 'block',
   marginTop: '0.5rem',
 })
@@ -78,21 +73,7 @@ const SelectWrapper = styled('div')({
   marginTop: '1rem',
 })
 
-const getAddressFromContract = (contract: Contract): string => {
-  const currentAgreement = currentAgreementForContract(contract)
-  if (
-    currentAgreement != null &&
-    (isSwedishApartment(currentAgreement) ||
-      isSwedishHouse(currentAgreement) ||
-      isNorwegianHomeContent(currentAgreement))
-  ) {
-    return currentAgreement.address.street
-  } else {
-    return ''
-  }
-}
-
-const ClaimInformation: React.SFC<Props> = ({
+const ClaimInformation: React.FC<Props> = ({
   recordingUrl,
   registrationDate,
   state,
@@ -125,20 +106,20 @@ const ClaimInformation: React.SFC<Props> = ({
               type="audio/aac"
             />
           </Audio>
-          <DonloadClaimFile
+          <DownloadClaimFile
             href={recordingUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
             Download claim file
-          </DonloadClaimFile>
-          <DonloadClaimFile
+          </DownloadClaimFile>
+          <DownloadClaimFile
             href={getUrlWithoutParameters(recordingUrl)}
             target="_blank"
             rel="noopener noreferrer"
           >
             Download claim file
-          </DonloadClaimFile>
+          </DownloadClaimFile>
         </AudioWrapper>
       )}
       <SelectWrapper>
@@ -208,12 +189,15 @@ const ClaimInformation: React.SFC<Props> = ({
             <MuiMenuItem disabled value={'none'} divider>
               None selected
             </MuiMenuItem>
-            {contracts.map((_contract) => (
-              <MuiMenuItem key={_contract.id} value={_contract.id}>
-                {_contract.contractTypeName} (
-                {getAddressFromContract(_contract)})
-              </MuiMenuItem>
-            ))}
+            {contracts.map((_contract) => {
+              const address = getAddressFromContract(_contract)
+              return (
+                <MuiMenuItem key={_contract.id} value={_contract.id}>
+                  {_contract.contractTypeName}
+                  {address && <> ({address.street})</>}
+                </MuiMenuItem>
+              )
+            })}
           </MuiSelect>
         </SelectWrapper>
       )}

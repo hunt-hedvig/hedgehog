@@ -19,8 +19,6 @@ const initialState: BackofficeStore = {
     polling: false,
   },
   messages: {
-    list: [],
-    activeConnection: null,
     member: null,
   },
   members: {
@@ -68,18 +66,6 @@ const initialState: BackofficeStore = {
     data: null,
     requesting: false,
     requestResult: PayoutRequestResult.READY,
-  },
-  questions: {
-    answered: {
-      questions: [],
-      requesting: false,
-    },
-    notAnswered: {
-      questions: [],
-      requesting: false,
-    },
-    requesting: false,
-    errors: null,
   },
   notifications: [],
   memberInsurance: {

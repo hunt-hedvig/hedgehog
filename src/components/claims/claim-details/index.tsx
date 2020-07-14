@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid'
 import { ClaimNote, ClaimTranscription, QueryType } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
-import ChatPane from 'components/member/tabs/ChatPane.js'
+import { ChatPane } from 'components/member/tabs/ChatPane.js'
 import React from 'react'
 import { Query } from 'react-apollo'
 import { Mount } from 'react-lifecycle-components/dist'
@@ -34,7 +34,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
     {({ pushToMemberHistory }) => (
       <Mount on={() => pushToMemberHistory(props.match.params.memberId)}>
         <>
-          <ChatPane {...props} />
+          <ChatPane memberId={props.match.params.memberId} />
           <Query<Pick<QueryType, 'claim'>>
             query={CLAIM_PAGE_QUERY}
             variables={{ id: props.match.params.claimId }}
@@ -76,7 +76,12 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                   )}
 
                   <Grid item xs={12} sm={12} md={4}>
-                    {member && <MemberInformation member={member} />}
+                    {member && (
+                      <MemberInformation
+                        member={member}
+                        contract={contract ?? undefined}
+                      />
+                    )}
                   </Grid>
                   <Grid item xs={12} sm={12} md={4}>
                     <ClaimInformation
