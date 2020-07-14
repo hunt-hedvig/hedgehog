@@ -96,7 +96,7 @@ const memberPagePanes = (props) => {
       render: () => <TabItem props={props} TabContent={MemberDebtComponent} />,
     },
     {
-      menuItem: 'Referrals',
+      menuItem: 'Campaigns',
       render: () => (
         <TabItem props={{ ...props, memberId }} TabContent={ReferralsTab} />
       ),

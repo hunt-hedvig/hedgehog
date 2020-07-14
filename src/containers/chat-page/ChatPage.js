@@ -20,8 +20,9 @@ const mapStateToProps = ({
   payoutDetails,
 })
 
-export default withRouter(
-  connect(mapStateToProps, {
+export default connect(
+  mapStateToProps,
+  {
     claimsByMember: actions.claimsActions.claimsByMember,
     ...actions.insuranceActions,
     ...actions.messagesActions,
@@ -29,5 +30,7 @@ export default withRouter(
     ...actions.clientActions,
     ...actions.notificationsActions,
     ...actions.payoutDetailsActions,
-  })(ChatPage),
-)
+  },
+  null,
+  { pure: false },
+)(withRouter(ChatPage))

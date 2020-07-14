@@ -3,33 +3,27 @@ import {
   InfoRow,
   InfoText,
 } from 'components/member/tabs/contracts-tab/contract'
+import { CampaignCodeInput } from 'components/member/tabs/referrals-tab/CampaignCodeInput'
+import { CampaignsRedeemedTable } from 'components/member/tabs/referrals-tab/CampaignsRedeemedTable'
+import { MembersReferredTable } from 'components/member/tabs/referrals-tab/MembersReferredTable'
 import { useGetReferralInformation } from 'graphql/use-get-referral-information'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
+import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { Input } from 'hedvig-ui/input'
 import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
-import { Table } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 const Headline = styled(MainHeadline)`
   display: flex;
   align-items: center;
 `
 
-const ReferralsWrapper = styled('div')`
-  &:not(:first-of-type) {
-    margin-top: 5rem;
-    border-top: 1px solid ${({ theme }) => theme.border};
-    padding-top: 5rem;
-  }
-`
-
 interface ForeverStatusProps {
   eligible: boolean
 }
 
-const ForeverStatusBadge = styled('div')<ForeverStatusProps>`
+const ForeverStatusBadge = styled.div<ForeverStatusProps>`
   padding: 0.5rem 1rem;
   line-height: 1;
   background: ${({ eligible, theme }) =>
@@ -38,7 +32,7 @@ const ForeverStatusBadge = styled('div')<ForeverStatusProps>`
   color: #fff;
 `
 
-const CampaignCodeBadge = styled('div')`
+const CampaignCodeBadge = styled.div`
   padding: 0.5rem 1rem;
   line-height: 1;
   background: ${({ theme }) => theme.accent};
@@ -47,122 +41,110 @@ const CampaignCodeBadge = styled('div')`
   font-weight: bold;
 `
 
+const NotAvailableLabel = styled.div`
+  color: ${({ theme }) => theme.placeholderColor};
+`
+
+const NotAvailable: React.FC = () => (
+  <NotAvailableLabel>Not available</NotAvailableLabel>
+)
+
 export const ReferralsTab: React.FunctionComponent<{ memberId: string }> = ({
   memberId,
 }) => {
   const [referralInformation] = useGetReferralInformation(memberId)
-  const [referralCode, setReferralCode] = React.useState('')
-
-  /* MOCK DATA
-  const referralInformation = {
-    eligible: true,
-    campaign: { code: 'Meletis' },
-    hasReferred: [
-      {
-        memberId: '123',
-        name: 'Rasmus',
-        status: 'OFFER',
-      },
-      {
-        memberId: '654321',
-        name: 'Elvin',
-        status: 'OFFER',
-      },
-    ],
-  }
-   */
+  const eligible = referralInformation?.eligible
 
   return (
     <>
+      <Headline>Campaigns</Headline>
+
+      {/*
+      <ThirdLevelHeadline style={{ marginBottom: '-0.2rem' }}>
+        Redeemed campaigns
+      </ThirdLevelHeadline>
+      <CampaignsRedeemedTable />
+      */}
+      <CardsWrapper>
+        <Card>
+          <CampaignCodeInput />
+        </Card>
+      </CardsWrapper>
+
       <Headline>Referrals</Headline>
-      <ReferralsWrapper>
-        <CardsWrapper>
-          <Card span={2}>
-            <InfoContainer>
-              <InfoRow style={{ marginTop: '0.4rem' }}>
-                <span style={{ marginTop: '0.3rem' }}>Campaign Code</span>
+      <CardsWrapper>
+        <Card>
+          <InfoContainer>
+            <InfoRow>
+              <span style={{ marginTop: '0.3rem' }}>Hedvig Forever</span>
+              {referralInformation ? (
                 <InfoText>
-                  {(
-                    <CampaignCodeBadge>
-                      {referralInformation?.campaign.code.toUpperCase()}
-                    </CampaignCodeBadge>
-                  ) ?? 'Not available'}
+                  <ForeverStatusBadge eligible={eligible ?? false}>
+                    {eligible ? 'Activated' : 'Disabled'}
+                  </ForeverStatusBadge>
                 </InfoText>
-              </InfoRow>
-              <InfoRow style={{ marginTop: '1.5rem' }}>
-                <span style={{ marginTop: '0.3rem' }}>Hedvig Forever</span>
+              ) : (
+                <InfoText style={{ marginTop: '0.3rem' }}>
+                  <NotAvailable />
+                </InfoText>
+              )}
+            </InfoRow>
+            <InfoRow style={{ marginTop: '0.4rem' }}>
+              <span style={{ marginTop: '0.3rem' }}>Referral Code</span>
+              {eligible ? (
                 <InfoText>
-                  {referralInformation ? (
-                    <ForeverStatusBadge eligible={referralInformation.eligible}>
-                      {referralInformation.eligible ? 'Activated' : 'Disabled'}
-                    </ForeverStatusBadge>
-                  ) : (
-                    'Not available'
-                  )}
+                  <CampaignCodeBadge>
+                    {referralInformation?.campaign.code.toUpperCase()}
+                  </CampaignCodeBadge>
                 </InfoText>
-              </InfoRow>
-            </InfoContainer>
-          </Card>
-          <Card span={2}>
-            {referralInformation?.eligible ? (
-              <>
-                <Input
-                  placeholder={'Campaign code'}
-                  value={referralCode}
-                  onChange={(_e, { value }) => setReferralCode(value)}
-                />
-                <ButtonsGroup style={{ marginTop: '1.0rem' }}>
-                  <Button
-                    variation="primary"
-                    fullWidth
-                    onClick={() => console.log('Hello world')}
+              ) : (
+                <InfoText style={{ marginTop: '0.3rem' }}>
+                  <NotAvailable />
+                </InfoText>
+              )}
+            </InfoRow>
+            <InfoRow style={{ marginTop: '0.4rem' }}>
+              <span style={{ marginTop: '0.3rem' }}>Referred By</span>
+              {eligible && referralInformation?.referredBy ? (
+                <InfoText style={{ marginTop: '0.3rem' }}>
+                  <Link
+                    to={`/members/${referralInformation.referredBy.memberId}`}
                   >
-                    Unredeem
-                  </Button>
-                  <Button
-                    variation="primary"
-                    fullWidth
-                    onClick={() => console.log('Hello world')}
-                  >
-                    Redeem
-                  </Button>
-                </ButtonsGroup>
-              </>
-            ) : (
+                    {referralInformation.referredBy.name}
+                  </Link>
+                </InfoText>
+              ) : (
+                <InfoText style={{ marginTop: '0.3rem' }}>
+                  <NotAvailable />
+                </InfoText>
+              )}
+            </InfoRow>
+            {!eligible && (
               <Button
                 variation="primary"
                 fullWidth
                 onClick={() => console.log('Hello world')}
-                style={{ marginTop: '1.0rem' }}
+                style={{
+                  marginTop: '1.6rem',
+                }}
               >
                 Activate Hedvig Forever
               </Button>
             )}
-          </Card>
-        </CardsWrapper>
-      </ReferralsWrapper>
-      <ThirdLevelHeadline style={{ marginBottom: '-0.2rem' }}>
-        Members referred
-      </ThirdLevelHeadline>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell width={6}>Member id</Table.HeaderCell>
-            <Table.HeaderCell width={6}>Name</Table.HeaderCell>
-            <Table.HeaderCell width={6}>Status</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
+          </InfoContainer>
+        </Card>
+      </CardsWrapper>
 
-        <Table.Body>
-          {referralInformation?.hasReferred?.map((member) => (
-            <Table.Row key={member.memberId}>
-              <Table.Cell>{member.memberId}</Table.Cell>
-              <Table.Cell>{member.name}</Table.Cell>
-              <Table.Cell>{member.status}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {eligible && (
+        <>
+          <ThirdLevelHeadline style={{ marginBottom: '-0.2rem' }}>
+            Members referred
+          </ThirdLevelHeadline>
+          <MembersReferredTable
+            members={referralInformation?.hasReferred ?? []}
+          />
+        </>
+      )}
     </>
   )
 }

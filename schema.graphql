@@ -120,6 +120,9 @@ type MutationType {
   setContractForClaim(
     request: SetContractForClaim!
   ): Boolean!
+  manualRedeemCampaign(memberId: ID!, request: ManualRedeemCampaignInput!): Boolean!
+  manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
+  manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
 }
 
 type ClaimItem {
@@ -653,6 +656,7 @@ type Member {
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
+  pickedLocale: PickedLocale
   referralInformation: ReferralInformation
 }
 
@@ -675,6 +679,15 @@ type MemberReferral {
   incentive: Incentive!
 }
 
+input ManualRedeemCampaignInput {
+  campaignCode: String!
+  activationDate: LocalDate
+}
+
+input ManualUnRedeemCampaignInput {
+  campaignCode: String!
+}
+
 type ContractMarketInfo {
   market: Market!
   preferredCurrency: String!
@@ -683,6 +696,13 @@ type ContractMarketInfo {
 enum Market {
   SWEDEN
   NORWAY
+}
+
+enum PickedLocale {
+  sv_SE
+  en_SE
+  nb_NO
+  en_NO
 }
 
 enum Gender {

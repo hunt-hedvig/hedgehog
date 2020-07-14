@@ -68,7 +68,7 @@ export default class Member extends React.Component {
   getMemberPageTitle = (member) =>
     `${member && (member.firstName || '') + ' ' + (member.lastName || '')}`
 
-  componentDidMount() {
+  getMemberData = () => {
     const {
       match: {
         params: { memberId },
@@ -83,6 +83,16 @@ export default class Member extends React.Component {
     insuranceRequest(memberId)
     claimsByMember(memberId)
     insurancesListRequest(memberId)
+  }
+
+  componentDidMount() {
+    this.getMemberData()
+  }
+
+  componentDidUpdate(prevProps, prevState, prevContext) {
+    if (prevProps.match.params.memberId !== this.props.match.params.memberId) {
+      this.getMemberData()
+    }
   }
 
   render() {
