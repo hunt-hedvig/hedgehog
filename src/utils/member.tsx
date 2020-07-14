@@ -30,12 +30,7 @@ export const isMemberIdEven = (memberId: string) => {
   return isMemberIdEvenReally
 }
 
-const tomasMemberId = 185188729
 export const getMemberIdColor = (memberId: string) => {
-  if (parseInt(memberId, 10) === tomasMemberId) {
-    return '#000'
-  }
-
   if (isMemberIdEven(memberId)) {
     return lightTheme.danger
   }
