@@ -1,23 +1,16 @@
+import { MembersReferredTable } from 'components/member/tabs/campaigns-tab/referrals/MembersReferredTable'
 import {
   InfoContainer,
   InfoRow,
   InfoText,
 } from 'components/member/tabs/contracts-tab/contract'
-import { CampaignCodeInput } from 'components/member/tabs/referrals-tab/CampaignCodeInput'
-import { CampaignsRedeemedTable } from 'components/member/tabs/referrals-tab/CampaignsRedeemedTable'
-import { MembersReferredTable } from 'components/member/tabs/referrals-tab/MembersReferredTable'
 import { useGetReferralInformation } from 'graphql/use-get-referral-information'
 import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
-
-const Headline = styled(MainHeadline)`
-  display: flex;
-  align-items: center;
-`
 
 interface ForeverStatusProps {
   eligible: boolean
@@ -49,29 +42,25 @@ const NotAvailable: React.FC = () => (
   <NotAvailableLabel>Not available</NotAvailableLabel>
 )
 
-export const ReferralsTab: React.FunctionComponent<{ memberId: string }> = ({
+export const ReferralsInfo: React.FunctionComponent<{ memberId: string }> = ({
   memberId,
 }) => {
-  const [referralInformation] = useGetReferralInformation(memberId)
+  const [referralInformation, { loading, error }] = useGetReferralInformation(
+    memberId,
+  )
+
   const eligible = referralInformation?.eligible
+
+  if (loading) {
+    return <>Loading...</>
+  }
+
+  if (error) {
+    return <>Something went wrong!</>
+  }
 
   return (
     <>
-      <Headline>Campaigns</Headline>
-
-      {/*
-      <ThirdLevelHeadline style={{ marginBottom: '-0.2rem' }}>
-        Redeemed campaigns
-      </ThirdLevelHeadline>
-      <CampaignsRedeemedTable />
-      */}
-      <CardsWrapper>
-        <Card>
-          <CampaignCodeInput />
-        </Card>
-      </CardsWrapper>
-
-      <Headline>Referrals</Headline>
       <CardsWrapper>
         <Card>
           <InfoContainer>

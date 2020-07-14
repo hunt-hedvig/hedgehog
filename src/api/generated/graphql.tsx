@@ -761,6 +761,15 @@ export type LuggageDelayClaim = {
   ticket?: Maybe<Scalars['String']>
 }
 
+export type ManualRedeemCampaignInput = {
+  campaignCode: Scalars['String']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type ManualUnRedeemCampaignInput = {
+  campaignCode: Scalars['String']
+}
+
 export enum Market {
   Sweden = 'SWEDEN',
   Norway = 'NORWAY',
@@ -791,6 +800,7 @@ export type Member = {
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
+  pickedLocale?: Maybe<PickedLocale>
   referralInformation?: Maybe<ReferralInformation>
 }
 
@@ -885,6 +895,9 @@ export type MutationType = {
   upsertValuationRule: Scalars['ID']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   setContractForClaim: Scalars['Boolean']
+  manualRedeemCampaign: Scalars['Boolean']
+  manualUnRedeemCampaign: Scalars['Boolean']
+  manualRedeemEnableReferralsCampaign: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1137,6 +1150,21 @@ export type MutationTypeSetContractForClaimArgs = {
   request: SetContractForClaim
 }
 
+export type MutationTypeManualRedeemCampaignArgs = {
+  memberId: Scalars['ID']
+  request: ManualRedeemCampaignInput
+}
+
+export type MutationTypeManualUnRedeemCampaignArgs = {
+  memberId: Scalars['ID']
+  request: ManualUnRedeemCampaignInput
+}
+
+export type MutationTypeManualRedeemEnableReferralsCampaignArgs = {
+  memberId: Scalars['ID']
+  market: Market
+}
+
 export type NoDiscount = {
   __typename?: 'NoDiscount'
   _?: Maybe<Scalars['Boolean']>
@@ -1292,6 +1320,13 @@ export type PersonStatus = {
   __typename?: 'PersonStatus'
   flag?: Maybe<Flag>
   whitelisted?: Maybe<Scalars['Boolean']>
+}
+
+export enum PickedLocale {
+  SvSe = 'sv_SE',
+  EnSe = 'en_SE',
+  NbNo = 'nb_NO',
+  EnNo = 'en_NO',
 }
 
 export type QueryType = {
@@ -2485,6 +2520,24 @@ export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
       }
   >
 }
+
+export type ManualRedeemCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  request: ManualRedeemCampaignInput
+}
+
+export type ManualRedeemCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualRedeemCampaign'>
+
+export type ManualUnRedeemCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  request: ManualUnRedeemCampaignInput
+}
+
+export type ManualUnRedeemCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualUnRedeemCampaign'>
 
 export type MarkQuestionAsResolvedMutationVariables = {
   memberId: Scalars['ID']
@@ -4574,6 +4627,110 @@ export type GetReferralInformationLazyQueryHookResult = ReturnType<
 export type GetReferralInformationQueryResult = ApolloReactCommon.QueryResult<
   GetReferralInformationQuery,
   GetReferralInformationQueryVariables
+>
+export const ManualRedeemCampaignDocument = gql`
+  mutation ManualRedeemCampaign(
+    $memberId: ID!
+    $request: ManualRedeemCampaignInput!
+  ) {
+    manualRedeemCampaign(memberId: $memberId, request: $request)
+  }
+`
+export type ManualRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualRedeemCampaignMutation,
+  ManualRedeemCampaignMutationVariables
+>
+
+/**
+ * __useManualRedeemCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualRedeemCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualRedeemCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualRedeemCampaignMutation, { data, loading, error }] = useManualRedeemCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useManualRedeemCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualRedeemCampaignMutation,
+    ManualRedeemCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualRedeemCampaignMutation,
+    ManualRedeemCampaignMutationVariables
+  >(ManualRedeemCampaignDocument, baseOptions)
+}
+export type ManualRedeemCampaignMutationHookResult = ReturnType<
+  typeof useManualRedeemCampaignMutation
+>
+export type ManualRedeemCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualRedeemCampaignMutation
+>
+export type ManualRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualRedeemCampaignMutation,
+  ManualRedeemCampaignMutationVariables
+>
+export const ManualUnRedeemCampaignDocument = gql`
+  mutation ManualUnRedeemCampaign(
+    $memberId: ID!
+    $request: ManualUnRedeemCampaignInput!
+  ) {
+    manualUnRedeemCampaign(memberId: $memberId, request: $request)
+  }
+`
+export type ManualUnRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualUnRedeemCampaignMutation,
+  ManualUnRedeemCampaignMutationVariables
+>
+
+/**
+ * __useManualUnRedeemCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualUnRedeemCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualUnRedeemCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualUnRedeemCampaignMutation, { data, loading, error }] = useManualUnRedeemCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useManualUnRedeemCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualUnRedeemCampaignMutation,
+    ManualUnRedeemCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualUnRedeemCampaignMutation,
+    ManualUnRedeemCampaignMutationVariables
+  >(ManualUnRedeemCampaignDocument, baseOptions)
+}
+export type ManualUnRedeemCampaignMutationHookResult = ReturnType<
+  typeof useManualUnRedeemCampaignMutation
+>
+export type ManualUnRedeemCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualUnRedeemCampaignMutation
+>
+export type ManualUnRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualUnRedeemCampaignMutation,
+  ManualUnRedeemCampaignMutationVariables
 >
 export const MarkQuestionAsResolvedDocument = gql`
   mutation MarkQuestionAsResolved($memberId: ID!) {
