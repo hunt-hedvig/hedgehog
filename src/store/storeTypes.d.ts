@@ -12,7 +12,6 @@ export interface BackofficeStore {
   assets: any
   client: any
   poll: any
-  messages: any
   members: MembersStore
   dashboard: any
   claims: ClaimsStore

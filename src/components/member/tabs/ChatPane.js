@@ -55,6 +55,8 @@ export const ChatPane = ({ memberId }) => {
       <Resizable
         style={resizableStyles}
         defaultSize={{ width: '400px', height: '80%' }}
+        maxWidth={'90vw'}
+        maxHeight={'85vh'}
         enable={{ left: true }}
       >
         <ChatHeader visible={visible} onResizeClick={onResizeClick} />

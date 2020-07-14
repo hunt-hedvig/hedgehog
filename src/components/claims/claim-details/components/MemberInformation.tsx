@@ -42,7 +42,7 @@ const MemberName = styled('h2')({
   marginBottom: '2rem',
 })
 
-const MemberInformation: React.SFC<{
+const MemberInformation: React.FC<{
   member: Member
   contract: Contract | undefined
 }> = ({ member, contract }) => {
@@ -64,8 +64,7 @@ const MemberInformation: React.SFC<{
       </p>
       {address && (
         <p>
-          <b>Address:</b> {address?.street}, {address?.postalCode}{' '}
-          {address.city}
+          <b>Address:</b> {address.street}, {address.postalCode} {address.city}
         </p>
       )}
 

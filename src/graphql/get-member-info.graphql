@@ -11,10 +11,5 @@ query GetMemberInfo($memberId: ID!) {
     fraudulentStatusDescription
     signedOn
     createdOn
-    pickedLocale
-    contractMarketInfo {
-      market
-      preferredCurrency
-    }
   }
 }

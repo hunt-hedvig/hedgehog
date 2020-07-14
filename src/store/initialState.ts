@@ -18,9 +18,6 @@ const initialState: BackofficeStore = {
   poll: {
     polling: false,
   },
-  messages: {
-    member: null,
-  },
   members: {
     list: [],
     searchResult: {

@@ -88,7 +88,4 @@ export default {
       method: 'post',
     },
   },
-  ws: {
-    messages: '/messages/',
-  },
 }
