@@ -1,4 +1,3 @@
-import * as claimDetailsActions from './claimDetailsActions'
 import * as claimsActions from './claimsActions'
 import * as clientActions from './clientActions'
 import * as loginActions from './loginActions'
@@ -12,7 +11,6 @@ export default {
   clientActions,
   membersActions,
   claimsActions,
-  claimDetailsActions,
   paymentActions,
   payoutDetailsActions,
   notificationsActions,

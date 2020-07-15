@@ -1,5 +1,4 @@
 import auth from './authReducer'
-import claimDetails from './claimDetailsReducer'
 import claims from './claimsReducer'
 import client from './clientReducer'
 import login from './loginReducer'
@@ -13,7 +12,6 @@ export default {
   client,
   members,
   claims,
-  claimDetails,
   payoutDetails,
   notifications,
 }
