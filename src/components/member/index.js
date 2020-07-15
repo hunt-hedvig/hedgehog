@@ -74,15 +74,11 @@ export default class Member extends React.Component {
         params: { memberId },
       },
       memberRequest,
-      insuranceRequest,
-      insurancesListRequest,
       claimsByMember,
     } = this.props
 
     memberRequest(memberId)
-    insuranceRequest(memberId)
     claimsByMember(memberId)
-    insurancesListRequest(memberId)
   }
 
   componentDidMount() {
@@ -161,14 +157,12 @@ export default class Member extends React.Component {
                     </MemberDetailLink>
                   </Popover>
                 </MemberDetails>
-                {this.props.insurance.requesting || (
-                  <Tab
-                    style={{ height: '100%' }}
-                    panes={panes}
-                    renderActiveOnly={true}
-                    defaultActiveIndex={4}
-                  />
-                )}
+                <Tab
+                  style={{ height: '100%' }}
+                  panes={panes}
+                  renderActiveOnly={true}
+                  defaultActiveIndex={4}
+                />
               </MemberPageContainer>
               <ChatPane {...this.props} />
             </MemberPageWrapper>
