@@ -15,7 +15,7 @@ import {
   MembersSearchResult,
 } from 'store/storeTypes'
 import { MemberAge } from 'utils/member'
-import { InsuranceStatusBadge } from '../../utils/agreement'
+import { InsuranceStatusBadge } from 'utils/agreement'
 import { MemberSuggestions } from './member-suggestions'
 
 export interface Props {
@@ -93,7 +93,7 @@ export const MembersSearch: React.FC<Props> = ({
       <Search
         onSubmit={(submittedQuery, submittedIncludeAll) => {
           searchMemberRequest({
-            query: submittedQuery,
+            query: submittedQuery !== '' ? submittedQuery : '%',
             includeAll: submittedIncludeAll,
           })
           setHasDispatchedSearch(true)

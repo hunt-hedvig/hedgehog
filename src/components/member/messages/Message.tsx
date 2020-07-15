@@ -11,6 +11,7 @@ const MessageRow = styled.div<
   WithLeft & { isQuestion?: boolean; isVisible: boolean }
 >`
   display: flex;
+  flex-shrink: 0;
   justify-content: ${(props) => (props.left ? 'flex-end' : 'flex-start')};
   margin: ${(props) => (props.isQuestion ? '0px' : '0.5rem 0')};
   width: 100%;

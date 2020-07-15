@@ -634,20 +634,19 @@ type MonthlySubscription {
 
 type Member {
   memberId: ID!
-  email: String
-  phoneNumber: String
+  signedOn: Instant
   firstName: String
   lastName: String
   personalNumber: String
-  birthDate: LocalDate
   gender: Gender
-  fraudulentStatus: String
-  fraudulentStatusDescription: String
-  createdOn: Instant
-  signedOn: Instant
+  address: String
+  postalNumber: String
+  city: String
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
+  fraudulentStatus: String
+  fraudulentStatusDescription: String
   sanctionStatus: SanctionStatus
   account: Account
   fileUploads: [FileUpload!]!

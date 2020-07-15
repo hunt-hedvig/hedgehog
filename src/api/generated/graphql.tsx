@@ -13,10 +13,10 @@ export type Scalars = {
   YearMonth: any
   /** An object-representation of `javax.money.MonetaryAmount`, ex: `{"amount": 100  "currency": "SEK"}` */
   MonetaryAmount: any
-  /** A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"` */
-  LocalDate: any
   /** A String-representation of `java.time.Instant`, ex: `"2018-06-11T20:08:30.123456"` */
   Instant: any
+  /** A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"` */
+  LocalDate: any
   /** A String-representation of `java.net.URL`, ex: "https://www.google.com/" */
   URL: any
   /** A String-representation of `java.time.LocalDateTIme`, ex: `"2018-06-11T20:08:30.123456"` */
@@ -778,20 +778,19 @@ export enum Market {
 export type Member = {
   __typename?: 'Member'
   memberId: Scalars['ID']
-  email?: Maybe<Scalars['String']>
-  phoneNumber?: Maybe<Scalars['String']>
+  signedOn?: Maybe<Scalars['Instant']>
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   personalNumber?: Maybe<Scalars['String']>
-  birthDate?: Maybe<Scalars['LocalDate']>
   gender?: Maybe<Gender>
-  fraudulentStatus?: Maybe<Scalars['String']>
-  fraudulentStatusDescription?: Maybe<Scalars['String']>
-  createdOn?: Maybe<Scalars['Instant']>
-  signedOn?: Maybe<Scalars['Instant']>
+  address?: Maybe<Scalars['String']>
+  postalNumber?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
   transactions?: Maybe<Array<Maybe<Transaction>>>
   directDebitStatus?: Maybe<DirectDebitStatus>
   monthlySubscription?: Maybe<MonthlySubscription>
+  fraudulentStatus?: Maybe<Scalars['String']>
+  fraudulentStatusDescription?: Maybe<Scalars['String']>
   sanctionStatus?: Maybe<SanctionStatus>
   account?: Maybe<Account>
   fileUploads: Array<FileUpload>

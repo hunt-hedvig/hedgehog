@@ -201,7 +201,5 @@ Member.propTypes = {
   memberRequest: PropTypes.func.isRequired,
   clearMessagesList: PropTypes.func.isRequired,
   claimsByMember: PropTypes.func.isRequired,
-  insuranceRequest: PropTypes.func.isRequired,
-  insurancesListRequest: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 }

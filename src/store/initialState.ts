@@ -81,12 +81,6 @@ const initialState: BackofficeStore = {
     requesting: false,
     errors: null,
   },
-  insurance: {
-    requesting: false,
-    data: null,
-    list: [],
-    error: [],
-  },
   notifications: [],
   memberInsurance: {
     searchFilter: {
