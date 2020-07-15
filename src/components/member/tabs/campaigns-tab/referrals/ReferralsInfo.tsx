@@ -1,3 +1,7 @@
+import {
+  Market,
+  useManualRedeemEnableReferralsCampaignMutation,
+} from 'api/generated/graphql'
 import { MembersReferredTable } from 'components/member/tabs/campaigns-tab/referrals/MembersReferredTable'
 import {
   InfoContainer,
@@ -42,12 +46,18 @@ const NotAvailable: React.FC = () => (
   <NotAvailableLabel>Not available</NotAvailableLabel>
 )
 
-export const ReferralsInfo: React.FunctionComponent<{ memberId: string }> = ({
-  memberId,
-}) => {
+export const ReferralsInfo: React.FunctionComponent<{
+  memberId: string
+  market?: Market
+}> = ({ memberId, market }) => {
   const [referralInformation, { loading, error }] = useGetReferralInformation(
     memberId,
   )
+
+  const [
+    enableReferralsCampaign,
+    { loading: loadingEnableReferral },
+  ] = useManualRedeemEnableReferralsCampaignMutation()
 
   const eligible = referralInformation?.eligible
 
@@ -108,11 +118,26 @@ export const ReferralsInfo: React.FunctionComponent<{ memberId: string }> = ({
                 </InfoText>
               )}
             </InfoRow>
-            {!eligible && (
+            {!eligible && market && (
               <Button
                 variation="primary"
                 fullWidth
-                onClick={() => console.log('Hello world')}
+                loading={loadingEnableReferral || loading}
+                onClick={() =>
+                  enableReferralsCampaign({
+                    variables: {
+                      memberId,
+                      market: Market.Norway,
+                    },
+                    refetchQueries: () => ['GetReferralInformation'],
+                  })
+                    .then(() => {
+                      console.log('Success')
+                    })
+                    .catch(() => {
+                      console.log('Error')
+                    })
+                }
                 style={{
                   marginTop: '1.6rem',
                 }}

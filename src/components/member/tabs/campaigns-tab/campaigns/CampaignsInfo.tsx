@@ -9,12 +9,12 @@ export const CampaignsInfo: React.FunctionComponent<{ memberId: string }> = ({
 }) => {
   return (
     <>
-      <ThirdLevelHeadline style={{ marginBottom: '-0.2rem' }}>
-        Redeemed campaigns
-      </ThirdLevelHeadline>
-      <CampaignsRedeemedTable />
+      <ThirdLevelHeadline>Redeemed campaigns</ThirdLevelHeadline>
       <CardsWrapper>
-        <Card>
+        <Card span={2}>
+          <CampaignsRedeemedTable />
+        </Card>
+        <Card span={2}>
           <CampaignCodeInput memberId={memberId} />
         </Card>
       </CardsWrapper>

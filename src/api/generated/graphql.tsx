@@ -13,10 +13,10 @@ export type Scalars = {
   YearMonth: any
   /** An object-representation of `javax.money.MonetaryAmount`, ex: `{"amount": 100  "currency": "SEK"}` */
   MonetaryAmount: any
-  /** A String-representation of `java.time.Instant`, ex: `"2018-06-11T20:08:30.123456"` */
-  Instant: any
   /** A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"` */
   LocalDate: any
+  /** A String-representation of `java.time.Instant`, ex: `"2018-06-11T20:08:30.123456"` */
+  Instant: any
   /** A String-representation of `java.net.URL`, ex: "https://www.google.com/" */
   URL: any
   /** A String-representation of `java.time.LocalDateTIme`, ex: `"2018-06-11T20:08:30.123456"` */
@@ -778,19 +778,20 @@ export enum Market {
 export type Member = {
   __typename?: 'Member'
   memberId: Scalars['ID']
-  signedOn?: Maybe<Scalars['Instant']>
+  email?: Maybe<Scalars['String']>
+  phoneNumber?: Maybe<Scalars['String']>
   firstName?: Maybe<Scalars['String']>
   lastName?: Maybe<Scalars['String']>
   personalNumber?: Maybe<Scalars['String']>
+  birthDate?: Maybe<Scalars['LocalDate']>
   gender?: Maybe<Gender>
-  address?: Maybe<Scalars['String']>
-  postalNumber?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
+  fraudulentStatus?: Maybe<Scalars['String']>
+  fraudulentStatusDescription?: Maybe<Scalars['String']>
+  createdOn?: Maybe<Scalars['Instant']>
+  signedOn?: Maybe<Scalars['Instant']>
   transactions?: Maybe<Array<Maybe<Transaction>>>
   directDebitStatus?: Maybe<DirectDebitStatus>
   monthlySubscription?: Maybe<MonthlySubscription>
-  fraudulentStatus?: Maybe<Scalars['String']>
-  fraudulentStatusDescription?: Maybe<Scalars['String']>
   sanctionStatus?: Maybe<SanctionStatus>
   account?: Maybe<Account>
   fileUploads: Array<FileUpload>
@@ -1482,6 +1483,23 @@ export enum QuoteState {
   Expired = 'EXPIRED',
 }
 
+export type RedeemedCampaign = {
+  __typename?: 'RedeemedCampaign'
+  code: Scalars['String']
+  type: Scalars['String']
+  incentive: Incentive
+  redemptionState: RedemptionState
+}
+
+export type RedemptionState = {
+  __typename?: 'RedemptionState'
+  redeemedAt: Scalars['Instant']
+  activatedAt?: Maybe<Scalars['Instant']>
+  activeTo?: Maybe<Scalars['Instant']>
+  terminatedAt?: Maybe<Scalars['Instant']>
+  unRedeemedAt?: Maybe<Scalars['Instant']>
+}
+
 export type ReferralCampaign = {
   __typename?: 'ReferralCampaign'
   code: Scalars['String']
@@ -1494,6 +1512,7 @@ export type ReferralInformation = {
   campaign: ReferralCampaign
   referredBy?: Maybe<MemberReferral>
   hasReferred: Array<MemberReferral>
+  redeemedCampaigns: Array<RedeemedCampaign>
 }
 
 export type RemindNotification = {
@@ -2529,6 +2548,15 @@ export type ManualRedeemCampaignMutationVariables = {
 export type ManualRedeemCampaignMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'manualRedeemCampaign'>
+
+export type ManualRedeemEnableReferralsCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  market: Market
+}
+
+export type ManualRedeemEnableReferralsCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualRedeemEnableReferralsCampaign'>
 
 export type ManualUnRedeemCampaignMutationVariables = {
   memberId: Scalars['ID']
@@ -4679,6 +4707,58 @@ export type ManualRedeemCampaignMutationResult = ApolloReactCommon.MutationResul
 export type ManualRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ManualRedeemCampaignMutation,
   ManualRedeemCampaignMutationVariables
+>
+export const ManualRedeemEnableReferralsCampaignDocument = gql`
+  mutation ManualRedeemEnableReferralsCampaign(
+    $memberId: ID!
+    $market: Market!
+  ) {
+    manualRedeemEnableReferralsCampaign(memberId: $memberId, market: $market)
+  }
+`
+export type ManualRedeemEnableReferralsCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualRedeemEnableReferralsCampaignMutation,
+  ManualRedeemEnableReferralsCampaignMutationVariables
+>
+
+/**
+ * __useManualRedeemEnableReferralsCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualRedeemEnableReferralsCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualRedeemEnableReferralsCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualRedeemEnableReferralsCampaignMutation, { data, loading, error }] = useManualRedeemEnableReferralsCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      market: // value for 'market'
+ *   },
+ * });
+ */
+export function useManualRedeemEnableReferralsCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualRedeemEnableReferralsCampaignMutation,
+    ManualRedeemEnableReferralsCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualRedeemEnableReferralsCampaignMutation,
+    ManualRedeemEnableReferralsCampaignMutationVariables
+  >(ManualRedeemEnableReferralsCampaignDocument, baseOptions)
+}
+export type ManualRedeemEnableReferralsCampaignMutationHookResult = ReturnType<
+  typeof useManualRedeemEnableReferralsCampaignMutation
+>
+export type ManualRedeemEnableReferralsCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualRedeemEnableReferralsCampaignMutation
+>
+export type ManualRedeemEnableReferralsCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualRedeemEnableReferralsCampaignMutation,
+  ManualRedeemEnableReferralsCampaignMutationVariables
 >
 export const ManualUnRedeemCampaignDocument = gql`
   mutation ManualUnRedeemCampaign(

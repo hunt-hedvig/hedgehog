@@ -634,19 +634,20 @@ type MonthlySubscription {
 
 type Member {
   memberId: ID!
-  signedOn: Instant
+  email: String
+  phoneNumber: String
   firstName: String
   lastName: String
   personalNumber: String
+  birthDate: LocalDate
   gender: Gender
-  address: String
-  postalNumber: String
-  city: String
+  fraudulentStatus: String
+  fraudulentStatusDescription: String
+  createdOn: Instant
+  signedOn: Instant
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
-  fraudulentStatus: String
-  fraudulentStatusDescription: String
   sanctionStatus: SanctionStatus
   account: Account
   fileUploads: [FileUpload!]!
@@ -665,6 +666,22 @@ type ReferralInformation {
   campaign: ReferralCampaign!
   referredBy: MemberReferral
   hasReferred: [MemberReferral!]!
+  redeemedCampaigns: [RedeemedCampaign!]!
+}
+
+type RedeemedCampaign {
+  code: String!
+  type: String!
+  incentive: Incentive!
+  redemptionState: RedemptionState!
+}
+
+type RedemptionState {
+  redeemedAt: Instant!
+  activatedAt: Instant
+  activeTo: Instant
+  terminatedAt: Instant
+  unRedeemedAt: Instant
 }
 
 type ReferralCampaign {

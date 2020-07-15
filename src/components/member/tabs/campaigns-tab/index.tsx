@@ -1,3 +1,4 @@
+import { ContractMarketInfo } from 'api/generated/graphql'
 import { CampaignsInfo } from 'components/member/tabs/campaigns-tab/campaigns/CampaignsInfo'
 import { ReferralsInfo } from 'components/member/tabs/campaigns-tab/referrals/ReferralsInfo'
 import { MainHeadline } from 'hedvig-ui/typography'
@@ -9,16 +10,17 @@ const Headline = styled(MainHeadline)`
   align-items: center;
 `
 
-export const CampaignsTab: React.FunctionComponent<{ memberId: string }> = ({
-  memberId,
-}) => {
+export const CampaignsTab: React.FunctionComponent<{
+  memberId: string
+  contractMarketInfo: ContractMarketInfo
+}> = ({ memberId, contractMarketInfo }) => {
   return (
     <>
       <Headline>Campaigns</Headline>
       <CampaignsInfo memberId={memberId} />
 
       <Headline>Referrals</Headline>
-      <ReferralsInfo memberId={memberId} />
+      <ReferralsInfo memberId={memberId} market={contractMarketInfo?.market} />
     </>
   )
 }
