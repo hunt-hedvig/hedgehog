@@ -6,12 +6,7 @@ import actions from 'store/actions'
 
 const ChatPage = (props) => <Member {...props} />
 
-const mapStateToProps = ({
-  messages,
-  claims,
-  auth,
-  payoutDetails,
-}) => ({
+const mapStateToProps = ({ messages, claims, auth, payoutDetails }) => ({
   memberClaims: claims.memberClaims,
   messages,
   auth,

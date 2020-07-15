@@ -14,8 +14,8 @@ import {
   MemberSearchResultItem,
   MembersSearchResult,
 } from 'store/storeTypes'
-import { MemberAge } from 'utils/member'
 import { InsuranceStatusBadge } from 'utils/agreement'
+import { MemberAge } from 'utils/member'
 import { MemberSuggestions } from './member-suggestions'
 
 export interface Props {
@@ -279,7 +279,7 @@ const Search: React.FC<{
 const ListHeader: React.FC = () => (
   <Table.Header>
     <Table.HeaderCell>Member</Table.HeaderCell>
-    <Table.HeaderCell></Table.HeaderCell>
+    <Table.HeaderCell />
     <Table.HeaderCell>Sign up</Table.HeaderCell>
     <Table.HeaderCell>Active from</Table.HeaderCell>
     <Table.HeaderCell>Active to</Table.HeaderCell>
