@@ -5,12 +5,10 @@ import MembersSaga from './membersSaga'
 import NotesSaga from './notesSaga'
 import PaymentsSaga from './paymentsSaga'
 import PayoutSaga from './payoutSaga'
-import PollingSaga from './pollingSaga'
 
 export default function* IndexSaga() {
   yield [
     AuthSaga(),
-    PollingSaga(),
     MembersSaga(),
     ClaimsSaga(),
     ClaimDetailsSaga(),
