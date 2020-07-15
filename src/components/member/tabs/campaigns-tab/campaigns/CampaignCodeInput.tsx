@@ -29,6 +29,26 @@ export const CampaignCodeInput: React.FunctionComponent<{
     { loading, error },
   ] = useManualRedeemCampaignMutation()
 
+  const getStatusMessage = () => {
+    if (success) {
+      return (
+        <Message
+          success
+          style={{ width: '100%' }}
+          header={`Campaign code ${campaignCode.toUpperCase()} redeemed`}
+        />
+      )
+    } else {
+      return (
+        <Message
+          error
+          style={{ width: '100%' }}
+          header={`Could not redeem campaign code ${campaignCode.toUpperCase()}`}
+        />
+      )
+    }
+  }
+
   return (
     <>
       <Group>
@@ -91,19 +111,7 @@ export const CampaignCodeInput: React.FunctionComponent<{
           Redeem
         </Button>
       </Group>
-      {success ? (
-        <Message
-          success
-          style={{ width: '100%' }}
-          header={`Campaign code ${campaignCode.toUpperCase()} redeemed`}
-        />
-      ) : (
-        <Message
-          error
-          style={{ width: '100%' }}
-          header={`Could not redeem campaign code ${campaignCode.toUpperCase()}`}
-        />
-      )}
+      {success !== null && getStatusMessage()}
     </>
   )
 }

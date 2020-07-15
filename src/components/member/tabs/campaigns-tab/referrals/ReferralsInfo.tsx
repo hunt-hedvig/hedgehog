@@ -1,20 +1,17 @@
-import {
-  Market,
-  useManualRedeemEnableReferralsCampaignMutation,
-} from 'api/generated/graphql'
-import { MembersReferredTable } from 'components/member/tabs/campaigns-tab/referrals/MembersReferredTable'
+import { Market } from 'api/generated/graphql'
 import {
   InfoContainer,
   InfoRow,
   InfoText,
 } from 'components/member/tabs/contracts-tab/contract'
 import { useGetReferralInformation } from 'graphql/use-get-referral-information'
-import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
+import { EnableReferralButton } from './EnableReferralButton'
+import { MembersReferredTable } from './MembersReferredTable'
 
 interface ForeverStatusProps {
   eligible: boolean
@@ -53,11 +50,6 @@ export const ReferralsInfo: React.FunctionComponent<{
   const [referralInformation, { loading, error }] = useGetReferralInformation(
     memberId,
   )
-
-  const [
-    enableReferralsCampaign,
-    { loading: loadingEnableReferral },
-  ] = useManualRedeemEnableReferralsCampaignMutation()
 
   const eligible = referralInformation?.eligible
 
@@ -119,31 +111,7 @@ export const ReferralsInfo: React.FunctionComponent<{
               )}
             </InfoRow>
             {!eligible && market && (
-              <Button
-                variation="primary"
-                fullWidth
-                loading={loadingEnableReferral || loading}
-                onClick={() =>
-                  enableReferralsCampaign({
-                    variables: {
-                      memberId,
-                      market: Market.Norway,
-                    },
-                    refetchQueries: () => ['GetReferralInformation'],
-                  })
-                    .then(() => {
-                      console.log('Success')
-                    })
-                    .catch(() => {
-                      console.log('Error')
-                    })
-                }
-                style={{
-                  marginTop: '1.6rem',
-                }}
-              >
-                Activate Hedvig Forever
-              </Button>
+              <EnableReferralButton market={market} memberId={memberId} />
             )}
           </InfoContainer>
         </Card>
