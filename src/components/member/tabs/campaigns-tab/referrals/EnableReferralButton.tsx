@@ -22,13 +22,18 @@ export const EnableReferralButton: React.FunctionComponent<{
         fullWidth
         loading={loading}
         onClick={() => {
-          enableReferralsCampaign({
-            variables: {
-              memberId,
-              market,
-            },
-            refetchQueries: () => ['GetReferralInformation'],
-          }).then()
+          const confirm = window.confirm(
+            'Are you sure you want to activate referrals for this member?',
+          )
+          if (confirm) {
+            enableReferralsCampaign({
+              variables: {
+                memberId,
+                market,
+              },
+              refetchQueries: () => ['GetReferralInformation'],
+            }).then()
+          }
         }}
         style={{
           marginTop: '1.6rem',

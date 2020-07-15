@@ -55,7 +55,6 @@ export const CampaignCodeInput: React.FunctionComponent<{
         <Input
           placeholder={'Campaign code'}
           value={campaignCode}
-          fullWidth
           onChange={(_e, { value }) => {
             setCampaignCode(value)
             setSuccess(null)
@@ -92,20 +91,25 @@ export const CampaignCodeInput: React.FunctionComponent<{
           disabled={campaignCode === '' || !!error}
           loading={loading}
           onClick={() => {
-            manualRedeemCampaign({
-              variables: {
-                memberId,
-                request: { campaignCode, activationDate },
-              },
-              refetchQueries: () => ['GetReferralInformation'],
-            })
-              .then(() => {
-                setCampaignCode('')
-                setSuccess(true)
+            const confirm = window.confirm(
+              `Are you sure you want to redeem the campaign code ${campaignCode.toUpperCase()}?`,
+            )
+            if (confirm) {
+              manualRedeemCampaign({
+                variables: {
+                  memberId,
+                  request: { campaignCode, activationDate },
+                },
+                refetchQueries: () => ['GetReferralInformation'],
               })
-              .catch(() => {
-                setSuccess(false)
-              })
+                .then(() => {
+                  setCampaignCode('')
+                  setSuccess(true)
+                })
+                .catch(() => {
+                  setSuccess(false)
+                })
+            }
           }}
         >
           Redeem

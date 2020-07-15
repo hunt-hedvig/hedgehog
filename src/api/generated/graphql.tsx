@@ -2496,6 +2496,23 @@ export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
             ReferralInformation,
             'eligible'
           > & {
+              redeemedCampaigns: Array<
+                { __typename?: 'RedeemedCampaign' } & Pick<
+                  RedeemedCampaign,
+                  'code' | 'type'
+                > & {
+                    redemptionState: { __typename?: 'RedemptionState' } & Pick<
+                      RedemptionState,
+                      'redeemedAt' | 'activatedAt' | 'activeTo' | 'unRedeemedAt'
+                    >
+                    incentive:
+                      | { __typename: 'MonthlyPercentageDiscountFixedPeriod' }
+                      | { __typename: 'FreeMonths' }
+                      | { __typename: 'CostDeduction' }
+                      | { __typename: 'NoDiscount' }
+                      | { __typename: 'IndefinitePercentageDiscount' }
+                  }
+              >
               campaign: { __typename?: 'ReferralCampaign' } & Pick<
                 ReferralCampaign,
                 'code'
@@ -4571,6 +4588,19 @@ export const GetReferralInformationDocument = gql`
       memberId
       referralInformation {
         eligible
+        redeemedCampaigns {
+          code
+          type
+          redemptionState {
+            redeemedAt
+            activatedAt
+            activeTo
+            unRedeemedAt
+          }
+          incentive {
+            __typename
+          }
+        }
         campaign {
           code
           incentive {

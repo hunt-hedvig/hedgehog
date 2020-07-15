@@ -1,10 +1,9 @@
-import { Market } from 'api/generated/graphql'
+import { Market, ReferralInformation } from 'api/generated/graphql'
 import {
   InfoContainer,
   InfoRow,
   InfoText,
 } from 'components/member/tabs/contracts-tab/contract'
-import { useGetReferralInformation } from 'graphql/use-get-referral-information'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
@@ -45,21 +44,10 @@ const NotAvailable: React.FC = () => (
 
 export const ReferralsInfo: React.FunctionComponent<{
   memberId: string
+  referralInformation: ReferralInformation
   market?: Market
-}> = ({ memberId, market }) => {
-  const [referralInformation, { loading, error }] = useGetReferralInformation(
-    memberId,
-  )
-
-  const eligible = referralInformation?.eligible
-
-  if (loading) {
-    return <>Loading...</>
-  }
-
-  if (error) {
-    return <>Something went wrong!</>
-  }
+}> = ({ memberId, referralInformation, market }) => {
+  const eligible = referralInformation.eligible
 
   return (
     <>

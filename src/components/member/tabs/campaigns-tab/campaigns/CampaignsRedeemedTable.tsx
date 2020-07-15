@@ -1,18 +1,70 @@
+import {
+  RedeemedCampaign,
+  useManualUnRedeemCampaignMutation,
+} from 'api/generated/graphql'
+import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
 
-export const CampaignsRedeemedTable: React.FunctionComponent<{}> = () => {
+export const CampaignsRedeemedTable: React.FunctionComponent<{
+  memberId: string
+  campaignsRedeemed: RedeemedCampaign[]
+}> = ({ memberId, campaignsRedeemed }) => {
+  const [
+    manualUnRedeemCampaign,
+    { loading },
+  ] = useManualUnRedeemCampaignMutation()
   return (
     <Table celled>
+      {console.log(campaignsRedeemed)}
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell width={6}>Member id</Table.HeaderCell>
-          <Table.HeaderCell width={6}>Name</Table.HeaderCell>
-          <Table.HeaderCell width={6}>Status</Table.HeaderCell>
+          <Table.HeaderCell width={6}>Code</Table.HeaderCell>
+          <Table.HeaderCell width={6}>Type</Table.HeaderCell>
+          <Table.HeaderCell width={6}>Incentive</Table.HeaderCell>
+          <Table.HeaderCell width={6}>Redeemed at</Table.HeaderCell>
+          <Table.HeaderCell width={6} />
         </Table.Row>
       </Table.Header>
 
-      <Table.Body />
+      <Table.Body>
+        {campaignsRedeemed.map(
+          (campaign) =>
+            !campaign.redemptionState.unRedeemedAt && (
+              <Table.Row>
+                <Table.Cell width={6}>{campaign.code.toUpperCase()}</Table.Cell>
+                <Table.Cell width={6}>{campaign.type}</Table.Cell>
+                <Table.Cell width={6}>
+                  {campaign.incentive.__typename}
+                </Table.Cell>
+                <Table.Cell />
+                <Table.Cell width={6}>
+                  <Button
+                    variation="primary"
+                    fullWidth
+                    disabled={loading}
+                    onClick={() => {
+                      const confirm = window.confirm(
+                        `Are you sure you want to unredeem the campaign ${campaign.code.toUpperCase()}?`,
+                      )
+                      if (confirm) {
+                        manualUnRedeemCampaign({
+                          variables: {
+                            memberId,
+                            request: { campaignCode: campaign.code },
+                          },
+                          refetchQueries: () => ['GetReferralInformation'],
+                        }).then()
+                      }
+                    }}
+                  >
+                    Unredeem
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
+            ),
+        )}
+      </Table.Body>
     </Table>
   )
 }

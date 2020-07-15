@@ -4,6 +4,19 @@ query GetReferralInformation($memberId: ID!) {
 
     referralInformation {
           eligible
+          redeemedCampaigns {
+            code
+            type
+            redemptionState {
+              redeemedAt
+              activatedAt
+              activeTo
+              unRedeemedAt
+            }
+            incentive {
+              __typename
+            }
+          }
           campaign {
             code
             incentive {

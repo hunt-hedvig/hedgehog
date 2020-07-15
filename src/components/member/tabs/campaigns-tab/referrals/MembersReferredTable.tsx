@@ -1,8 +1,8 @@
 import { MemberReferral } from 'api/generated/graphql'
 import React from 'react'
-import { Table } from 'semantic-ui-react'
-
 import styled from 'react-emotion'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 interface MemberStatusBadgeProps {
   status?: string
@@ -17,7 +17,7 @@ const MemberStatusBadge = styled.div<MemberStatusBadgeProps>`
       : status === 'UNREDEEMED'
       ? theme.danger
       : theme.accent};
-  border-radius: 8px;
+  border-radius: 16px;
   color: ${({ theme }) => theme.accentContrast};
   text-align: center;
   width: auto;
@@ -43,7 +43,9 @@ export const MembersReferredTable: React.FunctionComponent<{
       <Table.Body>
         {members.map((member) => (
           <Table.Row key={member.memberId + member.status}>
-            <Table.Cell>{member.memberId}</Table.Cell>
+            <Table.Cell>
+              <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
+            </Table.Cell>
             <Table.Cell>{member.name}</Table.Cell>
             <Table.Cell>
               <MemberStatusBadge status={member.status}>
