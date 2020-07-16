@@ -3,52 +3,52 @@ query GetReferralInformation($memberId: ID!) {
     memberId
 
     referralInformation {
-          eligible
-          redeemedCampaigns {
-            code
-            type
-            redemptionState {
-              redeemedAt
-              activatedAt
-              activeTo
-              unRedeemedAt
-            }
-            incentive {
-              __typename
-            }
+      eligible
+      redeemedCampaigns {
+        code
+        type
+        redemptionState {
+          redeemedAt
+          activatedAt
+          activeTo
+          unRedeemedAt
+        }
+        incentive {
+          __typename
+        }
+      }
+      campaign {
+        code
+        incentive {
+          __typename
+          ... on MonthlyPercentageDiscountFixedPeriod {
+            numberOfMonths
+            percentage
           }
-          campaign {
-            code
-            incentive {
-              __typename
-              ... on MonthlyPercentageDiscountFixedPeriod {
-                numberOfMonths
-                percentage
-              }
-              ... on FreeMonths {
-                numberOfMonths
-              }
-              ... on CostDeduction {
-                amount
-              }
-              ... on NoDiscount {
-                _
-              }
-              ... on IndefinitePercentageDiscount {
-                percentageDiscount
-              }
-            }
+          ... on FreeMonths {
+            numberOfMonths
           }
-          referredBy {
-            memberId
-    				name
-    				status
+          ... on CostDeduction {
+            amount
           }
-          hasReferred {
-            memberId
-    				name
-    				status
+          ... on NoDiscount {
+            _
           }
+          ... on IndefinitePercentageDiscount {
+            percentageDiscount
+          }
+        }
+      }
+      referredBy {
+        memberId
+        name
+        status
+      }
+      hasReferred {
+        memberId
+        name
+        status
+      }
     }
   }
 }

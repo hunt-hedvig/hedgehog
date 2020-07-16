@@ -24,10 +24,7 @@ export const CampaignCodeInput: React.FunctionComponent<{
   const [campaignCode, setCampaignCode] = React.useState('')
   const [success, setSuccess] = React.useState<boolean | null>(null)
   const [activationDate, setActivationDate] = React.useState<Date | null>(null)
-  const [
-    manualRedeemCampaign,
-    { loading, error },
-  ] = useManualRedeemCampaignMutation()
+  const [manualRedeemCampaign, { loading }] = useManualRedeemCampaignMutation()
 
   const getStatusMessage = () => {
     if (success) {
@@ -88,7 +85,7 @@ export const CampaignCodeInput: React.FunctionComponent<{
         <Button
           variation="primary"
           fullWidth
-          disabled={campaignCode === '' || !!error}
+          disabled={campaignCode === '' || success === false}
           loading={loading}
           onClick={() => {
             const confirm = window.confirm(
