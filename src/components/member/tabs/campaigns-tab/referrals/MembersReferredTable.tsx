@@ -21,6 +21,9 @@ const MemberStatusBadge = styled.div<MemberStatusBadgeProps>`
   color: ${({ theme }) => theme.accentContrast};
   text-align: center;
   width: auto;
+`
+
+export const Capitalized = styled.div`
   ::first-letter {
     text-transform: uppercase;
   }
@@ -49,7 +52,7 @@ export const MembersReferredTable: React.FunctionComponent<{
             <Table.Cell>{member.name}</Table.Cell>
             <Table.Cell>
               <MemberStatusBadge status={member.status}>
-                {member.status}
+                <Capitalized>{member.status}</Capitalized>
               </MemberStatusBadge>
             </Table.Cell>
           </Table.Row>

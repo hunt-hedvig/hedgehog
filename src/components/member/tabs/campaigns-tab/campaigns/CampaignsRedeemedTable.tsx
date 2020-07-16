@@ -2,6 +2,8 @@ import {
   RedeemedCampaign,
   useManualUnRedeemCampaignMutation,
 } from 'api/generated/graphql'
+import { Capitalized } from 'components/member/tabs/campaigns-tab/referrals/MembersReferredTable'
+import { format } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
@@ -16,7 +18,6 @@ export const CampaignsRedeemedTable: React.FunctionComponent<{
   ] = useManualUnRedeemCampaignMutation()
   return (
     <Table celled>
-      {console.log(campaignsRedeemed)}
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell width={6}>Code</Table.HeaderCell>
@@ -33,11 +34,18 @@ export const CampaignsRedeemedTable: React.FunctionComponent<{
             !campaign.redemptionState.unRedeemedAt && (
               <Table.Row>
                 <Table.Cell width={6}>{campaign.code.toUpperCase()}</Table.Cell>
-                <Table.Cell width={6}>{campaign.type}</Table.Cell>
+                <Table.Cell width={6}>
+                  <Capitalized>{campaign.type}</Capitalized>
+                </Table.Cell>
                 <Table.Cell width={6}>
                   {campaign.incentive.__typename}
                 </Table.Cell>
-                <Table.Cell />
+                <Table.Cell>
+                  {format(
+                    new Date(campaign.redemptionState.redeemedAt),
+                    'yyyy-MM-dd',
+                  )}
+                </Table.Cell>
                 <Table.Cell width={6}>
                   <Button
                     variation="primary"

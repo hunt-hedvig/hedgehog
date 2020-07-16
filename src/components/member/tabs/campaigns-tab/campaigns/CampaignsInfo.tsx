@@ -12,13 +12,11 @@ export const CampaignsInfo: React.FunctionComponent<{
   return (
     <>
       <ThirdLevelHeadline>Redeemed campaigns</ThirdLevelHeadline>
+      <CampaignsRedeemedTable
+        memberId={memberId}
+        campaignsRedeemed={referralInformation.redeemedCampaigns}
+      />
       <CardsWrapper>
-        <Card>
-          <CampaignsRedeemedTable
-            memberId={memberId}
-            campaignsRedeemed={referralInformation.redeemedCampaigns}
-          />
-        </Card>
         <Card>
           <CampaignCodeInput memberId={memberId} />
         </Card>
