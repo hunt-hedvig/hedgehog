@@ -62,7 +62,7 @@ export const CampaignsRedeemedTable: React.FunctionComponent<{
                             request: { campaignCode: campaign.code },
                           },
                           refetchQueries: () => ['GetReferralInformation'],
-                        }).then()
+                        })
                       }
                     }}
                   >
