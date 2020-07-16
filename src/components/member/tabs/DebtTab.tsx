@@ -1,7 +1,15 @@
 import { colors } from '@hedviginsurance/brand'
 import { ContractMarketInfo, Market } from 'api/generated/graphql'
+import {
+  InfoContainer,
+  InfoRow,
+  InfoText,
+} from 'components/member/tabs/contracts-tab/contract'
 import gql from 'graphql-tag'
+import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { OrbIndicator } from 'hedvig-ui/orb-indicator'
+import { Spacing } from 'hedvig-ui/spacing'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import { dateTimeFormatter, MonetaryAmount } from 'lib/helpers'
 import * as React from 'react'
 import { Mutation, Query } from 'react-apollo'
@@ -75,10 +83,6 @@ interface DebtProfile {
   fromDateTime: string
 }
 
-interface OverallDebtProfileTableProps {
-  debt: DebtProfile
-}
-
 const PaymentDefaultsTable: React.FunctionComponent<PaymentDefaultsTableProps> = ({
   paymentDefaults,
 }) => (
@@ -133,10 +137,6 @@ const Button = styled('button')({
   },
 })
 
-const Wrapper = styled('div')({
-  padding: '0 20px',
-})
-
 const ConfirmMessage = styled('div')({
   padding: '12px',
   alignItems: 'center',
@@ -150,31 +150,55 @@ const sortPaymentDefaultByYear = (a, b) => {
   return ((bDate as any) as number) - ((aDate as any) as number)
 }
 
-const OverallDebtProfileTable: React.FunctionComponent<OverallDebtProfileTableProps> = ({
-  debt,
-}) => (
-  <Table celled>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Total Amount of Public Debt</Table.HeaderCell>
-        <Table.HeaderCell>Number of Public Debts</Table.HeaderCell>
-        <Table.HeaderCell>Total Amount of Private Debt</Table.HeaderCell>
-        <Table.HeaderCell>Number of Private Debts</Table.HeaderCell>
-        <Table.HeaderCell>Date of Debt Check</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      <Table.Row>
-        <Table.Cell>{formatMoney(debt.totalAmountPublicDebt)}</Table.Cell>
-        <Table.Cell>{debt.numberPublicDebts}</Table.Cell>
-        <Table.Cell>{formatMoney(debt.totalAmountPrivateDebt)}</Table.Cell>
-        <Table.Cell>{debt.numberPrivateDebts}</Table.Cell>
-        <Table.Cell>
+const OverallDebtProfile: React.FunctionComponent<{
+  debt: DebtProfile
+}> = ({ debt }) => (
+  <Card span={2}>
+    <InfoContainer>
+      <InfoRow>
+        <ThirdLevelHeadline>Public Debt</ThirdLevelHeadline>
+      </InfoRow>
+
+      <InfoRow>
+        Total Amount
+        <InfoText>
+          {formatMoney(debt.totalAmountPublicDebt, {
+            minimumFractionDigits: 0,
+            useGrouping: true,
+          })}
+        </InfoText>
+      </InfoRow>
+      <InfoRow>
+        Occurrences <InfoText>{debt.numberPublicDebts}</InfoText>
+      </InfoRow>
+
+      <Spacing top={'small'} />
+      <InfoRow>
+        <ThirdLevelHeadline>Private Debt</ThirdLevelHeadline>
+      </InfoRow>
+
+      <InfoRow>
+        Total Amount
+        <InfoText>
+          {formatMoney(debt.totalAmountPrivateDebt, {
+            minimumFractionDigits: 0,
+            useGrouping: true,
+          })}
+        </InfoText>
+      </InfoRow>
+      <InfoRow>
+        Occurrences
+        <InfoText>{debt.numberPrivateDebts}</InfoText>
+      </InfoRow>
+      <Spacing top={'small'} />
+      <InfoRow>
+        Date of Debt Check
+        <InfoText>
           {dateTimeFormatter(debt.fromDateTime, 'yyyy-MM-dd')}
-        </Table.Cell>
-      </Table.Row>
-    </Table.Body>
-  </Table>
+        </InfoText>
+      </InfoRow>
+    </InfoContainer>
+  </Card>
 )
 
 interface State {
@@ -200,7 +224,7 @@ export class MemberDebtComponent extends React.Component<
       return <>Not available for Norway</>
     }
     return (
-      <Wrapper>
+      <CardsWrapper>
         <Query<any>
           query={query}
           variables={{ memberId: this.props.match.params.memberId }}
@@ -212,32 +236,37 @@ export class MemberDebtComponent extends React.Component<
             if (loading || !data) {
               return <div>Loading...</div>
             }
+
             return (
               <>
                 {!data.member || !data.member.person ? (
                   'Issue retrieving debt for this member'
                 ) : (
                   <>
-                    <PersonStatusWrapper>
-                      <div>
-                        Member flag:
-                        {data.member.person.status.flag && (
-                          <OrbIndicator
-                            color={data.member.person.status.flag}
-                            size={'tiny'}
-                          />
-                        )}
-                      </div>
-                    </PersonStatusWrapper>
-                    <PersonStatusWrapper>
-                      <div>
-                        Member status:{' '}
-                        {data.member.person.status.whitelisted
-                          ? 'Whitelisted'
-                          : 'Not Whitelisted'}
-                      </div>
-                    </PersonStatusWrapper>
-                    <OverallDebtProfileTable debt={data.member.person.debt} />
+                    <Card span={2}>
+                      <InfoContainer>
+                        <InfoRow>
+                          Member flag
+                          <InfoText>
+                            {data.member.person.status.flag && (
+                              <OrbIndicator
+                                color={data.member.person.status.flag}
+                                size={'tiny'}
+                              />
+                            )}
+                          </InfoText>
+                        </InfoRow>
+                        <InfoRow>
+                          Member status
+                          <InfoText>
+                            {data.member.person.status.whitelisted
+                              ? 'Whitelisted'
+                              : 'Not Whitelisted'}
+                          </InfoText>
+                        </InfoRow>
+                      </InfoContainer>
+                    </Card>
+                    <OverallDebtProfile debt={data.member.person.debt} />
                     <PaymentDefaultsTable
                       paymentDefaults={data.member.person.debt.paymentDefaults}
                     />
@@ -288,7 +317,7 @@ export class MemberDebtComponent extends React.Component<
             )
           }}
         </Query>
-      </Wrapper>
+      </CardsWrapper>
     )
   }
 
