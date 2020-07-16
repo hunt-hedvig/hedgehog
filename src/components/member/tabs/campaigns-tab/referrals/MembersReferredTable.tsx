@@ -8,15 +8,20 @@ interface MemberStatusBadgeProps {
   status?: string
 }
 
+const getThemeFromStatus = (theme, status) => {
+  switch (status) {
+    case 'ACTIVE':
+      return theme.success
+    case 'UNREDEEMED':
+      return theme.danger
+    default:
+      return theme.accent
+  }
+}
 const MemberStatusBadge = styled.div<MemberStatusBadgeProps>`
   padding: 0.5rem 1rem;
   line-height: 1;
-  background: ${({ theme, status }) =>
-    status === 'ACTIVE'
-      ? theme.success
-      : status === 'UNREDEEMED'
-      ? theme.danger
-      : theme.accent};
+  background: ${({ theme, status }) => getThemeFromStatus(theme, status)};
   border-radius: 16px;
   color: ${({ theme }) => theme.accentContrast};
   text-align: center;

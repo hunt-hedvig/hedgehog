@@ -1,8 +1,8 @@
 import { ReferralInformation } from 'api/generated/graphql'
 import { CampaignCodeInput } from 'components/member/tabs/campaigns-tab/campaigns/CampaignCodeInput'
 import { CampaignsRedeemedTable } from 'components/member/tabs/campaigns-tab/campaigns/CampaignsRedeemedTable'
+import { TableHeadline } from 'components/member/tabs/campaigns-tab/referrals/ReferralsInfo'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 
 export const CampaignsInfo: React.FunctionComponent<{
@@ -11,7 +11,7 @@ export const CampaignsInfo: React.FunctionComponent<{
 }> = ({ memberId, referralInformation }) => {
   return (
     <>
-      <ThirdLevelHeadline>Redeemed campaigns</ThirdLevelHeadline>
+      <TableHeadline>Redeemed campaigns</TableHeadline>
       <CampaignsRedeemedTable
         memberId={memberId}
         campaignsRedeemed={referralInformation.redeemedCampaigns}

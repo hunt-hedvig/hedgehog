@@ -1,22 +1,21 @@
-import { Market, ReferralInformation } from 'api/generated/graphql'
 import {
-  InfoContainer,
-  InfoRow,
-  InfoText,
-} from 'components/member/tabs/contracts-tab/contract'
+  Market,
+  MemberReferral,
+  ReferralInformation,
+} from 'api/generated/graphql'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { EnableReferralButton } from './EnableReferralButton'
 import { MembersReferredTable } from './MembersReferredTable'
 
-interface ForeverStatusProps {
+interface ReferralStatusProps {
   eligible: boolean
 }
 
-const ForeverStatusBadge = styled.div<ForeverStatusProps>`
+const ReferralStatusBadge = styled.div<ReferralStatusProps>`
   padding: 0.5rem 1rem;
   line-height: 1;
   background: ${({ eligible, theme }) =>
@@ -34,12 +33,42 @@ const CampaignCodeBadge = styled.div`
   font-weight: bold;
 `
 
+const BadgeRow = styled(Paragraph)`
+  margin-top: 0.3rem;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+export const TableHeadline = styled(ThirdLevelHeadline)`
+  margin-bottom: -0.2rem;
+`
+
 const NotAvailableLabel = styled.div`
   color: ${({ theme }) => theme.placeholderColor};
 `
 
+const SmallTopSpacing = styled.div`
+  margin-top: 0.2rem;
+`
+
+const MemberLink: React.FC<{ memberReferral: MemberReferral }> = ({
+  memberReferral,
+}) => {
+  return (
+    <SmallTopSpacing>
+      <Link to={`/members/${memberReferral.memberId}`}>
+        {memberReferral.name}
+      </Link>
+    </SmallTopSpacing>
+  )
+}
+
 const NotAvailable: React.FC = () => (
-  <NotAvailableLabel>Not available</NotAvailableLabel>
+  <SmallTopSpacing>
+    <NotAvailableLabel>Not available</NotAvailableLabel>
+  </SmallTopSpacing>
 )
 
 export const ReferralsInfo: React.FunctionComponent<{
@@ -53,63 +82,43 @@ export const ReferralsInfo: React.FunctionComponent<{
     <>
       <CardsWrapper>
         <Card>
-          <InfoContainer>
-            <InfoRow>
-              <span style={{ marginTop: '0.3rem' }}>Hedvig Forever</span>
-              {referralInformation ? (
-                <InfoText>
-                  <ForeverStatusBadge eligible={eligible ?? false}>
-                    {eligible ? 'Activated' : 'Disabled'}
-                  </ForeverStatusBadge>
-                </InfoText>
-              ) : (
-                <InfoText style={{ marginTop: '0.3rem' }}>
-                  <NotAvailable />
-                </InfoText>
-              )}
-            </InfoRow>
-            <InfoRow style={{ marginTop: '0.4rem' }}>
-              <span style={{ marginTop: '0.3rem' }}>Referral Code</span>
-              {eligible ? (
-                <InfoText>
-                  <CampaignCodeBadge>
-                    {referralInformation?.campaign.code.toUpperCase()}
-                  </CampaignCodeBadge>
-                </InfoText>
-              ) : (
-                <InfoText style={{ marginTop: '0.3rem' }}>
-                  <NotAvailable />
-                </InfoText>
-              )}
-            </InfoRow>
-            <InfoRow style={{ marginTop: '0.4rem' }}>
-              <span style={{ marginTop: '0.3rem' }}>Referred By</span>
-              {eligible && referralInformation?.referredBy ? (
-                <InfoText style={{ marginTop: '0.3rem' }}>
-                  <Link
-                    to={`/members/${referralInformation.referredBy.memberId}`}
-                  >
-                    {referralInformation.referredBy.name}
-                  </Link>
-                </InfoText>
-              ) : (
-                <InfoText style={{ marginTop: '0.3rem' }}>
-                  <NotAvailable />
-                </InfoText>
-              )}
-            </InfoRow>
-            {!eligible && market && (
-              <EnableReferralButton market={market} memberId={memberId} />
+          <BadgeRow>
+            <SmallTopSpacing>Hedvig Forever</SmallTopSpacing>
+            {referralInformation ? (
+              <ReferralStatusBadge eligible={eligible ?? false}>
+                {eligible ? 'Activated' : 'Disabled'}
+              </ReferralStatusBadge>
+            ) : (
+              <NotAvailable />
             )}
-          </InfoContainer>
+          </BadgeRow>
+          <BadgeRow>
+            <SmallTopSpacing>Referral Code</SmallTopSpacing>
+            {eligible ? (
+              <CampaignCodeBadge>
+                {referralInformation?.campaign.code.toUpperCase()}
+              </CampaignCodeBadge>
+            ) : (
+              <NotAvailable />
+            )}
+          </BadgeRow>
+          <BadgeRow>
+            <SmallTopSpacing>Referred By</SmallTopSpacing>
+            {eligible && referralInformation?.referredBy ? (
+              <MemberLink memberReferral={referralInformation?.referredBy} />
+            ) : (
+              <NotAvailable />
+            )}
+          </BadgeRow>
+          {!eligible && market && (
+            <EnableReferralButton market={market} memberId={memberId} />
+          )}
         </Card>
       </CardsWrapper>
 
       {eligible && (
         <>
-          <ThirdLevelHeadline style={{ marginBottom: '-0.2rem' }}>
-            Members referred
-          </ThirdLevelHeadline>
+          <TableHeadline>Members referred</TableHeadline>
           <MembersReferredTable
             members={referralInformation?.hasReferred ?? []}
           />

@@ -3,8 +3,14 @@ import {
   useManualRedeemEnableReferralsCampaignMutation,
 } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
+import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
+import styled from 'react-emotion'
 import { Message } from 'semantic-ui-react'
+
+const FullWidthMessage = styled(Message)`
+  width: 100%;
+`
 
 export const EnableReferralButton: React.FunctionComponent<{
   memberId: string
@@ -17,6 +23,7 @@ export const EnableReferralButton: React.FunctionComponent<{
 
   return (
     <>
+      <Spacing top />
       <Button
         variation="primary"
         fullWidth
@@ -35,19 +42,10 @@ export const EnableReferralButton: React.FunctionComponent<{
             }).then()
           }
         }}
-        style={{
-          marginTop: '1.6rem',
-        }}
       >
         Activate Hedvig Forever
       </Button>
-      {error && (
-        <Message
-          error
-          style={{ width: '100%' }}
-          header="Could not activate member"
-        />
-      )}
+      {error && <FullWidthMessage error header="Could not activate member" />}
     </>
   )
 }
