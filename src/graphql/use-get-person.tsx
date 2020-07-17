@@ -4,7 +4,7 @@ import {
   useGetPersonQuery,
 } from 'api/generated/graphql'
 
-type GetPersonReturnTuple = [Person, GetPersonQueryHookResult]
+type GetPersonReturnTuple = [Person | undefined, GetPersonQueryHookResult]
 
 export const useGetPerson = (memberId: string): GetPersonReturnTuple => {
   const queryResult = useGetPersonQuery({
