@@ -1,39 +1,11 @@
 import { MemberReferral } from 'api/generated/graphql'
+import {
+  Capitalized,
+  MemberStatusBadge,
+} from 'components/member/tabs/campaigns-tab/styles'
 import React from 'react'
-import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-
-interface MemberStatusBadgeProps {
-  status?: string
-}
-
-const getThemeFromStatus = (theme, status) => {
-  switch (status) {
-    case 'ACTIVE':
-      return theme.success
-    case 'UNREDEEMED':
-      return theme.danger
-    default:
-      return theme.accent
-  }
-}
-const MemberStatusBadge = styled.div<MemberStatusBadgeProps>`
-  padding: 0.5rem 1rem;
-  line-height: 1;
-  background: ${({ theme, status }) => getThemeFromStatus(theme, status)};
-  border-radius: 16px;
-  color: ${({ theme }) => theme.accentContrast};
-  text-align: center;
-  width: auto;
-`
-
-export const Capitalized = styled.div`
-  ::first-letter {
-    text-transform: uppercase;
-  }
-  text-transform: lowercase;
-`
 
 export const MembersReferredTable: React.FunctionComponent<{
   members: MemberReferral[]

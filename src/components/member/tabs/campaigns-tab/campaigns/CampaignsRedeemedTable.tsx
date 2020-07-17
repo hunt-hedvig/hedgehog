@@ -2,7 +2,7 @@ import {
   RedeemedCampaign,
   useManualUnRedeemCampaignMutation,
 } from 'api/generated/graphql'
-import { Capitalized } from 'components/member/tabs/campaigns-tab/referrals/MembersReferredTable'
+import { Capitalized } from 'components/member/tabs/campaigns-tab/styles'
 import { format } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'

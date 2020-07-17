@@ -1,22 +1,10 @@
 import { useManualRedeemCampaignMutation } from 'api/generated/graphql'
+import { Group } from 'components/member/tabs/campaigns-tab/styles'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Input } from 'hedvig-ui/input'
 import React from 'react'
-import styled from 'react-emotion'
 import { Message } from 'semantic-ui-react'
-
-export const Group = styled('div')({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'row',
-  '*:not(:last-child)': {
-    marginRight: '0.5rem',
-  },
-  '*:not(:first-child)': {
-    marginLeft: '0.5rem',
-  },
-})
 
 export const CampaignCodeInput: React.FunctionComponent<{
   memberId: string

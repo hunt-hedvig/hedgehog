@@ -3,55 +3,19 @@ import {
   MemberReferral,
   ReferralInformation,
 } from 'api/generated/graphql'
+import {
+  BadgeRow,
+  CampaignCodeBadge,
+  NotAvailableLabel,
+  ReferralStatusBadge,
+  SmallTopSpacing,
+  TableHeadline,
+} from 'components/member/tabs/campaigns-tab/styles'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { EnableReferralButton } from './EnableReferralButton'
 import { MembersReferredTable } from './MembersReferredTable'
-
-interface ReferralStatusProps {
-  eligible: boolean
-}
-
-const ReferralStatusBadge = styled.div<ReferralStatusProps>`
-  padding: 0.5rem 1rem;
-  line-height: 1;
-  background: ${({ eligible, theme }) =>
-    eligible ? theme.success : theme.danger};
-  border-radius: 8px;
-  color: #fff;
-`
-
-const CampaignCodeBadge = styled.div`
-  padding: 0.5rem 1rem;
-  line-height: 1;
-  background: ${({ theme }) => theme.accent};
-  border-radius: 8px;
-  color: ${({ theme }) => theme.accentContrast};
-  font-weight: bold;
-`
-
-const BadgeRow = styled(Paragraph)`
-  margin-top: 0.3rem;
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  color: ${({ theme }) => theme.semiStrongForeground};
-`
-
-export const TableHeadline = styled(ThirdLevelHeadline)`
-  margin-bottom: -0.2rem;
-`
-
-const NotAvailableLabel = styled.div`
-  color: ${({ theme }) => theme.placeholderColor};
-`
-
-const SmallTopSpacing = styled.div`
-  margin-top: 0.2rem;
-`
 
 const MemberLink: React.FC<{ memberReferral: MemberReferral }> = ({
   memberReferral,
