@@ -1,0 +1,3 @@
+mutation ManualRedeemEnableReferralsCampaign($memberId: ID!, $market: Market!) {
+  manualRedeemEnableReferralsCampaign(memberId: $memberId, market: $market)
+}
