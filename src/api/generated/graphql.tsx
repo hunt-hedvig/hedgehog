@@ -761,6 +761,15 @@ export type LuggageDelayClaim = {
   ticket?: Maybe<Scalars['String']>
 }
 
+export type ManualRedeemCampaignInput = {
+  campaignCode: Scalars['String']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type ManualUnRedeemCampaignInput = {
+  campaignCode: Scalars['String']
+}
+
 export enum Market {
   Sweden = 'SWEDEN',
   Norway = 'NORWAY',
@@ -791,6 +800,8 @@ export type Member = {
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
+  pickedLocale?: Maybe<PickedLocale>
+  referralInformation?: Maybe<ReferralInformation>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -800,6 +811,14 @@ export type MemberMonthlySubscriptionArgs = {
 export type MemberChargeApproval = {
   memberId: Scalars['ID']
   amount: Scalars['MonetaryAmount']
+}
+
+export type MemberReferral = {
+  __typename?: 'MemberReferral'
+  memberId: Scalars['String']
+  name?: Maybe<Scalars['String']>
+  status: Scalars['String']
+  incentive: Incentive
 }
 
 export type MonetaryAmountV2 = {
@@ -876,6 +895,9 @@ export type MutationType = {
   upsertValuationRule: Scalars['ID']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   setContractForClaim: Scalars['Boolean']
+  manualRedeemCampaign: Scalars['Boolean']
+  manualUnRedeemCampaign: Scalars['Boolean']
+  manualRedeemEnableReferralsCampaign: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1128,6 +1150,21 @@ export type MutationTypeSetContractForClaimArgs = {
   request: SetContractForClaim
 }
 
+export type MutationTypeManualRedeemCampaignArgs = {
+  memberId: Scalars['ID']
+  request: ManualRedeemCampaignInput
+}
+
+export type MutationTypeManualUnRedeemCampaignArgs = {
+  memberId: Scalars['ID']
+  request: ManualUnRedeemCampaignInput
+}
+
+export type MutationTypeManualRedeemEnableReferralsCampaignArgs = {
+  memberId: Scalars['ID']
+  market: Market
+}
+
 export type NoDiscount = {
   __typename?: 'NoDiscount'
   _?: Maybe<Scalars['Boolean']>
@@ -1285,6 +1322,13 @@ export type PersonStatus = {
   whitelisted?: Maybe<Scalars['Boolean']>
 }
 
+export enum PickedLocale {
+  SvSe = 'sv_SE',
+  EnSe = 'en_SE',
+  NbNo = 'nb_NO',
+  EnNo = 'en_NO',
+}
+
 export type QueryType = {
   __typename?: 'QueryType'
   monthlyPayments?: Maybe<Array<Maybe<MonthlySubscription>>>
@@ -1436,6 +1480,38 @@ export enum QuoteState {
   Quoted = 'QUOTED',
   Signed = 'SIGNED',
   Expired = 'EXPIRED',
+}
+
+export type RedeemedCampaign = {
+  __typename?: 'RedeemedCampaign'
+  code: Scalars['String']
+  type: Scalars['String']
+  incentive: Incentive
+  redemptionState: RedemptionState
+}
+
+export type RedemptionState = {
+  __typename?: 'RedemptionState'
+  redeemedAt: Scalars['Instant']
+  activatedAt?: Maybe<Scalars['Instant']>
+  activeTo?: Maybe<Scalars['Instant']>
+  terminatedAt?: Maybe<Scalars['Instant']>
+  unRedeemedAt?: Maybe<Scalars['Instant']>
+}
+
+export type ReferralCampaign = {
+  __typename?: 'ReferralCampaign'
+  code: Scalars['String']
+  incentive?: Maybe<Incentive>
+}
+
+export type ReferralInformation = {
+  __typename?: 'ReferralInformation'
+  eligible: Scalars['Boolean']
+  campaign: ReferralCampaign
+  referredBy?: Maybe<MemberReferral>
+  hasReferred: Array<MemberReferral>
+  redeemedCampaigns: Array<RedeemedCampaign>
 }
 
 export type RemindNotification = {
@@ -2406,6 +2482,106 @@ export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
       }
   >
 }
+
+export type GetReferralInformationQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        referralInformation: Maybe<
+          { __typename?: 'ReferralInformation' } & Pick<
+            ReferralInformation,
+            'eligible'
+          > & {
+              redeemedCampaigns: Array<
+                { __typename?: 'RedeemedCampaign' } & Pick<
+                  RedeemedCampaign,
+                  'code' | 'type'
+                > & {
+                    redemptionState: { __typename?: 'RedemptionState' } & Pick<
+                      RedemptionState,
+                      'redeemedAt' | 'activatedAt' | 'activeTo' | 'unRedeemedAt'
+                    >
+                    incentive:
+                      | { __typename: 'MonthlyPercentageDiscountFixedPeriod' }
+                      | { __typename: 'FreeMonths' }
+                      | { __typename: 'CostDeduction' }
+                      | { __typename: 'NoDiscount' }
+                      | { __typename: 'IndefinitePercentageDiscount' }
+                  }
+              >
+              campaign: { __typename?: 'ReferralCampaign' } & Pick<
+                ReferralCampaign,
+                'code'
+              > & {
+                  incentive: Maybe<
+                    | ({
+                        __typename: 'MonthlyPercentageDiscountFixedPeriod'
+                      } & Pick<
+                        MonthlyPercentageDiscountFixedPeriod,
+                        'numberOfMonths' | 'percentage'
+                      >)
+                    | ({ __typename: 'FreeMonths' } & Pick<
+                        FreeMonths,
+                        'numberOfMonths'
+                      >)
+                    | ({ __typename: 'CostDeduction' } & Pick<
+                        CostDeduction,
+                        'amount'
+                      >)
+                    | ({ __typename: 'NoDiscount' } & Pick<NoDiscount, '_'>)
+                    | ({ __typename: 'IndefinitePercentageDiscount' } & Pick<
+                        IndefinitePercentageDiscount,
+                        'percentageDiscount'
+                      >)
+                  >
+                }
+              referredBy: Maybe<
+                { __typename?: 'MemberReferral' } & Pick<
+                  MemberReferral,
+                  'memberId' | 'name' | 'status'
+                >
+              >
+              hasReferred: Array<
+                { __typename?: 'MemberReferral' } & Pick<
+                  MemberReferral,
+                  'memberId' | 'name' | 'status'
+                >
+              >
+            }
+        >
+      }
+  >
+}
+
+export type ManualRedeemCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  request: ManualRedeemCampaignInput
+}
+
+export type ManualRedeemCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualRedeemCampaign'>
+
+export type ManualRedeemEnableReferralsCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  market: Market
+}
+
+export type ManualRedeemEnableReferralsCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualRedeemEnableReferralsCampaign'>
+
+export type ManualUnRedeemCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  request: ManualUnRedeemCampaignInput
+}
+
+export type ManualUnRedeemCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualUnRedeemCampaign'>
 
 export type MarkQuestionAsResolvedMutationVariables = {
   memberId: Scalars['ID']
@@ -4405,6 +4581,266 @@ export type GetQuestionsGroupsQueryResult = ApolloReactCommon.QueryResult<
   GetQuestionsGroupsQuery,
   GetQuestionsGroupsQueryVariables
 >
+export const GetReferralInformationDocument = gql`
+  query GetReferralInformation($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      referralInformation {
+        eligible
+        redeemedCampaigns {
+          code
+          type
+          redemptionState {
+            redeemedAt
+            activatedAt
+            activeTo
+            unRedeemedAt
+          }
+          incentive {
+            __typename
+          }
+        }
+        campaign {
+          code
+          incentive {
+            __typename
+            ... on MonthlyPercentageDiscountFixedPeriod {
+              numberOfMonths
+              percentage
+            }
+            ... on FreeMonths {
+              numberOfMonths
+            }
+            ... on CostDeduction {
+              amount
+            }
+            ... on NoDiscount {
+              _
+            }
+            ... on IndefinitePercentageDiscount {
+              percentageDiscount
+            }
+          }
+        }
+        referredBy {
+          memberId
+          name
+          status
+        }
+        hasReferred {
+          memberId
+          name
+          status
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetReferralInformationQuery__
+ *
+ * To run a query within a React component, call `useGetReferralInformationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReferralInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReferralInformationQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetReferralInformationQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >(GetReferralInformationDocument, baseOptions)
+}
+export function useGetReferralInformationLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >(GetReferralInformationDocument, baseOptions)
+}
+export type GetReferralInformationQueryHookResult = ReturnType<
+  typeof useGetReferralInformationQuery
+>
+export type GetReferralInformationLazyQueryHookResult = ReturnType<
+  typeof useGetReferralInformationLazyQuery
+>
+export type GetReferralInformationQueryResult = ApolloReactCommon.QueryResult<
+  GetReferralInformationQuery,
+  GetReferralInformationQueryVariables
+>
+export const ManualRedeemCampaignDocument = gql`
+  mutation ManualRedeemCampaign(
+    $memberId: ID!
+    $request: ManualRedeemCampaignInput!
+  ) {
+    manualRedeemCampaign(memberId: $memberId, request: $request)
+  }
+`
+export type ManualRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualRedeemCampaignMutation,
+  ManualRedeemCampaignMutationVariables
+>
+
+/**
+ * __useManualRedeemCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualRedeemCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualRedeemCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualRedeemCampaignMutation, { data, loading, error }] = useManualRedeemCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useManualRedeemCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualRedeemCampaignMutation,
+    ManualRedeemCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualRedeemCampaignMutation,
+    ManualRedeemCampaignMutationVariables
+  >(ManualRedeemCampaignDocument, baseOptions)
+}
+export type ManualRedeemCampaignMutationHookResult = ReturnType<
+  typeof useManualRedeemCampaignMutation
+>
+export type ManualRedeemCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualRedeemCampaignMutation
+>
+export type ManualRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualRedeemCampaignMutation,
+  ManualRedeemCampaignMutationVariables
+>
+export const ManualRedeemEnableReferralsCampaignDocument = gql`
+  mutation ManualRedeemEnableReferralsCampaign(
+    $memberId: ID!
+    $market: Market!
+  ) {
+    manualRedeemEnableReferralsCampaign(memberId: $memberId, market: $market)
+  }
+`
+export type ManualRedeemEnableReferralsCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualRedeemEnableReferralsCampaignMutation,
+  ManualRedeemEnableReferralsCampaignMutationVariables
+>
+
+/**
+ * __useManualRedeemEnableReferralsCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualRedeemEnableReferralsCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualRedeemEnableReferralsCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualRedeemEnableReferralsCampaignMutation, { data, loading, error }] = useManualRedeemEnableReferralsCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      market: // value for 'market'
+ *   },
+ * });
+ */
+export function useManualRedeemEnableReferralsCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualRedeemEnableReferralsCampaignMutation,
+    ManualRedeemEnableReferralsCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualRedeemEnableReferralsCampaignMutation,
+    ManualRedeemEnableReferralsCampaignMutationVariables
+  >(ManualRedeemEnableReferralsCampaignDocument, baseOptions)
+}
+export type ManualRedeemEnableReferralsCampaignMutationHookResult = ReturnType<
+  typeof useManualRedeemEnableReferralsCampaignMutation
+>
+export type ManualRedeemEnableReferralsCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualRedeemEnableReferralsCampaignMutation
+>
+export type ManualRedeemEnableReferralsCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualRedeemEnableReferralsCampaignMutation,
+  ManualRedeemEnableReferralsCampaignMutationVariables
+>
+export const ManualUnRedeemCampaignDocument = gql`
+  mutation ManualUnRedeemCampaign(
+    $memberId: ID!
+    $request: ManualUnRedeemCampaignInput!
+  ) {
+    manualUnRedeemCampaign(memberId: $memberId, request: $request)
+  }
+`
+export type ManualUnRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualUnRedeemCampaignMutation,
+  ManualUnRedeemCampaignMutationVariables
+>
+
+/**
+ * __useManualUnRedeemCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualUnRedeemCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualUnRedeemCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualUnRedeemCampaignMutation, { data, loading, error }] = useManualUnRedeemCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useManualUnRedeemCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualUnRedeemCampaignMutation,
+    ManualUnRedeemCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualUnRedeemCampaignMutation,
+    ManualUnRedeemCampaignMutationVariables
+  >(ManualUnRedeemCampaignDocument, baseOptions)
+}
+export type ManualUnRedeemCampaignMutationHookResult = ReturnType<
+  typeof useManualUnRedeemCampaignMutation
+>
+export type ManualUnRedeemCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualUnRedeemCampaignMutation
+>
+export type ManualUnRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualUnRedeemCampaignMutation,
+  ManualUnRedeemCampaignMutationVariables
+>
 export const MarkQuestionAsResolvedDocument = gql`
   mutation MarkQuestionAsResolved($memberId: ID!) {
     markQuestionAsResolved(memberId: $memberId)
@@ -5253,6 +5689,27 @@ const result: IntrospectionResultData = {
       },
       {
         kind: 'UNION',
+        name: 'Incentive',
+        possibleTypes: [
+          {
+            name: 'MonthlyPercentageDiscountFixedPeriod',
+          },
+          {
+            name: 'FreeMonths',
+          },
+          {
+            name: 'CostDeduction',
+          },
+          {
+            name: 'NoDiscount',
+          },
+          {
+            name: 'IndefinitePercentageDiscount',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
         name: 'ClaimType',
         possibleTypes: [
           {
@@ -5362,27 +5819,6 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'ItemCompany',
-          },
-        ],
-      },
-      {
-        kind: 'UNION',
-        name: 'Incentive',
-        possibleTypes: [
-          {
-            name: 'MonthlyPercentageDiscountFixedPeriod',
-          },
-          {
-            name: 'FreeMonths',
-          },
-          {
-            name: 'CostDeduction',
-          },
-          {
-            name: 'NoDiscount',
-          },
-          {
-            name: 'IndefinitePercentageDiscount',
           },
         ],
       },

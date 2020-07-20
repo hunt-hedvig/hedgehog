@@ -68,7 +68,7 @@ export default class Member extends React.Component {
   getMemberPageTitle = (member) =>
     `${member && (member.firstName || '') + ' ' + (member.lastName || '')}`
 
-  componentDidMount() {
+  getMemberData = () => {
     const {
       match: {
         params: { memberId },
@@ -79,6 +79,16 @@ export default class Member extends React.Component {
 
     memberRequest(memberId)
     claimsByMember(memberId)
+  }
+
+  componentDidMount() {
+    this.getMemberData()
+  }
+
+  componentDidUpdate(prevProps, prevState, prevContext) {
+    if (prevProps.match.params.memberId !== this.props.match.params.memberId) {
+      this.getMemberData()
+    }
   }
 
   render() {
@@ -94,7 +104,7 @@ export default class Member extends React.Component {
             <MemberPageWrapper>
               <MemberPageContainer>
                 <Header size="huge">
-                  <FraudulentStatus stateInfo={this.getFraudulentStatus()}/>
+                  <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
                   {this.getMemberPageTitle(messages.member)}
                   {' ('}
                   <MemberAge
@@ -103,7 +113,7 @@ export default class Member extends React.Component {
                   {messages.member && (
                     <>
                       <Flag>
-                        <MemberFlag memberId={messages.member.memberId}/>
+                        <MemberFlag memberId={messages.member.memberId} />
                       </Flag>
                       <Badge memberId={messages.member.memberId}>
                         {getMemberGroup(messages.member.memberId)}
@@ -113,11 +123,11 @@ export default class Member extends React.Component {
                 </Header>
                 <MemberDetails>
                   {messages?.member?.status === 'SIGNED' &&
-                  messages?.member?.ssn && (
-                    <MemberDetail>
-                      {formatSsn(messages.member.ssn)}
-                    </MemberDetail>
-                  )}
+                    messages?.member?.ssn && (
+                      <MemberDetail>
+                        {formatSsn(messages.member.ssn)}
+                      </MemberDetail>
+                    )}
                   {messages?.member?.email && (
                     <MemberDetailLink href={`mailto:${messages.member.email}`}>
                       {messages.member.email}

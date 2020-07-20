@@ -120,6 +120,9 @@ type MutationType {
   setContractForClaim(
     request: SetContractForClaim!
   ): Boolean!
+  manualRedeemCampaign(memberId: ID!, request: ManualRedeemCampaignInput!): Boolean!
+  manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
+  manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
 }
 
 type ClaimItem {
@@ -653,6 +656,52 @@ type Member {
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
+  pickedLocale: PickedLocale
+  referralInformation: ReferralInformation
+}
+
+type ReferralInformation {
+  eligible: Boolean!
+  campaign: ReferralCampaign!
+  referredBy: MemberReferral
+  hasReferred: [MemberReferral!]!
+  redeemedCampaigns: [RedeemedCampaign!]!
+}
+
+type RedeemedCampaign {
+  code: String!
+  type: String!
+  incentive: Incentive!
+  redemptionState: RedemptionState!
+}
+
+type RedemptionState {
+  redeemedAt: Instant!
+  activatedAt: Instant
+  activeTo: Instant
+  terminatedAt: Instant
+  unRedeemedAt: Instant
+}
+
+type ReferralCampaign {
+  code: String!
+  incentive: Incentive
+}
+
+type MemberReferral {
+  memberId: String!
+  name: String
+  status: String!
+  incentive: Incentive!
+}
+
+input ManualRedeemCampaignInput {
+  campaignCode: String!
+  activationDate: LocalDate
+}
+
+input ManualUnRedeemCampaignInput {
+  campaignCode: String!
 }
 
 type ContractMarketInfo {
@@ -663,6 +712,13 @@ type ContractMarketInfo {
 enum Market {
   SWEDEN
   NORWAY
+}
+
+enum PickedLocale {
+  sv_SE
+  en_SE
+  nb_NO
+  en_NO
 }
 
 enum Gender {
