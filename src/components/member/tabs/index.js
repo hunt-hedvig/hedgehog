@@ -50,7 +50,9 @@ const memberPagePanes = (props) => {
     },
     {
       menuItem: 'Claims',
-      render: () => <TabItem props={props} TabContent={ClaimsTab} />,
+      render: () => (
+        <TabItem props={{ ...props, memberId }} TabContent={ClaimsTab} />
+      ),
     },
     {
       menuItem: 'Files',
