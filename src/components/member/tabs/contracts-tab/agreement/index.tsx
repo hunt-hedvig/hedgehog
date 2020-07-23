@@ -8,13 +8,16 @@ import { FromDate } from 'components/member/tabs/contracts-tab/agreement/FromDat
 import { InsuranceCertificate } from 'components/member/tabs/contracts-tab/agreement/InsuranceCertificate'
 import { InsuranceMandate } from 'components/member/tabs/contracts-tab/agreement/InsuranceMandate'
 import { ToDate } from 'components/member/tabs/contracts-tab/agreement/ToDate'
+import {
+  InfoRow,
+  InfoText,
+} from 'components/member/tabs/shared/card-components'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
-import { InfoRow, InfoText } from '../contract'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
 
 const Divider = styled.hr`
@@ -82,7 +85,7 @@ const AgreementComponent: React.FC<{
         </Card>
 
         <Card span={2}>
-          <ThirdLevelHeadline>Debuging</ThirdLevelHeadline>
+          <ThirdLevelHeadline>Debugging</ThirdLevelHeadline>
           <InfoRow>
             Contract id
             <InfoText>{contract.id}</InfoText>

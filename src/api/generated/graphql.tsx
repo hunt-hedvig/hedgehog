@@ -2409,6 +2409,19 @@ export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetMemberNameQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetMemberNameQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<
+      Member,
+      'memberId' | 'firstName' | 'lastName'
+    >
+  >
+}
+
 export type GetMessageHistoryQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -2460,6 +2473,61 @@ export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
               IndefinitePercentageDiscount,
               'percentageDiscount'
             >)
+        >
+      }
+  >
+}
+
+export type GetPersonQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetPersonQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        person: Maybe<
+          { __typename?: 'Person' } & Pick<Person, 'debtFlag'> & {
+              status: Maybe<
+                { __typename?: 'PersonStatus' } & Pick<
+                  PersonStatus,
+                  'flag' | 'whitelisted'
+                >
+              >
+              debt: Maybe<
+                { __typename?: 'Debt' } & Pick<
+                  Debt,
+                  | 'numberPublicDebts'
+                  | 'totalAmountPublicDebt'
+                  | 'numberPrivateDebts'
+                  | 'totalAmountPrivateDebt'
+                  | 'totalAmountDebt'
+                  | 'fromDateTime'
+                > & {
+                    paymentDefaults: Maybe<
+                      Array<
+                        Maybe<
+                          { __typename?: 'PaymentDefault' } & Pick<
+                            PaymentDefault,
+                            | 'year'
+                            | 'week'
+                            | 'paymentDefaultType'
+                            | 'paymentDefaultTypeText'
+                            | 'amount'
+                            | 'caseId'
+                            | 'claimant'
+                          >
+                        >
+                      >
+                    >
+                  }
+              >
+              whitelisted: Maybe<
+                { __typename?: 'Whitelisted' } & Pick<
+                  Whitelisted,
+                  'whitelistedAt' | 'whitelistedBy'
+                >
+              >
+            }
         >
       }
   >
@@ -2745,6 +2813,15 @@ export type UpsertItemCompanyMutationVariables = {
 export type UpsertItemCompanyMutation = { __typename?: 'MutationType' } & Pick<
   MutationType,
   'upsertItemCompany'
+>
+
+export type WhitelistMemberMutationVariables = {
+  memberId: Scalars['ID']
+}
+
+export type WhitelistMemberMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'whitelistMember'
 >
 
 export const MemberNameAndContractMarketInfoDocument = gql`
@@ -4326,6 +4403,64 @@ export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
   GetItemCategoriesQuery,
   GetItemCategoriesQueryVariables
 >
+export const GetMemberNameDocument = gql`
+  query GetMemberName($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      firstName
+      lastName
+    }
+  }
+`
+
+/**
+ * __useGetMemberNameQuery__
+ *
+ * To run a query within a React component, call `useGetMemberNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMemberNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMemberNameQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetMemberNameQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMemberNameQuery,
+    GetMemberNameQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetMemberNameQuery,
+    GetMemberNameQueryVariables
+  >(GetMemberNameDocument, baseOptions)
+}
+export function useGetMemberNameLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMemberNameQuery,
+    GetMemberNameQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMemberNameQuery,
+    GetMemberNameQueryVariables
+  >(GetMemberNameDocument, baseOptions)
+}
+export type GetMemberNameQueryHookResult = ReturnType<
+  typeof useGetMemberNameQuery
+>
+export type GetMemberNameLazyQueryHookResult = ReturnType<
+  typeof useGetMemberNameLazyQuery
+>
+export type GetMemberNameQueryResult = ApolloReactCommon.QueryResult<
+  GetMemberNameQuery,
+  GetMemberNameQueryVariables
+>
 export const GetMessageHistoryDocument = gql`
   query GetMessageHistory($memberId: ID!) {
     messageHistory(memberId: $memberId) {
@@ -4519,6 +4654,88 @@ export type FindPartnerCampaignsLazyQueryHookResult = ReturnType<
 export type FindPartnerCampaignsQueryResult = ApolloReactCommon.QueryResult<
   FindPartnerCampaignsQuery,
   FindPartnerCampaignsQueryVariables
+>
+export const GetPersonDocument = gql`
+  query GetPerson($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      person {
+        debtFlag
+        status {
+          flag
+          whitelisted
+        }
+        debt {
+          paymentDefaults {
+            year
+            week
+            paymentDefaultType
+            paymentDefaultTypeText
+            amount
+            caseId
+            claimant
+          }
+          numberPublicDebts
+          totalAmountPublicDebt
+          numberPrivateDebts
+          totalAmountPrivateDebt
+          totalAmountDebt
+          fromDateTime
+        }
+        whitelisted {
+          whitelistedAt
+          whitelistedBy
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetPersonQuery__
+ *
+ * To run a query within a React component, call `useGetPersonQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPersonQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPersonQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetPersonQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPersonQuery,
+    GetPersonQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetPersonQuery, GetPersonQueryVariables>(
+    GetPersonDocument,
+    baseOptions,
+  )
+}
+export function useGetPersonLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPersonQuery,
+    GetPersonQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<GetPersonQuery, GetPersonQueryVariables>(
+    GetPersonDocument,
+    baseOptions,
+  )
+}
+export type GetPersonQueryHookResult = ReturnType<typeof useGetPersonQuery>
+export type GetPersonLazyQueryHookResult = ReturnType<
+  typeof useGetPersonLazyQuery
+>
+export type GetPersonQueryResult = ApolloReactCommon.QueryResult<
+  GetPersonQuery,
+  GetPersonQueryVariables
 >
 export const GetQuestionsGroupsDocument = gql`
   query GetQuestionsGroups {
@@ -5599,6 +5816,54 @@ export type UpsertItemCompanyMutationResult = ApolloReactCommon.MutationResult<
 export type UpsertItemCompanyMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpsertItemCompanyMutation,
   UpsertItemCompanyMutationVariables
+>
+export const WhitelistMemberDocument = gql`
+  mutation whitelistMember($memberId: ID!) {
+    whitelistMember(memberId: $memberId)
+  }
+`
+export type WhitelistMemberMutationFn = ApolloReactCommon.MutationFunction<
+  WhitelistMemberMutation,
+  WhitelistMemberMutationVariables
+>
+
+/**
+ * __useWhitelistMemberMutation__
+ *
+ * To run a mutation, you first call `useWhitelistMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useWhitelistMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [whitelistMemberMutation, { data, loading, error }] = useWhitelistMemberMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useWhitelistMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    WhitelistMemberMutation,
+    WhitelistMemberMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    WhitelistMemberMutation,
+    WhitelistMemberMutationVariables
+  >(WhitelistMemberDocument, baseOptions)
+}
+export type WhitelistMemberMutationHookResult = ReturnType<
+  typeof useWhitelistMemberMutation
+>
+export type WhitelistMemberMutationResult = ApolloReactCommon.MutationResult<
+  WhitelistMemberMutation
+>
+export type WhitelistMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  WhitelistMemberMutation,
+  WhitelistMemberMutationVariables
 >
 
 export interface IntrospectionResultData {

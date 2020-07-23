@@ -3,8 +3,13 @@ import { Agreement } from 'components/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'components/member/tabs/contracts-tab/agreement/AgreementsTable'
 import { MasterInception } from 'components/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'components/member/tabs/contracts-tab/contract/termination-date'
+import {
+  InfoContainer,
+  InfoRow,
+  InfoText,
+} from 'components/member/tabs/shared/card-components'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { getSignSource } from 'utils/contract'
@@ -16,24 +21,6 @@ const ContractWrapper = styled('div')`
     border-top: 1px solid ${({ theme }) => theme.border};
     padding-top: 5rem;
   }
-`
-
-export const InfoContainer = styled('div')`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`
-
-export const InfoRow = styled(Paragraph)`
-  margin-bottom: 0.25rem;
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  color: ${({ theme }) => theme.semiStrongForeground};
-`
-
-export const InfoText = styled('span')`
-  color: ${({ theme }) => theme.foreground};
 `
 
 export const Contract: React.FunctionComponent<{

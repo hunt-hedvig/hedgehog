@@ -3,7 +3,7 @@ import {
   InfoContainer,
   InfoRow,
   InfoText,
-} from 'components/member/tabs/contracts-tab/contract'
+} from 'components/member/tabs/shared/card-components'
 import { Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
