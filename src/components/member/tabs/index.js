@@ -13,6 +13,7 @@ import styled from 'react-emotion'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { AccountTab } from './account-tab'
 import { DebtTab } from './debt-tab'
+import { CampaignsTab } from './campaigns-tab'
 
 const TabContainer = styled(Tab.Pane)`
   &&& {
@@ -85,23 +86,24 @@ const memberPagePanes = (props) => {
 
     {
       menuItem: 'Payments',
-      render: () => (
-        <TabItem props={props} TabContent={PaymentsTab} />
-      ),
+      render: () => <TabItem props={props} TabContent={PaymentsTab} />,
     },
     {
       menuItem: 'Account',
       render: () => (
-        <TabItem
-          props={{ ...props, memberId }}
-          TabContent={AccountTab}
-        />
+        <TabItem props={{ ...props, memberId }} TabContent={AccountTab} />
       ),
     },
     {
       menuItem: 'Debt',
       render: () => (
         <TabItem props={{ ...props, memberId }} TabContent={DebtTab} />
+      ),
+    },
+    {
+      menuItem: 'Campaigns',
+      render: () => (
+        <TabItem props={{ ...props, memberId }} TabContent={CampaignsTab} />
       ),
     },
   ]
