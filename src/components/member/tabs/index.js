@@ -83,7 +83,6 @@ const memberPagePanes = (props) => {
         <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
       ),
     },
-
     {
       menuItem: 'Payments',
       render: () => <TabItem props={props} TabContent={PaymentsTab} />,

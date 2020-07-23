@@ -47,6 +47,8 @@ const mapState = (state: BackofficeStore) => ({
 
 const mapActions = { authCheck: authCheckAction }
 
-const PrivateRoute = connect(mapState, mapActions)(PrivateRouteComponent)
+const PrivateRoute = connect(mapState, mapActions, null, { pure: false })(
+  PrivateRouteComponent,
+)
 
 export default PrivateRoute
