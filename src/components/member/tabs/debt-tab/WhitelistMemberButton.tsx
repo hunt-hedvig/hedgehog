@@ -2,12 +2,12 @@ import { useWhitelistMemberMutation } from 'api/generated/graphql'
 import { useGetMemberName } from 'graphql/use-get-member-name'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
-import { Notification } from 'store/actions/notificationsActions'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
-export const WhitelistMemberButton: React.FC<{
+const WhitelistMemberButtonComponent: React.FC<{
   memberId: string
-  showNotification: (data: Notification) => void
-}> = ({ memberId, showNotification }) => {
+} & WithShowNotification> = ({ memberId, showNotification }) => {
   const [whitelistMember] = useWhitelistMemberMutation()
   const [memberName] = useGetMemberName(memberId)
 
@@ -50,3 +50,7 @@ export const WhitelistMemberButton: React.FC<{
     </Button>
   )
 }
+
+export const WhitelistMemberButton = withShowNotification(
+  WhitelistMemberButtonComponent,
+)

@@ -19,7 +19,6 @@ import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import styled, { css, keyframes } from 'react-emotion'
-import { Notification } from 'store/actions/notificationsActions'
 
 const Headline = styled(MainHeadline)`
   display: flex;
@@ -49,10 +48,9 @@ const RefreshButton = styled.button<{ loading: boolean }>`
 `
 
 export const DebtTab: React.FC<{
-  showNotification: (data: Notification) => void
   memberId: string
   contractMarketInfo: ContractMarketInfo
-}> = ({ showNotification, memberId, contractMarketInfo }) => {
+}> = ({ memberId, contractMarketInfo }) => {
   const [person, { loading, error, refetch }] = useGetPerson(memberId)
 
   const eligibleForWhitelist =
@@ -121,10 +119,7 @@ export const DebtTab: React.FC<{
           </InfoContainer>
           <Spacing top={'large'} />
           {eligibleForWhitelist && (
-            <WhitelistMemberButton
-              memberId={memberId}
-              showNotification={showNotification}
-            />
+            <WhitelistMemberButton memberId={memberId} />
           )}
         </Card>
         {person?.debt && <OverallDebtProfile debt={person.debt} />}
