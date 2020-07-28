@@ -4,7 +4,7 @@ import { ChargePage } from 'features/tools/charges'
 import { ItemizerComponent } from 'features/tools/itemizer'
 import { NorwegianTariffCreator } from 'features/tools/norwegian-tariff-editor'
 import { PerilsEditor } from 'features/tools/perils-editor'
-import { UnsignerComponent } from 'features/tools/staging-tools/unsigner'
+import { Unsigner } from 'features/tools/staging-tools/unsigner'
 import { SwitcherAutomation } from 'features/tools/switcher-automation'
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
@@ -21,6 +21,6 @@ export const ToolsPageRoute: React.FunctionComponent = () => (
     />
     <Route component={ItemizerComponent} path="/tools/itemizer" />
     <Route component={CampaignCodeInfo} path="/tools/campaign-codes" />
-    <Route component={UnsignerComponent} path="/tools/unsigner" />
+    <Route component={Unsigner} path="/tools/unsigner" />
   </Switch>
 )
