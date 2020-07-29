@@ -21,7 +21,7 @@ export const StagingTools: React.FC = () => {
     <>
       <MainHeadline>Staging specific tools</MainHeadline>
       <CardsWrapper>
-        <CardLink to="/tools/unsigner" span={4}>
+        <CardLink to="/tools/unsign-member" span={4}>
           <Icon>✍️</Icon>
           Unsign member
         </CardLink>

@@ -12,7 +12,7 @@ enum UnsignMemberMarket {
   SWEDEN = 'SWEDEN',
   NORWAY = 'NORWAY',
 }
-const UnsignerComponent: React.FC<{} & WithShowNotification> = ({
+const UnsignMemberToolComponent: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
   const [ssn, setSsn] = React.useState('')
@@ -75,4 +75,4 @@ const UnsignerComponent: React.FC<{} & WithShowNotification> = ({
   )
 }
 
-export const Unsigner = withShowNotification(UnsignerComponent)
+export const UnsignMemberTool = withShowNotification(UnsignMemberToolComponent)
