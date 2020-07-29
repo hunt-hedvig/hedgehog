@@ -123,7 +123,7 @@ type MutationType {
   manualRedeemCampaign(memberId: ID!, request: ManualRedeemCampaignInput!): Boolean!
   manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
-  unsignMember(market: String!, ssn: String!): Boolean
+  unsignMember(market: String!, ssn: String!): Boolean!
 }
 
 type ClaimItem {

@@ -892,7 +892,7 @@ export type MutationType = {
   manualRedeemCampaign: Scalars['Boolean']
   manualUnRedeemCampaign: Scalars['Boolean']
   manualRedeemEnableReferralsCampaign: Scalars['Boolean']
-  unsignMember?: Maybe<Scalars['Boolean']>
+  unsignMember: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
