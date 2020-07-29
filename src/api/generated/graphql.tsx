@@ -646,14 +646,8 @@ export type Incentive =
   | CostDeduction
   | NoDiscount
   | IndefinitePercentageDiscount
-
-export enum IncentiveType {
-  CostDeduction = 'COST_DEDUCTION',
-  FreeMonths = 'FREE_MONTHS',
-  NoDiscount = 'NO_DISCOUNT',
-  MonthlyPercentageDiscountFixedPeriod = 'MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD',
-  IndefinitePercentageDiscount = 'INDEFINITE_PERCENTAGE_DISCOUNT',
-}
+  | VisibleNoDiscount
+  | UnknownIncentive
 
 export type IndefinitePercentageDiscount = {
   __typename?: 'IndefinitePercentageDiscount'
@@ -898,6 +892,7 @@ export type MutationType = {
   manualRedeemCampaign: Scalars['Boolean']
   manualUnRedeemCampaign: Scalars['Boolean']
   manualRedeemEnableReferralsCampaign: Scalars['Boolean']
+  unsignMember: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1163,6 +1158,11 @@ export type MutationTypeManualUnRedeemCampaignArgs = {
 export type MutationTypeManualRedeemEnableReferralsCampaignArgs = {
   memberId: Scalars['ID']
   market: Market
+}
+
+export type MutationTypeUnsignMemberArgs = {
+  market: Scalars['String']
+  ssn: Scalars['String']
 }
 
 export type NoDiscount = {
@@ -1797,6 +1797,11 @@ export enum TypeOfContract {
   NoTravelYouth = 'NO_TRAVEL_YOUTH',
 }
 
+export type UnknownIncentive = {
+  __typename?: 'UnknownIncentive'
+  _?: Maybe<Scalars['Boolean']>
+}
+
 export type UpsertClaimItemInput = {
   id?: Maybe<Scalars['ID']>
   claimId: Scalars['ID']
@@ -1860,6 +1865,11 @@ export type ValuationRule = {
 export type VerminAndPestsClaim = {
   __typename?: 'VerminAndPestsClaim'
   date?: Maybe<Scalars['LocalDate']>
+}
+
+export type VisibleNoDiscount = {
+  __typename?: 'VisibleNoDiscount'
+  _?: Maybe<Scalars['Boolean']>
 }
 
 export type VoucherCampaign = {
@@ -1947,6 +1957,16 @@ export type CreateNorwegianGripenPriceEngineMutationVariables = {
 export type CreateNorwegianGripenPriceEngineMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'createNorwegianGripenPriceEngine'>
+
+export type UnsignMemberMutationVariables = {
+  market: Scalars['String']
+  ssn: Scalars['String']
+}
+
+export type UnsignMemberMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'unsignMember'
+>
 
 export type GetSwitcherEmailsQueryVariables = {}
 
@@ -2473,6 +2493,8 @@ export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
               IndefinitePercentageDiscount,
               'percentageDiscount'
             >)
+          | { __typename?: 'VisibleNoDiscount' }
+          | { __typename?: 'UnknownIncentive' }
         >
       }
   >
@@ -2578,6 +2600,8 @@ export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
                       | { __typename: 'CostDeduction' }
                       | { __typename: 'NoDiscount' }
                       | { __typename: 'IndefinitePercentageDiscount' }
+                      | { __typename: 'VisibleNoDiscount' }
+                      | { __typename: 'UnknownIncentive' }
                   }
               >
               campaign: { __typename?: 'ReferralCampaign' } & Pick<
@@ -2604,6 +2628,8 @@ export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
                         IndefinitePercentageDiscount,
                         'percentageDiscount'
                       >)
+                    | { __typename: 'VisibleNoDiscount' }
+                    | { __typename: 'UnknownIncentive' }
                   >
                 }
               referredBy: Maybe<
@@ -3078,6 +3104,55 @@ export type CreateNorwegianGripenPriceEngineMutationResult = ApolloReactCommon.M
 export type CreateNorwegianGripenPriceEngineMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateNorwegianGripenPriceEngineMutation,
   CreateNorwegianGripenPriceEngineMutationVariables
+>
+export const UnsignMemberDocument = gql`
+  mutation UnsignMember($market: String!, $ssn: String!) {
+    unsignMember(market: $market, ssn: $ssn)
+  }
+`
+export type UnsignMemberMutationFn = ApolloReactCommon.MutationFunction<
+  UnsignMemberMutation,
+  UnsignMemberMutationVariables
+>
+
+/**
+ * __useUnsignMemberMutation__
+ *
+ * To run a mutation, you first call `useUnsignMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsignMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsignMemberMutation, { data, loading, error }] = useUnsignMemberMutation({
+ *   variables: {
+ *      market: // value for 'market'
+ *      ssn: // value for 'ssn'
+ *   },
+ * });
+ */
+export function useUnsignMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnsignMemberMutation,
+    UnsignMemberMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UnsignMemberMutation,
+    UnsignMemberMutationVariables
+  >(UnsignMemberDocument, baseOptions)
+}
+export type UnsignMemberMutationHookResult = ReturnType<
+  typeof useUnsignMemberMutation
+>
+export type UnsignMemberMutationResult = ApolloReactCommon.MutationResult<
+  UnsignMemberMutation
+>
+export type UnsignMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnsignMemberMutation,
+  UnsignMemberMutationVariables
 >
 export const GetSwitcherEmailsDocument = gql`
   query GetSwitcherEmails {
@@ -5970,6 +6045,12 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'IndefinitePercentageDiscount',
+          },
+          {
+            name: 'VisibleNoDiscount',
+          },
+          {
+            name: 'UnknownIncentive',
           },
         ],
       },

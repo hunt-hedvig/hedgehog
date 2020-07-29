@@ -123,6 +123,7 @@ type MutationType {
   manualRedeemCampaign(memberId: ID!, request: ManualRedeemCampaignInput!): Boolean!
   manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
+  unsignMember(market: String!, ssn: String!): Boolean!
 }
 
 type ClaimItem {
@@ -472,14 +473,6 @@ type CampaignOwnerPartner {
   partnerId: String!
 }
 
-enum IncentiveType {
-  COST_DEDUCTION
-  FREE_MONTHS
-  NO_DISCOUNT
-  MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD
-  INDEFINITE_PERCENTAGE_DISCOUNT
-}
-
 type VoucherCampaign {
   id: ID!
   campaignCode: String!
@@ -511,7 +504,15 @@ type IndefinitePercentageDiscount {
   percentageDiscount: Float
 }
 
-union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount
+type VisibleNoDiscount {
+  _: Boolean
+}
+
+type UnknownIncentive {
+  _: Boolean
+}
+
+union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount | VisibleNoDiscount | UnknownIncentive
 
 type ItemFamily implements ItemCategoryCore {
   id: ID!
