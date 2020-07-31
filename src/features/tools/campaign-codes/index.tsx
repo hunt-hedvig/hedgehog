@@ -1,13 +1,13 @@
 import { Scalars } from 'api/generated/graphql'
+import { InfoContainer } from 'components/member/tabs/shared/card-components'
 import { format, parseISO } from 'date-fns'
-import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
+import { CampaignCodeFilter } from 'features/tools/campaign-codes/CampaignCodeFilter'
+import { CreateCampaignCode } from 'features/tools/campaign-codes/CreateCampaignCode'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { Spacing } from 'hedvig-ui/spacing'
+import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import * as React from 'react'
-import { Dropdown, Form, Input, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import {
   isCostDeduction,
@@ -18,14 +18,14 @@ import { formatMoney } from 'utils/money'
 import { withShowNotification } from 'utils/notifications'
 import { CreateNewCampaignCode } from './create-new-campaign-code'
 
-interface CampaignQueryFormState {
+export interface CampaignFilter {
   code: string | null
   partnerId: string | null
   activeFrom: Date | null
   activeTo: Date | null
 }
 
-interface PartnerIdOptions {
+export interface PartnerIdOptions {
   key: string
   value: string
   text: string
@@ -34,19 +34,14 @@ interface PartnerIdOptions {
 const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
-  const [filter, setFilter] = React.useState(false)
-  const [shouldCreate, setShouldCreate] = React.useState(false)
-
-  const [campaignQueryFormState, setCampaignQueryFormState] = React.useState<
-    CampaignQueryFormState
-  >({
+  const [campaignFilter, setCampaignFilter] = React.useState<CampaignFilter>({
     code: null,
     partnerId: null,
     activeFrom: null,
     activeTo: null,
   })
 
-  const getCampaignQueryData = (formState: CampaignQueryFormState) => {
+  const getCampaignQueryData = (formState: CampaignFilter) => {
     return {
       code: formState.code,
       partnerId: formState.partnerId,
@@ -60,35 +55,17 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
   }
 
   const [partnerCampaigns, { refetch }] = usePartnerCampaigns(
-    getCampaignQueryData(campaignQueryFormState),
+    getCampaignQueryData(campaignFilter),
   )
 
   React.useEffect(() => {
     refetch()
   }, [
-    getCampaignQueryData(campaignQueryFormState).partnerId,
-    getCampaignQueryData(campaignQueryFormState).code,
-    getCampaignQueryData(campaignQueryFormState).activeFrom,
-    getCampaignQueryData(campaignQueryFormState).activeTo,
+    getCampaignQueryData(campaignFilter).partnerId,
+    getCampaignQueryData(campaignFilter).code,
+    getCampaignQueryData(campaignFilter).activeFrom,
+    getCampaignQueryData(campaignFilter).activeTo,
   ])
-
-  const [partnerCampaignOwners] = usePartnerCampaignOwners()
-
-  const partnerIdOptions: PartnerIdOptions[] = partnerCampaignOwners.map(
-    (partnerCampaignOwner) => ({
-      key: partnerCampaignOwner.partnerId,
-      value: partnerCampaignOwner.partnerId,
-      text: partnerCampaignOwner.partnerId,
-    }),
-  )
-  const [
-    activeFromDatePickerEnabled,
-    setActiveFromDatePickerEnabled,
-  ] = React.useState(false)
-  const [
-    activeToDatePickerEnabled,
-    setActiveToDatePickerEnabled,
-  ] = React.useState(false)
 
   const formatDate = (dateToFormat: Scalars['Instant']) => {
     const parsedDate = parseISO(dateToFormat)
@@ -98,105 +75,25 @@ const CampaignCodeInfoComponent: React.FC<{} & WithShowNotification> = ({
   return (
     <>
       <MainHeadline>Campaign Codes</MainHeadline>
-      <Spacing all>
-        <ButtonsGroup>
-          <Button onClick={() => setFilter(!filter)}>Filter codes</Button>
-          <Button onClick={() => setShouldCreate(!shouldCreate)}>
-            Create new code
-          </Button>
-        </ButtonsGroup>
-      </Spacing>
-      {filter && (
-        <Spacing bottom>
-          <Form>
-            <Form.Field>
-              <label>Code</label>
-              <Input
-                onChange={(e) => {
-                  setCampaignQueryFormState({
-                    ...campaignQueryFormState,
-                    code: e.currentTarget.value,
-                  })
-                }}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Campaign owner id</label>
-              <Dropdown
-                placeholder="partnerId"
-                fluid
-                search
-                selection
-                options={partnerIdOptions}
-                onChange={(_, data) => {
-                  setCampaignQueryFormState({
-                    ...campaignQueryFormState,
-                    partnerId: data.value as string,
-                  })
-                }}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Campaign code active from</label>
-              <input
-                onClick={() =>
-                  setActiveFromDatePickerEnabled(!activeFromDatePickerEnabled)
-                }
-                placeholder={
-                  campaignQueryFormState.activeFrom
-                    ? format(campaignQueryFormState.activeFrom, 'yyyy-MM-dd')
-                    : ''
-                }
-              />
-              {activeFromDatePickerEnabled && (
-                <>
-                  <DateTimePicker
-                    date={campaignQueryFormState.activeFrom!!}
-                    setDate={(data) => {
-                      setCampaignQueryFormState({
-                        ...campaignQueryFormState,
-                        activeFrom: data,
-                      })
-                    }}
-                  />
-                </>
-              )}
-            </Form.Field>
-            <Form.Field>
-              <label>Campaign code active to</label>
-              <input
-                onClick={() =>
-                  setActiveToDatePickerEnabled(!activeToDatePickerEnabled)
-                }
-                placeholder={
-                  campaignQueryFormState.activeFrom
-                    ? format(campaignQueryFormState.activeFrom, 'yyyy-MM-dd')
-                    : ''
-                }
-              />
-              {activeToDatePickerEnabled && (
-                <>
-                  <DateTimePicker
-                    date={campaignQueryFormState.activeTo!}
-                    setDate={(data) => {
-                      setCampaignQueryFormState({
-                        ...campaignQueryFormState,
-                        activeTo: data,
-                      })
-                    }}
-                  />
-                </>
-              )}
-            </Form.Field>
-          </Form>
-        </Spacing>
-      )}
-      {shouldCreate && (
-        <CreateNewCampaignCode
-          partnerIdOptions={partnerIdOptions}
-          showNotification={showNotification}
-        />
-      )}
+      <CardsWrapper>
+        <Card span={2}>
+          <CampaignCodeFilter
+            filter={campaignFilter}
+            setFilter={setCampaignFilter}
+          />
+        </Card>
+        <Card span={2}>
+          <CreateCampaignCode />
+        </Card>
+        <Card span={1}>
+          <InfoContainer>
+            <CreateNewCampaignCode
+              partnerIdOptions={[]}
+              showNotification={showNotification}
+            />
+          </InfoContainer>
+        </Card>
+      </CardsWrapper>
       {partnerCampaigns.length === 0 && 'No partner campaigns :('}
       <Table celled>
         <Table.Header>
