@@ -92,7 +92,6 @@ export const QuestionsFilter: React.FC<{
         checked={selected.includes(FilterState.Norway)}
         onChange={() => onToggle(FilterState.Norway)}
       />
-      {/*{console.log(selected)}*/}
     </>
   )
 }
