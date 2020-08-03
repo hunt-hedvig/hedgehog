@@ -67,7 +67,7 @@ export const CampaignCodeFilter: React.FC<{
       </InfoRow>
       <Spacing top={'small'} />
       <InfoRow>
-        <div style={{ float: 'left' }}>
+        <div style={{ width: '100%', float: 'left' }}>
           <DateTimePicker
             fullWidth
             date={filter.activeFrom!!}
@@ -80,9 +80,9 @@ export const CampaignCodeFilter: React.FC<{
             }}
           />
         </div>
-        <div style={{ float: 'right' }}>
+        <div style={{ width: '100%', float: 'right' }}>
           <DateTimePicker
-            fullWidth
+            fullWidth={true}
             placeholder={'Active to'}
             date={filter.activeTo!}
             setDate={(data) => {
