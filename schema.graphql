@@ -202,7 +202,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-    SwedishApartment
+  SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -433,7 +433,7 @@ type IndefinitePercentageDiscount {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -656,7 +656,7 @@ enum QuoteState {
 }
 
 union QuoteData =
-    ApartmentQuoteData
+  ApartmentQuoteData
   | HouseQuoteData
   | NorwegianHomeContentQuoteData
   | NorwegianTravelQuoteData
@@ -1026,7 +1026,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1239,6 +1239,7 @@ type QuestionGroup {
   id: ID!
   memberId: ID!
   questions: [Question!]!
+  member: Member
 }
 
 type Question {

@@ -7,7 +7,12 @@ import { FilterState, QuestionsFilter } from './filter'
 const Questions: React.FC = () => {
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
-  >('questions:filters', [FilterState.Even, FilterState.Odd])
+  >('questions:filters', [
+    FilterState.Even,
+    FilterState.Odd,
+    FilterState.Sweden,
+    FilterState.Norway,
+  ])
   return (
     <>
       <Spacing bottom="large">
