@@ -9,6 +9,8 @@ query GetQuestionsGroups {
     }
     member {
       memberId
+      firstName
+      lastName
       contractMarketInfo {
         market
       }

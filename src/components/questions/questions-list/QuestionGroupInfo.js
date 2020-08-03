@@ -19,11 +19,8 @@ const MemberInfoWrapper = styled.div`
 `
 
 const QuestionGroupInfo = ({ questionGroup }) => {
-  const memberQuery = useMemberNameAndContractMarketInfoQuery({
-    variables: { memberId: questionGroup.memberId},
-  })
 
-  const memberDataMaybe = memberQuery?.data?.member
+  const memberDataMaybe = questionGroup?.member
   return (
     <QuestionGroupInfoWrapper memberId={questionGroup.memberId}>
       <MemberInfoWrapper>
