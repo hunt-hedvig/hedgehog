@@ -19,12 +19,10 @@ export const FilteredQuestionGroups = ({ filterQuestionGroups }) => {
       {filterQuestionGroups.length ? (
         <>
           {filterQuestionGroups.map((questionGroup) => (
-
             <QuestionGroup
               key={questionGroup.id}
               questionGroup={questionGroup}
             />
-
           ))}
         </>
       ) : (
