@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import { TicketHistory } from '../../components/tickets/ticket/history/ticket-history'
 

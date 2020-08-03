@@ -1,0 +1,9 @@
+query GetMessageHistory($memberId: ID!) {
+  messageHistory(memberId: $memberId) {
+    globalId
+    author
+    fromId
+    timestamp
+    messageBodyJsonString
+  }
+}

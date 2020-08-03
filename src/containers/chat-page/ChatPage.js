@@ -6,28 +6,23 @@ import actions from 'store/actions'
 
 const ChatPage = (props) => <Member {...props} />
 
-const mapStateToProps = ({
-  messages,
-  claims,
-  insurance,
-  auth,
-  payoutDetails,
-}) => ({
+const mapStateToProps = ({ messages, claims, auth, payoutDetails }) => ({
   memberClaims: claims.memberClaims,
   messages,
-  insurance,
   auth,
   payoutDetails,
 })
 
-export default withRouter(
-  connect(mapStateToProps, {
+export default connect(
+  mapStateToProps,
+  {
     claimsByMember: actions.claimsActions.claimsByMember,
-    ...actions.insuranceActions,
     ...actions.messagesActions,
     ...actions.membersActions,
     ...actions.clientActions,
     ...actions.notificationsActions,
     ...actions.payoutDetailsActions,
-  })(ChatPage),
-)
+  },
+  null,
+  { pure: false },
+)(withRouter(ChatPage))

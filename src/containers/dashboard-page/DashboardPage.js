@@ -10,13 +10,9 @@ export default withRouter(
   connect(
     ({ auth, messages, dashboard }) => ({
       auth,
-      messages,
-      dashboard,
     }),
     {
-      ...actions.dashboardActions,
       ...actions.clientActions,
-      setActiveConnection: actions.messagesActions.setActiveConnection,
     },
   )(DashboardPage),
 )

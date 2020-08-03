@@ -73,6 +73,32 @@ export const CLAIM_PAGE_QUERY = gql`
         category
         contentType
       }
+      contract {
+        id
+        currentAgreementId
+        agreements {
+          ... on AgreementCore {
+            id
+          }
+          ... on SwedishApartment {
+            address {
+              street
+            }
+          }
+          ... on SwedishHouse {
+            address {
+              street
+            }
+          }
+          ... on NorwegianHomeContent {
+            address {
+              street
+            }
+          }
+        }
+        contractTypeName
+        typeOfContract
+      }
       coveringEmployee
       __typename
     }

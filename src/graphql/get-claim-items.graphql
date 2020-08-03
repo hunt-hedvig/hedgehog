@@ -22,6 +22,10 @@ query GetClaimItems($claimId: ID!) {
       amount
       currency
     }
+    valuation {
+      amount
+      currency
+    }
     note
   }
 }

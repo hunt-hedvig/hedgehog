@@ -1,10 +1,11 @@
 import { refreshAccessToken } from 'api/index'
-import ApolloClient from 'apollo-boost'
+import { ApolloClient, ApolloLink, HttpLink } from 'apollo-boost'
 import {
   defaultDataIdFromObject,
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory'
+import { onError } from 'apollo-link-error'
 import { ServerError } from 'apollo-link-http-common'
 import { Store } from 'redux'
 import { showNotification } from 'store/actions/notificationsActions'
@@ -22,24 +23,12 @@ export const apolloClient = (() => {
   }
 
   return new ApolloClient({
-    uri: '/api/graphql',
-    connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
-    cache: new InMemoryCache({
-      fragmentMatcher,
-      dataIdFromObject: (object) => {
-        switch (object.__typename) {
-          case 'Member':
-            return `Member(${(object as any).memberId})`
-          case 'Renewal':
-            return `Renewal(${(object as any).draftOfAgreementId})`
-          default:
-            return defaultDataIdFromObject(object)
+    link: ApolloLink.from([
+      onError((error) => {
+        if ((error?.networkError as ServerError)?.response?.status !== 403) {
+          return
         }
-      },
-    }),
-    credentials: 'same-origin',
-    onError: (error) => {
-      if ((error?.networkError as ServerError)?.response?.status === 403) {
+
         refreshAccessToken()
           .then(() => {
             ;((window as any).__store as Store).dispatch(
@@ -63,7 +52,26 @@ export const apolloClient = (() => {
             )
             forceLogOut()
           })
-      }
-    },
+      }),
+      new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
+    ]),
+    connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
+    cache: new InMemoryCache({
+      fragmentMatcher,
+      dataIdFromObject: (object) => {
+        switch (object.__typename) {
+          case 'Member':
+            return `Member(${(object as any).memberId})`
+          case 'Renewal':
+            return `Renewal(${(object as any).draftOfAgreementId})`
+          case 'ChatMessage':
+            return `ChatMessage(${(object as any).globalId})`
+          case 'MemberReferral':
+            return `MemberReferral(${(object as any).memberId}`
+          default:
+            return defaultDataIdFromObject(object)
+        }
+      },
+    }),
   })
 })()

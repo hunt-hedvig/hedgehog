@@ -1,7 +1,6 @@
+import AuthSaga from './authSaga'
 import ClaimDetailsSaga from './claimDetailsSaga'
 import ClaimsSaga from './claimsSaga'
-import InsuranceSaga from './insuranceSaga'
-import AuthSaga from './authSaga'
 import MembersSaga from './membersSaga'
 import MessagesSaga from './messagesSaga'
 import NotesSaga from './notesSaga'
@@ -22,6 +21,5 @@ export default function* IndexSaga() {
     PayoutSaga(),
     NotesSaga(),
     QuestionsSaga(),
-    InsuranceSaga(),
   ]
 }

@@ -11,7 +11,6 @@ export const useGetAccount = (memberId: string): AccountReturnTuple => {
     variables: { memberId },
     pollInterval: 2000,
   })
-  console.log(queryResult)
   const account = queryResult.data?.member?.account as Account | undefined
   return [account, queryResult]
 }

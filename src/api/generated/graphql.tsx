@@ -126,12 +126,6 @@ export enum AgreementStatus {
   Terminated = 'TERMINATED',
 }
 
-export type AllRepliesEntry = {
-  __typename?: 'AllRepliesEntry'
-  intent: Scalars['String']
-  reply: Scalars['String']
-}
-
 export type ApartmentQuoteData = IQuoteData & {
   __typename?: 'ApartmentQuoteData'
   id: Scalars['ID']
@@ -194,11 +188,6 @@ export type AssignVoucherPercentageDiscount = {
   validUntil?: Maybe<Scalars['Instant']>
 }
 
-export type AutoLabel = {
-  __typename?: 'AutoLabel'
-  message?: Maybe<Scalars['Boolean']>
-}
-
 export type BurglaryClaim = {
   __typename?: 'BurglaryClaim'
   location?: Maybe<Scalars['String']>
@@ -218,6 +207,14 @@ export type CampaignFilter = {
 export type CampaignOwnerPartner = {
   __typename?: 'CampaignOwnerPartner'
   partnerId: Scalars['String']
+}
+
+export type CanValuateClaimItem = {
+  __typename?: 'CanValuateClaimItem'
+  canValuate: Scalars['Boolean']
+  typeOfContract?: Maybe<TypeOfContract>
+  itemFamily?: Maybe<Scalars['String']>
+  itemTypeId?: Maybe<Scalars['ID']>
 }
 
 export type ChangeFromDateInput = {
@@ -247,6 +244,15 @@ export enum ChargeStatus {
   ChargeCompleted = 'CHARGE_COMPLETED',
 }
 
+export type ChatMessage = {
+  __typename?: 'ChatMessage'
+  globalId: Scalars['ID']
+  author?: Maybe<Scalars['String']>
+  fromId: Scalars['String']
+  timestamp?: Maybe<Scalars['Instant']>
+  messageBodyJsonString: Scalars['String']
+}
+
 export type Claim = {
   __typename?: 'Claim'
   id?: Maybe<Scalars['ID']>
@@ -262,6 +268,7 @@ export type Claim = {
   events?: Maybe<Array<Maybe<ClaimEvent>>>
   coveringEmployee: Scalars['Boolean']
   claimFiles: Array<ClaimFileUpload>
+  contract?: Maybe<Contract>
 }
 
 export type ClaimEvent = {
@@ -299,7 +306,14 @@ export type ClaimItem = {
   itemCompany?: Maybe<ItemCompany>
   dateOfPurchase?: Maybe<Scalars['LocalDate']>
   purchasePrice?: Maybe<MonetaryAmountV2>
+  valuation?: Maybe<MonetaryAmountV2>
   note?: Maybe<Scalars['String']>
+}
+
+export type ClaimItemValuation = {
+  __typename?: 'ClaimItemValuation'
+  depreciatedValue?: Maybe<MonetaryAmountV2>
+  valuationRule?: Maybe<ValuationRule>
 }
 
 export type ClaimNote = {
@@ -431,6 +445,7 @@ export type Contract = {
   switchedFrom?: Maybe<Scalars['String']>
   masterInception?: Maybe<Scalars['LocalDate']>
   status: ContractStatus
+  typeOfContract: TypeOfContract
   isTerminated: Scalars['Boolean']
   terminationDate?: Maybe<Scalars['LocalDate']>
   currentAgreementId: Scalars['ID']
@@ -469,6 +484,12 @@ export type CostDeduction = {
 export type CreateNorwegianGripenInput = {
   baseFactorString?: Maybe<Scalars['String']>
   factors: Array<NorwegianGripenFactorInput>
+}
+
+export type DashboardNumbers = {
+  __typename?: 'DashboardNumbers'
+  numberOfClaims: Scalars['Int']
+  numberOfQuestions: Scalars['Int']
 }
 
 export type Debt = {
@@ -563,6 +584,15 @@ export enum Gender {
   Other = 'OTHER',
 }
 
+export type GetValuationInput = {
+  purchasePrice: Scalars['MonetaryAmount']
+  itemFamilyId: Scalars['String']
+  itemTypeId?: Maybe<Scalars['ID']>
+  typeOfContract: TypeOfContract
+  purchaseDate: Scalars['LocalDate']
+  baseDate?: Maybe<Scalars['LocalDate']>
+}
+
 export type HouseQuoteData = IQuoteData & {
   __typename?: 'HouseQuoteData'
   id: Scalars['ID']
@@ -616,14 +646,8 @@ export type Incentive =
   | CostDeduction
   | NoDiscount
   | IndefinitePercentageDiscount
-
-export enum IncentiveType {
-  CostDeduction = 'COST_DEDUCTION',
-  FreeMonths = 'FREE_MONTHS',
-  NoDiscount = 'NO_DISCOUNT',
-  MonthlyPercentageDiscountFixedPeriod = 'MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD',
-  IndefinitePercentageDiscount = 'INDEFINITE_PERCENTAGE_DISCOUNT',
-}
+  | VisibleNoDiscount
+  | UnknownIncentive
 
 export type IndefinitePercentageDiscount = {
   __typename?: 'IndefinitePercentageDiscount'
@@ -632,6 +656,10 @@ export type IndefinitePercentageDiscount = {
 
 export type InsertItemCategoriesInput = {
   itemCategoriesString: Scalars['String']
+}
+
+export type InsertValuationRulesInput = {
+  valuationRulesString: Scalars['String']
 }
 
 export type InstallationsClaim = {
@@ -727,6 +755,15 @@ export type LuggageDelayClaim = {
   ticket?: Maybe<Scalars['String']>
 }
 
+export type ManualRedeemCampaignInput = {
+  campaignCode: Scalars['String']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}
+
+export type ManualUnRedeemCampaignInput = {
+  campaignCode: Scalars['String']
+}
+
 export enum Market {
   Sweden = 'SWEDEN',
   Norway = 'NORWAY',
@@ -757,6 +794,8 @@ export type Member = {
   quotes: Array<Quote>
   contracts: Array<Contract>
   contractMarketInfo?: Maybe<ContractMarketInfo>
+  pickedLocale?: Maybe<PickedLocale>
+  referralInformation?: Maybe<ReferralInformation>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -766,6 +805,14 @@ export type MemberMonthlySubscriptionArgs = {
 export type MemberChargeApproval = {
   memberId: Scalars['ID']
   amount: Scalars['MonetaryAmount']
+}
+
+export type MemberReferral = {
+  __typename?: 'MemberReferral'
+  memberId: Scalars['String']
+  name?: Maybe<Scalars['String']>
+  status: Scalars['String']
+  incentive: Incentive
 }
 
 export type MonetaryAmountV2 = {
@@ -806,7 +853,6 @@ export type MutationType = {
   changeTicketStatus?: Maybe<Scalars['ID']>
   changeTicketReminder?: Maybe<Scalars['ID']>
   changeTicketPriority?: Maybe<Scalars['ID']>
-  autoLabelQuestion?: Maybe<AutoLabel>
   whitelistMember?: Maybe<Scalars['Boolean']>
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
@@ -827,6 +873,7 @@ export type MutationType = {
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
   regenerateCertificate: Scalars['ID']
+  sendMessage: SendMessageResponse
   markQuestionAsResolved: Scalars['Boolean']
   answerQuestion: Scalars['Boolean']
   createQuoteForNewContract: Quote
@@ -838,7 +885,14 @@ export type MutationType = {
   upsertClaimItem: Scalars['ID']
   deleteClaimItem?: Maybe<Scalars['ID']>
   insertItemCategories: Array<Scalars['Boolean']>
+  insertValuationRules: Array<Scalars['Boolean']>
+  upsertValuationRule: Scalars['ID']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
+  setContractForClaim: Scalars['Boolean']
+  manualRedeemCampaign: Scalars['Boolean']
+  manualUnRedeemCampaign: Scalars['Boolean']
+  manualRedeemEnableReferralsCampaign: Scalars['Boolean']
+  unsignMember: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -927,13 +981,6 @@ export type MutationTypeChangeTicketReminderArgs = {
 export type MutationTypeChangeTicketPriorityArgs = {
   ticketId: Scalars['ID']
   newPriority?: Maybe<Scalars['Float']>
-}
-
-export type MutationTypeAutoLabelQuestionArgs = {
-  question: Scalars['String']
-  label: Scalars['String']
-  memberId?: Maybe<Scalars['String']>
-  messageIds?: Maybe<Array<Scalars['String']>>
 }
 
 export type MutationTypeWhitelistMemberArgs = {
@@ -1030,6 +1077,10 @@ export type MutationTypeRegenerateCertificateArgs = {
   agreementId: Scalars['ID']
 }
 
+export type MutationTypeSendMessageArgs = {
+  input: SendMessageInput
+}
+
 export type MutationTypeMarkQuestionAsResolvedArgs = {
   memberId: Scalars['ID']
 }
@@ -1078,8 +1129,40 @@ export type MutationTypeInsertItemCategoriesArgs = {
   request?: Maybe<InsertItemCategoriesInput>
 }
 
+export type MutationTypeInsertValuationRulesArgs = {
+  request?: Maybe<InsertValuationRulesInput>
+}
+
+export type MutationTypeUpsertValuationRuleArgs = {
+  request?: Maybe<UpsertValuationRuleInput>
+}
+
 export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
   request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type MutationTypeSetContractForClaimArgs = {
+  request: SetContractForClaim
+}
+
+export type MutationTypeManualRedeemCampaignArgs = {
+  memberId: Scalars['ID']
+  request: ManualRedeemCampaignInput
+}
+
+export type MutationTypeManualUnRedeemCampaignArgs = {
+  memberId: Scalars['ID']
+  request: ManualUnRedeemCampaignInput
+}
+
+export type MutationTypeManualRedeemEnableReferralsCampaignArgs = {
+  memberId: Scalars['ID']
+  market: Market
+}
+
+export type MutationTypeUnsignMemberArgs = {
+  market: Scalars['String']
+  ssn: Scalars['String']
 }
 
 export type NoDiscount = {
@@ -1239,6 +1322,13 @@ export type PersonStatus = {
   whitelisted?: Maybe<Scalars['Boolean']>
 }
 
+export enum PickedLocale {
+  SvSe = 'sv_SE',
+  EnSe = 'en_SE',
+  NbNo = 'nb_NO',
+  EnNo = 'en_NO',
+}
+
 export type QueryType = {
   __typename?: 'QueryType'
   monthlyPayments?: Maybe<Array<Maybe<MonthlySubscription>>>
@@ -1248,14 +1338,17 @@ export type QueryType = {
   ticket?: Maybe<Ticket>
   getFullTicketHistory?: Maybe<TicketHistory>
   tickets: Array<Ticket>
-  getAnswerSuggestion: Array<Suggestion>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
   itemCategories: Array<ItemCategory>
   claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
+  dashboardNumbers?: Maybe<DashboardNumbers>
+  getClaimItemValuation: ClaimItemValuation
+  canValuateClaimItem?: Maybe<CanValuateClaimItem>
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1286,8 +1379,8 @@ export type QueryTypeTicketsArgs = {
   resolved?: Maybe<Scalars['Boolean']>
 }
 
-export type QueryTypeGetAnswerSuggestionArgs = {
-  question?: Maybe<Scalars['String']>
+export type QueryTypeMessageHistoryArgs = {
+  memberId: Scalars['ID']
 }
 
 export type QueryTypeItemCategoriesArgs = {
@@ -1303,6 +1396,16 @@ export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
 }
 
+export type QueryTypeGetClaimItemValuationArgs = {
+  request?: Maybe<GetValuationInput>
+}
+
+export type QueryTypeCanValuateClaimItemArgs = {
+  typeOfContract: TypeOfContract
+  itemFamilyId: Scalars['String']
+  itemTypeId?: Maybe<Scalars['ID']>
+}
+
 export type Question = {
   __typename?: 'Question'
   id: Scalars['ID']
@@ -1315,6 +1418,7 @@ export type QuestionGroup = {
   id: Scalars['ID']
   memberId: Scalars['ID']
   questions: Array<Question>
+  member?: Maybe<Member>
 }
 
 export type Quote = {
@@ -1378,6 +1482,38 @@ export enum QuoteState {
   Expired = 'EXPIRED',
 }
 
+export type RedeemedCampaign = {
+  __typename?: 'RedeemedCampaign'
+  code: Scalars['String']
+  type: Scalars['String']
+  incentive: Incentive
+  redemptionState: RedemptionState
+}
+
+export type RedemptionState = {
+  __typename?: 'RedemptionState'
+  redeemedAt: Scalars['Instant']
+  activatedAt?: Maybe<Scalars['Instant']>
+  activeTo?: Maybe<Scalars['Instant']>
+  terminatedAt?: Maybe<Scalars['Instant']>
+  unRedeemedAt?: Maybe<Scalars['Instant']>
+}
+
+export type ReferralCampaign = {
+  __typename?: 'ReferralCampaign'
+  code: Scalars['String']
+  incentive?: Maybe<Incentive>
+}
+
+export type ReferralInformation = {
+  __typename?: 'ReferralInformation'
+  eligible: Scalars['Boolean']
+  campaign: ReferralCampaign
+  referredBy?: Maybe<MemberReferral>
+  hasReferred: Array<MemberReferral>
+  redeemedCampaigns: Array<RedeemedCampaign>
+}
+
 export type RemindNotification = {
   date?: Maybe<Scalars['LocalDate']>
   time?: Maybe<Scalars['LocalTime']>
@@ -1409,6 +1545,32 @@ export type SchedulerState = {
   transactionId?: Maybe<Scalars['ID']>
 }
 
+export type SendMessageFailed = {
+  __typename?: 'SendMessageFailed'
+  memberId: Scalars['String']
+  errorCode: Scalars['Int']
+  errorMessage: Scalars['String']
+}
+
+export type SendMessageInput = {
+  memberId: Scalars['ID']
+  message: Scalars['String']
+  forceSendMessage: Scalars['Boolean']
+}
+
+export type SendMessageResponse = SendMessageSuccessful | SendMessageFailed
+
+export type SendMessageSuccessful = {
+  __typename?: 'SendMessageSuccessful'
+  memberId: Scalars['String']
+}
+
+export type SetContractForClaim = {
+  claimId: Scalars['String']
+  memberId: Scalars['String']
+  contractId: Scalars['String']
+}
+
 export enum SignSource {
   Rapio = 'RAPIO',
   Webonboarding = 'WEBONBOARDING',
@@ -1427,15 +1589,6 @@ export type SnowPressureClaim = {
 export type StormDamageClaim = {
   __typename?: 'StormDamageClaim'
   date?: Maybe<Scalars['LocalDate']>
-}
-
-export type Suggestion = {
-  __typename?: 'Suggestion'
-  intent: Scalars['String']
-  reply: Scalars['String']
-  text: Scalars['String']
-  confidence: Scalars['Float']
-  allReplies: Array<AllRepliesEntry>
 }
 
 export type SwedishApartment = AgreementCore & {
@@ -1630,6 +1783,25 @@ export type TravelAccidentClaim = {
   receipt?: Maybe<Scalars['String']>
 }
 
+export enum TypeOfContract {
+  SeHouse = 'SE_HOUSE',
+  SeApartmentBrf = 'SE_APARTMENT_BRF',
+  SeApartmentRent = 'SE_APARTMENT_RENT',
+  SeApartmentStudentBrf = 'SE_APARTMENT_STUDENT_BRF',
+  SeApartmentStudentRent = 'SE_APARTMENT_STUDENT_RENT',
+  NoHomeContentOwn = 'NO_HOME_CONTENT_OWN',
+  NoHomeContentRent = 'NO_HOME_CONTENT_RENT',
+  NoHomeContentYouthOwn = 'NO_HOME_CONTENT_YOUTH_OWN',
+  NoHomeContentYouthRent = 'NO_HOME_CONTENT_YOUTH_RENT',
+  NoTravel = 'NO_TRAVEL',
+  NoTravelYouth = 'NO_TRAVEL_YOUTH',
+}
+
+export type UnknownIncentive = {
+  __typename?: 'UnknownIncentive'
+  _?: Maybe<Scalars['Boolean']>
+}
+
 export type UpsertClaimItemInput = {
   id?: Maybe<Scalars['ID']>
   claimId: Scalars['ID']
@@ -1638,8 +1810,9 @@ export type UpsertClaimItemInput = {
   itemBrandId?: Maybe<Scalars['ID']>
   itemModelId?: Maybe<Scalars['ID']>
   dateOfPurchase?: Maybe<Scalars['LocalDate']>
-  purchasePriceAmount?: Maybe<Scalars['Float']>
-  purchasePriceCurrency?: Maybe<Scalars['String']>
+  purchasePrice?: Maybe<Scalars['MonetaryAmount']>
+  automaticValuation?: Maybe<Scalars['MonetaryAmount']>
+  customValuation?: Maybe<Scalars['MonetaryAmount']>
   note?: Maybe<Scalars['String']>
 }
 
@@ -1667,9 +1840,36 @@ export type UpsertItemTypeInput = {
   itemFamilyId: Scalars['ID']
 }
 
+export type UpsertValuationRuleInput = {
+  id?: Maybe<Scalars['ID']>
+  name: Scalars['String']
+  ageLimit: Scalars['Float']
+  typeOfContract: TypeOfContract
+  itemFamilyId: Scalars['String']
+  itemTypeId?: Maybe<Scalars['String']>
+  valuationType: Scalars['String']
+  depreciation?: Maybe<Scalars['Float']>
+}
+
+export type ValuationRule = {
+  __typename?: 'ValuationRule'
+  valuationName: Scalars['String']
+  itemFamily: Scalars['String']
+  itemTypeId?: Maybe<Scalars['ID']>
+  ageLimit: Scalars['Float']
+  valuationTable: Scalars['String']
+  valuationType: Scalars['String']
+  depreciation?: Maybe<Scalars['Int']>
+}
+
 export type VerminAndPestsClaim = {
   __typename?: 'VerminAndPestsClaim'
   date?: Maybe<Scalars['LocalDate']>
+}
+
+export type VisibleNoDiscount = {
+  __typename?: 'VisibleNoDiscount'
+  _?: Maybe<Scalars['Boolean']>
 }
 
 export type VoucherCampaign = {
@@ -1734,6 +1934,14 @@ export type InsertItemCategoriesMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'insertItemCategories'>
 
+export type InsertValuationRulesMutationVariables = {
+  request?: Maybe<InsertValuationRulesInput>
+}
+
+export type InsertValuationRulesMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'insertValuationRules'>
+
 export type AddNorwegainPostalCodesMutationVariables = {
   postalCodesString?: Maybe<Scalars['String']>
 }
@@ -1749,6 +1957,16 @@ export type CreateNorwegianGripenPriceEngineMutationVariables = {
 export type CreateNorwegianGripenPriceEngineMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'createNorwegianGripenPriceEngine'>
+
+export type UnsignMemberMutationVariables = {
+  market: Scalars['String']
+  ssn: Scalars['String']
+}
+
+export type UnsignMemberMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'unsignMember'
+>
 
 export type GetSwitcherEmailsQueryVariables = {}
 
@@ -1817,6 +2035,21 @@ export type AnswerQuestionMutation = { __typename?: 'MutationType' } & Pick<
   MutationType,
   'answerQuestion'
 >
+
+export type CanValuateClaimItemQueryVariables = {
+  typeOfContract: TypeOfContract
+  itemFamilyId: Scalars['String']
+  itemTypeId?: Maybe<Scalars['ID']>
+}
+
+export type CanValuateClaimItemQuery = { __typename?: 'QueryType' } & {
+  canValuateClaimItem: Maybe<
+    { __typename?: 'CanValuateClaimItem' } & Pick<
+      CanValuateClaimItem,
+      'canValuate' | 'typeOfContract' | 'itemFamily' | 'itemTypeId'
+    >
+  >
+}
 
 export type ChangeFromDateMutationVariables = {
   agreementId: Scalars['ID']
@@ -1938,6 +2171,33 @@ export type GetAccountQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetClaimItemValuationQueryVariables = {
+  request?: Maybe<GetValuationInput>
+}
+
+export type GetClaimItemValuationQuery = { __typename?: 'QueryType' } & {
+  getClaimItemValuation: { __typename?: 'ClaimItemValuation' } & {
+    depreciatedValue: Maybe<
+      { __typename?: 'MonetaryAmountV2' } & Pick<
+        MonetaryAmountV2,
+        'amount' | 'currency'
+      >
+    >
+    valuationRule: Maybe<
+      { __typename?: 'ValuationRule' } & Pick<
+        ValuationRule,
+        | 'valuationName'
+        | 'itemFamily'
+        | 'itemTypeId'
+        | 'ageLimit'
+        | 'valuationTable'
+        | 'valuationType'
+        | 'depreciation'
+      >
+    >
+  }
+}
+
 export type GetClaimItemsQueryVariables = {
   claimId: Scalars['ID']
 }
@@ -1963,6 +2223,12 @@ export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
           { __typename?: 'ItemModel' } & Pick<ItemModel, 'id' | 'displayName'>
         >
         purchasePrice: Maybe<
+          { __typename?: 'MonetaryAmountV2' } & Pick<
+            MonetaryAmountV2,
+            'amount' | 'currency'
+          >
+        >
+        valuation: Maybe<
           { __typename?: 'MonetaryAmountV2' } & Pick<
             MonetaryAmountV2,
             'amount' | 'currency'
@@ -2122,6 +2388,17 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetDashboardNumbersQueryVariables = {}
+
+export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
+  dashboardNumbers: Maybe<
+    { __typename?: 'DashboardNumbers' } & Pick<
+      DashboardNumbers,
+      'numberOfClaims' | 'numberOfQuestions'
+    >
+  >
+}
+
 export type GetItemCategoriesQueryVariables = {
   kind: ItemCategoryKind
   parentId?: Maybe<Scalars['ID']>
@@ -2149,6 +2426,32 @@ export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
         ItemCompany,
         'id' | 'displayName' | 'searchTerms' | 'nextKind'
       >)
+  >
+}
+
+export type GetMemberNameQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetMemberNameQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<
+      Member,
+      'memberId' | 'firstName' | 'lastName'
+    >
+  >
+}
+
+export type GetMessageHistoryQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetMessageHistoryQuery = { __typename?: 'QueryType' } & {
+  messageHistory: Array<
+    { __typename?: 'ChatMessage' } & Pick<
+      ChatMessage,
+      'globalId' | 'author' | 'fromId' | 'timestamp' | 'messageBodyJsonString'
+    >
   >
 }
 
@@ -2190,6 +2493,63 @@ export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
               IndefinitePercentageDiscount,
               'percentageDiscount'
             >)
+          | { __typename?: 'VisibleNoDiscount' }
+          | { __typename?: 'UnknownIncentive' }
+        >
+      }
+  >
+}
+
+export type GetPersonQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetPersonQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        person: Maybe<
+          { __typename?: 'Person' } & Pick<Person, 'debtFlag'> & {
+              status: Maybe<
+                { __typename?: 'PersonStatus' } & Pick<
+                  PersonStatus,
+                  'flag' | 'whitelisted'
+                >
+              >
+              debt: Maybe<
+                { __typename?: 'Debt' } & Pick<
+                  Debt,
+                  | 'numberPublicDebts'
+                  | 'totalAmountPublicDebt'
+                  | 'numberPrivateDebts'
+                  | 'totalAmountPrivateDebt'
+                  | 'totalAmountDebt'
+                  | 'fromDateTime'
+                > & {
+                    paymentDefaults: Maybe<
+                      Array<
+                        Maybe<
+                          { __typename?: 'PaymentDefault' } & Pick<
+                            PaymentDefault,
+                            | 'year'
+                            | 'week'
+                            | 'paymentDefaultType'
+                            | 'paymentDefaultTypeText'
+                            | 'amount'
+                            | 'caseId'
+                            | 'claimant'
+                          >
+                        >
+                      >
+                    >
+                  }
+              >
+              whitelisted: Maybe<
+                { __typename?: 'Whitelisted' } & Pick<
+                  Whitelisted,
+                  'whitelistedAt' | 'whitelistedBy'
+                >
+              >
+            }
         >
       }
   >
@@ -2209,9 +2569,126 @@ export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
             'id' | 'messageJsonString' | 'timestamp'
           >
         >
+        member: Maybe<
+          { __typename?: 'Member' } & Pick<
+            Member,
+            'memberId' | 'firstName' | 'lastName'
+          > & {
+              contractMarketInfo: Maybe<
+                { __typename?: 'ContractMarketInfo' } & Pick<
+                  ContractMarketInfo,
+                  'market'
+                >
+              >
+            }
+        >
       }
   >
 }
+
+export type GetReferralInformationQueryVariables = {
+  memberId: Scalars['ID']
+}
+
+export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
+  member: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        referralInformation: Maybe<
+          { __typename?: 'ReferralInformation' } & Pick<
+            ReferralInformation,
+            'eligible'
+          > & {
+              redeemedCampaigns: Array<
+                { __typename?: 'RedeemedCampaign' } & Pick<
+                  RedeemedCampaign,
+                  'code' | 'type'
+                > & {
+                    redemptionState: { __typename?: 'RedemptionState' } & Pick<
+                      RedemptionState,
+                      'redeemedAt' | 'activatedAt' | 'activeTo' | 'unRedeemedAt'
+                    >
+                    incentive:
+                      | { __typename: 'MonthlyPercentageDiscountFixedPeriod' }
+                      | { __typename: 'FreeMonths' }
+                      | { __typename: 'CostDeduction' }
+                      | { __typename: 'NoDiscount' }
+                      | { __typename: 'IndefinitePercentageDiscount' }
+                      | { __typename: 'VisibleNoDiscount' }
+                      | { __typename: 'UnknownIncentive' }
+                  }
+              >
+              campaign: { __typename?: 'ReferralCampaign' } & Pick<
+                ReferralCampaign,
+                'code'
+              > & {
+                  incentive: Maybe<
+                    | ({
+                        __typename: 'MonthlyPercentageDiscountFixedPeriod'
+                      } & Pick<
+                        MonthlyPercentageDiscountFixedPeriod,
+                        'numberOfMonths' | 'percentage'
+                      >)
+                    | ({ __typename: 'FreeMonths' } & Pick<
+                        FreeMonths,
+                        'numberOfMonths'
+                      >)
+                    | ({ __typename: 'CostDeduction' } & Pick<
+                        CostDeduction,
+                        'amount'
+                      >)
+                    | ({ __typename: 'NoDiscount' } & Pick<NoDiscount, '_'>)
+                    | ({ __typename: 'IndefinitePercentageDiscount' } & Pick<
+                        IndefinitePercentageDiscount,
+                        'percentageDiscount'
+                      >)
+                    | { __typename: 'VisibleNoDiscount' }
+                    | { __typename: 'UnknownIncentive' }
+                  >
+                }
+              referredBy: Maybe<
+                { __typename?: 'MemberReferral' } & Pick<
+                  MemberReferral,
+                  'memberId' | 'name' | 'status'
+                >
+              >
+              hasReferred: Array<
+                { __typename?: 'MemberReferral' } & Pick<
+                  MemberReferral,
+                  'memberId' | 'name' | 'status'
+                >
+              >
+            }
+        >
+      }
+  >
+}
+
+export type ManualRedeemCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  request: ManualRedeemCampaignInput
+}
+
+export type ManualRedeemCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualRedeemCampaign'>
+
+export type ManualRedeemEnableReferralsCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  market: Market
+}
+
+export type ManualRedeemEnableReferralsCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualRedeemEnableReferralsCampaign'>
+
+export type ManualUnRedeemCampaignMutationVariables = {
+  memberId: Scalars['ID']
+  request: ManualUnRedeemCampaignInput
+}
+
+export type ManualUnRedeemCampaignMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'manualUnRedeemCampaign'>
 
 export type MarkQuestionAsResolvedMutationVariables = {
   memberId: Scalars['ID']
@@ -2240,6 +2717,49 @@ export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
   >
 }
 
+export type SendMessageMutationVariables = {
+  input: SendMessageInput
+}
+
+export type SendMessageMutation = { __typename?: 'MutationType' } & {
+  sendMessage:
+    | ({ __typename?: 'SendMessageSuccessful' } & Pick<
+        SendMessageSuccessful,
+        'memberId'
+      >)
+    | ({ __typename?: 'SendMessageFailed' } & Pick<
+        SendMessageFailed,
+        'memberId' | 'errorCode' | 'errorMessage'
+      >)
+}
+
+export type SetContractForClaimMutationVariables = {
+  request: SetContractForClaim
+}
+
+export type SetContractForClaimMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'setContractForClaim'>
+
+export type SetCoveringEmployeeMutationVariables = {
+  id: Scalars['ID']
+  coveringEmployee: Scalars['Boolean']
+}
+
+export type SetCoveringEmployeeMutation = { __typename?: 'MutationType' } & {
+  setCoveringEmployee: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'coveringEmployee'> & {
+        events: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+            >
+          >
+        >
+      }
+  >
+}
+
 export type SignQuoteForNewContractMutationVariables = {
   quoteId: Scalars['ID']
   activationDate?: Maybe<Scalars['LocalDate']>
@@ -2258,6 +2778,25 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
   terminateContract: { __typename?: 'Contract' } & Pick<
     Contract,
     'id' | 'holderMemberId'
+  >
+}
+
+export type UpdateClaimStateMutationVariables = {
+  id: Scalars['ID']
+  state: ClaimState
+}
+
+export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
+  updateClaimState: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'state'> & {
+        events: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+            >
+          >
+        >
+      }
   >
 }
 
@@ -2313,6 +2852,15 @@ export type UpsertItemCompanyMutationVariables = {
 export type UpsertItemCompanyMutation = { __typename?: 'MutationType' } & Pick<
   MutationType,
   'upsertItemCompany'
+>
+
+export type WhitelistMemberMutationVariables = {
+  memberId: Scalars['ID']
+}
+
+export type WhitelistMemberMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'whitelistMember'
 >
 
 export const MemberNameAndContractMarketInfoDocument = gql`
@@ -2424,6 +2972,54 @@ export type InsertItemCategoriesMutationOptions = ApolloReactCommon.BaseMutation
   InsertItemCategoriesMutation,
   InsertItemCategoriesMutationVariables
 >
+export const InsertValuationRulesDocument = gql`
+  mutation InsertValuationRules($request: InsertValuationRulesInput) {
+    insertValuationRules(request: $request)
+  }
+`
+export type InsertValuationRulesMutationFn = ApolloReactCommon.MutationFunction<
+  InsertValuationRulesMutation,
+  InsertValuationRulesMutationVariables
+>
+
+/**
+ * __useInsertValuationRulesMutation__
+ *
+ * To run a mutation, you first call `useInsertValuationRulesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertValuationRulesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertValuationRulesMutation, { data, loading, error }] = useInsertValuationRulesMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useInsertValuationRulesMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    InsertValuationRulesMutation,
+    InsertValuationRulesMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    InsertValuationRulesMutation,
+    InsertValuationRulesMutationVariables
+  >(InsertValuationRulesDocument, baseOptions)
+}
+export type InsertValuationRulesMutationHookResult = ReturnType<
+  typeof useInsertValuationRulesMutation
+>
+export type InsertValuationRulesMutationResult = ApolloReactCommon.MutationResult<
+  InsertValuationRulesMutation
+>
+export type InsertValuationRulesMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InsertValuationRulesMutation,
+  InsertValuationRulesMutationVariables
+>
 export const AddNorwegainPostalCodesDocument = gql`
   mutation AddNorwegainPostalCodes($postalCodesString: String) {
     addNorwegianPostalCodes(postalCodesString: $postalCodesString)
@@ -2521,6 +3117,55 @@ export type CreateNorwegianGripenPriceEngineMutationResult = ApolloReactCommon.M
 export type CreateNorwegianGripenPriceEngineMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateNorwegianGripenPriceEngineMutation,
   CreateNorwegianGripenPriceEngineMutationVariables
+>
+export const UnsignMemberDocument = gql`
+  mutation UnsignMember($market: String!, $ssn: String!) {
+    unsignMember(market: $market, ssn: $ssn)
+  }
+`
+export type UnsignMemberMutationFn = ApolloReactCommon.MutationFunction<
+  UnsignMemberMutation,
+  UnsignMemberMutationVariables
+>
+
+/**
+ * __useUnsignMemberMutation__
+ *
+ * To run a mutation, you first call `useUnsignMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsignMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsignMemberMutation, { data, loading, error }] = useUnsignMemberMutation({
+ *   variables: {
+ *      market: // value for 'market'
+ *      ssn: // value for 'ssn'
+ *   },
+ * });
+ */
+export function useUnsignMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnsignMemberMutation,
+    UnsignMemberMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UnsignMemberMutation,
+    UnsignMemberMutationVariables
+  >(UnsignMemberDocument, baseOptions)
+}
+export type UnsignMemberMutationHookResult = ReturnType<
+  typeof useUnsignMemberMutation
+>
+export type UnsignMemberMutationResult = ApolloReactCommon.MutationResult<
+  UnsignMemberMutation
+>
+export type UnsignMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnsignMemberMutation,
+  UnsignMemberMutationVariables
 >
 export const GetSwitcherEmailsDocument = gql`
   query GetSwitcherEmails {
@@ -2854,6 +3499,75 @@ export type AnswerQuestionMutationResult = ApolloReactCommon.MutationResult<
 export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AnswerQuestionMutation,
   AnswerQuestionMutationVariables
+>
+export const CanValuateClaimItemDocument = gql`
+  query CanValuateClaimItem(
+    $typeOfContract: TypeOfContract!
+    $itemFamilyId: String!
+    $itemTypeId: ID
+  ) {
+    canValuateClaimItem(
+      typeOfContract: $typeOfContract
+      itemFamilyId: $itemFamilyId
+      itemTypeId: $itemTypeId
+    ) {
+      canValuate
+      typeOfContract
+      itemFamily
+      itemTypeId
+    }
+  }
+`
+
+/**
+ * __useCanValuateClaimItemQuery__
+ *
+ * To run a query within a React component, call `useCanValuateClaimItemQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCanValuateClaimItemQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCanValuateClaimItemQuery({
+ *   variables: {
+ *      typeOfContract: // value for 'typeOfContract'
+ *      itemFamilyId: // value for 'itemFamilyId'
+ *      itemTypeId: // value for 'itemTypeId'
+ *   },
+ * });
+ */
+export function useCanValuateClaimItemQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    CanValuateClaimItemQuery,
+    CanValuateClaimItemQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    CanValuateClaimItemQuery,
+    CanValuateClaimItemQueryVariables
+  >(CanValuateClaimItemDocument, baseOptions)
+}
+export function useCanValuateClaimItemLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    CanValuateClaimItemQuery,
+    CanValuateClaimItemQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    CanValuateClaimItemQuery,
+    CanValuateClaimItemQueryVariables
+  >(CanValuateClaimItemDocument, baseOptions)
+}
+export type CanValuateClaimItemQueryHookResult = ReturnType<
+  typeof useCanValuateClaimItemQuery
+>
+export type CanValuateClaimItemLazyQueryHookResult = ReturnType<
+  typeof useCanValuateClaimItemLazyQuery
+>
+export type CanValuateClaimItemQueryResult = ApolloReactCommon.QueryResult<
+  CanValuateClaimItemQuery,
+  CanValuateClaimItemQueryVariables
 >
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
@@ -3263,6 +3977,74 @@ export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
   GetAccountQuery,
   GetAccountQueryVariables
 >
+export const GetClaimItemValuationDocument = gql`
+  query GetClaimItemValuation($request: GetValuationInput) {
+    getClaimItemValuation(request: $request) {
+      depreciatedValue {
+        amount
+        currency
+      }
+      valuationRule {
+        valuationName
+        itemFamily
+        itemTypeId
+        ageLimit
+        valuationTable
+        valuationType
+        depreciation
+      }
+    }
+  }
+`
+
+/**
+ * __useGetClaimItemValuationQuery__
+ *
+ * To run a query within a React component, call `useGetClaimItemValuationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimItemValuationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimItemValuationQuery({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useGetClaimItemValuationQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimItemValuationQuery,
+    GetClaimItemValuationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetClaimItemValuationQuery,
+    GetClaimItemValuationQueryVariables
+  >(GetClaimItemValuationDocument, baseOptions)
+}
+export function useGetClaimItemValuationLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimItemValuationQuery,
+    GetClaimItemValuationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimItemValuationQuery,
+    GetClaimItemValuationQueryVariables
+  >(GetClaimItemValuationDocument, baseOptions)
+}
+export type GetClaimItemValuationQueryHookResult = ReturnType<
+  typeof useGetClaimItemValuationQuery
+>
+export type GetClaimItemValuationLazyQueryHookResult = ReturnType<
+  typeof useGetClaimItemValuationLazyQuery
+>
+export type GetClaimItemValuationQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimItemValuationQuery,
+  GetClaimItemValuationQueryVariables
+>
 export const GetClaimItemsDocument = gql`
   query GetClaimItems($claimId: ID!) {
     claimItems(claimId: $claimId) {
@@ -3285,6 +4067,10 @@ export const GetClaimItemsDocument = gql`
       }
       dateOfPurchase
       purchasePrice {
+        amount
+        currency
+      }
+      valuation {
         amount
         currency
       }
@@ -3563,6 +4349,62 @@ export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
 >
+export const GetDashboardNumbersDocument = gql`
+  query GetDashboardNumbers {
+    dashboardNumbers {
+      numberOfClaims
+      numberOfQuestions
+    }
+  }
+`
+
+/**
+ * __useGetDashboardNumbersQuery__
+ *
+ * To run a query within a React component, call `useGetDashboardNumbersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDashboardNumbersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDashboardNumbersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDashboardNumbersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >(GetDashboardNumbersDocument, baseOptions)
+}
+export function useGetDashboardNumbersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >(GetDashboardNumbersDocument, baseOptions)
+}
+export type GetDashboardNumbersQueryHookResult = ReturnType<
+  typeof useGetDashboardNumbersQuery
+>
+export type GetDashboardNumbersLazyQueryHookResult = ReturnType<
+  typeof useGetDashboardNumbersLazyQuery
+>
+export type GetDashboardNumbersQueryResult = ApolloReactCommon.QueryResult<
+  GetDashboardNumbersQuery,
+  GetDashboardNumbersQueryVariables
+>
 export const GetItemCategoriesDocument = gql`
   query GetItemCategories($kind: ItemCategoryKind!, $parentId: ID) {
     itemCategories(kind: $kind, parentId: $parentId) {
@@ -3648,6 +4490,124 @@ export type GetItemCategoriesLazyQueryHookResult = ReturnType<
 export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
   GetItemCategoriesQuery,
   GetItemCategoriesQueryVariables
+>
+export const GetMemberNameDocument = gql`
+  query GetMemberName($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      firstName
+      lastName
+    }
+  }
+`
+
+/**
+ * __useGetMemberNameQuery__
+ *
+ * To run a query within a React component, call `useGetMemberNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMemberNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMemberNameQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetMemberNameQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMemberNameQuery,
+    GetMemberNameQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetMemberNameQuery,
+    GetMemberNameQueryVariables
+  >(GetMemberNameDocument, baseOptions)
+}
+export function useGetMemberNameLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMemberNameQuery,
+    GetMemberNameQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMemberNameQuery,
+    GetMemberNameQueryVariables
+  >(GetMemberNameDocument, baseOptions)
+}
+export type GetMemberNameQueryHookResult = ReturnType<
+  typeof useGetMemberNameQuery
+>
+export type GetMemberNameLazyQueryHookResult = ReturnType<
+  typeof useGetMemberNameLazyQuery
+>
+export type GetMemberNameQueryResult = ApolloReactCommon.QueryResult<
+  GetMemberNameQuery,
+  GetMemberNameQueryVariables
+>
+export const GetMessageHistoryDocument = gql`
+  query GetMessageHistory($memberId: ID!) {
+    messageHistory(memberId: $memberId) {
+      globalId
+      author
+      fromId
+      timestamp
+      messageBodyJsonString
+    }
+  }
+`
+
+/**
+ * __useGetMessageHistoryQuery__
+ *
+ * To run a query within a React component, call `useGetMessageHistoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessageHistoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessageHistoryQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetMessageHistoryQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMessageHistoryQuery,
+    GetMessageHistoryQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetMessageHistoryQuery,
+    GetMessageHistoryQueryVariables
+  >(GetMessageHistoryDocument, baseOptions)
+}
+export function useGetMessageHistoryLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMessageHistoryQuery,
+    GetMessageHistoryQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMessageHistoryQuery,
+    GetMessageHistoryQueryVariables
+  >(GetMessageHistoryDocument, baseOptions)
+}
+export type GetMessageHistoryQueryHookResult = ReturnType<
+  typeof useGetMessageHistoryQuery
+>
+export type GetMessageHistoryLazyQueryHookResult = ReturnType<
+  typeof useGetMessageHistoryLazyQuery
+>
+export type GetMessageHistoryQueryResult = ApolloReactCommon.QueryResult<
+  GetMessageHistoryQuery,
+  GetMessageHistoryQueryVariables
 >
 export const GetPartnerCampaignOwnersDocument = gql`
   query GetPartnerCampaignOwners {
@@ -3783,6 +4743,88 @@ export type FindPartnerCampaignsQueryResult = ApolloReactCommon.QueryResult<
   FindPartnerCampaignsQuery,
   FindPartnerCampaignsQueryVariables
 >
+export const GetPersonDocument = gql`
+  query GetPerson($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      person {
+        debtFlag
+        status {
+          flag
+          whitelisted
+        }
+        debt {
+          paymentDefaults {
+            year
+            week
+            paymentDefaultType
+            paymentDefaultTypeText
+            amount
+            caseId
+            claimant
+          }
+          numberPublicDebts
+          totalAmountPublicDebt
+          numberPrivateDebts
+          totalAmountPrivateDebt
+          totalAmountDebt
+          fromDateTime
+        }
+        whitelisted {
+          whitelistedAt
+          whitelistedBy
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetPersonQuery__
+ *
+ * To run a query within a React component, call `useGetPersonQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPersonQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPersonQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetPersonQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPersonQuery,
+    GetPersonQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetPersonQuery, GetPersonQueryVariables>(
+    GetPersonDocument,
+    baseOptions,
+  )
+}
+export function useGetPersonLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPersonQuery,
+    GetPersonQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<GetPersonQuery, GetPersonQueryVariables>(
+    GetPersonDocument,
+    baseOptions,
+  )
+}
+export type GetPersonQueryHookResult = ReturnType<typeof useGetPersonQuery>
+export type GetPersonLazyQueryHookResult = ReturnType<
+  typeof useGetPersonLazyQuery
+>
+export type GetPersonQueryResult = ApolloReactCommon.QueryResult<
+  GetPersonQuery,
+  GetPersonQueryVariables
+>
 export const GetQuestionsGroupsDocument = gql`
   query GetQuestionsGroups {
     questionGroups {
@@ -3792,6 +4834,14 @@ export const GetQuestionsGroupsDocument = gql`
         id
         messageJsonString
         timestamp
+      }
+      member {
+        memberId
+        firstName
+        lastName
+        contractMarketInfo {
+          market
+        }
       }
     }
   }
@@ -3843,6 +4893,266 @@ export type GetQuestionsGroupsLazyQueryHookResult = ReturnType<
 export type GetQuestionsGroupsQueryResult = ApolloReactCommon.QueryResult<
   GetQuestionsGroupsQuery,
   GetQuestionsGroupsQueryVariables
+>
+export const GetReferralInformationDocument = gql`
+  query GetReferralInformation($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      referralInformation {
+        eligible
+        redeemedCampaigns {
+          code
+          type
+          redemptionState {
+            redeemedAt
+            activatedAt
+            activeTo
+            unRedeemedAt
+          }
+          incentive {
+            __typename
+          }
+        }
+        campaign {
+          code
+          incentive {
+            __typename
+            ... on MonthlyPercentageDiscountFixedPeriod {
+              numberOfMonths
+              percentage
+            }
+            ... on FreeMonths {
+              numberOfMonths
+            }
+            ... on CostDeduction {
+              amount
+            }
+            ... on NoDiscount {
+              _
+            }
+            ... on IndefinitePercentageDiscount {
+              percentageDiscount
+            }
+          }
+        }
+        referredBy {
+          memberId
+          name
+          status
+        }
+        hasReferred {
+          memberId
+          name
+          status
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetReferralInformationQuery__
+ *
+ * To run a query within a React component, call `useGetReferralInformationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReferralInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReferralInformationQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetReferralInformationQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >(GetReferralInformationDocument, baseOptions)
+}
+export function useGetReferralInformationLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetReferralInformationQuery,
+    GetReferralInformationQueryVariables
+  >(GetReferralInformationDocument, baseOptions)
+}
+export type GetReferralInformationQueryHookResult = ReturnType<
+  typeof useGetReferralInformationQuery
+>
+export type GetReferralInformationLazyQueryHookResult = ReturnType<
+  typeof useGetReferralInformationLazyQuery
+>
+export type GetReferralInformationQueryResult = ApolloReactCommon.QueryResult<
+  GetReferralInformationQuery,
+  GetReferralInformationQueryVariables
+>
+export const ManualRedeemCampaignDocument = gql`
+  mutation ManualRedeemCampaign(
+    $memberId: ID!
+    $request: ManualRedeemCampaignInput!
+  ) {
+    manualRedeemCampaign(memberId: $memberId, request: $request)
+  }
+`
+export type ManualRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualRedeemCampaignMutation,
+  ManualRedeemCampaignMutationVariables
+>
+
+/**
+ * __useManualRedeemCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualRedeemCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualRedeemCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualRedeemCampaignMutation, { data, loading, error }] = useManualRedeemCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useManualRedeemCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualRedeemCampaignMutation,
+    ManualRedeemCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualRedeemCampaignMutation,
+    ManualRedeemCampaignMutationVariables
+  >(ManualRedeemCampaignDocument, baseOptions)
+}
+export type ManualRedeemCampaignMutationHookResult = ReturnType<
+  typeof useManualRedeemCampaignMutation
+>
+export type ManualRedeemCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualRedeemCampaignMutation
+>
+export type ManualRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualRedeemCampaignMutation,
+  ManualRedeemCampaignMutationVariables
+>
+export const ManualRedeemEnableReferralsCampaignDocument = gql`
+  mutation ManualRedeemEnableReferralsCampaign(
+    $memberId: ID!
+    $market: Market!
+  ) {
+    manualRedeemEnableReferralsCampaign(memberId: $memberId, market: $market)
+  }
+`
+export type ManualRedeemEnableReferralsCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualRedeemEnableReferralsCampaignMutation,
+  ManualRedeemEnableReferralsCampaignMutationVariables
+>
+
+/**
+ * __useManualRedeemEnableReferralsCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualRedeemEnableReferralsCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualRedeemEnableReferralsCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualRedeemEnableReferralsCampaignMutation, { data, loading, error }] = useManualRedeemEnableReferralsCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      market: // value for 'market'
+ *   },
+ * });
+ */
+export function useManualRedeemEnableReferralsCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualRedeemEnableReferralsCampaignMutation,
+    ManualRedeemEnableReferralsCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualRedeemEnableReferralsCampaignMutation,
+    ManualRedeemEnableReferralsCampaignMutationVariables
+  >(ManualRedeemEnableReferralsCampaignDocument, baseOptions)
+}
+export type ManualRedeemEnableReferralsCampaignMutationHookResult = ReturnType<
+  typeof useManualRedeemEnableReferralsCampaignMutation
+>
+export type ManualRedeemEnableReferralsCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualRedeemEnableReferralsCampaignMutation
+>
+export type ManualRedeemEnableReferralsCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualRedeemEnableReferralsCampaignMutation,
+  ManualRedeemEnableReferralsCampaignMutationVariables
+>
+export const ManualUnRedeemCampaignDocument = gql`
+  mutation ManualUnRedeemCampaign(
+    $memberId: ID!
+    $request: ManualUnRedeemCampaignInput!
+  ) {
+    manualUnRedeemCampaign(memberId: $memberId, request: $request)
+  }
+`
+export type ManualUnRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
+  ManualUnRedeemCampaignMutation,
+  ManualUnRedeemCampaignMutationVariables
+>
+
+/**
+ * __useManualUnRedeemCampaignMutation__
+ *
+ * To run a mutation, you first call `useManualUnRedeemCampaignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useManualUnRedeemCampaignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [manualUnRedeemCampaignMutation, { data, loading, error }] = useManualUnRedeemCampaignMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useManualUnRedeemCampaignMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ManualUnRedeemCampaignMutation,
+    ManualUnRedeemCampaignMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ManualUnRedeemCampaignMutation,
+    ManualUnRedeemCampaignMutationVariables
+  >(ManualUnRedeemCampaignDocument, baseOptions)
+}
+export type ManualUnRedeemCampaignMutationHookResult = ReturnType<
+  typeof useManualUnRedeemCampaignMutation
+>
+export type ManualUnRedeemCampaignMutationResult = ApolloReactCommon.MutationResult<
+  ManualUnRedeemCampaignMutation
+>
+export type ManualUnRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ManualUnRedeemCampaignMutation,
+  ManualUnRedeemCampaignMutationVariables
 >
 export const MarkQuestionAsResolvedDocument = gql`
   mutation MarkQuestionAsResolved($memberId: ID!) {
@@ -3991,6 +5301,166 @@ export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOpt
   RevertTerminationMutation,
   RevertTerminationMutationVariables
 >
+export const SendMessageDocument = gql`
+  mutation SendMessage($input: SendMessageInput!) {
+    sendMessage(input: $input) {
+      ... on SendMessageFailed {
+        memberId
+        errorCode
+        errorMessage
+      }
+      ... on SendMessageSuccessful {
+        memberId
+      }
+    }
+  }
+`
+export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
+  SendMessageMutation,
+  SendMessageMutationVariables
+>
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >(SendMessageDocument, baseOptions)
+}
+export type SendMessageMutationHookResult = ReturnType<
+  typeof useSendMessageMutation
+>
+export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
+  SendMessageMutation
+>
+export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SendMessageMutation,
+  SendMessageMutationVariables
+>
+export const SetContractForClaimDocument = gql`
+  mutation SetContractForClaim($request: SetContractForClaim!) {
+    setContractForClaim(request: $request)
+  }
+`
+export type SetContractForClaimMutationFn = ApolloReactCommon.MutationFunction<
+  SetContractForClaimMutation,
+  SetContractForClaimMutationVariables
+>
+
+/**
+ * __useSetContractForClaimMutation__
+ *
+ * To run a mutation, you first call `useSetContractForClaimMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetContractForClaimMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setContractForClaimMutation, { data, loading, error }] = useSetContractForClaimMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSetContractForClaimMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetContractForClaimMutation,
+    SetContractForClaimMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SetContractForClaimMutation,
+    SetContractForClaimMutationVariables
+  >(SetContractForClaimDocument, baseOptions)
+}
+export type SetContractForClaimMutationHookResult = ReturnType<
+  typeof useSetContractForClaimMutation
+>
+export type SetContractForClaimMutationResult = ApolloReactCommon.MutationResult<
+  SetContractForClaimMutation
+>
+export type SetContractForClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetContractForClaimMutation,
+  SetContractForClaimMutationVariables
+>
+export const SetCoveringEmployeeDocument = gql`
+  mutation SetCoveringEmployee($id: ID!, $coveringEmployee: Boolean!) {
+    setCoveringEmployee(id: $id, coveringEmployee: $coveringEmployee) {
+      coveringEmployee
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+export type SetCoveringEmployeeMutationFn = ApolloReactCommon.MutationFunction<
+  SetCoveringEmployeeMutation,
+  SetCoveringEmployeeMutationVariables
+>
+
+/**
+ * __useSetCoveringEmployeeMutation__
+ *
+ * To run a mutation, you first call `useSetCoveringEmployeeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetCoveringEmployeeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setCoveringEmployeeMutation, { data, loading, error }] = useSetCoveringEmployeeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      coveringEmployee: // value for 'coveringEmployee'
+ *   },
+ * });
+ */
+export function useSetCoveringEmployeeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetCoveringEmployeeMutation,
+    SetCoveringEmployeeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SetCoveringEmployeeMutation,
+    SetCoveringEmployeeMutationVariables
+  >(SetCoveringEmployeeDocument, baseOptions)
+}
+export type SetCoveringEmployeeMutationHookResult = ReturnType<
+  typeof useSetCoveringEmployeeMutation
+>
+export type SetCoveringEmployeeMutationResult = ApolloReactCommon.MutationResult<
+  SetCoveringEmployeeMutation
+>
+export type SetCoveringEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetCoveringEmployeeMutation,
+  SetCoveringEmployeeMutationVariables
+>
 export const SignQuoteForNewContractDocument = gql`
   mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {
     signQuoteForNewContract(
@@ -4099,6 +5569,61 @@ export type TerminateContractMutationResult = ApolloReactCommon.MutationResult<
 export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
   TerminateContractMutation,
   TerminateContractMutationVariables
+>
+export const UpdateClaimStateDocument = gql`
+  mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
+    updateClaimState(id: $id, state: $state) {
+      state
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+export type UpdateClaimStateMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateClaimStateMutation,
+  UpdateClaimStateMutationVariables
+>
+
+/**
+ * __useUpdateClaimStateMutation__
+ *
+ * To run a mutation, you first call `useUpdateClaimStateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClaimStateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClaimStateMutation, { data, loading, error }] = useUpdateClaimStateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      state: // value for 'state'
+ *   },
+ * });
+ */
+export function useUpdateClaimStateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateClaimStateMutation,
+    UpdateClaimStateMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateClaimStateMutation,
+    UpdateClaimStateMutationVariables
+  >(UpdateClaimStateDocument, baseOptions)
+}
+export type UpdateClaimStateMutationHookResult = ReturnType<
+  typeof useUpdateClaimStateMutation
+>
+export type UpdateClaimStateMutationResult = ApolloReactCommon.MutationResult<
+  UpdateClaimStateMutation
+>
+export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateClaimStateMutation,
+  UpdateClaimStateMutationVariables
 >
 export const DeleteClaimItemDocument = gql`
   mutation DeleteClaimItem($claimItemId: ID!) {
@@ -4388,6 +5913,54 @@ export type UpsertItemCompanyMutationOptions = ApolloReactCommon.BaseMutationOpt
   UpsertItemCompanyMutation,
   UpsertItemCompanyMutationVariables
 >
+export const WhitelistMemberDocument = gql`
+  mutation whitelistMember($memberId: ID!) {
+    whitelistMember(memberId: $memberId)
+  }
+`
+export type WhitelistMemberMutationFn = ApolloReactCommon.MutationFunction<
+  WhitelistMemberMutation,
+  WhitelistMemberMutationVariables
+>
+
+/**
+ * __useWhitelistMemberMutation__
+ *
+ * To run a mutation, you first call `useWhitelistMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useWhitelistMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [whitelistMemberMutation, { data, loading, error }] = useWhitelistMemberMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useWhitelistMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    WhitelistMemberMutation,
+    WhitelistMemberMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    WhitelistMemberMutation,
+    WhitelistMemberMutationVariables
+  >(WhitelistMemberDocument, baseOptions)
+}
+export type WhitelistMemberMutationHookResult = ReturnType<
+  typeof useWhitelistMemberMutation
+>
+export type WhitelistMemberMutationResult = ApolloReactCommon.MutationResult<
+  WhitelistMemberMutation
+>
+export type WhitelistMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  WhitelistMemberMutation,
+  WhitelistMemberMutationVariables
+>
 
 export interface IntrospectionResultData {
   __schema: {
@@ -4472,6 +6045,33 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'NorwegianTravel',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'Incentive',
+        possibleTypes: [
+          {
+            name: 'MonthlyPercentageDiscountFixedPeriod',
+          },
+          {
+            name: 'FreeMonths',
+          },
+          {
+            name: 'CostDeduction',
+          },
+          {
+            name: 'NoDiscount',
+          },
+          {
+            name: 'IndefinitePercentageDiscount',
+          },
+          {
+            name: 'VisibleNoDiscount',
+          },
+          {
+            name: 'UnknownIncentive',
           },
         ],
       },
@@ -4591,22 +6191,13 @@ const result: IntrospectionResultData = {
       },
       {
         kind: 'UNION',
-        name: 'Incentive',
+        name: 'SendMessageResponse',
         possibleTypes: [
           {
-            name: 'MonthlyPercentageDiscountFixedPeriod',
+            name: 'SendMessageSuccessful',
           },
           {
-            name: 'FreeMonths',
-          },
-          {
-            name: 'CostDeduction',
-          },
-          {
-            name: 'NoDiscount',
-          },
-          {
-            name: 'IndefinitePercentageDiscount',
+            name: 'SendMessageFailed',
           },
         ],
       },

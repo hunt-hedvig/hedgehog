@@ -58,6 +58,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                 type,
                 coveringEmployee,
                 claimFiles,
+                contract,
               } = data?.claim || {}
 
               return (
@@ -84,7 +85,9 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                       state={state!}
                       claimId={props.match.params.claimId}
                       coveringEmployee={coveringEmployee!}
+                      memberId={props.match.params.memberId}
                       refetchPage={refetch}
+                      contract={contract!}
                     />
                   </Grid>
                   <Grid item xs={12} sm={12} md={4}>
@@ -114,6 +117,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                     <ClaimItems
                       claimId={props.match.params.claimId}
                       memberId={member?.memberId ?? null}
+                      contract={contract}
                     />
                   </Grid>
                   <Grid item xs={12}>

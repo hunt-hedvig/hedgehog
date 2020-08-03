@@ -1,9 +1,9 @@
-import {
-  Quote,
-  useSignQuoteForNewContractMutation,
-} from 'api/generated/graphql'
+import { Quote } from 'api/generated/graphql'
 import { BaseDatePicker } from 'components/shared/inputs/DatePicker'
-import { getSignQuoteForNewContractOptions } from 'graphql/use-sign-quote-for-new-contract'
+import {
+  getSignQuoteForNewContractOptions,
+  useSignQuoteForNewContract,
+} from 'graphql/use-sign-quote-for-new-contract'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import { noopFunction } from 'utils'
@@ -21,7 +21,7 @@ export const QuoteContractCreation: React.FC<{
   onWipChange = noopFunction,
 }) => {
   const [activeFrom, setActiveFrom] = React.useState(() => new Date())
-  const [signQuote, setSignQuoteMutation] = useSignQuoteForNewContractMutation()
+  const [signQuote, setSignQuoteMutation] = useSignQuoteForNewContract()
 
   return (
     <form

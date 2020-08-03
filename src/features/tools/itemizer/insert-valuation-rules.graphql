@@ -1,0 +1,3 @@
+mutation InsertValuationRules($request: InsertValuationRulesInput) {
+  insertValuationRules(request: $request)
+}

@@ -7,7 +7,7 @@ import DateInput from 'components/shared/inputs/DateInput'
 import MaterialModal from 'components/shared/modals/MaterialModal'
 import { ActionMap, Container } from 'constate'
 import gql from 'graphql-tag'
-import * as moment from 'moment'
+import moment from 'moment'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled, { css } from 'react-emotion'
@@ -61,7 +61,7 @@ interface ClaimsTabProps {
   classes: any
   memberClaims: object[]
   sortClaimsList?: () => void
-  insurance: any
+  memberId: string
 }
 
 interface State {
@@ -92,13 +92,13 @@ const ClaimsTab: React.SFC<ClaimsTabProps> = (props) => {
         handleClaimSubmit: (mutation) => (state) => {
           mutation({
             variables: {
-              memberId: props.insurance.data.memberId,
+              memberId: props.memberId,
               date: state.date,
               source: state.value,
             },
           }).then((response) => {
             history.push(
-              `/claims/${response.data.createClaim}/members/${props.insurance.data.memberId}`,
+              `/claims/${response.data.createClaim}/members/${props.memberId}`,
             )
           })
           return { date: moment(), value: 'EMAIL', open: false }

@@ -30,6 +30,7 @@ export interface ButtonProps {
   halfWidth?: boolean
   basic?: boolean
   size?: 'small' | 'medium' | 'large'
+  icon?: React.ReactNode
   loading?: boolean
   disabled?: boolean
 }
@@ -149,6 +150,11 @@ const withLoader = <TElementAttributes extends object>(
         {loading && (
           <Spacing inline left="small">
             <Spinner />
+          </Spacing>
+        )}
+        {!loading && props.icon && (
+          <Spacing inline left="small">
+            {props.icon}
           </Spacing>
         )}
       </>

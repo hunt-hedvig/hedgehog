@@ -68,21 +68,27 @@ export default class Member extends React.Component {
   getMemberPageTitle = (member) =>
     `${member && (member.firstName || '') + ' ' + (member.lastName || '')}`
 
-  componentDidMount() {
+  getMemberData = () => {
     const {
       match: {
         params: { memberId },
       },
       memberRequest,
-      insuranceRequest,
-      insurancesListRequest,
       claimsByMember,
     } = this.props
 
     memberRequest(memberId)
-    insuranceRequest(memberId)
     claimsByMember(memberId)
-    insurancesListRequest(memberId)
+  }
+
+  componentDidMount() {
+    this.getMemberData()
+  }
+
+  componentDidUpdate(prevProps, prevState, prevContext) {
+    if (prevProps.match.params.memberId !== this.props.match.params.memberId) {
+      this.getMemberData()
+    }
   }
 
   render() {
@@ -151,14 +157,12 @@ export default class Member extends React.Component {
                     </MemberDetailLink>
                   </Popover>
                 </MemberDetails>
-                {this.props.insurance.requesting || (
-                  <Tab
-                    style={{ height: '100%' }}
-                    panes={panes}
-                    renderActiveOnly={true}
-                    defaultActiveIndex={4}
-                  />
-                )}
+                <Tab
+                  style={{ height: '100%' }}
+                  panes={panes}
+                  renderActiveOnly={true}
+                  defaultActiveIndex={4}
+                />
               </MemberPageContainer>
               <ChatPane {...this.props} />
             </MemberPageWrapper>
@@ -191,7 +195,5 @@ Member.propTypes = {
   memberRequest: PropTypes.func.isRequired,
   clearMessagesList: PropTypes.func.isRequired,
   claimsByMember: PropTypes.func.isRequired,
-  insuranceRequest: PropTypes.func.isRequired,
-  insurancesListRequest: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 }

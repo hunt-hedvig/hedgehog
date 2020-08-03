@@ -20,7 +20,6 @@ export interface BackofficeStore {
   claimDetails: any
   payoutDetails: any
   questions: QuestionsStore
-  insurance: any
   notifications: any
   memberInsurance: any
 }
@@ -77,7 +76,7 @@ export interface MemberSearchResultItem {
 }
 
 export interface MembersSearchResult {
-  items: Array<MemberSearchResultItem>
+  items: MemberSearchResultItem[]
   totalPages: number
   page: number
 }
