@@ -7,7 +7,7 @@ import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { Dropdown, Input } from 'semantic-ui-react'
+import { Dropdown } from 'semantic-ui-react'
 
 const getIncentiveTypeForm = (incentiveType: CreateableIncentiveTypes) => {
   switch (incentiveType) {
@@ -33,26 +33,14 @@ export const CreateCampaignCode: React.FC<{}> = () => {
       <InfoRow>
         <ThirdLevelHeadline>Create New Code</ThirdLevelHeadline>
       </InfoRow>
+      <Spacing top={'small'} />
+      <label style={{ marginBottom: '-1.0rem' }}>Incentive Type</label>
       <InfoRow>
-        <div style={{ width: '48%', float: 'left' }}>
-          <EnumDropdown
-            enumToSelectFrom={CreateableIncentiveTypes}
-            placeholder={'Incentive type'}
-            setValue={setIncentiveType}
-          />
-        </div>
-        <div style={{ width: '48%', float: 'right' }}>
-          <Spacing top={'small'} />
-          <Dropdown
-            label={'Partner'}
-            placeholder="Partner"
-            search
-            fluid
-            selection
-            options={[]}
-            onChange={(_, data) => void 0}
-          />
-        </div>
+        <EnumDropdown
+          enumToSelectFrom={CreateableIncentiveTypes}
+          placeholder={'Incentive type'}
+          setValue={setIncentiveType}
+        />
       </InfoRow>
       <Spacing bottom={'small'} />
       {incentiveType && getIncentiveTypeForm(incentiveType)}
