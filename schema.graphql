@@ -504,7 +504,6 @@ type IndefinitePercentageDiscount {
   percentageDiscount: Float
 }
 
-
 type VisibleNoDiscount {
   _: Boolean
 }
@@ -514,7 +513,6 @@ type UnknownIncentive {
 }
 
 union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount | VisibleNoDiscount | UnknownIncentive
-
 
 type ItemFamily implements ItemCategoryCore {
   id: ID!
@@ -771,7 +769,6 @@ enum QuoteState {
 
 
 union QuoteData = ApartmentQuoteData | HouseQuoteData | NorwegianHomeContentQuoteData | NorwegianTravelQuoteData
-
 
 type ApartmentQuoteData implements IQuoteData {
   id: ID!
