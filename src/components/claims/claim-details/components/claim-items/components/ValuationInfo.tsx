@@ -21,7 +21,7 @@ export const ValuationInfo: React.FC<{
   typeOfContract,
 }) => {
   const { itemFamilyId, itemTypeId, purchasePrice, dateOfPurchase } = request
-        
+
   const [
     valuationStatus,
     { loading: loadingValuation },

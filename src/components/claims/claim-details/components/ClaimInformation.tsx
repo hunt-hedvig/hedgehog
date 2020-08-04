@@ -33,7 +33,7 @@ interface Props {
   coveringEmployee: boolean
   memberId: string
   refetchPage: () => Promise<any>
-  contract: Contract | null
+  selectedContract: Contract | null
 }
 
 const validateSelectOption = (
@@ -81,7 +81,7 @@ const ClaimInformation: React.FC<Props> = ({
   coveringEmployee,
   memberId,
   refetchPage,
-  contract,
+  selectedContract,
 }) => {
   const [contracts] = useContracts(memberId)
   const [setContractForClaim] = useSetContractForClaim()
@@ -165,12 +165,12 @@ const ClaimInformation: React.FC<Props> = ({
       </SelectWrapper>
       {contracts && (
         <SelectWrapper>
-          <MuiInputLabel shrink error={!contract}>
+          <MuiInputLabel shrink error={!selectedContract}>
             Select Contract for Claim
           </MuiInputLabel>
 
           <MuiSelect
-            value={contract?.id ? contract.id : 'none'}
+            value={selectedContract?.id ? selectedContract.id : 'none'}
             onChange={async (event) => {
               if (event.target.value === 'none') {
                 return
@@ -189,11 +189,11 @@ const ClaimInformation: React.FC<Props> = ({
             <MuiMenuItem disabled value={'none'} divider>
               None selected
             </MuiMenuItem>
-            {contracts.map((_contract) => {
-              const address = getAddressFromContract(_contract)
+            {contracts.map((contract) => {
+              const address = getAddressFromContract(contract)
               return (
-                <MuiMenuItem key={_contract.id} value={_contract.id}>
-                  {_contract.contractTypeName}
+                <MuiMenuItem key={contract.id} value={contract.id}>
+                  {contract.contractTypeName}
                   {address && <> ({address.street})</>}
                 </MuiMenuItem>
               )

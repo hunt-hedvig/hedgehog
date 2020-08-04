@@ -8,7 +8,7 @@ module.exports = webpackConfig({
   entry: {
     app: [
       '@babel/polyfill',
-      'webpack-dev-server/client?http://0.0.0.0:9000/',
+      'webpack-dev-server/client?http://0.0.0.0:9001/',
       'webpack/hot/dev-server',
       path.resolve(root, 'src/clientEntry.tsx'),
     ],
