@@ -515,6 +515,14 @@ export type EarthquakeClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export type EditMemberInfoInput = {
+  memberId: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  phoneNumber?: Maybe<Scalars['String']>
+}
+
 export type ExtraBuilding = {
   __typename?: 'ExtraBuilding'
   id?: Maybe<Scalars['ID']>
@@ -646,14 +654,8 @@ export type Incentive =
   | CostDeduction
   | NoDiscount
   | IndefinitePercentageDiscount
-
-export enum IncentiveType {
-  CostDeduction = 'COST_DEDUCTION',
-  FreeMonths = 'FREE_MONTHS',
-  NoDiscount = 'NO_DISCOUNT',
-  MonthlyPercentageDiscountFixedPeriod = 'MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD',
-  IndefinitePercentageDiscount = 'INDEFINITE_PERCENTAGE_DISCOUNT',
-}
+  | VisibleNoDiscount
+  | UnknownIncentive
 
 export type IndefinitePercentageDiscount = {
   __typename?: 'IndefinitePercentageDiscount'
@@ -789,6 +791,7 @@ export type Member = {
   fraudulentStatusDescription?: Maybe<Scalars['String']>
   createdOn?: Maybe<Scalars['Instant']>
   signedOn?: Maybe<Scalars['Instant']>
+  status?: Maybe<Scalars['String']>
   transactions?: Maybe<Array<Maybe<Transaction>>>
   directDebitStatus?: Maybe<DirectDebitStatus>
   monthlySubscription?: Maybe<MonthlySubscription>
@@ -800,6 +803,7 @@ export type Member = {
   totalNumberOfClaims: Scalars['Int']
   quotes: Array<Quote>
   contracts: Array<Contract>
+  claims: Array<Claim>
   contractMarketInfo?: Maybe<ContractMarketInfo>
   pickedLocale?: Maybe<PickedLocale>
   referralInformation?: Maybe<ReferralInformation>
@@ -899,6 +903,8 @@ export type MutationType = {
   manualRedeemCampaign: Scalars['Boolean']
   manualUnRedeemCampaign: Scalars['Boolean']
   manualRedeemEnableReferralsCampaign: Scalars['Boolean']
+  unsignMember: Scalars['Boolean']
+  editMemberInfo: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1164,6 +1170,15 @@ export type MutationTypeManualUnRedeemCampaignArgs = {
 export type MutationTypeManualRedeemEnableReferralsCampaignArgs = {
   memberId: Scalars['ID']
   market: Market
+}
+
+export type MutationTypeUnsignMemberArgs = {
+  market: Scalars['String']
+  ssn: Scalars['String']
+}
+
+export type MutationTypeEditMemberInfoArgs = {
+  request: EditMemberInfoInput
 }
 
 export type NoDiscount = {
@@ -1483,6 +1498,23 @@ export enum QuoteState {
   Expired = 'EXPIRED',
 }
 
+export type RedeemedCampaign = {
+  __typename?: 'RedeemedCampaign'
+  code: Scalars['String']
+  type: Scalars['String']
+  incentive: Incentive
+  redemptionState: RedemptionState
+}
+
+export type RedemptionState = {
+  __typename?: 'RedemptionState'
+  redeemedAt: Scalars['Instant']
+  activatedAt?: Maybe<Scalars['Instant']>
+  activeTo?: Maybe<Scalars['Instant']>
+  terminatedAt?: Maybe<Scalars['Instant']>
+  unRedeemedAt?: Maybe<Scalars['Instant']>
+}
+
 export type ReferralCampaign = {
   __typename?: 'ReferralCampaign'
   code: Scalars['String']
@@ -1495,6 +1527,7 @@ export type ReferralInformation = {
   campaign: ReferralCampaign
   referredBy?: Maybe<MemberReferral>
   hasReferred: Array<MemberReferral>
+  redeemedCampaigns: Array<RedeemedCampaign>
 }
 
 export type RemindNotification = {
@@ -1780,6 +1813,11 @@ export enum TypeOfContract {
   NoTravelYouth = 'NO_TRAVEL_YOUTH',
 }
 
+export type UnknownIncentive = {
+  __typename?: 'UnknownIncentive'
+  _?: Maybe<Scalars['Boolean']>
+}
+
 export type UpsertClaimItemInput = {
   id?: Maybe<Scalars['ID']>
   claimId: Scalars['ID']
@@ -1843,6 +1881,11 @@ export type ValuationRule = {
 export type VerminAndPestsClaim = {
   __typename?: 'VerminAndPestsClaim'
   date?: Maybe<Scalars['LocalDate']>
+}
+
+export type VisibleNoDiscount = {
+  __typename?: 'VisibleNoDiscount'
+  _?: Maybe<Scalars['Boolean']>
 }
 
 export type VoucherCampaign = {
@@ -2084,6 +2127,15 @@ export type DeleteClaimItemMutationVariables = {
 export type DeleteClaimItemMutation = { __typename?: 'MutationType' } & Pick<
   MutationType,
   'deleteClaimItem'
+>
+
+export type EditMemberInfoMutationVariables = {
+  request: EditMemberInfoInput
+}
+
+export type EditMemberInfoMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'editMemberInfo'
 >
 
 export type GetAccountQueryVariables = {
@@ -2418,6 +2470,7 @@ export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
       | 'personalNumber'
       | 'fraudulentStatus'
       | 'fraudulentStatusDescription'
+      | 'status'
       | 'signedOn'
       | 'createdOn'
     >
@@ -2475,6 +2528,8 @@ export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
               IndefinitePercentageDiscount,
               'percentageDiscount'
             >)
+          | { __typename?: 'VisibleNoDiscount' }
+          | { __typename?: 'UnknownIncentive' }
         >
       }
   >
@@ -3672,6 +3727,54 @@ export type DeleteClaimItemMutationOptions = ApolloReactCommon.BaseMutationOptio
   DeleteClaimItemMutation,
   DeleteClaimItemMutationVariables
 >
+export const EditMemberInfoDocument = gql`
+  mutation EditMemberInfo($request: EditMemberInfoInput!) {
+    editMemberInfo(request: $request)
+  }
+`
+export type EditMemberInfoMutationFn = ApolloReactCommon.MutationFunction<
+  EditMemberInfoMutation,
+  EditMemberInfoMutationVariables
+>
+
+/**
+ * __useEditMemberInfoMutation__
+ *
+ * To run a mutation, you first call `useEditMemberInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditMemberInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editMemberInfoMutation, { data, loading, error }] = useEditMemberInfoMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useEditMemberInfoMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    EditMemberInfoMutation,
+    EditMemberInfoMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    EditMemberInfoMutation,
+    EditMemberInfoMutationVariables
+  >(EditMemberInfoDocument, baseOptions)
+}
+export type EditMemberInfoMutationHookResult = ReturnType<
+  typeof useEditMemberInfoMutation
+>
+export type EditMemberInfoMutationResult = ApolloReactCommon.MutationResult<
+  EditMemberInfoMutation
+>
+export type EditMemberInfoMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  EditMemberInfoMutation,
+  EditMemberInfoMutationVariables
+>
 export const GetAccountDocument = gql`
   query GetAccount($memberId: ID!) {
     member(id: $memberId) {
@@ -4292,6 +4395,7 @@ export const GetMemberInfoDocument = gql`
       personalNumber
       fraudulentStatus
       fraudulentStatusDescription
+      status
       signedOn
       createdOn
     }
@@ -5401,27 +5505,6 @@ const result: IntrospectionResultData = {
       },
       {
         kind: 'UNION',
-        name: 'Incentive',
-        possibleTypes: [
-          {
-            name: 'MonthlyPercentageDiscountFixedPeriod',
-          },
-          {
-            name: 'FreeMonths',
-          },
-          {
-            name: 'CostDeduction',
-          },
-          {
-            name: 'NoDiscount',
-          },
-          {
-            name: 'IndefinitePercentageDiscount',
-          },
-        ],
-      },
-      {
-        kind: 'UNION',
         name: 'ClaimType',
         possibleTypes: [
           {
@@ -5489,6 +5572,33 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'TestClaim',
+          },
+        ],
+      },
+      {
+        kind: 'UNION',
+        name: 'Incentive',
+        possibleTypes: [
+          {
+            name: 'MonthlyPercentageDiscountFixedPeriod',
+          },
+          {
+            name: 'FreeMonths',
+          },
+          {
+            name: 'CostDeduction',
+          },
+          {
+            name: 'NoDiscount',
+          },
+          {
+            name: 'IndefinitePercentageDiscount',
+          },
+          {
+            name: 'VisibleNoDiscount',
+          },
+          {
+            name: 'UnknownIncentive',
           },
         ],
       },

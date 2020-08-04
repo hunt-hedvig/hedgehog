@@ -12,12 +12,12 @@ import {
   MemberAge,
 } from 'utils/member'
 import memberPagePanes from './tabs'
-import { ChatPane } from './tabs/ChatPane'
 import { MemberFlag } from './shared/member-flag'
 import { MemberHistoryContext } from '../../utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
 import { useEffect } from 'react'
 import { useGetMemberInfo } from 'graphql/use-get-member-info'
+import { ChatPane } from 'components/member/tabs/ChatPane'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -71,15 +71,16 @@ export const Member = (props) => {
   const memberId = props.match.params.memberId
   const [member, { loading }] = useGetMemberInfo(memberId)
   const getMemberPageTitle = (member) =>
-    `${(member.firstName || '') + ' ' + (member.lastName || '')}`
+    `${member.firstName || ''} ${member.lastName || ''}`
 
   useEffect(() => {
     props.claimsByMember(memberId)
   }, [])
 
-  if (loading) return null
+  if (loading) {
+    return null
+  }
 
-  const panes = memberPagePanes(props, memberId, member)
   return (
     <MemberHistoryContext.Consumer>
       {({ pushToMemberHistory }) => (
@@ -143,7 +144,7 @@ export const Member = (props) => {
               {
                 <Tab
                   style={{ height: '100%' }}
-                  panes={panes}
+                  panes={memberPagePanes(props, memberId, member)}
                   renderActiveOnly={true}
                   defaultActiveIndex={4}
                 />
@@ -159,7 +160,6 @@ export const Member = (props) => {
 
 Member.propTypes = {
   match: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
   showNotification: PropTypes.func.isRequired,
   claimsByMember: PropTypes.func.isRequired,
 }

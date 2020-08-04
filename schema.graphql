@@ -133,6 +133,8 @@ type MutationType {
     request: ManualUnRedeemCampaignInput!
   ): Boolean!
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
+  unsignMember(market: String!, ssn: String!): Boolean!
+  editMemberInfo(request: EditMemberInfoInput!): Boolean!
 }
 
 type ClaimItem {
@@ -154,6 +156,14 @@ input InsertItemCategoriesInput {
 
 input InsertValuationRulesInput {
   valuationRulesString: String!
+}
+
+input EditMemberInfoInput {
+  memberId: String!
+  firstName: String
+  lastName: String
+  email: String
+  phoneNumber: String
 }
 
 input GetValuationInput {
@@ -481,14 +491,6 @@ type CampaignOwnerPartner {
   partnerId: String!
 }
 
-enum IncentiveType {
-  COST_DEDUCTION
-  FREE_MONTHS
-  NO_DISCOUNT
-  MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD
-  INDEFINITE_PERCENTAGE_DISCOUNT
-}
-
 type VoucherCampaign {
   id: ID!
   campaignCode: String!
@@ -520,12 +522,22 @@ type IndefinitePercentageDiscount {
   percentageDiscount: Float
 }
 
+type VisibleNoDiscount {
+  _: Boolean
+}
+
+type UnknownIncentive {
+  _: Boolean
+}
+
 union Incentive =
     MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
   | IndefinitePercentageDiscount
+  | VisibleNoDiscount
+  | UnknownIncentive
 
 type ItemFamily implements ItemCategoryCore {
   id: ID!
@@ -659,6 +671,7 @@ type Member {
   fraudulentStatusDescription: String
   createdOn: Instant
   signedOn: Instant
+  status: String
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
@@ -670,6 +683,7 @@ type Member {
   totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
+  claims: [Claim!]!
   contractMarketInfo: ContractMarketInfo
   pickedLocale: PickedLocale
   referralInformation: ReferralInformation
@@ -680,6 +694,22 @@ type ReferralInformation {
   campaign: ReferralCampaign!
   referredBy: MemberReferral
   hasReferred: [MemberReferral!]!
+  redeemedCampaigns: [RedeemedCampaign!]!
+}
+
+type RedeemedCampaign {
+  code: String!
+  type: String!
+  incentive: Incentive!
+  redemptionState: RedemptionState!
+}
+
+type RedemptionState {
+  redeemedAt: Instant!
+  activatedAt: Instant
+  activeTo: Instant
+  terminatedAt: Instant
+  unRedeemedAt: Instant
 }
 
 type ReferralCampaign {
