@@ -7,9 +7,12 @@ import {
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
 import { DropdownOption } from 'features/tools/campaign-codes/components/ClearableDropdown'
-import { Badge, BadgeRow } from 'features/tools/campaign-codes/styles'
+import {
+  Badge,
+  BadgeRow,
+  ValidityText,
+} from 'features/tools/campaign-codes/styles'
 import React from 'react'
-import styled from 'react-emotion'
 import {
   isCostDeduction,
   isFreeMonths,
@@ -19,7 +22,7 @@ import {
 } from 'utils/campaignCodes'
 import { formatMoney } from 'utils/money'
 
-export enum CreateableIncentiveTypes {
+export enum CreatableIncentiveTypes {
   MonthlyPercentageDiscountFixedPeriod = 'Monthly Percentage',
 }
 
@@ -131,12 +134,6 @@ export const getDiscountDetails = (incentive?: Incentive | null) => {
   }
 }
 
-const ValidityText = styled.span`
-  font-size: 0.9em;
-  display: flex;
-  justify-content: center;
-`
-
 export const getValidity = (campaign: VoucherCampaign) => {
   const validFrom =
     campaign.validFrom && formatDate(new Date(campaign.validFrom), 'yyyy-MM-dd')
@@ -158,9 +155,7 @@ export const getValidity = (campaign: VoucherCampaign) => {
 
   return (
     <ValidityText>
-      {validFrom}
-      {'  '}-{'  '}
-      {validTo}
+      {validFrom} - {validTo}
     </ValidityText>
   )
 }

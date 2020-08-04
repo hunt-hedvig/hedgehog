@@ -22,8 +22,6 @@ import {
 } from 'utils/campaignCodes'
 import { withShowNotification } from 'utils/notifications'
 
-// TODO: Dropdowns should be clearable
-
 const initialFormData: AssignVoucherPercentageDiscount = {
   code: '',
   partnerId: '',

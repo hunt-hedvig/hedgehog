@@ -39,3 +39,9 @@ export const Row = styled.div`
   width: 100%;
   justify-content: space-between;
 `
+
+export const ValidityText = styled.span`
+  font-size: 0.9em;
+  display: flex;
+  justify-content: center;
+`
