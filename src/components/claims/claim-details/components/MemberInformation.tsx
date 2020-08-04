@@ -1,4 +1,4 @@
-import { Member, SanctionStatus } from 'api/generated/graphql'
+import { Contract, Member, SanctionStatus } from 'api/generated/graphql'
 import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { OrbIndicator } from 'hedvig-ui/orb-indicator'
@@ -6,6 +6,7 @@ import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
+import { getAddressFromContract } from 'utils/contract'
 import { formatMoney } from 'utils/money'
 
 import {
@@ -41,7 +42,12 @@ const MemberName = styled('h2')({
   marginBottom: '2rem',
 })
 
-const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
+const MemberInformation: React.FC<{
+  member: Member
+  contract: Contract | null
+}> = ({ member, contract }) => {
+  const address = contract ? getAddressFromContract(contract) : null
+
   return (
     <Paper>
       <h3>Member Information</h3>
@@ -50,51 +56,55 @@ const MemberInformation: React.SFC<{ member: Member }> = ({ member }) => {
         <MemberFlag memberId={member.memberId} />
       </MemberName>
       <p>
-        <b>Id:</b>{' '}
+        <strong>Id:</strong>{' '}
         <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
       </p>
       <p>
-        <b>Personal Number:</b> {member.personalNumber}
+        <strong>Personal Number:</strong> {member.personalNumber}
       </p>
+      {address && (
+        <p>
+          <strong>Address:</strong> {address.street}, {address.postalCode}{' '}
+          {address.city}
+        </p>
+      )}
+
       <p>
-        <b>Address:</b> {member.address}, {member.postalNumber} {member.city}
-      </p>
-      <p>
-        <b>Sanction Status:</b> {member.sanctionStatus}{' '}
+        <strong>Sanction Status:</strong> {member.sanctionStatus}{' '}
         <SanctionStatusIcon status={member.sanctionStatus!} />
       </p>
       <h3>Fraud Checks</h3>
       <p>
-        <b>Signed:</b>{' '}
+        <strong>Signed:</strong>{' '}
         {Boolean(member.signedOn) &&
           formatDistance(parseISO(member.signedOn), new Date(), {
             addSuffix: true,
           })}
       </p>
       <p style={{ marginTop: '-7px' }}>
-        <b>Fraudulent Status:</b>{' '}
+        <strong>Fraudulent Status:</strong>{' '}
         <span style={{ fontSize: '32px' }}>
           <FraudulentStatus stateInfo={{ state: member.fraudulentStatus }} />
         </span>
       </p>
       <p>
-        <b>Direct Debit:</b>{' '}
+        <strong>Direct Debit:</strong>{' '}
         {member.directDebitStatus?.activated ? <Checkmark /> : <Cross />}
       </p>
       <p>
-        <b>Payments Balance (Minimum):</b>{' '}
+        <strong>Payments Balance (Minimum):</strong>{' '}
         {member.account?.totalBalance &&
           formatMoney(member.account.totalBalance)}
       </p>
       <p>
-        <b>Failed Payments:</b>{' '}
+        <strong>Failed Payments:</strong>{' '}
         {member.numberFailedCharges?.numberFailedCharges} payment(s) in a row
       </p>
       <p>
-        <b>Total Number of Claims:</b> {member.totalNumberOfClaims}
+        <strong>Total Number of Claims:</strong> {member.totalNumberOfClaims}
       </p>
       <p>
-        <b>Debt Status:</b>{' '}
+        <strong>Debt Status:</strong>{' '}
         {member.person && (
           <OrbIndicator color={member.person?.debtFlag} size={'tiny'} />
         )}

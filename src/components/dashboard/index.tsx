@@ -44,18 +44,20 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
         </span>
         !
       </Headline>
-      <MetricsWrapper>
-        <Metric to="/claims">
-          <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
-          <MetricName>claims</MetricName>
-        </Metric>
-        <Metric to="/questions">
-          <MetricNumber>
-            {dashboardNumbers?.numberOfQuestions || 0}
-          </MetricNumber>
-          <MetricName>questions</MetricName>
-        </Metric>
-      </MetricsWrapper>
+      {dashboardNumbers && (
+        <MetricsWrapper>
+          <Metric to="/claims">
+            <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
+            <MetricName>claims</MetricName>
+          </Metric>
+          <Metric to="/questions">
+            <MetricNumber>
+              {dashboardNumbers?.numberOfQuestions || 0}
+            </MetricNumber>
+            <MetricName>questions</MetricName>
+          </Metric>
+        </MetricsWrapper>
+      )}
     </>
   )
 }

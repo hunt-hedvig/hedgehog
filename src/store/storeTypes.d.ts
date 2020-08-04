@@ -1,6 +1,5 @@
 import { AuthState } from 'store/actions/auth'
 import { ClaimsStore } from './types/claimsTypes'
-import { QuestionsStore } from './types/questionsTypes'
 
 export interface BackofficeStore {
   auth: {
@@ -13,13 +12,10 @@ export interface BackofficeStore {
   assets: any
   client: any
   poll: any
-  messages: any
   members: MembersStore
-  dashboard: any
   claims: ClaimsStore
   claimDetails: any
   payoutDetails: any
-  questions: QuestionsStore
   notifications: any
   memberInsurance: any
 }

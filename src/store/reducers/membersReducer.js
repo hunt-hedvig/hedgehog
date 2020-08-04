@@ -1,15 +1,10 @@
-import {
-  filterMembersList,
-  setNewMessagesCounter,
-  sortMembersList,
-} from '../../lib/helpers'
+import { filterMembersList, sortMembersList } from '../../lib/helpers'
 import {
   MEMBER_SEARCH_REQUESTING,
   MEMBERS_ERROR,
   MEMBERS_REQUEST_SUCCESS,
   MEMBERS_REQUESTING,
   MEMBERS_SEARCH_SUCCESS,
-  NEW_MESSAGES_RECEIVED,
   SET_MEMBER_FILTER,
   SORT_MEMBERS_LIST,
 } from '../constants/members'
@@ -45,12 +40,6 @@ export default function(state = initialState.members, action) {
         ...state,
         searchResult: action.searchResult,
         requesting: false,
-      }
-
-    case NEW_MESSAGES_RECEIVED:
-      return {
-        ...state,
-        list: setNewMessagesCounter(state.list.slice()),
       }
 
     case SET_MEMBER_FILTER:
