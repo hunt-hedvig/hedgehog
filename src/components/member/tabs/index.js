@@ -1,6 +1,5 @@
 import ClaimsTab from 'components/member/tabs/ClaimsTab'
-import { MemberDebtComponent } from 'components/member/tabs/DebtTab'
-import DetailsTab from 'components/member/tabs/DetailsTab'
+import { DetailsTab } from 'components/member/tabs/DetailsTab'
 import MemberFile from 'components/member/tabs/FileTab'
 import PaymentsTab from 'components/member/tabs/payments-tab'
 import { Quotes } from 'components/member/tabs/quote-tab'
@@ -13,6 +12,8 @@ import { Tab } from 'semantic-ui-react'
 import styled from 'react-emotion'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { AccountTab } from './account-tab'
+import { DebtTab } from './debt-tab'
+import { CampaignsTab } from './campaigns-tab'
 
 const TabContainer = styled(Tab.Pane)`
   &&& {
@@ -41,7 +42,7 @@ TabItem.propTypes = {
 }
 
 const memberPagePanes = (props, memberId, member) => {
-  const panes = [
+  return [
     {
       menuItem: 'Member',
       render: () => (
@@ -71,8 +72,6 @@ const memberPagePanes = (props, memberId, member) => {
         />
       ),
     },
-  ]
-  panes.push(
     {
       menuItem: 'Contracts',
       render: () => (
@@ -85,8 +84,6 @@ const memberPagePanes = (props, memberId, member) => {
         <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
       ),
     },
-  )
-  panes.push(
     {
       menuItem: 'Payments',
       render: () => <TabItem props={props} TabContent={PaymentsTab} />,
@@ -99,10 +96,16 @@ const memberPagePanes = (props, memberId, member) => {
     },
     {
       menuItem: 'Debt',
-      render: () => <TabItem props={props} TabContent={MemberDebtComponent} />,
+      render: () => (
+        <TabItem props={{ ...props, memberId }} TabContent={DebtTab} />
+      ),
     },
-  )
-
-  return panes
+    {
+      menuItem: 'Campaigns',
+      render: () => (
+        <TabItem props={{ ...props, memberId }} TabContent={CampaignsTab} />
+      ),
+    },
+  ]
 }
 export default memberPagePanes

@@ -1,0 +1,33 @@
+query GetPerson($memberId: ID!) {
+  member(id: $memberId) {
+    memberId
+    person {
+      debtFlag
+      status {
+        flag
+        whitelisted
+      }
+      debt {
+        paymentDefaults {
+          year
+          week
+          paymentDefaultType
+          paymentDefaultTypeText
+          amount
+          caseId
+          claimant
+        }
+        numberPublicDebts
+        totalAmountPublicDebt
+        numberPrivateDebts
+        totalAmountPrivateDebt
+        totalAmountDebt
+        fromDateTime
+      }
+      whitelisted {
+        whitelistedAt
+        whitelistedBy
+      }
+    }
+  }
+}

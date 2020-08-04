@@ -12,12 +12,15 @@ const mapStateToProps = ({ claims, auth, payoutDetails }) => ({
   payoutDetails,
 })
 
-export default withRouter(
-  connect(mapStateToProps, {
+export default connect(
+  mapStateToProps,
+  {
     claimsByMember: actions.claimsActions.claimsByMember,
     ...actions.membersActions,
     ...actions.clientActions,
     ...actions.notificationsActions,
     ...actions.payoutDetailsActions,
-  })(MemberPage),
-)
+  },
+  null,
+  { pure: false },
+)(withRouter(MemberPage))

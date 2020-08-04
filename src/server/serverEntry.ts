@@ -81,12 +81,6 @@ if (process.env.NODE_ENV !== 'production') {
       target: 'http://localhost:9001',
     }),
   )
-  app.use(
-    proxy('/sockjs-node', {
-      target: 'http://localhost:9001',
-      ws: true,
-    }),
-  )
 }
 
 app.use(setRequestUuidMiddleware)

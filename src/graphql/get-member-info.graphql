@@ -9,6 +9,7 @@ query GetMemberInfo($memberId: ID!) {
     personalNumber
     fraudulentStatus
     fraudulentStatusDescription
+    status
     signedOn
     createdOn
   }

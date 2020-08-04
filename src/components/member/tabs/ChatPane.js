@@ -2,7 +2,7 @@ import { ChatPanel } from 'components/member/chat/ChatPanel'
 import { MessagesList } from 'components/member/messages/MessagesList'
 import PropTypes from 'prop-types'
 import Resizable from 're-resizable'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 
@@ -39,35 +39,34 @@ export const ChatPane = ({ memberId }) => {
   const [visible, setVisible] = useState(window.innerWidth > 1500)
   const [manualChange, setManualChange] = useState(false)
 
-  const resizeControlChat = (e) => {
-    if (!manualChange) {
-      setVisible(window.innerWidth > 1500)
+  useEffect(() => {
+    const resizeControlChat = (e) => {
+      if (!manualChange) {
+        setVisible(window.innerWidth > 1500)
+      }
     }
-  }
-  window.addEventListener('resize', resizeControlChat)
+    window.addEventListener('resize', resizeControlChat)
+    return () => window.removeEventListener('resize', resizeControlChat)
+  }, [])
 
   const onResizeClick = () => {
     setVisible(!visible)
     setManualChange(true)
   }
   return visible ? (
-    <>
-      <Resizable
-        style={resizableStyles}
-        defaultSize={{ width: '400px', height: '80%' }}
-        maxWidth={'90vw'}
-        maxHeight={'85vh'}
-        enable={{ left: true }}
-      >
-        <ChatHeader visible={visible} onResizeClick={onResizeClick} />
-        <MessagesList memberId={memberId} />
-        <ChatPanel memberId={memberId} />
-      </Resizable>
-    </>
+    <Resizable
+      style={resizableStyles}
+      defaultSize={{ width: '400px', height: '80%' }}
+      maxWidth={'90vw'}
+      maxHeight={'85vh'}
+      enable={{ left: true }}
+    >
+      <ChatHeader visible={visible} onResizeClick={onResizeClick} />s
+      <MessagesList memberId={memberId} />
+      <ChatPanel memberId={memberId} />
+    </Resizable>
   ) : (
-    <>
-      <ChatHeader visible={visible} onResizeClick={onResizeClick} />
-    </>
+    <ChatHeader visible={visible} onResizeClick={onResizeClick} />
   )
 }
 

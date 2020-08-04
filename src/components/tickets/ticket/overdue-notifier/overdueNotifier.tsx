@@ -11,10 +11,11 @@ export const OverdueNotifier = (props: { reminder: IRemindNotification }) => {
     >
       <h4>Sent reminder</h4>
       <p>
-        <b>Message:</b> {props.reminder.message}
+        <strong>Message:</strong> {props.reminder.message}
       </p>
       <p>
-        <b>Sent at:</b> {props.reminder.time + ' ' + props.reminder.date}
+        <strong>Sent at:</strong>{' '}
+        {props.reminder.time + ' ' + props.reminder.date}
       </p>
     </Popup>
   )
