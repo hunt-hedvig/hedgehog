@@ -1,0 +1,3 @@
+mutation ManualRedeemCampaign($memberId: ID!, $request: ManualRedeemCampaignInput!) {
+  manualRedeemCampaign(memberId: $memberId, request: $request)
+}

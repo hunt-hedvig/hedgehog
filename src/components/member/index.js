@@ -141,14 +141,12 @@ export const Member = (props) => {
                   </MemberDetailLink>
                 </Popover>
               </MemberDetails>
-              {
-                <Tab
-                  style={{ height: '100%' }}
-                  panes={memberPagePanes(props, memberId, member)}
-                  renderActiveOnly={true}
-                  defaultActiveIndex={4}
-                />
-              }
+              <Tab
+                style={{ height: '100%' }}
+                panes={memberPagePanes(props, memberId, member)}
+                renderActiveOnly={true}
+                defaultActiveIndex={4}
+              />
             </MemberPageContainer>
             <ChatPane memberId={memberId} />
           </MemberPageWrapper>
