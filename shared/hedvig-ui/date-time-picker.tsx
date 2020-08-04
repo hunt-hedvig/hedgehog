@@ -12,6 +12,7 @@ interface DatePickerProps {
   showTimePicker?: boolean
   fullWidth?: boolean
   placeholder?: string
+  disabled?: boolean
 }
 
 const StyledInput = styled(Input)<{ fullWidth?: boolean }>(
@@ -33,11 +34,13 @@ export const DateTimePicker: React.FunctionComponent<DatePickerProps> = ({
   showTimePicker = false,
   fullWidth = false,
   placeholder,
+  disabled = false,
 }) => {
   return (
     <DatePicker
       locale={'enGB'}
       selected={date}
+      disabled={disabled}
       placeholderText={placeholder}
       onChange={(newDate) => {
         setDate(newDate)

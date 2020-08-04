@@ -1,11 +1,9 @@
+import { CampaignFilter } from 'api/generated/graphql'
+import { InfoContainer } from 'components/member/tabs/shared/card-components'
 import {
-  InfoContainer,
-  InfoRow,
-} from 'components/member/tabs/shared/card-components'
-import {
-  CampaignFilter,
-  PartnerIdOptions,
-} from 'features/tools/campaign-codes/index'
+  initialCampaignFilter,
+  mapCampaignOwners,
+} from 'features/tools/campaign-codes/utils'
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
@@ -20,75 +18,67 @@ export const CampaignCodeFilter: React.FC<{
 }> = ({ filter, setFilter }) => {
   const [partnerCampaignOwners] = usePartnerCampaignOwners()
 
-  const partnerIdOptions: PartnerIdOptions[] = partnerCampaignOwners.map(
-    (partnerCampaignOwner) => ({
-      key: partnerCampaignOwner.partnerId,
-      value: partnerCampaignOwner.partnerId,
-      text: partnerCampaignOwner.partnerId,
-    }),
-  )
-
   return (
     <InfoContainer>
-      <InfoRow>
-        <ThirdLevelHeadline>Filter codes</ThirdLevelHeadline>
-      </InfoRow>
+      <ThirdLevelHeadline>Filter codes</ThirdLevelHeadline>
       <Spacing top={'small'} />
-      <InfoRow>
-        <Input
-          value={filter.code}
-          style={{ width: '100%' }}
-          onChange={(e) => {
-            setFilter({
-              ...filter,
-              code: e.currentTarget.value,
-            })
-          }}
-          placeholder="Code"
-        />
-      </InfoRow>
+      <Input
+        value={filter.code ?? ''}
+        style={{ width: '100%' }}
+        onChange={({ currentTarget: { value: code } }) => {
+          setFilter({
+            ...filter,
+            code,
+          })
+        }}
+        placeholder="Code"
+      />
       <Spacing top={'small'} />
-      <InfoRow>
-        <Dropdown
-          style={{ width: '100%' }}
-          placeholder="Campaign owner"
-          fluid
-          search
-          selection
-          options={partnerIdOptions}
-          value={filter.partnerId as string}
-          onChange={(_, data) => {
-            setFilter({
-              ...filter,
-              partnerId: data.value as string,
-            })
-          }}
-        />
-      </InfoRow>
+      <Dropdown
+        style={{ width: '100%' }}
+        placeholder="Campaign owner"
+        fluid
+        search
+        selection
+        options={mapCampaignOwners(partnerCampaignOwners)}
+        value={filter.partnerId as string}
+        onChange={(_, { value: partnerId }) => {
+          setFilter({
+            ...filter,
+            partnerId: partnerId as string,
+          })
+        }}
+      />
       <Spacing top={'small'} />
-      <InfoRow>
-        <div style={{ width: '100%', float: 'left' }}>
+      <div
+        style={{
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div style={{ float: 'left' }}>
           <DateTimePicker
             fullWidth
             date={filter.activeFrom!!}
             placeholder={'Active from'}
-            setDate={(data) => {
+            setDate={(activeFrom) => {
               setFilter({
                 ...filter,
-                activeFrom: data,
+                activeFrom,
               })
             }}
           />
         </div>
-        <div style={{ width: '100%', float: 'right' }}>
+        <div style={{ float: 'right' }}>
           <DateTimePicker
-            fullWidth={true}
+            fullWidth
             placeholder={'Active to'}
             date={filter.activeTo!}
-            setDate={(data) => {
+            setDate={(activeTo) => {
               setFilter({
                 ...filter,
-                activeTo: data,
+                activeTo,
               })
             }}
           />
@@ -96,18 +86,12 @@ export const CampaignCodeFilter: React.FC<{
         <Button
           variation="primary"
           onClick={() => {
-            setFilter({
-              ...filter,
-              code: '',
-              partnerId: null,
-              activeFrom: null,
-              activeTo: null,
-            })
+            setFilter(initialCampaignFilter)
           }}
         >
           Clear
         </Button>
-      </InfoRow>
+      </div>
     </InfoContainer>
   )
 }

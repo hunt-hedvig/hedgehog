@@ -2,12 +2,12 @@ import {
   InfoContainer,
   InfoRow,
 } from 'components/member/tabs/shared/card-components'
-import { MonthlyPercentageForm } from 'features/tools/campaign-codes/creatable-campaigns/monthly-percentage-form'
+import { MonthlyPercentageForm } from 'features/tools/campaign-codes/campaign-forms/monthly-percentage-form'
+import { CreateableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { Dropdown } from 'semantic-ui-react'
 
 const getIncentiveTypeForm = (incentiveType: CreateableIncentiveTypes) => {
   switch (incentiveType) {
@@ -18,11 +18,7 @@ const getIncentiveTypeForm = (incentiveType: CreateableIncentiveTypes) => {
   }
 }
 
-enum CreateableIncentiveTypes {
-  MonthlyPercentageDiscountFixedPeriod = 'Monthly Percentage',
-}
-
-export const CreateCampaignCode: React.FC<{}> = () => {
+export const CreateCampaignCode: React.FC = () => {
   const [
     incentiveType,
     setIncentiveType,
@@ -30,18 +26,12 @@ export const CreateCampaignCode: React.FC<{}> = () => {
 
   return (
     <InfoContainer>
-      <InfoRow>
-        <ThirdLevelHeadline>Create New Code</ThirdLevelHeadline>
-      </InfoRow>
-      <Spacing top={'small'} />
-      <label style={{ marginBottom: '-1.0rem' }}>Incentive Type</label>
-      <InfoRow>
-        <EnumDropdown
-          enumToSelectFrom={CreateableIncentiveTypes}
-          placeholder={'Incentive type'}
-          setValue={setIncentiveType}
-        />
-      </InfoRow>
+      <ThirdLevelHeadline>Create New Code</ThirdLevelHeadline>
+      <EnumDropdown
+        enumToSelectFrom={CreateableIncentiveTypes}
+        placeholder={'Incentive type'}
+        setValue={setIncentiveType}
+      />
       <Spacing bottom={'small'} />
       {incentiveType && getIncentiveTypeForm(incentiveType)}
     </InfoContainer>
