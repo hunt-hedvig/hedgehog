@@ -1,12 +1,13 @@
+import { Tools } from 'features/tools'
+import { CampaignCodeInfo } from 'features/tools/campaign-codes'
+import { ChargePage } from 'features/tools/charges'
+import { ItemizerComponent } from 'features/tools/itemizer'
 import { NorwegianTariffCreator } from 'features/tools/norwegian-tariff-editor'
+import { PerilsEditor } from 'features/tools/perils-editor'
+import { UnsignMemberTool } from 'features/tools/staging-tools/unsign-member-tool'
+import { SwitcherAutomation } from 'features/tools/switcher-automation'
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { Tools } from '../features/tools'
-import { CampaignCodeInfo } from '../features/tools/campaign-codes'
-import { ChargePage } from '../features/tools/charges'
-import { ItemizerComponent } from '../features/tools/itemizer'
-import { PerilsEditor } from '../features/tools/perils-editor'
-import { SwitcherAutomation } from '../features/tools/switcher-automation'
 
 export const ToolsPageRoute: React.FunctionComponent = () => (
   <Switch>
@@ -20,5 +21,6 @@ export const ToolsPageRoute: React.FunctionComponent = () => (
     />
     <Route component={ItemizerComponent} path="/tools/itemizer" />
     <Route component={CampaignCodeInfo} path="/tools/campaign-codes" />
+    <Route component={UnsignMemberTool} path="/tools/unsign-member" />
   </Switch>
 )
