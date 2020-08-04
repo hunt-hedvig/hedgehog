@@ -10,10 +10,6 @@ const initialState: BackofficeStore = {
   login: {
     requesting: false,
   },
-  assets: {
-    list: [],
-    requesting: false,
-  },
   client: {},
   poll: {
     polling: false,

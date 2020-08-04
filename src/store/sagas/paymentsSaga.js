@@ -1,7 +1,6 @@
 import api from 'api'
 import config from 'api/config'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { claimRequestError } from '../actions/claimDetailsActions'
 import { showNotification } from '../actions/notificationsActions'
 import * as actions from '../actions/paymentActions'
 import {
@@ -23,7 +22,6 @@ function* createFlow({ data, id, userId }) {
   } catch (error) {
     yield [
       put(showNotification({ message: error.message, header: 'Payments' })),
-      put(claimRequestError(error)),
     ]
   }
 }
@@ -36,7 +34,6 @@ function* updateResumeFlow({ data, id, userId }) {
   } catch (error) {
     yield [
       put(showNotification({ message: error.message, header: 'Payments' })),
-      put(claimRequestError(error)),
     ]
   }
 }

@@ -88,7 +88,7 @@ const SubmitButton = withStyles({
   },
 })(MuiButton)
 
-const ClaimNotes: React.SFC<Props> = ({ notes, claimId, refetchPage }) => (
+const ClaimNotes: React.FC<Props> = ({ notes, claimId, refetchPage }) => (
   <Mutation mutation={ADD_CLAIM_NOTE_MUTATION}>
     {(addClaimNote) => (
       <Paper>
