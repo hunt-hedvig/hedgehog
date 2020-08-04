@@ -28,3 +28,14 @@ export const BadgeRow = styled(Paragraph)`
   width: 100%;
   justify-content: space-between;
 `
+
+export const Centered = styled.div`
+  margin: 0 auto;
+  display: block;
+`
+
+export const Row = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`

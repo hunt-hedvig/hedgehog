@@ -1,4 +1,5 @@
 import { AssignVoucherPercentageDiscount } from 'api/generated/graphql'
+import { Centered, Row } from 'features/tools/campaign-codes/styles'
 import {
   formLooksGood,
   mapCampaignOwners,
@@ -21,11 +22,6 @@ import {
 import { withShowNotification } from 'utils/notifications'
 
 // TODO: Dropdowns should be clearable
-// TODO: Style label for input
-// TODO: Fill out incentive details
-// TODO: Create better "Validity" column
-// TODO: Fix all warnings -.-
-// TODO: Extract all inline styles
 
 const initialFormData: AssignVoucherPercentageDiscount = {
   code: '',
@@ -73,7 +69,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
       <label>Code</label>
       <Input
         value={formData.code}
-        style={{ width: '100%' }}
+        fluid
         disabled={loading}
         onChange={({ currentTarget: { value: code } }) =>
           setFormData({ ...formData, code })
@@ -82,13 +78,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
       />
       <Spacing top={'small'} />
       <label>Valid period</label>
-      <div
-        style={{
-          display: 'flex',
-          width: '100%',
-          justifyContent: 'space-between',
-        }}
-      >
+      <Row>
         <div style={{ float: 'left' }}>
           <DateTimePicker
             fullWidth
@@ -98,7 +88,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>
-        <div style={{ float: 'left' }}>
+        <div style={{ float: 'right' }}>
           <DateTimePicker
             fullWidth
             disabled={loading}
@@ -107,7 +97,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
-      </div>
+      </Row>
       <Spacing top={'small'} />
       <label>Percentage discount</label>
       <Dropdown
@@ -145,38 +135,41 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
         }}
       />
       <Spacing top={'small'} />
-      <Button
-        style={{ margin: '0 auto', display: 'block' }}
-        variation="primary"
-        loading={loading}
-        disabled={loading || !formLooksGood(formData)}
-        onClick={() => {
-          if (!window.confirm(`Create new campaign code "${formData.code}"?`)) {
-            return
-          }
-          setPartnerPercentageDiscount(
-            addPartnerPercentageDiscountCodeOptions(formData),
-          )
-            .then(() => {
-              reset()
-              showNotification({
-                type: 'olive',
-                header: 'Success',
-                message: `Successfully created a new percentage campaign for partner ${formData.partnerId}`,
+      <Centered>
+        <Button
+          variation="primary"
+          loading={loading}
+          disabled={loading || !formLooksGood(formData)}
+          onClick={() => {
+            if (
+              !window.confirm(`Create new campaign code "${formData.code}"?`)
+            ) {
+              return
+            }
+            setPartnerPercentageDiscount(
+              addPartnerPercentageDiscountCodeOptions(formData),
+            )
+              .then(() => {
+                reset()
+                showNotification({
+                  type: 'olive',
+                  header: 'Success',
+                  message: `Successfully created a new percentage campaign for partner ${formData.partnerId}`,
+                })
               })
-            })
-            .catch((error) => {
-              showNotification({
-                type: 'red',
-                header: 'Error',
-                message: error.message,
+              .catch((error) => {
+                showNotification({
+                  type: 'red',
+                  header: 'Error',
+                  message: error.message,
+                })
+                throw error
               })
-              throw error
-            })
-        }}
-      >
-        Create New Campaign
-      </Button>
+          }}
+        >
+          Create New Campaign
+        </Button>
+      </Centered>
     </>
   )
 }

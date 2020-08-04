@@ -1,5 +1,6 @@
 import { CampaignFilter } from 'api/generated/graphql'
 import { InfoContainer } from 'components/member/tabs/shared/card-components'
+import { Row } from 'features/tools/campaign-codes/styles'
 import {
   initialCampaignFilter,
   mapCampaignOwners,
@@ -24,7 +25,7 @@ export const CampaignCodeFilter: React.FC<{
       <Spacing top={'small'} />
       <Input
         value={filter.code ?? ''}
-        style={{ width: '100%' }}
+        fullWidth
         onChange={({ currentTarget: { value: code } }) => {
           setFilter({
             ...filter,
@@ -35,7 +36,7 @@ export const CampaignCodeFilter: React.FC<{
       />
       <Spacing top={'small'} />
       <Dropdown
-        style={{ width: '100%' }}
+        fullWidth
         placeholder="Campaign owner"
         fluid
         search
@@ -50,13 +51,7 @@ export const CampaignCodeFilter: React.FC<{
         }}
       />
       <Spacing top={'small'} />
-      <div
-        style={{
-          display: 'flex',
-          width: '100%',
-          justifyContent: 'space-between',
-        }}
-      >
+      <Row>
         <div style={{ float: 'left' }}>
           <DateTimePicker
             fullWidth
@@ -91,7 +86,7 @@ export const CampaignCodeFilter: React.FC<{
         >
           Clear
         </Button>
-      </div>
+      </Row>
     </InfoContainer>
   )
 }
