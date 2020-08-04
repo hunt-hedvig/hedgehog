@@ -1,4 +1,5 @@
 import { AssignVoucherPercentageDiscount } from 'api/generated/graphql'
+import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
 import { Centered, Row } from 'features/tools/campaign-codes/styles'
 import {
   formLooksGood,
@@ -13,7 +14,7 @@ import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
-import { Dropdown, Input } from 'semantic-ui-react'
+import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import {
   numberOfMonthsOptions,
@@ -26,8 +27,8 @@ import { withShowNotification } from 'utils/notifications'
 const initialFormData: AssignVoucherPercentageDiscount = {
   code: '',
   partnerId: '',
-  numberOfMonths: 0,
-  percentageDiscount: 0.0,
+  numberOfMonths: 1,
+  percentageDiscount: 5,
   validFrom: null,
   validUntil: null,
 }
@@ -52,18 +53,14 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
     <>
       <label>Partner</label>
       <Dropdown
-        label={'Partner'}
-        placeholder="Partner"
-        disabled={loading}
-        fluid
-        search
-        selection
-        selectOnBlur={false}
         value={formData.partnerId}
-        options={mapCampaignOwners(partnerCampaignOwners)}
+        disabled={loading}
+        placeholder={'Partner'}
         onChange={(_, { value: partnerId }) =>
           setFormData({ ...formData, partnerId: partnerId as string })
         }
+        onClear={() => setFormData({ ...formData, partnerId: '' })}
+        options={mapCampaignOwners(partnerCampaignOwners)}
       />
       <Spacing top={'small'} />
       <label>Code</label>
@@ -101,31 +98,20 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
       <Spacing top={'small'} />
       <label>Percentage discount</label>
       <Dropdown
-        placeholder="Discount %"
-        search
-        fluid
-        selection
-        selectOnBlur={false}
-        disabled={loading}
-        options={percentageDiscountOptions}
         value={formData.percentageDiscount}
+        disabled={loading}
+        placeholder={'Discount %'}
         onChange={(_, { value: percentageDiscount }) =>
           setFormData({
             ...formData,
             percentageDiscount: percentageDiscount as number,
           })
         }
+        options={percentageDiscountOptions}
       />
       <Spacing top={'small'} />
       <label>Months</label>
       <Dropdown
-        placeholder="Months"
-        search
-        fluid
-        disabled={loading}
-        selectOnBlur={false}
-        selection
-        options={numberOfMonthsOptions}
         value={formData.numberOfMonths}
         onChange={(_, { value: numberOfMonths }) => {
           setFormData({
@@ -133,6 +119,9 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
             numberOfMonths: numberOfMonths as number,
           })
         }}
+        placeholder="Months"
+        disabled={loading}
+        options={numberOfMonthsOptions}
       />
       <Spacing top={'small'} />
       <Centered>

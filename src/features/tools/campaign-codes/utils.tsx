@@ -6,6 +6,7 @@ import {
   VoucherCampaign,
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
+import { DropdownOption } from 'features/tools/campaign-codes/components/ClearableDropdown'
 import { Badge, BadgeRow } from 'features/tools/campaign-codes/styles'
 import React from 'react'
 import styled from 'react-emotion'
@@ -22,12 +23,6 @@ export enum CreateableIncentiveTypes {
   MonthlyPercentageDiscountFixedPeriod = 'Monthly Percentage',
 }
 
-export interface PartnerIdOptions {
-  key: string
-  value: string
-  text: string
-}
-
 export const formLooksGood = (formData: AssignVoucherPercentageDiscount) => {
   return formData.partnerId !== '' && formData.code !== ''
 }
@@ -41,7 +36,7 @@ export const initialCampaignFilter: CampaignFilter = {
 
 export const mapCampaignOwners = (
   partnerCampaignOwners: readonly CampaignOwnerPartner[],
-): PartnerIdOptions[] =>
+): DropdownOption[] =>
   partnerCampaignOwners.map(({ partnerId }) => ({
     key: partnerId,
     value: partnerId,

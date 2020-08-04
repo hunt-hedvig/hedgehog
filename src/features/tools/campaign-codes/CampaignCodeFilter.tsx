@@ -1,5 +1,6 @@
 import { CampaignFilter } from 'api/generated/graphql'
 import { InfoContainer } from 'components/member/tabs/shared/card-components'
+import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
 import { Row } from 'features/tools/campaign-codes/styles'
 import {
   initialCampaignFilter,
@@ -11,7 +12,7 @@ import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { Dropdown, Input } from 'semantic-ui-react'
+import { Input } from 'semantic-ui-react'
 
 export const CampaignCodeFilter: React.FC<{
   filter: CampaignFilter
@@ -36,17 +37,19 @@ export const CampaignCodeFilter: React.FC<{
       />
       <Spacing top={'small'} />
       <Dropdown
-        fullWidth
-        placeholder="Campaign owner"
-        fluid
-        search
-        selection
         options={mapCampaignOwners(partnerCampaignOwners)}
-        value={filter.partnerId as string}
+        value={filter.partnerId ?? ''}
+        placeholder="Partner"
         onChange={(_, { value: partnerId }) => {
           setFilter({
             ...filter,
             partnerId: partnerId as string,
+          })
+        }}
+        onClear={() => {
+          setFilter({
+            ...filter,
+            partnerId: null,
           })
         }}
       />

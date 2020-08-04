@@ -1,7 +1,4 @@
-import {
-  InfoContainer,
-  InfoRow,
-} from 'components/member/tabs/shared/card-components'
+import { InfoContainer } from 'components/member/tabs/shared/card-components'
 import { MonthlyPercentageForm } from 'features/tools/campaign-codes/campaign-forms/monthly-percentage-form'
 import { CreateableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import { EnumDropdown } from 'hedvig-ui/dropdown'
