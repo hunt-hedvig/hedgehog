@@ -75,7 +75,7 @@ export const Member = (props) => {
 
   useEffect(() => {
     props.claimsByMember(memberId)
-  }, [])
+  }, [memberId])
 
   if (loading) {
     return null
