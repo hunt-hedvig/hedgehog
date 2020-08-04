@@ -35,9 +35,6 @@ const initialState: BackofficeStore = {
       pageSize: 25,
     },
   },
-  dashboard: {
-    data: null,
-  },
   claims: {
     searchFilter: {
       page: 0,

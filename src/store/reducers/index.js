@@ -3,7 +3,6 @@ import auth from './authReducer'
 import claimDetails from './claimDetailsReducer'
 import claims from './claimsReducer'
 import client from './clientReducer'
-import dashboard from './dashboardReducer'
 import login from './loginReducer'
 import members from './membersReducer'
 import notifications from './notificationsReducer'
@@ -17,7 +16,6 @@ export default {
   poll,
   client,
   members,
-  dashboard,
   claims,
   claimDetails,
   payoutDetails,

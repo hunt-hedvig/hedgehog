@@ -2,7 +2,6 @@ import * as assetsActions from './assetsActions'
 import * as claimDetailsActions from './claimDetailsActions'
 import * as claimsActions from './claimsActions'
 import * as clientActions from './clientActions'
-import * as dashboardActions from './dashboardActions'
 import * as loginActions from './loginActions'
 import * as membersActions from './membersActions'
 import * as notesActions from './notesActions'
@@ -17,7 +16,6 @@ export default {
   clientActions,
   pollActions,
   membersActions,
-  dashboardActions,
   claimsActions,
   claimDetailsActions,
   paymentActions,

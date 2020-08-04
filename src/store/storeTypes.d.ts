@@ -13,7 +13,6 @@ export interface BackofficeStore {
   client: any
   poll: any
   members: MembersStore
-  dashboard: any
   claims: ClaimsStore
   claimDetails: any
   payoutDetails: any
