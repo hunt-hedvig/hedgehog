@@ -18,11 +18,6 @@ const initialState: BackofficeStore = {
   poll: {
     polling: false,
   },
-  messages: {
-    list: [],
-    activeConnection: null,
-    member: null,
-  },
   members: {
     list: [],
     searchResult: {
@@ -68,18 +63,6 @@ const initialState: BackofficeStore = {
     data: null,
     requesting: false,
     requestResult: PayoutRequestResult.READY,
-  },
-  questions: {
-    answered: {
-      questions: [],
-      requesting: false,
-    },
-    notAnswered: {
-      questions: [],
-      requesting: false,
-    },
-    requesting: false,
-    errors: null,
   },
   notifications: [],
   memberInsurance: {

@@ -3,11 +3,6 @@ import { gql } from 'apollo-boost'
 import { addDays, isFriday, set } from 'date-fns'
 import format from 'date-fns/format'
 import { CHANGE_STATUS, GET_TICKETS } from 'features/taskmanager/queries'
-import React from 'react'
-import { Mutation } from 'react-apollo'
-import styled from 'react-emotion'
-import { Button, Divider, Grid, Icon, Segment } from 'semantic-ui-react'
-import { history } from 'store'
 import {
   createOptionsArray,
   IEX_TEAM_MEMBERS_OPTIONS,
@@ -15,9 +10,13 @@ import {
   TICKET_STATUS,
   TicketStatus,
   TicketType,
-} from '../../../features/taskmanager/types'
+} from 'features/taskmanager/types'
+import React from 'react'
+import { Mutation } from 'react-apollo'
+import styled from 'react-emotion'
+import { Button, Divider, Grid, Icon, Segment } from 'semantic-ui-react'
+import { history } from 'store'
 import { IRemindNotification } from '../types'
-import MessageResponseForm from './body/message-response'
 import AssignTicketToMutation from './edit-ticket-mut/assignTo'
 import ChangeDescriptionMutation from './edit-ticket-mut/description'
 import ChangeReminderMutation from './edit-ticket-mut/reminder'
@@ -301,22 +300,12 @@ export class TicketBody extends React.Component<
         const route = '/claims/' + referenceId + '/members/' + memberId
         return <Redirector route={route} redirectText="Go to claim" />
       }
-      case TicketType.MESSAGE: {
-        const route = '/members/' + memberId
-        return <Redirector route={route} redirectText="Go to chat" />
-      }
       default:
         return null
     }
   }
 
   private getResolveOption = () => {
-    if (
-      this.props.type === TicketType.MESSAGE &&
-      this.props.assignedTo === this.props.me
-    ) {
-      return <MessageResponseForm memberId={this.props.memberId} />
-    }
     if (
       this.props.assignedTo === this.props.me &&
       this.props.status === TicketStatus.WORKING_ON

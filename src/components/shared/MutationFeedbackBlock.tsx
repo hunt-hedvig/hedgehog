@@ -15,7 +15,7 @@ interface MutationFeedbackBlockProps {
   onTimeout: () => void
 }
 
-export const MutationFeedbackBlock: React.SFC<MutationFeedbackBlockProps> = ({
+export const MutationFeedbackBlock: React.FC<MutationFeedbackBlockProps> = ({
   status,
   messages,
   onTimeout,

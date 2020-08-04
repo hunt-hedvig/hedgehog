@@ -1,4 +1,4 @@
-import ChatPage from 'containers/chat-page/ChatPage'
+import MemberPage from 'containers/member-page/MemberPage'
 import { MembersSearchPage } from 'containers/member-search-page'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
@@ -22,7 +22,7 @@ const MessagesPageRouter = ({ store }) => (
       path="/members/:memberId/:msgId?"
       render={() => (
         <PrivateRoute
-          component={ChatPage}
+          component={MemberPage}
           path="/members/:memberId/:msgId?"
           store={store}
         />

@@ -4,7 +4,7 @@ import {
   SetCoveringEmployeeMutationHookResult,
   SetCoveringEmployeeMutationVariables,
   useSetCoveringEmployeeMutation,
-} from '../api/generated/graphql'
+} from 'api/generated/graphql'
 
 export const useSetCoveringEmployee = (): SetCoveringEmployeeMutationHookResult =>
   useSetCoveringEmployeeMutation()

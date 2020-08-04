@@ -80,9 +80,3 @@ export const CHANGE_REMINDER = gql`
     changeTicketReminder(ticketId: $ticketId, newReminder: $newReminder)
   }
 `
-
-export const QUESTION_IS_DONE = gql`
-  mutation QuestionIsDone($memberId: ID!) {
-    questionIsDone(memberId: $memberId)
-  }
-`

@@ -12,10 +12,12 @@ import {
   MemberAge,
 } from 'utils/member'
 import memberPagePanes from './tabs'
-import ChatPane from './tabs/ChatPane'
 import { MemberFlag } from './shared/member-flag'
 import { MemberHistoryContext } from '../../utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
+import { useEffect } from 'react'
+import { useGetMemberInfo } from 'graphql/use-get-member-info'
+import { ChatPane } from 'components/member/tabs/ChatPane'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -53,6 +55,7 @@ const Badge = styled('div')`
 const Flag = styled('div')`
   display: inline-flex;
   font-size: 3rem;
+  margin-left: 0.5rem;
 `
 
 const MemberDetails = styled.div`
@@ -64,136 +67,97 @@ const MemberDetail = styled.span`
 `
 const MemberDetailLink = MemberDetail.withComponent('a')
 
-export default class Member extends React.Component {
-  getMemberPageTitle = (member) =>
-    `${member && (member.firstName || '') + ' ' + (member.lastName || '')}`
+export const Member = (props) => {
+  const memberId = props.match.params.memberId
+  const [member, { loading }] = useGetMemberInfo(memberId)
+  const getMemberPageTitle = (member) =>
+    `${member.firstName || ''} ${member.lastName || ''}`
 
-  getMemberData = () => {
-    const {
-      match: {
-        params: { memberId },
-      },
-      memberRequest,
-      claimsByMember,
-    } = this.props
+  useEffect(() => {
+    props.claimsByMember(memberId)
+  }, [memberId])
 
-    memberRequest(memberId)
-    claimsByMember(memberId)
+  if (loading) {
+    return null
   }
 
-  componentDidMount() {
-    this.getMemberData()
-  }
-
-  componentDidUpdate(prevProps, prevState, prevContext) {
-    if (prevProps.match.params.memberId !== this.props.match.params.memberId) {
-      this.getMemberData()
-    }
-  }
-
-  render() {
-    const { messages } = this.props
-    const panes = memberPagePanes(this.props, this.addMessageHandler)
-
-    return (
-      <MemberHistoryContext.Consumer>
-        {({ pushToMemberHistory }) => (
-          <Mount
-            on={() => pushToMemberHistory(this.props.match.params.memberId)}
-          >
-            <MemberPageWrapper>
-              <MemberPageContainer>
-                <Header size="huge">
-                  <FraudulentStatus stateInfo={this.getFraudulentStatus()} />
-                  {this.getMemberPageTitle(messages.member)}
-                  {' ('}
-                  <MemberAge
-                    birthDateString={messages.member?.birthDate}
-                  />){' '}
-                  {messages.member && (
-                    <>
-                      <Flag>
-                        <MemberFlag memberId={messages.member.memberId} />
-                      </Flag>
-                      <Badge memberId={messages.member.memberId}>
-                        {getMemberGroup(messages.member.memberId)}
-                      </Badge>
-                    </>
-                  )}
-                </Header>
-                <MemberDetails>
-                  {messages?.member?.status === 'SIGNED' &&
-                    messages?.member?.ssn && (
-                      <MemberDetail>
-                        {formatSsn(messages.member.ssn)}
-                      </MemberDetail>
-                    )}
-                  {messages?.member?.email && (
-                    <MemberDetailLink href={`mailto:${messages.member.email}`}>
-                      {messages.member.email}
-                    </MemberDetailLink>
-                  )}
-                  {messages?.member?.phoneNumber && (
-                    <MemberDetailLink
-                      href={`tel:${messages.member.phoneNumber}`}
-                    >
-                      {messages.member.phoneNumber}
-                    </MemberDetailLink>
-                  )}
-                  <Popover contents={<>Click to copy</>}>
-                    <MemberDetailLink
-                      href={`${window.location.protocol}//${window.location.host}/members/${messages?.member?.memberId}`}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        copy(
-                          `${window.location.protocol}//${window.location.host}/members/${messages?.member?.memberId}`,
-                          {
-                            format: 'text/plain',
-                          },
-                        )
-                      }}
-                    >
-                      {messages?.member?.memberId}
-                    </MemberDetailLink>
-                  </Popover>
-                </MemberDetails>
-                <Tab
-                  style={{ height: '100%' }}
-                  panes={panes}
-                  renderActiveOnly={true}
-                  defaultActiveIndex={4}
+  return (
+    <MemberHistoryContext.Consumer>
+      {({ pushToMemberHistory }) => (
+        <Mount on={() => pushToMemberHistory(memberId)}>
+          <MemberPageWrapper>
+            <MemberPageContainer>
+              <Header size="huge">
+                <FraudulentStatus
+                  stateInfo={{
+                    state: member.fraudulentStatus,
+                    description: member.fraudulentStatusDescription,
+                  }}
                 />
-              </MemberPageContainer>
-              <ChatPane {...this.props} />
-            </MemberPageWrapper>
-          </Mount>
-        )}
-      </MemberHistoryContext.Consumer>
-    )
-  }
-
-  getFraudulentStatus = () => ({
-    state:
-      this.props.messages && this.props.messages.member
-        ? this.props.messages.member.fraudulentStatus
-        : '',
-    description:
-      this.props.messages && this.props.messages.member
-        ? this.props.messages.member.fraudulentDescription
-        : '',
-  })
+                {getMemberPageTitle(member)}
+                {' ('}
+                <MemberAge birthDateString={member?.birthDate} />)
+                {member && (
+                  <>
+                    <Flag>
+                      <MemberFlag memberId={member.memberId} />
+                    </Flag>
+                    <Badge memberId={member.memberId}>
+                      {getMemberGroup(member.memberId)}
+                    </Badge>
+                  </>
+                )}
+              </Header>
+              <MemberDetails>
+                {member?.signedOn && member?.personalNumber && (
+                  <MemberDetail>
+                    {formatSsn(member.personalNumber)}
+                  </MemberDetail>
+                )}
+                {member?.email && (
+                  <MemberDetailLink href={`mailto:${member.email}`}>
+                    {member.email}
+                  </MemberDetailLink>
+                )}
+                {member?.phoneNumber && (
+                  <MemberDetailLink href={`tel:${member.phoneNumber}`}>
+                    {member.phoneNumber}
+                  </MemberDetailLink>
+                )}
+                <Popover contents={<>Click to copy</>}>
+                  <MemberDetailLink
+                    href={`${window.location.protocol}//${window.location.host}/members/${memberId}`}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      copy(
+                        `${window.location.protocol}//${window.location.host}/members/${memberId}`,
+                        {
+                          format: 'text/plain',
+                        },
+                      )
+                    }}
+                  >
+                    {memberId}
+                  </MemberDetailLink>
+                </Popover>
+              </MemberDetails>
+              <Tab
+                style={{ height: '100%' }}
+                panes={memberPagePanes(props, memberId, member)}
+                renderActiveOnly={true}
+                defaultActiveIndex={4}
+              />
+            </MemberPageContainer>
+            <ChatPane memberId={memberId} />
+          </MemberPageWrapper>
+        </Mount>
+      )}
+    </MemberHistoryContext.Consumer>
+  )
 }
 
 Member.propTypes = {
-  messageReceived: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
-  messages: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
   showNotification: PropTypes.func.isRequired,
-  addMessage: PropTypes.func.isRequired,
-  setActiveConnection: PropTypes.func.isRequired,
-  memberRequest: PropTypes.func.isRequired,
-  clearMessagesList: PropTypes.func.isRequired,
   claimsByMember: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
 }
