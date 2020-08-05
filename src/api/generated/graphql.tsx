@@ -181,7 +181,7 @@ export type AssaultClaim = {
 
 export type AssignVoucherFreeMonths = {
   partnerId: Scalars['String']
-  numberOfMonths: Scalars['Int']
+  numberOfFreeMonths: Scalars['Int']
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>

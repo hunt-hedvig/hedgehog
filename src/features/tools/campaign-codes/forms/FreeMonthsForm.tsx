@@ -19,7 +19,7 @@ import { withShowNotification } from 'utils/notifications'
 const initialFormData: AssignVoucherFreeMonths = {
   code: '',
   partnerId: '',
-  numberOfMonths: 1,
+  numberOfFreeMonths: 1,
   validFrom: null,
   validUntil: null,
 }
@@ -89,11 +89,11 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
       <Spacing top={'small'} />
       <label>Months</label>
       <Dropdown
-        value={formData.numberOfMonths}
-        onChange={(_, { value: numberOfMonths }) => {
+        value={formData.numberOfFreeMonths}
+        onChange={(_, { value: numberOfFreeMonths }) => {
           setFormData({
             ...formData,
-            numberOfMonths: numberOfMonths as number,
+            numberOfFreeMonths: numberOfFreeMonths as number,
           })
         }}
         placeholder="Months"

@@ -14559,7 +14559,7 @@
             "defaultValue": null
           },
           {
-            "name": "numberOfMonths",
+            "name": "numberOfFreeMonths",
             "description": "",
             "type": {
               "kind": "NON_NULL",

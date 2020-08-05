@@ -492,7 +492,7 @@ input AssignVoucherPercentageDiscount {
 
 input AssignVoucherFreeMonths {
   partnerId: String!
-  numberOfMonths: Int!
+  numberOfFreeMonths: Int!
   code: String!
   validFrom: Instant
   validUntil: Instant
