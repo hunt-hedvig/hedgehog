@@ -1,7 +1,6 @@
 query GetContracts($memberId: ID!) {
   member(id: $memberId) {
     memberId
-
     contracts {
       id
       holderMemberId

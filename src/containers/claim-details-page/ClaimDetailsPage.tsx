@@ -6,16 +6,13 @@ import actions from 'store/actions'
 
 const ClaimDetailsPage = (props) => <ClaimDetails {...props} />
 
-const mapStateToProps = ({ claimDetails, claims, auth }) => ({
-  claimDetails,
+const mapStateToProps = ({ auth }) => ({
   auth,
-  types: claims.types,
 })
 
 export default withRouter(
   // @ts-ignore
   connect(mapStateToProps, {
-    ...actions.paymentActions,
     ...actions.notificationsActions,
   })(ClaimDetailsPage),
 )
