@@ -134,7 +134,7 @@ const MenuGroup = styled('div')({
 })
 
 const MenuItem = styled(NavLink)<{ transparent?: boolean }>(
-  ({ theme, transparent }) => ({
+  ({ theme, transparent = false }) => ({
     display: 'inline-flex',
     flexShrink: 0,
     alignItems: 'center',

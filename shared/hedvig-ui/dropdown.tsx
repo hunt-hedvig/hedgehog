@@ -39,7 +39,7 @@ export const EnumDropdown: React.FunctionComponent<{
   )
 }
 
-const getTextFromEnumValue = (sentence: string) => {
+export const getTextFromEnumValue = (sentence: string) => {
   return sentence
     .toLowerCase()
     .split('_')

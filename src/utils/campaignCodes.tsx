@@ -4,7 +4,9 @@ import {
   Incentive,
   IndefinitePercentageDiscount,
   MonthlyPercentageDiscountFixedPeriod,
-} from '../api/generated/graphql'
+  NoDiscount,
+  VisibleNoDiscount,
+} from '/api/generated/graphql'
 
 type IncentiveDataMaybe = Incentive | null | undefined
 
@@ -21,6 +23,15 @@ export const isCostDeduction = (
   incentiveData: IncentiveDataMaybe,
 ): incentiveData is CostDeduction =>
   incentiveData?.__typename === 'CostDeduction'
+
+export const isVisibleNoDiscount = (
+  incentiveData: IncentiveDataMaybe,
+): incentiveData is VisibleNoDiscount =>
+  incentiveData?.__typename === 'VisibleNoDiscount'
+
+export const isNoDiscount = (
+  incentiveData: IncentiveDataMaybe,
+): incentiveData is NoDiscount => incentiveData?.__typename === 'NoDiscount'
 
 export const isIndefinitePercentageDiscount = (
   incentiveData: IncentiveDataMaybe,
