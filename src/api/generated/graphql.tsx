@@ -179,6 +179,14 @@ export type AssaultClaim = {
   policeReport?: Maybe<Scalars['String']>
 }
 
+export type AssignVoucherFreeMonths = {
+  partnerId: Scalars['String']
+  numberOfMonths: Scalars['Int']
+  code: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validUntil?: Maybe<Scalars['Instant']>
+}
+
 export type AssignVoucherPercentageDiscount = {
   partnerId: Scalars['String']
   numberOfMonths: Scalars['Int']
@@ -899,6 +907,7 @@ export type MutationType = {
   insertValuationRules: Array<Scalars['Boolean']>
   upsertValuationRule: Scalars['ID']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
+  assignCampaignToPartnerFreeMonths: Scalars['Boolean']
   setContractForClaim: Scalars['Boolean']
   manualRedeemCampaign: Scalars['Boolean']
   manualUnRedeemCampaign: Scalars['Boolean']
@@ -1151,6 +1160,10 @@ export type MutationTypeUpsertValuationRuleArgs = {
 
 export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
   request?: Maybe<AssignVoucherPercentageDiscount>
+}
+
+export type MutationTypeAssignCampaignToPartnerFreeMonthsArgs = {
+  request?: Maybe<AssignVoucherFreeMonths>
 }
 
 export type MutationTypeSetContractForClaimArgs = {
@@ -2033,6 +2046,14 @@ export type AddAgreementFromQuoteMutationVariables = {
 export type AddAgreementFromQuoteMutation = { __typename?: 'MutationType' } & {
   addAgreementFromQuote: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
+
+export type AssignCampaignToPartnerFreeMonthsMutationVariables = {
+  request?: Maybe<AssignVoucherFreeMonths>
+}
+
+export type AssignCampaignToPartnerFreeMonthsMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerFreeMonths'>
 
 export type AssignCampaignToPartnerPercentageDiscountMutationVariables = {
   request?: Maybe<AssignVoucherPercentageDiscount>
@@ -3436,6 +3457,56 @@ export type AddAgreementFromQuoteMutationResult = ApolloReactCommon.MutationResu
 export type AddAgreementFromQuoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddAgreementFromQuoteMutation,
   AddAgreementFromQuoteMutationVariables
+>
+export const AssignCampaignToPartnerFreeMonthsDocument = gql`
+  mutation AssignCampaignToPartnerFreeMonths(
+    $request: AssignVoucherFreeMonths
+  ) {
+    assignCampaignToPartnerFreeMonths(request: $request)
+  }
+`
+export type AssignCampaignToPartnerFreeMonthsMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerFreeMonthsMutation,
+  AssignCampaignToPartnerFreeMonthsMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerFreeMonthsMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerFreeMonthsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerFreeMonthsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerFreeMonthsMutation, { data, loading, error }] = useAssignCampaignToPartnerFreeMonthsMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerFreeMonthsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerFreeMonthsMutation,
+    AssignCampaignToPartnerFreeMonthsMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerFreeMonthsMutation,
+    AssignCampaignToPartnerFreeMonthsMutationVariables
+  >(AssignCampaignToPartnerFreeMonthsDocument, baseOptions)
+}
+export type AssignCampaignToPartnerFreeMonthsMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerFreeMonthsMutation
+>
+export type AssignCampaignToPartnerFreeMonthsMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerFreeMonthsMutation
+>
+export type AssignCampaignToPartnerFreeMonthsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerFreeMonthsMutation,
+  AssignCampaignToPartnerFreeMonthsMutationVariables
 >
 export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
   mutation AssignCampaignToPartnerPercentageDiscount(
