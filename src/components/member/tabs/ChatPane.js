@@ -61,7 +61,7 @@ export const ChatPane = ({ memberId }) => {
       maxHeight={'85vh'}
       enable={{ left: true }}
     >
-      <ChatHeader visible={visible} onResizeClick={onResizeClick} />s
+      <ChatHeader visible={visible} onResizeClick={onResizeClick} />
       <MessagesList memberId={memberId} />
       <ChatPanel memberId={memberId} />
     </Resizable>
