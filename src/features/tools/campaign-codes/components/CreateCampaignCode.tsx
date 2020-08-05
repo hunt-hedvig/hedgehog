@@ -1,5 +1,4 @@
 import { InfoContainer } from 'components/member/tabs/shared/card-components'
-import { MonthlyPercentageForm } from 'features/tools/campaign-codes/campaign-forms/monthly-percentage-form'
 import {
   ClearableDropdown,
   DropdownOption,
@@ -9,11 +8,15 @@ import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
+import { FreeMonthsForm } from '../forms/FreeMonthsForm'
+import { MonthlyPercentageForm } from '../forms/MonthlyPercentageForm'
 
 const getIncentiveTypeForm = (incentiveType: CreatableIncentiveTypes) => {
   switch (incentiveType) {
     case CreatableIncentiveTypes.MonthlyPercentageDiscountFixedPeriod:
       return <MonthlyPercentageForm />
+    case CreatableIncentiveTypes.FreeMonths:
+      return <FreeMonthsForm />
     default:
       return <>Not available</>
   }

@@ -1,5 +1,4 @@
 import {
-  AssignVoucherPercentageDiscount,
   CampaignFilter,
   CampaignOwnerPartner,
   Incentive,
@@ -24,10 +23,7 @@ import { formatMoney } from 'utils/money'
 
 export enum CreatableIncentiveTypes {
   MonthlyPercentageDiscountFixedPeriod = 'Monthly Percentage',
-}
-
-export const formLooksGood = (formData: AssignVoucherPercentageDiscount) => {
-  return formData.partnerId !== '' && formData.code !== ''
+  FreeMonths = 'Free Months',
 }
 
 export const initialCampaignFilter: CampaignFilter = {

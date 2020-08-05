@@ -1,14 +1,11 @@
-import { AssignVoucherPercentageDiscount } from 'api/generated/graphql'
+import { AssignVoucherFreeMonths } from 'api/generated/graphql'
 import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
 import { Centered, Row } from 'features/tools/campaign-codes/styles'
+import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
 import {
-  formLooksGood,
-  mapCampaignOwners,
-} from 'features/tools/campaign-codes/utils'
-import {
-  addPartnerPercentageDiscountCodeOptions,
-  useAddPartnerPercentageDiscountCode,
-} from 'graphql/use-add-partner-percentage-discount-code'
+  addPartnerFreeMonthsCodeOptions,
+  useAddPartnerFreeMonthsCode,
+} from 'graphql/use-add-partner-free-months-code'
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
@@ -16,34 +13,30 @@ import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
-import {
-  numberOfMonthsOptions,
-  percentageDiscountOptions,
-} from 'utils/campaignCodes'
+import { numberOfMonthsOptions } from 'utils/campaignCodes'
 import { withShowNotification } from 'utils/notifications'
 
-const initialFormData: AssignVoucherPercentageDiscount = {
+const initialFormData: AssignVoucherFreeMonths = {
   code: '',
   partnerId: '',
   numberOfMonths: 1,
-  percentageDiscount: 5,
   validFrom: null,
   validUntil: null,
+}
+
+const formLooksGood = (formData: AssignVoucherFreeMonths) => {
+  return formData.partnerId !== '' && formData.code !== ''
 }
 
 const FreeMonths: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
-  const [formData, setFormData] = React.useState<
-    AssignVoucherPercentageDiscount
-  >(initialFormData)
+  const [formData, setFormData] = React.useState<AssignVoucherFreeMonths>(
+    initialFormData,
+  )
 
   const [partnerCampaignOwners] = usePartnerCampaignOwners()
-
-  const [
-    setPartnerPercentageDiscount,
-    { loading },
-  ] = useAddPartnerPercentageDiscountCode()
+  const [setPartnerFreeMonths, { loading }] = useAddPartnerFreeMonthsCode()
 
   const reset = () => setFormData(initialFormData)
 
@@ -94,20 +87,6 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
         </div>
       </Row>
       <Spacing top={'small'} />
-      <label>Percentage discount</label>
-      <Dropdown
-        value={formData.percentageDiscount}
-        disabled={loading}
-        placeholder={'Discount %'}
-        onChange={(_, { value: percentageDiscount }) =>
-          setFormData({
-            ...formData,
-            percentageDiscount: percentageDiscount as number,
-          })
-        }
-        options={percentageDiscountOptions}
-      />
-      <Spacing top={'small'} />
       <label>Months</label>
       <Dropdown
         value={formData.numberOfMonths}
@@ -133,15 +112,13 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
             ) {
               return
             }
-            setPartnerPercentageDiscount(
-              addPartnerPercentageDiscountCodeOptions(formData),
-            )
+            setPartnerFreeMonths(addPartnerFreeMonthsCodeOptions(formData))
               .then(() => {
                 reset()
                 showNotification({
                   type: 'olive',
                   header: 'Success',
-                  message: `Successfully created a new percentage campaign for partner ${formData.partnerId}`,
+                  message: `Successfully created a new free month campaign for partner ${formData.partnerId}`,
                 })
               })
               .catch((error) => {
