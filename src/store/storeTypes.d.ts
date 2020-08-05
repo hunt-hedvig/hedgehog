@@ -9,7 +9,6 @@ export interface BackofficeStore {
     email?: string
   }
   login: any
-  assets: any
   client: any
   poll: any
   members: MembersStore
