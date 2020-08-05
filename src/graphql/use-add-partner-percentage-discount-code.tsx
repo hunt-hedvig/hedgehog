@@ -4,7 +4,6 @@ import {
   AssignCampaignToPartnerPercentageDiscountMutationHookResult,
   AssignCampaignToPartnerPercentageDiscountMutationVariables,
   AssignVoucherPercentageDiscount,
-  FindPartnerCampaignsDocument,
   useAssignCampaignToPartnerPercentageDiscountMutation,
 } from '../api/generated/graphql'
 
@@ -21,16 +20,6 @@ export const addPartnerPercentageDiscountCodeOptions = (
     variables: {
       request,
     },
-    refetchQueries: () => [
-      {
-        query: FindPartnerCampaignsDocument,
-        variables: {
-          code: request.code,
-          partnerId: request.partnerId,
-          activeFrom: request.validFrom,
-          activeTo: request.validUntil,
-        },
-      },
-    ],
+    refetchQueries: () => ['FindPartnerCampaigns'],
   }
 }

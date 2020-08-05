@@ -3,13 +3,13 @@ import {
   ClearableDropdown,
   DropdownOption,
 } from 'features/tools/campaign-codes/components/ClearableDropdown'
-import { FreeMonthsForm } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
-import { MonthlyPercentageForm } from 'features/tools/campaign-codes/forms/MonthlyPercentageForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
+import { FreeMonthsForm } from '../forms/FreeMonthsForm'
+import { MonthlyPercentageForm } from '../forms/MonthlyPercentageForm'
 
 const getIncentiveTypeForm = (incentiveType: CreatableIncentiveTypes) => {
   switch (incentiveType) {

@@ -1,10 +1,7 @@
 import { AssignVoucherPercentageDiscount } from 'api/generated/graphql'
 import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
 import { Centered, Row } from 'features/tools/campaign-codes/styles'
-import {
-  formLooksGood,
-  mapCampaignOwners,
-} from 'features/tools/campaign-codes/utils'
+import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerPercentageDiscountCodeOptions,
   useAddPartnerPercentageDiscountCode,
@@ -29,6 +26,10 @@ const initialFormData: AssignVoucherPercentageDiscount = {
   percentageDiscount: 5,
   validFrom: null,
   validUntil: null,
+}
+
+const formLooksGood = (formData: AssignVoucherPercentageDiscount) => {
+  return formData.partnerId !== '' && formData.code !== ''
 }
 
 const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
