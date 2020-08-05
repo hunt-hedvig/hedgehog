@@ -3,7 +3,6 @@ import * as clientActions from './clientActions'
 import * as loginActions from './loginActions'
 import * as membersActions from './membersActions'
 import * as notificationsActions from './notificationsActions'
-import * as paymentActions from './paymentActions'
 import * as payoutDetailsActions from './payoutDetailsActions'
 
 export default {
@@ -11,7 +10,6 @@ export default {
   clientActions,
   membersActions,
   claimsActions,
-  paymentActions,
   payoutDetailsActions,
   notificationsActions,
 }
