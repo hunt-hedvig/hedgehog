@@ -10,8 +10,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { ExpandMoreOutlined } from '@material-ui/icons'
-import { ContractMarketInfo } from 'api/generated/graphql'
-import { AddEntryForm } from 'components/member/tabs/account-tab/add-entry-form'
+import { AddEntryForm } from 'components/member/tabs/account-tab/AddEntryForm'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/BackfillSubscriptionsButton'
 import {
   InfoContainer,
@@ -76,8 +75,7 @@ const TableCell = styled(MuiTableCell)({
 
 export const AccountTab: React.FC<{
   memberId: string
-  contractMarketInfo: ContractMarketInfo
-}> = ({ memberId, contractMarketInfo }) => {
+}> = ({ memberId }) => {
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
 
   if (loading) {
@@ -177,19 +175,21 @@ export const AccountTab: React.FC<{
             </InfoRow>
           </InfoContainer>
         </Card>
+        <Card span={1} style={{ padding: '0.2rem' }}>
+          <ExpansionPanel
+            style={{ width: '100%', paddingTop: '0em' }}
+            square={false}
+          >
+            <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
+              Add entry
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <AddEntryForm memberId={memberId} />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        </Card>
       </CardsWrapper>
       <Spacing top={'small'} />
-      <ExpansionPanel elevation={0}>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
-          <Typography>Add entry</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <AddEntryForm
-            memberId={memberId}
-            preferredCurrency={contractMarketInfo.preferredCurrency}
-          />
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
       <Paper>
         <Table>
           <TableHead>

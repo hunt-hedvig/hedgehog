@@ -10,7 +10,6 @@ import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
-import { withShowNotification } from 'utils/notifications'
 import * as yup from 'yup'
 
 const ADD_ACCOUNT_ENTRY_MUTATION = gql`
@@ -267,5 +266,3 @@ const AddEntryFormComponent: React.FC<{
     </Mutation>
   )
 }
-
-export const AddEntryForm = withShowNotification(AddEntryFormComponent)
