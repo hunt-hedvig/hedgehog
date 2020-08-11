@@ -13,16 +13,23 @@ import { ExpandMoreOutlined } from '@material-ui/icons'
 import { ContractMarketInfo } from 'api/generated/graphql'
 import { AddEntryForm } from 'components/member/tabs/account-tab/add-entry-form'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/backfill-subscriptions-button'
+import {
+  InfoContainer,
+  InfoRow,
+  InfoText,
+} from 'components/member/tabs/shared/card-components'
 import { Paper } from 'components/shared/Paper'
 import { useGetAccount } from 'graphql/use-get-account'
+import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { Spacing } from 'hedvig-ui/spacing'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
 
-export interface AccountTabProps {
-  memberId: string
-  contractMarketInfo: ContractMarketInfo
-  showNotification: (notification: {}) => void
+const moneyOptions = {
+  minimumFractionDigits: 2,
+  useGrouping: true,
 }
 
 const TableRowColored = styled(TableRow)(({ entry }: { entry }) => {
@@ -39,11 +46,11 @@ const TableCell = styled(MuiTableCell)({
   fontSize: '1rem',
 })
 
-export const AccountTab: React.FC<AccountTabProps> = ({
-  memberId,
-  contractMarketInfo,
-  showNotification,
-}) => {
+export const AccountTab: React.FC<{
+  memberId: string
+  contractMarketInfo: ContractMarketInfo
+  showNotification: (notification: {}) => void
+}> = ({ memberId, contractMarketInfo, showNotification }) => {
   const [account, { loading }] = useGetAccount(memberId)
   if (loading) {
     return <>Loading...</>
@@ -53,24 +60,70 @@ export const AccountTab: React.FC<AccountTabProps> = ({
   }
   return (
     <>
-      <h3>Balance (current month): {formatMoney(account.currentBalance)}</h3>
-      <h3>Balance (total): {formatMoney(account.totalBalance)}</h3>
-      <h3>Upcoming charge information:</h3>
-      <p>
-        <strong>Total discount amount:</strong>{' '}
-        {formatMoney(account.chargeEstimation.discount)}
-      </p>
-      <p>
-        <strong>Subscription charge:</strong>{' '}
-        {formatMoney(account.chargeEstimation.subscription)}
-      </p>
-      <p>
-        <strong>Discount references:</strong>{' '}
-        {account.chargeEstimation.discountCodes}
-      </p>
-      <h5>
-        Total charge next month: {formatMoney(account.chargeEstimation.charge)}
-      </h5>
+      <CardsWrapper>
+        <Card span={2}>
+          <InfoContainer>
+            <InfoRow>
+              <ThirdLevelHeadline>Balance</ThirdLevelHeadline>
+            </InfoRow>
+
+            <InfoRow>
+              Current Month
+              <InfoText>
+                {formatMoney(account?.currentBalance, moneyOptions)}
+              </InfoText>
+            </InfoRow>
+            <InfoRow>
+              Total
+              <InfoText>
+                {formatMoney(account?.totalBalance, moneyOptions)}
+              </InfoText>
+            </InfoRow>
+          </InfoContainer>
+        </Card>
+        <Card span={2}>
+          <InfoContainer>
+            <InfoRow>
+              <ThirdLevelHeadline>
+                Upcoming Charge Information
+              </ThirdLevelHeadline>
+            </InfoRow>
+            <Spacing top={'small'} />
+            <InfoRow>
+              Total Discount Amount
+              <InfoText>
+                {formatMoney(account?.currentBalance, moneyOptions)}
+              </InfoText>
+            </InfoRow>
+            <Spacing top={'small'} />
+            <InfoRow>
+              Subscription Charge
+              <InfoText>
+                {formatMoney(
+                  account?.chargeEstimation.subscription,
+                  moneyOptions,
+                )}
+              </InfoText>
+            </InfoRow>
+            <Spacing top={'small'} />
+            <InfoRow>
+              Discount References
+              <InfoText>
+                {account?.chargeEstimation?.discountCodes.length === 0
+                  ? 'None'
+                  : account?.chargeEstimation?.discountCodes}
+              </InfoText>
+            </InfoRow>
+            <InfoRow>
+              Net Charge Next Month
+              <InfoText>
+                {formatMoney(account?.chargeEstimation?.charge, moneyOptions)}
+              </InfoText>
+            </InfoRow>
+          </InfoContainer>
+        </Card>
+      </CardsWrapper>
+      <Spacing top={'small'} />
       <ExpansionPanel elevation={0}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
           <Typography>Add entry</Typography>
