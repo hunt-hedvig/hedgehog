@@ -77,14 +77,34 @@ const TableCell = styled(MuiTableCell)({
 export const AccountTab: React.FC<{
   memberId: string
   contractMarketInfo: ContractMarketInfo
-  showNotification: (notification: {}) => void
-}> = ({ memberId, contractMarketInfo, showNotification }) => {
-  const [account, { loading, refetch }] = useGetAccount(memberId)
+}> = ({ memberId, contractMarketInfo }) => {
+  const [account, { loading, refetch, error }] = useGetAccount(memberId)
+
   if (loading) {
-    return <>Loading...</>
+    return (
+      <>
+        <Headline>
+          Account
+          <RefreshButton onClick={() => refetch()} loading={loading}>
+            <ArrowRepeat />
+          </RefreshButton>
+        </Headline>
+        Loading...
+      </>
+    )
   }
-  if (!account) {
-    return <>No account found :(</>
+  if (error || !account) {
+    return (
+      <>
+        <Headline>
+          Account
+          <RefreshButton onClick={() => refetch()} loading={loading}>
+            <ArrowRepeat />
+          </RefreshButton>
+        </Headline>
+        No account found :(
+      </>
+    )
   }
   return (
     <>
@@ -130,7 +150,6 @@ export const AccountTab: React.FC<{
                 {formatMoney(account?.currentBalance, moneyOptions)}
               </InfoText>
             </InfoRow>
-            <Spacing top={'small'} />
             <InfoRow>
               Subscription Charge
               <InfoText>
@@ -168,7 +187,6 @@ export const AccountTab: React.FC<{
           <AddEntryForm
             memberId={memberId}
             preferredCurrency={contractMarketInfo.preferredCurrency}
-            showNotification={showNotification}
           />
         </ExpansionPanelDetails>
       </ExpansionPanel>
@@ -204,10 +222,6 @@ export const AccountTab: React.FC<{
           </TableBody>
         </Table>
       </Paper>
-      <BackfillSubscriptionsButton
-        memberId={memberId}
-        showNotification={showNotification}
-      />
     </>
   )
 }

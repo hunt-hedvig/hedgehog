@@ -8,7 +8,9 @@ import { Field, Form as FormikForm, Formik } from 'formik'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
+import { WithShowNotification } from 'store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
+import { withShowNotification } from 'utils/notifications'
 import * as yup from 'yup'
 
 const ADD_ACCOUNT_ENTRY_MUTATION = gql`
@@ -79,11 +81,14 @@ const getValidationSchema = () =>
     fromDate: yup.date().min(startOfDay(new Date())),
   })
 
-export const AddEntryForm: React.FC<{
+const AddEntryFormComponent: React.FC<{
   memberId: string
   preferredCurrency: string
-  showNotification: (data: any) => void
-}> = ({ memberId, preferredCurrency, showNotification }) => {
+} & WithShowNotification> = ({
+  memberId,
+  preferredCurrency,
+  showNotification,
+}) => {
   const [confirmed, setConfirmed] = React.useState<boolean>(false)
 
   return (
@@ -262,3 +267,5 @@ export const AddEntryForm: React.FC<{
     </Mutation>
   )
 }
+
+export const AddEntryForm = withShowNotification(AddEntryFormComponent)
