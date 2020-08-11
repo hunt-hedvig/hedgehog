@@ -1,0 +1,5 @@
+mutation backfillSubscriptions($memberId: ID!) {
+  backfillSubscriptions(memberId: $memberId) {
+    memberId
+  }
+}

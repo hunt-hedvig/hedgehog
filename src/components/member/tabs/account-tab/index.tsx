@@ -12,7 +12,7 @@ import {
 import { ExpandMoreOutlined } from '@material-ui/icons'
 import { ContractMarketInfo } from 'api/generated/graphql'
 import { AddEntryForm } from 'components/member/tabs/account-tab/add-entry-form'
-import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/backfill-subscriptions-button'
+import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/BackfillSubscriptionsButton'
 import {
   InfoContainer,
   InfoRow,
@@ -222,6 +222,8 @@ export const AccountTab: React.FC<{
           </TableBody>
         </Table>
       </Paper>
+      <Spacing top={'small'} />
+      <BackfillSubscriptionsButton memberId={memberId} />
     </>
   )
 }

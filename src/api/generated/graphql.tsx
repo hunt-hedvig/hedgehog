@@ -1933,6 +1933,14 @@ export type Whitelisted = {
   whitelistedBy?: Maybe<Scalars['String']>
 }
 
+export type BackfillSubscriptionsMutationVariables = {
+  memberId: Scalars['ID']
+}
+
+export type BackfillSubscriptionsMutation = { __typename?: 'MutationType' } & {
+  backfillSubscriptions: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+}
+
 export type MemberNameAndContractMarketInfoQueryVariables = {
   memberId: Scalars['ID']
 }
@@ -2920,6 +2928,56 @@ export type WhitelistMemberMutation = { __typename?: 'MutationType' } & Pick<
   'whitelistMember'
 >
 
+export const BackfillSubscriptionsDocument = gql`
+  mutation backfillSubscriptions($memberId: ID!) {
+    backfillSubscriptions(memberId: $memberId) {
+      memberId
+    }
+  }
+`
+export type BackfillSubscriptionsMutationFn = ApolloReactCommon.MutationFunction<
+  BackfillSubscriptionsMutation,
+  BackfillSubscriptionsMutationVariables
+>
+
+/**
+ * __useBackfillSubscriptionsMutation__
+ *
+ * To run a mutation, you first call `useBackfillSubscriptionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBackfillSubscriptionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [backfillSubscriptionsMutation, { data, loading, error }] = useBackfillSubscriptionsMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useBackfillSubscriptionsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    BackfillSubscriptionsMutation,
+    BackfillSubscriptionsMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    BackfillSubscriptionsMutation,
+    BackfillSubscriptionsMutationVariables
+  >(BackfillSubscriptionsDocument, baseOptions)
+}
+export type BackfillSubscriptionsMutationHookResult = ReturnType<
+  typeof useBackfillSubscriptionsMutation
+>
+export type BackfillSubscriptionsMutationResult = ApolloReactCommon.MutationResult<
+  BackfillSubscriptionsMutation
+>
+export type BackfillSubscriptionsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  BackfillSubscriptionsMutation,
+  BackfillSubscriptionsMutationVariables
+>
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
