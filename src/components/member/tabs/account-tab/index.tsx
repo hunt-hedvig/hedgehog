@@ -22,9 +22,10 @@ import { Paper } from 'components/shared/Paper'
 import { useGetAccount } from 'graphql/use-get-account'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from 'react-emotion'
+import { ArrowRepeat } from 'react-bootstrap-icons'
+import styled, { css, keyframes } from 'react-emotion'
 import { formatMoney } from 'utils/money'
 
 const moneyOptions = {
@@ -42,6 +43,33 @@ const TableRowColored = styled(TableRow)(({ entry }: { entry }) => {
   }
 })
 
+const Headline = styled(MainHeadline)`
+  display: flex;
+  align-items: center;
+`
+
+const spin = keyframes`
+  from{transform: rotate(0deg)}
+  to{transform: rotate(360deg)}
+`
+const RefreshButton = styled.button<{ loading: boolean }>`
+  background: transparent;
+  font-size: 0.875em;
+  color: ${({ theme }) => theme.mutedText};
+  padding: 0;
+  border: 0;
+  margin-left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 500ms;
+  ${({ loading }) =>
+    loading &&
+    css`
+      animation: ${spin} 500ms linear infinite;
+    `};
+`
+
 const TableCell = styled(MuiTableCell)({
   fontSize: '1rem',
 })
@@ -51,7 +79,7 @@ export const AccountTab: React.FC<{
   contractMarketInfo: ContractMarketInfo
   showNotification: (notification: {}) => void
 }> = ({ memberId, contractMarketInfo, showNotification }) => {
-  const [account, { loading }] = useGetAccount(memberId)
+  const [account, { loading, refetch }] = useGetAccount(memberId)
   if (loading) {
     return <>Loading...</>
   }
@@ -60,19 +88,26 @@ export const AccountTab: React.FC<{
   }
   return (
     <>
+      <Headline>
+        Account
+        <RefreshButton onClick={() => refetch()} loading={loading}>
+          <ArrowRepeat />
+        </RefreshButton>
+      </Headline>
       <CardsWrapper>
         <Card span={2}>
           <InfoContainer>
             <InfoRow>
               <ThirdLevelHeadline>Balance</ThirdLevelHeadline>
             </InfoRow>
-
+            <Spacing top={'small'} />
             <InfoRow>
               Current Month
               <InfoText>
                 {formatMoney(account?.currentBalance, moneyOptions)}
               </InfoText>
             </InfoRow>
+            <Spacing top={'small'} />
             <InfoRow>
               Total
               <InfoText>
@@ -114,6 +149,7 @@ export const AccountTab: React.FC<{
                   : account?.chargeEstimation?.discountCodes}
               </InfoText>
             </InfoRow>
+            <Spacing top={'small'} />
             <InfoRow>
               Net Charge Next Month
               <InfoText>
