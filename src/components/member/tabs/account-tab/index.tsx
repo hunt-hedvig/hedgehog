@@ -7,52 +7,26 @@ import { ExpandMoreOutlined } from '@material-ui/icons'
 import { AccountEntryTable } from 'components/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'components/member/tabs/account-tab/AddEntryForm'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/BackfillSubscriptionsButton'
+import { RefreshButton } from 'components/member/tabs/campaigns-tab/styles'
 import {
   InfoContainer,
   InfoRow,
   InfoText,
 } from 'components/member/tabs/shared/card-components'
+import { Headline } from 'components/member/tabs/shared/headline'
 import { Placeholder } from 'components/member/tabs/shared/placeholder'
 import { useGetAccount } from 'graphql/use-get-account'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
-import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import styled, { css, keyframes } from 'react-emotion'
 import { formatMoney } from 'utils/money'
 
 const moneyOptions = {
   minimumFractionDigits: 2,
   useGrouping: true,
 }
-
-const Headline = styled(MainHeadline)`
-  display: flex;
-  align-items: center;
-`
-
-const spin = keyframes`
-  from{transform: rotate(0deg)}
-  to{transform: rotate(360deg)}
-`
-const RefreshButton = styled.button<{ loading: boolean }>`
-  background: transparent;
-  font-size: 0.875em;
-  color: ${({ theme }) => theme.mutedText};
-  padding: 0;
-  border: 0;
-  margin-left: 1rem;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 500ms;
-  ${({ loading }) =>
-    loading &&
-    css`
-      animation: ${spin} 500ms linear infinite;
-    `};
-`
 
 export const AccountTab: React.FC<{
   memberId: string
