@@ -11,41 +11,14 @@ import {
   InfoRow,
   InfoText,
 } from 'components/member/tabs/shared/card-components'
+import { Headline } from 'components/member/tabs/shared/headline'
+import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { OrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import styled, { css, keyframes } from 'react-emotion'
-
-const Headline = styled(MainHeadline)`
-  display: flex;
-  align-items: center;
-`
-
-const spin = keyframes`
-  from{transform: rotate(0deg)}
-  to{transform: rotate(360deg)}
-`
-const RefreshButton = styled.button<{ loading: boolean }>`
-  background: transparent;
-  font-size: 0.875em;
-  color: ${({ theme }) => theme.mutedText};
-  padding: 0;
-  border: 0;
-  margin-left: 1rem;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 500ms;
-  ${({ loading }) =>
-    loading &&
-    css`
-      animation: ${spin} 500ms linear infinite;
-    `};
-`
 
 export const DebtTab: React.FC<{
   memberId: string

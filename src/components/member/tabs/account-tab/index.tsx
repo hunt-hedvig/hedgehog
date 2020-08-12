@@ -7,7 +7,6 @@ import { ExpandMoreOutlined } from '@material-ui/icons'
 import { AccountEntryTable } from 'components/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'components/member/tabs/account-tab/AddEntryForm'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/BackfillSubscriptionsButton'
-import { RefreshButton } from 'components/member/tabs/campaigns-tab/styles'
 import {
   InfoContainer,
   InfoRow,
@@ -22,6 +21,7 @@ import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'
+import { RefreshButton } from '../shared/refresh-button'
 
 const moneyOptions = {
   minimumFractionDigits: 2,
