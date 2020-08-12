@@ -2,14 +2,9 @@ import {
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Table,
-  TableBody,
-  TableCell as MuiTableCell,
-  TableHead,
-  TableRow,
-  Typography,
 } from '@material-ui/core'
 import { ExpandMoreOutlined } from '@material-ui/icons'
+import { AccountEntryTable } from 'components/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'components/member/tabs/account-tab/AddEntryForm'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/BackfillSubscriptionsButton'
 import {
@@ -17,7 +12,7 @@ import {
   InfoRow,
   InfoText,
 } from 'components/member/tabs/shared/card-components'
-import { Paper } from 'components/shared/Paper'
+import { Placeholder } from 'components/member/tabs/shared/placeholder'
 import { useGetAccount } from 'graphql/use-get-account'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
@@ -31,16 +26,6 @@ const moneyOptions = {
   minimumFractionDigits: 2,
   useGrouping: true,
 }
-
-const TableRowColored = styled(TableRow)(({ entry }: { entry }) => {
-  if (entry.failedAt) {
-    return { backgroundColor: '#FFDDDD' }
-  } else if (entry.amount.amount < 0) {
-    return { backgroundColor: '#FFFFDD' }
-  } else {
-    return { backgroundColor: '#DDFFDD' }
-  }
-})
 
 const Headline = styled(MainHeadline)`
   display: flex;
@@ -68,10 +53,6 @@ const RefreshButton = styled.button<{ loading: boolean }>`
       animation: ${spin} 500ms linear infinite;
     `};
 `
-
-const TableCell = styled(MuiTableCell)({
-  fontSize: '1rem',
-})
 
 export const AccountTab: React.FC<{
   memberId: string
@@ -161,9 +142,11 @@ export const AccountTab: React.FC<{
             <InfoRow>
               Discount References
               <InfoText>
-                {account?.chargeEstimation?.discountCodes.length === 0
-                  ? 'None'
-                  : account?.chargeEstimation?.discountCodes}
+                {account?.chargeEstimation?.discountCodes.length === 0 ? (
+                  <Placeholder>None</Placeholder>
+                ) : (
+                  account?.chargeEstimation?.discountCodes
+                )}
               </InfoText>
             </InfoRow>
             <Spacing top={'small'} />
@@ -176,10 +159,7 @@ export const AccountTab: React.FC<{
           </InfoContainer>
         </Card>
         <Card span={1} style={{ padding: '0.2rem' }}>
-          <ExpansionPanel
-            style={{ width: '100%', paddingTop: '0em' }}
-            square={false}
-          >
+          <ExpansionPanel style={{ width: '100%' }}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
               Add entry
             </ExpansionPanelSummary>
@@ -189,40 +169,7 @@ export const AccountTab: React.FC<{
           </ExpansionPanel>
         </Card>
       </CardsWrapper>
-      <Spacing top={'small'} />
-      <Paper>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell align="right">Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {account.entries.map((entry) => (
-              <TableRowColored key={entry.id} entry={entry}>
-                <TableCell>{entry.fromDate}</TableCell>
-                <TableCell>{entry.type.toLowerCase()}</TableCell>
-                <TableCell>
-                  {entry.id}
-                  <br />
-                  {entry.title
-                    ? entry.title
-                    : `${entry.reference} (${entry.source})`}
-                </TableCell>
-                <TableCell align="right">
-                  <strong>
-                    {entry.amount.amount} {entry.amount.currency}
-                  </strong>
-                </TableCell>
-              </TableRowColored>
-            ))}
-          </TableBody>
-        </Table>
-      </Paper>
-      <Spacing top={'small'} />
+      <AccountEntryTable accountEntries={account.entries} />
       <BackfillSubscriptionsButton memberId={memberId} />
     </>
   )

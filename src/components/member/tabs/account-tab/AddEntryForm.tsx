@@ -1,15 +1,26 @@
 import { MenuItem, withStyles } from '@material-ui/core'
+import { useAddAccountEntryToMemberMutation } from 'api/generated/graphql'
 import { FormikDatePicker } from 'components/shared/inputs/DatePicker'
 import { FieldSelect } from 'components/shared/inputs/FieldSelect'
 import { TextField as MuiTextField } from 'components/shared/inputs/TextField'
-import { startOfDay } from 'date-fns'
+import { format, startOfDay } from 'date-fns'
 import { Field, Form as FormikForm, Formik } from 'formik'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
+import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import styled from 'react-emotion'
 import { WithShowNotification } from 'store/actions/notificationsActions'
+import { formatMoney } from 'utils/money'
 import { withShowNotification } from 'utils/notifications'
 import * as yup from 'yup'
+
+const BottomRowWrapper = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  '> div:first-of-type': {
+    flex: 1,
+  },
+})
 
 const TextField = withStyles({
   root: {
@@ -50,43 +61,90 @@ const getValidationSchema = () =>
     fromDate: yup.date().min(startOfDay(new Date())),
   })
 
+const parseAmount = (amount: string) => parseFloat(amount.replace(/\s+/g, ''))
+
+const initialValues = {
+  type: '',
+  amount: '',
+  reference: '',
+  source: '',
+  title: '',
+  comment: '',
+  fromDate: new Date(),
+}
+
 const AddEntryFormComponent: React.FC<{
   memberId: string
 } & WithShowNotification> = ({ memberId, showNotification }) => {
-  const [{ preferredCurrency }] = useContractMarketInfo(memberId)
+  const [contractMarketInfo] = useContractMarketInfo(memberId)
+  const preferredCurrency = contractMarketInfo?.preferredCurrency || 'SEK'
+  const [addAccountEntry] = useAddAccountEntryToMemberMutation()
 
   return (
     <Formik
-      initialValues={{
-        type: '',
-        amount: '',
-        reference: '',
-        source: '',
-        title: '',
-        comment: '',
-        fromDate: new Date(),
-      }}
-      onSubmit={() => void 0}
+      initialValues={initialValues}
       validationSchema={getValidationSchema()}
+      onSubmit={(formData: any, { resetForm }) => {
+        if (!window.confirm('Are you sure you want to add this entry?')) {
+          return
+        }
+
+        addAccountEntry({
+          variables: {
+            memberId,
+            accountEntry: {
+              type: formData.type,
+              amount: {
+                amount: parseAmount(formData.amount),
+                currency: preferredCurrency,
+              },
+              fromDate: format(formData.fromDate, 'yyyy-MM-dd'),
+              reference: formData.reference,
+              source: formData.source,
+              title: formData.title,
+              comment: formData.comment,
+            },
+          },
+        })
+          .then(() => {
+            showNotification({
+              message: 'Account entry added.',
+              header: 'Success',
+              type: 'olive',
+            })
+            resetForm()
+          })
+          .catch((error) => {
+            showNotification({
+              message: error.message,
+              header: 'Error',
+              type: 'red',
+            })
+
+            throw error
+          })
+      }}
     >
       {({ values, isValid }) => {
+        const parsedAmount = parseAmount(values.amount)
+
         return (
           <Form>
             <label htmlFor="type">Entry Type</label>
             <Field component={FieldSelect} name="type">
               <MenuItem value="CAMPAIGN">
-                <strong>Campaign</strong>: The member owes/will owe us money but
-                we want to pay for it with marketing budget
+                <strong>Campaign</strong>: The member owes or will owe us money,
+                but we want to pay for it with marketing budget
               </MenuItem>
               <MenuItem value="SUBSCRIPTION">
-                <strong>Subscription</strong>: The member should owe us more
-                money, e.g. object insurance, travel insurance, incorrectly
-                fetched premiums
+                <strong>Subscription</strong>: The member owes us more money
+                (e.g. object insurance, travel insurance, incorrectly fetched
+                premiums)
               </MenuItem>
               <MenuItem value="LOSS">
                 <strong>Loss</strong>: The member owes us money we will never
-                get, e.g. the member terminated its insurance or we had a too
-                early start date
+                get (e.g. the member terminated its insurance or we had a too
+                early start date)
               </MenuItem>
               <MenuItem value="CORRECTION">
                 <strong>Correction</strong>: A calculation is incorrect (should
@@ -103,13 +161,13 @@ const AddEntryFormComponent: React.FC<{
               component={TextField}
               label="Source"
               name="source"
-              placeholder="(Required) This is where we look when we want to know the source, e.g. travel insurance, object insurance, marketing, IEX"
+              placeholder="(Required) Entry source, e.g. travel insurance, object insurance, marketing, IEX"
             />
             <Field
               component={TextField}
               label="Reference"
               name="reference"
-              placeholder="(Required) This is what we look at when we want to know which source this is referring to, e.g. object insurance id, campaign code, member ID"
+              placeholder="(Required) Reference of source, e.g. object insurance id, campaign code, member ID"
             />
             <Field
               component={TextField}
@@ -121,10 +179,50 @@ const AddEntryFormComponent: React.FC<{
               component={TextField}
               label="Comment"
               name="comment"
-              placeholder="(Optional) Notes on what happened, maybe a calculation or statement on what happened"
+              placeholder="(Optional) Notes on what happened"
             />
             <label htmlFor="fromDate">From Date</label>
             <Field component={FormikDatePicker} type="date" name="fromDate" />
+            <BottomRowWrapper>
+              <div>
+                {!isNaN(parsedAmount) &&
+                  parsedAmount !== 0 &&
+                  (parsedAmount < 0 ? (
+                    <>
+                      {memberId} will owe us{' '}
+                      {formatMoney({
+                        amount: parsedAmount * -1,
+                        currency: preferredCurrency,
+                      })}{' '}
+                      <strong>less</strong>
+                    </>
+                  ) : (
+                    <>
+                      {memberId} will owe us{' '}
+                      {formatMoney({
+                        amount: parsedAmount,
+                        currency: preferredCurrency,
+                      })}{' '}
+                      <strong>more</strong>
+                    </>
+                  ))}
+              </div>
+              <div>
+                {
+                  <Button
+                    type="submit"
+                    variation="primary"
+                    color="primary"
+                    disabled={!isValid}
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                    }}
+                  >
+                    Add entry
+                  </Button>
+                }
+              </div>
+            </BottomRowWrapper>
           </Form>
         )
       }}
