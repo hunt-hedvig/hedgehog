@@ -2,9 +2,9 @@ import {
   RedeemedCampaign,
   useManualUnRedeemCampaignMutation,
 } from 'api/generated/graphql'
-import { Capitalized } from 'components/member/tabs/campaigns-tab/styles'
 import { format } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
+import { Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
 

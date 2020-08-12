@@ -1,7 +1,6 @@
 import { AccountEntry } from 'api/generated/graphql'
-import { Capitalized } from 'components/member/tabs/shared/capitalized'
-import { Placeholder } from 'components/member/tabs/shared/placeholder'
 import { Popover } from 'hedvig-ui/popover'
+import { Capitalized, Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Grid, Icon, Table } from 'semantic-ui-react'

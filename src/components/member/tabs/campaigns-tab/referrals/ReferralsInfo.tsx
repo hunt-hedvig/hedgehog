@@ -6,12 +6,12 @@ import {
 import {
   BadgeRow,
   CampaignCodeBadge,
-  NotAvailableLabel,
   ReferralStatusBadge,
   SmallTopSpacing,
   TableHeadline,
 } from 'components/member/tabs/campaigns-tab/styles'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { EnableReferralButton } from './EnableReferralButton'
@@ -31,7 +31,7 @@ const MemberLink: React.FC<{ memberReferral: MemberReferral }> = ({
 
 const NotAvailable: React.FC = () => (
   <SmallTopSpacing>
-    <NotAvailableLabel>Not available</NotAvailableLabel>
+    <Placeholder>Not available</Placeholder>
   </SmallTopSpacing>
 )
 

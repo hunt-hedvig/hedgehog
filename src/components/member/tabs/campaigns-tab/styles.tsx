@@ -1,13 +1,6 @@
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import styled from 'react-emotion'
 
-export const Capitalized = styled.div`
-  ::first-letter {
-    text-transform: uppercase;
-  }
-  text-transform: lowercase;
-`
-
 const getThemeFromStatus = (theme, status) => {
   switch (status) {
     case 'ACTIVE':
@@ -57,10 +50,6 @@ export const BadgeRow = styled(Paragraph)`
 
 export const TableHeadline = styled(ThirdLevelHeadline)`
   margin-bottom: -0.2rem;
-`
-
-export const NotAvailableLabel = styled.div`
-  color: ${({ theme }) => theme.placeholderColor};
 `
 
 export const SmallTopSpacing = styled.div`
