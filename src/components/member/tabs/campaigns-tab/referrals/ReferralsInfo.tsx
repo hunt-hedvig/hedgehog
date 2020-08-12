@@ -5,13 +5,12 @@ import {
 } from 'api/generated/graphql'
 import {
   BadgeRow,
-  CampaignCodeBadge,
-  ReferralStatusBadge,
   SmallTopSpacing,
   TableHeadline,
 } from 'components/member/tabs/campaigns-tab/styles'
+import { Badge } from 'hedvig-ui/badge'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { Placeholder } from 'hedvig-ui/typography'
+import { Capitalized, Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { EnableReferralButton } from './EnableReferralButton'
@@ -49,9 +48,9 @@ export const ReferralsInfo: React.FunctionComponent<{
           <BadgeRow>
             <SmallTopSpacing>Hedvig Forever</SmallTopSpacing>
             {referralInformation ? (
-              <ReferralStatusBadge eligible={eligible ?? false}>
-                {eligible ? 'Activated' : 'Disabled'}
-              </ReferralStatusBadge>
+              <Badge size="small" variant={eligible ? 'success' : 'danger'}>
+                <Capitalized>{eligible ? 'Activated' : 'Disabled'}</Capitalized>
+              </Badge>
             ) : (
               <NotAvailable />
             )}
@@ -59,9 +58,9 @@ export const ReferralsInfo: React.FunctionComponent<{
           <BadgeRow>
             <SmallTopSpacing>Referral Code</SmallTopSpacing>
             {eligible ? (
-              <CampaignCodeBadge>
+              <Badge size="medium" bold>
                 {referralInformation?.campaign.code.toUpperCase()}
-              </CampaignCodeBadge>
+              </Badge>
             ) : (
               <NotAvailable />
             )}

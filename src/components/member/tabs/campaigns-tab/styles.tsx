@@ -22,24 +22,6 @@ export const MemberStatusBadge = styled.div<{ status?: string }>`
   width: auto;
 `
 
-export const ReferralStatusBadge = styled.div<{ eligible: boolean }>`
-  padding: 0.5rem 1rem;
-  line-height: 1;
-  background: ${({ eligible, theme }) =>
-    eligible ? theme.success : theme.danger};
-  border-radius: 8px;
-  color: #fff;
-`
-
-export const CampaignCodeBadge = styled.div`
-  padding: 0.5rem 1rem;
-  line-height: 1;
-  background: ${({ theme }) => theme.accent};
-  border-radius: 8px;
-  color: ${({ theme }) => theme.accentContrast};
-  font-weight: bold;
-`
-
 export const BadgeRow = styled(Paragraph)`
   margin-top: 0.3rem;
   display: flex;
