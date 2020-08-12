@@ -64,7 +64,6 @@ export const AccountEntryTable: React.FC<{
               })}
             </Table.Cell>
             <Table.Cell textAlign="center">
-              {console.log(entry.title)}
               <Popover
                 contents={
                   <Grid>
