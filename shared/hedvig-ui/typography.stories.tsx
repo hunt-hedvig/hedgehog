@@ -1,7 +1,11 @@
+import { Input } from 'hedvig-ui/input'
+import { Spacing } from 'hedvig-ui/spacing'
 import {
+  Capitalized,
   FourthLevelHeadline,
   MainHeadline,
   Paragraph,
+  Placeholder,
   SecondLevelHeadline,
   ThirdLevelHeadline,
 } from 'hedvig-ui/typography'
@@ -20,3 +24,16 @@ export const Headlines: React.FC = () => (
     <Paragraph>Paragraph</Paragraph>
   </>
 )
+
+export const Utilities: React.FC = () => {
+  const [text, setText] = React.useState('CaPiTaLiZeD')
+  return (
+    <>
+      <Input value={text} onChange={(e) => setText(e.currentTarget.value)} />
+      <Spacing top={'small'} />
+      <Capitalized>{text}</Capitalized>
+      <Spacing top={'medium'} />
+      <Placeholder>This is a placeholder</Placeholder>
+    </>
+  )
+}
