@@ -1,5 +1,6 @@
 import { MenuItem, withStyles } from '@material-ui/core'
 import { useAddAccountEntryToMemberMutation } from 'api/generated/graphql'
+import { AddEntryInformation } from 'components/member/tabs/account-tab/AddEntryInformation'
 import { FormikDatePicker } from 'components/shared/inputs/DatePicker'
 import { FieldSelect } from 'components/shared/inputs/FieldSelect'
 import { TextField as MuiTextField } from 'components/shared/inputs/TextField'
@@ -10,7 +11,6 @@ import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import styled from 'react-emotion'
 import { WithShowNotification } from 'store/actions/notificationsActions'
-import { formatMoney } from 'utils/money'
 import { withShowNotification } from 'utils/notifications'
 import * as yup from 'yup'
 
@@ -61,7 +61,8 @@ const getValidationSchema = () =>
     fromDate: yup.date().min(startOfDay(new Date())),
   })
 
-const parseAmount = (amount: string) => parseFloat(amount.replace(/\s+/g, ''))
+export const parseAmount = (amount: string) =>
+  parseFloat(amount.replace(/\s+/g, ''))
 
 const initialValues = {
   type: '',
@@ -125,107 +126,84 @@ const AddEntryFormComponent: React.FC<{
           })
       }}
     >
-      {({ values, isValid }) => {
-        const parsedAmount = parseAmount(values.amount)
-
-        return (
-          <Form>
-            <label htmlFor="type">Entry Type</label>
-            <Field component={FieldSelect} name="type">
-              <MenuItem value="CAMPAIGN">
-                <strong>Campaign</strong>: The member owes or will owe us money,
-                but we want to pay for it with marketing budget
-              </MenuItem>
-              <MenuItem value="SUBSCRIPTION">
-                <strong>Subscription</strong>: The member owes us more money
-                (e.g. object insurance, travel insurance, incorrectly fetched
-                premiums)
-              </MenuItem>
-              <MenuItem value="LOSS">
-                <strong>Loss</strong>: The member owes us money we will never
-                get (e.g. the member terminated its insurance or we had a too
-                early start date)
-              </MenuItem>
-              <MenuItem value="CORRECTION">
-                <strong>Correction</strong>: A calculation is incorrect (should
-                hopefully never have to be used)
-              </MenuItem>
-            </Field>
-            <Field
-              component={TextField}
-              label="Amount"
-              type="number"
-              name="amount"
-            />
-            <Field
-              component={TextField}
-              label="Source"
-              name="source"
-              placeholder="(Required) Entry source, e.g. travel insurance, object insurance, marketing, IEX"
-            />
-            <Field
-              component={TextField}
-              label="Reference"
-              name="reference"
-              placeholder="(Required) Reference of source, e.g. object insurance id, campaign code, member ID"
-            />
-            <Field
-              component={TextField}
-              label="Title"
-              name="title"
-              placeholder="(Optional) If this is to be shown in the app at a later point, this is the title of the entry"
-            />
-            <Field
-              component={TextField}
-              label="Comment"
-              name="comment"
-              placeholder="(Optional) Notes on what happened"
-            />
-            <label htmlFor="fromDate">From Date</label>
-            <Field component={FormikDatePicker} type="date" name="fromDate" />
-            <BottomRowWrapper>
-              <div>
-                {!isNaN(parsedAmount) &&
-                  parsedAmount !== 0 &&
-                  (parsedAmount < 0 ? (
-                    <>
-                      {memberId} will owe us{' '}
-                      {formatMoney({
-                        amount: parsedAmount * -1,
-                        currency: preferredCurrency,
-                      })}{' '}
-                      <strong>less</strong>
-                    </>
-                  ) : (
-                    <>
-                      {memberId} will owe us{' '}
-                      {formatMoney({
-                        amount: parsedAmount,
-                        currency: preferredCurrency,
-                      })}{' '}
-                      <strong>more</strong>
-                    </>
-                  ))}
-              </div>
-              <div>
-                {
-                  <Button
-                    type="submit"
-                    variation="primary"
-                    color="primary"
-                    disabled={!isValid}
-                    onSubmit={(e) => {
-                      e.preventDefault()
-                    }}
-                  >
-                    Add entry
-                  </Button>
-                }
-              </div>
-            </BottomRowWrapper>
-          </Form>
-        )
-      }}
+      {({ values, isValid }) => (
+        <Form>
+          <label htmlFor="type">Entry Type</label>
+          <Field component={FieldSelect} name="type">
+            <MenuItem value="CAMPAIGN">
+              <strong>Campaign</strong>: The member owes or will owe us money,
+              but we want to pay for it with marketing budget
+            </MenuItem>
+            <MenuItem value="SUBSCRIPTION">
+              <strong>Subscription</strong>: The member owes us more money (e.g.
+              object insurance, travel insurance, incorrectly fetched premiums)
+            </MenuItem>
+            <MenuItem value="LOSS">
+              <strong>Loss</strong>: The member owes us money we will never get
+              (e.g. the member terminated its insurance or we had a too early
+              start date)
+            </MenuItem>
+            <MenuItem value="CORRECTION">
+              <strong>Correction</strong>: A calculation is incorrect (should
+              hopefully never have to be used)
+            </MenuItem>
+          </Field>
+          <Field
+            component={TextField}
+            label="Amount"
+            type="number"
+            name="amount"
+          />
+          <Field
+            component={TextField}
+            label="Source"
+            name="source"
+            placeholder="(Required) Entry source, e.g. travel insurance, object insurance, marketing, IEX"
+          />
+          <Field
+            component={TextField}
+            label="Reference"
+            name="reference"
+            placeholder="(Required) Reference of source, e.g. object insurance id, campaign code, member ID"
+          />
+          <Field
+            component={TextField}
+            label="Title"
+            name="title"
+            placeholder="(Optional) If this is to be shown in the app at a later point, this is the title of the entry"
+          />
+          <Field
+            component={TextField}
+            label="Comment"
+            name="comment"
+            placeholder="(Optional) Notes on what happened"
+          />
+          <label htmlFor="fromDate">From Date</label>
+          <Field component={FormikDatePicker} type="date" name="fromDate" />
+          <BottomRowWrapper>
+            {isValid && (
+              <AddEntryInformation
+                amount={{
+                  amount: values.amount,
+                  currency: preferredCurrency,
+                }}
+                memberId={memberId}
+              />
+            )}
+            <Button
+              type="submit"
+              variation="primary"
+              color="primary"
+              disabled={!isValid}
+              onSubmit={(e) => {
+                e.preventDefault()
+              }}
+            >
+              Add entry
+            </Button>
+          </BottomRowWrapper>
+        </Form>
+      )}
     </Formik>
   )
 }
