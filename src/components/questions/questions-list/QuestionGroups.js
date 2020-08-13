@@ -19,6 +19,8 @@ const doTeamFilter = (selectedFilters) => ({ memberId }) =>
 
 const doMarketFilter = (selectedFilters) => ({ member }) =>
   (selectedFilters.includes(FilterState.Sweden) && (member.contractMarketInfo?.market === Market.Sweden)) ||
+  //If no market exists,
+  (selectedFilters.includes(FilterState.Sweden) && (!(member.contractMarketInfo?.market))) ||
   (selectedFilters.includes(FilterState.Norway) && (member.contractMarketInfo?.market === Market.Norway))
 
 const QuestionGroups = ({ selectedFilters }) => {
