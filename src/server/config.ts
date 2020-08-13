@@ -27,4 +27,5 @@ export const config = {
     process.env.GATEKEEPER_HOST ?? defaultGatekeeperHost,
     'gatekeeper host',
   ),
+  stagingSpecificTools: process.env.USE_STAGING_SPECIFIC_TOOLS === 'true',
 }
