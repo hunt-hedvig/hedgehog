@@ -15,7 +15,7 @@ const getAccountEntryColor = (theme, entry: AccountEntry) => {
     return theme.warning
   }
 
-  return theme.success
+  return theme.backgroundTransparent
 }
 
 const FirstCell = styled(Table.Cell)<{ entry: AccountEntry }>`
