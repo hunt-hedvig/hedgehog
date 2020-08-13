@@ -49,6 +49,9 @@ const template = () => `
 
   <script>
     window.GATEKEEPER_HOST = ${JSON.stringify(config.gatekeeperHost)};
+    window.HOPE_FEATURES = {
+      "stagingSpecificTools": ${JSON.stringify(config.stagingSpecificTools)},
+    };
   </script>
   <script src="${scriptLocation}"></script>
 </body>

@@ -10,11 +10,7 @@ const Icon = styled('div')`
 `
 
 export const stagingToolsAvailable = () => {
-  return (
-    process.env.NODE_ENV === 'development' ||
-    process.env.API_URL === 'https://backoffice.dev.hedvigit.com' ||
-    process.env.API_URL === 'https://backoffice.dev.hedvigit.com/'
-  )
+  return (window as any).HOPE_FEATURES?.stagingSpecificTools ?? false
 }
 
 export const StagingTools: React.FC = () => {
