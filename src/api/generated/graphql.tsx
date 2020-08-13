@@ -2648,6 +2648,19 @@ export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
             'id' | 'messageJsonString' | 'timestamp'
           >
         >
+        member: Maybe<
+          { __typename?: 'Member' } & Pick<
+            Member,
+            'memberId' | 'firstName' | 'lastName'
+          > & {
+              contractMarketInfo: Maybe<
+                { __typename?: 'ContractMarketInfo' } & Pick<
+                  ContractMarketInfo,
+                  'market'
+                >
+              >
+            }
+        >
       }
   >
 }
@@ -5104,6 +5117,14 @@ export const GetQuestionsGroupsDocument = gql`
         id
         messageJsonString
         timestamp
+      }
+      member {
+        memberId
+        firstName
+        lastName
+        contractMarketInfo {
+          market
+        }
       }
     }
   }

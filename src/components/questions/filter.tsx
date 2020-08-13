@@ -5,6 +5,8 @@ import styled from 'react-emotion'
 export enum FilterState {
   Even,
   Odd,
+  Sweden,
+  Norway,
 }
 
 const Checkbox = styled(StandardCheckbox)`
@@ -79,6 +81,16 @@ export const QuestionsFilter: React.FC<{
         }
         checked={selected.includes(FilterState.Odd)}
         onChange={() => onToggle(FilterState.Odd)}
+      />
+      <Checkbox
+        label={<Label>Sweden 🇸🇪</Label>}
+        checked={selected.includes(FilterState.Sweden)}
+        onChange={() => onToggle(FilterState.Sweden)}
+      />
+      <Checkbox
+        label={<Label>Norway 🇳🇴</Label>}
+        checked={selected.includes(FilterState.Norway)}
+        onChange={() => onToggle(FilterState.Norway)}
       />
     </>
   )
