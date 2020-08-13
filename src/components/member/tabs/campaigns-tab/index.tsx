@@ -1,10 +1,8 @@
 import { ContractMarketInfo } from 'api/generated/graphql'
 import { CampaignsInfo } from 'components/member/tabs/campaigns-tab/campaigns/CampaignsInfo'
 import { ReferralsInfo } from 'components/member/tabs/campaigns-tab/referrals/ReferralsInfo'
-import {
-  Headline,
-  RefreshButton,
-} from 'components/member/tabs/campaigns-tab/styles'
+import { Headline } from 'components/member/tabs/shared/headline'
+import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetReferralInformation } from 'graphql/use-get-referral-information'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
