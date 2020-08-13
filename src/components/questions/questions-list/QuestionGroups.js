@@ -4,6 +4,7 @@ import { FilteredQuestionGroups } from './FilteredQuestionGroups'
 import { FilterState } from 'components/questions/filter'
 import { isMemberIdEven } from 'utils/member'
 import { useQuestionGroups } from 'graphql/use-question-groups'
+import {Market} from "api/generated/graphql";
 
 const ListContainer = styled.div`
   display: flex;
@@ -17,8 +18,8 @@ const doTeamFilter = (selectedFilters) => ({ memberId }) =>
   (selectedFilters.includes(FilterState.Odd) && !isMemberIdEven(memberId))
 
 const doMarketFilter = (selectedFilters) => ({ member }) =>
-  (selectedFilters.includes(FilterState.Sweden) && (member.contractMarketInfo?.market === "SWEDEN")) ||
-  (selectedFilters.includes(FilterState.Norway) && (member.contractMarketInfo?.market === "NORWAY"))
+  (selectedFilters.includes(FilterState.Sweden) && (member.contractMarketInfo?.market === Market.Sweden)) ||
+  (selectedFilters.includes(FilterState.Norway) && (member.contractMarketInfo?.market === Market.Norway))
 
 const QuestionGroups = ({ selectedFilters }) => {
   const [questionGroups, { loading }] = useQuestionGroups()
