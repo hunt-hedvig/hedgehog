@@ -4,7 +4,7 @@ import { FilteredQuestionGroups } from './FilteredQuestionGroups'
 import { FilterState } from 'components/questions/filter'
 import { isMemberIdEven } from 'utils/member'
 import { useQuestionGroups } from 'graphql/use-question-groups'
-import {Market} from "api/generated/graphql";
+import { Market } from "api/generated/graphql";
 
 const ListContainer = styled.div`
   display: flex;
