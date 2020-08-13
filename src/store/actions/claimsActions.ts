@@ -1,7 +1,4 @@
 import {
-  CLAIM_TYPES,
-  CLAIM_TYPES_SUCCESS,
-  CLAIM_UPDATE_SUCCESS,
   CLAIMS_BY_MEMBER,
   CLAIMS_BY_MEMBER_SUCCESS,
   CLAIMS_ERROR,
@@ -26,21 +23,6 @@ export const claimsRequest = (
 export const claimsRequestSuccess = (searchResult: ClaimSearchResult) => ({
   type: CLAIMS_REQUEST_SUCCESS,
   searchResult,
-})
-
-export const claimUpdateSuccess = (reqType, data) => ({
-  type: CLAIM_UPDATE_SUCCESS,
-  reqType,
-  data,
-})
-
-export const claimTypes = () => ({
-  type: CLAIM_TYPES,
-})
-
-export const claimsTypesSuccess = (types) => ({
-  type: CLAIM_TYPES_SUCCESS,
-  types,
 })
 
 export const claimsByMember = (id) => ({

@@ -13,9 +13,6 @@ export const CLAIM_PAGE_QUERY = gql`
           debtFlag
         }
         personalNumber
-        address
-        postalNumber
-        city
         directDebitStatus {
           activated
         }
@@ -57,9 +54,6 @@ export const CLAIM_PAGE_QUERY = gql`
         timestamp
         exGratia
         type
-        #transaction {
-        #  status
-        #}
         status
       }
       events {
@@ -83,16 +77,22 @@ export const CLAIM_PAGE_QUERY = gql`
           ... on SwedishApartment {
             address {
               street
+              postalCode
+              city
             }
           }
           ... on SwedishHouse {
             address {
               street
+              postalCode
+              city
             }
           }
           ... on NorwegianHomeContent {
             address {
               street
+              postalCode
+              city
             }
           }
         }

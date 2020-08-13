@@ -6,179 +6,176 @@ import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
+import { Member } from 'api/generated/graphql'
+import { useState } from 'react'
+import {
+  getEditMemberInfoOptions,
+  useEditMemberInfo,
+} from 'graphql/use-edit-member-info'
 
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
   createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
-export default class DetailsTab extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      modalOpen: false,
-      member: [],
-      editFraud: false,
-      fraudStatus: '',
-      fraudDescription: '',
-    }
-  }
+export const DetailsTab = (props) => {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editMemberInfoRequest, setEditMemberInfoRequest] = useState({
+    memberId: props.member.memberId,
+  })
+  const [editingFraud, setEditFraud] = useState(false)
+  const [fraudStatus, setFraudStatus] = useState(null)
+  const [fraudDescription, setFraudDescription] = useState(null)
+  const [editMemberInfo] = useEditMemberInfo()
 
-  handleOpen = () => this.setState({ modalOpen: true })
+  const handleOpen = () => setModalOpen(true)
 
-  handleClose = () => this.setState({ modalOpen: false })
+  const handleClose = () => setModalOpen(false)
 
-  isDisabled = (field) => {
+  const isDisabled = (field) => {
     switch (field.toLowerCase()) {
       case 'memberid':
       case 'status':
-      case 'ssn':
+      case 'personalnumber':
       case 'birthdate':
-      case 'signedOn':
+      case 'signedon':
+      case 'status':
+      case 'createdon':
         return true
       default:
         return false
     }
   }
 
-  handleChange = (field) => (e) => {
-    const { member } = this.state
-    member[field] = e.target.value
-    this.setState({ member })
+  const handleChange = (field) => (e) => {
+    const editedMemberDetails = editMemberInfoRequest
+    editedMemberDetails[field] = e.target.value
+    setEditMemberInfoRequest(editedMemberDetails)
   }
 
-  handleCancel = () => {
-    this.setState({ member: [] })
-    this.handleClose()
+  const handleCancel = () => {
+    setEditMemberInfoRequest({
+      memberId: props.member.memberId,
+    })
+    handleClose()
   }
 
-  handleSubmissionButton = () => {
-    const { editMemberDetails, messages } = this.props
-    const submittedMember = { ...messages.member, ...this.state.member }
-    editMemberDetails(submittedMember)
-    this.handleClose()
-  }
-
-  render() {
-    let traceData
-    const {
-      messages: { member },
-      saveFraudulentStatus,
-    } = this.props
-
-    const {
-      traceMemberInfo,
-      fraudulentDescription,
-      fraudulentStatus,
-      ...memberInfo
-    } = member || {}
-
-    traceData = traceMemberInfo
-
-    const memberInfoWithoutSsn = {
-      ...memberInfo,
-      ssn: memberInfo.status !== 'SIGNED' ? '' : memberInfo.ssn,
-    }
-
-    return member ? (
-      <>
-        <Table selectable>
-          <Table.Body>
-            <TableFields
-              fields={memberInfoWithoutSsn}
-              fieldFormatters={memberFieldFormatters}
-            />
-            <FraudulentStatusEdit
-              getFraudStatusInfo={() => ({
-                status: this.state.fraudStatus || fraudulentStatus,
-                description:
-                  this.state.fraudDescription || fraudulentDescription,
-              })}
-              setState={(val, fs, desc) => {
-                this.setState({
-                  editFraud: val,
-                  fraudStatus: fs,
-                  fraudDescription: desc,
-                })
-              }}
-              getState={() => this.state.editFraud}
-              action={(fraudStatus, fraudDescription) => {
-                saveFraudulentStatus(
-                  fraudStatus,
-                  fraudDescription,
-                  memberInfo.memberId,
-                )
-              }}
-            />
-          </Table.Body>
-          <Table.Footer fullWidth>
-            <Table.Row>
-              <Table.HeaderCell />
-              <Table.HeaderCell colSpan="2">
-                <WideModal
-                  className="scrolling"
-                  trigger={
-                    <Button
-                      floated="right"
-                      icon
-                      labelposition="left"
-                      primary
-                      size="medium"
-                      onClick={this.handleOpen}
-                    >
-                      <Icon name="edit" /> Edit Member
-                    </Button>
-                  }
-                  open={this.state.modalOpen}
-                  onClose={this.handleClose}
-                  basic
-                  size="small"
-                  dimmer="blurring"
-                >
-                  <Header icon="edit" content="Edit Member" />
-                  <Modal.Content>
-                    <Form inverted size="small">
-                      <>
-                        {Object.keys(memberInfo).map((field) => (
-                          <Form.Input
-                            key={field}
-                            label={getFieldName(field)}
-                            disabled={this.isDisabled(field)}
-                            defaultValue={getFieldValue(member[field])}
-                            onChange={this.handleChange(field)}
-                          />
-                        ))}
-                      </>
-                      <Button.Group floated="right" labelposition="left">
-                        <Button type="button" onClick={this.handleCancel}>
-                          Cancel
-                        </Button>
-                        <Button.Or />
-                        <Button
-                          type="button"
-                          onClick={this.handleSubmissionButton}
-                          positive
-                        >
-                          Submit
-                        </Button>
-                      </Button.Group>
-                    </Form>
-                  </Modal.Content>
-                </WideModal>
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Footer>
-        </Table>
-        <InsuranceTrace traceData={traceData} />
-      </>
-    ) : (
-      <Header>No member info</Header>
+  const handleSubmissionButton = () => {
+    editMemberInfo(getEditMemberInfoOptions(editMemberInfoRequest)).then(() =>
+      handleClose(),
     )
   }
+
+  const { saveFraudulentStatus } = props
+
+  const {
+    traceMemberInfo,
+    fraudulentStatusDescription,
+    fraudulentStatus,
+    ...memberInfo
+  } = props.member || {}
+
+  const memberInfoWithoutSsn = {
+    ...memberInfo,
+    personalNumber: memberInfo.signedOn ? memberInfo.personalNumber : null,
+  }
+
+  delete memberInfoWithoutSsn.__typename
+
+  return memberInfoWithoutSsn ? (
+    <>
+      <Table selectable>
+        <Table.Body>
+          <TableFields
+            fields={memberInfoWithoutSsn}
+            fieldFormatters={memberFieldFormatters}
+          />
+          <FraudulentStatusEdit
+            getFraudStatusInfo={() => ({
+              status: fraudStatus || fraudulentStatus,
+              description: fraudDescription || fraudulentStatusDescription,
+            })}
+            setState={(val, fs, desc) => {
+              setEditFraud(val)
+              setFraudStatus(fs)
+              setFraudDescription(desc)
+            }}
+            getState={() => editingFraud}
+            action={(fraudStatus, fraudDescription) => {
+              saveFraudulentStatus(
+                fraudStatus,
+                fraudDescription,
+                memberInfo.memberId,
+              )
+            }}
+          />
+        </Table.Body>
+        <Table.Footer fullWidth>
+          <Table.Row>
+            <Table.HeaderCell />
+            <Table.HeaderCell colSpan="2">
+              <WideModal
+                className="scrolling"
+                trigger={
+                  <Button
+                    floated="right"
+                    icon
+                    labelposition="left"
+                    primary
+                    size="medium"
+                    onClick={() => handleOpen()}
+                  >
+                    <Icon name="edit" /> Edit Member
+                  </Button>
+                }
+                open={modalOpen}
+                onClose={() => handleClose()}
+                basic
+                size="small"
+                dimmer="blurring"
+              >
+                <Header icon="edit" content="Edit Member" />
+                <Modal.Content>
+                  <Form inverted size="small">
+                    <>
+                      {Object.keys(memberInfoWithoutSsn).map((field) => (
+                        <Form.Input
+                          key={field}
+                          label={getFieldName(field)}
+                          disabled={isDisabled(field)}
+                          defaultValue={getFieldValue(props.member[field])}
+                          onChange={handleChange(field)}
+                        />
+                      ))}
+                    </>
+                    <Button.Group floated="right" labelposition="left">
+                      <Button type="button" onClick={() => handleCancel()}>
+                        Cancel
+                      </Button>
+                      <Button.Or />
+                      <Button
+                        type="button"
+                        onClick={() => handleSubmissionButton()}
+                        positive
+                      >
+                        Submit
+                      </Button>
+                    </Button.Group>
+                  </Form>
+                </Modal.Content>
+              </WideModal>
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      </Table>
+      <InsuranceTrace traceData={traceMemberInfo} />
+    </>
+  ) : (
+    <Header>No member info</Header>
+  )
 }
 
 DetailsTab.propTypes = {
-  messages: PropTypes.object.isRequired,
-  editMemberDetails: PropTypes.func.isRequired,
+  member: PropTypes.object.isRequired,
   saveFraudulentStatus: PropTypes.func.isRequired,
 }

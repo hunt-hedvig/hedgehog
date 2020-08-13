@@ -10,18 +10,9 @@ const initialState: BackofficeStore = {
   login: {
     requesting: false,
   },
-  assets: {
-    list: [],
-    requesting: false,
-  },
   client: {},
   poll: {
     polling: false,
-  },
-  messages: {
-    list: [],
-    activeConnection: null,
-    member: null,
   },
   members: {
     list: [],
@@ -39,9 +30,6 @@ const initialState: BackofficeStore = {
       page: 0,
       pageSize: 25,
     },
-  },
-  dashboard: {
-    data: null,
   },
   claims: {
     searchFilter: {
@@ -68,18 +56,6 @@ const initialState: BackofficeStore = {
     data: null,
     requesting: false,
     requestResult: PayoutRequestResult.READY,
-  },
-  questions: {
-    answered: {
-      questions: [],
-      requesting: false,
-    },
-    notAnswered: {
-      questions: [],
-      requesting: false,
-    },
-    requesting: false,
-    errors: null,
   },
   notifications: [],
   memberInsurance: {

@@ -57,15 +57,16 @@ export const AccountTab: React.FC<AccountTabProps> = ({
       <h3>Balance (total): {formatMoney(account.totalBalance)}</h3>
       <h3>Upcoming charge information:</h3>
       <p>
-        <b>Total discount amount:</b>{' '}
+        <strong>Total discount amount:</strong>{' '}
         {formatMoney(account.chargeEstimation.discount)}
       </p>
       <p>
-        <b>Subscription charge:</b>{' '}
+        <strong>Subscription charge:</strong>{' '}
         {formatMoney(account.chargeEstimation.subscription)}
       </p>
       <p>
-        <b>Discount references:</b> {account.chargeEstimation.discountCodes}
+        <strong>Discount references:</strong>{' '}
+        {account.chargeEstimation.discountCodes}
       </p>
       <h5>
         Total charge next month: {formatMoney(account.chargeEstimation.charge)}

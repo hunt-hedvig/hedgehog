@@ -1,15 +1,5 @@
 export default {
   baseUrl: '/api/',
-  asset: {
-    get: {
-      method: 'get',
-      url: 'assets',
-    },
-    update: {
-      method: 'post',
-      url: 'assets',
-    },
-  },
   login: {
     login: {
       method: 'get',
@@ -87,40 +77,5 @@ export default {
       url: 'payout',
       method: 'post',
     },
-  },
-  questions: {
-    get: {
-      url: 'questions',
-      method: 'get',
-    },
-    answered: {
-      url: 'questions/answered',
-      method: 'get',
-    },
-    notAnsewred: {
-      url: 'questions/not-answered',
-      method: 'get',
-    },
-    sendAnswer: {
-      url: 'questions/answer',
-      method: 'post',
-    },
-    sendDoneMsg: {
-      url: 'questions/done',
-      method: 'post',
-    },
-  },
-  ws: {
-    endpoint: '/chat',
-    messagesPrefix: '/user/',
-    messages: '/messages/',
-    history: '/app/messages/history/',
-    send: '/app/messages/send/',
-    dashboardSub: '/user/',
-    cleanupDashboard: '/app/updates/clear/',
-    dashboardUpdates: '/app/updates/',
-    cleanupMessages: '/app/clear/',
-    newMessagesSub: '/app/updates/',
-    messagesUpdates: '/app/updates/',
   },
 }

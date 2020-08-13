@@ -1,5 +1,5 @@
 import ClaimsTab from 'components/member/tabs/ClaimsTab'
-import DetailsTab from 'components/member/tabs/DetailsTab'
+import { DetailsTab } from 'components/member/tabs/DetailsTab'
 import MemberFile from 'components/member/tabs/FileTab'
 import PaymentsTab from 'components/member/tabs/payments-tab'
 import { Quotes } from 'components/member/tabs/quote-tab'
@@ -41,12 +41,13 @@ TabItem.propTypes = {
   hideTab: PropTypes.bool,
 }
 
-const memberPagePanes = (props) => {
-  const memberId = props.match.params.memberId
+const memberPagePanes = (props, memberId, member) => {
   return [
     {
       menuItem: 'Member',
-      render: () => <TabItem props={props} TabContent={DetailsTab} />,
+      render: () => (
+        <TabItem props={{ ...props, member }} TabContent={DetailsTab} />
+      ),
     },
     {
       menuItem: 'Claims',

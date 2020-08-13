@@ -10,26 +10,38 @@ interface DatePickerProps {
   date: Date
   setDate: (date: Date) => void
   showTimePicker?: boolean
+  fullWidth?: boolean
+  placeholder?: string
+  disabled?: boolean
 }
 
-const StyledInput = styled(Input)({
-  '&&': {
-    width: '150px',
+const StyledInput = styled(Input)<{ fullWidth?: boolean }>(
+  ({ fullWidth = false }) => {
+    return {
+      '&&': {
+        width: fullWidth ? '100%' : '150px',
+      },
+      '&& input:hover': {
+        cursor: 'pointer !important',
+      },
+    }
   },
-  '&& input:hover': {
-    cursor: 'pointer !important',
-  },
-})
+)
 
 export const DateTimePicker: React.FunctionComponent<DatePickerProps> = ({
   date,
   setDate,
   showTimePicker = false,
+  fullWidth = false,
+  placeholder,
+  disabled = false,
 }) => {
   return (
     <DatePicker
       locale={'enGB'}
       selected={date}
+      disabled={disabled}
+      placeholderText={placeholder}
       onChange={(newDate) => {
         setDate(newDate)
       }}
@@ -37,6 +49,7 @@ export const DateTimePicker: React.FunctionComponent<DatePickerProps> = ({
       customInput={
         <StyledInput
           type="text"
+          fullWidth={fullWidth}
           icon={showTimePicker ? 'clock outline' : 'calendar alternate outline'}
           iconPosition={'left'}
           maxLength={10}

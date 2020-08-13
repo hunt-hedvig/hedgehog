@@ -1,12 +1,12 @@
 import Grid from '@material-ui/core/Grid'
 import { ClaimNote, ClaimTranscription, QueryType } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
-import ChatPane from 'components/member/tabs/ChatPane.js'
+import { ChatPane } from 'components/member/tabs/ChatPane'
 import React from 'react'
 import { Query } from 'react-apollo'
 import { Mount } from 'react-lifecycle-components/dist'
 import { Prompt } from 'react-router'
-import { MemberHistoryContext } from '../../../utils/member-history'
+import { MemberHistoryContext } from 'utils/member-history'
 // @ts-ignore
 import { CreateTicketStandAlone } from '../../tickets/ticket/create-ticket/create-ticket-stand-alone'
 import { ClaimEvents } from './components/ClaimEvents'
@@ -34,7 +34,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
     {({ pushToMemberHistory }) => (
       <Mount on={() => pushToMemberHistory(props.match.params.memberId)}>
         <>
-          <ChatPane {...props} />
+          <ChatPane memberId={props.match.params.memberId} />
           <Query<Pick<QueryType, 'claim'>>
             query={CLAIM_PAGE_QUERY}
             variables={{ id: props.match.params.claimId }}
@@ -76,7 +76,12 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                   )}
 
                   <Grid item xs={12} sm={12} md={4}>
-                    {member && <MemberInformation member={member} />}
+                    {member && (
+                      <MemberInformation
+                        member={member}
+                        contract={contract ?? null}
+                      />
+                    )}
                   </Grid>
                   <Grid item xs={12} sm={12} md={4}>
                     <ClaimInformation
@@ -87,7 +92,7 @@ const ClaimPage: React.SFC<Props> = ({ ...props }) => (
                       coveringEmployee={coveringEmployee!}
                       memberId={props.match.params.memberId}
                       refetchPage={refetch}
-                      contract={contract!}
+                      selectedContract={contract!}
                     />
                   </Grid>
                   <Grid item xs={12} sm={12} md={4}>

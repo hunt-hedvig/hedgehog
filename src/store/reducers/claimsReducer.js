@@ -1,7 +1,5 @@
 import { sortClaimsList } from 'lib/helpers'
 import {
-  CLAIM_TYPES,
-  CLAIM_TYPES_SUCCESS,
   CLAIMS_BY_MEMBER,
   CLAIMS_BY_MEMBER_SUCCESS,
   CLAIMS_ERROR,
@@ -18,7 +16,6 @@ export default function(state = initialState.claims, action) {
         ...state,
         searchFilter: action.searchFilter,
       }
-    case CLAIM_TYPES:
     case CLAIMS_BY_MEMBER:
       return {
         ...state,
@@ -30,19 +27,6 @@ export default function(state = initialState.claims, action) {
         ...state,
         searchResult: action.searchResult,
         requesting: false,
-      }
-
-    case CLAIM_TYPES_SUCCESS:
-      return {
-        ...state,
-        types: action.types
-          .map((type, id) => ({
-            ...type,
-            key: id,
-            value: type.name,
-            text: type.title,
-          }))
-          .sort((a, b) => a.value.localeCompare(b.value)),
       }
 
     case CLAIMS_BY_MEMBER_SUCCESS:

@@ -21,7 +21,11 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
-  canValuateClaimItem(typeOfContract: TypeOfContract!, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
+  canValuateClaimItem(
+    typeOfContract: TypeOfContract!
+    itemFamilyId: String!
+    itemTypeId: ID
+  ): CanValuateClaimItem
 }
 
 type DashboardNumbers {
@@ -56,16 +60,16 @@ type MutationType {
   backfillSubscriptions(memberId: ID!): Member!
   setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
   activateQuote(
-    id: ID!,
-    activationDate: LocalDate!,
+    id: ID!
+    activationDate: LocalDate!
     terminationDate: LocalDate
   ): Quote!
 
   addAgreementFromQuote(
-    id: ID!,
-    contractId: ID!,
-    activeFrom: LocalDate,
-    activeTo: LocalDate,
+    id: ID!
+    contractId: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
     previousAgreementActiveTo: LocalDate
   ): Quote!
 
@@ -74,10 +78,7 @@ type MutationType {
     memberId: ID!
     quoteData: QuoteFromProductInput!
   ): Quote!
-  createQuoteFromAgreement(
-    agreementId: ID!
-    memberId: ID!
-  ): Quote!
+  createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
   updateQuote(
     quoteId: ID!
     quoteData: QuoteInput!
@@ -85,10 +86,18 @@ type MutationType {
   ): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
-  activatePendingAgreement(contractId: ID!, request: ActivatePendingAgreementInput): Contract!
-  changeTerminationDate(contractId: ID!, request: ChangeTerminationDateInput): Contract!
+  activatePendingAgreement(
+    contractId: ID!
+    request: ActivatePendingAgreementInput
+  ): Contract!
+  changeTerminationDate(
+    contractId: ID!
+    request: ChangeTerminationDateInput
+  ): Contract!
   revertTermination(contractId: ID!): Contract!
-  createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
+  createNorwegianGripenPriceEngine(
+    request: CreateNorwegianGripenInput
+  ): Boolean!
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
@@ -97,14 +106,11 @@ type MutationType {
   markQuestionAsResolved(memberId: ID!): Boolean!
   answerQuestion(memberId: ID!, answer: String!): Boolean!
   createQuoteForNewContract(
-    memberId: ID!,
-    quoteInput: QuoteInput!,
+    memberId: ID!
+    quoteInput: QuoteInput!
     bypassUnderwritingGuidelines: Boolean!
   ): Quote!
-  signQuoteForNewContract(
-    quoteId: ID!,
-    activationDate: LocalDate
-  ): Quote!
+  signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
   upsertItemCompany(request: UpsertItemCompanyInput): ID!
   upsertItemType(request: UpsertItemTypeInput): ID!
   upsertItemBrand(request: UpsertItemBrandInput): ID!
@@ -117,13 +123,21 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  setContractForClaim(
-    request: SetContractForClaim!
+  assignCampaignToPartnerFreeMonths(
+    request: AssignVoucherFreeMonths
   ): Boolean!
-  manualRedeemCampaign(memberId: ID!, request: ManualRedeemCampaignInput!): Boolean!
-  manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
+  setContractForClaim(request: SetContractForClaim!): Boolean!
+  manualRedeemCampaign(
+    memberId: ID!
+    request: ManualRedeemCampaignInput!
+  ): Boolean!
+  manualUnRedeemCampaign(
+    memberId: ID!
+    request: ManualUnRedeemCampaignInput!
+  ): Boolean!
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
   unsignMember(market: String!, ssn: String!): Boolean!
+  editMemberInfo(request: EditMemberInfoInput!): Boolean!
 }
 
 type ClaimItem {
@@ -145,6 +159,14 @@ input InsertItemCategoriesInput {
 
 input InsertValuationRulesInput {
   valuationRulesString: String!
+}
+
+input EditMemberInfoInput {
+  memberId: String!
+  firstName: String
+  lastName: String
+  email: String
+  phoneNumber: String
 }
 
 input GetValuationInput {
@@ -171,8 +193,7 @@ type ValuationRule {
   depreciation: Int
 }
 
-type CanValuateClaimItem
-{
+type CanValuateClaimItem {
   canValuate: Boolean!
   typeOfContract: TypeOfContract
   itemFamily: String
@@ -276,7 +297,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-  SwedishApartment
+    SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -469,6 +490,14 @@ input AssignVoucherPercentageDiscount {
   validUntil: Instant
 }
 
+input AssignVoucherFreeMonths {
+  partnerId: String!
+  numberOfFreeMonths: Int!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+}
+
 type CampaignOwnerPartner {
   partnerId: String!
 }
@@ -484,7 +513,7 @@ type VoucherCampaign {
 }
 
 type MonthlyPercentageDiscountFixedPeriod {
-  numberOfMonths: Int,
+  numberOfMonths: Int
   percentage: Float
 }
 
@@ -512,7 +541,14 @@ type UnknownIncentive {
   _: Boolean
 }
 
-union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount | VisibleNoDiscount | UnknownIncentive
+union Incentive =
+    MonthlyPercentageDiscountFixedPeriod
+  | FreeMonths
+  | CostDeduction
+  | NoDiscount
+  | IndefinitePercentageDiscount
+  | VisibleNoDiscount
+  | UnknownIncentive
 
 type ItemFamily implements ItemCategoryCore {
   id: ID!
@@ -635,19 +671,21 @@ type MonthlySubscription {
 
 type Member {
   memberId: ID!
-  signedOn: Instant
+  email: String
+  phoneNumber: String
   firstName: String
   lastName: String
   personalNumber: String
+  birthDate: LocalDate
   gender: Gender
-  address: String
-  postalNumber: String
-  city: String
+  fraudulentStatus: String
+  fraudulentStatusDescription: String
+  createdOn: Instant
+  signedOn: Instant
+  status: String
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
-  fraudulentStatus: String
-  fraudulentStatusDescription: String
   sanctionStatus: SanctionStatus
   account: Account
   fileUploads: [FileUpload!]!
@@ -656,6 +694,7 @@ type Member {
   totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
+  claims: [Claim!]!
   contractMarketInfo: ContractMarketInfo
   pickedLocale: PickedLocale
   referralInformation: ReferralInformation
@@ -754,10 +793,10 @@ type Quote {
 }
 
 enum QuoteProductType {
-  APARTMENT,
-  HOUSE,
-  OBJECT,
-  HOME_CONTENT,
+  APARTMENT
+  HOUSE
+  OBJECT
+  HOME_CONTENT
   TRAVEL
 }
 enum QuoteState {
@@ -768,7 +807,12 @@ enum QuoteState {
 }
 
 
-union QuoteData = ApartmentQuoteData | HouseQuoteData | NorwegianHomeContentQuoteData | NorwegianTravelQuoteData
+union QuoteData =
+    ApartmentQuoteData
+  | HouseQuoteData
+  | NorwegianHomeContentQuoteData
+  | NorwegianTravelQuoteData
+
 
 type ApartmentQuoteData implements IQuoteData {
   id: ID!
@@ -781,9 +825,9 @@ type ApartmentQuoteData implements IQuoteData {
 }
 
 enum ApartmentSubType {
-  BRF,
-  RENT,
-  STUDENT_BRF,
+  BRF
+  RENT
+  STUDENT_BRF
   STUDENT_RENT
 }
 
@@ -837,9 +881,9 @@ enum ExtraBuildingType {
   OTHER
 }
 
-type NorwegianHomeContentQuoteData implements IQuoteData{
+type NorwegianHomeContentQuoteData implements IQuoteData {
   id: ID!
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
 
@@ -851,9 +895,9 @@ type NorwegianHomeContentQuoteData implements IQuoteData{
   subType: NorwegianHomeContentLineOfBusiness
 }
 
-type NorwegianTravelQuoteData implements IQuoteData{
+type NorwegianTravelQuoteData implements IQuoteData {
   id: ID!
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
   householdSize: Int
@@ -903,7 +947,6 @@ input NorwegianHomeContentQuoteInput {
 
   subType: NorwegianHomeContentLineOfBusiness
 }
-
 
 input NorwegianTravelQuoteInput {
   householdSize: Int
@@ -959,7 +1002,7 @@ input ExtraBuildingInput {
 }
 
 input NorwegianHomeContentQuoteDataInput {
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
 
@@ -973,7 +1016,7 @@ input NorwegianHomeContentQuoteDataInput {
 }
 
 input NorwegianTravelQuoteDataInput {
-  ssn:  String
+  ssn: String
   firstName: String
   lastName: String
 
@@ -1137,7 +1180,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1461,9 +1504,9 @@ enum NorwegianGripenFactorType {
 
 type ChatMessage {
   globalId: ID!
-  author: String,
-  fromId: String!,
-  timestamp: Instant,
+  author: String
+  fromId: String!
+  timestamp: Instant
   messageBodyJsonString: String!
 }
 
@@ -1486,7 +1529,7 @@ input SendMessageInput {
 }
 
 type MonetaryAmountV2 {
-  amount: String!,
+  amount: String!
   currency: String!
 }
 

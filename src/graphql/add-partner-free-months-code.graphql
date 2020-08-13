@@ -1,0 +1,7 @@
+mutation AssignCampaignToPartnerFreeMonths(
+  $request: AssignVoucherFreeMonths
+) {
+  assignCampaignToPartnerFreeMonths(
+    request: $request
+  )
+}
