@@ -1,7 +1,5 @@
 import { AssignVoucherVisibleNoDiscount } from 'api/generated/graphql'
 import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
-import { Centered, Row } from 'features/tools/campaign-codes/styles'
-import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerVisibleNoDiscountCodeOptions,
   useAddPartnerVisibleNoDiscountCode,
@@ -14,6 +12,8 @@ import React from 'react'
 import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
+import { Centered, DateTimePickerWrapper, Row } from '../styles'
+import { mapCampaignOwners } from '../utils'
 
 const initialFormData: AssignVoucherVisibleNoDiscount = {
   code: '',
@@ -22,11 +22,11 @@ const initialFormData: AssignVoucherVisibleNoDiscount = {
   validUntil: null,
 }
 
-const formLooksGood = (formData: AssignVoucherVisibleNoDiscount) => {
+const formIsValid = (formData: AssignVoucherVisibleNoDiscount) => {
   return formData.partnerId !== '' && formData.code !== ''
 }
 
-const VisibleNoDiscount: React.FC<{} & WithShowNotification> = ({
+const VisibleNoDiscount: React.FC<WithShowNotification> = ({
   showNotification,
 }) => {
   const [formData, setFormData] = React.useState<
@@ -68,7 +68,7 @@ const VisibleNoDiscount: React.FC<{} & WithShowNotification> = ({
       <Spacing top={'small'} />
       <label>Valid period</label>
       <Row>
-        <div style={{ float: 'left' }}>
+        <DateTimePickerWrapper>
           <DateTimePicker
             fullWidth
             disabled={loading}
@@ -76,8 +76,6 @@ const VisibleNoDiscount: React.FC<{} & WithShowNotification> = ({
             placeholder={'Valid from'}
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
-        </div>
-        <div style={{ float: 'right' }}>
           <DateTimePicker
             fullWidth
             disabled={loading}
@@ -85,14 +83,14 @@ const VisibleNoDiscount: React.FC<{} & WithShowNotification> = ({
             placeholder={'Valid until'}
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
-        </div>
+        </DateTimePickerWrapper>
       </Row>
       <Spacing top={'small'} />
       <Centered>
         <Button
           variation="primary"
           loading={loading}
-          disabled={loading || !formLooksGood(formData)}
+          disabled={loading || !formIsValid(formData)}
           onClick={() => {
             if (
               !window.confirm(`Create new campaign code "${formData.code}"?`)
