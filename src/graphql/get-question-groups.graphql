@@ -7,5 +7,13 @@ query GetQuestionsGroups {
       messageJsonString
       timestamp
     }
+    member {
+      memberId
+      firstName
+      lastName
+      contractMarketInfo {
+        market
+      }
+    }
   }
 }

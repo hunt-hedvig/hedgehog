@@ -806,11 +806,13 @@ enum QuoteState {
   EXPIRED
 }
 
+
 union QuoteData =
     ApartmentQuoteData
   | HouseQuoteData
   | NorwegianHomeContentQuoteData
   | NorwegianTravelQuoteData
+
 
 type ApartmentQuoteData implements IQuoteData {
   id: ID!
