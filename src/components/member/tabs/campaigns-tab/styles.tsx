@@ -1,9 +1,5 @@
-import {
-  MainHeadline,
-  Paragraph,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
-import styled, { css, keyframes } from 'react-emotion'
+import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import styled from 'react-emotion'
 
 export const Capitalized = styled.div`
   ::first-letter {
@@ -31,33 +27,6 @@ export const MemberStatusBadge = styled.div<{ status?: string }>`
   color: ${({ theme }) => theme.accentContrast};
   text-align: center;
   width: auto;
-`
-
-export const Headline = styled(MainHeadline)`
-  display: flex;
-  align-items: center;
-`
-
-export const spin = keyframes`
-  from{transform: rotate(0deg)}
-  to{transform: rotate(360deg)}
-`
-export const RefreshButton = styled.button<{ loading: boolean }>`
-  background: transparent;
-  font-size: 0.875em;
-  color: ${({ theme }) => theme.mutedText};
-  padding: 0;
-  border: 0;
-  margin-left: 1rem;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 500ms;
-  ${({ loading }) =>
-    loading &&
-    css`
-      animation: ${spin} 500ms linear infinite;
-    `};
 `
 
 export const ReferralStatusBadge = styled.div<{ eligible: boolean }>`

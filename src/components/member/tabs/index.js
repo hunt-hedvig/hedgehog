@@ -41,71 +41,69 @@ TabItem.propTypes = {
   hideTab: PropTypes.bool,
 }
 
-const memberPagePanes = (props, memberId, member) => {
-  return [
-    {
-      menuItem: 'Member',
-      render: () => (
-        <TabItem props={{ ...props, member }} TabContent={DetailsTab} />
-      ),
-    },
-    {
-      menuItem: 'Claims',
-      render: () => (
-        <TabItem props={{ ...props, memberId }} TabContent={ClaimsTab} />
-      ),
-    },
-    {
-      menuItem: 'Files',
-      render: () => <TabItem props={props} TabContent={MemberFile} />,
-    },
-    {
-      menuItem: 'Tickets',
-      render: () => (
-        <TabItem
-          props={{
-            ...props,
-            memberId,
-            ticketType: 'REMIND',
-          }}
-          TabContent={CreateTicketStandAlone}
-        />
-      ),
-    },
-    {
-      menuItem: 'Contracts',
-      render: () => (
-        <TabItem props={{ ...props, memberId }} TabContent={ContractTab} />
-      ),
-    },
-    {
-      menuItem: 'Quotes',
-      render: () => (
-        <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
-      ),
-    },
-    {
-      menuItem: 'Payments',
-      render: () => <TabItem props={props} TabContent={PaymentsTab} />,
-    },
-    {
-      menuItem: 'Account',
-      render: () => (
-        <TabItem props={{ ...props, memberId }} TabContent={AccountTab} />
-      ),
-    },
-    {
-      menuItem: 'Debt',
-      render: () => (
-        <TabItem props={{ ...props, memberId }} TabContent={DebtTab} />
-      ),
-    },
-    {
-      menuItem: 'Campaigns',
-      render: () => (
-        <TabItem props={{ ...props, memberId }} TabContent={CampaignsTab} />
-      ),
-    },
-  ]
-}
+const memberPagePanes = (props, memberId, member) => [
+  {
+    menuItem: 'Member',
+    render: () => (
+      <TabItem props={{ ...props, member }} TabContent={DetailsTab} />
+    ),
+  },
+  {
+    menuItem: 'Claims',
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={ClaimsTab} />
+    ),
+  },
+  {
+    menuItem: 'Files',
+    render: () => <TabItem props={props} TabContent={MemberFile} />,
+  },
+  {
+    menuItem: 'Tickets',
+    render: () => (
+      <TabItem
+        props={{
+          ...props,
+          memberId,
+          ticketType: 'REMIND',
+        }}
+        TabContent={CreateTicketStandAlone}
+      />
+    ),
+  },
+  {
+    menuItem: 'Contracts',
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={ContractTab} />
+    ),
+  },
+  {
+    menuItem: 'Quotes',
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
+    ),
+  },
+  {
+    menuItem: 'Payments',
+    render: () => <TabItem props={props} TabContent={PaymentsTab} />,
+  },
+  {
+    menuItem: 'Account',
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={AccountTab} />
+    ),
+  },
+  {
+    menuItem: 'Debt',
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={DebtTab} />
+    ),
+  },
+  {
+    menuItem: 'Campaigns',
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={CampaignsTab} />
+    ),
+  },
+]
 export default memberPagePanes

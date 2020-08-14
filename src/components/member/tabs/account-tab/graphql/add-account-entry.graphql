@@ -1,0 +1,8 @@
+mutation addAccountEntryToMember(
+  $memberId: ID!
+  $accountEntry: AccountEntryInput!
+) {
+  addAccountEntryToMember(memberId: $memberId, accountEntry: $accountEntry) {
+    memberId
+  }
+}
