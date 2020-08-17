@@ -3,6 +3,7 @@ import {
   ClearableDropdown,
   DropdownOption,
 } from 'features/tools/campaign-codes/components/ClearableDropdown'
+import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
@@ -17,6 +18,8 @@ const getIncentiveTypeForm = (incentiveType: CreatableIncentiveTypes) => {
       return <MonthlyPercentageForm />
     case CreatableIncentiveTypes.FreeMonths:
       return <FreeMonthsForm />
+    case CreatableIncentiveTypes.VisibleNoDiscount:
+      return <VisibleNoDiscountForm />
     default:
       return <>Not available</>
   }

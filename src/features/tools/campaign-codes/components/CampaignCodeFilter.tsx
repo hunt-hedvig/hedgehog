@@ -1,7 +1,10 @@
 import { CampaignFilter } from 'api/generated/graphql'
 import { InfoContainer } from 'components/member/tabs/shared/card-components'
 import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
-import { Row } from 'features/tools/campaign-codes/styles'
+import {
+  DateTimePickerWrapper,
+  Row,
+} from 'features/tools/campaign-codes/styles'
 import {
   initialCampaignFilter,
   mapCampaignOwners,
@@ -55,7 +58,7 @@ export const CampaignCodeFilter: React.FC<{
       />
       <Spacing top={'small'} />
       <Row>
-        <div style={{ float: 'left' }}>
+        <DateTimePickerWrapper>
           <DateTimePicker
             fullWidth
             date={filter.activeFrom!!}
@@ -67,8 +70,6 @@ export const CampaignCodeFilter: React.FC<{
               })
             }}
           />
-        </div>
-        <div style={{ float: 'right' }}>
           <DateTimePicker
             fullWidth
             placeholder={'Active to'}
@@ -80,15 +81,15 @@ export const CampaignCodeFilter: React.FC<{
               })
             }}
           />
-        </div>
-        <Button
-          variation="primary"
-          onClick={() => {
-            setFilter(initialCampaignFilter)
-          }}
-        >
-          Clear
-        </Button>
+          <Button
+            variation="primary"
+            onClick={() => {
+              setFilter(initialCampaignFilter)
+            }}
+          >
+            Clear
+          </Button>
+        </DateTimePickerWrapper>
       </Row>
     </InfoContainer>
   )

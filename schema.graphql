@@ -126,6 +126,9 @@ type MutationType {
   assignCampaignToPartnerFreeMonths(
     request: AssignVoucherFreeMonths
   ): Boolean!
+  assignCampaignToPartnerVisibleNoDiscount(
+    request: AssignVoucherVisibleNoDiscount
+  ): Boolean!
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(
     memberId: ID!
@@ -297,7 +300,7 @@ enum ContractStatus {
 }
 
 union Agreement =
-    SwedishApartment
+  SwedishApartment
   | SwedishHouse
   | NorwegianHomeContent
   | NorwegianTravel
@@ -498,6 +501,14 @@ input AssignVoucherFreeMonths {
   validUntil: Instant
 }
 
+input AssignVoucherVisibleNoDiscount {
+  partnerId: String!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+}
+
+
 type CampaignOwnerPartner {
   partnerId: String!
 }
@@ -542,7 +553,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -808,7 +819,7 @@ enum QuoteState {
 
 
 union QuoteData =
-    ApartmentQuoteData
+  ApartmentQuoteData
   | HouseQuoteData
   | NorwegianHomeContentQuoteData
   | NorwegianTravelQuoteData
@@ -1180,7 +1191,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
