@@ -29,6 +29,7 @@ const template = () => `
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hedvig H.OPE.</title>
+  <link rel="icon" type="image/png" href="/static/favicon.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet"
@@ -71,13 +72,15 @@ const router = new Router()
 app.use(compress({ threshold: 5 * 1024 }))
 
 const buildDir = path.resolve(__dirname, '../../build')
+const staticDir = path.resolve(__dirname, '../../static')
 const scriptLocation =
   process.env.NODE_ENV === 'production'
     ? '/static/' +
       JSON.parse(readFileSync(path.resolve(buildDir, 'stats.json'), 'UTF8'))
         .assetsByChunkName.app[0]
     : '/static/app.js'
-app.use(mount('/static', serve(buildDir, { maxage: 86400 * 365 })))
+app.use(mount('/static', serve(buildDir, { maxage: 86400 * 1000 * 365 })))
+app.use(mount('/static', serve(staticDir, { maxage: 86400 * 1000 * 365 })))
 if (process.env.NODE_ENV !== 'production') {
   app.use(
     proxy('/static', {
