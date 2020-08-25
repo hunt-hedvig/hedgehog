@@ -6,28 +6,30 @@ const webpackConfig = require('./webpack.config.base')
 
 const root = path.resolve(__dirname, '..')
 
-module.exports =
-  webpackConfig({
-    entry: { app: ['@babel/polyfill', path.resolve(root, 'src/clientEntry.tsx')] },
-    target: 'web',
-    mode: 'production',
-    context: root,
-    output: {
-      filename: '[name]-[hash].js',
-      publicPath: '/static/',
-      path: path.resolve(root, 'build'),
-    },
-    plugins: [
-      new webpack.LoaderOptionsPlugin({
-        minimize: true,
-        debug: false,
-      }),
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: JSON.stringify('production'),
-        },
-      }),
-      new StatsWriterPlugin({ filename: 'stats.json' }),
-      // new BundleAnalyzerPlugin(),
-    ].filter(Boolean),
-  })
+module.exports = webpackConfig({
+  entry: {
+    app: ['@babel/polyfill', path.resolve(root, 'src/clientEntry.tsx')],
+  },
+  target: 'web',
+  mode: 'production',
+  context: root,
+  output: {
+    filename: '[name]-[hash].js',
+    publicPath: '/static/',
+    path: path.resolve(root, 'build'),
+  },
+  devtool: 'source-map',
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false,
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      },
+    }),
+    new StatsWriterPlugin({ filename: 'stats.json' }),
+    // new BundleAnalyzerPlugin(),
+  ].filter(Boolean),
+})

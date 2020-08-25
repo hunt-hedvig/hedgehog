@@ -28,10 +28,7 @@ module.exports = ({
     rules: [
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(tsx?|js)$/,
@@ -42,10 +39,9 @@ module.exports = ({
             options: { ...babelrc, cacheDirectory: true },
           },
         ],
-      }
+      },
     ],
   },
-  devtool: 'cheap-source-map',
   target,
   context,
   stats: {
