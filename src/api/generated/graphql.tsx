@@ -828,6 +828,10 @@ export type MemberMonthlySubscriptionArgs = {
   month: Scalars['YearMonth']
 }
 
+export type MemberClaimsArgs = {
+  filterByStates?: Maybe<Array<ClaimState>>
+}
+
 export type MemberChargeApproval = {
   memberId: Scalars['ID']
   amount: Scalars['MonetaryAmount']
@@ -2697,6 +2701,9 @@ export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
                   ContractMarketInfo,
                   'market'
                 >
+              >
+              claims: Array<
+                { __typename?: 'Claim' } & Pick<Claim, 'id' | 'state'>
               >
             }
         >
@@ -5317,6 +5324,10 @@ export const GetQuestionsGroupsDocument = gql`
         lastName
         contractMarketInfo {
           market
+        }
+        claims(filterByStates: [OPEN, REOPENED]) {
+          id
+          state
         }
       }
     }

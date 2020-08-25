@@ -14,6 +14,10 @@ query GetQuestionsGroups {
       contractMarketInfo {
         market
       }
+      claims(filterByStates: [OPEN, REOPENED]) {
+        id
+        state
+      }
     }
   }
 }
