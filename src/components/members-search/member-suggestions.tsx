@@ -1,8 +1,8 @@
+import { useMemberNameAndContractMarketInfoQuery } from 'api/generated/graphql'
 import React, { useContext } from 'react'
 import styled, { css } from 'react-emotion'
 import { Link } from 'react-router-dom'
-import { useMemberNameAndContractMarketInfoQuery } from '../../api/generated/graphql'
-import { MemberHistoryContext } from '../../utils/member-history'
+import { MemberHistoryContext } from 'utils/member-history'
 import { MemberFlag } from '../member/shared/member-flag'
 
 const MemberHistoryWrapper = styled.div`

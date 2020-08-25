@@ -1,3 +1,4 @@
+import { Flag } from 'api/generated/graphql'
 import React from 'react'
 import styled from 'react-emotion'
 import { Icon, SemanticCOLORS } from 'semantic-ui-react'
@@ -13,16 +14,20 @@ const Container = styled('p')(() => ({
   display: 'inline',
 }))
 
-interface OrbProps {
-  color?: Flag | string | null
+interface FlagOrbProps {
+  flag?: Flag | null
   size?: IconSizeProp
 }
 
-enum Flag {
-  GREEN = 'green',
-  AMBER = 'orange',
-  RED = 'red',
+interface OrbProps {
+  color?: SemanticCOLORS | null
+  size?: IconSizeProp
 }
+
+export const FlagOrbIndicator: React.FunctionComponent<FlagOrbProps> = ({
+  flag,
+  size,
+}) => <OrbIndicator color={getColorOfFlag(flag)} size={size} />
 
 export const OrbIndicator: React.FunctionComponent<OrbProps> = ({
   color,
@@ -39,4 +44,19 @@ export const OrbIndicator: React.FunctionComponent<OrbProps> = ({
       </span>
     </Container>
   )
+}
+
+const getColorOfFlag = (
+  flag?: Flag | null,
+): SemanticCOLORS | undefined | null => {
+  if (flag === Flag.Green) {
+    return 'green'
+  }
+  if (flag === Flag.Amber) {
+    return 'orange'
+  }
+  if (flag === Flag.Red) {
+    return 'red'
+  }
+  return flag
 }

@@ -1,5 +1,6 @@
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
 import React from 'react'
+import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 
 export enum FilterState {
@@ -7,6 +8,8 @@ export enum FilterState {
   Odd,
   Sweden,
   Norway,
+  HasOpenClaim,
+  NoOpenClaim,
 }
 
 const Checkbox = styled(StandardCheckbox)`
@@ -38,6 +41,7 @@ const Label = styled.label`
   &:after {
     left: 1rem !important;
   }
+  vertical-align: middle;
 `
 
 const TeamBadge = styled.div`
@@ -91,6 +95,26 @@ export const QuestionsFilter: React.FC<{
         label={<Label>Norway 🇳🇴</Label>}
         checked={selected.includes(FilterState.Norway)}
         onChange={() => onToggle(FilterState.Norway)}
+      />
+      <Checkbox
+        label={
+          <Label>
+            Has open claim️
+            <ShieldShaded style={{ marginLeft: '0.35rem' }} />
+          </Label>
+        }
+        checked={selected.includes(FilterState.HasOpenClaim)}
+        onChange={() => onToggle(FilterState.HasOpenClaim)}
+      />
+      <Checkbox
+        label={
+          <Label>
+            No open claim
+            <Shield style={{ marginLeft: '0.35rem' }} />
+          </Label>
+        }
+        checked={selected.includes(FilterState.NoOpenClaim)}
+        onChange={() => onToggle(FilterState.NoOpenClaim)}
       />
     </>
   )
