@@ -68,8 +68,6 @@ export const apolloClient = (() => {
             return `ChatMessage(${(object as any).globalId})`
           case 'MemberReferral':
             return `MemberReferral(${(object as any).memberId})`
-          case 'Claim':
-            return `Claim(${(object as any).id})`
           default:
             return defaultDataIdFromObject(object)
         }

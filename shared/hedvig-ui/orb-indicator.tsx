@@ -27,7 +27,7 @@ interface OrbProps {
 export const FlagOrbIndicator: React.FunctionComponent<FlagOrbProps> = ({
   flag,
   size,
-}) => <OrbIndicator color={getColorOfFlag(flag)} size={size} />
+}) => <OrbIndicator color={getFlagColor(flag)} size={size} />
 
 export const OrbIndicator: React.FunctionComponent<OrbProps> = ({
   color,
@@ -46,7 +46,7 @@ export const OrbIndicator: React.FunctionComponent<OrbProps> = ({
   )
 }
 
-const getColorOfFlag = (
+const getFlagColor = (
   flag?: Flag | null,
 ): SemanticCOLORS | undefined | null => {
   if (flag === Flag.Green) {

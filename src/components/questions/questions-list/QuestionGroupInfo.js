@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useMemberNameAndContractMarketInfoQuery } from 'api/generated/graphql'
 import styled from 'react-emotion'
 import { getMemberFlag, getMemberIdColor } from 'utils/member'
 import { QuestionInfo } from './QuestionInfo'
@@ -35,7 +34,7 @@ const QuestionGroupInfo = ({ questionGroup }) => {
       <MemberInfoWrapper>
         {member && (
           <>
-            {hasOpenClaim(member.claims) ? (
+            {hasOpenClaim(member.claims) && (
               <StyledPopover
                 contents={
                   <>
@@ -57,7 +56,7 @@ const QuestionGroupInfo = ({ questionGroup }) => {
                   <ShieldShaded />
                 </IconButton>
               </StyledPopover>
-            ) : null}
+            )}
             {member?.firstName} {member?.lastName}{' '}
             {getMemberFlag(member?.contractMarketInfo?.market)}{' '}
           </>
