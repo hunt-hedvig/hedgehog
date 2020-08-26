@@ -48,7 +48,7 @@ const QuestionGroupInfo = ({ questionGroup }) => {
                   disabled={member.claims.length > 1}
                   onClick={() =>
                     history.push(
-                      `/claims/${member.claims[0].id}/members/${member.id}`,
+                      `/claims/${member.claims[0].id}/members/${member.memberId}`,
                     )
                   }
                   color={'primary'}
