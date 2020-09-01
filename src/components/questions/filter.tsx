@@ -74,21 +74,17 @@ export const QuestionsFilter: React.FC<{
   const getCountByFilter = (filter: FilterState) => {
     switch (filter) {
       case FilterState.Even:
-        return questionGroups.filter(doTeamFilter([FilterState.Even])).length
+        return questionGroups.filter(doTeamFilter([filter])).length
       case FilterState.Odd:
-        return questionGroups.filter(doTeamFilter([FilterState.Odd])).length
+        return questionGroups.filter(doTeamFilter([filter])).length
       case FilterState.Sweden:
-        return questionGroups.filter(doMarketFilter([FilterState.Sweden]))
-          .length
+        return questionGroups.filter(doMarketFilter([filter])).length
       case FilterState.Norway:
-        return questionGroups.filter(doMarketFilter([FilterState.Sweden]))
-          .length
+        return questionGroups.filter(doMarketFilter([filter])).length
       case FilterState.HasOpenClaim:
-        return questionGroups.filter(doClaimFilter([FilterState.HasOpenClaim]))
-          .length
+        return questionGroups.filter(doClaimFilter([filter])).length
       case FilterState.NoOpenClaim:
-        return questionGroups.filter(doClaimFilter([FilterState.NoOpenClaim]))
-          .length
+        return questionGroups.filter(doClaimFilter([filter])).length
     }
   }
 
