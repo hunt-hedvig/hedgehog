@@ -71,21 +71,13 @@ export const QuestionsFilter: React.FC<{
   selected: ReadonlyArray<FilterState>
   onToggle: (filter: FilterState) => void
 }> = ({ selected, onToggle, questionGroups }) => {
-  const getCountByFilter = (filter: FilterState) => {
-    switch (filter) {
-      case FilterState.Even:
-        return questionGroups.filter(doTeamFilter([filter])).length
-      case FilterState.Odd:
-        return questionGroups.filter(doTeamFilter([filter])).length
-      case FilterState.Sweden:
-        return questionGroups.filter(doMarketFilter([filter])).length
-      case FilterState.Norway:
-        return questionGroups.filter(doMarketFilter([filter])).length
-      case FilterState.HasOpenClaim:
-        return questionGroups.filter(doClaimFilter([filter])).length
-      case FilterState.NoOpenClaim:
-        return questionGroups.filter(doClaimFilter([filter])).length
-    }
+  const getCountByFilter = (
+    filter: FilterState,
+    filterer: (
+      selectedFilters: FilterState[],
+    ) => (questionGroup: QuestionGroup) => boolean,
+  ) => {
+    return questionGroups.filter(filterer([filter])).length
   }
 
   return (
@@ -93,7 +85,7 @@ export const QuestionsFilter: React.FC<{
       <Checkbox
         label={
           <Label>
-            Red team ({getCountByFilter(FilterState.Even)})
+            Red team ({getCountByFilter(FilterState.Even, doTeamFilter)})
             <RedTeamBadge />
           </Label>
         }
@@ -103,7 +95,7 @@ export const QuestionsFilter: React.FC<{
       <Checkbox
         label={
           <Label>
-            Green team ({getCountByFilter(FilterState.Odd)})
+            Green team ({getCountByFilter(FilterState.Odd, doTeamFilter)})
             <GreenTeamBadge />
           </Label>
         }
@@ -112,14 +104,18 @@ export const QuestionsFilter: React.FC<{
       />
       <Checkbox
         label={
-          <Label>Sweden ({getCountByFilter(FilterState.Sweden)}) 🇸🇪</Label>
+          <Label>
+            Sweden ({getCountByFilter(FilterState.Sweden, doMarketFilter)}) 🇸🇪
+          </Label>
         }
         checked={selected.includes(FilterState.Sweden)}
         onChange={() => onToggle(FilterState.Sweden)}
       />
       <Checkbox
         label={
-          <Label>Norway ({getCountByFilter(FilterState.Norway)}) 🇳🇴</Label>
+          <Label>
+            Norway ({getCountByFilter(FilterState.Norway, doMarketFilter)}) 🇳🇴
+          </Label>
         }
         checked={selected.includes(FilterState.Norway)}
         onChange={() => onToggle(FilterState.Norway)}
@@ -127,7 +123,8 @@ export const QuestionsFilter: React.FC<{
       <Checkbox
         label={
           <Label>
-            Has open claim️ ({getCountByFilter(FilterState.HasOpenClaim)}
+            Has open claim️ (
+            {getCountByFilter(FilterState.HasOpenClaim, doClaimFilter)}
             )
             <ShieldShaded style={{ marginLeft: '0.35rem' }} />
           </Label>
@@ -138,7 +135,8 @@ export const QuestionsFilter: React.FC<{
       <Checkbox
         label={
           <Label>
-            No open claim ({getCountByFilter(FilterState.NoOpenClaim)}
+            No open claim (
+            {getCountByFilter(FilterState.NoOpenClaim, doClaimFilter)}
             )
             <Shield style={{ marginLeft: '0.35rem' }} />
           </Label>

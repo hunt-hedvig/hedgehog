@@ -13,6 +13,8 @@ const Questions: React.FC = () => {
     FilterState.Odd,
     FilterState.Sweden,
     FilterState.Norway,
+    FilterState.HasOpenClaim,
+    FilterState.NoOpenClaim,
   ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
