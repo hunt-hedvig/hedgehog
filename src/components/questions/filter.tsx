@@ -1,7 +1,13 @@
+import { QuestionGroup } from 'api/generated/graphql'
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
+import {
+  doClaimFilter,
+  doMarketFilter,
+  doTeamFilter,
+} from 'utils/questionGroup'
 
 export enum FilterState {
   Even,
@@ -61,15 +67,37 @@ const GreenTeamBadge = styled(TeamBadge)`
 `
 
 export const QuestionsFilter: React.FC<{
+  questionGroups: ReadonlyArray<QuestionGroup>
   selected: ReadonlyArray<FilterState>
   onToggle: (filter: FilterState) => void
-}> = ({ selected, onToggle }) => {
+}> = ({ selected, onToggle, questionGroups }) => {
+  const getCountByFilter = (filter: FilterState) => {
+    switch (filter) {
+      case FilterState.Even:
+        return questionGroups.filter(doTeamFilter([FilterState.Even])).length
+      case FilterState.Odd:
+        return questionGroups.filter(doTeamFilter([FilterState.Odd])).length
+      case FilterState.Sweden:
+        return questionGroups.filter(doMarketFilter([FilterState.Sweden]))
+          .length
+      case FilterState.Norway:
+        return questionGroups.filter(doMarketFilter([FilterState.Sweden]))
+          .length
+      case FilterState.HasOpenClaim:
+        return questionGroups.filter(doClaimFilter([FilterState.HasOpenClaim]))
+          .length
+      case FilterState.NoOpenClaim:
+        return questionGroups.filter(doClaimFilter([FilterState.NoOpenClaim]))
+          .length
+    }
+  }
+
   return (
     <>
       <Checkbox
         label={
           <Label>
-            Red team
+            Red team ({getCountByFilter(FilterState.Even)})
             <RedTeamBadge />
           </Label>
         }
@@ -79,7 +107,7 @@ export const QuestionsFilter: React.FC<{
       <Checkbox
         label={
           <Label>
-            Green team
+            Green team ({getCountByFilter(FilterState.Odd)})
             <GreenTeamBadge />
           </Label>
         }
@@ -87,19 +115,24 @@ export const QuestionsFilter: React.FC<{
         onChange={() => onToggle(FilterState.Odd)}
       />
       <Checkbox
-        label={<Label>Sweden 🇸🇪</Label>}
+        label={
+          <Label>Sweden ({getCountByFilter(FilterState.Sweden)}) 🇸🇪</Label>
+        }
         checked={selected.includes(FilterState.Sweden)}
         onChange={() => onToggle(FilterState.Sweden)}
       />
       <Checkbox
-        label={<Label>Norway 🇳🇴</Label>}
+        label={
+          <Label>Norway ({getCountByFilter(FilterState.Norway)}) 🇳🇴</Label>
+        }
         checked={selected.includes(FilterState.Norway)}
         onChange={() => onToggle(FilterState.Norway)}
       />
       <Checkbox
         label={
           <Label>
-            Has open claim️
+            Has open claim️ ({getCountByFilter(FilterState.HasOpenClaim)}
+            )
             <ShieldShaded style={{ marginLeft: '0.35rem' }} />
           </Label>
         }
@@ -109,7 +142,8 @@ export const QuestionsFilter: React.FC<{
       <Checkbox
         label={
           <Label>
-            No open claim
+            No open claim ({getCountByFilter(FilterState.NoOpenClaim)}
+            )
             <Shield style={{ marginLeft: '0.35rem' }} />
           </Label>
         }

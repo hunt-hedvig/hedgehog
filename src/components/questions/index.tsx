@@ -1,4 +1,5 @@
 import QuestionGroups from 'components/questions/questions-list/QuestionGroups'
+import { useQuestionGroups } from 'graphql/use-question-groups'
 import { Spacing } from 'hedvig-ui/spacing'
 import * as React from 'react'
 import { useInsecurePersistentState } from 'utils/state'
@@ -13,10 +14,22 @@ const Questions: React.FC = () => {
     FilterState.Sweden,
     FilterState.Norway,
   ])
+
+  const [questionGroups, { loading }] = useQuestionGroups()
+
+  if (loading) {
+    return <>Loading...</>
+  }
+
+  if (!questionGroups) {
+    return <>Something went wrong :(</>
+  }
+
   return (
     <>
       <Spacing bottom="large">
         <QuestionsFilter
+          questionGroups={questionGroups}
           selected={selectedFilters}
           onToggle={(newFilter) => {
             if (selectedFilters.includes(newFilter)) {
@@ -30,7 +43,10 @@ const Questions: React.FC = () => {
         />
       </Spacing>
 
-      <QuestionGroups selectedFilters={selectedFilters} />
+      <QuestionGroups
+        selectedFilters={selectedFilters}
+        questionGroups={questionGroups}
+      />
     </>
   )
 }
