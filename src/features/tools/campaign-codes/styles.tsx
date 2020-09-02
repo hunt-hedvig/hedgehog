@@ -45,3 +45,9 @@ export const ValidityText = styled.span`
   display: flex;
   justify-content: center;
 `
+
+export const DateTimePickerWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`

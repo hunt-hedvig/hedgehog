@@ -24,6 +24,7 @@ import { formatMoney } from 'utils/money'
 export enum CreatableIncentiveTypes {
   MonthlyPercentageDiscountFixedPeriod = 'Monthly Percentage',
   FreeMonths = 'Free Months',
+  VisibleNoDiscount = 'Visible No Discount',
 }
 
 export const initialCampaignFilter: CampaignFilter = {

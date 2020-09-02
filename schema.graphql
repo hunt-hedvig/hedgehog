@@ -123,8 +123,9 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  assignCampaignToPartnerFreeMonths(
-    request: AssignVoucherFreeMonths
+  assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
+  assignCampaignToPartnerVisibleNoDiscount(
+    request: AssignVoucherVisibleNoDiscount
   ): Boolean!
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(
@@ -498,6 +499,13 @@ input AssignVoucherFreeMonths {
   validUntil: Instant
 }
 
+input AssignVoucherVisibleNoDiscount {
+  partnerId: String!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+}
+
 type CampaignOwnerPartner {
   partnerId: String!
 }
@@ -694,7 +702,7 @@ type Member {
   totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
-  claims: [Claim!]!
+  claims(filterByStates: [ClaimState!]): [Claim!]!
   contractMarketInfo: ContractMarketInfo
   pickedLocale: PickedLocale
   referralInformation: ReferralInformation
@@ -806,13 +814,11 @@ enum QuoteState {
   EXPIRED
 }
 
-
 union QuoteData =
     ApartmentQuoteData
   | HouseQuoteData
   | NorwegianHomeContentQuoteData
   | NorwegianTravelQuoteData
-
 
 type ApartmentQuoteData implements IQuoteData {
   id: ID!
@@ -1116,6 +1122,7 @@ enum AccountEntryType {
   PERCENTAGE_MONTH_DISCOUNT
   BUNDLE_DISCOUNT_COST_DEDUCTION
   BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION
+  COST_DEDUCTION
   LOSS
 }
 

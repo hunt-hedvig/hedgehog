@@ -1,12 +1,21 @@
+import { QuestionGroup } from 'api/generated/graphql'
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
 import React from 'react'
+import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
+import {
+  doClaimFilter,
+  doMarketFilter,
+  doTeamFilter,
+} from 'utils/questionGroup'
 
 export enum FilterState {
   Even,
   Odd,
   Sweden,
   Norway,
+  HasOpenClaim,
+  NoOpenClaim,
 }
 
 const Checkbox = styled(StandardCheckbox)`
@@ -38,6 +47,7 @@ const Label = styled.label`
   &:after {
     left: 1rem !important;
   }
+  vertical-align: middle;
 `
 
 const TeamBadge = styled.div`
@@ -57,15 +67,25 @@ const GreenTeamBadge = styled(TeamBadge)`
 `
 
 export const QuestionsFilter: React.FC<{
+  questionGroups: ReadonlyArray<QuestionGroup>
   selected: ReadonlyArray<FilterState>
   onToggle: (filter: FilterState) => void
-}> = ({ selected, onToggle }) => {
+}> = ({ selected, onToggle, questionGroups }) => {
+  const getCountByFilter = (
+    filter: FilterState,
+    filterer: (
+      selectedFilters: FilterState[],
+    ) => (questionGroup: QuestionGroup) => boolean,
+  ) => {
+    return questionGroups.filter(filterer([filter])).length
+  }
+
   return (
     <>
       <Checkbox
         label={
           <Label>
-            Red team
+            Red team ({getCountByFilter(FilterState.Even, doTeamFilter)})
             <RedTeamBadge />
           </Label>
         }
@@ -75,7 +95,7 @@ export const QuestionsFilter: React.FC<{
       <Checkbox
         label={
           <Label>
-            Green team
+            Green team ({getCountByFilter(FilterState.Odd, doTeamFilter)})
             <GreenTeamBadge />
           </Label>
         }
@@ -83,14 +103,46 @@ export const QuestionsFilter: React.FC<{
         onChange={() => onToggle(FilterState.Odd)}
       />
       <Checkbox
-        label={<Label>Sweden 🇸🇪</Label>}
+        label={
+          <Label>
+            Sweden ({getCountByFilter(FilterState.Sweden, doMarketFilter)}) 🇸🇪
+          </Label>
+        }
         checked={selected.includes(FilterState.Sweden)}
         onChange={() => onToggle(FilterState.Sweden)}
       />
       <Checkbox
-        label={<Label>Norway 🇳🇴</Label>}
+        label={
+          <Label>
+            Norway ({getCountByFilter(FilterState.Norway, doMarketFilter)}) 🇳🇴
+          </Label>
+        }
         checked={selected.includes(FilterState.Norway)}
         onChange={() => onToggle(FilterState.Norway)}
+      />
+      <Checkbox
+        label={
+          <Label>
+            Has open claim️ (
+            {getCountByFilter(FilterState.HasOpenClaim, doClaimFilter)}
+            )
+            <ShieldShaded style={{ marginLeft: '0.35rem' }} />
+          </Label>
+        }
+        checked={selected.includes(FilterState.HasOpenClaim)}
+        onChange={() => onToggle(FilterState.HasOpenClaim)}
+      />
+      <Checkbox
+        label={
+          <Label>
+            No open claim (
+            {getCountByFilter(FilterState.NoOpenClaim, doClaimFilter)}
+            )
+            <Shield style={{ marginLeft: '0.35rem' }} />
+          </Label>
+        }
+        checked={selected.includes(FilterState.NoOpenClaim)}
+        onChange={() => onToggle(FilterState.NoOpenClaim)}
       />
     </>
   )

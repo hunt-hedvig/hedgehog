@@ -15,7 +15,7 @@ import { Headline } from 'components/member/tabs/shared/headline'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { OrbIndicator } from 'hedvig-ui/orb-indicator'
+import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
@@ -77,7 +77,7 @@ export const DebtTab: React.FC<{
               Member flag
               <InfoText>
                 {person?.status?.flag && (
-                  <OrbIndicator color={person.status.flag} size={'tiny'} />
+                  <FlagOrbIndicator flag={person.status.flag} size={'tiny'} />
                 )}
               </InfoText>
             </InfoRow>
