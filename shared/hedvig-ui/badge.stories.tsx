@@ -18,17 +18,15 @@ const variants: ReadonlyArray<NonNullable<BadgeProps['variant']>> = [
 
 export const StandardBadge: React.FC = () => {
   return (
-    <>
-      <Badge
-        size={select('Size', sizes, 'small')}
-        fluid={boolean('Fluid', false)}
-        centered={boolean('Centered', true)}
-        bold={boolean('Bold', false)}
-        variant={select('Variant', variants, 'default')}
-      >
-        Badge
-      </Badge>
-    </>
+    <Badge
+      size={select('Size', sizes, 'small')}
+      fluid={boolean('Fluid', false)}
+      centered={boolean('Centered', true)}
+      bold={boolean('Bold', false)}
+      variant={select('Variant', variants, 'default')}
+    >
+      Badge
+    </Badge>
   )
 }
 

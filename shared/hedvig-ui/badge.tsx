@@ -11,43 +11,37 @@ export interface BadgeProps {
   variant?: BadgeVariant
 }
 
-const mapBadgeSize = (size?: BadgeSize) => {
-  if (size === 'small') {
-    return '0.5rem 0.5rem'
+const getPaddingFromSize = (size?: BadgeSize) => {
+  switch (size) {
+    case 'small':
+      return '0.5rem 0.5rem'
+    case 'medium':
+      return '0.7rem 0.7rem'
+    case 'large':
+      return '0.9rem 0.9rem'
+    default:
+      return '0.5rem 0.5rem'
   }
-
-  if (size === 'medium') {
-    return '0.7rem 0.7rem'
-  }
-
-  if (size === 'large') {
-    return '0.9rem 0.9rem'
-  }
-
-  return '0.5rem 0.5rem'
 }
 
-const mapBadgeColor = (theme: any, variant?: BadgeVariant) => {
-  if (variant === 'danger') {
-    return theme.danger
+const getColorFromVariant = (theme: any, variant?: BadgeVariant) => {
+  switch (variant) {
+    case 'danger':
+      return theme.danger
+    case 'warning':
+      return theme.warning
+    case 'success':
+      return theme.success
+    default:
+      return theme.accent
   }
-
-  if (variant === 'warning') {
-    return theme.warning
-  }
-
-  if (variant === 'success') {
-    return theme.success
-  }
-
-  return theme.accent
 }
 
 export const Badge = styled.div<BadgeProps>`
   display: inline-block;
-  padding: ${({ size }) => mapBadgeSize(size)};
+  padding: ${({ size }) => getPaddingFromSize(size)};
   line-height: 1;
-  background: ${({ theme, variant }) => mapBadgeColor(theme, variant)};
+  background: ${({ theme, variant }) => getColorFromVariant(theme, variant)};
   border-radius: 13px;
   color: ${({ theme }) => theme.accentContrast};
   font-weight: ${({ bold = false }) => (bold ? 'bold' : 'normal')};
