@@ -15030,6 +15030,41 @@
         "possibleTypes": null
       },
       {
+        "kind": "ENUM",
+        "name": "SwedishApartmentLineOfBusiness",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "RENT",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "BRF",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STUDENT_RENT",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STUDENT_BRF",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
         "kind": "SCALAR",
         "name": "ZonedDateTime",
         "description": "A String-representation of `java.time.ZonedDateTime`, ex: `\"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]\"`",

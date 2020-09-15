@@ -1615,6 +1615,13 @@ export type StormDamageClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
+export enum SwedishApartmentLineOfBusiness {
+  Rent = 'RENT',
+  Brf = 'BRF',
+  StudentRent = 'STUDENT_RENT',
+  StudentBrf = 'STUDENT_BRF',
+}
+
 export type SwitchableSwitcherEmail = {
   __typename?: 'SwitchableSwitcherEmail'
   id: Scalars['ID']

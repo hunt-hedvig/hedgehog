@@ -1,10 +1,10 @@
 import { MutationFunctionOptions } from '@apollo/react-common'
 import {
-  Agreement,
   Contract,
   CreateQuoteFromAgreementMutation,
   CreateQuoteFromAgreementMutationHookResult,
   CreateQuoteFromAgreementMutationVariables,
+  GenericAgreement,
   GetContractsDocument,
   useCreateQuoteFromAgreementMutation,
 } from '../api/generated/graphql'
@@ -14,7 +14,7 @@ export const useCreateQuoteFromAgreement = (): CreateQuoteFromAgreementMutationH
   useCreateQuoteFromAgreementMutation()
 
 export const createQuoteFromAgreementOptions = (
-  agreement: Agreement,
+  agreement: GenericAgreement,
   contract: Contract,
 ): MutationFunctionOptions<
   CreateQuoteFromAgreementMutation,

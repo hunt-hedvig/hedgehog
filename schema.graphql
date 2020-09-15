@@ -317,6 +317,13 @@ type GenericAgreement {
   isSubleted: Boolean
 }
 
+enum SwedishApartmentLineOfBusiness {
+  RENT
+  BRF
+  STUDENT_RENT
+  STUDENT_BRF
+}
+
 enum NorwegianHomeContentLineOfBusiness {
   RENT
   OWN
