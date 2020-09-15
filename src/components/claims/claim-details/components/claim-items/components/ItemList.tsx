@@ -6,14 +6,13 @@ import {
   TableCell as MuiTableCell,
   TableHead,
   TableRow,
-  Typography,
   withStyles,
 } from '@material-ui/core'
 import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
+import { Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { ChevronRight, InfoCircleFill, Trash } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
 import {
   ChevronRightWrapper,
@@ -28,15 +27,7 @@ const TableCell = withStyles({
   },
 })(MuiTableCell)
 
-const NotSpecifiedLabel = styled(Typography)`
-  && {
-    color: ${({ theme }) => theme.placeholderColor};
-  }
-`
-
-const NotSpecified: React.FC = () => (
-  <NotSpecifiedLabel>Not specified</NotSpecifiedLabel>
-)
+const NotSpecified: React.FC = () => <Placeholder>Not specified</Placeholder>
 
 export const ItemList: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [claimItems] = useGetClaimItems(claimId)

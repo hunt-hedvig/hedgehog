@@ -13,11 +13,10 @@ import {
   InfoText,
 } from 'components/member/tabs/shared/card-components'
 import { Headline } from 'components/member/tabs/shared/headline'
-import { Placeholder } from 'components/member/tabs/shared/placeholder'
 import { useGetAccount } from 'graphql/use-get-account'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { Placeholder, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'

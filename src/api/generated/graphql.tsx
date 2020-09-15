@@ -88,6 +88,7 @@ export enum AccountEntryType {
   PercentageMonthDiscount = 'PERCENTAGE_MONTH_DISCOUNT',
   BundleDiscountCostDeduction = 'BUNDLE_DISCOUNT_COST_DEDUCTION',
   BundleDiscountPercentageDeduction = 'BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION',
+  CostDeduction = 'COST_DEDUCTION',
   Loss = 'LOSS',
 }
 
