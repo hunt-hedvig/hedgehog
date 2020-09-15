@@ -1,8 +1,8 @@
-import { Agreement, AgreementStatus } from 'api/generated/graphql'
+import { AgreementStatus, GenericAgreement } from 'api/generated/graphql'
 import React from 'react'
 import styled, { css } from 'react-emotion'
 import { Table } from 'semantic-ui-react'
-import { getLineOfBusiness, InsuranceStatusBadge } from 'utils/agreement'
+import { InsuranceStatusBadge } from 'utils/agreement'
 import { formatMoney } from 'utils/money'
 import { getEnumTitleCase } from 'utils/text'
 
@@ -25,7 +25,7 @@ const SelectableTableCell = styled(Table.Cell)<{
 `
 
 export const AgreementsTable: React.FC<{
-  agreements: ReadonlyArray<Agreement>
+  agreements: ReadonlyArray<GenericAgreement>
   selectedAgreement: string | undefined
   setSelectedAgreement: (agreementId: string | undefined) => void
 }> = ({ agreements, selectedAgreement, setSelectedAgreement }) => {
@@ -58,7 +58,7 @@ export const AgreementsTable: React.FC<{
                 selected={isSelected}
                 status={agreement.status}
               >
-                {getEnumTitleCase(getLineOfBusiness(agreement))}
+                {getEnumTitleCase(agreement.typeOfContract)}
               </SelectableTableCell>
               <SelectableTableCell
                 selected={isSelected}
