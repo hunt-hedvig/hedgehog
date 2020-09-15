@@ -1,8 +1,6 @@
 import { MemberReferral } from 'api/generated/graphql'
-import {
-  Capitalized,
-  MemberStatusBadge,
-} from 'components/member/tabs/campaigns-tab/styles'
+import { MemberStatusBadge } from 'components/member/tabs/campaigns-tab/styles'
+import { Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
