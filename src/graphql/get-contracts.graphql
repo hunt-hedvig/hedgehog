@@ -42,6 +42,7 @@ query GetContracts($memberId: ID!) {
           hasWaterConnected
         }
         isSubleted
+        lineOfBusinessName
       }
       hasQueuedRenewal
       renewal {

@@ -78,7 +78,7 @@ export const AgreementInfo: React.FC<{ agreement: GenericAgreement }> = ({
       )}
       <InfoRow>
         Line of Business{' '}
-        <InfoText>{getEnumTitleCase(agreement.typeOfContract)}</InfoText>
+        <InfoText>{getEnumTitleCase(agreement.lineOfBusinessName)}</InfoText>
       </InfoRow>
       <InfoRow>
         Premium <InfoText>{formatMoney(agreement.premium)}</InfoText>

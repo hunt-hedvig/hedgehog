@@ -58,7 +58,7 @@ export const AgreementsTable: React.FC<{
                 selected={isSelected}
                 status={agreement.status}
               >
-                {getEnumTitleCase(agreement.typeOfContract)}
+                {getEnumTitleCase(agreement.lineOfBusinessName)}
               </SelectableTableCell>
               <SelectableTableCell
                 selected={isSelected}

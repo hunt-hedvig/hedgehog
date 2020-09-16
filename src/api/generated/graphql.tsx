@@ -2344,6 +2344,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'yearOfConstruction'
                   | 'numberOfBathrooms'
                   | 'isSubleted'
+                  | 'lineOfBusinessName'
                 > & {
                     premium: { __typename?: 'MonetaryAmountV2' } & Pick<
                       MonetaryAmountV2,
@@ -4543,6 +4544,7 @@ export const GetContractsDocument = gql`
             hasWaterConnected
           }
           isSubleted
+          lineOfBusinessName
         }
         hasQueuedRenewal
         renewal {
