@@ -610,6 +610,7 @@ export type GenericAgreement = {
   numberOfBathrooms?: Maybe<Scalars['Int']>
   extraBuildings?: Maybe<Array<ExtraBuilding>>
   isSubleted?: Maybe<Scalars['Boolean']>
+  lineOfBusinessName: Scalars['String']
 }
 
 export type GetValuationInput = {
