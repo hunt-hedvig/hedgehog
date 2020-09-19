@@ -2,8 +2,20 @@ import { MembersSearch, Props } from 'components/members-search'
 import React from 'react'
 import { connect } from 'react-redux'
 import { searchMemberRequest as searchMemberRequestAction } from 'store/actions/membersActions'
+import { useMemberSearch } from '../../graphql/use-member-search'
 
-export const MembersSearchPageComponent: React.FC<Props> = ({
+// TODO: Inject new MemberSearchPageComponent here
+// TODO: Shouldn't we generate Member type from graphql:gen instead?
+
+export const MembersSearchPage: React.FC<{}> = () => {
+  const [memberSearchResult, { loading, error }] = useMemberSearch('')
+
+  return <></>
+}
+
+// TODO: --
+
+export const MembersSearchPageComponentOLD: React.FC<Props> = ({
   searchMemberRequest,
   searchResult,
   searchLoading,
@@ -22,6 +34,6 @@ const mapState = (
   searchLoading: state.members.requesting,
 })
 
-export const MembersSearchPage = connect(mapState, {
+export const MembersSearchPageOLD = connect(mapState, {
   searchMemberRequest: searchMemberRequestAction,
-})(MembersSearchPageComponent)
+})(MembersSearchPageComponentOLD)

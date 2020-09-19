@@ -88,6 +88,7 @@ export enum AccountEntryType {
   PercentageMonthDiscount = 'PERCENTAGE_MONTH_DISCOUNT',
   BundleDiscountCostDeduction = 'BUNDLE_DISCOUNT_COST_DEDUCTION',
   BundleDiscountPercentageDeduction = 'BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION',
+  CostDeduction = 'COST_DEDUCTION',
   Loss = 'LOSS',
 }
 
@@ -845,6 +846,21 @@ export type MemberReferral = {
   incentive: Incentive
 }
 
+export type MemberSearchOptions = {
+  includeAll?: Maybe<Scalars['Boolean']>
+  page?: Maybe<Scalars['Int']>
+  pageSize?: Maybe<Scalars['Int']>
+  sortBy?: Maybe<Scalars['String']>
+  sortDirection?: Maybe<Scalars['String']>
+}
+
+export type MemberSearchResult = {
+  __typename?: 'MemberSearchResult'
+  members: Array<Member>
+  totalPages: Scalars['Int']
+  page: Scalars['Int']
+}
+
 export type MonetaryAmountV2 = {
   __typename?: 'MonetaryAmountV2'
   amount: Scalars['String']
@@ -1385,6 +1401,7 @@ export type QueryType = {
   tickets: Array<Ticket>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  memberSearch: MemberSearchResult
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
   itemCategories: Array<ItemCategory>
@@ -1422,6 +1439,11 @@ export type QueryTypeGetFullTicketHistoryArgs = {
 
 export type QueryTypeTicketsArgs = {
   resolved?: Maybe<Scalars['Boolean']>
+}
+
+export type QueryTypeMemberSearchArgs = {
+  query: Scalars['String']
+  options: MemberSearchOptions
 }
 
 export type QueryTypeMessageHistoryArgs = {
@@ -2822,6 +2844,22 @@ export type MarkQuestionAsResolvedMutationVariables = {
 export type MarkQuestionAsResolvedMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'markQuestionAsResolved'>
+
+export type MemberSearchQueryVariables = {
+  query: Scalars['String']
+  options: MemberSearchOptions
+}
+
+export type MemberSearchQuery = { __typename?: 'QueryType' } & {
+  memberSearch: { __typename?: 'MemberSearchResult' } & Pick<
+    MemberSearchResult,
+    'page' | 'totalPages'
+  > & {
+      members: Array<
+        { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'>
+      >
+    }
+}
 
 export type RegenerateCertificateMutationVariables = {
   agreementId: Scalars['ID']
@@ -5688,6 +5726,68 @@ export type MarkQuestionAsResolvedMutationResult = ApolloReactCommon.MutationRes
 export type MarkQuestionAsResolvedMutationOptions = ApolloReactCommon.BaseMutationOptions<
   MarkQuestionAsResolvedMutation,
   MarkQuestionAsResolvedMutationVariables
+>
+export const MemberSearchDocument = gql`
+  query MemberSearch($query: String!, $options: MemberSearchOptions!) {
+    memberSearch(query: $query, options: $options) {
+      members {
+        firstName
+        lastName
+      }
+      page
+      totalPages
+    }
+  }
+`
+
+/**
+ * __useMemberSearchQuery__
+ *
+ * To run a query within a React component, call `useMemberSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberSearchQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useMemberSearchQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    MemberSearchQuery,
+    MemberSearchQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    MemberSearchQuery,
+    MemberSearchQueryVariables
+  >(MemberSearchDocument, baseOptions)
+}
+export function useMemberSearchLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    MemberSearchQuery,
+    MemberSearchQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    MemberSearchQuery,
+    MemberSearchQueryVariables
+  >(MemberSearchDocument, baseOptions)
+}
+export type MemberSearchQueryHookResult = ReturnType<
+  typeof useMemberSearchQuery
+>
+export type MemberSearchLazyQueryHookResult = ReturnType<
+  typeof useMemberSearchLazyQuery
+>
+export type MemberSearchQueryResult = ApolloReactCommon.QueryResult<
+  MemberSearchQuery,
+  MemberSearchQueryVariables
 >
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {

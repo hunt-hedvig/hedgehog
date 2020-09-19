@@ -1,0 +1,10 @@
+query MemberSearch($query: String!, $options: MemberSearchOptions!) {
+  memberSearch(query: $query, options: $options) {
+    members {
+      firstName
+      lastName
+    }
+    page
+    totalPages
+  }
+}
