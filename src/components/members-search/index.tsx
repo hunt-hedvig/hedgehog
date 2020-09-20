@@ -1,28 +1,18 @@
+import { Member, useMemberSearchLazyQuery } from 'api/generated/graphql'
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import { Checkbox } from 'hedvig-ui/checkbox'
 import { Input } from 'hedvig-ui/input'
 import { MainHeadline } from 'hedvig-ui/typography'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import styled, { keyframes } from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import {
-  MemberSearchFilter,
-  MemberSearchResultItem,
-  MembersSearchResult,
-} from 'store/storeTypes'
 import { InsuranceStatusBadge } from 'utils/agreement'
 import { MemberAge } from 'utils/member'
 import { MemberSuggestions } from './member-suggestions'
-
-export interface Props {
-  searchMemberRequest: (requestArgs: Partial<MemberSearchFilter>) => void
-  searchResult: MembersSearchResult
-  searchLoading: boolean
-}
 
 const fadeIn = (max: number) =>
   keyframes({
@@ -73,54 +63,63 @@ const ListWrapper = styled('div')({
   paddingLeft: '1rem',
 })
 
-export const MembersSearch: React.FC<Props> = ({
-  searchMemberRequest,
-  searchResult,
-  searchLoading,
-}) => {
+export const MembersSearch: React.FC = () => {
   const [query, setQuery] = React.useState('')
   const [includeAll, setIncludeAll] = React.useState(false)
-  const [hasDispatchedSearch, setHasDispatchedSearch] = React.useState(false)
 
-  useEffect(() => {
-    if (searchResult.items.length === 0) {
-      searchMemberRequest({})
-    }
-  }, [])
+  const [memberSearch, { data, loading }] = useMemberSearchLazyQuery()
+
+  const searchResult = data?.memberSearch
+  const members = searchResult?.members ?? []
+  const currentResultSize = searchResult?.members.length ?? 0
+  const currentPage = searchResult?.page ?? 0
+  const totalPages = searchResult?.totalPages ?? 0
 
   return (
     <>
       <Search
-        onSubmit={(submittedQuery, submittedIncludeAll) => {
-          searchMemberRequest({
-            query: submittedQuery !== '' ? submittedQuery : '%',
-            includeAll: submittedIncludeAll,
+        onSubmit={() => {
+          memberSearch({
+            variables: {
+              query: query !== '' ? query : '%',
+              options: {
+                includeAll,
+                page: 0,
+                pageSize: 25,
+                sortBy: 'SIGN_UP',
+                sortDirection: 'DESC',
+              },
+            },
           })
-          setHasDispatchedSearch(true)
         }}
-        loading={searchLoading}
+        loading={loading}
         query={query}
         setQuery={setQuery}
         includeAll={includeAll}
         setIncludeAll={setIncludeAll}
-        currentResultSize={searchResult.items.length}
+        currentResultSize={currentResultSize}
       />
-      {searchResult.items.length > 0 && (
+      {currentResultSize > 0 && (
         <ListWrapper>
-          <BackendPaginatorList<MemberSearchResultItem>
-            currentPage={searchResult.page}
-            totalPages={searchResult.totalPages}
+          <BackendPaginatorList<Member>
+            currentPage={currentPage}
+            totalPages={totalPages}
             changePage={(page) =>
-              searchMemberRequest({ query, includeAll, page })
+              memberSearch({
+                variables: {
+                  query,
+                  options: { includeAll, page, pageSize: 25 },
+                },
+              })
             }
-            pagedItems={searchResult.items}
-            itemContent={(item) => <ListItem item={item} />}
+            pagedItems={members as Member[]}
+            itemContent={(member) => <ListItem member={member} />}
             isSortable={false}
             tableHeader={<ListHeader />}
           />
         </ListWrapper>
       )}
-      {searchResult.items.length === 0 && (!hasDispatchedSearch || !query) && (
+      {currentResultSize === 0 && !query && (
         <>
           <Instructions>
             <h1>Search for members</h1>
@@ -149,14 +148,11 @@ export const MembersSearch: React.FC<Props> = ({
         </>
       )}
 
-      {searchResult.items.length === 0 &&
-        hasDispatchedSearch &&
-        query &&
-        !searchLoading && (
-          <NoMembers>
-            <div>D*shborad! No members found</div>
-          </NoMembers>
-        )}
+      {currentResultSize === 0 && query && !loading && (
+        <NoMembers>
+          <div>D*shborad! No members found</div>
+        </NoMembers>
+      )}
     </>
   )
 }
@@ -293,32 +289,34 @@ const MemberAgeWrapper = styled('div')(({ theme }) => ({
   fontSize: '0.8rem',
 }))
 
-const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => {
-  const memberStatus =
-    item.member.status !== 'SIGNED' ? item.member.status : item.productStatus
+const ListItem: React.FC<{ member: Member }> = ({ member }) => {
+  // TODO: @Elvin, is productStatus something from ProductPricing? Verify what to resolve
+  // const memberStatus =
+  //  member.status !== 'SIGNED' ? member.status : item.productStatus
+
+  const memberStatus = member?.status ?? null
+
   return (
     <Table.Row>
       <Table.Cell>
-        {item.member.memberId ? (
-          <Link to={`/members/${item.member.memberId}`}>
-            {item.member.memberId}
-          </Link>
+        {member.memberId ? (
+          <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
         ) : (
           '-'
         )}
       </Table.Cell>
       <Table.Cell>
-        {item.member.firstName ?? '-'} {item.member.lastName ?? '-'}
+        {member.firstName ?? '-'} {member.lastName ?? '-'}
         <MemberAgeWrapper>
-          <MemberAge birthDateString={item.member.birthDate} />
+          <MemberAge birthDateString={member.birthDate} />
         </MemberAgeWrapper>
       </Table.Cell>
       <Table.Cell>
-        {item.member.signedOn &&
-          format(parseISO(item.member.signedOn), 'MMM d, yyy, HH:ii')}
+        {member.signedOn &&
+          format(parseISO(member.signedOn), 'MMM d, yyy, HH:ii')}
       </Table.Cell>
-      <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>
-      <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
+      <Table.Cell>{'firstActiveFrom'}</Table.Cell>
+      <Table.Cell>{'lastActiveTo'}</Table.Cell>
       <Table.Cell>
         {memberStatus && (
           <InsuranceStatusBadge status={memberStatus}>
@@ -326,10 +324,7 @@ const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => {
           </InsuranceStatusBadge>
         )}
       </Table.Cell>
-      <Table.Cell>
-        {item.householdSize ?? '-'} people / {item.livingSpace ?? '-'} m
-        <sup>2</sup>
-      </Table.Cell>
+      <Table.Cell>householdSize</Table.Cell>
     </Table.Row>
   )
 }

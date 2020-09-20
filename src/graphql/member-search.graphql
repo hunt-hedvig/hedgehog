@@ -1,6 +1,7 @@
 query MemberSearch($query: String!, $options: MemberSearchOptions!) {
   memberSearch(query: $query, options: $options) {
     members {
+      memberId
       firstName
       lastName
     }

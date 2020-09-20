@@ -2856,7 +2856,10 @@ export type MemberSearchQuery = { __typename?: 'QueryType' } & {
     'page' | 'totalPages'
   > & {
       members: Array<
-        { __typename?: 'Member' } & Pick<Member, 'firstName' | 'lastName'>
+        { __typename?: 'Member' } & Pick<
+          Member,
+          'memberId' | 'firstName' | 'lastName'
+        >
       >
     }
 }
@@ -5731,6 +5734,7 @@ export const MemberSearchDocument = gql`
   query MemberSearch($query: String!, $options: MemberSearchOptions!) {
     memberSearch(query: $query, options: $options) {
       members {
+        memberId
         firstName
         lastName
       }
