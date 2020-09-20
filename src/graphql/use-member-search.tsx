@@ -1,33 +1,31 @@
 import {
   MemberSearchOptions,
   MemberSearchQueryHookResult,
-  MemberSearchResult,
-  useMemberSearchQuery,
-} from 'api/generated/graphql'
+  useMemberSearchLazyQuery,
+} from '../api/generated/graphql'
 
 type MemberSearchReturnTuple = [
-  MemberSearchResult | undefined,
+  (query: string, options?: MemberSearchOptions) => void,
   MemberSearchQueryHookResult,
 ]
 
-export const useMemberSearch = (
-  query: string,
-  options?: MemberSearchOptions,
-): MemberSearchReturnTuple => {
-  const queryResult = useMemberSearchQuery({
-    variables: {
-      query,
-      options: {
-        includeAll: options?.includeAll ?? false,
-        page: options?.page ?? 0,
-        pageSize: options?.pageSize ?? 25,
-        sortBy: options?.sortBy ?? 'SIGN_UP',
-        sortDirection: options?.sortDirection ?? 'DESC',
+export const useMemberSearch = (): MemberSearchReturnTuple => {
+  const [memberSearchQuery, queryResult] = useMemberSearchLazyQuery()
+
+  const memberSearch = (query: string, options?: MemberSearchOptions) => {
+    memberSearchQuery({
+      variables: {
+        query,
+        options: {
+          includeAll: options?.includeAll ?? false,
+          page: options?.page ?? 0,
+          pageSize: options?.pageSize ?? 25,
+          sortBy: options?.sortBy ?? 'SIGN_UP',
+          sortDirection: options?.sortDirection ?? 'DESC',
+        },
       },
-    },
-  })
-  const memberSearchResult = queryResult.data?.memberSearch as
-    | MemberSearchResult
-    | undefined
-  return [memberSearchResult, queryResult]
+    })
+  }
+
+  return [memberSearch, queryResult]
 }

@@ -1,6 +1,7 @@
-import { Member, useMemberSearchLazyQuery } from 'api/generated/graphql'
+import { Member } from 'api/generated/graphql'
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
 import { format, parseISO } from 'date-fns'
+import { useMemberSearch } from 'graphql/use-member-search'
 import { Button } from 'hedvig-ui/button'
 import { Checkbox } from 'hedvig-ui/checkbox'
 import { Input } from 'hedvig-ui/input'
@@ -67,7 +68,7 @@ export const MembersSearch: React.FC = () => {
   const [query, setQuery] = React.useState('')
   const [includeAll, setIncludeAll] = React.useState(false)
 
-  const [memberSearch, { data, loading }] = useMemberSearchLazyQuery()
+  const [memberSearch, { data, loading }] = useMemberSearch()
 
   const searchResult = data?.memberSearch
   const members = searchResult?.members ?? []
@@ -79,17 +80,8 @@ export const MembersSearch: React.FC = () => {
     <>
       <Search
         onSubmit={() => {
-          memberSearch({
-            variables: {
-              query: query !== '' ? query : '%',
-              options: {
-                includeAll,
-                page: 0,
-                pageSize: 25,
-                sortBy: 'SIGN_UP',
-                sortDirection: 'DESC',
-              },
-            },
+          memberSearch(query !== '' ? query : '%', {
+            includeAll,
           })
         }}
         loading={loading}
@@ -105,12 +97,7 @@ export const MembersSearch: React.FC = () => {
             currentPage={currentPage}
             totalPages={totalPages}
             changePage={(page) =>
-              memberSearch({
-                variables: {
-                  query,
-                  options: { includeAll, page, pageSize: 25 },
-                },
-              })
+              memberSearch(query, { includeAll, page, pageSize: 25 })
             }
             pagedItems={members as Member[]}
             itemContent={(member) => <ListItem member={member} />}
