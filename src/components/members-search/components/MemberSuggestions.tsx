@@ -8,7 +8,7 @@ import {
 } from 'components/members-search/styles'
 import React, { useContext } from 'react'
 import { MemberHistoryContext } from 'utils/member-history'
-import { MemberFlag } from '../member/shared/member-flag'
+import { MemberFlag } from '../../member/shared/member-flag'
 
 export const MemberSuggestions: React.FC = () => {
   const { memberHistory } = useContext(MemberHistoryContext)
