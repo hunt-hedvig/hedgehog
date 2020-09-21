@@ -30,18 +30,15 @@ export const MembersSearch: React.FC = () => {
   const [includeAll, setIncludeAll] = React.useState(false)
 
   const [memberSearch, { data, loading }] = useMemberSearch()
+  const { members = [], page = 0, totalPages = 0 } = { ...data?.memberSearch }
 
-  const searchResult = data?.memberSearch
-  const members = searchResult?.members ?? []
-  const currentResultSize = searchResult?.members.length ?? 0
-  const currentPage = searchResult?.page ?? 0
-  const totalPages = searchResult?.totalPages ?? 0
+  const noMembersFound = members.length === 0 && query && !loading
 
   return (
     <>
       <Search
         onSubmit={() => {
-          memberSearch(query !== '' ? query : '%', {
+          memberSearch(query || '%', {
             includeAll,
           })
         }}
@@ -50,15 +47,15 @@ export const MembersSearch: React.FC = () => {
         setQuery={setQuery}
         includeAll={includeAll}
         setIncludeAll={setIncludeAll}
-        currentResultSize={currentResultSize}
+        currentResultSize={members.length}
       />
-      {currentResultSize > 0 && (
+      {members.length > 0 && (
         <ListWrapper>
           <BackendPaginatorList<Member>
-            currentPage={currentPage}
+            currentPage={page}
             totalPages={totalPages}
-            changePage={(page) =>
-              memberSearch(query, { includeAll, page, pageSize: 25 })
+            changePage={(nextPage) =>
+              memberSearch(query, { includeAll, page: nextPage, pageSize: 25 })
             }
             pagedItems={members as Member[]}
             itemContent={(member) => <ListItem member={member} />}
@@ -67,7 +64,7 @@ export const MembersSearch: React.FC = () => {
           />
         </ListWrapper>
       )}
-      {currentResultSize === 0 && !query && (
+      {members.length === 0 && !query && (
         <>
           <Instructions>
             <h1>Search for members</h1>
@@ -96,7 +93,7 @@ export const MembersSearch: React.FC = () => {
         </>
       )}
 
-      {currentResultSize === 0 && query && !loading && (
+      {noMembersFound && (
         <NoMembers>
           <div>D*shborad! No members found</div>
         </NoMembers>

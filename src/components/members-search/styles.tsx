@@ -1,9 +1,10 @@
 import { Button } from 'hedvig-ui/button'
 import { Input } from 'hedvig-ui/input'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
-import styled, { keyframes } from 'react-emotion'
+import styled, { css, keyframes } from 'react-emotion'
+import { Link } from 'react-router-dom'
 
-export const fadeIn = (max: number) =>
+const fadeIn = (max: number) =>
   keyframes({
     from: { opacity: 0, transform: 'translateY(5%)' },
     to: { opacity: max, transform: 'translateY(0)' },
@@ -106,3 +107,43 @@ export const MemberAgeWrapper = styled('div')(({ theme }) => ({
   color: theme.mutedText,
   fontSize: '0.8rem',
 }))
+
+export const MemberHistoryWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -1rem;
+  width: calc(100% + 1rem);
+`
+
+export const EmptyState = styled.div`
+  font-style: italic;
+  margin-left: 1rem;
+  color: ${({ theme }) => theme.mutedText};
+`
+
+export const MemberHistoryCardWrapper = styled(Link)<{ muted: boolean }>`
+  display: flex;
+  flex-direction: column;
+  width: calc((100% / 3) - 1rem);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-left: 1rem;
+  min-height: 5rem;
+  margin-bottom: 1rem;
+  & {
+    ${({ theme, muted }) => css`
+      background: ${theme.foreground};
+      color: ${theme.backgroundLight} !important;
+
+      ${muted && 'opacity: 0.5;'};
+    `};
+  }
+`
+export const MemberName = styled.span`
+  display: block;
+`
+
+export const MemberId = styled.span`
+  display: block;
+  color: ${({ theme }) => theme.mutedText};
+`
