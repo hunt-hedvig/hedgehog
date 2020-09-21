@@ -106,10 +106,6 @@ export const Bold = styled.span`
   font-weight: bold;
 `
 
-export const Placeholder = styled.div`
-  color: ${({ theme }) => theme.placeholderColor};
-`
-
 export const ExplanationPopover = styled(Popover)`
   font-size: 0.85rem;
   width: auto;
