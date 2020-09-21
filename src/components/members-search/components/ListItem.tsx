@@ -1,4 +1,5 @@
 import { Member } from 'api/generated/graphql'
+import { ContractCountCircles } from 'components/members-search/components/ContractCountCircles'
 import { MemberAgeWrapper } from 'components/members-search/styles'
 import { format, parseISO } from 'date-fns'
 import React from 'react'
@@ -12,17 +13,6 @@ const CircleWrapper = styled.div`
   justify-content: center;
   align-items: center;
   color: ${({ theme }) => theme.accentContrast};
-`
-
-const Circle = styled.div`
-  margin: 0 5px;
-  height: 25px;
-  width: 25px;
-  background-color: ${({ theme }) => theme.success};
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `
 
 export const ListItem: React.FC<{ member: Member }> = ({ member }) => {
@@ -50,9 +40,7 @@ export const ListItem: React.FC<{ member: Member }> = ({ member }) => {
       </Table.Cell>
       <Table.Cell>
         <CircleWrapper>
-          <Circle>0</Circle>
-          <Circle>0</Circle>
-          <Circle>0</Circle>
+          <ContractCountCircles contracts={member.contracts} />
         </CircleWrapper>
       </Table.Cell>
     </Table.Row>
