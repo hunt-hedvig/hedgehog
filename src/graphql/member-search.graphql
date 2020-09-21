@@ -4,6 +4,15 @@ query MemberSearch($query: String!, $options: MemberSearchOptions!) {
       memberId
       firstName
       lastName
+      status
+      signedOn
+      birthDate
+      contractMarketInfo {
+        market
+      }
+      contracts {
+        status
+      }
     }
     page
     totalPages

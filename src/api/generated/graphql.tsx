@@ -2858,8 +2858,23 @@ export type MemberSearchQuery = { __typename?: 'QueryType' } & {
       members: Array<
         { __typename?: 'Member' } & Pick<
           Member,
-          'memberId' | 'firstName' | 'lastName'
-        >
+          | 'memberId'
+          | 'firstName'
+          | 'lastName'
+          | 'status'
+          | 'signedOn'
+          | 'birthDate'
+        > & {
+            contractMarketInfo: Maybe<
+              { __typename?: 'ContractMarketInfo' } & Pick<
+                ContractMarketInfo,
+                'market'
+              >
+            >
+            contracts: Array<
+              { __typename?: 'Contract' } & Pick<Contract, 'status'>
+            >
+          }
       >
     }
 }
@@ -5737,6 +5752,15 @@ export const MemberSearchDocument = gql`
         memberId
         firstName
         lastName
+        status
+        signedOn
+        birthDate
+        contractMarketInfo {
+          market
+        }
+        contracts {
+          status
+        }
       }
       page
       totalPages
