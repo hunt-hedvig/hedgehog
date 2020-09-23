@@ -4,10 +4,9 @@ import { FraudulentStatusEdit } from 'lib/fraudulentStatus'
 import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import { useState } from 'react'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import InsuranceTrace from './insurance-trace/InsuranceTrace'
-import { Member } from 'api/generated/graphql'
-import { useState } from 'react'
 import {
   getEditMemberInfoOptions,
   useEditMemberInfo,
@@ -41,7 +40,6 @@ const DetailsTabComponent = (props) => {
   const isDisabled = (field) => {
     switch (field.toLowerCase()) {
       case 'memberid':
-      case 'status':
       case 'personalnumber':
       case 'birthdate':
       case 'signedon':
