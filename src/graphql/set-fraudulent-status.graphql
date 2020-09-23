@@ -1,0 +1,3 @@
+mutation SetFraudulentStatus($memberId: ID!, $request: MemberFraudulentStatusInput!) {
+  setFraudulentStatus(memberId: $memberId, request: $request)
+}

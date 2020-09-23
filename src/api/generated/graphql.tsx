@@ -838,6 +838,11 @@ export type MemberChargeApproval = {
   amount: Scalars['MonetaryAmount']
 }
 
+export type MemberFraudulentStatusInput = {
+  fraudulentStatus: Scalars['String']
+  fraudulentStatusDescription?: Maybe<Scalars['String']>
+}
+
 export type MemberReferral = {
   __typename?: 'MemberReferral'
   memberId: Scalars['String']
@@ -942,6 +947,7 @@ export type MutationType = {
   manualRedeemEnableReferralsCampaign: Scalars['Boolean']
   unsignMember: Scalars['Boolean']
   editMemberInfo: Scalars['Boolean']
+  setFraudulentStatus: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1224,6 +1230,11 @@ export type MutationTypeUnsignMemberArgs = {
 
 export type MutationTypeEditMemberInfoArgs = {
   request: EditMemberInfoInput
+}
+
+export type MutationTypeSetFraudulentStatusArgs = {
+  memberId: Scalars['ID']
+  request: MemberFraudulentStatusInput
 }
 
 export type NoDiscount = {
@@ -2940,6 +2951,15 @@ export type SetCoveringEmployeeMutation = { __typename?: 'MutationType' } & {
       }
   >
 }
+
+export type SetFraudulentStatusMutationVariables = {
+  memberId: Scalars['ID']
+  request: MemberFraudulentStatusInput
+}
+
+export type SetFraudulentStatusMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'setFraudulentStatus'>
 
 export type SignQuoteForNewContractMutationVariables = {
   quoteId: Scalars['ID']
@@ -6075,6 +6095,58 @@ export type SetCoveringEmployeeMutationResult = ApolloReactCommon.MutationResult
 export type SetCoveringEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetCoveringEmployeeMutation,
   SetCoveringEmployeeMutationVariables
+>
+export const SetFraudulentStatusDocument = gql`
+  mutation SetFraudulentStatus(
+    $memberId: ID!
+    $request: MemberFraudulentStatusInput!
+  ) {
+    setFraudulentStatus(memberId: $memberId, request: $request)
+  }
+`
+export type SetFraudulentStatusMutationFn = ApolloReactCommon.MutationFunction<
+  SetFraudulentStatusMutation,
+  SetFraudulentStatusMutationVariables
+>
+
+/**
+ * __useSetFraudulentStatusMutation__
+ *
+ * To run a mutation, you first call `useSetFraudulentStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetFraudulentStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setFraudulentStatusMutation, { data, loading, error }] = useSetFraudulentStatusMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSetFraudulentStatusMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetFraudulentStatusMutation,
+    SetFraudulentStatusMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SetFraudulentStatusMutation,
+    SetFraudulentStatusMutationVariables
+  >(SetFraudulentStatusDocument, baseOptions)
+}
+export type SetFraudulentStatusMutationHookResult = ReturnType<
+  typeof useSetFraudulentStatusMutation
+>
+export type SetFraudulentStatusMutationResult = ApolloReactCommon.MutationResult<
+  SetFraudulentStatusMutation
+>
+export type SetFraudulentStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetFraudulentStatusMutation,
+  SetFraudulentStatusMutationVariables
 >
 export const SignQuoteForNewContractDocument = gql`
   mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {

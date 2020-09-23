@@ -25,15 +25,6 @@ export const updateList = (list: any[], msg: any[]) => {
   }
 }
 
-/**
- * Hidding inactive members on first render && sort by signup date
- * @param {object} param0 -
- */
-export const filterMembersList = ({ type, members }) =>
-  type !== 'MEMBERS_REQUEST_SUCCESS'
-    ? members
-    : members.filter((item) => item.status !== 'INACTIVATED').reverse()
-
 const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }

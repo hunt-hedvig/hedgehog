@@ -138,6 +138,15 @@ type MutationType {
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
   unsignMember(market: String!, ssn: String!): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Boolean!
+  setFraudulentStatus(
+    memberId: ID!
+    request: MemberFraudulentStatusInput!
+  ): Boolean!
+}
+
+input MemberFraudulentStatusInput {
+  fraudulentStatus: String!
+  fraudulentStatusDescription: String
 }
 
 type MemberSearchResult {
