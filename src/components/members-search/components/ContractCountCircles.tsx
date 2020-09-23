@@ -29,16 +29,16 @@ type NumberOfContracts = {
 
 const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
   contracts.reduce((acc, { status }) => {
-    switch (status) {
-      case ContractStatus.Pending:
-      case ContractStatus.Terminated:
-        acc[status] = (acc[status] || 0) + 1
-        break
-      default:
-        acc[ContractStatus.Active] = (acc[ContractStatus.Active] || 0) + 1
+    const groupedStatus = [
+      ContractStatus.Pending,
+      ContractStatus.Terminated,
+    ].includes(status)
+      ? status
+      : ContractStatus.Active
+    return {
+      ...acc,
+      [groupedStatus]: (acc[groupedStatus] || 0) + 1,
     }
-
-    return acc
   }, {})
 
 export const CountCircle: React.FC<{
@@ -63,9 +63,9 @@ export const ContractCountCircles: React.FC<{
   contracts: Contract[]
 }> = ({ contracts }) => {
   const {
-    ACTIVE: ActiveContracts = 0,
-    PENDING: PendingContracts = 0,
-    TERMINATED: TerminatedContracts = 0,
+    ACTIVE: activeContracts = 0,
+    PENDING: pendingContracts = 0,
+    TERMINATED: terminatedContracts = 0,
   } = countContractsByStatus(contracts)
 
   return (
@@ -73,17 +73,17 @@ export const ContractCountCircles: React.FC<{
       <CountCircle
         label={'Pending contract'}
         variation={'warning'}
-        count={PendingContracts}
+        count={pendingContracts}
       />
       <CountCircle
         label={'Active contract'}
         variation={'success'}
-        count={ActiveContracts}
+        count={activeContracts}
       />
       <CountCircle
         label={'Terminated contract'}
         variation={'danger'}
-        count={TerminatedContracts}
+        count={terminatedContracts}
       />
     </>
   )
