@@ -34,18 +34,6 @@ export const filterMembersList = ({ type, members }) =>
     ? members
     : members.filter((item) => item.status !== 'INACTIVATED').reverse()
 
-/**
- * Returns string with member first+last name || member Id
- * @param {array} members
- * @param {string} id
- */
-export const getMemberInfo = (members, id) => {
-  const member = members.find((person) => person.memberId === id)
-  return member && member.firstName
-    ? `${member.firstName} ${member.lastName || ''}`
-    : `${id ? 'Member-' + id : 'No id'}`
-}
-
 const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }

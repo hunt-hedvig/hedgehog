@@ -1,30 +1,12 @@
 import { filterMembersList, sortMembersList } from '../../lib/helpers'
 import {
-  MEMBER_SEARCH_REQUESTING,
   MEMBERS_ERROR,
   MEMBERS_REQUEST_SUCCESS,
-  MEMBERS_REQUESTING,
-  MEMBERS_SEARCH_SUCCESS,
-  SET_MEMBER_FILTER,
   SORT_MEMBERS_LIST,
 } from '../constants/members'
-import initialState from '../initialState'
 
-export default function(state = initialState.members, action) {
+export default function(state = {}, action) {
   switch (action.type) {
-    case MEMBER_SEARCH_REQUESTING:
-      return {
-        ...state,
-        requesting: true,
-        searchFilter: action.searchFilter,
-      }
-
-    case MEMBERS_REQUESTING:
-      return {
-        ...state,
-        requesting: true,
-      }
-
     case MEMBERS_REQUEST_SUCCESS:
       return {
         ...state,
@@ -34,19 +16,6 @@ export default function(state = initialState.members, action) {
           action.isDescendingOrder,
         ),
         requesting: false,
-      }
-    case MEMBERS_SEARCH_SUCCESS:
-      return {
-        ...state,
-        searchResult: action.searchResult,
-        requesting: false,
-      }
-
-    case SET_MEMBER_FILTER:
-      return {
-        ...state,
-        filter: action.query.filter,
-        requesting: true,
       }
 
     case MEMBERS_ERROR:
