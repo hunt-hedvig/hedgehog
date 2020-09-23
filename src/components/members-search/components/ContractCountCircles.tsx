@@ -41,7 +41,7 @@ const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
     return acc
   }, {})
 
-const CountCircle: React.FC<{
+export const CountCircle: React.FC<{
   label: string
   variation?: CircleVariation
   count?: number
