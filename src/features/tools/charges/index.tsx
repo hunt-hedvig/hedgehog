@@ -104,8 +104,9 @@ const Row: React.FunctionComponent<RowProps> = ({ paymentSchedule }) => (
       <TableRow
         key={payment.id}
         warning={
+          payment.member.account &&
           payment.member.account.currentBalance.amount !==
-          payment.member.monthlySubscription.amount.amount
+            payment.member.monthlySubscription.amount.amount
         }
       >
         <Table.Cell>
@@ -117,11 +118,14 @@ const Row: React.FunctionComponent<RowProps> = ({ paymentSchedule }) => (
           </Link>
         </Table.Cell>
         <Table.Cell>
-          {formatMoney(payment.member.monthlySubscription.amount)}
+          {payment.member.monthlySubscription.amount &&
+            formatMoney(payment.member.monthlySubscription.amount)}
         </Table.Cell>
         <Table.Cell>
-          {formatMoney(payment.member.account.currentBalance)}
-          {parseFloat(payment.member.account.currentBalance.amount) <= 0 &&
+          {payment.member.account &&
+            formatMoney(payment.member.account.currentBalance)}
+          {payment.member.account &&
+            parseFloat(payment.member.account.currentBalance.amount) <= 0 &&
             " (Won't be charged)"}
         </Table.Cell>
       </TableRow>
