@@ -24,7 +24,10 @@ const query = gql`
           amount
         }
         account {
-          currentBalance
+          currentBalance {
+            amount
+            currency
+          }
         }
       }
       status
