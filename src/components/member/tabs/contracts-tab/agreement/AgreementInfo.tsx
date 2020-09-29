@@ -71,7 +71,7 @@ export const AgreementInfo: React.FC<{ agreement: GenericAgreement }> = ({
             </InfoRow>
           )
         })}
-      {agreement.numberCoInsured && (
+      {agreement.numberCoInsured !== undefined && (
         <InfoRow>
           Number Co-insured <InfoText>{agreement.numberCoInsured}</InfoText>
         </InfoRow>
