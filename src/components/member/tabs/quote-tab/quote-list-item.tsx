@@ -1,5 +1,5 @@
 import { Quote, QuoteProductType } from 'api/generated/graphql'
-import { UpdateQuoteForm } from 'components/member/tabs/quote-tab-v2/update-quote-form'
+import { UpdateQuoteForm } from 'components/member/tabs/quote-tab/update-quote-form'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import styled from 'react-emotion'

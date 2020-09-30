@@ -88,9 +88,8 @@ const ArrayFieldTemplate = ({ items, onAddClick, title }) => {
         </Spacing>
       )}
       {items.map((element, index) => {
-        element.children.props.schema.title = null
         return (
-          <ItemWrapper>
+          <ItemWrapper key={index}>
             <ItemTitleWrapper>
               {camelcaseToTitleCase(title)}: {index + 1}
               <ItemRemoveButton onClick={element.onDropIndexClick(index)}>
@@ -190,7 +189,10 @@ export const JsonSchemaForm: React.FC<{
       uiSchema={uiSchema}
       formData={formData}
       onChange={(e) => setFormData(e.formData)}
-      onSubmit={() => onSubmit(formData)}
+      onSubmit={(e) => {
+        setFormData(e.formData)
+        onSubmit(formData)
+      }}
       transformErrors={transformErrors}
       ArrayFieldTemplate={ArrayFieldTemplate}
       widgets={{ SelectWidget: CustomSelectWidget }}

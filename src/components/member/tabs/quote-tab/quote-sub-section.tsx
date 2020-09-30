@@ -1,5 +1,5 @@
 import { Quote } from 'api/generated/graphql'
-import { CreateQuoteForm } from 'components/member/tabs/quote-tab-v2/create-quote-form'
+import { CreateQuoteForm } from 'components/member/tabs/quote-tab/create-quote-form'
 import { signedOrExpiredPredicate, signedPredicate } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'

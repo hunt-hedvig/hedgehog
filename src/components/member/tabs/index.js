@@ -85,12 +85,6 @@ const memberPagePanes = (props, memberId, member) => [
     ),
   },
   {
-    menuItem: 'Quotes V2',
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={QuotesV2} />
-    ),
-  },
-  {
     menuItem: 'Payments',
     render: () => <TabItem props={props} TabContent={PaymentsTab} />,
   },
