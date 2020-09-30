@@ -8,7 +8,6 @@ import styled from 'react-emotion'
 import { showNotification } from 'store/actions/notificationsActions'
 import { ActionsWrapper, Muted } from './common'
 import { QuoteListItem } from './quote-list-item'
-import { QuoteModification } from './quote-modification'
 
 const Headline = styled('h1')({})
 const Wrapper = styled('div')({})
@@ -33,22 +32,6 @@ export const QuotesSubSection: React.FunctionComponent<{
       )}
       {!hasActiveQuotes && !hasSignedQuotes && isWip && (
         <ActionsWrapper>
-          <QuoteModification
-            quote={null}
-            memberId={memberId}
-            shouldCreateContract={true}
-            onWipChange={setIsWip}
-            onSubmitted={() => {
-              if (showNotification) {
-                showNotification({
-                  header: 'Saved',
-                  message: <>Quote saved</>,
-                  type: 'olive',
-                })
-              }
-              setIsWip(false)
-            }}
-          />
           <CreateQuoteForm
             memberId={memberId}
             contractToCreate={contractType}

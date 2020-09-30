@@ -53,7 +53,11 @@ const CreateQuoteFormComponent: React.FC<{
   }
 
   return (
-    <JsonSchemaForm schema={schema} onSubmit={createQuote}>
+    <JsonSchemaForm
+      schema={schema}
+      onSubmit={createQuote}
+      submitText={'Create'}
+    >
       <Checkbox
         style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}

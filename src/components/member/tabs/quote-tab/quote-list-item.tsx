@@ -16,7 +16,6 @@ import {
 import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
-import { QuoteModification } from './quote-modification'
 
 const OuterWrapper = styled('div')(({}) => ({
   width: '100%',
@@ -275,24 +274,6 @@ export const QuoteListItemComponent: React.FC<{
 
       {action === Action.MODIFY && (
         <ActionsWrapper>
-          <QuoteModification
-            quote={quote}
-            memberId={memberId}
-            shouldCreateContract={false}
-            onWipChange={setIsWip}
-            onSubmitted={() => {
-              if (showNotification) {
-                showNotification({
-                  header: 'Saved',
-                  message: <>Quote saved</>,
-                  type: 'olive',
-                })
-              }
-
-              setIsWip(false)
-              setAction(null)
-            }}
-          />
           <UpdateQuoteForm
             quote={quote}
             onSubmitted={() => {
