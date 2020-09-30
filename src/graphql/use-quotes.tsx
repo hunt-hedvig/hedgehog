@@ -47,6 +47,7 @@ export const QUOTES_QUERY = gql`
             }
             isSubleted
           }
+
           ... on NorwegianHomeContentQuoteData {
             street
             zipCode

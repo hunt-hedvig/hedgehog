@@ -1,4 +1,5 @@
 import { Quote, QuoteProductType } from 'api/generated/graphql'
+import { UpdateQuoteForm } from 'components/member/tabs/quote-tab-v2/update-quote-form'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import styled from 'react-emotion'
@@ -279,6 +280,21 @@ export const QuoteListItemComponent: React.FC<{
             memberId={memberId}
             shouldCreateContract={false}
             onWipChange={setIsWip}
+            onSubmitted={() => {
+              if (showNotification) {
+                showNotification({
+                  header: 'Saved',
+                  message: <>Quote saved</>,
+                  type: 'olive',
+                })
+              }
+
+              setIsWip(false)
+              setAction(null)
+            }}
+          />
+          <UpdateQuoteForm
+            quote={quote}
             onSubmitted={() => {
               if (showNotification) {
                 showNotification({

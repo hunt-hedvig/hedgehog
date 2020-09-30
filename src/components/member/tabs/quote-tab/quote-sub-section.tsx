@@ -1,4 +1,5 @@
 import { Quote } from 'api/generated/graphql'
+import { CreateQuoteForm } from 'components/member/tabs/quote-tab-v2/create-quote-form'
 import { signedOrExpiredPredicate, signedPredicate } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
@@ -14,8 +15,9 @@ const Wrapper = styled('div')({})
 
 export const QuotesSubSection: React.FunctionComponent<{
   memberId: string
+  contractType: string
   quotes: ReadonlyArray<Quote>
-}> = ({ memberId, quotes }) => {
+}> = ({ memberId, contractType, quotes }) => {
   const [isWip, setIsWip] = React.useState(false)
   const activeQuotes = quotes.filter(
     (quote) => !signedOrExpiredPredicate(quote),
@@ -36,6 +38,20 @@ export const QuotesSubSection: React.FunctionComponent<{
             memberId={memberId}
             shouldCreateContract={true}
             onWipChange={setIsWip}
+            onSubmitted={() => {
+              if (showNotification) {
+                showNotification({
+                  header: 'Saved',
+                  message: <>Quote saved</>,
+                  type: 'olive',
+                })
+              }
+              setIsWip(false)
+            }}
+          />
+          <CreateQuoteForm
+            memberId={memberId}
+            contractToCreate={contractType}
             onSubmitted={() => {
               if (showNotification) {
                 showNotification({

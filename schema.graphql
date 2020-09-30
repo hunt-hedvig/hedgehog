@@ -26,6 +26,7 @@ type QueryType {
     itemFamilyId: String!
     itemTypeId: ID
   ): CanValuateClaimItem
+  quoteSchemaForContractType(contractType: String!): JSON
 }
 
 type DashboardNumbers {
@@ -108,6 +109,16 @@ type MutationType {
   createQuoteForNewContract(
     memberId: ID!
     quoteInput: QuoteInput!
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  updateQuoteBySchema(
+    quoteId: ID!
+    schemaData: JSON!
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  createQuoteForMemberBySchema(
+    memberId: ID!
+    schemaData: JSON!
     bypassUnderwritingGuidelines: Boolean!
   ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
@@ -795,6 +806,8 @@ type Quote {
   breachedUnderwritingGuidelines: [String!]
   isComplete: Boolean
   data: QuoteData
+  schema: JSON
+  schemaData: JSON
   signedProductId: ID
   originatingProductId: ID
   isReadyToSign: Boolean
@@ -1556,3 +1569,5 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
+# A Json Object represtation of `JsonNode`
+scalar JSON

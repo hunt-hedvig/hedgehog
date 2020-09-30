@@ -7,7 +7,7 @@ import {
   CreateQuoteFromAgreementMutationVariables,
   GetContractsDocument,
   useCreateQuoteFromAgreementMutation,
-} from '../api/generated/graphql'
+} from 'api/generated/graphql'
 import { QUOTES_QUERY } from './use-quotes'
 
 export const useCreateQuoteFromAgreement = (): CreateQuoteFromAgreementMutationHookResult =>
