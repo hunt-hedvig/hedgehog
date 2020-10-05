@@ -40,8 +40,19 @@ export const isNorwegianMarket = (market: ContractMarketInfo): boolean => {
 
 export const currentAgreementForContract = (
   contract: Contract,
-): GenericAgreement | undefined | null => {
+): GenericAgreement | undefined => {
   return contract.genericAgreements.find(
     (agreement) => agreement.id === contract.currentAgreementId,
+  )
+}
+
+export const getContractByAgreementId = (
+  contracts: ReadonlyArray<Contract>,
+  agreementId: string,
+): Contract | undefined => {
+  return contracts.find((contract) =>
+    contract.genericAgreements.some(
+      (agreement) => agreement.id === agreementId,
+    ),
   )
 }
