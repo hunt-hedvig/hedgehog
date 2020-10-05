@@ -106,21 +106,6 @@ export type Address = {
   city?: Maybe<Scalars['String']>
 }
 
-export type Agreement =
-  | SwedishApartment
-  | SwedishHouse
-  | NorwegianHomeContent
-  | NorwegianTravel
-
-export type AgreementCore = {
-  id: Scalars['ID']
-  fromDate?: Maybe<Scalars['LocalDate']>
-  toDate?: Maybe<Scalars['LocalDate']>
-  premium: MonetaryAmountV2
-  certificateUrl?: Maybe<Scalars['String']>
-  status: AgreementStatus
-}
-
 export enum AgreementStatus {
   Pending = 'PENDING',
   ActiveInFuture = 'ACTIVE_IN_FUTURE',
@@ -468,7 +453,7 @@ export type Contract = {
   terminationDate?: Maybe<Scalars['LocalDate']>
   currentAgreementId: Scalars['ID']
   hasPendingAgreement: Scalars['Boolean']
-  agreements: Array<Agreement>
+  genericAgreements: Array<GenericAgreement>
   hasQueuedRenewal: Scalars['Boolean']
   renewal?: Maybe<Renewal>
   preferredCurrency: Scalars['String']
@@ -608,6 +593,26 @@ export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE',
   Other = 'OTHER',
+}
+
+export type GenericAgreement = {
+  __typename?: 'GenericAgreement'
+  id: Scalars['ID']
+  fromDate?: Maybe<Scalars['LocalDate']>
+  toDate?: Maybe<Scalars['LocalDate']>
+  premium: MonetaryAmountV2
+  certificateUrl?: Maybe<Scalars['String']>
+  status: AgreementStatus
+  typeOfContract: TypeOfContract
+  address?: Maybe<Address>
+  numberCoInsured?: Maybe<Scalars['Int']>
+  squareMeters?: Maybe<Scalars['Int']>
+  ancillaryArea?: Maybe<Scalars['Int']>
+  yearOfConstruction?: Maybe<Scalars['Int']>
+  numberOfBathrooms?: Maybe<Scalars['Int']>
+  extraBuildings?: Maybe<Array<ExtraBuilding>>
+  isSubleted?: Maybe<Scalars['Boolean']>
+  lineOfBusinessName: Scalars['String']
 }
 
 export type GetValuationInput = {
@@ -1247,20 +1252,6 @@ export enum NorwegianGripenFactorType {
   Deductible = 'DEDUCTIBLE',
 }
 
-export type NorwegianHomeContent = AgreementCore & {
-  __typename?: 'NorwegianHomeContent'
-  id: Scalars['ID']
-  fromDate?: Maybe<Scalars['LocalDate']>
-  toDate?: Maybe<Scalars['LocalDate']>
-  premium: MonetaryAmountV2
-  certificateUrl?: Maybe<Scalars['String']>
-  status: AgreementStatus
-  lineOfBusiness: NorwegianHomeContentLineOfBusiness
-  address: Address
-  numberCoInsured: Scalars['Int']
-  squareMeters: Scalars['Int']
-}
-
 export enum NorwegianHomeContentLineOfBusiness {
   Rent = 'RENT',
   Own = 'OWN',
@@ -1301,18 +1292,6 @@ export type NorwegianHomeContentQuoteInput = {
   householdSize?: Maybe<Scalars['Int']>
   livingSpace?: Maybe<Scalars['Int']>
   subType?: Maybe<NorwegianHomeContentLineOfBusiness>
-}
-
-export type NorwegianTravel = AgreementCore & {
-  __typename?: 'NorwegianTravel'
-  id: Scalars['ID']
-  fromDate?: Maybe<Scalars['LocalDate']>
-  toDate?: Maybe<Scalars['LocalDate']>
-  premium: MonetaryAmountV2
-  certificateUrl?: Maybe<Scalars['String']>
-  status: AgreementStatus
-  lineOfBusiness: NorwegianTravelLineOfBusiness
-  numberCoInsured: Scalars['Int']
 }
 
 export enum NorwegianTravelLineOfBusiness {
@@ -1660,43 +1639,11 @@ export type StormDamageClaim = {
   date?: Maybe<Scalars['LocalDate']>
 }
 
-export type SwedishApartment = AgreementCore & {
-  __typename?: 'SwedishApartment'
-  id: Scalars['ID']
-  fromDate?: Maybe<Scalars['LocalDate']>
-  toDate?: Maybe<Scalars['LocalDate']>
-  premium: MonetaryAmountV2
-  certificateUrl?: Maybe<Scalars['String']>
-  status: AgreementStatus
-  lineOfBusiness: SwedishApartmentLineOfBusiness
-  address: Address
-  numberCoInsured: Scalars['Int']
-  squareMeters: Scalars['Int']
-}
-
 export enum SwedishApartmentLineOfBusiness {
   Rent = 'RENT',
   Brf = 'BRF',
   StudentRent = 'STUDENT_RENT',
   StudentBrf = 'STUDENT_BRF',
-}
-
-export type SwedishHouse = AgreementCore & {
-  __typename?: 'SwedishHouse'
-  id: Scalars['ID']
-  fromDate?: Maybe<Scalars['LocalDate']>
-  toDate?: Maybe<Scalars['LocalDate']>
-  premium: MonetaryAmountV2
-  certificateUrl?: Maybe<Scalars['String']>
-  status: AgreementStatus
-  address: Address
-  numberCoInsured: Scalars['Int']
-  squareMeters: Scalars['Int']
-  ancillaryArea: Scalars['Int']
-  yearOfConstruction: Scalars['Int']
-  numberOfBathrooms: Scalars['Int']
-  extraBuildings: Array<ExtraBuilding>
-  isSubleted: Scalars['Boolean']
 }
 
 export type SwitchableSwitcherEmail = {
@@ -2417,98 +2364,46 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
             | 'contractTypeName'
             | 'createdAt'
           > & {
-              agreements: Array<
-                | ({ __typename?: 'SwedishApartment' } & Pick<
-                    SwedishApartment,
-                    | 'id'
-                    | 'fromDate'
-                    | 'toDate'
-                    | 'certificateUrl'
-                    | 'status'
-                    | 'numberCoInsured'
-                    | 'squareMeters'
-                  > & {
-                      swedishApartmentLineOfBusiness: SwedishApartment['lineOfBusiness']
-                    } & {
-                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                        MonetaryAmountV2,
-                        'amount' | 'currency'
-                      >
-                      address: { __typename?: 'Address' } & Pick<
+              genericAgreements: Array<
+                { __typename?: 'GenericAgreement' } & Pick<
+                  GenericAgreement,
+                  | 'id'
+                  | 'fromDate'
+                  | 'toDate'
+                  | 'certificateUrl'
+                  | 'status'
+                  | 'typeOfContract'
+                  | 'numberCoInsured'
+                  | 'squareMeters'
+                  | 'ancillaryArea'
+                  | 'yearOfConstruction'
+                  | 'numberOfBathrooms'
+                  | 'isSubleted'
+                  | 'lineOfBusinessName'
+                > & {
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                    address: Maybe<
+                      { __typename?: 'Address' } & Pick<
                         Address,
-                        'street' | 'postalCode' | 'city'
+                        'street' | 'city' | 'postalCode'
                       >
-                    })
-                | ({ __typename?: 'SwedishHouse' } & Pick<
-                    SwedishHouse,
-                    | 'id'
-                    | 'fromDate'
-                    | 'toDate'
-                    | 'certificateUrl'
-                    | 'status'
-                    | 'numberCoInsured'
-                    | 'squareMeters'
-                    | 'ancillaryArea'
-                    | 'yearOfConstruction'
-                    | 'numberOfBathrooms'
-                    | 'isSubleted'
-                  > & {
-                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                        MonetaryAmountV2,
-                        'amount' | 'currency'
-                      >
-                      address: { __typename?: 'Address' } & Pick<
-                        Address,
-                        'street' | 'postalCode' | 'city'
-                      >
-                      extraBuildings: Array<
+                    >
+                    extraBuildings: Maybe<
+                      Array<
                         { __typename?: 'ExtraBuilding' } & Pick<
                           ExtraBuilding,
                           | 'id'
                           | 'type'
                           | 'area'
-                          | 'hasWaterConnected'
                           | 'displayName'
+                          | 'hasWaterConnected'
                         >
                       >
-                    })
-                | ({ __typename?: 'NorwegianHomeContent' } & Pick<
-                    NorwegianHomeContent,
-                    | 'id'
-                    | 'fromDate'
-                    | 'toDate'
-                    | 'certificateUrl'
-                    | 'status'
-                    | 'numberCoInsured'
-                    | 'squareMeters'
-                  > & {
-                      norwegianHomeContentLineOfBusiness: NorwegianHomeContent['lineOfBusiness']
-                    } & {
-                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                        MonetaryAmountV2,
-                        'amount' | 'currency'
-                      >
-                      address: { __typename?: 'Address' } & Pick<
-                        Address,
-                        'street' | 'postalCode' | 'city'
-                      >
-                    })
-                | ({ __typename?: 'NorwegianTravel' } & Pick<
-                    NorwegianTravel,
-                    | 'id'
-                    | 'fromDate'
-                    | 'toDate'
-                    | 'certificateUrl'
-                    | 'status'
-                    | 'numberCoInsured'
-                  > & {
-                      norwegianTravelLineOfBusiness: NorwegianTravel['lineOfBusiness']
-                    } & {
-                      premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                        MonetaryAmountV2,
-                        'amount' | 'currency'
-                      >
-                    })
+                    >
+                  }
               >
               renewal: Maybe<
                 { __typename?: 'Renewal' } & Pick<
@@ -4812,87 +4707,36 @@ export const GetContractsDocument = gql`
         terminationDate
         currentAgreementId
         hasPendingAgreement
-        agreements {
-          ... on SwedishApartment {
-            id
-            fromDate
-            toDate
-            certificateUrl
-            status
-            premium {
-              amount
-              currency
-            }
-            swedishApartmentLineOfBusiness: lineOfBusiness
-            address {
-              street
-              postalCode
-              city
-            }
-            numberCoInsured
-            squareMeters
+        genericAgreements {
+          id
+          fromDate
+          toDate
+          premium {
+            amount
+            currency
           }
-          ... on SwedishHouse {
-            id
-            fromDate
-            toDate
-            certificateUrl
-            status
-            premium {
-              amount
-              currency
-            }
-            address {
-              street
-              postalCode
-              city
-            }
-            numberCoInsured
-            squareMeters
-            ancillaryArea
-            yearOfConstruction
-            numberOfBathrooms
-            extraBuildings {
-              id
-              type
-              area
-              hasWaterConnected
-              displayName
-            }
-            isSubleted
+          certificateUrl
+          status
+          typeOfContract
+          address {
+            street
+            city
+            postalCode
           }
-          ... on NorwegianHomeContent {
+          numberCoInsured
+          squareMeters
+          ancillaryArea
+          yearOfConstruction
+          numberOfBathrooms
+          extraBuildings {
             id
-            fromDate
-            toDate
-            certificateUrl
-            status
-            premium {
-              amount
-              currency
-            }
-            norwegianHomeContentLineOfBusiness: lineOfBusiness
-            address {
-              street
-              postalCode
-              city
-            }
-            numberCoInsured
-            squareMeters
+            type
+            area
+            displayName
+            hasWaterConnected
           }
-          ... on NorwegianTravel {
-            id
-            fromDate
-            toDate
-            certificateUrl
-            status
-            premium {
-              amount
-              currency
-            }
-            norwegianTravelLineOfBusiness: lineOfBusiness
-            numberCoInsured
-          }
+          isSubleted
+          lineOfBusinessName
         }
         hasQueuedRenewal
         renewal {
@@ -6864,42 +6708,6 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'NorwegianTravelQuoteData',
-          },
-        ],
-      },
-      {
-        kind: 'UNION',
-        name: 'Agreement',
-        possibleTypes: [
-          {
-            name: 'SwedishApartment',
-          },
-          {
-            name: 'SwedishHouse',
-          },
-          {
-            name: 'NorwegianHomeContent',
-          },
-          {
-            name: 'NorwegianTravel',
-          },
-        ],
-      },
-      {
-        kind: 'INTERFACE',
-        name: 'AgreementCore',
-        possibleTypes: [
-          {
-            name: 'SwedishApartment',
-          },
-          {
-            name: 'SwedishHouse',
-          },
-          {
-            name: 'NorwegianHomeContent',
-          },
-          {
-            name: 'NorwegianTravel',
           },
         ],
       },

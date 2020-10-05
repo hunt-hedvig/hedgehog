@@ -134,7 +134,9 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
+  assignCampaignToPartnerFreeMonths(
+    request: AssignVoucherFreeMonths
+  ): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -274,7 +276,7 @@ type Contract {
   terminationDate: LocalDate
   currentAgreementId: ID!
   hasPendingAgreement: Boolean!
-  agreements: [Agreement!]!
+  genericAgreements: [GenericAgreement!]!
   hasQueuedRenewal: Boolean!
   renewal: Renewal
   preferredCurrency: String!
@@ -308,32 +310,23 @@ enum ContractStatus {
   TERMINATED
 }
 
-union Agreement =
-    SwedishApartment
-  | SwedishHouse
-  | NorwegianHomeContent
-  | NorwegianTravel
-
-interface AgreementCore {
+type GenericAgreement {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
   premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
-}
-
-type SwedishApartment implements AgreementCore {
-  id: ID!
-  fromDate: LocalDate
-  toDate: LocalDate
-  premium: MonetaryAmountV2!
-  certificateUrl: String
-  status: AgreementStatus!
-  lineOfBusiness: SwedishApartmentLineOfBusiness!
-  address: Address!
-  numberCoInsured: Int!
-  squareMeters: Int!
+  typeOfContract: TypeOfContract!
+  address: Address
+  numberCoInsured: Int
+  squareMeters: Int
+  ancillaryArea: Int
+  yearOfConstruction: Int
+  numberOfBathrooms: Int
+  extraBuildings: [ExtraBuilding!]
+  isSubleted: Boolean
+  lineOfBusinessName: String!
 }
 
 enum SwedishApartmentLineOfBusiness {
@@ -343,52 +336,11 @@ enum SwedishApartmentLineOfBusiness {
   STUDENT_BRF
 }
 
-type SwedishHouse implements AgreementCore {
-  id: ID!
-  fromDate: LocalDate
-  toDate: LocalDate
-  premium: MonetaryAmountV2!
-  certificateUrl: String
-  status: AgreementStatus!
-  address: Address!
-  numberCoInsured: Int!
-  squareMeters: Int!
-  ancillaryArea: Int!
-  yearOfConstruction: Int!
-  numberOfBathrooms: Int!
-  extraBuildings: [ExtraBuilding!]!
-  isSubleted: Boolean!
-}
-
-type NorwegianHomeContent implements AgreementCore {
-  id: ID!
-  fromDate: LocalDate
-  toDate: LocalDate
-  premium: MonetaryAmountV2!
-  certificateUrl: String
-  status: AgreementStatus!
-  lineOfBusiness: NorwegianHomeContentLineOfBusiness!
-  address: Address!
-  numberCoInsured: Int!
-  squareMeters: Int!
-}
-
 enum NorwegianHomeContentLineOfBusiness {
   RENT
   OWN
   YOUTH_RENT
   YOUTH_OWN
-}
-
-type NorwegianTravel implements AgreementCore {
-  id: ID!
-  fromDate: LocalDate
-  toDate: LocalDate
-  premium: MonetaryAmountV2!
-  certificateUrl: String
-  status: AgreementStatus!
-  lineOfBusiness: NorwegianTravelLineOfBusiness!
-  numberCoInsured: Int!
 }
 
 enum NorwegianTravelLineOfBusiness {
@@ -561,7 +513,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -828,7 +780,7 @@ enum QuoteState {
 }
 
 union QuoteData =
-    ApartmentQuoteData
+  ApartmentQuoteData
   | HouseQuoteData
   | NorwegianHomeContentQuoteData
   | NorwegianTravelQuoteData
@@ -1200,7 +1152,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
