@@ -23,6 +23,7 @@ export const getUpdateQuoteSchemaOptions = (
       quoteId,
       schemaData: {
         ...formData,
+        // @ts-ignore
         id: schema.$id,
       },
       bypassUnderwritingGuidelines,

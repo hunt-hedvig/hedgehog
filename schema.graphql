@@ -26,7 +26,7 @@ type QueryType {
     itemFamilyId: String!
     itemTypeId: ID
   ): CanValuateClaimItem
-  quoteSchemaForContractType(contractType: String!): JSON
+  quoteSchemaForContractType(contractType: ContractType!): JSON
 }
 
 type DashboardNumbers {
@@ -134,9 +134,7 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  assignCampaignToPartnerFreeMonths(
-    request: AssignVoucherFreeMonths
-  ): Boolean!
+  assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -284,6 +282,13 @@ type Contract {
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
+}
+
+enum ContractType {
+  SWEDISH_APARTMENT
+  SWEDISH_HOUSE
+  NORWEGIAN_HOME_CONTENT
+  NORWEGIAN_TRAVEL
 }
 
 enum TypeOfContract {
@@ -513,7 +518,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -780,7 +785,7 @@ enum QuoteState {
 }
 
 union QuoteData =
-  ApartmentQuoteData
+    ApartmentQuoteData
   | HouseQuoteData
   | NorwegianHomeContentQuoteData
   | NorwegianTravelQuoteData
@@ -1152,7 +1157,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

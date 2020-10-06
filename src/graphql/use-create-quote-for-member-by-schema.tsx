@@ -23,6 +23,7 @@ export const getCreateQuoteForMemberBySchemaOptions = (
       memberId,
       schemaData: {
         ...formData,
+        // @ts-ignore
         id: schema.$id,
       },
       bypassUnderwritingGuidelines,

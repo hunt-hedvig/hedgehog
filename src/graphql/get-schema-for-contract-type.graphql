@@ -1,3 +1,3 @@
-query GetSchemaForContractType($contractType: String!) {
+query GetSchemaForContractType($contractType: ContractType!) {
   quoteSchemaForContractType(contractType: $contractType)
 }

@@ -1,3 +1,4 @@
+import { ContractType } from 'api/generated/graphql'
 import {
   getCreateQuoteForMemberBySchemaOptions,
   useCreateQuoteForMemberBySchema,
@@ -11,19 +12,17 @@ import { withShowNotification } from 'utils/notifications'
 
 const CreateQuoteFormComponent: React.FC<{
   memberId: string
-  contractToCreate: string
+  contractType: ContractType
   onSubmitted: () => void
 } & WithShowNotification> = ({
   memberId,
-  contractToCreate,
+  contractType,
   onSubmitted,
   showNotification,
 }) => {
   const [bypassUwgl, setBypassUwgl] = useState(false)
 
-  const [schema, { loading }] = useSchemaForContractType(
-    getContractTypeFromContractToCreate(contractToCreate),
-  )
+  const [schema, { loading }] = useSchemaForContractType(contractType)
 
   const [createQuoteForMember] = useCreateQuoteForMemberBySchema()
 
@@ -66,21 +65,6 @@ const CreateQuoteFormComponent: React.FC<{
       />
     </JsonSchemaForm>
   )
-}
-
-const getContractTypeFromContractToCreate = (contractToCreate) => {
-  switch (contractToCreate) {
-    case 'Swedish Apartment':
-      return 'SWEDISH_APARTMENT'
-    case 'Swedish House':
-      return 'SWEDISH_HOUSE'
-    case 'Norwegian Home Content':
-      return 'NORWEGIAN_HOME_CONTENT'
-    case 'Norwegian Travel':
-      return 'NORWEGIAN_TRAVEL'
-    default:
-      return null
-  }
 }
 
 export const CreateQuoteForm = withShowNotification(CreateQuoteFormComponent)

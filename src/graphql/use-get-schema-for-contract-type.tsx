@@ -1,4 +1,5 @@
 import {
+  ContractType,
   GetSchemaForContractTypeQueryHookResult,
   useGetSchemaForContractTypeQuery,
 } from 'api/generated/graphql'
@@ -9,7 +10,7 @@ type GetSchemaForContractTypeReturnTuple = [
 ]
 
 export const useSchemaForContractType = (
-  contractType,
+  contractType: ContractType,
 ): GetSchemaForContractTypeReturnTuple => {
   const queryResult = useGetSchemaForContractTypeQuery({
     variables: {

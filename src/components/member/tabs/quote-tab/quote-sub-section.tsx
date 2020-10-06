@@ -1,4 +1,4 @@
-import { Quote } from 'api/generated/graphql'
+import { ContractType, Quote } from 'api/generated/graphql'
 import { CreateQuoteForm } from 'components/member/tabs/quote-tab/create-quote-form'
 import { signedOrExpiredPredicate, signedPredicate } from 'graphql/use-quotes'
 import { Button } from 'hedvig-ui/button'
@@ -14,7 +14,7 @@ const Wrapper = styled('div')({})
 
 export const QuotesSubSection: React.FunctionComponent<{
   memberId: string
-  contractType: string
+  contractType: ContractType
   quotes: ReadonlyArray<Quote>
 }> = ({ memberId, contractType, quotes }) => {
   const [isWip, setIsWip] = React.useState(false)
@@ -34,7 +34,7 @@ export const QuotesSubSection: React.FunctionComponent<{
         <ActionsWrapper>
           <CreateQuoteForm
             memberId={memberId}
-            contractToCreate={contractType}
+            contractType={contractType}
             onSubmitted={() => {
               if (showNotification) {
                 showNotification({
