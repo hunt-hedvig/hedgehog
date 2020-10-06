@@ -1,32 +1,38 @@
 import { Grid, IconButton } from '@material-ui/core'
+import {
+  AjvError,
+  ArrayFieldTemplateProps,
+  ObjectFieldTemplateProps,
+  WidgetProps,
+} from '@rjsf/core'
 import Form from '@rjsf/semantic-ui'
 import { TrashIconWrapper } from 'components/claims/claim-details/components/claim-items/components/styles'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
+import { JSONSchema7 } from 'json-schema'
 import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { Dropdown, FormField } from 'semantic-ui-react'
 import { camelcaseToTitleCase, getEnumTitleCase } from 'utils/text'
 
-const ContentWrapper = styled('div')<{ shouldAddMargin: boolean }>`
-  margin-top: ${({ shouldAddMargin }) => (shouldAddMargin ? '2.75rem' : 0)};
+const ContentWrapper = styled('div')<{ pushTop: boolean }>`
+  margin-top: ${({ pushTop }) => (pushTop ? '2.75rem' : 0)};
 `
 
-const ObjectFieldTemplate = ({
+const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
   DescriptionField,
   description,
   TitleField,
   title,
   properties,
   required,
-  uiSchema,
   idSchema,
 }) => {
   return (
     <>
-      {(uiSchema['ui:title'] || title) && (
+      {title && (
         <TitleField
           id={`${idSchema.$id}-title`}
           title={title}
@@ -35,26 +41,22 @@ const ObjectFieldTemplate = ({
       )}
       {description && (
         <DescriptionField
-          id={`${idSchema.$id}-description`}
+          id={`${idSchema.id}-description`}
           description={description}
         />
       )}
       <Grid container={true} spacing={8}>
-        {properties.map((element, index) => {
+        {properties.map((property, index) => {
+          const fieldId = `${idSchema.id}-field-${index}`
           return (
-            <Grid
-              item={true}
-              xs={6}
-              key={index}
-              id={`${idSchema.$id}-${index}`}
-            >
+            <Grid item={true} xs={6} id={fieldId} key={fieldId}>
               <ContentWrapper
-                shouldAddMargin={
-                  element.content.props.schema.type === 'boolean' &&
+                pushTop={
+                  property.content.props.schema.type === 'boolean' &&
                   index % 2 === 1
                 }
               >
-                {element.content}
+                {property.content}
               </ContentWrapper>
             </Grid>
           )
@@ -77,7 +79,12 @@ const ItemRemoveButton = styled(IconButton)`
   padding: 0.5rem;
 `
 
-const ArrayFieldTemplate = ({ items, onAddClick, title }) => {
+const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
+  items,
+  onAddClick,
+  title,
+  idSchema,
+}) => {
   return (
     <>
       {title && (
@@ -89,7 +96,7 @@ const ArrayFieldTemplate = ({ items, onAddClick, title }) => {
       )}
       {items.map((element, index) => {
         return (
-          <ItemWrapper key={index}>
+          <ItemWrapper key={`${idSchema.$id}-${title}-${index}`}>
             <ItemTitleWrapper>
               {camelcaseToTitleCase(title)}: {index + 1}
               <ItemRemoveButton onClick={element.onDropIndexClick(index)}>
@@ -106,7 +113,7 @@ const ArrayFieldTemplate = ({ items, onAddClick, title }) => {
         fullWidth
         onClick={(e) => {
           e.preventDefault()
-          onAddClick(e)
+          onAddClick()
         }}
       >
         + Add
@@ -115,21 +122,27 @@ const ArrayFieldTemplate = ({ items, onAddClick, title }) => {
   )
 }
 
-const CustomSelectWidget = (props) => {
+const CustomSelectWidget: React.FC<WidgetProps> = ({
+  id,
+  label,
+  value,
+  onChange,
+  schema,
+}) => {
   return (
     <FormField>
-      <label htmlFor={props.id}>{props.label}</label>
+      <label htmlFor={id}>{label}</label>
       <Dropdown
+        id={id}
         style={{ borderRadius: '0.5rem' }}
-        id={props.id}
         fluid
         selection
-        value={props.value}
-        onChange={(_, e) => props.onChange(e.value)}
-        options={props.schema.enum.map((value) => {
+        value={value}
+        onChange={(_, e) => onChange(e.value)}
+        options={schema.enum!.map((enumValue) => {
           return {
-            text: getEnumTitleCase(value),
-            value,
+            text: getEnumTitleCase(enumValue as string),
+            value: enumValue as string,
           }
         })}
       />
@@ -137,24 +150,30 @@ const CustomSelectWidget = (props) => {
   )
 }
 
-const transformErrors = (errors) => {
+const transformErrors = (errors: AjvError[]): AjvError[] => {
   return errors.map((error) => {
-    if (error.name === 'type' && error.params.type === 'integer') {
-      error.message = `Must be a number`
-    } else if (error.name === 'type' && error.params.type === 'string') {
-      error.message = `Must be a text`
-    } else if (error.name === 'maxLength') {
-      error.message = `Should not be longer than ${error.params.limit} characters`
-    } else if (error.name === 'minLength') {
-      error.message = `Should not be shorter than ${error.params.limit} characters`
-    } else if (error.name === 'minimum') {
-      error.message = `Should be greater than ${!error.params.exclusive &&
-        '(or equal to) '}${error.params.limit}`
-    } else if (error.name === 'maximum') {
-      error.message = `Should be less than ${!error.params.exlusive &&
-        '(or equal to) '}${error.params.limit}`
-    } else {
-      console.log(error)
+    switch (error.name) {
+      case 'type':
+        if (error.params.type === 'integer') {
+          error.message = `Must be a number`
+        } else if (error.params.type === 'string') {
+          error.message = `Must be a text`
+        }
+        break
+      case 'maxLength':
+        error.message = `Should not be longer than ${error.params.limit} characters`
+        break
+      case 'minLength':
+        error.message = `Should not be shorter than ${error.params.limit} characters`
+        break
+      case 'minimum':
+        error.message = `Should be greater than ${!error.params.exclusive &&
+          '(or equal to) '}${error.params.limit}`
+        break
+      case 'maximum':
+        error.message = `Should be less than ${!error.params.exlusive &&
+          '(or equal to) '}${error.params.limit}`
+        break
     }
     error.stack = `${getPropertyTitle(error.property)}: ${error.message}`
     return error
@@ -165,14 +184,10 @@ const getPropertyTitle = (property) => {
   return camelcaseToTitleCase(property.substring(1))
 }
 
-const StyledForm = styled(Form)`
-  width: 100%;
-`
-
 export const JsonSchemaForm: React.FC<{
-  schema: object
-  onSubmit: (formData) => void
-  initialFormData?: object
+  schema: JSONSchema7
+  onSubmit: (formData: Record<string, unknown>) => void
+  initialFormData?: Record<string, unknown>
   submitText?: string
 }> = ({ schema, onSubmit, initialFormData, submitText, children }) => {
   const uiSchema = {
@@ -180,14 +195,15 @@ export const JsonSchemaForm: React.FC<{
   }
   const [formData, setFormData] = useState(initialFormData ?? null)
   return (
-    <StyledForm
+    <Form
+      style={{ width: '100%' }}
       schema={schema}
       uiSchema={uiSchema}
       formData={formData}
       onChange={(e) => setFormData(e.formData)}
       onSubmit={(e) => {
         setFormData(e.formData)
-        onSubmit(formData)
+        onSubmit(formData!)
       }}
       transformErrors={transformErrors}
       ArrayFieldTemplate={ArrayFieldTemplate}
@@ -199,6 +215,6 @@ export const JsonSchemaForm: React.FC<{
         </Button>
         {children}
       </ButtonsGroup>
-    </StyledForm>
+    </Form>
   )
 }

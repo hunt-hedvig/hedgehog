@@ -16,14 +16,14 @@ const UpdateQuoteFormComponent: React.FC<{
   const [bypassUwgl, setBypassUwgl] = useState(false)
   const [updateQuote] = useUpdateQuoteBySchema()
 
-  const performQuoteUpdate = (formData) => {
-    const options = getUpdateQuoteSchemaOptions(
-      quote.memberId!!,
-      quote.id,
-      quote.schema,
+  const performQuoteUpdate = (formData: Record<string, unknown>) => {
+    const options = getUpdateQuoteSchemaOptions({
+      memberId: quote.memberId!,
+      quoteId: quote.id,
+      schema: quote.schema,
       formData,
-      bypassUwgl,
-    )
+      bypassUnderwritingGuidelines: bypassUwgl,
+    })
     updateQuote(options)
       .then(() => {
         onSubmitted()
@@ -47,7 +47,7 @@ const UpdateQuoteFormComponent: React.FC<{
       <Checkbox
         style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}
-        onChange={(_, { checked }) => setBypassUwgl(checked!)}
+        onChange={(_, { checked }) => setBypassUwgl(Boolean(checked))}
         label={'Bypass underwriting guidelines'}
       />
     </JsonSchemaForm>

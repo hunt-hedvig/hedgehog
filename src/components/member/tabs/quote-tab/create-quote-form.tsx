@@ -26,14 +26,14 @@ const CreateQuoteFormComponent: React.FC<{
 
   const [createQuoteForMember] = useCreateQuoteForMemberBySchema()
 
-  const createQuote = (formData) => {
+  const createQuote = (formData: Record<string, unknown>) => {
     createQuoteForMember(
-      getCreateQuoteForMemberBySchemaOptions(
+      getCreateQuoteForMemberBySchemaOptions({
         memberId,
         schema,
         formData,
-        bypassUwgl,
-      ),
+        bypassUnderwritingGuidelines: bypassUwgl,
+      }),
     )
       .then(() => {
         onSubmitted()
@@ -60,7 +60,7 @@ const CreateQuoteFormComponent: React.FC<{
       <Checkbox
         style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}
-        onChange={(_, { checked }) => setBypassUwgl(checked!)}
+        onChange={(_, { checked }) => setBypassUwgl(Boolean(checked))}
         label={'Bypass underwriting guidelines'}
       />
     </JsonSchemaForm>

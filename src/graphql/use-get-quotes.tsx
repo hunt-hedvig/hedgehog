@@ -10,7 +10,7 @@ type GetQuotesReturnTuple = [ReadonlyArray<Quote>, GetQuotesQueryHookResult]
 const latest = (a: Quote, b: Quote) =>
   Number(parseISO(b.createdAt)) - Number(parseISO(a.createdAt))
 
-export const useQuotes = (memberId): GetQuotesReturnTuple => {
+export const useQuotes = (memberId: string): GetQuotesReturnTuple => {
   const queryResult = useGetQuotesQuery({
     variables: {
       memberId,

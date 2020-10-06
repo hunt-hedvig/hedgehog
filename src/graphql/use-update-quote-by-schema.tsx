@@ -5,16 +5,25 @@ import {
   UpdateQuoteBySchemaMutationVariables,
   useUpdateQuoteBySchemaMutation,
 } from 'api/generated/graphql'
+import { JSONSchema7 } from 'json-schema'
 
 export const useUpdateQuoteBySchema = () => useUpdateQuoteBySchemaMutation()
 
-export const getUpdateQuoteSchemaOptions = (
-  memberId: string,
-  quoteId: string,
-  schema: object,
-  formData: object,
-  bypassUnderwritingGuidelines: boolean,
-): MutationFunctionOptions<
+interface GetUpdateQuoteSchemaOptionsParams {
+  memberId: string
+  quoteId: string
+  schema: JSONSchema7
+  formData: Record<string, unknown>
+  bypassUnderwritingGuidelines: boolean
+}
+
+export const getUpdateQuoteSchemaOptions = ({
+  memberId,
+  quoteId,
+  schema,
+  formData,
+  bypassUnderwritingGuidelines,
+}: GetUpdateQuoteSchemaOptionsParams): MutationFunctionOptions<
   UpdateQuoteBySchemaMutation,
   UpdateQuoteBySchemaMutationVariables
 > => {
@@ -23,7 +32,6 @@ export const getUpdateQuoteSchemaOptions = (
       quoteId,
       schemaData: {
         ...formData,
-        // @ts-ignore
         id: schema.$id,
       },
       bypassUnderwritingGuidelines,

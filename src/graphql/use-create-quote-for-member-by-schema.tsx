@@ -5,16 +5,24 @@ import {
   GetQuotesDocument,
   useCreateQuoteForMemberBySchemaMutation,
 } from 'api/generated/graphql'
+import { JSONSchema7 } from 'json-schema'
 
 export const useCreateQuoteForMemberBySchema = () =>
   useCreateQuoteForMemberBySchemaMutation()
 
-export const getCreateQuoteForMemberBySchemaOptions = (
-  memberId: string,
-  schema: object,
-  formData: object,
-  bypassUnderwritingGuidelines: boolean,
-): MutationFunctionOptions<
+interface GetCreateQuoteForMemberBySchemaOptionsParams {
+  memberId: string
+  schema: JSONSchema7
+  formData: Record<string, unknown>
+  bypassUnderwritingGuidelines: boolean
+}
+
+export const getCreateQuoteForMemberBySchemaOptions = ({
+  memberId,
+  schema,
+  formData,
+  bypassUnderwritingGuidelines,
+}: GetCreateQuoteForMemberBySchemaOptionsParams): MutationFunctionOptions<
   CreateQuoteForMemberBySchemaMutation,
   CreateQuoteForMemberBySchemaMutationVariables
 > => {
@@ -23,7 +31,6 @@ export const getCreateQuoteForMemberBySchemaOptions = (
       memberId,
       schemaData: {
         ...formData,
-        // @ts-ignore
         id: schema.$id,
       },
       bypassUnderwritingGuidelines,
