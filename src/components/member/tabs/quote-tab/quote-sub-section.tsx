@@ -5,7 +5,7 @@ import { Card, CardsWrapper } from 'hedvig-ui/card'
 import React from 'react'
 import styled from 'react-emotion'
 import { showNotification } from 'store/actions/notificationsActions'
-import { signedOrExpiredPredicate, signedPredicate } from 'utils/quote'
+import { isSigned, isSignedOrExpired } from 'utils/quote'
 import { ActionsWrapper, Muted } from './common'
 import { QuoteListItem } from './quote-list-item'
 
@@ -18,10 +18,8 @@ export const QuotesSubSection: React.FunctionComponent<{
   quotes: ReadonlyArray<Quote>
 }> = ({ memberId, contractType, quotes }) => {
   const [isWip, setIsWip] = React.useState(false)
-  const activeQuotes = quotes.filter(
-    (quote) => !signedOrExpiredPredicate(quote),
-  )
-  const signedQuotes = quotes.filter(signedPredicate)
+  const activeQuotes = quotes.filter((quote) => !isSignedOrExpired(quote))
+  const signedQuotes = quotes.filter(isSigned)
   const hasActiveQuotes = activeQuotes.length > 0
   const hasSignedQuotes = signedQuotes.length > 0
 
@@ -60,7 +58,7 @@ export const QuotesSubSection: React.FunctionComponent<{
       <Headline>Signed/Expired quotes</Headline>
       <Muted>
         <CardsWrapper>
-          {quotes.filter(signedOrExpiredPredicate).map((quote) => (
+          {quotes.filter(isSignedOrExpired).map((quote) => (
             <Card key={quote.id}>
               <QuoteListItem quote={quote} memberId={memberId} inactionable />
             </Card>

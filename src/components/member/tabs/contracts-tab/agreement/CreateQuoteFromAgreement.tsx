@@ -8,7 +8,7 @@ import { Button } from 'hedvig-ui/button'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
-import { expiredPredicate } from 'utils/quote'
+import { isExpired } from 'utils/quote'
 
 export const CreateQuoteFromAgreement: React.FunctionComponent<{
   agreement: GenericAgreement
@@ -26,8 +26,7 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
       <>
         {quotes
           .filter(
-            (quote) =>
-              quote.state === QuoteState.Quoted && !expiredPredicate(quote),
+            (quote) => quote.state === QuoteState.Quoted && !isExpired(quote),
           )
           .map((quote) => quote.originatingProductId)
           .includes(agreement.id) && !loadingQuotes ? (
