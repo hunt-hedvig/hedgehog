@@ -3,9 +3,10 @@ import {
   GetSchemaForContractTypeQueryHookResult,
   useGetSchemaForContractTypeQuery,
 } from 'api/generated/graphql'
+import { JSONSchema7 } from 'json-schema'
 
 type GetSchemaForContractTypeReturnTuple = [
-  object,
+  JSONSchema7,
   GetSchemaForContractTypeQueryHookResult,
 ]
 
