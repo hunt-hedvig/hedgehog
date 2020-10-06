@@ -3,11 +3,12 @@ import {
   createQuoteFromAgreementOptions,
   useCreateQuoteFromAgreement,
 } from 'graphql/use-create-quote'
-import { expiredPredicate, useQuotes } from 'graphql/use-quotes'
+import { useQuotes } from 'graphql/use-get-quotes'
 import { Button } from 'hedvig-ui/button'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
+import { expiredPredicate } from 'utils/quote'
 
 export const CreateQuoteFromAgreement: React.FunctionComponent<{
   agreement: GenericAgreement
@@ -15,7 +16,9 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
   showNotification: (data: Notification) => void
 }> = ({ agreement, contract, showNotification }) => {
   const [createQuote] = useCreateQuoteFromAgreement()
-  const [quotes, loadingQuotes] = useQuotes(contract.holderMemberId)
+  const [quotes, { loading: loadingQuotes }] = useQuotes(
+    contract.holderMemberId,
+  )
 
   return (
     <>

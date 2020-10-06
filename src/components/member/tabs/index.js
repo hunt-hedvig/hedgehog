@@ -3,7 +3,6 @@ import { DetailsTab } from 'components/member/tabs/DetailsTab'
 import MemberFile from 'components/member/tabs/FileTab'
 import PaymentsTab from 'components/member/tabs/payments-tab'
 import { Quotes } from 'components/member/tabs/quote-tab'
-import { Quotes as QuotesV2 } from 'components/member/tabs/quote-tab-v2'
 import { ContractTab } from 'components/member/tabs/contracts-tab'
 import { CreateTicketStandAlone } from 'components/tickets/ticket/create-ticket/create-ticket-stand-alone'
 

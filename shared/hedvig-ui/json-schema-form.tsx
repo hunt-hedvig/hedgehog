@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { Dropdown, FormField } from 'semantic-ui-react'
-import { getEnumTitleCase } from 'utils/text'
+import { camelcaseToTitleCase, getEnumTitleCase } from 'utils/text'
 
 const ContentWrapper = styled('div')<{ shouldAddMargin: boolean }>`
   margin-top: ${({ shouldAddMargin }) => (shouldAddMargin ? '2.75rem' : 0)};
@@ -165,9 +165,6 @@ const getPropertyTitle = (property) => {
   return camelcaseToTitleCase(property.substring(1))
 }
 
-const camelcaseToTitleCase = (text) =>
-  text.charAt(0).toUpperCase() + text.substring(1).replace(/(\B[A-Z])/g, ' $1')
-
 const StyledForm = styled(Form)`
   width: 100%;
 `
@@ -182,7 +179,6 @@ export const JsonSchemaForm: React.FC<{
     'ui:ObjectFieldTemplate': ObjectFieldTemplate,
   }
   const [formData, setFormData] = useState(initialFormData ?? null)
-  console.log(formData)
   return (
     <StyledForm
       schema={schema}

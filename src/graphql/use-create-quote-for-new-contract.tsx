@@ -3,11 +3,11 @@ import {
   CreateQuoteForNewContractMutation,
   CreateQuoteForNewContractMutationHookResult,
   CreateQuoteForNewContractMutationVariables,
+  GetQuotesDocument,
   QuoteInput,
   Scalars,
   useCreateQuoteForNewContractMutation,
 } from 'api/generated/graphql'
-import { QUOTES_QUERY } from './use-quotes'
 
 export const createQuoteForNewContract = (): CreateQuoteForNewContractMutationHookResult =>
   useCreateQuoteForNewContractMutation()
@@ -28,7 +28,7 @@ export const getCreateQuoteForNewContractOptions = (
     },
     refetchQueries: () => [
       {
-        query: QUOTES_QUERY,
+        query: GetQuotesDocument,
         variables: { memberId },
       },
     ],
