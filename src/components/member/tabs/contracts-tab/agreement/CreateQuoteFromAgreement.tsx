@@ -1,3 +1,4 @@
+import { Simulate } from '@types/react-dom/test-utils'
 import { Contract, GenericAgreement, QuoteState } from 'api/generated/graphql'
 import {
   createQuoteFromAgreementOptions,
@@ -9,6 +10,7 @@ import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 import { isExpired } from 'utils/quote'
+import load = Simulate.load
 
 export const CreateQuoteFromAgreement: React.FunctionComponent<{
   agreement: GenericAgreement
@@ -20,17 +22,21 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
     contract.holderMemberId,
   )
 
+  if (loadingQuotes) {
+    return null
+  }
+
+  const quoteAlreadyExists = quotes
+    .filter((quote) => quote.state === QuoteState.Quoted && !isExpired(quote))
+    .map((quote) => quote.originatingProductId)
+    .includes(agreement.id)
+
   return (
     <>
       <ThirdLevelHeadline>Create Quote</ThirdLevelHeadline>
       <>
-        {quotes
-          .filter(
-            (quote) => quote.state === QuoteState.Quoted && !isExpired(quote),
-          )
-          .map((quote) => quote.originatingProductId)
-          .includes(agreement.id) && !loadingQuotes ? (
-          <>Agreement has an existing quote</>
+        {quoteAlreadyExists ? (
+          <>Agreement already has an existing quote</>
         ) : (
           <Button
             variation="primary"
