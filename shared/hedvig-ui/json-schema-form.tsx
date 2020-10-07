@@ -137,31 +137,36 @@ const CustomSelectWidget: React.FC<WidgetProps> = ({
 
 const transformErrors = (errors: AjvError[]): AjvError[] => {
   return errors.map((error) => {
+    const transformedError = { ...error }
     switch (error.name) {
       case 'type':
         if (error.params.type === 'integer') {
-          error.message = `Must be a number`
+          transformedError.message = `Must be a number`
         } else if (error.params.type === 'string') {
-          error.message = `Must be a text`
+          transformedError.message = `Must be a text`
         }
         break
       case 'maxLength':
-        error.message = `Should not be longer than ${error.params.limit} characters`
+        transformedError.message = `Should not be longer than ${transformedError.params.limit} characters`
         break
       case 'minLength':
-        error.message = `Should not be shorter than ${error.params.limit} characters`
+        transformedError.message = `Should not be shorter than ${transformedError.params.limit} characters`
         break
       case 'minimum':
-        error.message = `Should be greater than ${!error.params.exclusive &&
-          '(or equal to) '}${error.params.limit}`
+        transformedError.message = `Should be greater than ${!transformedError
+          .params.exclusive && '(or equal to) '}${
+          transformedError.params.limit
+        }`
         break
       case 'maximum':
-        error.message = `Should be less than ${!error.params.exlusive &&
-          '(or equal to) '}${error.params.limit}`
+        transformedError.message = `Should be less than ${!transformedError
+          .params.exlusive && '(or equal to) '}${transformedError.params.limit}`
         break
     }
-    error.stack = `${getPropertyTitle(error.property)}: ${error.message}`
-    return error
+    transformedError.stack = `${getPropertyTitle(transformedError.property)}: ${
+      transformedError.message
+    }`
+    return transformedError
   })
 }
 

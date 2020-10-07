@@ -1,4 +1,3 @@
-import { Simulate } from '@types/react-dom/test-utils'
 import { Contract, GenericAgreement, QuoteState } from 'api/generated/graphql'
 import {
   createQuoteFromAgreementOptions,
@@ -10,7 +9,6 @@ import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 import { isExpired } from 'utils/quote'
-import load = Simulate.load
 
 export const CreateQuoteFromAgreement: React.FunctionComponent<{
   agreement: GenericAgreement
