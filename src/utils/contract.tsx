@@ -1,15 +1,9 @@
 import {
-  Address,
-  Agreement,
   Contract,
   ContractMarketInfo,
+  GenericAgreement,
   SignSource,
 } from 'api/generated/graphql'
-import {
-  isNorwegianHomeContent,
-  isSwedishApartment,
-  isSwedishHouse,
-} from 'utils/agreement'
 
 export const getSignSource = (signSource: SignSource): string => {
   if (signSource === SignSource.App) {
@@ -46,22 +40,19 @@ export const isNorwegianMarket = (market: ContractMarketInfo): boolean => {
 
 export const currentAgreementForContract = (
   contract: Contract,
-): Agreement | undefined | null => {
-  return contract.agreements.find(
+): GenericAgreement | undefined => {
+  return contract.genericAgreements.find(
     (agreement) => agreement.id === contract.currentAgreementId,
   )
 }
 
-export const getAddressFromContract = (contract: Contract): Address | null => {
-  const currentAgreement = currentAgreementForContract(contract)
-  if (
-    currentAgreement != null &&
-    (isSwedishApartment(currentAgreement) ||
-      isSwedishHouse(currentAgreement) ||
-      isNorwegianHomeContent(currentAgreement))
-  ) {
-    return currentAgreement.address
-  } else {
-    return null
-  }
+export const getContractByAgreementId = (
+  contracts: ReadonlyArray<Contract>,
+  agreementId: string,
+): Contract | undefined => {
+  return contracts.find((contract) =>
+    contract.genericAgreements.some(
+      (agreement) => agreement.id === agreementId,
+    ),
+  )
 }

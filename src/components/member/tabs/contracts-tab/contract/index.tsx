@@ -32,7 +32,7 @@ export const Contract: React.FunctionComponent<{
     string | undefined
   >(shouldPreSelectAgreement ? contract.currentAgreementId : undefined)
 
-  const agreementToShow = contract.agreements.find(
+  const agreementToShow = contract.genericAgreements.find(
     (agreement) => agreement.id === selectedAgreement,
   )
 
@@ -78,7 +78,7 @@ export const Contract: React.FunctionComponent<{
         </Card>
       </CardsWrapper>
       <AgreementsTable
-        agreements={contract.agreements}
+        agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
         setSelectedAgreement={setSelectedAgreement}
       />

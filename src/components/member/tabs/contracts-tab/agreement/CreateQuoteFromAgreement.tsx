@@ -1,4 +1,4 @@
-import { Agreement, Contract, QuoteState } from 'api/generated/graphql'
+import { Contract, GenericAgreement, QuoteState } from 'api/generated/graphql'
 import {
   createQuoteFromAgreementOptions,
   useCreateQuoteFromAgreement,
@@ -10,7 +10,7 @@ import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
 export const CreateQuoteFromAgreement: React.FunctionComponent<{
-  agreement: Agreement
+  agreement: GenericAgreement
   contract: Contract
   showNotification: (data: Notification) => void
 }> = ({ agreement, contract, showNotification }) => {
