@@ -19,37 +19,19 @@ import { camelcaseToTitleCase, getEnumTitleCase } from 'utils/text'
 
 const ContentWrapper = styled('div')<{ pushTop: boolean }>`
   margin-top: ${({ pushTop }) => (pushTop ? '2.75rem' : 0)};
+  label {
+    color: ${(p) => p.theme.foreground} !important;
+  }
 `
-
 const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
-  DescriptionField,
-  description,
-  TitleField,
-  title,
   properties,
-  required,
-  idSchema,
 }) => {
   return (
     <>
-      {title && (
-        <TitleField
-          id={`${idSchema.$id}-title`}
-          title={title}
-          required={required}
-        />
-      )}
-      {description && (
-        <DescriptionField
-          id={`${idSchema.id}-description`}
-          description={description}
-        />
-      )}
       <Grid container={true} spacing={8}>
         {properties.map((property, index) => {
-          const fieldId = `${idSchema.id}-field-${index}`
           return (
-            <Grid item={true} xs={6} id={fieldId} key={fieldId}>
+            <Grid item={true} xs={6} key={property.name}>
               <ContentWrapper
                 pushTop={
                   property.content.props.schema.type === 'boolean' &&
@@ -67,7 +49,11 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
 }
 
 const ItemWrapper = styled('div')`
-  margin: 1rem 0 2rem 0;
+  margin: 1rem 0 1rem 0;
+  &:not(:last-of-type) {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid ${({ theme }) => theme.borderStrong};
+  }
 `
 
 const ItemTitleWrapper = styled('div')`
@@ -83,7 +69,6 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
   items,
   onAddClick,
   title,
-  idSchema,
 }) => {
   return (
     <>
@@ -96,9 +81,9 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
       )}
       {items.map((element, index) => {
         return (
-          <ItemWrapper key={`${idSchema.$id}-${title}-${index}`}>
+          <ItemWrapper key={element.key}>
             <ItemTitleWrapper>
-              {camelcaseToTitleCase(title)}: {index + 1}
+              <strong>{index + 1}.</strong>
               <ItemRemoveButton onClick={element.onDropIndexClick(index)}>
                 <TrashIconWrapper>
                   <Trash />
