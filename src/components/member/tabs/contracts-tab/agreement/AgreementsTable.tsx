@@ -4,7 +4,7 @@ import styled, { css } from 'react-emotion'
 import { Table } from 'semantic-ui-react'
 import { InsuranceStatusBadge } from 'utils/agreement'
 import { formatMoney } from 'utils/money'
-import { getEnumTitleCase } from 'utils/text'
+import { convertEnumToTitle } from 'utils/text'
 
 const SelectableTableRow = styled(Table.Row)({
   cursor: 'pointer',
@@ -58,7 +58,7 @@ export const AgreementsTable: React.FC<{
                 selected={isSelected}
                 status={agreement.status}
               >
-                {getEnumTitleCase(agreement.lineOfBusinessName)}
+                {convertEnumToTitle(agreement.lineOfBusinessName)}
               </SelectableTableCell>
               <SelectableTableCell
                 selected={isSelected}
@@ -83,7 +83,7 @@ export const AgreementsTable: React.FC<{
                 status={agreement.status}
               >
                 <InsuranceStatusBadge status={agreement.status}>
-                  {getEnumTitleCase(agreement.status)}
+                  {convertEnumToTitle(agreement.status)}
                 </InsuranceStatusBadge>
               </SelectableTableCell>
             </SelectableTableRow>
