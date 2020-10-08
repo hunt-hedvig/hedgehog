@@ -1,4 +1,3 @@
-import { ContractType } from 'api/generated/graphql'
 import {
   getCreateQuoteForMemberBySchemaOptions,
   useCreateQuoteForMemberBySchema,
@@ -8,6 +7,7 @@ import { JsonSchemaForm } from 'hedvig-ui/json-schema-form'
 import React, { useState } from 'react'
 import { Checkbox } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
+import { ContractType } from 'utils/contract'
 import { withShowNotification } from 'utils/notifications'
 
 const CreateQuoteFormComponent: React.FC<{

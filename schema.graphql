@@ -26,7 +26,7 @@ type QueryType {
     itemFamilyId: String!
     itemTypeId: ID
   ): CanValuateClaimItem
-  quoteSchemaForContractType(contractType: ContractType!): JSON
+  quoteSchemaForContractType(contractType: String!): JSON
 }
 
 type DashboardNumbers {
@@ -282,13 +282,6 @@ type Contract {
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
-}
-
-enum ContractType {
-  SWEDISH_APARTMENT
-  SWEDISH_HOUSE
-  NORWEGIAN_HOME_CONTENT
-  NORWEGIAN_TRAVEL
 }
 
 enum TypeOfContract {

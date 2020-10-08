@@ -5,6 +5,13 @@ import {
   SignSource,
 } from 'api/generated/graphql'
 
+export enum ContractType {
+  SwedishApartment = 'SWEDISH_APARTMENT',
+  SwedishHouse = 'SWEDISH_HOUSE',
+  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
+  NorwegianTravel = 'NORWEGIAN_TRAVEL',
+}
+
 export const getSignSource = (signSource: SignSource): string => {
   if (signSource === SignSource.App) {
     return 'App'
