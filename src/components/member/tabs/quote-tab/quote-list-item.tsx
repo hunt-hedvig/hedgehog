@@ -1,4 +1,5 @@
 import { Quote, QuoteProductType } from 'api/generated/graphql'
+import { UpdateQuoteForm } from 'components/member/tabs/quote-tab/update-quote-form'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import styled from 'react-emotion'
@@ -15,7 +16,6 @@ import {
 import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
-import { QuoteModification } from './quote-modification'
 
 const OuterWrapper = styled('div')(({}) => ({
   width: '100%',
@@ -274,11 +274,8 @@ export const QuoteListItemComponent: React.FC<{
 
       {action === Action.MODIFY && (
         <ActionsWrapper>
-          <QuoteModification
+          <UpdateQuoteForm
             quote={quote}
-            memberId={memberId}
-            shouldCreateContract={false}
-            onWipChange={setIsWip}
             onSubmitted={() => {
               if (showNotification) {
                 showNotification({

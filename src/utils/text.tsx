@@ -14,3 +14,6 @@ export const formatPostalCode = (postalCode: string): string => {
   }
   return postalCode
 }
+
+export const camelcaseToTitleCase = (text) =>
+  text.charAt(0).toUpperCase() + text.substring(1).replace(/(\B[A-Z])/g, ' $1')

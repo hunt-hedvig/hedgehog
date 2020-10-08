@@ -3,6 +3,7 @@ import {
   HouseQuoteData,
   NorwegianHomeContentQuoteData,
   NorwegianTravelQuoteData,
+  Quote,
   QuoteData,
 } from 'api/generated/graphql'
 
@@ -41,3 +42,19 @@ export const getSubType = (quoteData: QuoteData): string => {
   }
   throw Error(`Unable to return subType of quoteData=${quoteData}`)
 }
+
+export const isSignedOrExpired = (quote: Quote) =>
+  isExpired(quote) || isSigned(quote)
+
+export const isExpired = (quote: Quote) => {
+  const createdAt = new Date(quote.createdAt)
+  const now = new Date()
+
+  const thirtyDaysInSeconds = 30 * 24 * 3600
+  const validityInSeconds = quote.validity ?? thirtyDaysInSeconds
+  const validUntil = new Date(createdAt.getTime() + validityInSeconds * 1000)
+
+  return now > validUntil
+}
+
+export const isSigned = (quote: Quote) => quote.state === 'SIGNED'
