@@ -174,6 +174,20 @@ const getPropertyTitle = (property) => {
   return camelcaseToTitleCase(property.substring(1))
 }
 
+const formatInitialFormData = (
+  initialFormData: Record<string, unknown>,
+  schema: JSONSchema7,
+): Record<string, unknown> => {
+  const properties = schema.properties!
+  const formData = { ...initialFormData }
+  Object.entries(properties).forEach((property) => {
+    const key = property[0]
+    const value = property[1] as JSONSchema7
+    formData[key] = initialFormData[key] ?? value?.default ?? undefined
+  })
+  return formData
+}
+
 export const JsonSchemaForm: React.FC<{
   schema: JSONSchema7
   onSubmit: (formData: Record<string, unknown>) => void
@@ -183,7 +197,9 @@ export const JsonSchemaForm: React.FC<{
   const uiSchema = {
     'ui:ObjectFieldTemplate': ObjectFieldTemplate,
   }
-  const [formData, setFormData] = useState(initialFormData ?? null)
+  const [formData, setFormData] = useState(
+    formatInitialFormData(initialFormData ?? {}, schema),
+  )
   return (
     <Form
       style={{ width: '100%' }}
