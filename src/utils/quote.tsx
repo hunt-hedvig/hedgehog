@@ -29,8 +29,7 @@ export const getSchemaDataInfo: React.FC<{
       {Object.entries(schemaData)
         .filter((entry) => entry[0] !== 'id' && entry[1] !== null)
         .map((entry) => {
-          const key = entry[0]
-          const value = entry[1]
+          const [key, value] = entry
           const valueMessage = valueToMessage(value)
           return (
             <p>
@@ -46,10 +45,7 @@ export const getSchemaDataInfo: React.FC<{
 const valueToMessage = (value: unknown): string | null => {
   switch (typeof value) {
     case 'boolean':
-      if (value) {
-        return 'Yes'
-      }
-      return 'No'
+      return value ? 'Yes' : 'No'
     case 'number':
     case 'string':
       return value.toString()

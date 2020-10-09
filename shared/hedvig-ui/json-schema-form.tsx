@@ -181,8 +181,7 @@ const formatInitialFormData = (
   const properties = schema.properties!
   const formData = { ...initialFormData }
   Object.entries(properties).forEach((property) => {
-    const key = property[0]
-    const value = property[1] as JSONSchema7
+    const [key, value] = property as [string, JSONSchema7]
     formData[key] = initialFormData[key] ?? value?.default ?? undefined
   })
   return formData
