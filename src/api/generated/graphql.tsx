@@ -479,13 +479,6 @@ export enum ContractStatus {
   Terminated = 'TERMINATED',
 }
 
-export enum ContractType {
-  SwedishApartment = 'SWEDISH_APARTMENT',
-  SwedishHouse = 'SWEDISH_HOUSE',
-  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
-  NorwegianTravel = 'NORWEGIAN_TRAVEL',
-}
-
 export type CostDeduction = {
   __typename?: 'CostDeduction'
   amount?: Maybe<Scalars['MonetaryAmount']>
@@ -1456,7 +1449,7 @@ export type QueryTypeCanValuateClaimItemArgs = {
 }
 
 export type QueryTypeQuoteSchemaForContractTypeArgs = {
-  contractType: ContractType
+  contractType: Scalars['String']
 }
 
 export type Question = {
@@ -2758,7 +2751,7 @@ export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
 }
 
 export type GetSchemaForContractTypeQueryVariables = {
-  contractType: ContractType
+  contractType: Scalars['String']
 }
 
 export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
@@ -5554,7 +5547,7 @@ export type GetReferralInformationQueryResult = ApolloReactCommon.QueryResult<
   GetReferralInformationQueryVariables
 >
 export const GetSchemaForContractTypeDocument = gql`
-  query GetSchemaForContractType($contractType: ContractType!) {
+  query GetSchemaForContractType($contractType: String!) {
     quoteSchemaForContractType(contractType: $contractType)
   }
 `

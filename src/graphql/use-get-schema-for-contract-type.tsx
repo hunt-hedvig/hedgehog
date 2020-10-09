@@ -1,9 +1,9 @@
 import {
-  ContractType,
   GetSchemaForContractTypeQueryHookResult,
   useGetSchemaForContractTypeQuery,
 } from 'api/generated/graphql'
 import { JSONSchema7 } from 'json-schema'
+import { ContractType } from 'utils/contract'
 
 type GetSchemaForContractTypeReturnTuple = [
   JSONSchema7,

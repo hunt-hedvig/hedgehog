@@ -1,10 +1,14 @@
-import { ContractType, Quote } from 'api/generated/graphql'
+import { Quote } from 'api/generated/graphql'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { useQuotes } from 'graphql/use-get-quotes'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import * as React from 'react'
 import { Tab } from 'semantic-ui-react'
-import { isNorwegianMarket, isSwedishMarket } from 'utils/contract'
+import {
+  ContractType,
+  isNorwegianMarket,
+  isSwedishMarket,
+} from 'utils/contract'
 import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
