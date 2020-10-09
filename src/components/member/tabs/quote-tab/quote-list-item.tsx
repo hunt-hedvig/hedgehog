@@ -76,7 +76,8 @@ const QuoteDetails: React.FC<{
         Created:{' '}
         <strong>{format(parseISO(quote.createdAt), 'yyyy-MM-dd hh:mm')}</strong>
         <br />
-        State: <strong>{quote.state && convertEnumToTitle(quote.state)}</strong>
+        State:{' '}
+        <strong>{quote.state ? convertEnumToTitle(quote.state) : '-'}</strong>
         <br />
         Originating Product Id:{' '}
         <strong>{quote.originatingProductId ?? '-'}</strong>

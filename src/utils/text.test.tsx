@@ -17,7 +17,7 @@ it('convertEnumOrSentenceToTitle converts sentence text to Title', () => {
   expect(convertEnumOrSentenceToTitle('My sentence')).toBe('My Sentence')
 })
 
-it('convertEnumOrSentenceToTitle converts Swedihs sentence text to Title', () => {
+it('convertEnumOrSentenceToTitle converts Swedish sentence text to Title', () => {
   expect(convertEnumOrSentenceToTitle('Martin hövding 23')).toBe(
     'Martin Hövding 23',
   )
