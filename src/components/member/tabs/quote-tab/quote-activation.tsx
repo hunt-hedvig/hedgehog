@@ -29,7 +29,11 @@ export const QuoteActivation: React.FC<{
   const [useGap, setUseGap] = useState(false)
   const [contracts, { loading }] = useContracts(memberId)
   if (!quote.originatingProductId) {
-    return <>Cannot active quote without Originating product id</>
+    return (
+      <>
+        Cannot active quote without <strong>Originating Product Id</strong>
+      </>
+    )
   }
   if (loading) {
     return null

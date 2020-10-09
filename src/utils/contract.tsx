@@ -2,6 +2,7 @@ import {
   Contract,
   ContractMarketInfo,
   GenericAgreement,
+  Market,
   SignSource,
 } from 'api/generated/graphql'
 
@@ -37,12 +38,16 @@ export const getSignSource = (signSource: SignSource): string => {
   return signSource
 }
 
-export const isSwedishMarket = (market: ContractMarketInfo): boolean => {
-  return market.market === 'SWEDEN'
+export const isSwedishMarket = (
+  contractMarketInfo: ContractMarketInfo,
+): boolean => {
+  return contractMarketInfo.market === Market.Sweden
 }
 
-export const isNorwegianMarket = (market: ContractMarketInfo): boolean => {
-  return market.market === 'NORWAY'
+export const isNorwegianMarket = (
+  contractMarketInfo: ContractMarketInfo,
+): boolean => {
+  return contractMarketInfo.market === Market.Norway
 }
 
 export const currentAgreementForContract = (

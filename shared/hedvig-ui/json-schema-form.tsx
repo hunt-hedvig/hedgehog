@@ -15,7 +15,7 @@ import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { Dropdown, FormField } from 'semantic-ui-react'
-import { camelcaseToTitleCase, getEnumTitleCase } from 'utils/text'
+import { convertCamelcaseToTitle, convertEnumToTitle } from 'utils/text'
 
 const ContentWrapper = styled('div')<{ pushTop: boolean }>`
   margin-top: ${({ pushTop }) => (pushTop ? '2.75rem' : 0)};
@@ -75,7 +75,7 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
       {title && (
         <Spacing bottom={'small'}>
           <FourthLevelHeadline>
-            {camelcaseToTitleCase(title)}
+            {convertCamelcaseToTitle(title)}
           </FourthLevelHeadline>
         </Spacing>
       )}
@@ -126,7 +126,7 @@ const CustomSelectWidget: React.FC<WidgetProps> = ({
         onChange={(_, e) => onChange(e.value)}
         options={schema.enum!.map((enumValue) => {
           return {
-            text: getEnumTitleCase(enumValue as string),
+            text: convertEnumToTitle(enumValue as string),
             value: enumValue as string,
           }
         })}
@@ -171,7 +171,7 @@ const transformErrors = (errors: AjvError[]): AjvError[] => {
 }
 
 const getPropertyTitle = (property) => {
-  return camelcaseToTitleCase(property.substring(1))
+  return convertCamelcaseToTitle(property.substring(1))
 }
 
 const formatInitialFormData = (
@@ -181,8 +181,7 @@ const formatInitialFormData = (
   const properties = schema.properties!
   const formData = { ...initialFormData }
   Object.entries(properties).forEach((property) => {
-    const key = property[0]
-    const value = property[1] as JSONSchema7
+    const [key, value] = property as [string, JSONSchema7]
     formData[key] = initialFormData[key] ?? value?.default ?? undefined
   })
   return formData

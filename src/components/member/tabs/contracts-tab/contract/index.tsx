@@ -13,7 +13,7 @@ import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { getSignSource } from 'utils/contract'
-import { getEnumTitleCase } from 'utils/text'
+import { convertEnumToTitle } from 'utils/text'
 
 const ContractWrapper = styled('div')`
   &:not(:first-of-type) {
@@ -53,7 +53,7 @@ export const Contract: React.FunctionComponent<{
               </InfoText>
             </InfoRow>
             <InfoRow>
-              Status <InfoText>{getEnumTitleCase(contract.status)}</InfoText>
+              Status <InfoText>{convertEnumToTitle(contract.status)}</InfoText>
             </InfoRow>
             {contract.switchedFrom && (
               <InfoRow>

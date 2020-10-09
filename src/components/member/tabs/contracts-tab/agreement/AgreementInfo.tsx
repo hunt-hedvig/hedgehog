@@ -8,7 +8,7 @@ import { Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
-import { formatPostalCode, getEnumTitleCase } from 'utils/text'
+import { formatPostalCode, convertEnumToTitle } from 'utils/text'
 
 const AddressInfoRow = styled(Paragraph)`
   margin-bottom: 1rem;
@@ -78,13 +78,13 @@ export const AgreementInfo: React.FC<{ agreement: GenericAgreement }> = ({
       )}
       <InfoRow>
         Line of Business{' '}
-        <InfoText>{getEnumTitleCase(agreement.lineOfBusinessName)}</InfoText>
+        <InfoText>{convertEnumToTitle(agreement.lineOfBusinessName)}</InfoText>
       </InfoRow>
       <InfoRow>
         Premium <InfoText>{formatMoney(agreement.premium)}</InfoText>
       </InfoRow>
       <InfoRow>
-        Status <InfoText>{getEnumTitleCase(agreement.status)}</InfoText>
+        Status <InfoText>{convertEnumToTitle(agreement.status)}</InfoText>
       </InfoRow>
     </InfoContainer>
   )

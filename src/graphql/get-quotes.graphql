@@ -17,46 +17,6 @@ query GetQuotes($memberId: ID!) {
       isReadyToSign
       schema
       schemaData
-      data {
-        ... on ApartmentQuoteData {
-          street
-          zipCode
-          city
-          householdSize
-          livingSpace
-          subType
-        }
-
-        ... on HouseQuoteData {
-          street
-          zipCode
-          city
-          householdSize
-          livingSpace
-          ancillaryArea
-          yearOfConstruction
-          numberOfBathrooms
-          extraBuildings {
-            type
-            area
-            hasWaterConnected
-          }
-          isSubleted
-        }
-        ... on NorwegianHomeContentQuoteData {
-          street
-          zipCode
-          city
-          householdSize
-          livingSpace
-          norwegianHomeContentSubType: subType
-        }
-
-        ... on NorwegianTravelQuoteData {
-          householdSize
-          norwegianTravelSubType: subType
-        }
-      }
     }
   }
 }

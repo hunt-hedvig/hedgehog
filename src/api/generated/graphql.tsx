@@ -2667,54 +2667,7 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
             | 'isReadyToSign'
             | 'schema'
             | 'schemaData'
-          > & {
-              data: Maybe<
-                | ({ __typename?: 'ApartmentQuoteData' } & Pick<
-                    ApartmentQuoteData,
-                    | 'street'
-                    | 'zipCode'
-                    | 'city'
-                    | 'householdSize'
-                    | 'livingSpace'
-                    | 'subType'
-                  >)
-                | ({ __typename?: 'HouseQuoteData' } & Pick<
-                    HouseQuoteData,
-                    | 'street'
-                    | 'zipCode'
-                    | 'city'
-                    | 'householdSize'
-                    | 'livingSpace'
-                    | 'ancillaryArea'
-                    | 'yearOfConstruction'
-                    | 'numberOfBathrooms'
-                    | 'isSubleted'
-                  > & {
-                      extraBuildings: Array<
-                        { __typename?: 'ExtraBuilding' } & Pick<
-                          ExtraBuilding,
-                          'type' | 'area' | 'hasWaterConnected'
-                        >
-                      >
-                    })
-                | ({ __typename?: 'NorwegianHomeContentQuoteData' } & Pick<
-                    NorwegianHomeContentQuoteData,
-                    | 'street'
-                    | 'zipCode'
-                    | 'city'
-                    | 'householdSize'
-                    | 'livingSpace'
-                  > & {
-                      norwegianHomeContentSubType: NorwegianHomeContentQuoteData['subType']
-                    })
-                | ({ __typename?: 'NorwegianTravelQuoteData' } & Pick<
-                    NorwegianTravelQuoteData,
-                    'householdSize'
-                  > & {
-                      norwegianTravelSubType: NorwegianTravelQuoteData['subType']
-                    })
-              >
-            }
+          >
         >
       }
   >
@@ -5438,44 +5391,6 @@ export const GetQuotesDocument = gql`
         isReadyToSign
         schema
         schemaData
-        data {
-          ... on ApartmentQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            subType
-          }
-          ... on HouseQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            ancillaryArea
-            yearOfConstruction
-            numberOfBathrooms
-            extraBuildings {
-              type
-              area
-              hasWaterConnected
-            }
-            isSubleted
-          }
-          ... on NorwegianHomeContentQuoteData {
-            street
-            zipCode
-            city
-            householdSize
-            livingSpace
-            norwegianHomeContentSubType: subType
-          }
-          ... on NorwegianTravelQuoteData {
-            householdSize
-            norwegianTravelSubType: subType
-          }
-        }
       }
     }
   }
