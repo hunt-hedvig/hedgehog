@@ -10,7 +10,7 @@ export const convertEnumToTitle = (enumText: string) => {
 export const convertEnumOrSentenceToTitle = (enumText: string) => {
   return enumText
     .toLowerCase()
-    .split(/_|\W/)
+    .split(/_|\s/)
     .map((word) => {
       return word.charAt(0).toUpperCase() + word.slice(1)
     })

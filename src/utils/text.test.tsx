@@ -13,8 +13,14 @@ it('convertEnumOrSentenceToTitle converts enum text to Title', () => {
   expect(convertEnumOrSentenceToTitle('MY_ENUM')).toBe('My Enum')
 })
 
-it('convertEnumOrSentenceToTitle converts sentence text to TitleCase', () => {
+it('convertEnumOrSentenceToTitle converts sentence text to Title', () => {
   expect(convertEnumOrSentenceToTitle('My sentence')).toBe('My Sentence')
+})
+
+it('convertEnumOrSentenceToTitle converts Swedihs sentence text to Title', () => {
+  expect(convertEnumOrSentenceToTitle('Martin hövding 23')).toBe(
+    'Martin Hövding 23',
+  )
 })
 
 it('formats Swedish postal code', () => {
