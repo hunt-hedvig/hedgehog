@@ -30,6 +30,7 @@ type QueryType {
     itemFamilyId: String!
     itemTypeId: ID
   ): CanValuateClaimItem
+  quoteSchemaForContractType(contractType: String!): JSON
 }
 
 type MutationType {
@@ -109,6 +110,16 @@ type MutationType {
     quoteInput: QuoteInput!
     bypassUnderwritingGuidelines: Boolean!
   ): Quote!
+  updateQuoteBySchema(
+    quoteId: ID!
+    schemaData: JSON!
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  createQuoteForMemberBySchema(
+    memberId: ID!
+    schemaData: JSON!
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
   upsertItemCompany(request: UpsertItemCompanyInput): ID!
   upsertItemType(request: UpsertItemTypeInput): ID!
@@ -122,9 +133,7 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  assignCampaignToPartnerFreeMonths(
-    request: AssignVoucherFreeMonths
-  ): Boolean!
+  assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -529,7 +538,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -774,6 +783,8 @@ type Quote {
   breachedUnderwritingGuidelines: [String!]
   isComplete: Boolean
   data: QuoteData
+  schema: JSON
+  schemaData: JSON
   signedProductId: ID
   originatingProductId: ID
   isReadyToSign: Boolean
@@ -794,7 +805,7 @@ enum QuoteState {
 }
 
 union QuoteData =
-  ApartmentQuoteData
+    ApartmentQuoteData
   | HouseQuoteData
   | NorwegianHomeContentQuoteData
   | NorwegianTravelQuoteData
@@ -1166,7 +1177,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1535,3 +1546,5 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
+# A Json Object represtation of `JsonNode`
+scalar JSON
