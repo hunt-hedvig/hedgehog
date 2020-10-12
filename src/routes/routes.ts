@@ -14,6 +14,6 @@ export const reactPageRoutes = [
     Component: Routes.TicketHistoryPageRoute,
     exact: true,
   },
-  { path: '/dashboard', Component: Routes.DashboardPageRoute, exact: true },
+  { path: '/dashborad', Component: Routes.DashboardPageRoute, exact: true },
   { path: '/tools', Component: Routes.ToolsPageRoute, exact: true },
 ]
