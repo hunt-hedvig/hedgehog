@@ -1,6 +1,6 @@
 import styled from 'react-emotion'
 
-export type BadgeSize = 'small' | 'medium' | 'large'
+export type BadgeSize = 'match' | 'small' | 'medium' | 'large'
 export type BadgeVariant = 'danger' | 'warning' | 'success' | 'default'
 
 export interface BadgeProps {
@@ -13,6 +13,8 @@ export interface BadgeProps {
 
 const getPaddingFromSize = (size?: BadgeSize) => {
   switch (size) {
+    case 'match':
+      return '0.3em 0.5em'
     case 'small':
       return '0.5rem 0.5rem'
     case 'medium':
@@ -47,4 +49,5 @@ export const Badge = styled.div<BadgeProps>`
   font-weight: ${({ bold = false }) => (bold ? 'bold' : 'normal')};
   width: ${({ fluid = false }) => (fluid ? '100%' : 'auto')};
   text-align: ${({ centered = true }) => (centered ? 'center' : 'left')};
+  font-size: ${({ size }) => size === 'match' && '0.7em'};
 `
