@@ -1,11 +1,13 @@
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
+import { useHistory } from 'react-router'
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import { Checkbox } from 'hedvig-ui/checkbox'
 import { Input } from 'hedvig-ui/input'
 import { MainHeadline } from 'hedvig-ui/typography'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
+import { findDOMNode } from 'react-dom'
 import styled, { keyframes } from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
@@ -73,6 +75,15 @@ const ListWrapper = styled('div')({
   paddingLeft: '1rem',
 })
 
+/**
+ * Semantic UI haven't implemented refs corretly or they collide with react-emotion or something.
+ * See https://github.com/Semantic-Org/Semantic-UI-React/issues/3819
+ */
+const findInputFieldDomElementHackishly = (
+  instance: React.ReactElement,
+): HTMLInputElement | null =>
+  findDOMNode(instance as any) as HTMLInputElement | null
+
 export const MembersSearch: React.FC<Props> = ({
   searchMemberRequest,
   searchResult,
@@ -81,6 +92,8 @@ export const MembersSearch: React.FC<Props> = ({
   const [query, setQuery] = React.useState('')
   const [includeAll, setIncludeAll] = React.useState(false)
   const [hasDispatchedSearch, setHasDispatchedSearch] = React.useState(false)
+  const history = useHistory()
+  const searchField = useRef<React.ReactElement>()
 
   useEffect(() => {
     if (searchResult.items.length === 0) {
@@ -104,6 +117,7 @@ export const MembersSearch: React.FC<Props> = ({
         includeAll={includeAll}
         setIncludeAll={setIncludeAll}
         currentResultSize={searchResult.items.length}
+        searchFieldRef={searchField as any}
       />
       {searchResult.items.length > 0 && (
         <ListWrapper>
@@ -114,9 +128,28 @@ export const MembersSearch: React.FC<Props> = ({
               searchMemberRequest({ query, includeAll, page })
             }
             pagedItems={searchResult.items}
-            itemContent={(item) => <ListItem item={item} />}
+            itemContent={(item, isKeyboardHighlighted) => (
+              <ListItem
+                item={item}
+                isKeyboardHighlighted={isKeyboardHighlighted}
+              />
+            )}
             isSortable={false}
             tableHeader={<ListHeader />}
+            keyboardNavigationActive={searchResult.items.length > 0}
+            onKeyboardNavigation={() => {
+              const inputWrapper =
+                searchField.current &&
+                findInputFieldDomElementHackishly(searchField.current)
+              if (inputWrapper) {
+                inputWrapper.querySelector('input')!.blur()
+              }
+            }}
+            onKeyboardSelect={(index) => {
+              history.push(
+                `/members/${searchResult.items[index].member.memberId}`,
+              )
+            }}
           />
         </ListWrapper>
       )}
@@ -206,7 +239,7 @@ const EscapeButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
   marginLeft: '2rem',
 }))
 
-const Search: React.FC<{
+type SearchFieldProps = {
   onSubmit: (query: string, includeAll: boolean) => void
   loading: boolean
   query: string
@@ -214,7 +247,9 @@ const Search: React.FC<{
   setQuery: (query: string) => void
   setIncludeAll: (includeAll: boolean) => void
   currentResultSize: number
-}> = ({
+  searchFieldRef: React.Ref<any>
+}
+const Search: React.FC<SearchFieldProps> = ({
   onSubmit,
   loading,
   query,
@@ -222,6 +257,7 @@ const Search: React.FC<{
   includeAll,
   setIncludeAll,
   currentResultSize,
+  searchFieldRef,
 }) => {
   return (
     <form
@@ -243,6 +279,7 @@ const Search: React.FC<{
             type="search"
             autoFocus
             muted={!query}
+            ref={searchFieldRef}
           />
           <SearchButton
             type="submit"
@@ -276,6 +313,7 @@ const Search: React.FC<{
     </form>
   )
 }
+
 const ListHeader: React.FC = () => (
   <Table.Header>
     <Table.HeaderCell>Member</Table.HeaderCell>
@@ -293,11 +331,14 @@ const MemberAgeWrapper = styled('div')(({ theme }) => ({
   fontSize: '0.8rem',
 }))
 
-const ListItem: React.FC<{ item: MemberSearchResultItem }> = ({ item }) => {
+const ListItem: React.FC<{
+  item: MemberSearchResultItem
+  isKeyboardHighlighted?: boolean
+}> = ({ item, isKeyboardHighlighted }) => {
   const memberStatus =
     item.member.status !== 'SIGNED' ? item.member.status : item.productStatus
   return (
-    <Table.Row>
+    <Table.Row active={isKeyboardHighlighted}>
       <Table.Cell>
         {item.member.memberId ? (
           <Link to={`/members/${item.member.memberId}`}>

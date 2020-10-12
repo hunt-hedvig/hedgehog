@@ -30,14 +30,17 @@ const linkClickHandler = (id: string, userId: string) => {
   history.push(`/claims/${id}/members/${userId}`)
 }
 
-const getTableRow = (item: Claim) => {
+const getTableRow = (item: Claim, isKeyboardHighlighted: boolean) => {
   const date = parseISO(item.date)
   const formattedDate = isValidDate(date)
     ? formatDate(date, 'dd MMMM yyyy HH:mm')
     : '-'
 
   return (
-    <LinkRow onClick={() => linkClickHandler(item.id, item.userId)}>
+    <LinkRow
+      onClick={() => linkClickHandler(item.id, item.userId)}
+      active={isKeyboardHighlighted}
+    >
       <MemberIdCell memberId={item.userId}>{item.userId}</MemberIdCell>
       <Table.Cell>{formattedDate}</Table.Cell>
       <Table.Cell>{item.type}</Table.Cell>
@@ -119,6 +122,13 @@ const BackendServedClaimsList: React.SFC<BackendServedClaimsListProps> = ({
     isSortable={true}
     keyName="id"
     changePage={(page) => claimsRequest({ ...searchFilter, page })}
+    keyboardNavigationActive
+    onKeyboardSelect={(index) => {
+      linkClickHandler(
+        searchResult.claims[index].id,
+        searchResult.claims[index].userId,
+      )
+    }}
   />
 )
 
