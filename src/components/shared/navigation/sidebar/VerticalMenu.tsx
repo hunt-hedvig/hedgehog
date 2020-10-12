@@ -254,7 +254,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
 
             <Menu>
               <MenuGroup>
-                <MenuItem to="/dashboard">
+                <MenuItem to="/dashborad">
                   <House />
                   <MenuText>Dashborad</MenuText>
                 </MenuItem>
