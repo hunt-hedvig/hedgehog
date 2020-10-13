@@ -23,7 +23,7 @@ export const useKeyboardListener = (
 
 export type PerformNavigationHandler = (index: number) => void
 export type NavigationStepHandler = () => void
-export type UseVerticalKeyboardNavigationProps = {
+export interface UseVerticalKeyboardNavigationProps {
   maxStep: number
   isActive: boolean
   onPerformNavigation?: PerformNavigationHandler
