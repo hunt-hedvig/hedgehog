@@ -8,6 +8,7 @@ import { format, parseISO } from 'date-fns'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
+import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
 import { getMemberFlag, MemberAge } from 'utils/member'
 
 export const ListItem: React.FC<{ member: Member; active?: boolean }> = ({
@@ -38,16 +39,8 @@ export const ListItem: React.FC<{ member: Member; active?: boolean }> = ({
         {member.signedOn &&
           format(parseISO(member.signedOn), 'MMM d, yyy, HH:ii')}
       </Table.Cell>
-      <Table.Cell>
-        {
-          // TODO: First active from
-        }
-      </Table.Cell>
-      <Table.Cell>
-        {
-          // TODO: Last active to
-        }
-      </Table.Cell>
+      <Table.Cell>{getFirstMasterInception(contracts)}</Table.Cell>
+      <Table.Cell>{getLastTerminationDate(contracts)}</Table.Cell>
       <Table.Cell>
         <CircleWrapper>
           <ContractCountCircles contracts={contracts} />

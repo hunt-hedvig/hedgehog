@@ -1,65 +1,22 @@
 import { Member } from 'api/generated/graphql'
+import { ListHeader } from 'components/members-search/components/ListHeader'
 import { ListItem } from 'components/members-search/components/ListItem'
 import { SearchForm } from 'components/members-search/components/SearchForm'
+import {
+  ExtraInstruction,
+  Instructions,
+  ListWrapper,
+  MemberSuggestionsWrapper,
+  NoMembers,
+} from 'components/members-search/styles'
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
 import { useMemberSearch } from 'graphql/use-member-search'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
-import styled, { keyframes } from 'react-emotion'
 import { useHistory } from 'react-router'
-import { Table } from 'semantic-ui-react'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 import { MemberSuggestions } from './components/MemberSuggestions'
-
-const fadeIn = (max: number) =>
-  keyframes({
-    from: { opacity: 0, transform: 'translateY(5%)' },
-    to: { opacity: max, transform: 'translateY(0)' },
-  })
-
-const Instructions = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  textAlign: 'left',
-  paddingLeft: '1rem',
-  paddingTop: '2rem',
-  code: {
-    background: theme.backgroundTransparent,
-    padding: '1px 2px',
-    borderRadius: 1,
-  },
-  opacity: 0,
-  animation: `${fadeIn(0.3)} 1000ms forwards`,
-  animationDelay: '500ms',
-}))
-
-const MemberSuggestionsWrapper = styled(Instructions)({
-  paddingTop: '25vh',
-  width: '100%',
-  maxWidth: '50rem',
-  animation: `${fadeIn(1)} 1000ms forwards`,
-  animationDelay: '750ms',
-})
-
-const NoMembers = styled(Instructions)({
-  width: '100%',
-  flex: 1,
-  alignItems: 'center',
-  fontSize: '1.5rem',
-  paddingTop: '25vh',
-})
-
-const ExtraInstruction = styled('div')({
-  opacity: 0,
-  animation: `${fadeIn(1)} 1000ms forwards`,
-  animationDelay: '1000ms',
-})
-
-const ListWrapper = styled('div')({
-  paddingLeft: '1rem',
-})
 
 /**
  * Semantic UI haven't implemented refs corretly or they collide with react-emotion or something.
@@ -179,15 +136,3 @@ export const MembersSearch: React.FC = () => {
     </>
   )
 }
-
-const ListHeader: React.FC = () => (
-  <Table.Header>
-    <Table.HeaderCell>Member</Table.HeaderCell>
-    <Table.HeaderCell />
-    <Table.HeaderCell>Sign up</Table.HeaderCell>
-    <Table.HeaderCell>Active from</Table.HeaderCell>
-    <Table.HeaderCell>Active to</Table.HeaderCell>
-    <Table.HeaderCell>Status</Table.HeaderCell>
-    <Table.HeaderCell>Size</Table.HeaderCell>
-  </Table.Header>
-)
