@@ -9,7 +9,7 @@ import {
 import { Checkbox } from 'hedvig-ui/checkbox'
 import React from 'react'
 
-export const SearchForm: React.FC<{
+interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
   loading: boolean
   query: string
@@ -17,7 +17,10 @@ export const SearchForm: React.FC<{
   setQuery: (query: string) => void
   setIncludeAll: (includeAll: boolean) => void
   currentResultSize: number
-}> = ({
+  searchFieldRef: React.Ref<any>
+}
+
+export const SearchForm: React.FC<SearchFieldProps> = ({
   onSubmit,
   loading,
   query,
@@ -25,6 +28,7 @@ export const SearchForm: React.FC<{
   includeAll,
   setIncludeAll,
   currentResultSize,
+  searchFieldRef,
 }) => {
   return (
     <form
@@ -46,6 +50,7 @@ export const SearchForm: React.FC<{
             type="search"
             autoFocus
             muted={!query}
+            ref={searchFieldRef}
           />
           <SearchButton
             type="submit"

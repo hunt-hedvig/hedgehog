@@ -1,10 +1,12 @@
 import {
   MemberSearchOptions,
   MemberSearchQueryHookResult,
+  MemberSearchResult,
   useMemberSearchLazyQuery,
-} from '../api/generated/graphql'
+} from 'api/generated/graphql'
 
 type MemberSearchReturnTuple = [
+  MemberSearchResult,
   (query: string, options?: MemberSearchOptions) => void,
   MemberSearchQueryHookResult,
 ]
@@ -26,6 +28,15 @@ export const useMemberSearch = (): MemberSearchReturnTuple => {
       },
     })
   }
+  const { members = [], page = 0, totalPages = 0 } = {
+    ...queryResult?.data?.memberSearch,
+  }
 
-  return [memberSearch, queryResult]
+  const memberSearchResult = {
+    members,
+    totalPages,
+    page,
+  }
+
+  return [memberSearchResult as MemberSearchResult, memberSearch, queryResult]
 }

@@ -10,13 +10,16 @@ import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { getMemberFlag, MemberAge } from 'utils/member'
 
-export const ListItem: React.FC<{ member: Member }> = ({ member }) => {
+export const ListItem: React.FC<{ member: Member; active?: boolean }> = ({
+  member,
+  active,
+}) => {
   const market = member?.contractMarketInfo?.market
 
   const contracts = member.contracts
 
   return (
-    <Table.Row>
+    <Table.Row active={active}>
       <Table.Cell>
         {member.memberId ? (
           <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
