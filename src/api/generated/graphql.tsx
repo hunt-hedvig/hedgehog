@@ -1230,7 +1230,6 @@ export type QueryType = {
   tickets: Array<Ticket>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
-  memberSearch: MemberSearchResult
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
   itemCategories: Array<ItemCategory>
@@ -1241,6 +1240,7 @@ export type QueryType = {
   getClaimItemValuation: ClaimItemValuation
   canValuateClaimItem?: Maybe<CanValuateClaimItem>
   quoteSchemaForContractType?: Maybe<Scalars['JSON']>
+  memberSearch: MemberSearchResult
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1269,11 +1269,6 @@ export type QueryTypeGetFullTicketHistoryArgs = {
 
 export type QueryTypeTicketsArgs = {
   resolved?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryTypeMemberSearchArgs = {
-  query: Scalars['String']
-  options: MemberSearchOptions
 }
 
 export type QueryTypeMessageHistoryArgs = {
@@ -1305,6 +1300,11 @@ export type QueryTypeCanValuateClaimItemArgs = {
 
 export type QueryTypeQuoteSchemaForContractTypeArgs = {
   contractType: Scalars['String']
+}
+
+export type QueryTypeMemberSearchArgs = {
+  query: Scalars['String']
+  options: MemberSearchOptions
 }
 
 export type Question = {
