@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import ClaimsList from 'components/claims/claims-list/ClaimsList'
 import MaterialModal from 'components/shared/modals/MaterialModal'
 import { ActionMap, Container } from 'constate'
-import { formatISO } from 'date-fns'
+import { format, formatISO, parseISO } from 'date-fns'
 import gql from 'graphql-tag'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import * as React from 'react'
@@ -93,7 +93,7 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
           mutation({
             variables: {
               memberId: props.memberId,
-              date: state.date,
+              date: format(state.date, "yyyy-MM-dd'T'HH:mm:ss"),
               source: state.value,
             },
           }).then((response) => {
@@ -106,9 +106,11 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
         typeChangeHandler: (event) => (_) => ({
           value: event.target.value,
         }),
-        dateChangeHandler: (date) => ({
-          date: formatISO(date),
-        }),
+        dateChangeHandler: (date) => {
+          return {
+            date,
+          }
+        },
       }}
     >
       {({
@@ -169,6 +171,7 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
                 date={date}
                 setDate={dateChangeHandler as any}
                 placeholder="Notification date"
+                maxDate={new Date()}
               />
             </InlineFlex>
             <InlineFlexButton>
