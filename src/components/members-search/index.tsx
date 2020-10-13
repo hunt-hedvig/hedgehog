@@ -1,5 +1,4 @@
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
-import { useHistory } from 'react-router'
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import { Checkbox } from 'hedvig-ui/checkbox'
@@ -9,6 +8,7 @@ import React, { useEffect, useRef } from 'react'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import { findDOMNode } from 'react-dom'
 import styled, { keyframes } from 'react-emotion'
+import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import {
@@ -248,7 +248,7 @@ const EscapeButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
   marginLeft: '2rem',
 }))
 
-type SearchFieldProps = {
+interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
   loading: boolean
   query: string
