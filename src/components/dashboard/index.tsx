@@ -81,7 +81,15 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
         </MetricsWrapper>
       )}
       <Spacing top="large">
-        <SecondLevelHeadline>Recent changes from tech</SecondLevelHeadline>
+        <SecondLevelHeadline>Recent changes from Tech</SecondLevelHeadline>
+        <Spacing bottom>
+          <MutedText>
+            If you experience any issues with new updates, please submit a bug
+            to the{' '}
+            <a href="slack://channel?id=CT97ADLGJ&team=T5KLK1H52">#bug-inbox</a>{' '}
+            Slack channel
+          </MutedText>
+        </Spacing>
         <ChangeLogWrapper>
           {changelog.slice(0, 10).map((change) => {
             const isRecent =
