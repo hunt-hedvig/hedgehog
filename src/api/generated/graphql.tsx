@@ -114,45 +114,6 @@ export enum AgreementStatus {
   Terminated = 'TERMINATED',
 }
 
-export type ApartmentQuoteData = IQuoteData & {
-  __typename?: 'ApartmentQuoteData'
-  id: Scalars['ID']
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<ApartmentSubType>
-}
-
-export type ApartmentQuoteDataInput = {
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<ApartmentSubType>
-}
-
-export type ApartmentQuoteInput = {
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<ApartmentSubType>
-}
-
-export enum ApartmentSubType {
-  Brf = 'BRF',
-  Rent = 'RENT',
-  StudentBrf = 'STUDENT_BRF',
-  StudentRent = 'STUDENT_RENT',
-}
-
 export type ApplianceClaim = {
   __typename?: 'ApplianceClaim'
   location?: Maybe<Scalars['String']>
@@ -535,13 +496,6 @@ export type ExtraBuilding = {
   displayName?: Maybe<Scalars['String']>
 }
 
-export type ExtraBuildingInput = {
-  type: Scalars['String']
-  area: Scalars['Int']
-  hasWaterConnected: Scalars['Boolean']
-  displayName?: Maybe<Scalars['String']>
-}
-
 export enum ExtraBuildingType {
   Garage = 'GARAGE',
   Carport = 'CARPORT',
@@ -624,53 +578,6 @@ export type GetValuationInput = {
   baseDate?: Maybe<Scalars['LocalDate']>
 }
 
-export type HouseQuoteData = IQuoteData & {
-  __typename?: 'HouseQuoteData'
-  id: Scalars['ID']
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  ancillaryArea?: Maybe<Scalars['Int']>
-  yearOfConstruction?: Maybe<Scalars['Int']>
-  numberOfBathrooms?: Maybe<Scalars['Int']>
-  extraBuildings: Array<ExtraBuilding>
-  isSubleted?: Maybe<Scalars['Boolean']>
-}
-
-export type HouseQuoteDataInput = {
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  ancillaryArea?: Maybe<Scalars['Int']>
-  yearOfConstruction?: Maybe<Scalars['Int']>
-  numberOfBathrooms?: Maybe<Scalars['Int']>
-  extraBuildings: Array<ExtraBuildingInput>
-  isSubleted?: Maybe<Scalars['Boolean']>
-}
-
-export type HouseQuoteInput = {
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  ancillaryArea?: Maybe<Scalars['Int']>
-  yearOfConstruction?: Maybe<Scalars['Int']>
-  numberOfBathrooms?: Maybe<Scalars['Int']>
-  extraBuildings?: Maybe<Array<ExtraBuildingInput>>
-  isSubleted?: Maybe<Scalars['Boolean']>
-}
-
 export type Incentive =
   | MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
@@ -698,11 +605,6 @@ export type InstallationsClaim = {
   date?: Maybe<Scalars['LocalDate']>
   item?: Maybe<Scalars['String']>
   location?: Maybe<Scalars['String']>
-}
-
-export type IQuoteData = {
-  id: Scalars['ID']
-  householdSize?: Maybe<Scalars['Int']>
 }
 
 export type ItemBrand = ItemCategoryCore & {
@@ -897,10 +799,7 @@ export type MutationType = {
   setClaimFileCategory?: Maybe<Scalars['String']>
   activateQuote: Quote
   addAgreementFromQuote: Quote
-  /** Creates a quote from a product and returns the quote id */
-  createQuoteFromProduct: Quote
   createQuoteFromAgreement: Quote
-  updateQuote: Quote
   markSwitchableSwitcherEmailAsReminded: Scalars['Boolean']
   terminateContract: Contract
   activatePendingAgreement: Contract
@@ -914,7 +813,6 @@ export type MutationType = {
   sendMessage: SendMessageResponse
   markQuestionAsResolved: Scalars['Boolean']
   answerQuestion: Scalars['Boolean']
-  createQuoteForNewContract: Quote
   updateQuoteBySchema: Quote
   createQuoteForMemberBySchema: Quote
   signQuoteForNewContract: Quote
@@ -1059,20 +957,9 @@ export type MutationTypeAddAgreementFromQuoteArgs = {
   previousAgreementActiveTo?: Maybe<Scalars['LocalDate']>
 }
 
-export type MutationTypeCreateQuoteFromProductArgs = {
-  memberId: Scalars['ID']
-  quoteData: QuoteFromProductInput
-}
-
 export type MutationTypeCreateQuoteFromAgreementArgs = {
   agreementId: Scalars['ID']
   memberId: Scalars['ID']
-}
-
-export type MutationTypeUpdateQuoteArgs = {
-  quoteId: Scalars['ID']
-  quoteData: QuoteInput
-  bypassUnderwritingGuidelines?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationTypeMarkSwitchableSwitcherEmailAsRemindedArgs = {
@@ -1131,12 +1018,6 @@ export type MutationTypeMarkQuestionAsResolvedArgs = {
 export type MutationTypeAnswerQuestionArgs = {
   memberId: Scalars['ID']
   answer: Scalars['String']
-}
-
-export type MutationTypeCreateQuoteForNewContractArgs = {
-  memberId: Scalars['ID']
-  quoteInput: QuoteInput
-  bypassUnderwritingGuidelines: Scalars['Boolean']
 }
 
 export type MutationTypeUpdateQuoteBySchemaArgs = {
@@ -1259,67 +1140,9 @@ export enum NorwegianHomeContentLineOfBusiness {
   YouthOwn = 'YOUTH_OWN',
 }
 
-export type NorwegianHomeContentQuoteData = IQuoteData & {
-  __typename?: 'NorwegianHomeContentQuoteData'
-  id: Scalars['ID']
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
-}
-
-export type NorwegianHomeContentQuoteDataInput = {
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
-}
-
-export type NorwegianHomeContentQuoteInput = {
-  street?: Maybe<Scalars['String']>
-  city?: Maybe<Scalars['String']>
-  zipCode?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  livingSpace?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianHomeContentLineOfBusiness>
-}
-
 export enum NorwegianTravelLineOfBusiness {
   Regular = 'REGULAR',
   Youth = 'YOUTH',
-}
-
-export type NorwegianTravelQuoteData = IQuoteData & {
-  __typename?: 'NorwegianTravelQuoteData'
-  id: Scalars['ID']
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianTravelLineOfBusiness>
-}
-
-export type NorwegianTravelQuoteDataInput = {
-  ssn?: Maybe<Scalars['String']>
-  firstName?: Maybe<Scalars['String']>
-  lastName?: Maybe<Scalars['String']>
-  householdSize?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianTravelLineOfBusiness>
-}
-
-export type NorwegianTravelQuoteInput = {
-  householdSize?: Maybe<Scalars['Int']>
-  subType?: Maybe<NorwegianTravelLineOfBusiness>
 }
 
 export type NotCoveredClaim = {
@@ -1472,6 +1295,7 @@ export type Quote = {
   id: Scalars['ID']
   createdAt?: Maybe<Scalars['Instant']>
   price?: Maybe<Scalars['Float']>
+  currency?: Maybe<Scalars['String']>
   productType?: Maybe<QuoteProductType>
   state?: Maybe<QuoteState>
   initiatedFrom?: Maybe<Scalars['String']>
@@ -1482,37 +1306,11 @@ export type Quote = {
   memberId?: Maybe<Scalars['ID']>
   breachedUnderwritingGuidelines?: Maybe<Array<Scalars['String']>>
   isComplete?: Maybe<Scalars['Boolean']>
-  data?: Maybe<QuoteData>
   schema?: Maybe<Scalars['JSON']>
   schemaData?: Maybe<Scalars['JSON']>
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
   isReadyToSign?: Maybe<Scalars['Boolean']>
-}
-
-export type QuoteData =
-  | ApartmentQuoteData
-  | HouseQuoteData
-  | NorwegianHomeContentQuoteData
-  | NorwegianTravelQuoteData
-
-export type QuoteFromProductInput = {
-  incompleteHouseQuoteData?: Maybe<HouseQuoteDataInput>
-  incompleteApartmentQuoteData?: Maybe<ApartmentQuoteDataInput>
-  norwegianHomeContentQuoteData?: Maybe<NorwegianHomeContentQuoteDataInput>
-  norwegianTravelQuoteData?: Maybe<NorwegianTravelQuoteDataInput>
-  originatingProductId?: Maybe<Scalars['ID']>
-  currentInsurer?: Maybe<Scalars['String']>
-}
-
-export type QuoteInput = {
-  productType?: Maybe<QuoteProductType>
-  currentInsurer?: Maybe<Scalars['String']>
-  apartmentData?: Maybe<ApartmentQuoteInput>
-  houseData?: Maybe<HouseQuoteInput>
-  norwegianHomeContentData?: Maybe<NorwegianHomeContentQuoteInput>
-  norwegianTravelData?: Maybe<NorwegianTravelQuoteInput>
-  originatingProductId?: Maybe<Scalars['ID']>
 }
 
 export enum QuoteProductType {
@@ -2158,16 +1956,6 @@ export type CreateQuoteForMemberBySchemaMutation = {
   createQuoteForMemberBySchema: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
 
-export type CreateQuoteForNewContractMutationVariables = {
-  memberId: Scalars['ID']
-  quoteInput: QuoteInput
-  bypassUnderwritingGuidelines: Scalars['Boolean']
-}
-
-export type CreateQuoteForNewContractMutation = {
-  __typename?: 'MutationType'
-} & { createQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
-
 export type CreateQuoteFromAgreementMutationVariables = {
   agreementId: Scalars['ID']
   memberId: Scalars['ID']
@@ -2655,6 +2443,7 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
             | 'id'
             | 'memberId'
             | 'price'
+            | 'currency'
             | 'productType'
             | 'state'
             | 'startDate'
@@ -4133,66 +3922,6 @@ export type CreateQuoteForMemberBySchemaMutationOptions = ApolloReactCommon.Base
   CreateQuoteForMemberBySchemaMutation,
   CreateQuoteForMemberBySchemaMutationVariables
 >
-export const CreateQuoteForNewContractDocument = gql`
-  mutation CreateQuoteForNewContract(
-    $memberId: ID!
-    $quoteInput: QuoteInput!
-    $bypassUnderwritingGuidelines: Boolean!
-  ) {
-    createQuoteForNewContract(
-      memberId: $memberId
-      quoteInput: $quoteInput
-      bypassUnderwritingGuidelines: $bypassUnderwritingGuidelines
-    ) {
-      id
-    }
-  }
-`
-export type CreateQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunction<
-  CreateQuoteForNewContractMutation,
-  CreateQuoteForNewContractMutationVariables
->
-
-/**
- * __useCreateQuoteForNewContractMutation__
- *
- * To run a mutation, you first call `useCreateQuoteForNewContractMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateQuoteForNewContractMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createQuoteForNewContractMutation, { data, loading, error }] = useCreateQuoteForNewContractMutation({
- *   variables: {
- *      memberId: // value for 'memberId'
- *      quoteInput: // value for 'quoteInput'
- *      bypassUnderwritingGuidelines: // value for 'bypassUnderwritingGuidelines'
- *   },
- * });
- */
-export function useCreateQuoteForNewContractMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateQuoteForNewContractMutation,
-    CreateQuoteForNewContractMutationVariables
-  >,
-) {
-  return ApolloReactHooks.useMutation<
-    CreateQuoteForNewContractMutation,
-    CreateQuoteForNewContractMutationVariables
-  >(CreateQuoteForNewContractDocument, baseOptions)
-}
-export type CreateQuoteForNewContractMutationHookResult = ReturnType<
-  typeof useCreateQuoteForNewContractMutation
->
-export type CreateQuoteForNewContractMutationResult = ApolloReactCommon.MutationResult<
-  CreateQuoteForNewContractMutation
->
-export type CreateQuoteForNewContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateQuoteForNewContractMutation,
-  CreateQuoteForNewContractMutationVariables
->
 export const CreateQuoteFromAgreementDocument = gql`
   mutation CreateQuoteFromAgreement($agreementId: ID!, $memberId: ID!) {
     createQuoteFromAgreement(agreementId: $agreementId, memberId: $memberId) {
@@ -5379,6 +5108,7 @@ export const GetQuotesDocument = gql`
         id
         memberId
         price
+        currency
         productType
         state
         startDate
@@ -6590,42 +6320,6 @@ export interface IntrospectionResultData {
 const result: IntrospectionResultData = {
   __schema: {
     types: [
-      {
-        kind: 'UNION',
-        name: 'QuoteData',
-        possibleTypes: [
-          {
-            name: 'ApartmentQuoteData',
-          },
-          {
-            name: 'HouseQuoteData',
-          },
-          {
-            name: 'NorwegianHomeContentQuoteData',
-          },
-          {
-            name: 'NorwegianTravelQuoteData',
-          },
-        ],
-      },
-      {
-        kind: 'INTERFACE',
-        name: 'IQuoteData',
-        possibleTypes: [
-          {
-            name: 'ApartmentQuoteData',
-          },
-          {
-            name: 'HouseQuoteData',
-          },
-          {
-            name: 'NorwegianHomeContentQuoteData',
-          },
-          {
-            name: 'NorwegianTravelQuoteData',
-          },
-        ],
-      },
       {
         kind: 'UNION',
         name: 'ClaimType',
