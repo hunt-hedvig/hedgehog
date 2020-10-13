@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
-import moment from 'moment'
 
 export const filterList = (filter: string, list: any[], fieldName: string) =>
   list.filter((item) => item[fieldName] === filter)
@@ -189,9 +188,7 @@ function sortListByDate(list, fieldName, isReverse) {
   })
 
   const sortedDates = withDates.sort((a, b) => {
-    const dateA = moment(a[fieldName] || '10000-01-01')
-    const dateB = moment(b[fieldName] || '10000-01-01')
-    return dateA.diff(dateB)
+    return a - b
   })
   const resultList = isReverse ? sortedDates.reverse() : sortedDates
   return [...resultList, ...withoutDates]
