@@ -12,6 +12,8 @@ query MemberSearch($query: String!, $options: MemberSearchOptions!) {
       }
       contracts {
         status
+        masterInception
+        terminationDate
       }
     }
     page

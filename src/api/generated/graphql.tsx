@@ -2853,7 +2853,10 @@ export type MemberSearchQuery = { __typename?: 'QueryType' } & {
               >
             >
             contracts: Array<
-              { __typename?: 'Contract' } & Pick<Contract, 'status'>
+              { __typename?: 'Contract' } & Pick<
+                Contract,
+                'status' | 'masterInception' | 'terminationDate'
+              >
             >
           }
       >
@@ -5894,6 +5897,8 @@ export const MemberSearchDocument = gql`
         }
         contracts {
           status
+          masterInception
+          terminationDate
         }
       }
       page

@@ -32,6 +32,7 @@ const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
     const groupedStatus = [
       ContractStatus.Pending,
       ContractStatus.Terminated,
+      ContractStatus.ActiveInFuture,
     ].includes(status)
       ? status
       : ContractStatus.Active
@@ -63,6 +64,7 @@ export const ContractCountCircles: React.FC<{
   contracts: Contract[]
 }> = ({ contracts }) => {
   const {
+    ACTIVE_IN_FUTURE: activeInFutureContracts = 0,
     ACTIVE: activeContracts = 0,
     PENDING: pendingContracts = 0,
     TERMINATED: terminatedContracts = 0,
@@ -74,6 +76,11 @@ export const ContractCountCircles: React.FC<{
         label={'Pending contract'}
         variation={'warning'}
         count={pendingContracts}
+      />
+      <CountCircle
+        label={'Active in future contract'}
+        variation={'accent'}
+        count={activeInFutureContracts}
       />
       <CountCircle
         label={'Active contract'}

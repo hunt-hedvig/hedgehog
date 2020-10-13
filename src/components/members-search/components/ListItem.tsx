@@ -13,6 +13,8 @@ import { getMemberFlag, MemberAge } from 'utils/member'
 export const ListItem: React.FC<{ member: Member }> = ({ member }) => {
   const market = member?.contractMarketInfo?.market
 
+  const contracts = member.contracts
+
   return (
     <Table.Row>
       <Table.Cell>
@@ -34,8 +36,18 @@ export const ListItem: React.FC<{ member: Member }> = ({ member }) => {
           format(parseISO(member.signedOn), 'MMM d, yyy, HH:ii')}
       </Table.Cell>
       <Table.Cell>
+        {
+          // TODO: First active from
+        }
+      </Table.Cell>
+      <Table.Cell>
+        {
+          // TODO: Last active to
+        }
+      </Table.Cell>
+      <Table.Cell>
         <CircleWrapper>
-          <ContractCountCircles contracts={member.contracts} />
+          <ContractCountCircles contracts={contracts} />
         </CircleWrapper>
       </Table.Cell>
     </Table.Row>
