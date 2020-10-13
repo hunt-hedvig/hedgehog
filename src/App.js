@@ -108,7 +108,7 @@ class App extends React.Component {
                           component={Routes.LoginPageRoute}
                         />
                         <Routes.PrivateRoute
-                          path="/dashboard"
+                          path="/dashborad"
                           store={store}
                           component={Routes.DashboardPageRoute}
                         />
@@ -140,7 +140,7 @@ class App extends React.Component {
                           store={store}
                           component={Routes.ToolsPageRoute}
                         />
-                        <Redirect from="*" to="/dashboard" />
+                        <Redirect from="*" to="/dashborad" />
                       </Switch>
                       <Notifications />
                     </Main>
