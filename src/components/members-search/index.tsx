@@ -17,6 +17,7 @@ import {
   MembersSearchResult,
 } from 'store/storeTypes'
 import { InsuranceStatusBadge } from 'utils/agreement'
+import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 import { MemberAge } from 'utils/member'
 import { MemberSuggestions } from './member-suggestions'
 
@@ -81,8 +82,15 @@ const ListWrapper = styled('div')({
  */
 const findInputFieldDomElementHackishly = (
   instance: React.ReactElement,
-): HTMLInputElement | null =>
-  findDOMNode(instance as any) as HTMLInputElement | null
+): HTMLInputElement | null => {
+  const wrapper = findDOMNode(instance as any) as HTMLInputElement | null
+
+  if (!wrapper) {
+    return null
+  }
+
+  return wrapper.querySelector('input') ?? null
+}
 
 export const MembersSearch: React.FC<Props> = ({
   searchMemberRequest,
@@ -94,6 +102,21 @@ export const MembersSearch: React.FC<Props> = ({
   const [hasDispatchedSearch, setHasDispatchedSearch] = React.useState(false)
   const history = useHistory()
   const searchField = useRef<React.ReactElement>()
+  const [currentKeyboardNavigationStep] = useVerticalKeyboardNavigation({
+    maxStep: searchResult.items.length - 1,
+    isActive: searchResult.items.length > 0,
+    onNavigationStep: () => {
+      const input =
+        searchField.current &&
+        findInputFieldDomElementHackishly(searchField.current)
+      if (input) {
+        input.blur()
+      }
+    },
+    onPerformNavigation: (index) => {
+      history.push(`/members/${searchResult.items[index].member.memberId}`)
+    },
+  })
 
   useEffect(() => {
     if (searchResult.items.length === 0) {
@@ -128,28 +151,14 @@ export const MembersSearch: React.FC<Props> = ({
               searchMemberRequest({ query, includeAll, page })
             }
             pagedItems={searchResult.items}
-            itemContent={(item, isKeyboardHighlighted) => (
+            itemContent={(item, index) => (
               <ListItem
                 item={item}
-                isKeyboardHighlighted={isKeyboardHighlighted}
+                active={currentKeyboardNavigationStep === index}
               />
             )}
             isSortable={false}
             tableHeader={<ListHeader />}
-            keyboardNavigationActive={searchResult.items.length > 0}
-            onKeyboardNavigation={() => {
-              const inputWrapper =
-                searchField.current &&
-                findInputFieldDomElementHackishly(searchField.current)
-              if (inputWrapper) {
-                inputWrapper.querySelector('input')!.blur()
-              }
-            }}
-            onKeyboardSelect={(index) => {
-              history.push(
-                `/members/${searchResult.items[index].member.memberId}`,
-              )
-            }}
           />
         </ListWrapper>
       )}
@@ -333,12 +342,12 @@ const MemberAgeWrapper = styled('div')(({ theme }) => ({
 
 const ListItem: React.FC<{
   item: MemberSearchResultItem
-  isKeyboardHighlighted?: boolean
-}> = ({ item, isKeyboardHighlighted }) => {
+  active?: boolean
+}> = ({ item, active }) => {
   const memberStatus =
     item.member.status !== 'SIGNED' ? item.member.status : item.productStatus
   return (
-    <Table.Row active={isKeyboardHighlighted}>
+    <Table.Row active={active}>
       <Table.Cell>
         {item.member.memberId ? (
           <Link to={`/members/${item.member.memberId}`}>
