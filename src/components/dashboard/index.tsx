@@ -100,7 +100,7 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
                   {change.change}
                   {isRecent && (
                     <Spacing inline left="small" width="auto">
-                      <Badge variant="success" size="match">
+                      <Badge variant="success" size="small" matchParentSize>
                         New!
                       </Badge>
                     </Spacing>
