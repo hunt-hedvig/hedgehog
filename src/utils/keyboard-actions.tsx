@@ -64,7 +64,7 @@ export const useVerticalKeyboardNavigation = ({
 
     if (e.key === 'ArrowUp') {
       e.preventDefault()
-      if (navigationIndex === 0) {
+      if (navigationIndex === 0 && onExit) {
         onExit()
       }
       handleStepChange(setNavigationIndex, (i) => i > -1, -1)
