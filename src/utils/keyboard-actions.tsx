@@ -25,9 +25,9 @@ export type PerformNavigationHandler = (index: number) => void
 export type NavigationStepHandler = () => void
 export interface UseVerticalKeyboardNavigationProps {
   maxStep: number
-  isActive: boolean
   onPerformNavigation?: PerformNavigationHandler
   onNavigationStep?: NavigationStepHandler
+  onExit?: () => void
 }
 
 const handleStepChange = (
@@ -46,14 +46,17 @@ const handleStepChange = (
 
 export const useVerticalKeyboardNavigation = ({
   maxStep,
-  isActive,
   onNavigationStep,
   onPerformNavigation,
-}: UseVerticalKeyboardNavigationProps): [number] => {
+  onExit,
+}: UseVerticalKeyboardNavigationProps): [number, () => void] => {
   const [navigationIndex, setNavigationIndex] = useState(-1)
+  const reset = () => {
+    setNavigationIndex(-1)
+  }
 
-  useKeyboardListener(isActive, (e) => {
-    if (e.key === 'Enter' && onPerformNavigation) {
+  useKeyboardListener(true, (e) => {
+    if (navigationIndex !== -1 && e.key === 'Enter' && onPerformNavigation) {
       e.preventDefault()
       onPerformNavigation(navigationIndex)
       return
@@ -61,7 +64,10 @@ export const useVerticalKeyboardNavigation = ({
 
     if (e.key === 'ArrowUp') {
       e.preventDefault()
-      handleStepChange(setNavigationIndex, (i) => i > 0, -1)
+      if (navigationIndex === 0 && onExit) {
+        onExit()
+      }
+      handleStepChange(setNavigationIndex, (i) => i > -1, -1)
       return
     }
 
@@ -78,5 +84,5 @@ export const useVerticalKeyboardNavigation = ({
     }
   }, [navigationIndex])
 
-  return [navigationIndex]
+  return [navigationIndex, reset]
 }

@@ -45,9 +45,11 @@ export const MembersSearch: React.FC = () => {
     memberSearch,
     { loading },
   ] = useMemberSearch()
-  const [currentKeyboardNavigationStep] = useVerticalKeyboardNavigation({
+  const [
+    currentKeyboardNavigationStep,
+    resetKeyboardNavigationStep,
+  ] = useVerticalKeyboardNavigation({
     maxStep: members.length - 1,
-    isActive: members.length > 0,
     onNavigationStep: () => {
       const input =
         searchField.current &&
@@ -59,9 +61,21 @@ export const MembersSearch: React.FC = () => {
     onPerformNavigation: (index) => {
       history.push(`/members/${members[index].memberId}`)
     },
+    onExit: () => {
+      const input =
+        searchField.current &&
+        findInputFieldDomElementHackishly(searchField.current)
+      if (input) {
+        input.focus()
+      }
+    },
   })
 
   const noMembersFound = members.length === 0 && query && !loading
+
+  useEffect(() => {
+    resetKeyboardNavigation()
+  }, [query])
 
   return (
     <>
@@ -78,6 +92,7 @@ export const MembersSearch: React.FC = () => {
         setIncludeAll={setIncludeAll}
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
+        onFocus={resetKeyboardNavigation}
       />
       {members.length > 0 && (
         <ListWrapper>

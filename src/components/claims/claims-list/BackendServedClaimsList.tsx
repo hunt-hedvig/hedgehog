@@ -13,7 +13,7 @@ import {
   ClaimSearchFilter,
   ClaimSortColumn,
   ClaimsStore,
-} from '../../../store/types/claimsTypes'
+} from 'store/types/claimsTypes'
 import BackendPaginatorList from '../../shared/paginator-list/BackendPaginatorList'
 
 export interface BackendServedClaimsListProps {
@@ -119,7 +119,6 @@ const BackendServedClaimsList: React.SFC<BackendServedClaimsListProps> = ({
 }) => {
   const [currentKeyboardNavigationStep] = useVerticalKeyboardNavigation({
     maxStep: searchResult.claims.length - 1,
-    isActive: true,
     onPerformNavigation: (index) => {
       linkClickHandler(
         searchResult.claims[index].id,

@@ -34,7 +34,6 @@ describe('useVerticalKeyboardNavigation', () => {
     const StepShower: React.FC = () => {
       const [currentStep] = useVerticalKeyboardNavigation({
         maxStep: 3,
-        isActive: true,
         onNavigationStep: navStepListener,
         onPerformNavigation: performNavigationListener,
       })
@@ -75,7 +74,6 @@ describe('useVerticalKeyboardNavigation', () => {
     const StepShower: React.FC = () => {
       const [currentStep] = useVerticalKeyboardNavigation({
         maxStep: 3,
-        isActive: true,
         onPerformNavigation: performNavigationListener,
       })
 
