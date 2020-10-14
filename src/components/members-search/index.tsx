@@ -73,8 +73,8 @@ export const MembersSearch: React.FC = () => {
 
   const noMembersFound = members.length === 0 && query && !loading
 
-  useEffect(() => {
-    resetKeyboardNavigation()
+  React.useEffect(() => {
+    resetKeyboardNavigationStep()
   }, [query])
 
   return (
@@ -92,7 +92,7 @@ export const MembersSearch: React.FC = () => {
         setIncludeAll={setIncludeAll}
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
-        onFocus={resetKeyboardNavigation}
+        onFocus={resetKeyboardNavigationStep}
       />
       {members.length > 0 && (
         <ListWrapper>

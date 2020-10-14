@@ -11,6 +11,7 @@ import React from 'react'
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
+  onFocus: () => void
   loading: boolean
   query: string
   includeAll: boolean
@@ -22,6 +23,7 @@ interface SearchFieldProps {
 
 export const SearchForm: React.FC<SearchFieldProps> = ({
   onSubmit,
+  onFocus,
   loading,
   query,
   setQuery,
@@ -36,6 +38,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
         e.preventDefault()
         onSubmit(query, includeAll)
       }}
+      onFocus={onFocus}
     >
       <Group>
         <SearchInputGroup>
