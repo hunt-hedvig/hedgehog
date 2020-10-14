@@ -102,9 +102,11 @@ export const MembersSearch: React.FC<Props> = ({
   const [hasDispatchedSearch, setHasDispatchedSearch] = React.useState(false)
   const history = useHistory()
   const searchField = useRef<React.ReactElement>()
-  const [currentKeyboardNavigationStep] = useVerticalKeyboardNavigation({
+  const [
+    currentKeyboardNavigationStep,
+    resetKeyboardNavigation,
+  ] = useVerticalKeyboardNavigation({
     maxStep: searchResult.items.length - 1,
-    isActive: searchResult.items.length > 0,
     onNavigationStep: () => {
       const input =
         searchField.current &&
@@ -116,6 +118,14 @@ export const MembersSearch: React.FC<Props> = ({
     onPerformNavigation: (index) => {
       history.push(`/members/${searchResult.items[index].member.memberId}`)
     },
+    onExit: () => {
+      const input =
+        searchField.current &&
+        findInputFieldDomElementHackishly(searchField.current)
+      if (input) {
+        input.focus()
+      }
+    },
   })
 
   useEffect(() => {
@@ -123,6 +133,10 @@ export const MembersSearch: React.FC<Props> = ({
       searchMemberRequest({})
     }
   }, [])
+
+  useEffect(() => {
+    resetKeyboardNavigation()
+  }, [query])
 
   return (
     <>
@@ -141,6 +155,7 @@ export const MembersSearch: React.FC<Props> = ({
         setIncludeAll={setIncludeAll}
         currentResultSize={searchResult.items.length}
         searchFieldRef={searchField as any}
+        onFocus={resetKeyboardNavigation}
       />
       {searchResult.items.length > 0 && (
         <ListWrapper>
@@ -257,6 +272,7 @@ interface SearchFieldProps {
   setIncludeAll: (includeAll: boolean) => void
   currentResultSize: number
   searchFieldRef: React.Ref<any>
+  onFocus?: () => void
 }
 const Search: React.FC<SearchFieldProps> = ({
   onSubmit,
@@ -267,6 +283,7 @@ const Search: React.FC<SearchFieldProps> = ({
   setIncludeAll,
   currentResultSize,
   searchFieldRef,
+  onFocus,
 }) => {
   return (
     <form
@@ -274,6 +291,7 @@ const Search: React.FC<SearchFieldProps> = ({
         e.preventDefault()
         onSubmit(query, includeAll)
       }}
+      autoComplete="off"
     >
       <Group>
         <SearchInputGroup>
@@ -289,6 +307,7 @@ const Search: React.FC<SearchFieldProps> = ({
             autoFocus
             muted={!query}
             ref={searchFieldRef}
+            onFocus={onFocus}
           />
           <SearchButton
             type="submit"
