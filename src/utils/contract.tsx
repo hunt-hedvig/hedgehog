@@ -74,12 +74,7 @@ export const getFirstMasterInception = (
   if (masterInceptions.length === 0) {
     return null
   }
-  return masterInceptions.reduce((a, b) => {
-    if (a < b) {
-      return a
-    }
-    return b
-  })
+  return masterInceptions.reduce((a, b) => (a < b ? a : b))
 }
 
 export const getLastTerminationDate = (
@@ -95,10 +90,5 @@ export const getLastTerminationDate = (
     return null
   }
   const terminationDates = contracts.map((contract) => contract.terminationDate)
-  return terminationDates.reduce((a, b) => {
-    if (a > b) {
-      return a
-    }
-    return b
-  })
+  return terminationDates.reduce((a, b) => (a > b ? a : b))
 }
