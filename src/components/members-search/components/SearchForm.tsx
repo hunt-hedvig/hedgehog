@@ -38,7 +38,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
         e.preventDefault()
         onSubmit(query, includeAll)
       }}
-      onFocus={onFocus}
+      autoComplete="off"
     >
       <Group>
         <SearchInputGroup>
@@ -54,6 +54,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             autoFocus
             muted={!query}
             ref={searchFieldRef}
+            onFocus={onFocus}
           />
           <SearchButton
             type="submit"
