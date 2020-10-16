@@ -52,7 +52,7 @@ export const CountCircle: React.FC<{
   }
 
   return (
-    <Popover contents={`${label}${count !== 1 ? 's' : ''}`}>
+    <Popover contents={label}>
       <Circle variation={count ? variation : 'placeholderColor'}>
         {count}
       </Circle>
@@ -73,22 +73,22 @@ export const ContractCountCircles: React.FC<{
   return (
     <>
       <CountCircle
-        label={'Pending contract'}
+        label={'Pending contracts'}
         variation={'warning'}
         count={pendingContracts}
       />
       <CountCircle
-        label={'Active in future contract'}
+        label={'Contracts active in future'}
         variation={'accent'}
         count={activeInFutureContracts}
       />
       <CountCircle
-        label={'Active contract'}
+        label={'Active contracts'}
         variation={'success'}
         count={activeContracts}
       />
       <CountCircle
-        label={'Terminated contract'}
+        label={'Terminated contracts'}
         variation={'danger'}
         count={terminatedContracts}
       />
