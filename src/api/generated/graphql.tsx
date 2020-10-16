@@ -747,12 +747,32 @@ export type MemberChargeApproval = {
   amount: Scalars['MonetaryAmount']
 }
 
+export type MemberFraudulentStatusInput = {
+  fraudulentStatus: Scalars['String']
+  fraudulentStatusDescription?: Maybe<Scalars['String']>
+}
+
 export type MemberReferral = {
   __typename?: 'MemberReferral'
   memberId: Scalars['String']
   name?: Maybe<Scalars['String']>
   status: Scalars['String']
   incentive: Incentive
+}
+
+export type MemberSearchOptions = {
+  includeAll?: Maybe<Scalars['Boolean']>
+  page?: Maybe<Scalars['Int']>
+  pageSize?: Maybe<Scalars['Int']>
+  sortBy?: Maybe<Scalars['String']>
+  sortDirection?: Maybe<Scalars['String']>
+}
+
+export type MemberSearchResult = {
+  __typename?: 'MemberSearchResult'
+  members: Array<Member>
+  totalPages: Scalars['Int']
+  page: Scalars['Int']
 }
 
 export type MonetaryAmountV2 = {
@@ -834,6 +854,7 @@ export type MutationType = {
   manualRedeemEnableReferralsCampaign: Scalars['Boolean']
   unsignMember: Scalars['Boolean']
   editMemberInfo: Scalars['Boolean']
+  setFraudulentStatus: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1113,6 +1134,11 @@ export type MutationTypeEditMemberInfoArgs = {
   request: EditMemberInfoInput
 }
 
+export type MutationTypeSetFraudulentStatusArgs = {
+  memberId: Scalars['ID']
+  request: MemberFraudulentStatusInput
+}
+
 export type NoDiscount = {
   __typename?: 'NoDiscount'
   _?: Maybe<Scalars['Boolean']>
@@ -1214,6 +1240,7 @@ export type QueryType = {
   getClaimItemValuation: ClaimItemValuation
   canValuateClaimItem?: Maybe<CanValuateClaimItem>
   quoteSchemaForContractType?: Maybe<Scalars['JSON']>
+  memberSearch: MemberSearchResult
 }
 
 export type QueryTypeMonthlyPaymentsArgs = {
@@ -1273,6 +1300,11 @@ export type QueryTypeCanValuateClaimItemArgs = {
 
 export type QueryTypeQuoteSchemaForContractTypeArgs = {
   contractType: Scalars['String']
+}
+
+export type QueryTypeMemberSearchArgs = {
+  query: Scalars['String']
+  options: MemberSearchOptions
 }
 
 export type Question = {
@@ -2583,6 +2615,43 @@ export type MarkQuestionAsResolvedMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'markQuestionAsResolved'>
 
+export type MemberSearchQueryVariables = {
+  query: Scalars['String']
+  options: MemberSearchOptions
+}
+
+export type MemberSearchQuery = { __typename?: 'QueryType' } & {
+  memberSearch: { __typename?: 'MemberSearchResult' } & Pick<
+    MemberSearchResult,
+    'page' | 'totalPages'
+  > & {
+      members: Array<
+        { __typename?: 'Member' } & Pick<
+          Member,
+          | 'memberId'
+          | 'firstName'
+          | 'lastName'
+          | 'status'
+          | 'signedOn'
+          | 'birthDate'
+        > & {
+            contractMarketInfo: Maybe<
+              { __typename?: 'ContractMarketInfo' } & Pick<
+                ContractMarketInfo,
+                'market'
+              >
+            >
+            contracts: Array<
+              { __typename?: 'Contract' } & Pick<
+                Contract,
+                'status' | 'masterInception' | 'terminationDate'
+              >
+            >
+          }
+      >
+    }
+}
+
 export type RegenerateCertificateMutationVariables = {
   agreementId: Scalars['ID']
 }
@@ -2644,6 +2713,15 @@ export type SetCoveringEmployeeMutation = { __typename?: 'MutationType' } & {
       }
   >
 }
+
+export type SetFraudulentStatusMutationVariables = {
+  memberId: Scalars['ID']
+  request: MemberFraudulentStatusInput
+}
+
+export type SetFraudulentStatusMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'setFraudulentStatus'>
 
 export type SignQuoteForNewContractMutationVariables = {
   quoteId: Scalars['ID']
@@ -5534,6 +5612,80 @@ export type MarkQuestionAsResolvedMutationOptions = ApolloReactCommon.BaseMutati
   MarkQuestionAsResolvedMutation,
   MarkQuestionAsResolvedMutationVariables
 >
+export const MemberSearchDocument = gql`
+  query MemberSearch($query: String!, $options: MemberSearchOptions!) {
+    memberSearch(query: $query, options: $options) {
+      members {
+        memberId
+        firstName
+        lastName
+        status
+        signedOn
+        birthDate
+        contractMarketInfo {
+          market
+        }
+        contracts {
+          status
+          masterInception
+          terminationDate
+        }
+      }
+      page
+      totalPages
+    }
+  }
+`
+
+/**
+ * __useMemberSearchQuery__
+ *
+ * To run a query within a React component, call `useMemberSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberSearchQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useMemberSearchQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    MemberSearchQuery,
+    MemberSearchQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    MemberSearchQuery,
+    MemberSearchQueryVariables
+  >(MemberSearchDocument, baseOptions)
+}
+export function useMemberSearchLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    MemberSearchQuery,
+    MemberSearchQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    MemberSearchQuery,
+    MemberSearchQueryVariables
+  >(MemberSearchDocument, baseOptions)
+}
+export type MemberSearchQueryHookResult = ReturnType<
+  typeof useMemberSearchQuery
+>
+export type MemberSearchLazyQueryHookResult = ReturnType<
+  typeof useMemberSearchLazyQuery
+>
+export type MemberSearchQueryResult = ApolloReactCommon.QueryResult<
+  MemberSearchQuery,
+  MemberSearchQueryVariables
+>
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {
     regenerateCertificate(agreementId: $agreementId)
@@ -5792,6 +5944,58 @@ export type SetCoveringEmployeeMutationResult = ApolloReactCommon.MutationResult
 export type SetCoveringEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetCoveringEmployeeMutation,
   SetCoveringEmployeeMutationVariables
+>
+export const SetFraudulentStatusDocument = gql`
+  mutation SetFraudulentStatus(
+    $memberId: ID!
+    $request: MemberFraudulentStatusInput!
+  ) {
+    setFraudulentStatus(memberId: $memberId, request: $request)
+  }
+`
+export type SetFraudulentStatusMutationFn = ApolloReactCommon.MutationFunction<
+  SetFraudulentStatusMutation,
+  SetFraudulentStatusMutationVariables
+>
+
+/**
+ * __useSetFraudulentStatusMutation__
+ *
+ * To run a mutation, you first call `useSetFraudulentStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetFraudulentStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setFraudulentStatusMutation, { data, loading, error }] = useSetFraudulentStatusMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSetFraudulentStatusMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetFraudulentStatusMutation,
+    SetFraudulentStatusMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    SetFraudulentStatusMutation,
+    SetFraudulentStatusMutationVariables
+  >(SetFraudulentStatusDocument, baseOptions)
+}
+export type SetFraudulentStatusMutationHookResult = ReturnType<
+  typeof useSetFraudulentStatusMutation
+>
+export type SetFraudulentStatusMutationResult = ApolloReactCommon.MutationResult<
+  SetFraudulentStatusMutation
+>
+export type SetFraudulentStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetFraudulentStatusMutation,
+  SetFraudulentStatusMutationVariables
 >
 export const SignQuoteForNewContractDocument = gql`
   mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {

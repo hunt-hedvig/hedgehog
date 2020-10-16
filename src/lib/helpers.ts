@@ -24,27 +24,6 @@ export const updateList = (list: any[], msg: any[]) => {
   }
 }
 
-/**
- * Hidding inactive members on first render && sort by signup date
- * @param {object} param0 -
- */
-export const filterMembersList = ({ type, members }) =>
-  type !== 'MEMBERS_REQUEST_SUCCESS'
-    ? members
-    : members.filter((item) => item.status !== 'INACTIVATED').reverse()
-
-/**
- * Returns string with member first+last name || member Id
- * @param {array} members
- * @param {string} id
- */
-export const getMemberInfo = (members, id) => {
-  const member = members.find((person) => person.memberId === id)
-  return member && member.firstName
-    ? `${member.firstName} ${member.lastName || ''}`
-    : `${id ? 'Member-' + id : 'No id'}`
-}
-
 const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }

@@ -27,6 +27,24 @@ type QueryType {
     itemTypeId: ID
   ): CanValuateClaimItem
   quoteSchemaForContractType(contractType: String!): JSON
+  memberSearch(
+    query: String!
+    options: MemberSearchOptions!
+  ): MemberSearchResult!
+}
+
+type MemberSearchResult {
+  members: [Member!]!
+  totalPages: Int!
+  page: Int!
+}
+
+input MemberSearchOptions {
+  includeAll: Boolean
+  page: Int
+  pageSize: Int
+  sortBy: String
+  sortDirection: String
 }
 
 type DashboardNumbers {
@@ -119,9 +137,7 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  assignCampaignToPartnerFreeMonths(
-    request: AssignVoucherFreeMonths
-  ): Boolean!
+  assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -137,6 +153,15 @@ type MutationType {
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
   unsignMember(market: String!, ssn: String!): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Boolean!
+  setFraudulentStatus(
+    memberId: ID!
+    request: MemberFraudulentStatusInput!
+  ): Boolean!
+}
+
+input MemberFraudulentStatusInput {
+  fraudulentStatus: String!
+  fraudulentStatusDescription: String
 }
 
 type ClaimItem {
@@ -498,7 +523,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -948,7 +973,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

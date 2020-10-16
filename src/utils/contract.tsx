@@ -64,3 +64,31 @@ export const getContractByAgreementId = (
     ),
   )
 }
+
+export const getFirstMasterInception = (
+  contracts: ReadonlyArray<Contract>,
+): Date | null => {
+  const masterInceptions = contracts
+    .filter((contract) => !!contract.masterInception)
+    .map((contract) => contract.masterInception)
+  if (masterInceptions.length === 0) {
+    return null
+  }
+  return masterInceptions.reduce((a, b) => (a < b ? a : b))
+}
+
+export const getLastTerminationDate = (
+  contracts: ReadonlyArray<Contract>,
+): Date | null => {
+  if (contracts.length === 0) {
+    return null
+  }
+  const hasNonTerminatedContract = contracts.some(
+    (contract) => !contract.isTerminated,
+  )
+  if (hasNonTerminatedContract) {
+    return null
+  }
+  const terminationDates = contracts.map((contract) => contract.terminationDate)
+  return terminationDates.reduce((a, b) => (a > b ? a : b))
+}

@@ -1,80 +1,22 @@
-import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
-import { format, parseISO } from 'date-fns'
-import { Button } from 'hedvig-ui/button'
-import { Checkbox } from 'hedvig-ui/checkbox'
-import { Input } from 'hedvig-ui/input'
-import { MainHeadline } from 'hedvig-ui/typography'
-import React, { useEffect, useRef } from 'react'
-import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
-import { findDOMNode } from 'react-dom'
-import styled, { keyframes } from 'react-emotion'
-import { useHistory } from 'react-router'
-import { Link } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
+import { Member } from 'api/generated/graphql'
+import { ListHeader } from 'components/members-search/components/ListHeader'
+import { ListItem } from 'components/members-search/components/ListItem'
+import { SearchForm } from 'components/members-search/components/SearchForm'
 import {
-  MemberSearchFilter,
-  MemberSearchResultItem,
-  MembersSearchResult,
-} from 'store/storeTypes'
-import { InsuranceStatusBadge } from 'utils/agreement'
+  ExtraInstruction,
+  Instructions,
+  ListWrapper,
+  MemberSuggestionsWrapper,
+  NoMembers,
+} from 'components/members-search/styles'
+import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
+import { useMemberSearch } from 'graphql/use-member-search'
+import { MainHeadline } from 'hedvig-ui/typography'
+import React, { useRef } from 'react'
+import { findDOMNode } from 'react-dom'
+import { useHistory } from 'react-router'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
-import { MemberAge } from 'utils/member'
-import { MemberSuggestions } from './member-suggestions'
-
-export interface Props {
-  searchMemberRequest: (requestArgs: Partial<MemberSearchFilter>) => void
-  searchResult: MembersSearchResult
-  searchLoading: boolean
-}
-
-const fadeIn = (max: number) =>
-  keyframes({
-    from: { opacity: 0, transform: 'translateY(5%)' },
-    to: { opacity: max, transform: 'translateY(0)' },
-  })
-
-const Instructions = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  textAlign: 'left',
-  paddingLeft: '1rem',
-  paddingTop: '2rem',
-  code: {
-    background: theme.backgroundTransparent,
-    padding: '1px 2px',
-    borderRadius: 1,
-  },
-  opacity: 0,
-  animation: `${fadeIn(0.3)} 1000ms forwards`,
-  animationDelay: '500ms',
-}))
-
-const MemberSuggestionsWrapper = styled(Instructions)({
-  paddingTop: '25vh',
-  width: '100%',
-  maxWidth: '50rem',
-  animation: `${fadeIn(1)} 1000ms forwards`,
-  animationDelay: '750ms',
-})
-
-const NoMembers = styled(Instructions)({
-  width: '100%',
-  flex: 1,
-  alignItems: 'center',
-  fontSize: '1.5rem',
-  paddingTop: '25vh',
-})
-
-const ExtraInstruction = styled('div')({
-  opacity: 0,
-  animation: `${fadeIn(1)} 1000ms forwards`,
-  animationDelay: '1000ms',
-})
-
-const ListWrapper = styled('div')({
-  paddingLeft: '1rem',
-})
+import { MemberSuggestions } from './components/MemberSuggestions'
 
 /**
  * Semantic UI haven't implemented refs corretly or they collide with react-emotion or something.
@@ -92,21 +34,22 @@ const findInputFieldDomElementHackishly = (
   return wrapper.querySelector('input') ?? null
 }
 
-export const MembersSearch: React.FC<Props> = ({
-  searchMemberRequest,
-  searchResult,
-  searchLoading,
-}) => {
+export const MembersSearch: React.FC = () => {
   const [query, setQuery] = React.useState('')
   const [includeAll, setIncludeAll] = React.useState(false)
-  const [hasDispatchedSearch, setHasDispatchedSearch] = React.useState(false)
   const history = useHistory()
   const searchField = useRef<React.ReactElement>()
+
+  const [
+    { members, totalPages, page },
+    memberSearch,
+    { loading },
+  ] = useMemberSearch()
   const [
     currentKeyboardNavigationStep,
-    resetKeyboardNavigation,
+    resetKeyboardNavigationStep,
   ] = useVerticalKeyboardNavigation({
-    maxStep: searchResult.items.length - 1,
+    maxStep: members.length - 1,
     onNavigationStep: () => {
       const input =
         searchField.current &&
@@ -116,7 +59,7 @@ export const MembersSearch: React.FC<Props> = ({
       }
     },
     onPerformNavigation: (index) => {
-      history.push(`/members/${searchResult.items[index].member.memberId}`)
+      history.push(`/members/${members[index].memberId}`)
     },
     onExit: () => {
       const input =
@@ -128,47 +71,41 @@ export const MembersSearch: React.FC<Props> = ({
     },
   })
 
-  useEffect(() => {
-    if (searchResult.items.length === 0) {
-      searchMemberRequest({})
-    }
-  }, [])
+  const noMembersFound = members.length === 0 && query && !loading
 
-  useEffect(() => {
-    resetKeyboardNavigation()
+  React.useEffect(() => {
+    resetKeyboardNavigationStep()
   }, [query])
 
   return (
     <>
-      <Search
-        onSubmit={(submittedQuery, submittedIncludeAll) => {
-          searchMemberRequest({
-            query: submittedQuery !== '' ? submittedQuery : '%',
-            includeAll: submittedIncludeAll,
+      <SearchForm
+        onSubmit={() => {
+          memberSearch(query || '%', {
+            includeAll,
           })
-          setHasDispatchedSearch(true)
         }}
-        loading={searchLoading}
+        loading={loading}
         query={query}
         setQuery={setQuery}
         includeAll={includeAll}
         setIncludeAll={setIncludeAll}
-        currentResultSize={searchResult.items.length}
+        currentResultSize={members.length}
         searchFieldRef={searchField as any}
-        onFocus={resetKeyboardNavigation}
+        onFocus={resetKeyboardNavigationStep}
       />
-      {searchResult.items.length > 0 && (
+      {members.length > 0 && (
         <ListWrapper>
-          <BackendPaginatorList<MemberSearchResultItem>
-            currentPage={searchResult.page}
-            totalPages={searchResult.totalPages}
-            changePage={(page) =>
-              searchMemberRequest({ query, includeAll, page })
+          <BackendPaginatorList<Member>
+            currentPage={page}
+            totalPages={totalPages}
+            changePage={(nextPage) =>
+              memberSearch(query, { includeAll, page: nextPage, pageSize: 25 })
             }
-            pagedItems={searchResult.items}
-            itemContent={(item, index) => (
+            pagedItems={members}
+            itemContent={(member, index) => (
               <ListItem
-                item={item}
+                member={member}
                 active={currentKeyboardNavigationStep === index}
               />
             )}
@@ -177,7 +114,7 @@ export const MembersSearch: React.FC<Props> = ({
           />
         </ListWrapper>
       )}
-      {searchResult.items.length === 0 && (!hasDispatchedSearch || !query) && (
+      {members.length === 0 && !query && (
         <>
           <Instructions>
             <h1>Search for members</h1>
@@ -206,199 +143,11 @@ export const MembersSearch: React.FC<Props> = ({
         </>
       )}
 
-      {searchResult.items.length === 0 &&
-        hasDispatchedSearch &&
-        query &&
-        !searchLoading && (
-          <NoMembers>
-            <div>D*shborad! No members found</div>
-          </NoMembers>
-        )}
+      {noMembersFound && (
+        <NoMembers>
+          <div>D*shborad! No members found</div>
+        </NoMembers>
+      )}
     </>
-  )
-}
-
-const Group = styled('div')<{ pushLeft?: boolean }>(({ pushLeft }) => ({
-  paddingBottom: '1rem',
-  paddingLeft: pushLeft ? '1rem' : 0,
-}))
-const SearchInputGroup = styled('div')({
-  display: 'flex',
-  position: 'relative',
-  fontSize: '1rem',
-  maxWidth: '40rem',
-})
-const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
-  ({ muted, theme }) => ({
-    position: 'absolute',
-    top: '50%',
-    left: '1rem',
-    transform: 'translateY(-50%)',
-    zIndex: 1,
-    fill: muted ? theme.mutedText : undefined,
-    transition: 'fill 300ms',
-  }),
-)
-
-const SearchInput = styled(Input)({
-  marginRight: '1rem',
-
-  '&&': {
-    width: '100%',
-  },
-
-  '&& input': {
-    borderRadius: '0.5rem',
-    paddingLeft: '3rem',
-  },
-})
-const SearchButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
-  opacity: visible ? 1 : 0,
-  transition: 'opacity 400ms',
-}))
-
-const EscapeButton = styled(Button)<{ visible: boolean }>(({ visible }) => ({
-  opacity: visible ? 1 : 0,
-  transition: 'opacity 300ms',
-  marginLeft: '2rem',
-}))
-
-interface SearchFieldProps {
-  onSubmit: (query: string, includeAll: boolean) => void
-  loading: boolean
-  query: string
-  includeAll: boolean
-  setQuery: (query: string) => void
-  setIncludeAll: (includeAll: boolean) => void
-  currentResultSize: number
-  searchFieldRef: React.Ref<any>
-  onFocus?: () => void
-}
-const Search: React.FC<SearchFieldProps> = ({
-  onSubmit,
-  loading,
-  query,
-  setQuery,
-  includeAll,
-  setIncludeAll,
-  currentResultSize,
-  searchFieldRef,
-  onFocus,
-}) => {
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit(query, includeAll)
-      }}
-      autoComplete="off"
-    >
-      <Group>
-        <SearchInputGroup>
-          <SearchIcon muted={!query} />
-          <SearchInput
-            onChange={(_, { value }) => setQuery(value)}
-            placeholder="Looking for someone...?"
-            id="query"
-            value={query}
-            loading={loading}
-            size="big"
-            type="search"
-            autoFocus
-            muted={!query}
-            ref={searchFieldRef}
-            onFocus={onFocus}
-          />
-          <SearchButton
-            type="submit"
-            disabled={loading}
-            variation="primary"
-            size="large"
-            visible={Boolean(query)}
-          >
-            Search
-          </SearchButton>
-        </SearchInputGroup>
-      </Group>
-      <Group pushLeft>
-        <Checkbox
-          onChange={(_, { checked }) => {
-            setIncludeAll(checked!)
-            onSubmit(query, checked!)
-          }}
-          checked={includeAll}
-          label="Wide search"
-        />
-
-        <EscapeButton
-          size="small"
-          visible={!query && currentResultSize > 0}
-          onClick={() => onSubmit('', false)}
-        >
-          Clear
-        </EscapeButton>
-      </Group>
-    </form>
-  )
-}
-
-const ListHeader: React.FC = () => (
-  <Table.Header>
-    <Table.HeaderCell>Member</Table.HeaderCell>
-    <Table.HeaderCell />
-    <Table.HeaderCell>Sign up</Table.HeaderCell>
-    <Table.HeaderCell>Active from</Table.HeaderCell>
-    <Table.HeaderCell>Active to</Table.HeaderCell>
-    <Table.HeaderCell>Status</Table.HeaderCell>
-    <Table.HeaderCell>Size</Table.HeaderCell>
-  </Table.Header>
-)
-
-const MemberAgeWrapper = styled('div')(({ theme }) => ({
-  color: theme.mutedText,
-  fontSize: '0.8rem',
-}))
-
-const ListItem: React.FC<{
-  item: MemberSearchResultItem
-  active?: boolean
-}> = ({ item, active }) => {
-  const memberStatus =
-    item.member.status !== 'SIGNED' ? item.member.status : item.productStatus
-  return (
-    <Table.Row active={active}>
-      <Table.Cell>
-        {item.member.memberId ? (
-          <Link to={`/members/${item.member.memberId}`}>
-            {item.member.memberId}
-          </Link>
-        ) : (
-          '-'
-        )}
-      </Table.Cell>
-      <Table.Cell>
-        {item.member.firstName ?? '-'} {item.member.lastName ?? '-'}
-        <MemberAgeWrapper>
-          <MemberAge birthDateString={item.member.birthDate} />
-        </MemberAgeWrapper>
-      </Table.Cell>
-      <Table.Cell>
-        {item.member.signedOn &&
-          format(parseISO(item.member.signedOn), 'MMM d, yyy, HH:ii')}
-      </Table.Cell>
-      <Table.Cell>{item.firstActiveFrom ?? '-'}</Table.Cell>
-      <Table.Cell>{item.lastActiveTo ?? '-'}</Table.Cell>
-      <Table.Cell>
-        {memberStatus && (
-          <InsuranceStatusBadge status={memberStatus}>
-            {memberStatus?.toLowerCase()}
-          </InsuranceStatusBadge>
-        )}
-      </Table.Cell>
-      <Table.Cell>
-        {item.householdSize ?? '-'} people / {item.livingSpace ?? '-'} m
-        <sup>2</sup>
-      </Table.Cell>
-    </Table.Row>
   )
 }

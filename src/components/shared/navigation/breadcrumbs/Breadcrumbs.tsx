@@ -1,4 +1,4 @@
-import { getMemberInfo } from 'lib/helpers'
+import { useGetMemberInfoLazyQuery } from 'api/generated/graphql'
 import React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
@@ -16,7 +16,9 @@ const BreadcrumbsContainer = styled.div`
   }
 `
 
-const Breadcrumbs: React.FC<any> = ({ state, history }) => {
+const Breadcrumbs: React.FC<any> = ({ history }) => {
+  const [getMember, { loading, data, error }] = useGetMemberInfoLazyQuery()
+
   const pathname = history.location.pathname
   if (pathname.startsWith('/login')) {
     return null
@@ -32,10 +34,15 @@ const Breadcrumbs: React.FC<any> = ({ state, history }) => {
     }
 
     if (i === arr.length - 1) {
-      const content =
-        pathname.indexOf('members/') >= 0
-          ? getMemberInfo(state.members.list, path)
-          : path.toLowerCase()
+      if (pathname.indexOf('members/') >= 0 && !loading && !data && !error) {
+        const memberId = path
+        getMember({ variables: { memberId } })
+      }
+
+      const content = data?.member
+        ? `${data.member.firstName} ${data.member.lastName}`
+        : path.toLowerCase()
+
       return {
         key: i,
         content,
