@@ -16,7 +16,7 @@ const BreadcrumbsContainer = styled.div`
   }
 `
 
-const Breadcrumbs: React.FC<any> = () => {
+const Breadcrumbs: React.FC = () => {
   const history = useHistory()
 
   const [pathname, setPathname] = React.useState<string>(
