@@ -1,5 +1,6 @@
 import QuestionGroups from 'components/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
+import { MajorLoadingMessage } from 'hedvig-ui/animations/major-message'
 import { Spacing } from 'hedvig-ui/spacing'
 import * as React from 'react'
 import { useInsecurePersistentState } from 'utils/state'
@@ -20,7 +21,7 @@ const Questions: React.FC = () => {
   const [questionGroups, { loading }] = useQuestionGroups()
 
   if (loading) {
-    return <>Loading...</>
+    return <MajorLoadingMessage>Loading</MajorLoadingMessage>
   }
 
   if (!questionGroups) {
