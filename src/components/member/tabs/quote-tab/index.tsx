@@ -1,6 +1,10 @@
 import { Quote } from 'api/generated/graphql'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { useQuotes } from 'graphql/use-get-quotes'
+import {
+  MajorLoadingMessage,
+  MajorMessage,
+} from 'hedvig-ui/animations/major-message'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import * as React from 'react'
 import { Tab } from 'semantic-ui-react'
@@ -18,15 +22,19 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   const [contractMarket, { loading }] = useContractMarketInfo(memberId)
 
   if (loading || quotesLoading) {
-    return null
+    return <MajorLoadingMessage paddingTop="10vh">Loading</MajorLoadingMessage>
   }
 
   if (quotes.length === 0) {
-    return <em>No quotes :(</em>
+    return <MajorMessage paddingTop="10vh">No quotes</MajorMessage>
   }
 
   if (!contractMarket) {
-    return <>Unable to get Market, please contact Tech</>
+    return (
+      <MajorMessage paddingTop="10vh">
+        Unable to get Market, contact Tech
+      </MajorMessage>
+    )
   }
 
   const getUniqueContractTypes = () => {

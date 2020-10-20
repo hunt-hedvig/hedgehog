@@ -51,13 +51,21 @@ const AnimatedEllipsis = styled.span`
   }
 `
 
-export const MajorMessage: React.FC<{
+interface MajorMessageProps {
   children: React.ReactNode
   paddingTop?: string
   paddingBottom?: string
   paddingLeft?: string
   paddingRight?: string
-}> = ({ children, paddingTop, paddingBottom, paddingLeft, paddingRight }) => {
+}
+
+export const MajorMessage: React.FC<MajorMessageProps> = ({
+  children,
+  paddingTop,
+  paddingBottom,
+  paddingLeft,
+  paddingRight,
+}) => {
   return (
     <MajorMessageWrapper
       paddingTop={paddingTop}
@@ -70,11 +78,13 @@ export const MajorMessage: React.FC<{
   )
 }
 
-export const MajorLoadingMessage: React.FC<{ children: React.ReactNode }> = ({
-  children,
+export const MajorLoadingMessage: React.FC<MajorMessageProps> = ({
+  ...props
 }) => {
+  const { children, ...padding } = props
+
   return (
-    <MajorMessage>
+    <MajorMessage {...padding}>
       <AnimatedEllipsis>{children}</AnimatedEllipsis>
     </MajorMessage>
   )

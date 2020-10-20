@@ -13,6 +13,10 @@ import {
 } from 'components/member/tabs/shared/card-components'
 import { Headline } from 'components/member/tabs/shared/headline'
 import { useGetAccount } from 'graphql/use-get-account'
+import {
+  MajorLoadingMessage,
+  MajorMessage,
+} from 'hedvig-ui/animations/major-message'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Placeholder, ThirdLevelHeadline } from 'hedvig-ui/typography'
@@ -32,30 +36,10 @@ export const AccountTab: React.FC<{
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
 
   if (loading) {
-    return (
-      <>
-        <Headline>
-          Account
-          <RefreshButton onClick={() => refetch()} loading={loading}>
-            <ArrowRepeat />
-          </RefreshButton>
-        </Headline>
-        Loading...
-      </>
-    )
+    return <MajorLoadingMessage paddingTop="10vh">Loading</MajorLoadingMessage>
   }
   if (error || !account) {
-    return (
-      <>
-        <Headline>
-          Account
-          <RefreshButton onClick={() => refetch()} loading={loading}>
-            <ArrowRepeat />
-          </RefreshButton>
-        </Headline>
-        No account found :(
-      </>
-    )
+    return <MajorMessage paddingTop="10vh">No account found</MajorMessage>
   }
   return (
     <>

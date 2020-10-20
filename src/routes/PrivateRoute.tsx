@@ -1,3 +1,4 @@
+import { MajorLoadingMessage } from 'hedvig-ui/animations/major-message'
 import React from 'react'
 import { connect } from 'react-redux'
 import { Redirect, Route } from 'react-router'
@@ -21,7 +22,7 @@ const PrivateRouteComponent = ({
       {...rest}
       render={(props) => {
         if (authState === AuthState.UNKNOWN) {
-          return 'loading'
+          return <MajorLoadingMessage>Loading</MajorLoadingMessage>
         }
 
         if (authState === AuthState.UNAUTHENTICATED) {

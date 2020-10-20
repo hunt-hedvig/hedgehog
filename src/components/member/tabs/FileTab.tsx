@@ -1,9 +1,13 @@
 import gql from 'graphql-tag'
+import {
+  MajorLoadingMessage,
+  MajorMessage,
+} from 'hedvig-ui/animations/major-message'
+import { dateTimeFormatter } from 'lib/helpers'
 import React from 'react'
 import { Query } from 'react-apollo'
 import { RouteComponentProps } from 'react-router'
 import { Image, Table } from 'semantic-ui-react'
-import { dateTimeFormatter } from '../../../lib/helpers'
 
 const query = gql`
   query FileUploadsQuery($memberId: ID!) {
@@ -85,11 +89,17 @@ class MemberFile extends React.Component<
             )
           }
           if (loading || !data) {
-            return <div>Loading...</div>
+            return (
+              <MajorLoadingMessage paddingTop="10vh">
+                Loading
+              </MajorLoadingMessage>
+            )
           }
 
           return data.member.fileUploads.length === 0 ? (
-            <div>No files uploaded for this member</div>
+            <MajorMessage paddingTop="10vh">
+              No files uploaded for this member
+            </MajorMessage>
           ) : (
             <MemberFileTable memberFiles={data.member.fileUploads} />
           )

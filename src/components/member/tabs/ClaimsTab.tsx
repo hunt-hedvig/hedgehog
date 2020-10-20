@@ -7,6 +7,7 @@ import MaterialModal from 'components/shared/modals/MaterialModal'
 import { ActionMap, Container } from 'constate'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
+import { MajorMessage } from 'hedvig-ui/animations/major-message'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
@@ -138,9 +139,7 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
               sortClaimsList={props.sortClaimsList}
             />
           ) : (
-            <Typography variant="h5" component="h3">
-              Claims list is empty
-            </Typography>
+            <MajorMessage paddingTop="10vh">Claims list is empty</MajorMessage>
           )}
           <MaterialModal handleClose={handleClose} open={open}>
             <Typography variant="h5" id="modal-title">

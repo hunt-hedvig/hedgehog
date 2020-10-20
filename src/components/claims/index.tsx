@@ -1,7 +1,7 @@
+import { MajorLoadingMessage } from 'hedvig-ui/animations/major-message'
 import React from 'react'
-import { Mount } from 'react-lifecycle-components/dist'
 import { Header } from 'semantic-ui-react'
-import { ClaimSearchFilter, ClaimsStore } from '../../store/types/claimsTypes'
+import { ClaimSearchFilter, ClaimsStore } from 'store/types/claimsTypes'
 import BackendServedClaimsList from './claims-list/BackendServedClaimsList'
 
 export interface ClaimsProps {
@@ -9,18 +9,24 @@ export interface ClaimsProps {
   claimsRequest: (filter: ClaimSearchFilter) => void
 }
 
-const Claims: React.SFC<ClaimsProps> = (props) => {
+const Claims: React.FC<ClaimsProps> = (props) => {
   const { claimsRequest, claims } = props
 
   const initClaims = () => claimsRequest(claims.searchFilter)
 
+  React.useEffect(() => {
+    initClaims()
+  }, [])
+
+  if (claims.searchResult.claims.length === 0) {
+    return <MajorLoadingMessage>Loading</MajorLoadingMessage>
+  }
+
   return (
-    <Mount on={initClaims}>
-      <React.Fragment>
-        <Header size="huge">Claims List</Header>
-        <BackendServedClaimsList {...props} />
-      </React.Fragment>
-    </Mount>
+    <>
+      <Header size="huge">Claims List</Header>
+      <BackendServedClaimsList {...props} />
+    </>
   )
 }
 
