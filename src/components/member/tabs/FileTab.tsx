@@ -91,7 +91,7 @@ class MemberFile extends React.Component<
               )
             }
             if (loading || !data) {
-              return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
+              return <LoadingMessage paddingTop="10vh" />
             }
 
             return data.member.fileUploads.length === 0 ? (

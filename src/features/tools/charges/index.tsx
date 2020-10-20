@@ -2,7 +2,7 @@ import { colors } from '@hedviginsurance/brand'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
+import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import { MainHeadline } from 'hedvig-ui/typography'
 import { MonetaryAmount } from 'lib/helpers'
 import React from 'react'
@@ -167,7 +167,7 @@ export class ChargePageComponent extends React.Component<
               )
             }
             if (loading || !data || !data.paymentSchedule) {
-              return <StandaloneMessage>Loading</StandaloneMessage>
+              return <LoadingMessage paddingTop="10vh" />
             }
             return (
               <EaseIn>

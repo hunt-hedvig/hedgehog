@@ -23,7 +23,7 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   const [contractMarket, { loading }] = useContractMarketInfo(memberId)
 
   if (loading || quotesLoading) {
-    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
+    return <LoadingMessage paddingTop="10vh" />
   }
 
   if (quotes.length === 0) {

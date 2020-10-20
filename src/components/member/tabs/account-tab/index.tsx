@@ -37,7 +37,7 @@ export const AccountTab: React.FC<{
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
 
   if (loading) {
-    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
+    return <LoadingMessage paddingTop="10vh" />
   }
   if (error || !account) {
     return (

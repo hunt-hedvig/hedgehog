@@ -44,7 +44,7 @@ export const DebtTab: React.FC<{
   }
 
   if (loading) {
-    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
+    return <LoadingMessage paddingTop="10vh" />
   }
 
   if (error || !person) {

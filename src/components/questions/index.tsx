@@ -25,11 +25,15 @@ const Questions: React.FC = () => {
   const [questionGroups, { loading }] = useQuestionGroups()
 
   if (loading) {
-    return <LoadingMessage>Loading</LoadingMessage>
+    return <LoadingMessage paddingTop={'25vh'} />
   }
 
   if (!questionGroups) {
-    return <StandaloneMessage>Something went wrong!</StandaloneMessage>
+    return (
+      <StandaloneMessage paddingTop="25vh">
+        Something went wrong!
+      </StandaloneMessage>
+    )
   }
 
   return (

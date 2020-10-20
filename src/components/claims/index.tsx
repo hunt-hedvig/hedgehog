@@ -21,7 +21,7 @@ const Claims: React.FC<ClaimsProps> = (props) => {
   }, [])
 
   if (claims.searchResult.claims.length === 0) {
-    return <LoadingMessage>Loading</LoadingMessage>
+    return <LoadingMessage paddingTop={'25vh'} />
   }
 
   return (

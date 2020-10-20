@@ -22,7 +22,9 @@ const PrivateRouteComponent = ({
       {...rest}
       render={(props) => {
         if (authState === AuthState.UNKNOWN) {
-          return <LoadingMessage>Loading</LoadingMessage>
+          return (
+            <LoadingMessage paddingTop={'25vh'}>Authenticating</LoadingMessage>
+          )
         }
 
         if (authState === AuthState.UNAUTHENTICATED) {

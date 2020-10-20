@@ -22,7 +22,7 @@ export const CampaignsTab: React.FunctionComponent<{
   ] = useGetReferralInformation(memberId)
 
   if (loading) {
-    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
+    return <LoadingMessage paddingTop="10vh" />
   }
 
   if (error || !referralInformation) {

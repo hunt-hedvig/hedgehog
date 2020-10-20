@@ -42,8 +42,8 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
             fetchPolicy="no-cache"
           >
             {({ loading, error, data, refetch }) => {
-              if (loading) {
-                return <LoadingMessage>Loading</LoadingMessage>
+              if (!loading) {
+                return <LoadingMessage paddingTop="25vh" />
               }
 
               const {

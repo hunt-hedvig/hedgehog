@@ -16,7 +16,7 @@ export const ContractTab: React.FunctionComponent<{
   const [contracts, { loading, refetch }] = useContracts(memberId)
 
   if (loading) {
-    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
+    return <LoadingMessage paddingTop="10vh" />
   }
 
   if (contracts.length === 0) {

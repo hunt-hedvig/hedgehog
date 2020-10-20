@@ -1,3 +1,4 @@
+import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
 import styled, { keyframes } from 'react-emotion'
 
@@ -7,85 +8,46 @@ const fadeIn = (max) =>
     to: { opacity: max, transform: 'translateY(0)' },
   })
 
-const StandaloneMessageWrapper = styled('div')<{
+interface StandaloneMessageProps {
   paddingTop?: string
   paddingBottom?: string
   paddingLeft?: string
   paddingRight?: string
-}>(({ paddingTop = '25vh', paddingBottom, paddingLeft, paddingRight }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  textAlign: 'center',
-  opacity: 0,
-  animation: `${fadeIn(0.3)} 1000ms forwards`,
-  animationDelay: '20ms',
-  width: '100%',
-  flex: 1,
-  fontSize: '1.5rem',
-  paddingTop,
-  paddingBottom,
-  paddingLeft,
-  paddingRight,
-}))
+}
 
-const AnimatedEllipsis = styled.span`
-  &::after {
-    display: inline-block;
-    animation: ellipsis 1.5s infinite;
-    content: '.';
-    width: 1em;
-    text-align: left;
-  }
-  @keyframes ellipsis {
-    0% {
-      content: '.';
-    }
-    33% {
-      content: '..';
-    }
-    66% {
-      content: '...';
-    }
-  }
+export const StandaloneMessage = styled('div')<StandaloneMessageProps>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  animation: ${fadeIn(0.3)} 1000ms forwards;
+  animation-delay: 20ms;
+  width: 100%;
+  margin: 0 auto;
+  flex: 1;
+  font-size: 1.5rem;
+  padding-top: ${({ paddingTop }) => paddingTop};
+  padding-bottom: ${({ paddingBottom }) => paddingBottom};
+  padding-left: ${({ paddingLeft }) => paddingLeft};
+  padding-right: ${({ paddingRight }) => paddingRight};
 `
 
-interface StandaloneMessageProps {
-  children: React.ReactNode
-  paddingTop?: string
-  paddingBottom?: string
-  paddingLeft?: string
-  paddingRight?: string
-}
-
-export const StandaloneMessage: React.FC<StandaloneMessageProps> = ({
-  children,
-  paddingTop,
-  paddingBottom,
-  paddingLeft,
-  paddingRight,
-}) => {
-  return (
-    <StandaloneMessageWrapper
-      paddingTop={paddingTop}
-      paddingBottom={paddingBottom}
-      paddingLeft={paddingLeft}
-      paddingRight={paddingRight}
-    >
-      {children}
-    </StandaloneMessageWrapper>
-  )
-}
+const LoadingMessageWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-left: -2em;
+`
 
 export const LoadingMessage: React.FC<StandaloneMessageProps> = ({
   ...props
-}) => {
-  const { children, ...padding } = props
-
-  return (
-    <StandaloneMessage {...padding}>
-      <AnimatedEllipsis>{children}</AnimatedEllipsis>
-    </StandaloneMessage>
-  )
-}
+}) => (
+  <StandaloneMessage {...props}>
+    <LoadingMessageWrapper>
+      <Spinner style={{ margin: '0.2em 0.7em' }} />
+      {props?.children ?? 'Loading'}
+    </LoadingMessageWrapper>
+  </StandaloneMessage>
+)

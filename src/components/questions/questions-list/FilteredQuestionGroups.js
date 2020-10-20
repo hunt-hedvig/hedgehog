@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Header, Segment } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
 import styled from 'react-emotion'
 import { QuestionGroup } from './QuestionGroup'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 
 const List = styled(Segment)`
   width: 100%;
@@ -20,7 +21,7 @@ export const FilteredQuestionGroups = ({ filterQuestionGroups }) => {
       {filterQuestionGroups.length ? (
         <>
           {filterQuestionGroups.map((questionGroup, index) => (
-            <EaseIn delay={`${index*100}ms`}>
+            <EaseIn delay={`${index * 100}ms`}>
               <QuestionGroup
                 key={questionGroup.id}
                 questionGroup={questionGroup}
@@ -29,7 +30,7 @@ export const FilteredQuestionGroups = ({ filterQuestionGroups }) => {
           ))}
         </>
       ) : (
-        <Header>List is empty</Header>
+        <StandaloneMessage paddingTop="25vh">List is empty</StandaloneMessage>
       )}
     </List>
   )

@@ -184,7 +184,6 @@ class PaymentsTab extends React.Component {
         <Query query={GET_MEMBER_QUERY} variables={{ id: this.memberId }}>
           {({ loading, error, data }) => {
             if (error) {
-              console.error(error)
               return (
                 <StandaloneMessage paddingTop="10vh">
                   Something went wrong
@@ -193,7 +192,7 @@ class PaymentsTab extends React.Component {
             }
 
             if (loading || !data) {
-              return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
+              return <LoadingMessage paddingTop="10vh" />
             }
 
             return (
