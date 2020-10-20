@@ -3,7 +3,7 @@ import { ClaimNote, ClaimTranscription, QueryType } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
-import { MajorLoadingMessage } from 'hedvig-ui/animations/major-message'
+import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { Query } from 'react-apollo'
 import { Mount } from 'react-lifecycle-components/dist'
@@ -43,7 +43,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
           >
             {({ loading, error, data, refetch }) => {
               if (loading) {
-                return <MajorLoadingMessage>Loading</MajorLoadingMessage>
+                return <LoadingMessage>Loading</LoadingMessage>
               }
 
               const {

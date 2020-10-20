@@ -4,9 +4,9 @@ import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useContracts } from 'graphql/use-contracts'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
-  MajorLoadingMessage,
-  MajorMessage,
-} from 'hedvig-ui/animations/major-message'
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 
@@ -16,11 +16,15 @@ export const ContractTab: React.FunctionComponent<{
   const [contracts, { loading, refetch }] = useContracts(memberId)
 
   if (loading) {
-    return <MajorLoadingMessage paddingTop="10vh">Loading</MajorLoadingMessage>
+    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
   }
 
   if (contracts.length === 0) {
-    return <MajorMessage paddingTop="10vh">No contract for member</MajorMessage>
+    return (
+      <StandaloneMessage paddingTop="10vh">
+        No contract for member
+      </StandaloneMessage>
+    )
   }
 
   return (

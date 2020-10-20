@@ -8,7 +8,7 @@ import { ActionMap, Container } from 'constate'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
-import { MajorMessage } from 'hedvig-ui/animations/major-message'
+import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React from 'react'
 import { Mutation } from 'react-apollo'
@@ -141,9 +141,9 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
                 sortClaimsList={props.sortClaimsList}
               />
             ) : (
-              <MajorMessage paddingTop="10vh">
+              <StandaloneMessage paddingTop="10vh">
                 Claims list is empty
-              </MajorMessage>
+              </StandaloneMessage>
             )}
             <MaterialModal handleClose={handleClose} open={open}>
               <Typography variant="h5" id="modal-title">

@@ -16,9 +16,9 @@ import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
-  MajorLoadingMessage,
-  MajorMessage,
-} from 'hedvig-ui/animations/major-message'
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'
@@ -37,19 +37,21 @@ export const DebtTab: React.FC<{
   // FIXME: We should not make market specific features like this, should use "have debt" or "don't have debt" instead
   if (contractMarketInfo?.market === Market.Norway) {
     return (
-      <MajorMessage paddingTop="10vh">Not available for Norway</MajorMessage>
+      <StandaloneMessage paddingTop="10vh">
+        Not available for Norway
+      </StandaloneMessage>
     )
   }
 
   if (loading) {
-    return <MajorLoadingMessage paddingTop="10vh">Loading</MajorLoadingMessage>
+    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
   }
 
   if (error || !person) {
     return (
-      <MajorMessage paddingTop="10vh">
+      <StandaloneMessage paddingTop="10vh">
         Issue retrieving debt for this member
-      </MajorMessage>
+      </StandaloneMessage>
     )
   }
 

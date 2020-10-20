@@ -1,9 +1,9 @@
 import gql from 'graphql-tag'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
-  MajorLoadingMessage,
-  MajorMessage,
-} from 'hedvig-ui/animations/major-message'
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import { dateTimeFormatter } from 'lib/helpers'
 import React from 'react'
 import { Query } from 'react-apollo'
@@ -91,17 +91,13 @@ class MemberFile extends React.Component<
               )
             }
             if (loading || !data) {
-              return (
-                <MajorLoadingMessage paddingTop="10vh">
-                  Loading
-                </MajorLoadingMessage>
-              )
+              return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
             }
 
             return data.member.fileUploads.length === 0 ? (
-              <MajorMessage paddingTop="10vh">
+              <StandaloneMessage paddingTop="10vh">
                 No files uploaded for this member
-              </MajorMessage>
+              </StandaloneMessage>
             ) : (
               <MemberFileTable memberFiles={data.member.fileUploads} />
             )

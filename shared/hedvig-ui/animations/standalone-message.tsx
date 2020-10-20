@@ -7,7 +7,7 @@ const fadeIn = (max) =>
     to: { opacity: max, transform: 'translateY(0)' },
   })
 
-const MajorMessageWrapper = styled('div')<{
+const StandaloneMessageWrapper = styled('div')<{
   paddingTop?: string
   paddingBottom?: string
   paddingLeft?: string
@@ -51,7 +51,7 @@ const AnimatedEllipsis = styled.span`
   }
 `
 
-interface MajorMessageProps {
+interface StandaloneMessageProps {
   children: React.ReactNode
   paddingTop?: string
   paddingBottom?: string
@@ -59,7 +59,7 @@ interface MajorMessageProps {
   paddingRight?: string
 }
 
-export const MajorMessage: React.FC<MajorMessageProps> = ({
+export const StandaloneMessage: React.FC<StandaloneMessageProps> = ({
   children,
   paddingTop,
   paddingBottom,
@@ -67,25 +67,25 @@ export const MajorMessage: React.FC<MajorMessageProps> = ({
   paddingRight,
 }) => {
   return (
-    <MajorMessageWrapper
+    <StandaloneMessageWrapper
       paddingTop={paddingTop}
       paddingBottom={paddingBottom}
       paddingLeft={paddingLeft}
       paddingRight={paddingRight}
     >
       {children}
-    </MajorMessageWrapper>
+    </StandaloneMessageWrapper>
   )
 }
 
-export const MajorLoadingMessage: React.FC<MajorMessageProps> = ({
+export const LoadingMessage: React.FC<StandaloneMessageProps> = ({
   ...props
 }) => {
   const { children, ...padding } = props
 
   return (
-    <MajorMessage {...padding}>
+    <StandaloneMessage {...padding}>
       <AnimatedEllipsis>{children}</AnimatedEllipsis>
-    </MajorMessage>
+    </StandaloneMessage>
   )
 }

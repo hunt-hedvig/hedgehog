@@ -6,9 +6,9 @@ import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetReferralInformation } from 'graphql/use-get-referral-information'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
-  MajorLoadingMessage,
-  MajorMessage,
-} from 'hedvig-ui/animations/major-message'
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 
@@ -22,11 +22,15 @@ export const CampaignsTab: React.FunctionComponent<{
   ] = useGetReferralInformation(memberId)
 
   if (loading) {
-    return <MajorLoadingMessage paddingTop="10vh">Loading</MajorLoadingMessage>
+    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
   }
 
   if (error || !referralInformation) {
-    return <MajorMessage paddingTop="10vh">Something went wrong</MajorMessage>
+    return (
+      <StandaloneMessage paddingTop="10vh">
+        Something went wrong
+      </StandaloneMessage>
+    )
   }
 
   return (

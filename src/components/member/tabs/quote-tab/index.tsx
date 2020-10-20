@@ -3,9 +3,9 @@ import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-in
 import { useQuotes } from 'graphql/use-get-quotes'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
-  MajorLoadingMessage,
-  MajorMessage,
-} from 'hedvig-ui/animations/major-message'
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import * as React from 'react'
 import { Tab } from 'semantic-ui-react'
@@ -23,18 +23,18 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   const [contractMarket, { loading }] = useContractMarketInfo(memberId)
 
   if (loading || quotesLoading) {
-    return <MajorLoadingMessage paddingTop="10vh">Loading</MajorLoadingMessage>
+    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
   }
 
   if (quotes.length === 0) {
-    return <MajorMessage paddingTop="10vh">No quotes</MajorMessage>
+    return <StandaloneMessage paddingTop="10vh">No quotes</StandaloneMessage>
   }
 
   if (!contractMarket) {
     return (
-      <MajorMessage paddingTop="10vh">
+      <StandaloneMessage paddingTop="10vh">
         Unable to get Market, contact Tech
-      </MajorMessage>
+      </StandaloneMessage>
     )
   }
 

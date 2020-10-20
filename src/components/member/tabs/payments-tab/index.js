@@ -11,11 +11,11 @@ import { Button } from 'hedvig-ui/button'
 import { Market } from 'api/generated/graphql'
 import { formatMoney } from 'utils/money'
 import { GenerateSetupDirectDebitLink } from './generate-setup-direct-debit-link'
-import {
-  MajorLoadingMessage,
-  MajorMessage,
-} from 'hedvig-ui/animations/major-message'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import {
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 
 const IconWrapper = styled.span`
   display: inline-block;
@@ -186,18 +186,14 @@ class PaymentsTab extends React.Component {
             if (error) {
               console.error(error)
               return (
-                <MajorMessage paddingTop="10vh">
+                <StandaloneMessage paddingTop="10vh">
                   Something went wrong
-                </MajorMessage>
+                </StandaloneMessage>
               )
             }
 
             if (loading || !data) {
-              return (
-                <MajorLoadingMessage paddingTop="10vh">
-                  Loading
-                </MajorLoadingMessage>
-              )
+              return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
             }
 
             return (

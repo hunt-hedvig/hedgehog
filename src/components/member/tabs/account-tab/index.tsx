@@ -15,9 +15,9 @@ import { Headline } from 'components/member/tabs/shared/headline'
 import { useGetAccount } from 'graphql/use-get-account'
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
-  MajorLoadingMessage,
-  MajorMessage,
-} from 'hedvig-ui/animations/major-message'
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Placeholder, ThirdLevelHeadline } from 'hedvig-ui/typography'
@@ -37,10 +37,12 @@ export const AccountTab: React.FC<{
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
 
   if (loading) {
-    return <MajorLoadingMessage paddingTop="10vh">Loading</MajorLoadingMessage>
+    return <LoadingMessage paddingTop="10vh">Loading</LoadingMessage>
   }
   if (error || !account) {
-    return <MajorMessage paddingTop="10vh">No account found</MajorMessage>
+    return (
+      <StandaloneMessage paddingTop="10vh">No account found</StandaloneMessage>
+    )
   }
   return (
     <EaseIn>

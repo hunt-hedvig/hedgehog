@@ -1,5 +1,5 @@
 import { EaseIn } from 'hedvig-ui/animations/ease-in'
-import { MajorLoadingMessage } from 'hedvig-ui/animations/major-message'
+import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { Header } from 'semantic-ui-react'
@@ -21,7 +21,7 @@ const Claims: React.FC<ClaimsProps> = (props) => {
   }, [])
 
   if (claims.searchResult.claims.length === 0) {
-    return <MajorLoadingMessage>Loading</MajorLoadingMessage>
+    return <LoadingMessage>Loading</LoadingMessage>
   }
 
   return (
