@@ -1,6 +1,7 @@
 import { Quote } from 'api/generated/graphql'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { useQuotes } from 'graphql/use-get-quotes'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
   MajorLoadingMessage,
   MajorMessage,
@@ -81,11 +82,13 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
       menuItem: getTextFromEnumValue(contractType),
       render: () => (
         <Tab.Pane>
-          <QuotesSubSection
-            memberId={memberId}
-            contractType={contractType}
-            quotes={getCategorisedQuotesBasedOnContractType(contractType)}
-          />
+          <EaseIn>
+            <QuotesSubSection
+              memberId={memberId}
+              contractType={contractType}
+              quotes={getCategorisedQuotesBasedOnContractType(contractType)}
+            />
+          </EaseIn>
         </Tab.Pane>
       ),
     }))

@@ -16,6 +16,7 @@ import {
   useSetFraudulentStatus,
 } from 'graphql/use-set-fraudulent-status'
 import { withShowNotification } from 'utils/notifications'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
@@ -85,7 +86,7 @@ const DetailsTabComponent = (props) => {
   delete memberInfoWithoutSsn.__typename
 
   return memberInfoWithoutSsn ? (
-    <>
+    <EaseIn>
       <Table selectable>
         <Table.Body>
           <TableFields
@@ -186,7 +187,7 @@ const DetailsTabComponent = (props) => {
         </Table.Footer>
       </Table>
       <InsuranceTrace traceData={traceMemberInfo} />
-    </>
+    </EaseIn>
   ) : (
     <Header>No member info</Header>
   )

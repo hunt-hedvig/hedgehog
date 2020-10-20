@@ -15,6 +15,7 @@ import {
   MajorLoadingMessage,
   MajorMessage,
 } from 'hedvig-ui/animations/major-message'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 
 const IconWrapper = styled.span`
   display: inline-block;
@@ -179,7 +180,7 @@ class PaymentsTab extends React.Component {
   // FIXME: Logic whether charge or payout can be performed should be owned by the backend
   render() {
     return (
-      <React.Fragment>
+      <EaseIn>
         <Query query={GET_MEMBER_QUERY} variables={{ id: this.memberId }}>
           {({ loading, error, data }) => {
             if (error) {
@@ -296,7 +297,7 @@ class PaymentsTab extends React.Component {
             )
           }}
         </Query>
-      </React.Fragment>
+      </EaseIn>
     )
   }
 }

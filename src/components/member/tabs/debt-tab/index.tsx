@@ -14,6 +14,7 @@ import {
 import { Headline } from 'components/member/tabs/shared/headline'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
   MajorLoadingMessage,
   MajorMessage,
@@ -53,7 +54,7 @@ export const DebtTab: React.FC<{
   }
 
   return (
-    <>
+    <EaseIn>
       <Headline>
         Debt
         <RefreshButton onClick={() => refetch()} loading={loading}>
@@ -92,6 +93,6 @@ export const DebtTab: React.FC<{
           paymentDefaults={person.debt.paymentDefaults as PaymentDefault[]}
         />
       )}
-    </>
+    </EaseIn>
   )
 }

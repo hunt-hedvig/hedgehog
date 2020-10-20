@@ -13,6 +13,7 @@ import {
 } from 'components/member/tabs/shared/card-components'
 import { Headline } from 'components/member/tabs/shared/headline'
 import { useGetAccount } from 'graphql/use-get-account'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
   MajorLoadingMessage,
   MajorMessage,
@@ -42,7 +43,7 @@ export const AccountTab: React.FC<{
     return <MajorMessage paddingTop="10vh">No account found</MajorMessage>
   }
   return (
-    <>
+    <EaseIn>
       <Headline>
         Account
         <RefreshButton onClick={() => refetch()} loading={loading}>
@@ -127,6 +128,6 @@ export const AccountTab: React.FC<{
       </CardsWrapper>
       <AccountEntryTable accountEntries={account.entries} />
       <BackfillSubscriptionsButton memberId={memberId} />
-    </>
+    </EaseIn>
   )
 }

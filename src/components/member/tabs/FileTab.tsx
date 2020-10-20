@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
   MajorLoadingMessage,
   MajorMessage,
@@ -75,36 +76,38 @@ class MemberFile extends React.Component<
 > {
   public render() {
     return (
-      <Query<any>
-        query={query}
-        variables={{ memberId: this.props.match.params.memberId }}
-      >
-        {({ loading, error, data }) => {
-          if (error) {
-            return (
-              <div>
-                Error in GraphQl query here.....:{' '}
-                <pre>{JSON.stringify(error, null, 2)}</pre>
-              </div>
-            )
-          }
-          if (loading || !data) {
-            return (
-              <MajorLoadingMessage paddingTop="10vh">
-                Loading
-              </MajorLoadingMessage>
-            )
-          }
+      <EaseIn>
+        <Query<any>
+          query={query}
+          variables={{ memberId: this.props.match.params.memberId }}
+        >
+          {({ loading, error, data }) => {
+            if (error) {
+              return (
+                <div>
+                  Error in GraphQl query here.....:{' '}
+                  <pre>{JSON.stringify(error, null, 2)}</pre>
+                </div>
+              )
+            }
+            if (loading || !data) {
+              return (
+                <MajorLoadingMessage paddingTop="10vh">
+                  Loading
+                </MajorLoadingMessage>
+              )
+            }
 
-          return data.member.fileUploads.length === 0 ? (
-            <MajorMessage paddingTop="10vh">
-              No files uploaded for this member
-            </MajorMessage>
-          ) : (
-            <MemberFileTable memberFiles={data.member.fileUploads} />
-          )
-        }}
-      </Query>
+            return data.member.fileUploads.length === 0 ? (
+              <MajorMessage paddingTop="10vh">
+                No files uploaded for this member
+              </MajorMessage>
+            ) : (
+              <MemberFileTable memberFiles={data.member.fileUploads} />
+            )
+          }}
+        </Query>
+      </EaseIn>
     )
   }
 }
