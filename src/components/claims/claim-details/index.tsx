@@ -2,6 +2,7 @@ import Grid from '@material-ui/core/Grid'
 import { ClaimNote, ClaimTranscription, QueryType } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import { ChatPane } from 'components/member/tabs/ChatPane'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import { MajorLoadingMessage } from 'hedvig-ui/animations/major-message'
 import React from 'react'
 import { Query } from 'react-apollo'
@@ -42,11 +43,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
           >
             {({ loading, error, data, refetch }) => {
               if (loading) {
-                return (
-                  <MajorLoadingMessage paddingTop="10vh">
-                    Loading
-                  </MajorLoadingMessage>
-                )
+                return <MajorLoadingMessage>Loading</MajorLoadingMessage>
               }
 
               const {
@@ -66,99 +63,103 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
               } = data?.claim || {}
 
               return (
-                <Grid container spacing={8}>
-                  <Prompt
-                    when={Boolean(data?.claim) && !reserves}
-                    message="This claim has no reserves, do you want leave it it without?"
-                  />
-                  {error && (
-                    <Grid item xs={12}>
-                      <div>
-                        Error: <pre>{JSON.stringify(error, null, 2)}</pre>
-                      </div>
-                    </Grid>
-                  )}
+                <EaseIn>
+                  <Grid container spacing={8}>
+                    <Prompt
+                      when={Boolean(data?.claim) && !reserves}
+                      message="This claim has no reserves, do you want leave it it without?"
+                    />
+                    {error && (
+                      <Grid item xs={12}>
+                        <div>
+                          Error: <pre>{JSON.stringify(error, null, 2)}</pre>
+                        </div>
+                      </Grid>
+                    )}
 
-                  <Grid item xs={12} sm={12} md={4}>
-                    {member && (
-                      <MemberInformation
-                        member={member}
-                        contract={contract ?? null}
+                    <Grid item xs={12} sm={12} md={4}>
+                      {member && (
+                        <MemberInformation
+                          member={member}
+                          contract={contract ?? null}
+                        />
+                      )}
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={4}>
+                      <ClaimInformation
+                        recordingUrl={recordingUrl!}
+                        registrationDate={registrationDate}
+                        state={state!}
+                        claimId={props.match.params.claimId}
+                        coveringEmployee={coveringEmployee!}
+                        memberId={props.match.params.memberId}
+                        refetchPage={refetch}
+                        selectedContract={contract!}
                       />
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4}>
-                    <ClaimInformation
-                      recordingUrl={recordingUrl!}
-                      registrationDate={registrationDate}
-                      state={state!}
-                      claimId={props.match.params.claimId}
-                      coveringEmployee={coveringEmployee!}
-                      memberId={props.match.params.memberId}
-                      refetchPage={refetch}
-                      selectedContract={contract!}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4}>
-                    <ClaimTypeForm
-                      type={type}
-                      claimId={props.match.params.claimId}
-                      refetchPage={refetch}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    {transcriptions && transcriptions.length > 0 && (
-                      <ClaimTranscriptions
-                        transcriptions={transcriptions as ClaimTranscription[]}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item xs={12}>
-                    {notes && (
-                      <ClaimNotes
-                        notes={(notes.filter(Boolean) as ClaimNote[]) ?? []}
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={4}>
+                      <ClaimTypeForm
+                        type={type}
                         claimId={props.match.params.claimId}
                         refetchPage={refetch}
                       />
-                    )}
-                  </Grid>
-                  <Grid item xs={12}>
-                    <ClaimItems
-                      claimId={props.match.params.claimId}
-                      memberId={member?.memberId ?? null}
-                      contract={contract}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    {payments && member && (
-                      <ClaimPayments
-                        payments={payments ?? []}
+                    </Grid>
+                    <Grid item xs={12}>
+                      {transcriptions && transcriptions.length > 0 && (
+                        <ClaimTranscriptions
+                          transcriptions={
+                            transcriptions as ClaimTranscription[]
+                          }
+                        />
+                      )}
+                    </Grid>
+                    <Grid item xs={12}>
+                      {notes && (
+                        <ClaimNotes
+                          notes={(notes.filter(Boolean) as ClaimNote[]) ?? []}
+                          claimId={props.match.params.claimId}
+                          refetchPage={refetch}
+                        />
+                      )}
+                    </Grid>
+                    <Grid item xs={12}>
+                      <ClaimItems
                         claimId={props.match.params.claimId}
-                        reserves={reserves}
-                        sanctionStatus={member.sanctionStatus!}
-                        refetchPage={refetch}
+                        memberId={member?.memberId ?? null}
+                        contract={contract}
                       />
-                    )}
+                    </Grid>
+                    <Grid item xs={12}>
+                      {payments && member && (
+                        <ClaimPayments
+                          payments={payments ?? []}
+                          claimId={props.match.params.claimId}
+                          reserves={reserves}
+                          sanctionStatus={member.sanctionStatus!}
+                          refetchPage={refetch}
+                        />
+                      )}
+                    </Grid>
+                    <Grid item xs={12}>
+                      {member && (
+                        <FileUpload
+                          claimId={props.match.params.claimId}
+                          memberId={member.memberId}
+                          onUploaded={() => refetch()}
+                        />
+                      )}
+                      {claimFiles && (
+                        <ClaimFileTable
+                          claimFiles={claimFiles ?? []}
+                          claimId={props.match.params.claimId}
+                        />
+                      )}
+                    </Grid>
+                    <Grid item xs={12}>
+                      {events && <ClaimEvents events={events ?? []} />}
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12}>
-                    {member && (
-                      <FileUpload
-                        claimId={props.match.params.claimId}
-                        memberId={member.memberId}
-                        onUploaded={() => refetch()}
-                      />
-                    )}
-                    {claimFiles && (
-                      <ClaimFileTable
-                        claimFiles={claimFiles ?? []}
-                        claimId={props.match.params.claimId}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item xs={12}>
-                    {events && <ClaimEvents events={events ?? []} />}
-                  </Grid>
-                </Grid>
+                </EaseIn>
               )
             }}
           </Query>

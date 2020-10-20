@@ -6,8 +6,10 @@ const fadeIn = (max) =>
     to: { opacity: max, transform: 'translateY(0)' },
   })
 
-export const EaseIn = styled('div')(() => ({
-  opacity: 0,
-  animation: `${fadeIn(1.0)} 1000ms forwards`,
-  animationDelay: '0ms',
-}))
+export const EaseIn = styled('div')<{ delay?: string }>(
+  ({ delay = '0ms' }) => ({
+    opacity: 0,
+    animation: `${fadeIn(1.0)} 1000ms forwards`,
+    animationDelay: delay,
+  }),
+)

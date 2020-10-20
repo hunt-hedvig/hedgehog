@@ -11,6 +11,7 @@ import {
 } from 'components/members-search/styles'
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
 import { useMemberSearch } from 'graphql/use-member-search'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
@@ -96,22 +97,28 @@ export const MembersSearch: React.FC = () => {
       />
       {members.length > 0 && (
         <ListWrapper>
-          <BackendPaginatorList<Member>
-            currentPage={page}
-            totalPages={totalPages}
-            changePage={(nextPage) =>
-              memberSearch(query, { includeAll, page: nextPage, pageSize: 25 })
-            }
-            pagedItems={members}
-            itemContent={(member, index) => (
-              <ListItem
-                member={member}
-                active={currentKeyboardNavigationStep === index}
-              />
-            )}
-            isSortable={false}
-            tableHeader={<ListHeader />}
-          />
+          <EaseIn>
+            <BackendPaginatorList<Member>
+              currentPage={page}
+              totalPages={totalPages}
+              changePage={(nextPage) =>
+                memberSearch(query, {
+                  includeAll,
+                  page: nextPage,
+                  pageSize: 25,
+                })
+              }
+              pagedItems={members}
+              itemContent={(member, index) => (
+                <ListItem
+                  member={member}
+                  active={currentKeyboardNavigationStep === index}
+                />
+              )}
+              isSortable={false}
+              tableHeader={<ListHeader />}
+            />
+          </EaseIn>
         </ListWrapper>
       )}
       {members.length === 0 && !query && (

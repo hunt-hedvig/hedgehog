@@ -1,5 +1,6 @@
 import QuestionGroups from 'components/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import {
   MajorLoadingMessage,
   MajorMessage,
@@ -34,19 +35,21 @@ const Questions: React.FC = () => {
   return (
     <>
       <Spacing bottom="large">
-        <QuestionsFilter
-          questionGroups={questionGroups}
-          selected={selectedFilters}
-          onToggle={(newFilter) => {
-            if (selectedFilters.includes(newFilter)) {
-              setSelectedFilters(
-                selectedFilters.filter((filter) => filter !== newFilter),
-              )
-            } else {
-              setSelectedFilters([...selectedFilters, newFilter])
-            }
-          }}
-        />
+        <EaseIn>
+          <QuestionsFilter
+            questionGroups={questionGroups}
+            selected={selectedFilters}
+            onToggle={(newFilter) => {
+              if (selectedFilters.includes(newFilter)) {
+                setSelectedFilters(
+                  selectedFilters.filter((filter) => filter !== newFilter),
+                )
+              } else {
+                setSelectedFilters([...selectedFilters, newFilter])
+              }
+            }}
+          />
+        </EaseIn>
       </Spacing>
 
       <QuestionGroups

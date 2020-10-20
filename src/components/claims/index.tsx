@@ -1,4 +1,6 @@
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 import { MajorLoadingMessage } from 'hedvig-ui/animations/major-message'
+import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { Header } from 'semantic-ui-react'
 import { ClaimSearchFilter, ClaimsStore } from 'store/types/claimsTypes'
@@ -24,8 +26,14 @@ const Claims: React.FC<ClaimsProps> = (props) => {
 
   return (
     <>
-      <Header size="huge">Claims List</Header>
-      <BackendServedClaimsList {...props} />
+      <EaseIn>
+        <Header size="huge">Claims List</Header>
+      </EaseIn>
+      <Spacing top={'small'}>
+        <EaseIn delay={'200ms'}>
+          <BackendServedClaimsList {...props} />
+        </EaseIn>
+      </Spacing>
     </>
   )
 }

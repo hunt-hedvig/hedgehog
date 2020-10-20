@@ -3,6 +3,7 @@ import React from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import styled from 'react-emotion'
 import { QuestionGroup } from './QuestionGroup'
+import { EaseIn } from 'hedvig-ui/animations/ease-in'
 
 const List = styled(Segment)`
   width: 100%;
@@ -18,11 +19,13 @@ export const FilteredQuestionGroups = ({ filterQuestionGroups }) => {
     <List>
       {filterQuestionGroups.length ? (
         <>
-          {filterQuestionGroups.map((questionGroup) => (
-            <QuestionGroup
-              key={questionGroup.id}
-              questionGroup={questionGroup}
-            />
+          {filterQuestionGroups.map((questionGroup, index) => (
+            <EaseIn delay={`${index*100}ms`}>
+              <QuestionGroup
+                key={questionGroup.id}
+                questionGroup={questionGroup}
+              />
+            </EaseIn>
           ))}
         </>
       ) : (
