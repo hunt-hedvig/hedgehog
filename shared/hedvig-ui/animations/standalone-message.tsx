@@ -1,12 +1,7 @@
+import { fadeIn } from 'hedvig-ui/animations/utils'
 import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
-import styled, { keyframes } from 'react-emotion'
-
-const fadeIn = (max) =>
-  keyframes({
-    from: { opacity: 0, transform: 'translateY(2%)' },
-    to: { opacity: max, transform: 'translateY(0)' },
-  })
+import styled from 'react-emotion'
 
 interface StandaloneMessageProps {
   paddingTop?: string
