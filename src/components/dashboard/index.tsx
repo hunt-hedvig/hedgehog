@@ -1,7 +1,7 @@
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Badge } from 'hedvig-ui/badge'
 import { CasualList, CasualListItem } from 'hedvig-ui/casual-list'
 import { Spacing } from 'hedvig-ui/spacing'
@@ -68,7 +68,7 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
         !
       </Headline>
       {dashboardNumbers && (
-        <EaseIn>
+        <FadeIn>
           <MetricsWrapper>
             <Metric to="/claims">
               <MetricNumber>
@@ -83,7 +83,7 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
               <MetricName>questions</MetricName>
             </Metric>
           </MetricsWrapper>
-        </EaseIn>
+        </FadeIn>
       )}
       <Spacing top="large">
         <SecondLevelHeadline>Recent changes from Tech</SecondLevelHeadline>
@@ -100,7 +100,7 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
             const isRecent =
               differenceInCalendarDays(new Date(), change.date) < 3
             return (
-              <EaseIn delay={`${index * 50}ms`}>
+              <FadeIn delay={`${index * 50}ms`}>
                 <ChangeLogItem key={change.change}>
                   <ChangeDescription>
                     {change.change}
@@ -118,7 +118,7 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
                       ` by ${change.authorGithubHandle}`}
                   </MutedText>
                 </ChangeLogItem>
-              </EaseIn>
+              </FadeIn>
             )
           })}
         </ChangeLogWrapper>

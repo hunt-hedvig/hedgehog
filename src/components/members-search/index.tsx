@@ -11,7 +11,7 @@ import {
 } from 'components/members-search/styles'
 import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
 import { useMemberSearch } from 'graphql/use-member-search'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
@@ -97,7 +97,7 @@ export const MembersSearch: React.FC = () => {
       />
       {members.length > 0 && (
         <ListWrapper>
-          <EaseIn>
+          <FadeIn>
             <BackendPaginatorList<Member>
               currentPage={page}
               totalPages={totalPages}
@@ -118,7 +118,7 @@ export const MembersSearch: React.FC = () => {
               isSortable={false}
               tableHeader={<ListHeader />}
             />
-          </EaseIn>
+          </FadeIn>
         </ListWrapper>
       )}
       {members.length === 0 && !query && (

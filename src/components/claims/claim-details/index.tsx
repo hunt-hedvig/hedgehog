@@ -2,7 +2,7 @@ import Grid from '@material-ui/core/Grid'
 import { ClaimNote, ClaimTranscription, QueryType } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import { ChatPane } from 'components/member/tabs/ChatPane'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { Query } from 'react-apollo'
@@ -63,7 +63,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
               } = data?.claim || {}
 
               return (
-                <EaseIn>
+                <FadeIn>
                   <Grid container spacing={8}>
                     <Prompt
                       when={Boolean(data?.claim) && !reserves}
@@ -159,7 +159,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                       {events && <ClaimEvents events={events ?? []} />}
                     </Grid>
                   </Grid>
-                </EaseIn>
+                </FadeIn>
               )
             }}
           </Query>

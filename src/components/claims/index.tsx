@@ -1,4 +1,4 @@
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
@@ -26,13 +26,13 @@ const Claims: React.FC<ClaimsProps> = (props) => {
 
   return (
     <>
-      <EaseIn>
+      <FadeIn>
         <Header size="huge">Claims List</Header>
-      </EaseIn>
+      </FadeIn>
       <Spacing top={'small'}>
-        <EaseIn delay={'200ms'}>
+        <FadeIn delay={'200ms'}>
           <BackendServedClaimsList {...props} />
-        </EaseIn>
+        </FadeIn>
       </Spacing>
     </>
   )

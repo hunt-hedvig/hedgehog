@@ -2,7 +2,7 @@ import {
   StagingTools,
   stagingToolsAvailable,
 } from 'features/tools/staging-tools'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import React from 'react'
 import styled from 'react-emotion'
@@ -16,7 +16,7 @@ const Icon = styled('div')`
 export const CardLink = Card.withComponent(Link)
 
 export const Tools: React.FC = () => (
-  <EaseIn>
+  <FadeIn>
     <CardsWrapper>
       <CardLink to="/tools/charges" span={4}>
         <Icon>💰</Icon>
@@ -50,5 +50,5 @@ export const Tools: React.FC = () => (
     </CardsWrapper>
 
     {stagingToolsAvailable() && <StagingTools />}
-  </EaseIn>
+  </FadeIn>
 )

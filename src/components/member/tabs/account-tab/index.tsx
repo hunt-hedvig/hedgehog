@@ -13,7 +13,7 @@ import {
 } from 'components/member/tabs/shared/card-components'
 import { Headline } from 'components/member/tabs/shared/headline'
 import { useGetAccount } from 'graphql/use-get-account'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
   LoadingMessage,
   StandaloneMessage,
@@ -45,7 +45,7 @@ export const AccountTab: React.FC<{
     )
   }
   return (
-    <EaseIn>
+    <FadeIn>
       <Headline>
         Account
         <RefreshButton onClick={() => refetch()} loading={loading}>
@@ -130,6 +130,6 @@ export const AccountTab: React.FC<{
       </CardsWrapper>
       <AccountEntryTable accountEntries={account.entries} />
       <BackfillSubscriptionsButton memberId={memberId} />
-    </EaseIn>
+    </FadeIn>
   )
 }

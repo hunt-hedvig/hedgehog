@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
   LoadingMessage,
   StandaloneMessage,
@@ -76,7 +76,7 @@ class MemberFile extends React.Component<
 > {
   public render() {
     return (
-      <EaseIn>
+      <FadeIn>
         <Query<any>
           query={query}
           variables={{ memberId: this.props.match.params.memberId }}
@@ -103,7 +103,7 @@ class MemberFile extends React.Component<
             )
           }}
         </Query>
-      </EaseIn>
+      </FadeIn>
     )
   }
 }

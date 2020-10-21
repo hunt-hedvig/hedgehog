@@ -2,7 +2,7 @@ import { Contract } from 'components/member/tabs/contracts-tab/contract'
 import { Headline } from 'components/member/tabs/shared/headline'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useContracts } from 'graphql/use-contracts'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
   LoadingMessage,
   StandaloneMessage,
@@ -28,7 +28,7 @@ export const ContractTab: React.FunctionComponent<{
   }
 
   return (
-    <EaseIn>
+    <FadeIn>
       <Headline>
         Contracts
         <RefreshButton onClick={() => refetch()} loading={loading}>
@@ -45,6 +45,6 @@ export const ContractTab: React.FunctionComponent<{
           }
         />
       ))}
-    </EaseIn>
+    </FadeIn>
   )
 }

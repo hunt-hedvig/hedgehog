@@ -4,7 +4,7 @@ import { ReferralsInfo } from 'components/member/tabs/campaigns-tab/referrals/Re
 import { Headline } from 'components/member/tabs/shared/headline'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetReferralInformation } from 'graphql/use-get-referral-information'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
   LoadingMessage,
   StandaloneMessage,
@@ -34,7 +34,7 @@ export const CampaignsTab: React.FunctionComponent<{
   }
 
   return (
-    <EaseIn>
+    <FadeIn>
       <Headline>
         Campaigns
         <RefreshButton onClick={() => refetch()} loading={loading}>
@@ -52,6 +52,6 @@ export const CampaignsTab: React.FunctionComponent<{
         referralInformation={referralInformation}
         market={contractMarketInfo?.market}
       />
-    </EaseIn>
+    </FadeIn>
   )
 }

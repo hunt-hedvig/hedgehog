@@ -7,7 +7,7 @@ import MaterialModal from 'components/shared/modals/MaterialModal'
 import { ActionMap, Container } from 'constate'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React from 'react'
@@ -82,7 +82,7 @@ interface Actions {
 
 const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
   return (
-    <EaseIn>
+    <FadeIn>
       <Container<State, ActionMap<State, Actions>>
         initialState={{
           open: false,
@@ -195,7 +195,7 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
           </>
         )}
       </Container>
-    </EaseIn>
+    </FadeIn>
   )
 }
 

@@ -1,6 +1,6 @@
 import QuestionGroups from 'components/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
-import { EaseIn } from 'hedvig-ui/animations/ease-in'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
   LoadingMessage,
   StandaloneMessage,
@@ -39,7 +39,7 @@ const Questions: React.FC = () => {
   return (
     <>
       <Spacing bottom="large">
-        <EaseIn>
+        <FadeIn>
           <QuestionsFilter
             questionGroups={questionGroups}
             selected={selectedFilters}
@@ -53,7 +53,7 @@ const Questions: React.FC = () => {
               }
             }}
           />
-        </EaseIn>
+        </FadeIn>
       </Spacing>
 
       <QuestionGroups
