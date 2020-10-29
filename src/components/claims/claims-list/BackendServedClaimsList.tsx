@@ -2,6 +2,7 @@ import { LinkRow } from 'components/shared'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import isValidDate from 'date-fns/isValid'
+import { FadeInComponent } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
@@ -31,6 +32,8 @@ const linkClickHandler = (id: string, userId: string) => {
   history.push(`/claims/${id}/members/${userId}`)
 }
 
+const FadeInLinkRow = FadeInComponent(LinkRow)
+
 const getTableRow = (currentlyActiveIndex: number) => (
   item: Claim,
   itemIndex: number,
@@ -41,7 +44,8 @@ const getTableRow = (currentlyActiveIndex: number) => (
     : '-'
 
   return (
-    <LinkRow
+    <FadeInLinkRow
+      delay={`${itemIndex * 50}ms`}
       onClick={() => linkClickHandler(item.id, item.userId)}
       active={itemIndex === currentlyActiveIndex}
     >
@@ -50,7 +54,7 @@ const getTableRow = (currentlyActiveIndex: number) => (
       <Table.Cell>{item.type}</Table.Cell>
       <Table.Cell>{item.state}</Table.Cell>
       <Table.Cell>{item.reserve}</Table.Cell>
-    </LinkRow>
+    </FadeInLinkRow>
   )
 }
 
