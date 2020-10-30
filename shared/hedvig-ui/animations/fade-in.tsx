@@ -1,16 +1,22 @@
-import styled, { keyframes } from 'react-emotion'
+import styled, { keyframes, StyledComponent } from 'react-emotion'
 
-const fadeIn = (max) =>
+const fadeInKeyframes = (max) =>
   keyframes({
     from: { opacity: 0, transform: 'translateY(2%)' },
     to: { opacity: max, transform: 'translateY(0)' },
   })
 
-export const FadeInComponent = (component: any) =>
-  styled(component)<{ delay?: string }>(({ delay = '0ms' }) => ({
+export const withFadeIn: (
+  component,
+  ...args
+) => StyledComponent<object, object, object> = (component, ...args) =>
+  styled(
+    component,
+    ...args,
+  )<{ delay?: string }>(({ delay = '0ms' }) => ({
     opacity: 0,
-    animation: `${fadeIn(1.0)} 1000ms forwards`,
+    animation: `${fadeInKeyframes(1.0)} 1000ms forwards`,
     animationDelay: delay,
   }))
 
-export const FadeIn = FadeInComponent('div')
+export const FadeIn = withFadeIn('div')

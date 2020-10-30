@@ -5,14 +5,14 @@ import {
   MemberAgeWrapper,
 } from 'components/members-search/styles'
 import { format, parseISO } from 'date-fns'
-import { FadeInComponent } from 'hedvig-ui/animations/fade-in'
+import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
 import { getMemberFlag, MemberAge } from 'utils/member'
 
-const FadeInTableRow = FadeInComponent(Table.Row)
+const FadeInTableRow = withFadeIn(Table.Row)
 
 export const ListItem: React.FC<{
   index: number
