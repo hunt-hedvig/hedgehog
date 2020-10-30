@@ -1,6 +1,5 @@
 import { useUnsignMemberMutation } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
-import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
