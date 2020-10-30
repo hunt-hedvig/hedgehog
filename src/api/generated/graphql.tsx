@@ -1824,7 +1824,6 @@ export type CreateNorwegianGripenPriceEngineMutation = {
 } & Pick<MutationType, 'createNorwegianGripenPriceEngine'>
 
 export type UnsignMemberMutationVariables = {
-  market: Scalars['String']
   ssn: Scalars['String']
 }
 
