@@ -6,14 +6,18 @@ const fadeInKeyframes = (max) =>
     to: { opacity: max, transform: 'translateY(0)' },
   })
 
-export const withFadeIn: (
+interface FadeInProps {
+  delay?: string
+}
+
+export const withFadeIn: <T extends object>(
   component,
   ...args
-) => StyledComponent<object, object, object> = (component, ...args) =>
+) => StyledComponent<FadeInProps, T, object> = (component, ...args) =>
   styled(
     component,
     ...args,
-  )<{ delay?: string }>(({ delay = '0ms' }) => ({
+  )<FadeInProps>(({ delay = '0ms' }) => ({
     opacity: 0,
     animation: `${fadeInKeyframes(1.0)} 1000ms forwards`,
     animationDelay: delay,

@@ -8,11 +8,11 @@ import { format, parseISO } from 'date-fns'
 import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
+import { Table, TableRowProps } from 'semantic-ui-react'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
 import { getMemberFlag, MemberAge } from 'utils/member'
 
-const FadeInTableRow = withFadeIn(Table.Row)
+const FadeInTableRow = withFadeIn<TableRowProps>(Table.Row)
 
 export const ListItem: React.FC<{
   index: number

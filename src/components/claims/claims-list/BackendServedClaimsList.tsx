@@ -5,16 +5,16 @@ import isValidDate from 'date-fns/isValid'
 import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import styled from 'react-emotion'
-import { Table } from 'semantic-ui-react'
+import { Table, TableRowProps } from 'semantic-ui-react'
 import { history } from 'store'
-import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
-import { getMemberIdColor } from 'utils/member'
 import {
   Claim,
   ClaimSearchFilter,
   ClaimSortColumn,
   ClaimsStore,
 } from 'store/types/claimsTypes'
+import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
+import { getMemberIdColor } from 'utils/member'
 import BackendPaginatorList from '../../shared/paginator-list/BackendPaginatorList'
 
 export interface BackendServedClaimsListProps {
@@ -32,7 +32,7 @@ const linkClickHandler = (id: string, userId: string) => {
   history.push(`/claims/${id}/members/${userId}`)
 }
 
-const FadeInLinkRow = withFadeIn(LinkRow)
+const FadeInLinkRow = withFadeIn<TableRowProps>(LinkRow)
 
 const getTableRow = (currentlyActiveIndex: number) => (
   item: Claim,
