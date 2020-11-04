@@ -1126,7 +1126,6 @@ export type MutationTypeManualRedeemEnableReferralsCampaignArgs = {
 }
 
 export type MutationTypeUnsignMemberArgs = {
-  market: Scalars['String']
   ssn: Scalars['String']
 }
 
@@ -1824,7 +1823,6 @@ export type CreateNorwegianGripenPriceEngineMutation = {
 } & Pick<MutationType, 'createNorwegianGripenPriceEngine'>
 
 export type UnsignMemberMutationVariables = {
-  market: Scalars['String']
   ssn: Scalars['String']
 }
 
@@ -3187,8 +3185,8 @@ export type CreateNorwegianGripenPriceEngineMutationOptions = ApolloReactCommon.
   CreateNorwegianGripenPriceEngineMutationVariables
 >
 export const UnsignMemberDocument = gql`
-  mutation UnsignMember($market: String!, $ssn: String!) {
-    unsignMember(market: $market, ssn: $ssn)
+  mutation UnsignMember($ssn: String!) {
+    unsignMember(ssn: $ssn)
   }
 `
 export type UnsignMemberMutationFn = ApolloReactCommon.MutationFunction<
@@ -3209,7 +3207,6 @@ export type UnsignMemberMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [unsignMemberMutation, { data, loading, error }] = useUnsignMemberMutation({
  *   variables: {
- *      market: // value for 'market'
  *      ssn: // value for 'ssn'
  *   },
  * });
