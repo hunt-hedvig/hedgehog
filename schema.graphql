@@ -151,7 +151,7 @@ type MutationType {
     request: ManualUnRedeemCampaignInput!
   ): Boolean!
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
-  unsignMember(market: String!, ssn: String!): Boolean!
+  unsignMember(ssn: String!): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Boolean!
   setFraudulentStatus(
     memberId: ID!
