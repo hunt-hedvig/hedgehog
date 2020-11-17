@@ -14,7 +14,7 @@ export const changelog: ReadonlyArray<Change> = [
   {
     date: '2020-11-17',
     change:
-      'Unsigne tool now notifies if the member was signed or not on unsigning',
+      'Unsign tool now notifies if the ssn was signed or not on unsigning',
     authorGithubHandle: 'fredrikareschoug',
   },
   {
