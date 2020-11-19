@@ -87,6 +87,15 @@ export const AccountEntryTable: React.FC<{
                         {entry.source}
                       </Grid.Column>
                     </Grid.Row>
+                    {entry.comment && (
+                      <Grid.Row>
+                        <Grid.Column>
+                          <span style={{ fontWeight: 'bold' }}>Comment</span>
+                          <br />
+                          {entry.comment}
+                        </Grid.Column>
+                      </Grid.Row>
+                    )}
                   </Grid>
                 }
               >

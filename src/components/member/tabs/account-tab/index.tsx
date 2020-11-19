@@ -3,15 +3,19 @@ import {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
 } from '@material-ui/core'
+import { ContractMarketInfo } from 'api/generated/graphql'
+import { AccountEntriesInfo } from 'components/member/tabs/account-tab/AccountEntriesInfo'
 import { AccountEntryTable } from 'components/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'components/member/tabs/account-tab/AddEntryForm'
+import { AddMonthlyEntryForm } from 'components/member/tabs/account-tab/AddMonthlyEntryForm'
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/BackfillSubscriptionsButton'
+import { MonthlyEntriesInfo } from 'components/member/tabs/account-tab/MonthlyEntriesInfo'
+import { MonthlyEntriesTable } from 'components/member/tabs/account-tab/MonthlyEntriesTable'
 import {
   InfoContainer,
   InfoRow,
   InfoText,
 } from 'components/member/tabs/shared/card-components'
-import { Headline } from 'components/member/tabs/shared/headline'
 import { useGetAccount } from 'graphql/use-get-account'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
@@ -20,7 +24,7 @@ import {
 } from 'hedvig-ui/animations/standalone-message'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { Spacing } from 'hedvig-ui/spacing'
-import { Placeholder, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat, ChevronDown } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'
@@ -33,7 +37,8 @@ const moneyOptions = {
 
 export const AccountTab: React.FC<{
   memberId: string
-}> = ({ memberId }) => {
+  contractMarketInfo: ContractMarketInfo
+}> = ({ memberId, contractMarketInfo }) => {
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
 
   if (loading) {
@@ -44,14 +49,16 @@ export const AccountTab: React.FC<{
       <StandaloneMessage paddingTop="10vh">No account found</StandaloneMessage>
     )
   }
+
+  console.log(contractMarketInfo)
   return (
     <FadeIn>
-      <Headline>
+      <MainHeadline>
         Account
         <RefreshButton onClick={() => refetch()} loading={loading}>
           <ArrowRepeat />
         </RefreshButton>
-      </Headline>
+      </MainHeadline>
       <CardsWrapper>
         <Card span={2}>
           <InfoContainer>
@@ -83,44 +90,50 @@ export const AccountTab: React.FC<{
             </InfoRow>
             <Spacing top={'small'} />
             <InfoRow>
-              Total Discount Amount
+              Current Balance
               <InfoText>
                 {formatMoney(account?.currentBalance, moneyOptions)}
               </InfoText>
             </InfoRow>
             <InfoRow>
-              Subscription Charge
+              Upcoming Subscription
               <InfoText>
+                +{' '}
                 {formatMoney(
                   account?.chargeEstimation.subscription,
                   moneyOptions,
                 )}
               </InfoText>
             </InfoRow>
-            <Spacing top={'small'} />
             <InfoRow>
-              Discount References
+              Upcoming Discount
               <InfoText>
-                {account?.chargeEstimation?.discountCodes.length === 0 ? (
-                  <Placeholder>None</Placeholder>
-                ) : (
-                  account?.chargeEstimation?.discountCodes
-                )}
+                {formatMoney(account?.chargeEstimation.discount, moneyOptions)}
               </InfoText>
             </InfoRow>
             <Spacing top={'small'} />
+            {account?.chargeEstimation?.discountCodes.length > 0 && (
+              <InfoRow>
+                Discount References
+                <InfoText>{account?.chargeEstimation?.discountCodes}</InfoText>
+              </InfoRow>
+            )}
+            <Spacing top={'small'} />
             <InfoRow>
-              Net Charge Next Month
+              Upcoming Charge
               <InfoText>
-                {formatMoney(account?.chargeEstimation?.charge, moneyOptions)}
+                = {formatMoney(account?.chargeEstimation?.charge, moneyOptions)}
               </InfoText>
             </InfoRow>
           </InfoContainer>
         </Card>
-        <Card span={1} style={{ padding: '0.2rem' }}>
+      </CardsWrapper>
+      <AccountEntriesInfo />
+      <CardsWrapper>
+        <Card span={1} style={{ padding: '0.2rem', marginTop: '1.5rem' }}>
           <ExpansionPanel style={{ width: '100%' }}>
             <ExpansionPanelSummary expandIcon={<ChevronDown />}>
-              Add entry
+              Add entry to account
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <AddEntryForm memberId={memberId} />
@@ -129,7 +142,26 @@ export const AccountTab: React.FC<{
         </Card>
       </CardsWrapper>
       <AccountEntryTable accountEntries={account.entries} />
-      <BackfillSubscriptionsButton memberId={memberId} />
+      <div>
+        <BackfillSubscriptionsButton memberId={memberId} />
+      </div>
+      <MonthlyEntriesInfo />
+      <CardsWrapper>
+        <Card span={1} style={{ padding: '0.2rem', marginTop: '1.5rem' }}>
+          <ExpansionPanel style={{ width: '100%' }}>
+            <ExpansionPanelSummary expandIcon={<ChevronDown />}>
+              Add monthly entry
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <AddMonthlyEntryForm
+                memberId={memberId}
+                preferredCurrency={contractMarketInfo?.preferredCurrency}
+              />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        </Card>
+      </CardsWrapper>
+      <MonthlyEntriesTable monthlyEntries={account.monthlyEntries} />
     </FadeIn>
   )
 }

@@ -9,14 +9,14 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
-  /** A String-representation of `java.time.YearMonth`, ex: `"2018-06"` */
-  YearMonth: any
-  /** An object-representation of `javax.money.MonetaryAmount`, ex: `{"amount": 100  "currency": "SEK"}` */
-  MonetaryAmount: any
   /** A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"` */
   LocalDate: any
   /** A String-representation of `java.time.Instant`, ex: `"2018-06-11T20:08:30.123456"` */
   Instant: any
+  /** A String-representation of `java.time.YearMonth`, ex: `"2018-06"` */
+  YearMonth: any
+  /** An object-representation of `javax.money.MonetaryAmount`, ex: `{"amount": 100  "currency": "SEK"}` */
+  MonetaryAmount: any
   /** A String-representation of `java.net.URL`, ex: "https://www.google.com/" */
   URL: any
   /** A String-representation of `java.time.LocalDateTIme`, ex: `"2018-06-11T20:08:30.123456"` */
@@ -45,6 +45,7 @@ export type Account = {
   totalBalance: MonetaryAmountV2
   chargeEstimation: AccountChargeEstimation
   entries: Array<AccountEntry>
+  monthlyEntries: Array<MonthlyEntry>
 }
 
 export type AccountChargeEstimation = {
@@ -781,6 +782,28 @@ export type MonetaryAmountV2 = {
   currency: Scalars['String']
 }
 
+export type MonthlyEntry = {
+  __typename?: 'MonthlyEntry'
+  id: Scalars['ID']
+  externalId?: Maybe<Scalars['String']>
+  amount: MonetaryAmountV2
+  type: AccountEntryType
+  source: Scalars['String']
+  addedBy: Scalars['String']
+  addedAt: Scalars['Instant']
+  title: Scalars['String']
+  comment: Scalars['String']
+}
+
+export type MonthlyEntryInput = {
+  externalId?: Maybe<Scalars['String']>
+  amount: Scalars['MonetaryAmount']
+  type: AccountEntryType
+  source: Scalars['String']
+  title: Scalars['String']
+  comment: Scalars['String']
+}
+
 export type MonthlyPercentageDiscountFixedPeriod = {
   __typename?: 'MonthlyPercentageDiscountFixedPeriod'
   numberOfMonths?: Maybe<Scalars['Int']>
@@ -797,6 +820,8 @@ export type MutationType = {
   __typename?: 'MutationType'
   chargeMember?: Maybe<Member>
   addAccountEntryToMember: Member
+  addMonthlyEntryToMember: Member
+  removeMonthlyEntry?: Maybe<Scalars['Boolean']>
   approveMemberCharge?: Maybe<Scalars['Boolean']>
   createPaymentCompletionLink: PaymentCompletionResponse
   updateClaimState?: Maybe<Claim>
@@ -865,6 +890,15 @@ export type MutationTypeChargeMemberArgs = {
 export type MutationTypeAddAccountEntryToMemberArgs = {
   memberId: Scalars['ID']
   accountEntry: AccountEntryInput
+}
+
+export type MutationTypeAddMonthlyEntryToMemberArgs = {
+  memberId: Scalars['ID']
+  monthlyEntry: MonthlyEntryInput
+}
+
+export type MutationTypeRemoveMonthlyEntryArgs = {
+  id: Scalars['ID']
 }
 
 export type MutationTypeApproveMemberChargeArgs = {
@@ -1220,7 +1254,6 @@ export enum PickedLocale {
 
 export type QueryType = {
   __typename?: 'QueryType'
-  monthlyPayments?: Maybe<Array<Maybe<MonthlySubscription>>>
   member?: Maybe<Member>
   claim?: Maybe<Claim>
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
@@ -1240,10 +1273,6 @@ export type QueryType = {
   canValuateClaimItem?: Maybe<CanValuateClaimItem>
   quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
-}
-
-export type QueryTypeMonthlyPaymentsArgs = {
-  month: Scalars['YearMonth']
 }
 
 export type QueryTypeMemberArgs = {
@@ -1881,6 +1910,15 @@ export type AddAgreementFromQuoteMutation = { __typename?: 'MutationType' } & {
   addAgreementFromQuote: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
 
+export type AddMonthlyEntryMutationVariables = {
+  memberId: Scalars['ID']
+  input: MonthlyEntryInput
+}
+
+export type AddMonthlyEntryMutation = { __typename?: 'MutationType' } & {
+  addMonthlyEntryToMember: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+}
+
 export type AssignCampaignToPartnerFreeMonthsMutationVariables = {
   request?: Maybe<AssignVoucherFreeMonths>
 }
@@ -2057,6 +2095,24 @@ export type GetAccountQuery = { __typename?: 'QueryType' } & {
                   | 'type'
                   | 'failedAt'
                   | 'chargedAt'
+                > & {
+                    amount: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+              monthlyEntries: Array<
+                { __typename?: 'MonthlyEntry' } & Pick<
+                  MonthlyEntry,
+                  | 'id'
+                  | 'externalId'
+                  | 'type'
+                  | 'source'
+                  | 'addedAt'
+                  | 'addedBy'
+                  | 'title'
+                  | 'comment'
                 > & {
                     amount: { __typename?: 'MonetaryAmountV2' } & Pick<
                       MonetaryAmountV2,
@@ -3466,6 +3522,57 @@ export type AddAgreementFromQuoteMutationOptions = ApolloReactCommon.BaseMutatio
   AddAgreementFromQuoteMutation,
   AddAgreementFromQuoteMutationVariables
 >
+export const AddMonthlyEntryDocument = gql`
+  mutation AddMonthlyEntry($memberId: ID!, $input: MonthlyEntryInput!) {
+    addMonthlyEntryToMember(memberId: $memberId, monthlyEntry: $input) {
+      memberId
+    }
+  }
+`
+export type AddMonthlyEntryMutationFn = ApolloReactCommon.MutationFunction<
+  AddMonthlyEntryMutation,
+  AddMonthlyEntryMutationVariables
+>
+
+/**
+ * __useAddMonthlyEntryMutation__
+ *
+ * To run a mutation, you first call `useAddMonthlyEntryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddMonthlyEntryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addMonthlyEntryMutation, { data, loading, error }] = useAddMonthlyEntryMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddMonthlyEntryMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddMonthlyEntryMutation,
+    AddMonthlyEntryMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddMonthlyEntryMutation,
+    AddMonthlyEntryMutationVariables
+  >(AddMonthlyEntryDocument, baseOptions)
+}
+export type AddMonthlyEntryMutationHookResult = ReturnType<
+  typeof useAddMonthlyEntryMutation
+>
+export type AddMonthlyEntryMutationResult = ApolloReactCommon.MutationResult<
+  AddMonthlyEntryMutation
+>
+export type AddMonthlyEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddMonthlyEntryMutation,
+  AddMonthlyEntryMutationVariables
+>
 export const AssignCampaignToPartnerFreeMonthsDocument = gql`
   mutation AssignCampaignToPartnerFreeMonths(
     $request: AssignVoucherFreeMonths
@@ -4186,6 +4293,20 @@ export const GetAccountDocument = gql`
           type
           failedAt
           chargedAt
+        }
+        monthlyEntries {
+          id
+          externalId
+          amount {
+            amount
+            currency
+          }
+          type
+          source
+          addedAt
+          addedBy
+          title
+          comment
         }
       }
     }
