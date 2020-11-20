@@ -518,8 +518,8 @@
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "ENUM",
-                    "name": "TypeOfContract",
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   }
                 },
@@ -2763,8 +2763,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "ENUM",
-                "name": "TypeOfContract",
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -3019,83 +3019,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "ENUM",
-        "name": "TypeOfContract",
-        "description": "",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "SE_HOUSE",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SE_APARTMENT_BRF",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SE_APARTMENT_RENT",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SE_APARTMENT_STUDENT_BRF",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SE_APARTMENT_STUDENT_RENT",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "NO_HOME_CONTENT_OWN",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "NO_HOME_CONTENT_RENT",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "NO_HOME_CONTENT_YOUTH_OWN",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "NO_HOME_CONTENT_YOUTH_RENT",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "NO_TRAVEL",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "NO_TRAVEL_YOUTH",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
         "name": "GenericAgreement",
         "description": "",
@@ -3192,8 +3115,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "ENUM",
-                "name": "TypeOfContract",
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -7970,8 +7893,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "ENUM",
-                "name": "TypeOfContract",
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -8182,8 +8105,8 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "ENUM",
-              "name": "TypeOfContract",
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,
@@ -12375,8 +12298,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "ENUM",
-                "name": "TypeOfContract",
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
