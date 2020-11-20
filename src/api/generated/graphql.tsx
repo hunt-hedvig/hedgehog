@@ -1516,6 +1516,7 @@ export enum TerminationReason {
   DiscountPeriodOver = 'DISCOUNT_PERIOD_OVER',
   ConfirmedFraud = 'CONFIRMED_FRAUD',
   SuspectedFraud = 'SUSPECTED_FRAUD',
+  SignedByMistake = 'SIGNED_BY_MISTAKE',
   Other = 'OTHER',
   Unknown = 'UNKNOWN',
 }
