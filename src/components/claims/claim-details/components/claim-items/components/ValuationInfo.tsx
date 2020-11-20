@@ -1,4 +1,4 @@
-import { TypeOfContract, UpsertClaimItemInput } from 'api/generated/graphql'
+import { UpsertClaimItemInput } from 'api/generated/graphql'
 import { useCanValuateClaimItem } from 'graphql/use-can-valuate-claim-item'
 import { useGetClaimItemValuation } from 'graphql/use-get-claim-item-valuation'
 import React from 'react'
@@ -11,7 +11,7 @@ export const ValuationInfo: React.FC<{
   customValuationAmount: string
   setCustomValuationAmount: React.EventHandler<any>
   defaultCurrency: string
-  typeOfContract: TypeOfContract
+  typeOfContract: string
 }> = ({
   request,
   setValuation,
