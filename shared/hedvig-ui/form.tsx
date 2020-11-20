@@ -53,6 +53,50 @@ const FormError: React.FC<{
   )
 }
 
+interface FormFieldProps {
+  label: string
+  name: string
+  defaultValue: unknown
+  rules?: ValidationRules
+}
+
+const FormField: React.FC<FormFieldProps> = ({
+  label,
+  name,
+  rules,
+  children,
+}) => {
+  const { errors } = useFormContext()
+  return (
+    <SemanticForm.Field
+      required={Boolean(rules?.required)}
+      error={errors && Boolean(errors[name])}
+    >
+      <FormLabel label={label} name={name} />
+      {children}
+      <FormError name={name} />
+    </SemanticForm.Field>
+  )
+}
+
+interface SubmitButtonProps extends ButtonProps {
+  submitText: string
+}
+
+export const SubmitButton: React.FC<SubmitButtonProps> = ({
+  submitText = 'Submit',
+  ...props
+}) => {
+  const {
+    formState: { isSubmitting },
+  } = useFormContext()
+  return (
+    <Button disabled={isSubmitting} type={'submit'} {...props}>
+      {submitText}
+    </Button>
+  )
+}
+
 interface FormInputProps {
   type?: 'number' | 'text'
 }
@@ -123,49 +167,5 @@ export const FormDropdown: React.FC<FormDropdownProps & FormFieldProps> = ({
     <FormField {...props}>
       <FormDropdownComponent options={options} {...props} />
     </FormField>
-  )
-}
-
-interface FormFieldProps {
-  label: string
-  name: string
-  defaultValue: unknown
-  rules?: ValidationRules
-}
-
-const FormField: React.FC<FormFieldProps> = ({
-  label,
-  name,
-  rules,
-  children,
-}) => {
-  const { errors } = useFormContext()
-  return (
-    <SemanticForm.Field
-      required={Boolean(rules?.required)}
-      error={errors && Boolean(errors[name])}
-    >
-      <FormLabel label={label} name={name} />
-      {children}
-      <FormError name={name} />
-    </SemanticForm.Field>
-  )
-}
-
-interface SubmitButtonProps extends ButtonProps {
-  submitText: string
-}
-
-export const SubmitButton: React.FC<SubmitButtonProps> = ({
-  submitText = 'Submit',
-  ...props
-}) => {
-  const {
-    formState: { isSubmitting },
-  } = useFormContext()
-  return (
-    <Button disabled={isSubmitting} type={'submit'} {...props}>
-      {submitText}
-    </Button>
   )
 }

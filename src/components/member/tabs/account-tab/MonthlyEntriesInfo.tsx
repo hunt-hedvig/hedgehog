@@ -11,7 +11,8 @@ export const MonthlyEntriesInfo: React.FC = () => {
     <MonthlyEntriesInfoWrapper>
       <MainHeadline>Monthly Entries</MainHeadline>
       <FourthLevelHeadline>
-        Entries that will be added once <strong>every month</strong>
+        Entries that will be added once <strong>every month</strong> to the
+        member's account
       </FourthLevelHeadline>
     </MonthlyEntriesInfoWrapper>
   )

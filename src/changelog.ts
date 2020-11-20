@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2020-11-23',
+    change:
+      'Add ability "monthly entries" to a member\'s account, to be used to automate adding object insurances each month',
+    authorGithubHandle: 'palmenhq',
+  },
+  {
     date: '2020-10-13',
     change:
       "Use your your keyboard's up and down arrow keys to navigate the member search and claims list",

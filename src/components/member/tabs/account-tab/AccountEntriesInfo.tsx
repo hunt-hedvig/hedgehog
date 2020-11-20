@@ -11,8 +11,8 @@ export const AccountEntriesInfo: React.FC = () => {
     <AccountEntriesInfoWrapper>
       <MainHeadline>Account Entries</MainHeadline>
       <FourthLevelHeadline>
-        The total amount from the account entries, called the <i>balance</i>, is
-        used to calculate what we will charge a member every month.
+        The total amount from the account entries, called the <i>balance</i>, at
+        the end of a month, is the amount we will charge a member that month.
       </FourthLevelHeadline>
     </AccountEntriesInfoWrapper>
   )
