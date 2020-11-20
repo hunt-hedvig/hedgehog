@@ -22,7 +22,7 @@ type QueryType {
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
   canValuateClaimItem(
-    typeOfContract: TypeOfContract!
+    typeOfContract: String!
     itemFamilyId: String!
     itemTypeId: ID
   ): CanValuateClaimItem
@@ -197,7 +197,7 @@ input GetValuationInput {
   purchasePrice: MonetaryAmount!
   itemFamilyId: String!
   itemTypeId: ID
-  typeOfContract: TypeOfContract!
+  typeOfContract: String!
   purchaseDate: LocalDate!
   baseDate: LocalDate
 }
@@ -219,7 +219,7 @@ type ValuationRule {
 
 type CanValuateClaimItem {
   canValuate: Boolean!
-  typeOfContract: TypeOfContract
+  typeOfContract: String
   itemFamily: String
   itemTypeId: ID
 }
@@ -266,7 +266,7 @@ input UpsertValuationRuleInput {
   id: ID
   name: String!
   ageLimit: Float!
-  typeOfContract: TypeOfContract!
+  typeOfContract: String!
   itemFamilyId: String!
   itemTypeId: String
   valuationType: String!
@@ -281,7 +281,7 @@ type Contract {
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!
-  typeOfContract: TypeOfContract!
+  typeOfContract: String!
   isTerminated: Boolean!
   terminationDate: LocalDate
   currentAgreementId: ID!
@@ -294,20 +294,6 @@ type Contract {
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
-}
-
-enum TypeOfContract {
-  SE_HOUSE
-  SE_APARTMENT_BRF
-  SE_APARTMENT_RENT
-  SE_APARTMENT_STUDENT_BRF
-  SE_APARTMENT_STUDENT_RENT
-  NO_HOME_CONTENT_OWN
-  NO_HOME_CONTENT_RENT
-  NO_HOME_CONTENT_YOUTH_OWN
-  NO_HOME_CONTENT_YOUTH_RENT
-  NO_TRAVEL
-  NO_TRAVEL_YOUTH
 }
 
 enum ContractStatus {
@@ -327,7 +313,7 @@ type GenericAgreement {
   premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
-  typeOfContract: TypeOfContract!
+  typeOfContract: String!
   address: Address
   numberCoInsured: Int
   squareMeters: Int
