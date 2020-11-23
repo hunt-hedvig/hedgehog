@@ -24,6 +24,6 @@ export const Placeholder = styled('div')`
   }
 `
 
-export const Bold = styled('span')`
-  font-weight: bold;
+export const Bold = styled('strong')`
+  color: inherit !important;
 `
