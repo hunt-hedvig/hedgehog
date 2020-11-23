@@ -94,7 +94,7 @@ export const StandardForm: React.FC = () => {
             },
           }}
         />
-        <SubmitButton submitText={'Submit form'} />
+        <SubmitButton>Submit form</SubmitButton>
       </Form>
     </FormProvider>
   )
