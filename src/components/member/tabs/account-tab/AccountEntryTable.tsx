@@ -1,6 +1,6 @@
 import { AccountEntry } from 'api/generated/graphql'
 import { Popover } from 'hedvig-ui/popover'
-import { Capitalized, Placeholder } from 'hedvig-ui/typography'
+import { Bold, Capitalized, Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Grid, Icon, Table } from 'semantic-ui-react'
@@ -29,10 +29,6 @@ const DetailsIcon = styled(Icon)`
 
 const StyledTable = styled(Table)`
   overflow: visible !important;
-`
-
-const StyledStrong = styled('strong')`
-  color: ${({ theme }) => theme.background} !important;
 `
 
 export const AccountEntryTable: React.FC<{
@@ -76,21 +72,21 @@ export const AccountEntryTable: React.FC<{
                   <Grid>
                     <Grid.Row>
                       <Grid.Column>
-                        <StyledStrong>Entry ID</StyledStrong>
+                        <Bold>Entry ID</Bold>
                         <br />
                         {entry.id}
                       </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
                       <Grid.Column>
-                        <StyledStrong>Reference</StyledStrong>
+                        <Bold>Reference</Bold>
                         <br />
                         {entry.reference}
                       </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
                       <Grid.Column>
-                        <StyledStrong>Source</StyledStrong>
+                        <Bold>Source</Bold>
                         <br />
                         {entry.source}
                       </Grid.Column>
@@ -98,7 +94,7 @@ export const AccountEntryTable: React.FC<{
                     {entry.comment && (
                       <Grid.Row>
                         <Grid.Column>
-                          <StyledStrong>Comment</StyledStrong>
+                          <Bold>Comment</Bold>
                           <br />
                           {entry.comment}
                         </Grid.Column>

@@ -1,7 +1,7 @@
 import { MonthlyEntry } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Popover } from 'hedvig-ui/popover'
-import { Capitalized } from 'hedvig-ui/typography'
+import { Bold, Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Grid, Icon, Table } from 'semantic-ui-react'
@@ -13,10 +13,6 @@ const DetailsIcon = styled(Icon)`
 
 const StyledTable = styled(Table)`
   overflow: visible !important;
-`
-
-const StyledStrong = styled('strong')`
-  color: ${({ theme }) => theme.background} !important;
 `
 
 export const MonthlyEntriesTable: React.FC<{
@@ -55,14 +51,14 @@ export const MonthlyEntriesTable: React.FC<{
                     <Grid>
                       <Grid.Row>
                         <Grid.Column>
-                          <StyledStrong>ID</StyledStrong>
+                          <Bold>ID</Bold>
                           <br />
                           {monthlyEntry.id}
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row>
                         <Grid.Column>
-                          <StyledStrong>Added At</StyledStrong>
+                          <Bold>Added At</Bold>
                           <br />
                           {format(
                             parseISO(monthlyEntry.addedAt),
@@ -72,14 +68,14 @@ export const MonthlyEntriesTable: React.FC<{
                       </Grid.Row>
                       <Grid.Row>
                         <Grid.Column>
-                          <StyledStrong>Added By</StyledStrong>
+                          <Bold>Added By</Bold>
                           <br />
                           {monthlyEntry.addedBy}
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row>
                         <Grid.Column>
-                          <StyledStrong>Comment</StyledStrong>
+                          <Bold>Comment</Bold>
                           <br />
                           {monthlyEntry.comment}
                         </Grid.Column>
