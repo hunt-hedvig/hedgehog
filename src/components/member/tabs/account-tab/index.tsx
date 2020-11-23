@@ -115,7 +115,9 @@ export const AccountTab: React.FC<{
             {account?.chargeEstimation?.discountCodes.length > 0 && (
               <InfoRow>
                 Discount References
-                <InfoText>{account?.chargeEstimation?.discountCodes}</InfoText>
+                <InfoText>
+                  {account?.chargeEstimation?.discountCodes.join(', ')}
+                </InfoText>
               </InfoRow>
             )}
             <Spacing top={'small'} />
@@ -129,39 +131,44 @@ export const AccountTab: React.FC<{
         </Card>
       </CardsWrapper>
       <AccountEntriesInfo />
-      <CardsWrapper>
-        <Card span={1} style={{ padding: '0.2rem', marginTop: '1.5rem' }}>
-          <ExpansionPanel style={{ width: '100%' }}>
-            <ExpansionPanelSummary expandIcon={<ChevronDown />}>
-              Add entry to account
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <AddEntryForm memberId={memberId} />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-        </Card>
-      </CardsWrapper>
-      <AccountEntryTable accountEntries={account.entries} />
+      <Spacing top bottom>
+        <CardsWrapper>
+          <Card padding="small">
+            <ExpansionPanel style={{ width: '100%' }}>
+              <ExpansionPanelSummary expandIcon={<ChevronDown />}>
+                Add entry to account
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <AddEntryForm memberId={memberId} />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          </Card>
+        </CardsWrapper>
+        <AccountEntryTable accountEntries={account.entries} />
+      </Spacing>
+
       <div>
         <BackfillSubscriptionsButton memberId={memberId} />
       </div>
       <MonthlyEntriesInfo />
-      <CardsWrapper>
-        <Card span={1} style={{ padding: '0.2rem', marginTop: '1.5rem' }}>
-          <ExpansionPanel style={{ width: '100%' }}>
-            <ExpansionPanelSummary expandIcon={<ChevronDown />}>
-              Add monthly entry
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <AddMonthlyEntryForm
-                memberId={memberId}
-                preferredCurrency={contractMarketInfo?.preferredCurrency}
-              />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-        </Card>
-      </CardsWrapper>
-      <MonthlyEntriesTable monthlyEntries={account.monthlyEntries} />
+      <Spacing top bottom>
+        <CardsWrapper>
+          <Card padding="small">
+            <ExpansionPanel style={{ width: '100%' }}>
+              <ExpansionPanelSummary expandIcon={<ChevronDown />}>
+                Add monthly entry
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <AddMonthlyEntryForm
+                  memberId={memberId}
+                  preferredCurrency={contractMarketInfo?.preferredCurrency}
+                />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          </Card>
+        </CardsWrapper>
+        <MonthlyEntriesTable monthlyEntries={account.monthlyEntries} />
+      </Spacing>
     </FadeIn>
   )
 }

@@ -57,13 +57,15 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
 
   return (
     <Wrapper>
-      <MainHeadline style={{ marginBottom: '2rem' }}>
-        Hi there{' '}
-        <span css={{ textTransform: 'capitalize' }}>
-          {auth?.email && getLowercaseNameFromEmail(auth.email)}
-        </span>
-        !
-      </MainHeadline>
+      <Spacing bottom>
+        <MainHeadline>
+          Hi there{' '}
+          <span css={{ textTransform: 'capitalize' }}>
+            {auth?.email && getLowercaseNameFromEmail(auth.email)}
+          </span>
+          !
+        </MainHeadline>
+      </Spacing>
       {dashboardNumbers && (
         <FadeIn>
           <MetricsWrapper>

@@ -1,6 +1,7 @@
 import { Form, FormDropdown, FormInput, SubmitButton } from 'hedvig-ui/form'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { FieldValues } from 'react-hook-form/dist/types/fields'
 import { DropdownItemProps } from 'semantic-ui-react'
 
 export default {
@@ -29,7 +30,7 @@ const formOptions: DropdownItemProps[] = [
 export const StandardForm: React.FC = () => {
   const form = useForm()
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: FieldValues) => {
     console.log(data)
   }
 

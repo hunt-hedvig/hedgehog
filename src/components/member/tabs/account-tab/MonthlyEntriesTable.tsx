@@ -11,11 +11,19 @@ const DetailsIcon = styled(Icon)`
   color: ${({ theme }) => theme.accent};
 `
 
+const StyledTable = styled(Table)`
+  overflow: visible !important;
+`
+
+const StyledStrong = styled('strong')`
+  color: ${({ theme }) => theme.background} !important;
+`
+
 export const MonthlyEntriesTable: React.FC<{
   monthlyEntries: ReadonlyArray<MonthlyEntry>
 }> = ({ monthlyEntries }) => {
   return (
-    <Table style={{ overflow: 'visible' }}>
+    <StyledTable>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>External Id</Table.HeaderCell>
@@ -47,14 +55,14 @@ export const MonthlyEntriesTable: React.FC<{
                     <Grid>
                       <Grid.Row>
                         <Grid.Column>
-                          <span style={{ fontWeight: 'bold' }}>ID</span>
+                          <StyledStrong>ID</StyledStrong>
                           <br />
                           {monthlyEntry.id}
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row>
                         <Grid.Column>
-                          <span style={{ fontWeight: 'bold' }}>Added At</span>
+                          <StyledStrong>Added At</StyledStrong>
                           <br />
                           {format(
                             parseISO(monthlyEntry.addedAt),
@@ -64,14 +72,14 @@ export const MonthlyEntriesTable: React.FC<{
                       </Grid.Row>
                       <Grid.Row>
                         <Grid.Column>
-                          <span style={{ fontWeight: 'bold' }}>Added By</span>
+                          <StyledStrong>Added By</StyledStrong>
                           <br />
                           {monthlyEntry.addedBy}
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row>
                         <Grid.Column>
-                          <span style={{ fontWeight: 'bold' }}>Comment</span>
+                          <StyledStrong>Comment</StyledStrong>
                           <br />
                           {monthlyEntry.comment}
                         </Grid.Column>
@@ -86,6 +94,6 @@ export const MonthlyEntriesTable: React.FC<{
           )
         })}
       </Table.Body>
-    </Table>
+    </StyledTable>
   )
 }

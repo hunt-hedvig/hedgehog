@@ -27,11 +27,19 @@ const DetailsIcon = styled(Icon)`
   color: ${({ theme }) => theme.accent};
 `
 
+const StyledTable = styled(Table)`
+  overflow: visible !important;
+`
+
+const StyledStrong = styled('strong')`
+  color: ${({ theme }) => theme.background} !important;
+`
+
 export const AccountEntryTable: React.FC<{
   accountEntries: AccountEntry[]
 }> = ({ accountEntries }) => {
   return (
-    <Table style={{ overflow: 'visible' }}>
+    <StyledTable>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Date</Table.HeaderCell>
@@ -68,21 +76,21 @@ export const AccountEntryTable: React.FC<{
                   <Grid>
                     <Grid.Row>
                       <Grid.Column>
-                        <span style={{ fontWeight: 'bold' }}>Entry ID</span>
+                        <StyledStrong>Entry ID</StyledStrong>
                         <br />
                         {entry.id}
                       </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
                       <Grid.Column>
-                        <span style={{ fontWeight: 'bold' }}>Reference</span>
+                        <StyledStrong>Reference</StyledStrong>
                         <br />
                         {entry.reference}
                       </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
                       <Grid.Column>
-                        <span style={{ fontWeight: 'bold' }}>Source</span>
+                        <StyledStrong>Source</StyledStrong>
                         <br />
                         {entry.source}
                       </Grid.Column>
@@ -90,7 +98,7 @@ export const AccountEntryTable: React.FC<{
                     {entry.comment && (
                       <Grid.Row>
                         <Grid.Column>
-                          <span style={{ fontWeight: 'bold' }}>Comment</span>
+                          <StyledStrong>Comment</StyledStrong>
                           <br />
                           {entry.comment}
                         </Grid.Column>
@@ -105,6 +113,6 @@ export const AccountEntryTable: React.FC<{
           </Table.Row>
         ))}
       </Table.Body>
-    </Table>
+    </StyledTable>
   )
 }

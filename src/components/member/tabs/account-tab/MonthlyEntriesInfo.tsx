@@ -1,19 +1,15 @@
+import { Spacing } from 'hedvig-ui/spacing'
 import { FourthLevelHeadline, MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from 'react-emotion'
-
-const MonthlyEntriesInfoWrapper = styled('div')`
-  margin-top: 4rem;
-`
 
 export const MonthlyEntriesInfo: React.FC = () => {
   return (
-    <MonthlyEntriesInfoWrapper>
+    <Spacing top="large">
       <MainHeadline>Monthly Entries</MainHeadline>
       <FourthLevelHeadline>
         Entries that will be added once <strong>every month</strong> to the
         member's account
       </FourthLevelHeadline>
-    </MonthlyEntriesInfoWrapper>
+    </Spacing>
   )
 }

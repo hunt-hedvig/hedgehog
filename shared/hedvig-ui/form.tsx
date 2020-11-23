@@ -3,6 +3,7 @@ import { Button, ButtonProps } from 'hedvig-ui/button'
 import React from 'react'
 import styled from 'react-emotion'
 import { Controller, useFormContext, ValidationRules } from 'react-hook-form'
+import { FieldValues } from 'react-hook-form/dist/types/fields'
 import {
   Dropdown,
   DropdownItemProps,
@@ -10,11 +11,9 @@ import {
   FormProps,
 } from 'semantic-ui-react'
 
-export const Form: React.FC<{ onSubmit: (data) => void } & FormProps> = ({
-  onSubmit,
-  children,
-  ...props
-}) => {
+export const Form: React.FC<{
+  onSubmit: (data: FieldValues) => void
+} & FormProps> = ({ onSubmit, children, ...props }) => {
   const { handleSubmit } = useFormContext()
 
   return (
@@ -33,11 +32,14 @@ const ErrorMessageWrapper = styled('div')`
   margin: 0;
 `
 
-const FormLabel: React.FC<{
-  label: string
-  name: string
-}> = ({ label, name }) => {
-  return <label htmlFor={name}>{label}</label>
+const FormLabel: React.FC<{ name: string } & React.HTMLProps<
+  HTMLLabelElement
+>> = ({ name, children, ...props }) => {
+  return (
+    <label htmlFor={name} {...props}>
+      {children}
+    </label>
+  )
 }
 
 const FormError: React.FC<{
@@ -54,7 +56,7 @@ const FormError: React.FC<{
 }
 
 interface FormFieldProps {
-  label: string
+  label: React.ReactNode
   name: string
   defaultValue: unknown
   rules?: ValidationRules
@@ -72,27 +74,20 @@ const FormField: React.FC<FormFieldProps> = ({
       required={Boolean(rules?.required)}
       error={errors && Boolean(errors[name])}
     >
-      <FormLabel label={label} name={name} />
+      <FormLabel name={name}>{label}</FormLabel>
       {children}
       <FormError name={name} />
     </SemanticForm.Field>
   )
 }
 
-interface SubmitButtonProps extends ButtonProps {
-  submitText: string
-}
-
-export const SubmitButton: React.FC<SubmitButtonProps> = ({
-  submitText = 'Submit',
-  ...props
-}) => {
+export const SubmitButton: React.FC<ButtonProps> = ({ children, ...props }) => {
   const {
     formState: { isSubmitting },
   } = useFormContext()
   return (
     <Button disabled={isSubmitting} type={'submit'} {...props}>
-      {submitText}
+      {children}
     </Button>
   )
 }
