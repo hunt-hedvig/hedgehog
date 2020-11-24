@@ -2702,6 +2702,15 @@ export type RegenerateCertificateMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'regenerateCertificate'>
 
+export type RemoveMonthlyEntryMutationVariables = {
+  id: Scalars['ID']
+}
+
+export type RemoveMonthlyEntryMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'removeMonthlyEntry'
+>
+
 export type RevertTerminationMutationVariables = {
   contractId: Scalars['ID']
 }
@@ -5840,6 +5849,54 @@ export type RegenerateCertificateMutationResult = ApolloReactCommon.MutationResu
 export type RegenerateCertificateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RegenerateCertificateMutation,
   RegenerateCertificateMutationVariables
+>
+export const RemoveMonthlyEntryDocument = gql`
+  mutation RemoveMonthlyEntry($id: ID!) {
+    removeMonthlyEntry(id: $id)
+  }
+`
+export type RemoveMonthlyEntryMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveMonthlyEntryMutation,
+  RemoveMonthlyEntryMutationVariables
+>
+
+/**
+ * __useRemoveMonthlyEntryMutation__
+ *
+ * To run a mutation, you first call `useRemoveMonthlyEntryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveMonthlyEntryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeMonthlyEntryMutation, { data, loading, error }] = useRemoveMonthlyEntryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveMonthlyEntryMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveMonthlyEntryMutation,
+    RemoveMonthlyEntryMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RemoveMonthlyEntryMutation,
+    RemoveMonthlyEntryMutationVariables
+  >(RemoveMonthlyEntryDocument, baseOptions)
+}
+export type RemoveMonthlyEntryMutationHookResult = ReturnType<
+  typeof useRemoveMonthlyEntryMutation
+>
+export type RemoveMonthlyEntryMutationResult = ApolloReactCommon.MutationResult<
+  RemoveMonthlyEntryMutation
+>
+export type RemoveMonthlyEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveMonthlyEntryMutation,
+  RemoveMonthlyEntryMutationVariables
 >
 export const RevertTerminationDocument = gql`
   mutation RevertTermination($contractId: ID!) {

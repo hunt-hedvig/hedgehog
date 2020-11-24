@@ -12,9 +12,14 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2020-11-24',
+    change: 'Add ability to remove a monthly entry',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2020-11-23',
     change:
-      'Add ability "monthly entries" to a member\'s account, to be used to automate adding object insurances each month',
+      'Add ability "monthly entries" to a member\'s account, to be used to automate object insurances',
     authorGithubHandle: 'vonElfvin',
   },
   {
