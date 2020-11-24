@@ -1,6 +1,6 @@
 import { AccountEntry } from 'api/generated/graphql'
 import { Popover } from 'hedvig-ui/popover'
-import { Capitalized, Placeholder } from 'hedvig-ui/typography'
+import { Bold, Capitalized, Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Grid, Icon, Table } from 'semantic-ui-react'
@@ -27,11 +27,15 @@ const DetailsIcon = styled(Icon)`
   color: ${({ theme }) => theme.accent};
 `
 
+const StyledTable = styled(Table)`
+  overflow: visible !important;
+`
+
 export const AccountEntryTable: React.FC<{
   accountEntries: AccountEntry[]
 }> = ({ accountEntries }) => {
   return (
-    <Table style={{ overflow: 'visible' }}>
+    <StyledTable>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Date</Table.HeaderCell>
@@ -68,25 +72,34 @@ export const AccountEntryTable: React.FC<{
                   <Grid>
                     <Grid.Row>
                       <Grid.Column>
-                        <span style={{ fontWeight: 'bold' }}>Entry ID</span>
+                        <Bold>Entry ID</Bold>
                         <br />
                         {entry.id}
                       </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
                       <Grid.Column>
-                        <span style={{ fontWeight: 'bold' }}>Reference</span>
+                        <Bold>Reference</Bold>
                         <br />
                         {entry.reference}
                       </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
                       <Grid.Column>
-                        <span style={{ fontWeight: 'bold' }}>Source</span>
+                        <Bold>Source</Bold>
                         <br />
                         {entry.source}
                       </Grid.Column>
                     </Grid.Row>
+                    {entry.comment && (
+                      <Grid.Row>
+                        <Grid.Column>
+                          <Bold>Comment</Bold>
+                          <br />
+                          {entry.comment}
+                        </Grid.Column>
+                      </Grid.Row>
+                    )}
                   </Grid>
                 }
               >
@@ -96,6 +109,6 @@ export const AccountEntryTable: React.FC<{
           </Table.Row>
         ))}
       </Table.Body>
-    </Table>
+    </StyledTable>
   )
 }

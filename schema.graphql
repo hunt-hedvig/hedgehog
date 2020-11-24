@@ -4,7 +4,6 @@ schema {
 }
 
 type QueryType {
-  monthlyPayments(month: YearMonth!): [MonthlySubscription]
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
@@ -58,6 +57,11 @@ type MutationType {
     memberId: ID!
     accountEntry: AccountEntryInput!
   ): Member!
+  addMonthlyEntryToMember(
+    memberId: ID!
+    monthlyEntry: MonthlyEntryInput!
+  ): Member!
+  removeMonthlyEntry(id: ID!): Boolean
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
   createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
   updateClaimState(id: ID!, state: ClaimState!): Claim
@@ -837,6 +841,19 @@ type Account {
   totalBalance: MonetaryAmountV2!
   chargeEstimation: AccountChargeEstimation!
   entries: [AccountEntry!]!
+  monthlyEntries: [MonthlyEntry!]!
+}
+
+type MonthlyEntry {
+  id: ID!
+  externalId: String
+  amount: MonetaryAmountV2!
+  type: AccountEntryType!
+  source: String!
+  addedBy: String!
+  addedAt: Instant!
+  title: String!
+  comment: String!
 }
 
 type AccountChargeEstimation {
@@ -859,6 +876,15 @@ type SchedulerState {
 input MemberChargeApproval {
   memberId: ID!
   amount: MonetaryAmount!
+}
+
+input MonthlyEntryInput {
+  externalId: String
+  amount: MonetaryAmount!
+  type: AccountEntryType!
+  source: String!
+  title: String!
+  comment: String!
 }
 
 input AccountEntryInput {

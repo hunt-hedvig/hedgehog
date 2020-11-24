@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2020-11-23',
+    change:
+      'Add ability "monthly entries" to a member\'s account, to be used to automate adding object insurances each month',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2020-11-17',
     change:
       'Unsign tool now notifies if the ssn was signed or not on unsigning',
