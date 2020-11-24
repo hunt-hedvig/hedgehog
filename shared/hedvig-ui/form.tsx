@@ -11,19 +11,19 @@ import {
   FormProps,
 } from 'semantic-ui-react'
 
+const StyledForm = styled(SemanticForm)`
+  width: 100%;
+`
+
 export const Form: React.FC<{
   onSubmit: (data: FieldValues) => void
 } & FormProps> = ({ onSubmit, children, ...props }) => {
   const { handleSubmit } = useFormContext()
 
   return (
-    <SemanticForm
-      onSubmit={handleSubmit(onSubmit)}
-      {...props}
-      style={{ width: '100%' }}
-    >
+    <StyledForm onSubmit={handleSubmit(onSubmit)} {...props}>
       {children}
-    </SemanticForm>
+    </StyledForm>
   )
 }
 
@@ -72,7 +72,7 @@ const FormField: React.FC<FormFieldProps> = ({
   return (
     <SemanticForm.Field
       required={Boolean(rules?.required)}
-      error={errors && Boolean(errors[name])}
+      error={errors && Boolean(errors[name.split('.')[0]])}
     >
       <FormLabel name={name}>{label}</FormLabel>
       {children}

@@ -2079,6 +2079,7 @@ export type GetAccountQuery = { __typename?: 'QueryType' } & {
                   | 'title'
                   | 'source'
                   | 'reference'
+                  | 'comment'
                   | 'type'
                   | 'failedAt'
                   | 'chargedAt'
@@ -4277,6 +4278,7 @@ export const GetAccountDocument = gql`
           title
           source
           reference
+          comment
           type
           failedAt
           chargedAt
