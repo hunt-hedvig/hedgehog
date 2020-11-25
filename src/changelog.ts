@@ -13,7 +13,7 @@ export interface Change {
 export const changelog: ReadonlyArray<Change> = [
   {
     date: '2020-11-24',
-    change: 'Add ability to remove a monthly entry',
+    change: 'Add ability to remove a monthly entry from a member',
     authorGithubHandle: 'vonElfvin',
   },
   {

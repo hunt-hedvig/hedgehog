@@ -102,28 +102,29 @@ export const MonthlyEntriesTableComponent: React.FC<{
                 <IconButton
                   onClick={() => {
                     const confirm = window.confirm(
-                      `Are you sure you want delete the monthly entry "${monthlyEntry.title}? (id=${monthlyEntry.id})"`,
+                      `Are you sure you want delete the monthly entry titled "${monthlyEntry.title}? (id=${monthlyEntry.id})"`,
                     )
-                    if (confirm) {
-                      removeMonthlyEntry(
-                        getRemoveMonthlyEntryOptions(memberId, monthlyEntry.id),
-                      )
-                        .then(() => {
-                          showNotification({
-                            message: 'Monthly entry removed',
-                            header: 'Success',
-                            type: 'olive',
-                          })
-                        })
-                        .catch((e) => {
-                          showNotification({
-                            message: e.message,
-                            header: 'Error',
-                            type: 'red',
-                          })
-                          throw e
-                        })
+                    if (!confirm) {
+                      return
                     }
+                    removeMonthlyEntry(
+                      getRemoveMonthlyEntryOptions(memberId, monthlyEntry.id),
+                    )
+                      .then(() => {
+                        showNotification({
+                          message: 'Monthly entry removed',
+                          header: 'Success',
+                          type: 'olive',
+                        })
+                      })
+                      .catch((e) => {
+                        showNotification({
+                          message: e.message,
+                          header: 'Error',
+                          type: 'red',
+                        })
+                        throw e
+                      })
                   }}
                 >
                   <Trash color="red" />
