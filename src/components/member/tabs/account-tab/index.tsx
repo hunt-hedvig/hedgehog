@@ -105,12 +105,18 @@ export const AccountTab: React.FC<{
                 )}
               </InfoText>
             </InfoRow>
-            <InfoRow>
-              Upcoming Discount
-              <InfoText>
-                {formatMoney(account?.chargeEstimation.discount, moneyOptions)}
-              </InfoText>
-            </InfoRow>
+            {+account?.chargeEstimation.discount.amount > 0 && (
+              <InfoRow>
+                Upcoming Discount
+                <InfoText>
+                  -{' '}
+                  {formatMoney(
+                    account?.chargeEstimation.discount,
+                    moneyOptions,
+                  )}
+                </InfoText>
+              </InfoRow>
+            )}
             <Spacing top={'small'} />
             {account?.chargeEstimation?.discountCodes.length > 0 && (
               <InfoRow>
@@ -167,7 +173,10 @@ export const AccountTab: React.FC<{
             </ExpansionPanel>
           </Card>
         </CardsWrapper>
-        <MonthlyEntriesTable monthlyEntries={account.monthlyEntries} />
+        <MonthlyEntriesTable
+          memberId={memberId}
+          monthlyEntries={account.monthlyEntries}
+        />
       </Spacing>
     </FadeIn>
   )

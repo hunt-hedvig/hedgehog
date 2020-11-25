@@ -1,23 +1,34 @@
+import { IconButton } from '@material-ui/core'
 import { MonthlyEntry } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
+import {
+  getRemoveMonthlyEntryOptions,
+  useRemoveMonthlyEntry,
+} from 'graphql/use-remove-monthly-entry'
 import { Popover } from 'hedvig-ui/popover'
 import { Bold, Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
+import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
-import { Grid, Icon, Table } from 'semantic-ui-react'
+import { Grid, Table } from 'semantic-ui-react'
+import { WithShowNotification } from 'store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
-
-const DetailsIcon = styled(Icon)`
-  color: ${({ theme }) => theme.accent};
-`
+import { withShowNotification } from 'utils/notifications'
 
 const StyledTable = styled(Table)`
   overflow: visible !important;
 `
 
-export const MonthlyEntriesTable: React.FC<{
+export const MonthlyEntriesTableComponent: React.FC<{
+  memberId: string
   monthlyEntries: ReadonlyArray<MonthlyEntry>
-}> = ({ monthlyEntries }) => {
+} & WithShowNotification> = ({
+  memberId,
+  monthlyEntries,
+  showNotification,
+}) => {
+  const [removeMonthlyEntry] = useRemoveMonthlyEntry()
+
   return (
     <StyledTable>
       <Table.Header>
@@ -28,6 +39,7 @@ export const MonthlyEntriesTable: React.FC<{
           <Table.HeaderCell>Type</Table.HeaderCell>
           <Table.HeaderCell>Amount</Table.HeaderCell>
           <Table.HeaderCell width={1}>Details</Table.HeaderCell>
+          <Table.HeaderCell width={1} />
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -83,8 +95,40 @@ export const MonthlyEntriesTable: React.FC<{
                     </Grid>
                   }
                 >
-                  <DetailsIcon name="info circle" />
+                  <InfoCircleFill />
                 </Popover>
+              </Table.Cell>
+              <Table.Cell>
+                <IconButton
+                  onClick={() => {
+                    const confirm = window.confirm(
+                      `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,
+                    )
+                    if (!confirm) {
+                      return
+                    }
+                    removeMonthlyEntry(
+                      getRemoveMonthlyEntryOptions(memberId, monthlyEntry.id),
+                    )
+                      .then(() => {
+                        showNotification({
+                          message: 'Monthly entry removed',
+                          header: 'Success',
+                          type: 'olive',
+                        })
+                      })
+                      .catch((e) => {
+                        showNotification({
+                          message: e.message,
+                          header: 'Error',
+                          type: 'red',
+                        })
+                        throw e
+                      })
+                  }}
+                >
+                  <Trash color="red" />
+                </IconButton>
               </Table.Cell>
             </Table.Row>
           )
@@ -93,3 +137,7 @@ export const MonthlyEntriesTable: React.FC<{
     </StyledTable>
   )
 }
+
+export const MonthlyEntriesTable = withShowNotification(
+  MonthlyEntriesTableComponent,
+)
