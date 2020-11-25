@@ -8,7 +8,9 @@ export const MonthlyEntriesInfo: React.FC = () => {
       <MainHeadline>Monthly Entries</MainHeadline>
       <FourthLevelHeadline>
         Entries that will be added once <strong>every month</strong> to the
-        member's account
+        member's account. <br /> <strong>Note.</strong> They are always added,
+        regardless of contract status, to their full amount. You can remove them
+        though.
       </FourthLevelHeadline>
     </Spacing>
   )

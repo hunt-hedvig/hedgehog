@@ -102,7 +102,7 @@ export const MonthlyEntriesTableComponent: React.FC<{
                 <IconButton
                   onClick={() => {
                     const confirm = window.confirm(
-                      `Are you sure you want delete the monthly entry titled "${monthlyEntry.title}? (id=${monthlyEntry.id})"`,
+                      `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,
                     )
                     if (!confirm) {
                       return
