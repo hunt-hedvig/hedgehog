@@ -38,7 +38,7 @@
     "es6-promise": "^4.2.5",
     "formik": "^2.1.4",
     "graphql": "^14.0.2",
-    "graphql-tag": "^2.10.3",
+    "graphql-tag": "^2.11.0",
     "koa": "^2.11.0",
     "koa-basic-auth": "^4.0.0",
     "koa-compress": "^3.0.0",

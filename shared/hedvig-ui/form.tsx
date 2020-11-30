@@ -2,7 +2,7 @@ import { ErrorMessage } from '@hookform/error-message'
 import { Button, ButtonProps } from 'hedvig-ui/button'
 import React from 'react'
 import styled from 'react-emotion'
-import { Controller, useFormContext, RegisterOptions } from 'react-hook-form'
+import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
 import {
   Dropdown,
