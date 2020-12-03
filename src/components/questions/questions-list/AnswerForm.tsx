@@ -100,7 +100,7 @@ export const AnswerFormComponent: React.FC<{
                   rules={{
                     required: 'Cannot send an empty message',
                     pattern: {
-                      value: /[a-zA-Z0-9]+/,
+                      value: /[^\s]/,
                       message: 'Cannot send a message without text',
                     },
                   }}
