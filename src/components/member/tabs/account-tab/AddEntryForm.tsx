@@ -5,6 +5,7 @@ import {
 import { AddEntryInformation } from 'components/member/tabs/account-tab/AddEntryInformation'
 import { format } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
+import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import { Form, FormDropdown, FormInput, SubmitButton } from 'hedvig-ui/form'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
@@ -87,7 +88,16 @@ const AddEntryFormComponent: React.FC<{
   memberId: string
 } & WithShowNotification> = ({ memberId, showNotification }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
-  const preferredCurrency = contractMarketInfo!!.preferredCurrency
+
+  if (!contractMarketInfo?.preferredCurrency) {
+    return (
+      <StandaloneMessage>
+        The member has no preferred currency
+      </StandaloneMessage>
+    )
+  }
+
+  const preferredCurrency = contractMarketInfo.preferredCurrency
   const [addAccountEntry] = useAddAccountEntryToMemberMutation()
 
   const form = useForm()
