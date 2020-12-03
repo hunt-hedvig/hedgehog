@@ -1,0 +1,14 @@
+query GetMemberClaims($memberId: ID!) {
+  member(id: $memberId) {
+    memberId
+    claims {
+      id
+      registrationDate
+      type {
+        __typename
+      }
+      state
+      reserves
+    }
+  }
+}

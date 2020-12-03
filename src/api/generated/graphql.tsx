@@ -2338,6 +2338,48 @@ export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetMemberClaimsQueryVariables = Exact<{
+  memberId: Scalars['ID']
+}>
+
+export type GetMemberClaimsQuery = { __typename?: 'QueryType' } & {
+  member?: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        claims: Array<
+          { __typename?: 'Claim' } & Pick<
+            Claim,
+            'id' | 'registrationDate' | 'state' | 'reserves'
+          > & {
+              type?: Maybe<
+                | { __typename: 'TheftClaim' }
+                | { __typename: 'AccidentalDamageClaim' }
+                | { __typename: 'AssaultClaim' }
+                | { __typename: 'WaterDamageClaim' }
+                | { __typename: 'TravelAccidentClaim' }
+                | { __typename: 'LuggageDelayClaim' }
+                | { __typename: 'NotCoveredClaim' }
+                | { __typename: 'FireDamageClaim' }
+                | { __typename: 'ConfirmedFraudClaim' }
+                | { __typename: 'LiabilityClaim' }
+                | { __typename: 'ApplianceClaim' }
+                | { __typename: 'LegalProtectionClaim' }
+                | { __typename: 'WaterDamageBathroomClaim' }
+                | { __typename: 'WaterDamageKitchenClaim' }
+                | { __typename: 'BurglaryClaim' }
+                | { __typename: 'FloodingClaim' }
+                | { __typename: 'EarthquakeClaim' }
+                | { __typename: 'InstallationsClaim' }
+                | { __typename: 'SnowPressureClaim' }
+                | { __typename: 'StormDamageClaim' }
+                | { __typename: 'VerminAndPestsClaim' }
+                | { __typename: 'TestClaim' }
+              >
+            }
+        >
+      }
+  >
+}
+
 export type GetMemberInfoQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -4883,6 +4925,71 @@ export type GetItemCategoriesLazyQueryHookResult = ReturnType<
 export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
   GetItemCategoriesQuery,
   GetItemCategoriesQueryVariables
+>
+export const GetMemberClaimsDocument = gql`
+  query GetMemberClaims($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      claims {
+        id
+        registrationDate
+        type {
+          __typename
+        }
+        state
+        reserves
+      }
+    }
+  }
+`
+
+/**
+ * __useGetMemberClaimsQuery__
+ *
+ * To run a query within a React component, call `useGetMemberClaimsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMemberClaimsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMemberClaimsQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetMemberClaimsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetMemberClaimsQuery,
+    GetMemberClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetMemberClaimsQuery,
+    GetMemberClaimsQueryVariables
+  >(GetMemberClaimsDocument, baseOptions)
+}
+export function useGetMemberClaimsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMemberClaimsQuery,
+    GetMemberClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMemberClaimsQuery,
+    GetMemberClaimsQueryVariables
+  >(GetMemberClaimsDocument, baseOptions)
+}
+export type GetMemberClaimsQueryHookResult = ReturnType<
+  typeof useGetMemberClaimsQuery
+>
+export type GetMemberClaimsLazyQueryHookResult = ReturnType<
+  typeof useGetMemberClaimsLazyQuery
+>
+export type GetMemberClaimsQueryResult = ApolloReactCommon.QueryResult<
+  GetMemberClaimsQuery,
+  GetMemberClaimsQueryVariables
 >
 export const GetMemberInfoDocument = gql`
   query GetMemberInfo($memberId: ID!) {

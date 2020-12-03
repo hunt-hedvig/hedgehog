@@ -6,8 +6,12 @@ import MaterialModal from 'components/shared/modals/MaterialModal'
 import { ActionMap, Container } from 'constate'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
+import { useGetMemberClaims } from 'graphql/use-get-member-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
+import {
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React from 'react'
 import { Mutation } from 'react-apollo'
@@ -59,13 +63,6 @@ const CREATE_CLAIM_MUTATION = gql`
   }
 `
 
-interface ClaimsTabProps {
-  classes: any
-  memberClaims: object[]
-  sortClaimsList?: () => void
-  memberId: string
-}
-
 interface State {
   open: boolean
   date?: any
@@ -80,7 +77,13 @@ interface Actions {
   dateChangeHandler?: (type: string, e: any, value: any) => void
 }
 
-const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
+const ClaimsTab: React.FC<{ memberId: string }> = ({ memberId }) => {
+  const [claims, { loading }] = useGetMemberClaims(memberId)
+
+  if (loading || !claims) {
+    return <LoadingMessage paddingTop="25vh" />
+  }
+
   return (
     <FadeIn>
       <Container<State, ActionMap<State, Actions>>
@@ -95,13 +98,13 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
           handleClaimSubmit: (mutation) => (state) => {
             mutation({
               variables: {
-                memberId: props.memberId,
+                memberId,
                 date: format(state.date, "yyyy-MM-dd'T'HH:mm:ss"),
                 source: state.value,
               },
             }).then((response) => {
               history.push(
-                `/claims/${response.data.createClaim}/members/${props.memberId}`,
+                `/claims/${response.data.createClaim}/members/${memberId}`,
               )
             })
             return { date: new Date(), value: 'EMAIL', open: false }
@@ -135,10 +138,12 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
             >
               Add new claim
             </Button>
-            {props.memberClaims.length > 0 ? (
+            {claims?.length > 0 ? (
               <MemberClaimsList
-                claims={{ list: props.memberClaims }}
-                sortClaimsList={props.sortClaimsList}
+                claims={{ list: claims }}
+                sortClaimsList={(clickedColumn, isReversed) => {
+                  console.log(`Sorting: ${clickedColumn}, ${isReversed}`)
+                }}
               />
             ) : (
               <StandaloneMessage paddingTop="10vh">

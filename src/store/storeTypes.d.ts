@@ -11,7 +11,6 @@ export interface BackofficeStore {
   login: any
   client: any
   poll: any
-  claims: ClaimsStore
   claimDetails: any
   payoutDetails: any
   notifications: any
