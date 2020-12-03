@@ -6,16 +6,6 @@ import {
 } from 'api/generated/graphql'
 import { Market } from 'types/enums'
 
-export enum ContractType {
-  SwedishApartment = 'SWEDISH_APARTMENT',
-  SwedishHouse = 'SWEDISH_HOUSE',
-  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
-  NorwegianTravel = 'NORWEGIAN_TRAVEL',
-  DanishHomeContent = 'DANISH_HOME_CONTENT',
-  DanishTravel = 'DANISH_TRAVEL',
-  DanishAccident = 'DANISH_ACCIDENT',
-}
-
 export const getSignSource = (signSource: SignSource): string => {
   switch (signSource) {
     case SignSource.App:

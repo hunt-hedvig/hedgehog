@@ -9,7 +9,6 @@ import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table, TableRowProps } from 'semantic-ui-react'
-import { Market } from 'types/enums'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
 import { getMemberFlag, MemberAge } from 'utils/member'
 
@@ -20,8 +19,6 @@ export const ListItem: React.FC<{
   member: Member
   active?: boolean
 }> = ({ index, member, active }) => {
-  const market = member?.contractMarketInfo?.market as Market | undefined
-
   const contracts = member.contracts
 
   return (
@@ -35,7 +32,7 @@ export const ListItem: React.FC<{
       </Table.Cell>
       <Table.Cell>
         {member.firstName ?? '-'} {member.lastName ?? '-'}{' '}
-        {market && getMemberFlag(market)}
+        {getMemberFlag(member?.contractMarketInfo)}
         <MemberAgeWrapper>
           <MemberAge birthDateString={member.birthDate} />
         </MemberAgeWrapper>

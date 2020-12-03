@@ -9,9 +9,8 @@ import {
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import * as React from 'react'
 import { Tab } from 'semantic-ui-react'
-import { QuoteProductType } from 'types/enums'
+import { ContractType, QuoteProductType } from 'types/enums'
 import {
-  ContractType,
   isDanishMarket,
   isNorwegianMarket,
   isSwedishMarket,

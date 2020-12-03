@@ -1,3 +1,4 @@
+import { ContractMarketInfo } from 'api/generated/graphql'
 import { differenceInYears, parse } from 'date-fns'
 import { lightTheme } from 'hedvig-ui/themes'
 import React from 'react'
@@ -44,8 +45,14 @@ export const getMemberGroup = (memberId: string) => {
   return 'Green team'
 }
 
-export const getMemberFlag = (market: Market): string => {
-  switch (market) {
+export const getMemberFlag = (
+  contractMarketInfo?: ContractMarketInfo | null,
+): string => {
+  if (!contractMarketInfo) {
+    return '🏳'
+  }
+
+  switch (contractMarketInfo.market) {
     case Market.Norway:
       return '🇳🇴'
     case Market.Sweden:
