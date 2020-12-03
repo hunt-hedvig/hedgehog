@@ -16,6 +16,11 @@ export interface CustomInputProps extends InputProps {
 const StyledSemanticInput = styled(SemanticInput)<CustomInputProps>`
   &&&& {
     width: 100%;
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
     input {
       font-family: ${fonts.FAVORIT};
 

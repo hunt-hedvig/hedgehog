@@ -107,7 +107,14 @@ const FormInputComponent: React.FC<CustomInputProps & FormFieldProps> = ({
       name={name}
       rules={rules}
       defaultValue={defaultValue}
-      as={<Input {...props} label={affix} labelPosition={affixPosition} />}
+      as={
+        <Input
+          {...props}
+          label={affix}
+          labelPosition={affixPosition}
+          autoComplete="off"
+        />
+      }
     />
   )
 }

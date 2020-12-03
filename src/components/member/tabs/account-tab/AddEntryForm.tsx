@@ -1,4 +1,7 @@
-import { useAddAccountEntryToMemberMutation } from 'api/generated/graphql'
+import {
+  AccountEntryInput,
+  useAddAccountEntryToMemberMutation,
+} from 'api/generated/graphql'
 import { AddEntryInformation } from 'components/member/tabs/account-tab/AddEntryInformation'
 import { format } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
@@ -39,37 +42,42 @@ const entryTypeOptions = [
 const sourceOptions = [
   {
     key: 1,
-    value: 'object',
+    value: 'manual_object',
     text: 'Object Insurance',
   },
   {
     key: 2,
-    value: 'travel',
+    value: 'manual_travel',
     text: 'Travel Insurance',
   },
   {
     key: 3,
-    value: 'growth_discount',
-    text: 'Growth discount (e.g. Benify, Studentkortet, Mecenat)',
+    value: 'manual_growth_discount_correction',
+    text: 'Discount code issues (e.g. missing free month, wrong code etc.)',
   },
   {
     key: 4,
-    value: 'iex_discount',
+    value: 'manual_growth_discount',
+    text: 'Growth discount (e.g. Benify, Studentkortet, Mecenat)',
+  },
+  {
+    key: 5,
+    value: 'manual_iex_discount',
     text:
       'IEX discount (e.g. Start date issues, Technical issues, "Plåster på såren")',
   },
   {
-    key: 5,
-    value: 'calculation_correction',
+    key: 6,
+    value: 'manual_calculation_correction',
     text: 'Correction of calculation error',
   },
   {
-    key: 6,
-    value: 'manual_correction',
+    key: 7,
+    value: 'manual_automation_correction',
     text: 'Manual correction of automatic payments calculation error',
   },
   {
-    key: 7,
+    key: 8,
     value: 'other',
     text: 'Other',
   },
@@ -89,34 +97,27 @@ const AddEntryFormComponent: React.FC<{
       return
     }
 
+    const dataCopy = { ...data }
+    dataCopy.amount = { ...dataCopy.amount, currency: preferredCurrency }
+    dataCopy.fromDate = format(new Date(), 'yyyy-MM-dd')
     addAccountEntry({
       variables: {
         memberId,
-        accountEntry: {
-          type: data.type,
-          amount: {
-            amount: data.amount,
-            currency: preferredCurrency,
-          },
-          fromDate: format(new Date(), 'yyyy-MM-dd'),
-          reference: data.reference,
-          source: data.source,
-          title: data.title,
-          comment: data.comment,
-        },
+        accountEntry: dataCopy as AccountEntryInput,
       },
     })
       .then(() => {
         showNotification({
-          message: 'Account entry added.',
           header: 'Success',
+          message: 'Account entry added.',
           type: 'olive',
         })
+        form.reset()
       })
       .catch((error) => {
         showNotification({
-          message: error.message,
           header: 'Error',
+          message: error.message,
           type: 'red',
         })
 
@@ -138,7 +139,7 @@ const AddEntryFormComponent: React.FC<{
         />
         <FormInput
           label="Amount (If positive the member will be charged more, if negative the member will be charged less)"
-          name="amount"
+          name="amount.amount"
           defaultValue=""
           type="number"
           affix={{
@@ -174,12 +175,22 @@ const AddEntryFormComponent: React.FC<{
           defaultValue=""
           rules={{
             required: 'Reference is required',
+            maxLength: {
+              value: 50,
+              message: 'The reference is too long (max 50 characters)',
+            },
           }}
         />
         <FormInput
           label="Title (If this is to be shown in the app at a later point, this is the title of the entry)"
           name="title"
           defaultValue=""
+          rules={{
+            maxLength: {
+              value: 100,
+              message: 'The title is too long (max 100 characters)',
+            },
+          }}
         />
         <FormInput
           label="Comment (Notes on what happened)"
@@ -189,7 +200,7 @@ const AddEntryFormComponent: React.FC<{
         <Spacing bottom="small">
           <AddEntryInformation
             amount={{
-              amount: form.watch('amount'),
+              amount: form.watch('amount.amount'),
               currency: preferredCurrency,
             }}
           />
