@@ -1336,7 +1336,7 @@ export type Quote = {
   createdAt?: Maybe<Scalars['Instant']>
   price?: Maybe<Scalars['Float']>
   currency?: Maybe<Scalars['String']>
-  productType?: Maybe<QuoteProductType>
+  productType?: Maybe<Scalars['String']>
   state?: Maybe<QuoteState>
   initiatedFrom?: Maybe<Scalars['String']>
   attributedTo?: Maybe<Scalars['String']>
@@ -1351,14 +1351,6 @@ export type Quote = {
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
   isReadyToSign?: Maybe<Scalars['Boolean']>
-}
-
-export enum QuoteProductType {
-  Apartment = 'APARTMENT',
-  House = 'HOUSE',
-  Object = 'OBJECT',
-  HomeContent = 'HOME_CONTENT',
-  Travel = 'TRAVEL',
 }
 
 export enum QuoteState {

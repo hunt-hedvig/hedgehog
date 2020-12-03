@@ -26,7 +26,10 @@ type QueryType {
     itemTypeId: ID
   ): CanValuateClaimItem
   quoteSchemaForContractType(contractType: String!): JSON
-  memberSearch(query: String!, options: MemberSearchOptions!): MemberSearchResult!
+  memberSearch(
+    query: String!
+    options: MemberSearchOptions!
+  ): MemberSearchResult!
 }
 
 type MemberSearchResult {
@@ -138,9 +141,7 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  assignCampaignToPartnerFreeMonths(
-    request: AssignVoucherFreeMonths
-  ): Boolean!
+  assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -155,7 +156,10 @@ type MutationType {
   ): Boolean!
   unsignMember(ssn: String!): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Boolean!
-  setFraudulentStatus(memberId: ID!, request: MemberFraudulentStatusInput!): Boolean!
+  setFraudulentStatus(
+    memberId: ID!
+    request: MemberFraudulentStatusInput!
+  ): Boolean!
 }
 
 input MemberFraudulentStatusInput {
@@ -509,7 +513,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -727,7 +731,7 @@ type Quote {
   createdAt: Instant
   price: Float
   currency: String
-  productType: QuoteProductType
+  productType: String
   state: QuoteState
   initiatedFrom: String
   attributedTo: String
@@ -744,13 +748,6 @@ type Quote {
   isReadyToSign: Boolean
 }
 
-enum QuoteProductType {
-  APARTMENT
-  HOUSE
-  OBJECT
-  HOME_CONTENT
-  TRAVEL
-}
 enum QuoteState {
   INCOMPLETE
   QUOTED
@@ -969,7 +966,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
