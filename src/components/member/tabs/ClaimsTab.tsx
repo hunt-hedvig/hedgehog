@@ -6,12 +6,7 @@ import MaterialModal from 'components/shared/modals/MaterialModal'
 import { ActionMap, Container } from 'constate'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
-import { useGetMemberClaims } from 'graphql/use-get-member-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React from 'react'
 import { Mutation } from 'react-apollo'
@@ -78,12 +73,6 @@ interface Actions {
 }
 
 const ClaimsTab: React.FC<{ memberId: string }> = ({ memberId }) => {
-  const [claims, { loading }] = useGetMemberClaims(memberId)
-
-  if (loading || !claims) {
-    return <LoadingMessage paddingTop="25vh" />
-  }
-
   return (
     <FadeIn>
       <Container<State, ActionMap<State, Actions>>
@@ -138,18 +127,7 @@ const ClaimsTab: React.FC<{ memberId: string }> = ({ memberId }) => {
             >
               Add new claim
             </Button>
-            {claims?.length > 0 ? (
-              <MemberClaimsList
-                claims={{ list: claims }}
-                sortClaimsList={(clickedColumn, isReversed) => {
-                  console.log(`Sorting: ${clickedColumn}, ${isReversed}`)
-                }}
-              />
-            ) : (
-              <StandaloneMessage paddingTop="10vh">
-                Claims list is empty
-              </StandaloneMessage>
-            )}
+            <MemberClaimsList memberId={memberId} />
             <MaterialModal handleClose={handleClose} open={open}>
               <Typography variant="h5" id="modal-title">
                 Create claim
