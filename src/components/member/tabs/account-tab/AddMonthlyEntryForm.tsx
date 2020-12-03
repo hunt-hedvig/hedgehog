@@ -20,7 +20,7 @@ const AddMonthlyEntryFormComponent: React.FC<{
   showNotification,
 }) => {
   if (!preferredCurrency) {
-    return null
+    return <>The member has no preferred currency</>
   }
 
   const form = useForm()

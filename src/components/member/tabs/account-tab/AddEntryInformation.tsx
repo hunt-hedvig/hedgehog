@@ -16,7 +16,7 @@ export const AddEntryInformation: React.FC<{
 
   return (
     <div>
-      If we add this entry, we will charge this member{' '}
+      If this entry is added, the member will be charged{' '}
       {formatMoney(absoluteAmount)}{' '}
       <strong>{+amount.amount < 0 ? 'less' : 'more'}</strong>
     </div>

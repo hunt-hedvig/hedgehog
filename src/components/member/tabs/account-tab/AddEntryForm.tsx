@@ -49,23 +49,23 @@ const sourceOptions = [
   },
   {
     key: 3,
-    value: 'growth',
+    value: 'growth_discount',
     text: 'Growth discount (e.g. Benify, Studentkortet, Mecenat)',
   },
   {
     key: 4,
-    value: 'IEX',
+    value: 'iex_discount',
     text:
       'IEX discount (e.g. Start date issues, Technical issues, "Plåster på såren")',
   },
   {
     key: 5,
-    value: 'correction',
+    value: 'calculation_correction',
     text: 'Correction of calculation error',
   },
   {
     key: 6,
-    value: 'manual',
+    value: 'manual_correction',
     text: 'Manual correction of automatic payments calculation error',
   },
   {
@@ -137,7 +137,7 @@ const AddEntryFormComponent: React.FC<{
           }}
         />
         <FormInput
-          label="Amount (if positive the member will be charged more, if negative the member will be charged less)"
+          label="Amount (If positive the member will be charged more, if negative the member will be charged less)"
           name="amount"
           defaultValue=""
           type="number"
@@ -164,7 +164,7 @@ const AddEntryFormComponent: React.FC<{
             pattern: {
               value: /[^other$]/,
               message:
-                'Other should not be used. Please contact Elvin to add the option you are looking for',
+                "Other should not be used. Please contact Elvin to add the option you are looking for (he promises he'll be fast)",
             },
           }}
         />

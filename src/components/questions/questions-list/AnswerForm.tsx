@@ -12,7 +12,9 @@ import { Form, FormTextArea, SubmitButton } from 'hedvig-ui/form'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import styled from 'react-emotion'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
 const MarkAsResolvedWrapper = styled.div`
   padding-left: 1rem;
@@ -27,7 +29,9 @@ const FlexGrid = styled(Grid)`
   display: flex;
 `
 
-export const AnswerForm: React.FC<{ memberId: string }> = ({ memberId }) => {
+export const AnswerFormComponent: React.FC<{
+  memberId: string
+} & WithShowNotification> = ({ memberId, showNotification }) => {
   const form = useForm()
 
   const [
@@ -40,14 +44,47 @@ export const AnswerForm: React.FC<{ memberId: string }> = ({ memberId }) => {
     { loading: loadingMarkQuestionAsResolved },
   ] = useMarkQuestionAsResolved()
 
-  const loading = loadingAnswerQuestion || loadingMarkQuestionAsResolved
+  const loading =
+    loadingAnswerQuestion ||
+    loadingMarkQuestionAsResolved ||
+    form.formState.isSubmitting
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: FieldValues) => {
     answerQuestion(getAnswerQuestionOptions(memberId, data.answer.trim()))
+      .then(() => {
+        showNotification({
+          type: 'olive',
+          header: 'Success',
+          message: `Successfully sent an answer to ${memberId}`,
+        })
+      })
+      .catch((error) => {
+        showNotification({
+          type: 'red',
+          header: `Unable to send the answer to ${memberId}`,
+          message: error.message,
+        })
+        throw error
+      })
   }
 
   const doneClick = () => {
     markQuestionAsResolved(getMarkQuestionAsResolvedOptions(memberId))
+      .then(() => {
+        showNotification({
+          type: 'olive',
+          header: 'Success',
+          message: `Successfully marked question as resolved for ${memberId}`,
+        })
+      })
+      .catch((error) => {
+        showNotification({
+          type: 'red',
+          header: `Unable to mark the question as resolved for ${memberId}`,
+          message: error.message,
+        })
+        throw error
+      })
   }
 
   return (
@@ -88,3 +125,5 @@ export const AnswerForm: React.FC<{ memberId: string }> = ({ memberId }) => {
     </>
   )
 }
+
+export const AnswerForm = withShowNotification(AnswerFormComponent)
