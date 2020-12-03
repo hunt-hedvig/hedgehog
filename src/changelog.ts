@@ -12,8 +12,18 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2020-12-03',
+    date: '2020-12-04',
     change: 'Add basic support for Danish market',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2020-12-03',
+    change: 'Update Questions form and Account Entry form',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2020-12-03',
+    change: 'Fix GSR navigation link',
     authorGithubHandle: 'vonElfvin',
   },
   {
