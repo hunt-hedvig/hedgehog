@@ -20,7 +20,6 @@ export const ListItem: React.FC<{
   active?: boolean
 }> = ({ index, member, active }) => {
   const market = member?.contractMarketInfo?.market
-
   const contracts = member.contracts
 
   return (

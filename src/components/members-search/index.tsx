@@ -46,6 +46,7 @@ export const MembersSearch: React.FC = () => {
     memberSearch,
     { loading },
   ] = useMemberSearch()
+
   const [
     currentKeyboardNavigationStep,
     resetKeyboardNavigationStep,

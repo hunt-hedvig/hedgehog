@@ -2,7 +2,6 @@ import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import ClaimsList from 'components/claims/claims-list/ClaimsList'
 import MaterialModal from 'components/shared/modals/MaterialModal'
 import { ActionMap, Container } from 'constate'
 import { format } from 'date-fns'
@@ -14,6 +13,7 @@ import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled, { css } from 'react-emotion'
 import { history } from 'store'
+import { MemberClaimsList } from '../../claims/claims-list/MemberClaimsList'
 
 const buttonStyle = css({
   width: '130px',
@@ -136,7 +136,7 @@ const ClaimsTab: React.FC<ClaimsTabProps> = (props) => {
               Add new claim
             </Button>
             {props.memberClaims.length > 0 ? (
-              <ClaimsList
+              <MemberClaimsList
                 claims={{ list: props.memberClaims }}
                 sortClaimsList={props.sortClaimsList}
               />

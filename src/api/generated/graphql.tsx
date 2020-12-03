@@ -680,6 +680,21 @@ export type LiabilityClaim = {
   location?: Maybe<Scalars['String']>
 }
 
+export type ListClaimsOptions = {
+  includeAll?: Maybe<Scalars['Boolean']>
+  page?: Maybe<Scalars['Int']>
+  pageSize?: Maybe<Scalars['Int']>
+  sortBy?: Maybe<Scalars['String']>
+  sortDirection?: Maybe<Scalars['String']>
+}
+
+export type ListClaimsResult = {
+  __typename?: 'ListClaimsResult'
+  claims: Array<Claim>
+  totalPages: Scalars['Int']
+  page: Scalars['Int']
+}
+
 export type LuggageDelayClaim = {
   __typename?: 'LuggageDelayClaim'
   location?: Maybe<Scalars['String']>
@@ -1271,6 +1286,7 @@ export type QueryType = {
   canValuateClaimItem?: Maybe<CanValuateClaimItem>
   quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
+  listClaims: ListClaimsResult
 }
 
 export type QueryTypeMemberArgs = {
@@ -1331,6 +1347,10 @@ export type QueryTypeQuoteSchemaForContractTypeArgs = {
 export type QueryTypeMemberSearchArgs = {
   query: Scalars['String']
   options: MemberSearchOptions
+}
+
+export type QueryTypeListClaimsArgs = {
+  options: ListClaimsOptions
 }
 
 export type Question = {
@@ -2621,6 +2641,50 @@ export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
   QueryType,
   'quoteSchemaForContractType'
 >
+
+export type ListClaimsQueryVariables = Exact<{
+  options: ListClaimsOptions
+}>
+
+export type ListClaimsQuery = { __typename?: 'QueryType' } & {
+  listClaims: { __typename?: 'ListClaimsResult' } & Pick<
+    ListClaimsResult,
+    'page' | 'totalPages'
+  > & {
+      claims: Array<
+        { __typename?: 'Claim' } & Pick<
+          Claim,
+          'id' | 'registrationDate' | 'state' | 'reserves'
+        > & {
+            member?: Maybe<{ __typename?: 'Member' } & Pick<Member, 'memberId'>>
+            type?: Maybe<
+              | { __typename: 'TheftClaim' }
+              | { __typename: 'AccidentalDamageClaim' }
+              | { __typename: 'AssaultClaim' }
+              | { __typename: 'WaterDamageClaim' }
+              | { __typename: 'TravelAccidentClaim' }
+              | { __typename: 'LuggageDelayClaim' }
+              | { __typename: 'NotCoveredClaim' }
+              | { __typename: 'FireDamageClaim' }
+              | { __typename: 'ConfirmedFraudClaim' }
+              | { __typename: 'LiabilityClaim' }
+              | { __typename: 'ApplianceClaim' }
+              | { __typename: 'LegalProtectionClaim' }
+              | { __typename: 'WaterDamageBathroomClaim' }
+              | { __typename: 'WaterDamageKitchenClaim' }
+              | { __typename: 'BurglaryClaim' }
+              | { __typename: 'FloodingClaim' }
+              | { __typename: 'EarthquakeClaim' }
+              | { __typename: 'InstallationsClaim' }
+              | { __typename: 'SnowPressureClaim' }
+              | { __typename: 'StormDamageClaim' }
+              | { __typename: 'VerminAndPestsClaim' }
+              | { __typename: 'TestClaim' }
+            >
+          }
+      >
+    }
+}
 
 export type ManualRedeemCampaignMutationVariables = Exact<{
   memberId: Scalars['ID']
@@ -5523,6 +5587,73 @@ export type GetSchemaForContractTypeLazyQueryHookResult = ReturnType<
 export type GetSchemaForContractTypeQueryResult = ApolloReactCommon.QueryResult<
   GetSchemaForContractTypeQuery,
   GetSchemaForContractTypeQueryVariables
+>
+export const ListClaimsDocument = gql`
+  query ListClaims($options: ListClaimsOptions!) {
+    listClaims(options: $options) {
+      claims {
+        id
+        member {
+          memberId
+        }
+        registrationDate
+        type {
+          __typename
+        }
+        state
+        reserves
+      }
+      page
+      totalPages
+    }
+  }
+`
+
+/**
+ * __useListClaimsQuery__
+ *
+ * To run a query within a React component, call `useListClaimsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListClaimsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListClaimsQuery({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useListClaimsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<ListClaimsQuery, ListClaimsQueryVariables>(
+    ListClaimsDocument,
+    baseOptions,
+  )
+}
+export function useListClaimsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >(ListClaimsDocument, baseOptions)
+}
+export type ListClaimsQueryHookResult = ReturnType<typeof useListClaimsQuery>
+export type ListClaimsLazyQueryHookResult = ReturnType<
+  typeof useListClaimsLazyQuery
+>
+export type ListClaimsQueryResult = ApolloReactCommon.QueryResult<
+  ListClaimsQuery,
+  ListClaimsQueryVariables
 >
 export const ManualRedeemCampaignDocument = gql`
   mutation ManualRedeemCampaign(

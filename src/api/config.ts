@@ -33,20 +33,12 @@ export default {
     },
   },
   claims: {
-    getList: {
-      url: 'claims',
-      method: 'get',
-    },
     search: {
       url: 'claims/search',
       method: 'get',
     },
     getListByMemberId: {
       url: 'claims/user',
-      method: 'get',
-    },
-    types: {
-      url: 'claims/types',
       method: 'get',
     },
     update: {
