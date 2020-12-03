@@ -68,7 +68,7 @@ export const AnswerFormComponent: React.FC<{
       })
   }
 
-  const doneClick = () => {
+  const handleDone = () => {
     markQuestionAsResolved(getMarkQuestionAsResolvedOptions(memberId))
       .then(() => {
         showNotification({
@@ -100,7 +100,7 @@ export const AnswerFormComponent: React.FC<{
                   rules={{
                     required: 'Cannot send an empty message',
                     pattern: {
-                      value: /[^\s]/,
+                      value: /[a-zA-Z0-9]+/,
                       message: 'Cannot send a message without text',
                     },
                   }}
@@ -118,7 +118,7 @@ export const AnswerFormComponent: React.FC<{
       <MarkAsResolvedWrapper>
         <Checkbox
           label="Mark as resolved"
-          onClick={() => doneClick()}
+          onClick={() => handleDone()}
           disabled={loading}
         />
       </MarkAsResolvedWrapper>
