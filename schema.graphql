@@ -154,7 +154,6 @@ type MutationType {
     memberId: ID!
     request: ManualUnRedeemCampaignInput!
   ): Boolean!
-  manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
   unsignMember(ssn: String!): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Boolean!
   setFraudulentStatus(
@@ -294,7 +293,7 @@ type Contract {
   hasQueuedRenewal: Boolean!
   renewal: Renewal
   preferredCurrency: String!
-  market: Market!
+  market: String!
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
@@ -668,7 +667,7 @@ type Member {
   contracts: [Contract!]!
   claims(filterByStates: [ClaimState!]): [Claim!]!
   contractMarketInfo: ContractMarketInfo
-  pickedLocale: PickedLocale
+  pickedLocale: String!
   referralInformation: ReferralInformation
 }
 
@@ -717,20 +716,8 @@ input ManualUnRedeemCampaignInput {
 }
 
 type ContractMarketInfo {
-  market: Market!
+  market: String!
   preferredCurrency: String!
-}
-
-enum Market {
-  SWEDEN
-  NORWAY
-}
-
-enum PickedLocale {
-  sv_SE
-  en_SE
-  nb_NO
-  en_NO
 }
 
 enum Gender {
@@ -744,7 +731,7 @@ type Quote {
   createdAt: Instant
   price: Float
   currency: String
-  productType: QuoteProductType
+  productType: String
   state: QuoteState
   initiatedFrom: String
   attributedTo: String
@@ -761,13 +748,6 @@ type Quote {
   isReadyToSign: Boolean
 }
 
-enum QuoteProductType {
-  APARTMENT
-  HOUSE
-  OBJECT
-  HOME_CONTENT
-  TRAVEL
-}
 enum QuoteState {
   INCOMPLETE
   QUOTED
