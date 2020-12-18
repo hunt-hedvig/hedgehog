@@ -22,6 +22,7 @@ export const Claims: React.FC = () => {
     listClaims,
     { loading },
   ] = useListClaims()
+
   const [currentKeyboardNavigationStep] = useVerticalKeyboardNavigation({
     maxStep: claims.length - 1,
     onPerformNavigation: (index) => {

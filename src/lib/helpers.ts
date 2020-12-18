@@ -55,30 +55,6 @@ export const getFieldValue = (value) => {
 }
 
 /**
- * Sort members table (Members overview page)
- * @param {array} list members list
- * @param {string} fieldName clicked column name
- * @param {bool} isReverse
- */
-export const sortMembersList = (list, fieldName, isReverse) => {
-  let sortedList = null
-
-  switch (fieldName) {
-    case 'name':
-      sortedList = list.sort((a, b) =>
-        a.firstName + a.lastName > b.firstName + b.lastName ? 1 : -1,
-      )
-      break
-    case 'signedOn':
-    case 'createdOn':
-      return sortListByDate(list, fieldName, isReverse)
-    default:
-      sortedList = list
-  }
-  return isReverse ? (sortedList ?? []).reverse() : sortedList
-}
-
-/**
  * Sort claims table (ClaimsList page)
  * @param {array} list ClaimsList
  * @param {string} fieldName clicked column name
