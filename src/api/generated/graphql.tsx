@@ -1979,6 +1979,17 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   'changeToDate'
 >
 
+export type CreateClaimMutationVariables = Exact<{
+  memberId: Scalars['ID']
+  date: Scalars['LocalDateTime']
+  source: ClaimSource
+}>
+
+export type CreateClaimMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'createClaim'
+>
+
 export type CreatePaymentCompletionLinkMutationVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -4064,6 +4075,60 @@ export type ChangeToDateMutationResult = ApolloReactCommon.MutationResult<
 export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
+>
+export const CreateClaimDocument = gql`
+  mutation createClaim(
+    $memberId: ID!
+    $date: LocalDateTime!
+    $source: ClaimSource!
+  ) {
+    createClaim(memberId: $memberId, date: $date, source: $source)
+  }
+`
+export type CreateClaimMutationFn = ApolloReactCommon.MutationFunction<
+  CreateClaimMutation,
+  CreateClaimMutationVariables
+>
+
+/**
+ * __useCreateClaimMutation__
+ *
+ * To run a mutation, you first call `useCreateClaimMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClaimMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClaimMutation, { data, loading, error }] = useCreateClaimMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      date: // value for 'date'
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useCreateClaimMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateClaimMutation,
+    CreateClaimMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateClaimMutation,
+    CreateClaimMutationVariables
+  >(CreateClaimDocument, baseOptions)
+}
+export type CreateClaimMutationHookResult = ReturnType<
+  typeof useCreateClaimMutation
+>
+export type CreateClaimMutationResult = ApolloReactCommon.MutationResult<
+  CreateClaimMutation
+>
+export type CreateClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateClaimMutation,
+  CreateClaimMutationVariables
 >
 export const CreatePaymentCompletionLinkDocument = gql`
   mutation CreatePaymentCompletionLink($memberId: ID!) {

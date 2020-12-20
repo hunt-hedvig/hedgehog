@@ -1,185 +1,154 @@
-import Button from '@material-ui/core/Button'
-import MenuItem from '@material-ui/core/MenuItem'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import MaterialModal from 'components/shared/modals/MaterialModal'
-import { ActionMap, Container } from 'constate'
+import { ClaimSource, useCreateClaimMutation } from 'api/generated/graphql'
+import { ClaimListHeader } from 'components/claims/claims-list/components/ClaimListHeader'
+import { ClaimListItem } from 'components/claims/claims-list/components/ClaimListItem'
+import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { format } from 'date-fns'
-import gql from 'graphql-tag'
+import { useGetMemberClaims } from 'graphql/use-get-member-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
+import {
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
+import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { EnumDropdown } from 'hedvig-ui/dropdown'
+import { Spacing } from 'hedvig-ui/spacing'
+import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { Mutation } from 'react-apollo'
-import styled, { css } from 'react-emotion'
+import { ArrowRepeat } from 'react-bootstrap-icons'
+import styled from 'react-emotion'
+import { Table } from 'semantic-ui-react'
 import { history } from 'store'
-import { MemberClaimsList } from '../../claims/claims-list/MemberClaimsList'
 
-const buttonStyle = css({
-  width: '130px',
-  alignSelf: 'flex-end',
-})
-
-const InlineFlexButton = styled('div')({
-  display: 'flex',
-  justifyContent: 'flex-end',
-})
-
-const InlineFlex = styled('div')({
-  display: 'flex',
-  justifyContent: 'space-between',
-})
-
-const types = [
-  {
-    value: 'EMAIL',
-    label: 'Email',
-  },
-  {
-    value: 'INTERCOM',
-    label: 'Intercom',
-  },
-  {
-    value: 'PHONE',
-    label: 'Phone',
-  },
-  {
-    value: 'CHAT',
-    label: 'Chat',
-  },
-]
-
-const CREATE_CLAIM_MUTATION = gql`
-  mutation createClaim(
-    $memberId: ID!
-    $date: LocalDateTime!
-    $source: ClaimSource!
-  ) {
-    createClaim(memberId: $memberId, date: $date, source: $source)
-  }
+const HeaderWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 `
 
-interface State {
-  open: boolean
-  date?: any
-  value: string
-}
+const FormWrapper = styled.div`
+  display: inline-flex;
+  justify-content: space-between;
+  height: 100%;
+`
 
-interface Actions {
-  handleClose: () => void
-  handleOpen: () => void
-  handleClaimSubmit: (mutation: any) => void
-  typeChangeHandler: (event: any) => void
-  dateChangeHandler?: (type: string, e: any, value: any) => void
-}
+export const ClaimsTab: React.FC<{ memberId: string }> = ({ memberId }) => {
+  const [claims, { loading, refetch }] = useGetMemberClaims(memberId)
+  const [
+    createClaim,
+    { loading: createClaimLoading },
+  ] = useCreateClaimMutation()
 
-const ClaimsTab: React.FC<{ memberId: string }> = ({ memberId }) => {
+  const [showForm, setShowForm] = React.useState(false)
+  const [claimSource, setClaimSource] = React.useState<ClaimSource | null>(null)
+  const [claimDate, setClaimDate] = React.useState<Date | null>(null)
+
+  if (loading || !claims) {
+    return <LoadingMessage paddingTop="25vh" />
+  }
+
+  if (claims.length === 0) {
+    return (
+      <StandaloneMessage paddingTop="10vh">
+        Claims list is empty
+      </StandaloneMessage>
+    )
+  }
+
   return (
     <FadeIn>
-      <Container<State, ActionMap<State, Actions>>
-        initialState={{
-          open: false,
-          date: new Date(),
-          value: 'EMAIL',
-        }}
-        actions={{
-          handleClose: () => (_) => ({ open: false }),
-          handleOpen: () => (_) => ({ open: true }),
-          handleClaimSubmit: (mutation) => (state) => {
-            mutation({
-              variables: {
-                memberId,
-                date: format(state.date, "yyyy-MM-dd'T'HH:mm:ss"),
-                source: state.value,
-              },
-            }).then((response) => {
-              history.push(
-                `/claims/${response.data.createClaim}/members/${memberId}`,
-              )
-            })
-            return { date: new Date(), value: 'EMAIL', open: false }
-          },
-          typeChangeHandler: (event) => (_) => ({
-            value: event.target.value,
-          }),
-          dateChangeHandler: (date) => {
-            return {
-              date,
-            }
-          },
-        }}
-      >
-        {({
-          handleClose,
-          handleOpen,
-          dateChangeHandler,
-          typeChangeHandler,
-          handleClaimSubmit,
-          open,
-          value,
-          date,
-        }) => (
-          <>
+      <HeaderWrapper>
+        <MainHeadline>
+          Claims
+          <RefreshButton onClick={() => refetch()} loading={loading}>
+            <ArrowRepeat />
+          </RefreshButton>
+        </MainHeadline>
+
+        <FormWrapper>
+          {showForm ? (
+            <>
+              <EnumDropdown
+                enumToSelectFrom={ClaimSource}
+                placeholder={'Claim Source'}
+                setValue={(source) => setClaimSource(source)}
+              />
+              <Spacing left={'small'} />
+              <DateTimePicker
+                disabled={createClaimLoading}
+                date={claimDate}
+                fullWidth={true}
+                setDate={(date) => setClaimDate(date)}
+                placeholder="Notification date"
+                maxDate={new Date()}
+              />
+              <Spacing left={'small'} />
+              <Button
+                disabled={createClaimLoading}
+                variation="danger"
+                color="danger"
+                onClick={() => {
+                  setShowForm(false)
+                  setClaimDate(null)
+                  setClaimSource(null)
+                }}
+              >
+                Cancel
+              </Button>
+              <Spacing left={'small'} />
+              <Button
+                disabled={
+                  claimSource === null ||
+                  claimDate === null ||
+                  createClaimLoading
+                }
+                variation="success"
+                color="success"
+                onClick={() => {
+                  if (claimSource === null || claimDate === null) {
+                    return
+                  }
+
+                  createClaim({
+                    variables: {
+                      memberId,
+                      date: format(claimDate, "yyyy-MM-dd'T'HH:mm:ss"),
+                      source: claimSource,
+                    },
+                  }).then((response) => {
+                    const claimId = response.data?.createClaim
+                    setShowForm(false)
+                    setClaimDate(null)
+                    setClaimSource(null)
+                    if (claimId) {
+                      history.push(`/claims/${claimId}/members/${memberId}`)
+                    }
+                    refetch()
+                  })
+                }}
+              >
+                Save
+              </Button>
+            </>
+          ) : (
             <Button
-              variant="contained"
+              variation="primary"
               color="primary"
-              onClick={handleOpen}
-              className={buttonStyle}
+              onClick={() => setShowForm(true)}
             >
               Add new claim
             </Button>
-            <MemberClaimsList memberId={memberId} />
-            <MaterialModal handleClose={handleClose} open={open}>
-              <Typography variant="h5" id="modal-title">
-                Create claim
-              </Typography>
-              <Typography variant="subtitle1" id="simple-modal-description">
-                Choose notification date and type of claim.
-              </Typography>
-              <InlineFlex>
-                <TextField
-                  id="filled-select-currency"
-                  select
-                  label="Select"
-                  value={value}
-                  onChange={typeChangeHandler}
-                  helperText="Please select claim type"
-                  margin="normal"
-                  variant="filled"
-                >
-                  {types.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <strong>Notification date</strong>
-                <DateTimePicker
-                  date={date}
-                  setDate={dateChangeHandler as any}
-                  placeholder="Notification date"
-                  maxDate={new Date()}
-                />
-              </InlineFlex>
-              <InlineFlexButton>
-                <Mutation mutation={CREATE_CLAIM_MUTATION}>
-                  {(createClaim) => (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleClaimSubmit(createClaim)}
-                      className={buttonStyle}
-                    >
-                      Save
-                    </Button>
-                  )}
-                </Mutation>
-              </InlineFlexButton>
-            </MaterialModal>
-          </>
-        )}
-      </Container>
+          )}
+        </FormWrapper>
+      </HeaderWrapper>
+      <Table celled selectable>
+        <ClaimListHeader />
+
+        <Table.Body>
+          {claims.map((item, index) => (
+            <ClaimListItem key={item.id} item={item} index={index} />
+          ))}
+        </Table.Body>
+      </Table>
     </FadeIn>
   )
 }
-
-export default ClaimsTab
