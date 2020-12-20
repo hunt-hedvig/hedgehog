@@ -3,6 +3,8 @@ import { Table } from 'semantic-ui-react'
 
 type SortDirection = 'ascending' | 'descending'
 
+// TODO: Fix actual sorting (like, onSort or something)
+
 export const ClaimListHeader: React.FC = () => {
   const [column, setColumn] = React.useState<string | null>(null)
   const [direction, setDirection] = React.useState<SortDirection>()
