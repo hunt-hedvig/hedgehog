@@ -1,7 +1,5 @@
 import { Claim } from 'api/generated/graphql'
-import { ListHeader } from 'components/claims/claims-list/components/ListHeader'
-import { ListItem } from 'components/claims/claims-list/components/ListItem'
-import { Paginator } from 'components/shared/Paginator/Paginator'
+import { Paginator } from 'components/shared/paginator/Paginator'
 import { useListClaims } from 'graphql/use-list-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
@@ -10,6 +8,8 @@ import React from 'react'
 import { Header } from 'semantic-ui-react'
 import { history } from 'store'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
+import { ClaimListHeader } from './claims-list/components/ClaimListHeader'
+import { ClaimListItem } from './claims-list/components/ClaimListItem'
 
 const linkClickHandler = (id: string, memberId: string) => {
   history.push(`/claims/${id}/members/${memberId}`)
@@ -70,13 +70,13 @@ export const Claims: React.FC = () => {
             }
             pagedItems={claims}
             itemContent={(claim, index) => (
-              <ListItem
+              <ClaimListItem
                 index={index}
                 item={claim}
                 active={currentKeyboardNavigationStep === index}
               />
             )}
-            tableHeader={<ListHeader />}
+            tableHeader={<ClaimListHeader />}
           />
         </FadeIn>
       </Spacing>

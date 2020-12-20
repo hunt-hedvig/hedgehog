@@ -1,14 +1,12 @@
-import { ListHeader } from 'components/claims/claims-list/components/ListHeader'
-import { ListItem } from 'components/claims/claims-list/components/ListItem'
-import PaginatorList from 'components/shared/paginator-list/PaginatorList'
+import { ClaimListHeader } from 'components/claims/claims-list/components/ClaimListHeader'
+import { ClaimListItem } from 'components/claims/claims-list/components/ClaimListItem'
 import { useGetMemberClaims } from 'graphql/use-get-member-claims'
 import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
-
-// TODO: Implement actual sorting
+import { Table } from 'semantic-ui-react'
 
 export const MemberClaimsList: React.FC<{ memberId: string }> = ({
   memberId,
@@ -28,15 +26,14 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
   }
 
   return (
-    <PaginatorList
-      list={claims}
-      itemContent={(claim, index) => (
-        <ListItem key={claim.id} index={index} item={claim} active={false} />
-      )}
-      tableHeader={<ListHeader />}
-      pageSize={20}
-      isSortable={true}
-      keyName="id"
-    />
+    <Table celled selectable>
+      <ClaimListHeader />
+
+      <Table.Body>
+        {claims.map((item, index) => (
+          <ClaimListItem key={item.id} item={item} index={index} />
+        ))}
+      </Table.Body>
+    </Table>
   )
 }

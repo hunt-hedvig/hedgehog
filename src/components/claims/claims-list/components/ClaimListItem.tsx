@@ -23,12 +23,11 @@ const linkClickHandler = (id: string, userId: string) => {
   history.push(`/claims/${id}/members/${userId}`)
 }
 
-export const ListItem: React.FC<{
+export const ClaimListItem: React.FC<{
   item: Claim
   index: number
-  animationOffset?: number
-  active: boolean
-}> = ({ item, index, animationOffset = 0, active }) => {
+  active?: boolean
+}> = ({ item, index, active = false }) => {
   const date = parseISO(item.registrationDate)
   const formattedDate = isValidDate(date)
     ? formatDate(date, 'dd MMMM yyyy HH:mm')
@@ -43,7 +42,7 @@ export const ListItem: React.FC<{
 
   return (
     <FadeInLinkRow
-      delay={`${(index - animationOffset) * 50}ms`}
+      delay={`${index * 50}ms`}
       onClick={() => linkClickHandler(claimId, memberId)}
       active={active}
     >

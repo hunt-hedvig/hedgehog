@@ -3,7 +3,7 @@ import { Table } from 'semantic-ui-react'
 
 type SortDirection = 'ascending' | 'descending'
 
-export const ListHeader: React.FC = () => {
+export const ClaimListHeader: React.FC = () => {
   const [column, setColumn] = React.useState<string | null>(null)
   const [direction, setDirection] = React.useState<SortDirection>()
 

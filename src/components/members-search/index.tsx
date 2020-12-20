@@ -9,7 +9,7 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'components/members-search/styles'
-import BackendPaginatorList from 'components/shared/paginator-list/BackendPaginatorList'
+import { Paginator } from 'components/shared/paginator/Paginator'
 import { useMemberSearch } from 'graphql/use-member-search'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { MainHeadline } from 'hedvig-ui/typography'
@@ -99,10 +99,10 @@ export const MembersSearch: React.FC = () => {
       {members.length > 0 && (
         <ListWrapper>
           <FadeIn>
-            <BackendPaginatorList<Member>
+            <Paginator<Member>
               currentPage={page}
               totalPages={totalPages}
-              changePage={(nextPage) =>
+              onChangePage={(nextPage) =>
                 memberSearch(query, {
                   includeAll,
                   page: nextPage,
@@ -117,7 +117,6 @@ export const MembersSearch: React.FC = () => {
                   active={currentKeyboardNavigationStep === index}
                 />
               )}
-              isSortable={false}
               tableHeader={<ListHeader />}
             />
           </FadeIn>
