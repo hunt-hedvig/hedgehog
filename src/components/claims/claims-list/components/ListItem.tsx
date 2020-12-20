@@ -26,8 +26,9 @@ const linkClickHandler = (id: string, userId: string) => {
 export const ListItem: React.FC<{
   item: Claim
   index: number
+  animationOffset?: number
   active: boolean
-}> = ({ item, index, active }) => {
+}> = ({ item, index, animationOffset = 0, active }) => {
   const date = parseISO(item.registrationDate)
   const formattedDate = isValidDate(date)
     ? formatDate(date, 'dd MMMM yyyy HH:mm')
@@ -42,7 +43,7 @@ export const ListItem: React.FC<{
 
   return (
     <FadeInLinkRow
-      delay={`${index * 50}ms`}
+      delay={`${(index - animationOffset) * 50}ms`}
       onClick={() => linkClickHandler(claimId, memberId)}
       active={active}
     >

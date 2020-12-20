@@ -2,9 +2,6 @@
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 
-export const filterList = (filter: string, list: any[], fieldName: string) =>
-  list.filter((item) => item[fieldName] === filter)
-
 export const sortByKey = (key: string) => (a, b) => a[key] - b[key]
 
 export const updateList = (list: any[], msg: any[]) => {
@@ -77,22 +74,10 @@ export const sortClaimsList = (list, fieldName, isReverse) => {
   return isReverse ? (sortedList ?? []).reverse() : sortedList
 }
 
-export const range = (
-  startInclusive: number,
-  endExclusive: number,
-): number[] => {
-  const len = endExclusive - startInclusive
-  if (len <= 0) {
-    return []
-  }
-
-  const res: number[] = new Array<number>(len)
-  for (let i = 0; i < len; i++) {
-    res[i] = i + startInclusive
-  }
-
-  return res
-}
+export const range = (start, end) =>
+  start >= 0 && end >= start
+    ? Array.from({ length: end - start }, (v, k) => k + start)
+    : []
 
 function sortListByText(list, fieldName, isReverse) {
   const withoutText: any[] = []
