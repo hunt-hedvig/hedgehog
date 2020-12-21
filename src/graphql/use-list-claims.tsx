@@ -15,6 +15,9 @@ export const useListClaims = (): ListClaimsReturnTuple => {
   const [listClaimsQuery, queryResult] = useListClaimsLazyQuery()
 
   const listClaims = (options?: ListClaimsOptions) => {
+    const sortDirection =
+      options?.sortDirection === 'ascending' ? 'ASC' : 'DESC'
+
     listClaimsQuery({
       variables: {
         options: {
@@ -22,7 +25,7 @@ export const useListClaims = (): ListClaimsReturnTuple => {
           page: options?.page ?? 0,
           pageSize: options?.pageSize ?? 20,
           sortBy: options?.sortBy ?? 'DATE',
-          sortDirection: options?.sortDirection ?? 'DESC',
+          sortDirection,
         },
       },
     })

@@ -76,7 +76,19 @@ export const Claims: React.FC = () => {
                 active={currentKeyboardNavigationStep === index}
               />
             )}
-            tableHeader={<ClaimListHeader />}
+            tableHeader={
+              <ClaimListHeader
+                onSort={(column, direction) => {
+                  listClaims({
+                    includeAll: true,
+                    page,
+                    pageSize: 20,
+                    sortBy: column,
+                    sortDirection: direction,
+                  })
+                }}
+              />
+            }
           />
         </FadeIn>
       </Spacing>

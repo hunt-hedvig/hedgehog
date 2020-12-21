@@ -3,20 +3,35 @@ import { Table } from 'semantic-ui-react'
 
 type SortDirection = 'ascending' | 'descending'
 
-// TODO: Fix actual sorting (like, onSort or something)
+enum ClaimSortColumn {
+  Type = 'TYPE',
+  Date = 'DATE',
+  Reserve = 'RESERVE',
+  State = 'STATE',
+}
 
-export const ClaimListHeader: React.FC = () => {
-  const [column, setColumn] = React.useState<string | null>(null)
+export const ClaimListHeader: React.FC<{
+  onSort?: (column: ClaimSortColumn | null, direction?: SortDirection) => void
+}> = ({ onSort }) => {
+  const [column, setColumn] = React.useState<ClaimSortColumn | null>(null)
   const [direction, setDirection] = React.useState<SortDirection>()
 
-  const sortTable = (clickedColumn: string) => {
+  const sortTable = (clickedColumn: ClaimSortColumn) => {
     if (column !== clickedColumn) {
       setColumn(clickedColumn)
       setDirection('ascending')
+
+      if (onSort) {
+        onSort(column, direction)
+      }
       return
     }
 
     setDirection(flippedDirection(direction))
+
+    if (onSort) {
+      onSort(column, direction)
+    }
   }
 
   const flippedDirection = (d?: SortDirection) => {
@@ -31,29 +46,29 @@ export const ClaimListHeader: React.FC = () => {
       <Table.HeaderCell>Member ID</Table.HeaderCell>
       <Table.HeaderCell
         width={6}
-        sorted={column === 'date' ? direction : undefined}
-        onClick={() => sortTable('date')}
+        sorted={column === ClaimSortColumn.Date ? direction : undefined}
+        onClick={() => sortTable(ClaimSortColumn.Date)}
       >
         Date
       </Table.HeaderCell>
       <Table.HeaderCell
         width={6}
-        sorted={column === 'type' ? direction : undefined}
-        onClick={() => sortTable('type')}
+        sorted={column === ClaimSortColumn.Type ? direction : undefined}
+        onClick={() => sortTable(ClaimSortColumn.Type)}
       >
         Type
       </Table.HeaderCell>
       <Table.HeaderCell
         width={6}
-        sorted={column === 'state' ? direction : undefined}
-        onClick={() => sortTable('state')}
+        sorted={column === ClaimSortColumn.State ? direction : undefined}
+        onClick={() => sortTable(ClaimSortColumn.State)}
       >
         State
       </Table.HeaderCell>
       <Table.HeaderCell
         width={6}
-        sorted={column === 'reserve' ? direction : undefined}
-        onClick={() => sortTable('reserve')}
+        sorted={column === ClaimSortColumn.Reserve ? direction : undefined}
+        onClick={() => sortTable(ClaimSortColumn.Reserve)}
       >
         Reserves
       </Table.HeaderCell>
