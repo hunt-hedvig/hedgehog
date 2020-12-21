@@ -36,11 +36,19 @@ export const Claims: React.FC = () => {
     },
   })
 
+  const [firstRenderDone, setFirstRenderDone] = React.useState(false)
+
   React.useEffect(() => {
     listClaims()
   }, [])
 
-  if (loading) {
+  React.useEffect(() => {
+    if (claims && !loading) {
+      setFirstRenderDone(true)
+    }
+  }, [claims])
+
+  if (loading && !firstRenderDone) {
     return (
       <>
         <FadeIn>

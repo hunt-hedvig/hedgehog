@@ -75,7 +75,7 @@ export const Paginator = <T extends object>({
     <>
       <Table celled selectable sortable>
         {tableHeader}
-        {pagedItems.length && (
+        {pagedItems.length ? (
           <Table.Body>
             {pagedItems.map((item, index) => (
               <React.Fragment key={keyName ? '' + item[keyName] : index}>
@@ -83,6 +83,8 @@ export const Paginator = <T extends object>({
               </React.Fragment>
             ))}
           </Table.Body>
+        ) : (
+          <></>
         )}
       </Table>
       <PaginatorContainer>

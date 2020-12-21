@@ -14,7 +14,7 @@ export const ClaimListHeader: React.FC<{
   onSort?: (column: ClaimSortColumn | null, direction?: SortDirection) => void
 }> = ({ onSort }) => {
   const [column, setColumn] = React.useState<ClaimSortColumn | null>(null)
-  const [direction, setDirection] = React.useState<SortDirection>()
+  const [direction, setDirection] = React.useState<SortDirection>('descending')
 
   const sortTable = (clickedColumn: ClaimSortColumn) => {
     if (column !== clickedColumn) {
@@ -22,15 +22,16 @@ export const ClaimListHeader: React.FC<{
       setDirection('ascending')
 
       if (onSort) {
-        onSort(column, direction)
+        onSort(clickedColumn, 'ascending')
       }
+
       return
     }
 
     setDirection(flippedDirection(direction))
 
     if (onSort) {
-      onSort(column, direction)
+      onSort(clickedColumn, flippedDirection(direction))
     }
   }
 
