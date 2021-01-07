@@ -1,5 +1,4 @@
 import { AuthState } from 'store/actions/auth'
-import { ClaimsStore } from './types/claimsTypes'
 
 export interface BackofficeStore {
   auth: {
