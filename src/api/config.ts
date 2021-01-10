@@ -10,36 +10,6 @@ export default {
       url: 'settings/auth-success',
     },
   },
-  members: {
-    get: {
-      method: 'get',
-      url: 'member',
-    },
-    edit: {
-      method: 'post',
-      url: 'member',
-    },
-  },
-  claims: {
-    update: {
-      url: 'claims',
-      method: 'post',
-    },
-    details: {
-      get: {
-        url: 'claims',
-        method: 'get',
-      },
-      create: {
-        url: 'claims',
-        method: 'put',
-      },
-      remove: {
-        url: 'claims',
-        method: 'delete',
-      },
-    },
-  },
   payout: {
     create: {
       url: 'payout',
