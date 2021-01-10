@@ -21,10 +21,6 @@ const MemberIdCell = styled(Table.Cell)<{ memberId: string }>(
 
 const FadeInLinkRow = withFadeIn<TableRowProps>(LinkRow)
 
-const linkClickHandler = (id: string, userId: string) => {
-  history.push(`/claims/${id}/members/${userId}`)
-}
-
 const splitOnUpperCase = (s: string) => {
   const splitResult = s.match(/[A-Z][a-z]+|[0-9]+/g)
   return splitResult?.join(' ') ?? null
@@ -54,7 +50,7 @@ export const ClaimListItem: React.FC<{
   return (
     <FadeInLinkRow
       delay={`${index * 50}ms`}
-      onClick={() => linkClickHandler(claimId, memberId)}
+      onClick={() => history.push(`/claims/${claimId}/members/${memberId}`)}
       active={active}
     >
       <MemberIdCell memberId={memberId}>{memberId}</MemberIdCell>

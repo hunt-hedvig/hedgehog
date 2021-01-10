@@ -5,7 +5,7 @@ import {
 } from 'api/generated/graphql'
 
 type UseGetMemberClaimsReturnTuple = [
-  Claim[] | undefined,
+  ReadonlyArray<Claim> | undefined,
   GetMemberClaimsQueryResult,
 ]
 

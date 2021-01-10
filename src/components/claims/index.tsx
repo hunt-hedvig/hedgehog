@@ -11,10 +11,6 @@ import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 import { ClaimListHeader } from './claims-list/components/ClaimListHeader'
 import { ClaimListItem } from './claims-list/components/ClaimListItem'
 
-const linkClickHandler = (id: string, memberId: string) => {
-  history.push(`/claims/${id}/members/${memberId}`)
-}
-
 export const Claims: React.FC = () => {
   const [
     { claims, page, totalPages },
@@ -32,23 +28,15 @@ export const Claims: React.FC = () => {
         return
       }
 
-      linkClickHandler(claimId, memberId)
+      history.push(`/claims/${claimId}/members/${memberId}`)
     },
   })
-
-  const [firstRenderDone, setFirstRenderDone] = React.useState(false)
 
   React.useEffect(() => {
     listClaims()
   }, [])
 
-  React.useEffect(() => {
-    if (claims && !loading) {
-      setFirstRenderDone(true)
-    }
-  }, [claims])
-
-  if (loading && !firstRenderDone) {
+  if (loading && !claims) {
     return (
       <>
         <FadeIn>

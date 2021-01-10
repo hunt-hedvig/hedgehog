@@ -15,39 +15,15 @@ export default {
       method: 'get',
       url: 'member',
     },
-    search: {
-      method: 'get',
-      url: 'member/search',
-    },
-    findOne: {
-      method: 'get',
-      url: 'member',
-    },
     edit: {
       method: 'post',
       url: 'member',
     },
-    fraudulentStatus: {
-      url: 'member',
-      method: 'post',
-    },
   },
   claims: {
-    search: {
-      url: 'claims/search',
-      method: 'get',
-    },
-    getListByMemberId: {
-      url: 'claims/user',
-      method: 'get',
-    },
     update: {
       url: 'claims',
       method: 'post',
-    },
-    updateDetails: {
-      url: 'claims',
-      method: 'put',
     },
     details: {
       get: {

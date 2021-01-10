@@ -1,17 +1,15 @@
+import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { range } from 'lib/helpers'
 import React from 'react'
 import styled, { css } from 'react-emotion'
-import { Button, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 
-interface BackendPageState {
+interface PageState {
   startPage: number
   endPage: number
 }
 
-const getPageLimits = (
-  totalPages: number,
-  currentPage: number,
-): BackendPageState => {
+const getPageLimits = (totalPages: number, currentPage: number): PageState => {
   let start = currentPage - 3
   let end = currentPage + 4
 
@@ -32,11 +30,10 @@ const getPageLimits = (
   }
 }
 
-const PaginatorContainer = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
 
   .buttons button.ui.button {
     ${({ theme }) => css`
@@ -87,9 +84,9 @@ export const Paginator = <T extends object>({
           <></>
         )}
       </Table>
-      <PaginatorContainer>
-        {totalPages > 1 && (
-          <Button.Group>
+      {totalPages > 1 && (
+        <ButtonWrapper>
+          <ButtonsGroup style={{ justifyContent: 'center' }}>
             <Button
               disabled={currentPage === 0}
               onClick={() => onChangePage(0)}
@@ -111,9 +108,9 @@ export const Paginator = <T extends object>({
             >
               Last
             </Button>
-          </Button.Group>
-        )}
-      </PaginatorContainer>
+          </ButtonsGroup>
+        </ButtonWrapper>
+      )}
     </>
   )
 }

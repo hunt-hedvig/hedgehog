@@ -9,11 +9,8 @@ export interface BackofficeStore {
   }
   login: any
   client: any
-  poll: any
-  claimDetails: any
   payoutDetails: any
   notifications: any
-  memberInsurance: any
 }
 
 export type Gender = 'MALE' | 'FEMALE' | 'OTHER'

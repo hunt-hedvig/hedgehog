@@ -18,7 +18,8 @@ import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { Table } from 'semantic-ui-react'
-import { history } from 'store'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
 const HeaderWrapper = styled.div`
   display: flex;
@@ -31,7 +32,9 @@ const FormWrapper = styled.div`
   height: 100%;
 `
 
-export const ClaimsTab: React.FC<{ memberId: string }> = ({ memberId }) => {
+const ClaimsTabComponent: React.FC<{
+  memberId: string
+} & WithShowNotification> = ({ memberId, showNotification }) => {
   const [claims, { loading, refetch }] = useGetMemberClaims(memberId)
   const [
     createClaim,
@@ -72,62 +75,76 @@ export const ClaimsTab: React.FC<{ memberId: string }> = ({ memberId }) => {
                 placeholder={'Claim Source'}
                 setValue={(source) => setClaimSource(source)}
               />
-              <Spacing left={'small'} />
-              <DateTimePicker
-                disabled={createClaimLoading}
-                date={claimDate}
-                fullWidth={true}
-                setDate={(date) => setClaimDate(date)}
-                placeholder="Notification date"
-                maxDate={new Date()}
-              />
-              <Spacing left={'small'} />
-              <Button
-                disabled={createClaimLoading}
-                variation="danger"
-                color="danger"
-                onClick={() => {
-                  setShowForm(false)
-                  setClaimDate(null)
-                  setClaimSource(null)
-                }}
-              >
-                Cancel
-              </Button>
-              <Spacing left={'small'} />
-              <Button
-                disabled={
-                  claimSource === null ||
-                  claimDate === null ||
-                  createClaimLoading
-                }
-                variation="success"
-                color="success"
-                onClick={() => {
-                  if (claimSource === null || claimDate === null) {
-                    return
-                  }
-
-                  createClaim({
-                    variables: {
-                      memberId,
-                      date: format(claimDate, "yyyy-MM-dd'T'HH:mm:ss"),
-                      source: claimSource,
-                    },
-                  }).then((response) => {
-                    const claimId = response.data?.createClaim
+              <Spacing left={'small'}>
+                <DateTimePicker
+                  disabled={createClaimLoading}
+                  date={claimDate}
+                  fullWidth={true}
+                  setDate={(date) => setClaimDate(date)}
+                  placeholder="Notification date"
+                  maxDate={new Date()}
+                />
+              </Spacing>
+              <Spacing left={'small'}>
+                <Button
+                  disabled={createClaimLoading}
+                  variation="danger"
+                  color="danger"
+                  onClick={() => {
                     setShowForm(false)
                     setClaimDate(null)
                     setClaimSource(null)
-                    if (claimId) {
-                      history.push(`/claims/${claimId}/members/${memberId}`)
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Spacing>
+              <Spacing left={'small'}>
+                <Button
+                  disabled={
+                    claimSource === null ||
+                    claimDate === null ||
+                    createClaimLoading
+                  }
+                  variation="success"
+                  color="success"
+                  onClick={() => {
+                    if (claimSource === null || claimDate === null) {
+                      return
                     }
-                    refetch()
-                  })
-                }}
-              >
-                Save
-              </Button>
+
+                    createClaim({
+                      variables: {
+                        memberId,
+                        date: format(claimDate, "yyyy-MM-dd'T'HH:mm:ss"),
+                        source: claimSource,
+                      },
+                    })
+                      .then(() => {
+                        setShowForm(false)
+                        setClaimDate(null)
+                        setClaimSource(null)
+                        refetch().then(() => {
+                          showNotification({
+                            header: 'Success!',
+                            message: 'Claim created',
+                            type: 'green',
+                          })
+                        })
+                      })
+                      .catch((error) => {
+                        showNotification({
+                          type: 'red',
+                          header: 'Error',
+                          message: error.message,
+                        })
+                        throw error
+                      })
+                  }}
+                >
+                  Save
+                </Button>
+              </Spacing>
             </>
           ) : (
             <Button
@@ -152,3 +169,5 @@ export const ClaimsTab: React.FC<{ memberId: string }> = ({ memberId }) => {
     </FadeIn>
   )
 }
+
+export const ClaimsTab = withShowNotification(ClaimsTabComponent)
