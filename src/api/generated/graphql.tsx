@@ -577,6 +577,13 @@ export type GetValuationInput = {
   baseDate?: Maybe<Scalars['LocalDate']>
 }
 
+export type Identity = {
+  __typename?: 'Identity'
+  nationalIdentification: NationalIdentification
+  firstName?: Maybe<Scalars['String']>
+  lastName?: Maybe<Scalars['String']>
+}
+
 export type Incentive =
   | MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
@@ -726,6 +733,7 @@ export type Member = {
   contractMarketInfo?: Maybe<ContractMarketInfo>
   pickedLocale: Scalars['String']
   referralInformation?: Maybe<ReferralInformation>
+  identity?: Maybe<Identity>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -1157,6 +1165,12 @@ export type MutationTypeEditMemberInfoArgs = {
 export type MutationTypeSetFraudulentStatusArgs = {
   memberId: Scalars['ID']
   request: MemberFraudulentStatusInput
+}
+
+export type NationalIdentification = {
+  __typename?: 'NationalIdentification'
+  identification: Scalars['String']
+  nationality: Scalars['String']
 }
 
 export type NoDiscount = {
