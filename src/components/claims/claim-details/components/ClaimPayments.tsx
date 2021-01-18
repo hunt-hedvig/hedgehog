@@ -1,4 +1,5 @@
 import {
+  DialogContentText,
   Table as MuiTable,
   TableBody as MuiTableBody,
   TableCell as MuiTableCell,
@@ -51,9 +52,12 @@ const ClaimPayments: React.SFC<Props> = ({
   return (
     <Paper>
       <h3>Payments</h3>
-      {identity && (
+      {identity ? (
         <p>
-          <strong>Identified</strong>
+          <strong>
+            Identified: <Checkmark />
+          </strong>
+          <br />
           <strong>Personal Number: </strong>
           {identity.nationalIdentification.identification}{' '}
           {identity.firstName && identity.lastName && (
@@ -61,6 +65,13 @@ const ClaimPayments: React.SFC<Props> = ({
               <strong>Name:</strong> {identity.firstName} {identity.lastName}
             </p>
           )}
+        </p>
+      ) : (
+        <p>
+          <strong>
+            ⚠️ Identified: <Cross />
+          </strong>
+          <br />
         </p>
       )}
       <ClaimReserves
