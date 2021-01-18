@@ -9,6 +9,7 @@
 ## Optional screenshots
 
 ## Optional checklist
+- [ ] Boyscouted
 - [ ] Unit tests written
 - [ ] Tested locally
 
