@@ -51,7 +51,7 @@ export const PaymentConfirmationDialog: React.SFC<PaymentConfirmationDialogProps
       <DialogContent>
         {!identified && market === Market.Norway && (
           <DialogContentText>
-            ⚠️ Please note that this member is not identified ⚠️
+            ⚠️ Please note that this member is not identified
           </DialogContentText>
         )}
         <br />
