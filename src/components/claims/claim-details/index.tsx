@@ -137,7 +137,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                           reserves={reserves}
                           sanctionStatus={member.sanctionStatus!}
                           refetchPage={refetch}
-                          identity={member.identity ? member.identity : null}
+                          identity={member.identity ?? null}
                           market={member.contractMarketInfo?.market ?? null}
                         />
                       )}
