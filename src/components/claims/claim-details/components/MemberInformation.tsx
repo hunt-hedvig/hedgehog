@@ -62,7 +62,7 @@ const MemberInformation: React.FC<{
       </p>
       {member.contractMarketInfo?.market === Market.Norway && (
         <p>
-          <strong>Identified Status:</strong>{' '}
+          <strong>Identified:</strong>{' '}
           {member.identity ? <Checkmark /> : <Cross />}
         </p>
       )}
