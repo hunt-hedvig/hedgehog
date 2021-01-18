@@ -137,8 +137,12 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                           reserves={reserves}
                           sanctionStatus={member.sanctionStatus!}
                           refetchPage={refetch}
-                          identity={member.identity}
-                          market={member.contractMarketInfo?.market}
+                          identity={member.identity ? member.identity : null}
+                          market={
+                            member.contractMarketInfo?.market
+                              ? member.contractMarketInfo?.market
+                              : null
+                          }
                         />
                       )}
                     </Grid>

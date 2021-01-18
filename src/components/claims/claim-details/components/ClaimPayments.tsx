@@ -1,5 +1,4 @@
 import {
-  DialogContentText,
   Table as MuiTable,
   TableBody as MuiTableBody,
   TableCell as MuiTableCell,
