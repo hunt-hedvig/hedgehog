@@ -6,7 +6,7 @@ import {
   TableRow as MuiTableRow,
   withStyles,
 } from '@material-ui/core'
-import { Claim, SanctionStatus } from 'api/generated/graphql'
+import { Claim, Identity, SanctionStatus } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import React from 'react'
@@ -23,6 +23,8 @@ interface Props {
   reserves: MonetaryAmount
   sanctionStatus: SanctionStatus
   refetchPage: () => Promise<any>
+  identity: Identity | null
+  market: string | null
 }
 
 const PaymentTable = withStyles({
@@ -43,10 +45,24 @@ const ClaimPayments: React.SFC<Props> = ({
   reserves,
   sanctionStatus,
   refetchPage,
+  identity,
+  market,
 }) => {
   return (
     <Paper>
       <h3>Payments</h3>
+      {identity && (
+        <p>
+          <strong>Identified</strong>
+          <strong>Personal Number: </strong>
+          {identity.nationalIdentification.identification}{' '}
+          {identity.firstName && identity.lastName && (
+            <p>
+              <strong>Name:</strong> {identity.firstName} {identity.lastName}
+            </p>
+          )}
+        </p>
+      )}
       <ClaimReserves
         claimId={claimId}
         reserves={reserves}
@@ -100,6 +116,8 @@ const ClaimPayments: React.SFC<Props> = ({
         sanctionStatus={sanctionStatus}
         claimId={claimId}
         refetchPage={refetchPage}
+        identified={!!identity}
+        market={market}
       />
     </Paper>
   )
