@@ -14,7 +14,7 @@ export const changelog: ReadonlyArray<Change> = [
   {
     date: '2020-01-18',
     change: 'Add ability to generate direct debit link for all members',
-    authorGithubHandle: 'fredrikareschoug',
+    authorGithubHandle: 'vonElfvin',
   },
   {
     date: '2020-01-18',
