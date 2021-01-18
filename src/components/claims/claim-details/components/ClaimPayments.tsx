@@ -10,6 +10,7 @@ import { Claim, Identity, SanctionStatus } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import React from 'react'
+import { Market } from 'types/enums'
 
 import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'
@@ -51,26 +52,22 @@ const ClaimPayments: React.SFC<Props> = ({
   return (
     <Paper>
       <h3>Payments</h3>
-      {identity ? (
+      {market === Market.Norway && (
         <p>
-          <strong>
-            Identified: <Checkmark />
-          </strong>
+          <strong>Identified: {identity ? <Checkmark /> : <Cross />}</strong>
           <br />
-          <strong>Personal Number: </strong>
-          {identity.nationalIdentification.identification}{' '}
-          {identity.firstName && identity.lastName && (
+          {identity && (
             <p>
-              <strong>Name:</strong> {identity.firstName} {identity.lastName}
+              <strong>Personal Number: </strong>
+              {identity.nationalIdentification.identification}{' '}
+              {identity.firstName && identity.lastName && (
+                <p>
+                  <strong>Name:</strong> {identity.firstName}{' '}
+                  {identity.lastName}
+                </p>
+              )}
             </p>
           )}
-        </p>
-      ) : (
-        <p>
-          <strong>
-            ⚠️ Identified: <Cross />
-          </strong>
-          <br />
         </p>
       )}
       <ClaimReserves
