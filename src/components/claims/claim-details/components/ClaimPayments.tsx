@@ -59,7 +59,7 @@ const ClaimPayments: React.SFC<Props> = ({
           {identity && (
             <p>
               <strong>Personal Number: </strong>
-              {identity.nationalIdentification.identification}{' '}
+              {identity.nationalIdentification.identification}
               {identity.firstName && identity.lastName && (
                 <p>
                   <strong>Name:</strong> {identity.firstName}{' '}
