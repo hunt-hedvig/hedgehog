@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2020-01-18',
+    change: 'Support for identification on claims page for norway',
+    authorGithubHandle: 'fredrikareschoug',
+  },
+  {
     date: '2020-12-04',
     change: 'Add basic support for Danish market',
     authorGithubHandle: 'vonElfvin',
