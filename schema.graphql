@@ -684,6 +684,18 @@ type Member {
   contractMarketInfo: ContractMarketInfo
   pickedLocale: String!
   referralInformation: ReferralInformation
+  identity: Identity
+}
+
+type Identity {
+  nationalIdentification: NationalIdentification!
+  firstName: String
+  lastName: String
+}
+
+type NationalIdentification {
+  identification: String!
+  nationality: String!
 }
 
 type ReferralInformation {
