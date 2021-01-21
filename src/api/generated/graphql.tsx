@@ -687,6 +687,21 @@ export type LiabilityClaim = {
   location?: Maybe<Scalars['String']>
 }
 
+export type ListClaimsOptions = {
+  includeAll?: Maybe<Scalars['Boolean']>
+  page?: Maybe<Scalars['Int']>
+  pageSize?: Maybe<Scalars['Int']>
+  sortBy?: Maybe<Scalars['String']>
+  sortDirection?: Maybe<Scalars['String']>
+}
+
+export type ListClaimsResult = {
+  __typename?: 'ListClaimsResult'
+  claims: Array<Claim>
+  totalPages: Scalars['Int']
+  page: Scalars['Int']
+}
+
 export type LuggageDelayClaim = {
   __typename?: 'LuggageDelayClaim'
   location?: Maybe<Scalars['String']>
@@ -1267,6 +1282,7 @@ export type QueryType = {
   canValuateClaimItem?: Maybe<CanValuateClaimItem>
   quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
+  listClaims: ListClaimsResult
 }
 
 export type QueryTypeMemberArgs = {
@@ -1327,6 +1343,10 @@ export type QueryTypeQuoteSchemaForContractTypeArgs = {
 export type QueryTypeMemberSearchArgs = {
   query: Scalars['String']
   options: MemberSearchOptions
+}
+
+export type QueryTypeListClaimsArgs = {
+  options: ListClaimsOptions
 }
 
 export type Question = {
@@ -1973,6 +1993,17 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
   'changeToDate'
 >
 
+export type CreateClaimMutationVariables = Exact<{
+  memberId: Scalars['ID']
+  date: Scalars['LocalDateTime']
+  source: ClaimSource
+}>
+
+export type CreateClaimMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'createClaim'
+>
+
 export type CreatePaymentCompletionLinkMutationVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -2306,6 +2337,51 @@ export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetMemberClaimsQueryVariables = Exact<{
+  memberId: Scalars['ID']
+}>
+
+export type GetMemberClaimsQuery = { __typename?: 'QueryType' } & {
+  member?: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        claims: Array<
+          { __typename?: 'Claim' } & Pick<
+            Claim,
+            'id' | 'registrationDate' | 'state' | 'reserves'
+          > & {
+              member?: Maybe<
+                { __typename?: 'Member' } & Pick<Member, 'memberId'>
+              >
+              type?: Maybe<
+                | { __typename: 'TheftClaim' }
+                | { __typename: 'AccidentalDamageClaim' }
+                | { __typename: 'AssaultClaim' }
+                | { __typename: 'WaterDamageClaim' }
+                | { __typename: 'TravelAccidentClaim' }
+                | { __typename: 'LuggageDelayClaim' }
+                | { __typename: 'NotCoveredClaim' }
+                | { __typename: 'FireDamageClaim' }
+                | { __typename: 'ConfirmedFraudClaim' }
+                | { __typename: 'LiabilityClaim' }
+                | { __typename: 'ApplianceClaim' }
+                | { __typename: 'LegalProtectionClaim' }
+                | { __typename: 'WaterDamageBathroomClaim' }
+                | { __typename: 'WaterDamageKitchenClaim' }
+                | { __typename: 'BurglaryClaim' }
+                | { __typename: 'FloodingClaim' }
+                | { __typename: 'EarthquakeClaim' }
+                | { __typename: 'InstallationsClaim' }
+                | { __typename: 'SnowPressureClaim' }
+                | { __typename: 'StormDamageClaim' }
+                | { __typename: 'VerminAndPestsClaim' }
+                | { __typename: 'TestClaim' }
+              >
+            }
+        >
+      }
+  >
+}
+
 export type GetMemberInfoQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -2609,6 +2685,50 @@ export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
   QueryType,
   'quoteSchemaForContractType'
 >
+
+export type ListClaimsQueryVariables = Exact<{
+  options: ListClaimsOptions
+}>
+
+export type ListClaimsQuery = { __typename?: 'QueryType' } & {
+  listClaims: { __typename?: 'ListClaimsResult' } & Pick<
+    ListClaimsResult,
+    'page' | 'totalPages'
+  > & {
+      claims: Array<
+        { __typename?: 'Claim' } & Pick<
+          Claim,
+          'id' | 'registrationDate' | 'state' | 'reserves'
+        > & {
+            member?: Maybe<{ __typename?: 'Member' } & Pick<Member, 'memberId'>>
+            type?: Maybe<
+              | { __typename: 'TheftClaim' }
+              | { __typename: 'AccidentalDamageClaim' }
+              | { __typename: 'AssaultClaim' }
+              | { __typename: 'WaterDamageClaim' }
+              | { __typename: 'TravelAccidentClaim' }
+              | { __typename: 'LuggageDelayClaim' }
+              | { __typename: 'NotCoveredClaim' }
+              | { __typename: 'FireDamageClaim' }
+              | { __typename: 'ConfirmedFraudClaim' }
+              | { __typename: 'LiabilityClaim' }
+              | { __typename: 'ApplianceClaim' }
+              | { __typename: 'LegalProtectionClaim' }
+              | { __typename: 'WaterDamageBathroomClaim' }
+              | { __typename: 'WaterDamageKitchenClaim' }
+              | { __typename: 'BurglaryClaim' }
+              | { __typename: 'FloodingClaim' }
+              | { __typename: 'EarthquakeClaim' }
+              | { __typename: 'InstallationsClaim' }
+              | { __typename: 'SnowPressureClaim' }
+              | { __typename: 'StormDamageClaim' }
+              | { __typename: 'VerminAndPestsClaim' }
+              | { __typename: 'TestClaim' }
+            >
+          }
+      >
+    }
+}
 
 export type ManualRedeemCampaignMutationVariables = Exact<{
   memberId: Scalars['ID']
@@ -3970,6 +4090,60 @@ export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
 >
+export const CreateClaimDocument = gql`
+  mutation createClaim(
+    $memberId: ID!
+    $date: LocalDateTime!
+    $source: ClaimSource!
+  ) {
+    createClaim(memberId: $memberId, date: $date, source: $source)
+  }
+`
+export type CreateClaimMutationFn = ApolloReactCommon.MutationFunction<
+  CreateClaimMutation,
+  CreateClaimMutationVariables
+>
+
+/**
+ * __useCreateClaimMutation__
+ *
+ * To run a mutation, you first call `useCreateClaimMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClaimMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClaimMutation, { data, loading, error }] = useCreateClaimMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      date: // value for 'date'
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useCreateClaimMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateClaimMutation,
+    CreateClaimMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateClaimMutation,
+    CreateClaimMutationVariables
+  >(CreateClaimDocument, baseOptions)
+}
+export type CreateClaimMutationHookResult = ReturnType<
+  typeof useCreateClaimMutation
+>
+export type CreateClaimMutationResult = ApolloReactCommon.MutationResult<
+  CreateClaimMutation
+>
+export type CreateClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateClaimMutation,
+  CreateClaimMutationVariables
+>
 export const CreatePaymentCompletionLinkDocument = gql`
   mutation CreatePaymentCompletionLink($memberId: ID!) {
     createPaymentCompletionLink(memberId: $memberId) {
@@ -4799,6 +4973,74 @@ export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
   GetItemCategoriesQuery,
   GetItemCategoriesQueryVariables
 >
+export const GetMemberClaimsDocument = gql`
+  query GetMemberClaims($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      claims {
+        id
+        member {
+          memberId
+        }
+        registrationDate
+        type {
+          __typename
+        }
+        state
+        reserves
+      }
+    }
+  }
+`
+
+/**
+ * __useGetMemberClaimsQuery__
+ *
+ * To run a query within a React component, call `useGetMemberClaimsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMemberClaimsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMemberClaimsQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetMemberClaimsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetMemberClaimsQuery,
+    GetMemberClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetMemberClaimsQuery,
+    GetMemberClaimsQueryVariables
+  >(GetMemberClaimsDocument, baseOptions)
+}
+export function useGetMemberClaimsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMemberClaimsQuery,
+    GetMemberClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMemberClaimsQuery,
+    GetMemberClaimsQueryVariables
+  >(GetMemberClaimsDocument, baseOptions)
+}
+export type GetMemberClaimsQueryHookResult = ReturnType<
+  typeof useGetMemberClaimsQuery
+>
+export type GetMemberClaimsLazyQueryHookResult = ReturnType<
+  typeof useGetMemberClaimsLazyQuery
+>
+export type GetMemberClaimsQueryResult = ApolloReactCommon.QueryResult<
+  GetMemberClaimsQuery,
+  GetMemberClaimsQueryVariables
+>
 export const GetMemberInfoDocument = gql`
   query GetMemberInfo($memberId: ID!) {
     member(id: $memberId) {
@@ -5502,6 +5744,73 @@ export type GetSchemaForContractTypeLazyQueryHookResult = ReturnType<
 export type GetSchemaForContractTypeQueryResult = ApolloReactCommon.QueryResult<
   GetSchemaForContractTypeQuery,
   GetSchemaForContractTypeQueryVariables
+>
+export const ListClaimsDocument = gql`
+  query ListClaims($options: ListClaimsOptions!) {
+    listClaims(options: $options) {
+      claims {
+        id
+        member {
+          memberId
+        }
+        registrationDate
+        type {
+          __typename
+        }
+        state
+        reserves
+      }
+      page
+      totalPages
+    }
+  }
+`
+
+/**
+ * __useListClaimsQuery__
+ *
+ * To run a query within a React component, call `useListClaimsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListClaimsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListClaimsQuery({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useListClaimsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<ListClaimsQuery, ListClaimsQueryVariables>(
+    ListClaimsDocument,
+    baseOptions,
+  )
+}
+export function useListClaimsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >(ListClaimsDocument, baseOptions)
+}
+export type ListClaimsQueryHookResult = ReturnType<typeof useListClaimsQuery>
+export type ListClaimsLazyQueryHookResult = ReturnType<
+  typeof useListClaimsLazyQuery
+>
+export type ListClaimsQueryResult = ApolloReactCommon.QueryResult<
+  ListClaimsQuery,
+  ListClaimsQueryVariables
 >
 export const ManualRedeemCampaignDocument = gql`
   mutation ManualRedeemCampaign(
