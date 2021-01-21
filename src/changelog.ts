@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2020-01-21',
+    change: 'Refactor claims list',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2020-01-18',
     change: 'Add ability to generate direct debit link for all members',
     authorGithubHandle: 'vonElfvin',
