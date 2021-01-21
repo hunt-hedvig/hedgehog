@@ -41,7 +41,7 @@ const PageButton = styled(Button)<{ active: boolean }>`
     background: ${active
       ? theme.highlightedButtonBackground
       : theme.defaultButtonBackground};
-    color: ${theme.danger};
+    color: ${theme.foreground};
   `}
 `
 
