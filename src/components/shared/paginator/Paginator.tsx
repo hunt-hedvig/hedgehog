@@ -34,17 +34,15 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
 
-  .buttons button.ui.button {
-    ${({ theme }) => css`
-      background: ${theme.defaultButtonBackground};
-      color: ${theme.foreground};
-
-      &.active {
-        background: ${theme.highlightedButtonBackground};
-      }
-    `}
-  }
+const PageButton = styled(Button)<{ active: boolean }>`
+  ${({ theme, active }) => css`
+    background: ${active
+      ? theme.highlightedButtonBackground
+      : theme.defaultButtonBackground};
+    color: ${theme.danger};
+  `}
 `
 
 export interface PaginatorProps<T> {
@@ -94,13 +92,13 @@ export const Paginator = <T extends object>({
               First
             </Button>
             {range(startPage, endPage).map((page, id) => (
-              <Button
+              <PageButton
                 key={id}
-                className={currentPage === page ? 'active' : ''}
+                active={currentPage === page}
                 onClick={() => onChangePage(page)}
               >
                 {page + 1}
-              </Button>
+              </PageButton>
             ))}
             <Button
               disabled={currentPage === totalPages - 1}
