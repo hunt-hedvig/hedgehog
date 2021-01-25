@@ -180,7 +180,6 @@ class PaymentsTab extends React.Component {
     })
   }
 
-  // FIXME: Logic whether charge or payout can be performed should be owned by the backend
   render() {
     return (
       <FadeIn>
