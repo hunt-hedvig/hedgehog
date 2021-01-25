@@ -52,6 +52,9 @@ const GET_MEMBER_QUERY = gql`
       directDebitStatus {
         activated
       }
+      payoutMethodStatus {
+        activated
+      }
       transactions {
         id
         amount {
@@ -194,12 +197,23 @@ class PaymentsTab extends React.Component {
             if (loading || !data) {
               return <LoadingMessage paddingTop="10vh" />
             }
-
             return (
               <div>
                 <p>
                   Direct Debit activated:{' '}
                   {data.member.directDebitStatus.activated ? (
+                    <SuccessText>
+                      <CheckCircle />
+                    </SuccessText>
+                  ) : (
+                    <DangerText>
+                      <XCircle />
+                    </DangerText>
+                  )}
+                </p>
+                <p>
+                  Payout method authorised:{' '}
+                  {data.member.payoutMethodStatus.activated ? (
                     <SuccessText>
                       <CheckCircle />
                     </SuccessText>
@@ -272,8 +286,7 @@ class PaymentsTab extends React.Component {
                   </Mutation>
                 )}
                 <br />
-                {this.props.contractMarketInfo?.market === Market.Sweden &&
-                  data.member.directDebitStatus.activated && (
+                {data.member.payoutMethodStatus.activated && (
                     <>
                       <h3>Payout:</h3>
                       <PayoutDetails {...this.props} />
