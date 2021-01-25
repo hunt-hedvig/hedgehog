@@ -23,8 +23,8 @@ export type Scalars = {
   URL: any
   LocalDateTime: any
   JSON: any
-  LocalTime: any
   ZonedDateTime: any
+  LocalTime: any
 }
 
 export type AccidentalDamageClaim = {
@@ -849,12 +849,6 @@ export type MutationType = {
   setClaimInformation?: Maybe<Claim>
   updateReserve?: Maybe<Claim>
   setCoveringEmployee?: Maybe<Claim>
-  createTicket?: Maybe<Scalars['ID']>
-  changeTicketDescription?: Maybe<Scalars['ID']>
-  assignTicketToTeamMember?: Maybe<Scalars['ID']>
-  changeTicketStatus?: Maybe<Scalars['ID']>
-  changeTicketReminder?: Maybe<Scalars['ID']>
-  changeTicketPriority?: Maybe<Scalars['ID']>
   whitelistMember?: Maybe<Scalars['Boolean']>
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
@@ -964,35 +958,6 @@ export type MutationTypeUpdateReserveArgs = {
 export type MutationTypeSetCoveringEmployeeArgs = {
   id: Scalars['ID']
   coveringEmployee: Scalars['Boolean']
-}
-
-export type MutationTypeCreateTicketArgs = {
-  ticket?: Maybe<TicketInput>
-}
-
-export type MutationTypeChangeTicketDescriptionArgs = {
-  ticketId: Scalars['ID']
-  newDescription?: Maybe<Scalars['String']>
-}
-
-export type MutationTypeAssignTicketToTeamMemberArgs = {
-  ticketId: Scalars['ID']
-  teamMemberId: Scalars['ID']
-}
-
-export type MutationTypeChangeTicketStatusArgs = {
-  ticketId: Scalars['ID']
-  newStatus?: Maybe<TicketStatus>
-}
-
-export type MutationTypeChangeTicketReminderArgs = {
-  ticketId: Scalars['ID']
-  newReminder?: Maybe<RemindNotification>
-}
-
-export type MutationTypeChangeTicketPriorityArgs = {
-  ticketId: Scalars['ID']
-  newPriority?: Maybe<Scalars['Float']>
 }
 
 export type MutationTypeWhitelistMemberArgs = {
@@ -1272,9 +1237,6 @@ export type QueryType = {
   member?: Maybe<Member>
   claim?: Maybe<Claim>
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
-  ticket?: Maybe<Ticket>
-  getFullTicketHistory?: Maybe<TicketHistory>
-  tickets: Array<Ticket>
   me?: Maybe<Scalars['String']>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   messageHistory: Array<ChatMessage>
@@ -1301,18 +1263,6 @@ export type QueryTypeClaimArgs = {
 
 export type QueryTypePaymentScheduleArgs = {
   status: ChargeStatus
-}
-
-export type QueryTypeTicketArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryTypeGetFullTicketHistoryArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryTypeTicketsArgs = {
-  resolved?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryTypeMessageHistoryArgs = {
@@ -1430,12 +1380,6 @@ export type ReferralInformation = {
   referredBy?: Maybe<MemberReferral>
   hasReferred: Array<MemberReferral>
   redeemedCampaigns: Array<RedeemedCampaign>
-}
-
-export type RemindNotification = {
-  date?: Maybe<Scalars['LocalDate']>
-  time?: Maybe<Scalars['LocalTime']>
-  message?: Maybe<Scalars['String']>
 }
 
 export type Renewal = {
@@ -1574,83 +1518,6 @@ export type TheftClaim = {
   item?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
-}
-
-export type Ticket = {
-  __typename?: 'Ticket'
-  id?: Maybe<Scalars['ID']>
-  assignedTo?: Maybe<Scalars['String']>
-  createdAt?: Maybe<Scalars['Instant']>
-  createdBy?: Maybe<Scalars['String']>
-  memberId?: Maybe<Scalars['String']>
-  referenceId?: Maybe<Scalars['String']>
-  priority?: Maybe<Scalars['Float']>
-  type?: Maybe<TicketType>
-  remindNotificationDate?: Maybe<Scalars['LocalDate']>
-  remindNotificationTime?: Maybe<Scalars['LocalTime']>
-  remindMessage?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-  status?: Maybe<TicketStatus>
-}
-
-export enum TicketChangeType {
-  TicketCreated = 'TICKET_CREATED',
-  ChangedReminder = 'CHANGED_REMINDER',
-  ChangedAssignedTo = 'CHANGED_ASSIGNED_TO',
-  ChangedDescription = 'CHANGED_DESCRIPTION',
-  ChangedStatus = 'CHANGED_STATUS',
-  ChangedPriority = 'CHANGED_PRIORITY',
-}
-
-export type TicketHistory = {
-  __typename?: 'TicketHistory'
-  id?: Maybe<Scalars['ID']>
-  createdAt?: Maybe<Scalars['Instant']>
-  createdBy?: Maybe<Scalars['String']>
-  type?: Maybe<TicketType>
-  revisions?: Maybe<Array<Maybe<TicketRevision>>>
-}
-
-export type TicketInput = {
-  assignedTo?: Maybe<Scalars['String']>
-  priority?: Maybe<Scalars['Float']>
-  type?: Maybe<TicketType>
-  remindNotificationDate?: Maybe<Scalars['LocalDate']>
-  remindNotificationTime?: Maybe<Scalars['LocalTime']>
-  remindMessage?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-  status?: Maybe<TicketStatus>
-  referenceId?: Maybe<Scalars['String']>
-  memberId?: Maybe<Scalars['String']>
-}
-
-export type TicketRevision = {
-  __typename?: 'TicketRevision'
-  assignedTo?: Maybe<Scalars['String']>
-  manualPriority?: Maybe<Scalars['Float']>
-  remindDate?: Maybe<Scalars['LocalDate']>
-  remindTime?: Maybe<Scalars['LocalTime']>
-  remindMessage?: Maybe<Scalars['String']>
-  status?: Maybe<TicketStatus>
-  changedAt?: Maybe<Scalars['Instant']>
-  changeType?: Maybe<TicketChangeType>
-  changedBy?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-}
-
-export enum TicketStatus {
-  Waiting = 'WAITING',
-  WorkingOn = 'WORKING_ON',
-  OnHold = 'ON_HOLD',
-  Resolved = 'RESOLVED',
-}
-
-export enum TicketType {
-  Remind = 'REMIND',
-  Message = 'MESSAGE',
-  Claim = 'CLAIM',
-  CallMe = 'CALL_ME',
-  Other = 'OTHER',
 }
 
 export type Transaction = {

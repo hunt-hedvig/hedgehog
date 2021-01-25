@@ -11,25 +11,12 @@ import { Button } from 'hedvig-ui/button'
 import { formatMoney } from 'utils/money'
 import { GenerateSetupDirectDebitLink } from './generate-setup-direct-debit-link'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
+import { Checkmark, Cross } from '../../../icons'
 import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { Market } from 'types/enums'
-
-const IconWrapper = styled.span`
-  display: inline-block;
-  vertical-align: top;
-  font-size: 1.5rem;
-  padding-left: 0.5rem;
-  margin-top: -0.1rem;
-`
-const SuccessText = styled(IconWrapper)`
-  color: ${({ theme }) => theme.success};
-`
-const DangerText = styled(IconWrapper)`
-  color: ${({ theme }) => theme.danger};
-`
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -54,6 +41,14 @@ const GET_MEMBER_QUERY = gql`
       }
       payoutMethodStatus {
         activated
+      }
+      identity {
+        nationalIdentification {
+          identification
+          nationality
+        }
+        firstName
+        lastName
       }
       transactions {
         id
@@ -200,27 +195,11 @@ class PaymentsTab extends React.Component {
               <div>
                 <p>
                   Direct Debit activated:{' '}
-                  {data.member.directDebitStatus.activated ? (
-                    <SuccessText>
-                      <CheckCircle />
-                    </SuccessText>
-                  ) : (
-                    <DangerText>
-                      <XCircle />
-                    </DangerText>
-                  )}
+                  {data.member.directDebitStatus.activated ? <Checkmark /> : <Cross />}
                 </p>
                 <p>
-                  Payout method authorised:{' '}
-                  {data.member.payoutMethodStatus.activated ? (
-                    <SuccessText>
-                      <CheckCircle />
-                    </SuccessText>
-                  ) : (
-                    <DangerText>
-                      <XCircle />
-                    </DangerText>
-                  )}
+                  Payout Method activated:{' '}
+                  {data.member.payoutMethodStatus.activated ? <Checkmark /> : <Cross />}
                 </p>
 
                 <Spacing bottom>
@@ -288,6 +267,37 @@ class PaymentsTab extends React.Component {
                 {data.member.payoutMethodStatus.activated && (
                   <>
                     <h3>Payout:</h3>
+                    {this.props.contractMarketInfo?.market ===
+                      Market.Norway && (
+                      <p>
+                        <strong>
+                          Identified:{' '}
+                          {data.member.identity ? <Checkmark /> : <Cross />}
+                        </strong>
+                        <br />
+                        {data.member.identity ? (
+                          <p>
+                            <strong>Personal Number: </strong>
+                            {
+                              data.member.identity.nationalIdentification
+                                .identification
+                            }
+                            {data.member.identity.firstName &&
+                              data.member.identity.lastName && (
+                                <p>
+                                  <strong>Name:</strong>{' '}
+                                  {data.member.identity.firstName}{' '}
+                                  {data.member.identity.lastName}
+                                </p>
+                              )}
+                          </p>
+                        ) : (
+                          <p>
+                            ⚠️ Please note that this member is not identified
+                          </p>
+                        )}
+                      </p>
+                    )}
                     <PayoutDetails {...this.props} />
                   </>
                 )}
