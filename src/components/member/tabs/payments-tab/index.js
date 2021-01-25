@@ -286,11 +286,11 @@ class PaymentsTab extends React.Component {
                 )}
                 <br />
                 {data.member.payoutMethodStatus.activated && (
-                    <>
-                      <h3>Payout:</h3>
-                      <PayoutDetails {...this.props} />
-                    </>
-                  )}
+                  <>
+                    <h3>Payout:</h3>
+                    <PayoutDetails {...this.props} />
+                  </>
+                )}
                 <h3>Transactions:</h3>
                 <MemberTransactionsTable
                   transactions={data.member.transactions
