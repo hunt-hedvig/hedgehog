@@ -48,15 +48,6 @@ const ClaimsTabComponent: React.FC<{
   if (loading || !claims) {
     return <LoadingMessage paddingTop="25vh" />
   }
-
-  if (claims.length === 0) {
-    return (
-      <StandaloneMessage paddingTop="10vh">
-        Claims list is empty
-      </StandaloneMessage>
-    )
-  }
-
   return (
     <FadeIn>
       <HeaderWrapper>
@@ -142,7 +133,7 @@ const ClaimsTabComponent: React.FC<{
                       })
                   }}
                 >
-                  Save
+                  Add
                 </Button>
               </Spacing>
             </>
@@ -157,15 +148,20 @@ const ClaimsTabComponent: React.FC<{
           )}
         </FormWrapper>
       </HeaderWrapper>
-      <Table celled selectable>
-        <ClaimListHeader />
-
-        <Table.Body>
-          {claims.map((item, index) => (
-            <ClaimListItem key={item.id} item={item} index={index} />
-          ))}
-        </Table.Body>
-      </Table>
+      {claims.length === 0 ? (
+        <StandaloneMessage paddingTop="10vh">
+          No claims for member
+        </StandaloneMessage>
+      ) : (
+        <Table celled selectable>
+          <ClaimListHeader />
+          <Table.Body>
+            {claims.map((item, index) => (
+              <ClaimListItem key={item.id} item={item} index={index} />
+            ))}
+          </Table.Body>
+        </Table>
+      )}
     </FadeIn>
   )
 }

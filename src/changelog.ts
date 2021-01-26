@@ -12,8 +12,13 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-01-26',
+    change: 'Claims list fixes, decrease Dashborad polling interval',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-01-25',
-    change: 'Add payout status to payments',
+    change: 'Add payout support for Norway',
     authorGithubHandle: 'bystam',
   },
   {
