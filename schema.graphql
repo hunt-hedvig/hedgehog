@@ -7,9 +7,6 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
-  ticket(id: ID!): Ticket
-  getFullTicketHistory(id: ID!): TicketHistory
-  tickets(resolved: Boolean): [Ticket!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
@@ -54,12 +51,6 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  createTicket(ticket: TicketInput): ID
-  changeTicketDescription(ticketId: ID!, newDescription: String): ID
-  assignTicketToTeamMember(ticketId: ID!, teamMemberId: ID!): ID
-  changeTicketStatus(ticketId: ID!, newStatus: TicketStatus): ID
-  changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
-  changeTicketPriority(ticketId: ID!, newPriority: Float): ID
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
@@ -671,6 +662,7 @@ type Member {
   status: String
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
+  payoutMethodStatus: PayoutMethodStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
   sanctionStatus: SanctionStatus
   account: Account
@@ -827,6 +819,10 @@ type Transaction {
 }
 
 type DirectDebitStatus {
+  activated: Boolean
+}
+
+type PayoutMethodStatus {
   activated: Boolean
 }
 
@@ -1213,86 +1209,6 @@ type Question {
   id: ID!
   timestamp: Instant!
   messageJsonString: String!
-}
-
-input TicketInput {
-  assignedTo: String
-  priority: Float
-  type: TicketType
-  remindNotificationDate: LocalDate
-  remindNotificationTime: LocalTime
-  remindMessage: String
-  description: String
-  status: TicketStatus
-  referenceId: String
-  memberId: String
-}
-
-type Ticket {
-  id: ID
-  assignedTo: String
-  createdAt: Instant
-  createdBy: String
-  memberId: String
-  referenceId: String
-  priority: Float
-  type: TicketType
-  remindNotificationDate: LocalDate
-  remindNotificationTime: LocalTime
-  remindMessage: String
-  description: String
-  status: TicketStatus
-}
-
-type TicketHistory {
-  id: ID
-  createdAt: Instant
-  createdBy: String
-  type: TicketType
-  revisions: [TicketRevision]
-}
-
-type TicketRevision {
-  assignedTo: String
-  manualPriority: Float
-  remindDate: LocalDate
-  remindTime: LocalTime
-  remindMessage: String
-  status: TicketStatus
-  changedAt: Instant
-  changeType: TicketChangeType
-  changedBy: String
-  description: String
-}
-
-input RemindNotification {
-  date: LocalDate
-  time: LocalTime
-  message: String
-}
-
-enum TicketChangeType {
-  TICKET_CREATED
-  CHANGED_REMINDER
-  CHANGED_ASSIGNED_TO
-  CHANGED_DESCRIPTION
-  CHANGED_STATUS
-  CHANGED_PRIORITY
-}
-
-enum TicketStatus {
-  WAITING
-  WORKING_ON
-  ON_HOLD
-  RESOLVED
-}
-
-enum TicketType {
-  REMIND
-  MESSAGE
-  CLAIM
-  CALL_ME
-  OTHER
 }
 
 input CreateNorwegianGripenInput {
