@@ -43,7 +43,7 @@ const ClaimsTabComponent: React.FC<{
 
   const [showForm, setShowForm] = React.useState(false)
   const [claimSource, setClaimSource] = React.useState<ClaimSource | null>(null)
-  const [claimDate, setClaimDate] = React.useState<Date | null>(null)
+  const [claimDate, setClaimDate] = React.useState<Date>(new Date())
 
   if (loading || !claims) {
     return <LoadingMessage paddingTop="25vh" />
@@ -74,6 +74,7 @@ const ClaimsTabComponent: React.FC<{
                   setDate={(date) => setClaimDate(date)}
                   placeholder="Notification date"
                   maxDate={new Date()}
+                  showTimePicker
                 />
               </Spacing>
               <Spacing left={'small'}>
@@ -83,7 +84,7 @@ const ClaimsTabComponent: React.FC<{
                   color="danger"
                   onClick={() => {
                     setShowForm(false)
-                    setClaimDate(null)
+                    setClaimDate(new Date())
                     setClaimSource(null)
                   }}
                 >
@@ -113,7 +114,7 @@ const ClaimsTabComponent: React.FC<{
                     })
                       .then(() => {
                         setShowForm(false)
-                        setClaimDate(null)
+                        setClaimDate(new Date())
                         setClaimSource(null)
                         refetch().then(() => {
                           showNotification({
