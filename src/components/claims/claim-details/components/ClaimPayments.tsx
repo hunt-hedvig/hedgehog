@@ -49,6 +49,13 @@ const ClaimPayments: React.SFC<Props> = ({
   identity,
   market,
 }) => {
+  let total = payments
+    .map((payment) => +payment?.amount?.amount)
+    .reduce((acc, amount) => acc + amount, 0)
+  let totalDeductible = payments
+    .map((payment) => +payment?.deductible?.amount)
+    .reduce((acc, amount) => acc + amount, 0)
+
   return (
     <Paper>
       <h3>Payments</h3>
@@ -100,10 +107,10 @@ const ClaimPayments: React.SFC<Props> = ({
             >
               <PaymentTableCell>{payment!.id}</PaymentTableCell>
               <PaymentTableCell>
-                {payment!.amount.amount} {payment!.amount.currency}
+                {payment!.amount.amount}&nbsp;{payment!.amount.currency}
               </PaymentTableCell>
               <PaymentTableCell>
-                {payment!.deductible.amount} {payment!.deductible.currency}
+                {payment!.deductible.amount}&nbsp;{payment!.deductible.currency}
               </PaymentTableCell>
               <PaymentTableCell>{payment!.note}</PaymentTableCell>
               <PaymentTableCell>
@@ -116,6 +123,28 @@ const ClaimPayments: React.SFC<Props> = ({
               <PaymentTableCell>{payment!.status}</PaymentTableCell>
             </MuiTableRow>
           ))}
+          {total > 0 && (
+            <>
+              <MuiTableRow>
+                <MuiTableCell rowSpan={3} colSpan={5} />
+                <PaymentTableCell colSpan={2}>
+                  <b>Total: </b>
+                </PaymentTableCell>
+                <PaymentTableCell align="right">
+                  {total.toFixed(2)}&nbsp;{payments[0]!.amount.currency}
+                </PaymentTableCell>
+              </MuiTableRow>
+              <MuiTableRow>
+                <PaymentTableCell colSpan={2}>
+                  <b>Total deductible: </b>
+                </PaymentTableCell>
+                <PaymentTableCell align="right">
+                  {totalDeductible.toFixed(2)}&nbsp;
+                  {payments[0]!.deductible.currency}
+                </PaymentTableCell>
+              </MuiTableRow>
+            </>
+          )}
         </MuiTableBody>
       </PaymentTable>
 
