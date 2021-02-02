@@ -17,6 +17,7 @@ import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
+import styled from 'react-emotion'
 
 interface Props {
   payments: NonNullable<Claim['payments']>
@@ -39,6 +40,11 @@ const PaymentTableCell = withStyles({
     fontSize: '1rem',
   },
 })(MuiTableCell)
+
+const TotalCell = styled(MuiTableCell)(({ theme }) => ({
+  backgroundColor: theme.accentThird,
+  fontSize: '1rem',
+}))
 
 const ClaimPayments: React.SFC<Props> = ({
   payments,
@@ -126,22 +132,21 @@ const ClaimPayments: React.SFC<Props> = ({
           {totalAmount > 0 && (
             <>
               <MuiTableRow>
-                <MuiTableCell rowSpan={3} colSpan={5} />
-                <PaymentTableCell colSpan={2}>
+                <TotalCell>
                   <b>Amount Total: </b>
-                </PaymentTableCell>
-                <PaymentTableCell align="right">
+                </TotalCell>
+                <TotalCell align="right">
                   {totalAmount.toFixed(2)}&nbsp;{payments[0]!.amount.currency}
-                </PaymentTableCell>
+                </TotalCell>
               </MuiTableRow>
               <MuiTableRow>
-                <PaymentTableCell colSpan={2}>
+                <TotalCell>
                   <b>Deductible Total: </b>
-                </PaymentTableCell>
-                <PaymentTableCell align="right">
+                </TotalCell>
+                <TotalCell align="right">
                   {totalDeductible.toFixed(2)}&nbsp;
                   {payments[0]!.deductible.currency}
-                </PaymentTableCell>
+                </TotalCell>
               </MuiTableRow>
             </>
           )}
