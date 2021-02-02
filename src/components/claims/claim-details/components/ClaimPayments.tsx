@@ -49,7 +49,7 @@ const ClaimPayments: React.SFC<Props> = ({
   identity,
   market,
 }) => {
-  let total = payments
+  let totalAmount = payments
     .map((payment) => +payment?.amount?.amount)
     .reduce((acc, amount) => acc + amount, 0)
   let totalDeductible = payments
@@ -123,20 +123,20 @@ const ClaimPayments: React.SFC<Props> = ({
               <PaymentTableCell>{payment!.status}</PaymentTableCell>
             </MuiTableRow>
           ))}
-          {total > 0 && (
+          {totalAmount > 0 && (
             <>
               <MuiTableRow>
                 <MuiTableCell rowSpan={3} colSpan={5} />
                 <PaymentTableCell colSpan={2}>
-                  <b>Total: </b>
+                  <b>Amount Total: </b>
                 </PaymentTableCell>
                 <PaymentTableCell align="right">
-                  {total.toFixed(2)}&nbsp;{payments[0]!.amount.currency}
+                  {totalAmount.toFixed(2)}&nbsp;{payments[0]!.amount.currency}
                 </PaymentTableCell>
               </MuiTableRow>
               <MuiTableRow>
                 <PaymentTableCell colSpan={2}>
-                  <b>Total deductible: </b>
+                  <b>Deductible Total: </b>
                 </PaymentTableCell>
                 <PaymentTableCell align="right">
                   {totalDeductible.toFixed(2)}&nbsp;
