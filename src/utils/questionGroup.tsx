@@ -2,15 +2,19 @@ import { QuestionGroup } from 'api/generated/graphql'
 import { FilterState } from 'components/questions/filter'
 import { Market } from 'types/enums'
 import { hasOpenClaim } from 'utils/claim'
-import { isMemberIdEven } from 'utils/member'
 
-export const doTeamFilter = (selectedFilters: ReadonlyArray<FilterState>) => (
-  questionGroup: QuestionGroup,
-): boolean =>
-  (selectedFilters.includes(FilterState.Even) &&
-    isMemberIdEven(questionGroup.memberId)) ||
-  (selectedFilters.includes(FilterState.Odd) &&
-    !isMemberIdEven(questionGroup.memberId))
+export const doTeamFilter = (numberTeamColors: number) => (
+  selectedFilters: ReadonlyArray<FilterState>,
+) => (questionGroup: QuestionGroup): boolean => {
+  return [...Array(numberTeamColors)]
+    .map((_, teamNumber) => {
+      return (
+        selectedFilters.includes(teamNumber) &&
+        +questionGroup.memberId % numberTeamColors === teamNumber
+      )
+    })
+    .reduce((acc, cur) => acc || cur, false)
+}
 
 export const doMarketFilter = (selectedFilters: ReadonlyArray<FilterState>) => (
   questionGroup: QuestionGroup,

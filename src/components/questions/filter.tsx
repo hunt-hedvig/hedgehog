@@ -10,9 +10,15 @@ import {
   doTeamFilter,
 } from 'utils/questionGroup'
 
+export const totalNumberOfColors = 6
+
 export enum FilterState {
-  Even,
-  Odd,
+  Red,
+  Green,
+  Blue,
+  Yellow,
+  Teal,
+  Purple,
   Sweden,
   Norway,
   Denmark,
@@ -61,27 +67,42 @@ const FilterName = styled.label`
   vertical-align: middle;
 `
 
-const TeamBadge = styled.div`
+const TeamBadge = styled.div<{ filter: FilterState }>`
+  background-color:
   display: inline-block;
   width: 1.5em;
   height: 1.5em;
   border-radius: 2px;
   vertical-align: center;
   margin-left: 0.5rem;
+  background-color: ${({ filter }) => getFilterColor(filter)};
 `
 
-const RedTeamBadge = styled(TeamBadge)`
-  background-color: ${({ theme }) => theme.danger};
-`
-const GreenTeamBadge = styled(TeamBadge)`
-  background-color: ${({ theme }) => theme.success};
-`
+export const getFilterColor = (filter: number): string => {
+  switch (filter) {
+    case FilterState.Blue:
+      return 'blue'
+    case FilterState.Green:
+      return 'green'
+    case FilterState.Red:
+      return 'red'
+    case FilterState.Purple:
+      return 'purple'
+    case FilterState.Teal:
+      return 'teal'
+    case FilterState.Yellow:
+      return 'yellow'
+    default:
+      return 'grey'
+  }
+}
 
 export const QuestionsFilter: React.FC<{
   questionGroups: ReadonlyArray<QuestionGroup>
   selected: ReadonlyArray<FilterState>
   onToggle: (filter: FilterState) => void
-}> = ({ selected, onToggle, questionGroups }) => {
+  numberTeamColors: number
+}> = ({ selected, onToggle, questionGroups, numberTeamColors }) => {
   const getCountByFilter = (
     filter: FilterState,
     filterer: (
@@ -93,6 +114,29 @@ export const QuestionsFilter: React.FC<{
 
   return (
     <>
+      <FilterRow>
+        <FilterLabel>Team: </FilterLabel>
+        {[...Array(numberTeamColors)].map((_, filterNumber) => {
+          return (
+            <FilterCheckbox
+              key={filterNumber}
+              label={
+                <FilterName>
+                  {FilterState[filterNumber]} (
+                  {getCountByFilter(
+                    filterNumber,
+                    doTeamFilter(numberTeamColors),
+                  )}
+                  )
+                  <TeamBadge filter={filterNumber} />
+                </FilterName>
+              }
+              checked={selected.includes(filterNumber)}
+              onChange={() => onToggle(filterNumber)}
+            />
+          )
+        })}
+      </FilterRow>
       <FilterRow>
         <FilterLabel>Market: </FilterLabel>
         <FilterCheckbox
@@ -122,29 +166,6 @@ export const QuestionsFilter: React.FC<{
           }
           checked={selected.includes(FilterState.Denmark)}
           onChange={() => onToggle(FilterState.Denmark)}
-        />
-      </FilterRow>
-      <FilterRow>
-        <FilterLabel>Team: </FilterLabel>
-        <FilterCheckbox
-          label={
-            <FilterName>
-              Red team ({getCountByFilter(FilterState.Even, doTeamFilter)})
-              <RedTeamBadge />
-            </FilterName>
-          }
-          checked={selected.includes(FilterState.Even)}
-          onChange={() => onToggle(FilterState.Even)}
-        />
-        <FilterCheckbox
-          label={
-            <FilterName>
-              Green team ({getCountByFilter(FilterState.Odd, doTeamFilter)})
-              <GreenTeamBadge />
-            </FilterName>
-          }
-          checked={selected.includes(FilterState.Odd)}
-          onChange={() => onToggle(FilterState.Odd)}
         />
       </FilterRow>
       <FilterRow>

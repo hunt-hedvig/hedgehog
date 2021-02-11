@@ -1,6 +1,6 @@
 import { ContractMarketInfo } from 'api/generated/graphql'
+import { FilterState, getFilterColor } from 'components/questions/filter'
 import { differenceInYears, parse } from 'date-fns'
-import { lightTheme } from 'hedvig-ui/themes'
 import React from 'react'
 import { Market } from 'types/enums'
 
@@ -21,28 +21,18 @@ export const MemberAge: React.FC<{
   return <>{age} years</>
 }
 
-export const isMemberIdEven = (memberId: string) => {
-  let isMemberIdEvenReally = false
-  try {
-    isMemberIdEvenReally = parseInt(memberId, 10) % 2 === 0
-  } catch (_) {
-    // noop
-  }
-  return isMemberIdEvenReally
+export const getMemberIdColor = (
+  memberId: string,
+  numberTeamColors: number = 2,
+) => {
+  return getFilterColor(+memberId % numberTeamColors)
 }
 
-export const getMemberIdColor = (memberId: string) => {
-  if (isMemberIdEven(memberId)) {
-    return lightTheme.danger
-  }
-  return lightTheme.success
-}
-
-export const getMemberGroup = (memberId: string) => {
-  if (isMemberIdEven(memberId.toString())) {
-    return 'Red team'
-  }
-  return 'Green team'
+export const getMemberGroup = (
+  memberId: string,
+  numberTeamColors: number = 2,
+) => {
+  return `${FilterState[+memberId % numberTeamColors]} team`
 }
 
 export const getMemberFlag = (

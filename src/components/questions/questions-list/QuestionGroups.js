@@ -14,12 +14,12 @@ const ListContainer = styled.div`
   margin: 0;
 `
 
-const QuestionGroups = ({ selectedFilters, questionGroups }) => {
+const QuestionGroups = ({ numberTeamColors, selectedFilters, questionGroups }) => {
   return (
     <ListContainer>
       <FilteredQuestionGroups
         filterQuestionGroups={questionGroups
-          .filter(doTeamFilter(selectedFilters))
+          .filter(doTeamFilter(numberTeamColors)(selectedFilters))
           .filter(doMarketFilter(selectedFilters))
           .filter(doClaimFilter(selectedFilters))}
       />
