@@ -23,15 +23,12 @@ export const MemberAge: React.FC<{
 
 export const getMemberIdColor = (
   memberId: string,
-  numberTeamColors: number = 2,
+  numberTeamColors: number,
 ) => {
   return getFilterColor(+memberId % numberTeamColors)
 }
 
-export const getMemberGroup = (
-  memberId: string,
-  numberTeamColors: number = 2,
-) => {
+export const getMemberGroup = (memberId: string, numberTeamColors: number) => {
   return `${FilterState[+memberId % numberTeamColors]} team`
 }
 

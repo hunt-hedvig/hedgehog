@@ -15,7 +15,8 @@ const QuestionGroupInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 1.5rem;
-  border-left: 7px solid ${({ memberId, numberTeams }) => getMemberIdColor(memberId, numberTeams)};
+  border-left: 7px solid
+    ${({ memberId, numberTeams }) => getMemberIdColor(memberId, numberTeams)};
 `
 
 const StyledPopover = styled(Popover)`
@@ -34,7 +35,10 @@ const QuestionGroupInfo = ({ questionGroup }) => {
   const { numberTeams } = useContext(NumberTeamsContext)
 
   return (
-    <QuestionGroupInfoWrapper memberId={questionGroup.memberId} numberTeams={numberTeams}>
+    <QuestionGroupInfoWrapper
+      memberId={questionGroup.memberId}
+      numberTeams={numberTeams}
+    >
       <MemberInfoWrapper>
         {member && (
           <>

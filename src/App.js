@@ -101,7 +101,9 @@ class App extends React.Component {
                   <Router history={history}>
                     <Layout>
                       <Navigation history={history} store={store} />
-                      <Main dark={history.location.pathname.startsWith('/login')}>
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
                         <Breadcrumbs />
                         <Switch>
                           <Route

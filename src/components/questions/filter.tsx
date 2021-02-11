@@ -11,7 +11,7 @@ import {
   doTeamFilter,
 } from 'utils/questionGroup'
 
-export const totalNumberOfColors = 6
+export const totalNumberOfTeams = 3
 
 export enum FilterState {
   Red,

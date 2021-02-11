@@ -49,7 +49,7 @@ export const ClaimListHeader: React.FC<{
 
   return (
     <Table.Header>
-      <Table.HeaderCell width={1}>Member ID</Table.HeaderCell>
+      <Table.HeaderCell width={4}>Member</Table.HeaderCell>
       <Table.HeaderCell
         width={3}
         sorted={column === ClaimSortColumn.Date ? sortDirection : undefined}

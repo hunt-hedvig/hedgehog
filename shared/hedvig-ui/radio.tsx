@@ -13,7 +13,7 @@ interface RadioGroupProps {
 
 const RadioButtonField = styled(Form.Field)`
   display: inline-block;
-  padding-right: 2rem;
+  padding: 0.5rem 2rem 0 0;
 `
 
 export const RadioGroup: React.FC<RadioGroupProps> = ({

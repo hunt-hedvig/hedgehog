@@ -46,7 +46,8 @@ const Badge = styled('div')`
   padding: 0.5rem 1rem;
   line-height: 1;
   font-size: 1rem;
-  ${({ memberId, numberTeams }) => `background: ${getMemberIdColor(memberId, numberTeams)}`};
+  ${({ memberId, numberTeams }) =>
+    `background: ${getMemberIdColor(memberId, numberTeams)}`};
   border-radius: 8px;
   color: #fff;
   margin-left: auto;

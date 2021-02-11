@@ -1,11 +1,16 @@
 import { changelog } from 'changelog'
+import { NumberTeamsRadioButtons } from 'components/questions/number-teams-radio-buttons'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Badge } from 'hedvig-ui/badge'
 import { CasualList, CasualListItem } from 'hedvig-ui/casual-list'
 import { Spacing } from 'hedvig-ui/spacing'
-import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
+import {
+  MainHeadline,
+  SecondLevelHeadline,
+  ThirdLevelHeadline,
+} from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
@@ -84,6 +89,12 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
           </MetricsWrapper>
         </FadeIn>
       )}
+      <Spacing top>
+        <ThirdLevelHeadline>
+          <strong>Number of teams:</strong>
+        </ThirdLevelHeadline>
+        <NumberTeamsRadioButtons />
+      </Spacing>
       <Spacing top="large">
         <SecondLevelHeadline>Recent changes from Tech</SecondLevelHeadline>
         <Spacing bottom>

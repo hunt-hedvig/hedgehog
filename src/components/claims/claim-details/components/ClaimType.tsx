@@ -1,9 +1,10 @@
 import { Button as MuiButton, MenuItem as MuiMenuItem } from '@material-ui/core'
-import { ClaimType } from 'api/generated/graphql'
+import { ClaimType, Contract } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import { FormikDateTimePicker } from 'hedvig-ui/date-time-picker'
+import { Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
@@ -214,6 +215,7 @@ interface ClaimTypeProps {
   type?: ClaimType | null
   claimId: string
   refetchPage: () => Promise<any>
+  contract?: Contract | null
 }
 
 const SubmitButton = MuiButton
@@ -229,9 +231,14 @@ const handleError = (showNotification: (data: any) => void) => () => {
     headline: '):',
   })
 }
+
+const DangerParagraph = styled(Paragraph)`
+  color: ${({ theme }) => theme.danger};
+`
+
 const ClaimTypeComponent: React.FC<ClaimTypeProps & {
   showNotification: (data: any) => void
-}> = ({ type, claimId, refetchPage, showNotification }) => {
+}> = ({ type, claimId, refetchPage, contract, showNotification }) => {
   const [isSetClaimTypeLoading, setSetClaimTypeLoading] = React.useState(false)
 
   return (
@@ -247,6 +254,9 @@ const ClaimTypeComponent: React.FC<ClaimTypeProps & {
           {(setClaimInformation, setInfoMutation) => (
             <Paper>
               <h3>Type</h3>
+              {!contract && (
+                <DangerParagraph>⚠️ No contract set</DangerParagraph>
+              )}
               <Formik<{ selectedType?: ClaimTypes | '' }>
                 initialValues={{
                   selectedType: (type?.__typename as ClaimTypes) || '',
