@@ -1,3 +1,4 @@
+import { NumberTeamsRadioButtons } from 'components/questions/number-teams-radio-buttons'
 import QuestionGroups from 'components/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
@@ -5,19 +6,11 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { RadioGroup } from 'hedvig-ui/radio'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import React, { useState } from 'react'
+import React from 'react'
 import { useInsecurePersistentState } from 'utils/state'
-import { FilterState, QuestionsFilter, totalNumberOfColors } from './filter'
-
-const teamOptions = [...Array(totalNumberOfColors - 1)].map((_, i) => {
-  return {
-    value: i + 2,
-    label: (i + 2).toString(),
-  }
-})
+import { FilterState, QuestionsFilter } from './filter'
 
 const Questions: React.FC = () => {
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
@@ -33,8 +26,6 @@ const Questions: React.FC = () => {
 
   const [questionGroups, { loading }] = useQuestionGroups()
 
-  const [numberTeamColors, setNumberTeamColors] = useState(2)
-
   if (loading) {
     return <LoadingMessage paddingTop={'25vh'} />
   }
@@ -46,7 +37,6 @@ const Questions: React.FC = () => {
       </StandaloneMessage>
     )
   }
-  console.log(numberTeamColors)
 
   return (
     <>
@@ -54,12 +44,8 @@ const Questions: React.FC = () => {
         <FadeIn>
           <ThirdLevelHeadline>
             <strong>Number of teams:</strong>
+            <NumberTeamsRadioButtons />
           </ThirdLevelHeadline>
-          <RadioGroup
-            value={numberTeamColors}
-            setValue={setNumberTeamColors}
-            options={teamOptions}
-          />
           <QuestionsFilter
             questionGroups={questionGroups}
             selected={selectedFilters}
@@ -72,13 +58,11 @@ const Questions: React.FC = () => {
                 setSelectedFilters([...selectedFilters, newFilter])
               }
             }}
-            numberTeamColors={numberTeamColors}
           />
         </FadeIn>
       </Spacing>
 
       <QuestionGroups
-        numberTeamColors={numberTeamColors}
         selectedFilters={selectedFilters}
         questionGroups={questionGroups}
       />

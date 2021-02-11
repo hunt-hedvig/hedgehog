@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'react-emotion'
 import { FilteredQuestionGroups } from './FilteredQuestionGroups'
 import {
@@ -6,6 +6,7 @@ import {
   doMarketFilter,
   doTeamFilter,
 } from 'utils/questionGroup'
+import { NumberTeamsContext } from 'utils/number-teams-context'
 
 const ListContainer = styled.div`
   display: flex;
@@ -14,12 +15,13 @@ const ListContainer = styled.div`
   margin: 0;
 `
 
-const QuestionGroups = ({ numberTeamColors, selectedFilters, questionGroups }) => {
+const QuestionGroups = ({ selectedFilters, questionGroups }) => {
+  const { numberTeams } = useContext(NumberTeamsContext)
   return (
     <ListContainer>
       <FilteredQuestionGroups
         filterQuestionGroups={questionGroups
-          .filter(doTeamFilter(numberTeamColors)(selectedFilters))
+          .filter(doTeamFilter(numberTeams)(selectedFilters))
           .filter(doMarketFilter(selectedFilters))
           .filter(doClaimFilter(selectedFilters))}
       />

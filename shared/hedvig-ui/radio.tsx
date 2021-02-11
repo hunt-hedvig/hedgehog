@@ -26,9 +26,8 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     <Form>
       {options.map((option) => {
         return (
-          <RadioButtonField>
+          <RadioButtonField key={option.value}>
             <Radio
-              key={option.value}
               label={option.label}
               value={option.value}
               checked={currentValue === option.value}

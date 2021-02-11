@@ -1,9 +1,10 @@
 import { QuestionGroup } from 'api/generated/graphql'
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
+import { NumberTeamsContext } from 'utils/number-teams-context'
 import {
   doClaimFilter,
   doMarketFilter,
@@ -101,8 +102,7 @@ export const QuestionsFilter: React.FC<{
   questionGroups: ReadonlyArray<QuestionGroup>
   selected: ReadonlyArray<FilterState>
   onToggle: (filter: FilterState) => void
-  numberTeamColors: number
-}> = ({ selected, onToggle, questionGroups, numberTeamColors }) => {
+}> = ({ selected, onToggle, questionGroups }) => {
   const getCountByFilter = (
     filter: FilterState,
     filterer: (
@@ -112,21 +112,20 @@ export const QuestionsFilter: React.FC<{
     return questionGroups.filter(filterer([filter])).length
   }
 
+  const { numberTeams } = useContext(NumberTeamsContext)
+
   return (
     <>
       <FilterRow>
         <FilterLabel>Team: </FilterLabel>
-        {[...Array(numberTeamColors)].map((_, filterNumber) => {
+        {[...Array(numberTeams)].map((_, filterNumber) => {
           return (
             <FilterCheckbox
               key={filterNumber}
               label={
                 <FilterName>
                   {FilterState[filterNumber]} (
-                  {getCountByFilter(
-                    filterNumber,
-                    doTeamFilter(numberTeamColors),
-                  )}
+                  {getCountByFilter(filterNumber, doTeamFilter(numberTeams))}
                   )
                   <TeamBadge filter={filterNumber} />
                 </FilterName>

@@ -6,18 +6,20 @@ import isValidDate from 'date-fns/isValid'
 import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import { Badge } from 'hedvig-ui/badge'
 import { Capitalized } from 'hedvig-ui/typography'
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'react-emotion'
 import { Table, TableRowProps } from 'semantic-ui-react'
 import { history } from 'store'
 import { getMemberIdColor } from 'utils/member'
 import { formatMoney } from 'utils/money'
+import { NumberTeamsContext } from 'utils/number-teams-context'
 
-const MemberIdCell = styled(Table.Cell)<{ memberId: string }>(
-  ({ memberId }) => ({
-    borderLeft: `7px solid ${getMemberIdColor(memberId)} !important`,
-  }),
-)
+const MemberIdCell = styled(Table.Cell)<{
+  memberId: string
+  numberTeams: number
+}>(({ memberId, numberTeams }) => ({
+  borderLeft: `7px solid ${getMemberIdColor(memberId, numberTeams)} !important`,
+}))
 
 const FadeInLinkRow = withFadeIn<TableRowProps>(LinkRow)
 
@@ -47,13 +49,17 @@ export const ClaimListItem: React.FC<{
     return null
   }
 
+  const { numberTeams } = useContext(NumberTeamsContext)
+
   return (
     <FadeInLinkRow
       delay={`${index * 50}ms`}
       onClick={() => history.push(`/claims/${claimId}/members/${memberId}`)}
       active={active}
     >
-      <MemberIdCell memberId={memberId}>{memberId}</MemberIdCell>
+      <MemberIdCell memberId={memberId} numberTeams={numberTeams}>
+        {memberId}
+      </MemberIdCell>
       <Table.Cell>{formattedDate}</Table.Cell>
       <Table.Cell>{claimType}</Table.Cell>
       <Table.Cell textAlign={'center'}>
