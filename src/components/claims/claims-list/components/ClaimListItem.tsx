@@ -12,13 +12,16 @@ import { Table, TableRowProps } from 'semantic-ui-react'
 import { history } from 'store'
 import { getMemberIdColor } from 'utils/member'
 import { formatMoney } from 'utils/money'
-import { NumberTeamsContext } from 'utils/number-teams-context'
+import { NumberColorsContext } from 'utils/number-colors-context'
 
 const MemberIdCell = styled(Table.Cell)<{
   memberId: string
-  numberTeams: number
-}>(({ memberId, numberTeams }) => ({
-  borderLeft: `7px solid ${getMemberIdColor(memberId, numberTeams)} !important`,
+  numberColors: number
+}>(({ memberId, numberColors }) => ({
+  borderLeft: `7px solid ${getMemberIdColor(
+    memberId,
+    numberColors,
+  )} !important`,
 }))
 
 const FadeInLinkRow = withFadeIn<TableRowProps>(LinkRow)
@@ -49,7 +52,7 @@ export const ClaimListItem: React.FC<{
     return null
   }
 
-  const { numberTeams } = useContext(NumberTeamsContext)
+  const { numberColors } = useContext(NumberColorsContext)
 
   return (
     <FadeInLinkRow
@@ -57,7 +60,7 @@ export const ClaimListItem: React.FC<{
       onClick={() => history.push(`/claims/${claimId}/members/${memberId}`)}
       active={active}
     >
-      <MemberIdCell memberId={memberId} numberTeams={numberTeams}>
+      <MemberIdCell memberId={memberId} numberColors={numberColors}>
         {item.member?.firstName + ' ' + item.member?.lastName} ({memberId})
       </MemberIdCell>
       <Table.Cell>{formattedDate}</Table.Cell>

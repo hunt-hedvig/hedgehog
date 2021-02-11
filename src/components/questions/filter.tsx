@@ -4,7 +4,7 @@ import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React, { useContext } from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
-import { NumberTeamsContext } from 'utils/number-teams-context'
+import { NumberColorsContext } from 'utils/number-colors-context'
 import {
   doClaimFilter,
   doMarketFilter,
@@ -112,20 +112,20 @@ export const QuestionsFilter: React.FC<{
     return questionGroups.filter(filterer([filter])).length
   }
 
-  const { numberTeams } = useContext(NumberTeamsContext)
+  const { numberColors } = useContext(NumberColorsContext)
 
   return (
     <>
       <FilterRow>
         <FilterLabel>Team: </FilterLabel>
-        {[...Array(numberTeams)].map((_, filterNumber) => {
+        {[...Array(numberColors)].map((_, filterNumber) => {
           return (
             <FilterCheckbox
               key={filterNumber}
               label={
                 <FilterName>
                   {FilterState[filterNumber]} (
-                  {getCountByFilter(filterNumber, doTeamFilter(numberTeams))}
+                  {getCountByFilter(filterNumber, doTeamFilter(numberColors))}
                   )
                   <TeamBadge filter={filterNumber} />
                 </FilterName>

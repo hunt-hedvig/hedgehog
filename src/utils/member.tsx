@@ -29,7 +29,7 @@ export const getMemberIdColor = (
 }
 
 export const getMemberGroup = (memberId: string, numberTeamColors: number) => {
-  return `${FilterState[+memberId % numberTeamColors]} team`
+  return `${FilterState[+memberId % numberTeamColors]}`
 }
 
 export const getMemberFlag = (

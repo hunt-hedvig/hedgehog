@@ -1,7 +1,7 @@
 import { totalNumberOfTeams } from 'components/questions/filter'
 import { RadioGroup } from 'hedvig-ui/radio'
 import React, { useContext } from 'react'
-import { NumberTeamsContext } from 'utils/number-teams-context'
+import { NumberColorsContext } from 'utils/number-colors-context'
 
 const teamOptions = [...Array(totalNumberOfTeams - 1)].map((_, i) => {
   return {
@@ -10,13 +10,13 @@ const teamOptions = [...Array(totalNumberOfTeams - 1)].map((_, i) => {
   }
 })
 
-export const NumberTeamsRadioButtons: React.FC = () => {
-  const { numberTeams, setNumberTeams } = useContext(NumberTeamsContext)
+export const NumberColorsRadioButtons: React.FC = () => {
+  const { numberColors, setNumberColors } = useContext(NumberColorsContext)
 
   return (
     <RadioGroup
-      value={numberTeams}
-      setValue={setNumberTeams}
+      value={numberColors}
+      setValue={setNumberColors}
       options={teamOptions}
     />
   )

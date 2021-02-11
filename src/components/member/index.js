@@ -3,7 +3,7 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
@@ -18,7 +18,7 @@ import { MemberHistoryContext } from 'utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
 import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
-import { NumberTeamsContext } from 'utils/number-teams-context'
+import { NumberColorsContext } from 'utils/number-colors-context'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -46,8 +46,8 @@ const Badge = styled('div')`
   padding: 0.5rem 1rem;
   line-height: 1;
   font-size: 1rem;
-  ${({ memberId, numberTeams }) =>
-    `background: ${getMemberIdColor(memberId, numberTeams)}`};
+  ${({ memberId, numberColors }) =>
+    `background: ${getMemberIdColor(memberId, numberColors)}`};
   border-radius: 8px;
   color: #fff;
   margin-left: auto;
@@ -79,7 +79,7 @@ export const Member = (props) => {
     return null
   }
 
-  const { numberTeams } = useContext(NumberTeamsContext)
+  const { numberColors } = useContext(NumberColorsContext)
 
   return (
     <MemberHistoryContext.Consumer>
@@ -102,8 +102,11 @@ export const Member = (props) => {
                     <Flag>
                       <MemberFlag memberId={member.memberId} />
                     </Flag>
-                    <Badge memberId={member.memberId} numberTeams={numberTeams}>
-                      {getMemberGroup(member.memberId, numberTeams)}
+                    <Badge
+                      memberId={member.memberId}
+                      numberColors={numberColors}
+                    >
+                      {getMemberGroup(member.memberId, numberColors)}
                     </Badge>
                   </>
                 )}

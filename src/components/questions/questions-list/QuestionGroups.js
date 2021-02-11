@@ -6,7 +6,7 @@ import {
   doMarketFilter,
   doTeamFilter,
 } from 'utils/questionGroup'
-import { NumberTeamsContext } from 'utils/number-teams-context'
+import { NumberColorsContext } from 'utils/number-colors-context'
 
 const ListContainer = styled.div`
   display: flex;
@@ -16,12 +16,12 @@ const ListContainer = styled.div`
 `
 
 const QuestionGroups = ({ selectedFilters, questionGroups }) => {
-  const { numberTeams } = useContext(NumberTeamsContext)
+  const { numberColors } = useContext(NumberColorsContext)
   return (
     <ListContainer>
       <FilteredQuestionGroups
         filterQuestionGroups={questionGroups
-          .filter(doTeamFilter(numberTeams)(selectedFilters))
+          .filter(doTeamFilter(numberColors)(selectedFilters))
           .filter(doMarketFilter(selectedFilters))
           .filter(doClaimFilter(selectedFilters))}
       />

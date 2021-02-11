@@ -12,14 +12,14 @@ import { Link } from 'react-router-dom'
 import { Table, TableRowProps } from 'semantic-ui-react'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
 import { getMemberFlag, getMemberIdColor, MemberAge } from 'utils/member'
-import { NumberTeamsContext } from 'utils/number-teams-context'
+import { NumberColorsContext } from 'utils/number-colors-context'
 
 const MemberCell = styled(Table.Cell)<{
   memberId: string
-  numberTeams: number
+  numberColors: number
 }>`
   border-left: 7px solid
-    ${({ memberId, numberTeams }) => getMemberIdColor(memberId, numberTeams)} !important;
+    ${({ memberId, numberColors }) => getMemberIdColor(memberId, numberColors)} !important;
 `
 
 const FadeInTableRow = withFadeIn<TableRowProps>(Table.Row)
@@ -31,11 +31,11 @@ export const ListItem: React.FC<{
 }> = ({ index, member, active }) => {
   const contracts = member.contracts
 
-  const { numberTeams } = useContext(NumberTeamsContext)
+  const { numberColors } = useContext(NumberColorsContext)
 
   return (
     <FadeInTableRow active={active} delay={`${index * 50}ms`}>
-      <MemberCell memberId={member.memberId} numberTeams={numberTeams}>
+      <MemberCell memberId={member.memberId} numberColors={numberColors}>
         {member.memberId ? (
           <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
         ) : (
