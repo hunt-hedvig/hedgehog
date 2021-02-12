@@ -12,12 +12,12 @@ import { format, parseISO } from 'date-fns'
 import React from 'react'
 import { Market } from 'types/enums'
 
+import styled from 'react-emotion'
 import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
-import styled from 'react-emotion'
 
 interface Props {
   payments: NonNullable<Claim['payments']>
@@ -41,10 +41,9 @@ const PaymentTableCell = withStyles({
   },
 })(MuiTableCell)
 
-const TotalCell = styled(MuiTableCell)(({ theme }) => ({
-  backgroundColor: theme.accentThird,
-  fontSize: '1rem',
-}))
+const TotalCell = styled(MuiTableCell)`
+  font-size: 1.1rem;
+`
 
 const ClaimPayments: React.SFC<Props> = ({
   payments,
@@ -55,10 +54,10 @@ const ClaimPayments: React.SFC<Props> = ({
   identity,
   market,
 }) => {
-  let totalAmount = payments
+  const totalAmount = payments
     .map((payment) => +payment?.amount?.amount)
     .reduce((acc, amount) => acc + amount, 0)
-  let totalDeductible = payments
+  const totalDeductible = payments
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
 
@@ -136,7 +135,7 @@ const ClaimPayments: React.SFC<Props> = ({
                   <b>Amount Total: </b>
                 </TotalCell>
                 <TotalCell align="right">
-                  {totalAmount.toFixed(2)}&nbsp;{payments[0]!.amount.currency}
+                  {totalAmount.toFixed(2)} {payments[0]!.amount.currency}
                 </TotalCell>
               </MuiTableRow>
               <MuiTableRow>
@@ -144,7 +143,7 @@ const ClaimPayments: React.SFC<Props> = ({
                   <b>Deductible Total: </b>
                 </TotalCell>
                 <TotalCell align="right">
-                  {totalDeductible.toFixed(2)}&nbsp;
+                  {totalDeductible.toFixed(2)}{' '}
                   {payments[0]!.deductible.currency}
                 </TotalCell>
               </MuiTableRow>

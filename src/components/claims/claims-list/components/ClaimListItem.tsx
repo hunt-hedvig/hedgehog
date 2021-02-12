@@ -17,12 +17,10 @@ import { NumberColorsContext } from 'utils/number-colors-context'
 const MemberIdCell = styled(Table.Cell)<{
   memberId: string
   numberColors: number
-}>(({ memberId, numberColors }) => ({
-  borderLeft: `7px solid ${getMemberIdColor(
-    memberId,
-    numberColors,
-  )} !important`,
-}))
+}>`
+  border-left: 7px solid
+    ${({ memberId, numberColors }) => getMemberIdColor(memberId, numberColors)} !important;
+`
 
 const FadeInLinkRow = withFadeIn<TableRowProps>(LinkRow)
 

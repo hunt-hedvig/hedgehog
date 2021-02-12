@@ -1,5 +1,6 @@
 import { QuestionGroup } from 'api/generated/graphql'
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
+import { lightTheme } from 'hedvig-ui/themes'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React, { useContext } from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
@@ -16,8 +17,8 @@ export const totalNumberOfTeams = 3
 export enum FilterState {
   Red,
   Green,
+  Violet,
   Blue,
-  Yellow,
   Teal,
   Purple,
   Sweden,
@@ -84,15 +85,15 @@ export const getFilterColor = (filter: number): string => {
     case FilterState.Blue:
       return 'blue'
     case FilterState.Green:
-      return 'green'
+      return lightTheme.success
     case FilterState.Red:
-      return 'red'
+      return lightTheme.danger
     case FilterState.Purple:
       return 'purple'
     case FilterState.Teal:
       return 'teal'
-    case FilterState.Yellow:
-      return 'yellow'
+    case FilterState.Violet:
+      return '#BE9BF3'
     default:
       return 'grey'
   }
@@ -117,7 +118,7 @@ export const QuestionsFilter: React.FC<{
   return (
     <>
       <FilterRow>
-        <FilterLabel>Team: </FilterLabel>
+        <FilterLabel>Color: </FilterLabel>
         {[...Array(numberColors)].map((_, filterNumber) => {
           return (
             <FilterCheckbox

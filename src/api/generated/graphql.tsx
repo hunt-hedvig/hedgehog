@@ -2223,7 +2223,10 @@ export type GetMemberClaimsQuery = { __typename?: 'QueryType' } & {
             'id' | 'registrationDate' | 'state' | 'reserves'
           > & {
               member?: Maybe<
-                { __typename?: 'Member' } & Pick<Member, 'memberId'>
+                { __typename?: 'Member' } & Pick<
+                  Member,
+                  'memberId' | 'firstName' | 'lastName'
+                >
               >
               type?: Maybe<
                 | { __typename: 'TheftClaim' }
@@ -4859,6 +4862,8 @@ export const GetMemberClaimsDocument = gql`
         id
         member {
           memberId
+          firstName
+          lastName
         }
         registrationDate
         type {

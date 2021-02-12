@@ -5,6 +5,8 @@ query GetMemberClaims($memberId: ID!) {
       id
       member {
         memberId
+        firstName
+        lastName
       }
       registrationDate
       type {

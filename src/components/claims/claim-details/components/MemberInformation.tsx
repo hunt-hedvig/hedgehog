@@ -7,7 +7,11 @@ import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Market } from 'types/enums'
-import { currentAgreementForContract } from 'utils/contract'
+import {
+  currentAgreementForContract,
+  getFirstMasterInception,
+  getLastTerminationDate,
+} from 'utils/contract'
 import { formatMoney } from 'utils/money'
 
 import {
@@ -21,7 +25,7 @@ import {
 
 import { Paper } from '../../../shared/Paper'
 
-const SanctionStatusIcon: React.SFC<{ status: SanctionStatus }> = ({
+const SanctionStatusIcon: React.FC<{ status: SanctionStatus }> = ({
   status,
 }) => {
   switch (status) {
@@ -48,7 +52,8 @@ const MemberInformation: React.FC<{
   contract: Contract | null
 }> = ({ member, contract }) => {
   const address = contract && currentAgreementForContract(contract)?.address
-
+  const firstMasterInception = getFirstMasterInception(member.contracts)
+  const lastTermination = getLastTerminationDate(member.contracts)
   return (
     <Paper>
       <h3>Member Information</h3>
@@ -88,6 +93,22 @@ const MemberInformation: React.FC<{
             addSuffix: true,
           })}
       </p>
+      <p>
+        <strong>First Master Inception:</strong> {firstMasterInception}
+        {firstMasterInception && (
+          <>({formatDistance(new Date(firstMasterInception), new Date())})</>
+        )}
+        {!firstMasterInception && 'Never been active'})
+      </p>
+      {lastTermination && (
+        <p>
+          <strong>Last Termination Date:</strong> {lastTermination} (
+          {lastTermination &&
+            formatDistance(new Date(lastTermination), new Date(), {
+              addSuffix: true,
+            })}
+        </p>
+      )}
       <p style={{ marginTop: '-7px' }}>
         <strong>Fraudulent Status:</strong>{' '}
         <span style={{ fontSize: '32px' }}>
@@ -110,12 +131,12 @@ const MemberInformation: React.FC<{
       <p>
         <strong>Total Number of Claims:</strong> {member.totalNumberOfClaims}
       </p>
-      <p>
-        <strong>Debt Status:</strong>{' '}
-        {member.person && (
-          <FlagOrbIndicator flag={member.person?.debtFlag} size={'tiny'} />
-        )}
-      </p>
+      {member.person && (
+        <p>
+          <strong>Debt Status:</strong>{' '}
+          <FlagOrbIndicator flag={member.person.debtFlag} size={'tiny'} />
+        </p>
+      )}
     </Paper>
   )
 }

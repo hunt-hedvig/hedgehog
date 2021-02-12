@@ -151,7 +151,11 @@ export const Member = (props) => {
               <Tab
                 style={{ height: '100%' }}
                 panes={panes}
-                onTabChange={(_, { activeIndex }) => history.push(`/members/${memberId}/${panes[activeIndex].tabName}`)}
+                onTabChange={(_, { activeIndex }) =>
+                  history.push(
+                    `/members/${memberId}/${panes[activeIndex].tabName}`,
+                  )
+                }
                 renderActiveOnly={true}
                 activeIndex={panes.map((pane) => pane.tabName).indexOf(tab)}
               />
