@@ -19,6 +19,7 @@ import { Mount } from 'react-lifecycle-components/dist'
 import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { NumberColorsContext } from 'utils/number-colors-context'
+import { history } from 'store'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -71,6 +72,7 @@ const MemberDetailLink = MemberDetail.withComponent('a')
 
 export const Member = (props) => {
   const memberId = props.match.params.memberId
+  const tab = props.match.params.tab ?? 'contracts'
   const [member, { loading }] = useGetMemberInfo(memberId)
   const getMemberPageTitle = (member) =>
     `${member.firstName || ''} ${member.lastName || ''}`
@@ -78,6 +80,8 @@ export const Member = (props) => {
   if (loading) {
     return null
   }
+
+  const panes = memberPagePanes(props, memberId, member)
 
   const { numberColors } = useContext(NumberColorsContext)
 
@@ -146,9 +150,10 @@ export const Member = (props) => {
               </MemberDetails>
               <Tab
                 style={{ height: '100%' }}
-                panes={memberPagePanes(props, memberId, member)}
+                panes={panes}
+                onTabChange={(_, { activeIndex }) => history.push(`/members/${memberId}/${panes[activeIndex].tabName}`)}
                 renderActiveOnly={true}
-                defaultActiveIndex={3}
+                activeIndex={panes.map((pane) => pane.tabName).indexOf(tab)}
               />
             </MemberPageContainer>
             <ChatPane memberId={memberId} />
