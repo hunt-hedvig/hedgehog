@@ -322,6 +322,8 @@ export enum ClaimPaymentStatus {
 export enum ClaimPaymentType {
   Manual = 'Manual',
   Automatic = 'Automatic',
+  IndemnityCost = 'IndemnityCost',
+  Expense = 'Expense',
 }
 
 export enum ClaimSource {

@@ -1181,6 +1181,8 @@ enum ClaimState {
 enum ClaimPaymentType {
   Manual
   Automatic
+  IndemnityCost
+  Expense
 }
 
 enum ChargeStatus {
