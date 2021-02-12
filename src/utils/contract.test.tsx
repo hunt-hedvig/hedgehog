@@ -89,7 +89,7 @@ it('getLastTerminationDate returns null if one contract is active', () => {
     },
   ]
   const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
-  expect(lastTerminationDate).toStrictEqual('2020-03-01')
+  expect(lastTerminationDate).toStrictEqual(null)
 })
 
 it('getLastTerminationDate returns last termination date in time if one contract is terminated', () => {
