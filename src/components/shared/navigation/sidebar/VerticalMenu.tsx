@@ -1,10 +1,11 @@
 import { colorsV3 } from '@hedviginsurance/brand'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   ArrowUpRight,
   BoxArrowLeft,
   ChevronLeft,
   CreditCard,
+  CreditCard2Front,
   House,
   Inbox,
   PersonBoundingBox,
@@ -20,6 +21,20 @@ import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 import { DarkmodeContext } from 'utils/darkmode-context'
+import {
+  A_KEY_CODE,
+  BACKSPACE_KEY_CODE,
+  C_KEY_CODE,
+  D_KEY_CODE,
+  G_KEY_CODE,
+  L_KEY_CODE,
+  OPTION_KEY_CODE,
+  Q_KEY_CODE,
+  S_KEY_CODE,
+  T_KEY_CODE,
+  useKeyPressed,
+  usePressedKey,
+} from 'utils/hooks/key-press-hook'
 import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
@@ -209,6 +224,16 @@ const DarkmodeInnerSwitch = styled('input')({
   visibility: 'hidden',
 })
 
+const routes = {
+  dashborad: '/dashborad',
+  claims: '/claims/list/1',
+  questions: '/questions',
+  search: '/members',
+  trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
+  adyen: 'https://ca-live.adyen.com',
+  gsr: 'https://app.gsr.se/Account/SignIn',
+}
+
 export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   authLogOut: authLogOut_,
   loginState,
@@ -219,6 +244,43 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   )
   const [updateCount, setUpdateCount] = useState(0)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
+  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const pressedKey = usePressedKey()
+
+  useEffect(() => {
+    if (!optionPressed) {
+      return
+    }
+    switch (pressedKey) {
+      case Q_KEY_CODE:
+        history.push(routes.questions)
+        break
+      case S_KEY_CODE:
+        history.push(routes.search)
+        break
+      case D_KEY_CODE:
+        history.push(routes.dashborad)
+        break
+      case C_KEY_CODE:
+        history.push(routes.claims)
+        break
+      case L_KEY_CODE:
+        authLogOut_()
+        break
+      case T_KEY_CODE:
+        window.open(routes.trustly)
+        break
+      case A_KEY_CODE:
+        window.open(routes.adyen)
+        break
+      case G_KEY_CODE:
+        window.open(routes.gsr)
+        break
+      case BACKSPACE_KEY_CODE:
+        history.goBack()
+        break
+    }
+  }, [optionPressed, pressedKey])
 
   const toggleOpen = () => {
     setCollapsed(!isCollapsed)
@@ -253,9 +315,14 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
 
             <Menu>
               <MenuGroup>
-                <MenuItem to="/dashborad">
+                <MenuItem
+                  to="/dashborad"
+                  isActive={(_match, location) =>
+                    location.pathname.startsWith('/dashborad')
+                  }
+                >
                   <House />
-                  <MenuText>Dashborad</MenuText>
+                  <MenuText>Dashborad {optionPressed && '(D)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -266,17 +333,27 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Search />
-                  <MenuText>Member Search</MenuText>
+                  <MenuText>Member Search {optionPressed && '(S)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
-                <MenuItem to="/questions">
+                <MenuItem
+                  to={routes.questions}
+                  isActive={(_match, location) =>
+                    location.pathname.startsWith('/questions')
+                  }
+                >
                   <Inbox />
-                  <MenuText>Questions</MenuText>
+                  <MenuText>Questions {optionPressed && '(Q)'}</MenuText>
                 </MenuItem>
-                <MenuItem to="/claims/list/1">
+                <MenuItem
+                  to={routes.claims}
+                  isActive={(_match, location) =>
+                    location.pathname.startsWith('/claims')
+                  }
+                >
                   <ShieldShaded />
-                  <MenuText>Claims</MenuText>
+                  <MenuText>Claims {optionPressed && '(C)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -287,23 +364,20 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
               </MenuGroup>
 
               <MenuGroup>
-                <MenuItemExternalLink
-                  href="https://backoffice.trustly.com/?Locale=en_GB#/tab_orders"
-                  target="_blank"
-                >
+                <MenuItemExternalLink href={routes.trustly} target="_blank">
+                  <ArrowUpRight />
                   <CreditCard />
-                  <MenuText>
-                    Trustly <ArrowUpRight />
-                  </MenuText>
+                  <MenuText>Trustly {optionPressed && '(T)'}</MenuText>
                 </MenuItemExternalLink>
-                <MenuItemExternalLink
-                  href="https://app.gsr.se/Account/SignIn"
-                  target="_blank"
-                >
+                <MenuItemExternalLink href={routes.adyen} target="_blank">
+                  <ArrowUpRight />
+                  <CreditCard2Front />
+                  <MenuText>Adyen {optionPressed && '(A)'}</MenuText>
+                </MenuItemExternalLink>
+                <MenuItemExternalLink href={routes.gsr} target="_blank">
+                  <ArrowUpRight />
                   <PersonBoundingBox />
-                  <MenuText>
-                    GSR <ArrowUpRight />
-                  </MenuText>
+                  <MenuText>GSR {optionPressed && '(G)'}</MenuText>
                 </MenuItemExternalLink>
               </MenuGroup>
             </Menu>
@@ -326,7 +400,8 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
               >
                 <BoxArrowLeft />
                 <MenuText>
-                  {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Log out'}
+                  {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Logout'}{' '}
+                  {optionPressed && '(L)'}
                 </MenuText>
               </MenuItem>
             </BottomSection>
