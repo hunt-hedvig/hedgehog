@@ -30,6 +30,7 @@ import {
   L_KEY_CODE,
   OPTION_KEY_CODE,
   Q_KEY_CODE,
+  R_KEY_CODE,
   S_KEY_CODE,
   T_KEY_CODE,
   useKeyPressed,
@@ -229,6 +230,7 @@ const routes = {
   claims: '/claims/list/1',
   questions: '/questions',
   search: '/members',
+  tools: '/tools',
   trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
   adyen: 'https://ca-live.adyen.com',
   gsr: 'https://app.gsr.se/Account/SignIn',
@@ -264,10 +266,10 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
       case C_KEY_CODE:
         history.push(routes.claims)
         break
-      case L_KEY_CODE:
-        authLogOut_()
-        break
       case T_KEY_CODE:
+        history.push(routes.tools)
+        break
+      case R_KEY_CODE:
         window.open(routes.trustly)
         break
       case A_KEY_CODE:
@@ -275,6 +277,9 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
         break
       case G_KEY_CODE:
         window.open(routes.gsr)
+        break
+      case L_KEY_CODE:
+        authLogOut_()
         break
       case BACKSPACE_KEY_CODE:
         history.goBack()
@@ -357,9 +362,9 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
-                <MenuItem to="/tools">
+                <MenuItem to={routes.tools}>
                   <Tools />
-                  <MenuText>Tools</MenuText>
+                  <MenuText>Tools {optionPressed && '(T)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
 
@@ -367,7 +372,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <MenuItemExternalLink href={routes.trustly} target="_blank">
                   <ArrowUpRight />
                   <CreditCard />
-                  <MenuText>Trustly {optionPressed && '(T)'}</MenuText>
+                  <MenuText>Trustly {optionPressed && '(R)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
                   <ArrowUpRight />

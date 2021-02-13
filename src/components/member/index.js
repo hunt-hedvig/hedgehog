@@ -3,7 +3,7 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
@@ -20,6 +20,13 @@ import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { NumberColorsContext } from 'utils/number-colors-context'
 import { history } from 'store'
+import {
+  NINE_KEY_CODE,
+  ONE_KEY_CODE,
+  OPTION_KEY_CODE,
+  useKeyPressed,
+  usePressedKey,
+} from 'utils/hooks/key-press-hook'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -71,6 +78,17 @@ const MemberDetail = styled.span`
 const MemberDetailLink = MemberDetail.withComponent('a')
 
 export const Member = (props) => {
+  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const pressedKey = usePressedKey()
+  useEffect(() => {
+    if (!optionPressed) {
+      return
+    }
+    if (ONE_KEY_CODE <= pressedKey && pressedKey <= NINE_KEY_CODE) {
+      const targetTabIndex = pressedKey - ONE_KEY_CODE
+      history.push(`/members/${memberId}/${panes[targetTabIndex].tabName}`)
+    }
+  }, [optionPressed, pressedKey])
   const memberId = props.match.params.memberId
   const tab = props.match.params.tab ?? 'contracts'
   const [member, { loading }] = useGetMemberInfo(memberId)

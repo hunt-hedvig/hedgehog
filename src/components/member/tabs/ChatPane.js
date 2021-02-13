@@ -5,6 +5,12 @@ import Resizable from 're-resizable'
 import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
+import {
+  OPTION_KEY_CODE,
+  useKeyPressed,
+  usePressedKey,
+  W_KEY_CODE,
+} from 'utils/hooks/key-press-hook'
 
 const resizableStyles = {
   display: 'flex',
@@ -38,6 +44,16 @@ const ChatHeaderStyle = styled.div`
 export const ChatPane = ({ memberId }) => {
   const [visible, setVisible] = useState(window.innerWidth > 1000)
   const [manualChange, setManualChange] = useState(false)
+  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const pressedKey = usePressedKey()
+  useEffect(() => {
+    if (!optionPressed) {
+      return
+    }
+    if (pressedKey === W_KEY_CODE) {
+      setVisible(!visible)
+    }
+  }, [optionPressed, pressedKey])
 
   useEffect(() => {
     const resizeControlChat = (e) => {
@@ -61,24 +77,36 @@ export const ChatPane = ({ memberId }) => {
       maxHeight={'85vh'}
       enable={{ left: true }}
     >
-      <ChatHeader visible={visible} onResizeClick={onResizeClick} />
+      <ChatHeader
+        visible={visible}
+        onResizeClick={onResizeClick}
+        optionPressed={optionPressed}
+      />
       <MessagesList memberId={memberId} />
-      <ChatPanel memberId={memberId} />
+      <ChatPanel memberId={memberId} optionPressed={optionPressed} />
     </Resizable>
   ) : (
-    <ChatHeader visible={visible} onResizeClick={onResizeClick} />
+    <ChatHeader
+      visible={visible}
+      onResizeClick={onResizeClick}
+      optionPressed={optionPressed}
+    />
   )
 }
 
 const ChatHeader = (props) => (
   <ChatHeaderStyle state={props.visible}>
     <h4>Chat</h4>
-    <Icon
-      name={props.visible ? 'angle double up' : 'angle double down'}
-      size={'large'}
-      link
-      onClick={props.onResizeClick}
-    />
+    {props.optionPressed && props.visible ? (
+      '(W)'
+    ) : (
+      <Icon
+        name={props.visible ? 'angle double up' : 'angle double down'}
+        size={'large'}
+        link
+        onClick={props.onResizeClick}
+      />
+    )}
   </ChatHeaderStyle>
 )
 

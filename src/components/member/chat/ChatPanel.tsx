@@ -60,7 +60,7 @@ const TextField = withStyles({
   },
 })(MuiTextField)
 
-export const ChatPanel = ({ memberId }) => {
+export const ChatPanel = ({ memberId, optionPressed }) => {
   const [currentMessage, setCurrentMessage] = useState('')
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [error, setError] = useState(false)
@@ -75,6 +75,9 @@ export const ChatPanel = ({ memberId }) => {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (optionPressed) {
+      return
+    }
     if (loading) {
       return
     }
@@ -115,6 +118,7 @@ export const ChatPanel = ({ memberId }) => {
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>
         <TextField
+          autoFocus
           error={error}
           multiline
           rows={4}

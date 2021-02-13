@@ -3,15 +3,23 @@ import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
+import { useEffect } from 'react'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
+import { history } from 'store'
 import { Market } from 'types/enums'
 import {
   currentAgreementForContract,
   getFirstMasterInception,
   getLastTerminationDate,
 } from 'utils/contract'
+import {
+  M_KEY_CODE,
+  OPTION_KEY_CODE,
+  useKeyPressed,
+  usePressedKey,
+} from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
 
 import {
@@ -54,6 +62,16 @@ const MemberInformation: React.FC<{
   const address = contract && currentAgreementForContract(contract)?.address
   const firstMasterInception = getFirstMasterInception(member.contracts)
   const lastTermination = getLastTerminationDate(member.contracts)
+  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const pressedKey = usePressedKey()
+  useEffect(() => {
+    if (!optionPressed) {
+      return
+    }
+    if (pressedKey === M_KEY_CODE) {
+      history.push(`/members/${member.memberId}`)
+    }
+  }, [optionPressed, pressedKey])
   return (
     <Paper>
       <h3>Member Information</h3>
@@ -63,7 +81,8 @@ const MemberInformation: React.FC<{
       </MemberName>
       <p>
         <strong>Id:</strong>{' '}
-        <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
+        <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>{' '}
+        {optionPressed && '(M)'}
       </p>
       {member.contractMarketInfo?.market === Market.Norway && (
         <p>
