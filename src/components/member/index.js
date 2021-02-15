@@ -181,7 +181,7 @@ export const Member = (props) => {
               </MemberDetails>
               <Tab
                 panes={panes}
-                onTabChange={(_, {activeIndex}) =>
+                onTabChange={(_, { activeIndex }) =>
                   history.push(
                     `/members/${memberId}/${panes[activeIndex].tabName}`,
                   )

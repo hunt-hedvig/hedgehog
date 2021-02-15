@@ -14,8 +14,13 @@ export const C_KEY_CODE = 67
 export const M_KEY_CODE = 77
 export const LEFT_KEY_CODE = 37
 export const RIGHT_KEY_CODE = 39
+export const ONE_KEY_CODE = 49
+export const NINE_KEY_CODE = 57
 export const BACKSPACE_KEY_CODE = 8
 export const ENTER_KEY_CODE = 13
+
+export const isAllowedOptionKeyCode = (keyCode: number | null) =>
+  keyCode == null || (keyCode >= ONE_KEY_CODE && keyCode <= NINE_KEY_CODE)
 
 export const useKeyPressed = (keyCode: number): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)

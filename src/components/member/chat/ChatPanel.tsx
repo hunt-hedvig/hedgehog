@@ -9,6 +9,10 @@ import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
+import {
+  isAllowedOptionKeyCode,
+  usePressedKey,
+} from 'utils/hooks/key-press-hook'
 import { EmojiPicker } from './EmojiPicker'
 
 const MessagesPanelContainer = styled('div')(({ theme }) => ({
@@ -65,6 +69,7 @@ export const ChatPanel = ({ memberId, optionPressed }) => {
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [error, setError] = useState(false)
   const [sendMessage, { loading }] = useSendMessage()
+  const pressedKey = usePressedKey()
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLDivElement>) => {
     return (
@@ -75,7 +80,7 @@ export const ChatPanel = ({ memberId, optionPressed }) => {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (optionPressed) {
+    if (optionPressed && !isAllowedOptionKeyCode(pressedKey)) {
       return
     }
     if (loading) {
