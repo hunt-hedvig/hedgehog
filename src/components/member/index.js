@@ -3,7 +3,7 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
@@ -21,9 +21,9 @@ import { ChatPane } from 'components/member/tabs/ChatPane'
 import { NumberColorsContext } from 'utils/number-colors-context'
 import { history } from 'store'
 import {
-  NINE_KEY_CODE,
-  ONE_KEY_CODE,
+  LEFT_KEY_CODE,
   OPTION_KEY_CODE,
+  RIGHT_KEY_CODE,
   useKeyPressed,
   usePressedKey,
 } from 'utils/hooks/key-press-hook'
@@ -77,31 +77,44 @@ const MemberDetail = styled.span`
 `
 const MemberDetailLink = MemberDetail.withComponent('a')
 
+const getIndex = (tab, panes) => panes.map((pane) => pane.tabName).indexOf(tab)
+
 export const Member = (props) => {
+  const memberId = props.match.params.memberId
+  const tab = props.match.params.tab ?? 'contracts'
   const optionPressed = useKeyPressed(OPTION_KEY_CODE)
   const pressedKey = usePressedKey()
+  const [member, { loading }] = useGetMemberInfo(memberId)
+  const panes = memberPagePanes(props, memberId, member)
+  const numberPanes = panes.length
+  const getMemberPageTitle = (member) =>
+    `${member.firstName || ''} ${member.lastName || ''}`
+
+  const [activeIndex, setActiveIndex] = useState(getIndex(tab, panes))
+  useEffect(() => {
+    setActiveIndex(getIndex(tab, panes))
+  }, [tab])
   useEffect(() => {
     if (!optionPressed) {
       return
     }
-    if (ONE_KEY_CODE <= pressedKey && pressedKey <= NINE_KEY_CODE) {
-      const targetTabIndex = pressedKey - ONE_KEY_CODE
-      history.push(`/members/${memberId}/${panes[targetTabIndex].tabName}`)
+    switch (pressedKey) {
+      case LEFT_KEY_CODE:
+        const targetIndexLeft = (activeIndex - 1 + numberPanes) % numberPanes
+        history.push(`/members/${memberId}/${panes[targetIndexLeft].tabName}`)
+        break
+      case RIGHT_KEY_CODE:
+        const targetIndexRight = (activeIndex + 1) % numberPanes
+        history.push(`/members/${memberId}/${panes[targetIndexRight].tabName}`)
+        break
     }
   }, [optionPressed, pressedKey])
-  const memberId = props.match.params.memberId
-  const tab = props.match.params.tab ?? 'contracts'
-  const [member, { loading }] = useGetMemberInfo(memberId)
-  const getMemberPageTitle = (member) =>
-    `${member.firstName || ''} ${member.lastName || ''}`
+
+  const { numberColors } = useContext(NumberColorsContext)
 
   if (loading) {
     return null
   }
-
-  const panes = memberPagePanes(props, memberId, member)
-
-  const { numberColors } = useContext(NumberColorsContext)
 
   return (
     <MemberHistoryContext.Consumer>
@@ -167,15 +180,14 @@ export const Member = (props) => {
                 </Popover>
               </MemberDetails>
               <Tab
-                style={{ height: '100%' }}
                 panes={panes}
-                onTabChange={(_, { activeIndex }) =>
+                onTabChange={(_, {activeIndex}) =>
                   history.push(
                     `/members/${memberId}/${panes[activeIndex].tabName}`,
                   )
                 }
                 renderActiveOnly={true}
-                activeIndex={panes.map((pane) => pane.tabName).indexOf(tab)}
+                activeIndex={activeIndex}
               />
             </MemberPageContainer>
             <ChatPane memberId={memberId} />

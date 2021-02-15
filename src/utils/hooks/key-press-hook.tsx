@@ -12,15 +12,8 @@ export const G_KEY_CODE = 71
 export const L_KEY_CODE = 76
 export const C_KEY_CODE = 67
 export const M_KEY_CODE = 77
-export const ONE_KEY_CODE = 49
-export const TWO_KEY_CODE = 50
-export const THREE_KEY_CODE = 51
-export const FOUR_KEY_CODE = 52
-export const FIVE_KEY_CODE = 53
-export const SIX_KEY_CODE = 54
-export const SEVEN_KEY_CODE = 55
-export const EIGHT_KEY_CODE = 56
-export const NINE_KEY_CODE = 57
+export const LEFT_KEY_CODE = 37
+export const RIGHT_KEY_CODE = 39
 export const BACKSPACE_KEY_CODE = 8
 export const ENTER_KEY_CODE = 13
 
