@@ -18,7 +18,6 @@ const CommandLineWindow = styled.div`
   -webkit-box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
   border-radius: 0.3em;
-  height: 400px;
 `
 
 const CharacterBadge: React.FC<{ content: string }> = ({ content }) => {
@@ -85,9 +84,12 @@ const CommandLineComponent: React.FC<{}> = ({}) => {
   }, [isUpPressed, isDownPressed])
 
   const mockData = [
-    { label: 'Help a bro', characters: ['⌥', 'B'] },
+    { label: 'Help a bro', characters: ['⌥', 'H'] },
     { label: 'Call a bro', characters: ['⌥', 'C'] },
     { label: 'Arrest a bro', characters: ['⌥', 'A'] },
+    { label: 'Call a bro', characters: ['⌥', 'B'] },
+    { label: 'Fire a bro', characters: ['⌥', 'F'] },
+    { label: 'Promote a bro', characters: ['⌥', 'P'] },
   ]
 
   return (
@@ -116,16 +118,20 @@ const CommandLineComponent: React.FC<{}> = ({}) => {
           style={{ width: '60vh', padding: '1em 1em' }}
         />
       </div>
-      {value !== '' &&
-        mockData.map(({ label, characters }, index) => (
-          <FadeIn delay={`${index * 50}ms`}>
-            <ResultItem
-              label={label}
-              characters={characters}
-              selected={index === selectedItem}
-            />
-          </FadeIn>
-        ))}
+      <div
+        style={{ height: '200px', overflowX: 'hidden', overflowY: 'scroll' }}
+      >
+        {value !== '' &&
+          mockData.map(({ label, characters }, index) => (
+            <FadeIn delay={`${index * 50}ms`}>
+              <ResultItem
+                label={label}
+                characters={characters}
+                selected={index === selectedItem}
+              />
+            </FadeIn>
+          ))}
+      </div>
     </CommandLineWindow>
   )
 }
