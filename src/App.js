@@ -23,6 +23,7 @@ import {
 } from 'hedvig-ui/themes'
 import { MemberHistoryProvider } from 'utils/member-history'
 import { NumberColorsProvider } from 'utils/number-colors-context'
+import { CommandLineProvider } from 'utils/hooks/command-line-hook'
 
 const store = Store.configureStore()
 
@@ -95,64 +96,66 @@ class App extends React.Component {
         >
           <CssBaseline />
           <ThemeProvider theme={this.state.isDarkmode ? darkTheme : lightTheme}>
-            <Provider store={store}>
-              <MemberHistoryProvider>
-                <NumberColorsProvider>
-                  <Router history={history}>
-                    <Layout>
-                      <Navigation history={history} store={store} />
-                      <Main
-                        dark={history.location.pathname.startsWith('/login')}
-                      >
-                        <Breadcrumbs />
-                        <Switch>
-                          <Route
-                            path="/login"
-                            exact
-                            component={Routes.LoginPageRoute}
-                          />
-                          <Routes.PrivateRoute
-                            path="/dashborad"
-                            store={store}
-                            component={Routes.DashboardPageRoute}
-                          />
-                          <Routes.PrivateRoute
-                            path="/questions"
-                            store={store}
-                            component={Routes.QuestionsPageRoute}
-                          />
-                          <Route
-                            path="/claims"
-                            render={(routeProps) => (
-                              <Routes.ClaimsPageRoute
-                                {...routeProps}
-                                store={store}
-                              />
-                            )}
-                          />
-                          <Route
-                            path="/members"
-                            render={(routeProps) => (
-                              <Routes.MembersPageRoute
-                                {...routeProps}
-                                store={store}
-                              />
-                            )}
-                          />
-                          <Routes.PrivateRoute
-                            path="/tools"
-                            store={store}
-                            component={Routes.ToolsPageRoute}
-                          />
-                          <Redirect from="*" to="/dashborad" />
-                        </Switch>
-                        <Notifications />
-                      </Main>
-                    </Layout>
-                  </Router>
-                </NumberColorsProvider>
-              </MemberHistoryProvider>
-            </Provider>
+            <CommandLineProvider>
+              <Provider store={store}>
+                <MemberHistoryProvider>
+                  <NumberColorsProvider>
+                    <Router history={history}>
+                      <Layout>
+                        <Navigation history={history} store={store} />
+                        <Main
+                          dark={history.location.pathname.startsWith('/login')}
+                        >
+                          <Breadcrumbs />
+                          <Switch>
+                            <Route
+                              path="/login"
+                              exact
+                              component={Routes.LoginPageRoute}
+                            />
+                            <Routes.PrivateRoute
+                              path="/dashborad"
+                              store={store}
+                              component={Routes.DashboardPageRoute}
+                            />
+                            <Routes.PrivateRoute
+                              path="/questions"
+                              store={store}
+                              component={Routes.QuestionsPageRoute}
+                            />
+                            <Route
+                              path="/claims"
+                              render={(routeProps) => (
+                                <Routes.ClaimsPageRoute
+                                  {...routeProps}
+                                  store={store}
+                                />
+                              )}
+                            />
+                            <Route
+                              path="/members"
+                              render={(routeProps) => (
+                                <Routes.MembersPageRoute
+                                  {...routeProps}
+                                  store={store}
+                                />
+                              )}
+                            />
+                            <Routes.PrivateRoute
+                              path="/tools"
+                              store={store}
+                              component={Routes.ToolsPageRoute}
+                            />
+                            <Redirect from="*" to="/dashborad" />
+                          </Switch>
+                          <Notifications />
+                        </Main>
+                      </Layout>
+                    </Router>
+                  </NumberColorsProvider>
+                </MemberHistoryProvider>
+              </Provider>
+            </CommandLineProvider>
           </ThemeProvider>
         </MuiThemeProvider>
       </DarkmodeContext.Provider>
