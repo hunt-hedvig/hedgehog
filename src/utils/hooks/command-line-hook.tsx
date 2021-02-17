@@ -1,9 +1,10 @@
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Input } from 'hedvig-ui/input'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
+import { KeyCode, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 export const CommandLineContext = React.createContext({})
 
@@ -48,7 +49,8 @@ const ResultItem: React.FC<{
   return (
     <div
       style={{
-        padding: '1.0em 2.5em',
+        padding: '1.0em 3.5em',
+        paddingRight: '1.0em',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -67,12 +69,27 @@ const ResultItem: React.FC<{
 
 const CommandLineComponent: React.FC<{}> = ({}) => {
   const [value, setValue] = React.useState('')
+  const [selectedItem, setSelectedItem] = React.useState(0)
+
+  const isUpPressed = useKeyIsPressed(KeyCode.Up)
+  const isDownPressed = useKeyIsPressed(KeyCode.Down)
+
+  React.useEffect(() => {
+    if (isUpPressed && selectedItem > 0) {
+      setSelectedItem(selectedItem - 1)
+    }
+
+    if (isDownPressed && selectedItem < mockData.length - 1) {
+      setSelectedItem(selectedItem + 1)
+    }
+  }, [isUpPressed, isDownPressed])
 
   const mockData = [
     { label: 'Help a bro', characters: ['⌥', 'B'] },
     { label: 'Call a bro', characters: ['⌥', 'C'] },
     { label: 'Arrest a bro', characters: ['⌥', 'A'] },
   ]
+
   return (
     <CommandLineWindow>
       <div
@@ -82,8 +99,15 @@ const CommandLineComponent: React.FC<{}> = ({}) => {
         }}
       >
         <Input
+          autoFocus
           value={value}
-          onChange={({ target }) => setValue(target.value)}
+          onChange={({ target }) => {
+            if (target.value === ' ' || target.value === ' ') {
+              return
+            }
+
+            setValue(target.value)
+          }}
           icon={<Icon name="search" style={{ marginLeft: '1em' }} />}
           iconPosition="left"
           placeholder="What can I help you with?"
@@ -92,24 +116,36 @@ const CommandLineComponent: React.FC<{}> = ({}) => {
           style={{ width: '60vh', padding: '1em 1em' }}
         />
       </div>
-      <div>
-        {value !== '' &&
-          mockData.map(({ label, characters }, index) => (
-            <FadeIn delay={`${index * 50}ms`}>
-              <ResultItem
-                label={label}
-                characters={characters}
-                selected={index === 0}
-              />
-            </FadeIn>
-          ))}
-      </div>
+      {value !== '' &&
+        mockData.map(({ label, characters }, index) => (
+          <FadeIn delay={`${index * 50}ms`}>
+            <ResultItem
+              label={label}
+              characters={characters}
+              selected={index === selectedItem}
+            />
+          </FadeIn>
+        ))}
     </CommandLineWindow>
   )
 }
 
 export const CommandLineProvider: React.FC = ({ children }) => {
-  const [showCommandLine, setShowCommandLine] = React.useState(true)
+  const [showCommandLine, setShowCommandLine] = React.useState(false)
+
+  const isOptionPressed = useKeyIsPressed(KeyCode.Option)
+  const isSpacePressed = useKeyIsPressed(KeyCode.Space)
+  const isEscapePressed = useKeyIsPressed(KeyCode.Escape)
+
+  React.useEffect(() => {
+    if (isOptionPressed && isSpacePressed) {
+      setShowCommandLine(true)
+    }
+  }, [isOptionPressed, isSpacePressed])
+
+  React.useEffect(() => {
+    setShowCommandLine(false)
+  }, [isEscapePressed])
 
   return (
     <CommandLineContext.Provider value={{}}>
