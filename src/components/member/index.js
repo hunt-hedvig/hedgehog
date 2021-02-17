@@ -21,10 +21,8 @@ import { ChatPane } from 'components/member/tabs/ChatPane'
 import { NumberColorsContext } from 'utils/number-colors-context'
 import { history } from 'store'
 import {
-  LEFT_KEY_CODE,
-  OPTION_KEY_CODE,
-  RIGHT_KEY_CODE,
-  useKeyPressed,
+  KeyCode,
+  useKeyIsPressed,
   usePressedKey,
 } from 'utils/hooks/key-press-hook'
 
@@ -82,7 +80,7 @@ const getIndex = (tab, panes) => panes.map((pane) => pane.tabName).indexOf(tab)
 export const Member = (props) => {
   const memberId = props.match.params.memberId
   const tab = props.match.params.tab ?? 'contracts'
-  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
   const pressedKey = usePressedKey()
   const [member, { loading }] = useGetMemberInfo(memberId)
   const panes = memberPagePanes(props, memberId, member)
@@ -95,20 +93,20 @@ export const Member = (props) => {
     setActiveIndex(getIndex(tab, panes))
   }, [tab])
   useEffect(() => {
-    if (!optionPressed) {
+    if (!optionIsPressed) {
       return
     }
     switch (pressedKey) {
-      case LEFT_KEY_CODE:
+      case KeyCode.Left:
         const targetIndexLeft = (activeIndex - 1 + numberPanes) % numberPanes
         history.push(`/members/${memberId}/${panes[targetIndexLeft].tabName}`)
         break
-      case RIGHT_KEY_CODE:
+      case KeyCode.Right:
         const targetIndexRight = (activeIndex + 1) % numberPanes
         history.push(`/members/${memberId}/${panes[targetIndexRight].tabName}`)
         break
     }
-  }, [optionPressed, pressedKey])
+  }, [optionIsPressed, pressedKey])
 
   const { numberColors } = useContext(NumberColorsContext)
 

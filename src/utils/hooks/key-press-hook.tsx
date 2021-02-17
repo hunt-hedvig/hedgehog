@@ -1,28 +1,30 @@
 import { useEffect, useState } from 'react'
 
-export const OPTION_KEY_CODE = 18
-export const Q_KEY_CODE = 81
-export const W_KEY_CODE = 87
-export const R_KEY_CODE = 82
-export const T_KEY_CODE = 84
-export const A_KEY_CODE = 65
-export const S_KEY_CODE = 83
-export const D_KEY_CODE = 68
-export const G_KEY_CODE = 71
-export const L_KEY_CODE = 76
-export const C_KEY_CODE = 67
-export const M_KEY_CODE = 77
-export const LEFT_KEY_CODE = 37
-export const RIGHT_KEY_CODE = 39
-export const ONE_KEY_CODE = 49
-export const NINE_KEY_CODE = 57
-export const BACKSPACE_KEY_CODE = 8
-export const ENTER_KEY_CODE = 13
+export const KeyCode = {
+  Option: 18,
+  Q: 81,
+  W: 87,
+  R: 82,
+  T: 84,
+  A: 65,
+  S: 83,
+  D: 68,
+  G: 71,
+  L: 76,
+  C: 67,
+  M: 77,
+  Left: 37,
+  Right: 39,
+  One: 49,
+  Nine: 57,
+  Backspace: 8,
+  Enter: 13,
+}
 
 export const isAllowedOptionKeyCode = (keyCode: number | null) =>
-  keyCode == null || (keyCode >= ONE_KEY_CODE && keyCode <= NINE_KEY_CODE)
+  keyCode == null || (keyCode >= KeyCode.One && keyCode <= KeyCode.Nine)
 
-export const useKeyPressed = (keyCode: number): boolean => {
+export const useKeyIsPressed = (keyCode: number): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
   const handleKeydown = (e) => {

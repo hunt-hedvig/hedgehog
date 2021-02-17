@@ -15,9 +15,8 @@ import {
   getLastTerminationDate,
 } from 'utils/contract'
 import {
-  M_KEY_CODE,
-  OPTION_KEY_CODE,
-  useKeyPressed,
+  KeyCode,
+  useKeyIsPressed,
   usePressedKey,
 } from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
@@ -62,16 +61,16 @@ const MemberInformation: React.FC<{
   const address = contract && currentAgreementForContract(contract)?.address
   const firstMasterInception = getFirstMasterInception(member.contracts)
   const lastTermination = getLastTerminationDate(member.contracts)
-  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
   const pressedKey = usePressedKey()
   useEffect(() => {
-    if (!optionPressed) {
+    if (!optionIsPressed) {
       return
     }
-    if (pressedKey === M_KEY_CODE) {
+    if (pressedKey === KeyCode.M) {
       history.push(`/members/${member.memberId}`)
     }
-  }, [optionPressed, pressedKey])
+  }, [optionIsPressed, pressedKey])
   return (
     <Paper>
       <h3>Member Information</h3>
@@ -82,7 +81,7 @@ const MemberInformation: React.FC<{
       <p>
         <strong>Id:</strong>{' '}
         <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>{' '}
-        {optionPressed && '(M)'}
+        {optionIsPressed && '(M)'}
       </p>
       {member.contractMarketInfo?.market === Market.Norway && (
         <p>

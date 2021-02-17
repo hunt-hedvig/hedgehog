@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'react-emotion'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -23,9 +23,11 @@ const Breadcrumbs: React.FC = () => {
     history.location.pathname,
   )
 
-  history.listen((location) => {
-    setPathname(location.pathname)
-  })
+  useEffect(() => {
+    history.listen((location) => {
+      setPathname(location.pathname)
+    })
+  }, [])
 
   if (pathname.startsWith('/login')) {
     return null

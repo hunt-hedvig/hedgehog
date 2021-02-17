@@ -10,8 +10,8 @@ import { Checkbox } from 'hedvig-ui/checkbox'
 import React from 'react'
 import {
   isAllowedOptionKeyCode,
-  OPTION_KEY_CODE,
-  useKeyPressed,
+  KeyCode,
+  useKeyIsPressed,
   usePressedKey,
 } from 'utils/hooks/key-press-hook'
 
@@ -39,7 +39,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
   searchFieldRef,
 }) => {
   const pressedKey = usePressedKey()
-  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
   return (
     <form
       onSubmit={(e) => {
@@ -53,7 +53,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
           <SearchIcon muted={!query} />
           <SearchInput
             onChange={(_, { value }) => {
-              if (optionPressed && !isAllowedOptionKeyCode(pressedKey)) {
+              if (optionIsPressed && !isAllowedOptionKeyCode(pressedKey)) {
                 return
               }
               setQuery(value)

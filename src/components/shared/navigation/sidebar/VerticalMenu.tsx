@@ -1,7 +1,9 @@
 import { colorsV3 } from '@hedviginsurance/brand'
+import { Spacing } from 'hedvig-ui/spacing'
 import React, { useContext, useEffect, useState } from 'react'
 import {
   ArrowUpRight,
+  Backspace,
   BoxArrowLeft,
   ChevronLeft,
   CreditCard,
@@ -22,18 +24,8 @@ import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 import { DarkmodeContext } from 'utils/darkmode-context'
 import {
-  A_KEY_CODE,
-  BACKSPACE_KEY_CODE,
-  C_KEY_CODE,
-  D_KEY_CODE,
-  G_KEY_CODE,
-  L_KEY_CODE,
-  OPTION_KEY_CODE,
-  Q_KEY_CODE,
-  R_KEY_CODE,
-  S_KEY_CODE,
-  T_KEY_CODE,
-  useKeyPressed,
+  KeyCode,
+  useKeyIsPressed,
   usePressedKey,
 } from 'utils/hooks/key-press-hook'
 import { Logo, LogoIcon } from './elements'
@@ -236,6 +228,12 @@ const routes = {
   gsr: 'https://app.gsr.se/Account/SignIn',
 }
 
+interface LatestClaim {
+  memberId: string
+  claimId: string
+  location: string
+}
+
 export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   authLogOut: authLogOut_,
   loginState,
@@ -244,48 +242,87 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   const [isCollapsed, setCollapsed] = useState(
     () => localStorage.getItem('hedvig:menu:collapse') === 'true',
   )
-  const [updateCount, setUpdateCount] = useState(0)
+  const [currentLocation, setCurrentLocation] = useState<string>(
+    history.location.pathname,
+  )
+  const [locations, setLocations] = useState<string[]>([])
+  const [latestClaim, setLatestClaim] = useState<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
-  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
   const pressedKey = usePressedKey()
 
+  React.useEffect(() => {
+    history.listen((location) => {
+      setCurrentLocation(location.pathname)
+    })
+  }, [])
+
+  React.useEffect(() => {
+    const newLocations = [...locations]
+    newLocations.push(currentLocation)
+    if (newLocations.length > 10) {
+      newLocations.shift()
+    }
+    setLocations(newLocations)
+  }, [currentLocation])
+
+  React.useEffect(() => {
+    const CLAIM_REGEX = /\/claims\/([\-A-Za-z0-9]+)\/members\/(\d+)/
+    const targetLocation = locations.reverse().find((location) => {
+      const exists = CLAIM_REGEX.exec(location)
+      return exists != null
+    })
+    if (!targetLocation) {
+      return
+    }
+    const regexMatch = CLAIM_REGEX.exec(targetLocation)
+    setLatestClaim({
+      memberId: regexMatch![2],
+      claimId: regexMatch![1],
+      location: targetLocation,
+    })
+  }, [locations])
+
   useEffect(() => {
-    if (!optionPressed) {
+    if (!optionIsPressed) {
       return
     }
     switch (pressedKey) {
-      case Q_KEY_CODE:
+      case KeyCode.Q:
         history.push(routes.questions)
         break
-      case S_KEY_CODE:
+      case KeyCode.S:
         history.push(routes.search)
         break
-      case D_KEY_CODE:
+      case KeyCode.D:
         history.push(routes.dashborad)
         break
-      case C_KEY_CODE:
+      case KeyCode.C:
         history.push(routes.claims)
         break
-      case T_KEY_CODE:
+      case KeyCode.T:
         history.push(routes.tools)
         break
-      case R_KEY_CODE:
+      case KeyCode.R:
         window.open(routes.trustly)
         break
-      case A_KEY_CODE:
+      case KeyCode.A:
         window.open(routes.adyen)
         break
-      case G_KEY_CODE:
+      case KeyCode.G:
         window.open(routes.gsr)
         break
-      case L_KEY_CODE:
+      case KeyCode.L:
         authLogOut_()
         break
-      case BACKSPACE_KEY_CODE:
-        history.goBack()
+      case KeyCode.Backspace:
+        if (!latestClaim) {
+          return
+        }
+        history.push(latestClaim.location)
         break
     }
-  }, [optionPressed, pressedKey])
+  }, [optionIsPressed, pressedKey])
 
   const toggleOpen = () => {
     setCollapsed(!isCollapsed)
@@ -294,12 +331,6 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   const toggleDarkmode = () => {
     setIsDarkmode(!isDarkmode)
   }
-
-  React.useEffect(() => {
-    history.listen(() => {
-      setUpdateCount(updateCount + 1)
-    })
-  }, [])
 
   return (
     <MediaQuery query="(max-width: 1300px)">
@@ -327,7 +358,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <House />
-                  <MenuText>Dashborad {optionPressed && '(D)'}</MenuText>
+                  <MenuText>Dashborad {optionIsPressed && '(D)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -338,7 +369,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Search />
-                  <MenuText>Member Search {optionPressed && '(S)'}</MenuText>
+                  <MenuText>Member Search {optionIsPressed && '(S)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -349,7 +380,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Inbox />
-                  <MenuText>Questions {optionPressed && '(Q)'}</MenuText>
+                  <MenuText>Questions {optionIsPressed && '(Q)'}</MenuText>
                 </MenuItem>
                 <MenuItem
                   to={routes.claims}
@@ -358,13 +389,19 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <ShieldShaded />
-                  <MenuText>Claims {optionPressed && '(C)'}</MenuText>
+                  {isCollapsed && <MenuText>Claims</MenuText>}
+                  {!isCollapsed && (
+                    <Spacing right inline>
+                      <MenuText>Claims {optionIsPressed && '(C)'}</MenuText>
+                    </Spacing>
+                  )}
+                  {optionIsPressed && latestClaim && <Backspace />}
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
                 <MenuItem to={routes.tools}>
                   <Tools />
-                  <MenuText>Tools {optionPressed && '(T)'}</MenuText>
+                  <MenuText>Tools {optionIsPressed && '(T)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
 
@@ -372,17 +409,17 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <MenuItemExternalLink href={routes.trustly} target="_blank">
                   <ArrowUpRight />
                   <CreditCard />
-                  <MenuText>Trustly {optionPressed && '(R)'}</MenuText>
+                  <MenuText>Trustly {optionIsPressed && '(R)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
                   <ArrowUpRight />
                   <CreditCard2Front />
-                  <MenuText>Adyen {optionPressed && '(A)'}</MenuText>
+                  <MenuText>Adyen {optionIsPressed && '(A)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.gsr} target="_blank">
                   <ArrowUpRight />
                   <PersonBoundingBox />
-                  <MenuText>GSR {optionPressed && '(G)'}</MenuText>
+                  <MenuText>GSR {optionIsPressed && '(G)'}</MenuText>
                 </MenuItemExternalLink>
               </MenuGroup>
             </Menu>
@@ -406,7 +443,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <BoxArrowLeft />
                 <MenuText>
                   {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Logout'}{' '}
-                  {optionPressed && '(L)'}
+                  {optionIsPressed && '(L)'}
                 </MenuText>
               </MenuItem>
             </BottomSection>

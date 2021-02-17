@@ -6,10 +6,9 @@ import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 import {
-  OPTION_KEY_CODE,
-  useKeyPressed,
+  KeyCode,
+  useKeyIsPressed,
   usePressedKey,
-  W_KEY_CODE,
 } from 'utils/hooks/key-press-hook'
 
 const resizableStyles = {
@@ -44,16 +43,16 @@ const ChatHeaderStyle = styled.div`
 export const ChatPane = ({ memberId }) => {
   const [visible, setVisible] = useState(window.innerWidth > 1000)
   const [manualChange, setManualChange] = useState(false)
-  const optionPressed = useKeyPressed(OPTION_KEY_CODE)
+  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
   const pressedKey = usePressedKey()
   useEffect(() => {
-    if (!optionPressed) {
+    if (!optionIsPressed) {
       return
     }
-    if (pressedKey === W_KEY_CODE) {
+    if (pressedKey === KeyCode.W) {
       setVisible(!visible)
     }
-  }, [optionPressed, pressedKey])
+  }, [optionIsPressed, pressedKey])
 
   useEffect(() => {
     const resizeControlChat = (e) => {
@@ -80,16 +79,16 @@ export const ChatPane = ({ memberId }) => {
       <ChatHeader
         visible={visible}
         onResizeClick={onResizeClick}
-        optionPressed={optionPressed}
+        optionPressed={optionIsPressed}
       />
       <MessagesList memberId={memberId} />
-      <ChatPanel memberId={memberId} optionPressed={optionPressed} />
+      <ChatPanel memberId={memberId} optionPressed={optionIsPressed} />
     </Resizable>
   ) : (
     <ChatHeader
       visible={visible}
       onResizeClick={onResizeClick}
-      optionPressed={optionPressed}
+      optionPressed={optionIsPressed}
     />
   )
 }
