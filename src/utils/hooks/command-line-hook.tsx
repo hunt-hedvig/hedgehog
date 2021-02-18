@@ -6,8 +6,6 @@ import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 import { KeyCode, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
-export const CommandLineContext = React.createContext({})
-
 const CommandLineWindow = styled.div`
   position: absolute;
   top: 50%;
@@ -53,7 +51,7 @@ const ResultItem: React.FC<{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: selected ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
+        backgroundColor: selected ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
       }}
     >
       <FourthLevelHeadline>{label}</FourthLevelHeadline>
@@ -66,31 +64,56 @@ const ResultItem: React.FC<{
   )
 }
 
-const CommandLineComponent: React.FC<{}> = ({}) => {
+export interface CommandLineAction {
+  label: string
+  keysHint: string[]
+  keys: number[]
+  onResolve: () => void
+}
+
+const CommandLineComponent: React.FC<{
+  hide: () => void
+  actions: CommandLineAction[]
+}> = ({ hide, actions }) => {
   const [value, setValue] = React.useState('')
   const [selectedItem, setSelectedItem] = React.useState(0)
 
   const isUpPressed = useKeyIsPressed(KeyCode.Up)
   const isDownPressed = useKeyIsPressed(KeyCode.Down)
+  const isEnterPressed = useKeyIsPressed(KeyCode.Return)
 
   React.useEffect(() => {
     if (isUpPressed && selectedItem > 0) {
       setSelectedItem(selectedItem - 1)
     }
 
-    if (isDownPressed && selectedItem < mockData.length - 1) {
+    if (isDownPressed && selectedItem < 2) {
       setSelectedItem(selectedItem + 1)
     }
   }, [isUpPressed, isDownPressed])
 
-  const mockData = [
-    { label: 'Help a bro', characters: ['⌥', 'H'] },
-    { label: 'Call a bro', characters: ['⌥', 'C'] },
-    { label: 'Arrest a bro', characters: ['⌥', 'A'] },
-    { label: 'Call a bro', characters: ['⌥', 'B'] },
-    { label: 'Fire a bro', characters: ['⌥', 'F'] },
-    { label: 'Promote a bro', characters: ['⌥', 'P'] },
-  ]
+  const searchResult = (query: string) => {
+    if (value === '') {
+      return []
+    }
+
+    return actions
+      .filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+      .slice(0, 3)
+  }
+
+  React.useEffect(() => {
+    setSelectedItem(0)
+  }, [searchResult])
+
+  React.useEffect(() => {
+    if (isEnterPressed) {
+      hide()
+      searchResult(value)[selectedItem].onResolve()
+    }
+  }, [isEnterPressed])
 
   return (
     <CommandLineWindow>
@@ -118,26 +141,36 @@ const CommandLineComponent: React.FC<{}> = ({}) => {
           style={{ width: '60vh', padding: '1em 1em' }}
         />
       </div>
-      <div
-        style={{ height: '200px', overflowX: 'hidden', overflowY: 'scroll' }}
-      >
-        {value !== '' &&
-          mockData.map(({ label, characters }, index) => (
-            <FadeIn delay={`${index * 50}ms`}>
-              <ResultItem
-                label={label}
-                characters={characters}
-                selected={index === selectedItem}
-              />
-            </FadeIn>
-          ))}
+      <div>
+        {searchResult(value).map(({ label, keysHint }, index) => (
+          <FadeIn delay={`${index * 50}ms`} key={label}>
+            <ResultItem
+              label={label}
+              characters={keysHint}
+              selected={index === selectedItem}
+            />
+          </FadeIn>
+        ))}
       </div>
     </CommandLineWindow>
   )
 }
 
+interface CommandLineContextProps {
+  useAction: (action: CommandLineAction) => any
+  isHinting: boolean
+}
+
+const CommandLineContext = React.createContext<CommandLineContextProps>({
+  useAction: (_: CommandLineAction) => void 0,
+  isHinting: false,
+})
+
+export const useCommandLine = () => React.useContext(CommandLineContext)
+
 export const CommandLineProvider: React.FC = ({ children }) => {
   const [showCommandLine, setShowCommandLine] = React.useState(false)
+  const [actions, setActions] = React.useState<CommandLineAction[]>([])
 
   const isOptionPressed = useKeyIsPressed(KeyCode.Option)
   const isSpacePressed = useKeyIsPressed(KeyCode.Space)
@@ -153,10 +186,29 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     setShowCommandLine(false)
   }, [isEscapePressed])
 
+  const addAction = (action: CommandLineAction) =>
+    setActions([...actions, action])
+  const removeAction = (label: string) =>
+    setActions(actions.filter((action) => action.label === label))
+
   return (
-    <CommandLineContext.Provider value={{}}>
+    <CommandLineContext.Provider
+      value={{
+        useAction: (action: CommandLineAction) =>
+          React.useEffect(() => {
+            addAction(action)
+            return () => removeAction(action.label)
+          }, []),
+        isHinting: isOptionPressed,
+      }}
+    >
       {children}
-      {showCommandLine && <CommandLineComponent />}
+      {showCommandLine && (
+        <CommandLineComponent
+          hide={() => setShowCommandLine(false)}
+          actions={actions}
+        />
+      )}
     </CommandLineContext.Provider>
   )
 }
