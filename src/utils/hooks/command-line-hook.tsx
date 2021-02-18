@@ -88,6 +88,7 @@ const CommandLineComponent: React.FC<{
     }
 
     if (isDownPressed && selectedItem < 2) {
+      console.log(selectedItem)
       setSelectedItem(selectedItem + 1)
     }
   }, [isUpPressed, isDownPressed])
@@ -106,7 +107,7 @@ const CommandLineComponent: React.FC<{
 
   React.useEffect(() => {
     setSelectedItem(0)
-  }, [searchResult])
+  }, [])
 
   React.useEffect(() => {
     if (isEnterPressed) {
@@ -143,7 +144,7 @@ const CommandLineComponent: React.FC<{
       </div>
       <div>
         {searchResult(value).map(({ label, keysHint }, index) => (
-          <FadeIn delay={`${index * 50}ms`} key={label}>
+          <FadeIn delay={`${index * 50}ms`} key={label + index.toString()}>
             <ResultItem
               label={label}
               characters={keysHint}
@@ -157,12 +158,12 @@ const CommandLineComponent: React.FC<{
 }
 
 interface CommandLineContextProps {
-  useAction: (action: CommandLineAction) => any
+  useAction: (newActions: CommandLineAction[]) => any
   isHinting: boolean
 }
 
 const CommandLineContext = React.createContext<CommandLineContextProps>({
-  useAction: (_: CommandLineAction) => void 0,
+  useAction: (_: CommandLineAction[]) => void 0,
   isHinting: false,
 })
 
@@ -186,18 +187,20 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     setShowCommandLine(false)
   }, [isEscapePressed])
 
-  const addAction = (action: CommandLineAction) =>
-    setActions([...actions, action])
   const removeAction = (label: string) =>
     setActions(actions.filter((action) => action.label === label))
 
   return (
     <CommandLineContext.Provider
       value={{
-        useAction: (action: CommandLineAction) =>
+        useAction: (newActions: CommandLineAction[]) =>
           React.useEffect(() => {
-            addAction(action)
-            return () => removeAction(action.label)
+            setActions([...actions, ...newActions])
+            return () => {
+              newActions.forEach((newAction) => {
+                removeAction(newAction.label)
+              })
+            }
           }, []),
         isHinting: isOptionPressed,
       }}

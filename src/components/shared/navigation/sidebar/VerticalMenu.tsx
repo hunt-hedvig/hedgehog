@@ -1,6 +1,6 @@
 import { colorsV3 } from '@hedviginsurance/brand'
 import { Spacing } from 'hedvig-ui/spacing'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   ArrowUpRight,
   Backspace,
@@ -23,14 +23,9 @@ import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 import { DarkmodeContext } from 'utils/darkmode-context'
-import {
-  KeyCode,
-  useKeyIsPressed,
-  usePressedKey,
-} from 'utils/hooks/key-press-hook'
-import { Logo, LogoIcon } from './elements'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { history } from 'store'
+import { KeyCode } from 'utils/hooks/key-press-hook'
+import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
   ({ collapsed, theme }) => ({
@@ -250,19 +245,94 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   const [locations, setLocations] = useState<string[]>([])
   const [latestClaim, setLatestClaim] = useState<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
-  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
-  const pressedKey = usePressedKey()
 
   const { useAction, isHinting } = useCommandLine()
 
-  useAction({
-    label: 'Claims list',
-    keysHint: ['⌥', 'C'],
-    keys: [KeyCode.Option, KeyCode.C],
-    onResolve: () => {
-      history.push(routes.claims)
+  useAction([
+    {
+      label: 'Claims list',
+      keysHint: ['⌥', 'C'],
+      keys: [KeyCode.Option, KeyCode.C],
+      onResolve: () => {
+        history.push(routes.claims)
+      },
     },
-  })
+    {
+      label: 'Tools',
+      keysHint: ['⌥', 'T'],
+      keys: [KeyCode.Option, KeyCode.T],
+      onResolve: () => {
+        history.push(routes.tools)
+      },
+    },
+    {
+      label: 'Questions',
+      keysHint: ['⌥', 'Q'],
+      keys: [KeyCode.Option, KeyCode.Q],
+      onResolve: () => {
+        history.push(routes.questions)
+      },
+    },
+    {
+      label: 'Member search',
+      keysHint: ['⌥', 'S'],
+      keys: [KeyCode.Option, KeyCode.Q],
+      onResolve: () => {
+        history.push(routes.search)
+      },
+    },
+    {
+      label: 'Dashborad',
+      keysHint: ['⌥', 'D'],
+      keys: [KeyCode.Option, KeyCode.D],
+      onResolve: () => {
+        history.push(routes.dashborad)
+      },
+    },
+    {
+      label: 'Trustly',
+      keysHint: ['⌥', 'R'],
+      keys: [KeyCode.Option, KeyCode.R],
+      onResolve: () => {
+        window.location.href = routes.trustly
+      },
+    },
+    {
+      label: 'Adyen',
+      keysHint: ['⌥', 'A'],
+      keys: [KeyCode.Option, KeyCode.A],
+      onResolve: () => {
+        window.location.href = routes.adyen
+      },
+    },
+    {
+      label: 'GSR',
+      keysHint: ['⌥', 'G'],
+      keys: [KeyCode.Option, KeyCode.G],
+      onResolve: () => {
+        window.location.href = routes.gsr
+      },
+    },
+    {
+      label: 'Logout',
+      keysHint: ['⌥', 'L'],
+      keys: [KeyCode.Option, KeyCode.L],
+      onResolve: () => {
+        authLogOut_()
+      },
+    },
+    {
+      label: 'Latest claim',
+      keysHint: ['⌥', '←'],
+      keys: [KeyCode.Option, KeyCode.Backspace],
+      onResolve: () => {
+        if (!latestClaim) {
+          return
+        }
+        history.push(latestClaim.location)
+      },
+    },
+  ])
 
   React.useEffect(() => {
     history.listen((location) => {
@@ -295,47 +365,6 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
       location: targetLocation,
     })
   }, [locations])
-
-  useEffect(() => {
-    if (!optionIsPressed) {
-      return
-    }
-    switch (pressedKey) {
-      case KeyCode.Q:
-        history.push(routes.questions)
-        break
-      case KeyCode.S:
-        history.push(routes.search)
-        break
-      case KeyCode.D:
-        history.push(routes.dashborad)
-        break
-      case KeyCode.C:
-        history.push(routes.claims)
-        break
-      case KeyCode.T:
-        history.push(routes.tools)
-        break
-      case KeyCode.R:
-        window.open(routes.trustly)
-        break
-      case KeyCode.A:
-        window.open(routes.adyen)
-        break
-      case KeyCode.G:
-        window.open(routes.gsr)
-        break
-      case KeyCode.L:
-        authLogOut_()
-        break
-      case KeyCode.Backspace:
-        if (!latestClaim) {
-          return
-        }
-        history.push(latestClaim.location)
-        break
-    }
-  }, [optionIsPressed, pressedKey])
 
   const toggleOpen = () => {
     setCollapsed(!isCollapsed)
@@ -371,7 +400,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <House />
-                  <MenuText>Dashborad {optionIsPressed && '(D)'}</MenuText>
+                  <MenuText>Dashborad {isHinting && '(D)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -382,7 +411,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Search />
-                  <MenuText>Member Search {optionIsPressed && '(S)'}</MenuText>
+                  <MenuText>Member Search {isHinting && '(S)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -393,7 +422,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Inbox />
-                  <MenuText>Questions {optionIsPressed && '(Q)'}</MenuText>
+                  <MenuText>Questions {isHinting && '(Q)'}</MenuText>
                 </MenuItem>
                 <MenuItem
                   to={routes.claims}
@@ -408,13 +437,13 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                       <MenuText>Claims {isHinting && '(C)'}</MenuText>
                     </Spacing>
                   )}
-                  {optionIsPressed && latestClaim && <Backspace />}
+                  {isHinting && latestClaim && <Backspace />}
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
                 <MenuItem to={routes.tools}>
                   <Tools />
-                  <MenuText>Tools {optionIsPressed && '(T)'}</MenuText>
+                  <MenuText>Tools {isHinting && '(T)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
 
@@ -422,17 +451,17 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <MenuItemExternalLink href={routes.trustly} target="_blank">
                   <ArrowUpRight />
                   <CreditCard />
-                  <MenuText>Trustly {optionIsPressed && '(R)'}</MenuText>
+                  <MenuText>Trustly {isHinting && '(R)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
                   <ArrowUpRight />
                   <CreditCard2Front />
-                  <MenuText>Adyen {optionIsPressed && '(A)'}</MenuText>
+                  <MenuText>Adyen {isHinting && '(A)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.gsr} target="_blank">
                   <ArrowUpRight />
                   <PersonBoundingBox />
-                  <MenuText>GSR {optionIsPressed && '(G)'}</MenuText>
+                  <MenuText>GSR {isHinting && '(G)'}</MenuText>
                 </MenuItemExternalLink>
               </MenuGroup>
             </Menu>
@@ -456,7 +485,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <BoxArrowLeft />
                 <MenuText>
                   {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Logout'}{' '}
-                  {optionIsPressed && '(L)'}
+                  {isHinting && '(L)'}
                 </MenuText>
               </MenuItem>
             </BottomSection>
