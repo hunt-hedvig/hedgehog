@@ -13,23 +13,6 @@ export const ClaimItems: React.FC<{
   memberId: string | null
   contract?: Contract | null
 }> = ({ claimId, memberId, contract }) => {
-  const { useAction, isHinting } = useCommandLine()
-
-  useAction({
-    label: 'Member',
-    keysHint: ['⌥', 'M'],
-    keys: [KeyCode.Option, KeyCode.M],
-    onResolve: () => {
-      if (memberId) {
-        history.push(`/members/${memberId}`)
-      }
-    },
-  })
-
-  React.useEffect(() => {
-    console.log(isHinting)
-  }, [isHinting])
-
   return (
     <Paper>
       <Grid container spacing={24}>

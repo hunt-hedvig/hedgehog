@@ -29,6 +29,8 @@ import {
   usePressedKey,
 } from 'utils/hooks/key-press-hook'
 import { Logo, LogoIcon } from './elements'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { history } from 'store'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
   ({ collapsed, theme }) => ({
@@ -251,6 +253,17 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   const optionIsPressed = useKeyIsPressed(KeyCode.Option)
   const pressedKey = usePressedKey()
 
+  const { useAction, isHinting } = useCommandLine()
+
+  useAction({
+    label: 'Claims list',
+    keysHint: ['⌥', 'C'],
+    keys: [KeyCode.Option, KeyCode.C],
+    onResolve: () => {
+      history.push(routes.claims)
+    },
+  })
+
   React.useEffect(() => {
     history.listen((location) => {
       setCurrentLocation(location.pathname)
@@ -392,7 +405,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   {isCollapsed && <MenuText>Claims</MenuText>}
                   {!isCollapsed && (
                     <Spacing right inline>
-                      <MenuText>Claims {optionIsPressed && '(C)'}</MenuText>
+                      <MenuText>Claims {isHinting && '(C)'}</MenuText>
                     </Spacing>
                   )}
                   {optionIsPressed && latestClaim && <Backspace />}
