@@ -5,11 +5,8 @@ import Resizable from 're-resizable'
 import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
-import {
-  KeyCode,
-  useKeyIsPressed,
-  usePressedKey,
-} from 'utils/hooks/key-press-hook'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { KeyCode } from 'utils/hooks/key-press-hook'
 
 const resizableStyles = {
   display: 'flex',
@@ -43,16 +40,19 @@ const ChatHeaderStyle = styled.div`
 export const ChatPane = ({ memberId }) => {
   const [visible, setVisible] = useState(window.innerWidth > 1000)
   const [manualChange, setManualChange] = useState(false)
-  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
-  const pressedKey = usePressedKey()
-  useEffect(() => {
-    if (!optionIsPressed) {
-      return
-    }
-    if (pressedKey === KeyCode.W) {
-      setVisible(!visible)
-    }
-  }, [optionIsPressed, pressedKey])
+
+  const { useAction, isHinting } = useCommandLine()
+
+  useAction([
+    {
+      label: 'Toggle chat',
+      keysHint: ['⌥', 'W'],
+      keys: [KeyCode.Option, KeyCode.W],
+      onResolve: () => {
+        setVisible(!visible)
+      },
+    },
+  ])
 
   useEffect(() => {
     const resizeControlChat = (e) => {
@@ -68,6 +68,7 @@ export const ChatPane = ({ memberId }) => {
     setVisible(!visible)
     setManualChange(true)
   }
+
   return visible ? (
     <Resizable
       style={resizableStyles}
@@ -79,16 +80,16 @@ export const ChatPane = ({ memberId }) => {
       <ChatHeader
         visible={visible}
         onResizeClick={onResizeClick}
-        optionPressed={optionIsPressed}
+        isHinting={isHinting}
       />
       <MessagesList memberId={memberId} />
-      <ChatPanel memberId={memberId} optionPressed={optionIsPressed} />
+      <ChatPanel memberId={memberId} />
     </Resizable>
   ) : (
     <ChatHeader
       visible={visible}
       onResizeClick={onResizeClick}
-      optionPressed={optionIsPressed}
+      isHinting={isHinting}
     />
   )
 }
@@ -96,7 +97,7 @@ export const ChatPane = ({ memberId }) => {
 const ChatHeader = (props) => (
   <ChatHeaderStyle state={props.visible}>
     <h4>Chat</h4>
-    {props.optionPressed && props.visible ? (
+    {props.isHinting && props.visible ? (
       '(W)'
     ) : (
       <Icon

@@ -3,7 +3,6 @@ import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
-import { useEffect } from 'react'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
@@ -14,11 +13,6 @@ import {
   getFirstMasterInception,
   getLastTerminationDate,
 } from 'utils/contract'
-import {
-  KeyCode,
-  useKeyIsPressed,
-  usePressedKey,
-} from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
 
 import {
@@ -30,6 +24,8 @@ import {
   ThumpsUp,
 } from '../../../icons'
 
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { KeyCode } from 'utils/hooks/key-press-hook'
 import { Paper } from '../../../shared/Paper'
 
 const SanctionStatusIcon: React.FC<{ status: SanctionStatus }> = ({
@@ -61,16 +57,20 @@ const MemberInformation: React.FC<{
   const address = contract && currentAgreementForContract(contract)?.address
   const firstMasterInception = getFirstMasterInception(member.contracts)
   const lastTermination = getLastTerminationDate(member.contracts)
-  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
-  const pressedKey = usePressedKey()
-  useEffect(() => {
-    if (!optionIsPressed) {
-      return
-    }
-    if (pressedKey === KeyCode.M) {
-      history.push(`/members/${member.memberId}`)
-    }
-  }, [optionIsPressed, pressedKey])
+
+  const { useAction, isHinting } = useCommandLine()
+
+  useAction([
+    {
+      label: `Go to member`,
+      keysHint: ['⌥', 'M'],
+      keys: [KeyCode.Option, KeyCode.M],
+      onResolve: () => {
+        history.push(`/members/${member.memberId}`)
+      },
+    },
+  ])
+
   return (
     <Paper>
       <h3>Member Information</h3>
@@ -81,7 +81,7 @@ const MemberInformation: React.FC<{
       <p>
         <strong>Id:</strong>{' '}
         <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>{' '}
-        {optionIsPressed && '(M)'}
+        {isHinting && '(M)'}
       </p>
       {member.contractMarketInfo?.market === Market.Norway && (
         <p>

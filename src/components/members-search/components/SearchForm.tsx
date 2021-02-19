@@ -40,6 +40,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
 }) => {
   const pressedKey = usePressedKey()
   const optionIsPressed = useKeyIsPressed(KeyCode.Option)
+
   return (
     <form
       onSubmit={(e) => {

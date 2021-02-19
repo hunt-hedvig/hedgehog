@@ -20,11 +20,8 @@ import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { NumberColorsContext } from 'utils/number-colors-context'
 import { history } from 'store'
-import {
-  KeyCode,
-  useKeyIsPressed,
-  usePressedKey,
-} from 'utils/hooks/key-press-hook'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { KeyCode } from 'utils/hooks/key-press-hook'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -80,33 +77,40 @@ const getIndex = (tab, panes) => panes.map((pane) => pane.tabName).indexOf(tab)
 export const Member = (props) => {
   const memberId = props.match.params.memberId
   const tab = props.match.params.tab ?? 'contracts'
-  const optionIsPressed = useKeyIsPressed(KeyCode.Option)
-  const pressedKey = usePressedKey()
+
   const [member, { loading }] = useGetMemberInfo(memberId)
   const panes = memberPagePanes(props, memberId, member)
-  const numberPanes = panes.length
   const getMemberPageTitle = (member) =>
     `${member.firstName || ''} ${member.lastName || ''}`
 
+  const { useAction } = useCommandLine()
+
+  useAction([
+    {
+      label: `Member information`,
+      keysHint: ['⌥', '1'],
+      keys: [KeyCode.Option, KeyCode.One],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[0].tabName}`)
+      },
+    },
+    {
+      label: member?.firstName
+        ? `${member.firstName}'s claims`
+        : 'Member claims',
+      keysHint: ['⌥', '1'],
+      keys: [KeyCode.Option, KeyCode.Two],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[1].tabName}`)
+      },
+    },
+  ])
+
   const [activeIndex, setActiveIndex] = useState(getIndex(tab, panes))
+
   useEffect(() => {
     setActiveIndex(getIndex(tab, panes))
   }, [tab])
-  useEffect(() => {
-    if (!optionIsPressed) {
-      return
-    }
-    switch (pressedKey) {
-      case KeyCode.Left:
-        const targetIndexLeft = (activeIndex - 1 + numberPanes) % numberPanes
-        history.push(`/members/${memberId}/${panes[targetIndexLeft].tabName}`)
-        break
-      case KeyCode.Right:
-        const targetIndexRight = (activeIndex + 1) % numberPanes
-        history.push(`/members/${memberId}/${panes[targetIndexRight].tabName}`)
-        break
-    }
-  }, [optionIsPressed, pressedKey])
 
   const { numberColors } = useContext(NumberColorsContext)
 

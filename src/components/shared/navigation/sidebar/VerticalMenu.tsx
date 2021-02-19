@@ -276,7 +276,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
     {
       label: 'Member search',
       keysHint: ['⌥', 'S'],
-      keys: [KeyCode.Option, KeyCode.Q],
+      keys: [KeyCode.Option, KeyCode.S],
       onResolve: () => {
         history.push(routes.search)
       },
