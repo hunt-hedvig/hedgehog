@@ -116,27 +116,56 @@ export const useKeyIsPressed = (keyCode: number): boolean => {
   return keyPressed
 }
 
-export const usePressedKey = (): number | null => {
-  const [pressedKey, setPressedKey] = useState<number | null>(null)
+export const usePressedKeys = () => {
+  const [keyDown, setKeyDown] = useState<number | null>(null)
+  const [keyUp, setKeyUp] = useState<number | null>(null)
+  const [pressedKeys, setPressedKeys] = useState<number[]>([])
 
-  const handleKeydown = ({ keyCode }) => {
-    setPressedKey(keyCode)
+  useEffect(() => {
+    if (!keyDown) {
+      return
+    }
+    if (pressedKeys.includes(keyDown)) {
+      return
+    }
+    const pressedKeysCopy = [...pressedKeys, keyDown]
+    setPressedKeys(pressedKeysCopy)
+    setKeyDown(null)
+    setKeyUp(null)
+  }, [keyDown])
+
+  useEffect(() => {
+    if (!keyUp) {
+      return
+    }
+    const pressedKeysCopy = [...pressedKeys]
+    setPressedKeys(pressedKeysCopy.filter((key) => key !== keyUp))
+    setKeyDown(null)
+    setKeyUp(null)
+  }, [keyUp])
+
+  const handleKeydown = (e) => {
+    setKeyDown(e.keyCode)
   }
 
-  const handleKeyup = () => {
-    setPressedKey(null)
+  const handleKeyup = (e) => {
+    setKeyUp(e.keyCode)
   }
 
   const handleVisibility = () => {
     if (document.hidden) {
-      setPressedKey(null)
+      setPressedKeys([])
     }
   }
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeydown)
-    window.addEventListener('keyup', handleKeyup)
-    document.addEventListener('visibilitychange', handleVisibility)
+    window.addEventListener('keydown', handleKeydown, {
+      capture: true,
+    })
+    window.addEventListener('keyup', handleKeyup, {
+      capture: true,
+    })
+    document.addEventListener('visibilitychange', handleVisibility, {})
     return () => {
       window.removeEventListener('keydown', handleKeydown)
       window.removeEventListener('keyup', handleKeyup)
@@ -144,5 +173,5 @@ export const usePressedKey = (): number | null => {
     }
   }, [])
 
-  return pressedKey
+  return pressedKeys
 }

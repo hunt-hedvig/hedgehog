@@ -4,7 +4,11 @@ import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
-import { KeyCode, useKeyIsPressed } from 'utils/hooks/key-press-hook'
+import {
+  KeyCode,
+  useKeyIsPressed,
+  usePressedKeys,
+} from 'utils/hooks/key-press-hook'
 
 const CommandLineWindow = styled.div`
   position: absolute;
@@ -88,7 +92,6 @@ const CommandLineComponent: React.FC<{
     }
 
     if (isDownPressed && selectedItem < 2) {
-      console.log(selectedItem)
       setSelectedItem(selectedItem + 1)
     }
   }, [isUpPressed, isDownPressed])
@@ -112,7 +115,9 @@ const CommandLineComponent: React.FC<{
   React.useEffect(() => {
     if (isEnterPressed) {
       hide()
-      searchResult(value)[selectedItem].onResolve()
+      if (searchResult(value).length !== 0) {
+        searchResult(value)[selectedItem].onResolve()
+      }
     }
   }, [isEnterPressed])
 
@@ -176,6 +181,20 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const isOptionPressed = useKeyIsPressed(KeyCode.Option)
   const isSpacePressed = useKeyIsPressed(KeyCode.Space)
   const isEscapePressed = useKeyIsPressed(KeyCode.Escape)
+
+  const keys = usePressedKeys()
+
+  React.useEffect(() => {
+    actions.some((action) => {
+      const match =
+        action.keys.filter((key) => !keys.includes(key)).length === 0
+
+      if (match) {
+        action.onResolve()
+        return true
+      }
+    })
+  }, [keys])
 
   React.useEffect(() => {
     if (isOptionPressed && isSpacePressed) {

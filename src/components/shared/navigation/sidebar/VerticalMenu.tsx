@@ -294,7 +294,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
       keysHint: ['⌥', 'R'],
       keys: [KeyCode.Option, KeyCode.R],
       onResolve: () => {
-        window.location.href = routes.trustly
+        window.open(routes.trustly)
       },
     },
     {
@@ -302,7 +302,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
       keysHint: ['⌥', 'A'],
       keys: [KeyCode.Option, KeyCode.A],
       onResolve: () => {
-        window.location.href = routes.adyen
+        window.open(routes.adyen)
       },
     },
     {
@@ -310,7 +310,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
       keysHint: ['⌥', 'G'],
       keys: [KeyCode.Option, KeyCode.G],
       onResolve: () => {
-        window.location.href = routes.gsr
+        window.open(routes.gsr)
       },
     },
     {
