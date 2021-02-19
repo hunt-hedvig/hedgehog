@@ -16,7 +16,6 @@ import memberPagePanes from './tabs/index'
 import { MemberFlag } from './shared/member-flag'
 import { MemberHistoryContext } from 'utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
-import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { NumberColorsContext } from 'utils/number-colors-context'
 import { history } from 'store'
@@ -78,12 +77,16 @@ export const Member = (props) => {
   const memberId = props.match.params.memberId
   const tab = props.match.params.tab ?? 'contracts'
 
-  const [member, { loading }] = useGetMemberInfo(memberId)
-  const panes = memberPagePanes(props, memberId, member)
+  const member = props.member
+
+  const { useAction, isHinting } = useCommandLine()
+
+  const panes = memberPagePanes(props, memberId, member, isHinting)
   const getMemberPageTitle = (member) =>
     `${member.firstName || ''} ${member.lastName || ''}`
 
-  const { useAction } = useCommandLine()
+  const formattedFirstName =
+    member.firstName + (member.firstName.slice(-1) === 's' ? "'" : "'s")
 
   useAction([
     {
@@ -95,13 +98,77 @@ export const Member = (props) => {
       },
     },
     {
-      label: member?.firstName
-        ? `${member.firstName}'s claims`
-        : 'Member claims',
-      keysHint: ['⌥', '1'],
+      label: `${formattedFirstName} claims`,
+      keysHint: ['⌥', '2'],
       keys: [KeyCode.Option, KeyCode.Two],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[1].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} files`,
+      keysHint: ['⌥', '3'],
+      keys: [KeyCode.Option, KeyCode.Three],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[2].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} contracts`,
+      keysHint: ['⌥', '4'],
+      keys: [KeyCode.Option, KeyCode.Four],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[3].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} quotes`,
+      keysHint: ['⌥', '5'],
+      keys: [KeyCode.Option, KeyCode.Five],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[4].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} payments`,
+      keysHint: ['⌥', '6'],
+      keys: [KeyCode.Option, KeyCode.Six],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[5].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} account`,
+      keysHint: ['⌥', '7'],
+      keys: [KeyCode.Option, KeyCode.Seven],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[6].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} debt`,
+      keysHint: ['⌥', '8'],
+      keys: [KeyCode.Option, KeyCode.Eight],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[7].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} campaigns`,
+      keysHint: ['⌥', '9'],
+      keys: [KeyCode.Option, KeyCode.Nine],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[8].tabName}`)
+      },
+    },
+
+    {
+      label: `Send an email to ${member.email}`,
+      keysHint: ['⌥', 'E'],
+      keys: [KeyCode.Option, KeyCode.Nine],
+      onResolve: () => {
+        window.open(`mailto:${member.email}`)
+        history.push(`/members/${memberId}/${panes[8].tabName}`)
       },
     },
   ])
@@ -113,10 +180,6 @@ export const Member = (props) => {
   }, [tab])
 
   const { numberColors } = useContext(NumberColorsContext)
-
-  if (loading) {
-    return null
-  }
 
   return (
     <MemberHistoryContext.Consumer>
