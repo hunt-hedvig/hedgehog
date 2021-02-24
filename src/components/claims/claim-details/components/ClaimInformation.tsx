@@ -215,6 +215,11 @@ const ClaimInformation: React.FC<Props> = ({
           </Paragraph>
         </>
       )}
+      {!selectedAgreement && (
+        <Paragraph>
+          ⚠️ No agreement covers the claim on the date of loss
+        </Paragraph>
+      )}
     </Paper>
   )
 }
