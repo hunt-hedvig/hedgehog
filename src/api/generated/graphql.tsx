@@ -338,6 +338,16 @@ export enum ClaimState {
   Reopened = 'REOPENED',
 }
 
+export type ClaimSwishPaymentInput = {
+  amount: Scalars['MonetaryAmount']
+  deductible: Scalars['MonetaryAmount']
+  note: Scalars['String']
+  exGratia: Scalars['Boolean']
+  sanctionListSkipped: Scalars['Boolean']
+  phoneNumber: Scalars['String']
+  message: Scalars['String']
+}
+
 export type ClaimTranscription = {
   __typename?: 'ClaimTranscription'
   text: Scalars['String']
@@ -845,6 +855,7 @@ export type MutationType = {
   createClaim?: Maybe<Scalars['ID']>
   addClaimNote?: Maybe<Claim>
   createClaimPayment?: Maybe<Claim>
+  createClaimSwishPayment?: Maybe<Claim>
   setClaimType?: Maybe<Claim>
   setClaimInformation?: Maybe<Claim>
   updateReserve?: Maybe<Claim>
@@ -938,6 +949,11 @@ export type MutationTypeAddClaimNoteArgs = {
 export type MutationTypeCreateClaimPaymentArgs = {
   id: Scalars['ID']
   payment: ClaimPaymentInput
+}
+
+export type MutationTypeCreateClaimSwishPaymentArgs = {
+  id: Scalars['ID']
+  payment: ClaimSwishPaymentInput
 }
 
 export type MutationTypeSetClaimTypeArgs = {

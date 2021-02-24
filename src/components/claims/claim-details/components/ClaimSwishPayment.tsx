@@ -2,7 +2,6 @@ import {
   Button as MuiButton,
   Checkbox as MuiCheckbox,
   FormControlLabel as MuiFormControlLabel,
-  MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
 import { SanctionStatus } from 'api/generated/graphql'
@@ -15,17 +14,16 @@ import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
-import { FieldSelect } from '../../../shared/inputs/FieldSelect'
 import { TextField } from '../../../shared/inputs/TextField'
 import {
   MutationFeedbackBlock,
   MutationStatus,
 } from '../../../shared/MutationFeedbackBlock'
-import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
+import { SwishPaymentConfirmationDialog } from './SwishPaymentConfirmationDialog'
 
-const CREATE_PAYMENT_MUTATION = gql`
-  mutation CreatePayment($id: ID!, $payment: ClaimPaymentInput!) {
-    createClaimPayment(id: $id, payment: $payment) {
+const CREATE_SWISH_PAYMENT_MUTATION = gql`
+  mutation CreatePayment($id: ID!, $payment: ClaimSwishPaymentInput!) {
+    createClaimSwishPayment(id: $id, payment: $payment) {
       payments {
         id
         amount
@@ -51,17 +49,15 @@ interface Props {
   sanctionStatus: SanctionStatus
   claimId: string
   refetchPage: () => Promise<any>
-  identified: boolean
-  market: string | null
 }
 
 interface State {
-  initiatedPayment: PaymentFormData | null
+  initiatedPayment: PaymentSwishFormData | null
   paymentStatus: MutationStatus
 }
 
 interface Actions {
-  initiatePayment: (payment: PaymentFormData) => void
+  initiatePayment: (payment: PaymentSwishFormData) => void
   closeInitiatedPayment: () => void
   setPaymentStatus: (paymentStatus: MutationStatus) => void
 }
@@ -78,13 +74,14 @@ const actions: ActionMap<State, Actions> = {
   }),
 }
 
-export interface PaymentFormData {
+export interface PaymentSwishFormData {
   amount: string
   deductible: string
   note: string
-  exGratia?: boolean
-  type: string
-  overridden?: boolean
+  exGratia: boolean
+  phoneNumber: string
+  message: string
+  overridden: boolean
 }
 
 const PaymentForm = styled(Form)({
@@ -119,7 +116,7 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
         .test(
           'overridden',
           'Override saction list checkbox isn’t checked.',
-          (value) => value === true,
+          (value) => value === false,
         ),
     }),
     amount: yup.string().required(),
@@ -131,12 +128,10 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
       .required(),
   })
 
-export const ClaimPayment: React.FC<Props> = ({
+export const ClaimSwishPayment: React.FC<Props> = ({
   sanctionStatus,
   claimId,
   refetchPage,
-  identified,
-  market,
 }) => {
   const isPotentiallySanctioned =
     sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
@@ -157,7 +152,7 @@ export const ClaimPayment: React.FC<Props> = ({
         setPaymentStatus,
       }) => (
         <Mutation
-          mutation={CREATE_PAYMENT_MUTATION}
+          mutation={CREATE_SWISH_PAYMENT_MUTATION}
           onCompleted={() => {
             closeInitiatedPayment()
             setPaymentStatus('COMPLETED')
@@ -168,12 +163,14 @@ export const ClaimPayment: React.FC<Props> = ({
           }}
         >
           {(createPayment) => (
-            <Formik<PaymentFormData>
+            <Formik<PaymentSwishFormData>
               initialValues={{
-                type: 'Manual',
                 amount: '',
                 deductible: '',
                 note: '',
+                phoneNumber: '',
+                message: '',
+                exGratia: false,
                 overridden: false,
               }}
               onSubmit={(values, {}) => {
@@ -184,7 +181,7 @@ export const ClaimPayment: React.FC<Props> = ({
               )}
               validate={(values) => {
                 try {
-                  validateYupSchema<PaymentFormData>(
+                  validateYupSchema<PaymentSwishFormData>(
                     values,
                     getPaymentValidationSchema(isPotentiallySanctioned),
                     false,
@@ -218,11 +215,16 @@ export const ClaimPayment: React.FC<Props> = ({
                       label="Ex Gratia?"
                       control={<Field component={Checkbox} name="exGratia" />}
                     />
-                    <Field component={FieldSelect} name="type">
-                      <MuiMenuItem value="Manual">Manual</MuiMenuItem>
-                      <MuiMenuItem value="Automatic">Automatic</MuiMenuItem>
-                    </Field>
-
+                    <Field
+                      component={TextField}
+                      placeholder="Phone number (467XXXXXXXX)"
+                      name="phoneNumber"
+                    />
+                    <Field
+                      component={TextField}
+                      placeholder="Swish notification message"
+                      name="message"
+                    />
                     {isPotentiallySanctioned && (
                       <MuiFormControlLabel
                         label="Override sanction list result (I promise that I have manually checked the list)"
@@ -243,7 +245,7 @@ export const ClaimPayment: React.FC<Props> = ({
                   </PaymentForm>
 
                   {initiatedPayment && (
-                    <PaymentConfirmationDialog
+                    <SwishPaymentConfirmationDialog
                       onClose={() => {
                         closeInitiatedPayment()
                         resetForm()
@@ -255,8 +257,6 @@ export const ClaimPayment: React.FC<Props> = ({
                       }}
                       payment={initiatedPayment}
                       claimId={claimId}
-                      identified={identified}
-                      market={market}
                     />
                   )}
 

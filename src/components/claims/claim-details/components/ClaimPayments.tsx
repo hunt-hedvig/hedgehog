@@ -10,14 +10,16 @@ import { Claim, Identity, SanctionStatus } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import React from 'react'
+import { Tab } from 'semantic-ui-react'
 import { Market } from 'types/enums'
 
+import styled from 'react-emotion'
 import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
-import styled from 'react-emotion'
+import { ClaimSwishPayment } from './ClaimSwishPayment'
 
 interface Props {
   payments: NonNullable<Claim['payments']>
@@ -41,10 +43,65 @@ const PaymentTableCell = withStyles({
   },
 })(MuiTableCell)
 
+const TabContainer = styled(Tab.Pane)`
+  &&& {
+    display: flex;
+    flex-direction: column;
+    min-width: 700px;
+    margin-bottom: 50px !important;
+  }
+`
+
 const TotalCell = styled(MuiTableCell)(({ theme }) => ({
   backgroundColor: theme.accentThird,
   fontSize: '1rem',
 }))
+
+// const TabItem: React.FC<{ props: any; TabContent: any }> = ({
+//   props,
+//   TabContent,
+// }) => {
+//   return (
+//     <TabContainer>
+//       <TabContent {...props} />
+//     </TabContainer>
+//   )
+// }
+
+const payoutPanes = (
+  sanctionStatus,
+  claimId,
+  refetchPage,
+  identity,
+  market,
+) => [
+  {
+    menuItem: 'Payout',
+    render: () => (
+      <TabContainer>
+        <ClaimPayment
+          sanctionStatus={sanctionStatus}
+          claimId={claimId}
+          refetchPage={refetchPage}
+          identified={!!identity}
+          market={market}
+        />
+      </TabContainer>
+    ),
+  },
+  {
+    menuItem: 'Swish payout',
+    render: () => (
+      <TabContainer>
+        <ClaimSwishPayment
+          sanctionStatus={sanctionStatus}
+          claimId={claimId}
+          refetchPage={refetchPage}
+        />
+      </TabContainer>
+    ),
+  },
+]
 
 const ClaimPayments: React.SFC<Props> = ({
   payments,
@@ -55,10 +112,10 @@ const ClaimPayments: React.SFC<Props> = ({
   identity,
   market,
 }) => {
-  let totalAmount = payments
+  const totalAmount = payments
     .map((payment) => +payment?.amount?.amount)
     .reduce((acc, amount) => acc + amount, 0)
-  let totalDeductible = payments
+  const totalDeductible = payments
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
 
@@ -153,12 +210,17 @@ const ClaimPayments: React.SFC<Props> = ({
         </MuiTableBody>
       </PaymentTable>
 
-      <ClaimPayment
-        sanctionStatus={sanctionStatus}
-        claimId={claimId}
-        refetchPage={refetchPage}
-        identified={!!identity}
-        market={market}
+      <Tab
+        style={{ height: '100%' }}
+        panes={payoutPanes(
+          sanctionStatus,
+          claimId,
+          refetchPage,
+          identity,
+          market,
+        )}
+        renderActiveOnly={true}
+        defaultActiveIndex={3}
       />
     </Paper>
   )

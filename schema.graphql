@@ -47,6 +47,7 @@ type MutationType {
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
+  createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
   setClaimType(id: ID!, type: ClaimTypes!): Claim
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
@@ -1152,6 +1153,16 @@ input ClaimPaymentInput {
   type: ClaimPaymentType!
   exGratia: Boolean!
   sanctionListSkipped: Boolean!
+}
+
+input ClaimSwishPaymentInput {
+  amount: MonetaryAmount!
+  deductible: MonetaryAmount!
+  note: String!
+  exGratia: Boolean!
+  sanctionListSkipped: Boolean!
+  phoneNumber: String!
+  message: String!
 }
 
 input ClaimNoteInput {
