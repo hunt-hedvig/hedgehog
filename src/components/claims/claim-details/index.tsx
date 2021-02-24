@@ -141,6 +141,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                           refetchPage={refetch}
                           identity={member.identity ?? null}
                           market={member.contractMarketInfo?.market ?? null}
+                          carrier={agreement?.carrier ?? null}
                         />
                       )}
                     </Grid>
