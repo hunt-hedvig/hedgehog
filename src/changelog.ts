@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-02-24',
+    change: 'Show carrier and line of business of a claim.',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-02-12',
     change: 'Added new claim payment types: Expense and Indemnity Cost.',
     authorGithubHandle: 'michael-duivestein',
