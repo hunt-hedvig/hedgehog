@@ -92,6 +92,10 @@ export const CLAIM_PAGE_QUERY = gql`
         contractTypeName
         typeOfContract
       }
+      agreement {
+        lineOfBusinessName
+        carrier
+      }
       coveringEmployee
       __typename
     }

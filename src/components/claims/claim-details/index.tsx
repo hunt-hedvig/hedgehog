@@ -60,6 +60,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                 coveringEmployee,
                 claimFiles,
                 contract,
+                agreement,
               } = data?.claim || {}
 
               return (
@@ -94,7 +95,8 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                         coveringEmployee={coveringEmployee!}
                         memberId={props.match.params.memberId}
                         refetchPage={refetch}
-                        selectedContract={contract!}
+                        selectedContract={contract ?? null}
+                        selectedAgreement={agreement ?? null}
                       />
                     </Grid>
                     <Grid item xs={12} sm={12} md={4}>

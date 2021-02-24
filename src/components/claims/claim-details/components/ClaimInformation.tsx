@@ -3,8 +3,9 @@ import {
   MenuItem as MuiMenuItem,
   Select as MuiSelect,
 } from '@material-ui/core'
-import { ClaimState, Contract } from 'api/generated/graphql'
+import { ClaimState, Contract, GenericAgreement } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
+import { Paragraph } from 'hedvig-ui/typography'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { sleep } from 'utils/sleep'
@@ -24,6 +25,7 @@ import {
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
 import { currentAgreementForContract } from 'utils/contract'
+import { convertEnumToTitle } from 'utils/text'
 
 interface Props {
   recordingUrl: string | null
@@ -34,6 +36,7 @@ interface Props {
   memberId: string
   refetchPage: () => Promise<any>
   selectedContract: Contract | null
+  selectedAgreement: GenericAgreement | null
 }
 
 const validateSelectOption = (
@@ -80,6 +83,7 @@ const ClaimInformation: React.FC<Props> = ({
   memberId,
   refetchPage,
   selectedContract,
+  selectedAgreement,
 }) => {
   const [contracts] = useContracts(memberId)
   const [setContractForClaim] = useSetContractForClaim()
@@ -199,6 +203,17 @@ const ClaimInformation: React.FC<Props> = ({
             })}
           </MuiSelect>
         </SelectWrapper>
+      )}
+      {selectedAgreement && (
+        <>
+          <Paragraph>
+            <strong>Carrier:</strong> {selectedAgreement.carrier}
+          </Paragraph>
+          <Paragraph>
+            <strong>Line Of Business:</strong>{' '}
+            {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
+          </Paragraph>
+        </>
       )}
     </Paper>
   )
