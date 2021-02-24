@@ -1159,6 +1159,7 @@ input ClaimPaymentInput {
   type: ClaimPaymentType!
   exGratia: Boolean!
   sanctionListSkipped: Boolean!
+  carrier: String!
 }
 
 input ClaimNoteInput {

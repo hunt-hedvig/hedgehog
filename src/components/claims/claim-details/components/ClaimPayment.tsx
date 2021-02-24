@@ -10,6 +10,8 @@ import { SanctionStatus } from 'api/generated/graphql'
 import { ActionMap, Container } from 'constate'
 import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
 import gql from 'graphql-tag'
+import { Spacing } from 'hedvig-ui/spacing'
+import { Paragraph } from 'hedvig-ui/typography'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
@@ -53,6 +55,7 @@ interface Props {
   refetchPage: () => Promise<any>
   identified: boolean
   market: string | null
+  carrier: string | null
 }
 
 interface State {
@@ -137,7 +140,20 @@ export const ClaimPayment: React.SFC<Props> = ({
   refetchPage,
   identified,
   market,
+  carrier,
 }) => {
+  if (!carrier) {
+    return (
+      <Spacing top>
+        <Paragraph>
+          ⚠️ Can not make a payment without a carrier, please select a{' '}
+          <strong>contract</strong> and <strong>date of loss</strong> above,
+          while making sure the claim is <strong>covered on that date</strong>
+        </Paragraph>
+      </Spacing>
+    )
+  }
+
   const isPotentiallySanctioned =
     sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
 
@@ -261,6 +277,7 @@ export const ClaimPayment: React.SFC<Props> = ({
                       claimId={claimId}
                       identified={identified}
                       market={market}
+                      carrier={carrier}
                     />
                   )}
 

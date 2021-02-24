@@ -316,6 +316,7 @@ export type ClaimPaymentInput = {
   type: ClaimPaymentType
   exGratia: Scalars['Boolean']
   sanctionListSkipped: Scalars['Boolean']
+  carrier: Scalars['String']
 }
 
 export enum ClaimPaymentStatus {
