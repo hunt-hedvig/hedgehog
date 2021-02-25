@@ -341,17 +341,14 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   }, [])
 
   React.useEffect(() => {
-    const newLocations = [...locations]
-    newLocations.push(currentLocation)
-    if (newLocations.length > 10) {
-      newLocations.shift()
-    }
+    const latestLocations = [currentLocation, ...locations]
+    const newLocations = latestLocations.filter((_, index) => index < 10)
     setLocations(newLocations)
   }, [currentLocation])
 
   React.useEffect(() => {
     const CLAIM_REGEX = /\/claims\/([\-A-Za-z0-9]+)\/members\/(\d+)/
-    const targetLocation = locations.reverse().find((location) => {
+    const targetLocation = locations.find((location) => {
       const exists = CLAIM_REGEX.exec(location)
       return exists != null
     })

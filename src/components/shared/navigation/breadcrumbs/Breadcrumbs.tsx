@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'react-emotion'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Breadcrumb } from 'semantic-ui-react'
 
@@ -18,14 +18,13 @@ const BreadcrumbsContainer = styled.div`
 
 const Breadcrumbs: React.FC = () => {
   const history = useHistory()
+  const location = useLocation()
 
-  const [pathname, setPathname] = React.useState<string>(
-    history.location.pathname,
-  )
+  const [pathname, setPathname] = React.useState<string>(location.pathname)
 
   useEffect(() => {
-    history.listen((location) => {
-      setPathname(location.pathname)
+    history.listen((loc) => {
+      setPathname(loc.pathname)
     })
   }, [])
 
