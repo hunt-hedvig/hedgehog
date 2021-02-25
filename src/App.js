@@ -96,11 +96,11 @@ class App extends React.Component {
         >
           <CssBaseline />
           <ThemeProvider theme={this.state.isDarkmode ? darkTheme : lightTheme}>
-            <CommandLineProvider>
-              <Provider store={store}>
-                <MemberHistoryProvider>
-                  <NumberColorsProvider>
-                    <Router history={history}>
+            <Provider store={store}>
+              <MemberHistoryProvider>
+                <NumberColorsProvider>
+                  <Router history={history}>
+                    <CommandLineProvider>
                       <Layout>
                         <Navigation history={history} store={store} />
                         <Main
@@ -151,11 +151,11 @@ class App extends React.Component {
                           <Notifications />
                         </Main>
                       </Layout>
-                    </Router>
-                  </NumberColorsProvider>
-                </MemberHistoryProvider>
-              </Provider>
-            </CommandLineProvider>
+                    </CommandLineProvider>
+                  </Router>
+                </NumberColorsProvider>
+              </MemberHistoryProvider>
+            </Provider>
           </ThemeProvider>
         </MuiThemeProvider>
       </DarkmodeContext.Provider>

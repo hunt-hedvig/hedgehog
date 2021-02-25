@@ -133,10 +133,12 @@ const CommandLineComponent: React.FC<{
           autoFocus
           value={value}
           onChange={({ target }) => {
+            // @ts-ignore
             if (target.value === ' ' || target.value === ' ') {
               return
             }
 
+            // @ts-ignore
             setValue(target.value)
           }}
           icon={<Icon name="search" style={{ marginLeft: '1em' }} />}
@@ -177,12 +179,21 @@ export const useCommandLine = () => React.useContext(CommandLineContext)
 export const CommandLineProvider: React.FC = ({ children }) => {
   const [showCommandLine, setShowCommandLine] = React.useState(false)
   const [actions, setActions] = React.useState<CommandLineAction[]>([])
+  const actionsRef = React.useRef<CommandLineAction[]>()
 
   const isOptionPressed = useKeyIsPressed(KeyCode.Option)
   const isSpacePressed = useKeyIsPressed(KeyCode.Space)
   const isEscapePressed = useKeyIsPressed(KeyCode.Escape)
 
   const keys = usePressedKeys()
+
+  React.useEffect(() => {
+    actionsRef.current = actions
+  }, [actions])
+
+  const onMousePress = () => {
+    setShowCommandLine(false)
+  }
 
   React.useEffect(() => {
     actions.some((action) => {
@@ -197,6 +208,14 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }, [keys])
 
   React.useEffect(() => {
+    window.addEventListener('mousedown', onMousePress)
+
+    return () => {
+      window.removeEventListener('mousedown', onMousePress)
+    }
+  }, [])
+
+  React.useEffect(() => {
     if (isOptionPressed && isSpacePressed) {
       setShowCommandLine(true)
     }
@@ -206,21 +225,27 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     setShowCommandLine(false)
   }, [isEscapePressed])
 
-  const removeAction = (label: string) =>
-    setActions(actions.filter((action) => action.label === label))
+  const addAction = (newActions: CommandLineAction[]) => {
+    React.useEffect(() => {
+      setActions([...(actionsRef.current ?? []), ...newActions])
+      return () => {
+        newActions.forEach((newAction) => {
+          removeAction(newAction.label)
+        })
+      }
+    }, [])
+  }
+
+  const removeAction = (label: string) => {
+    actionsRef.current = (actionsRef.current ?? []).filter(
+      (action) => action.label !== label,
+    )
+  }
 
   return (
     <CommandLineContext.Provider
       value={{
-        useAction: (newActions: CommandLineAction[]) =>
-          React.useEffect(() => {
-            setActions([...actions, ...newActions])
-            return () => {
-              newActions.forEach((newAction) => {
-                removeAction(newAction.label)
-              })
-            }
-          }, []),
+        useAction: addAction,
         isHinting: isOptionPressed,
       }}
     >
