@@ -75,7 +75,7 @@ export interface CommandLineAction {
   onResolve: () => void
 }
 
-const CommandLineComponent: React.FC<{
+export const CommandLineComponent: React.FC<{
   hide: () => void
   actions: CommandLineAction[]
 }> = ({ hide, actions }) => {
