@@ -9,6 +9,7 @@ import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { EmojiPicker } from './EmojiPicker'
 
 const MessagesPanelContainer = styled('div')(({ theme }) => ({
@@ -61,6 +62,7 @@ const TextField = withStyles({
 })(MuiTextField)
 
 export const ChatPanel = ({ memberId }) => {
+  const commandLine = useCommandLine()
   const [currentMessage, setCurrentMessage] = useState('')
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [error, setError] = useState(false)
@@ -119,6 +121,8 @@ export const ChatPanel = ({ memberId }) => {
           error={error}
           multiline
           rows={4}
+          onFocus={() => commandLine.setBlocked(true)}
+          onBlur={() => commandLine.setBlocked(false)}
           rowsMax="12"
           margin="none"
           variant="outlined"

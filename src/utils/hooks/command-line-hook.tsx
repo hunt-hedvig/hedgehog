@@ -165,11 +165,13 @@ export const CommandLineComponent: React.FC<{
 
 interface CommandLineContextProps {
   useAction: (newActions: CommandLineAction[]) => any
+  setBlocked: (value: boolean) => void
   isHinting: boolean
 }
 
 const CommandLineContext = React.createContext<CommandLineContextProps>({
   useAction: (_: CommandLineAction[]) => void 0,
+  setBlocked: (_: boolean) => void 0,
   isHinting: false,
 })
 
@@ -178,13 +180,14 @@ export const useCommandLine = () => React.useContext(CommandLineContext)
 export const CommandLineProvider: React.FC = ({ children }) => {
   const [showCommandLine, setShowCommandLine] = React.useState(false)
   const [actions, setActions] = React.useState<CommandLineAction[]>([])
+  const [blocked, setBlocked] = React.useState(false)
   const actionsRef = React.useRef<CommandLineAction[]>()
 
   const isOptionPressed = useKeyIsPressed(KeyCode.Option)
   const isSpacePressed = useKeyIsPressed(KeyCode.Space)
   const isEscapePressed = useKeyIsPressed(KeyCode.Escape)
 
-  const keys = usePressedKeys()
+  const keys = usePressedKeys(blocked)
 
   React.useEffect(() => {
     actionsRef.current = actions
@@ -195,6 +198,9 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }
 
   React.useEffect(() => {
+    if (blocked) {
+      return
+    }
     actions.some((action) => {
       const match =
         action.keys.filter((key) => !keys.includes(key)).length === 0
@@ -215,6 +221,9 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }, [])
 
   React.useEffect(() => {
+    if (blocked) {
+      return
+    }
     if (isOptionPressed && isSpacePressed) {
       setShowCommandLine(true)
     }
@@ -245,11 +254,12 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     <CommandLineContext.Provider
       value={{
         useAction: addAction,
-        isHinting: isOptionPressed,
+        setBlocked: (value: boolean) => setBlocked(value),
+        isHinting: blocked ? false : isOptionPressed,
       }}
     >
       {children}
-      {showCommandLine && (
+      {!blocked && showCommandLine && (
         <CommandLineComponent
           hide={() => setShowCommandLine(false)}
           actions={actions}

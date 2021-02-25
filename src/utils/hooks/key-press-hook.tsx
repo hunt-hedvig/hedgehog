@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export const KeyCode = {
   Backspace: 8,
@@ -78,9 +78,6 @@ export const KeyCode = {
   Period: 190,
 }
 
-export const isAllowedOptionKeyCode = (keyCode: number | null) =>
-  keyCode == null || (keyCode >= KeyCode.One && keyCode <= KeyCode.Nine)
-
 export const useKeyIsPressed = (keyCode: number): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
@@ -116,10 +113,15 @@ export const useKeyIsPressed = (keyCode: number): boolean => {
   return keyPressed
 }
 
-export const usePressedKeys = () => {
+export const usePressedKeys = (ignore: boolean) => {
   const [keyDown, setKeyDown] = useState<number | null>(null)
   const [keyUp, setKeyUp] = useState<number | null>(null)
   const [pressedKeys, setPressedKeys] = useState<number[]>([])
+  const ignoreRef = useRef(ignore)
+
+  useEffect(() => {
+    ignoreRef.current = ignore
+  }, [ignore])
 
   useEffect(() => {
     if (!keyDown) {
@@ -145,10 +147,16 @@ export const usePressedKeys = () => {
   }, [keyUp])
 
   const handleKeydown = (e) => {
+    if (ignoreRef.current) {
+      return
+    }
     setKeyDown(e.keyCode)
   }
 
   const handleKeyup = (e) => {
+    if (ignoreRef.current) {
+      return
+    }
     setKeyUp(e.keyCode)
   }
 
