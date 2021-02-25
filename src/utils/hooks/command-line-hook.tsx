@@ -125,7 +125,6 @@ export const CommandLineComponent: React.FC<{
     <CommandLineWindow>
       <div
         style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.0)',
           width: '100%',
         }}
       >
