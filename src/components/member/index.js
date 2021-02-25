@@ -161,14 +161,12 @@ export const Member = (props) => {
         history.push(`/members/${memberId}/${panes[8].tabName}`)
       },
     },
-
     {
       label: `Send an email to ${member.email}`,
       keysHint: ['⌥', 'E'],
-      keys: [KeyCode.Option, KeyCode.Nine],
+      keys: [KeyCode.Option, KeyCode.E],
       onResolve: () => {
         window.open(`mailto:${member.email}`)
-        history.push(`/members/${memberId}/${panes[8].tabName}`)
       },
     },
   ])

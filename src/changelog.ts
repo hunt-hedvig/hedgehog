@@ -14,8 +14,8 @@ export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-02-16',
     change:
-      'Added keyboard navigation. Accessible through pressing Option (Mac) or Alt (others)',
-    authorGithubHandle: 'vonElfvin',
+      'Added Hedvig CLI. Accessible by pressing ⌥ + Space (Mac) or Alt + Space (others)',
+    authorGithubHandle: 'rasmusguterstam (feat. vonElfvin 🥴)',
   },
   {
     date: '2021-02-12',
