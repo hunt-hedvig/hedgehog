@@ -89,7 +89,7 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
           </MetricsWrapper>
         </FadeIn>
       )}
-      <Spacing top>
+      <Spacing top bottom>
         <ThirdLevelHeadline>
           <strong>Number of colors:</strong>
         </ThirdLevelHeadline>

@@ -42,10 +42,12 @@ const Questions: React.FC = () => {
     <>
       <Spacing bottom="large">
         <FadeIn>
-          <ThirdLevelHeadline>
-            <strong>Number of colors:</strong>
-          </ThirdLevelHeadline>
-          <NumberColorsRadioButtons />
+          <Spacing bottom>
+            <ThirdLevelHeadline>
+              <strong>Number of colors:</strong>
+            </ThirdLevelHeadline>
+            <NumberColorsRadioButtons />
+          </Spacing>
           <QuestionsFilter
             questionGroups={questionGroups}
             selected={selectedFilters}

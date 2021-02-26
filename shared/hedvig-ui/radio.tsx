@@ -23,7 +23,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 }) => {
   const [currentValue, setCurrentValue] = useState(value)
   return (
-    <Form>
+    <>
       {options.map((option) => {
         return (
           <RadioButtonField key={option.value}>
@@ -39,6 +39,6 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
           </RadioButtonField>
         )
       })}
-    </Form>
+    </>
   )
 }
