@@ -21,6 +21,7 @@ interface PaymentConfirmationDialogProps {
   claimId: string
   identified: boolean
   market: string | null
+  carrier: string
 }
 
 const CustomTextField = ({ field, form, ...props }) => {
@@ -36,13 +37,14 @@ interface ConfirmationData {
   confirmation: string
 }
 
-export const PaymentConfirmationDialog: React.SFC<PaymentConfirmationDialogProps> = ({
+export const PaymentConfirmationDialog: React.FC<PaymentConfirmationDialogProps> = ({
   onClose,
   onSubmit,
   payment,
   claimId,
   identified,
   market,
+  carrier,
 }) => {
   return (
     <Dialog open={true} onClose={onClose} aria-labelledby="form-dialog-title">
@@ -82,6 +84,7 @@ export const PaymentConfirmationDialog: React.SFC<PaymentConfirmationDialogProps
                   note: payment.note,
                   exGratia: payment.exGratia || false,
                   type: payment.type,
+                  carrier,
                 },
               },
             })
