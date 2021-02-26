@@ -4,7 +4,7 @@ import { FilteredQuestionGroups } from './FilteredQuestionGroups'
 import {
   doClaimFilter,
   doMarketFilter,
-  doTeamFilter,
+  doColorFilter,
 } from 'utils/questionGroup'
 import { NumberColorsContext } from 'utils/number-colors-context'
 
@@ -21,7 +21,7 @@ const QuestionGroups = ({ selectedFilters, questionGroups }) => {
     <ListContainer>
       <FilteredQuestionGroups
         filterQuestionGroups={questionGroups
-          .filter(doTeamFilter(numberColors)(selectedFilters))
+          .filter(doColorFilter(numberColors)(selectedFilters))
           .filter(doMarketFilter(selectedFilters))
           .filter(doClaimFilter(selectedFilters))}
       />

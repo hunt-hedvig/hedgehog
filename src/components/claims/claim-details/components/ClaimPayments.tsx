@@ -137,7 +137,7 @@ const ClaimPayments: React.FC<Props> = ({
                   <b>Amount Total: </b>
                 </TotalCell>
                 <TotalCell align="right">
-                  {totalAmount.toFixed(2)} {payments[0]!.amount.currency}
+                  {totalAmount.toFixed(2)}&nbsp;{payments[0]!.amount.currency}
                 </TotalCell>
               </MuiTableRow>
               <MuiTableRow>
@@ -145,7 +145,7 @@ const ClaimPayments: React.FC<Props> = ({
                   <b>Deductible Total: </b>
                 </TotalCell>
                 <TotalCell align="right">
-                  {totalDeductible.toFixed(2)}{' '}
+                  {totalDeductible.toFixed(2)}&nbsp;
                   {payments[0]!.deductible.currency}
                 </TotalCell>
               </MuiTableRow>

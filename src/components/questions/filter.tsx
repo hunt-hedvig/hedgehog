@@ -5,22 +5,20 @@ import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React, { useContext } from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
+import { range } from 'utils/array'
 import { NumberColorsContext } from 'utils/number-colors-context'
 import {
   doClaimFilter,
+  doColorFilter,
   doMarketFilter,
-  doTeamFilter,
 } from 'utils/questionGroup'
 
-export const totalNumberOfTeams = 3
+export const totalNumberOfColors = 3
 
 export enum FilterState {
-  Red,
-  Green,
-  Violet,
-  Blue,
-  Teal,
-  Purple,
+  First,
+  Second,
+  Third,
   Sweden,
   Norway,
   Denmark,
@@ -69,7 +67,7 @@ const FilterName = styled.label`
   vertical-align: middle;
 `
 
-const TeamBadge = styled.div<{ filter: FilterState }>`
+const ColorBadge = styled.div<{ filter: FilterState }>`
   background-color:
   display: inline-block;
   width: 1.5em;
@@ -80,22 +78,16 @@ const TeamBadge = styled.div<{ filter: FilterState }>`
   background-color: ${({ filter }) => getFilterColor(filter)};
 `
 
-export const getFilterColor = (filter: number): string => {
+export const getFilterColor = (filter: FilterState): string => {
   switch (filter) {
-    case FilterState.Blue:
-      return 'blue'
-    case FilterState.Green:
+    case FilterState.Second:
       return lightTheme.success
-    case FilterState.Red:
+    case FilterState.First:
       return lightTheme.danger
-    case FilterState.Purple:
-      return 'purple'
-    case FilterState.Teal:
-      return 'teal'
-    case FilterState.Violet:
-      return '#BE9BF3'
+    case FilterState.Third:
+      return lightTheme.highlight
     default:
-      return 'grey'
+      return lightTheme.accent
   }
 }
 
@@ -119,16 +111,16 @@ export const QuestionsFilter: React.FC<{
     <>
       <FilterRow>
         <FilterLabel>Color: </FilterLabel>
-        {[...Array(numberColors)].map((_, filterNumber) => {
+        {range(numberColors).map((filterNumber) => {
           return (
             <FilterCheckbox
               key={filterNumber}
               label={
                 <FilterName>
                   {FilterState[filterNumber]} (
-                  {getCountByFilter(filterNumber, doTeamFilter(numberColors))}
+                  {getCountByFilter(filterNumber, doColorFilter(numberColors))}
                   )
-                  <TeamBadge filter={filterNumber} />
+                  <ColorBadge filter={filterNumber} />
                 </FilterName>
               }
               checked={selected.includes(filterNumber)}

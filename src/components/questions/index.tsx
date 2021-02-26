@@ -16,8 +16,8 @@ const Questions: React.FC = () => {
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
   >('questions:filters', [
-    FilterState.Red,
-    FilterState.Green,
+    FilterState.First,
+    FilterState.Second,
     FilterState.Sweden,
     FilterState.Norway,
     FilterState.HasOpenClaim,

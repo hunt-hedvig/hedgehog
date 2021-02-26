@@ -1,25 +1,26 @@
 import React, { createContext, useEffect, useState } from 'react'
 
-const NUMBER_COLORS_KEY = 'hedvig:teams:number'
+const NUMBER_COLORS_KEY = 'hedvig:colors:number'
 
 export const getDefaultNumberColors = (): number => {
   try {
-    return +(window.localStorage.getItem(NUMBER_COLORS_KEY) ?? 2)
+    return Number(window.localStorage.getItem(NUMBER_COLORS_KEY)) ?? 2
   } catch (e) {
     console.error(e)
     return 2
   }
 }
 
-export const NumberColorsContext = createContext({
+export const NumberColorsContext = createContext<{
+  numberColors: number
+  setNumberColors: (value: number) => void
+}>({
   numberColors: getDefaultNumberColors(),
-  setNumberColors: (_numberColors: number) => {
-    // noop
-  },
+  setNumberColors: (_value: number) => void 0,
 })
 
 export const NumberColorsProvider: React.FC = ({ children }) => {
-  const [numberColors, setNumberColors] = useState(() =>
+  const [numberColors, setNumberColors] = useState<number>(() =>
     getDefaultNumberColors(),
   )
 
