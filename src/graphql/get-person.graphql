@@ -7,23 +7,6 @@ query GetPerson($memberId: ID!) {
         flag
         whitelisted
       }
-      debt {
-        paymentDefaults {
-          year
-          week
-          paymentDefaultType
-          paymentDefaultTypeText
-          amount
-          caseId
-          claimant
-        }
-        numberPublicDebts
-        totalAmountPublicDebt
-        numberPrivateDebts
-        totalAmountPrivateDebt
-        totalAmountDebt
-        fromDateTime
-      }
       whitelisted {
         whitelistedAt
         whitelistedBy

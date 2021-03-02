@@ -1,6 +1,4 @@
-import { ContractMarketInfo, PaymentDefault } from 'api/generated/graphql'
-import { OverallDebtProfile } from 'components/member/tabs/debt-tab/OverallDebtProfile'
-import { PaymentDefaultsTable } from 'components/member/tabs/debt-tab/PaymentDefaultsTable'
+import { ContractMarketInfo } from 'api/generated/graphql'
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
 import {
   InfoContainer,
@@ -47,7 +45,7 @@ export const DebtTab: React.FC<{
   if (error || !person) {
     return (
       <StandaloneMessage paddingTop="10vh">
-        Issue retrieving debt for this member
+        Issue retrieving debt flag for this member
       </StandaloneMessage>
     )
   }
@@ -85,13 +83,7 @@ export const DebtTab: React.FC<{
             <WhitelistMemberButton memberId={memberId} />
           )}
         </Card>
-        {person?.debt && <OverallDebtProfile debt={person.debt} />}
       </CardsWrapper>
-      {person?.debt?.paymentDefaults && (
-        <PaymentDefaultsTable
-          paymentDefaults={person.debt.paymentDefaults as PaymentDefault[]}
-        />
-      )}
     </FadeIn>
   )
 }
