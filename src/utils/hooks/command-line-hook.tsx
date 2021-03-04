@@ -1,7 +1,13 @@
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Input } from 'hedvig-ui/input'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
-import React from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 import {
@@ -17,30 +23,33 @@ const CommandLineWindow = styled.div`
   transform: translate(-50%, -50%);
   background-color: rgba(255, 255, 255, 1);
   box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
-  -webkit-box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
   border-radius: 0.3em;
 `
 
-const CharacterBadge: React.FC<{ content: string }> = ({ content }) => {
-  return (
-    <div
-      style={{
-        background: 'rgba(0, 0, 0, 0.1)',
-        padding: '0.35em 0.55em',
-        borderRadius: '0.3em',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: '0.4em',
-      }}
-    >
-      <Paragraph style={{ fontSize: '0.8em', fontWeight: 'bold' }}>
-        {content}
-      </Paragraph>
-    </div>
-  )
-}
+const CharacterBadge = styled.div`
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.35em 0.55em;
+  border-radius: 0.3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.4em;
+`
+
+const ResultItemWrapper = styled.div<{ selected: boolean }>`
+  padding: 1em 3.5em;
+  padding-right: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: ${({ selected }) =>
+    selected ? 'rgba(0, 0, 0, 0.1)' : 'transparent'};
+`
+
+const ResultItemContent = styled.div`
+  display: flex;
+  flex-direction: row;
+`
 
 const ResultItem: React.FC<{
   label: string
@@ -48,23 +57,18 @@ const ResultItem: React.FC<{
   selected?: boolean
 }> = ({ label, characters, selected = false }) => {
   return (
-    <div
-      style={{
-        padding: '1.0em 3.5em',
-        paddingRight: '1.0em',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: selected ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
-      }}
-    >
+    <ResultItemWrapper selected={selected}>
       <FourthLevelHeadline>{label}</FourthLevelHeadline>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <ResultItemContent>
         {characters.map((character) => (
-          <CharacterBadge key={character} content={character} />
+          <CharacterBadge key={character}>
+            <Paragraph style={{ fontSize: '0.8em', fontWeight: 'bold' }}>
+              {character}
+            </Paragraph>
+          </CharacterBadge>
         ))}
-      </div>
-    </div>
+      </ResultItemContent>
+    </ResultItemWrapper>
   )
 }
 
@@ -79,14 +83,14 @@ export const CommandLineComponent: React.FC<{
   hide: () => void
   actions: CommandLineAction[]
 }> = ({ hide, actions }) => {
-  const [value, setValue] = React.useState('')
-  const [selectedItem, setSelectedItem] = React.useState(0)
+  const [value, setValue] = useState('')
+  const [selectedItem, setSelectedItem] = useState(0)
 
   const isUpPressed = useKeyIsPressed(KeyCode.Up)
   const isDownPressed = useKeyIsPressed(KeyCode.Down)
   const isEnterPressed = useKeyIsPressed(KeyCode.Return)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isUpPressed && selectedItem > 0) {
       setSelectedItem(selectedItem - 1)
     }
@@ -96,7 +100,7 @@ export const CommandLineComponent: React.FC<{
     }
   }, [isUpPressed, isDownPressed])
 
-  const searchResult = (query: string) => {
+  const getSearchResult = (query: string) => {
     if (value === '') {
       return []
     }
@@ -108,15 +112,15 @@ export const CommandLineComponent: React.FC<{
       .slice(0, 3)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     setSelectedItem(0)
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isEnterPressed) {
       hide()
-      if (searchResult(value).length !== 0) {
-        searchResult(value)[selectedItem].onResolve()
+      if (getSearchResult(value).length !== 0) {
+        getSearchResult(value)[selectedItem].onResolve()
       }
     }
   }, [isEnterPressed])
@@ -132,13 +136,13 @@ export const CommandLineComponent: React.FC<{
           autoFocus
           value={value}
           onChange={({ target }) => {
-            // @ts-ignore
-            if (target.value === ' ' || target.value === ' ') {
+            const inputValue = (target as HTMLInputElement).value
+
+            if (inputValue === '\xa0' || inputValue === ' ') {
               return
             }
 
-            // @ts-ignore
-            setValue(target.value)
+            setValue(inputValue)
           }}
           icon={<Icon name="search" style={{ marginLeft: '1em' }} />}
           iconPosition="left"
@@ -149,7 +153,7 @@ export const CommandLineComponent: React.FC<{
         />
       </div>
       <div>
-        {searchResult(value).map(({ label, keysHint }, index) => (
+        {getSearchResult(value).map(({ label, keysHint }, index) => (
           <FadeIn delay={`${index * 50}ms`} key={label + index.toString()}>
             <ResultItem
               label={label}
@@ -169,19 +173,19 @@ interface CommandLineContextProps {
   isHinting: boolean
 }
 
-const CommandLineContext = React.createContext<CommandLineContextProps>({
+const CommandLineContext = createContext<CommandLineContextProps>({
   useAction: (_: CommandLineAction[]) => void 0,
   setBlocked: (_: boolean) => void 0,
   isHinting: false,
 })
 
-export const useCommandLine = () => React.useContext(CommandLineContext)
+export const useCommandLine = () => useContext(CommandLineContext)
 
 export const CommandLineProvider: React.FC = ({ children }) => {
-  const [showCommandLine, setShowCommandLine] = React.useState(false)
-  const [actions, setActions] = React.useState<CommandLineAction[]>([])
-  const [blocked, setBlocked] = React.useState(false)
-  const actionsRef = React.useRef<CommandLineAction[]>()
+  const [showCommandLine, setShowCommandLine] = useState(false)
+  const [actions, setActions] = useState<CommandLineAction[]>([])
+  const [blocked, setBlocked] = useState(false)
+  const actionsRef = useRef<CommandLineAction[]>()
 
   const isOptionPressed = useKeyIsPressed(KeyCode.Option)
   const isSpacePressed = useKeyIsPressed(KeyCode.Space)
@@ -189,7 +193,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
 
   const keys = usePressedKeys(blocked)
 
-  React.useEffect(() => {
+  useEffect(() => {
     actionsRef.current = actions
   }, [actions])
 
@@ -197,7 +201,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     setShowCommandLine(false)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (blocked) {
       return
     }
@@ -212,7 +216,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     })
   }, [keys])
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('mousedown', onMousePress)
 
     return () => {
@@ -220,7 +224,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     }
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (blocked) {
       return
     }
@@ -229,12 +233,12 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     }
   }, [isOptionPressed, isSpacePressed])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setShowCommandLine(false)
   }, [isEscapePressed])
 
   const addAction = (newActions: CommandLineAction[]) => {
-    React.useEffect(() => {
+    useEffect(() => {
       setActions([...(actionsRef.current ?? []), ...newActions])
       return () => {
         newActions.forEach((newAction) => {
