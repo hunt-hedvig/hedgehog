@@ -8,7 +8,7 @@ import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
   formatSsn,
-  getMemberGroup,
+  getMemberGroupName,
   getMemberIdColor,
   MemberAge,
 } from 'utils/member'
@@ -111,7 +111,7 @@ export const Member = (props) => {
                       memberId={member.memberId}
                       numberMemberGroups={numberMemberGroups}
                     >
-                      {getMemberGroup(member.memberId, numberMemberGroups)}
+                      {getMemberGroupName(member.memberId, numberMemberGroups)}
                     </Badge>
                   </>
                 )}

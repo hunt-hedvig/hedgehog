@@ -18,6 +18,7 @@ const Questions: React.FC = () => {
   >('questions:filters', [
     FilterState.First,
     FilterState.Second,
+    FilterState.Third,
     FilterState.Sweden,
     FilterState.Norway,
     FilterState.HasOpenClaim,
