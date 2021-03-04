@@ -9,7 +9,7 @@ import { range } from 'utils/array'
 import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
 import {
   doClaimFilter,
-  doColorFilter,
+  doMemberGroupFilter,
   doMarketFilter,
 } from 'utils/questionGroup'
 
@@ -117,10 +117,10 @@ export const QuestionsFilter: React.FC<{
               key={filterNumber}
               label={
                 <FilterName>
-                  {FilterState[filterNumber]} group (
+                  {FilterState[filterNumber]} (
                   {getCountByFilter(
                     filterNumber,
-                    doColorFilter(numberMemberGroups),
+                    doMemberGroupFilter(numberMemberGroups),
                   )}
                   )
                   <ColorBadge filter={filterNumber} />

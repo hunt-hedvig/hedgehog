@@ -12,8 +12,9 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-02-26',
-    change: 'Add ability to change how many colors are in H.OPE.',
+    date: '2021-03-04',
+    change:
+      'Add ability to change how many colors are in H.OPE. and other improvements',
     authorGithubHandle: 'vonElfvin',
   },
   {

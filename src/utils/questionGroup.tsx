@@ -5,7 +5,7 @@ import { range } from 'utils/array'
 import { hasOpenClaim } from 'utils/claim'
 import { memberBelongsToMemberGroup } from 'utils/member'
 
-export const doColorFilter = (numberMemberGroups: number) => (
+export const doMemberGroupFilter = (numberMemberGroups: number) => (
   selectedFilters: ReadonlyArray<FilterState>,
 ) => (questionGroup: QuestionGroup): boolean => {
   return range(numberMemberGroups)
