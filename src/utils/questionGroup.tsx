@@ -5,14 +5,18 @@ import { range } from 'utils/array'
 import { hasOpenClaim } from 'utils/claim'
 import { memberBelongsToColor } from 'utils/member'
 
-export const doColorFilter = (numberColors: number) => (
+export const doColorFilter = (numberMemberGroups: number) => (
   selectedFilters: ReadonlyArray<FilterState>,
 ) => (questionGroup: QuestionGroup): boolean => {
-  return range(numberColors)
+  return range(numberMemberGroups)
     .map(
-      (colorNumber) =>
-        selectedFilters.includes(colorNumber) &&
-        memberBelongsToColor(questionGroup.memberId, colorNumber, numberColors),
+      (memberGroupNumber) =>
+        selectedFilters.includes(memberGroupNumber) &&
+        memberBelongsToColor(
+          questionGroup.memberId,
+          memberGroupNumber,
+          numberMemberGroups,
+        ),
     )
     .includes(true)
 }

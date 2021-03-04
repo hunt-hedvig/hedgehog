@@ -9,14 +9,14 @@ import { ShieldShaded } from 'react-bootstrap-icons'
 import { IconButton } from '@material-ui/core'
 import { history } from 'store'
 import { Popover } from 'hedvig-ui/popover'
-import { NumberColorsContext } from 'utils/number-colors-context'
+import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
 
 const QuestionGroupInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 1.5rem;
   border-left: 7px solid
-    ${({ memberId, numberColors }) => getMemberIdColor(memberId, numberColors)};
+    ${({ memberId, numberMemberGroups }) => getMemberIdColor(memberId, numberMemberGroups)};
 `
 
 const StyledPopover = styled(Popover)`
@@ -32,12 +32,12 @@ const MemberInfoWrapper = styled.div`
 const QuestionGroupInfo = ({ questionGroup }) => {
   const member = questionGroup?.member
 
-  const { numberColors } = useContext(NumberColorsContext)
+  const { numberMemberGroups } = useContext(NumberMemberGroupsContext)
 
   return (
     <QuestionGroupInfoWrapper
       memberId={questionGroup.memberId}
-      numberColors={numberColors}
+      numberMemberGroups={numberMemberGroups}
     >
       <MemberInfoWrapper>
         {member && (

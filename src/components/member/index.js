@@ -18,7 +18,7 @@ import { MemberHistoryContext } from 'utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
 import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
-import { NumberColorsContext } from 'utils/number-colors-context'
+import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
 import { useHistory } from 'react-router'
 
 const MemberPageWrapper = styled('div')({
@@ -47,8 +47,8 @@ const Badge = styled('div')`
   padding: 0.5rem 1rem;
   line-height: 1;
   font-size: 1rem;
-  ${({ memberId, numberColors }) =>
-    `background: ${getMemberIdColor(memberId, numberColors)}`};
+  ${({ memberId, numberMemberGroups }) =>
+    `background: ${getMemberIdColor(memberId, numberMemberGroups)}`};
   border-radius: 8px;
   color: #fff;
   margin-left: auto;
@@ -84,7 +84,7 @@ export const Member = (props) => {
 
   const panes = memberPagePanes(props, memberId, member)
 
-  const { numberColors } = useContext(NumberColorsContext)
+  const { numberMemberGroups } = useContext(NumberMemberGroupsContext)
 
   return (
     <MemberHistoryContext.Consumer>
@@ -109,9 +109,9 @@ export const Member = (props) => {
                     </Flag>
                     <Badge
                       memberId={member.memberId}
-                      numberColors={numberColors}
+                      numberMemberGroups={numberMemberGroups}
                     >
-                      {getMemberGroup(member.memberId, numberColors)}
+                      {getMemberGroup(member.memberId, numberMemberGroups)}
                     </Badge>
                   </>
                 )}

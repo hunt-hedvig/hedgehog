@@ -6,7 +6,7 @@ import {
   doMarketFilter,
   doColorFilter,
 } from 'utils/questionGroup'
-import { NumberColorsContext } from 'utils/number-colors-context'
+import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
 
 const ListContainer = styled.div`
   display: flex;
@@ -16,12 +16,12 @@ const ListContainer = styled.div`
 `
 
 const QuestionGroups = ({ selectedFilters, questionGroups }) => {
-  const { numberColors } = useContext(NumberColorsContext)
+  const { numberMemberGroups } = useContext(NumberMemberGroupsContext)
   return (
     <ListContainer>
       <FilteredQuestionGroups
         filterQuestionGroups={questionGroups
-          .filter(doColorFilter(numberColors)(selectedFilters))
+          .filter(doColorFilter(numberMemberGroups)(selectedFilters))
           .filter(doMarketFilter(selectedFilters))
           .filter(doClaimFilter(selectedFilters))}
       />
