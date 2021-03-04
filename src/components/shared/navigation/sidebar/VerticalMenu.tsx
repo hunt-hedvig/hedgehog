@@ -18,6 +18,7 @@ import {
 import styled from 'react-emotion'
 import MediaQuery from 'react-media'
 import { connect } from 'react-redux'
+import { matchPath } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
@@ -347,19 +348,24 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   }, [currentLocation])
 
   React.useEffect(() => {
-    const CLAIM_REGEX = /\/claims\/([\-A-Za-z0-9]+)\/members\/(\d+)/
-    const targetLocation = locations.find((location) => {
-      const exists = CLAIM_REGEX.exec(location)
-      return exists != null
-    })
-    if (!targetLocation) {
-      return
-    }
-    const regexMatch = CLAIM_REGEX.exec(targetLocation)
-    setLatestClaim({
-      memberId: regexMatch![2],
-      claimId: regexMatch![1],
-      location: targetLocation,
+    locations.find((location) => {
+      const match = matchPath(location, {
+        path: '/claims/:claimId/members/:memberId',
+        exact: true,
+        strict: false,
+      })
+
+      if (!match) {
+        return
+      }
+
+      const { memberId, claimId } = match.params as LatestClaim
+
+      setLatestClaim({
+        memberId,
+        claimId,
+        location,
+      })
     })
   }, [locations])
 

@@ -18,7 +18,6 @@ import { MemberHistoryContext } from 'utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { NumberColorsContext } from 'utils/number-colors-context'
-import { history } from 'store'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { KeyCode } from 'utils/hooks/key-press-hook'
 import { useHistory } from 'react-router'
@@ -164,11 +163,13 @@ export const Member = (props) => {
       },
     },
     {
-      label: `Send an email to ${member.email}`,
+      label: `Copy ${formattedFirstName} email to clipboard`,
       keysHint: ['⌥', 'E'],
       keys: [KeyCode.Option, KeyCode.E],
       onResolve: () => {
-        window.open(`mailto:${member.email}`)
+        copy(member.email, {
+          format: 'text/plain',
+        })
       },
     },
   ])
@@ -247,7 +248,9 @@ export const Member = (props) => {
               <Tab
                 panes={panes}
                 onTabChange={(_, { activeIndex }) =>
-                  history.replace(`/members/${memberId}/${panes[activeIndex].tabName}`)
+                  history.replace(
+                    `/members/${memberId}/${panes[activeIndex].tabName}`,
+                  )
                 }
                 renderActiveOnly={true}
                 activeIndex={activeIndex}
