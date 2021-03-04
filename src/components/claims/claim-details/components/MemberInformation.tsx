@@ -96,7 +96,7 @@ const MemberInformation: React.FC<{
       <p>
         <strong>First Master Inception:</strong> {firstMasterInception}
         {firstMasterInception && (
-          <>({formatDistance(new Date(firstMasterInception), new Date())})</>
+          <> ({formatDistance(new Date(firstMasterInception), new Date())}</>
         )}
         {!firstMasterInception && 'Never been active'})
       </p>
