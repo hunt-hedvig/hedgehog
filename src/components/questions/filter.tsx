@@ -80,10 +80,10 @@ const ColorBadge = styled.div<{ filter: FilterState }>`
 
 export const getFilterColor = (filter: FilterState): string => {
   switch (filter) {
-    case FilterState.Second:
-      return lightTheme.success
     case FilterState.First:
       return lightTheme.danger
+    case FilterState.Second:
+      return lightTheme.success
     case FilterState.Third:
       return lightTheme.highlight
     default:

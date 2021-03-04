@@ -45,7 +45,7 @@ export const getMemberGroup = (
   } group`
 }
 
-export const memberBelongsToColor = (
+export const memberBelongsToMemberGroup = (
   memberId,
   colorNumber,
   numberMemberGroups,
