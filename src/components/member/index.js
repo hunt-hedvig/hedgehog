@@ -21,6 +21,7 @@ import { NumberColorsContext } from 'utils/number-colors-context'
 import { history } from 'store'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { KeyCode } from 'utils/hooks/key-press-hook'
+import { useHistory } from 'react-router'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -74,6 +75,7 @@ const MemberDetailLink = MemberDetail.withComponent('a')
 const getIndex = (tab, panes) => panes.map((pane) => pane.tabName).indexOf(tab)
 
 export const Member = (props) => {
+  const history = useHistory()
   const memberId = props.match.params.memberId
   const tab = props.match.params.tab ?? 'contracts'
 
@@ -245,9 +247,7 @@ export const Member = (props) => {
               <Tab
                 panes={panes}
                 onTabChange={(_, { activeIndex }) =>
-                  history.push(
-                    `/members/${memberId}/${panes[activeIndex].tabName}`,
-                  )
+                  history.replace(`/members/${memberId}/${panes[activeIndex].tabName}`)
                 }
                 renderActiveOnly={true}
                 activeIndex={activeIndex}

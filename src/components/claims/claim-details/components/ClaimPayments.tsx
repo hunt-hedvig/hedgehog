@@ -27,6 +27,7 @@ interface Props {
   refetchPage: () => Promise<any>
   identity: Identity | null
   market: string | null
+  carrier: string | null
 }
 
 const PaymentTable = withStyles({
@@ -45,7 +46,7 @@ const TotalCell = styled(MuiTableCell)`
   font-size: 1.1rem;
 `
 
-const ClaimPayments: React.SFC<Props> = ({
+const ClaimPayments: React.FC<Props> = ({
   payments,
   claimId,
   reserves,
@@ -53,6 +54,7 @@ const ClaimPayments: React.SFC<Props> = ({
   refetchPage,
   identity,
   market,
+  carrier,
 }) => {
   const totalAmount = payments
     .map((payment) => +payment?.amount?.amount)
@@ -135,7 +137,7 @@ const ClaimPayments: React.SFC<Props> = ({
                   <b>Amount Total: </b>
                 </TotalCell>
                 <TotalCell align="right">
-                  {totalAmount.toFixed(2)} {payments[0]!.amount.currency}
+                  {totalAmount.toFixed(2)}&nbsp;{payments[0]!.amount.currency}
                 </TotalCell>
               </MuiTableRow>
               <MuiTableRow>
@@ -143,7 +145,7 @@ const ClaimPayments: React.SFC<Props> = ({
                   <b>Deductible Total: </b>
                 </TotalCell>
                 <TotalCell align="right">
-                  {totalDeductible.toFixed(2)}{' '}
+                  {totalDeductible.toFixed(2)}&nbsp;
                   {payments[0]!.deductible.currency}
                 </TotalCell>
               </MuiTableRow>
@@ -158,6 +160,7 @@ const ClaimPayments: React.SFC<Props> = ({
         refetchPage={refetchPage}
         identified={!!identity}
         market={market}
+        carrier={carrier}
       />
     </Paper>
   )

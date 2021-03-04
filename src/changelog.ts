@@ -12,10 +12,20 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-02-16',
+    date: '2021-03-04',
     change:
       'Added Hedvig CLI. Accessible by pressing ⌥ + Space (Mac) or Alt + Space (others)',
-    authorGithubHandle: 'rasmusguterstam (feat. vonElfvin 🥴)',
+    authorGithubHandle: 'rasmusguterstam feat. vonElfvin',
+  },
+  {
+    date: '2021-02-26',
+    change: 'Add ability to change how many colors are in H.OPE.',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2021-02-24',
+    change: 'Show carrier and line of business of a claim.',
+    authorGithubHandle: 'vonElfvin',
   },
   {
     date: '2021-02-12',

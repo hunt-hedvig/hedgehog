@@ -332,6 +332,7 @@ type GenericAgreement {
   extraBuildings: [ExtraBuilding!]
   isSubleted: Boolean
   lineOfBusinessName: String!
+  carrier: String!
 }
 
 enum SwedishApartmentLineOfBusiness {
@@ -937,25 +938,31 @@ enum ClaimSource {
 }
 
 type Claim {
-  id: ID
-  member: Member
+  id: ID!
+  member: Member!
   recordingUrl: String
-  state: ClaimState
+  state: ClaimState!
   type: ClaimType
   reserves: MonetaryAmount
-  registrationDate: Instant
-  notes: [ClaimNote]
-  transcriptions: [ClaimTranscription]
-  payments: [ClaimPayment]
-  events: [ClaimEvent]
+  registrationDate: Instant!
+  notes: [ClaimNote!]!
+  transcriptions: [ClaimTranscription!]!
+  payments: [ClaimPayment!]!
+  events: [ClaimEvent!]!
   coveringEmployee: Boolean!
   claimFiles: [ClaimFileUpload!]!
   contract: Contract
+  agreement: GenericAgreement
+  itemSet: ClaimItemSet!
+}
+
+type ClaimItemSet {
+  items: [ClaimItem!]!
 }
 
 type ClaimNote {
-  text: String
-  date: LocalDateTime
+  text: String!
+  date: LocalDateTime!
 }
 
 type ClaimTranscription {
@@ -1152,6 +1159,7 @@ input ClaimPaymentInput {
   type: ClaimPaymentType!
   exGratia: Boolean!
   sanctionListSkipped: Boolean!
+  carrier: String!
 }
 
 input ClaimNoteInput {

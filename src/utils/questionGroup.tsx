@@ -1,19 +1,20 @@
 import { QuestionGroup } from 'api/generated/graphql'
 import { FilterState } from 'components/questions/filter'
 import { Market } from 'types/enums'
+import { range } from 'utils/array'
 import { hasOpenClaim } from 'utils/claim'
+import { memberBelongsToColor } from 'utils/member'
 
-export const doTeamFilter = (numberTeamColors: number) => (
+export const doColorFilter = (numberColors: number) => (
   selectedFilters: ReadonlyArray<FilterState>,
 ) => (questionGroup: QuestionGroup): boolean => {
-  return [...Array(numberTeamColors)]
-    .map((_, teamNumber) => {
-      return (
-        selectedFilters.includes(teamNumber) &&
-        +questionGroup.memberId % numberTeamColors === teamNumber
-      )
-    })
-    .reduce((acc, cur) => acc || cur, false)
+  return range(numberColors)
+    .map(
+      (colorNumber) =>
+        selectedFilters.includes(colorNumber) &&
+        memberBelongsToColor(questionGroup.memberId, colorNumber, numberColors),
+    )
+    .includes(true)
 }
 
 export const doMarketFilter = (selectedFilters: ReadonlyArray<FilterState>) => (

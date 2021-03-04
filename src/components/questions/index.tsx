@@ -16,8 +16,8 @@ const Questions: React.FC = () => {
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
   >('questions:filters', [
-    FilterState.Red,
-    FilterState.Green,
+    FilterState.First,
+    FilterState.Second,
     FilterState.Sweden,
     FilterState.Norway,
     FilterState.HasOpenClaim,
@@ -42,10 +42,12 @@ const Questions: React.FC = () => {
     <>
       <Spacing bottom="large">
         <FadeIn>
-          <ThirdLevelHeadline>
-            <strong>Number of colors:</strong>
-          </ThirdLevelHeadline>
-          <NumberColorsRadioButtons />
+          <Spacing bottom>
+            <ThirdLevelHeadline>
+              <strong>Number of colors:</strong>
+            </ThirdLevelHeadline>
+            <NumberColorsRadioButtons />
+          </Spacing>
           <QuestionsFilter
             questionGroups={questionGroups}
             selected={selectedFilters}
