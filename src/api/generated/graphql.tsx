@@ -2233,7 +2233,10 @@ export type GetMemberClaimsQuery = { __typename?: 'QueryType' } & {
             Claim,
             'id' | 'registrationDate' | 'state' | 'reserves'
           > & {
-              member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+              member: { __typename?: 'Member' } & Pick<
+                Member,
+                'memberId' | 'firstName' | 'lastName'
+              >
               type?: Maybe<
                 | { __typename: 'TheftClaim' }
                 | { __typename: 'AccidentalDamageClaim' }
@@ -2582,7 +2585,10 @@ export type ListClaimsQuery = { __typename?: 'QueryType' } & {
           Claim,
           'id' | 'registrationDate' | 'state' | 'reserves'
         > & {
-            member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+            member: { __typename?: 'Member' } & Pick<
+              Member,
+              'memberId' | 'firstName' | 'lastName'
+            >
             type?: Maybe<
               | { __typename: 'TheftClaim' }
               | { __typename: 'AccidentalDamageClaim' }
@@ -4855,6 +4861,8 @@ export const GetMemberClaimsDocument = gql`
         id
         member {
           memberId
+          firstName
+          lastName
         }
         registrationDate
         type {
@@ -5626,6 +5634,8 @@ export const ListClaimsDocument = gql`
         id
         member {
           memberId
+          firstName
+          lastName
         }
         registrationDate
         type {

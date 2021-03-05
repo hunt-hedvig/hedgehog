@@ -3,12 +3,11 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { useEffect } from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
   formatSsn,
-  getMemberGroup,
+  getMemberGroupName,
   getMemberIdColor,
   MemberAge,
 } from 'utils/member'
@@ -18,6 +17,8 @@ import { MemberHistoryContext } from 'utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
 import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import { useHistory } from 'react-router'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -45,7 +46,8 @@ const Badge = styled('div')`
   padding: 0.5rem 1rem;
   line-height: 1;
   font-size: 1rem;
-  ${({ memberId }) => `background: ${getMemberIdColor(memberId)}`};
+  ${({ memberId, numberMemberGroups }) =>
+    `background: ${getMemberIdColor(memberId, numberMemberGroups)}`};
   border-radius: 8px;
   color: #fff;
   margin-left: auto;
@@ -68,7 +70,9 @@ const MemberDetail = styled.span`
 const MemberDetailLink = MemberDetail.withComponent('a')
 
 export const Member = (props) => {
+  const history = useHistory()
   const memberId = props.match.params.memberId
+  const tab = props.match.params.tab ?? 'contracts'
   const [member, { loading }] = useGetMemberInfo(memberId)
   const getMemberPageTitle = (member) =>
     `${member.firstName || ''} ${member.lastName || ''}`
@@ -76,6 +80,10 @@ export const Member = (props) => {
   if (loading) {
     return null
   }
+
+  const panes = memberPagePanes(props, memberId, member)
+
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <MemberHistoryContext.Consumer>
@@ -98,8 +106,11 @@ export const Member = (props) => {
                     <Flag>
                       <MemberFlag memberId={member.memberId} />
                     </Flag>
-                    <Badge memberId={member.memberId}>
-                      {getMemberGroup(member.memberId)}
+                    <Badge
+                      memberId={member.memberId}
+                      numberMemberGroups={numberMemberGroups}
+                    >
+                      {getMemberGroupName(member.memberId, numberMemberGroups)}
                     </Badge>
                   </>
                 )}
@@ -139,9 +150,14 @@ export const Member = (props) => {
               </MemberDetails>
               <Tab
                 style={{ height: '100%' }}
-                panes={memberPagePanes(props, memberId, member)}
+                panes={panes}
+                onTabChange={(_, { activeIndex }) =>
+                  history.replace(
+                    `/members/${memberId}/${panes[activeIndex].tabName}`,
+                  )
+                }
                 renderActiveOnly={true}
-                defaultActiveIndex={3}
+                activeIndex={panes.map((pane) => pane.tabName).indexOf(tab)}
               />
             </MemberPageContainer>
             <ChatPane memberId={memberId} />

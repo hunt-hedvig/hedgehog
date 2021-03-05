@@ -15,7 +15,6 @@ import {
   setContractForClaimOptions,
   useSetContractForClaim,
 } from 'graphql/use-add-contract-id-to-claim'
-import { useContracts } from 'graphql/use-contracts'
 import {
   setCoveringEmployeeOptions,
   useSetCoveringEmployee,
@@ -36,6 +35,7 @@ interface Props {
   memberId: string
   refetchPage: () => Promise<any>
   selectedContract: Contract | null
+  contracts: ReadonlyArray<Contract>
   selectedAgreement: GenericAgreement | null
 }
 
@@ -83,9 +83,9 @@ const ClaimInformation: React.FC<Props> = ({
   memberId,
   refetchPage,
   selectedContract,
+  contracts,
   selectedAgreement,
 }) => {
-  const [contracts] = useContracts(memberId)
   const [setContractForClaim] = useSetContractForClaim()
   const [setCoveringEmployee] = useSetCoveringEmployee()
   const [updateClaimState] = useUpdateClaimState()

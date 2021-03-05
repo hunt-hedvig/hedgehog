@@ -12,12 +12,12 @@ import { format, parseISO } from 'date-fns'
 import React from 'react'
 import { Market } from 'types/enums'
 
+import styled from 'react-emotion'
 import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
-import styled from 'react-emotion'
 
 interface Props {
   payments: NonNullable<Claim['payments']>
@@ -42,10 +42,9 @@ const PaymentTableCell = withStyles({
   },
 })(MuiTableCell)
 
-const TotalCell = styled(MuiTableCell)(({ theme }) => ({
-  backgroundColor: theme.accentThird,
-  fontSize: '1rem',
-}))
+const TotalCell = styled(MuiTableCell)`
+  font-size: 1.1rem;
+`
 
 const ClaimPayments: React.FC<Props> = ({
   payments,
@@ -57,10 +56,10 @@ const ClaimPayments: React.FC<Props> = ({
   market,
   carrier,
 }) => {
-  let totalAmount = payments
+  const totalAmount = payments
     .map((payment) => +payment?.amount?.amount)
     .reduce((acc, amount) => acc + amount, 0)
-  let totalDeductible = payments
+  const totalDeductible = payments
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
 

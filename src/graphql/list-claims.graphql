@@ -4,6 +4,8 @@ query ListClaims($options: ListClaimsOptions!) {
       id
       member {
         memberId
+        firstName
+        lastName
       }
       registrationDate
       type {

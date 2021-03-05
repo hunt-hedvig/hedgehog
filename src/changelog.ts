@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-03-04',
+    change:
+      'Add ability to change how many colors are in H.OPE. and other improvements',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-02-24',
     change: 'Show carrier and line of business of a claim.',
     authorGithubHandle: 'vonElfvin',

@@ -1,3 +1,4 @@
+import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
 import QuestionGroups from 'components/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
@@ -6,7 +7,8 @@ import {
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { Spacing } from 'hedvig-ui/spacing'
-import * as React from 'react'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import React from 'react'
 import { useInsecurePersistentState } from 'utils/state'
 import { FilterState, QuestionsFilter } from './filter'
 
@@ -14,8 +16,9 @@ const Questions: React.FC = () => {
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
   >('questions:filters', [
-    FilterState.Even,
-    FilterState.Odd,
+    FilterState.First,
+    FilterState.Second,
+    FilterState.Third,
     FilterState.Sweden,
     FilterState.Norway,
     FilterState.HasOpenClaim,
@@ -40,6 +43,12 @@ const Questions: React.FC = () => {
     <>
       <Spacing bottom="large">
         <FadeIn>
+          <Spacing bottom>
+            <ThirdLevelHeadline>
+              <strong>Number of member groups:</strong>
+            </ThirdLevelHeadline>
+            <NumberMemberGroupsRadioButtons />
+          </Spacing>
           <QuestionsFilter
             questionGroups={questionGroups}
             selected={selectedFilters}
