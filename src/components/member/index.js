@@ -3,7 +3,6 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { useContext } from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
@@ -18,7 +17,7 @@ import { MemberHistoryContext } from 'utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
 import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
-import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { useHistory } from 'react-router'
 
 const MemberPageWrapper = styled('div')({
@@ -84,7 +83,7 @@ export const Member = (props) => {
 
   const panes = memberPagePanes(props, memberId, member)
 
-  const { numberMemberGroups } = useContext(NumberMemberGroupsContext)
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <MemberHistoryContext.Consumer>
@@ -153,7 +152,9 @@ export const Member = (props) => {
                 style={{ height: '100%' }}
                 panes={panes}
                 onTabChange={(_, { activeIndex }) =>
-                  history.replace(`/members/${memberId}/${panes[activeIndex].tabName}`)
+                  history.replace(
+                    `/members/${memberId}/${panes[activeIndex].tabName}`,
+                  )
                 }
                 renderActiveOnly={true}
                 activeIndex={panes.map((pane) => pane.tabName).indexOf(tab)}

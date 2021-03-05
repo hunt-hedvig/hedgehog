@@ -6,7 +6,7 @@ import {
   doMarketFilter,
   doMemberGroupFilter,
 } from 'utils/questionGroup'
-import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 const ListContainer = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ const ListContainer = styled.div`
 `
 
 const QuestionGroups = ({ selectedFilters, questionGroups }) => {
-  const { numberMemberGroups } = useContext(NumberMemberGroupsContext)
+  const { numberMemberGroups } = useNumberMemberGroups()
   return (
     <ListContainer>
       <FilteredQuestionGroups

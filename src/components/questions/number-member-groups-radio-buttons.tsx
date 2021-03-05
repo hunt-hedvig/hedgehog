@@ -1,8 +1,8 @@
 import { totalNumberMemberGroups } from 'components/questions/filter'
 import { RadioGroup } from 'hedvig-ui/radio'
-import React, { useContext } from 'react'
+import React from 'react'
 import { range } from 'utils/array'
-import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 const numberMemberGroupsOptions = range(totalNumberMemberGroups - 1).map(
   (numberMemberGroups) => {
@@ -14,9 +14,7 @@ const numberMemberGroupsOptions = range(totalNumberMemberGroups - 1).map(
 )
 
 export const NumberMemberGroupsRadioButtons: React.FC = () => {
-  const { numberMemberGroups, setNumberMemberGroups } = useContext(
-    NumberMemberGroupsContext,
-  )
+  const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
 
   return (
     <RadioGroup

@@ -2,15 +2,15 @@ import { QuestionGroup } from 'api/generated/graphql'
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
 import { lightTheme } from 'hedvig-ui/themes'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import React, { useContext } from 'react'
+import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { range } from 'utils/array'
-import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {
   doClaimFilter,
-  doMemberGroupFilter,
   doMarketFilter,
+  doMemberGroupFilter,
 } from 'utils/questionGroup'
 
 export const totalNumberMemberGroups = 2
@@ -105,7 +105,7 @@ export const QuestionsFilter: React.FC<{
     return questionGroups.filter(filterer([filter])).length
   }
 
-  const { numberMemberGroups } = useContext(NumberMemberGroupsContext)
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <>

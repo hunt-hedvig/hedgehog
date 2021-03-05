@@ -6,13 +6,13 @@ import isValidDate from 'date-fns/isValid'
 import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import { Badge } from 'hedvig-ui/badge'
 import { Capitalized } from 'hedvig-ui/typography'
-import React, { useContext } from 'react'
+import React from 'react'
 import styled from 'react-emotion'
 import { Table, TableRowProps } from 'semantic-ui-react'
 import { history } from 'store'
 import { getMemberIdColor } from 'utils/member'
 import { formatMoney } from 'utils/money'
-import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 const MemberIdCell = styled(Table.Cell)<{
   memberId: string
@@ -51,7 +51,7 @@ export const ClaimListItem: React.FC<{
     return null
   }
 
-  const { numberMemberGroups } = useContext(NumberMemberGroupsContext)
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <FadeInLinkRow

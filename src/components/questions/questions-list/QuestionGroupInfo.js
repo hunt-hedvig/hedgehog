@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'react-emotion'
 import { getMemberFlag, getMemberIdColor } from 'utils/member'
@@ -9,14 +9,15 @@ import { ShieldShaded } from 'react-bootstrap-icons'
 import { IconButton } from '@material-ui/core'
 import { history } from 'store'
 import { Popover } from 'hedvig-ui/popover'
-import { NumberMemberGroupsContext } from 'utils/number-member-groups-context'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 const QuestionGroupInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 1.5rem;
   border-left: 7px solid
-    ${({ memberId, numberMemberGroups }) => getMemberIdColor(memberId, numberMemberGroups)};
+    ${({ memberId, numberMemberGroups }) =>
+      getMemberIdColor(memberId, numberMemberGroups)};
 `
 
 const StyledPopover = styled(Popover)`
@@ -32,7 +33,7 @@ const MemberInfoWrapper = styled.div`
 const QuestionGroupInfo = ({ questionGroup }) => {
   const member = questionGroup?.member
 
-  const { numberMemberGroups } = useContext(NumberMemberGroupsContext)
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <QuestionGroupInfoWrapper
