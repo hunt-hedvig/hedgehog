@@ -4,9 +4,12 @@ import { differenceInYears, parse } from 'date-fns'
 import React from 'react'
 import { Market } from 'types/enums'
 
-const getColorNumberForMember = (memberId: string, numberColors: number) => {
+export const getGroupNumberForMember = (
+  memberId: string,
+  numberMemberGroups: number,
+) => {
   const memberIdNumber = Number(memberId)
-  return memberIdNumber % numberColors
+  return memberIdNumber % numberMemberGroups
 }
 
 export const MemberAge: React.FC<{
@@ -26,16 +29,20 @@ export const MemberAge: React.FC<{
   return <>{age} years</>
 }
 
-export const getMemberIdColor = (memberId: string, numberColors: number) => {
-  return getFilterColor(getColorNumberForMember(memberId, numberColors))
+export const getMemberIdColor = (
+  memberId: string,
+  numberMemberGroups: number,
+) => {
+  return getFilterColor(getGroupNumberForMember(memberId, numberMemberGroups))
 }
 
-export const getMemberGroup = (memberId: string, numberColors: number) => {
-  return `${FilterState[getColorNumberForMember(memberId, numberColors)]}`
-}
-
-export const memberBelongsToColor = (memberId, colorNumber, numberColors) => {
-  return getColorNumberForMember(memberId, numberColors) === colorNumber
+export const getMemberGroupName = (
+  memberId: string,
+  numberMemberGroups: number,
+) => {
+  return `${
+    FilterState[getGroupNumberForMember(memberId, numberMemberGroups)]
+  } group`
 }
 
 export const getMemberFlag = (

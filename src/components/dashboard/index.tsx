@@ -1,5 +1,5 @@
 import { changelog } from 'changelog'
-import { NumberColorsRadioButtons } from 'components/questions/number-colors-radio-buttons'
+import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
@@ -91,9 +91,9 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
       )}
       <Spacing top bottom>
         <ThirdLevelHeadline>
-          <strong>Number of colors:</strong>
+          <strong>Number of member groups:</strong>
         </ThirdLevelHeadline>
-        <NumberColorsRadioButtons />
+        <NumberMemberGroupsRadioButtons />
       </Spacing>
       <Spacing top="large">
         <SecondLevelHeadline>Recent changes from Tech</SecondLevelHeadline>

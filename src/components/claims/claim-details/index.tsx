@@ -96,7 +96,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                         memberId={props.match.params.memberId}
                         refetchPage={refetch}
                         contracts={member!!.contracts}
-                        selectedContract={contract!}
+                        selectedContract={contract ?? null}
                         selectedAgreement={agreement ?? null}
                       />
                     </Grid>

@@ -2,6 +2,8 @@ import { Contract, Member, SanctionStatus } from 'api/generated/graphql'
 import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
+import { Spacing } from 'hedvig-ui/spacing'
+import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
 import styled from 'react-emotion'
@@ -73,87 +75,89 @@ const MemberInformation: React.FC<{
 
   return (
     <Paper>
-      <h3>Member Information</h3>
+      <ThirdLevelHeadline>Member Information</ThirdLevelHeadline>
       <MemberName>
         {member.firstName} {member.lastName}{' '}
         <MemberFlag memberId={member.memberId} />
       </MemberName>
-      <p>
+      <Paragraph>
         <strong>Id:</strong>{' '}
         <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>{' '}
         {isHinting && '(M)'}
-      </p>
+      </Paragraph>
       {member.contractMarketInfo?.market === Market.Norway && (
-        <p>
+        <Paragraph>
           <strong>Identified:</strong>{' '}
           {member.identity ? <Checkmark /> : <Cross />}
-        </p>
+        </Paragraph>
       )}
-      <p>
+      <Paragraph>
         <strong>Personal Number:</strong> {member.personalNumber}
-      </p>
+      </Paragraph>
       {address && (
-        <p>
+        <Paragraph>
           <strong>Address:</strong> {address.street}, {address.postalCode}{' '}
           {address.city}
-        </p>
+        </Paragraph>
       )}
 
-      <p>
+      <Paragraph>
         <strong>Sanction Status:</strong> {member.sanctionStatus}{' '}
         <SanctionStatusIcon status={member.sanctionStatus!} />
-      </p>
-      <h3>Fraud Checks</h3>
-      <p>
+      </Paragraph>
+      <ThirdLevelHeadline>Fraud Checks</ThirdLevelHeadline>
+      <Spacing bottom="small">
+        <Paragraph>
+          <strong>Fraudulent Status:</strong>{' '}
+          <span style={{ fontSize: '32px' }}>
+            <FraudulentStatus stateInfo={{ state: member.fraudulentStatus }} />
+          </span>
+        </Paragraph>
+      </Spacing>
+      <Paragraph>
         <strong>Signed:</strong>{' '}
         {Boolean(member.signedOn) &&
           formatDistance(parseISO(member.signedOn), new Date(), {
             addSuffix: true,
           })}
-      </p>
-      <p>
+      </Paragraph>
+      <Paragraph>
         <strong>First Master Inception:</strong> {firstMasterInception}
         {firstMasterInception && (
-          <>({formatDistance(new Date(firstMasterInception), new Date())})</>
+          <> ({formatDistance(new Date(firstMasterInception), new Date())}</>
         )}
         {!firstMasterInception && 'Never been active'})
-      </p>
+      </Paragraph>
       {lastTermination && (
-        <p>
+        <Paragraph>
           <strong>Last Termination Date:</strong> {lastTermination} (
           {lastTermination &&
             formatDistance(new Date(lastTermination), new Date(), {
               addSuffix: true,
             })}
-        </p>
+        </Paragraph>
       )}
-      <p style={{ marginTop: '-7px' }}>
-        <strong>Fraudulent Status:</strong>{' '}
-        <span style={{ fontSize: '32px' }}>
-          <FraudulentStatus stateInfo={{ state: member.fraudulentStatus }} />
-        </span>
-      </p>
-      <p>
+      <Paragraph>
         <strong>Direct Debit:</strong>{' '}
         {member.directDebitStatus?.activated ? <Checkmark /> : <Cross />}
-      </p>
-      <p>
+      </Paragraph>
+      <Paragraph>
         <strong>Payments Balance (Minimum):</strong>{' '}
         {member.account?.totalBalance &&
           formatMoney(member.account.totalBalance)}
-      </p>
-      <p>
+      </Paragraph>
+      <Paragraph>
         <strong>Failed Payments:</strong>{' '}
         {member.numberFailedCharges?.numberFailedCharges} payment(s) in a row
-      </p>
-      <p>
+      </Paragraph>
+      <Paragraph>
         <strong>Total Number of Claims:</strong> {member.totalNumberOfClaims}
-      </p>
+      </Paragraph>
       {member.person && (
-        <p>
+        <Paragraph>
           <strong>Debt Status:</strong>{' '}
           <FlagOrbIndicator flag={member.person.debtFlag} size={'tiny'} />
-        </p>
+        </Paragraph>
       )}
     </Paper>
   )

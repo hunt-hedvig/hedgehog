@@ -22,8 +22,8 @@ import {
   SemanticOverrides,
 } from 'hedvig-ui/themes'
 import { MemberHistoryProvider } from 'utils/member-history'
-import { NumberColorsProvider } from 'utils/number-colors-context'
 import { CommandLineProvider } from 'utils/hooks/command-line-hook'
+import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
 
 const store = Store.configureStore()
 
@@ -98,7 +98,7 @@ class App extends React.Component {
           <ThemeProvider theme={this.state.isDarkmode ? darkTheme : lightTheme}>
             <Provider store={store}>
               <MemberHistoryProvider>
-                <NumberColorsProvider>
+                <NumberMemberGroupsProvider>
                   <Router history={history}>
                     <CommandLineProvider>
                       <Layout>
@@ -153,7 +153,7 @@ class App extends React.Component {
                       </Layout>
                     </CommandLineProvider>
                   </Router>
-                </NumberColorsProvider>
+                </NumberMemberGroupsProvider>
               </MemberHistoryProvider>
             </Provider>
           </ThemeProvider>

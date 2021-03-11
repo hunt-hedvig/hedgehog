@@ -2,18 +2,18 @@ import { QuestionGroup } from 'api/generated/graphql'
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
 import { lightTheme } from 'hedvig-ui/themes'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import React, { useContext } from 'react'
+import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { range } from 'utils/array'
-import { NumberColorsContext } from 'utils/number-colors-context'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {
   doClaimFilter,
-  doColorFilter,
   doMarketFilter,
+  doMemberGroupFilter,
 } from 'utils/questionGroup'
 
-export const totalNumberOfColors = 3
+export const totalNumberMemberGroups = 2
 
 export enum FilterState {
   First,
@@ -80,10 +80,10 @@ const ColorBadge = styled.div<{ filter: FilterState }>`
 
 export const getFilterColor = (filter: FilterState): string => {
   switch (filter) {
-    case FilterState.Second:
-      return lightTheme.success
     case FilterState.First:
       return lightTheme.danger
+    case FilterState.Second:
+      return lightTheme.success
     case FilterState.Third:
       return lightTheme.highlight
     default:
@@ -105,20 +105,23 @@ export const QuestionsFilter: React.FC<{
     return questionGroups.filter(filterer([filter])).length
   }
 
-  const { numberColors } = useContext(NumberColorsContext)
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <>
       <FilterRow>
-        <FilterLabel>Color: </FilterLabel>
-        {range(numberColors).map((filterNumber) => {
+        <FilterLabel>Group: </FilterLabel>
+        {range(numberMemberGroups).map((filterNumber) => {
           return (
             <FilterCheckbox
               key={filterNumber}
               label={
                 <FilterName>
                   {FilterState[filterNumber]} (
-                  {getCountByFilter(filterNumber, doColorFilter(numberColors))}
+                  {getCountByFilter(
+                    filterNumber,
+                    doMemberGroupFilter(numberMemberGroups),
+                  )}
                   )
                   <ColorBadge filter={filterNumber} />
                 </FilterName>

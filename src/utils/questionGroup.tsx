@@ -3,16 +3,17 @@ import { FilterState } from 'components/questions/filter'
 import { Market } from 'types/enums'
 import { range } from 'utils/array'
 import { hasOpenClaim } from 'utils/claim'
-import { memberBelongsToColor } from 'utils/member'
+import { getGroupNumberForMember } from 'utils/member'
 
-export const doColorFilter = (numberColors: number) => (
+export const doMemberGroupFilter = (numberMemberGroups: number) => (
   selectedFilters: ReadonlyArray<FilterState>,
 ) => (questionGroup: QuestionGroup): boolean => {
-  return range(numberColors)
+  return range(numberMemberGroups)
     .map(
-      (colorNumber) =>
-        selectedFilters.includes(colorNumber) &&
-        memberBelongsToColor(questionGroup.memberId, colorNumber, numberColors),
+      (memberGroupNumber) =>
+        selectedFilters.includes(memberGroupNumber) &&
+        getGroupNumberForMember(questionGroup.memberId, numberMemberGroups) ===
+          memberGroupNumber,
     )
     .includes(true)
 }

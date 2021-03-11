@@ -8,7 +8,7 @@ import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
   formatSsn,
-  getMemberGroup,
+  getMemberGroupName,
   getMemberIdColor,
   MemberAge,
 } from 'utils/member'
@@ -17,7 +17,7 @@ import { MemberFlag } from './shared/member-flag'
 import { MemberHistoryContext } from 'utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
 import { ChatPane } from 'components/member/tabs/ChatPane'
-import { NumberColorsContext } from 'utils/number-colors-context'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { KeyCode } from 'utils/hooks/key-press-hook'
 import { useHistory } from 'react-router'
@@ -48,8 +48,8 @@ const Badge = styled('div')`
   padding: 0.5rem 1rem;
   line-height: 1;
   font-size: 1rem;
-  ${({ memberId, numberColors }) =>
-    `background: ${getMemberIdColor(memberId, numberColors)}`};
+  ${({ memberId, numberMemberGroups }) =>
+    `background: ${getMemberIdColor(memberId, numberMemberGroups)}`};
   border-radius: 8px;
   color: #fff;
   margin-left: auto;
@@ -180,7 +180,7 @@ export const Member = (props) => {
     setActiveIndex(getIndex(tab, panes))
   }, [tab])
 
-  const { numberColors } = useContext(NumberColorsContext)
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <MemberHistoryContext.Consumer>
@@ -205,9 +205,9 @@ export const Member = (props) => {
                     </Flag>
                     <Badge
                       memberId={member.memberId}
-                      numberColors={numberColors}
+                      numberMemberGroups={numberMemberGroups}
                     >
-                      {getMemberGroup(member.memberId, numberColors)}
+                      {getMemberGroupName(member.memberId, numberMemberGroups)}
                     </Badge>
                   </>
                 )}
