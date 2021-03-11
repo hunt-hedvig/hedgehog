@@ -65,8 +65,8 @@ const MemberInformation: React.FC<{
   registerActions([
     {
       label: `Go to member`,
-      keysHint: ['⌥', 'M'],
-      keys: [KeyCode.Option, KeyCode.M],
+      keysHint: ['CTRL', 'M'],
+      keys: [KeyCode.Control, KeyCode.M],
       onResolve: () => {
         history.push(`/members/${member.memberId}`)
       },

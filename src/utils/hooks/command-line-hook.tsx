@@ -193,7 +193,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const [blocked, setBlocked] = useState(false)
   const actionsRef = useRef<CommandLineAction[]>()
 
-  const isOptionPressed = useKeyIsPressed(KeyCode.Option)
+  const isOptionPressed = useKeyIsPressed(KeyCode.Control)
   const isSpacePressed = useKeyIsPressed(KeyCode.Space)
   const isEscapePressed = useKeyIsPressed(KeyCode.Escape)
 
@@ -211,15 +211,15 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     if (blocked) {
       return
     }
-    actions.some((action) => {
+    for (const action of actions) {
       const match =
         action.keys.filter((key) => !keys.includes(key)).length === 0
 
       if (match) {
         action.onResolve()
-        return true
+        break
       }
-    })
+    }
   }, [keys])
 
   useEffect(() => {

@@ -92,80 +92,80 @@ export const Member = (props) => {
   registerActions([
     {
       label: `Member information`,
-      keysHint: ['⌥', '1'],
-      keys: [KeyCode.Option, KeyCode.One],
+      keysHint: ['CTRL', '1'],
+      keys: [KeyCode.Control , KeyCode.One],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[0].tabName}`)
       },
     },
     {
       label: `${formattedFirstName} claims`,
-      keysHint: ['⌥', '2'],
-      keys: [KeyCode.Option, KeyCode.Two],
+      keysHint: ['CTRL', '2'],
+      keys: [KeyCode.Control , KeyCode.Two],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[1].tabName}`)
       },
     },
     {
       label: `${formattedFirstName} files`,
-      keysHint: ['⌥', '3'],
-      keys: [KeyCode.Option, KeyCode.Three],
+      keysHint: ['CTRL', '3'],
+      keys: [KeyCode.Control , KeyCode.Three],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[2].tabName}`)
       },
     },
     {
       label: `${formattedFirstName} contracts`,
-      keysHint: ['⌥', '4'],
-      keys: [KeyCode.Option, KeyCode.Four],
+      keysHint: ['CTRL', '4'],
+      keys: [KeyCode.Control , KeyCode.Four],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[3].tabName}`)
       },
     },
     {
       label: `${formattedFirstName} quotes`,
-      keysHint: ['⌥', '5'],
-      keys: [KeyCode.Option, KeyCode.Five],
+      keysHint: ['CTRL', '5'],
+      keys: [KeyCode.Control , KeyCode.Five],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[4].tabName}`)
       },
     },
     {
       label: `${formattedFirstName} payments`,
-      keysHint: ['⌥', '6'],
-      keys: [KeyCode.Option, KeyCode.Six],
+      keysHint: ['CTRL', '6'],
+      keys: [KeyCode.Control , KeyCode.Six],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[5].tabName}`)
       },
     },
     {
       label: `${formattedFirstName} account`,
-      keysHint: ['⌥', '7'],
-      keys: [KeyCode.Option, KeyCode.Seven],
+      keysHint: ['CTRL', '7'],
+      keys: [KeyCode.Control , KeyCode.Seven],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[6].tabName}`)
       },
     },
     {
       label: `${formattedFirstName} debt`,
-      keysHint: ['⌥', '8'],
-      keys: [KeyCode.Option, KeyCode.Eight],
+      keysHint: ['CTRL', '8'],
+      keys: [KeyCode.Control , KeyCode.Eight],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[7].tabName}`)
       },
     },
     {
       label: `${formattedFirstName} campaigns`,
-      keysHint: ['⌥', '9'],
-      keys: [KeyCode.Option, KeyCode.Nine],
+      keysHint: ['CTRL', '9'],
+      keys: [KeyCode.Control , KeyCode.Nine],
       onResolve: () => {
         history.push(`/members/${memberId}/${panes[8].tabName}`)
       },
     },
     {
       label: `Copy ${formattedFirstName} email to clipboard`,
-      keysHint: ['⌥', 'E'],
-      keys: [KeyCode.Option, KeyCode.E],
+      keysHint: ['CTRL', 'E'],
+      keys: [KeyCode.Control , KeyCode.E],
       onResolve: () => {
         copy(member.email, {
           format: 'text/plain',

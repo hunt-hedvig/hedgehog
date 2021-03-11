@@ -46,8 +46,8 @@ export const ChatPane = ({ memberId }) => {
   registerActions([
     {
       label: 'Toggle chat',
-      keysHint: ['⌥', 'W'],
-      keys: [KeyCode.Option, KeyCode.W],
+      keysHint: ['CTRL', 'W'],
+      keys: [KeyCode.Control , KeyCode.W],
       onResolve: () => {
         setVisible(!visible)
       },

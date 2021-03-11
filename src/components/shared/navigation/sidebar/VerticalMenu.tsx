@@ -252,80 +252,80 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   registerActions([
     {
       label: 'Claims list',
-      keysHint: ['⌥', 'C'],
-      keys: [KeyCode.Option, KeyCode.C],
+      keysHint: ['CTRL', 'C'],
+      keys: [KeyCode.Control, KeyCode.C],
       onResolve: () => {
         history.push(routes.claims)
       },
     },
     {
       label: 'Tools',
-      keysHint: ['⌥', 'T'],
-      keys: [KeyCode.Option, KeyCode.T],
+      keysHint: ['CTRL', 'T'],
+      keys: [KeyCode.Control, KeyCode.T],
       onResolve: () => {
         history.push(routes.tools)
       },
     },
     {
       label: 'Questions',
-      keysHint: ['⌥', 'Q'],
-      keys: [KeyCode.Option, KeyCode.Q],
+      keysHint: ['CTRL', 'Q'],
+      keys: [KeyCode.Control, KeyCode.Q],
       onResolve: () => {
         history.push(routes.questions)
       },
     },
     {
       label: 'Member search',
-      keysHint: ['⌥', 'S'],
-      keys: [KeyCode.Option, KeyCode.S],
+      keysHint: ['CTRL', 'S'],
+      keys: [KeyCode.Control, KeyCode.S],
       onResolve: () => {
         history.push(routes.search)
       },
     },
     {
       label: 'Dashborad',
-      keysHint: ['⌥', 'D'],
-      keys: [KeyCode.Option, KeyCode.D],
+      keysHint: ['CTRL', 'D'],
+      keys: [KeyCode.Control, KeyCode.D],
       onResolve: () => {
         history.push(routes.dashborad)
       },
     },
     {
       label: 'Trustly',
-      keysHint: ['⌥', 'R'],
-      keys: [KeyCode.Option, KeyCode.R],
+      keysHint: ['CTRL', 'R'],
+      keys: [KeyCode.Control, KeyCode.R],
       onResolve: () => {
         window.open(routes.trustly)
       },
     },
     {
       label: 'Adyen',
-      keysHint: ['⌥', 'A'],
-      keys: [KeyCode.Option, KeyCode.A],
+      keysHint: ['CTRL', 'A'],
+      keys: [KeyCode.Control, KeyCode.A],
       onResolve: () => {
         window.open(routes.adyen)
       },
     },
     {
       label: 'GSR',
-      keysHint: ['⌥', 'G'],
-      keys: [KeyCode.Option, KeyCode.G],
+      keysHint: ['CTRL', 'G'],
+      keys: [KeyCode.Control, KeyCode.G],
       onResolve: () => {
         window.open(routes.gsr)
       },
     },
     {
       label: 'Logout',
-      keysHint: ['⌥', 'L'],
-      keys: [KeyCode.Option, KeyCode.L],
+      keysHint: ['CTRL', 'L'],
+      keys: [KeyCode.Control, KeyCode.L],
       onResolve: () => {
         authLogOut_()
       },
     },
     {
       label: 'Latest claim',
-      keysHint: ['⌥', '←'],
-      keys: [KeyCode.Option, KeyCode.Backspace],
+      keysHint: ['CTRL', '←'],
+      keys: [KeyCode.Control, KeyCode.Backspace],
       onResolve: () => {
         if (!latestClaim) {
           return
