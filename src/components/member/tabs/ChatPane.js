@@ -41,9 +41,9 @@ export const ChatPane = ({ memberId }) => {
   const [visible, setVisible] = useState(window.innerWidth > 1000)
   const [manualChange, setManualChange] = useState(false)
 
-  const { useAction, isHinting } = useCommandLine()
+  const { registerActions, isHinting } = useCommandLine()
 
-  useAction([
+  registerActions([
     {
       label: 'Toggle chat',
       keysHint: ['⌥', 'W'],

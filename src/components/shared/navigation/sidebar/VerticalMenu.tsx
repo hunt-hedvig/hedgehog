@@ -247,9 +247,9 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   const [latestClaim, setLatestClaim] = useState<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
 
-  const { useAction, isHinting } = useCommandLine()
+  const { registerActions, isHinting } = useCommandLine()
 
-  useAction([
+  registerActions([
     {
       label: 'Claims list',
       keysHint: ['⌥', 'C'],

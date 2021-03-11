@@ -51,6 +51,13 @@ const ResultItemContent = styled.div`
   flex-direction: row;
 `
 
+const CommandLineInput = styled(Input)`
+  &&&& {
+    width: 40vw;
+    padding: 1em 1em;
+  }
+`
+
 const ResultItem: React.FC<{
   label: string
   characters: string[]
@@ -132,7 +139,7 @@ export const CommandLineComponent: React.FC<{
           width: '100%',
         }}
       >
-        <Input
+        <CommandLineInput
           autoFocus
           value={value}
           onChange={({ target }) => {
@@ -149,7 +156,6 @@ export const CommandLineComponent: React.FC<{
           placeholder="What can I help you with?"
           transparent
           size={'large'}
-          style={{ width: '60vh', padding: '1em 1em' }}
         />
       </div>
       <div>
@@ -168,13 +174,13 @@ export const CommandLineComponent: React.FC<{
 }
 
 interface CommandLineContextProps {
-  useAction: (newActions: CommandLineAction[]) => any
+  registerActions: (newActions: CommandLineAction[]) => any
   setBlocked: (value: boolean) => void
   isHinting: boolean
 }
 
 const CommandLineContext = createContext<CommandLineContextProps>({
-  useAction: (_: CommandLineAction[]) => void 0,
+  registerActions: (_: CommandLineAction[]) => void 0,
   setBlocked: (_: boolean) => void 0,
   isHinting: false,
 })
@@ -257,7 +263,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   return (
     <CommandLineContext.Provider
       value={{
-        useAction: addAction,
+        registerActions: addAction,
         setBlocked: (value: boolean) => setBlocked(value),
         isHinting: blocked ? false : isOptionPressed,
       }}

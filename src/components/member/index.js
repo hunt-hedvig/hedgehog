@@ -80,7 +80,7 @@ export const Member = (props) => {
 
   const member = props.member
 
-  const { useAction, isHinting } = useCommandLine()
+  const { registerActions, isHinting } = useCommandLine()
 
   const panes = memberPagePanes(props, memberId, member, isHinting)
   const getMemberPageTitle = (member) =>
@@ -89,7 +89,7 @@ export const Member = (props) => {
   const formattedFirstName =
     member.firstName + (member.firstName.slice(-1) === 's' ? "'" : "'s")
 
-  useAction([
+  registerActions([
     {
       label: `Member information`,
       keysHint: ['⌥', '1'],

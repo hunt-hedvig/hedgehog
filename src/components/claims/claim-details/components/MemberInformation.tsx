@@ -60,9 +60,9 @@ const MemberInformation: React.FC<{
   const firstMasterInception = getFirstMasterInception(member.contracts)
   const lastTermination = getLastTerminationDate(member.contracts)
 
-  const { useAction, isHinting } = useCommandLine()
+  const { registerActions, isHinting } = useCommandLine()
 
-  useAction([
+  registerActions([
     {
       label: `Go to member`,
       keysHint: ['⌥', 'M'],
