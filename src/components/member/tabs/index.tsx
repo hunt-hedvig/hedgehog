@@ -37,50 +37,59 @@ const TabItem: React.FC<{ props: any; TabContent: any }> = ({
 
 const memberPagePanes = (props, memberId, member) => [
   {
+    tabName: 'member',
     menuItem: 'Member',
     render: () => (
       <TabItem props={{ ...props, member }} TabContent={DetailsTab} />
     ),
   },
   {
+    tabName: 'claims',
     menuItem: 'Claims',
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={ClaimsTab} />
     ),
   },
   {
+    tabName: 'files',
     menuItem: 'Files',
     render: () => <TabItem props={props} TabContent={MemberFile} />,
   },
   {
+    tabName: 'contracts',
     menuItem: 'Contracts',
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={ContractTab} />
     ),
   },
   {
+    tabName: 'quotes',
     menuItem: 'Quotes',
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
     ),
   },
   {
+    tabName: 'payments',
     menuItem: 'Payments',
     render: () => <TabItem props={props} TabContent={PaymentsTab} />,
   },
   {
+    tabName: 'account',
     menuItem: 'Account',
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={AccountTab} />
     ),
   },
   {
+    tabName: 'debt',
     menuItem: 'Debt',
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={DebtTab} />
     ),
   },
   {
+    tabName: 'campaigns',
     menuItem: 'Campaigns',
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={CampaignsTab} />

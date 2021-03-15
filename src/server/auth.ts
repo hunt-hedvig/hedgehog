@@ -26,9 +26,17 @@ function setTokenCookies(
   })
 }
 
+function getTokenFromQuery(token: undefined | string | string[]) {
+  if (Array.isArray(token)) {
+    return token[0]
+  }
+
+  return token || ''
+}
+
 export const loginCallback: Middleware<object> = async (ctx) => {
-  const accessToken = ctx.request.query['access-token']
-  const refreshToken = ctx.request.query['refresh-token']
+  const accessToken = getTokenFromQuery(ctx.request.query['access-token'])
+  const refreshToken = getTokenFromQuery(ctx.request.query['refresh-token'])
   setTokenCookies(ctx, { accessToken, refreshToken })
 
   await fetch(

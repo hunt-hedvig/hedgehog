@@ -1,18 +1,24 @@
 import { QuestionGroup } from 'api/generated/graphql'
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
+import { lightTheme } from 'hedvig-ui/themes'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
+import { range } from 'utils/array'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {
   doClaimFilter,
   doMarketFilter,
-  doTeamFilter,
+  doMemberGroupFilter,
 } from 'utils/questionGroup'
 
+export const totalNumberMemberGroups = 2
+
 export enum FilterState {
-  Even,
-  Odd,
+  First,
+  Second,
+  Third,
   Sweden,
   Norway,
   Denmark,
@@ -61,21 +67,29 @@ const FilterName = styled.label`
   vertical-align: middle;
 `
 
-const TeamBadge = styled.div`
+const ColorBadge = styled.div<{ filter: FilterState }>`
+  background-color:
   display: inline-block;
   width: 1.5em;
   height: 1.5em;
   border-radius: 2px;
   vertical-align: center;
   margin-left: 0.5rem;
+  background-color: ${({ filter }) => getFilterColor(filter)};
 `
 
-const RedTeamBadge = styled(TeamBadge)`
-  background-color: ${({ theme }) => theme.danger};
-`
-const GreenTeamBadge = styled(TeamBadge)`
-  background-color: ${({ theme }) => theme.success};
-`
+export const getFilterColor = (filter: FilterState): string => {
+  switch (filter) {
+    case FilterState.First:
+      return lightTheme.danger
+    case FilterState.Second:
+      return lightTheme.success
+    case FilterState.Third:
+      return lightTheme.highlight
+    default:
+      return lightTheme.accent
+  }
+}
 
 export const QuestionsFilter: React.FC<{
   questionGroups: ReadonlyArray<QuestionGroup>
@@ -91,8 +105,33 @@ export const QuestionsFilter: React.FC<{
     return questionGroups.filter(filterer([filter])).length
   }
 
+  const { numberMemberGroups } = useNumberMemberGroups()
+
   return (
     <>
+      <FilterRow>
+        <FilterLabel>Group: </FilterLabel>
+        {range(numberMemberGroups).map((filterNumber) => {
+          return (
+            <FilterCheckbox
+              key={filterNumber}
+              label={
+                <FilterName>
+                  {FilterState[filterNumber]} (
+                  {getCountByFilter(
+                    filterNumber,
+                    doMemberGroupFilter(numberMemberGroups),
+                  )}
+                  )
+                  <ColorBadge filter={filterNumber} />
+                </FilterName>
+              }
+              checked={selected.includes(filterNumber)}
+              onChange={() => onToggle(filterNumber)}
+            />
+          )
+        })}
+      </FilterRow>
       <FilterRow>
         <FilterLabel>Market: </FilterLabel>
         <FilterCheckbox
@@ -122,29 +161,6 @@ export const QuestionsFilter: React.FC<{
           }
           checked={selected.includes(FilterState.Denmark)}
           onChange={() => onToggle(FilterState.Denmark)}
-        />
-      </FilterRow>
-      <FilterRow>
-        <FilterLabel>Team: </FilterLabel>
-        <FilterCheckbox
-          label={
-            <FilterName>
-              Red team ({getCountByFilter(FilterState.Even, doTeamFilter)})
-              <RedTeamBadge />
-            </FilterName>
-          }
-          checked={selected.includes(FilterState.Even)}
-          onChange={() => onToggle(FilterState.Even)}
-        />
-        <FilterCheckbox
-          label={
-            <FilterName>
-              Green team ({getCountByFilter(FilterState.Odd, doTeamFilter)})
-              <GreenTeamBadge />
-            </FilterName>
-          }
-          checked={selected.includes(FilterState.Odd)}
-          onChange={() => onToggle(FilterState.Odd)}
         />
       </FilterRow>
       <FilterRow>

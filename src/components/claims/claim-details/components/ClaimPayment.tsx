@@ -53,6 +53,7 @@ interface Props {
   refetchPage: () => Promise<any>
   identified: boolean
   market: string | null
+  carrier: string | null
 }
 
 interface State {
@@ -127,7 +128,7 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
     exGratia: yup.boolean(),
     type: yup
       .string()
-      .oneOf(['Manual', 'Automatic'])
+      .oneOf(['Manual', 'Automatic', 'IndemnityCost', 'Expense'])
       .required(),
   })
 
@@ -137,6 +138,7 @@ export const ClaimPayment: React.FC<Props> = ({
   refetchPage,
   identified,
   market,
+  carrier,
 }) => {
   const isPotentiallySanctioned =
     sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
@@ -191,7 +193,7 @@ export const ClaimPayment: React.FC<Props> = ({
                   )
                 } catch (error) {
                   throw new Error(
-                    'An error occured with the validation ' + error,
+                    'An error occurred with the validation ' + error,
                   )
                 }
               }}
@@ -221,6 +223,10 @@ export const ClaimPayment: React.FC<Props> = ({
                     <Field component={FieldSelect} name="type">
                       <MuiMenuItem value="Manual">Manual</MuiMenuItem>
                       <MuiMenuItem value="Automatic">Automatic</MuiMenuItem>
+                      <MuiMenuItem value="IndemnityCost">
+                        Indemnity Cost
+                      </MuiMenuItem>
+                      <MuiMenuItem value="Expense">Expense</MuiMenuItem>
                     </Field>
 
                     {isPotentiallySanctioned && (
@@ -267,6 +273,7 @@ export const ClaimPayment: React.FC<Props> = ({
                               note: initiatedPayment.note,
                               exGratia: initiatedPayment.exGratia || false,
                               type: initiatedPayment.type,
+                              carrier,
                             },
                           },
                         })

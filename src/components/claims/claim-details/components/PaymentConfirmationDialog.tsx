@@ -34,7 +34,7 @@ interface ConfirmationData {
   confirmation: string
 }
 
-export const PaymentConfirmationDialog: React.SFC<PaymentConfirmationDialogProps> = ({
+export const PaymentConfirmationDialog: React.FC<PaymentConfirmationDialogProps> = ({
   onClose,
   onSubmit,
   amount,

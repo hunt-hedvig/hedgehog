@@ -218,20 +218,22 @@ export type ChatMessage = {
 
 export type Claim = {
   __typename?: 'Claim'
-  id?: Maybe<Scalars['ID']>
-  member?: Maybe<Member>
+  id: Scalars['ID']
+  member: Member
   recordingUrl?: Maybe<Scalars['String']>
-  state?: Maybe<ClaimState>
+  state: ClaimState
   type?: Maybe<ClaimType>
   reserves?: Maybe<Scalars['MonetaryAmount']>
-  registrationDate?: Maybe<Scalars['Instant']>
-  notes?: Maybe<Array<Maybe<ClaimNote>>>
-  transcriptions?: Maybe<Array<Maybe<ClaimTranscription>>>
-  payments?: Maybe<Array<Maybe<ClaimPayment>>>
-  events?: Maybe<Array<Maybe<ClaimEvent>>>
+  registrationDate: Scalars['Instant']
+  notes: Array<ClaimNote>
+  transcriptions: Array<ClaimTranscription>
+  payments: Array<ClaimPayment>
+  events: Array<ClaimEvent>
   coveringEmployee: Scalars['Boolean']
   claimFiles: Array<ClaimFileUpload>
   contract?: Maybe<Contract>
+  agreement?: Maybe<GenericAgreement>
+  itemSet: ClaimItemSet
 }
 
 export type ClaimEvent = {
@@ -273,6 +275,11 @@ export type ClaimItem = {
   note?: Maybe<Scalars['String']>
 }
 
+export type ClaimItemSet = {
+  __typename?: 'ClaimItemSet'
+  items: Array<ClaimItem>
+}
+
 export type ClaimItemValuation = {
   __typename?: 'ClaimItemValuation'
   depreciatedValue?: Maybe<MonetaryAmountV2>
@@ -281,8 +288,8 @@ export type ClaimItemValuation = {
 
 export type ClaimNote = {
   __typename?: 'ClaimNote'
-  text?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDateTime']>
+  text: Scalars['String']
+  date: Scalars['LocalDateTime']
 }
 
 export type ClaimNoteInput = {
@@ -309,6 +316,7 @@ export type ClaimPaymentInput = {
   type: ClaimPaymentType
   exGratia: Scalars['Boolean']
   sanctionListSkipped: Scalars['Boolean']
+  carrier: Scalars['String']
 }
 
 export enum ClaimPaymentStatus {
@@ -322,6 +330,8 @@ export enum ClaimPaymentStatus {
 export enum ClaimPaymentType {
   Manual = 'Manual',
   Automatic = 'Automatic',
+  IndemnityCost = 'IndemnityCost',
+  Expense = 'Expense',
 }
 
 export enum ClaimSource {
@@ -576,6 +586,7 @@ export type GenericAgreement = {
   extraBuildings?: Maybe<Array<ExtraBuilding>>
   isSubleted?: Maybe<Scalars['Boolean']>
   lineOfBusinessName: Scalars['String']
+  carrier: Scalars['String']
 }
 
 export type GetValuationInput = {
@@ -2238,8 +2249,9 @@ export type GetMemberClaimsQuery = { __typename?: 'QueryType' } & {
             Claim,
             'id' | 'registrationDate' | 'state' | 'reserves'
           > & {
-              member?: Maybe<
-                { __typename?: 'Member' } & Pick<Member, 'memberId'>
+              member: { __typename?: 'Member' } & Pick<
+                Member,
+                'memberId' | 'firstName' | 'lastName'
               >
               type?: Maybe<
                 | { __typename: 'TheftClaim' }
@@ -2589,7 +2601,10 @@ export type ListClaimsQuery = { __typename?: 'QueryType' } & {
           Claim,
           'id' | 'registrationDate' | 'state' | 'reserves'
         > & {
-            member?: Maybe<{ __typename?: 'Member' } & Pick<Member, 'memberId'>>
+            member: { __typename?: 'Member' } & Pick<
+              Member,
+              'memberId' | 'firstName' | 'lastName'
+            >
             type?: Maybe<
               | { __typename: 'TheftClaim' }
               | { __typename: 'AccidentalDamageClaim' }
@@ -2742,12 +2757,8 @@ export type SetCoveringEmployeeMutationVariables = Exact<{
 export type SetCoveringEmployeeMutation = { __typename?: 'MutationType' } & {
   setCoveringEmployee?: Maybe<
     { __typename?: 'Claim' } & Pick<Claim, 'coveringEmployee'> & {
-        events?: Maybe<
-          Array<
-            Maybe<
-              { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
-            >
-          >
+        events: Array<
+          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
         >
       }
   >
@@ -2791,12 +2802,8 @@ export type UpdateClaimStateMutationVariables = Exact<{
 export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
   updateClaimState?: Maybe<
     { __typename?: 'Claim' } & Pick<Claim, 'state'> & {
-        events?: Maybe<
-          Array<
-            Maybe<
-              { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
-            >
-          >
+        events: Array<
+          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
         >
       }
   >
@@ -4870,6 +4877,8 @@ export const GetMemberClaimsDocument = gql`
         id
         member {
           memberId
+          firstName
+          lastName
         }
         registrationDate
         type {
@@ -5641,6 +5650,8 @@ export const ListClaimsDocument = gql`
         id
         member {
           memberId
+          firstName
+          lastName
         }
         registrationDate
         type {
@@ -6830,6 +6841,13 @@ const result: PossibleTypesResultData = {
       'VerminAndPestsClaim',
       'TestClaim',
     ],
+    ItemCategoryCore: [
+      'ItemFamily',
+      'ItemType',
+      'ItemBrand',
+      'ItemModel',
+      'ItemCompany',
+    ],
     Incentive: [
       'MonthlyPercentageDiscountFixedPeriod',
       'FreeMonths',
@@ -6840,13 +6858,6 @@ const result: PossibleTypesResultData = {
       'UnknownIncentive',
     ],
     ItemCategory: [
-      'ItemFamily',
-      'ItemType',
-      'ItemBrand',
-      'ItemModel',
-      'ItemCompany',
-    ],
-    ItemCategoryCore: [
       'ItemFamily',
       'ItemType',
       'ItemBrand',

@@ -12,12 +12,16 @@ import { Table, TableRowProps } from 'semantic-ui-react'
 import { history } from 'store'
 import { getMemberIdColor } from 'utils/member'
 import { formatMoney } from 'utils/money'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
-const MemberIdCell = styled(Table.Cell)<{ memberId: string }>(
-  ({ memberId }) => ({
-    borderLeft: `7px solid ${getMemberIdColor(memberId)} !important`,
-  }),
-)
+const MemberIdCell = styled(Table.Cell)<{
+  memberId: string
+  numberMemberGroups: number
+}>`
+  border-left: 7px solid
+    ${({ memberId, numberMemberGroups }) =>
+      getMemberIdColor(memberId, numberMemberGroups)} !important;
+`
 
 const FadeInLinkRow = withFadeIn<TableRowProps>(LinkRow)
 
@@ -47,13 +51,17 @@ export const ClaimListItem: React.FC<{
     return null
   }
 
+  const { numberMemberGroups } = useNumberMemberGroups()
+
   return (
     <FadeInLinkRow
       delay={`${index * 50}ms`}
       onClick={() => history.push(`/claims/${claimId}/members/${memberId}`)}
       active={active}
     >
-      <MemberIdCell memberId={memberId}>{memberId}</MemberIdCell>
+      <MemberIdCell memberId={memberId} numberMemberGroups={numberMemberGroups}>
+        {item.member?.firstName + ' ' + item.member?.lastName} ({memberId})
+      </MemberIdCell>
       <Table.Cell>{formattedDate}</Table.Cell>
       <Table.Cell>{claimType}</Table.Cell>
       <Table.Cell textAlign={'center'}>

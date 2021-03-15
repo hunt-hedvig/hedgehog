@@ -98,7 +98,7 @@ export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
 
   const getTabs = () =>
     getUniqueContractTypes().map((contractType) => ({
-      menuItem: getTextFromEnumValue(contractType),
+      menuItem: getTextFromEnumValue(contractType, true),
       render: () => (
         <Tab.Pane>
           <FadeIn>

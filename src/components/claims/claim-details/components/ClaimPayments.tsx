@@ -8,6 +8,8 @@ import {
 } from '@material-ui/core'
 import { Claim, Identity, SanctionStatus } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
+import { Spacing } from 'hedvig-ui/spacing'
+import { Paragraph } from 'hedvig-ui/typography'
 
 import React from 'react'
 import { Tab } from 'semantic-ui-react'
@@ -29,6 +31,7 @@ interface Props {
   refetchPage: () => Promise<any>
   identity: Identity | null
   market: string | null
+  carrier: string | null
 }
 
 const PaymentTable = withStyles({
@@ -43,10 +46,9 @@ const PaymentTableCell = withStyles({
   },
 })(MuiTableCell)
 
-const TotalCell = styled(MuiTableCell)(({ theme }) => ({
-  backgroundColor: theme.accentThird,
-  fontSize: '1rem',
-}))
+const TotalCell = styled(MuiTableCell)`
+  font-size: 1.1rem;
+`
 
 const payoutPanes = (
   sanctionStatus,
@@ -54,6 +56,7 @@ const payoutPanes = (
   refetchPage,
   identity,
   market,
+  carrier,
 ) => [
   {
     menuItem: 'Payout',
@@ -64,6 +67,7 @@ const payoutPanes = (
         refetchPage={refetchPage}
         identified={!!identity}
         market={market}
+        carrier={carrier}
       />
     ),
   },
@@ -76,6 +80,7 @@ const payoutPanes = (
         refetchPage={refetchPage}
         identified={!!identity}
         market={market}
+        carrier={carrier}
       />
     ),
   },
@@ -89,6 +94,7 @@ const ClaimPayments: React.SFC<Props> = ({
   refetchPage,
   identity,
   market,
+  carrier,
 }) => {
   const totalAmount = payments
     .map((payment) => +payment?.amount?.amount)
@@ -188,30 +194,42 @@ const ClaimPayments: React.SFC<Props> = ({
         </MuiTableBody>
       </PaymentTable>
 
-      {market === Market.Sweden ? (
-        <Tab
-          style={{
-            height: '100%',
-            marginTop: '20px',
-          }}
-          panes={payoutPanes(
-            sanctionStatus,
-            claimId,
-            refetchPage,
-            identity,
-            market,
-          )}
-          renderActiveOnly={true}
-          defaultActiveIndex={0}
-        />
+      {carrier ? (
+        market === Market.Sweden ? (
+          <Tab
+            style={{
+              height: '100%',
+              marginTop: '20px',
+            }}
+            panes={payoutPanes(
+              sanctionStatus,
+              claimId,
+              refetchPage,
+              identity,
+              market,
+              carrier,
+            )}
+            renderActiveOnly={true}
+            defaultActiveIndex={0}
+          />
+        ) : (
+          <ClaimPayment
+            sanctionStatus={sanctionStatus}
+            claimId={claimId}
+            refetchPage={refetchPage}
+            identified={!!identity}
+            market={market}
+            carrier={carrier}
+          />
+        )
       ) : (
-        <ClaimPayment
-          sanctionStatus={sanctionStatus}
-          claimId={claimId}
-          refetchPage={refetchPage}
-          identified={!!identity}
-          market={market}
-        />
+        <Spacing top>
+          <Paragraph>
+            ⚠️ Can not make a payment without a carrier, please select a{' '}
+            <strong>contract</strong> and <strong>date of loss</strong> above,
+            while making sure the claim is <strong>covered on that date</strong>
+          </Paragraph>
+        </Spacing>
       )}
     </Paper>
   )

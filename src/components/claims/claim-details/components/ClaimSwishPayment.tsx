@@ -51,6 +51,7 @@ interface Props {
   refetchPage: () => Promise<any>
   identified
   market
+  carrier
 }
 
 interface State {
@@ -136,6 +137,7 @@ export const ClaimSwishPayment: React.FC<Props> = ({
   refetchPage,
   identified,
   market,
+  carrier,
 }) => {
   const isPotentiallySanctioned =
     sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
@@ -274,6 +276,7 @@ export const ClaimSwishPayment: React.FC<Props> = ({
                               exGratia: initiatedPayment.exGratia || false,
                               phoneNumber: initiatedPayment.phoneNumber,
                               message: initiatedPayment.message,
+                              carrier,
                             },
                           },
                         })

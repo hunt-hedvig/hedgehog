@@ -7,10 +7,21 @@ import {
 import { format, parseISO } from 'date-fns'
 import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
+import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
 import { Table, TableRowProps } from 'semantic-ui-react'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
-import { getMemberFlag, MemberAge } from 'utils/member'
+import { getMemberFlag, getMemberIdColor, MemberAge } from 'utils/member'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+
+const MemberCell = styled(Table.Cell)<{
+  memberId: string
+  numberMemberGroups: number
+}>`
+  border-left: 7px solid
+    ${({ memberId, numberMemberGroups }) =>
+      getMemberIdColor(memberId, numberMemberGroups)} !important;
+`
 
 const FadeInTableRow = withFadeIn<TableRowProps>(Table.Row)
 
@@ -21,15 +32,20 @@ export const ListItem: React.FC<{
 }> = ({ index, member, active }) => {
   const contracts = member.contracts
 
+  const { numberMemberGroups } = useNumberMemberGroups()
+
   return (
     <FadeInTableRow active={active} delay={`${index * 50}ms`}>
-      <Table.Cell>
+      <MemberCell
+        memberId={member.memberId}
+        numberMemberGroups={numberMemberGroups}
+      >
         {member.memberId ? (
           <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
         ) : (
           '-'
         )}
-      </Table.Cell>
+      </MemberCell>
       <Table.Cell>
         {member.firstName ?? '-'} {member.lastName ?? '-'}{' '}
         {getMemberFlag(member?.contractMarketInfo)}

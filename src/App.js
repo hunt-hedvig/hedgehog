@@ -22,6 +22,7 @@ import {
   SemanticOverrides,
 } from 'hedvig-ui/themes'
 import { MemberHistoryProvider } from 'utils/member-history'
+import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
 
 const store = Store.configureStore()
 
@@ -96,56 +97,60 @@ class App extends React.Component {
           <ThemeProvider theme={this.state.isDarkmode ? darkTheme : lightTheme}>
             <Provider store={store}>
               <MemberHistoryProvider>
-                <Router history={history}>
-                  <Layout>
-                    <Navigation history={history} store={store} />
-                    <Main dark={history.location.pathname.startsWith('/login')}>
-                      <Breadcrumbs />
-                      <Switch>
-                        <Route
-                          path="/login"
-                          exact
-                          component={Routes.LoginPageRoute}
-                        />
-                        <Routes.PrivateRoute
-                          path="/dashborad"
-                          store={store}
-                          component={Routes.DashboardPageRoute}
-                        />
-                        <Routes.PrivateRoute
-                          path="/questions"
-                          store={store}
-                          component={Routes.QuestionsPageRoute}
-                        />
-                        <Route
-                          path="/claims"
-                          render={(routeProps) => (
-                            <Routes.ClaimsPageRoute
-                              {...routeProps}
-                              store={store}
-                            />
-                          )}
-                        />
-                        <Route
-                          path="/members"
-                          render={(routeProps) => (
-                            <Routes.MembersPageRoute
-                              {...routeProps}
-                              store={store}
-                            />
-                          )}
-                        />
-                        <Routes.PrivateRoute
-                          path="/tools"
-                          store={store}
-                          component={Routes.ToolsPageRoute}
-                        />
-                        <Redirect from="*" to="/dashborad" />
-                      </Switch>
-                      <Notifications />
-                    </Main>
-                  </Layout>
-                </Router>
+                <NumberMemberGroupsProvider>
+                  <Router history={history}>
+                    <Layout>
+                      <Navigation history={history} store={store} />
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
+                        <Breadcrumbs />
+                        <Switch>
+                          <Route
+                            path="/login"
+                            exact
+                            component={Routes.LoginPageRoute}
+                          />
+                          <Routes.PrivateRoute
+                            path="/dashborad"
+                            store={store}
+                            component={Routes.DashboardPageRoute}
+                          />
+                          <Routes.PrivateRoute
+                            path="/questions"
+                            store={store}
+                            component={Routes.QuestionsPageRoute}
+                          />
+                          <Route
+                            path="/claims"
+                            render={(routeProps) => (
+                              <Routes.ClaimsPageRoute
+                                {...routeProps}
+                                store={store}
+                              />
+                            )}
+                          />
+                          <Route
+                            path="/members"
+                            render={(routeProps) => (
+                              <Routes.MembersPageRoute
+                                {...routeProps}
+                                store={store}
+                              />
+                            )}
+                          />
+                          <Routes.PrivateRoute
+                            path="/tools"
+                            store={store}
+                            component={Routes.ToolsPageRoute}
+                          />
+                          <Redirect from="*" to="/dashborad" />
+                        </Switch>
+                        <Notifications />
+                      </Main>
+                    </Layout>
+                  </Router>
+                </NumberMemberGroupsProvider>
               </MemberHistoryProvider>
             </Provider>
           </ThemeProvider>

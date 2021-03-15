@@ -66,7 +66,7 @@ export const getContractByAgreementId = (
 
 export const getFirstMasterInception = (
   contracts: ReadonlyArray<Contract>,
-): Date | null => {
+): string | null => {
   const masterInceptions = contracts
     .filter((contract) => !!contract.masterInception)
     .map((contract) => contract.masterInception)
@@ -78,7 +78,7 @@ export const getFirstMasterInception = (
 
 export const getLastTerminationDate = (
   contracts: ReadonlyArray<Contract>,
-): Date | null => {
+): string | null => {
   if (contracts.length === 0) {
     return null
   }
