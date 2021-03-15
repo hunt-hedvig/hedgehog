@@ -43,30 +43,10 @@ const PaymentTableCell = withStyles({
   },
 })(MuiTableCell)
 
-const TabContainer = styled(Tab.Pane)`
-  &&& {
-    display: flex;
-    flex-direction: column;
-    min-width: 700px;
-    margin-bottom: 50px !important;
-  }
-`
-
 const TotalCell = styled(MuiTableCell)(({ theme }) => ({
   backgroundColor: theme.accentThird,
   fontSize: '1rem',
 }))
-
-// const TabItem: React.FC<{ props: any; TabContent: any }> = ({
-//   props,
-//   TabContent,
-// }) => {
-//   return (
-//     <TabContainer>
-//       <TabContent {...props} />
-//     </TabContainer>
-//   )
-// }
 
 const payoutPanes = (
   sanctionStatus,
@@ -78,27 +58,25 @@ const payoutPanes = (
   {
     menuItem: 'Payout',
     render: () => (
-      <TabContainer>
-        <ClaimPayment
-          sanctionStatus={sanctionStatus}
-          claimId={claimId}
-          refetchPage={refetchPage}
-          identified={!!identity}
-          market={market}
-        />
-      </TabContainer>
+      <ClaimPayment
+        sanctionStatus={sanctionStatus}
+        claimId={claimId}
+        refetchPage={refetchPage}
+        identified={!!identity}
+        market={market}
+      />
     ),
   },
   {
     menuItem: 'Swish payout',
     render: () => (
-      <TabContainer>
-        <ClaimSwishPayment
-          sanctionStatus={sanctionStatus}
-          claimId={claimId}
-          refetchPage={refetchPage}
-        />
-      </TabContainer>
+      <ClaimSwishPayment
+        sanctionStatus={sanctionStatus}
+        claimId={claimId}
+        refetchPage={refetchPage}
+        identified={!!identity}
+        market={market}
+      />
     ),
   },
 ]
@@ -210,18 +188,31 @@ const ClaimPayments: React.SFC<Props> = ({
         </MuiTableBody>
       </PaymentTable>
 
-      <Tab
-        style={{ height: '100%' }}
-        panes={payoutPanes(
-          sanctionStatus,
-          claimId,
-          refetchPage,
-          identity,
-          market,
-        )}
-        renderActiveOnly={true}
-        defaultActiveIndex={3}
-      />
+      {market === Market.Sweden ? (
+        <Tab
+          style={{
+            height: '100%',
+            marginTop: '20px',
+          }}
+          panes={payoutPanes(
+            sanctionStatus,
+            claimId,
+            refetchPage,
+            identity,
+            market,
+          )}
+          renderActiveOnly={true}
+          defaultActiveIndex={0}
+        />
+      ) : (
+        <ClaimPayment
+          sanctionStatus={sanctionStatus}
+          claimId={claimId}
+          refetchPage={refetchPage}
+          identified={!!identity}
+          market={market}
+        />
+      )}
     </Paper>
   )
 }

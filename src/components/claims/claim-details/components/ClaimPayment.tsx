@@ -248,13 +248,32 @@ export const ClaimPayment: React.FC<Props> = ({
                         closeInitiatedPayment()
                         resetForm()
                       }}
-                      onSubmit={async (graphqlArgs) => {
-                        await createPayment(graphqlArgs)
+                      onSubmit={async () => {
+                        await createPayment({
+                          variables: {
+                            id: claimId,
+                            payment: {
+                              amount: {
+                                amount: +initiatedPayment.amount,
+                                currency: 'SEK',
+                              },
+                              deductible: {
+                                amount: +initiatedPayment.deductible,
+                                currency: 'SEK',
+                              },
+                              sanctionListSkipped: initiatedPayment.overridden
+                                ? initiatedPayment.overridden
+                                : false,
+                              note: initiatedPayment.note,
+                              exGratia: initiatedPayment.exGratia || false,
+                              type: initiatedPayment.type,
+                            },
+                          },
+                        })
                         await sleep(1000)
                         await refetchPage()
                       }}
-                      payment={initiatedPayment}
-                      claimId={claimId}
+                      amount={initiatedPayment.amount}
                       identified={identified}
                       market={market}
                     />

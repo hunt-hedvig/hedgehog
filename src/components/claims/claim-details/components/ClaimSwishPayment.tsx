@@ -5,6 +5,7 @@ import {
   withStyles,
 } from '@material-ui/core'
 import { SanctionStatus } from 'api/generated/graphql'
+import { PaymentConfirmationDialog } from 'components/claims/claim-details/components/PaymentConfirmationDialog'
 
 import { ActionMap, Container } from 'constate'
 import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
@@ -19,7 +20,6 @@ import {
   MutationFeedbackBlock,
   MutationStatus,
 } from '../../../shared/MutationFeedbackBlock'
-import { SwishPaymentConfirmationDialog } from './SwishPaymentConfirmationDialog'
 
 const CREATE_SWISH_PAYMENT_MUTATION = gql`
   mutation CreatePayment($id: ID!, $payment: ClaimSwishPaymentInput!) {
@@ -49,6 +49,8 @@ interface Props {
   sanctionStatus: SanctionStatus
   claimId: string
   refetchPage: () => Promise<any>
+  identified
+  market
 }
 
 interface State {
@@ -132,6 +134,8 @@ export const ClaimSwishPayment: React.FC<Props> = ({
   sanctionStatus,
   claimId,
   refetchPage,
+  identified,
+  market,
 }) => {
   const isPotentiallySanctioned =
     sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
@@ -245,18 +249,40 @@ export const ClaimSwishPayment: React.FC<Props> = ({
                   </PaymentForm>
 
                   {initiatedPayment && (
-                    <SwishPaymentConfirmationDialog
+                    <PaymentConfirmationDialog
                       onClose={() => {
                         closeInitiatedPayment()
                         resetForm()
                       }}
-                      onSubmit={async (graphqlArgs) => {
-                        await createPayment(graphqlArgs)
+                      onSubmit={async () => {
+                        await createPayment({
+                          variables: {
+                            id: claimId,
+                            payment: {
+                              amount: {
+                                amount: +initiatedPayment.amount,
+                                currency: 'SEK',
+                              },
+                              deductible: {
+                                amount: +initiatedPayment.deductible,
+                                currency: 'SEK',
+                              },
+                              sanctionListSkipped: initiatedPayment.overridden
+                                ? initiatedPayment.overridden
+                                : false,
+                              note: initiatedPayment.note,
+                              exGratia: initiatedPayment.exGratia || false,
+                              phoneNumber: initiatedPayment.phoneNumber,
+                              message: initiatedPayment.message,
+                            },
+                          },
+                        })
                         await sleep(1000)
                         await refetchPage()
                       }}
-                      payment={initiatedPayment}
-                      claimId={claimId}
+                      amount={initiatedPayment.amount}
+                      identified={identified}
+                      market={market}
                     />
                   )}
 

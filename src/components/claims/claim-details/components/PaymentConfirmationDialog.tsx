@@ -8,7 +8,6 @@ import {
   TextField,
 } from '@material-ui/core'
 import { Market } from 'types/enums'
-import { PaymentFormData } from './ClaimPayment'
 
 import { Field, Form, Formik } from 'formik'
 import React from 'react'
@@ -16,9 +15,8 @@ import * as yup from 'yup'
 
 interface PaymentConfirmationDialogProps {
   onClose: () => void
-  onSubmit: (claimVariables: object) => void
-  payment: PaymentFormData
-  claimId: string
+  onSubmit: () => void
+  amount: string
   identified: boolean
   market: string | null
 }
@@ -39,8 +37,7 @@ interface ConfirmationData {
 export const PaymentConfirmationDialog: React.SFC<PaymentConfirmationDialogProps> = ({
   onClose,
   onSubmit,
-  payment,
-  claimId,
+  amount,
   identified,
   market,
 }) => {
@@ -56,39 +53,19 @@ export const PaymentConfirmationDialog: React.SFC<PaymentConfirmationDialogProps
         )}
         <br />
         <DialogContentText>
-          Please enter "{payment.amount}" and submit to confirm payment.
+          Please enter "{amount}" and submit to confirm payment.
           <br />
-          Once confirmed, an amount of {payment.amount} will be paid out to
-          support this claim.
+          Once confirmed, an amount of {amount} will be paid out to support this
+          claim.
         </DialogContentText>
         <Formik<ConfirmationData>
           initialValues={{ confirmation: '' }}
           onSubmit={(_, { resetForm }) => {
-            onSubmit({
-              variables: {
-                id: claimId,
-                payment: {
-                  amount: {
-                    amount: +payment.amount,
-                    currency: 'SEK',
-                  },
-                  deductible: {
-                    amount: +payment.deductible,
-                    currency: 'SEK',
-                  },
-                  sanctionListSkipped: payment.overridden
-                    ? payment.overridden
-                    : false,
-                  note: payment.note,
-                  exGratia: payment.exGratia || false,
-                  type: payment.type,
-                },
-              },
-            })
+            onSubmit()
             resetForm()
             onClose()
           }}
-          validationSchema={paymentConfirmValidationSchema(payment.amount)}
+          validationSchema={paymentConfirmValidationSchema(amount)}
         >
           {({ isValid }) => (
             <Form>
