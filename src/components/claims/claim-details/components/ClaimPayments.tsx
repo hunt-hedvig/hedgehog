@@ -72,7 +72,7 @@ const payoutPanes = (
     ),
   },
   {
-    menuItem: 'Swish payout',
+    menuItem: 'Swish payout(Test - do not use in prod)',
     render: () => (
       <ClaimSwishPayment
         sanctionStatus={sanctionStatus}
