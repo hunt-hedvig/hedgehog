@@ -52,6 +52,7 @@ const template = () => `
     window.GATEKEEPER_HOST = ${JSON.stringify(config.gatekeeperHost)};
     window.HOPE_FEATURES = {
       "stagingSpecificTools": ${JSON.stringify(config.stagingSpecificTools)},
+      "swishPayoutsEnabled": ${JSON.stringify(config.swishPayoutsEnabled)},
     };
   </script>
   <script src="${scriptLocation}"></script>

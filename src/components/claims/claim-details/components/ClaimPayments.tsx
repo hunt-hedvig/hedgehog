@@ -72,7 +72,7 @@ const payoutPanes = (
     ),
   },
   {
-    menuItem: 'Swish payout(Test - do not use in prod)',
+    menuItem: 'Swish payout',
     render: () => (
       <ClaimSwishPayment
         sanctionStatus={sanctionStatus}
@@ -85,6 +85,10 @@ const payoutPanes = (
     ),
   },
 ]
+
+const swishPayoutsEnabled = () => {
+  return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
+}
 
 const ClaimPayments: React.SFC<Props> = ({
   payments,
@@ -195,7 +199,7 @@ const ClaimPayments: React.SFC<Props> = ({
       </PaymentTable>
 
       {carrier ? (
-        market === Market.Sweden ? (
+        swishPayoutsEnabled() && market === Market.Sweden ? (
           <Tab
             style={{
               height: '100%',
