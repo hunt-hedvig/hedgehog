@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-03-16',
+    change: 'Swish claims payouts (feature toggled)',
+    authorGithubHandle: 'fredrikareschoug',
+  },
+  {
     date: '2021-03-04',
     change:
       'Add ability to change how many colors are in H.OPE. and other improvements',
