@@ -341,7 +341,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   }, [pathname])
 
   React.useEffect(() => {
-    locations.forEach((location) => {
+    for (const location of locations) {
       const match = matchPath(location, {
         path: '/claims/:claimId/members/:memberId',
         exact: true,
@@ -349,7 +349,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
       })
 
       if (!match) {
-        return
+        continue
       }
 
       const { memberId, claimId } = match.params as LatestClaim
@@ -359,7 +359,8 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
         claimId,
         location,
       })
-    })
+      break
+    }
   }, [locations])
 
   const toggleOpen = () => {
