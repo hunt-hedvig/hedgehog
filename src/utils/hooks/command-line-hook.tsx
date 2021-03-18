@@ -54,6 +54,7 @@ const ResultItemContent = styled.div`
 const CommandLineInput = styled(Input)`
   &&&& {
     width: 40vw;
+    min-width: 500px;
     padding: 1em 1em;
   }
 `
@@ -144,8 +145,9 @@ export const CommandLineComponent: React.FC<{
           value={value}
           onChange={({ target }) => {
             const inputValue = (target as HTMLInputElement).value
+            const NON_BREAKING_SPACE = '\xa0'
 
-            if (inputValue === '\xa0' || inputValue === ' ') {
+            if (inputValue === NON_BREAKING_SPACE || inputValue === ' ') {
               return
             }
 

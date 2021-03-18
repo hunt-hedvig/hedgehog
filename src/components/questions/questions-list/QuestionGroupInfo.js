@@ -7,9 +7,9 @@ import { QuestionInfo } from './QuestionInfo'
 import { hasOpenClaim } from 'utils/claim'
 import { ShieldShaded } from 'react-bootstrap-icons'
 import { IconButton } from '@material-ui/core'
-import { history } from 'store'
 import { Popover } from 'hedvig-ui/popover'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import { useHistory } from 'react-router'
 
 const QuestionGroupInfoWrapper = styled.div`
   display: flex;
@@ -34,6 +34,7 @@ const QuestionGroupInfo = ({ questionGroup }) => {
   const member = questionGroup?.member
 
   const { numberMemberGroups } = useNumberMemberGroups()
+  const history = useHistory()
 
   return (
     <QuestionGroupInfoWrapper

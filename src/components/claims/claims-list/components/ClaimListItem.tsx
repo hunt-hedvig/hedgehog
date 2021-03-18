@@ -8,8 +8,8 @@ import { Badge } from 'hedvig-ui/badge'
 import { Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import styled from 'react-emotion'
+import { useHistory } from 'react-router'
 import { Table, TableRowProps } from 'semantic-ui-react'
-import { history } from 'store'
 import { getMemberIdColor } from 'utils/member'
 import { formatMoney } from 'utils/money'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
@@ -35,6 +35,7 @@ export const ClaimListItem: React.FC<{
   index: number
   active?: boolean
 }> = ({ item, index, active = false }) => {
+  const history = useHistory()
   const date = parseISO(item.registrationDate)
   const formattedDate = isValidDate(date)
     ? formatDate(date, 'dd MMMM yyyy HH:mm')

@@ -18,7 +18,7 @@ import {
 import styled from 'react-emotion'
 import MediaQuery from 'react-media'
 import { connect } from 'react-redux'
-import { matchPath } from 'react-router'
+import { matchPath, useLocation } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
@@ -237,11 +237,9 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   loginState,
   history,
 }) => {
+  const { pathname } = useLocation()
   const [isCollapsed, setCollapsed] = useState(
     () => localStorage.getItem('hedvig:menu:collapse') === 'true',
-  )
-  const [currentLocation, setCurrentLocation] = useState<string>(
-    history.location.pathname,
   )
   const [locations, setLocations] = useState<string[]>([])
   const [latestClaim, setLatestClaim] = useState<LatestClaim | null>(null)
@@ -336,19 +334,14 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   ])
 
   React.useEffect(() => {
-    history.listen((location) => {
-      setCurrentLocation(location.pathname)
-    })
-  }, [])
+    const latestLocations = [pathname, ...locations].filter(
+      (_, index) => index < 10,
+    )
+    setLocations(latestLocations)
+  }, [pathname])
 
   React.useEffect(() => {
-    const latestLocations = [currentLocation, ...locations]
-    const newLocations = latestLocations.filter((_, index) => index < 10)
-    setLocations(newLocations)
-  }, [currentLocation])
-
-  React.useEffect(() => {
-    locations.find((location) => {
+    locations.forEach((location) => {
       const match = matchPath(location, {
         path: '/claims/:claimId/members/:memberId',
         exact: true,

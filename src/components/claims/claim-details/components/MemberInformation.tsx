@@ -8,7 +8,6 @@ import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
 import styled from 'react-emotion'
 import { Link } from 'react-router-dom'
-import { history } from 'store'
 import { Market } from 'types/enums'
 import {
   currentAgreementForContract,
@@ -26,6 +25,7 @@ import {
   ThumpsUp,
 } from '../../../icons'
 
+import { useHistory } from 'react-router'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { KeyCode } from 'utils/hooks/key-press-hook'
 import { Paper } from '../../../shared/Paper'
@@ -61,6 +61,7 @@ const MemberInformation: React.FC<{
   const lastTermination = getLastTerminationDate(member.contracts)
 
   const { registerActions, isHinting } = useCommandLine()
+  const history = useHistory()
 
   registerActions([
     {

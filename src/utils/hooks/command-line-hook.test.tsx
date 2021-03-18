@@ -56,7 +56,7 @@ describe('CommandLineProvider', () => {
 
     wrapper.update()
 
-    expect(wrapper.find('CommandLineComponent').exists()).toBeTruthy()
+    expect(wrapper.find('CommandLineComponent').exists()).toBe(true)
   })
 
   it('closes on escape press', () => {
@@ -66,7 +66,7 @@ describe('CommandLineProvider', () => {
 
     wrapper.update()
 
-    expect(wrapper.find('CommandLineComponent').exists()).toBeTruthy()
+    expect(wrapper.find('CommandLineComponent').exists()).toBe(true)
 
     act(() => {
       window.dispatchEvent(
@@ -78,14 +78,14 @@ describe('CommandLineProvider', () => {
 
     wrapper.update()
 
-    expect(wrapper.find('CommandLineComponent').exists()).toBeFalsy()
+    expect(wrapper.find('CommandLineComponent').exists()).toBe(false)
   })
 
   it('closes on mouse click', () => {
     const wrapper = mount(<CommandLineProvider />)
     simulateOpenKeyPress()
     wrapper.update()
-    expect(wrapper.find('CommandLineComponent').exists()).toBeTruthy()
+    expect(wrapper.find('CommandLineComponent').exists()).toBe(true)
 
     act(() => {
       window.dispatchEvent(new KeyboardEvent('mousedown'))
@@ -93,6 +93,6 @@ describe('CommandLineProvider', () => {
 
     wrapper.update()
 
-    expect(wrapper.find('CommandLineComponent').exists()).toBeFalsy()
+    expect(wrapper.find('CommandLineComponent').exists()).toBe(false)
   })
 })
