@@ -35,62 +35,62 @@ const TabItem: React.FC<{ props: any; TabContent: any }> = ({
   )
 }
 
-const memberPagePanes = (props, memberId, member) => [
+const memberPagePanes = (props, memberId, member, isHinting) => [
   {
     tabName: 'member',
-    menuItem: 'Member',
+    menuItem: `Member ${isHinting ? '(1)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, member }} TabContent={DetailsTab} />
     ),
   },
   {
     tabName: 'claims',
-    menuItem: 'Claims',
+    menuItem: `Claims ${isHinting ? '(2)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={ClaimsTab} />
     ),
   },
   {
     tabName: 'files',
-    menuItem: 'Files',
+    menuItem: `Files ${isHinting ? '(3)' : ''}`,
     render: () => <TabItem props={props} TabContent={MemberFile} />,
   },
   {
     tabName: 'contracts',
-    menuItem: 'Contracts',
+    menuItem: `Contracts ${isHinting ? '(4)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={ContractTab} />
     ),
   },
   {
     tabName: 'quotes',
-    menuItem: 'Quotes',
+    menuItem: `Quotes ${isHinting ? '(5)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
     ),
   },
   {
     tabName: 'payments',
-    menuItem: 'Payments',
+    menuItem: `Payments ${isHinting ? '(6)' : ''}`,
     render: () => <TabItem props={props} TabContent={PaymentsTab} />,
   },
   {
     tabName: 'account',
-    menuItem: 'Account',
+    menuItem: `Account ${isHinting ? '(7)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={AccountTab} />
     ),
   },
   {
     tabName: 'debt',
-    menuItem: 'Debt',
+    menuItem: `Debt ${isHinting ? '(8)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={DebtTab} />
     ),
   },
   {
     tabName: 'campaigns',
-    menuItem: 'Campaigns',
+    menuItem: `Campaigns ${isHinting ? '(9)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={CampaignsTab} />
     ),

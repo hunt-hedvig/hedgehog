@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'react-emotion'
-import { useHistory } from 'react-router'
+import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Breadcrumb } from 'semantic-ui-react'
 
@@ -17,15 +17,7 @@ const BreadcrumbsContainer = styled.div`
 `
 
 const Breadcrumbs: React.FC = () => {
-  const history = useHistory()
-
-  const [pathname, setPathname] = React.useState<string>(
-    history.location.pathname,
-  )
-
-  history.listen((location) => {
-    setPathname(location.pathname)
-  })
+  const { pathname } = useLocation()
 
   if (pathname.startsWith('/login')) {
     return null

@@ -23,6 +23,7 @@ The following dependencies are required:
 `back-office` and `hedgehog` share the `schema.graphql` file. When altering this file, it should be altered in
 `back-office`. The contents of `back-office/schema.graphql` should then be copied to `hedgehog/schema.graphql`. Once
 done, do the following:
+
 - Regenerate the GraphQL schema
   - `yarn graphql:gen`
 - Get rid of the formatting issues by prettifying:

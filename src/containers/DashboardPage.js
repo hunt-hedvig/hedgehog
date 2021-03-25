@@ -6,9 +6,7 @@ import { withRouter } from 'react-router'
 const DashboardPage = (props) => <Dashboard {...props} />
 
 export default withRouter(
-  connect(
-    ({ auth}) => ({
-      auth,
-    })
-  )(DashboardPage),
+  connect(({ auth }) => ({
+    auth,
+  }))(DashboardPage),
 )

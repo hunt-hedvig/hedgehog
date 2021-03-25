@@ -3,6 +3,7 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
+import { useContext, useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
@@ -15,9 +16,10 @@ import memberPagePanes from './tabs/index'
 import { MemberFlag } from './shared/member-flag'
 import { MemberHistoryContext } from 'utils/member-history'
 import { Mount } from 'react-lifecycle-components/dist'
-import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { KeyCode } from 'utils/hooks/key-press-hook'
 import { useHistory } from 'react-router'
 
 const MemberPageWrapper = styled('div')({
@@ -69,19 +71,114 @@ const MemberDetail = styled.span`
 `
 const MemberDetailLink = MemberDetail.withComponent('a')
 
+const getIndex = (tab, panes) => panes.map((pane) => pane.tabName).indexOf(tab)
+
 export const Member = (props) => {
   const history = useHistory()
   const memberId = props.match.params.memberId
   const tab = props.match.params.tab ?? 'contracts'
-  const [member, { loading }] = useGetMemberInfo(memberId)
+
+  const member = props.member
+
+  const { registerActions, isHinting } = useCommandLine()
+
+  const panes = memberPagePanes(props, memberId, member, isHinting)
   const getMemberPageTitle = (member) =>
     `${member.firstName || ''} ${member.lastName || ''}`
 
-  if (loading) {
-    return null
-  }
+  const formattedFirstName =
+    member.firstName + (member.firstName.slice(-1) === 's' ? "'" : "'s")
 
-  const panes = memberPagePanes(props, memberId, member)
+  registerActions([
+    {
+      label: `Member information`,
+      keysHint: ['CTRL', '1'],
+      keys: [KeyCode.Control , KeyCode.One],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[0].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} claims`,
+      keysHint: ['CTRL', '2'],
+      keys: [KeyCode.Control , KeyCode.Two],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[1].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} files`,
+      keysHint: ['CTRL', '3'],
+      keys: [KeyCode.Control , KeyCode.Three],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[2].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} contracts`,
+      keysHint: ['CTRL', '4'],
+      keys: [KeyCode.Control , KeyCode.Four],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[3].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} quotes`,
+      keysHint: ['CTRL', '5'],
+      keys: [KeyCode.Control , KeyCode.Five],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[4].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} payments`,
+      keysHint: ['CTRL', '6'],
+      keys: [KeyCode.Control , KeyCode.Six],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[5].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} account`,
+      keysHint: ['CTRL', '7'],
+      keys: [KeyCode.Control , KeyCode.Seven],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[6].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} debt`,
+      keysHint: ['CTRL', '8'],
+      keys: [KeyCode.Control , KeyCode.Eight],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[7].tabName}`)
+      },
+    },
+    {
+      label: `${formattedFirstName} campaigns`,
+      keysHint: ['CTRL', '9'],
+      keys: [KeyCode.Control , KeyCode.Nine],
+      onResolve: () => {
+        history.push(`/members/${memberId}/${panes[8].tabName}`)
+      },
+    },
+    {
+      label: `Copy ${formattedFirstName} email to clipboard`,
+      keysHint: ['CTRL', 'E'],
+      keys: [KeyCode.Control , KeyCode.E],
+      onResolve: () => {
+        copy(member.email, {
+          format: 'text/plain',
+        })
+      },
+    },
+  ])
+
+  const [activeIndex, setActiveIndex] = useState(getIndex(tab, panes))
+
+  useEffect(() => {
+    setActiveIndex(getIndex(tab, panes))
+  }, [tab])
 
   const { numberMemberGroups } = useNumberMemberGroups()
 
@@ -149,7 +246,6 @@ export const Member = (props) => {
                 </Popover>
               </MemberDetails>
               <Tab
-                style={{ height: '100%' }}
                 panes={panes}
                 onTabChange={(_, { activeIndex }) =>
                   history.replace(
@@ -157,7 +253,7 @@ export const Member = (props) => {
                   )
                 }
                 renderActiveOnly={true}
-                activeIndex={panes.map((pane) => pane.tabName).indexOf(tab)}
+                activeIndex={activeIndex}
               />
             </MemberPageContainer>
             <ChatPane memberId={memberId} />
