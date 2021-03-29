@@ -213,7 +213,7 @@ const ClaimPayments: React.SFC<Props> = ({
               market,
               carrier,
             )}
-            renderActiveOnly={true}
+            renderActiveOnly
             defaultActiveIndex={0}
           />
         ) : (

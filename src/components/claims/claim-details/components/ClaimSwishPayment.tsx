@@ -14,7 +14,7 @@ import * as React from 'react'
 import { Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 import { sleep } from 'utils/sleep'
-import * as yup from 'yup'
+import yup from 'yup'
 import { TextField } from '../../../shared/inputs/TextField'
 import {
   MutationFeedbackBlock,
@@ -48,7 +48,7 @@ const CREATE_SWISH_PAYMENT_MUTATION = gql`
 interface Props {
   sanctionStatus: SanctionStatus
   claimId: string
-  refetchPage: () => Promise<any>
+  refetchPage: () => Promise<void>
   identified
   market
   carrier
@@ -186,17 +186,11 @@ export const ClaimSwishPayment: React.FC<Props> = ({
                 isPotentiallySanctioned,
               )}
               validate={(values) => {
-                try {
-                  validateYupSchema<PaymentSwishFormData>(
-                    values,
-                    getPaymentValidationSchema(isPotentiallySanctioned),
-                    false,
-                  )
-                } catch (error) {
-                  throw new Error(
-                    'An error occured with the validation ' + error,
-                  )
-                }
+                validateYupSchema<PaymentSwishFormData>(
+                  values,
+                  getPaymentValidationSchema(isPotentiallySanctioned),
+                  false,
+                )
               }}
             >
               {({ resetForm, isValid }) => (
@@ -269,9 +263,9 @@ export const ClaimSwishPayment: React.FC<Props> = ({
                                 amount: +initiatedPayment.deductible,
                                 currency: 'SEK',
                               },
-                              sanctionListSkipped: initiatedPayment.overridden
-                                ? initiatedPayment.overridden
-                                : false,
+                              sanctionListSkipped: Boolean(
+                                initiatedPayment.overridden,
+                              ),
                               note: initiatedPayment.note,
                               exGratia: initiatedPayment.exGratia || false,
                               phoneNumber: initiatedPayment.phoneNumber,
