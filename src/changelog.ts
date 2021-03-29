@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-03-25',
+    change:
+      'Shortcuts! Hold CTRL to show available shortcuts on a page. Press CTRL and SPACE to open searchable interface. ',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-03-16',
     change: 'Swish claims payouts (feature toggled)',
     authorGithubHandle: 'fredrikareschoug',

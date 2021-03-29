@@ -5,8 +5,8 @@ import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import { Spacing } from 'hedvig-ui/spacing'
 import React, { useEffect } from 'react'
+import { useHistory } from 'react-router'
 import { Header } from 'semantic-ui-react'
-import { history } from 'store'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 import { ClaimListHeader } from './claims-list/components/ClaimListHeader'
 import { ClaimListItem } from './claims-list/components/ClaimListItem'
@@ -20,6 +20,7 @@ interface ClaimsListProps {
 }
 
 export const ClaimsList: React.FC<ClaimsListProps> = ({ ...props }) => {
+  const history = useHistory()
   const selectedPage = props.match.params.page ?? 1
   const [
     { claims, page: currentPage, totalPages },

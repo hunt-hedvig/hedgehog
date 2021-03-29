@@ -17,6 +17,7 @@ import {
 } from 'graphql/use-set-fraudulent-status'
 import { withShowNotification } from 'utils/notifications'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
 
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),

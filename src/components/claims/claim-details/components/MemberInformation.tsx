@@ -25,6 +25,9 @@ import {
   ThumpsUp,
 } from '../../../icons'
 
+import { useHistory } from 'react-router'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { KeyCode } from 'utils/hooks/key-press-hook'
 import { Paper } from '../../../shared/Paper'
 
 const SanctionStatusIcon: React.FC<{ status: SanctionStatus }> = ({
@@ -56,6 +59,21 @@ const MemberInformation: React.FC<{
   const address = contract && currentAgreementForContract(contract)?.address
   const firstMasterInception = getFirstMasterInception(member.contracts)
   const lastTermination = getLastTerminationDate(member.contracts)
+
+  const { registerActions, isHinting } = useCommandLine()
+  const history = useHistory()
+
+  registerActions([
+    {
+      label: `Go to member`,
+      keysHint: ['CTRL', 'M'],
+      keys: [KeyCode.Control, KeyCode.M],
+      onResolve: () => {
+        history.push(`/members/${member.memberId}`)
+      },
+    },
+  ])
+
   return (
     <Paper>
       <ThirdLevelHeadline>Member Information</ThirdLevelHeadline>
@@ -65,7 +83,8 @@ const MemberInformation: React.FC<{
       </MemberName>
       <Paragraph>
         <strong>Id:</strong>{' '}
-        <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
+        <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>{' '}
+        {isHinting && '(M)'}
       </Paragraph>
       {member.contractMarketInfo?.market === Market.Norway && (
         <Paragraph>

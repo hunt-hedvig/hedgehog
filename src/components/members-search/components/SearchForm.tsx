@@ -44,7 +44,9 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
         <SearchInputGroup>
           <SearchIcon muted={!query} />
           <SearchInput
-            onChange={(_, { value }) => setQuery(value)}
+            onChange={(_, { value }) => {
+              setQuery(value)
+            }}
             placeholder="Looking for someone...?"
             id="query"
             value={query}

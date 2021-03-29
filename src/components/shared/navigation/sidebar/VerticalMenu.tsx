@@ -1,10 +1,13 @@
 import { colorsV3 } from '@hedviginsurance/brand'
+import { Spacing } from 'hedvig-ui/spacing'
 import React, { useContext, useState } from 'react'
 import {
   ArrowUpRight,
+  Backspace,
   BoxArrowLeft,
   ChevronLeft,
   CreditCard,
+  CreditCard2Front,
   House,
   Inbox,
   PersonBoundingBox,
@@ -15,11 +18,14 @@ import {
 import styled from 'react-emotion'
 import MediaQuery from 'react-media'
 import { connect } from 'react-redux'
+import { matchPath, useLocation } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 import { DarkmodeContext } from 'utils/darkmode-context'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { KeyCode } from 'utils/hooks/key-press-hook'
 import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
@@ -209,16 +215,153 @@ const DarkmodeInnerSwitch = styled('input')({
   visibility: 'hidden',
 })
 
+const routes = {
+  dashborad: '/dashborad',
+  claims: '/claims/list/1',
+  questions: '/questions',
+  search: '/members',
+  tools: '/tools',
+  trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
+  adyen: 'https://ca-live.adyen.com',
+  gsr: 'https://app.gsr.se/Account/SignIn',
+}
+
+interface LatestClaim {
+  memberId: string
+  claimId: string
+  location: string
+}
+
 export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   authLogOut: authLogOut_,
   loginState,
   history,
 }) => {
+  const { pathname } = useLocation()
   const [isCollapsed, setCollapsed] = useState(
     () => localStorage.getItem('hedvig:menu:collapse') === 'true',
   )
-  const [updateCount, setUpdateCount] = useState(0)
+  const [locations, setLocations] = useState<string[]>([])
+  const [latestClaim, setLatestClaim] = useState<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
+
+  const { registerActions, isHinting } = useCommandLine()
+
+  registerActions([
+    {
+      label: 'Claims list',
+      keysHint: ['CTRL', 'C'],
+      keys: [KeyCode.Control, KeyCode.C],
+      onResolve: () => {
+        history.push(routes.claims)
+      },
+    },
+    {
+      label: 'Tools',
+      keysHint: ['CTRL', 'T'],
+      keys: [KeyCode.Control, KeyCode.T],
+      onResolve: () => {
+        history.push(routes.tools)
+      },
+    },
+    {
+      label: 'Questions',
+      keysHint: ['CTRL', 'Q'],
+      keys: [KeyCode.Control, KeyCode.Q],
+      onResolve: () => {
+        history.push(routes.questions)
+      },
+    },
+    {
+      label: 'Member search',
+      keysHint: ['CTRL', 'S'],
+      keys: [KeyCode.Control, KeyCode.S],
+      onResolve: () => {
+        history.push(routes.search)
+      },
+    },
+    {
+      label: 'Dashborad',
+      keysHint: ['CTRL', 'D'],
+      keys: [KeyCode.Control, KeyCode.D],
+      onResolve: () => {
+        history.push(routes.dashborad)
+      },
+    },
+    {
+      label: 'Trustly',
+      keysHint: ['CTRL', 'R'],
+      keys: [KeyCode.Control, KeyCode.R],
+      onResolve: () => {
+        window.open(routes.trustly)
+      },
+    },
+    {
+      label: 'Adyen',
+      keysHint: ['CTRL', 'A'],
+      keys: [KeyCode.Control, KeyCode.A],
+      onResolve: () => {
+        window.open(routes.adyen)
+      },
+    },
+    {
+      label: 'GSR',
+      keysHint: ['CTRL', 'G'],
+      keys: [KeyCode.Control, KeyCode.G],
+      onResolve: () => {
+        window.open(routes.gsr)
+      },
+    },
+    {
+      label: 'Logout',
+      keysHint: ['CTRL', 'L'],
+      keys: [KeyCode.Control, KeyCode.L],
+      onResolve: () => {
+        authLogOut_()
+      },
+    },
+    {
+      label: 'Latest claim',
+      keysHint: ['CTRL', '←'],
+      keys: [KeyCode.Control, KeyCode.Backspace],
+      onResolve: () => {
+        if (!latestClaim) {
+          return
+        }
+        history.push(latestClaim.location)
+      },
+    },
+  ])
+
+  React.useEffect(() => {
+    const latestLocations = [pathname, ...locations].filter(
+      (_, index) => index < 10,
+    )
+    setLocations(latestLocations)
+  }, [pathname])
+
+  React.useEffect(() => {
+    for (const location of locations) {
+      const match = matchPath(location, {
+        path: '/claims/:claimId/members/:memberId',
+        exact: true,
+        strict: false,
+      })
+
+      if (!match) {
+        continue
+      }
+
+      const { memberId, claimId } = match.params as LatestClaim
+
+      setLatestClaim({
+        memberId,
+        claimId,
+        location,
+      })
+      break
+    }
+  }, [locations])
 
   const toggleOpen = () => {
     setCollapsed(!isCollapsed)
@@ -227,12 +370,6 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   const toggleDarkmode = () => {
     setIsDarkmode(!isDarkmode)
   }
-
-  React.useEffect(() => {
-    history.listen(() => {
-      setUpdateCount(updateCount + 1)
-    })
-  }, [])
 
   return (
     <MediaQuery query="(max-width: 1300px)">
@@ -253,9 +390,14 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
 
             <Menu>
               <MenuGroup>
-                <MenuItem to="/dashborad">
+                <MenuItem
+                  to="/dashborad"
+                  isActive={(_match, location) =>
+                    location.pathname.startsWith('/dashborad')
+                  }
+                >
                   <House />
-                  <MenuText>Dashborad</MenuText>
+                  <MenuText>Dashborad {isHinting && '(D)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -266,44 +408,57 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Search />
-                  <MenuText>Member Search</MenuText>
+                  <MenuText>Member Search {isHinting && '(S)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
-                <MenuItem to="/questions">
+                <MenuItem
+                  to={routes.questions}
+                  isActive={(_match, location) =>
+                    location.pathname.startsWith('/questions')
+                  }
+                >
                   <Inbox />
-                  <MenuText>Questions</MenuText>
+                  <MenuText>Questions {isHinting && '(Q)'}</MenuText>
                 </MenuItem>
-                <MenuItem to="/claims/list/1">
+                <MenuItem
+                  to={routes.claims}
+                  isActive={(_match, location) =>
+                    location.pathname.startsWith('/claims')
+                  }
+                >
                   <ShieldShaded />
-                  <MenuText>Claims</MenuText>
+                  {isCollapsed && <MenuText>Claims</MenuText>}
+                  {!isCollapsed && (
+                    <Spacing right inline>
+                      <MenuText>Claims {isHinting && '(C)'}</MenuText>
+                    </Spacing>
+                  )}
+                  {isHinting && latestClaim && <Backspace />}
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
-                <MenuItem to="/tools">
+                <MenuItem to={routes.tools}>
                   <Tools />
-                  <MenuText>Tools</MenuText>
+                  <MenuText>Tools {isHinting && '(T)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
 
               <MenuGroup>
-                <MenuItemExternalLink
-                  href="https://backoffice.trustly.com/?Locale=en_GB#/tab_orders"
-                  target="_blank"
-                >
+                <MenuItemExternalLink href={routes.trustly} target="_blank">
+                  <ArrowUpRight />
                   <CreditCard />
-                  <MenuText>
-                    Trustly <ArrowUpRight />
-                  </MenuText>
+                  <MenuText>Trustly {isHinting && '(R)'}</MenuText>
                 </MenuItemExternalLink>
-                <MenuItemExternalLink
-                  href="https://app.gsr.se/Account/SignIn"
-                  target="_blank"
-                >
+                <MenuItemExternalLink href={routes.adyen} target="_blank">
+                  <ArrowUpRight />
+                  <CreditCard2Front />
+                  <MenuText>Adyen {isHinting && '(A)'}</MenuText>
+                </MenuItemExternalLink>
+                <MenuItemExternalLink href={routes.gsr} target="_blank">
+                  <ArrowUpRight />
                   <PersonBoundingBox />
-                  <MenuText>
-                    GSR <ArrowUpRight />
-                  </MenuText>
+                  <MenuText>GSR {isHinting && '(G)'}</MenuText>
                 </MenuItemExternalLink>
               </MenuGroup>
             </Menu>
@@ -326,7 +481,8 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
               >
                 <BoxArrowLeft />
                 <MenuText>
-                  {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Log out'}
+                  {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Logout'}{' '}
+                  {isHinting && '(L)'}
                 </MenuText>
               </MenuItem>
             </BottomSection>

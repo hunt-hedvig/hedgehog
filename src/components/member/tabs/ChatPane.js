@@ -5,6 +5,8 @@ import Resizable from 're-resizable'
 import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { KeyCode } from 'utils/hooks/key-press-hook'
 
 const resizableStyles = {
   display: 'flex',
@@ -39,6 +41,19 @@ export const ChatPane = ({ memberId }) => {
   const [visible, setVisible] = useState(window.innerWidth > 1000)
   const [manualChange, setManualChange] = useState(false)
 
+  const { registerActions, isHinting } = useCommandLine()
+
+  registerActions([
+    {
+      label: 'Toggle chat',
+      keysHint: ['CTRL', 'W'],
+      keys: [KeyCode.Control , KeyCode.W],
+      onResolve: () => {
+        setVisible(!visible)
+      },
+    },
+  ])
+
   useEffect(() => {
     const resizeControlChat = (e) => {
       if (!manualChange) {
@@ -53,6 +68,7 @@ export const ChatPane = ({ memberId }) => {
     setVisible(!visible)
     setManualChange(true)
   }
+
   return visible ? (
     <Resizable
       style={resizableStyles}
@@ -61,24 +77,36 @@ export const ChatPane = ({ memberId }) => {
       maxHeight={'85vh'}
       enable={{ left: true }}
     >
-      <ChatHeader visible={visible} onResizeClick={onResizeClick} />
+      <ChatHeader
+        visible={visible}
+        onResizeClick={onResizeClick}
+        isHinting={isHinting}
+      />
       <MessagesList memberId={memberId} />
       <ChatPanel memberId={memberId} />
     </Resizable>
   ) : (
-    <ChatHeader visible={visible} onResizeClick={onResizeClick} />
+    <ChatHeader
+      visible={visible}
+      onResizeClick={onResizeClick}
+      isHinting={isHinting}
+    />
   )
 }
 
 const ChatHeader = (props) => (
   <ChatHeaderStyle state={props.visible}>
     <h4>Chat</h4>
-    <Icon
-      name={props.visible ? 'angle double up' : 'angle double down'}
-      size={'large'}
-      link
-      onClick={props.onResizeClick}
-    />
+    {props.isHinting && props.visible ? (
+      '(W)'
+    ) : (
+      <Icon
+        name={props.visible ? 'angle double up' : 'angle double down'}
+        size={'large'}
+        link
+        onClick={props.onResizeClick}
+      />
+    )}
   </ChatHeaderStyle>
 )
 
