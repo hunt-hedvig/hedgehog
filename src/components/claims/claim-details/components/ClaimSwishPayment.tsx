@@ -14,7 +14,7 @@ import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
 import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { sleep } from 'utils/sleep'
-import yup from 'yup'
+import * as yup from 'yup'
 import { TextField } from '../../../shared/inputs/TextField'
 import { MutationFeedbackBlock } from '../../../shared/MutationFeedbackBlock'
 
@@ -60,7 +60,7 @@ const Checkbox: React.SFC<FieldProps> = ({
   />
 )
 
-const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
+const getSwishPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
   yup.object().shape({
     ...(isPotentiallySanctioned && {
       overridden: yup
@@ -131,11 +131,13 @@ export const ClaimSwishPayment: React.FC<Props> = ({
       onSubmit={() => {
         setIsConfirming(true)
       }}
-      validationSchema={getPaymentValidationSchema(isPotentiallySanctioned)}
+      validationSchema={getSwishPaymentValidationSchema(
+        isPotentiallySanctioned,
+      )}
       validate={(values) => {
         validateYupSchema<PaymentSwishFormData>(
           values,
-          getPaymentValidationSchema(isPotentiallySanctioned),
+          getSwishPaymentValidationSchema(isPotentiallySanctioned),
           false,
         )
       }}
