@@ -90,7 +90,7 @@ export const ClaimSwishPayment: React.FC<Props> = ({
   const [
     createSwishPayment,
     createSwishPaymentProps,
-  ] = useCreateSwishClaimsPaymentMutation()
+  ] = useCreateSwishClaimPaymentMutation()
 
   const [isConfirming, setIsConfirming] = useState(false)
 
