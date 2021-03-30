@@ -74,11 +74,9 @@ const getSwishPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
     }),
     amount: yup.string().required(),
     note: yup.string().required(),
+    phoneNumber: yup.string().required(),
+    message: yup.string().required(),
     exGratia: yup.boolean(),
-    type: yup
-      .string()
-      .oneOf(['Manual', 'Automatic'])
-      .required(),
   })
 
 export const ClaimSwishPayment: React.FC<Props> = ({
