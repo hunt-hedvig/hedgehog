@@ -5,47 +5,21 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
-import { SanctionStatus } from 'api/generated/graphql'
+import {
+  ClaimPaymentType,
+  SanctionStatus,
+  useCreateClaimPaymentMutation,
+} from 'api/generated/graphql'
 
-import { ActionMap, Container } from 'constate'
 import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
-import gql from 'graphql-tag'
-import * as React from 'react'
-import { Mutation } from 'react-apollo'
+import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
 import { TextField } from '../../../shared/inputs/TextField'
-import {
-  MutationFeedbackBlock,
-  MutationStatus,
-} from '../../../shared/MutationFeedbackBlock'
+import { MutationFeedbackBlock } from '../../../shared/MutationFeedbackBlock'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
-
-const CREATE_PAYMENT_MUTATION = gql`
-  mutation CreatePayment($id: ID!, $payment: ClaimPaymentInput!) {
-    createClaimPayment(id: $id, payment: $payment) {
-      payments {
-        id
-        amount
-        deductible
-        note
-        type
-        timestamp
-        exGratia
-        transaction {
-          status
-        }
-        status
-      }
-      events {
-        text
-        date
-      }
-    }
-  }
-`
 
 interface Props {
   sanctionStatus: SanctionStatus
@@ -53,30 +27,7 @@ interface Props {
   refetchPage: () => Promise<any>
   identified: boolean
   market: string | null
-  carrier: string | null
-}
-
-interface State {
-  initiatedPayment: PaymentFormData | null
-  paymentStatus: MutationStatus
-}
-
-interface Actions {
-  initiatePayment: (payment: PaymentFormData) => void
-  closeInitiatedPayment: () => void
-  setPaymentStatus: (paymentStatus: MutationStatus) => void
-}
-
-const actions: ActionMap<State, Actions> = {
-  initiatePayment: (payment) => () => ({
-    initiatedPayment: payment,
-  }),
-  closeInitiatedPayment: () => () => ({
-    initiatedPayment: null,
-  }),
-  setPaymentStatus: (paymentStatus: MutationStatus) => () => ({
-    paymentStatus,
-  }),
+  carrier: string
 }
 
 export interface PaymentFormData {
@@ -84,7 +35,7 @@ export interface PaymentFormData {
   deductible: string
   note: string
   exGratia?: boolean
-  type: string
+  type: ClaimPaymentType
   overridden?: boolean
 }
 
@@ -140,167 +91,144 @@ export const ClaimPayment: React.FC<Props> = ({
   market,
   carrier,
 }) => {
+  const [createPayment, createPaymentProps] = useCreateClaimPaymentMutation()
+
+  const [isConfirming, setIsConfirming] = useState(false)
+
+  const [paymentStatus, setPaymentStatus] = useState<
+    'COMPLETED' | 'FAILED' | null
+  >(null)
+
   const isPotentiallySanctioned =
     sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
 
+  useEffect(() => {
+    if (createPaymentProps.data) {
+      setPaymentStatus('COMPLETED')
+    } else if (createPaymentProps.error) {
+      setPaymentStatus('FAILED')
+    } else {
+      setPaymentStatus(null)
+    }
+  }, [createPaymentProps.data, createPaymentProps.error, setPaymentStatus])
+
   return (
-    <Container<State, Actions>
-      initialState={{
-        initiatedPayment: null,
-        paymentStatus: '',
+    <Formik<PaymentFormData>
+      initialValues={{
+        type: ClaimPaymentType.Manual,
+        amount: '',
+        deductible: '',
+        note: '',
+        overridden: false,
       }}
-      actions={actions}
+      onSubmit={() => {
+        setIsConfirming(true)
+      }}
+      validationSchema={getPaymentValidationSchema(isPotentiallySanctioned)}
+      validate={(values) => {
+        try {
+          validateYupSchema<PaymentFormData>(
+            values,
+            getPaymentValidationSchema(isPotentiallySanctioned),
+            false,
+          )
+        } catch (error) {
+          throw new Error('An error occurred with the validation ' + error)
+        }
+      }}
     >
-      {({
-        initiatePayment,
-        closeInitiatedPayment,
-        initiatedPayment,
-        paymentStatus,
-        setPaymentStatus,
-      }) => (
-        <Mutation
-          mutation={CREATE_PAYMENT_MUTATION}
-          onCompleted={() => {
-            closeInitiatedPayment()
-            setPaymentStatus('COMPLETED')
-          }}
-          onError={() => {
-            closeInitiatedPayment()
-            setPaymentStatus('FAILED')
-          }}
-        >
-          {(createPayment) => (
-            <Formik<PaymentFormData>
-              initialValues={{
-                type: 'Manual',
-                amount: '',
-                deductible: '',
-                note: '',
-                overridden: false,
-              }}
-              onSubmit={(values, {}) => {
-                initiatePayment(values)
-              }}
-              validationSchema={getPaymentValidationSchema(
-                isPotentiallySanctioned,
-              )}
-              validate={(values) => {
-                try {
-                  validateYupSchema<PaymentFormData>(
-                    values,
-                    getPaymentValidationSchema(isPotentiallySanctioned),
-                    false,
-                  )
-                } catch (error) {
-                  throw new Error(
-                    'An error occurred with the validation ' + error,
-                  )
-                }
-              }}
+      {({ values, resetForm, isValid }) => (
+        <>
+          <PaymentForm>
+            <Field
+              component={TextField}
+              placeholder="Payment amount"
+              name="amount"
+            />
+            <Field
+              component={TextField}
+              placeholder="Deductible"
+              name="deductible"
+            />
+            <Field component={TextField} placeholder="Note" name="note" />
+            <MuiFormControlLabel
+              label="Ex Gratia?"
+              control={<Field component={Checkbox} name="exGratia" />}
+            />
+            <Field component={FieldSelect} name="type">
+              <MuiMenuItem value="Manual">Manual</MuiMenuItem>
+              <MuiMenuItem value="Automatic">Automatic</MuiMenuItem>
+              <MuiMenuItem value="IndemnityCost">Indemnity Cost</MuiMenuItem>
+              <MuiMenuItem value="Expense">Expense</MuiMenuItem>
+            </Field>
+
+            {isPotentiallySanctioned && (
+              <MuiFormControlLabel
+                label="Override sanction list result (I promise that I have manually checked the list)"
+                control={<Field component={Checkbox} name="overridden" />}
+              />
+            )}
+
+            <SubmitButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!isValid}
             >
-              {({ resetForm, isValid }) => (
-                <>
-                  <PaymentForm>
-                    <Field
-                      component={TextField}
-                      placeholder="Payment amount"
-                      name="amount"
-                    />
-                    <Field
-                      component={TextField}
-                      placeholder="Deductible"
-                      name="deductible"
-                    />
-                    <Field
-                      component={TextField}
-                      placeholder="Note"
-                      name="note"
-                    />
-                    <MuiFormControlLabel
-                      label="Ex Gratia?"
-                      control={<Field component={Checkbox} name="exGratia" />}
-                    />
-                    <Field component={FieldSelect} name="type">
-                      <MuiMenuItem value="Manual">Manual</MuiMenuItem>
-                      <MuiMenuItem value="Automatic">Automatic</MuiMenuItem>
-                      <MuiMenuItem value="IndemnityCost">
-                        Indemnity Cost
-                      </MuiMenuItem>
-                      <MuiMenuItem value="Expense">Expense</MuiMenuItem>
-                    </Field>
+              Create payment
+            </SubmitButton>
+          </PaymentForm>
 
-                    {isPotentiallySanctioned && (
-                      <MuiFormControlLabel
-                        label="Override sanction list result (I promise that I have manually checked the list)"
-                        control={
-                          <Field component={Checkbox} name="overridden" />
-                        }
-                      />
-                    )}
-
-                    <SubmitButton
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      disabled={!isValid}
-                    >
-                      Create payment
-                    </SubmitButton>
-                  </PaymentForm>
-
-                  {initiatedPayment && (
-                    <PaymentConfirmationDialog
-                      onClose={() => {
-                        closeInitiatedPayment()
-                        resetForm()
-                      }}
-                      onSubmit={async () => {
-                        await createPayment({
-                          variables: {
-                            id: claimId,
-                            payment: {
-                              amount: {
-                                amount: +initiatedPayment.amount,
-                                currency: 'SEK',
-                              },
-                              deductible: {
-                                amount: +initiatedPayment.deductible,
-                                currency: 'SEK',
-                              },
-                              sanctionListSkipped: Boolean(initiatedPayment.overridden),
-                              note: initiatedPayment.note,
-                              exGratia: initiatedPayment.exGratia || false,
-                              type: initiatedPayment.type,
-                              carrier,
-                            },
-                          },
-                        })
-                        await sleep(1000)
-                        await refetchPage()
-                      }}
-                      amount={initiatedPayment.amount}
-                      identified={identified}
-                      market={market}
-                    />
-                  )}
-
-                  {!!paymentStatus && (
-                    <MutationFeedbackBlock
-                      status={paymentStatus}
-                      messages={{
-                        COMPLETED: 'Payment was completed',
-                        FAILED:
-                          'Payment failed. Please contact tech support if failure is persistent.',
-                      }}
-                      onTimeout={() => setPaymentStatus('')}
-                    />
-                  )}
-                </>
-              )}
-            </Formik>
+          {isConfirming && (
+            <PaymentConfirmationDialog
+              onClose={() => {
+                setIsConfirming(false)
+                resetForm()
+              }}
+              onSubmit={async () => {
+                await createPayment({
+                  variables: {
+                    id: claimId,
+                    payment: {
+                      amount: {
+                        amount: +values.amount,
+                        currency: 'SEK',
+                      },
+                      deductible: {
+                        amount: +values.deductible,
+                        currency: 'SEK',
+                      },
+                      sanctionListSkipped: Boolean(values.overridden),
+                      note: values.note,
+                      exGratia: values.exGratia || false,
+                      type: values.type,
+                      carrier,
+                    },
+                  },
+                })
+                await sleep(1000)
+                await refetchPage()
+                setIsConfirming(false)
+              }}
+              amount={values.amount}
+              identified={identified}
+              market={market}
+            />
           )}
-        </Mutation>
+
+          {!!paymentStatus && (
+            <MutationFeedbackBlock
+              status={paymentStatus}
+              messages={{
+                COMPLETED: 'Payment was completed',
+                FAILED:
+                  'Payment failed. Please contact tech support if failure is persistent.',
+              }}
+              onTimeout={() => setPaymentStatus(null)}
+            />
+          )}
+        </>
       )}
-    </Container>
+    </Formik>
   )
 }

@@ -1906,6 +1906,38 @@ export type CreateClaimMutation = { __typename?: 'MutationType' } & Pick<
   'createClaim'
 >
 
+export type CreateClaimPaymentMutationVariables = Exact<{
+  id: Scalars['ID']
+  payment: ClaimPaymentInput
+}>
+
+export type CreateClaimPaymentMutation = { __typename?: 'MutationType' } & {
+  createClaimPayment?: Maybe<
+    { __typename?: 'Claim' } & {
+      payments: Array<
+        { __typename?: 'ClaimPayment' } & Pick<
+          ClaimPayment,
+          | 'id'
+          | 'amount'
+          | 'deductible'
+          | 'note'
+          | 'type'
+          | 'timestamp'
+          | 'exGratia'
+          | 'status'
+        > & {
+            transaction?: Maybe<
+              { __typename?: 'Transaction' } & Pick<Transaction, 'status'>
+            >
+          }
+      >
+      events: Array<
+        { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+      >
+    }
+  >
+}
+
 export type CreatePaymentCompletionLinkMutationVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -4072,6 +4104,74 @@ export type CreateClaimMutationResult = ApolloReactCommon.MutationResult<
 export type CreateClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateClaimMutation,
   CreateClaimMutationVariables
+>
+export const CreateClaimPaymentDocument = gql`
+  mutation CreateClaimPayment($id: ID!, $payment: ClaimPaymentInput!) {
+    createClaimPayment(id: $id, payment: $payment) {
+      payments {
+        id
+        amount
+        deductible
+        note
+        type
+        timestamp
+        exGratia
+        transaction {
+          status
+        }
+        status
+      }
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+export type CreateClaimPaymentMutationFn = ApolloReactCommon.MutationFunction<
+  CreateClaimPaymentMutation,
+  CreateClaimPaymentMutationVariables
+>
+
+/**
+ * __useCreateClaimPaymentMutation__
+ *
+ * To run a mutation, you first call `useCreateClaimPaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClaimPaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClaimPaymentMutation, { data, loading, error }] = useCreateClaimPaymentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      payment: // value for 'payment'
+ *   },
+ * });
+ */
+export function useCreateClaimPaymentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateClaimPaymentMutation,
+    CreateClaimPaymentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    CreateClaimPaymentMutation,
+    CreateClaimPaymentMutationVariables
+  >(CreateClaimPaymentDocument, options)
+}
+export type CreateClaimPaymentMutationHookResult = ReturnType<
+  typeof useCreateClaimPaymentMutation
+>
+export type CreateClaimPaymentMutationResult = ApolloReactCommon.MutationResult<
+  CreateClaimPaymentMutation
+>
+export type CreateClaimPaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateClaimPaymentMutation,
+  CreateClaimPaymentMutationVariables
 >
 export const CreatePaymentCompletionLinkDocument = gql`
   mutation CreatePaymentCompletionLink($memberId: ID!) {
