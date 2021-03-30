@@ -267,9 +267,7 @@ export const ClaimPayment: React.FC<Props> = ({
                                 amount: +initiatedPayment.deductible,
                                 currency: 'SEK',
                               },
-                              sanctionListSkipped: initiatedPayment.overridden
-                                ? initiatedPayment.overridden
-                                : false,
+                              sanctionListSkipped: Boolean(initiatedPayment.overridden),
                               note: initiatedPayment.note,
                               exGratia: initiatedPayment.exGratia || false,
                               type: initiatedPayment.type,
