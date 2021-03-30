@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core'
 import {
   SanctionStatus,
-  useCreateSwishClaimsPaymentMutation,
+  useCreateSwishClaimPaymentMutation,
 } from 'api/generated/graphql'
 import { PaymentConfirmationDialog } from 'components/claims/claim-details/components/PaymentConfirmationDialog'
 
