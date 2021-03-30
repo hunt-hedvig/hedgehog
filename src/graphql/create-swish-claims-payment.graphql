@@ -1,0 +1,21 @@
+mutation CreateSwishClaimsPayment($id: ID!, $payment: ClaimSwishPaymentInput!) {
+  createClaimSwishPayment(id: $id, payment: $payment) {
+    payments {
+      id
+      amount
+      deductible
+      note
+      type
+      timestamp
+      exGratia
+      transaction {
+        status
+      }
+      status
+    }
+    events {
+      text
+      date
+    }
+  }
+}
