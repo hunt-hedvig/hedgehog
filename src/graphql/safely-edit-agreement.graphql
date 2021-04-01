@@ -1,0 +1,3 @@
+mutation SafelyEditAgreement($agreementId: ID!, $request: SafelyEditAgreementInput!) {
+  safelyEdit(agreementId: $agreementId, request: $request)
+}

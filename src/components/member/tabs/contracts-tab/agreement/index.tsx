@@ -43,7 +43,7 @@ const AgreementComponent: React.FC<{
     <>
       <CardsWrapper>
         <Card span={2}>
-          <AgreementInfo agreement={agreement} />
+          <AgreementInfo contract={contract} agreement={agreement} />
         </Card>
         {agreement.status !== AgreementStatus.Pending && (
           <>
