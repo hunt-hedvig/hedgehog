@@ -4,7 +4,7 @@ import {
   useSafelyEditAgreement,
 } from 'graphql/use-safely-edit-agreement'
 import { Input } from 'hedvig-ui/input'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { KeyCode } from 'utils/hooks/key-press-hook'
 import { withShowNotification } from 'utils/notifications'
@@ -22,6 +22,9 @@ const EditStreetInputComponent: React.FC<{
   showNotification,
 }) => {
   const [newStreet, setNewStreet] = useState(street)
+  useEffect(() => {
+    setNewStreet(street)
+  }, [agreementId])
   const [safelyEditAgreement] = useSafelyEditAgreement(contract)
   return (
     <Input
@@ -33,6 +36,9 @@ const EditStreetInputComponent: React.FC<{
           return
         }
         if (e.keyCode !== KeyCode.Return) {
+          return
+        }
+        if (street.trim() === newStreet.trim()) {
           return
         }
         if (

@@ -28,7 +28,7 @@ export const safelyEditAgreementOptions = (
     variables: {
       agreementId,
       request: {
-        newStreet,
+        newStreet: newStreet.trim(),
       },
     },
   }
