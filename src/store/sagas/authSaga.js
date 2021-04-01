@@ -7,6 +7,7 @@ import { forceLogOut } from 'utils/auth'
 
 function* checkAuth() {
   const response = yield call(api, config.login.login)
+
   if (response.status === 200) {
     yield put(authSuccess(response.data))
     return

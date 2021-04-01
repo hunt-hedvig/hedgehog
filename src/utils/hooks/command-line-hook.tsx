@@ -59,6 +59,12 @@ const CommandLineInput = styled(Input)`
   }
 `
 
+const SearchWrapper = styled.div`
+  width: 100%;
+`
+
+const SearchResultWrapper = styled.div``
+
 const ResultItem: React.FC<{
   label: string
   characters: string[]
@@ -121,10 +127,6 @@ export const CommandLineComponent: React.FC<{
   }
 
   useEffect(() => {
-    setSelectedItem(0)
-  }, [])
-
-  useEffect(() => {
     if (isEnterPressed) {
       hide()
       if (getSearchResult(value).length !== 0) {
@@ -135,11 +137,7 @@ export const CommandLineComponent: React.FC<{
 
   return (
     <CommandLineWindow>
-      <div
-        style={{
-          width: '100%',
-        }}
-      >
+      <SearchWrapper>
         <CommandLineInput
           autoFocus
           value={value}
@@ -159,8 +157,8 @@ export const CommandLineComponent: React.FC<{
           transparent
           size={'large'}
         />
-      </div>
-      <div>
+      </SearchWrapper>
+      <SearchResultWrapper>
         {getSearchResult(value).map(({ label, keysHint }, index) => (
           <FadeIn delay={`${index * 50}ms`} key={label + index.toString()}>
             <ResultItem
@@ -170,7 +168,7 @@ export const CommandLineComponent: React.FC<{
             />
           </FadeIn>
         ))}
-      </div>
+      </SearchResultWrapper>
     </CommandLineWindow>
   )
 }
@@ -195,7 +193,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const [blocked, setBlocked] = useState(false)
   const actionsRef = useRef<CommandLineAction[]>()
 
-  const isOptionPressed = useKeyIsPressed(KeyCode.Control)
+  const isControlPressed = useKeyIsPressed(KeyCode.Control)
   const isSpacePressed = useKeyIsPressed(KeyCode.Space)
   const isEscapePressed = useKeyIsPressed(KeyCode.Escape)
 
@@ -236,10 +234,10 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     if (blocked) {
       return
     }
-    if (isOptionPressed && isSpacePressed) {
+    if (isControlPressed && isSpacePressed) {
       setShowCommandLine(true)
     }
-  }, [isOptionPressed, isSpacePressed])
+  }, [isControlPressed, isSpacePressed])
 
   useEffect(() => {
     setShowCommandLine(false)
@@ -267,7 +265,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
       value={{
         registerActions: addAction,
         setBlocked: (value: boolean) => setBlocked(value),
-        isHinting: blocked ? false : isOptionPressed,
+        isHinting: blocked ? false : isControlPressed,
       }}
     >
       {children}

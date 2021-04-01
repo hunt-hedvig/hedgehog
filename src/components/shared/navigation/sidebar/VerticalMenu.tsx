@@ -322,7 +322,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
     },
     {
       label: 'Latest claim',
-      keysHint: ['CTRL', '←'],
+      keysHint: ['CTRL', '⌫'],
       keys: [KeyCode.Control, KeyCode.Backspace],
       onResolve: () => {
         if (!latestClaim) {
