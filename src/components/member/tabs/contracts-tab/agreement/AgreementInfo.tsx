@@ -1,14 +1,17 @@
-import { GenericAgreement } from 'api/generated/graphql'
+import { IconButton } from '@material-ui/core'
+import { Contract, GenericAgreement } from 'api/generated/graphql'
+import { EditStreetInput } from 'components/member/tabs/contracts-tab/agreement/EditStreetInput'
 import {
   InfoContainer,
   InfoRow,
   InfoText,
 } from 'components/member/tabs/shared/card-components'
 import { Paragraph } from 'hedvig-ui/typography'
-import React from 'react'
+import React, { useState } from 'react'
+import { PencilFill } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
 import { formatMoney } from 'utils/money'
-import { formatPostalCode, convertEnumToTitle } from 'utils/text'
+import { convertEnumToTitle, formatPostalCode } from 'utils/text'
 
 const AddressInfoRow = styled(Paragraph)`
   margin-bottom: 1rem;
@@ -16,14 +19,37 @@ const AddressInfoRow = styled(Paragraph)`
   display: inline-block;
 `
 
-export const AgreementInfo: React.FC<{ agreement: GenericAgreement }> = ({
-  agreement,
-}) => {
+const EditIconWrapper = styled('span')`
+  font-size: 1rem;
+`
+
+export const AgreementInfo: React.FC<{
+  contract: Contract
+  agreement: GenericAgreement
+}> = ({ contract, agreement }) => {
+  const [editStreet, setEditStreet] = useState(false)
   return (
     <InfoContainer>
       {agreement.address && (
         <AddressInfoRow>
-          {agreement.address.street}
+          {!editStreet && (
+            <>
+              {agreement.address.street}{' '}
+              <IconButton onClick={() => setEditStreet(true)}>
+                <EditIconWrapper>
+                  <PencilFill />
+                </EditIconWrapper>
+              </IconButton>
+            </>
+          )}
+          {editStreet && (
+            <EditStreetInput
+              agreementId={agreement.id}
+              contract={contract}
+              street={agreement.address.street}
+              closeEdit={() => setEditStreet(false)}
+            />
+          )}
           <br />
           {formatPostalCode(agreement.address.postalCode)}{' '}
           {agreement.address.city}
