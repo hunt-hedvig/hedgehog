@@ -6,6 +6,10 @@ export interface Key {
 }
 
 export const Keys: { [name: string]: Key } = {
+  Escape: {
+    code: 27,
+    hint: 'esc',
+  },
   Backspace: {
     code: 8,
     hint: '⌫',
@@ -24,11 +28,11 @@ export const Keys: { [name: string]: Key } = {
   },
   Control: {
     code: 17,
-    hint: 'Ctrl ⌃',
+    hint: 'control ⌃',
   },
   Option: {
     code: 18,
-    hint: '⌥',
+    hint: 'option ⌥',
   },
   CapsLock: {
     code: 20,
@@ -37,10 +41,6 @@ export const Keys: { [name: string]: Key } = {
   Command: {
     code: 91,
     hint: '⌘',
-  },
-  Escape: {
-    code: 27,
-    hint: '⎋',
   },
   Space: {
     code: 32,
@@ -256,6 +256,37 @@ export const Keys: { [name: string]: Key } = {
   },
 }
 
+const IllegalCharacters = new Set([
+  '•',
+  'Ω',
+  'é',
+  '®',
+  '†',
+  'µ',
+  'ü',
+  'ı',
+  'œ',
+  'π',
+  '',
+  'ß',
+  '∂',
+  'ƒ',
+  '¸',
+  '˛',
+  '√',
+  'ª',
+  'ﬁ',
+  '÷',
+  '≈',
+  'ç',
+  '‹',
+  '›',
+  '‘',
+  '’',
+])
+
+export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
+
 export const useKeyIsPressed = (key: Key): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
@@ -291,56 +322,42 @@ export const useKeyIsPressed = (key: Key): boolean => {
   return keyPressed
 }
 
-export const usePressedKeys = (ignore: boolean) => {
-  const [keyDown, setKeyDown] = useState<number | null>(null)
-  const [keyUp, setKeyUp] = useState<number | null>(null)
-  const [pressedKeys, setPressedKeys] = useState<number[]>([]) // TODO: use useRef here instead
-  const ignoreRef = useRef(ignore)
+export const usePressedKeys = (): number[] => {
+  const pressedKeysRef = useRef<Set<number>>(new Set())
+  const [pressedKeys, setPressedKeys] = useState<number[]>([])
 
-  useEffect(() => {
-    ignoreRef.current = ignore
-  }, [ignore])
+  const isModifierKey = (keyCode) =>
+    keyCode === Keys.Option.code || keyCode === Keys.Control.code
+  const modifierIsPressed = () =>
+    pressedKeysRef.current.has(Keys.Option.code) ||
+    pressedKeysRef.current.has(Keys.Control.code)
 
-  useEffect(() => {
-    if (!keyDown) {
-      return
-    }
-    if (pressedKeys.includes(keyDown)) {
-      return
-    }
-    const pressedKeysCopy = [...pressedKeys, keyDown]
-    setPressedKeys(pressedKeysCopy)
-    setKeyDown(null)
-    setKeyUp(null)
-  }, [keyDown])
-
-  useEffect(() => {
-    if (!keyUp) {
-      return
-    }
-    const pressedKeysCopy = [...pressedKeys]
-    setPressedKeys(pressedKeysCopy.filter((key) => key !== keyUp))
-    setKeyDown(null)
-    setKeyUp(null)
-  }, [keyUp])
+  const reset = () => {
+    pressedKeysRef.current = new Set()
+    setPressedKeys([])
+  }
 
   const handleKeydown = (e) => {
-    if (ignoreRef.current) {
+    if (e.keyCode === Keys.Escape.code) {
+      reset()
       return
     }
-    setKeyDown(e.keyCode)
+    if (isModifierKey(e.keyCode) || modifierIsPressed()) {
+      pressedKeysRef.current.add(e.keyCode)
+      setPressedKeys(Array.from(pressedKeysRef.current))
+    }
   }
 
   const handleKeyup = (e) => {
-    if (ignoreRef.current) {
-      return
+    if (isModifierKey(e.keyCode) || modifierIsPressed()) {
+      pressedKeysRef.current.delete(e.keyCode)
+      setPressedKeys(Array.from(pressedKeysRef.current))
     }
-    setKeyUp(e.keyCode)
   }
 
   const handleVisibility = () => {
     if (document.hidden) {
-      setPressedKeys([])
+      reset()
     }
   }
 

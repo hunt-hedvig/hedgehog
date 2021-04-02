@@ -95,6 +95,33 @@ export const Member = (props) => {
 
   registerActions([
     {
+      label: `Copy ${formattedFirstName} member page link to clipboard`,
+      keys: [Keys.Option, Keys.M],
+      onResolve: () => {
+        copy(`${window.location.protocol}//${window.location.host}/members/${memberId}`, {
+          format: 'text/plain',
+        })
+      },
+    },
+    {
+      label: `Copy ${formattedFirstName} email to clipboard`,
+      keys: [Keys.Option, Keys.E],
+      onResolve: () => {
+        copy(member.email, {
+          format: 'text/plain',
+        })
+      },
+    },
+    {
+      label: `Copy ${formattedFirstName} phone number to clipboard`,
+      keys: [Keys.Option, Keys.P],
+      onResolve: () => {
+        copy(member.phoneNumber, {
+          format: 'text/plain',
+        })
+      },
+    },
+    {
       label: `Member information`,
       keys: [Keys.Control, Keys.One],
       onResolve: () => {
@@ -155,24 +182,6 @@ export const Member = (props) => {
       keys: [Keys.Control, Keys.Nine],
       onResolve: () => {
         navigateToTab(panes[8].tabName)
-      },
-    },
-    {
-      label: `Copy ${formattedFirstName} email to clipboard`,
-      keys: [Keys.Option, Keys.E],
-      onResolve: () => {
-        copy(member.email, {
-          format: 'text/plain',
-        })
-      },
-    },
-    {
-      label: `Copy ${formattedFirstName} phone number to clipboard`,
-      keys: [Keys.Option, Keys.P],
-      onResolve: () => {
-        copy(member.phoneNumber, {
-          format: 'text/plain',
-        })
       },
     },
   ])

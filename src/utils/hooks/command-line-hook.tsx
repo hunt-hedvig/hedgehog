@@ -104,27 +104,32 @@ export const CommandLineComponent: React.FC<{
   const isDownPressed = useKeyIsPressed(Keys.Down)
   const isEnterPressed = useKeyIsPressed(Keys.Return)
 
+  const maxActions = 10
+
   useEffect(() => {
-    if (isUpPressed && selectedItem > 0) {
-      setSelectedItem(selectedItem - 1)
+    if (isUpPressed) {
+      if (selectedItem > 0) {
+        setSelectedItem(selectedItem - 1)
+      } else {
+        setSelectedItem(maxActions - 1)
+      }
     }
 
-    if (isDownPressed && selectedItem < 2) {
-      setSelectedItem(selectedItem + 1)
+    if (isDownPressed) {
+      if (selectedItem < maxActions - 1) {
+        setSelectedItem(selectedItem + 1)
+      } else {
+        setSelectedItem(0)
+      }
     }
   }, [isUpPressed, isDownPressed])
 
-  const getSearchResult = (query: string) => {
-    if (value === '') {
-      return []
-    }
-
-    return actions
+  const getSearchResult = (query: string) =>
+    actions
       .filter((item) => {
         return item.label.toLowerCase().includes(query.toLowerCase())
       })
-      .slice(0, 3)
-  }
+      .slice(0, maxActions)
 
   useEffect(() => {
     if (isEnterPressed) {
@@ -175,15 +180,11 @@ export const CommandLineComponent: React.FC<{
 
 interface CommandLineContextProps {
   registerActions: (newActions: CommandLineAction[]) => any
-  isInputBlocked: (keyCode: number) => boolean
-  setBlocked: (value: boolean) => void
   isHinting: boolean
 }
 
 const CommandLineContext = createContext<CommandLineContextProps>({
   registerActions: (_: CommandLineAction[]) => void 0,
-  isInputBlocked: (_: number) => false,
-  setBlocked: (_: boolean) => void 0,
   isHinting: false,
 })
 
@@ -192,48 +193,38 @@ const CommandLineWrapper = styled.div``
 export const useCommandLine = () => useContext(CommandLineContext)
 
 export const CommandLineProvider: React.FC = ({ children }) => {
-  const commandLineRef = useRef<HTMLInputElement>(null)
+  const commandLine = useRef<HTMLInputElement>(null)
   const [showCommandLine, setShowCommandLine] = useState(false)
-  const [actions, setActions] = useState<CommandLineAction[]>([])
-  const [blocked, setBlocked] = useState(false)
-  const actionsRef = useRef<CommandLineAction[]>()
+  const actions = useRef<CommandLineAction[]>([])
+  const [actionKeyCodes, setActionKeyCodes] = useState<number[][]>([])
 
   const isOptionPressed = useKeyIsPressed(Keys.Option)
   const isSpacePressed = useKeyIsPressed(Keys.Space)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
-  const keys = usePressedKeys(blocked)
-
-  const isPressingActionKeys = (pressedKeys, actionKeys) =>
-    actionKeys.length === pressedKeys.length &&
-    actionKeys.filter((key) => !pressedKeys.includes(key.code)).length === 0
-
-  useEffect(() => {
-    actionsRef.current = actions
-  }, [actions])
+  const keys = usePressedKeys()
 
   const onMouseDown = (event) => {
-    if (
-      commandLineRef.current &&
-      commandLineRef.current.contains(event.target)
-    ) {
+    if (commandLine.current && commandLine.current.contains(event.target)) {
       return
     }
     setShowCommandLine(false)
   }
 
   useEffect(() => {
-    if (blocked) {
-      return
-    }
-    for (const action of actions) {
-      const match = isPressingActionKeys(keys, action.keys)
+    setActionKeyCodes(
+      actions.current.map((action) => action.keys.map((key) => key.code)),
+    )
+  }, [actions.current])
 
-      if (match) {
-        action.onResolve()
-        setShowCommandLine(false)
-        break
-      }
+  useEffect(() => {
+    const matchIndex = actionKeyCodes.findIndex((keyCodes) => {
+      return keyCodes.every((keyCode, index) => keyCode === keys[index])
+    })
+
+    if (matchIndex > -1) {
+      actions.current[matchIndex].onResolve()
+      setShowCommandLine(false)
     }
   }, [keys])
 
@@ -249,9 +240,6 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     if (showCommandLine) {
       return
     }
-    if (blocked) {
-      return
-    }
     if (isOptionPressed && isSpacePressed) {
       setShowCommandLine(true)
     }
@@ -263,7 +251,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
 
   const addAction = (newActions: CommandLineAction[]) => {
     useEffect(() => {
-      setActions([...(actionsRef.current ?? []), ...newActions])
+      actions.current = [...newActions, ...actions.current]
       return () => {
         newActions.forEach((newAction) => {
           removeAction(newAction.label)
@@ -273,37 +261,22 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }
 
   const removeAction = (label: string) => {
-    actionsRef.current = (actionsRef.current ?? []).filter(
-      (action) => action.label !== label,
-    )
+    actions.current = actions.current.filter((action) => action.label !== label)
   }
 
   return (
     <CommandLineContext.Provider
       value={{
         registerActions: addAction,
-        isInputBlocked: (keyCode) => {
-          if (!isOptionPressed) {
-            return false
-          }
-          if (Keys.One.code <= keyCode && keyCode <= Keys.Nine.code) {
-            return false
-          }
-          if (Keys.Left.code === keyCode || Keys.Right.code === keyCode) {
-            return false
-          }
-          return true
-        },
-        setBlocked: (value: boolean) => setBlocked(value),
-        isHinting: blocked ? false : isOptionPressed,
+        isHinting: isOptionPressed, // TODO: Use hinting from different modifiers
       }}
     >
       {children}
-      {!blocked && showCommandLine && (
-        <CommandLineWrapper innerRef={commandLineRef}>
+      {showCommandLine && (
+        <CommandLineWrapper innerRef={commandLine}>
           <CommandLineComponent
             hide={() => setShowCommandLine(false)}
-            actions={actions}
+            actions={actions.current}
           />
         </CommandLineWrapper>
       )}

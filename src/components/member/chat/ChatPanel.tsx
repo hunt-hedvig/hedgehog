@@ -9,7 +9,7 @@ import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
 import styled from 'react-emotion'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 import { EmojiPicker } from './EmojiPicker'
 
 const MessagesPanelContainer = styled('div')(({ theme }) => ({
@@ -62,7 +62,6 @@ const TextField = withStyles({
 })(MuiTextField)
 
 export const ChatPanel = ({ memberId }) => {
-  const commandLine = useCommandLine()
   const [currentMessage, setCurrentMessage] = useState('')
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [error, setError] = useState(false)
@@ -77,6 +76,9 @@ export const ChatPanel = ({ memberId }) => {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (shouldIgnoreInput(e.currentTarget.value)) {
+      return
+    }
     if (loading) {
       return
     }
@@ -126,14 +128,11 @@ export const ChatPanel = ({ memberId }) => {
           variant="outlined"
           value={currentMessage}
           onChange={handleInputChange}
-          onFocus={() => commandLine.setBlocked(true)}
-          onBlur={() => commandLine.setBlocked(false)}
           onKeyDown={(event) => {
-            /*if (commandLine.isInputBlocked(event.keyCode)) {
-              console.log('BLOCKED')
+            if (shouldIgnoreInput(event.key)) {
               event.preventDefault()
               return
-            }*/
+            }
             if (shouldSubmit(event)) {
               event.preventDefault()
               handleSubmit()
