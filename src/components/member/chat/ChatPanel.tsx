@@ -121,14 +121,19 @@ export const ChatPanel = ({ memberId }) => {
           error={error}
           multiline
           rows={4}
-          onFocus={() => commandLine.setBlocked(true)}
-          onBlur={() => commandLine.setBlocked(false)}
           rowsMax="12"
           margin="none"
           variant="outlined"
           value={currentMessage}
           onChange={handleInputChange}
+          onFocus={() => commandLine.setBlocked(true)}
+          onBlur={() => commandLine.setBlocked(false)}
           onKeyDown={(event) => {
+            /*if (commandLine.isInputBlocked(event.keyCode)) {
+              console.log('BLOCKED')
+              event.preventDefault()
+              return
+            }*/
             if (shouldSubmit(event)) {
               event.preventDefault()
               handleSubmit()

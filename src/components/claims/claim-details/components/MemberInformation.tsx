@@ -27,7 +27,7 @@ import {
 
 import { useHistory } from 'react-router'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { KeyCode } from 'utils/hooks/key-press-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { Paper } from '../../../shared/Paper'
 
 const SanctionStatusIcon: React.FC<{ status: SanctionStatus }> = ({
@@ -66,8 +66,7 @@ const MemberInformation: React.FC<{
   registerActions([
     {
       label: `Go to member`,
-      keysHint: ['CTRL', 'M'],
-      keys: [KeyCode.Control, KeyCode.M],
+      keys: [Keys.Option, Keys.M],
       onResolve: () => {
         history.push(`/members/${member.memberId}`)
       },

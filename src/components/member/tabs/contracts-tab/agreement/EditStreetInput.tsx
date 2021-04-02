@@ -6,7 +6,7 @@ import {
 import { Input } from 'hedvig-ui/input'
 import React, { useEffect, useState } from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
-import { KeyCode } from 'utils/hooks/key-press-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { withShowNotification } from 'utils/notifications'
 
 const EditStreetInputComponent: React.FC<{
@@ -31,11 +31,11 @@ const EditStreetInputComponent: React.FC<{
       value={newStreet}
       onChange={(e) => setNewStreet(e.currentTarget.value)}
       onKeyDown={(e) => {
-        if (e.keyCode === KeyCode.Escape) {
+        if (e.keyCode === Keys.Escape.code) {
           closeEdit()
           return
         }
-        if (e.keyCode !== KeyCode.Return) {
+        if (e.keyCode !== Keys.Return.code) {
           return
         }
         if (street.trim() === newStreet.trim()) {

@@ -11,7 +11,8 @@ import React, {
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 import {
-  KeyCode,
+  Key,
+  Keys,
   useKeyIsPressed,
   usePressedKeys,
 } from 'utils/hooks/key-press-hook'
@@ -67,17 +68,17 @@ const SearchResultWrapper = styled.div``
 
 const ResultItem: React.FC<{
   label: string
-  characters: string[]
+  keys: Key[]
   selected?: boolean
-}> = ({ label, characters, selected = false }) => {
+}> = ({ label, keys, selected = false }) => {
   return (
     <ResultItemWrapper selected={selected}>
       <FourthLevelHeadline>{label}</FourthLevelHeadline>
       <ResultItemContent>
-        {characters.map((character) => (
-          <CharacterBadge key={character}>
+        {keys.map(({ hint }) => (
+          <CharacterBadge key={hint}>
             <Paragraph style={{ fontSize: '0.8em', fontWeight: 'bold' }}>
-              {character}
+              {hint}
             </Paragraph>
           </CharacterBadge>
         ))}
@@ -88,8 +89,7 @@ const ResultItem: React.FC<{
 
 export interface CommandLineAction {
   label: string
-  keysHint: string[]
-  keys: number[]
+  keys: Key[]
   onResolve: () => void
 }
 
@@ -100,9 +100,9 @@ export const CommandLineComponent: React.FC<{
   const [value, setValue] = useState('')
   const [selectedItem, setSelectedItem] = useState(0)
 
-  const isUpPressed = useKeyIsPressed(KeyCode.Up)
-  const isDownPressed = useKeyIsPressed(KeyCode.Down)
-  const isEnterPressed = useKeyIsPressed(KeyCode.Return)
+  const isUpPressed = useKeyIsPressed(Keys.Up)
+  const isDownPressed = useKeyIsPressed(Keys.Down)
+  const isEnterPressed = useKeyIsPressed(Keys.Return)
 
   useEffect(() => {
     if (isUpPressed && selectedItem > 0) {
@@ -159,11 +159,11 @@ export const CommandLineComponent: React.FC<{
         />
       </SearchWrapper>
       <SearchResultWrapper>
-        {getSearchResult(value).map(({ label, keysHint }, index) => (
+        {getSearchResult(value).map(({ label, keys }, index) => (
           <FadeIn delay={`${index * 50}ms`} key={label + index.toString()}>
             <ResultItem
               label={label}
-              characters={keysHint}
+              keys={keys}
               selected={index === selectedItem}
             />
           </FadeIn>
@@ -175,35 +175,50 @@ export const CommandLineComponent: React.FC<{
 
 interface CommandLineContextProps {
   registerActions: (newActions: CommandLineAction[]) => any
+  isInputBlocked: (keyCode: number) => boolean
   setBlocked: (value: boolean) => void
   isHinting: boolean
 }
 
 const CommandLineContext = createContext<CommandLineContextProps>({
   registerActions: (_: CommandLineAction[]) => void 0,
+  isInputBlocked: (_: number) => false,
   setBlocked: (_: boolean) => void 0,
   isHinting: false,
 })
 
+const CommandLineWrapper = styled.div``
+
 export const useCommandLine = () => useContext(CommandLineContext)
 
 export const CommandLineProvider: React.FC = ({ children }) => {
+  const commandLineRef = useRef<HTMLInputElement>(null)
   const [showCommandLine, setShowCommandLine] = useState(false)
   const [actions, setActions] = useState<CommandLineAction[]>([])
   const [blocked, setBlocked] = useState(false)
   const actionsRef = useRef<CommandLineAction[]>()
 
-  const isControlPressed = useKeyIsPressed(KeyCode.Control)
-  const isSpacePressed = useKeyIsPressed(KeyCode.Space)
-  const isEscapePressed = useKeyIsPressed(KeyCode.Escape)
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isSpacePressed = useKeyIsPressed(Keys.Space)
+  const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   const keys = usePressedKeys(blocked)
+
+  const isPressingActionKeys = (pressedKeys, actionKeys) =>
+    actionKeys.length === pressedKeys.length &&
+    actionKeys.filter((key) => !pressedKeys.includes(key.code)).length === 0
 
   useEffect(() => {
     actionsRef.current = actions
   }, [actions])
 
-  const onMousePress = () => {
+  const onMouseDown = (event) => {
+    if (
+      commandLineRef.current &&
+      commandLineRef.current.contains(event.target)
+    ) {
+      return
+    }
     setShowCommandLine(false)
   }
 
@@ -212,32 +227,35 @@ export const CommandLineProvider: React.FC = ({ children }) => {
       return
     }
     for (const action of actions) {
-      const match =
-        action.keys.filter((key) => !keys.includes(key)).length === 0
+      const match = isPressingActionKeys(keys, action.keys)
 
       if (match) {
         action.onResolve()
+        setShowCommandLine(false)
         break
       }
     }
   }, [keys])
 
   useEffect(() => {
-    window.addEventListener('mousedown', onMousePress)
+    window.addEventListener('mousedown', onMouseDown)
 
     return () => {
-      window.removeEventListener('mousedown', onMousePress)
+      window.removeEventListener('mousedown', onMouseDown)
     }
   }, [])
 
   useEffect(() => {
+    if (showCommandLine) {
+      return
+    }
     if (blocked) {
       return
     }
-    if (isControlPressed && isSpacePressed) {
+    if (isOptionPressed && isSpacePressed) {
       setShowCommandLine(true)
     }
-  }, [isControlPressed, isSpacePressed])
+  }, [keys])
 
   useEffect(() => {
     setShowCommandLine(false)
@@ -264,16 +282,30 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     <CommandLineContext.Provider
       value={{
         registerActions: addAction,
+        isInputBlocked: (keyCode) => {
+          if (!isOptionPressed) {
+            return false
+          }
+          if (Keys.One.code <= keyCode && keyCode <= Keys.Nine.code) {
+            return false
+          }
+          if (Keys.Left.code === keyCode || Keys.Right.code === keyCode) {
+            return false
+          }
+          return true
+        },
         setBlocked: (value: boolean) => setBlocked(value),
-        isHinting: blocked ? false : isControlPressed,
+        isHinting: blocked ? false : isOptionPressed,
       }}
     >
       {children}
       {!blocked && showCommandLine && (
-        <CommandLineComponent
-          hide={() => setShowCommandLine(false)}
-          actions={actions}
-        />
+        <CommandLineWrapper innerRef={commandLineRef}>
+          <CommandLineComponent
+            hide={() => setShowCommandLine(false)}
+            actions={actions}
+          />
+        </CommandLineWrapper>
       )}
     </CommandLineContext.Provider>
   )
