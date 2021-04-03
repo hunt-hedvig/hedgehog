@@ -60,7 +60,7 @@ const MemberInformation: React.FC<{
   const firstMasterInception = getFirstMasterInception(member.contracts)
   const lastTermination = getLastTerminationDate(member.contracts)
 
-  const { registerActions, isHinting } = useCommandLine()
+  const { registerActions, isHintingOption } = useCommandLine()
   const history = useHistory()
 
   registerActions([
@@ -83,7 +83,7 @@ const MemberInformation: React.FC<{
       <Paragraph>
         <strong>Id:</strong>{' '}
         <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>{' '}
-        {isHinting && '(M)'}
+        {isHintingOption && '(M)'}
       </Paragraph>
       {member.contractMarketInfo?.market === Market.Norway && (
         <Paragraph>

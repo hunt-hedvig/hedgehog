@@ -245,7 +245,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
   const latestClaim = useRef<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
 
-  const { registerActions, isHinting } = useCommandLine()
+  const { registerActions, isHintingOption } = useCommandLine()
 
   registerActions([
     {
@@ -387,7 +387,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <House />
-                  <MenuText>Dashborad {isHinting && '(D)'}</MenuText>
+                  <MenuText>Dashborad {isHintingOption && '(D)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -398,7 +398,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Search />
-                  <MenuText>Member Search {isHinting && '(S)'}</MenuText>
+                  <MenuText>Member Search {isHintingOption && '(S)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -409,7 +409,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Inbox />
-                  <MenuText>Questions {isHinting && '(Q)'}</MenuText>
+                  <MenuText>Questions {isHintingOption && '(Q)'}</MenuText>
                 </MenuItem>
                 <MenuItem
                   to={routes.claims}
@@ -421,16 +421,16 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   {isCollapsed && <MenuText>Claims</MenuText>}
                   {!isCollapsed && (
                     <Spacing right inline>
-                      <MenuText>Claims {isHinting && '(C)'}</MenuText>
+                      <MenuText>Claims {isHintingOption && '(C)'}</MenuText>
                     </Spacing>
                   )}
-                  {isHinting && latestClaim.current && <Backspace />}
+                  {isHintingOption && latestClaim.current && <Backspace />}
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
                 <MenuItem to={routes.tools}>
                   <Tools />
-                  <MenuText>Tools {isHinting && '(T)'}</MenuText>
+                  <MenuText>Tools {isHintingOption && '(T)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
 
@@ -438,17 +438,17 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <MenuItemExternalLink href={routes.trustly} target="_blank">
                   <ArrowUpRight />
                   <CreditCard />
-                  <MenuText>Trustly {isHinting && '(R)'}</MenuText>
+                  <MenuText>Trustly {isHintingOption && '(R)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
                   <ArrowUpRight />
                   <CreditCard2Front />
-                  <MenuText>Adyen {isHinting && '(A)'}</MenuText>
+                  <MenuText>Adyen {isHintingOption && '(A)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.gsr} target="_blank">
                   <ArrowUpRight />
                   <PersonBoundingBox />
-                  <MenuText>GSR {isHinting && '(G)'}</MenuText>
+                  <MenuText>GSR {isHintingOption && '(G)'}</MenuText>
                 </MenuItemExternalLink>
               </MenuGroup>
             </Menu>
@@ -472,7 +472,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <BoxArrowLeft />
                 <MenuText>
                   {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Logout'}{' '}
-                  {isHinting && '(L)'}
+                  {isHintingOption && '(L)'}
                 </MenuText>
               </MenuItem>
             </BottomSection>

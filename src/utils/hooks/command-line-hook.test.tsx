@@ -25,9 +25,9 @@ describe('CommandLineProvider', () => {
 
   it('hints on option press', () => {
     const CommandLineConsumer: React.FC = () => {
-      const { isHinting } = useCommandLine()
+      const { isHintingOption } = useCommandLine()
 
-      return <>{isHinting ? 'hint' : 'no hint'}</>
+      return <>{isHintingOption ? 'hint' : 'no hint'}</>
     }
 
     const wrapper = mount(

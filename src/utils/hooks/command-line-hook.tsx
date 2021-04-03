@@ -97,47 +97,74 @@ export const CommandLineComponent: React.FC<{
   hide: () => void
   actions: CommandLineAction[]
 }> = ({ hide, actions }) => {
-  const [value, setValue] = useState('')
-  const [selectedItem, setSelectedItem] = useState(0)
+  const [searchValue, setSearchValue] = useState('')
+  const [searchResult, setSearchResult] = useState<CommandLineAction[]>([])
 
   const isUpPressed = useKeyIsPressed(Keys.Up)
   const isDownPressed = useKeyIsPressed(Keys.Down)
   const isEnterPressed = useKeyIsPressed(Keys.Return)
 
   const maxActions = 10
+  const [selectedActionIndex, setSelectedActionIndex] = useState(0)
+  const [firstActionIndex, setFirstActionIndex] = useState(0)
 
   useEffect(() => {
-    if (isUpPressed) {
-      if (selectedItem > 0) {
-        setSelectedItem(selectedItem - 1)
-      } else {
-        setSelectedItem(maxActions - 1)
-      }
-    }
-
-    if (isDownPressed) {
-      if (selectedItem < maxActions - 1) {
-        setSelectedItem(selectedItem + 1)
-      } else {
-        setSelectedItem(0)
-      }
-    }
-  }, [isUpPressed, isDownPressed])
-
-  const getSearchResult = (query: string) =>
-    actions
-      .filter((item) => {
-        return item.label.toLowerCase().includes(query.toLowerCase())
-      })
-      .slice(0, maxActions)
+    setSearchResult(
+      actions.filter((item) => {
+        return item.label.toLowerCase().includes(searchValue.toLowerCase())
+      }),
+    )
+    setFirstActionIndex(0)
+    setSelectedActionIndex(0)
+  }, [searchValue])
 
   useEffect(() => {
-    if (isEnterPressed) {
-      hide()
-      if (getSearchResult(value).length !== 0) {
-        getSearchResult(value)[selectedItem].onResolve()
-      }
+    if (!isUpPressed) {
+      return
     }
+    if (searchResult.length === 0) {
+      return
+    }
+    if (selectedActionIndex > 0) {
+      setSelectedActionIndex(selectedActionIndex - 1)
+    } else {
+      setSelectedActionIndex(searchResult.length - 1)
+    }
+    if (selectedActionIndex === 0) {
+      setFirstActionIndex(Math.max(searchResult.length - maxActions, 0))
+    } else if (selectedActionIndex === firstActionIndex) {
+      setFirstActionIndex(Math.max(firstActionIndex - 1, 0))
+    }
+  }, [isUpPressed])
+
+  useEffect(() => {
+    if (!isDownPressed) {
+      return
+    }
+    if (searchResult.length === 0) {
+      return
+    }
+    if (selectedActionIndex === searchResult.length - 1) {
+      setSelectedActionIndex(0)
+    } else {
+      setSelectedActionIndex(selectedActionIndex + 1)
+    }
+    if (selectedActionIndex === searchResult.length - 1) {
+      setFirstActionIndex(0)
+    } else if (selectedActionIndex === firstActionIndex + maxActions - 1) {
+      setFirstActionIndex(firstActionIndex + 1)
+    }
+  }, [isDownPressed])
+
+  useEffect(() => {
+    if (!isEnterPressed) {
+      return
+    }
+    if (searchResult.length === 0) {
+      return
+    }
+    hide()
+    searchResult[selectedActionIndex].onResolve()
   }, [isEnterPressed])
 
   return (
@@ -145,7 +172,12 @@ export const CommandLineComponent: React.FC<{
       <SearchWrapper>
         <CommandLineInput
           autoFocus
-          value={value}
+          value={searchValue}
+          onKeyDown={(e) => {
+            if (e.keyCode === Keys.Down.code || e.keyCode === Keys.Up.code) {
+              e.preventDefault()
+            }
+          }}
           onChange={({ target }) => {
             const inputValue = (target as HTMLInputElement).value
             const NON_BREAKING_SPACE = '\xa0'
@@ -154,7 +186,7 @@ export const CommandLineComponent: React.FC<{
               return
             }
 
-            setValue(inputValue)
+            setSearchValue(inputValue)
           }}
           icon={<Icon name="search" style={{ marginLeft: '1em' }} />}
           iconPosition="left"
@@ -164,15 +196,23 @@ export const CommandLineComponent: React.FC<{
         />
       </SearchWrapper>
       <SearchResultWrapper>
-        {getSearchResult(value).map(({ label, keys }, index) => (
-          <FadeIn delay={`${index * 50}ms`} key={label + index.toString()}>
-            <ResultItem
-              label={label}
-              keys={keys}
-              selected={index === selectedItem}
-            />
-          </FadeIn>
-        ))}
+        {searchResult
+          .slice(firstActionIndex, firstActionIndex + maxActions)
+          .map(({ label, keys }, index) => (
+            <FadeIn
+              delay={`${Math.abs(
+                selectedActionIndex - firstActionIndex - index,
+              ) * 40}ms`}
+              duration={400}
+              key={`${label} ${searchValue}`}
+            >
+              <ResultItem
+                label={label}
+                keys={keys}
+                selected={firstActionIndex + index === selectedActionIndex}
+              />
+            </FadeIn>
+          ))}
       </SearchResultWrapper>
     </CommandLineWindow>
   )
@@ -180,12 +220,14 @@ export const CommandLineComponent: React.FC<{
 
 interface CommandLineContextProps {
   registerActions: (newActions: CommandLineAction[]) => any
-  isHinting: boolean
+  isHintingOption: boolean
+  isHintingControl: boolean
 }
 
 const CommandLineContext = createContext<CommandLineContextProps>({
   registerActions: (_: CommandLineAction[]) => void 0,
-  isHinting: false,
+  isHintingOption: false,
+  isHintingControl: false,
 })
 
 const CommandLineWrapper = styled.div``
@@ -199,6 +241,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const [actionKeyCodes, setActionKeyCodes] = useState<number[][]>([])
 
   const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isControlPressed = useKeyIsPressed(Keys.Control)
   const isSpacePressed = useKeyIsPressed(Keys.Space)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
@@ -268,7 +311,8 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     <CommandLineContext.Provider
       value={{
         registerActions: addAction,
-        isHinting: isOptionPressed, // TODO: Use hinting from different modifiers
+        isHintingOption: isOptionPressed,
+        isHintingControl: isControlPressed,
       }}
     >
       {children}

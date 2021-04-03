@@ -8,6 +8,7 @@ const fadeInKeyframes = (max) =>
 
 interface FadeInProps {
   delay?: string
+  duration?: number
 }
 
 export const withFadeIn: <T extends object>(
@@ -17,9 +18,9 @@ export const withFadeIn: <T extends object>(
   styled(
     component,
     ...args,
-  )<FadeInProps>(({ delay = '0ms' }) => ({
+  )<FadeInProps>(({ delay = '0ms', duration = 1000 }) => ({
     opacity: 0,
-    animation: `${fadeInKeyframes(1.0)} 1000ms forwards`,
+    animation: `${fadeInKeyframes(1.0)} ${duration}ms forwards`,
     animationDelay: delay,
   }))
 

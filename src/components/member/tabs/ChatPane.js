@@ -41,7 +41,7 @@ export const ChatPane = ({ memberId }) => {
   const manualChange = useRef(false)
   const visible = useRef(window.innerWidth > 1000)
 
-  const { registerActions, isHinting } = useCommandLine()
+  const { registerActions, isHintingOption } = useCommandLine()
 
   registerActions([
     {
@@ -79,7 +79,7 @@ export const ChatPane = ({ memberId }) => {
       <ChatHeader
         visible={visible.current}
         onResizeClick={onResizeClick}
-        isHinting={isHinting}
+        isHinting={isHintingOption}
       />
       <MessagesList memberId={memberId} />
       <ChatPanel memberId={memberId} />
@@ -88,7 +88,7 @@ export const ChatPane = ({ memberId }) => {
     <ChatHeader
       visible={visible.current}
       onResizeClick={onResizeClick}
-      isHinting={isHinting}
+      isHinting={isHintingOption}
     />
   )
 }

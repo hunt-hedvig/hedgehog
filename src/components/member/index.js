@@ -3,7 +3,7 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
@@ -80,9 +80,9 @@ export const Member = (props) => {
 
   const member = props.member
 
-  const { registerActions, isHinting } = useCommandLine()
+  const { registerActions, isHintingControl } = useCommandLine()
 
-  const panes = memberPagePanes(props, memberId, member, isHinting)
+  const panes = memberPagePanes(props, memberId, member, isHintingControl)
   const getMemberPageTitle = (member) =>
     `${member.firstName || ''} ${member.lastName || ''}`
 
@@ -108,15 +108,6 @@ export const Member = (props) => {
       keys: [Keys.Option, Keys.E],
       onResolve: () => {
         copy(member.email, {
-          format: 'text/plain',
-        })
-      },
-    },
-    {
-      label: `Copy ${formattedFirstName} phone number to clipboard`,
-      keys: [Keys.Option, Keys.P],
-      onResolve: () => {
-        copy(member.phoneNumber, {
           format: 'text/plain',
         })
       },
