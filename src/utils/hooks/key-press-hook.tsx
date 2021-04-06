@@ -283,6 +283,7 @@ const IllegalCharacters = new Set([
   '›',
   '‘',
   '’',
+  ' ',
 ])
 
 export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)

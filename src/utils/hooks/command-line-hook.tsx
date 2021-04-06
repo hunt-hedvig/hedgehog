@@ -272,10 +272,10 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }, [keys])
 
   useEffect(() => {
-    window.addEventListener('mousedown', onMouseDown)
+    document.addEventListener('mousedown', onMouseDown)
 
     return () => {
-      window.removeEventListener('mousedown', onMouseDown)
+      document.removeEventListener('mousedown', onMouseDown)
     }
   }, [])
 

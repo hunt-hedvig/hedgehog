@@ -87,8 +87,10 @@ describe('CommandLineProvider', () => {
     wrapper.update()
     expect(wrapper.find('CommandLineComponent').exists()).toBe(true)
 
+    const nonCLIElement = document.createElement('div')
+    document.body.appendChild(nonCLIElement)
     act(() => {
-      window.dispatchEvent(new KeyboardEvent('mousedown'))
+      document.dispatchEvent(new KeyboardEvent('mousedown'))
     })
 
     wrapper.update()
