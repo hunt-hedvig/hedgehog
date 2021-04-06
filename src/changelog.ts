@@ -14,7 +14,13 @@ export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-03-25',
     change:
-      'Shortcuts! Hold CTRL to show available shortcuts on a page. Press CTRL and SPACE to open searchable interface. ',
+      'Shortcut fixes. Add pagination, fix some bugs and improve speed slightly. ',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2021-03-25',
+    change:
+      'Shortcuts! Hold OPTION and CTRL to show available shortcuts on a page. Press OPTION and SPACE to open searchable interface. ',
     authorGithubHandle: 'rasmusguterstam',
   },
   {
