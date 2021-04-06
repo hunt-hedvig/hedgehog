@@ -12,9 +12,9 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-03-25',
+    date: '2021-04-06',
     change:
-      'Shortcut fixes. Add pagination, fix some bugs and improve speed slightly. ',
+      'Shortcut fixes! Added search pagination, fix some bugs and improve speed slightly. ',
     authorGithubHandle: 'vonElfvin',
   },
   {
