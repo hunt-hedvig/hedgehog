@@ -339,9 +339,8 @@ export const usePressedKeys = (): number[] => {
   }
 
   const handleKeydown = (e) => {
-    if (e.keyCode === Keys.Escape.code) {
+    if (isModifierKey(e.keyCode)) {
       reset()
-      return
     }
     if (isModifierKey(e.keyCode) || modifierIsPressed()) {
       pressedKeysRef.current.add(e.keyCode)
