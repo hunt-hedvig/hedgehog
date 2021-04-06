@@ -3,7 +3,7 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
@@ -19,7 +19,7 @@ import { Mount } from 'react-lifecycle-components/dist'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { KeyCode } from 'utils/hooks/key-press-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { useHistory } from 'react-router'
 
 const MemberPageWrapper = styled('div')({
@@ -80,96 +80,99 @@ export const Member = (props) => {
 
   const member = props.member
 
-  const { registerActions, isHinting } = useCommandLine()
+  const { registerActions, isHintingControl } = useCommandLine()
 
-  const panes = memberPagePanes(props, memberId, member, isHinting)
+  const panes = memberPagePanes(props, memberId, member, isHintingControl)
   const getMemberPageTitle = (member) =>
     `${member.firstName || ''} ${member.lastName || ''}`
+
+  const navigateToTab = (tabName) => history.replace(
+    `/members/${memberId}/${tabName}`,
+  )
 
   const formattedFirstName =
     member.firstName + (member.firstName.slice(-1) === 's' ? "'" : "'s")
 
   registerActions([
     {
-      label: `Member information`,
-      keysHint: ['CTRL', '1'],
-      keys: [KeyCode.Control , KeyCode.One],
+      label: `Copy ${formattedFirstName} member page link to clipboard`,
+      keys: [Keys.Option, Keys.M],
       onResolve: () => {
-        history.push(`/members/${memberId}/${panes[0].tabName}`)
-      },
-    },
-    {
-      label: `${formattedFirstName} claims`,
-      keysHint: ['CTRL', '2'],
-      keys: [KeyCode.Control , KeyCode.Two],
-      onResolve: () => {
-        history.push(`/members/${memberId}/${panes[1].tabName}`)
-      },
-    },
-    {
-      label: `${formattedFirstName} files`,
-      keysHint: ['CTRL', '3'],
-      keys: [KeyCode.Control , KeyCode.Three],
-      onResolve: () => {
-        history.push(`/members/${memberId}/${panes[2].tabName}`)
-      },
-    },
-    {
-      label: `${formattedFirstName} contracts`,
-      keysHint: ['CTRL', '4'],
-      keys: [KeyCode.Control , KeyCode.Four],
-      onResolve: () => {
-        history.push(`/members/${memberId}/${panes[3].tabName}`)
-      },
-    },
-    {
-      label: `${formattedFirstName} quotes`,
-      keysHint: ['CTRL', '5'],
-      keys: [KeyCode.Control , KeyCode.Five],
-      onResolve: () => {
-        history.push(`/members/${memberId}/${panes[4].tabName}`)
-      },
-    },
-    {
-      label: `${formattedFirstName} payments`,
-      keysHint: ['CTRL', '6'],
-      keys: [KeyCode.Control , KeyCode.Six],
-      onResolve: () => {
-        history.push(`/members/${memberId}/${panes[5].tabName}`)
-      },
-    },
-    {
-      label: `${formattedFirstName} account`,
-      keysHint: ['CTRL', '7'],
-      keys: [KeyCode.Control , KeyCode.Seven],
-      onResolve: () => {
-        history.push(`/members/${memberId}/${panes[6].tabName}`)
-      },
-    },
-    {
-      label: `${formattedFirstName} debt`,
-      keysHint: ['CTRL', '8'],
-      keys: [KeyCode.Control , KeyCode.Eight],
-      onResolve: () => {
-        history.push(`/members/${memberId}/${panes[7].tabName}`)
-      },
-    },
-    {
-      label: `${formattedFirstName} campaigns`,
-      keysHint: ['CTRL', '9'],
-      keys: [KeyCode.Control , KeyCode.Nine],
-      onResolve: () => {
-        history.push(`/members/${memberId}/${panes[8].tabName}`)
+        copy(`${window.location.protocol}//${window.location.host}/members/${memberId}`, {
+          format: 'text/plain',
+        })
       },
     },
     {
       label: `Copy ${formattedFirstName} email to clipboard`,
-      keysHint: ['CTRL', 'E'],
-      keys: [KeyCode.Control , KeyCode.E],
+      keys: [Keys.Option, Keys.E],
       onResolve: () => {
         copy(member.email, {
           format: 'text/plain',
         })
+      },
+    },
+    {
+      label: `Member information`,
+      keys: [Keys.Control, Keys.One],
+      onResolve: () => {
+        navigateToTab(panes[0].tabName)
+      },
+    },
+    {
+      label: `${formattedFirstName} claims`,
+      keys: [Keys.Control, Keys.Two],
+      onResolve: () => {
+        navigateToTab(panes[1].tabName)
+      },
+    },
+    {
+      label: `${formattedFirstName} files`,
+      keys: [Keys.Control, Keys.Three],
+      onResolve: () => {
+        navigateToTab(panes[2].tabName)
+      },
+    },
+    {
+      label: `${formattedFirstName} contracts`,
+      keys: [Keys.Control, Keys.Four],
+      onResolve: () => {
+        navigateToTab(panes[3].tabName)
+      },
+    },
+    {
+      label: `${formattedFirstName} quotes`,
+      keys: [Keys.Control, Keys.Five],
+      onResolve: () => {
+        navigateToTab(panes[4].tabName)
+      },
+    },
+    {
+      label: `${formattedFirstName} payments`,
+      keys: [Keys.Control, Keys.Six],
+      onResolve: () => {
+        navigateToTab(panes[5].tabName)
+      },
+    },
+    {
+      label: `${formattedFirstName} account`,
+      keys: [Keys.Control, Keys.Seven],
+      onResolve: () => {
+        navigateToTab(panes[6].tabName)
+      },
+    },
+    {
+      label: `${formattedFirstName} debt`,
+      keys: [Keys.Control, Keys.Eight],
+      onResolve: () => {
+        navigateToTab(panes[7].tabName)
+      },
+    },
+    {
+      label: `${formattedFirstName} campaigns`,
+      keys: [Keys.Control, Keys.Nine],
+      onResolve: () => {
+        navigateToTab(panes[8].tabName)
       },
     },
   ])
@@ -248,9 +251,7 @@ export const Member = (props) => {
               <Tab
                 panes={panes}
                 onTabChange={(_, { activeIndex }) =>
-                  history.replace(
-                    `/members/${memberId}/${panes[activeIndex].tabName}`,
-                  )
+                  navigateToTab(panes[activeIndex].tabName)
                 }
                 renderActiveOnly={true}
                 activeIndex={activeIndex}

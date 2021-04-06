@@ -1,6 +1,6 @@
 import { colorsV3 } from '@hedviginsurance/brand'
 import { Spacing } from 'hedvig-ui/spacing'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import {
   ArrowUpRight,
   Backspace,
@@ -25,7 +25,7 @@ import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 import { DarkmodeContext } from 'utils/darkmode-context'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { KeyCode } from 'utils/hooks/key-press-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
@@ -242,93 +242,83 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
     () => localStorage.getItem('hedvig:menu:collapse') === 'true',
   )
   const [locations, setLocations] = useState<string[]>([])
-  const [latestClaim, setLatestClaim] = useState<LatestClaim | null>(null)
+  const latestClaim = useRef<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
 
-  const { registerActions, isHinting } = useCommandLine()
+  const { registerActions, isHintingOption } = useCommandLine()
 
   registerActions([
     {
       label: 'Claims list',
-      keysHint: ['CTRL', 'C'],
-      keys: [KeyCode.Control, KeyCode.C],
+      keys: [Keys.Option, Keys.C],
       onResolve: () => {
         history.push(routes.claims)
       },
     },
     {
       label: 'Tools',
-      keysHint: ['CTRL', 'T'],
-      keys: [KeyCode.Control, KeyCode.T],
+      keys: [Keys.Option, Keys.T],
       onResolve: () => {
         history.push(routes.tools)
       },
     },
     {
       label: 'Questions',
-      keysHint: ['CTRL', 'Q'],
-      keys: [KeyCode.Control, KeyCode.Q],
+      keys: [Keys.Option, Keys.Q],
       onResolve: () => {
         history.push(routes.questions)
       },
     },
     {
       label: 'Member search',
-      keysHint: ['CTRL', 'S'],
-      keys: [KeyCode.Control, KeyCode.S],
+      keys: [Keys.Option, Keys.S],
       onResolve: () => {
         history.push(routes.search)
       },
     },
     {
       label: 'Dashborad',
-      keysHint: ['CTRL', 'D'],
-      keys: [KeyCode.Control, KeyCode.D],
+      keys: [Keys.Option, Keys.D],
       onResolve: () => {
         history.push(routes.dashborad)
       },
     },
     {
       label: 'Trustly',
-      keysHint: ['CTRL', 'R'],
-      keys: [KeyCode.Control, KeyCode.R],
+      keys: [Keys.Option, Keys.R],
       onResolve: () => {
         window.open(routes.trustly)
       },
     },
     {
       label: 'Adyen',
-      keysHint: ['CTRL', 'A'],
-      keys: [KeyCode.Control, KeyCode.A],
+      keys: [Keys.Option, Keys.A],
       onResolve: () => {
         window.open(routes.adyen)
       },
     },
     {
       label: 'GSR',
-      keysHint: ['CTRL', 'G'],
-      keys: [KeyCode.Control, KeyCode.G],
+      keys: [Keys.Option, Keys.G],
       onResolve: () => {
         window.open(routes.gsr)
       },
     },
     {
       label: 'Logout',
-      keysHint: ['CTRL', 'L'],
-      keys: [KeyCode.Control, KeyCode.L],
+      keys: [Keys.Option, Keys.L],
       onResolve: () => {
         authLogOut_()
       },
     },
     {
       label: 'Latest claim',
-      keysHint: ['CTRL', '←'],
-      keys: [KeyCode.Control, KeyCode.Backspace],
+      keys: [Keys.Option, Keys.Backspace],
       onResolve: () => {
-        if (!latestClaim) {
+        if (!latestClaim.current) {
           return
         }
-        history.push(latestClaim.location)
+        history.push(latestClaim.current.location)
       },
     },
   ])
@@ -354,11 +344,11 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
 
       const { memberId, claimId } = match.params as LatestClaim
 
-      setLatestClaim({
+      latestClaim.current = {
         memberId,
         claimId,
         location,
-      })
+      }
       break
     }
   }, [locations])
@@ -397,7 +387,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <House />
-                  <MenuText>Dashborad {isHinting && '(D)'}</MenuText>
+                  <MenuText>Dashborad {isHintingOption && '(D)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -408,7 +398,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Search />
-                  <MenuText>Member Search {isHinting && '(S)'}</MenuText>
+                  <MenuText>Member Search {isHintingOption && '(S)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -419,7 +409,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Inbox />
-                  <MenuText>Questions {isHinting && '(Q)'}</MenuText>
+                  <MenuText>Questions {isHintingOption && '(Q)'}</MenuText>
                 </MenuItem>
                 <MenuItem
                   to={routes.claims}
@@ -431,16 +421,16 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   {isCollapsed && <MenuText>Claims</MenuText>}
                   {!isCollapsed && (
                     <Spacing right inline>
-                      <MenuText>Claims {isHinting && '(C)'}</MenuText>
+                      <MenuText>Claims {isHintingOption && '(C)'}</MenuText>
                     </Spacing>
                   )}
-                  {isHinting && latestClaim && <Backspace />}
+                  {isHintingOption && latestClaim.current && <Backspace />}
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
                 <MenuItem to={routes.tools}>
                   <Tools />
-                  <MenuText>Tools {isHinting && '(T)'}</MenuText>
+                  <MenuText>Tools {isHintingOption && '(T)'}</MenuText>
                 </MenuItem>
               </MenuGroup>
 
@@ -448,17 +438,17 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <MenuItemExternalLink href={routes.trustly} target="_blank">
                   <ArrowUpRight />
                   <CreditCard />
-                  <MenuText>Trustly {isHinting && '(R)'}</MenuText>
+                  <MenuText>Trustly {isHintingOption && '(R)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
                   <ArrowUpRight />
                   <CreditCard2Front />
-                  <MenuText>Adyen {isHinting && '(A)'}</MenuText>
+                  <MenuText>Adyen {isHintingOption && '(A)'}</MenuText>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.gsr} target="_blank">
                   <ArrowUpRight />
                   <PersonBoundingBox />
-                  <MenuText>GSR {isHinting && '(G)'}</MenuText>
+                  <MenuText>GSR {isHintingOption && '(G)'}</MenuText>
                 </MenuItemExternalLink>
               </MenuGroup>
             </Menu>
@@ -482,7 +472,7 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                 <BoxArrowLeft />
                 <MenuText>
                   {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Logout'}{' '}
-                  {isHinting && '(L)'}
+                  {isHintingOption && '(L)'}
                 </MenuText>
               </MenuItem>
             </BottomSection>

@@ -12,9 +12,15 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-04-06',
+    change:
+      'Shortcut fixes! Added search pagination, fix some bugs and improve speed slightly. ',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-03-25',
     change:
-      'Shortcuts! Hold CTRL to show available shortcuts on a page. Press CTRL and SPACE to open searchable interface. ',
+      'Shortcuts! Hold OPTION and CTRL to show available shortcuts on a page. Press OPTION and SPACE to open searchable interface. ',
     authorGithubHandle: 'rasmusguterstam',
   },
   {

@@ -2,11 +2,11 @@ import { ChatPanel } from 'components/member/chat/ChatPanel'
 import { MessagesList } from 'components/member/messages/MessagesList'
 import PropTypes from 'prop-types'
 import Resizable from 're-resizable'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { KeyCode } from 'utils/hooks/key-press-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 
 const resizableStyles = {
   display: 'flex',
@@ -38,26 +38,25 @@ const ChatHeaderStyle = styled.div`
 `
 
 export const ChatPane = ({ memberId }) => {
-  const [visible, setVisible] = useState(window.innerWidth > 1000)
-  const [manualChange, setManualChange] = useState(false)
+  const manualChange = useRef(false)
+  const visible = useRef(window.innerWidth > 1000)
 
-  const { registerActions, isHinting } = useCommandLine()
+  const { registerActions, isHintingOption } = useCommandLine()
 
   registerActions([
     {
       label: 'Toggle chat',
-      keysHint: ['CTRL', 'W'],
-      keys: [KeyCode.Control , KeyCode.W],
+      keys: [Keys.Option, Keys.W],
       onResolve: () => {
-        setVisible(!visible)
+        visible.current = !visible.current
       },
     },
   ])
 
   useEffect(() => {
-    const resizeControlChat = (e) => {
-      if (!manualChange) {
-        setVisible(window.innerWidth > 1000)
+    const resizeControlChat = () => {
+      if (!manualChange.current) {
+        visible.current = window.innerWidth > 1000
       }
     }
     window.addEventListener('resize', resizeControlChat)
@@ -65,11 +64,11 @@ export const ChatPane = ({ memberId }) => {
   }, [])
 
   const onResizeClick = () => {
-    setVisible(!visible)
-    setManualChange(true)
+    visible.current = !visible.current
+    manualChange.current = true
   }
 
-  return visible ? (
+  return visible.current ? (
     <Resizable
       style={resizableStyles}
       defaultSize={{ width: '400px', height: '80%' }}
@@ -78,18 +77,18 @@ export const ChatPane = ({ memberId }) => {
       enable={{ left: true }}
     >
       <ChatHeader
-        visible={visible}
+        visible={visible.current}
         onResizeClick={onResizeClick}
-        isHinting={isHinting}
+        isHinting={isHintingOption}
       />
       <MessagesList memberId={memberId} />
       <ChatPanel memberId={memberId} />
     </Resizable>
   ) : (
     <ChatHeader
-      visible={visible}
+      visible={visible.current}
       onResizeClick={onResizeClick}
-      isHinting={isHinting}
+      isHinting={isHintingOption}
     />
   )
 }
