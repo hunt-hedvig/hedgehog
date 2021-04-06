@@ -2,7 +2,7 @@ import { ChatPanel } from 'components/member/chat/ChatPanel'
 import { MessagesList } from 'components/member/messages/MessagesList'
 import PropTypes from 'prop-types'
 import Resizable from 're-resizable'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'react-emotion'
 import { Icon } from 'semantic-ui-react'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
@@ -39,7 +39,8 @@ const ChatHeaderStyle = styled.div`
 
 export const ChatPane = ({ memberId }) => {
   const manualChange = useRef(false)
-  const visible = useRef(window.innerWidth > 1000)
+  const [isVisible, setIsVisible] = useState(window.innerWidth > 1000)
+  const visible = useRef(isVisible)
 
   const { registerActions, isHintingOption } = useCommandLine()
 
@@ -48,27 +49,32 @@ export const ChatPane = ({ memberId }) => {
       label: 'Toggle chat',
       keys: [Keys.Option, Keys.W],
       onResolve: () => {
-        visible.current = !visible.current
+        onResizeClick()
       },
     },
   ])
 
   useEffect(() => {
-    const resizeControlChat = () => {
-      if (!manualChange.current) {
-        visible.current = window.innerWidth > 1000
-      }
+    visible.current = isVisible
+  }, [isVisible])
+
+  const resizeControlChat = () => {
+    if (!manualChange.current) {
+      setIsVisible(window.innerWidth > 1000)
     }
+  }
+
+  useEffect(() => {
     window.addEventListener('resize', resizeControlChat)
     return () => window.removeEventListener('resize', resizeControlChat)
   }, [])
 
   const onResizeClick = () => {
-    visible.current = !visible.current
+    setIsVisible(!visible.current)
     manualChange.current = true
   }
 
-  return visible.current ? (
+  return isVisible ? (
     <Resizable
       style={resizableStyles}
       defaultSize={{ width: '400px', height: '80%' }}
@@ -77,7 +83,7 @@ export const ChatPane = ({ memberId }) => {
       enable={{ left: true }}
     >
       <ChatHeader
-        visible={visible.current}
+        visible={isVisible}
         onResizeClick={onResizeClick}
         isHinting={isHintingOption}
       />
@@ -86,7 +92,7 @@ export const ChatPane = ({ memberId }) => {
     </Resizable>
   ) : (
     <ChatHeader
-      visible={visible.current}
+      visible={isVisible}
       onResizeClick={onResizeClick}
       isHinting={isHintingOption}
     />
