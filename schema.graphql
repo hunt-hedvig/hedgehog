@@ -88,6 +88,7 @@ type MutationType {
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
+  safelyEdit(agreementId: ID!, request: SafelyEditAgreementInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
   sendMessage(input: SendMessageInput!): SendMessageResponse!
   markQuestionAsResolved(memberId: ID!): Boolean!
@@ -442,6 +443,10 @@ input ChangeToDateInput {
 
 input ChangeFromDateInput {
   newFromDate: LocalDate!
+}
+
+input SafelyEditAgreementInput {
+  newStreet: String
 }
 
 union ItemCategory = ItemFamily | ItemType | ItemBrand | ItemModel | ItemCompany

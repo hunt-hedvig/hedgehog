@@ -889,6 +889,7 @@ export type MutationType = {
   addNorwegianPostalCodes: Scalars['Boolean']
   changeToDate: Scalars['ID']
   changeFromDate: Scalars['ID']
+  safelyEdit: Scalars['ID']
   regenerateCertificate: Scalars['ID']
   sendMessage: SendMessageResponse
   markQuestionAsResolved: Scalars['Boolean']
@@ -1066,6 +1067,11 @@ export type MutationTypeChangeToDateArgs = {
 export type MutationTypeChangeFromDateArgs = {
   agreementId: Scalars['ID']
   request?: Maybe<ChangeFromDateInput>
+}
+
+export type MutationTypeSafelyEditArgs = {
+  agreementId: Scalars['ID']
+  request?: Maybe<SafelyEditAgreementInput>
 }
 
 export type MutationTypeRegenerateCertificateArgs = {
@@ -1416,6 +1422,10 @@ export type Renewal = {
   renewalDate: Scalars['LocalDate']
   draftCertificateUrl?: Maybe<Scalars['String']>
   draftOfAgreementId?: Maybe<Scalars['ID']>
+}
+
+export type SafelyEditAgreementInput = {
+  newStreet?: Maybe<Scalars['String']>
 }
 
 export enum SanctionStatus {
@@ -2764,6 +2774,15 @@ export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
     'id' | 'holderMemberId'
   >
 }
+
+export type SafelyEditAgreementMutationVariables = Exact<{
+  agreementId: Scalars['ID']
+  request: SafelyEditAgreementInput
+}>
+
+export type SafelyEditAgreementMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'safelyEdit'>
 
 export type SendMessageMutationVariables = Exact<{
   input: SendMessageInput
@@ -6322,6 +6341,59 @@ export type RevertTerminationMutationResult = ApolloReactCommon.MutationResult<
 export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RevertTerminationMutation,
   RevertTerminationMutationVariables
+>
+export const SafelyEditAgreementDocument = gql`
+  mutation SafelyEditAgreement(
+    $agreementId: ID!
+    $request: SafelyEditAgreementInput!
+  ) {
+    safelyEdit(agreementId: $agreementId, request: $request)
+  }
+`
+export type SafelyEditAgreementMutationFn = ApolloReactCommon.MutationFunction<
+  SafelyEditAgreementMutation,
+  SafelyEditAgreementMutationVariables
+>
+
+/**
+ * __useSafelyEditAgreementMutation__
+ *
+ * To run a mutation, you first call `useSafelyEditAgreementMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSafelyEditAgreementMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [safelyEditAgreementMutation, { data, loading, error }] = useSafelyEditAgreementMutation({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSafelyEditAgreementMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SafelyEditAgreementMutation,
+    SafelyEditAgreementMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SafelyEditAgreementMutation,
+    SafelyEditAgreementMutationVariables
+  >(SafelyEditAgreementDocument, options)
+}
+export type SafelyEditAgreementMutationHookResult = ReturnType<
+  typeof useSafelyEditAgreementMutation
+>
+export type SafelyEditAgreementMutationResult = ApolloReactCommon.MutationResult<
+  SafelyEditAgreementMutation
+>
+export type SafelyEditAgreementMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SafelyEditAgreementMutation,
+  SafelyEditAgreementMutationVariables
 >
 export const SendMessageDocument = gql`
   mutation SendMessage($input: SendMessageInput!) {

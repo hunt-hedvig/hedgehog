@@ -1,94 +1,304 @@
 import { useEffect, useRef, useState } from 'react'
 
-export const KeyCode = {
-  Backspace: 8,
-  Tab: 9,
-  Return: 13,
-  Shift: 16,
-  Control: 17,
-  Option: 18,
-  CapsLock: 20,
-  Escape: 27,
-  Space: 32,
-  Left: 37,
-  Up: 38,
-  Right: 39,
-  Down: 40,
-  Zero: 48,
-  One: 49,
-  Two: 50,
-  Three: 51,
-  Four: 52,
-  Five: 53,
-  Six: 54,
-  Seven: 55,
-  Eight: 56,
-  Nine: 57,
-  A: 65,
-  B: 66,
-  C: 67,
-  D: 68,
-  E: 69,
-  F: 70,
-  G: 71,
-  H: 72,
-  I: 73,
-  J: 74,
-  K: 75,
-  L: 76,
-  M: 77,
-  N: 78,
-  O: 79,
-  P: 80,
-  Q: 81,
-  R: 82,
-  S: 83,
-  T: 84,
-  U: 85,
-  V: 86,
-  W: 87,
-  X: 88,
-  Y: 89,
-  Z: 90,
-  F1: 112,
-  F2: 113,
-  F3: 114,
-  F4: 115,
-  F5: 116,
-  F6: 117,
-  F7: 118,
-  F8: 119,
-  F9: 120,
-  F10: 121,
-  F11: 122,
-  F12: 123,
-  F13: 124,
-  F14: 125,
-  F15: 126,
-  F16: 127,
-  F17: 128,
-  F18: 129,
-  F19: 130,
-  F20: 131,
-  F21: 132,
-  F22: 133,
-  F23: 134,
-  F24: 135,
-  Comma: 188,
-  Period: 190,
+export interface Key {
+  code: number
+  hint: string
 }
 
-export const useKeyIsPressed = (keyCode: number): boolean => {
+export const Keys: { [name: string]: Key } = {
+  Escape: {
+    code: 27,
+    hint: 'esc',
+  },
+  Backspace: {
+    code: 8,
+    hint: '⌫',
+  },
+  Tab: {
+    code: 9,
+    hint: '⇥',
+  },
+  Return: {
+    code: 13,
+    hint: '↩',
+  },
+  Shift: {
+    code: 16,
+    hint: '⇧',
+  },
+  Control: {
+    code: 17,
+    hint: 'control ⌃',
+  },
+  Option: {
+    code: 18,
+    hint: 'option ⌥',
+  },
+  CapsLock: {
+    code: 20,
+    hint: '⇪',
+  },
+  Command: {
+    code: 91,
+    hint: '⌘',
+  },
+  Space: {
+    code: 32,
+    hint: '␣',
+  },
+  Left: {
+    code: 37,
+    hint: '←',
+  },
+  Up: {
+    code: 38,
+    hint: '↑',
+  },
+  Right: {
+    code: 39,
+    hint: '→',
+  },
+  Down: {
+    code: 40,
+    hint: '↓',
+  },
+  Zero: {
+    code: 48,
+    hint: '0',
+  },
+  One: {
+    code: 49,
+    hint: '1',
+  },
+  Two: {
+    code: 50,
+    hint: '2',
+  },
+  Three: {
+    code: 51,
+    hint: '3',
+  },
+  Four: {
+    code: 52,
+    hint: '4',
+  },
+  Five: {
+    code: 53,
+    hint: '5',
+  },
+  Six: {
+    code: 54,
+    hint: '6',
+  },
+  Seven: {
+    code: 55,
+    hint: '7',
+  },
+  Eight: {
+    code: 56,
+    hint: '8',
+  },
+  Nine: {
+    code: 57,
+    hint: '9',
+  },
+  A: {
+    code: 65,
+    hint: 'A',
+  },
+  B: {
+    code: 66,
+    hint: 'B',
+  },
+  C: {
+    code: 67,
+    hint: 'C',
+  },
+  D: {
+    code: 68,
+    hint: 'D',
+  },
+  E: {
+    code: 69,
+    hint: 'E',
+  },
+  F: {
+    code: 70,
+    hint: 'F',
+  },
+  G: {
+    code: 71,
+    hint: 'G',
+  },
+  H: {
+    code: 72,
+    hint: 'H',
+  },
+  I: {
+    code: 73,
+    hint: 'I',
+  },
+  J: {
+    code: 74,
+    hint: 'J',
+  },
+  K: {
+    code: 75,
+    hint: 'K',
+  },
+  L: {
+    code: 76,
+    hint: 'L',
+  },
+  M: {
+    code: 77,
+    hint: 'M',
+  },
+  N: {
+    code: 78,
+    hint: 'N',
+  },
+  O: {
+    code: 79,
+    hint: 'O',
+  },
+  P: {
+    code: 80,
+    hint: 'P',
+  },
+  Q: {
+    code: 81,
+    hint: 'Q',
+  },
+  R: {
+    code: 82,
+    hint: 'R',
+  },
+  S: {
+    code: 83,
+    hint: 'S',
+  },
+  T: {
+    code: 84,
+    hint: 'T',
+  },
+  U: {
+    code: 85,
+    hint: 'U',
+  },
+  V: {
+    code: 86,
+    hint: 'V',
+  },
+  W: {
+    code: 87,
+    hint: 'W',
+  },
+  X: {
+    code: 88,
+    hint: 'X',
+  },
+  Y: {
+    code: 89,
+    hint: 'Y',
+  },
+  Z: {
+    code: 90,
+    hint: 'Z',
+  },
+  F1: {
+    code: 112,
+    hint: 'F1',
+  },
+  F2: {
+    code: 113,
+    hint: 'F2',
+  },
+  F3: {
+    code: 114,
+    hint: 'F3',
+  },
+  F4: {
+    code: 115,
+    hint: 'F4',
+  },
+  F5: {
+    code: 116,
+    hint: 'F5',
+  },
+  F6: {
+    code: 117,
+    hint: 'F6',
+  },
+  F7: {
+    code: 118,
+    hint: 'F7',
+  },
+  F8: {
+    code: 119,
+    hint: 'F8',
+  },
+  F9: {
+    code: 120,
+    hint: 'F9',
+  },
+  F10: {
+    code: 121,
+    hint: 'F10',
+  },
+  F11: {
+    code: 122,
+    hint: 'F11',
+  },
+  F12: {
+    code: 123,
+    hint: 'F12',
+  },
+}
+
+const IllegalCharacters = new Set([
+  '•',
+  'Ω',
+  'é',
+  '®',
+  '†',
+  'µ',
+  'ü',
+  'ı',
+  'œ',
+  'π',
+  '',
+  'ß',
+  '∂',
+  'ƒ',
+  '¸',
+  '˛',
+  '√',
+  'ª',
+  'ﬁ',
+  '÷',
+  '≈',
+  'ç',
+  '‹',
+  '›',
+  '‘',
+  '’',
+  ' ',
+])
+
+export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
+
+export const useKeyIsPressed = (key: Key): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
   const handleKeydown = (e) => {
-    if (e.keyCode === keyCode) {
+    if (e.keyCode === key.code) {
       setKeyPressed(true)
     }
   }
 
   const handleKeyup = (e) => {
-    if (e.keyCode === keyCode) {
+    if (e.keyCode === key.code) {
       setKeyPressed(false)
     }
   }
@@ -113,56 +323,41 @@ export const useKeyIsPressed = (keyCode: number): boolean => {
   return keyPressed
 }
 
-export const usePressedKeys = (ignore: boolean) => {
-  const [keyDown, setKeyDown] = useState<number | null>(null)
-  const [keyUp, setKeyUp] = useState<number | null>(null)
+export const usePressedKeys = (): number[] => {
+  const pressedKeysRef = useRef<Set<number>>(new Set())
   const [pressedKeys, setPressedKeys] = useState<number[]>([])
-  const ignoreRef = useRef(ignore)
 
-  useEffect(() => {
-    ignoreRef.current = ignore
-  }, [ignore])
+  const isModifierKey = (keyCode) =>
+    keyCode === Keys.Option.code || keyCode === Keys.Control.code
+  const modifierIsPressed = () =>
+    pressedKeysRef.current.has(Keys.Option.code) ||
+    pressedKeysRef.current.has(Keys.Control.code)
 
-  useEffect(() => {
-    if (!keyDown) {
-      return
-    }
-    if (pressedKeys.includes(keyDown)) {
-      return
-    }
-    const pressedKeysCopy = [...pressedKeys, keyDown]
-    setPressedKeys(pressedKeysCopy)
-    setKeyDown(null)
-    setKeyUp(null)
-  }, [keyDown])
-
-  useEffect(() => {
-    if (!keyUp) {
-      return
-    }
-    const pressedKeysCopy = [...pressedKeys]
-    setPressedKeys(pressedKeysCopy.filter((key) => key !== keyUp))
-    setKeyDown(null)
-    setKeyUp(null)
-  }, [keyUp])
+  const reset = () => {
+    pressedKeysRef.current = new Set()
+    setPressedKeys([])
+  }
 
   const handleKeydown = (e) => {
-    if (ignoreRef.current) {
-      return
+    if (isModifierKey(e.keyCode)) {
+      reset()
     }
-    setKeyDown(e.keyCode)
+    if (isModifierKey(e.keyCode) || modifierIsPressed()) {
+      pressedKeysRef.current.add(e.keyCode)
+      setPressedKeys(Array.from(pressedKeysRef.current))
+    }
   }
 
   const handleKeyup = (e) => {
-    if (ignoreRef.current) {
-      return
+    if (isModifierKey(e.keyCode) || modifierIsPressed()) {
+      pressedKeysRef.current.delete(e.keyCode)
+      setPressedKeys(Array.from(pressedKeysRef.current))
     }
-    setKeyUp(e.keyCode)
   }
 
   const handleVisibility = () => {
     if (document.hidden) {
-      setPressedKeys([])
+      reset()
     }
   }
 

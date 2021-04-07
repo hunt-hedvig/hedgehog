@@ -1,7 +1,7 @@
 import { mount } from 'enzyme'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { KeyCode } from 'utils/hooks/key-press-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { CommandLineProvider, useCommandLine } from './command-line-hook'
 
 describe('CommandLineProvider', () => {
@@ -10,7 +10,7 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { keyCode: KeyCode.Control }),
+        new KeyboardEvent('keydown', { keyCode: Keys.Option.code }),
       )
     })
 
@@ -18,16 +18,16 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { keyCode: KeyCode.Space }),
+        new KeyboardEvent('keydown', { keyCode: Keys.Space.code }),
       )
     })
   }
 
   it('hints on option press', () => {
     const CommandLineConsumer: React.FC = () => {
-      const { isHinting } = useCommandLine()
+      const { isHintingOption } = useCommandLine()
 
-      return <>{isHinting ? 'hint' : 'no hint'}</>
+      return <>{isHintingOption ? 'hint' : 'no hint'}</>
     }
 
     const wrapper = mount(
@@ -40,7 +40,7 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { keyCode: KeyCode.Control }),
+        new KeyboardEvent('keydown', { keyCode: Keys.Option.code }),
       )
     })
 
@@ -72,7 +72,7 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { keyCode: KeyCode.Escape }),
+        new KeyboardEvent('keydown', { keyCode: Keys.Escape.code }),
       )
     })
 
@@ -87,8 +87,10 @@ describe('CommandLineProvider', () => {
     wrapper.update()
     expect(wrapper.find('CommandLineComponent').exists()).toBe(true)
 
+    const nonCLIElement = document.createElement('div')
+    document.body.appendChild(nonCLIElement)
     act(() => {
-      window.dispatchEvent(new KeyboardEvent('mousedown'))
+      document.dispatchEvent(new KeyboardEvent('mousedown'))
     })
 
     wrapper.update()
