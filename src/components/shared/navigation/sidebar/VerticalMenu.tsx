@@ -305,15 +305,8 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
       },
     },
     {
-      label: 'Logout',
-      keys: [Keys.Option, Keys.L],
-      onResolve: () => {
-        authLogOut_()
-      },
-    },
-    {
       label: 'Latest claim',
-      keys: [Keys.Option, Keys.Backspace],
+      keys: [Keys.Option, Keys.L],
       onResolve: () => {
         if (!latestClaim.current) {
           return

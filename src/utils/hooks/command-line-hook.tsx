@@ -37,14 +37,14 @@ const CharacterBadge = styled.div`
   margin-right: 0.4em;
 `
 
-const ResultItemWrapper = styled.div<{ selected: boolean }>`
+const ResultItemWrapper = styled.div<{ highlighted: boolean }>`
   padding: 1em 3.5em;
   padding-right: 1em;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ selected }) =>
-    selected ? 'rgba(0, 0, 0, 0.1)' : 'transparent'};
+  background-color: ${({ highlighted }) =>
+    highlighted ? 'rgba(0, 0, 0, 0.1)' : 'transparent'};
 `
 
 const ResultItemContent = styled.div`
@@ -67,15 +67,27 @@ const SearchWrapper = styled.div`
 const SearchResultWrapper = styled.div``
 
 const ResultItem: React.FC<{
-  label: string
-  keys: Key[]
+  action: CommandLineAction
   selected?: boolean
-}> = ({ label, keys, selected = false }) => {
+  hide: () => void
+}> = ({ action, selected = false, hide }) => {
+  const [highlighted, setHighlighted] = useState(selected)
+  useEffect(() => {
+    setHighlighted(selected)
+  }, [selected])
   return (
-    <ResultItemWrapper selected={selected}>
-      <FourthLevelHeadline>{label}</FourthLevelHeadline>
+    <ResultItemWrapper
+      highlighted={highlighted}
+      onClick={() => {
+        action.onResolve()
+        hide()
+      }}
+      onMouseEnter={() => setHighlighted(true)}
+      onMouseLeave={() => setHighlighted(selected)}
+    >
+      <FourthLevelHeadline>{action.label}</FourthLevelHeadline>
       <ResultItemContent>
-        {keys.map(({ hint }) => (
+        {action.keys.map(({ hint }) => (
           <CharacterBadge key={hint}>
             <Paragraph style={{ fontSize: '0.8em', fontWeight: 'bold' }}>
               {hint}
@@ -198,17 +210,17 @@ export const CommandLineComponent: React.FC<{
       <SearchResultWrapper>
         {searchResult
           .slice(firstActionIndex, firstActionIndex + maxActions)
-          .map(({ label, keys }, index) => (
+          .map((action, index) => (
             <FadeIn
               delay={`${Math.abs(
                 selectedActionIndex - firstActionIndex - index,
               ) * 40}ms`}
               duration={400}
-              key={`${label} ${searchValue}`}
+              key={`${action.label} ${searchValue}`}
             >
               <ResultItem
-                label={label}
-                keys={keys}
+                hide={hide}
+                action={action}
                 selected={firstActionIndex + index === selectedActionIndex}
               />
             </FadeIn>
