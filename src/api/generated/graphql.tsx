@@ -1925,24 +1925,7 @@ export type CreateClaimPaymentMutation = { __typename?: 'MutationType' } & {
   createClaimPayment?: Maybe<
     { __typename?: 'Claim' } & {
       payments: Array<
-        { __typename?: 'ClaimPayment' } & Pick<
-          ClaimPayment,
-          | 'id'
-          | 'amount'
-          | 'deductible'
-          | 'note'
-          | 'type'
-          | 'timestamp'
-          | 'exGratia'
-          | 'status'
-        > & {
-            transaction?: Maybe<
-              { __typename?: 'Transaction' } & Pick<Transaction, 'status'>
-            >
-          }
-      >
-      events: Array<
-        { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+        { __typename?: 'ClaimPayment' } & Pick<ClaimPayment, 'id'>
       >
     }
   >
@@ -1992,24 +1975,7 @@ export type CreateSwishClaimPaymentMutation = {
   createClaimSwishPayment?: Maybe<
     { __typename?: 'Claim' } & {
       payments: Array<
-        { __typename?: 'ClaimPayment' } & Pick<
-          ClaimPayment,
-          | 'id'
-          | 'amount'
-          | 'deductible'
-          | 'note'
-          | 'type'
-          | 'timestamp'
-          | 'exGratia'
-          | 'status'
-        > & {
-            transaction?: Maybe<
-              { __typename?: 'Transaction' } & Pick<Transaction, 'status'>
-            >
-          }
-      >
-      events: Array<
-        { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+        { __typename?: 'ClaimPayment' } & Pick<ClaimPayment, 'id'>
       >
     }
   >
@@ -4129,20 +4095,6 @@ export const CreateClaimPaymentDocument = gql`
     createClaimPayment(id: $id, payment: $payment) {
       payments {
         id
-        amount
-        deductible
-        note
-        type
-        timestamp
-        exGratia
-        transaction {
-          status
-        }
-        status
-      }
-      events {
-        text
-        date
       }
     }
   }
@@ -4364,20 +4316,6 @@ export const CreateSwishClaimPaymentDocument = gql`
     createClaimSwishPayment(id: $id, payment: $payment) {
       payments {
         id
-        amount
-        deductible
-        note
-        type
-        timestamp
-        exGratia
-        transaction {
-          status
-        }
-        status
-      }
-      events {
-        text
-        date
       }
     }
   }

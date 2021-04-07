@@ -67,6 +67,7 @@ export const PaymentConfirmationDialog: React.FC<PaymentConfirmationDialogProps>
             onChange={(e) => {
               setConfirmValue(e.target.value)
             }}
+            value={confirmValue}
           />
           <DialogActions>
             <Button onClick={onClose} color="primary">

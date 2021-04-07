@@ -14,7 +14,7 @@ import {
   useCreateSwishClaimPaymentMutation,
 } from 'api/generated/graphql'
 
-import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
+import { Field, FieldProps, Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
 import { Market } from 'types/enums'
@@ -39,8 +39,10 @@ export interface PaymentFormData {
   deductible: string
   note: string
   exGratia?: boolean
-  type: ClaimPaymentType
+  type: ClaimPaymentType | 'AutomaticSwish'
   overridden?: boolean
+  phoneNumber?: string
+  message?: string
 }
 
 const PaymentForm = styled(Form)({
@@ -54,7 +56,7 @@ const SubmitButton = withStyles({
   },
 })(MuiButton)
 
-const Checkbox: React.SFC<FieldProps> = ({
+const Checkbox: React.FC<FieldProps> = ({
   field: { onChange, onBlur, name, value },
 }) => (
   <MuiCheckbox
@@ -237,9 +239,9 @@ export const ClaimPayment: React.FC<Props> = ({
                 resetForm()
               }}
               onSubmit={async () => {
-                const paymentInput:
-                  | ClaimPaymentInput
-                  | ClaimSwishPaymentInput = {
+                const paymentInput: Partial<
+                  ClaimPaymentInput | ClaimSwishPaymentInput
+                > = {
                   amount: {
                     amount: +values.amount,
                     currency: 'SEK',
@@ -259,9 +261,9 @@ export const ClaimPayment: React.FC<Props> = ({
                     variables: {
                       id: claimId,
                       payment: {
-                        ...paymentInput,
-                        phoneNumber: values.phoneNumber,
-                        message: values.message,
+                        ...(paymentInput as ClaimSwishPaymentInput),
+                        phoneNumber: values.phoneNumber!,
+                        message: values.message!,
                       },
                     },
                   })
@@ -269,7 +271,10 @@ export const ClaimPayment: React.FC<Props> = ({
                   await createPayment({
                     variables: {
                       id: claimId,
-                      payment: { ...paymentInput, type: values.type },
+                      payment: {
+                        ...(paymentInput as ClaimPaymentInput),
+                        type: values.type,
+                      },
                     },
                   })
                 }
