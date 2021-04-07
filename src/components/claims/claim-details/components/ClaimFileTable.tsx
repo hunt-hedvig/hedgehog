@@ -87,9 +87,13 @@ class ClaimFileTableComponent extends React.Component<{
           </Table.Header>
           <Table.Body>
             {this.props.claimFiles.length === 0 ? (
-              <NoClaimFiles>
-                No claim documents have been uploaded for this claim
-              </NoClaimFiles>
+              <Table.Row>
+                <Table.Cell>
+                  <NoClaimFiles>
+                    No claim documents have been uploaded for this claim
+                  </NoClaimFiles>
+                </Table.Cell>
+              </Table.Row>
             ) : (
               [...this.props.claimFiles]
                 .filter(Boolean)

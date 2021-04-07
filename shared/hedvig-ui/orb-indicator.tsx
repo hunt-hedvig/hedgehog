@@ -6,7 +6,7 @@ import { IconSizeProp } from 'semantic-ui-react/dist/commonjs/elements/Icon/Icon
 const IconStyled = styled(Icon)(() => ({
   verticalAlign: 'middle',
   paddingLeft: '4px',
-}))
+})).withComponent('span')
 
 const Container = styled('p')(() => ({
   marginTop: '-7px',

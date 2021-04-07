@@ -6,14 +6,18 @@ import {
   withStyles,
 } from '@material-ui/core'
 import {
+  ClaimPaymentInput,
   ClaimPaymentType,
+  ClaimSwishPaymentInput,
   SanctionStatus,
   useCreateClaimPaymentMutation,
+  useCreateSwishClaimPaymentMutation,
 } from 'api/generated/graphql'
 
 import { Field, FieldProps, Form, Formik, validateYupSchema } from 'formik'
 import React, { useEffect, useState } from 'react'
 import styled from 'react-emotion'
+import { Market } from 'types/enums'
 import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
@@ -62,6 +66,10 @@ const Checkbox: React.SFC<FieldProps> = ({
   />
 )
 
+const areSwishPayoutsEnabled = () => {
+  return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
+}
+
 const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
   yup.object().shape({
     ...(isPotentiallySanctioned && {
@@ -79,8 +87,24 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
     exGratia: yup.boolean(),
     type: yup
       .string()
-      .oneOf(['Manual', 'Automatic', 'IndemnityCost', 'Expense'])
+      .oneOf([
+        'Manual',
+        'Automatic',
+        'AutomaticSwish',
+        'IndemnityCost',
+        'Expense',
+      ])
       .required(),
+    phoneNumber: yup.string().when('type', {
+      is: 'AutomaticSwish',
+      then: yup.string().required(),
+      otherwise: yup.string().notRequired(),
+    }),
+    message: yup.string().when('type', {
+      is: 'AutomaticSwish',
+      then: yup.string().required(),
+      otherwise: yup.string().notRequired(),
+    }),
   })
 
 export const ClaimPayment: React.FC<Props> = ({
@@ -92,6 +116,10 @@ export const ClaimPayment: React.FC<Props> = ({
   carrier,
 }) => {
   const [createPayment, createPaymentProps] = useCreateClaimPaymentMutation()
+  const [
+    createSwishPayment,
+    createSwishPaymentProps,
+  ] = useCreateSwishClaimPaymentMutation()
 
   const [isConfirming, setIsConfirming] = useState(false)
 
@@ -103,14 +131,20 @@ export const ClaimPayment: React.FC<Props> = ({
     sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
 
   useEffect(() => {
-    if (createPaymentProps.data) {
+    if (createPaymentProps.data || createSwishPaymentProps.data) {
       setPaymentStatus('COMPLETED')
-    } else if (createPaymentProps.error) {
+    } else if (createPaymentProps.error || createSwishPaymentProps.data) {
       setPaymentStatus('FAILED')
     } else {
       setPaymentStatus(null)
     }
-  }, [createPaymentProps.data, createPaymentProps.error, setPaymentStatus])
+  }, [
+    createPaymentProps.data,
+    createPaymentProps.error,
+    createSwishPaymentProps.data,
+    createSwishPaymentProps.error,
+    setPaymentStatus,
+  ])
 
   return (
     <Formik<PaymentFormData>
@@ -125,17 +159,6 @@ export const ClaimPayment: React.FC<Props> = ({
         setIsConfirming(true)
       }}
       validationSchema={getPaymentValidationSchema(isPotentiallySanctioned)}
-      validate={(values) => {
-        try {
-          validateYupSchema<PaymentFormData>(
-            values,
-            getPaymentValidationSchema(isPotentiallySanctioned),
-            false,
-          )
-        } catch (error) {
-          throw new Error('An error occurred with the validation ' + error)
-        }
-      }}
     >
       {({ values, resetForm, isValid }) => (
         <>
@@ -144,11 +167,13 @@ export const ClaimPayment: React.FC<Props> = ({
               component={TextField}
               placeholder="Payment amount"
               name="amount"
+              type="number"
             />
             <Field
               component={TextField}
               placeholder="Deductible"
               name="deductible"
+              type="number"
             />
             <Field component={TextField} placeholder="Note" name="note" />
             <MuiFormControlLabel
@@ -156,10 +181,21 @@ export const ClaimPayment: React.FC<Props> = ({
               control={<Field component={Checkbox} name="exGratia" />}
             />
             <Field component={FieldSelect} name="type">
-              <MuiMenuItem value="Manual">Manual</MuiMenuItem>
-              <MuiMenuItem value="Automatic">Automatic</MuiMenuItem>
-              <MuiMenuItem value="IndemnityCost">Indemnity Cost</MuiMenuItem>
-              <MuiMenuItem value="Expense">Expense</MuiMenuItem>
+              <MuiMenuItem value={ClaimPaymentType.Manual}>Manual</MuiMenuItem>
+              <MuiMenuItem value={ClaimPaymentType.Automatic}>
+                Automatic
+              </MuiMenuItem>
+              {areSwishPayoutsEnabled() && market === Market.Sweden && (
+                <MuiMenuItem value="AutomaticSwish">
+                  Automatic (Swish)
+                </MuiMenuItem>
+              )}
+              <MuiMenuItem value={ClaimPaymentType.IndemnityCost}>
+                Indemnity Cost
+              </MuiMenuItem>
+              <MuiMenuItem value={ClaimPaymentType.Expense}>
+                Expense
+              </MuiMenuItem>
             </Field>
 
             {isPotentiallySanctioned && (
@@ -167,6 +203,21 @@ export const ClaimPayment: React.FC<Props> = ({
                 label="Override sanction list result (I promise that I have manually checked the list)"
                 control={<Field component={Checkbox} name="overridden" />}
               />
+            )}
+
+            {values.type === 'AutomaticSwish' && (
+              <>
+                <Field
+                  component={TextField}
+                  placeholder="Phone number (467XXXXXXXX)"
+                  name="phoneNumber"
+                />
+                <Field
+                  component={TextField}
+                  placeholder="Swish notification message"
+                  name="message"
+                />
+              </>
             )}
 
             <SubmitButton
@@ -186,26 +237,42 @@ export const ClaimPayment: React.FC<Props> = ({
                 resetForm()
               }}
               onSubmit={async () => {
-                await createPayment({
-                  variables: {
-                    id: claimId,
-                    payment: {
-                      amount: {
-                        amount: +values.amount,
-                        currency: 'SEK',
-                      },
-                      deductible: {
-                        amount: +values.deductible,
-                        currency: 'SEK',
-                      },
-                      sanctionListSkipped: Boolean(values.overridden),
-                      note: values.note,
-                      exGratia: values.exGratia || false,
-                      type: values.type,
-                      carrier,
-                    },
+                const paymentInput:
+                  | ClaimPaymentInput
+                  | ClaimSwishPaymentInput = {
+                  amount: {
+                    amount: +values.amount,
+                    currency: 'SEK',
                   },
-                })
+                  deductible: {
+                    amount: +values.deductible,
+                    currency: 'SEK',
+                  },
+                  sanctionListSkipped: Boolean(values.overridden),
+                  note: values.note,
+                  exGratia: values.exGratia || false,
+                  carrier,
+                }
+
+                if (values.type === 'AutomaticSwish') {
+                  await createSwishPayment({
+                    variables: {
+                      id: claimId,
+                      payment: {
+                        ...paymentInput,
+                        phoneNumber: values.phoneNumber,
+                        message: values.message,
+                      },
+                    },
+                  })
+                } else {
+                  await createPayment({
+                    variables: {
+                      id: claimId,
+                      payment: { ...paymentInput, type: values.type },
+                    },
+                  })
+                }
                 await sleep(1000)
                 await refetchPage()
                 setIsConfirming(false)

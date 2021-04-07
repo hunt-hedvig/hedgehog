@@ -12,16 +12,14 @@ import { Spacing } from 'hedvig-ui/spacing'
 import { Paragraph } from 'hedvig-ui/typography'
 
 import React from 'react'
-import { Tab } from 'semantic-ui-react'
-import { Market } from 'types/enums'
 
 import styled from 'react-emotion'
+import { Market } from 'types/enums'
 import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
-import { ClaimSwishPayment } from './ClaimSwishPayment'
 
 interface Props {
   payments: NonNullable<Claim['payments']>
@@ -49,46 +47,6 @@ const PaymentTableCell = withStyles({
 const TotalCell = styled(MuiTableCell)`
   font-size: 1.1rem;
 `
-
-const payoutPanes = (
-  sanctionStatus,
-  claimId,
-  refetchPage,
-  identity,
-  market,
-  carrier,
-) => [
-  {
-    menuItem: 'Payout',
-    render: () => (
-      <ClaimPayment
-        sanctionStatus={sanctionStatus}
-        claimId={claimId}
-        refetchPage={refetchPage}
-        identified={!!identity}
-        market={market}
-        carrier={carrier}
-      />
-    ),
-  },
-  {
-    menuItem: 'Swish payout',
-    render: () => (
-      <ClaimSwishPayment
-        sanctionStatus={sanctionStatus}
-        claimId={claimId}
-        refetchPage={refetchPage}
-        identified={!!identity}
-        market={market}
-        carrier={carrier}
-      />
-    ),
-  },
-]
-
-const swishPayoutsEnabled = () => {
-  return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
-}
 
 const ClaimPayments: React.SFC<Props> = ({
   payments,
@@ -199,33 +157,14 @@ const ClaimPayments: React.SFC<Props> = ({
       </PaymentTable>
 
       {carrier ? (
-        swishPayoutsEnabled() && market === Market.Sweden ? (
-          <Tab
-            style={{
-              height: '100%',
-              marginTop: '20px',
-            }}
-            panes={payoutPanes(
-              sanctionStatus,
-              claimId,
-              refetchPage,
-              identity,
-              market,
-              carrier,
-            )}
-            renderActiveOnly
-            defaultActiveIndex={0}
-          />
-        ) : (
-          <ClaimPayment
-            sanctionStatus={sanctionStatus}
-            claimId={claimId}
-            refetchPage={refetchPage}
-            identified={!!identity}
-            market={market}
-            carrier={carrier}
-          />
-        )
+        <ClaimPayment
+          sanctionStatus={sanctionStatus}
+          claimId={claimId}
+          refetchPage={refetchPage}
+          identified={!!identity}
+          market={market}
+          carrier={carrier}
+        />
       ) : (
         <Spacing top>
           <Paragraph>
