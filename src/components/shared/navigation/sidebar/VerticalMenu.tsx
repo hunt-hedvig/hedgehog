@@ -1,5 +1,5 @@
+import styled, { StyledComponent } from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { Spacing } from 'hedvig-ui/spacing'
 import React, { useContext, useRef, useState } from 'react'
 import {
   ArrowUpRight,
@@ -15,7 +15,6 @@ import {
   ShieldShaded,
   Tools,
 } from 'react-bootstrap-icons'
-import styled, { StyledComponent } from '@emotion/styled'
 import MediaQuery from 'react-media'
 import { connect } from 'react-redux'
 import { matchPath, useLocation } from 'react-router'
