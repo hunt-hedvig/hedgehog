@@ -28,4 +28,5 @@ export const config = {
     'gatekeeper host',
   ),
   stagingSpecificTools: process.env.USE_STAGING_SPECIFIC_TOOLS === 'true',
+  useHelmet: process.env.USE_HELMET === 'true',
 }
