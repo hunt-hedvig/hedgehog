@@ -19,9 +19,9 @@ import {
 
 const CommandLineWindow = styled.div`
   position: absolute;
-  top: 50%;
+  top: 20vh;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   background-color: rgba(255, 255, 255, 1);
   box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
   border-radius: 0.3em;
@@ -37,14 +37,19 @@ const CharacterBadge = styled.div`
   margin-right: 0.4em;
 `
 
-const ResultItemWrapper = styled.div<{ highlighted: boolean }>`
+const ResultItemWrapper = styled.div<{ selected: boolean }>`
   padding: 1em 3.5em;
   padding-right: 1em;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ highlighted }) =>
-    highlighted ? 'rgba(0, 0, 0, 0.1)' : 'transparent'};
+  background-color: ${({ selected }) =>
+    selected ? 'rgba(0, 0, 0, 0.1)' : 'transparent'};
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
 `
 
 const ResultItemContent = styled.div`
@@ -71,19 +76,13 @@ const ResultItem: React.FC<{
   selected?: boolean
   hide: () => void
 }> = ({ action, selected = false, hide }) => {
-  const [highlighted, setHighlighted] = useState(selected)
-  useEffect(() => {
-    setHighlighted(selected)
-  }, [selected])
   return (
     <ResultItemWrapper
-      highlighted={highlighted}
+      selected={selected}
       onClick={() => {
         action.onResolve()
         hide()
       }}
-      onMouseEnter={() => setHighlighted(true)}
-      onMouseLeave={() => setHighlighted(selected)}
     >
       <FourthLevelHeadline>{action.label}</FourthLevelHeadline>
       <ResultItemContent>
