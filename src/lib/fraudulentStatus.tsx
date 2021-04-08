@@ -1,6 +1,6 @@
 // @ts-nocheck
+import styled from '@emotion/styled'
 import * as React from 'react'
-import styled from 'react-emotion'
 import { Button, Dropdown, Icon, Input, Table } from 'semantic-ui-react'
 
 const ButtonsBlock = styled('div')((_) => ({

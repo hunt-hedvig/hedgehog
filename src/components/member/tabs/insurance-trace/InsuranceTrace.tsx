@@ -1,7 +1,7 @@
 import { ScrollList } from 'components/shared'
 import { getFieldName } from 'lib/helpers'
 import * as React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { List } from 'semantic-ui-react'
 
 const TextWrapper = styled('div')(

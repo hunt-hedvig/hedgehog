@@ -1,9 +1,9 @@
+import styled from '@emotion/styled'
 import enGB from 'date-fns/locale/en-GB'
 import { FieldProps } from 'formik'
 import React from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import styled from 'react-emotion'
 import { Input } from 'semantic-ui-react'
 registerLocale('enGB', enGB)
 

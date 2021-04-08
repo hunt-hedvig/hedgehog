@@ -1,4 +1,4 @@
-import { css } from 'react-emotion'
+import { css } from '@emotion/react'
 
 export const monthPickerStyles = css({
   '.calendar-container': {

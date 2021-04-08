@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Dropdown, DropdownProps, Icon } from 'semantic-ui-react'
 
 const Container = styled.div`

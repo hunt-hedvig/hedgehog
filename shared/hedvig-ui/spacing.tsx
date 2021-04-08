@@ -1,4 +1,4 @@
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 export type SpacingSize = 'small' | 'medium' | 'large'
 export type SpacingDirection = 'top' | 'right' | 'bottom' | 'left' | 'all'

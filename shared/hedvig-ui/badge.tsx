@@ -1,4 +1,4 @@
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 export type BadgeSize = 'small' | 'medium' | 'large'
 export type BadgeVariant = 'danger' | 'warning' | 'success' | 'default'

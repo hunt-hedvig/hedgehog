@@ -1,6 +1,7 @@
 import { ActionMap, Container } from 'constate'
 import React, { lazy, Suspense } from 'react'
-import styled from 'react-emotion'
+import { Global } from '@emotion/react'
+import styled from '@emotion/styled'
 import { Icon } from 'semantic-ui-react'
 import { emojiMartStyles } from './_emojimartstyles'
 
@@ -36,12 +37,12 @@ const LazyEmojiPicker = lazy(
     ).then(({ Picker }) => ({ default: Picker })) as any,
 )
 
-emojiMartStyles()
 export const EmojiPicker: React.SFC<EmojiPickerProps> = ({ selectEmoji }) => {
   return (
     <Container<State, Actions> initialState={{ open: false }} actions={actions}>
       {({ open, setIsOpen }) => (
         <>
+          <Global styles={emojiMartStyles} />
           <Icon
             name={'smile outline'}
             size={'large'}

@@ -5,7 +5,7 @@ import {
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 const Icon = styled('div')`

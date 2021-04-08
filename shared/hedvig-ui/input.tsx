@@ -1,6 +1,7 @@
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import { colorsV3, fonts } from '@hedviginsurance/brand'
 import React from 'react'
-import styled, { css } from 'react-emotion'
 import {
   Input as SemanticInput,
   InputProps,

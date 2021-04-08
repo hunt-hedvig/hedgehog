@@ -12,7 +12,7 @@ import { format, parseISO } from 'date-fns'
 import React from 'react'
 import { Market } from 'types/enums'
 
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'

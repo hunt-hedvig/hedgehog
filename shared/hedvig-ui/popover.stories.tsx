@@ -1,7 +1,7 @@
+import styled from '@emotion/styled'
 import { action } from '@storybook/addon-actions'
 import { Popover } from 'hedvig-ui/popover'
 import React from 'react'
-import styled from 'react-emotion'
 
 export default {
   title: 'Popover',

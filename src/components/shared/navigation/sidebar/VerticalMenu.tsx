@@ -15,11 +15,11 @@ import {
   ShieldShaded,
   Tools,
 } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
+import styled, { StyledComponent } from '@emotion/styled'
 import MediaQuery from 'react-media'
 import { connect } from 'react-redux'
 import { matchPath, useLocation } from 'react-router'
-import { NavLink } from 'react-router-dom'
+import { NavLink, NavLinkProps } from 'react-router-dom'
 import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
@@ -138,38 +138,44 @@ const MenuGroup = styled('div')({
   paddingBottom: '4rem',
 })
 
-const MenuItem = styled(NavLink)<{ transparent?: boolean }>(
-  ({ theme, transparent = false }) => ({
-    display: 'inline-flex',
+type WithTransparent = { transparent?: boolean }
+const MenuItem = styled<React.ComponentType<NavLinkProps & WithTransparent>>(
+  ({ transparent: _transparent, ...rest }) => <NavLink {...rest} />,
+)<WithTransparent>(({ theme, transparent = false }) => ({
+  display: 'inline-flex',
+  flexShrink: 0,
+  alignItems: 'center',
+  padding: '0.5rem 1rem',
+  margin: '0.5rem 0',
+  color: '#fff !important',
+  borderRadius: '0.5rem',
+  transition: 'background 500ms, font-size 300ms, width 300ms',
+
+  '&:hover, &:focus, &.active': {
+    color: colorsV3.gray100 + ' !important',
+    textDecoration: 'none',
+    background: theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray700,
+  },
+  '&:hover:not(.active), &:focus:not(.active)': {
+    background: colorsV3.gray900,
+  },
+
+  opacity: transparent ? 0.5 : 1,
+
+  svg: {
+    fill: colorsV3.gray100,
+    marginRight: 16,
+    textAlign: 'center',
+    transition: 'width 300ms, weight 300ms, margin 300ms',
     flexShrink: 0,
-    alignItems: 'center',
-    padding: '0.5rem 1rem',
-    margin: '0.5rem 0',
-    color: '#fff !important',
-    borderRadius: '0.5rem',
-    transition: 'background 500ms, font-size 300ms, width 300ms',
-
-    '&:hover, &:focus, &.active': {
-      color: colorsV3.gray100 + ' !important',
-      textDecoration: 'none',
-      background: theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray700,
-    },
-    '&:hover:not(.active), &:focus:not(.active)': {
-      background: colorsV3.gray900,
-    },
-
-    opacity: transparent ? 0.5 : 1,
-
-    svg: {
-      fill: colorsV3.gray100,
-      marginRight: 16,
-      textAlign: 'center',
-      transition: 'width 300ms, weight 300ms, margin 300ms',
-      flexShrink: 0,
-    },
-  }),
-)
-const MenuItemExternalLink = MenuItem.withComponent('a')
+  },
+}))
+const MenuItemExternalLink = MenuItem.withComponent('a') as StyledComponent<
+  React.DetailedHTMLProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >
+>
 
 const Menu = styled('div')({
   display: 'flex',
@@ -179,6 +185,8 @@ const Menu = styled('div')({
 })
 
 const MenuText = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
   transition: 'width 500ms',
   whiteSpace: 'nowrap',
   overflowX: 'hidden',
@@ -418,13 +426,12 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   }
                 >
                   <ShieldShaded />
-                  {isCollapsed && <MenuText>Claims</MenuText>}
                   {!isCollapsed && (
-                    <Spacing right inline>
-                      <MenuText>Claims {isHintingOption && '(C)'}</MenuText>
-                    </Spacing>
+                    <MenuText>
+                      Claims {isHintingOption && '(C)'}
+                      {isHintingOption && latestClaim.current && <Backspace />}
+                    </MenuText>
                   )}
-                  {isHintingOption && latestClaim.current && <Backspace />}
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>

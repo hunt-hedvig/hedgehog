@@ -4,7 +4,7 @@ import { lightTheme } from 'hedvig-ui/themes'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { range } from 'utils/array'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {

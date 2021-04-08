@@ -3,7 +3,7 @@ import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
 

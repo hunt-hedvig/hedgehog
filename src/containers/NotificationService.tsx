@@ -1,7 +1,7 @@
+import styled from '@emotion/styled'
 import Notifications from 'components/notifications'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
-import styled from 'react-emotion'
 import { connect } from 'react-redux'
 import { TransitionablePortal } from 'semantic-ui-react'
 import actions from 'store/actions'

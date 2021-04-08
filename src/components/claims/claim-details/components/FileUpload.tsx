@@ -1,6 +1,6 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
 

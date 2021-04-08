@@ -9,7 +9,7 @@ import {
 import { Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { PencilFill } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { formatMoney } from 'utils/money'
 import { convertEnumToTitle, formatPostalCode } from 'utils/text'
 

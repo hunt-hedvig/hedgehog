@@ -3,7 +3,7 @@ import { UpdateQuoteForm } from 'components/member/tabs/quote-tab/update-quote-f
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { connect } from 'react-redux'
 import actions from 'store/actions'
 import { formatMoney } from 'utils/money'

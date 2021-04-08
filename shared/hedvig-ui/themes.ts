@@ -1,6 +1,7 @@
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import { colorsV3, fonts } from '@hedviginsurance/brand'
 import { createMuiTheme } from '@material-ui/core/styles'
-import styled, { css } from 'react-emotion'
 
 export const lightTheme = {
   type: 'light',
@@ -103,6 +104,7 @@ export const lightUiTheme = createMuiTheme({
     },
   },
   typography: {
+    useNextVariants: true,
     fontFamily: [fonts.FAVORIT, 'sans-serif'].join(','),
   },
   props: {
@@ -199,6 +201,7 @@ export const darkUiTheme = createMuiTheme({
     },
   },
   typography: {
+    useNextVariants: true,
     fontFamily: [fonts.FAVORIT, 'sans-serif'].join(','),
   },
   props: {

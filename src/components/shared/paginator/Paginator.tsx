@@ -1,7 +1,8 @@
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { range } from 'lib/helpers'
 import React from 'react'
-import styled, { css } from 'react-emotion'
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import { Table } from 'semantic-ui-react'
 
 interface PageState {

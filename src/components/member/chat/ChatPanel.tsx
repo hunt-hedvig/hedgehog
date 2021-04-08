@@ -8,7 +8,7 @@ import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 import { EmojiPicker } from './EmojiPicker'
 
