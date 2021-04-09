@@ -1,5 +1,6 @@
+import styled from '@emotion/styled'
 import { Button as MuiButton, MenuItem as MuiMenuItem } from '@material-ui/core'
-import { ClaimType, Contract } from 'api/generated/graphql'
+import { ClaimType, Contract, GenericAgreement } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Field, Form, Formik } from 'formik'
 import gql from 'graphql-tag'
@@ -7,7 +8,6 @@ import { FormikDateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import { Mutation } from 'react-apollo'
-import styled from '@emotion/styled'
 import { connect } from 'react-redux'
 import { showNotification as createShowNotificationAction } from 'store/actions/notificationsActions'
 import { sleep } from 'utils/sleep'
@@ -216,6 +216,7 @@ interface ClaimTypeProps {
   claimId: string
   refetchPage: () => Promise<any>
   contract?: Contract | null
+  agreement?: GenericAgreement | null
 }
 
 const SubmitButton = MuiButton
@@ -238,7 +239,14 @@ const DangerParagraph = styled(Paragraph)`
 
 const ClaimTypeComponent: React.FC<ClaimTypeProps & {
   showNotification: (data: any) => void
-}> = ({ type, claimId, refetchPage, contract, showNotification }) => {
+}> = ({
+  type,
+  claimId,
+  refetchPage,
+  contract,
+  agreement,
+  showNotification,
+}) => {
   const [isSetClaimTypeLoading, setSetClaimTypeLoading] = React.useState(false)
 
   return (
@@ -353,6 +361,9 @@ const ClaimTypeComponent: React.FC<ClaimTypeProps & {
                         </div>
                       )}
                       <div>
+                        {agreement && agreement.carrier === 'EIR' && (
+                          <>⚠️ EIR </>
+                        )}
                         <Field
                           component={FormikDateTimePicker}
                           name="date"
@@ -425,8 +436,6 @@ const ClaimTypeComponent: React.FC<ClaimTypeProps & {
   )
 }
 
-const ClaimTypeForm = connect(null, {
+export const ClaimTypeForm = connect(null, {
   showNotification: createShowNotificationAction,
 })(ClaimTypeComponent)
-
-export { ClaimTypeForm }

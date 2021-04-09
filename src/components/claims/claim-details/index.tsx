@@ -106,6 +106,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                         claimId={props.match.params.claimId}
                         refetchPage={refetch}
                         contract={contract}
+                        agreement={agreement}
                       />
                     </Grid>
                     <Grid item xs={12}>
