@@ -291,6 +291,7 @@ export type ClaimNote = {
   __typename?: 'ClaimNote'
   text: Scalars['String']
   date: Scalars['LocalDateTime']
+  handlerReference?: Maybe<Scalars['String']>
 }
 
 export type ClaimNoteInput = {

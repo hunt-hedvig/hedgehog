@@ -87,18 +87,20 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => (
                       )}
                     </Grid>
                     <Grid item xs={12} sm={12} md={4}>
-                      <ClaimInformation
-                        recordingUrl={recordingUrl!}
-                        registrationDate={registrationDate}
-                        state={state!}
-                        claimId={props.match.params.claimId}
-                        coveringEmployee={coveringEmployee!}
-                        memberId={props.match.params.memberId}
-                        refetchPage={refetch}
-                        contracts={member!!.contracts}
-                        selectedContract={contract ?? null}
-                        selectedAgreement={agreement ?? null}
-                      />
+                      {member && (
+                        <ClaimInformation
+                          recordingUrl={recordingUrl!}
+                          registrationDate={registrationDate}
+                          state={state!}
+                          claimId={props.match.params.claimId}
+                          coveringEmployee={coveringEmployee!}
+                          memberId={props.match.params.memberId}
+                          refetchPage={refetch}
+                          contracts={member.contracts}
+                          selectedContract={contract ?? null}
+                          selectedAgreement={agreement ?? null}
+                        />
+                      )}
                     </Grid>
                     <Grid item xs={12} sm={12} md={4}>
                       <ClaimTypeForm
