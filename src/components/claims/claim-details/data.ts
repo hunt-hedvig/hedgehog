@@ -62,6 +62,7 @@ export const CLAIM_PAGE_QUERY = gql`
       notes {
         text
         date
+        handlerReference
       }
       transcriptions {
         text

@@ -76,9 +76,10 @@ const ClaimNote = withStyles({
   },
 })(MuiTypography)
 
-const ClaimNoteDate = withStyles({
+const ClaimNoteFooter = withStyles({
   root: {
     fontSize: '0.875rem',
+    textAlign: 'right',
   },
 })(MuiTypography)
 
@@ -97,9 +98,15 @@ const ClaimNotes: React.FC<Props> = ({ notes, claimId, refetchPage }) => (
           {sortNotesByDate(notes).map((note) => (
             <ListItem key={note.date}>
               <ClaimNote component="p">{note.text}</ClaimNote>
-              <ClaimNoteDate component="span">
+              <ClaimNoteFooter component="span">
+                {note.handlerReference && (
+                  <>
+                    {note.handlerReference}
+                    <br />
+                  </>
+                )}
                 {format(parseISO(note.date), 'yyyy-MM-dd HH:mm:ss')}
-              </ClaimNoteDate>
+              </ClaimNoteFooter>
             </ListItem>
           ))}
         </MuiList>
