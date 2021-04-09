@@ -49,35 +49,39 @@ export const ClaimListHeader: React.FC<{
 
   return (
     <Table.Header>
-      <Table.HeaderCell width={4}>Member</Table.HeaderCell>
-      <Table.HeaderCell
-        width={3}
-        sorted={column === ClaimSortColumn.Date ? sortDirection : undefined}
-        onClick={() => sortTable(ClaimSortColumn.Date)}
-      >
-        Date
-      </Table.HeaderCell>
-      <Table.HeaderCell
-        width={6}
-        sorted={column === ClaimSortColumn.Type ? sortDirection : undefined}
-        onClick={() => sortTable(ClaimSortColumn.Type)}
-      >
-        Type
-      </Table.HeaderCell>
-      <Table.HeaderCell
-        width={1}
-        sorted={column === ClaimSortColumn.State ? sortDirection : undefined}
-        onClick={() => sortTable(ClaimSortColumn.State)}
-      >
-        State
-      </Table.HeaderCell>
-      <Table.HeaderCell
-        width={2}
-        sorted={column === ClaimSortColumn.Reserve ? sortDirection : undefined}
-        onClick={() => sortTable(ClaimSortColumn.Reserve)}
-      >
-        Reserves
-      </Table.HeaderCell>
+      <Table.Row>
+        <Table.HeaderCell width={4}>Member</Table.HeaderCell>
+        <Table.HeaderCell
+          width={3}
+          sorted={column === ClaimSortColumn.Date ? sortDirection : undefined}
+          onClick={() => sortTable(ClaimSortColumn.Date)}
+        >
+          Date
+        </Table.HeaderCell>
+        <Table.HeaderCell
+          width={6}
+          sorted={column === ClaimSortColumn.Type ? sortDirection : undefined}
+          onClick={() => sortTable(ClaimSortColumn.Type)}
+        >
+          Type
+        </Table.HeaderCell>
+        <Table.HeaderCell
+          width={1}
+          sorted={column === ClaimSortColumn.State ? sortDirection : undefined}
+          onClick={() => sortTable(ClaimSortColumn.State)}
+        >
+          State
+        </Table.HeaderCell>
+        <Table.HeaderCell
+          width={2}
+          sorted={
+            column === ClaimSortColumn.Reserve ? sortDirection : undefined
+          }
+          onClick={() => sortTable(ClaimSortColumn.Reserve)}
+        >
+          Reserves
+        </Table.HeaderCell>
+      </Table.Row>
     </Table.Header>
   )
 }

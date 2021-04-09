@@ -11,7 +11,7 @@ import {
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { getSignSource } from 'utils/contract'
 import { convertEnumToTitle } from 'utils/text'
 

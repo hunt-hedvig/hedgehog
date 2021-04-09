@@ -1,6 +1,6 @@
 import React from 'react'
 import { Pencil } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 import { TextField } from '@material-ui/core'
 import { BaseChip } from './BaseChip'

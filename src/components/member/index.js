@@ -4,7 +4,7 @@ import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
   formatSsn,
@@ -86,9 +86,8 @@ export const Member = (props) => {
   const getMemberPageTitle = (member) =>
     `${member.firstName || ''} ${member.lastName || ''}`
 
-  const navigateToTab = (tabName) => history.replace(
-    `/members/${memberId}/${tabName}`,
-  )
+  const navigateToTab = (tabName) =>
+    history.replace(`/members/${memberId}/${tabName}`)
 
   const formattedFirstName =
     member.firstName + (member.firstName.slice(-1) === 's' ? "'" : "'s")
@@ -98,9 +97,12 @@ export const Member = (props) => {
       label: `Copy ${formattedFirstName} member page link to clipboard`,
       keys: [Keys.Option, Keys.M],
       onResolve: () => {
-        copy(`${window.location.protocol}//${window.location.host}/members/${memberId}`, {
-          format: 'text/plain',
-        })
+        copy(
+          `${window.location.protocol}//${window.location.host}/members/${memberId}`,
+          {
+            format: 'text/plain',
+          },
+        )
       },
     },
     {

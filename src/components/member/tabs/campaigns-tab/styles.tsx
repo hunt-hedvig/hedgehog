@@ -1,5 +1,5 @@
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 const getThemeFromStatus = (theme, status) => {
   switch (status) {

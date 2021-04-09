@@ -7,14 +7,20 @@ import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import { Badge } from 'hedvig-ui/badge'
 import { Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
 import { Table, TableRowProps } from 'semantic-ui-react'
 import { getMemberIdColor } from 'utils/member'
 import { formatMoney } from 'utils/money'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
-const MemberIdCell = styled(Table.Cell)<{
+const MemberIdCell = styled<typeof Table.Cell>(
+  ({
+    memberId: _memberId,
+    numberMemberGroups: _numberMemberGroups,
+    ...props
+  }) => <Table.Cell {...props} />,
+)<{
   memberId: string
   numberMemberGroups: number
 }>`

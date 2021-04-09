@@ -2,7 +2,7 @@ import { Claim, ClaimFileUpload } from 'api/generated/graphql'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 import { connect } from 'react-redux'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
@@ -87,9 +87,13 @@ class ClaimFileTableComponent extends React.Component<{
           </Table.Header>
           <Table.Body>
             {this.props.claimFiles.length === 0 ? (
-              <NoClaimFiles>
-                No claim documents have been uploaded for this claim
-              </NoClaimFiles>
+              <Table.Row>
+                <Table.Cell>
+                  <NoClaimFiles>
+                    No claim documents have been uploaded for this claim
+                  </NoClaimFiles>
+                </Table.Cell>
+              </Table.Row>
             ) : (
               [...this.props.claimFiles]
                 .filter(Boolean)

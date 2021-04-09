@@ -1,8 +1,8 @@
+import { ThemeProvider } from '@emotion/react'
+import styled from '@emotion/styled'
 import { select } from '@storybook/addon-knobs'
-import { ThemeProvider } from 'emotion-theming'
 import { darkTheme, lightTheme } from 'hedvig-ui/themes'
 import React from 'react'
-import styled from 'react-emotion'
 
 const ThemeWrapper = styled.div`
   min-height: 100%;

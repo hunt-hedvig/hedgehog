@@ -7,7 +7,7 @@ import { ClaimState, Contract, GenericAgreement } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Paragraph } from 'hedvig-ui/typography'
 import * as React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { sleep } from 'utils/sleep'
 
 import { Paper } from 'components/shared/Paper'

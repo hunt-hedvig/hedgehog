@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Icon } from 'semantic-ui-react'
 import {
   Key,
@@ -328,7 +328,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     >
       {children}
       {showCommandLine && (
-        <CommandLineWrapper innerRef={commandLine}>
+        <CommandLineWrapper ref={commandLine}>
           <CommandLineComponent
             hide={() => setShowCommandLine(false)}
             actions={actions.current}

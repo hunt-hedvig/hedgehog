@@ -1,4 +1,5 @@
-import styled, { keyframes, StyledComponent } from 'react-emotion'
+import { keyframes } from '@emotion/react'
+import styled, { StyledComponent } from '@emotion/styled'
 
 const fadeInKeyframes = (max) =>
   keyframes({

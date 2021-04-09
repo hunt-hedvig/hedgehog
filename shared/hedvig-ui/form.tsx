@@ -1,8 +1,8 @@
+import styled from '@emotion/styled'
 import { ErrorMessage } from '@hookform/error-message'
 import { Button, ButtonProps } from 'hedvig-ui/button'
 import { CustomInputProps, Input } from 'hedvig-ui/input'
 import React from 'react'
-import styled from 'react-emotion'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
 import {
@@ -140,7 +140,7 @@ const FormTextAreaComponent: React.FC<FormFieldProps> = ({
       name={name}
       rules={rules}
       defaultValue={defaultValue}
-      as={<TextArea {...props} autoHeight />}
+      as={<TextArea {...props} />}
     />
   )
 }

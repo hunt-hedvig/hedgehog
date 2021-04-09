@@ -2,7 +2,7 @@ import { CardLink } from 'features/tools'
 import { CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 const Icon = styled('div')`
   font-size: 2rem;

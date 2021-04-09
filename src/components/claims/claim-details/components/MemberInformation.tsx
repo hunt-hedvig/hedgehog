@@ -6,7 +6,7 @@ import { Spacing } from 'hedvig-ui/spacing'
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 import { Market } from 'types/enums'
 import {

@@ -1,7 +1,8 @@
+import { css, keyframes } from '@emotion/react'
 import { Button } from 'hedvig-ui/button'
 import { Input } from 'hedvig-ui/input'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
-import styled, { css, keyframes } from 'react-emotion'
+import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 const fadeIn = (max: number) =>

@@ -4,7 +4,7 @@ import React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import { Form, Input, Table } from 'semantic-ui-react'
 import PayoutDetails from 'components/payouts/payout-details'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Button } from 'hedvig-ui/button'
 import { formatMoney } from 'utils/money'
@@ -194,11 +194,19 @@ class PaymentsTab extends React.Component {
               <div>
                 <p>
                   Direct Debit activated:{' '}
-                  {data.member.directDebitStatus.activated ? <Checkmark /> : <Cross />}
+                  {data.member.directDebitStatus.activated ? (
+                    <Checkmark />
+                  ) : (
+                    <Cross />
+                  )}
                 </p>
                 <p>
                   Payout Method activated:{' '}
-                  {data.member.payoutMethodStatus.activated ? <Checkmark /> : <Cross />}
+                  {data.member.payoutMethodStatus.activated ? (
+                    <Checkmark />
+                  ) : (
+                    <Cross />
+                  )}
                 </p>
 
                 <Spacing bottom>
@@ -263,12 +271,13 @@ class PaymentsTab extends React.Component {
                   </Mutation>
                 )}
                 <br />
-                {data.member.payoutMethodStatus.activated && this.props.contractMarketInfo?.market === Market.Sweden && (
-                  <>
-                    <h3>Payout:</h3>
-                    <PayoutDetails {...this.props} />
-                  </>
-                )}
+                {data.member.payoutMethodStatus.activated &&
+                  this.props.contractMarketInfo?.market === Market.Sweden && (
+                    <>
+                      <h3>Payout:</h3>
+                      <PayoutDetails {...this.props} />
+                    </>
+                  )}
                 <h3>Transactions:</h3>
                 <MemberTransactionsTable
                   transactions={data.member.transactions

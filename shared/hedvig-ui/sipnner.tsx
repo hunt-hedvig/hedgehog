@@ -1,4 +1,5 @@
-import styled, { keyframes } from 'react-emotion'
+import { keyframes } from '@emotion/react'
+import styled from '@emotion/styled'
 
 const spin = keyframes`
   from {
