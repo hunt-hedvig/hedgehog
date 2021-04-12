@@ -8,8 +8,8 @@ import { FormikDateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import { Mutation } from 'react-apollo'
-import { connect } from 'react-redux'
-import { showNotification as createShowNotificationAction } from 'store/actions/notificationsActions'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 import { sleep } from 'utils/sleep'
 
 import { FieldSelect } from 'components/shared/inputs/FieldSelect'
@@ -237,9 +237,7 @@ const DangerParagraph = styled(Paragraph)`
   color: ${({ theme }) => theme.danger};
 `
 
-const ClaimTypeComponent: React.FC<ClaimTypeProps & {
-  showNotification: (data: any) => void
-}> = ({
+const ClaimTypeComponent: React.FC<ClaimTypeProps & WithShowNotification> = ({
   type,
   claimId,
   refetchPage,
@@ -436,6 +434,4 @@ const ClaimTypeComponent: React.FC<ClaimTypeProps & {
   )
 }
 
-export const ClaimTypeForm = connect(null, {
-  showNotification: createShowNotificationAction,
-})(ClaimTypeComponent)
+export const ClaimTypeForm = withShowNotification(ClaimTypeComponent)
