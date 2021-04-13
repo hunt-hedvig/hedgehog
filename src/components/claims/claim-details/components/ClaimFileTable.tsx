@@ -1,13 +1,13 @@
+import styled from '@emotion/styled'
 import { Claim, ClaimFileUpload } from 'api/generated/graphql'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { Mutation } from 'react-apollo'
-import styled from '@emotion/styled'
 
-import { connect } from 'react-redux'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 import { dateTimeFormatter } from '../../../../lib/helpers'
-import actions from '../../../../store/actions'
 import { DeleteButton } from '../components/DeleteClaimFileButton'
 
 const SET_CLAIM_FILE_CATEGORY = gql`
@@ -68,11 +68,12 @@ const fileUploadOptions = [
   },
 ]
 
-class ClaimFileTableComponent extends React.Component<{
-  claimFiles: Claim['claimFiles']
-  claimId: string
-  showNotification: (data: any) => void
-}> {
+class ClaimFileTableComponent extends React.Component<
+  {
+    claimFiles: Claim['claimFiles']
+    claimId: string
+  } & WithShowNotification
+> {
   public render() {
     return (
       <>
@@ -163,6 +164,4 @@ class ClaimFileTableComponent extends React.Component<{
   }
 }
 
-const mapActions = { ...actions.notificationsActions }
-
-export const ClaimFileTable = connect(null, mapActions)(ClaimFileTableComponent)
+export const ClaimFileTable = withShowNotification(ClaimFileTableComponent)

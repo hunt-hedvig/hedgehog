@@ -1,8 +1,8 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import styled from '@emotion/styled'
-import { connect } from 'react-redux'
-import actions from 'store/actions'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
 const UploadClaimFileWrapper = styled('div')({
   padding: '4rem',
@@ -43,12 +43,13 @@ const FileUploadContainer = styled('div')({
   padding: '2rem',
 })
 
-class FileUploadComponent extends React.Component<{
-  claimId: string
-  memberId: string
-  showNotification: (data: any) => void
-  onUploaded: () => void
-}> {
+class FileUploadComponent extends React.Component<
+  {
+    claimId: string
+    memberId: string
+    onUploaded: () => void
+  } & WithShowNotification
+> {
   public render() {
     return (
       <>
@@ -103,6 +104,4 @@ class FileUploadComponent extends React.Component<{
   }
 }
 
-const mapActions = { ...actions.notificationsActions }
-
-export const FileUpload = connect(null, mapActions)(FileUploadComponent)
+export const FileUpload = withShowNotification(FileUploadComponent)

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { colors } from '@hedviginsurance/brand'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
@@ -7,12 +8,11 @@ import { MainHeadline } from 'hedvig-ui/typography'
 import { MonetaryAmount } from 'lib/helpers'
 import React from 'react'
 import { Mutation, Query } from 'react-apollo'
-import styled from '@emotion/styled'
-import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import actions from 'store/actions'
+import { WithShowNotification } from 'store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
+import { withShowNotification } from 'utils/notifications'
 
 const query = gql`
   query PaymentScheduleQuery($month: YearMonth!) {
@@ -141,10 +141,7 @@ interface State {
 }
 
 export class ChargePageComponent extends React.Component<
-  {
-    showNotification: (data: any) => void
-  },
-  State
+  State & WithShowNotification
 > {
   public state = {
     confirming: false,
@@ -262,6 +259,4 @@ export class ChargePageComponent extends React.Component<
   }
 }
 
-const mapActions = { ...actions.notificationsActions }
-
-export const ChargePage = connect(null, mapActions)(ChargePageComponent)
+export const ChargePage = withShowNotification(ChargePageComponent)
