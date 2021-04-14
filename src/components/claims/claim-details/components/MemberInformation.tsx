@@ -11,7 +11,7 @@ import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
-import * as React from 'react'
+import React from 'react'
 
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'

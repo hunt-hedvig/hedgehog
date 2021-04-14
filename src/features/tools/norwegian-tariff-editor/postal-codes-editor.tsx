@@ -3,7 +3,7 @@ import { Button } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 
 interface PostalCodesEditorProps {

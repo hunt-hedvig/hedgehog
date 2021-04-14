@@ -15,7 +15,7 @@ import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
 import { Spinner } from 'hedvig-ui/sipnner'
-import * as React from 'react'
+import React from 'react'
 import { sleep } from 'utils/sleep'
 
 import { Paper } from '../../../shared/Paper'

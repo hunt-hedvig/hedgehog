@@ -1,6 +1,6 @@
 import { Paper as MuiPaper } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
+import React from 'react'
 
 export interface PaperProps {
   children: object

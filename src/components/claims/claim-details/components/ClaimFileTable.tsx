@@ -6,7 +6,7 @@ import {
 } from 'api/generated/graphql'
 import { FileUpload } from 'components/claims/claim-details/components/FileUpload'
 import { Spinner } from 'hedvig-ui/sipnner'
-import * as React from 'react'
+import React from 'react'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
@@ -160,7 +160,10 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
                         claimId={claimId}
                         claimFileId={claimFile.claimFileId!}
                         showNotification={showNotification}
-                        onDeleted={refetch}
+                        onDeleted={async () => {
+                          await sleep(500)
+                          await refetch()
+                        }}
                       />
                     </Table.Cell>
                   </Table.Row>

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Button as MuiButton, withStyles } from '@material-ui/core'
 import { useUpdateReserveMutation } from 'api/generated/graphql'
 import { Field, Form, Formik } from 'formik'
-import * as React from 'react'
+import React from 'react'
 import * as yup from 'yup'
 
 import { TextField } from '../../../shared/inputs/TextField'

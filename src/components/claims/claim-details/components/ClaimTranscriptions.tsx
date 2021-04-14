@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core'
 import { useClaimTranscriptionsQuery } from 'api/generated/graphql'
 
-import * as React from 'react'
+import React from 'react'
 
 import { Paper } from '../../../shared/Paper'
 

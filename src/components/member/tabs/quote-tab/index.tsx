@@ -7,7 +7,7 @@ import {
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
-import * as React from 'react'
+import React from 'react'
 import { Tab } from 'semantic-ui-react'
 import { ContractType, QuoteProductType } from 'types/enums'
 import {

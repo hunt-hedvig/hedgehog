@@ -22,7 +22,7 @@ import {
 } from 'graphql/use-update-claim-state'
 import { Loadable } from 'hedvig-ui/loadable'
 import { Paragraph } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 import { currentAgreementForContract } from 'utils/contract'
 import { sleep } from 'utils/sleep'
 import { convertEnumToTitle } from 'utils/text'
