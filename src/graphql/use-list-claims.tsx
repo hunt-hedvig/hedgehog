@@ -1,6 +1,6 @@
 import {
+  ListClaimsLazyQueryHookResult,
   ListClaimsOptions,
-  ListClaimsQueryHookResult,
   ListClaimsResult,
   useListClaimsLazyQuery,
 } from 'api/generated/graphql'
@@ -8,7 +8,7 @@ import {
 type ListClaimsReturnTuple = [
   ListClaimsResult,
   (options?: ListClaimsOptions) => void,
-  ListClaimsQueryHookResult,
+  ListClaimsLazyQueryHookResult[1],
 ]
 
 export const useListClaims = (): ListClaimsReturnTuple => {

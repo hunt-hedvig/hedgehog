@@ -1,7 +1,7 @@
 import {
   MutationFunction,
-  OperationVariables,
   MutationTuple,
+  OperationVariables,
 } from '@apollo/client'
 import {
   Contract,
