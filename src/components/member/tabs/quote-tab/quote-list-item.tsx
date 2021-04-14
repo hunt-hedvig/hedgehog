@@ -1,12 +1,13 @@
+import styled from '@emotion/styled'
 import { Quote } from 'api/generated/graphql'
 import { UpdateQuoteForm } from 'components/member/tabs/quote-tab/update-quote-form'
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from '@emotion/styled'
-import { connect } from 'react-redux'
-import actions from 'store/actions'
+import { WithShowNotification } from 'store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
+import { withShowNotification } from 'utils/notifications'
 import { getSchemaDataInfo } from 'utils/quote'
 import { convertEnumToTitle } from 'utils/text'
 import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
@@ -61,19 +62,20 @@ const QuoteDetails: React.FC<{
           })
         : '-'}
     </PriceWrapper>
-    {quote.breachedUnderwritingGuidelines?.length ||
-      (0 > 0 && (
-        <DetailWrapper>
-          <BreachedUnderwritingGuidelines>
-            <h3>Important! Member breaches underwriting guidelines</h3>
-            <ul>
-              {quote.breachedUnderwritingGuidelines!.map((guideline) => (
-                <li key={guideline}>{guideline}</li>
-              ))}
-            </ul>
-          </BreachedUnderwritingGuidelines>
-        </DetailWrapper>
-      ))}
+    {(quote.breachedUnderwritingGuidelines?.length || 0) > 0 && (
+      <DetailWrapper>
+        <BreachedUnderwritingGuidelines>
+          <ThirdLevelHeadline>
+            Quote breaches the following underwriting guidelines:
+          </ThirdLevelHeadline>
+          <ul>
+            {quote.breachedUnderwritingGuidelines!.map((guideline) => (
+              <li key={guideline}>{convertEnumToTitle(guideline)}</li>
+            ))}
+          </ul>
+        </BreachedUnderwritingGuidelines>
+      </DetailWrapper>
+    )}
     <DetailWrapper>
       <Muted>
         Created:{' '}
@@ -94,12 +96,16 @@ const QuoteDetails: React.FC<{
   </DetailsWrapper>
 )
 
-export const QuoteListItemComponent: React.FC<{
+const QuoteListItemComponent: React.FC<{
   quote: Quote
   inactionable?: boolean
   memberId: string
-  showNotification?: (data: any) => void
-}> = ({ quote, inactionable, memberId, showNotification }) => {
+} & WithShowNotification> = ({
+  quote,
+  inactionable,
+  memberId,
+  showNotification,
+}) => {
   const [action, setAction] = React.useState<Action | null>(null)
   const [isWip, setIsWip] = React.useState(false)
 
@@ -240,8 +246,4 @@ export const QuoteListItemComponent: React.FC<{
   )
 }
 
-const mapActions = {
-  ...actions.notificationsActions,
-}
-
-export const QuoteListItem = connect(null, mapActions)(QuoteListItemComponent)
+export const QuoteListItem = withShowNotification(QuoteListItemComponent)
