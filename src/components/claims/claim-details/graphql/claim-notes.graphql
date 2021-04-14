@@ -1,0 +1,10 @@
+query ClaimNotes($claimId: ID!) {
+  claim(id: $claimId) {
+    id
+    notes {
+      date
+      handlerReference
+      text
+    }
+  }
+}

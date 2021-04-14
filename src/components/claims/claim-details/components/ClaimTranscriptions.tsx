@@ -4,14 +4,14 @@ import {
   Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
-import { ClaimTranscription as ClaimTranscriptionType } from 'api/generated/graphql'
+import { useClaimTranscriptionsQuery } from 'api/generated/graphql'
 
 import * as React from 'react'
 
 import { Paper } from '../../../shared/Paper'
 
 interface Props {
-  transcriptions: ReadonlyArray<ClaimTranscriptionType>
+  claimId: string
 }
 
 const ListItem = withStyles({
@@ -39,25 +39,37 @@ const ClaimTranscriptionMetaData = withStyles({
   },
 })(MuiTypography)
 
-const ClaimTranscriptions: React.SFC<Props> = ({ transcriptions }) => (
-  <Paper>
-    <h3>Transcription</h3>
-    <MuiList>
-      {transcriptions.map((transcription) => (
-        <ListItem>
-          <ClaimTranscription component="p">
-            {transcription.text}
-          </ClaimTranscription>
-          <MuiList>
-            <ClaimTranscriptionMetaData component="span">
-              Confidence: {transcription.confidenceScore}
-              <br /> Language code: {transcription.languageCode}
-            </ClaimTranscriptionMetaData>
-          </MuiList>
-        </ListItem>
-      ))}
-    </MuiList>
-  </Paper>
-)
+const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
+  const { data: claimTranscriptionsData } = useClaimTranscriptionsQuery({
+    variables: { claimId },
+  })
+
+  if (!claimTranscriptionsData?.claim?.transcriptions.length) {
+    return null
+  }
+
+  return (
+    <Paper>
+      <h3>Transcription</h3>
+      <MuiList>
+        {claimTranscriptionsData?.claim?.transcriptions?.map(
+          (transcription) => (
+            <ListItem key={transcription.text}>
+              <ClaimTranscription component="p">
+                {transcription.text}
+              </ClaimTranscription>
+              <MuiList>
+                <ClaimTranscriptionMetaData component="span">
+                  Confidence: {transcription.confidenceScore}
+                  <br /> Language code: {transcription.languageCode}
+                </ClaimTranscriptionMetaData>
+              </MuiList>
+            </ListItem>
+          ),
+        )}
+      </MuiList>
+    </Paper>
+  )
+}
 
 export { ClaimTranscriptions }

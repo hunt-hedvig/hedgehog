@@ -46,7 +46,7 @@ export const isDanishMarket = (
 }
 
 export const currentAgreementForContract = (
-  contract: Contract,
+  contract: Pick<Contract, 'genericAgreements' | 'currentAgreementId'>,
 ): GenericAgreement | undefined => {
   return contract.genericAgreements.find(
     (agreement) => agreement.id === contract.currentAgreementId,
@@ -65,7 +65,7 @@ export const getContractByAgreementId = (
 }
 
 export const getFirstMasterInception = (
-  contracts: ReadonlyArray<Contract>,
+  contracts: ReadonlyArray<Pick<Contract, 'masterInception'>>,
 ): string | null => {
   const masterInceptions = contracts
     .filter((contract) => !!contract.masterInception)
@@ -77,7 +77,7 @@ export const getFirstMasterInception = (
 }
 
 export const getLastTerminationDate = (
-  contracts: ReadonlyArray<Contract>,
+  contracts: ReadonlyArray<Pick<Contract, 'isTerminated' | 'terminationDate'>>,
 ): string | null => {
   if (contracts.length === 0) {
     return null

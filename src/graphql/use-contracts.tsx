@@ -1,6 +1,8 @@
-import { MutationFunction } from '@apollo/react-common'
-import { OperationVariables } from '@apollo/react-common/lib/types/types'
-import { MutationTuple } from '@apollo/react-hooks'
+import {
+  MutationFunction,
+  OperationVariables,
+  MutationTuple,
+} from '@apollo/client'
 import {
   Contract,
   GetContractsQueryHookResult,

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   Table as MuiTable,
   TableBody as MuiTableBody,
@@ -6,30 +7,25 @@ import {
   TableRow as MuiTableRow,
   withStyles,
 } from '@material-ui/core'
-import { Claim, Identity, SanctionStatus } from 'api/generated/graphql'
+import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
+import { Spinner } from 'hedvig-ui/sipnner'
 
 import React from 'react'
 import { Market } from 'types/enums'
-
-import styled from '@emotion/styled'
-import { MonetaryAmount } from '../../../../lib/helpers'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
 
 interface Props {
-  payments: NonNullable<Claim['payments']>
   claimId: string
-  reserves: MonetaryAmount
-  sanctionStatus: SanctionStatus
-  refetchPage: () => Promise<any>
-  identity: Identity | null
-  market: string | null
-  carrier: string | null
 }
 
+const ScrollX = styled.div`
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+`
 const PaymentTable = withStyles({
   root: {
     marginTop: '1rem',
@@ -46,16 +42,18 @@ const TotalCell = styled(MuiTableCell)`
   font-size: 1.1rem;
 `
 
-const ClaimPayments: React.FC<Props> = ({
-  payments,
-  claimId,
-  reserves,
-  sanctionStatus,
-  refetchPage,
-  identity,
-  market,
-  carrier,
-}) => {
+const ClaimPayments: React.FC<Props> = ({ claimId }) => {
+  const {
+    data: paymentsData,
+    refetch: refetchPayments,
+    loading: loadingPayments,
+  } = useClaimPaymentsQuery({
+    variables: { claimId },
+  })
+
+  const payments = paymentsData?.claim?.payments ?? []
+  const identity = paymentsData?.claim?.member?.identity
+
   const totalAmount = payments
     .map((payment) => +payment?.amount?.amount)
     .reduce((acc, amount) => acc + amount, 0)
@@ -66,7 +64,7 @@ const ClaimPayments: React.FC<Props> = ({
   return (
     <Paper>
       <h3>Payments</h3>
-      {market === Market.Norway && (
+      {paymentsData?.claim?.contract?.market === Market.Norway && (
         <p>
           <strong>Identified: {identity ? <Checkmark /> : <Cross />}</strong>
           <br />
@@ -84,84 +82,87 @@ const ClaimPayments: React.FC<Props> = ({
           )}
         </p>
       )}
+
       <ClaimReserves
         claimId={claimId}
-        reserves={reserves}
-        refetchPage={refetchPage}
+        reserves={paymentsData?.claim?.reserves}
+        refetch={refetchPayments}
+        loading={loadingPayments}
       />
 
-      <PaymentTable>
-        <MuiTableHead>
-          <MuiTableRow>
-            <PaymentTableCell>Id</PaymentTableCell>
-            <PaymentTableCell>Amount</PaymentTableCell>
-            <PaymentTableCell>Deductible</PaymentTableCell>
-            <PaymentTableCell>Note</PaymentTableCell>
-            <PaymentTableCell>Date</PaymentTableCell>
-            <PaymentTableCell>Ex Gratia</PaymentTableCell>
-            <PaymentTableCell>Type</PaymentTableCell>
-            <PaymentTableCell>Status</PaymentTableCell>
-          </MuiTableRow>
-        </MuiTableHead>
-        <MuiTableBody>
-          {payments.map((payment) => (
-            <MuiTableRow
-              key={
-                payment!.amount.amount +
-                payment!.amount.currency +
-                payment!.timestamp
-              }
-            >
-              <PaymentTableCell>{payment!.id}</PaymentTableCell>
-              <PaymentTableCell>
-                {payment!.amount.amount}&nbsp;{payment!.amount.currency}
-              </PaymentTableCell>
-              <PaymentTableCell>
-                {payment!.deductible.amount}&nbsp;{payment!.deductible.currency}
-              </PaymentTableCell>
-              <PaymentTableCell>{payment!.note}</PaymentTableCell>
-              <PaymentTableCell>
-                {format(parseISO(payment!.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-              </PaymentTableCell>
-              <PaymentTableCell>
-                {payment!.exGratia ? <Checkmark /> : <Cross />}
-              </PaymentTableCell>
-              <PaymentTableCell>{payment!.type}</PaymentTableCell>
-              <PaymentTableCell>{payment!.status}</PaymentTableCell>
+      <ScrollX>
+        {loadingPayments && <Spinner />}
+        <PaymentTable>
+          <MuiTableHead>
+            <MuiTableRow>
+              <PaymentTableCell>Id</PaymentTableCell>
+              <PaymentTableCell>Amount</PaymentTableCell>
+              <PaymentTableCell>Deductible</PaymentTableCell>
+              <PaymentTableCell>Note</PaymentTableCell>
+              <PaymentTableCell>Date</PaymentTableCell>
+              <PaymentTableCell>Ex Gratia</PaymentTableCell>
+              <PaymentTableCell>Type</PaymentTableCell>
+              <PaymentTableCell>Status</PaymentTableCell>
             </MuiTableRow>
-          ))}
-          {totalAmount > 0 && (
-            <>
-              <MuiTableRow>
-                <TotalCell>
-                  <b>Amount Total: </b>
-                </TotalCell>
-                <TotalCell align="right">
-                  {totalAmount.toFixed(2)}&nbsp;{payments[0]!.amount.currency}
-                </TotalCell>
+          </MuiTableHead>
+          <MuiTableBody>
+            {payments.map((payment) => (
+              <MuiTableRow key={payment.id}>
+                <PaymentTableCell>{payment.id}</PaymentTableCell>
+                <PaymentTableCell>
+                  {payment.amount.amount}&nbsp;{payment.amount.currency}
+                </PaymentTableCell>
+                <PaymentTableCell>
+                  {payment.deductible.amount}&nbsp;
+                  {payment.deductible.currency}
+                </PaymentTableCell>
+                <PaymentTableCell>{payment.note}</PaymentTableCell>
+                <PaymentTableCell>
+                  {format(parseISO(payment.timestamp), 'yyyy-MM-dd HH:mm:ss')}
+                </PaymentTableCell>
+                <PaymentTableCell>
+                  {payment.exGratia ? <Checkmark /> : <Cross />}
+                </PaymentTableCell>
+                <PaymentTableCell>{payment.type}</PaymentTableCell>
+                <PaymentTableCell>{payment.status}</PaymentTableCell>
               </MuiTableRow>
-              <MuiTableRow>
-                <TotalCell>
-                  <b>Deductible Total: </b>
-                </TotalCell>
-                <TotalCell align="right">
-                  {totalDeductible.toFixed(2)}&nbsp;
-                  {payments[0]!.deductible.currency}
-                </TotalCell>
-              </MuiTableRow>
-            </>
-          )}
-        </MuiTableBody>
-      </PaymentTable>
+            ))}
+            {totalAmount > 0 && (
+              <>
+                <MuiTableRow>
+                  <TotalCell>
+                    <b>Amount Total: </b>
+                  </TotalCell>
+                  <TotalCell align="right">
+                    {totalAmount.toFixed(2)}&nbsp;
+                    {payments[0]!.amount.currency}
+                  </TotalCell>
+                </MuiTableRow>
+                <MuiTableRow>
+                  <TotalCell>
+                    <b>Deductible Total: </b>
+                  </TotalCell>
+                  <TotalCell align="right">
+                    {totalDeductible.toFixed(2)}&nbsp;
+                    {payments[0]!.deductible.currency}
+                  </TotalCell>
+                </MuiTableRow>
+              </>
+            )}
+          </MuiTableBody>
+        </PaymentTable>
+      </ScrollX>
 
-      <ClaimPayment
-        sanctionStatus={sanctionStatus}
-        claimId={claimId}
-        refetchPage={refetchPage}
-        identified={!!identity}
-        market={market}
-        carrier={carrier}
-      />
+      {paymentsData?.claim && (
+        <ClaimPayment
+          sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
+          claimId={claimId}
+          refetch={refetchPayments}
+          identified={Boolean(identity)}
+          market={paymentsData?.claim?.contract?.market}
+          carrier={paymentsData?.claim?.agreement?.carrier}
+        />
+      )}
     </Paper>
   )
 }

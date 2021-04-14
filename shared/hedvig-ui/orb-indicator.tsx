@@ -8,7 +8,7 @@ const IconStyled = styled(Icon)(() => ({
   paddingLeft: '4px',
 }))
 
-const Container = styled('p')(() => ({
+const Container = styled('span')(() => ({
   marginTop: '-7px',
   display: 'inline',
 }))

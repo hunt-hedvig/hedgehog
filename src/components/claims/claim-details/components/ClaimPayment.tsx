@@ -13,7 +13,7 @@ import gql from 'graphql-tag'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Paragraph } from 'hedvig-ui/typography'
 import * as React from 'react'
-import { Mutation } from 'react-apollo'
+import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
 import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
@@ -50,12 +50,12 @@ const CREATE_PAYMENT_MUTATION = gql`
 `
 
 interface Props {
-  sanctionStatus: SanctionStatus
+  sanctionStatus?: SanctionStatus | null
   claimId: string
-  refetchPage: () => Promise<any>
+  refetch: () => Promise<any>
   identified: boolean
-  market: string | null
-  carrier: string | null
+  market?: string | null
+  carrier?: string | null
 }
 
 interface State {
@@ -134,10 +134,10 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
       .required(),
   })
 
-export const ClaimPayment: React.SFC<Props> = ({
+export const ClaimPayment: React.FC<Props> = ({
   sanctionStatus,
   claimId,
-  refetchPage,
+  refetch,
   identified,
   market,
   carrier,
@@ -155,7 +155,8 @@ export const ClaimPayment: React.SFC<Props> = ({
   }
 
   const isPotentiallySanctioned =
-    sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
+    sanctionStatus === SanctionStatus.Undetermined ||
+    sanctionStatus === SanctionStatus.PartialHit
 
   return (
     <Container<State, Actions>
@@ -271,7 +272,7 @@ export const ClaimPayment: React.SFC<Props> = ({
                       onSubmit={async (graphqlArgs) => {
                         await createPayment(graphqlArgs)
                         await sleep(1000)
-                        await refetchPage()
+                        await refetch()
                       }}
                       payment={initiatedPayment}
                       claimId={claimId}

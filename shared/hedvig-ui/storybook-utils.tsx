@@ -8,6 +8,7 @@ const ThemeWrapper = styled.div`
   min-height: 100%;
   width: 100%;
   background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.foreground};
 `
 
 export const withTheme = (story: () => React.ReactElement) => (

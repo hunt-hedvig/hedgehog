@@ -1,0 +1,11 @@
+mutation SetClaimFileCategory(
+  $claimId: ID!
+  $claimFileId: ID!
+  $category: String
+) {
+  setClaimFileCategory(
+    claimId: $claimId
+    claimFileId: $claimFileId
+    category: $category
+  )
+}

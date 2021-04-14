@@ -1,15 +1,12 @@
+import styled from '@emotion/styled'
 import Grid from '@material-ui/core/Grid'
-import { ClaimNote, ClaimTranscription, QueryType } from 'api/generated/graphql'
+import { useClaimReservesQuery } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
-import React from 'react'
-import { Query } from 'react-apollo'
-import { Mount } from 'react-lifecycle-components/dist'
+import React, { useContext, useEffect } from 'react'
 import { Prompt } from 'react-router'
 import { MemberHistoryContext } from 'utils/member-history'
-// @ts-ignore
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimFileTable } from './components/ClaimFileTable'
 import { ClaimInformation } from './components/ClaimInformation'
@@ -17,9 +14,13 @@ import { ClaimNotes } from './components/ClaimNotes'
 import { ClaimPayments } from './components/ClaimPayments'
 import { ClaimTranscriptions } from './components/ClaimTranscriptions'
 import { ClaimTypeForm } from './components/ClaimType'
-import { FileUpload } from './components/FileUpload'
 import { MemberInformation } from './components/MemberInformation'
-import { CLAIM_PAGE_QUERY } from './data'
+
+const GridWithChatPaneAdjustment = styled(Grid)`
+  @media (min-width: 1400px) {
+    max-width: calc(100% - 400px);
+  }
+`
 
 interface Props {
   match: {
@@ -30,153 +31,65 @@ interface Props {
   }
 }
 
-const ClaimPage: React.FC<Props> = ({ ...props }) => (
-  <MemberHistoryContext.Consumer>
-    {({ pushToMemberHistory }) => (
-      <Mount on={() => pushToMemberHistory(props.match.params.memberId)}>
-        <>
-          <ChatPane memberId={props.match.params.memberId} />
-          <Query<Pick<QueryType, 'claim'>>
-            query={CLAIM_PAGE_QUERY}
-            variables={{ id: props.match.params.claimId }}
-            fetchPolicy="no-cache"
-          >
-            {({ loading, error, data, refetch }) => {
-              if (loading) {
-                return <LoadingMessage paddingTop="25vh" />
-              }
+const ClaimPage: React.FC<Props> = ({ ...props }) => {
+  const { memberId, claimId } = props.match.params
 
-              const {
-                member,
-                recordingUrl,
-                registrationDate,
-                state,
-                notes,
-                transcriptions,
-                events,
-                payments,
-                reserves,
-                type,
-                coveringEmployee,
-                claimFiles,
-                contract,
-                agreement,
-              } = data?.claim || {}
+  const { pushToMemberHistory } = useContext(MemberHistoryContext)
 
-              return (
-                <FadeIn>
-                  <Grid container spacing={8}>
-                    <Prompt
-                      when={Boolean(data?.claim) && !reserves}
-                      message="This claim has no reserves, do you want leave it it without?"
-                    />
-                    {error && (
-                      <Grid item xs={12}>
-                        <div>
-                          Error: <pre>{JSON.stringify(error, null, 2)}</pre>
-                        </div>
-                      </Grid>
-                    )}
+  const { data: claimReservesData } = useClaimReservesQuery({
+    variables: { claimId },
+  })
+  useEffect(() => {
+    pushToMemberHistory(memberId)
+  }, [memberId])
 
-                    <Grid item xs={12} sm={12} md={4}>
-                      {member && (
-                        <MemberInformation
-                          member={member}
-                          contract={contract ?? null}
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                      {member && (
-                        <ClaimInformation
-                          recordingUrl={recordingUrl!}
-                          registrationDate={registrationDate}
-                          state={state!}
-                          claimId={props.match.params.claimId}
-                          coveringEmployee={coveringEmployee!}
-                          memberId={props.match.params.memberId}
-                          refetchPage={refetch}
-                          contracts={member.contracts}
-                          selectedContract={contract ?? null}
-                          selectedAgreement={agreement ?? null}
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                      <ClaimTypeForm
-                        type={type}
-                        claimId={props.match.params.claimId}
-                        refetchPage={refetch}
-                        contract={contract}
-                        agreement={agreement}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      {transcriptions && transcriptions.length > 0 && (
-                        <ClaimTranscriptions
-                          transcriptions={
-                            transcriptions as ClaimTranscription[]
-                          }
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={12}>
-                      {notes && (
-                        <ClaimNotes
-                          notes={(notes.filter(Boolean) as ClaimNote[]) ?? []}
-                          claimId={props.match.params.claimId}
-                          refetchPage={refetch}
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={12}>
-                      <ClaimItems
-                        claimId={props.match.params.claimId}
-                        memberId={member?.memberId ?? null}
-                        contract={contract}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      {payments && member && (
-                        <ClaimPayments
-                          payments={payments ?? []}
-                          claimId={props.match.params.claimId}
-                          reserves={reserves}
-                          sanctionStatus={member.sanctionStatus!}
-                          refetchPage={refetch}
-                          identity={member.identity ?? null}
-                          market={member.contractMarketInfo?.market ?? null}
-                          carrier={agreement?.carrier ?? null}
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={12}>
-                      {member && (
-                        <FileUpload
-                          claimId={props.match.params.claimId}
-                          memberId={member.memberId}
-                          onUploaded={() => refetch()}
-                        />
-                      )}
-                      {claimFiles && (
-                        <ClaimFileTable
-                          claimFiles={claimFiles ?? []}
-                          claimId={props.match.params.claimId}
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={12}>
-                      {events && <ClaimEvents events={events ?? []} />}
-                    </Grid>
-                  </Grid>
-                </FadeIn>
-              )
-            }}
-          </Query>
-        </>
-      </Mount>
-    )}
-  </MemberHistoryContext.Consumer>
-)
+  return (
+    <>
+      <ChatPane memberId={props.match.params.memberId} />
+      <FadeIn>
+        <GridWithChatPaneAdjustment container spacing={8}>
+          <Prompt
+            when={
+              Boolean(claimReservesData?.claim) &&
+              !claimReservesData?.claim?.reserves
+            }
+            message="This claim has no reserves, do you want leave it it without?"
+          />
+
+          <Grid item xs={12} sm={12} md={4}>
+            <MemberInformation claimId={claimId} memberId={memberId} />
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <ClaimInformation claimId={claimId} memberId={memberId} />
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <ClaimTypeForm claimId={claimId} memberId={memberId} />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimTranscriptions claimId={claimId} />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimNotes claimId={claimId} />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimItems
+              claimId={props.match.params.claimId}
+              memberId={memberId}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimPayments claimId={claimId} />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimFileTable claimId={claimId} memberId={memberId} />
+          </Grid>
+          <Grid item xs={12}>
+            <ClaimEvents claimId={claimId} />
+          </Grid>
+        </GridWithChatPaneAdjustment>
+      </FadeIn>
+    </>
+  )
+}
 
 export default ClaimPage

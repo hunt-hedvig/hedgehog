@@ -3,13 +3,14 @@ import {
   ListItem as MuiListItem,
   withStyles,
 } from '@material-ui/core'
-import { Claim } from 'api/generated/graphql'
+import { useClaimEventsQuery } from 'api/generated/graphql'
 import { Paper } from 'components/shared/Paper'
 import { format, parseISO } from 'date-fns'
+import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
 
 interface Props {
-  events: NonNullable<Claim['events']>
+  claimId: string
 }
 
 const ListItem = withStyles({
@@ -20,15 +21,26 @@ const ListItem = withStyles({
   },
 })(MuiListItem)
 
-export const ClaimEvents: React.SFC<Props> = ({ events }) => (
-  <Paper>
-    <h3>Events</h3>
-    <MuiList>
-      {events.filter(Boolean).map((event) => (
-        <ListItem key={event!.date}>
-          {format(parseISO(event!.date), 'yyyy-MM-dd HH:mm:ss')}: {event!.text}
-        </ListItem>
-      ))}
-    </MuiList>
-  </Paper>
-)
+export const ClaimEvents: React.FC<Props> = ({ claimId }) => {
+  const {
+    data: claimEventsData,
+    loading: loadingClaimEvents,
+  } = useClaimEventsQuery({
+    variables: { claimId },
+  })
+
+  return (
+    <Paper>
+      <h3>Events</h3>
+
+      {loadingClaimEvents && <Spinner />}
+      <MuiList>
+        {claimEventsData?.claim?.events.filter(Boolean).map((event) => (
+          <ListItem key={event.date}>
+            {format(parseISO(event.date), 'yyyy-MM-dd HH:mm:ss')}: {event.text}
+          </ListItem>
+        ))}
+      </MuiList>
+    </Paper>
+  )
+}

@@ -1,29 +1,15 @@
-import { Button as MuiButton, withStyles } from '@material-ui/core'
-import { Field, Form, Formik } from 'formik'
-import gql from 'graphql-tag'
-import * as React from 'react'
-import { Mutation } from 'react-apollo'
 import styled from '@emotion/styled'
-import { sleep } from 'utils/sleep'
+import { Button as MuiButton, withStyles } from '@material-ui/core'
+import { useUpdateReserveMutation } from 'api/generated/graphql'
+import { Field, Form, Formik } from 'formik'
+import * as React from 'react'
 import * as yup from 'yup'
 
 import { TextField } from '../../../shared/inputs/TextField'
 
-const UPDATE_RESERVE_MUTATION = gql`
-  mutation UpdateReserve($id: ID!, $amount: MonetaryAmount!) {
-    updateReserve(id: $id, amount: $amount) {
-      reserves
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-
 interface Props {
   claimId: string
-  refetchPage: () => Promise<any>
+  refetch: () => Promise<any>
 }
 
 interface ReserveFormData {
@@ -42,54 +28,45 @@ const SubmitButton = withStyles({
   },
 })(MuiButton)
 
-const ClaimReserveForm: React.SFC<Props> = ({ claimId, refetchPage }) => (
-  <Mutation
-    mutation={UPDATE_RESERVE_MUTATION}
-    onError={(error) => {
-      console.error(error)
-      console.error('GraphQL error when trying to update the reserve')
-    }}
-  >
-    {(updateReserve) => (
-      <Formik<ReserveFormData>
-        initialValues={{ amount: 0 }}
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
-          await updateReserve({
-            variables: {
-              id: claimId,
-              amount: {
-                amount: +values.amount,
-                currency: 'SEK',
-              },
+const ClaimReserveForm: React.FC<Props> = ({ claimId }) => {
+  const [updateReserve] = useUpdateReserveMutation()
+
+  return (
+    <Formik<ReserveFormData>
+      initialValues={{ amount: 0 }}
+      onSubmit={async (values, { resetForm }) => {
+        await updateReserve({
+          variables: {
+            claimId,
+            amount: {
+              amount: +values.amount,
+              currency: 'SEK',
             },
-          })
-          await sleep(1000)
-          await refetchPage()
-          setSubmitting(false)
-          resetForm()
-        }}
-        validationSchema={validationSchema}
-      >
-        {({ isValid, isSubmitting }) => (
-          <ReserveForm>
-            <Field
-              component={TextField}
-              placeholder={'Reserve amount'}
-              name="amount"
-            />
-            <SubmitButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={!isValid || isSubmitting}
-            >
-              Update Reserve
-            </SubmitButton>
-          </ReserveForm>
-        )}
-      </Formik>
-    )}
-  </Mutation>
-)
+          },
+        })
+        resetForm()
+      }}
+      validationSchema={validationSchema}
+    >
+      {({ isValid, isSubmitting }) => (
+        <ReserveForm>
+          <Field
+            component={TextField}
+            placeholder={'Reserve amount'}
+            name="amount"
+          />
+          <SubmitButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={!isValid || isSubmitting}
+          >
+            Update Reserve
+          </SubmitButton>
+        </ReserveForm>
+      )}
+    </Formik>
+  )
+}
 
 export { ClaimReserveForm }

@@ -6,7 +6,7 @@ import {
 } from 'hedvig-ui/animations/standalone-message'
 import { dateTimeFormatter } from 'lib/helpers'
 import React from 'react'
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 import { RouteComponentProps } from 'react-router'
 import { Image, Table } from 'semantic-ui-react'
 

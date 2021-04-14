@@ -1,8 +1,8 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import styled from '@emotion/styled'
-import { connect } from 'react-redux'
-import actions from 'store/actions'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
 const UploadClaimFileWrapper = styled('div')({
   padding: '4rem',
@@ -43,57 +43,33 @@ const FileUploadContainer = styled('div')({
   padding: '2rem',
 })
 
-class FileUploadComponent extends React.Component<{
+const FileUploadComponent: React.FC<WithShowNotification & {
   claimId: string
   memberId: string
-  showNotification: (data: any) => void
-  onUploaded: () => void
-}> {
-  public render() {
-    return (
-      <>
-        <UploadClaimFileWrapper>
-          <UploadClaimFileHeader>Upload files here</UploadClaimFileHeader>
-          <FileUploadContainer>
-            <Dropzone onDrop={this.onDrop}>
-              {({ getRootProps, getInputProps, isDragActive }) => (
-                // @ts-ignore
-                <Button {...getRootProps()}>
-                  <input {...getInputProps()} />
-                  {isDragActive
-                    ? 'Drop files here to upload them'
-                    : 'Click here or drag files to upload'}
-                </Button>
-              )}
-            </Dropzone>
-          </FileUploadContainer>
-        </UploadClaimFileWrapper>
-      </>
-    )
-  }
-
-  private onDrop = (acceptedFiles) => {
+  onUpload: () => void
+}> = ({ claimId, memberId, onUpload, showNotification }) => {
+  const handleDrop = (acceptedFiles: ReadonlyArray<File>) => {
     const claimFiles = new FormData()
 
     for (const file of acceptedFiles) {
       claimFiles.append('files', file)
     }
-    claimFiles.append('memberId', this.props.memberId)
+    claimFiles.append('memberId', memberId)
 
-    fetch(`/api/claims/${this.props.claimId}/claimFiles`, {
+    fetch(`/api/claims/${claimId}/claimFiles`, {
       method: 'POST',
       body: claimFiles,
     })
       .then(() => {
-        this.props.showNotification({
+        showNotification({
           message: 'Upload successful!',
           header: 'Approved',
           type: 'olive',
         })
-        this.props.onUploaded()
+        onUpload()
       })
       .catch((error) => {
-        this.props.showNotification({
+        showNotification({
           message: error.message,
           header: 'Error',
           type: 'red',
@@ -101,8 +77,25 @@ class FileUploadComponent extends React.Component<{
         throw error
       })
   }
+
+  return (
+    <UploadClaimFileWrapper>
+      <UploadClaimFileHeader>Upload files here</UploadClaimFileHeader>
+      <FileUploadContainer>
+        <Dropzone onDrop={handleDrop}>
+          {({ getRootProps, getInputProps, isDragActive }) => (
+            // @ts-ignore
+            <Button {...getRootProps()}>
+              <input {...getInputProps()} />
+              {isDragActive
+                ? 'Drop files here to upload them'
+                : 'Click here or drag files to upload'}
+            </Button>
+          )}
+        </Dropzone>
+      </FileUploadContainer>
+    </UploadClaimFileWrapper>
+  )
 }
 
-const mapActions = { ...actions.notificationsActions }
-
-export const FileUpload = connect(null, mapActions)(FileUploadComponent)
+export const FileUpload = withShowNotification(FileUploadComponent)

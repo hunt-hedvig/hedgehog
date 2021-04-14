@@ -6,36 +6,22 @@ import {
   Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
-import { ClaimNote as ClaimNoteType } from 'api/generated/graphql'
+import {
+  ClaimNote as ClaimNoteType,
+  useClaimAddClaimNoteMutation,
+  useClaimNotesQuery,
+} from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
-import gql from 'graphql-tag'
+import { Spinner } from 'hedvig-ui/sipnner'
 import * as React from 'react'
-import { Mutation } from 'react-apollo'
 import { sleep } from 'utils/sleep'
 
 import { Paper } from '../../../shared/Paper'
 
-const ADD_CLAIM_NOTE_MUTATION = gql`
-  mutation AddClaimNote($id: ID!, $note: ClaimNoteInput!) {
-    addClaimNote(id: $id, note: $note) {
-      notes {
-        text
-        date
-      }
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-
 interface Props {
-  notes: ReadonlyArray<ClaimNoteType>
   claimId: string
-  refetchPage: () => Promise<any>
 }
 
 const TextArea: React.SFC<FieldProps<string>> = ({
@@ -89,61 +75,70 @@ const SubmitButton = withStyles({
   },
 })(MuiButton)
 
-const ClaimNotes: React.FC<Props> = ({ notes, claimId, refetchPage }) => (
-  <Mutation mutation={ADD_CLAIM_NOTE_MUTATION}>
-    {(addClaimNote) => (
-      <Paper>
-        <h3>Notes</h3>
-        <MuiList>
-          {sortNotesByDate(notes).map((note) => (
-            <ListItem key={note.date}>
-              <ClaimNote component="p">{note.text}</ClaimNote>
-              <ClaimNoteFooter component="span">
-                {note.handlerReference && (
-                  <>
-                    {note.handlerReference}
-                    <br />
-                  </>
-                )}
-                {format(parseISO(note.date), 'yyyy-MM-dd HH:mm:ss')}
-              </ClaimNoteFooter>
-            </ListItem>
-          ))}
-        </MuiList>
-        <Formik<{ text: string }>
-          initialValues={{ text: '' }}
-          onSubmit={async (values, { setSubmitting, resetForm }) => {
-            setSubmitting(true)
-            await addClaimNote({
-              variables: { id: claimId, note: { text: values.text } },
-            })
-            await sleep(1000)
-            await refetchPage()
-            setSubmitting(false)
-            resetForm()
-          }}
-        >
-          {({ isValid, isSubmitting }) => (
-            <Form>
-              <Field
-                component={TextArea}
-                placeholder="Type note content here"
-                name="text"
-              />
-              <SubmitButton
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={!isValid || isSubmitting}
-              >
-                Add note
-              </SubmitButton>
-            </Form>
-          )}
-        </Formik>
-      </Paper>
-    )}
-  </Mutation>
-)
+const ClaimNotes: React.FC<Props> = ({ claimId }) => {
+  const {
+    data: claimNotesData,
+    refetch: refetchClaimNotes,
+    loading: loadingClaimNotes,
+  } = useClaimNotesQuery({
+    variables: { claimId },
+  })
+  const notes = claimNotesData?.claim?.notes ?? []
+  const [addClaimNote] = useClaimAddClaimNoteMutation()
+
+  return (
+    <Paper>
+      <h3>Notes</h3>
+      {loadingClaimNotes && <Spinner />}
+      <MuiList>
+        {sortNotesByDate(notes).map((note) => (
+          <ListItem key={note.date + note.handlerReference}>
+            <ClaimNote component="p">{note.text}</ClaimNote>
+            <ClaimNoteFooter component="span">
+              {note.handlerReference && (
+                <>
+                  {note.handlerReference}
+                  <br />
+                </>
+              )}
+              {format(parseISO(note.date), 'yyyy-MM-dd HH:mm:ss')}
+            </ClaimNoteFooter>
+          </ListItem>
+        ))}
+      </MuiList>
+      <Formik<{ text: string }>
+        initialValues={{ text: '' }}
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          setSubmitting(true)
+          await addClaimNote({
+            variables: { claimId, note: { text: values.text } },
+          })
+          await sleep(1000)
+          await refetchClaimNotes()
+          setSubmitting(false)
+          resetForm()
+        }}
+      >
+        {({ isValid, isSubmitting }) => (
+          <Form>
+            <Field
+              component={TextArea}
+              placeholder="Type note content here"
+              name="text"
+            />
+            <SubmitButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!isValid || isSubmitting}
+            >
+              Add note {isSubmitting && <Spinner push="left" />}
+            </SubmitButton>
+          </Form>
+        )}
+      </Formik>
+    </Paper>
+  )
+}
 
 export { ClaimNotes }

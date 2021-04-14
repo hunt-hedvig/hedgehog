@@ -1,16 +1,13 @@
+import styled from '@emotion/styled'
 import {
   InputLabel as MuiInputLabel,
   MenuItem as MuiMenuItem,
   Select as MuiSelect,
 } from '@material-ui/core'
-import { ClaimState, Contract, GenericAgreement } from 'api/generated/graphql'
-import { format, parseISO } from 'date-fns'
-import { Paragraph } from 'hedvig-ui/typography'
-import * as React from 'react'
-import styled from '@emotion/styled'
-import { sleep } from 'utils/sleep'
+import { ClaimState, useClaimInformationQuery } from 'api/generated/graphql'
 
 import { Paper } from 'components/shared/Paper'
+import { format, parseISO } from 'date-fns'
 import {
   setContractForClaimOptions,
   useSetContractForClaim,
@@ -23,20 +20,16 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
+import { Loadable } from 'hedvig-ui/loadable'
+import { Paragraph } from 'hedvig-ui/typography'
+import * as React from 'react'
 import { currentAgreementForContract } from 'utils/contract'
+import { sleep } from 'utils/sleep'
 import { convertEnumToTitle } from 'utils/text'
 
 interface Props {
-  recordingUrl: string | null
-  registrationDate: string
-  state: ClaimState
   claimId: string
-  coveringEmployee: boolean
   memberId: string
-  refetchPage: () => Promise<any>
-  selectedContract: Contract | null
-  contracts: ReadonlyArray<Contract>
-  selectedAgreement: GenericAgreement | null
 }
 
 const validateSelectOption = (
@@ -74,152 +67,160 @@ const SelectWrapper = styled('div')({
   marginTop: '1rem',
 })
 
-const ClaimInformation: React.FC<Props> = ({
-  recordingUrl,
-  registrationDate,
-  state,
-  claimId,
-  coveringEmployee,
-  memberId,
-  refetchPage,
-  selectedContract,
-  contracts,
-  selectedAgreement,
-}) => {
+const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
+  const {
+    data,
+    refetch: refetchClaimInformation,
+    loading: claimInformationLoading,
+  } = useClaimInformationQuery({
+    variables: { claimId, memberId },
+  })
+
+  const {
+    registrationDate,
+    recordingUrl,
+    coveringEmployee,
+    state,
+    contract: selectedContract,
+    agreement: selectedAgreement,
+  } = data?.claim ?? {}
+  const contracts = data?.member?.contracts
+
   const [setContractForClaim] = useSetContractForClaim()
   const [setCoveringEmployee] = useSetCoveringEmployee()
   const [updateClaimState] = useUpdateClaimState()
+
   return (
     <Paper>
       <h3>Claim Information</h3>
-      <div>
-        <p>
-          Registered at:{' '}
-          {format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
-        </p>
-        {recordingUrl && (
-          <>
-            <Audio controls>
-              <source src={recordingUrl} type="audio/aac" />
-            </Audio>
-            <Audio controls>
-              <source
-                src={getUrlWithoutParameters(recordingUrl)}
-                type="audio/aac"
-              />
-            </Audio>
-            <DownloadClaimFile
-              href={recordingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Download claim file
-            </DownloadClaimFile>
-            <DownloadClaimFile
-              href={getUrlWithoutParameters(recordingUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Download claim file
-            </DownloadClaimFile>
-          </>
-        )}
-      </div>
-      <SelectWrapper>
-        <MuiInputLabel shrink>Status</MuiInputLabel>
-        <MuiSelect
-          value={state}
-          onChange={async (event) => {
-            await updateClaimState(
-              updateClaimStateOptions(claimId, validateSelectOption(event)),
-            )
-            await refetchPage()
-          }}
-        >
-          {Object.values(ClaimState).map((s) => (
-            <MuiMenuItem key={s} value={s}>
-              {s}
-            </MuiMenuItem>
-          ))}
-        </MuiSelect>
-      </SelectWrapper>
-      <SelectWrapper>
-        <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
-        <MuiSelect
-          value={coveringEmployee ? 'True' : 'False'}
-          onChange={async (event) => {
-            await setCoveringEmployee(
-              setCoveringEmployeeOptions(
-                claimId,
-                validateSelectEmployeeClaimOption(event),
-              ),
-            )
-            await sleep(1000)
-            await refetchPage()
-          }}
-        >
-          <MuiMenuItem key={'True'} value={'True'}>
-            True
-          </MuiMenuItem>
-          <MuiMenuItem key={'False'} value={'False'}>
-            False
-          </MuiMenuItem>
-        </MuiSelect>
-      </SelectWrapper>
-      {contracts && (
+      <Loadable loading={claimInformationLoading}>
+        <div>
+          <p>
+            Registered at:{' '}
+            {registrationDate &&
+              format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
+          </p>
+          {recordingUrl && (
+            <>
+              <Audio controls>
+                <source src={recordingUrl} type="audio/aac" />
+              </Audio>
+              <Audio controls>
+                <source
+                  src={getUrlWithoutParameters(recordingUrl)}
+                  type="audio/aac"
+                />
+              </Audio>
+              <DownloadClaimFile
+                href={recordingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download claim file
+              </DownloadClaimFile>
+              <DownloadClaimFile
+                href={getUrlWithoutParameters(recordingUrl)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download claim file
+              </DownloadClaimFile>
+            </>
+          )}
+        </div>
         <SelectWrapper>
-          <MuiInputLabel shrink error={!selectedContract}>
-            Select Contract for Claim
-          </MuiInputLabel>
-
+          <MuiInputLabel shrink>Status</MuiInputLabel>
           <MuiSelect
-            value={selectedContract?.id ? selectedContract.id : 'none'}
+            value={state}
             onChange={async (event) => {
-              if (event.target.value === 'none') {
-                return
-              }
-              await setContractForClaim(
-                setContractForClaimOptions({
-                  claimId,
-                  memberId,
-                  contractId: event.target.value,
-                }),
+              await updateClaimState(
+                updateClaimStateOptions(claimId, validateSelectOption(event)),
               )
-              await sleep(1000)
-              await refetchPage()
             }}
           >
-            <MuiMenuItem disabled value={'none'} divider>
-              None selected
-            </MuiMenuItem>
-            {contracts.map((contract) => {
-              const address = currentAgreementForContract(contract)?.address
-              return (
-                <MuiMenuItem key={contract.id} value={contract.id}>
-                  {contract.contractTypeName}
-                  {address && <> ({address.street})</>}
-                </MuiMenuItem>
-              )
-            })}
+            {Object.values(ClaimState).map((s) => (
+              <MuiMenuItem key={s} value={s}>
+                {s}
+              </MuiMenuItem>
+            ))}
           </MuiSelect>
         </SelectWrapper>
-      )}
-      {selectedAgreement && (
-        <>
+        <SelectWrapper>
+          <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
+          <MuiSelect
+            value={coveringEmployee ? 'True' : 'False'}
+            onChange={async (event) => {
+              await setCoveringEmployee(
+                setCoveringEmployeeOptions(
+                  claimId,
+                  validateSelectEmployeeClaimOption(event),
+                ),
+              )
+            }}
+          >
+            <MuiMenuItem key={'True'} value={'True'}>
+              True
+            </MuiMenuItem>
+            <MuiMenuItem key={'False'} value={'False'}>
+              False
+            </MuiMenuItem>
+          </MuiSelect>
+        </SelectWrapper>
+        {contracts && (
+          <SelectWrapper>
+            <MuiInputLabel shrink error={!selectedContract}>
+              Select Contract for Claim
+            </MuiInputLabel>
+
+            <MuiSelect
+              value={selectedContract?.id ? selectedContract.id : 'none'}
+              onChange={async (event) => {
+                if (event.target.value === 'none') {
+                  return
+                }
+                await setContractForClaim(
+                  setContractForClaimOptions({
+                    claimId,
+                    memberId,
+                    contractId: event.target.value,
+                  }),
+                )
+                await sleep(250)
+                await refetchClaimInformation()
+              }}
+            >
+              <MuiMenuItem disabled value={'none'} divider>
+                None selected
+              </MuiMenuItem>
+              {contracts.map((contract) => {
+                const address = currentAgreementForContract(contract)?.address
+                return (
+                  <MuiMenuItem key={contract.id} value={contract.id}>
+                    {contract.contractTypeName}
+                    {address && <> ({address.street})</>}
+                  </MuiMenuItem>
+                )
+              })}
+            </MuiSelect>
+          </SelectWrapper>
+        )}
+        {selectedAgreement && (
+          <>
+            <Paragraph>
+              <strong>Carrier:</strong> {selectedAgreement.carrier}
+            </Paragraph>
+            <Paragraph>
+              <strong>Line Of Business:</strong>{' '}
+              {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
+            </Paragraph>
+          </>
+        )}
+        {!selectedAgreement && (
           <Paragraph>
-            <strong>Carrier:</strong> {selectedAgreement.carrier}
+            ⚠️ No agreement covers the claim on the date of loss
           </Paragraph>
-          <Paragraph>
-            <strong>Line Of Business:</strong>{' '}
-            {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
-          </Paragraph>
-        </>
-      )}
-      {!selectedAgreement && (
-        <Paragraph>
-          ⚠️ No agreement covers the claim on the date of loss
-        </Paragraph>
-      )}
+        )}
+      </Loadable>
     </Paper>
   )
 }

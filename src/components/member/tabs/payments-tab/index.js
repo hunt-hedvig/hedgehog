@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import { format, parseISO } from 'date-fns'
 import React from 'react'
-import { Mutation, Query } from 'react-apollo'
+import { Mutation, Query } from '@apollo/client/react/components'
 import { Form, Input, Table } from 'semantic-ui-react'
 import PayoutDetails from 'components/payouts/payout-details'
 import styled from '@emotion/styled'
