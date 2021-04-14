@@ -4,15 +4,15 @@ import {
   useClaimFilesQuery,
   useSetClaimFileCategoryMutation,
 } from 'api/generated/graphql'
-import { FileUpload } from 'components/claims/claim-details/components/FileUpload'
 import { Spinner } from 'hedvig-ui/sipnner'
+import { dateTimeFormatter } from 'lib/helpers'
 import React from 'react'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 import { sleep } from 'utils/sleep'
-import { dateTimeFormatter } from '../../../../lib/helpers'
-import { DeleteButton } from '../components/DeleteClaimFileButton'
+import { DeleteButton } from './DeleteClaimFileButton'
+import { FileUpload } from './FileUpload'
 
 const TableWithOverflow = styled(Table)`
   overflow: visible !important;

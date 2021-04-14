@@ -31,8 +31,8 @@ interface Props {
   }
 }
 
-const ClaimPage: React.FC<Props> = ({ ...props }) => {
-  const { memberId, claimId } = props.match.params
+const ClaimPage: React.FC<Props> = ({ match }) => {
+  const { memberId, claimId } = match.params
 
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
 
@@ -45,7 +45,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => {
 
   return (
     <>
-      <ChatPane memberId={props.match.params.memberId} />
+      <ChatPane memberId={memberId} />
       <FadeIn>
         <GridWithChatPaneAdjustment container spacing={8}>
           <Prompt
@@ -72,10 +72,7 @@ const ClaimPage: React.FC<Props> = ({ ...props }) => {
             <ClaimNotes claimId={claimId} />
           </Grid>
           <Grid item xs={12}>
-            <ClaimItems
-              claimId={props.match.params.claimId}
-              memberId={memberId}
-            />
+            <ClaimItems claimId={claimId} memberId={memberId} />
           </Grid>
           <Grid item xs={12}>
             <ClaimPayments claimId={claimId} />
