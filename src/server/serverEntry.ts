@@ -71,6 +71,8 @@ const logger = loggerFactory.getLogger('app')
 const app = new Koa()
 const router = new Router()
 
+app.proxy = true
+
 if (config.useHelmet) {
   app.use(
     koaHelmet({
