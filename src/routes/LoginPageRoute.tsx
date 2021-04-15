@@ -1,5 +1,5 @@
 import LoginPage from 'containers/LoginPage'
-import * as React from 'react'
+import React from 'react'
 
 const LoginPageRouter = () => <LoginPage />
 

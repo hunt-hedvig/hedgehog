@@ -1,0 +1,10 @@
+query ClaimReserves($claimId: ID!) {
+  claim(id: $claimId) {
+    id
+    reserves
+    events {
+      date
+      text
+    }
+  }
+}

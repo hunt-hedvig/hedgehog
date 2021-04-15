@@ -1,0 +1,51 @@
+query ClaimMemberContractsMasterInception($memberId: ID!) {
+  member(id: $memberId) {
+    memberId
+    signedOn
+    firstName
+    lastName
+    person {
+      debtFlag
+    }
+    personalNumber
+    directDebitStatus {
+      activated
+    }
+    fraudulentStatus
+    sanctionStatus
+    numberFailedCharges {
+      numberFailedCharges
+      lastFailedChargeAt
+    }
+    totalNumberOfClaims
+    account {
+      totalBalance {
+        amount
+        currency
+      }
+    }
+    identity {
+      nationalIdentification {
+        identification
+        nationality
+      }
+      firstName
+      lastName
+    }
+    contractMarketInfo {
+      market
+    }
+    contracts {
+      id
+      contractTypeName
+      masterInception
+      terminationDate
+      isTerminated
+      genericAgreements {
+        address {
+          street
+        }
+      }
+    }
+  }
+}

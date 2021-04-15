@@ -45,7 +45,7 @@ export const Group = styled('div')({
   '*:not(:last-child)': {
     marginRight: '0.5rem',
   },
-  '*:not(:first-child)': {
+  '*:not(:first-of-type)': {
     marginLeft: '0.5rem',
   },
 })

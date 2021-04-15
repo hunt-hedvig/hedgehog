@@ -1,5 +1,5 @@
 import DashboardPage from 'containers/DashboardPage'
-import * as React from 'react'
+import React from 'react'
 
 const DashboardPageRoute = () => <DashboardPage />
 

@@ -13,8 +13,8 @@ generates:
       withComponent: false
       withHooks: true
       gqlImport: 'graphql-tag'
-      apolloReactHooksImportFrom: '@apollo/react-hooks'
-      apolloReactCommonImportFrom: '@apollo/react-common'
+      apolloReactHooksImportFrom: '@apollo/client'
+      apolloReactCommonImportFrom: '@apollo/client'
   ./graphql.schema.json:
     plugins:
       - 'introspection'

@@ -22,7 +22,7 @@ const isEmpty = (s: string | null) => s === '' || s === null
 export const ItemForm: React.FC<{
   claimId: string
   memberId: string | null
-  contract?: Contract | null
+  contract?: Pick<Contract, 'typeOfContract' | 'preferredCurrency'> | null
 }> = ({ claimId, memberId, contract }) => {
   const [selectedItemCategories, setSelectedItemCategories] = React.useState<
     SelectedItemCategory[]

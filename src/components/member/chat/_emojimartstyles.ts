@@ -24,7 +24,7 @@ export const emojiMartStyles = css`
   .emoji-mart-bar {
     border: 0 solid #d9d9d9;
   }
-  .emoji-mart-bar:first-child {
+  .emoji-mart-bar:first-of-type {
     border-bottom-width: 1px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -322,22 +322,22 @@ export const emojiMartStyles = css`
     transition-timing-function: ease-out;
   }
 
-  .emoji-mart-skin-swatch:nth-child(1) {
+  .emoji-mart-skin-swatch:nth-of-type(1) {
     transition-delay: 0s;
   }
-  .emoji-mart-skin-swatch:nth-child(2) {
+  .emoji-mart-skin-swatch:nth-of-type(2) {
     transition-delay: 0.03s;
   }
-  .emoji-mart-skin-swatch:nth-child(3) {
+  .emoji-mart-skin-swatch:nth-of-type(3) {
     transition-delay: 0.06s;
   }
-  .emoji-mart-skin-swatch:nth-child(4) {
+  .emoji-mart-skin-swatch:nth-of-type(4) {
     transition-delay: 0.09s;
   }
-  .emoji-mart-skin-swatch:nth-child(5) {
+  .emoji-mart-skin-swatch:nth-of-type(5) {
     transition-delay: 0.12s;
   }
-  .emoji-mart-skin-swatch:nth-child(6) {
+  .emoji-mart-skin-swatch:nth-of-type(6) {
     transition-delay: 0.15s;
   }
 

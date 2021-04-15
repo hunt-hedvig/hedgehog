@@ -1,3 +1,4 @@
+import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
 import styled from '@emotion/styled'
 import { MonetaryAmount } from '../../../../lib/helpers'
@@ -6,7 +7,8 @@ import { ClaimReserveForm } from './ClaimReserveForm'
 interface Props {
   reserves: MonetaryAmount
   claimId: string
-  refetchPage: () => Promise<any>
+  loading?: boolean
+  refetch: () => Promise<any>
 }
 
 const ReservesWrapper = styled('div')({
@@ -20,10 +22,11 @@ const ReservesTotal = styled('span')({
   fontSize: '1.125rem',
 })
 
-const ClaimReserves: React.SFC<Props> = ({
+const ClaimReserves: React.FC<Props> = ({
   claimId,
   reserves,
-  refetchPage,
+  loading,
+  refetch,
 }) => {
   const reserveAmount = reserves && reserves.amount ? reserves.amount : '0.00'
   const reserveCurrency =
@@ -32,9 +35,10 @@ const ClaimReserves: React.SFC<Props> = ({
   return (
     <ReservesWrapper>
       <ReservesTotal>
+        {loading && <Spinner />}
         {reserveAmountInteger} {reserveCurrency} Reserved
       </ReservesTotal>
-      <ClaimReserveForm claimId={claimId} refetchPage={refetchPage} />
+      <ClaimReserveForm claimId={claimId} refetch={refetch} />
     </ReservesWrapper>
   )
 }

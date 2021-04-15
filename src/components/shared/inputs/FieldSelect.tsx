@@ -1,6 +1,6 @@
 import { Select as MuiSelect } from '@material-ui/core'
 import { FieldProps } from 'formik'
-import * as React from 'react'
+import React from 'react'
 
 export const FieldSelect: React.SFC<FieldProps> = ({
   field: { onChange, onBlur, name, value },

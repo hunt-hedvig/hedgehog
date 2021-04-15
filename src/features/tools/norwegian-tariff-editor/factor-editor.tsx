@@ -1,7 +1,7 @@
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { TextArea } from 'hedvig-ui/text-area'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 
 interface FactorEditorProps {
   factorName: string

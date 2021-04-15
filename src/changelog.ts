@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-04-16',
+    change: 'Speed up the claims tab 🏎',
+    authorGithubHandle: 'palmenhq',
+  },
+  {
     date: '2021-04-09',
     change: 'Automatically store who made a claim note, bye bye initials // JP',
     authorGithubHandle: 'palmenhq',

@@ -1,5 +1,6 @@
 mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
   updateClaimState(id: $id, state: $state) {
+    id
     state
     events {
       text
