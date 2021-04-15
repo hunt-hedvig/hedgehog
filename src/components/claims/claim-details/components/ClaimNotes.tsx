@@ -97,7 +97,7 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
       <MuiList>
         {sortNotesByDate(notes).map((note) => (
           <ListItem key={note.date + note.handlerReference}>
-            <ClaimNote component="p">{note.text}</ClaimNote>
+            <ClaimNote component="pre">{note.text}</ClaimNote>
             <ClaimNoteFooter component="span">
               {note.handlerReference && (
                 <>
