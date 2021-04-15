@@ -21,7 +21,7 @@ import {
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
 import { Loadable } from 'hedvig-ui/loadable'
-import { Paragraph } from 'hedvig-ui/typography'
+import { ErrorText, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import { currentAgreementForContract } from 'utils/contract'
 import { sleep } from 'utils/sleep'
@@ -71,6 +71,7 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   const {
     data,
     refetch: refetchClaimInformation,
+    error: queryError,
     loading: claimInformationLoading,
   } = useClaimInformationQuery({
     variables: { claimId, memberId },
@@ -93,6 +94,8 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   return (
     <Paper>
       <h3>Claim Information</h3>
+      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+
       <Loadable loading={claimInformationLoading}>
         <div>
           <p>

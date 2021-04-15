@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import Grid from '@material-ui/core/Grid'
-import { useClaimReservesQuery } from 'api/generated/graphql'
+import { ClaimState, useClaimReservesQuery } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
@@ -53,8 +53,9 @@ const ClaimPage: React.FC<Props> = ({ match }) => {
         <GridWithChatPaneAdjustment container spacing={8}>
           <Prompt
             when={
-              claimReservesData?.claim?.reserves === null ||
-              claimReservesData?.claim?.reserves === undefined
+              claimReservesData?.claim?.state !== ClaimState.Closed &&
+              (claimReservesData?.claim?.reserves === null ||
+                claimReservesData?.claim?.reserves === undefined)
             }
             message="This claim has no reserves, do you want leave it it without?"
           />

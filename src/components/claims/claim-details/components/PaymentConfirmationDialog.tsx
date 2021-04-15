@@ -16,7 +16,7 @@ import * as yup from 'yup'
 
 interface PaymentConfirmationDialogProps {
   onClose: () => void
-  onSubmit: (claimVariables: object) => void
+  onSubmit: (claimVariables: object) => void | Promise<void>
   payment: PaymentFormData
   claimId: string
   identified: boolean

@@ -15,7 +15,7 @@ import { Field, Form, Formik } from 'formik'
 import { FormikDateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Loadable } from 'hedvig-ui/loadable'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { Paragraph } from 'hedvig-ui/typography'
+import { ErrorText, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
@@ -104,6 +104,7 @@ const ClaimTypeComponent: React.FC<ClaimTypeProps & WithShowNotification> = ({
     data: claimInformationData,
     refetch: refetchClaimInformation,
     loading: loadingClaimInformation,
+    error: queryError,
   } = useClaimInformationQuery({
     variables: { claimId, memberId },
   })
@@ -122,6 +123,9 @@ const ClaimTypeComponent: React.FC<ClaimTypeProps & WithShowNotification> = ({
   return (
     <Paper>
       <h3>Type</h3>
+
+      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+
       <Loadable loading={loadingClaimInformation}>
         {!contract && !loadingClaimInformation && (
           <DangerParagraph>⚠️ No contract set</DangerParagraph>

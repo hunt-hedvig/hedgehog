@@ -2,6 +2,7 @@ query ClaimReserves($claimId: ID!) {
   claim(id: $claimId) {
     id
     reserves
+    state
     events {
       date
       text

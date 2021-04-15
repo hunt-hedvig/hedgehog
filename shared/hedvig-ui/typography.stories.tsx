@@ -3,6 +3,7 @@ import { Spacing } from 'hedvig-ui/spacing'
 import {
   Bold,
   Capitalized,
+  ErrorText,
   FourthLevelHeadline,
   MainHeadline,
   Paragraph,
@@ -36,6 +37,8 @@ export const Utilities: React.FC = () => {
       <Capitalized>{text}</Capitalized>
       <Spacing top={'medium'} />
       <Placeholder>This is a placeholder</Placeholder>
+      <Spacing top={'small'} />
+      <ErrorText>This is an error</ErrorText>
     </>
   )
 }

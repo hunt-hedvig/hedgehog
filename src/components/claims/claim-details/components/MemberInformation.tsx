@@ -9,7 +9,7 @@ import { formatDistance, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'
-import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { ErrorText, Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import React from 'react'
 
@@ -61,15 +61,20 @@ const MemberInformation: React.FC<{
   claimId: string
   memberId: string
 }> = ({ claimId, memberId }) => {
-  const { data: contractData } = useClaimContractQuery({
+  const {
+    data: contractData,
+    error: claimContractQueryError,
+  } = useClaimContractQuery({
     variables: { claimId },
   })
   const {
     data: memberContractsData,
     loading: memberContractsDataLoading,
+    error: memberContractsQueryError,
   } = useClaimMemberContractsMasterInceptionQuery({ variables: { memberId } })
   const contract = contractData?.claim?.contract
   const member = memberContractsData?.member
+  const queryError = claimContractQueryError ?? memberContractsQueryError
 
   const address = contract && currentAgreementForContract(contract)?.address
   const firstMasterInception =
@@ -91,8 +96,10 @@ const MemberInformation: React.FC<{
 
   return (
     <Paper>
+      <ThirdLevelHeadline>Member Information</ThirdLevelHeadline>
+      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+
       <Loadable loading={memberContractsDataLoading}>
-        <ThirdLevelHeadline>Member Information</ThirdLevelHeadline>
         <MemberName>
           {member?.firstName ?? '-'} {member?.lastName ?? '-'}{' '}
           {member && <MemberFlag memberId={memberId} />}
