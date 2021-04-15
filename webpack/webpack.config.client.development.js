@@ -10,6 +10,7 @@ module.exports = webpackConfig({
     app: [
       'webpack-dev-server/client?http://0.0.0.0:9001/',
       'webpack/hot/dev-server',
+      'react-hot-loader/patch',
       path.resolve(root, 'src/clientEntry.tsx'),
     ],
   },

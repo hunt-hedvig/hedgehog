@@ -1,0 +1,10 @@
+query ClaimTranscriptions($claimId: ID!) {
+  claim(id: $claimId) {
+    id
+    transcriptions {
+      confidenceScore
+      languageCode
+      text
+    }
+  }
+}

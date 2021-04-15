@@ -4,6 +4,7 @@ dotenv.config()
 import { readFileSync } from 'fs'
 import Koa from 'koa'
 import compress from 'koa-compress'
+import koaHelmet from 'koa-helmet'
 import mount from 'koa-mount'
 import Router from 'koa-router'
 import proxy from 'koa-server-http-proxy'
@@ -70,6 +71,16 @@ console.log(`Booting server on ${getPort()} 👢`) // tslint:disable-line no-con
 const logger = loggerFactory.getLogger('app')
 const app = new Koa()
 const router = new Router()
+
+if (config.useHelmet) {
+  app.use(
+    koaHelmet({
+      contentSecurityPolicy: false,
+    }),
+  )
+  logger.info(`Securing headers with Helmet ⛑`)
+}
+
 app.use(compress({ threshold: 5 * 1024 }))
 
 const buildDir = path.resolve(__dirname, '../../build')
@@ -82,6 +93,7 @@ const scriptLocation =
     : '/static/app.js'
 app.use(mount('/static', serve(buildDir, { maxage: 86400 * 1000 * 365 })))
 app.use(mount('/static', serve(staticDir, { maxage: 86400 * 1000 * 365 })))
+
 if (process.env.NODE_ENV !== 'production') {
   app.use(
     proxy('/static', {

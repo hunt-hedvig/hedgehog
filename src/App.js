@@ -1,14 +1,14 @@
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { CssBaseline } from '@material-ui/core'
 import { MuiThemeProvider } from '@material-ui/core/styles'
-import { injectGlobal } from 'emotion'
+import { css, Global } from '@emotion/react'
 import { Navigation } from 'components/shared/navigation'
 import Breadcrumbs from 'components/shared/navigation/breadcrumbs/Breadcrumbs'
 import Notifications from 'containers/NotificationService'
 import React from 'react'
-import styled from 'react-emotion'
-import { ThemeProvider } from 'emotion-theming'
-import { hot } from 'react-hot-loader'
+import styled from '@emotion/styled'
+import { ThemeProvider } from '@emotion/react'
+import { hot } from 'react-hot-loader/root'
 import { Provider } from 'react-redux'
 import { Redirect, Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
@@ -44,7 +44,7 @@ const Main = styled('div')(({ dark, theme }) => ({
   padding: '3rem 4rem',
 }))
 
-injectGlobal`
+const globalCss = css`
   ${getCdnFontFaces()}
 
   * {
@@ -67,7 +67,7 @@ injectGlobal`
   h4,
   h5,
   h6,
-   .ui.header{
+  .ui.header {
     font-family: ${fonts.FAVORIT}, sans-serif;
     font-kerning: none;
     font-weight: 400;
@@ -95,6 +95,7 @@ class App extends React.Component {
           theme={this.state.isDarkmode ? darkUiTheme : lightUiTheme}
         >
           <CssBaseline />
+          <Global styles={globalCss} />
           <ThemeProvider theme={this.state.isDarkmode ? darkTheme : lightTheme}>
             <Provider store={store}>
               <MemberHistoryProvider>
@@ -163,5 +164,4 @@ class App extends React.Component {
   }
 }
 
-export default App
-export const HotApp = hot(module)(App)
+export const HotApp = hot(App)

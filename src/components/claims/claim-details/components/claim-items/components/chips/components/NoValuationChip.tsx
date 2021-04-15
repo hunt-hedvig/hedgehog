@@ -1,6 +1,6 @@
 import React from 'react'
 import { EyeFill } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { BaseChip } from './BaseChip'
 
 const StyledChip = styled(BaseChip)`

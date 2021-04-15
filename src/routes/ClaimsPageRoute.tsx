@@ -1,7 +1,7 @@
 import ClaimDetailsPage from 'containers/ClaimDetailsPage'
 import { ClaimsPage } from 'containers/ClaimsPage'
 import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import { Route, Switch } from 'react-router'
 import PrivateRoute from 'routes/PrivateRoute'
 

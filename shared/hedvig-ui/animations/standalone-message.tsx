@@ -1,7 +1,7 @@
 import { fadeIn } from 'hedvig-ui/animations/utils'
 import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 interface StandaloneMessageProps {
   paddingTop?: string

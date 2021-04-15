@@ -1,0 +1,13 @@
+query ClaimFiles($claimId: ID!) {
+  claim(id: $claimId) {
+    id
+    claimFiles {
+      claimFileId
+      claimId
+      category
+      contentType
+      fileUploadUrl
+      uploadedAt
+    }
+  }
+}

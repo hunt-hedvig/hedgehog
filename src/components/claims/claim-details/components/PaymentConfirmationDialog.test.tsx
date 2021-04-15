@@ -1,9 +1,9 @@
-import { PaymentConfirmationDialog } from 'components/claims/claim-details/components/PaymentConfirmationDialog'
 import { mount } from 'enzyme'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { Market } from 'types/enums'
 import { tickAsync } from 'utils/sleep'
+import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 it("doesn't submit an empty form", async () => {
   const onClose = jest.fn()

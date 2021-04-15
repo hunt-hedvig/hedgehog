@@ -1,6 +1,6 @@
 import { Chip } from '@material-ui/core'
 import { Popover } from 'hedvig-ui/popover'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import CreatableSelect from 'react-select/creatable'
 
 export const StyledCreatableSelect = styled(CreatableSelect)`

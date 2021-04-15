@@ -1,0 +1,65 @@
+query ClaimInformation($claimId: ID!, $memberId: ID!) {
+  claim(id: $claimId) {
+    id
+    recordingUrl
+    registrationDate
+    state
+    coveringEmployee
+    ...claimType
+
+    contract {
+      id
+      currentAgreementId
+      contractTypeName
+      typeOfContract
+      genericAgreements {
+        id
+        address {
+          street
+          postalCode
+          city
+        }
+        typeOfContract
+        lineOfBusinessName
+        carrier
+      }
+    }
+    agreement {
+      id
+      address {
+        street
+        postalCode
+        city
+      }
+      typeOfContract
+      lineOfBusinessName
+      carrier
+    }
+  }
+
+  member(id: $memberId) {
+    memberId
+    contracts {
+      id
+      currentAgreementId
+      contractTypeName
+      typeOfContract
+      genericAgreements {
+        id
+        address {
+          street
+          postalCode
+          city
+        }
+        status
+        typeOfContract
+        lineOfBusinessName
+        carrier
+        premium {
+          amount
+          currency
+        }
+      }
+    }
+  }
+}

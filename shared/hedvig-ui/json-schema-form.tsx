@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { Grid, IconButton } from '@material-ui/core'
 import {
   AjvError,
@@ -13,7 +14,6 @@ import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import { JSONSchema7 } from 'json-schema'
 import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
 import { Dropdown, FormField } from 'semantic-ui-react'
 import { convertCamelcaseToTitle, convertEnumToTitle } from 'utils/text'
 

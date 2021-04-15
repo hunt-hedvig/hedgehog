@@ -1,0 +1,95 @@
+fragment claimType on Claim {
+  type {
+    ... on TheftClaim {
+      location
+      date
+      item
+      policeReport
+      receipt
+    }
+    ... on AccidentalDamageClaim {
+      location
+      date
+      item
+      policeReport
+      receipt
+    }
+    ... on AssaultClaim {
+      location
+      date
+      policeReport
+    }
+    ... on WaterDamageClaim {
+      date
+    }
+    ... on TravelAccidentClaim {
+      location
+      date
+      policeReport
+      receipt
+    }
+    ... on LuggageDelayClaim {
+      location
+      date
+      ticket
+    }
+    ... on NotCoveredClaim {
+      date
+    }
+    ... on ConfirmedFraudClaim {
+      date
+    }
+    ... on TestClaim {
+      date
+    }
+    ... on LiabilityClaim {
+      date
+      location
+    }
+    ... on FireDamageClaim {
+      date
+      location
+    }
+    ... on ApplianceClaim {
+      date
+      location
+      item
+    }
+    ... on LegalProtectionClaim {
+      date
+    }
+    ... on WaterDamageBathroomClaim {
+      date
+    }
+    ... on WaterDamageBathroomClaim {
+      date
+    }
+    ... on BurglaryClaim {
+      location
+      date
+      item
+      policeReport
+      receipt
+    }
+    ... on FloodingClaim {
+      date
+    }
+    ... on EarthquakeClaim {
+      date
+    }
+    ... on InstallationsClaim {
+      date
+      location
+      item
+    }
+    ... on SnowPressureClaim {
+      date
+    }
+    ... on StormDamageClaim {
+      date
+    }
+    ... on VerminAndPestsClaim {
+      date
+    }
+  }
+}

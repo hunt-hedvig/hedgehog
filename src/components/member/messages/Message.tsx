@@ -1,11 +1,11 @@
 import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
 import { format } from 'date-fns'
-import { css } from 'emotion'
+import { css } from '@emotion/react'
 import * as types from 'lib/messageTypes'
 import PropTypes from 'prop-types'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 const MessageRow = styled.div<
   WithLeft & { isQuestion?: boolean; isVisible: boolean }
@@ -110,7 +110,7 @@ const Message = React.forwardRef<
     <MessageRow
       left={left}
       isQuestion={isQuestionMessage}
-      innerRef={ref}
+      ref={ref as React.RefObject<HTMLDivElement>}
       isVisible={isVisible}
     >
       <MessageBox>

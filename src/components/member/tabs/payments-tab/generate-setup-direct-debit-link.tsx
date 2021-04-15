@@ -6,7 +6,8 @@ import { Popover } from 'hedvig-ui/popover'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
-import styled, { css } from 'react-emotion'
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 
 const ActualLink = styled.a`
   white-space: pre-wrap;

@@ -1,5 +1,5 @@
+import styled from '@emotion/styled'
 import { match } from 'matchly'
-import styled from 'react-emotion'
 
 export const InsuranceStatusBadge = styled('div')<{ status: string }>(
   ({ theme, status }) => ({

@@ -5,7 +5,7 @@ import { CreateCampaignCode } from 'features/tools/campaign-codes/components/Cre
 import { initialCampaignFilter } from 'features/tools/campaign-codes/utils'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
-import * as React from 'react'
+import React from 'react'
 
 export const CampaignCodeInfo: React.FC = () => {
   const [campaignFilter, setCampaignFilter] = React.useState<CampaignFilter>(

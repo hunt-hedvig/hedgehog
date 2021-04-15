@@ -1,4 +1,4 @@
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import {
   ClaimPaymentInput,
   ClaimPaymentType,
@@ -20,7 +20,7 @@ it("doesn't submit empty form", async () => {
       <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
         claimId={'abc123'}
-        refetchPage={refetchPage}
+        refetch={refetchPage}
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
@@ -39,7 +39,7 @@ it("doesn't submit empty form", async () => {
 })
 
 it('submits valid form with confirmation', async () => {
-  const refetchPage = jest.fn(() => Promise.resolve())
+  const refetch = jest.fn(() => Promise.resolve())
   let paymentCreationCalled = false
   const payment: ClaimPaymentInput = {
     amount: {
@@ -82,7 +82,7 @@ it('submits valid form with confirmation', async () => {
       <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
         claimId={'abc123'}
-        refetchPage={refetchPage}
+        refetch={refetch}
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
@@ -133,12 +133,12 @@ it('submits valid form with confirmation', async () => {
   })
 
   expect(paymentCreationCalled).toBe(true)
-  expect(refetchPage).not.toHaveBeenCalled()
+  expect(refetch).not.toHaveBeenCalled()
 
   await act(async () => {
     await sleep(1001)
     await tickAsync()
   })
 
-  expect(refetchPage).toHaveBeenCalled()
+  expect(refetch).toHaveBeenCalled()
 })

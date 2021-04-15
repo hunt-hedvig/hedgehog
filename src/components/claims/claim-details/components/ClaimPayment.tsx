@@ -16,7 +16,7 @@ import {
 
 import { Field, FieldProps, Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Market } from 'types/enums'
 import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
@@ -26,11 +26,11 @@ import { MutationFeedbackBlock } from '../../../shared/MutationFeedbackBlock'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 interface Props {
-  sanctionStatus: SanctionStatus
+  sanctionStatus?: SanctionStatus | null
   claimId: string
-  refetchPage: () => Promise<any>
+  refetch: () => Promise<any>
   identified: boolean
-  market: string | null
+  market?: string | null
   carrier: string
 }
 
@@ -80,7 +80,7 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
         .required()
         .test(
           'overridden',
-          'Override saction list checkbox isn’t checked.',
+          'Override sanction list checkbox isn’t checked.',
           (value) => value === true,
         ),
     }),
@@ -112,7 +112,7 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
 export const ClaimPayment: React.FC<Props> = ({
   sanctionStatus,
   claimId,
-  refetchPage,
+  refetch,
   identified,
   market,
   carrier,
@@ -130,7 +130,8 @@ export const ClaimPayment: React.FC<Props> = ({
   >(null)
 
   const isPotentiallySanctioned =
-    sanctionStatus === 'Undetermined' || sanctionStatus === 'PartialHit'
+    sanctionStatus === SanctionStatus.Undetermined ||
+    sanctionStatus === SanctionStatus.PartialHit
 
   useEffect(() => {
     if (createPaymentProps.data || createSwishPaymentProps.data) {
@@ -279,7 +280,7 @@ export const ClaimPayment: React.FC<Props> = ({
                   })
                 }
                 await sleep(1000)
-                await refetchPage()
+                await refetch()
                 setIsConfirming(false)
               }}
               amount={values.amount}

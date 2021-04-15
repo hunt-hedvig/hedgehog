@@ -1,5 +1,5 @@
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 const getThemeFromStatus = (theme, status) => {
   switch (status) {
@@ -45,7 +45,7 @@ export const Group = styled('div')({
   '*:not(:last-child)': {
     marginRight: '0.5rem',
   },
-  '*:not(:first-child)': {
+  '*:not(:first-of-type)': {
     marginLeft: '0.5rem',
   },
 })

@@ -3,7 +3,7 @@ import { Popover } from 'hedvig-ui/popover'
 import { Bold, Capitalized, Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Grid, Table } from 'semantic-ui-react'
 import { formatMoney } from 'utils/money'
 

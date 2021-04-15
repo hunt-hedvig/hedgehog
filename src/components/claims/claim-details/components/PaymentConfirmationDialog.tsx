@@ -16,7 +16,7 @@ interface PaymentConfirmationDialogProps {
   onSubmit: () => void
   amount: string
   identified: boolean
-  market: string | null
+  market?: string | null
 }
 
 export const PaymentConfirmationDialog: React.FC<PaymentConfirmationDialogProps> = ({

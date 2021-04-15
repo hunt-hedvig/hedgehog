@@ -2,7 +2,7 @@ import animateScrollTo from 'animated-scroll-to'
 import Message from 'components/member/messages/Message'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef } from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { useMessageHistory } from '../../../graphql/use-message-history'
 import { parseISO } from 'date-fns'
 

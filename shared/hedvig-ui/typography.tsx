@@ -1,4 +1,4 @@
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 
 export const MainHeadline = styled('h1')``
 export const SecondLevelHeadline = styled('h2')``

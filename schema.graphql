@@ -969,6 +969,7 @@ type ClaimItemSet {
 type ClaimNote {
   text: String!
   date: LocalDateTime!
+  handlerReference: String
 }
 
 type ClaimTranscription {

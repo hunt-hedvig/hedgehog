@@ -2,9 +2,9 @@ import copy from 'copy-to-clipboard'
 import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import { useEffect, useState } from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import {
   formatSsn,

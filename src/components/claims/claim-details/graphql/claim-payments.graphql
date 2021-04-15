@@ -1,0 +1,39 @@
+query ClaimPayments($claimId: ID!) {
+  claim(id: $claimId) {
+    id
+    contract {
+      id
+      market
+    }
+    agreement {
+      id
+      carrier
+    }
+
+    member {
+      memberId
+      sanctionStatus
+      identity {
+        firstName
+        lastName
+        nationalIdentification {
+          identification
+          nationality
+        }
+      }
+    }
+
+    reserves
+
+    payments {
+      id
+      deductible
+      amount
+      exGratia
+      status
+      note
+      type
+      timestamp
+    }
+  }
+}

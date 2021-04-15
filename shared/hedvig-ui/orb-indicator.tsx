@@ -1,5 +1,5 @@
+import styled from '@emotion/styled'
 import React from 'react'
-import styled from 'react-emotion'
 import { Icon, SemanticCOLORS } from 'semantic-ui-react'
 import { IconSizeProp } from 'semantic-ui-react/dist/commonjs/elements/Icon/Icon'
 
@@ -8,7 +8,7 @@ const IconStyled = styled(Icon)(() => ({
   paddingLeft: '4px',
 }))
 
-const Container = styled('div')(() => ({
+const Container = styled('span')(() => ({
   marginTop: '-7px',
   display: 'inline',
 }))

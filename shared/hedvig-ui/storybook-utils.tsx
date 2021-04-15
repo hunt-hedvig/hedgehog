@@ -1,13 +1,14 @@
+import { ThemeProvider } from '@emotion/react'
+import styled from '@emotion/styled'
 import { select } from '@storybook/addon-knobs'
-import { ThemeProvider } from 'emotion-theming'
 import { darkTheme, lightTheme } from 'hedvig-ui/themes'
 import React from 'react'
-import styled from 'react-emotion'
 
 const ThemeWrapper = styled.div`
   min-height: 100%;
   width: 100%;
   background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.foreground};
 `
 
 export const withTheme = (story: () => React.ReactElement) => (

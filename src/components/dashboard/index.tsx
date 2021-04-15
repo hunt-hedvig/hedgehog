@@ -12,7 +12,7 @@ import {
   ThirdLevelHeadline,
 } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 const Wrapper = styled.div`
@@ -110,8 +110,8 @@ export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
             const isRecent =
               differenceInCalendarDays(new Date(), change.date) < 3
             return (
-              <FadeIn delay={`${index * 50}ms`}>
-                <ChangeLogItem key={change.change}>
+              <FadeIn delay={`${index * 50}ms`} key={change.change}>
+                <ChangeLogItem>
                   <ChangeDescription>
                     {change.change}
                     {isRecent && (

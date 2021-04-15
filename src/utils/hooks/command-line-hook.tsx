@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { Icon } from 'semantic-ui-react'
 import {
   Key,
@@ -19,9 +19,9 @@ import {
 
 const CommandLineWindow = styled.div`
   position: absolute;
-  top: 50%;
+  top: 20vh;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   background-color: rgba(255, 255, 255, 1);
   box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
   border-radius: 0.3em;
@@ -45,6 +45,11 @@ const ResultItemWrapper = styled.div<{ selected: boolean }>`
   align-items: center;
   background-color: ${({ selected }) =>
     selected ? 'rgba(0, 0, 0, 0.1)' : 'transparent'};
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
 `
 
 const ResultItemContent = styled.div`
@@ -67,15 +72,21 @@ const SearchWrapper = styled.div`
 const SearchResultWrapper = styled.div``
 
 const ResultItem: React.FC<{
-  label: string
-  keys: Key[]
+  action: CommandLineAction
   selected?: boolean
-}> = ({ label, keys, selected = false }) => {
+  hide: () => void
+}> = ({ action, selected = false, hide }) => {
   return (
-    <ResultItemWrapper selected={selected}>
-      <FourthLevelHeadline>{label}</FourthLevelHeadline>
+    <ResultItemWrapper
+      selected={selected}
+      onClick={() => {
+        action.onResolve()
+        hide()
+      }}
+    >
+      <FourthLevelHeadline>{action.label}</FourthLevelHeadline>
       <ResultItemContent>
-        {keys.map(({ hint }) => (
+        {action.keys.map(({ hint }) => (
           <CharacterBadge key={hint}>
             <Paragraph style={{ fontSize: '0.8em', fontWeight: 'bold' }}>
               {hint}
@@ -198,17 +209,17 @@ export const CommandLineComponent: React.FC<{
       <SearchResultWrapper>
         {searchResult
           .slice(firstActionIndex, firstActionIndex + maxActions)
-          .map(({ label, keys }, index) => (
+          .map((action, index) => (
             <FadeIn
               delay={`${Math.abs(
                 selectedActionIndex - firstActionIndex - index,
               ) * 40}ms`}
               duration={400}
-              key={`${label} ${searchValue}`}
+              key={`${action.label} ${searchValue}`}
             >
               <ResultItem
-                label={label}
-                keys={keys}
+                hide={hide}
+                action={action}
                 selected={firstActionIndex + index === selectedActionIndex}
               />
             </FadeIn>
@@ -317,7 +328,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     >
       {children}
       {showCommandLine && (
-        <CommandLineWrapper innerRef={commandLine}>
+        <CommandLineWrapper ref={commandLine}>
           <CommandLineComponent
             hide={() => setShowCommandLine(false)}
             actions={actions.current}

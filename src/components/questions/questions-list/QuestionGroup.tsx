@@ -1,6 +1,6 @@
 import QuestionGroupInfo from 'components/questions/questions-list/QuestionGroupInfo'
 import React from 'react'
-import styled from 'react-emotion'
+import styled from '@emotion/styled'
 import { AnswerForm } from './AnswerForm'
 
 const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`

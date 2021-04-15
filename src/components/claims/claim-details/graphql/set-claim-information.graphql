@@ -1,0 +1,15 @@
+mutation SetClaimInformation(
+  $id: ID!
+  $claimInformation: ClaimInformationInput!
+) {
+  setClaimInformation(id: $id, information: $claimInformation) {
+    id
+
+    ...claimType
+
+    events {
+      text
+      date
+    }
+  }
+}

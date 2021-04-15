@@ -1,4 +1,4 @@
-import { keyframes } from 'react-emotion'
+import { keyframes } from '@emotion/react'
 
 export const fadeIn = (max: number) => keyframes`
   from { opacity: 0; transform: translateY(2%) }

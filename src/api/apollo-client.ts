@@ -1,21 +1,15 @@
-import { refreshAccessToken } from 'api/index'
-import { ApolloClient, ApolloLink, HttpLink } from 'apollo-boost'
 import {
-  defaultDataIdFromObject,
+  ApolloClient,
+  ApolloLink,
+  HttpLink,
   InMemoryCache,
-  IntrospectionFragmentMatcher,
-} from 'apollo-cache-inmemory'
-import { onError } from 'apollo-link-error'
-import { ServerError } from 'apollo-link-http-common'
+  ServerError,
+} from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
+import { refreshAccessToken } from 'api/index'
 import { Store } from 'redux'
 import { showNotification } from 'store/actions/notificationsActions'
 import { forceLogOut } from 'utils/auth'
-
-import introspectionQueryResultData from './fragmentTypes.json'
-
-const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData,
-})
 
 export const apolloClient = (() => {
   if (typeof window === 'undefined') {
@@ -57,20 +51,28 @@ export const apolloClient = (() => {
     ]),
     connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
     cache: new InMemoryCache({
-      fragmentMatcher,
-      dataIdFromObject: (object) => {
-        switch (object.__typename) {
-          case 'Member':
-            return `Member(${(object as any).memberId})`
-          case 'Renewal':
-            return `Renewal(${(object as any).draftOfAgreementId})`
-          case 'ChatMessage':
-            return `ChatMessage(${(object as any).globalId})`
-          case 'MemberReferral':
-            return `MemberReferral(${(object as any).memberId})`
-          default:
-            return defaultDataIdFromObject(object)
-        }
+      typePolicies: {
+        Member: {
+          keyFields: ['memberId'],
+        },
+        Renewal: {
+          keyFields: ['draftOfAgreementId'],
+        },
+        ChatMessage: {
+          keyFields: ['globalId'],
+        },
+        MemberReferral: {
+          keyFields: ['memberId'],
+        },
+        ClaimEvent: {
+          keyFields: ['text', 'date'],
+        },
+        ClaimFileUpload: {
+          keyFields: ['claimFileId'],
+        },
+        ClaimNote: {
+          keyFields: ['date', 'handlerReference'],
+        },
       },
     }),
   })

@@ -1,5 +1,5 @@
+import styled from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
-import styled from 'react-emotion'
 
 export const CardsWrapper = styled('div')`
   width: calc(100% + 1rem);
