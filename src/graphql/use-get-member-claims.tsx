@@ -24,6 +24,6 @@ export const useGetMemberClaims = (
       (a, b) => +parseISO(b.registrationDate) - +parseISO(a.registrationDate),
     )
   }
-  console.log(claims)
+
   return [claims, queryResult]
 }
