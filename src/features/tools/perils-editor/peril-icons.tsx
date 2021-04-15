@@ -125,6 +125,15 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Festival',
+    text: 'festival',
+    value: 'festival',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/festival.svg',
+    },
+  },
+  {
     key: 'Home Transport',
     text: 'home_transport',
     value: 'home_transport',
@@ -173,6 +182,15 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Luggage',
+    text: 'luggage',
+    value: 'luggage',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/luggage.svg',
+    },
+  },
+  {
     key: 'Storms',
     text: 'nature_damage',
     value: 'nature_damage',
@@ -199,6 +217,16 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/personal_accident.svg',
+    },
+  },
+  {
+    key: 'Psychological support',
+    text: 'psychological_support',
+    value: 'psychological_support',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/psychological_support.svg',
     },
   },
   {
@@ -268,6 +296,16 @@ export const PerilIconOptions = [
     image: {
       avatar: true,
       src: 'https://graphql.dev.hedvigit.com/app-content-service/theft.svg',
+    },
+  },
+  {
+    key: 'Traffic accident',
+    text: 'traffic_accident',
+    value: 'traffic_accident',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/traffic_accident.svg',
     },
   },
   {
