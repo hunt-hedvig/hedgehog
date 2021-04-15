@@ -1,7 +1,7 @@
 import MemberPage from 'containers/MemberPage'
 import { MembersSearchPage } from 'containers/MembersSearchPage'
 import * as PropTypes from 'prop-types'
-import * as React from 'react'
+import React from 'react'
 import { Route, Switch } from 'react-router'
 import PrivateRoute from 'routes/PrivateRoute'
 

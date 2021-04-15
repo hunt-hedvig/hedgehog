@@ -1,1 +1,77 @@
-{"__schema":{"types":[{"kind":"UNION","name":"ClaimType","possibleTypes":[{"name":"TheftClaim"},{"name":"AccidentalDamageClaim"},{"name":"AssaultClaim"},{"name":"WaterDamageClaim"},{"name":"TravelAccidentClaim"},{"name":"LuggageDelayClaim"}]}]}}
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "INTERFACE",
+        "name": "ItemCategoryCore",
+        "possibleTypes": [
+          { "name": "ItemFamily" },
+          { "name": "ItemType" },
+          { "name": "ItemBrand" },
+          { "name": "ItemModel" },
+          { "name": "ItemCompany" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ItemCategory",
+        "possibleTypes": [
+          { "name": "ItemFamily" },
+          { "name": "ItemType" },
+          { "name": "ItemBrand" },
+          { "name": "ItemModel" },
+          { "name": "ItemCompany" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "SendMessageResponse",
+        "possibleTypes": [
+          { "name": "SendMessageSuccessful" },
+          { "name": "SendMessageFailed" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ClaimType",
+        "possibleTypes": [
+          { "name": "TheftClaim" },
+          { "name": "AccidentalDamageClaim" },
+          { "name": "AssaultClaim" },
+          { "name": "WaterDamageClaim" },
+          { "name": "TravelAccidentClaim" },
+          { "name": "LuggageDelayClaim" },
+          { "name": "NotCoveredClaim" },
+          { "name": "FireDamageClaim" },
+          { "name": "ConfirmedFraudClaim" },
+          { "name": "LiabilityClaim" },
+          { "name": "ApplianceClaim" },
+          { "name": "LegalProtectionClaim" },
+          { "name": "WaterDamageBathroomClaim" },
+          { "name": "WaterDamageKitchenClaim" },
+          { "name": "BurglaryClaim" },
+          { "name": "FloodingClaim" },
+          { "name": "EarthquakeClaim" },
+          { "name": "InstallationsClaim" },
+          { "name": "SnowPressureClaim" },
+          { "name": "StormDamageClaim" },
+          { "name": "VerminAndPestsClaim" },
+          { "name": "TestClaim" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Incentive",
+        "possibleTypes": [
+          { "name": "MonthlyPercentageDiscountFixedPeriod" },
+          { "name": "FreeMonths" },
+          { "name": "CostDeduction" },
+          { "name": "NoDiscount" },
+          { "name": "IndefinitePercentageDiscount" },
+          { "name": "VisibleNoDiscount" },
+          { "name": "UnknownIncentive" }
+        ]
+      }
+    ]
+  }
+}

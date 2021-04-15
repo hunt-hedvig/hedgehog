@@ -10,7 +10,7 @@ const spin = keyframes`
   }
 `
 
-export const Spinner = styled.div`
+export const Spinner = styled.div<{ push?: 'left' | 'right' }>`
   display: inline-block;
   width: 0.95em;
   height: 0.95em;
@@ -19,4 +19,7 @@ export const Spinner = styled.div`
   border-radius: 100%;
   animation: ${spin} 500ms linear infinite;
   transform: translateY(0.1em);
+
+  ${({ push }) => push === 'left' && 'margin-left: 1em'};
+  ${({ push }) => push === 'right' && 'margin-right: 1em'};
 `

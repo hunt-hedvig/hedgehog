@@ -1,4 +1,4 @@
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import {
   GetSwitcherEmailsDocument,
   MarkSwitcherEmailAsRemindedDocument,
@@ -6,7 +6,7 @@ import {
 } from 'api/generated/graphql'
 import { mount } from 'enzyme'
 import { Button } from 'hedvig-ui/button'
-import * as React from 'react'
+import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { StaticRouter } from 'react-router'
 import { Table } from 'semantic-ui-react'

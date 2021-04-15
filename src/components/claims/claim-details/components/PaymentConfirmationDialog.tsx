@@ -20,7 +20,7 @@ interface PaymentConfirmationDialogProps {
   payment: PaymentFormData
   claimId: string
   identified: boolean
-  market: string | null
+  market?: string | null
   carrier: string
 }
 

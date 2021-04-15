@@ -1,4 +1,4 @@
-import { MutationFunctionOptions } from '@apollo/react-common'
+import { MutationFunctionOptions } from '@apollo/client'
 import {
   SetContractForClaim,
   SetContractForClaimMutation,
@@ -6,7 +6,6 @@ import {
   SetContractForClaimMutationVariables,
   useSetContractForClaimMutation,
 } from 'api/generated/graphql'
-import { CLAIM_PAGE_QUERY } from 'components/claims/claim-details/data'
 
 export const useSetContractForClaim = (): SetContractForClaimMutationHookResult =>
   useSetContractForClaimMutation()
@@ -21,11 +20,5 @@ export const setContractForClaimOptions = (
     variables: {
       request,
     },
-    refetchQueries: () => [
-      {
-        query: CLAIM_PAGE_QUERY,
-        variables: { id: request.claimId },
-      },
-    ],
   }
 }

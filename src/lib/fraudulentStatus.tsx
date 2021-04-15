@@ -1,6 +1,7 @@
 // @ts-nocheck
 import styled from '@emotion/styled'
-import * as React from 'react'
+import { Member } from 'api/generated/graphql'
+import React from 'react'
 import { Button, Dropdown, Icon, Input, Table } from 'semantic-ui-react'
 
 const ButtonsBlock = styled('div')((_) => ({
@@ -35,7 +36,12 @@ const fraudulentStatuses = {
   CONFIRMED_FRAUD: 'red',
 }
 
-const FraudulentStatus = (props) => (
+const FraudulentStatus: React.FC<{
+  stateInfo: {
+    state: Member['fraudulentStatus']
+    description?: Member['fraudulentStatusDescription']
+  }
+}> = (props) => (
   <StatusBallBlock stateInfo={props.stateInfo}>
     <IconStyled
       name="circle"

@@ -1,27 +1,21 @@
 import styled from '@emotion/styled'
-import { Claim, ClaimFileUpload } from 'api/generated/graphql'
-import gql from 'graphql-tag'
-import * as React from 'react'
-import { Mutation } from 'react-apollo'
-
+import {
+  ClaimFileUpload,
+  useClaimFilesQuery,
+  useSetClaimFileCategoryMutation,
+} from 'api/generated/graphql'
+import { Spinner } from 'hedvig-ui/sipnner'
+import { dateTimeFormatter } from 'lib/helpers'
+import React from 'react'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
-import { dateTimeFormatter } from '../../../../lib/helpers'
-import { DeleteButton } from '../components/DeleteClaimFileButton'
+import { sleep } from 'utils/sleep'
+import { DeleteButton } from './DeleteClaimFileButton'
+import { FileUpload } from './FileUpload'
 
-const SET_CLAIM_FILE_CATEGORY = gql`
-  mutation setClaimFileCategory(
-    $claimId: ID!
-    $claimFileId: ID!
-    $category: String
-  ) {
-    setClaimFileCategory(
-      claimId: $claimId
-      claimFileId: $claimFileId
-      category: $category
-    )
-  }
+const TableWithOverflow = styled(Table)`
+  overflow: visible !important;
 `
 
 const sortClaimFileDate = (a: ClaimFileUpload, b: ClaimFileUpload) => {
@@ -68,100 +62,115 @@ const fileUploadOptions = [
   },
 ]
 
-class ClaimFileTableComponent extends React.Component<
-  {
-    claimFiles: Claim['claimFiles']
-    claimId: string
-  } & WithShowNotification
-> {
-  public render() {
-    return (
-      <>
-        <Table celled>
-          <Table.Header>
+const ClaimFileTableComponent: React.FC<WithShowNotification & {
+  claimId: string
+  memberId: string
+}> = ({ claimId, memberId, showNotification }) => {
+  const { data: claimFilesData, refetch, loading } = useClaimFilesQuery({
+    variables: { claimId },
+  })
+  const [setClaimFileCategory] = useSetClaimFileCategoryMutation()
+
+  const claimFiles = claimFilesData?.claim?.claimFiles ?? []
+
+  return (
+    <>
+      <FileUpload
+        claimId={claimId}
+        memberId={memberId}
+        onUpload={async () => {
+          await sleep(500)
+          await refetch()
+        }}
+      />
+
+      <TableWithOverflow celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Claim Files</Table.HeaderCell>
+            <Table.HeaderCell>File Type</Table.HeaderCell>
+            <Table.HeaderCell>Uploaded At</Table.HeaderCell>
+            <Table.HeaderCell />
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {loading && (
             <Table.Row>
-              <Table.HeaderCell>Claim Files</Table.HeaderCell>
-              <Table.HeaderCell>File Type</Table.HeaderCell>
-              <Table.HeaderCell>Uploaded At</Table.HeaderCell>
-              <Table.HeaderCell></Table.HeaderCell>
+              <Table.Cell>
+                <Spinner />
+              </Table.Cell>
             </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.props.claimFiles.length === 0 ? (
-              <Table.Row>
-                <Table.Cell>
-                  <NoClaimFiles>
-                    No claim documents have been uploaded for this claim
-                  </NoClaimFiles>
-                </Table.Cell>
-              </Table.Row>
-            ) : (
-              [...this.props.claimFiles]
-                .filter(Boolean)
-                .sort(sortClaimFileDate)
-                .map((claimFile) => {
-                  return (
-                    <Table.Row key={claimFile.fileUploadUrl}>
-                      <Table.Cell>
-                        {claimFile.contentType === 'application/pdf' ? (
-                          <embed
-                            src={claimFile.fileUploadUrl}
-                            width="800px"
-                            height="300px"
-                          />
-                        ) : (
-                          <Image src={claimFile.fileUploadUrl} size="large" />
-                        )}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Mutation mutation={SET_CLAIM_FILE_CATEGORY}>
-                          {(mutation) => {
-                            return (
-                              <Dropdown
-                                placeholder={
-                                  claimFile.category !== null
-                                    ? claimFile.category
-                                    : 'File Type'
-                                }
-                                fluid
-                                selection
-                                options={fileUploadOptions}
-                                onChange={(event) =>
-                                  mutation({
-                                    variables: {
-                                      claimId: this.props.claimId,
-                                      claimFileId: claimFile.claimFileId,
-                                      category: event.currentTarget.textContent,
-                                    },
-                                  })
-                                }
-                              />
-                            )
-                          }}
-                        </Mutation>
-                      </Table.Cell>
-                      <Table.Cell>
-                        {dateTimeFormatter(
-                          claimFile.uploadedAt,
-                          'yyyy-MM-dd HH:mm:ss',
-                        )}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <DeleteButton
-                          claimId={this.props.claimId}
-                          claimFileId={claimFile.claimFileId!}
-                          showNotification={this.props.showNotification}
-                        />
-                      </Table.Cell>
-                    </Table.Row>
-                  )
-                })
-            )}
-          </Table.Body>
-        </Table>
-      </>
-    )
-  }
+          )}
+
+          {!claimFiles && !loading ? (
+            <Table.Row>
+              <Table.Cell>
+                <NoClaimFiles>
+                  No claim documents have been uploaded for this claim
+                </NoClaimFiles>
+              </Table.Cell>
+            </Table.Row>
+          ) : (
+            claimFiles.sort(sortClaimFileDate).map((claimFile) => {
+              return (
+                <Table.Row key={claimFile.claimFileId}>
+                  <Table.Cell>
+                    {claimFile.contentType === 'application/pdf' ? (
+                      <embed
+                        src={claimFile.fileUploadUrl}
+                        width="800px"
+                        height="300px"
+                      />
+                    ) : (
+                      <Image src={claimFile.fileUploadUrl} size="large" />
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Dropdown
+                      placeholder={
+                        claimFile.category !== null
+                          ? claimFile.category
+                          : 'File Type'
+                      }
+                      fluid
+                      selection
+                      options={fileUploadOptions}
+                      onChange={(event) =>
+                        setClaimFileCategory({
+                          variables: {
+                            claimId: claimId,
+                            claimFileId: claimFile.claimFileId!,
+                            category: event.currentTarget.textContent,
+                          },
+                        })
+                      }
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    {dateTimeFormatter(
+                      claimFile.uploadedAt,
+                      'yyyy-MM-dd HH:mm:ss',
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <DeleteButton
+                      claimId={claimId}
+                      claimFileId={claimFile.claimFileId!}
+                      showNotification={showNotification}
+                      onDeleted={async () => {
+                        await sleep(500)
+                        await refetch()
+                      }}
+                    />
+                  </Table.Cell>
+                </Table.Row>
+              )
+            })
+          )}
+        </Table.Body>
+      </TableWithOverflow>
+    </>
+  )
 }
 
 export const ClaimFileTable = withShowNotification(ClaimFileTableComponent)

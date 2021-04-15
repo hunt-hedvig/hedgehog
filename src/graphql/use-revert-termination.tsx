@@ -1,4 +1,4 @@
-import { MutationFunctionOptions } from '@apollo/react-common'
+import { MutationFunctionOptions } from '@apollo/client'
 import {
   Contract,
   RevertTerminationMutation,
