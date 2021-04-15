@@ -19,6 +19,7 @@ query ClaimMemberContractsMasterInception($memberId: ID!) {
     }
     totalNumberOfClaims
     account {
+      id
       totalBalance {
         amount
         currency
@@ -42,6 +43,7 @@ query ClaimMemberContractsMasterInception($memberId: ID!) {
       terminationDate
       isTerminated
       genericAgreements {
+        id
         address {
           street
         }
