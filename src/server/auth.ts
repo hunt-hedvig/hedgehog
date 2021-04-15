@@ -17,11 +17,13 @@ function setTokenCookies(
   ctx.cookies.set('_hvg_at', accessToken, {
     path: '/',
     httpOnly: true,
+    secure: config.useSecureCookies,
     expires: addMinutes(new Date(), 3 * 60),
   })
   ctx.cookies.set('_hvg_rt', refreshToken, {
     path: '/',
     httpOnly: true,
+    secure: config.useSecureCookies,
     expires: addDays(new Date(), 30),
   })
 }
