@@ -17,7 +17,10 @@ import { ClaimTypeForm } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
 
 const GridWithChatPaneAdjustment = styled(Grid)`
-  @media (min-width: 1400px) {
+  max-width: 100%;
+  min-width: 1000px;
+
+  @media (min-width: 1700px) {
     max-width: calc(100% - 400px);
   }
 `
@@ -50,8 +53,8 @@ const ClaimPage: React.FC<Props> = ({ match }) => {
         <GridWithChatPaneAdjustment container spacing={8}>
           <Prompt
             when={
-              Boolean(claimReservesData?.claim) &&
-              !claimReservesData?.claim?.reserves
+              claimReservesData?.claim?.reserves === null ||
+              claimReservesData?.claim?.reserves === undefined
             }
             message="This claim has no reserves, do you want leave it it without?"
           />
