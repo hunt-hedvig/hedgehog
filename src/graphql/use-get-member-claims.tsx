@@ -3,6 +3,7 @@ import {
   GetMemberClaimsQueryResult,
   useGetMemberClaimsQuery,
 } from 'api/generated/graphql'
+import { parseISO } from 'date-fns'
 
 type UseGetMemberClaimsReturnTuple = [
   ReadonlyArray<Claim> | undefined,
@@ -17,6 +18,12 @@ export const useGetMemberClaims = (
       memberId,
     },
   })
-  const claims = queryResult?.data?.member?.claims as Claim[] | undefined
+  let claims = queryResult?.data?.member?.claims as Claim[] | undefined
+  if (Array.isArray(claims)) {
+    claims = [...claims].sort(
+      (a, b) => +parseISO(b.registrationDate) - +parseISO(a.registrationDate),
+    )
+  }
+  console.log(claims)
   return [claims, queryResult]
 }
