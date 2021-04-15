@@ -1897,12 +1897,12 @@ export type ClaimMemberContractsMasterInceptionQuery = {
           >
         >
         account?: Maybe<
-          { __typename?: 'Account' } & {
-            totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-          }
+          { __typename?: 'Account' } & Pick<Account, 'id'> & {
+              totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+            }
         >
         identity?: Maybe<
           { __typename?: 'Identity' } & Pick<
@@ -1930,11 +1930,14 @@ export type ClaimMemberContractsMasterInceptionQuery = {
             | 'isTerminated'
           > & {
               genericAgreements: Array<
-                { __typename?: 'GenericAgreement' } & {
-                  address?: Maybe<
-                    { __typename?: 'Address' } & Pick<Address, 'street'>
-                  >
-                }
+                { __typename?: 'GenericAgreement' } & Pick<
+                  GenericAgreement,
+                  'id'
+                > & {
+                    address?: Maybe<
+                      { __typename?: 'Address' } & Pick<Address, 'street'>
+                    >
+                  }
               >
             }
         >
@@ -3860,6 +3863,7 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
       }
       totalNumberOfClaims
       account {
+        id
         totalBalance {
           amount
           currency
@@ -3883,6 +3887,7 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
         terminationDate
         isTerminated
         genericAgreements {
+          id
           address {
             street
           }
