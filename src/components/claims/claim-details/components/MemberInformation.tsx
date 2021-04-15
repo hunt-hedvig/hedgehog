@@ -84,7 +84,7 @@ const MemberInformation: React.FC<{
       label: `Go to member`,
       keys: [Keys.Option, Keys.M],
       onResolve: () => {
-        history.push(`/members/${member?.memberId}`)
+        history.push(`/members/${memberId}`)
       },
     },
   ])
@@ -95,11 +95,11 @@ const MemberInformation: React.FC<{
         <ThirdLevelHeadline>Member Information</ThirdLevelHeadline>
         <MemberName>
           {member?.firstName ?? '-'} {member?.lastName ?? '-'}{' '}
-          {member && <MemberFlag memberId={member.memberId} />}
+          {member && <MemberFlag memberId={memberId} />}
         </MemberName>
         <Paragraph>
           <strong>Id:</strong>{' '}
-          <Link to={`/members/${member?.memberId}`}>{member?.memberId}</Link>{' '}
+          <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
           {isHintingOption && '(M)'}
         </Paragraph>
         {member?.contractMarketInfo?.market === Market.Norway && (

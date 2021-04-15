@@ -22,8 +22,8 @@ export const DeleteButton: React.FC<WithShowNotification & {
           if (window.confirm('Are you sure you want to delete this file?')) {
             markClaimFileAsDeleted({
               variables: {
-                claimId: claimId,
-                claimFileId: claimFileId,
+                claimId,
+                claimFileId,
               },
             })
               .then(() => {

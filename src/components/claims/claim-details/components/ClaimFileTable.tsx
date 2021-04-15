@@ -111,64 +111,61 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
               </Table.Cell>
             </Table.Row>
           ) : (
-            claimFiles
-              .filter(Boolean)
-              .sort(sortClaimFileDate)
-              .map((claimFile) => {
-                return (
-                  <Table.Row key={claimFile.claimFileId}>
-                    <Table.Cell>
-                      {claimFile.contentType === 'application/pdf' ? (
-                        <embed
-                          src={claimFile.fileUploadUrl}
-                          width="800px"
-                          height="300px"
-                        />
-                      ) : (
-                        <Image src={claimFile.fileUploadUrl} size="large" />
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Dropdown
-                        placeholder={
-                          claimFile.category !== null
-                            ? claimFile.category
-                            : 'File Type'
-                        }
-                        fluid
-                        selection
-                        options={fileUploadOptions}
-                        onChange={(event) =>
-                          setClaimFileCategory({
-                            variables: {
-                              claimId: claimId,
-                              claimFileId: claimFile.claimFileId!,
-                              category: event.currentTarget.textContent,
-                            },
-                          })
-                        }
+            claimFiles.sort(sortClaimFileDate).map((claimFile) => {
+              return (
+                <Table.Row key={claimFile.claimFileId}>
+                  <Table.Cell>
+                    {claimFile.contentType === 'application/pdf' ? (
+                      <embed
+                        src={claimFile.fileUploadUrl}
+                        width="800px"
+                        height="300px"
                       />
-                    </Table.Cell>
-                    <Table.Cell>
-                      {dateTimeFormatter(
-                        claimFile.uploadedAt,
-                        'yyyy-MM-dd HH:mm:ss',
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <DeleteButton
-                        claimId={claimId}
-                        claimFileId={claimFile.claimFileId!}
-                        showNotification={showNotification}
-                        onDeleted={async () => {
-                          await sleep(500)
-                          await refetch()
-                        }}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                )
-              })
+                    ) : (
+                      <Image src={claimFile.fileUploadUrl} size="large" />
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Dropdown
+                      placeholder={
+                        claimFile.category !== null
+                          ? claimFile.category
+                          : 'File Type'
+                      }
+                      fluid
+                      selection
+                      options={fileUploadOptions}
+                      onChange={(event) =>
+                        setClaimFileCategory({
+                          variables: {
+                            claimId: claimId,
+                            claimFileId: claimFile.claimFileId!,
+                            category: event.currentTarget.textContent,
+                          },
+                        })
+                      }
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    {dateTimeFormatter(
+                      claimFile.uploadedAt,
+                      'yyyy-MM-dd HH:mm:ss',
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <DeleteButton
+                      claimId={claimId}
+                      claimFileId={claimFile.claimFileId!}
+                      showNotification={showNotification}
+                      onDeleted={async () => {
+                        await sleep(500)
+                        await refetch()
+                      }}
+                    />
+                  </Table.Cell>
+                </Table.Row>
+              )
+            })
           )}
         </Table.Body>
       </TableWithOverflow>
