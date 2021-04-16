@@ -5,6 +5,7 @@ import {
   useSetClaimFileCategoryMutation,
 } from 'api/generated/graphql'
 import { Spinner } from 'hedvig-ui/sipnner'
+import { ErrorText } from 'hedvig-ui/typography'
 import { dateTimeFormatter } from 'lib/helpers'
 import React from 'react'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
@@ -66,7 +67,12 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
   claimId: string
   memberId: string
 }> = ({ claimId, memberId, showNotification }) => {
-  const { data: claimFilesData, refetch, loading } = useClaimFilesQuery({
+  const {
+    data: claimFilesData,
+    refetch,
+    loading,
+    error: queryError,
+  } = useClaimFilesQuery({
     variables: { claimId },
   })
   const [setClaimFileCategory] = useSetClaimFileCategoryMutation()
@@ -83,6 +89,8 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
           await refetch()
         }}
       />
+
+      {queryError && <ErrorText>{queryError.message}</ErrorText>}
 
       <TableWithOverflow celled>
         <Table.Header>

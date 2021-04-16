@@ -130,7 +130,7 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
     exGratia: yup.boolean(),
     type: yup
       .string()
-      .oneOf(['Manual', 'Automatic', 'IndemnityCost', 'Expense'])
+      .oneOf(['Automatic', 'IndemnityCost', 'Expense'])
       .required(),
   })
 
@@ -187,7 +187,7 @@ export const ClaimPayment: React.FC<Props> = ({
           {(createPayment) => (
             <Formik<PaymentFormData>
               initialValues={{
-                type: 'Manual',
+                type: 'Automatic',
                 amount: '',
                 deductible: '',
                 note: '',
@@ -236,7 +236,9 @@ export const ClaimPayment: React.FC<Props> = ({
                       control={<Field component={Checkbox} name="exGratia" />}
                     />
                     <Field component={FieldSelect} name="type">
-                      <MuiMenuItem value="Manual">Manual</MuiMenuItem>
+                      <MuiMenuItem value="Manual" disabled>
+                        Manual
+                      </MuiMenuItem>
                       <MuiMenuItem value="Automatic">Automatic</MuiMenuItem>
                       <MuiMenuItem value="IndemnityCost">
                         Indemnity Cost

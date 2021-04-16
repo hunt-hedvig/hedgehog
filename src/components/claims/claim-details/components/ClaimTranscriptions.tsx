@@ -5,6 +5,7 @@ import {
   withStyles,
 } from '@material-ui/core'
 import { useClaimTranscriptionsQuery } from 'api/generated/graphql'
+import { ErrorText } from 'hedvig-ui/typography'
 
 import React from 'react'
 
@@ -40,7 +41,10 @@ const ClaimTranscriptionMetaData = withStyles({
 })(MuiTypography)
 
 const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
-  const { data: claimTranscriptionsData } = useClaimTranscriptionsQuery({
+  const {
+    data: claimTranscriptionsData,
+    error: queryError,
+  } = useClaimTranscriptionsQuery({
     variables: { claimId },
   })
 
@@ -51,6 +55,9 @@ const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
   return (
     <Paper>
       <h3>Transcription</h3>
+
+      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+
       <MuiList>
         {claimTranscriptionsData?.claim?.transcriptions?.map(
           (transcription) => (

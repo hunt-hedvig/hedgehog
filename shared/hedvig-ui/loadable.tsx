@@ -1,7 +1,6 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React from 'react'
-import { range } from 'utils/array'
 
 const fade = keyframes`
   0% { opacity: 0.3; }
@@ -39,13 +38,15 @@ const LoadableWrapper = styled.div<{ loading: boolean }>`
         }
       }
 
-      ${range(10).map(
-        (i) => css`
-          > *:nth-of-type(${i}) {
-            animation-delay: ${(i * 1000) / 10}ms;
-          }
-        `,
-      )}
+      ${Array(10)
+        .fill(null)
+        .map(
+          (_, i) => css`
+            > *:nth-of-type(${i}) {
+              animation-delay: ${(i * 1000) / 10}ms;
+            }
+          `,
+        )}
     `}
 `
 

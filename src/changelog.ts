@@ -13,6 +13,13 @@ export interface Change {
 export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-04-16',
+    change:
+      'Allow line breaks and multiple spaces in claim notes 🛸. ' +
+      'Also sort payments and claims and some other goodies',
+    authorGithubHandle: 'palmenhq',
+  },
+  {
+    date: '2021-04-15',
     change: 'Speed up the claims tab 🏎',
     authorGithubHandle: 'palmenhq',
   },

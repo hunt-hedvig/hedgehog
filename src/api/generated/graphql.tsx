@@ -2019,7 +2019,7 @@ export type ClaimReservesQueryVariables = Exact<{
 
 export type ClaimReservesQuery = { __typename?: 'QueryType' } & {
   claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves'> & {
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves' | 'state'> & {
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
         >
@@ -4102,6 +4102,7 @@ export const ClaimReservesDocument = gql`
     claim(id: $claimId) {
       id
       reserves
+      state
       events {
         date
         text
