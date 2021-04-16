@@ -60,6 +60,7 @@ const ClaimNote = withStyles({
   root: {
     fontSize: '1rem',
     maxWidth: '80%',
+    whiteSpace: 'pre-wrap',
   },
 })(MuiTypography)
 
