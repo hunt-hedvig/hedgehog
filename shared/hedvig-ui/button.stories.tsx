@@ -32,20 +32,3 @@ export const Text = () => {
     </Button>
   )
 }
-
-export const Emoji: React.FC & WithStory = () => (
-  <Button
-    onClick={action('clicked')}
-    variation={select('variation', colors, 'primary')}
-    size={select('Size', sizes, 'medium')}
-    basic={boolean('Basic', false)}
-  >
-    <span role="img" aria-label="so cool">
-      😀 😎 👍 💯
-    </span>
-  </Button>
-)
-
-Emoji.story = {
-  name: 'with emoji',
-}

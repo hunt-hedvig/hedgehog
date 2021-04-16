@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   FormControlLabel as MuiFormControlLabel,
   Switch as MuiSwitch,
@@ -8,37 +9,27 @@ import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
 import { shouldIgnoreInput } from 'utils/hooks/key-press-hook'
-import { EmojiPicker } from './EmojiPicker'
 
-const MessagesPanelContainer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  flexShrink: 0,
-  flexWrap: 'wrap',
-  marginTop: 'auto',
-  padding: '0.5rem',
-  backgroundColor: theme.backgroundLight,
-  border: '1px solid ' + theme.borderStrong,
-  borderTop: 0,
-  borderBottomRightRadius: '0.5rem',
-  borderBottomLeftRadius: '0.5rem',
-}))
-
-const ChatForm = styled('form')({
-  marginLeft: '16px',
-  width: 'calc(100% - 3em - 16px)',
-  marginRight: '0.5rem',
-})
-
-const ActionContainer = styled('div')`
-  position: relative;
-  width: 2em;
-  text-align: right;
+const MessagesPanelContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding: 0.5rem;
+  background-color: ${({ theme }) => theme.backgroundLight};
+  border: 1px solid ${({ theme }) => theme.borderStrong};
+  border-top: 0;
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
 `
 
-const OptionsContainer = styled('div')`
+const ChatForm = styled.form`
+  margin: 0 1rem;
+  width: 100%;
+`
+const OptionsContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -111,10 +102,6 @@ export const ChatPanel = ({ memberId }) => {
       })
   }
 
-  const selectEmoji = (emoji: string) => {
-    setCurrentMessage(currentMessage + emoji)
-  }
-
   return (
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>
@@ -140,10 +127,6 @@ export const ChatPanel = ({ memberId }) => {
           }}
         />
       </ChatForm>
-
-      <ActionContainer>
-        <EmojiPicker selectEmoji={selectEmoji} />
-      </ActionContainer>
 
       <OptionsContainer>
         <MuiFormControlLabel
