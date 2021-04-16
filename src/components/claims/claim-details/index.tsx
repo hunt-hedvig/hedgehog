@@ -17,12 +17,7 @@ import { ClaimTypeForm } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
 
 const GridWithChatPaneAdjustment = styled(Grid)`
-  max-width: 100%;
-  min-width: 1000px;
-
-  @media (min-width: 1700px) {
-    max-width: calc(100% - 400px);
-  }
+  width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
 `
 
 interface Props {
