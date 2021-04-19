@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-04-19',
+    change:
+      'Speed up question resolve/send, add shortcuts to member suggestions in search, remove Emoji mart',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-04-16',
     change:
       'Allow line breaks and multiple spaces in claim notes 🛸. ' +
