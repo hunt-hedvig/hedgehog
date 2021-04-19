@@ -2127,6 +2127,62 @@ export type BackfillSubscriptionsMutation = { __typename?: 'MutationType' } & {
   backfillSubscriptions: { __typename?: 'Member' } & Pick<Member, 'memberId'>
 }
 
+export type GetMemberTransactionsQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetMemberTransactionsQuery = { __typename?: 'QueryType' } & {
+  member?: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        contractMarketInfo?: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market' | 'preferredCurrency'
+          >
+        >
+        directDebitStatus?: Maybe<
+          { __typename?: 'DirectDebitStatus' } & Pick<
+            DirectDebitStatus,
+            'activated'
+          >
+        >
+        payoutMethodStatus?: Maybe<
+          { __typename?: 'PayoutMethodStatus' } & Pick<
+            PayoutMethodStatus,
+            'activated'
+          >
+        >
+        identity?: Maybe<
+          { __typename?: 'Identity' } & Pick<
+            Identity,
+            'firstName' | 'lastName'
+          > & {
+              nationalIdentification: {
+                __typename?: 'NationalIdentification'
+              } & Pick<NationalIdentification, 'identification' | 'nationality'>
+            }
+        >
+        transactions?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Transaction' } & Pick<
+                Transaction,
+                'id' | 'timestamp' | 'type' | 'status'
+              > & {
+                  amount?: Maybe<
+                    { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  >
+                }
+            >
+          >
+        >
+      }
+  >
+}
+
 export type MemberNameAndContractMarketInfoQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -4614,6 +4670,92 @@ export type BackfillSubscriptionsMutationResult = ApolloReactCommon.MutationResu
 export type BackfillSubscriptionsMutationOptions = ApolloReactCommon.BaseMutationOptions<
   BackfillSubscriptionsMutation,
   BackfillSubscriptionsMutationVariables
+>
+export const GetMemberTransactionsDocument = gql`
+  query GetMemberTransactions($id: ID!) {
+    member(id: $id) {
+      memberId
+      contractMarketInfo {
+        market
+        preferredCurrency
+      }
+      directDebitStatus {
+        activated
+      }
+      payoutMethodStatus {
+        activated
+      }
+      identity {
+        nationalIdentification {
+          identification
+          nationality
+        }
+        firstName
+        lastName
+      }
+      transactions {
+        id
+        amount {
+          amount
+          currency
+        }
+        timestamp
+        type
+        status
+      }
+    }
+  }
+`
+
+/**
+ * __useGetMemberTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetMemberTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMemberTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMemberTransactionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetMemberTransactionsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetMemberTransactionsQuery,
+    GetMemberTransactionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetMemberTransactionsQuery,
+    GetMemberTransactionsQueryVariables
+  >(GetMemberTransactionsDocument, options)
+}
+export function useGetMemberTransactionsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMemberTransactionsQuery,
+    GetMemberTransactionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetMemberTransactionsQuery,
+    GetMemberTransactionsQueryVariables
+  >(GetMemberTransactionsDocument, options)
+}
+export type GetMemberTransactionsQueryHookResult = ReturnType<
+  typeof useGetMemberTransactionsQuery
+>
+export type GetMemberTransactionsLazyQueryHookResult = ReturnType<
+  typeof useGetMemberTransactionsLazyQuery
+>
+export type GetMemberTransactionsQueryResult = ApolloReactCommon.QueryResult<
+  GetMemberTransactionsQuery,
+  GetMemberTransactionsQueryVariables
 >
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {

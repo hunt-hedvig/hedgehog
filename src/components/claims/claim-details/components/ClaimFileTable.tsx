@@ -146,7 +146,7 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
                       onChange={(event) =>
                         setClaimFileCategory({
                           variables: {
-                            claimId: claimId,
+                            claimId,
                             claimFileId: claimFile.claimFileId!,
                             category: event.currentTarget.textContent,
                           },

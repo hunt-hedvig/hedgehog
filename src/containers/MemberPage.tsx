@@ -1,9 +1,9 @@
-import { Member } from 'components/member'
+import { MemberTabs } from 'components/member'
+import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import actions from 'store/actions'
-import { useGetMemberInfo } from 'graphql/use-get-member-info'
 
 const MemberPage = (props) => {
   const memberId = props.match.params.memberId
@@ -13,7 +13,7 @@ const MemberPage = (props) => {
     return null
   }
 
-  return <Member {...props} member={member} />
+  return <MemberTabs {...props} member={member} />
 }
 
 const mapStateToProps = ({ auth, payoutDetails }) => ({

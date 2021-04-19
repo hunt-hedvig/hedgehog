@@ -1,3 +1,4 @@
+import { Query } from '@apollo/client/react/components'
 import gql from 'graphql-tag'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
@@ -6,8 +7,6 @@ import {
 } from 'hedvig-ui/animations/standalone-message'
 import { dateTimeFormatter } from 'lib/helpers'
 import React from 'react'
-import { Query } from '@apollo/client/react/components'
-import { RouteComponentProps } from 'react-router'
 import { Image, Table } from 'semantic-ui-react'
 
 const query = gql`
@@ -69,43 +68,38 @@ const MemberFileTable: React.FunctionComponent<MemberFileTableProps> = ({
   </Table>
 )
 
-class MemberFile extends React.Component<
-  RouteComponentProps<{
-    memberId: string
-  }>
-> {
-  public render() {
-    return (
-      <FadeIn>
-        <Query<any>
-          query={query}
-          variables={{ memberId: this.props.match.params.memberId }}
-        >
-          {({ loading, error, data }) => {
-            if (error) {
-              return (
-                <div>
-                  Error in GraphQl query here.....:{' '}
-                  <pre>{JSON.stringify(error, null, 2)}</pre>
-                </div>
-              )
-            }
-            if (loading || !data) {
-              return <LoadingMessage paddingTop="10vh" />
-            }
+interface MemberFileProps {
+  memberId: string
+}
 
-            return data.member.fileUploads.length === 0 ? (
-              <StandaloneMessage paddingTop="10vh">
-                No files uploaded for this member
-              </StandaloneMessage>
-            ) : (
-              <MemberFileTable memberFiles={data.member.fileUploads} />
+export const MemberFile: React.FC<MemberFileProps> = ({ memberId }) => {
+  return (
+    <FadeIn>
+      <Query<any> query={query} variables={{ memberId }}>
+        {({ loading, error, data }) => {
+          if (error) {
+            return (
+              <div>
+                Error in GraphQl query here.....:{' '}
+                <pre>{JSON.stringify(error, null, 2)}</pre>
+              </div>
             )
-          }}
-        </Query>
-      </FadeIn>
-    )
-  }
+          }
+          if (loading || !data) {
+            return <LoadingMessage paddingTop="10vh" />
+          }
+
+          return data.member.fileUploads.length === 0 ? (
+            <StandaloneMessage paddingTop="10vh">
+              No files uploaded for this member
+            </StandaloneMessage>
+          ) : (
+            <MemberFileTable memberFiles={data.member.fileUploads} />
+          )
+        }}
+      </Query>
+    </FadeIn>
+  )
 }
 
 export default MemberFile

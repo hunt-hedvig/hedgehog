@@ -14,7 +14,7 @@ export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-04-19',
     change:
-      'Speed up question resolve/send, add shortcuts to member suggestions in search, remove Emoji mart',
+      'Speed up question resolve/send 🏎, add shortcuts to member suggestions in search, remove ☺ Emoji mart 😢',
     authorGithubHandle: 'vonElfvin',
   },
   {

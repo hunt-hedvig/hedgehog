@@ -29,7 +29,11 @@ export const QuestionGroup = ({ questionGroup }) => {
   return (
     <QuestionGroupWrapper key={questionGroup.id} isVisible={isVisible}>
       <QuestionGroupInfo questionGroup={questionGroup} />
-      <AnswerForm memberId={questionGroup.memberId} setVisible={setVisible} />
+      <AnswerForm
+        memberId={questionGroup.memberId}
+        onDone={() => setVisible(false)}
+        onError={() => setVisible(true)}
+      />
     </QuestionGroupWrapper>
   )
 }

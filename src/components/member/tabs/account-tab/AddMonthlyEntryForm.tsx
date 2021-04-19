@@ -3,6 +3,7 @@ import {
   getAddMonthlyEntryOptions,
   useAddMonthlyEntry,
 } from 'graphql/use-add-monthly-entry'
+import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import { Form, FormDropdown, FormInput, SubmitButton } from 'hedvig-ui/form'
@@ -12,28 +13,29 @@ import { FieldValues } from 'react-hook-form/dist/types/fields'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 
-const AddMonthlyEntryFormComponent: React.FC<{
+const AddMonthlyEntryFormComponent: React.FC<WithShowNotification & {
   memberId: string
-  preferredCurrency?: string
-} & WithShowNotification> = ({
-  memberId,
-  preferredCurrency,
-  showNotification,
-}) => {
-  if (!preferredCurrency) {
+}> = ({ memberId, showNotification }) => {
+  const [contractMarketInfo] = useContractMarketInfo(memberId)
+
+  if (!Boolean(contractMarketInfo?.preferredCurrency)) {
     return (
       <StandaloneMessage>
         The member has no preferred currency
       </StandaloneMessage>
     )
   }
+  const preferredCurrency = contractMarketInfo!.preferredCurrency
 
   const form = useForm()
 
   const [addMonthlyEntry] = useAddMonthlyEntry()
   const onSubmit = (data: FieldValues) => {
     const dataCopy = { ...data }
-    dataCopy.amount = { ...dataCopy.amount, currency: preferredCurrency }
+    dataCopy.amount = {
+      ...dataCopy.amount,
+      currency: preferredCurrency,
+    }
     dataCopy.externalId =
       dataCopy.externalId.trim() === '' ? undefined : dataCopy.externalId
     addMonthlyEntry(

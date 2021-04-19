@@ -4,10 +4,9 @@ import MemberFile from 'components/member/tabs/FileTab'
 import PaymentsTab from 'components/member/tabs/payments-tab'
 import { Quotes } from 'components/member/tabs/quote-tab'
 
-import { ClaimsTab } from 'components/member/tabs/ClaimsTab'
-import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
-import React from 'react'
 import styled from '@emotion/styled'
+import { ClaimsTab } from 'components/member/tabs/ClaimsTab'
+import React from 'react'
 import { Tab } from 'semantic-ui-react'
 import { AccountTab } from './account-tab'
 import { CampaignsTab } from './campaigns-tab'
@@ -26,16 +25,14 @@ const TabItem: React.FC<{ props: any; TabContent: any }> = ({
   props,
   TabContent,
 }) => {
-  const memberId = props.match.params.memberId
-  const [contractMarketInfo] = useContractMarketInfo(memberId)
   return (
     <TabContainer>
-      <TabContent {...props} contractMarketInfo={contractMarketInfo} />
+      <TabContent {...props} />
     </TabContainer>
   )
 }
 
-const memberPagePanes = (props, memberId, member, isHinting) => [
+export const memberPagePanes = (props, memberId, member, isHinting) => [
   {
     tabName: 'member',
     menuItem: `Member ${isHinting ? '(1)' : ''}`,
@@ -53,7 +50,9 @@ const memberPagePanes = (props, memberId, member, isHinting) => [
   {
     tabName: 'files',
     menuItem: `Files ${isHinting ? '(3)' : ''}`,
-    render: () => <TabItem props={props} TabContent={MemberFile} />,
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={MemberFile} />
+    ),
   },
   {
     tabName: 'contracts',
@@ -72,7 +71,9 @@ const memberPagePanes = (props, memberId, member, isHinting) => [
   {
     tabName: 'payments',
     menuItem: `Payments ${isHinting ? '(6)' : ''}`,
-    render: () => <TabItem props={props} TabContent={PaymentsTab} />,
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={PaymentsTab} />
+    ),
   },
   {
     tabName: 'account',
@@ -96,4 +97,3 @@ const memberPagePanes = (props, memberId, member, isHinting) => [
     ),
   },
 ]
-export default memberPagePanes

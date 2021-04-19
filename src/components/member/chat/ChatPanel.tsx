@@ -3,7 +3,6 @@ import {
   FormControlLabel as MuiFormControlLabel,
   Switch as MuiSwitch,
   TextField as MuiTextField,
-  withStyles,
 } from '@material-ui/core'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import { Button } from 'hedvig-ui/button'
@@ -19,10 +18,7 @@ const MessagesPanelContainer = styled.div`
   margin-top: auto;
   padding: 0.5rem;
   background-color: ${({ theme }) => theme.backgroundLight};
-  border: 1px solid ${({ theme }) => theme.borderStrong};
   border-top: 0;
-  border-bottom-right-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
 `
 
 const ChatForm = styled.form`
@@ -35,22 +31,18 @@ const OptionsContainer = styled.div`
   justify-content: space-between;
 `
 
-const OptionCheckbox = withStyles({
-  root: {
-    verticalAlign: 'middle',
-  },
-})(MuiSwitch)
+const OptionCheckbox = styled(MuiSwitch)`
+  vertical-align: middle;
+`
 
 const SubmitButton = styled(Button)`
   margin: 1rem;
 `
 
-const TextField = withStyles({
-  root: {
-    width: '100%',
-    boxSizing: 'border-box',
-  },
-})(MuiTextField)
+const TextField = styled(MuiTextField)`
+  width: 100%;
+  box-sizing: border-box;
+`
 
 export const ChatPanel = ({ memberId }) => {
   const [currentMessage, setCurrentMessage] = useState('')

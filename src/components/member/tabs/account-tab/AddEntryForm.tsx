@@ -89,7 +89,7 @@ const AddEntryFormComponent: React.FC<{
 } & WithShowNotification> = ({ memberId, showNotification }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
 
-  if (!contractMarketInfo?.preferredCurrency) {
+  if (!Boolean(contractMarketInfo?.preferredCurrency)) {
     return (
       <StandaloneMessage>
         The member has no preferred currency
@@ -97,7 +97,7 @@ const AddEntryFormComponent: React.FC<{
     )
   }
 
-  const preferredCurrency = contractMarketInfo.preferredCurrency
+  const preferredCurrency = contractMarketInfo!.preferredCurrency
   const [addAccountEntry] = useAddAccountEntryToMemberMutation()
 
   const form = useForm()

@@ -3,7 +3,6 @@ import {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
 } from '@material-ui/core'
-import { ContractMarketInfo } from 'api/generated/graphql'
 import { AccountEntriesInfo } from 'components/member/tabs/account-tab/AccountEntriesInfo'
 import { AccountEntryTable } from 'components/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'components/member/tabs/account-tab/AddEntryForm'
@@ -37,8 +36,7 @@ const moneyOptions = {
 
 export const AccountTab: React.FC<{
   memberId: string
-  contractMarketInfo: ContractMarketInfo
-}> = ({ memberId, contractMarketInfo }) => {
+}> = ({ memberId }) => {
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
 
   if (loading) {
@@ -164,10 +162,7 @@ export const AccountTab: React.FC<{
                 Add monthly entry
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <AddMonthlyEntryForm
-                  memberId={memberId}
-                  preferredCurrency={contractMarketInfo?.preferredCurrency}
-                />
+                <AddMonthlyEntryForm memberId={memberId} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Card>

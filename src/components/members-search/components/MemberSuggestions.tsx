@@ -23,16 +23,20 @@ export const MemberSuggestions: React.FC = () => {
       )}
 
       {memberHistory.map((memberId, index) => (
-        <MemberHistoryCard key={memberId} memberId={memberId} index={index} />
+        <MemberHistoryCard
+          key={memberId}
+          memberId={memberId}
+          orderNumber={index + 1}
+        />
       ))}
     </MemberHistoryWrapper>
   )
 }
 
-const MemberHistoryCard: React.FC<{ memberId: string; index: number }> = ({
-  memberId,
-  index,
-}) => {
+const MemberHistoryCard: React.FC<{
+  memberId: string
+  orderNumber: number
+}> = ({ memberId, orderNumber }) => {
   const { data } = useMemberNameAndContractMarketInfoQuery({
     variables: { memberId },
   })
@@ -43,7 +47,7 @@ const MemberHistoryCard: React.FC<{ memberId: string; index: number }> = ({
   registerActions([
     {
       label: `Navigate to ${data?.member?.firstName} ${data?.member?.lastName} (${memberId})`,
-      keys: [Keys.Control, NumberKeys[index + 1]],
+      keys: [Keys.Control, NumberKeys[orderNumber]],
       onResolve: () => history.push(targetLocation),
     },
   ])
@@ -52,7 +56,7 @@ const MemberHistoryCard: React.FC<{ memberId: string; index: number }> = ({
       <MemberName>
         {data?.member?.firstName} {data?.member?.lastName}&nbsp;
         <MemberFlag memberId={memberId} />
-        {isHintingControl && <>({index + 1})</>}
+        {isHintingControl && <>({orderNumber})</>}
       </MemberName>
       <MemberId>{memberId}</MemberId>
     </MemberHistoryCardWrapper>

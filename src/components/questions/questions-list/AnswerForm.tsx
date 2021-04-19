@@ -31,8 +31,14 @@ const FlexGrid = styled(Grid)`
 
 export const AnswerFormComponent: React.FC<{
   memberId: string
-  setVisible: (visible: boolean) => void
-} & WithShowNotification> = ({ memberId, setVisible, showNotification }) => {
+  onDone: () => void
+  onError: () => void
+} & WithShowNotification> = ({
+  memberId,
+  onDone,
+  onError,
+  showNotification,
+}) => {
   const form = useForm()
 
   const [
@@ -51,7 +57,7 @@ export const AnswerFormComponent: React.FC<{
     form.formState.isSubmitting
 
   const onSubmit = (data: FieldValues) => {
-    setVisible(false)
+    onDone()
     answerQuestion(getAnswerQuestionOptions(memberId, data.answer.trim()))
       .then(() => {
         showNotification({
@@ -61,7 +67,7 @@ export const AnswerFormComponent: React.FC<{
         })
       })
       .catch((error) => {
-        setVisible(true)
+        onError()
         showNotification({
           type: 'red',
           header: `Unable to send the answer to ${memberId}`,
@@ -72,7 +78,7 @@ export const AnswerFormComponent: React.FC<{
   }
 
   const handleMarkAsResolved = () => {
-    setVisible(false)
+    onDone()
     markQuestionAsResolved(getMarkQuestionAsResolvedOptions(memberId))
       .then(() => {
         showNotification({
@@ -82,7 +88,7 @@ export const AnswerFormComponent: React.FC<{
         })
       })
       .catch((error) => {
-        setVisible(true)
+        onError()
         showNotification({
           type: 'red',
           header: `Unable to mark the question as resolved for ${memberId}`,
