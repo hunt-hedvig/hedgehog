@@ -1,4 +1,4 @@
-import ClaimDetailsPage from 'containers/ClaimDetailsPage'
+import { ClaimDetailsPage } from 'containers/ClaimDetailsPage'
 import { ClaimsPage } from 'containers/ClaimsPage'
 import * as PropTypes from 'prop-types'
 import React from 'react'
