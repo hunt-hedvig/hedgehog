@@ -90,7 +90,7 @@ export const Member = (props) => {
     history.replace(`/members/${memberId}/${tabName}`)
 
   const formattedFirstName =
-    member.firstName + (member.firstName.slice(-1) === 's' ? "'" : "'s")
+    member.firstName ? member.firstName + (member.firstName.slice(-1) === 's' ? "'" : "'s") : "Member's"
 
   registerActions([
     {
