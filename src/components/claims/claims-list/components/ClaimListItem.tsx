@@ -29,7 +29,7 @@ const MemberIdCell = styled<typeof Table.Cell>(
       getMemberIdColor(memberId, numberMemberGroups)} !important;
 `
 
-const FadeInLinkRow = withFadeIn<TableRowProps>(LinkRow)
+const FadeInLinkRow = withFadeIn(LinkRow)
 
 const splitOnUpperCase = (s: string) => {
   const splitResult = s.match(/[A-Z][a-z]+|[0-9]+/g)

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import animateScrollTo from 'animated-scroll-to'
-import Message from 'components/member/messages/Message'
+import { Message } from 'components/member/messages/Message'
 import { parseISO } from 'date-fns'
 import { useMessageHistory } from 'graphql/use-message-history'
 import PropTypes from 'prop-types'

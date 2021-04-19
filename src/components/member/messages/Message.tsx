@@ -4,7 +4,6 @@ import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
 import { format } from 'date-fns'
 import * as types from 'lib/messageTypes'
-import PropTypes from 'prop-types'
 import React from 'react'
 
 const MessageRow = styled.div<
@@ -90,7 +89,7 @@ const isImage = (text) => {
   return text.match(/\.(jpeg|jpg|gif|png)$/) != null
 }
 
-const Message = React.forwardRef<
+export const Message = React.forwardRef<
   React.ReactNode,
   {
     left: boolean
@@ -152,9 +151,3 @@ const MessageContent = ({ content }) => {
       return null
   }
 }
-
-MessageContent.propTypes = {
-  content: PropTypes.object.isRequired,
-}
-
-export default Message

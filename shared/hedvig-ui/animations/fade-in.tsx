@@ -12,10 +12,10 @@ interface FadeInProps {
   duration?: number
 }
 
-export const withFadeIn: <T extends object>(
+export const withFadeIn: (
   component,
   ...args
-) => StyledComponent<FadeInProps, T, object> = (component, ...args) =>
+) => StyledComponent<FadeInProps, any> = (component, ...args) =>
   styled(
     component,
     ...args,

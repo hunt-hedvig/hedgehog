@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import QuestionGroupInfo from 'components/questions/questions-list/QuestionGroupInfo'
+import { QuestionGroup } from 'api/generated/graphql'
+import { QuestionGroupInfo } from 'components/questions/questions-list/QuestionGroupInfo'
 import React from 'react'
 import { AnswerForm } from './AnswerForm'
 
@@ -19,7 +20,9 @@ const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`
   border: 1px solid ${({ theme }) => theme.border};
 `
 
-export const QuestionGroup = ({ questionGroup }) => {
+export const QuestionGroupItem: React.FC<{
+  questionGroup: QuestionGroup
+}> = ({ questionGroup }) => {
   const [isVisible, setVisible] = React.useState(false)
 
   React.useEffect(() => {

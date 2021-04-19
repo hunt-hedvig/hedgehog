@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types'
+import styled from '@emotion/styled'
+import { QuestionGroup } from 'api/generated/graphql'
+import { QuestionGroupItem } from 'components/questions/questions-list/QuestionGroupItem'
+import { withFadeIn } from 'hedvig-ui/animations/fade-in'
+import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
-import styled from '@emotion/styled'
-import { QuestionGroup } from './QuestionGroup'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
-import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 
 const List = styled(Segment)`
   width: 100%;
@@ -15,9 +15,11 @@ const List = styled(Segment)`
   }
 `
 
-const FadeInQuestionGroup = withFadeIn(QuestionGroup)
+const FadeInQuestionGroup = withFadeIn(QuestionGroupItem)
 
-export const FilteredQuestionGroups = ({ filterQuestionGroups }) => {
+export const FilteredQuestionGroups: React.FC<{
+  filterQuestionGroups: ReadonlyArray<QuestionGroup>
+}> = ({ filterQuestionGroups }) => {
   return (
     <List>
       {filterQuestionGroups.length ? (
@@ -35,8 +37,4 @@ export const FilteredQuestionGroups = ({ filterQuestionGroups }) => {
       )}
     </List>
   )
-}
-
-FilteredQuestionGroups.propTypes = {
-  filterQuestionGroups: PropTypes.array.isRequired,
 }
