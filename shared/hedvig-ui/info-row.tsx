@@ -1,3 +1,4 @@
+import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { spacingMap } from 'hedvig-ui/spacing'
 import { Paragraph } from 'hedvig-ui/typography'
@@ -9,7 +10,7 @@ export const InfoContainer = styled('div')`
 `
 
 export const InfoRow = styled(Paragraph)`
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -22,8 +23,8 @@ export const InfoText = styled('span')`
 `
 
 export const InfoSection = styled.div`
-  padding-top: ${spacingMap.small};
-  padding-bottom: ${spacingMap.small};
+  margin-top: ${spacingMap.medium};
+  margin-bottom: ${spacingMap.medium};
 `
 
 export const InfoDelimiter = styled.div<{ visible?: boolean }>`
@@ -33,4 +34,31 @@ export const InfoDelimiter = styled.div<{ visible?: boolean }>`
       visible ? theme.placeholderColor : 'rgba(0, 0, 0, 0)'};
   margin-top: ${spacingMap.medium};
   margin-bottom: ${spacingMap.medium};
+`
+
+const mapInfoTagStatus = (status: 'success' | 'warning' | 'danger') => {
+  const theme = useTheme()
+
+  if (status === 'warning') {
+    return { backgroundColor: theme.lightWarning, color: theme.darkWarning }
+  }
+
+  if (status === 'danger') {
+    return { backgroundColor: theme.lightDanger, color: theme.danger }
+  }
+
+  return { backgroundColor: theme.lightSuccess, color: theme.success }
+}
+
+export type InfoTagStatus = 'success' | 'warning' | 'danger'
+
+export const InfoTag = styled.div<{
+  status?: InfoTagStatus
+}>`
+  background-color: ${({ status = 'success' }) =>
+    mapInfoTagStatus(status).backgroundColor};
+  padding: 0em 0.7em;
+  color: ${({ status = 'success' }) => mapInfoTagStatus(status).color};
+  border-radius: 7px;
+  font-size: 0.85em;
 `

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {
+  Flag,
   SanctionStatus,
   useClaimContractQuery,
   useClaimMemberContractsMasterInceptionQuery,
@@ -7,9 +8,7 @@ import {
 import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
-import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
-import { FraudulentStatus } from 'lib/fraudulentStatus'
 import React from 'react'
 
 import { useHistory } from 'react-router'
@@ -26,36 +25,42 @@ import { formatMoney } from 'utils/money'
 
 import {
   InfoContainer,
-  InfoDelimiter,
   InfoRow,
   InfoSection,
+  InfoTag,
+  InfoTagStatus,
   InfoText,
 } from 'hedvig-ui/info-row'
-import {
-  Ban,
-  Checkmark,
-  Cross,
-  QuestionMark,
-  RedQuestionMark,
-  ThumpsUp,
-} from '../../../icons'
+import { formatSsn } from 'utils/member'
+import { convertEnumOrSentenceToTitle, formatPostalCode } from 'utils/text'
+import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 
-const SanctionStatusIcon: React.FC<{ status: SanctionStatus }> = ({
-  status,
-}) => {
-  switch (status) {
-    case SanctionStatus.Undetermined:
-      return <QuestionMark />
-    case SanctionStatus.NoHit:
-      return <ThumpsUp />
-    case SanctionStatus.PartialHit:
-      return <RedQuestionMark />
-    case SanctionStatus.FullHit:
-      return <Ban />
-    default:
-      throw new Error('SanctionStatusPicker failed to map the status')
-  }
+type FraudulentStatus = 'NOT_FRAUD' | 'SUSPECTED_FRAUD' | 'CONFIRMED_FRAUD'
+
+const fraudulentStatusMap: Record<FraudulentStatus, InfoTagStatus> = {
+  NOT_FRAUD: 'success',
+  SUSPECTED_FRAUD: 'warning',
+  CONFIRMED_FRAUD: 'danger',
+}
+
+const sanctionStatusMap: Record<SanctionStatus, InfoTagStatus> = {
+  [SanctionStatus.NoHit]: 'success',
+  [SanctionStatus.PartialHit]: 'warning',
+  [SanctionStatus.Undetermined]: 'warning',
+  [SanctionStatus.FullHit]: 'danger',
+}
+
+const debtFlagMap: Record<Flag, InfoTagStatus> = {
+  [Flag.Green]: 'success',
+  [Flag.Amber]: 'warning',
+  [Flag.Red]: 'danger',
+}
+
+const debtFlagDescriptionMap: Record<Flag, string> = {
+  [Flag.Green]: 'No debt',
+  [Flag.Amber]: 'Minor debt',
+  [Flag.Red]: 'Major debt',
 }
 
 const MemberName = styled('h2')({
@@ -126,47 +131,87 @@ export const MemberInformation: React.FC<{
           )}
           <InfoRow>
             Personal number
-            <InfoText>{member?.personalNumber ?? '-'}</InfoText>
+            <InfoText>
+              {member?.personalNumber ? formatSsn(member.personalNumber) : '-'}
+            </InfoText>
           </InfoRow>
+          {member?.sanctionStatus && (
+            <InfoRow>
+              Sanction status
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={sanctionStatusMap[member.sanctionStatus]}
+                >
+                  {member.sanctionStatus}
+                </InfoTag>
+              </InfoText>
+            </InfoRow>
+          )}
           {address && (
             <InfoSection>
               <InfoRow>
                 Street
-                <InfoText>{address.street}</InfoText>
+                <InfoText>
+                  {convertEnumOrSentenceToTitle(address.street)}
+                </InfoText>
               </InfoRow>
               <InfoRow>
                 Postal code
-                <InfoText>{address.postalCode}</InfoText>
+                <InfoText>{formatPostalCode(address.postalCode)}</InfoText>
               </InfoRow>
               <InfoRow>
                 City
-                <InfoText>{address.city}</InfoText>
+                <InfoText>
+                  {convertEnumOrSentenceToTitle(address.city ?? '')}
+                </InfoText>
               </InfoRow>
             </InfoSection>
           )}
 
+          {member?.fraudulentStatus && (
+            <InfoRow>
+              Fraudulent status
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={fraudulentStatusMap[member.fraudulentStatus]}
+                >
+                  {convertEnumOrSentenceToTitle(member.fraudulentStatus ?? '')}
+                </InfoTag>
+              </InfoText>
+            </InfoRow>
+          )}
+
           <InfoRow>
-            Sanction status
+            Direct debit
             <InfoText>
-              {member?.sanctionStatus ?? '-'}{' '}
-              {member?.sanctionStatus && (
-                <SanctionStatusIcon status={member.sanctionStatus} />
-              )}
+              <InfoTag
+                style={{ fontWeight: 'bold' }}
+                status={
+                  member?.directDebitStatus?.activated ? 'success' : 'warning'
+                }
+              >
+                {member?.directDebitStatus?.activated
+                  ? 'Activated'
+                  : 'Not activated'}
+              </InfoTag>
             </InfoText>
           </InfoRow>
-          <InfoDelimiter visible={false} />
-          <InfoRow>
-            Fraudulent status
-            <InfoText>
-              <span style={{ fontSize: '32px' }}>
-                {member?.fraudulentStatus && (
-                  <FraudulentStatus
-                    stateInfo={{ state: member.fraudulentStatus }}
-                  />
-                )}
-              </span>
-            </InfoText>
-          </InfoRow>
+
+          {member?.person?.debtFlag && (
+            <InfoRow>
+              Debt status
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={debtFlagMap[member.person.debtFlag]}
+                >
+                  {debtFlagDescriptionMap[member.person.debtFlag]}
+                </InfoTag>
+              </InfoText>
+            </InfoRow>
+          )}
 
           <InfoRow>
             Signed
@@ -205,12 +250,6 @@ export const MemberInformation: React.FC<{
             </InfoRow>
           )}
           <InfoRow>
-            Direct debit
-            <InfoText>
-              {member?.directDebitStatus?.activated ? <Checkmark /> : <Cross />}
-            </InfoText>
-          </InfoRow>
-          <InfoRow>
             Payments balance (minimum)
             <InfoText>
               {member?.account?.totalBalance &&
@@ -230,14 +269,6 @@ export const MemberInformation: React.FC<{
             Total number of claims
             <InfoText>{member?.totalNumberOfClaims ?? '-'}</InfoText>
           </InfoRow>
-          {member?.person && (
-            <InfoRow>
-              Debt status
-              <InfoText>
-                <FlagOrbIndicator flag={member.person.debtFlag} size={'tiny'} />
-              </InfoText>
-            </InfoRow>
-          )}
         </Loadable>
       </InfoContainer>
     </Paper>
