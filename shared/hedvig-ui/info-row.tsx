@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { spacingMap } from 'hedvig-ui/spacing'
 import { Paragraph } from 'hedvig-ui/typography'
 
 export const InfoContainer = styled('div')`
@@ -17,4 +18,17 @@ export const InfoRow = styled(Paragraph)`
 
 export const InfoText = styled('span')`
   color: ${({ theme }) => theme.foreground};
+  text-align: right;
+`
+
+export const InfoSection = styled.div`
+  padding-top: ${spacingMap.small};
+  padding-bottom: ${spacingMap.small};
+`
+
+export const InfoDelimiter = styled.div`
+  height: 1px;
+  border-bottom: 1px solid ${({ theme }) => theme.placeholderColor};
+  margin-top: ${spacingMap.medium};
+  margin-bottom: ${spacingMap.medium};
 `

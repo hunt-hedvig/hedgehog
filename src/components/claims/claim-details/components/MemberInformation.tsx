@@ -8,8 +8,7 @@ import { MemberFlag } from 'components/member/shared/member-flag'
 import { formatDistance, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
-import { Spacing } from 'hedvig-ui/spacing'
-import { ErrorText, Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import React from 'react'
 
@@ -25,6 +24,13 @@ import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
 
+import {
+  InfoContainer,
+  InfoDelimiter,
+  InfoRow,
+  InfoSection,
+  InfoText,
+} from 'hedvig-ui/info-row'
 import {
   Ban,
   Checkmark,
@@ -99,99 +105,141 @@ const MemberInformation: React.FC<{
       <ThirdLevelHeadline>Member Information</ThirdLevelHeadline>
       {queryError && <ErrorText>{queryError.message}</ErrorText>}
 
-      <Loadable loading={memberContractsDataLoading}>
-        <MemberName>
-          {member?.firstName ?? '-'} {member?.lastName ?? '-'}{' '}
-          {member && <MemberFlag memberId={memberId} />}
-        </MemberName>
-        <Paragraph>
-          <strong>Id:</strong>{' '}
-          <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
-          {isHintingOption && '(M)'}
-        </Paragraph>
-        {member?.contractMarketInfo?.market === Market.Norway && (
-          <Paragraph>
-            <strong>Identified:</strong>{' '}
-            {member.identity ? <Checkmark /> : <Cross />}
-          </Paragraph>
-        )}
-        <Paragraph>
-          <strong>Personal Number:</strong> {member?.personalNumber ?? '-'}
-        </Paragraph>
-        {address && (
-          <Paragraph>
-            <strong>Address:</strong> {address.street}, {address.postalCode}{' '}
-            {address.city}
-          </Paragraph>
-        )}
+      <InfoContainer>
+        <Loadable loading={memberContractsDataLoading}>
+          <MemberName>
+            {member?.firstName ?? '-'} {member?.lastName ?? '-'}{' '}
+            {member && <MemberFlag memberId={memberId} />}
+          </MemberName>
+          <InfoRow>
+            Member ID
+            <InfoText>
+              <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
+              {isHintingOption && '(M)'}
+            </InfoText>
+          </InfoRow>
+          {member?.contractMarketInfo?.market === Market.Norway && (
+            <InfoRow>
+              Identified
+              <InfoText>{member.identity ? <Checkmark /> : <Cross />}</InfoText>
+            </InfoRow>
+          )}
+          <InfoRow>
+            Personal number
+            <InfoText>{member?.personalNumber ?? '-'}</InfoText>
+          </InfoRow>
+          {address && (
+            <InfoSection>
+              <InfoRow>
+                Street
+                <InfoText>{address.street}</InfoText>
+              </InfoRow>
+              <InfoRow>
+                Postal code
+                <InfoText>{address.postalCode}</InfoText>
+              </InfoRow>
+              <InfoRow>
+                City
+                <InfoText>{address.city}</InfoText>
+              </InfoRow>
+            </InfoSection>
+          )}
 
-        <Paragraph>
-          <strong>Sanction Status:</strong> {member?.sanctionStatus ?? '-'}{' '}
-          {member?.sanctionStatus && (
-            <SanctionStatusIcon status={member.sanctionStatus} />
-          )}
-        </Paragraph>
-        <ThirdLevelHeadline>Fraud Checks</ThirdLevelHeadline>
-        <Spacing bottom="small">
-          <Paragraph>
-            <strong>Fraudulent Status:</strong>{' '}
-            <span style={{ fontSize: '32px' }}>
-              {member?.fraudulentStatus && (
-                <FraudulentStatus
-                  stateInfo={{ state: member.fraudulentStatus }}
-                />
+          <InfoRow>
+            Sanction status
+            <InfoText>
+              {member?.sanctionStatus ?? '-'}{' '}
+              {member?.sanctionStatus && (
+                <SanctionStatusIcon status={member.sanctionStatus} />
               )}
-            </span>
-          </Paragraph>
-        </Spacing>
-        <Paragraph>
-          <strong>Signed:</strong>{' '}
-          {member?.signedOn &&
-            formatDistance(parseISO(member.signedOn), new Date(), {
-              addSuffix: true,
-            })}
-        </Paragraph>
-        <Paragraph>
-          <strong>First Master Inception:</strong> {firstMasterInception}
-          {firstMasterInception && (
-            <> ({formatDistance(new Date(firstMasterInception), new Date())}</>
+            </InfoText>
+          </InfoRow>
+          <InfoDelimiter />
+          <InfoRow>
+            Fraudulent status
+            <InfoText>
+              <span style={{ fontSize: '32px' }}>
+                {member?.fraudulentStatus && (
+                  <FraudulentStatus
+                    stateInfo={{ state: member.fraudulentStatus }}
+                  />
+                )}
+              </span>
+            </InfoText>
+          </InfoRow>
+
+          <InfoRow>
+            Signed
+            <InfoText>
+              {member?.signedOn &&
+                formatDistance(parseISO(member.signedOn), new Date(), {
+                  addSuffix: true,
+                })}
+            </InfoText>
+          </InfoRow>
+
+          <InfoRow>
+            First master inception
+            <InfoText>
+              {firstMasterInception}
+              {firstMasterInception && (
+                <>
+                  {' '}
+                  ({formatDistance(new Date(firstMasterInception), new Date())}
+                </>
+              )}
+              {!firstMasterInception && 'Never been active'})
+            </InfoText>
+          </InfoRow>
+
+          {lastTermination && (
+            <InfoRow>
+              Last termination date
+              <InfoText>
+                {lastTermination} (
+                {lastTermination &&
+                  formatDistance(new Date(lastTermination), new Date(), {
+                    addSuffix: true,
+                  })}
+              </InfoText>
+            </InfoRow>
           )}
-          {!firstMasterInception && 'Never been active'})
-        </Paragraph>
-        {lastTermination && (
-          <Paragraph>
-            <strong>Last Termination Date:</strong> {lastTermination} (
-            {lastTermination &&
-              formatDistance(new Date(lastTermination), new Date(), {
-                addSuffix: true,
-              })}
-          </Paragraph>
-        )}
-        <Paragraph>
-          <strong>Direct Debit:</strong>{' '}
-          {member?.directDebitStatus?.activated ? <Checkmark /> : <Cross />}
-        </Paragraph>
-        <Paragraph>
-          <strong>Payments Balance (Minimum):</strong>{' '}
-          {member?.account?.totalBalance &&
-            formatMoney(member.account.totalBalance)}
-        </Paragraph>
-        <Paragraph>
-          <strong>Failed Payments:</strong>{' '}
-          {member?.numberFailedCharges?.numberFailedCharges ?? '-'} payment(s)
-          in a row
-        </Paragraph>
-        <Paragraph>
-          <strong>Total Number of Claims:</strong>{' '}
-          {member?.totalNumberOfClaims ?? '-'}
-        </Paragraph>
-        {member?.person && (
-          <Paragraph>
-            <strong>Debt Status:</strong>{' '}
-            <FlagOrbIndicator flag={member.person.debtFlag} size={'tiny'} />
-          </Paragraph>
-        )}
-      </Loadable>
+          <InfoRow>
+            Direct debit
+            <InfoText>
+              {member?.directDebitStatus?.activated ? <Checkmark /> : <Cross />}
+            </InfoText>
+          </InfoRow>
+          <InfoRow>
+            Payments balance (minimum)
+            <InfoText>
+              {member?.account?.totalBalance &&
+                formatMoney(member.account.totalBalance)}
+            </InfoText>
+          </InfoRow>
+          <InfoRow>
+            Failed payments
+            <InfoText>
+              {member?.numberFailedCharges?.numberFailedCharges ?? '-'} payment
+              {member?.numberFailedCharges?.numberFailedCharges > 1
+                ? 's in a row'
+                : ''}
+            </InfoText>
+          </InfoRow>
+          <InfoRow>
+            Total number of claims
+            <InfoText>{member?.totalNumberOfClaims ?? '-'}</InfoText>
+          </InfoRow>
+          {member?.person && (
+            <InfoRow>
+              Debt status
+              <InfoText>
+                <FlagOrbIndicator flag={member.person.debtFlag} size={'tiny'} />
+              </InfoText>
+            </InfoRow>
+          )}
+        </Loadable>
+      </InfoContainer>
     </Paper>
   )
 }
