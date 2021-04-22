@@ -6,7 +6,7 @@ import {
   useClaimMemberContractsMasterInceptionQuery,
 } from 'api/generated/graphql'
 import { MemberFlag } from 'components/member/shared/member-flag'
-import { formatDistance, parseISO } from 'date-fns'
+import { format, formatDistance, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
 import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
@@ -31,6 +31,7 @@ import {
   InfoTagStatus,
   InfoText,
 } from 'hedvig-ui/info-row'
+import { Popover } from 'hedvig-ui/popover'
 import { formatSsn } from 'utils/member'
 import {
   convertCamelcaseToTitle,
@@ -217,27 +218,32 @@ export const MemberInformation: React.FC<{
             </InfoRow>
           )}
 
-          <InfoRow>
-            Signed
-            <InfoText>
-              {member?.signedOn &&
-                formatDistance(parseISO(member.signedOn), new Date(), {
-                  addSuffix: true,
-                })}
-            </InfoText>
-          </InfoRow>
+          {member?.signedOn && (
+            <InfoRow>
+              Signed
+              <InfoText>
+                <Popover
+                  contents={format(parseISO(member.signedOn), 'yyyy-MM-dd')}
+                >
+                  {member.signedOn &&
+                    formatDistance(parseISO(member.signedOn), new Date(), {
+                      addSuffix: true,
+                    })}
+                </Popover>
+              </InfoText>
+            </InfoRow>
+          )}
 
           <InfoRow>
-            First master inception
+            Master inception
             <InfoText>
-              {firstMasterInception}
-              {firstMasterInception && (
-                <>
-                  {' '}
-                  ({formatDistance(new Date(firstMasterInception), new Date())}
-                </>
-              )}
-              {!firstMasterInception && 'Never been active'})
+              <Popover contents={firstMasterInception}>
+                {firstMasterInception
+                  ? formatDistance(new Date(firstMasterInception), new Date(), {
+                      addSuffix: true,
+                    })
+                  : 'Never active'}
+              </Popover>
             </InfoText>
           </InfoRow>
 
@@ -254,7 +260,7 @@ export const MemberInformation: React.FC<{
             </InfoRow>
           )}
           <InfoRow>
-            Payments balance (minimum)
+            Payments balance (min)
             <InfoText>
               {member?.account?.totalBalance &&
                 formatMoney(member.account.totalBalance)}
@@ -263,9 +269,11 @@ export const MemberInformation: React.FC<{
           <InfoRow>
             Failed payments
             <InfoText>
-              {member?.numberFailedCharges?.numberFailedCharges ?? '-'} payment
-              {member?.numberFailedCharges?.numberFailedCharges ?? 0 > 1
-                ? 's in a row'
+              {member?.numberFailedCharges?.numberFailedCharges ?? '-'}
+              {(member?.numberFailedCharges?.numberFailedCharges ?? 0) === 1
+                ? 'payment'
+                : (member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
+                ? 'payments in a row'
                 : ''}
             </InfoText>
           </InfoRow>

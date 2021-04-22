@@ -55,13 +55,13 @@ const ClaimPage: React.FC<Props> = ({ match }) => {
             message="This claim has no reserves, do you want leave it it without?"
           />
 
-          <Grid item xs={12} sm={12} md={6}>
+          <Grid item xs={12} sm={12} md={4}>
             <MemberInformation claimId={claimId} memberId={memberId} />
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
+          <Grid item xs={12} sm={12} md={4}>
             <ClaimInformation claimId={claimId} memberId={memberId} />
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid item xs={12} sm={12} md={4}>
             <ClaimTypeForm claimId={claimId} memberId={memberId} />
           </Grid>
           <Grid item xs={12}>
