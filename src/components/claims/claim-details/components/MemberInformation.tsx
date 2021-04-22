@@ -32,7 +32,11 @@ import {
   InfoText,
 } from 'hedvig-ui/info-row'
 import { formatSsn } from 'utils/member'
-import { convertEnumOrSentenceToTitle, formatPostalCode } from 'utils/text'
+import {
+  convertCamelcaseToTitle,
+  convertEnumOrSentenceToTitle,
+  formatPostalCode,
+} from 'utils/text'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
 
@@ -58,9 +62,9 @@ const debtFlagMap: Record<Flag, InfoTagStatus> = {
 }
 
 const debtFlagDescriptionMap: Record<Flag, string> = {
-  [Flag.Green]: 'No debt',
-  [Flag.Amber]: 'Minor debt',
-  [Flag.Red]: 'Major debt',
+  [Flag.Green]: 'No Debt',
+  [Flag.Amber]: 'Minor Debt',
+  [Flag.Red]: 'Major Debt',
 }
 
 const MemberName = styled('h2')({
@@ -143,7 +147,7 @@ export const MemberInformation: React.FC<{
                   style={{ fontWeight: 'bold' }}
                   status={sanctionStatusMap[member.sanctionStatus]}
                 >
-                  {member.sanctionStatus}
+                  {convertCamelcaseToTitle(member.sanctionStatus)}
                 </InfoTag>
               </InfoText>
             </InfoRow>
@@ -194,7 +198,7 @@ export const MemberInformation: React.FC<{
               >
                 {member?.directDebitStatus?.activated
                   ? 'Activated'
-                  : 'Not activated'}
+                  : 'Not Activated'}
               </InfoTag>
             </InfoText>
           </InfoRow>
