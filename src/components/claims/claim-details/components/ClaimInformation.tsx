@@ -65,10 +65,10 @@ const DownloadClaimFile = styled('a')({
 })
 
 const SelectWrapper = styled('div')({
-  marginTop: '1rem',
+  marginTop: '1.0rem',
 })
 
-const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
+export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   const {
     data,
     refetch: refetchClaimInformation,
@@ -175,7 +175,7 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         {contracts && (
           <SelectWrapper>
             <MuiInputLabel shrink error={!selectedContract}>
-              Select Contract for Claim
+              Contract for Claim
             </MuiInputLabel>
 
             <MuiSelect
@@ -233,5 +233,3 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
     </Paper>
   )
 }
-
-export { ClaimInformation }

@@ -26,9 +26,11 @@ export const InfoSection = styled.div`
   padding-bottom: ${spacingMap.small};
 `
 
-export const InfoDelimiter = styled.div`
+export const InfoDelimiter = styled.div<{ visible?: boolean }>`
   height: 1px;
-  border-bottom: 1px solid ${({ theme }) => theme.placeholderColor};
+  border-bottom: 1px solid
+    ${({ theme, visible = true }) =>
+      visible ? theme.placeholderColor : 'rgba(0, 0, 0, 0)'};
   margin-top: ${spacingMap.medium};
   margin-bottom: ${spacingMap.medium};
 `

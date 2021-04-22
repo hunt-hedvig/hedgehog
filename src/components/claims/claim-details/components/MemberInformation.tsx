@@ -63,7 +63,7 @@ const MemberName = styled('h2')({
   marginBottom: '2rem',
 })
 
-const MemberInformation: React.FC<{
+export const MemberInformation: React.FC<{
   claimId: string
   memberId: string
 }> = ({ claimId, memberId }) => {
@@ -154,7 +154,7 @@ const MemberInformation: React.FC<{
               )}
             </InfoText>
           </InfoRow>
-          <InfoDelimiter />
+          <InfoDelimiter visible={false} />
           <InfoRow>
             Fraudulent status
             <InfoText>
@@ -221,7 +221,7 @@ const MemberInformation: React.FC<{
             Failed payments
             <InfoText>
               {member?.numberFailedCharges?.numberFailedCharges ?? '-'} payment
-              {member?.numberFailedCharges?.numberFailedCharges > 1
+              {member?.numberFailedCharges?.numberFailedCharges ?? 0 > 1
                 ? 's in a row'
                 : ''}
             </InfoText>
@@ -243,5 +243,3 @@ const MemberInformation: React.FC<{
     </Paper>
   )
 }
-
-export { MemberInformation }
