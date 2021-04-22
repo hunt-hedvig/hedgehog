@@ -20,9 +20,13 @@ const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`
   border: 1px solid ${({ theme }) => theme.border};
 `
 
-export const QuestionGroupItem: React.FC<{
+export interface QuestionGroupItemProps {
   questionGroup: QuestionGroup
-}> = ({ questionGroup }) => {
+}
+
+export const QuestionGroupItem: React.FC<QuestionGroupItemProps> = ({
+  questionGroup,
+}) => {
   const [isVisible, setVisible] = React.useState(false)
 
   React.useEffect(() => {

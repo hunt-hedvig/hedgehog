@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import { QuestionGroup } from 'api/generated/graphql'
-import { QuestionGroupItem } from 'components/questions/questions-list/QuestionGroupItem'
 import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
+import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'
 
 const List = styled(Segment)`
   width: 100%;
@@ -15,7 +15,9 @@ const List = styled(Segment)`
   }
 `
 
-const FadeInQuestionGroup = withFadeIn(QuestionGroupItem)
+const FadeInQuestionGroup = withFadeIn<QuestionGroupItemProps>(
+  QuestionGroupItem,
+)
 
 export const FilteredQuestionGroups: React.FC<{
   filterQuestionGroups: ReadonlyArray<QuestionGroup>

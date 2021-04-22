@@ -7,7 +7,7 @@ import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import React, { useEffect, useState } from 'react'
 import { Mount } from 'react-lifecycle-components/dist'
-import { useHistory } from 'react-router'
+import { RouteComponentProps, useHistory } from 'react-router'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
@@ -72,21 +72,12 @@ const MemberDetailLink = MemberDetail.withComponent('a')
 
 const getIndex = (tab, panes) => panes.map((pane) => pane.tabName).indexOf(tab)
 
-interface MemberProps {
-  match: {
-    params: {
-      memberId: string
-      tab: string
-    }
-  }
+export const MemberTabs: React.FC<RouteComponentProps<{
+  memberId: string
+  tab: string
+}> & {
   member: Member
-}
-
-export const MemberTabs: React.FC<MemberProps> = ({
-  match,
-  member,
-  ...props
-}) => {
+}> = ({ match, member, ...props }) => {
   const history = useHistory()
   const memberId = match.params.memberId
   const tab = match.params.tab ?? 'contracts'

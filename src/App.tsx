@@ -3,6 +3,8 @@ import styled from '@emotion/styled'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { CssBaseline } from '@material-ui/core'
 import { MuiThemeProvider } from '@material-ui/core/styles'
+import { DashboardPage } from 'components/dashboard'
+import { QuestionsPage } from 'components/questions'
 import { Navigation } from 'components/shared/navigation'
 import Breadcrumbs from 'components/shared/navigation/breadcrumbs/Breadcrumbs'
 import Notifications from 'containers/NotificationService'
@@ -79,6 +81,12 @@ const globalCss = css`
 const App: React.FC = () => {
   const [isDarkmode, setIsDarkmode] = useState(getDefaultIsDarkmode())
 
+  const redirectToLogin = () => {
+    window.location.href = `${(window as any).GATEKEEPER_HOST}/sso?redirect=${
+      window.location.protocol
+    }//${window.location.host}/login/callback`
+  }
+
   return (
     <DarkmodeContext.Provider
       value={{
@@ -111,17 +119,20 @@ const App: React.FC = () => {
                           <Route
                             path="/login"
                             exact
-                            component={Routes.LoginPageRoute}
+                            component={() => {
+                              redirectToLogin()
+                              return null
+                            }}
                           />
                           <Routes.PrivateRoute
                             path="/dashborad"
                             store={store}
-                            component={Routes.DashboardPageRoute}
+                            component={DashboardPage}
                           />
                           <Routes.PrivateRoute
                             path="/questions"
                             store={store}
-                            component={Routes.QuestionsPageRoute}
+                            component={QuestionsPage}
                           />
                           <Route
                             path="/claims"

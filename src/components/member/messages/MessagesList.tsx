@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import animateScrollTo from 'animated-scroll-to'
-import { Message } from 'components/member/messages/Message'
 import { parseISO } from 'date-fns'
 import { useMessageHistory } from 'graphql/use-message-history'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef } from 'react'
+import { Message } from './Message'
 
 const MessagesListContainer = styled.div`
   overflow-y: auto;
@@ -27,8 +27,8 @@ const getAuthor = (author) => {
 
 export const MessagesList: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [messages, { loading }] = useMessageHistory(memberId)
-  const messagesList = useRef(null)
-  const latestMessage = useRef(null)
+  const messagesList = useRef<HTMLDivElement>(null)
+  const latestMessage = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = async () => {
     await animateScrollTo(latestMessage.current!, {

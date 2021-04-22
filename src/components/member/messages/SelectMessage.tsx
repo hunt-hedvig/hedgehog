@@ -55,11 +55,7 @@ const SelectList = ({ content }) => {
     }
   })
 
-  return (
-    <React.Fragment>
-      <List>{list}</List>
-    </React.Fragment>
-  )
+  return <List>{list}</List>
 }
 
 export default SelectList

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { Claim, ClaimState } from 'api/generated/graphql'
 import { LinkRow } from 'components/shared'
 import { parseISO } from 'date-fns'
@@ -7,7 +8,6 @@ import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import { Badge } from 'hedvig-ui/badge'
 import { Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
 import { Table, TableRowProps } from 'semantic-ui-react'
 import { getMemberIdColor } from 'utils/member'
@@ -29,7 +29,7 @@ const MemberIdCell = styled<typeof Table.Cell>(
       getMemberIdColor(memberId, numberMemberGroups)} !important;
 `
 
-const FadeInLinkRow = withFadeIn(LinkRow)
+const FadeInLinkRow = withFadeIn<TableRowProps>(LinkRow)
 
 const splitOnUpperCase = (s: string) => {
   const splitResult = s.match(/[A-Z][a-z]+|[0-9]+/g)

@@ -1,5 +1,6 @@
 import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'components/questions/questions-list/QuestionGroups'
+import { ListPage } from 'components/shared'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
@@ -12,7 +13,7 @@ import React from 'react'
 import { useInsecurePersistentState } from 'utils/state'
 import { FilterState, QuestionsFilter } from './filter'
 
-const Questions: React.FC = () => {
+export const QuestionsPage: React.FC = () => {
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
   >('questions:filters', [
@@ -40,7 +41,7 @@ const Questions: React.FC = () => {
   }
 
   return (
-    <>
+    <ListPage>
       <Spacing bottom="large">
         <FadeIn>
           <Spacing bottom>
@@ -69,8 +70,6 @@ const Questions: React.FC = () => {
         selectedFilters={selectedFilters}
         questionGroups={questionGroups}
       />
-    </>
+    </ListPage>
   )
 }
-
-export default Questions

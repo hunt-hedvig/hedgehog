@@ -1,6 +1,9 @@
 import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
-import { useGetMemberTransactionsQuery } from 'api/generated/graphql'
+import {
+  Transaction,
+  useGetMemberTransactionsQuery,
+} from 'api/generated/graphql'
 import {
   PayoutDetails,
   PayoutFormData,
@@ -50,22 +53,24 @@ const CHARGE_MEMBER_MUTATION = gql`
   }
 `
 
-const TableRowColored = styled(Table.Row)(({ transaction }) => ({
-  td: (() => {
-    if (transaction.type === 'CHARGE') {
-      switch (transaction.status) {
-        case 'INITIATED':
-          return { backgroundColor: '#FFFFDD !important' } // Yellow
-        case 'COMPLETED':
-          return { backgroundColor: '#DDFFDD !important' } // Green
-        case 'FAILED':
-          return { backgroundColor: '#FF8A80 !important' } // Red
-      }
+const TableRowColored = styled(Table.Row)<{
+  type: string
+}>`
+  background-color: ${({ type }) => {
+    switch (type) {
+      case 'INITIATED':
+        return '#FFFFDD'
+      case 'COMPLETED':
+        return '#DDFFDD'
+      case 'FAILED':
+        return '#FF8A80'
     }
-  })(),
-}))
+  }} !important;
+`
 
-const MemberTransactionsTable = ({ transactions }) => (
+const MemberTransactionsTable: React.FC<{
+  transactions: Transaction[]
+}> = ({ transactions }) => (
   <Table celled compact>
     <Table.Header>
       <Table.Row>
@@ -78,10 +83,10 @@ const MemberTransactionsTable = ({ transactions }) => (
     </Table.Header>
     <Table.Body>
       {transactions.map((transaction) => (
-        <TableRowColored key={transaction.id} transaction={transaction}>
+        <TableRowColored key={transaction.id} type={transaction.type!}>
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
-            <strong>{formatMoney(transaction.amount)}</strong>
+            <strong>{formatMoney(transaction.amount!)}</strong>
           </Table.Cell>
           <Table.Cell>
             {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
@@ -110,7 +115,7 @@ export const PaymentsTab: React.FC<{
     setAmount(+e.target.value)
   }
 
-  const handleChargeSubmit = () => (mutation) => () => {
+  const handleChargeSubmit = (mutation) => {
     mutation({
       variables: {
         id: memberId,
@@ -183,7 +188,7 @@ export const PaymentsTab: React.FC<{
                   </Button>
                 )}
                 {confirming && (
-                  <React.Fragment>
+                  <>
                     <br />
                     <br />
                     <Input
@@ -193,17 +198,17 @@ export const PaymentsTab: React.FC<{
                       placeholder="a"
                     />
                     <br />
-                  </React.Fragment>
+                  </>
                 )}
                 {confirmed && (
-                  <React.Fragment>
+                  <>
                     Success!! Press execute, to execute the order
                     <br />
                     <br />
-                    <Button onClick={handleChargeSubmit()(chargeMember)}>
+                    <Button onClick={() => handleChargeSubmit(chargeMember)}>
                       Execute
                     </Button>
-                  </React.Fragment>
+                  </>
                 )}
               </Form>
             </div>
@@ -220,10 +225,12 @@ export const PaymentsTab: React.FC<{
         )}
       <h3>Transactions:</h3>
       <MemberTransactionsTable
-        transactions={data.member
-          ?.transactions!.slice()
-          .sort(transactionDateSorter)
-          .reverse()}
+        transactions={
+          data!
+            .member!.transactions!.slice()
+            .sort(transactionDateSorter)
+            .reverse() as Transaction[]
+        }
       />
     </div>
   )

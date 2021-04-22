@@ -1,27 +1,22 @@
 import { Claim } from 'api/generated/graphql'
+import { ListPage } from 'components/shared'
 import { Paginator } from 'components/shared/paginator/Paginator'
 import { useListClaims } from 'graphql/use-list-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import { Spacing } from 'hedvig-ui/spacing'
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router'
+import { RouteComponentProps, useHistory } from 'react-router'
 import { Header } from 'semantic-ui-react'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 import { ClaimListHeader } from './claims-list/components/ClaimListHeader'
 import { ClaimListItem } from './claims-list/components/ClaimListItem'
 
-interface ClaimsListProps {
-  match: {
-    params: {
-      page?: number
-    }
-  }
-}
-
-export const ClaimsList: React.FC<ClaimsListProps> = ({ ...props }) => {
+export const ClaimsList: React.FC<RouteComponentProps<{
+  page?: string
+}>> = ({ match }) => {
   const history = useHistory()
-  const selectedPage = props.match.params.page ?? 1
+  const selectedPage = parseInt(match.params.page ?? '1', 10)
   const [
     { claims, page: currentPage, totalPages },
     listClaims,
@@ -47,7 +42,7 @@ export const ClaimsList: React.FC<ClaimsListProps> = ({ ...props }) => {
   }, [selectedPage])
 
   return (
-    <>
+    <ListPage>
       <FadeIn>
         <Header size="huge">Claims List</Header>
       </FadeIn>
@@ -87,6 +82,6 @@ export const ClaimsList: React.FC<ClaimsListProps> = ({ ...props }) => {
           </FadeIn>
         </Spacing>
       )}
-    </>
+    </ListPage>
   )
 }
