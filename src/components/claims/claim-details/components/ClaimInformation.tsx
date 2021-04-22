@@ -20,6 +20,7 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
+import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
 import { ErrorText, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
@@ -98,11 +99,13 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
 
       <Loadable loading={claimInformationLoading}>
         <div>
-          <p>
-            Registered at:{' '}
-            {registrationDate &&
-              format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
-          </p>
+          <InfoRow>
+            Registered at
+            <InfoText>
+              {registrationDate &&
+                format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
+            </InfoText>
+          </InfoRow>
           {recordingUrl && (
             <>
               <Audio controls>
@@ -209,13 +212,16 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         )}
         {selectedAgreement && (
           <>
-            <Paragraph>
-              <strong>Carrier:</strong> {selectedAgreement.carrier}
-            </Paragraph>
-            <Paragraph>
-              <strong>Line Of Business:</strong>{' '}
-              {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
-            </Paragraph>
+            <InfoRow>
+              Carrier
+              <InfoText>{selectedAgreement.carrier}</InfoText>
+            </InfoRow>
+            <InfoRow>
+              Line of business
+              <InfoText>
+                {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
+              </InfoText>
+            </InfoRow>
           </>
         )}
         {!selectedAgreement && (
