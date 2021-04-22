@@ -99,10 +99,14 @@ export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
   )
 }
 
-const ChatHeader = ({ visible, isHinting, onResizeClick }) => (
+const ChatHeader: React.FC<{
+  visible: boolean
+  isHinting: boolean
+  onResizeClick: () => void
+}> = ({ visible, isHinting, onResizeClick }) => (
   <ChatHeaderStyle visible={visible}>
     <h4>Chat</h4>
-    {isHinting && visible ? (
+    {isHinting ? (
       '(W)'
     ) : (
       <Icon
