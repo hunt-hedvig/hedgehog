@@ -1,5 +1,5 @@
-import { Paragraph } from 'hedvig-ui/typography'
 import styled from '@emotion/styled'
+import { Paragraph } from 'hedvig-ui/typography'
 
 export const InfoContainer = styled('div')`
   display: flex;

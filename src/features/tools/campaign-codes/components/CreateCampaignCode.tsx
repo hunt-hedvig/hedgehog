@@ -1,4 +1,3 @@
-import { InfoContainer } from 'components/member/tabs/shared/card-components'
 import {
   ClearableDropdown,
   DropdownOption,
@@ -6,6 +5,7 @@ import {
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
+import { InfoContainer } from 'hedvig-ui/info-row'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'

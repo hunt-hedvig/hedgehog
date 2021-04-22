@@ -1,5 +1,4 @@
 import { CampaignFilter } from 'api/generated/graphql'
-import { InfoContainer } from 'components/member/tabs/shared/card-components'
 import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
 import {
   DateTimePickerWrapper,
@@ -12,6 +11,7 @@ import {
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { InfoContainer } from 'hedvig-ui/info-row'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'

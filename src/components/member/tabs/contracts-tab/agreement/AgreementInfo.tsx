@@ -1,15 +1,11 @@
+import styled from '@emotion/styled'
 import { IconButton } from '@material-ui/core'
 import { Contract, GenericAgreement } from 'api/generated/graphql'
 import { EditStreetInput } from 'components/member/tabs/contracts-tab/agreement/EditStreetInput'
-import {
-  InfoContainer,
-  InfoRow,
-  InfoText,
-} from 'components/member/tabs/shared/card-components'
+import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { PencilFill } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
 import { formatMoney } from 'utils/money'
 import { convertEnumToTitle, formatPostalCode } from 'utils/text'
 

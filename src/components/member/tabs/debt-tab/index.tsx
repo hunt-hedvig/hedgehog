@@ -1,10 +1,5 @@
 import { ContractMarketInfo } from 'api/generated/graphql'
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
-import {
-  InfoContainer,
-  InfoRow,
-  InfoText,
-} from 'components/member/tabs/shared/card-components'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
@@ -13,6 +8,7 @@ import {
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
