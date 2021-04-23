@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-04-23',
+    change:
+      'Better consistency and readability of member information in a claim',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-04-16',
     change:
       'Allow line breaks and multiple spaces in claim notes 🛸. ' +

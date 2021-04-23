@@ -20,6 +20,7 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
+import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
 import { ErrorText, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
@@ -64,10 +65,10 @@ const DownloadClaimFile = styled('a')({
 })
 
 const SelectWrapper = styled('div')({
-  marginTop: '1rem',
+  marginTop: '1.0rem',
 })
 
-const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
+export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   const {
     data,
     refetch: refetchClaimInformation,
@@ -98,11 +99,13 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
 
       <Loadable loading={claimInformationLoading}>
         <div>
-          <p>
-            Registered at:{' '}
-            {registrationDate &&
-              format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
-          </p>
+          <InfoRow>
+            Registered at
+            <InfoText>
+              {registrationDate &&
+                format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
+            </InfoText>
+          </InfoRow>
           {recordingUrl && (
             <>
               <Audio controls>
@@ -172,7 +175,7 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         {contracts && (
           <SelectWrapper>
             <MuiInputLabel shrink error={!selectedContract}>
-              Select Contract for Claim
+              Contract for Claim
             </MuiInputLabel>
 
             <MuiSelect
@@ -209,13 +212,16 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         )}
         {selectedAgreement && (
           <>
-            <Paragraph>
-              <strong>Carrier:</strong> {selectedAgreement.carrier}
-            </Paragraph>
-            <Paragraph>
-              <strong>Line Of Business:</strong>{' '}
-              {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
-            </Paragraph>
+            <InfoRow>
+              Carrier
+              <InfoText>{selectedAgreement.carrier}</InfoText>
+            </InfoRow>
+            <InfoRow>
+              Line of business
+              <InfoText>
+                {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
+              </InfoText>
+            </InfoRow>
           </>
         )}
         {!selectedAgreement && (
@@ -227,5 +233,3 @@ const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
     </Paper>
   )
 }
-
-export { ClaimInformation }

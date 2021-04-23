@@ -1,3 +1,5 @@
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import { useCreatePaymentCompletionLinkMutation } from 'api/generated/graphql'
 import copy from 'copy-to-clipboard'
 import { Button } from 'hedvig-ui/button'
@@ -6,8 +8,6 @@ import { Popover } from 'hedvig-ui/popover'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
-import { css } from '@emotion/react'
-import styled from '@emotion/styled'
 
 const ActualLink = styled.a`
   white-space: pre-wrap;
