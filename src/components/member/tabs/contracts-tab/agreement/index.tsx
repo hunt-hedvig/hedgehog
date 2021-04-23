@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   AgreementStatus,
   Contract,
@@ -8,14 +9,10 @@ import { FromDate } from 'components/member/tabs/contracts-tab/agreement/FromDat
 import { InsuranceCertificate } from 'components/member/tabs/contracts-tab/agreement/InsuranceCertificate'
 import { InsuranceMandate } from 'components/member/tabs/contracts-tab/agreement/InsuranceMandate'
 import { ToDate } from 'components/member/tabs/contracts-tab/agreement/ToDate'
-import {
-  InfoRow,
-  InfoText,
-} from 'components/member/tabs/shared/card-components'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from '@emotion/styled'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'

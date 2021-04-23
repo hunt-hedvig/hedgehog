@@ -10,11 +10,6 @@ import { AddMonthlyEntryForm } from 'components/member/tabs/account-tab/AddMonth
 import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/BackfillSubscriptionsButton'
 import { MonthlyEntriesInfo } from 'components/member/tabs/account-tab/MonthlyEntriesInfo'
 import { MonthlyEntriesTable } from 'components/member/tabs/account-tab/MonthlyEntriesTable'
-import {
-  InfoContainer,
-  InfoRow,
-  InfoText,
-} from 'components/member/tabs/shared/card-components'
 import { useGetAccount } from 'graphql/use-get-account'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
@@ -22,6 +17,7 @@ import {
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
