@@ -55,7 +55,7 @@ export const MemberFile: React.FC<{
       </div>
     )
   }
-  if (loading || !data) {
+  if (loading || !data?.member) {
     return <LoadingMessage paddingTop="10vh" />
   }
 

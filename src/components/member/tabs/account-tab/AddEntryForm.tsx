@@ -107,9 +107,14 @@ const AddEntryFormComponent: React.FC<{
       return
     }
 
-    const dataCopy = { ...data }
-    dataCopy.amount = { ...dataCopy.amount, currency: preferredCurrency }
-    dataCopy.fromDate = format(new Date(), 'yyyy-MM-dd')
+    const dataCopy = {
+      ...data,
+      fromDate: format(new Date(), 'yyyy-MM-dd'),
+      amount: {
+        amount: data.amount,
+        currency: preferredCurrency,
+      },
+    }
     addAccountEntry({
       variables: {
         memberId,

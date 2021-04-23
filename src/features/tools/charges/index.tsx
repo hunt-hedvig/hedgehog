@@ -59,13 +59,13 @@ const ConfirmMessage = styled('div')({
 interface PaymentSchedule {
   id: string
   member: {
-    memberId: string
-    firstName: string
-    lastName: string
-    monthlySubscription: {
+    memberId?: string
+    firstName?: string
+    lastName?: string
+    monthlySubscription?: {
       amount: MonetaryAmount
     }
-    account: {
+    account?: {
       currentBalance: MonetaryAmount
     }
   }
@@ -80,12 +80,14 @@ const Row: React.FunctionComponent<{
     {paymentSchedule.map((payment) => (
       <TableRow
         key={payment.id}
-        warning={
+        warning={Boolean(
           payment.member?.account &&
-          payment.member.monthlySubscription &&
-          payment.member.account.currentBalance.amount !==
-            payment.member.monthlySubscription.amount.amount
-        }
+            payment.member?.monthlySubscription &&
+            payment.member?.account.currentBalance &&
+            payment.member.monthlySubscription.amount &&
+            payment.member.account.currentBalance.amount !==
+              payment.member.monthlySubscription.amount.amount,
+        )}
       >
         <Table.Cell>
           {payment.member?.firstName + ' ' + payment.member?.lastName}
@@ -96,13 +98,15 @@ const Row: React.FunctionComponent<{
           </Link>
         </Table.Cell>
         <Table.Cell>
-          {payment.member?.monthlySubscription?.amount &&
-            formatMoney(payment.member.monthlySubscription.amount)}
+          {payment.member?.monthlySubscription?.amount
+            ? formatMoney(payment.member.monthlySubscription.amount)
+            : 'Unable to get monthly premium'}
         </Table.Cell>
         <Table.Cell>
-          {payment.member?.account &&
-            formatMoney(payment.member.account.currentBalance)}
-          {payment.member?.account &&
+          {payment.member?.account?.currentBalance
+            ? formatMoney(payment.member.account.currentBalance)
+            : '⚠️ No current balance'}
+          {payment.member?.account?.currentBalance &&
             parseFloat(payment.member.account.currentBalance.amount) <= 0 &&
             " (Won't be charged)"}
         </Table.Cell>
@@ -127,7 +131,7 @@ export const ChargePageComponent: React.FC<WithShowNotification> = ({
       </Table.Row>
     )
   }
-  if (loading || !data || !data.paymentSchedule) {
+  if (loading || !data?.paymentSchedule) {
     return <LoadingMessage paddingTop="10vh" />
   }
   return (
@@ -145,23 +149,26 @@ export const ChargePageComponent: React.FC<WithShowNotification> = ({
         <Table.Body>
           <Row
             paymentSchedule={data.paymentSchedule!.map((schedule) => {
+              if (!schedule) {
+                throw Error('Schedule not present when it should')
+              }
               return {
                 id: schedule!.id!,
                 member: {
-                  memberId: schedule!.member!.memberId!,
-                  firstName: schedule!.member!.firstName!,
-                  lastName: schedule!.member!.lastName!,
+                  memberId: schedule.member?.memberId!,
+                  firstName: schedule.member?.firstName!,
+                  lastName: schedule.member?.lastName!,
                   monthlySubscription: {
-                    amount: schedule!.member!.monthlySubscription!
-                      .amount as MonetaryAmount,
+                    amount: schedule.member?.monthlySubscription
+                      ?.amount! as MonetaryAmount,
                   },
                   account: {
-                    currentBalance: schedule!.member!.account!
-                      .currentBalance as MonetaryAmount,
+                    currentBalance: schedule.member?.account!
+                      ?.currentBalance! as MonetaryAmount,
                   },
                 },
-                status: schedule!.status,
-                amount: schedule!.amount as MonetaryAmount,
+                status: schedule.status,
+                amount: schedule.amount! as MonetaryAmount,
               }
             })}
           />

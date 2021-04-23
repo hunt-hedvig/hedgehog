@@ -54,7 +54,7 @@ const CHARGE_MEMBER_MUTATION = gql`
 `
 
 const TableRowColored = styled(Table.Row)<{
-  type: string
+  type: Transaction['type']
 }>`
   background-color: ${({ type }) => {
     switch (type) {
@@ -150,7 +150,7 @@ export const PaymentsTab: React.FC<{
     )
   }
 
-  if (loading || !data) {
+  if (loading || !data?.member) {
     return <LoadingMessage paddingTop="10vh" />
   }
 
