@@ -10,7 +10,7 @@ interface TableFieldsProps<T> {
 const TableFields = <T extends {}>(props: TableFieldsProps<T>) => {
   const { fields, fieldFormatters } = props
   return (
-    <React.Fragment>
+    <>
       {(Object.keys(fields) as Array<keyof T>).map((field, id) => {
         const formatter = fieldFormatters && fieldFormatters[field]
         return (
@@ -24,7 +24,7 @@ const TableFields = <T extends {}>(props: TableFieldsProps<T>) => {
           </Table.Row>
         )
       })}
-    </React.Fragment>
+    </>
   )
 }
 

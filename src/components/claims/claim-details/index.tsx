@@ -5,7 +5,7 @@ import { ClaimItems } from 'components/claims/claim-details/components/claim-ite
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React, { useContext, useEffect } from 'react'
-import { Prompt } from 'react-router'
+import { Prompt, RouteComponentProps } from 'react-router'
 import { MemberHistoryContext } from 'utils/member-history'
 import { ClaimEvents } from './components/ClaimEvents'
 import { ClaimFileTable } from './components/ClaimFileTable'
@@ -20,16 +20,10 @@ const GridWithChatPaneAdjustment = styled(Grid)`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
 `
 
-interface Props {
-  match: {
-    params: {
-      claimId: string
-      memberId: string
-    }
-  }
-}
-
-const ClaimPage: React.FC<Props> = ({ match }) => {
+export const ClaimDetails: React.FC<RouteComponentProps<{
+  claimId: string
+  memberId: string
+}>> = ({ match }) => {
   const { memberId, claimId } = match.params
 
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
@@ -87,5 +81,3 @@ const ClaimPage: React.FC<Props> = ({ match }) => {
     </>
   )
 }
-
-export default ClaimPage

@@ -1,3 +1,5 @@
+import styled from '@emotion/styled'
+import { useGetMeQuery } from 'api/generated/graphql'
 import { changelog } from 'changelog'
 import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
 import { differenceInCalendarDays, format } from 'date-fns'
@@ -7,12 +9,12 @@ import { Badge } from 'hedvig-ui/badge'
 import { CasualList, CasualListItem } from 'hedvig-ui/casual-list'
 import { Spacing } from 'hedvig-ui/spacing'
 import {
+  Capitalized,
   MainHeadline,
   SecondLevelHeadline,
   ThirdLevelHeadline,
 } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 const Wrapper = styled.div`
@@ -57,19 +59,19 @@ const MutedText = styled.div`
   font-size: 0.9rem;
 `
 
-export const Dashboard: React.FC<{ auth: any }> = ({ auth }) => {
+export const DashboardPage: React.FC = () => {
+  const { data } = useGetMeQuery()
   const [dashboardNumbers] = useDashboardNumbers()
 
   return (
     <Wrapper>
       <Spacing bottom>
-        <MainHeadline>
-          Hi there{' '}
-          <span css={{ textTransform: 'capitalize' }}>
-            {auth?.email && getLowercaseNameFromEmail(auth.email)}
-          </span>
-          !
-        </MainHeadline>
+        {data?.me && (
+          <MainHeadline>
+            Hi there{' '}
+            <Capitalized>{getLowercaseNameFromEmail(data.me)}</Capitalized>!
+          </MainHeadline>
+        )}
       </Spacing>
       {dashboardNumbers && (
         <FadeIn>

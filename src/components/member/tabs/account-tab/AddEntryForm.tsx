@@ -89,7 +89,7 @@ const AddEntryFormComponent: React.FC<{
 } & WithShowNotification> = ({ memberId, showNotification }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
 
-  if (!contractMarketInfo?.preferredCurrency) {
+  if (!Boolean(contractMarketInfo?.preferredCurrency)) {
     return (
       <StandaloneMessage>
         The member has no preferred currency
@@ -97,7 +97,7 @@ const AddEntryFormComponent: React.FC<{
     )
   }
 
-  const preferredCurrency = contractMarketInfo.preferredCurrency
+  const preferredCurrency = contractMarketInfo!.preferredCurrency
   const [addAccountEntry] = useAddAccountEntryToMemberMutation()
 
   const form = useForm()
@@ -107,9 +107,14 @@ const AddEntryFormComponent: React.FC<{
       return
     }
 
-    const dataCopy = { ...data }
-    dataCopy.amount = { ...dataCopy.amount, currency: preferredCurrency }
-    dataCopy.fromDate = format(new Date(), 'yyyy-MM-dd')
+    const dataCopy = {
+      ...data,
+      fromDate: format(new Date(), 'yyyy-MM-dd'),
+      amount: {
+        amount: data.amount,
+        currency: preferredCurrency,
+      },
+    }
     addAccountEntry({
       variables: {
         memberId,

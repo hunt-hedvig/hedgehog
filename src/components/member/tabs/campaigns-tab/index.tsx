@@ -1,4 +1,3 @@
-import { ContractMarketInfo } from 'api/generated/graphql'
 import { CampaignsInfo } from 'components/member/tabs/campaigns-tab/campaigns/CampaignsInfo'
 import { ReferralsInfo } from 'components/member/tabs/campaigns-tab/referrals/ReferralsInfo'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
@@ -14,7 +13,6 @@ import { ArrowRepeat } from 'react-bootstrap-icons'
 
 export const CampaignsTab: React.FunctionComponent<{
   memberId: string
-  contractMarketInfo: ContractMarketInfo
 }> = ({ memberId }) => {
   const [
     referralInformation,

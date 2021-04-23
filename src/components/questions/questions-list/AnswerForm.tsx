@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import Grid from '@material-ui/core/Grid'
 import {
   getAnswerQuestionOptions,
@@ -11,7 +12,6 @@ import { Checkbox } from 'hedvig-ui/checkbox'
 import { Form, FormTextArea, SubmitButton } from 'hedvig-ui/form'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
-import styled from '@emotion/styled'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
@@ -31,7 +31,14 @@ const FlexGrid = styled(Grid)`
 
 export const AnswerFormComponent: React.FC<{
   memberId: string
-} & WithShowNotification> = ({ memberId, showNotification }) => {
+  onDone: () => void
+  onError: () => void
+} & WithShowNotification> = ({
+  memberId,
+  onDone,
+  onError,
+  showNotification,
+}) => {
   const form = useForm()
 
   const [
@@ -50,6 +57,7 @@ export const AnswerFormComponent: React.FC<{
     form.formState.isSubmitting
 
   const onSubmit = (data: FieldValues) => {
+    onDone()
     answerQuestion(getAnswerQuestionOptions(memberId, data.answer.trim()))
       .then(() => {
         showNotification({
@@ -59,6 +67,7 @@ export const AnswerFormComponent: React.FC<{
         })
       })
       .catch((error) => {
+        onError()
         showNotification({
           type: 'red',
           header: `Unable to send the answer to ${memberId}`,
@@ -68,7 +77,8 @@ export const AnswerFormComponent: React.FC<{
       })
   }
 
-  const handleDone = () => {
+  const handleMarkAsResolved = () => {
+    onDone()
     markQuestionAsResolved(getMarkQuestionAsResolvedOptions(memberId))
       .then(() => {
         showNotification({
@@ -78,6 +88,7 @@ export const AnswerFormComponent: React.FC<{
         })
       })
       .catch((error) => {
+        onError()
         showNotification({
           type: 'red',
           header: `Unable to mark the question as resolved for ${memberId}`,
@@ -118,7 +129,7 @@ export const AnswerFormComponent: React.FC<{
       <MarkAsResolvedWrapper>
         <Checkbox
           label="Mark as resolved"
-          onClick={() => handleDone()}
+          onClick={() => handleMarkAsResolved()}
           disabled={loading}
         />
       </MarkAsResolvedWrapper>

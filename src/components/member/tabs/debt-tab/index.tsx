@@ -1,6 +1,6 @@
-import { ContractMarketInfo } from 'api/generated/graphql'
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
+import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { useGetPerson } from 'graphql/use-get-person'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
@@ -18,8 +18,8 @@ import { Market } from 'types/enums'
 
 export const DebtTab: React.FC<{
   memberId: string
-  contractMarketInfo: ContractMarketInfo
-}> = ({ memberId, contractMarketInfo }) => {
+}> = ({ memberId }) => {
+  const [contractMarketInfo] = useContractMarketInfo(memberId)
   const [person, { loading, error, refetch }] = useGetPerson(memberId)
 
   const eligibleForWhitelist =

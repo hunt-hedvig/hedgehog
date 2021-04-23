@@ -1,0 +1,21 @@
+query PaymentScheduleQuery($month: YearMonth!) {
+  paymentSchedule(status: SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL) {
+    id
+    member {
+      memberId
+      firstName
+      lastName
+      monthlySubscription(month: $month) {
+        amount
+      }
+      account {
+        currentBalance {
+          amount
+          currency
+        }
+      }
+    }
+    status
+    amount
+  }
+}

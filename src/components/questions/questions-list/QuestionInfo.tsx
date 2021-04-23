@@ -1,5 +1,5 @@
 import { Question } from 'api/generated/graphql'
-import Message from 'components/member/messages/Message'
+import { Message } from 'components/member/messages/Message'
 import { parseISO } from 'date-fns'
 import React from 'react'
 

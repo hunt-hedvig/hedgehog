@@ -1,26 +1,25 @@
+import styled from '@emotion/styled'
+import { Member } from 'api/generated/graphql'
+import { memberPagePanes } from 'components/member/tabs'
+import { ChatPane } from 'components/member/tabs/ChatPane'
 import copy from 'copy-to-clipboard'
 import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
-import * as PropTypes from 'prop-types'
-import React from 'react'
-import { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
+import React, { useEffect, useState } from 'react'
+import { Mount } from 'react-lifecycle-components/dist'
+import { RouteComponentProps, useHistory } from 'react-router'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 import {
   formatSsn,
   getMemberGroupName,
   getMemberIdColor,
   MemberAge,
 } from 'utils/member'
-import memberPagePanes from './tabs/index'
-import { MemberFlag } from './shared/member-flag'
 import { MemberHistoryContext } from 'utils/member-history'
-import { Mount } from 'react-lifecycle-components/dist'
-import { ChatPane } from 'components/member/tabs/ChatPane'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys } from 'utils/hooks/key-press-hook'
-import { useHistory } from 'react-router'
+import { MemberFlag } from './shared/member-flag'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -42,7 +41,7 @@ const Header = styled(SemanticHeader)`
   align-items: center;
 `
 
-const Badge = styled('div')`
+const Badge = styled('div')<{ memberId: string; numberMemberGroups: number }>`
   float: right;
   display: inline-flex;
   padding: 0.5rem 1rem;
@@ -73,24 +72,26 @@ const MemberDetailLink = MemberDetail.withComponent('a')
 
 const getIndex = (tab, panes) => panes.map((pane) => pane.tabName).indexOf(tab)
 
-export const Member = (props) => {
+export const MemberTabs: React.FC<RouteComponentProps<{
+  memberId: string
+  tab: string
+}> & {
+  member: Member
+}> = ({ match, member, ...props }) => {
   const history = useHistory()
-  const memberId = props.match.params.memberId
-  const tab = props.match.params.tab ?? 'contracts'
-
-  const member = props.member
+  const memberId = match.params.memberId
+  const tab = match.params.tab ?? 'contracts'
 
   const { registerActions, isHintingControl } = useCommandLine()
 
   const panes = memberPagePanes(props, memberId, member, isHintingControl)
-  const getMemberPageTitle = (member) =>
-    `${member.firstName || ''} ${member.lastName || ''}`
 
   const navigateToTab = (tabName) =>
     history.replace(`/members/${memberId}/${tabName}`)
 
-  const formattedFirstName =
-    member.firstName ? member.firstName + (member.firstName.slice(-1) === 's' ? "'" : "'s") : "Member's"
+  const formattedFirstName = Boolean(member.firstName)
+    ? member.firstName + (member.firstName!.slice(-1) === 's' ? "'" : "'s")
+    : "Member's"
 
   registerActions([
     {
@@ -103,15 +104,6 @@ export const Member = (props) => {
             format: 'text/plain',
           },
         )
-      },
-    },
-    {
-      label: `Copy ${formattedFirstName} email to clipboard`,
-      keys: [Keys.Option, Keys.E],
-      onResolve: () => {
-        copy(member.email, {
-          format: 'text/plain',
-        })
       },
     },
     {
@@ -179,10 +171,24 @@ export const Member = (props) => {
     },
   ])
 
-  const [activeIndex, setActiveIndex] = useState(getIndex(tab, panes))
+  if (Boolean(member.email)) {
+    registerActions([
+      {
+        label: `Copy ${formattedFirstName} email to clipboard`,
+        keys: [Keys.Option, Keys.E],
+        onResolve: () => {
+          copy(member.email!, {
+            format: 'text/plain',
+          })
+        },
+      },
+    ])
+  }
+
+  const [currentIndex, setCurrentIndex] = useState(getIndex(tab, panes))
 
   useEffect(() => {
-    setActiveIndex(getIndex(tab, panes))
+    setCurrentIndex(getIndex(tab, panes))
   }, [tab])
 
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -200,7 +206,7 @@ export const Member = (props) => {
                     description: member.fraudulentStatusDescription,
                   }}
                 />
-                {getMemberPageTitle(member)}
+                {`${member.firstName || ''} ${member.lastName || ''}`}
                 {' ('}
                 <MemberAge birthDateString={member?.birthDate} />)
                 {member && (
@@ -253,10 +259,10 @@ export const Member = (props) => {
               <Tab
                 panes={panes}
                 onTabChange={(_, { activeIndex }) =>
-                  navigateToTab(panes[activeIndex].tabName)
+                  navigateToTab(panes[activeIndex!].tabName)
                 }
                 renderActiveOnly={true}
-                activeIndex={activeIndex}
+                activeIndex={currentIndex}
               />
             </MemberPageContainer>
             <ChatPane memberId={memberId} />
@@ -265,9 +271,4 @@ export const Member = (props) => {
       )}
     </MemberHistoryContext.Consumer>
   )
-}
-
-Member.propTypes = {
-  match: PropTypes.object.isRequired,
-  showNotification: PropTypes.func.isRequired,
 }

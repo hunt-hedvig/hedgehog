@@ -14,6 +14,12 @@ export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-04-23',
     change:
+      'Speed up questions tab 🏎, add shortcuts to member suggestions in search, remove Emoji mart ☺',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2021-04-23',
+    change:
       'Better consistency and readability of member information in a claim',
     authorGithubHandle: 'rasmusguterstam',
   },

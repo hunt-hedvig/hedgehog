@@ -1,65 +1,48 @@
+import styled from '@emotion/styled'
 import {
   FormControlLabel as MuiFormControlLabel,
   Switch as MuiSwitch,
   TextField as MuiTextField,
-  withStyles,
 } from '@material-ui/core'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
 import { shouldIgnoreInput } from 'utils/hooks/key-press-hook'
-import { EmojiPicker } from './EmojiPicker'
 
-const MessagesPanelContainer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  flexShrink: 0,
-  flexWrap: 'wrap',
-  marginTop: 'auto',
-  padding: '0.5rem',
-  backgroundColor: theme.backgroundLight,
-  border: '1px solid ' + theme.borderStrong,
-  borderTop: 0,
-  borderBottomRightRadius: '0.5rem',
-  borderBottomLeftRadius: '0.5rem',
-}))
-
-const ChatForm = styled('form')({
-  marginLeft: '16px',
-  width: 'calc(100% - 3em - 16px)',
-  marginRight: '0.5rem',
-})
-
-const ActionContainer = styled('div')`
-  position: relative;
-  width: 2em;
-  text-align: right;
+const MessagesPanelContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding: 0.5rem;
+  background-color: ${({ theme }) => theme.backgroundLight};
+  border-top: 0;
 `
 
-const OptionsContainer = styled('div')`
+const ChatForm = styled.form`
+  margin: 0 1rem;
+  width: 100%;
+`
+const OptionsContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
 `
 
-const OptionCheckbox = withStyles({
-  root: {
-    verticalAlign: 'middle',
-  },
-})(MuiSwitch)
+const OptionCheckbox = styled(MuiSwitch)`
+  vertical-align: middle;
+`
 
 const SubmitButton = styled(Button)`
   margin: 1rem;
 `
 
-const TextField = withStyles({
-  root: {
-    width: '100%',
-    boxSizing: 'border-box',
-  },
-})(MuiTextField)
+const TextField = styled(MuiTextField)`
+  width: 100%;
+  box-sizing: border-box;
+`
 
 export const ChatPanel = ({ memberId }) => {
   const [currentMessage, setCurrentMessage] = useState('')
@@ -111,10 +94,6 @@ export const ChatPanel = ({ memberId }) => {
       })
   }
 
-  const selectEmoji = (emoji: string) => {
-    setCurrentMessage(currentMessage + emoji)
-  }
-
   return (
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>
@@ -140,10 +119,6 @@ export const ChatPanel = ({ memberId }) => {
           }}
         />
       </ChatForm>
-
-      <ActionContainer>
-        <EmojiPicker selectEmoji={selectEmoji} />
-      </ActionContainer>
 
       <OptionsContainer>
         <MuiFormControlLabel

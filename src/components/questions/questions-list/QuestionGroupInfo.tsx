@@ -1,17 +1,19 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
-import { getMemberFlag, getMemberIdColor } from 'utils/member'
-import { QuestionInfo } from './QuestionInfo'
-import { hasOpenClaim } from 'utils/claim'
-import { ShieldShaded } from 'react-bootstrap-icons'
 import { IconButton } from '@material-ui/core'
 import { Popover } from 'hedvig-ui/popover'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import React from 'react'
+import { ShieldShaded } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
+import { hasOpenClaim } from 'utils/claim'
+import { getMemberFlag, getMemberIdColor } from 'utils/member'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import { QuestionInfo } from './QuestionInfo'
 
-const QuestionGroupInfoWrapper = styled.div`
+const QuestionGroupInfoWrapper = styled.div<{
+  memberId: string
+  numberMemberGroups: number
+}>`
   display: flex;
   flex-direction: column;
   padding-left: 1.5rem;
@@ -30,7 +32,7 @@ const MemberInfoWrapper = styled.div`
   padding-bottom: 1rem;
 `
 
-const QuestionGroupInfo = ({ questionGroup }) => {
+export const QuestionGroupInfo = ({ questionGroup }) => {
   const member = questionGroup?.member
 
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -82,9 +84,3 @@ const QuestionGroupInfo = ({ questionGroup }) => {
     </QuestionGroupInfoWrapper>
   )
 }
-
-QuestionGroupInfo.propTypes = {
-  questionGroup: PropTypes.object.isRequired,
-}
-
-export default QuestionGroupInfo

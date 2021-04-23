@@ -1,5 +1,5 @@
-import ClaimDetailsPage from 'containers/ClaimDetailsPage'
-import { ClaimsPage } from 'containers/ClaimsPage'
+import { ClaimsList } from 'components/claims'
+import { ClaimDetails } from 'components/claims/claim-details'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Route, Switch } from 'react-router'
@@ -12,7 +12,7 @@ const ClaimsPageRoute = ({ store }) => (
       path="/claims/list/:page?"
       render={() => (
         <PrivateRoute
-          component={ClaimsPage}
+          component={ClaimsList}
           path="/claims/list/:page?"
           store={store}
         />
@@ -23,7 +23,7 @@ const ClaimsPageRoute = ({ store }) => (
       path="/claims/:claimId/members/:memberId"
       render={() => (
         <PrivateRoute
-          component={ClaimDetailsPage}
+          component={ClaimDetails}
           path="/claims/:claimId/members/:memberId"
           store={store}
         />

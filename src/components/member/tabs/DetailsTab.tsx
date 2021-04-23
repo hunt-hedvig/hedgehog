@@ -1,12 +1,6 @@
+import { Member } from 'api/generated/graphql'
 import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
-import { FraudulentStatusEdit } from 'lib/fraudulentStatus'
-import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
-import * as PropTypes from 'prop-types'
-import React from 'react'
-import { useState } from 'react'
-import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
-import InsuranceTrace from './insurance-trace/InsuranceTrace'
 import {
   getEditMemberInfoOptions,
   useEditMemberInfo,
@@ -15,19 +9,25 @@ import {
   getSetFraudulentStatusOptions,
   useSetFraudulentStatus,
 } from 'graphql/use-set-fraudulent-status'
-import { withShowNotification } from 'utils/notifications'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { FraudulentStatusEdit } from 'lib/fraudulentStatus'
+import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
+import React, { useState } from 'react'
+import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
   createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
-const DetailsTabComponent = (props) => {
+const DetailsTabComponent: React.FC<WithShowNotification & {
+  member: Member
+}> = ({ member, showNotification }) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [editMemberInfoRequest, setEditMemberInfoRequest] = useState({
-    memberId: props.member.memberId,
+    memberId: member.memberId,
   })
   const [editingFraud, setEditFraud] = useState(false)
   const [fraudStatus, setFraudStatus] = useState(null)
@@ -61,7 +61,7 @@ const DetailsTabComponent = (props) => {
 
   const handleCancel = () => {
     setEditMemberInfoRequest({
-      memberId: props.member.memberId,
+      memberId: member.memberId,
     })
     handleClose()
   }
@@ -72,12 +72,8 @@ const DetailsTabComponent = (props) => {
     )
   }
 
-  const {
-    traceMemberInfo,
-    fraudulentStatusDescription,
-    fraudulentStatus,
-    ...memberInfo
-  } = props.member || {}
+  const { fraudulentStatusDescription, fraudulentStatus, ...memberInfo } =
+    member || {}
 
   const memberInfoWithoutSsn = {
     ...memberInfo,
@@ -105,22 +101,22 @@ const DetailsTabComponent = (props) => {
               setFraudDescription(desc)
             }}
             getState={() => editingFraud}
-            action={(fraudulentStatus, fraudulentStatusDescription) => {
+            action={(newFraudulentStatus, newFraudulentStatusDescription) => {
               setFraudulentStatus(
                 getSetFraudulentStatusOptions(memberInfo.memberId, {
-                  fraudulentStatus,
-                  fraudulentStatusDescription,
+                  fraudulentStatus: newFraudulentStatus,
+                  fraudulentStatusDescription: newFraudulentStatusDescription,
                 }),
               )
                 .then(() => {
-                  props.showNotification({
+                  showNotification({
                     header: 'Success!',
                     message: 'Changed the fraudulent status',
                     type: 'green',
                   })
                 })
                 .catch((error) => {
-                  props.showNotification({
+                  showNotification({
                     header: 'Error',
                     message: error.message,
                     type: 'red',
@@ -162,7 +158,7 @@ const DetailsTabComponent = (props) => {
                           key={field}
                           label={getFieldName(field)}
                           disabled={isDisabled(field)}
-                          defaultValue={getFieldValue(props.member[field])}
+                          defaultValue={getFieldValue(member[field])}
                           onChange={handleChange(field)}
                         />
                       ))}
@@ -187,15 +183,10 @@ const DetailsTabComponent = (props) => {
           </Table.Row>
         </Table.Footer>
       </Table>
-      <InsuranceTrace traceData={traceMemberInfo} />
     </FadeIn>
   ) : (
     <Header>No member info</Header>
   )
-}
-
-DetailsTabComponent.propTypes = {
-  member: PropTypes.object.isRequired,
 }
 
 export const DetailsTab = withShowNotification(DetailsTabComponent)
