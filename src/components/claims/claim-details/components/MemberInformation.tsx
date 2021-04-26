@@ -223,12 +223,16 @@ export const MemberInformation: React.FC<{
               Signed
               <InfoText>
                 <Popover
-                  contents={format(parseISO(member.signedOn), 'yyyy-MM-dd')}
+                  contents={formatDistance(
+                    parseISO(member.signedOn),
+                    new Date(),
+                    {
+                      addSuffix: true,
+                    },
+                  )}
                 >
                   {member.signedOn &&
-                    formatDistance(parseISO(member.signedOn), new Date(), {
-                      addSuffix: true,
-                    })}
+                    format(parseISO(member.signedOn), 'yyyy-MM-dd HH:mm')}
                 </Popover>
               </InfoText>
             </InfoRow>
@@ -237,12 +241,20 @@ export const MemberInformation: React.FC<{
           <InfoRow>
             Master inception
             <InfoText>
-              <Popover contents={firstMasterInception}>
-                {firstMasterInception
-                  ? formatDistance(new Date(firstMasterInception), new Date(), {
-                      addSuffix: true,
-                    })
-                  : 'Never active'}
+              <Popover
+                contents={
+                  firstMasterInception
+                    ? formatDistance(
+                        new Date(firstMasterInception),
+                        new Date(),
+                        {
+                          addSuffix: true,
+                        },
+                      )
+                    : 'Never active'
+                }
+              >
+                {firstMasterInception ?? 'Never active'}
               </Popover>
             </InfoText>
           </InfoRow>
@@ -250,13 +262,7 @@ export const MemberInformation: React.FC<{
           {lastTermination && (
             <InfoRow>
               Last termination date
-              <InfoText>
-                {lastTermination} (
-                {lastTermination &&
-                  formatDistance(new Date(lastTermination), new Date(), {
-                    addSuffix: true,
-                  })}
-              </InfoText>
+              <InfoText>{lastTermination}</InfoText>
             </InfoRow>
           )}
           <InfoRow>

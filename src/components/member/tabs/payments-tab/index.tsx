@@ -54,18 +54,20 @@ const CHARGE_MEMBER_MUTATION = gql`
 `
 
 const TableRowColored = styled(Table.Row)<{
-  type: Transaction['type']
+  status: Transaction['status']
 }>`
-  background-color: ${({ type }) => {
-    switch (type) {
-      case 'INITIATED':
-        return '#FFFFDD'
-      case 'COMPLETED':
-        return '#DDFFDD'
-      case 'FAILED':
-        return '#FF8A80'
-    }
-  }} !important;
+  td {
+    background-color: ${({ status }) => {
+      switch (status) {
+        case 'INITIATED':
+          return '#FFFFDD'
+        case 'COMPLETED':
+          return '#DDFFDD'
+        case 'FAILED':
+          return '#FF8A80'
+      }
+    }} !important;
+  }
 `
 
 const MemberTransactionsTable: React.FC<{
@@ -83,7 +85,7 @@ const MemberTransactionsTable: React.FC<{
     </Table.Header>
     <Table.Body>
       {transactions.map((transaction) => (
-        <TableRowColored key={transaction.id} type={transaction.type!}>
+        <TableRowColored key={transaction.id} status={transaction.status!}>
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
             <strong>{formatMoney(transaction.amount!)}</strong>

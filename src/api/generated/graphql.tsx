@@ -3045,7 +3045,7 @@ export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
         member?: Maybe<
           { __typename?: 'Member' } & Pick<
             Member,
-            'memberId' | 'firstName' | 'lastName'
+            'memberId' | 'firstName' | 'lastName' | 'pickedLocale'
           > & {
               contractMarketInfo?: Maybe<
                 { __typename?: 'ContractMarketInfo' } & Pick<
@@ -7424,6 +7424,7 @@ export const GetQuestionsGroupsDocument = gql`
         contractMarketInfo {
           market
         }
+        pickedLocale
         claims(filterByStates: [OPEN, REOPENED]) {
           id
           state
