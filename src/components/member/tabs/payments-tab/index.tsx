@@ -60,9 +60,13 @@ const CHARGE_MEMBER_MUTATION = gql`
 
 const TableRowColored = styled(Table.Row)<{
   status: Transaction['status']
+  type: Transaction['type']
 }>`
   td {
-    background-color: ${({ status }) => {
+    background-color: ${({ status, type }) => {
+      if (type === 'PAYOUT') {
+        return '#E0EAF3'
+      }
       switch (status) {
         case 'INITIATED':
           return '#FFFFDD'
@@ -90,7 +94,11 @@ const MemberTransactionsTable: React.FC<{
     </Table.Header>
     <Table.Body>
       {transactions.map((transaction) => (
-        <TableRowColored key={transaction.id} status={transaction.status!}>
+        <TableRowColored
+          key={transaction.id}
+          status={transaction.status!}
+          type={transaction.type!}
+        >
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
             <strong>{formatMoney(transaction.amount!)}</strong>
