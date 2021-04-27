@@ -48,38 +48,38 @@ export const memberPagePanes = (props, memberId, member, isHinting) => [
     ),
   },
   {
-    tabName: 'files',
-    menuItem: `Files ${isHinting ? '(3)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={MemberFile} />
-    ),
-  },
-  {
     tabName: 'contracts',
-    menuItem: `Contracts ${isHinting ? '(4)' : ''}`,
+    menuItem: `Contracts ${isHinting ? '(3)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={ContractTab} />
     ),
   },
   {
     tabName: 'quotes',
-    menuItem: `Quotes ${isHinting ? '(5)' : ''}`,
+    menuItem: `Quotes ${isHinting ? '(4)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
     ),
   },
   {
     tabName: 'payments',
-    menuItem: `Payments ${isHinting ? '(6)' : ''}`,
+    menuItem: `Payments ${isHinting ? '(5)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={PaymentsTab} />
     ),
   },
   {
     tabName: 'account',
-    menuItem: `Account ${isHinting ? '(7)' : ''}`,
+    menuItem: `Account ${isHinting ? '(6)' : ''}`,
     render: () => (
       <TabItem props={{ ...props, memberId }} TabContent={AccountTab} />
+    ),
+  },
+  {
+    tabName: 'files',
+    menuItem: `Files ${isHinting ? '(7)' : ''}`,
+    render: () => (
+      <TabItem props={{ ...props, memberId }} TabContent={MemberFile} />
     ),
   },
   {

@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 const Contents = styled.div`
+  text-align: center;
   position: absolute;
   top: 0;
   left: 50%;
