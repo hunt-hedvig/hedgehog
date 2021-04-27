@@ -6,6 +6,7 @@ import {
   useClaimMemberContractsMasterInceptionQuery,
 } from 'api/generated/graphql'
 import { MemberFlag } from 'components/member/shared/member-flag'
+import copy from 'copy-to-clipboard'
 import { format, formatDistance, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
 import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
@@ -73,6 +74,13 @@ const MemberName = styled('h2')({
   marginBottom: '2rem',
 })
 
+const ClickableText = styled.span`
+  color: ${({ theme }) => theme.accent};
+  &:hover {
+    cursor: pointer;
+  }
+`
+
 export const MemberInformation: React.FC<{
   claimId: string
   memberId: string
@@ -137,7 +145,19 @@ export const MemberInformation: React.FC<{
           <InfoRow>
             Personal number
             <InfoText>
-              {member?.personalNumber ? formatSsn(member.personalNumber) : '-'}
+              {member?.personalNumber ? (
+                <Popover contents={<>Click to copy</>}>
+                  <ClickableText
+                    onClick={() => {
+                      copy(member.personalNumber!)
+                    }}
+                  >
+                    {formatSsn(member.personalNumber)}
+                  </ClickableText>
+                </Popover>
+              ) : (
+                'No personal number'
+              )}
             </InfoText>
           </InfoRow>
           {member?.sanctionStatus && (
@@ -165,12 +185,14 @@ export const MemberInformation: React.FC<{
                 Postal code
                 <InfoText>{formatPostalCode(address.postalCode)}</InfoText>
               </InfoRow>
-              <InfoRow>
-                City
-                <InfoText>
-                  {convertEnumOrSentenceToTitle(address.city ?? '')}
-                </InfoText>
-              </InfoRow>
+              {address.city && (
+                <InfoRow>
+                  City
+                  <InfoText>
+                    {convertEnumOrSentenceToTitle(address.city)}
+                  </InfoText>
+                </InfoRow>
+              )}
             </InfoSection>
           )}
 
