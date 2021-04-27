@@ -1,18 +1,17 @@
+import styled from '@emotion/styled'
 import {
   Button as MuiButton,
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
 import { Field, Form, Formik } from 'formik'
-import React from 'react'
-import styled from '@emotion/styled'
+import React, { useState } from 'react'
 import * as yup from 'yup'
 import { FieldSelect } from '../../shared/inputs/FieldSelect'
 import { TextField } from '../../shared/inputs/TextField'
 
 export interface PayoutProps {
-  payoutDetails
-  match: any
+  memberId
   payoutRequest: (payoutFormData: PayoutFormData, memberId: string) => void
 }
 
@@ -47,80 +46,65 @@ const getPayoutValidationSchema = () =>
     referenceId: yup.string().required(),
   })
 
-class PayoutDetails extends React.Component<
-  PayoutProps,
-  { confirmed: boolean }
-> {
-  public state = {
-    confirmed: false,
-  }
+export const PayoutDetails: React.FC<PayoutProps> = ({
+  memberId,
+  payoutRequest,
+}) => {
+  const [confirmed, setConfirmed] = useState(false)
 
-  public render() {
-    const { match, payoutRequest } = this.props
-    const memberId = match.params.memberId
-    return (
-      <Formik
-        initialValues={{ category: '', amount: '', note: '', referenceId: '' }}
-        onSubmit={(payoutFormData: any, { resetForm }) => {
-          if (!this.state.confirmed) {
-            return
-          }
-          payoutRequest(payoutFormData, memberId)
-          resetForm()
-          this.resetConfirmed()
-        }}
-        validationSchema={getPayoutValidationSchema()}
-      >
-        {({ isValid }) => (
-          <VerticalForm onChange={this.resetConfirmed}>
-            <Field component={FieldSelect} name="category">
-              <MuiMenuItem value="MARKETING">Marketing</MuiMenuItem>
-              <MuiMenuItem value="REFERRAL">Referral</MuiMenuItem>
-              <MuiMenuItem value="REFUND">Refund</MuiMenuItem>
-            </Field>
-            <Field component={TextField} label="Payout amount" name="amount" />
-            <Field
-              component={TextField}
-              label="Reference Id"
-              name="referenceId"
-            />
+  return (
+    <Formik
+      initialValues={{ category: '', amount: '', note: '', referenceId: '' }}
+      onSubmit={(payoutFormData: any, { resetForm }) => {
+        if (!confirmed) {
+          return
+        }
+        payoutRequest(payoutFormData, memberId)
+        resetForm()
+        setConfirmed(false)
+      }}
+      validationSchema={getPayoutValidationSchema()}
+    >
+      {({ isValid }) => (
+        <VerticalForm onChange={() => setConfirmed(false)}>
+          <Field component={FieldSelect} name="category">
+            <MuiMenuItem value="MARKETING">Marketing</MuiMenuItem>
+            <MuiMenuItem value="REFERRAL">Referral</MuiMenuItem>
+            <MuiMenuItem value="REFUND">Refund</MuiMenuItem>
+          </Field>
+          <Field component={TextField} label="Payout amount" name="amount" />
+          <Field
+            component={TextField}
+            label="Reference Id"
+            name="referenceId"
+          />
 
-            <Field component={TextField} label="Note" name="note" />
-            {!this.state.confirmed ? (
-              <SubmitButton
-                type="button"
-                variant="contained"
-                color="secondary"
-                disabled={!isValid}
-                onClick={(e) => {
-                  e.preventDefault()
-                  this.toggleConfirmed()
-                }}
-              >
-                Confirm payout
-              </SubmitButton>
-            ) : (
-              <SubmitButton
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={!isValid}
-              >
-                Create payout
-              </SubmitButton>
-            )}
-          </VerticalForm>
-        )}
-      </Formik>
-    )
-  }
-
-  private toggleConfirmed = () =>
-    this.setState((state) => ({
-      confirmed: !state.confirmed,
-    }))
-
-  private resetConfirmed = () => this.setState({ confirmed: false })
+          <Field component={TextField} label="Note" name="note" />
+          {!confirmed ? (
+            <SubmitButton
+              type="button"
+              variant="contained"
+              color="secondary"
+              disabled={!isValid}
+              onClick={(e) => {
+                e.preventDefault()
+                setConfirmed((currentConfirmed) => !currentConfirmed)
+              }}
+            >
+              Confirm payout
+            </SubmitButton>
+          ) : (
+            <SubmitButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!isValid}
+            >
+              Create payout
+            </SubmitButton>
+          )}
+        </VerticalForm>
+      )}
+    </Formik>
+  )
 }
-
-export default PayoutDetails

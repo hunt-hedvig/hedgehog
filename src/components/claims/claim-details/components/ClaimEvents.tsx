@@ -7,6 +7,7 @@ import { useClaimEventsQuery } from 'api/generated/graphql'
 import { Paper } from 'components/shared/Paper'
 import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
+import { ErrorText } from 'hedvig-ui/typography'
 import React from 'react'
 
 interface Props {
@@ -25,6 +26,7 @@ export const ClaimEvents: React.FC<Props> = ({ claimId }) => {
   const {
     data: claimEventsData,
     loading: loadingClaimEvents,
+    error: queryError,
   } = useClaimEventsQuery({
     variables: { claimId },
   })
@@ -34,6 +36,8 @@ export const ClaimEvents: React.FC<Props> = ({ claimId }) => {
       <h3>Events</h3>
 
       {loadingClaimEvents && <Spinner />}
+      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+
       <MuiList>
         {claimEventsData?.claim?.events.filter(Boolean).map((event) => (
           <ListItem key={event.date}>

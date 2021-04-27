@@ -1897,12 +1897,12 @@ export type ClaimMemberContractsMasterInceptionQuery = {
           >
         >
         account?: Maybe<
-          { __typename?: 'Account' } & {
-            totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
-              MonetaryAmountV2,
-              'amount' | 'currency'
-            >
-          }
+          { __typename?: 'Account' } & Pick<Account, 'id'> & {
+              totalBalance: { __typename?: 'MonetaryAmountV2' } & Pick<
+                MonetaryAmountV2,
+                'amount' | 'currency'
+              >
+            }
         >
         identity?: Maybe<
           { __typename?: 'Identity' } & Pick<
@@ -1930,11 +1930,14 @@ export type ClaimMemberContractsMasterInceptionQuery = {
             | 'isTerminated'
           > & {
               genericAgreements: Array<
-                { __typename?: 'GenericAgreement' } & {
-                  address?: Maybe<
-                    { __typename?: 'Address' } & Pick<Address, 'street'>
-                  >
-                }
+                { __typename?: 'GenericAgreement' } & Pick<
+                  GenericAgreement,
+                  'id'
+                > & {
+                    address?: Maybe<
+                      { __typename?: 'Address' } & Pick<Address, 'street'>
+                    >
+                  }
               >
             }
         >
@@ -2016,7 +2019,7 @@ export type ClaimReservesQueryVariables = Exact<{
 
 export type ClaimReservesQuery = { __typename?: 'QueryType' } & {
   claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves'> & {
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves' | 'state'> & {
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
         >
@@ -2105,6 +2108,10 @@ export type SetClaimTypeMutation = { __typename?: 'MutationType' } & {
   >
 }
 
+export type GetMeQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetMeQuery = { __typename?: 'QueryType' } & Pick<QueryType, 'me'>
+
 export type AddAccountEntryToMemberMutationVariables = Exact<{
   memberId: Scalars['ID']
   accountEntry: AccountEntryInput
@@ -2122,6 +2129,79 @@ export type BackfillSubscriptionsMutationVariables = Exact<{
 
 export type BackfillSubscriptionsMutation = { __typename?: 'MutationType' } & {
   backfillSubscriptions: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+}
+
+export type FileUploadsQueryQueryVariables = Exact<{
+  memberId: Scalars['ID']
+}>
+
+export type FileUploadsQueryQuery = { __typename?: 'QueryType' } & {
+  member?: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        fileUploads: Array<
+          { __typename?: 'FileUpload' } & Pick<
+            FileUpload,
+            'fileUploadUrl' | 'memberId' | 'timestamp' | 'mimeType'
+          >
+        >
+      }
+  >
+}
+
+export type GetMemberTransactionsQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetMemberTransactionsQuery = { __typename?: 'QueryType' } & {
+  member?: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        contractMarketInfo?: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market' | 'preferredCurrency'
+          >
+        >
+        directDebitStatus?: Maybe<
+          { __typename?: 'DirectDebitStatus' } & Pick<
+            DirectDebitStatus,
+            'activated'
+          >
+        >
+        payoutMethodStatus?: Maybe<
+          { __typename?: 'PayoutMethodStatus' } & Pick<
+            PayoutMethodStatus,
+            'activated'
+          >
+        >
+        identity?: Maybe<
+          { __typename?: 'Identity' } & Pick<
+            Identity,
+            'firstName' | 'lastName'
+          > & {
+              nationalIdentification: {
+                __typename?: 'NationalIdentification'
+              } & Pick<NationalIdentification, 'identification' | 'nationality'>
+            }
+        >
+        transactions?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Transaction' } & Pick<
+                Transaction,
+                'id' | 'timestamp' | 'type' | 'status'
+              > & {
+                  amount?: Maybe<
+                    { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  >
+                }
+            >
+          >
+        >
+      }
+  >
 }
 
 export type MemberNameAndContractMarketInfoQueryVariables = Exact<{
@@ -2143,6 +2223,44 @@ export type MemberNameAndContractMarketInfoQuery = {
           >
         >
       }
+  >
+}
+
+export type PaymentScheduleQueryQueryVariables = Exact<{
+  month: Scalars['YearMonth']
+}>
+
+export type PaymentScheduleQueryQuery = { __typename?: 'QueryType' } & {
+  paymentSchedule?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'SchedulerState' } & Pick<
+          SchedulerState,
+          'id' | 'status' | 'amount'
+        > & {
+            member?: Maybe<
+              { __typename?: 'Member' } & Pick<
+                Member,
+                'memberId' | 'firstName' | 'lastName'
+              > & {
+                  monthlySubscription?: Maybe<
+                    { __typename?: 'MonthlySubscription' } & Pick<
+                      MonthlySubscription,
+                      'amount'
+                    >
+                  >
+                  account?: Maybe<
+                    { __typename?: 'Account' } & {
+                      currentBalance: {
+                        __typename?: 'MonetaryAmountV2'
+                      } & Pick<MonetaryAmountV2, 'amount' | 'currency'>
+                    }
+                  >
+                }
+            >
+          }
+      >
+    >
   >
 }
 
@@ -2959,7 +3077,7 @@ export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
         member?: Maybe<
           { __typename?: 'Member' } & Pick<
             Member,
-            'memberId' | 'firstName' | 'lastName'
+            'memberId' | 'firstName' | 'lastName' | 'pickedLocale'
           > & {
               contractMarketInfo?: Maybe<
                 { __typename?: 'ContractMarketInfo' } & Pick<
@@ -3892,6 +4010,7 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
       }
       totalNumberOfClaims
       account {
+        id
         totalBalance {
           amount
           currency
@@ -3915,6 +4034,7 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
         terminationDate
         isTerminated
         genericAgreements {
+          id
           address {
             street
           }
@@ -4129,6 +4249,7 @@ export const ClaimReservesDocument = gql`
     claim(id: $claimId) {
       id
       reserves
+      state
       events {
         date
         text
@@ -4535,6 +4656,57 @@ export type SetClaimTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetClaimTypeMutation,
   SetClaimTypeMutationVariables
 >
+export const GetMeDocument = gql`
+  query GetMe {
+    me
+  }
+`
+
+/**
+ * __useGetMeQuery__
+ *
+ * To run a query within a React component, call `useGetMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMeQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMeQuery,
+    GetMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<GetMeQuery, GetMeQueryVariables>(
+    GetMeDocument,
+    options,
+  )
+}
+export function useGetMeLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMeQuery,
+    GetMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<GetMeQuery, GetMeQueryVariables>(
+    GetMeDocument,
+    options,
+  )
+}
+export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>
+export type GetMeLazyQueryHookResult = ReturnType<typeof useGetMeLazyQuery>
+export type GetMeQueryResult = ApolloReactCommon.QueryResult<
+  GetMeQuery,
+  GetMeQueryVariables
+>
 export const AddAccountEntryToMemberDocument = gql`
   mutation addAccountEntryToMember(
     $memberId: ID!
@@ -4641,6 +4813,156 @@ export type BackfillSubscriptionsMutationOptions = ApolloReactCommon.BaseMutatio
   BackfillSubscriptionsMutation,
   BackfillSubscriptionsMutationVariables
 >
+export const FileUploadsQueryDocument = gql`
+  query FileUploadsQuery($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      fileUploads {
+        fileUploadUrl
+        memberId
+        timestamp
+        mimeType
+      }
+    }
+  }
+`
+
+/**
+ * __useFileUploadsQueryQuery__
+ *
+ * To run a query within a React component, call `useFileUploadsQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFileUploadsQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFileUploadsQueryQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useFileUploadsQueryQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    FileUploadsQueryQuery,
+    FileUploadsQueryQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    FileUploadsQueryQuery,
+    FileUploadsQueryQueryVariables
+  >(FileUploadsQueryDocument, options)
+}
+export function useFileUploadsQueryLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    FileUploadsQueryQuery,
+    FileUploadsQueryQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    FileUploadsQueryQuery,
+    FileUploadsQueryQueryVariables
+  >(FileUploadsQueryDocument, options)
+}
+export type FileUploadsQueryQueryHookResult = ReturnType<
+  typeof useFileUploadsQueryQuery
+>
+export type FileUploadsQueryLazyQueryHookResult = ReturnType<
+  typeof useFileUploadsQueryLazyQuery
+>
+export type FileUploadsQueryQueryResult = ApolloReactCommon.QueryResult<
+  FileUploadsQueryQuery,
+  FileUploadsQueryQueryVariables
+>
+export const GetMemberTransactionsDocument = gql`
+  query GetMemberTransactions($id: ID!) {
+    member(id: $id) {
+      memberId
+      contractMarketInfo {
+        market
+        preferredCurrency
+      }
+      directDebitStatus {
+        activated
+      }
+      payoutMethodStatus {
+        activated
+      }
+      identity {
+        nationalIdentification {
+          identification
+          nationality
+        }
+        firstName
+        lastName
+      }
+      transactions {
+        id
+        amount {
+          amount
+          currency
+        }
+        timestamp
+        type
+        status
+      }
+    }
+  }
+`
+
+/**
+ * __useGetMemberTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetMemberTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMemberTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMemberTransactionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetMemberTransactionsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetMemberTransactionsQuery,
+    GetMemberTransactionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetMemberTransactionsQuery,
+    GetMemberTransactionsQueryVariables
+  >(GetMemberTransactionsDocument, options)
+}
+export function useGetMemberTransactionsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMemberTransactionsQuery,
+    GetMemberTransactionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetMemberTransactionsQuery,
+    GetMemberTransactionsQueryVariables
+  >(GetMemberTransactionsDocument, options)
+}
+export type GetMemberTransactionsQueryHookResult = ReturnType<
+  typeof useGetMemberTransactionsQuery
+>
+export type GetMemberTransactionsLazyQueryHookResult = ReturnType<
+  typeof useGetMemberTransactionsLazyQuery
+>
+export type GetMemberTransactionsQueryResult = ApolloReactCommon.QueryResult<
+  GetMemberTransactionsQuery,
+  GetMemberTransactionsQueryVariables
+>
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
@@ -4703,6 +5025,80 @@ export type MemberNameAndContractMarketInfoLazyQueryHookResult = ReturnType<
 export type MemberNameAndContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
   MemberNameAndContractMarketInfoQuery,
   MemberNameAndContractMarketInfoQueryVariables
+>
+export const PaymentScheduleQueryDocument = gql`
+  query PaymentScheduleQuery($month: YearMonth!) {
+    paymentSchedule(status: SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL) {
+      id
+      member {
+        memberId
+        firstName
+        lastName
+        monthlySubscription(month: $month) {
+          amount
+        }
+        account {
+          currentBalance {
+            amount
+            currency
+          }
+        }
+      }
+      status
+      amount
+    }
+  }
+`
+
+/**
+ * __usePaymentScheduleQueryQuery__
+ *
+ * To run a query within a React component, call `usePaymentScheduleQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaymentScheduleQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaymentScheduleQueryQuery({
+ *   variables: {
+ *      month: // value for 'month'
+ *   },
+ * });
+ */
+export function usePaymentScheduleQueryQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    PaymentScheduleQueryQuery,
+    PaymentScheduleQueryQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    PaymentScheduleQueryQuery,
+    PaymentScheduleQueryQueryVariables
+  >(PaymentScheduleQueryDocument, options)
+}
+export function usePaymentScheduleQueryLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PaymentScheduleQueryQuery,
+    PaymentScheduleQueryQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    PaymentScheduleQueryQuery,
+    PaymentScheduleQueryQueryVariables
+  >(PaymentScheduleQueryDocument, options)
+}
+export type PaymentScheduleQueryQueryHookResult = ReturnType<
+  typeof usePaymentScheduleQueryQuery
+>
+export type PaymentScheduleQueryLazyQueryHookResult = ReturnType<
+  typeof usePaymentScheduleQueryLazyQuery
+>
+export type PaymentScheduleQueryQueryResult = ApolloReactCommon.QueryResult<
+  PaymentScheduleQueryQuery,
+  PaymentScheduleQueryQueryVariables
 >
 export const InsertItemCategoriesDocument = gql`
   mutation InsertItemCategories($request: InsertItemCategoriesInput) {
@@ -7171,6 +7567,7 @@ export const GetQuestionsGroupsDocument = gql`
         contractMarketInfo {
           market
         }
+        pickedLocale
         claims(filterByStates: [OPEN, REOPENED]) {
           id
           state

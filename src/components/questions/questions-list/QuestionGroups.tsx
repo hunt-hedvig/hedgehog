@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
 import styled from '@emotion/styled'
-import { FilteredQuestionGroups } from './FilteredQuestionGroups'
+import React from 'react'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'utils/questionGroup'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import { FilteredQuestionGroups } from './FilteredQuestionGroups'
 
 const ListContainer = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ const ListContainer = styled.div`
   margin: 0;
 `
 
-const QuestionGroups = ({ selectedFilters, questionGroups }) => {
+export const QuestionGroups = ({ selectedFilters, questionGroups }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
   return (
     <ListContainer>
@@ -28,5 +28,3 @@ const QuestionGroups = ({ selectedFilters, questionGroups }) => {
     </ListContainer>
   )
 }
-
-export default QuestionGroups

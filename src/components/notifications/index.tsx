@@ -3,7 +3,7 @@ import React from 'react'
 import Notification from './Notification'
 
 const Notifications = ({ notifications, dismissNotification }) => (
-  <React.Fragment>
+  <>
     {notifications.map((item, id) => (
       <React.Fragment key={item.id || id}>
         <Notification
@@ -12,7 +12,7 @@ const Notifications = ({ notifications, dismissNotification }) => (
         />
       </React.Fragment>
     ))}
-  </React.Fragment>
+  </>
 )
 
 Notifications.propTypes = {

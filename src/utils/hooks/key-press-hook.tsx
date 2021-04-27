@@ -256,6 +256,19 @@ export const Keys: { [name: string]: Key } = {
   },
 }
 
+export const NumberKeys: ReadonlyArray<Key> = [
+  Keys.Zero,
+  Keys.One,
+  Keys.Two,
+  Keys.Three,
+  Keys.Four,
+  Keys.Five,
+  Keys.Six,
+  Keys.Seven,
+  Keys.Eight,
+  Keys.Nine,
+]
+
 const IllegalCharacters = new Set([
   '•',
   'Ω',

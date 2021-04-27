@@ -1,40 +1,38 @@
+import styled from '@emotion/styled'
 import animateScrollTo from 'animated-scroll-to'
-import Message from 'components/member/messages/Message'
+import { parseISO } from 'date-fns'
+import { useMessageHistory } from 'graphql/use-message-history'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef } from 'react'
-import styled from '@emotion/styled'
-import { useMessageHistory } from '../../../graphql/use-message-history'
-import { parseISO } from 'date-fns'
+import { Message } from './Message'
 
-const MessagesListContainer = styled('div')(({ theme }) => ({
-  boxSizing: 'border-box',
-  overflowY: 'auto',
-  padding: '0 20px',
-  background: theme.background,
-  border: '1px solid ' + theme.borderStrong,
-  borderTop: 0,
-  borderBottom: 0,
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column-reverse',
-}))
+const MessagesListContainer = styled.div`
+  overflow-y: auto;
+  padding: 0 20px;
+  background: ${({ theme }) => theme.background};
+  border-top: 0;
+  border-bottom: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+`
 
-const EmptyList = styled('h3')({
-  textAlign: 'center',
-})
+const EmptyList = styled.h3`
+  text-align: center;
+`
 
 const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
-export const MessagesList = ({ memberId }) => {
+export const MessagesList: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [messages, { loading }] = useMessageHistory(memberId)
-  const messagesList = useRef()
-  const latestMessage = useRef()
+  const messagesList = useRef<HTMLDivElement>(null)
+  const latestMessage = useRef<HTMLDivElement>(null)
 
-  const scrollToBottom = () => {
-    animateScrollTo(latestMessage.current, {
-      elementToScroll: messagesList.current,
+  const scrollToBottom = async () => {
+    await animateScrollTo(latestMessage.current!, {
+      elementToScroll: messagesList.current!,
       maxDuration: 1000,
     })
   }
@@ -50,12 +48,12 @@ export const MessagesList = ({ memberId }) => {
   }
 
   return (
-    <MessagesListContainer innerRef={messagesList}>
+    <MessagesListContainer ref={messagesList}>
       {messages ? (
-        messages.map((item, key) => {
+        messages.map((item, index) => {
           return (
             <Message
-              ref={key === 0 ? latestMessage : undefined}
+              ref={index === 0 ? latestMessage : undefined}
               key={item.globalId}
               content={item.body}
               left={item.fromId !== memberId}

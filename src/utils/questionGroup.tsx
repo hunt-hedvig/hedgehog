@@ -3,7 +3,10 @@ import { FilterState } from 'components/questions/filter'
 import { Market } from 'types/enums'
 import { range } from 'utils/array'
 import { hasOpenClaim } from 'utils/claim'
-import { getGroupNumberForMember } from 'utils/member'
+import {
+  getGroupNumberForMember,
+  getMarketFromPickedLocale,
+} from 'utils/member'
 
 export const doMemberGroupFilter = (numberMemberGroups: number) => (
   selectedFilters: ReadonlyArray<FilterState>,
@@ -20,15 +23,32 @@ export const doMemberGroupFilter = (numberMemberGroups: number) => (
 
 export const doMarketFilter = (selectedFilters: ReadonlyArray<FilterState>) => (
   questionGroup: QuestionGroup,
-): boolean =>
-  (selectedFilters.includes(FilterState.Sweden) &&
-    !questionGroup?.member?.contractMarketInfo?.market) ||
-  (selectedFilters.includes(FilterState.Sweden) &&
-    questionGroup?.member?.contractMarketInfo?.market === Market.Sweden) ||
-  (selectedFilters.includes(FilterState.Norway) &&
-    questionGroup?.member?.contractMarketInfo?.market === Market.Norway) ||
-  (selectedFilters.includes(FilterState.Denmark) &&
-    questionGroup?.member?.contractMarketInfo?.market === Market.Denmark)
+): boolean => {
+  const questionGroupMarket = questionGroup?.member?.contractMarketInfo?.market
+    ? questionGroup.member.contractMarketInfo.market
+    : questionGroup.member?.pickedLocale
+    ? getMarketFromPickedLocale(questionGroup.member.pickedLocale)
+    : Market.Sweden
+  if (
+    selectedFilters.includes(FilterState.Sweden) &&
+    questionGroupMarket === Market.Sweden
+  ) {
+    return true
+  }
+  if (
+    selectedFilters.includes(FilterState.Norway) &&
+    questionGroupMarket === Market.Norway
+  ) {
+    return true
+  }
+  if (
+    selectedFilters.includes(FilterState.Denmark) &&
+    questionGroupMarket === Market.Denmark
+  ) {
+    return true
+  }
+  return false
+}
 
 export const doClaimFilter = (selectedFilters: ReadonlyArray<FilterState>) => (
   questionGroup: QuestionGroup,

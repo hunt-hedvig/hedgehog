@@ -12,12 +12,31 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-04-16',
+    date: '2021-04-27',
     change: 'Swish claims payouts (feature flagged)',
     authorGithubHandle: 'fredrikareschoug',
   },
   {
+    date: '2021-04-23',
+    change:
+      'Speed up questions tab 🏎, add shortcuts to member suggestions in search, remove Emoji mart ☺',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2021-04-23',
+    change:
+      'Better consistency and readability of member information in a claim',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-04-16',
+    change:
+      'Allow line breaks and multiple spaces in claim notes 🛸. ' +
+      'Also sort payments and claims and some other goodies',
+    authorGithubHandle: 'palmenhq',
+  },
+  {
+    date: '2021-04-15',
     change: 'Speed up the claims tab 🏎',
     authorGithubHandle: 'palmenhq',
   },

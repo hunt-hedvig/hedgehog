@@ -15,6 +15,7 @@ import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
 import { Spinner } from 'hedvig-ui/sipnner'
+import { ErrorText } from 'hedvig-ui/typography'
 import React from 'react'
 import { sleep } from 'utils/sleep'
 
@@ -59,6 +60,7 @@ const ClaimNote = withStyles({
   root: {
     fontSize: '1rem',
     maxWidth: '80%',
+    whiteSpace: 'pre-wrap',
   },
 })(MuiTypography)
 
@@ -80,6 +82,7 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
     data: claimNotesData,
     refetch: refetchClaimNotes,
     loading: loadingClaimNotes,
+    error: queryError,
   } = useClaimNotesQuery({
     variables: { claimId },
   })
@@ -90,10 +93,12 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
     <Paper>
       <h3>Notes</h3>
       {loadingClaimNotes && <Spinner />}
+      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+
       <MuiList>
         {sortNotesByDate(notes).map((note) => (
           <ListItem key={note.date + note.handlerReference}>
-            <ClaimNote component="p">{note.text}</ClaimNote>
+            <ClaimNote component="pre">{note.text}</ClaimNote>
             <ClaimNoteFooter component="span">
               {note.handlerReference && (
                 <>

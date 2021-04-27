@@ -1,5 +1,5 @@
+import { MembersSearch } from 'components/members-search'
 import MemberPage from 'containers/MemberPage'
-import { MembersSearchPage } from 'containers/MembersSearchPage'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Route, Switch } from 'react-router'
@@ -11,11 +11,7 @@ const MessagesPageRouter = ({ store }) => (
       exact
       path="/members"
       render={() => (
-        <PrivateRoute
-          component={MembersSearchPage}
-          path="/members"
-          store={store}
-        />
+        <PrivateRoute component={MembersSearch} path="/members" store={store} />
       )}
     />
     <Route

@@ -1,11 +1,6 @@
-import { ContractMarketInfo } from 'api/generated/graphql'
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
-import {
-  InfoContainer,
-  InfoRow,
-  InfoText,
-} from 'components/member/tabs/shared/card-components'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
+import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { useGetPerson } from 'graphql/use-get-person'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
@@ -13,6 +8,7 @@ import {
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
@@ -22,8 +18,8 @@ import { Market } from 'types/enums'
 
 export const DebtTab: React.FC<{
   memberId: string
-  contractMarketInfo: ContractMarketInfo
-}> = ({ memberId, contractMarketInfo }) => {
+}> = ({ memberId }) => {
+  const [contractMarketInfo] = useContractMarketInfo(memberId)
   const [person, { loading, error, refetch }] = useGetPerson(memberId)
 
   const eligibleForWhitelist =

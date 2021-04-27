@@ -37,6 +37,6 @@ const StyledSemanticInput = styled(SemanticInput)<CustomInputProps>`
   }
 `
 
-export const Input: React.FunctionComponent<CustomInputProps> = (props) => {
+export const Input: React.FC<CustomInputProps> = (props) => {
   return <StyledSemanticInput {...props} />
 }

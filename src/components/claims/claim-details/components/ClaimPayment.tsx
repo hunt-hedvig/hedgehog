@@ -31,7 +31,7 @@ interface Props {
   refetch: () => Promise<any>
   identified: boolean
   market?: string | null
-  carrier: string
+  carrier?: string | null
 }
 
 export interface PaymentFormData {
@@ -152,7 +152,7 @@ export const ClaimPayment: React.FC<Props> = ({
   return (
     <Formik<PaymentFormData>
       initialValues={{
-        type: ClaimPaymentType.Manual,
+        type: ClaimPaymentType.Automatic,
         amount: '',
         deductible: '',
         note: '',
@@ -254,7 +254,7 @@ export const ClaimPayment: React.FC<Props> = ({
                   sanctionListSkipped: Boolean(values.overridden),
                   note: values.note,
                   exGratia: values.exGratia || false,
-                  carrier,
+                  carrier: carrier ?? undefined,
                 }
 
                 if (values.type === 'AutomaticSwish') {
@@ -281,7 +281,6 @@ export const ClaimPayment: React.FC<Props> = ({
                 }
                 await sleep(1000)
                 await refetch()
-                setIsConfirming(false)
               }}
               amount={values.amount}
               identified={identified}

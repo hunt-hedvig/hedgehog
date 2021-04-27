@@ -1,17 +1,13 @@
+import styled from '@emotion/styled'
 import { Contract as ContractType } from 'api/generated/graphql'
 import { Agreement } from 'components/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'components/member/tabs/contracts-tab/agreement/AgreementsTable'
 import { MasterInception } from 'components/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'components/member/tabs/contracts-tab/contract/termination-date'
-import {
-  InfoContainer,
-  InfoRow,
-  InfoText,
-} from 'components/member/tabs/shared/card-components'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from '@emotion/styled'
 import { getSignSource } from 'utils/contract'
 import { convertEnumToTitle } from 'utils/text'
 

@@ -1,11 +1,10 @@
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
 import { format } from 'date-fns'
-import { css } from '@emotion/react'
 import * as types from 'lib/messageTypes'
-import PropTypes from 'prop-types'
 import React from 'react'
-import styled from '@emotion/styled'
 
 const MessageRow = styled.div<
   WithLeft & { isQuestion?: boolean; isVisible: boolean }
@@ -90,13 +89,13 @@ const isImage = (text) => {
   return text.match(/\.(jpeg|jpg|gif|png)$/) != null
 }
 
-const Message = React.forwardRef<
+export const Message = React.forwardRef<
   React.ReactNode,
   {
     left: boolean
     content: any
     isQuestionMessage?: boolean
-    timestamp: Date
+    timestamp: Date | null
     from?: string
   }
 >(({ left, content, isQuestionMessage, timestamp, from }, ref) => {
@@ -152,9 +151,3 @@ const MessageContent = ({ content }) => {
       return null
   }
 }
-
-MessageContent.propTypes = {
-  content: PropTypes.object.isRequired,
-}
-
-export default Message

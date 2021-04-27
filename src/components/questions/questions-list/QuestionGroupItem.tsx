@@ -1,11 +1,12 @@
-import QuestionGroupInfo from 'components/questions/questions-list/QuestionGroupInfo'
-import React from 'react'
 import styled from '@emotion/styled'
+import { QuestionGroup } from 'api/generated/graphql'
+import { QuestionGroupInfo } from 'components/questions/questions-list/QuestionGroupInfo'
+import React from 'react'
 import { AnswerForm } from './AnswerForm'
 
 const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`
-  opacity: ${(props) => (props.isVisible ? 1 : 0)};
-  transform: ${(props) => (props.isVisible ? 'scale(1)' : 'scale(0.8)')};
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transform: ${({ isVisible }) => (isVisible ? 'scale(1)' : 'scale(0.8)')};
   transition: all 0.8s ease-out;
   padding: 3rem 1.5rem;
   margin-left: -1.5rem;
@@ -15,22 +16,31 @@ const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`
   max-width: 50rem;
   width: 50%;
   min-width: 350px;
-
   background: ${({ theme }) => theme.accentLighter};
   border: 1px solid ${({ theme }) => theme.border};
 `
 
-export const QuestionGroup = ({ questionGroup }) => {
+export interface QuestionGroupItemProps {
+  questionGroup: QuestionGroup
+}
+
+export const QuestionGroupItem: React.FC<QuestionGroupItemProps> = ({
+  questionGroup,
+}) => {
   const [isVisible, setVisible] = React.useState(false)
 
   React.useEffect(() => {
     setVisible(true)
-  })
+  }, [])
 
   return (
     <QuestionGroupWrapper key={questionGroup.id} isVisible={isVisible}>
       <QuestionGroupInfo questionGroup={questionGroup} />
-      <AnswerForm memberId={questionGroup.memberId} />
+      <AnswerForm
+        memberId={questionGroup.memberId}
+        onDone={() => setVisible(false)}
+        onError={() => setVisible(true)}
+      />
     </QuestionGroupWrapper>
   )
 }

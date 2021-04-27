@@ -11,7 +11,7 @@ import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
 import { Spacing } from 'hedvig-ui/spacing'
-import { Paragraph } from 'hedvig-ui/typography'
+import { Paragraph, ErrorText } from 'hedvig-ui/typography'
 
 import React from 'react'
 import { Market } from 'types/enums'
@@ -44,16 +44,19 @@ const TotalCell = styled(MuiTableCell)`
   font-size: 1.1rem;
 `
 
-const ClaimPayments: React.FC<Props> = ({ claimId }) => {
+export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
   const {
     data: paymentsData,
     refetch: refetchPayments,
+    error: queryError,
     loading: loadingPayments,
   } = useClaimPaymentsQuery({
     variables: { claimId },
   })
 
-  const payments = paymentsData?.claim?.payments ?? []
+  const payments = [...(paymentsData?.claim?.payments ?? [])].sort(
+    (a, b) => b.timestamp - a.timestamp,
+  )
   const identity = paymentsData?.claim?.member?.identity
 
   const totalAmount = payments
@@ -66,6 +69,7 @@ const ClaimPayments: React.FC<Props> = ({ claimId }) => {
   return (
     <Paper>
       <h3>Payments</h3>
+      {queryError && <ErrorText>{queryError.message}</ErrorText>}
       {paymentsData?.claim?.contract?.market === Market.Norway && (
         <p>
           <strong>Identified: {identity ? <Checkmark /> : <Cross />}</strong>
@@ -181,5 +185,3 @@ const ClaimPayments: React.FC<Props> = ({ claimId }) => {
     </Paper>
   )
 }
-
-export { ClaimPayments }
