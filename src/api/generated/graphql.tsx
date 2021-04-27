@@ -3197,7 +3197,14 @@ export type ListClaimsQuery = { __typename?: 'QueryType' } & {
             member: { __typename?: 'Member' } & Pick<
               Member,
               'memberId' | 'firstName' | 'lastName'
-            >
+            > & {
+                contractMarketInfo?: Maybe<
+                  { __typename?: 'ContractMarketInfo' } & Pick<
+                    ContractMarketInfo,
+                    'market'
+                  >
+                >
+              }
             type?: Maybe<
               | { __typename: 'TheftClaim' }
               | { __typename: 'AccidentalDamageClaim' }
@@ -7728,6 +7735,9 @@ export const ListClaimsDocument = gql`
           memberId
           firstName
           lastName
+          contractMarketInfo {
+            market
+          }
         }
         registrationDate
         type {
