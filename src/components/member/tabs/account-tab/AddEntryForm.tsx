@@ -111,10 +111,11 @@ const AddEntryFormComponent: React.FC<{
       ...data,
       fromDate: format(new Date(), 'yyyy-MM-dd'),
       amount: {
-        amount: data.amount,
+        amount: data.amount.amount,
         currency: preferredCurrency,
       },
     }
+
     addAccountEntry({
       variables: {
         memberId,
