@@ -2,7 +2,7 @@ import { ContractMarketInfo } from 'api/generated/graphql'
 import { FilterState, getFilterColor } from 'components/questions/filter'
 import { differenceInYears, parse } from 'date-fns'
 import React from 'react'
-import { Market } from 'types/enums'
+import { Market, PickedLocale } from 'types/enums'
 
 export const getGroupNumberForMember = (
   memberId: string,
@@ -47,12 +47,43 @@ export const getMemberGroupName = (
 
 export const getMemberFlag = (
   contractMarketInfo?: ContractMarketInfo | null,
+  pickedLocale: string | null = null,
 ): string => {
-  if (!contractMarketInfo) {
+  if (contractMarketInfo?.market) {
+    return getMemberFlagFromMarket(contractMarketInfo.market as Market)
+  }
+
+  if (!pickedLocale) {
+    return '🏳'
+  }
+  const market = getMarketFromPickedLocale(pickedLocale)
+  if (!market) {
     return '🏳'
   }
 
-  switch (contractMarketInfo.market) {
+  return `${getMemberFlagFromMarket(market)} & 🏳`
+}
+
+export const getMarketFromPickedLocale = (
+  pickedLocale: string,
+): Market | null => {
+  switch (pickedLocale) {
+    case PickedLocale.NbNo:
+    case PickedLocale.EnNo:
+      return Market.Norway
+    case PickedLocale.SvSe:
+    case PickedLocale.EnSe:
+      return Market.Sweden
+    case PickedLocale.DaDk:
+    case PickedLocale.EnDk:
+      return Market.Denmark
+    default:
+      return null
+  }
+}
+
+const getMemberFlagFromMarket = (market: Market): string => {
+  switch (market) {
     case Market.Norway:
       return '🇳🇴'
     case Market.Sweden:

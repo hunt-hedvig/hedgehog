@@ -15,11 +15,15 @@ import {
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { Button } from 'hedvig-ui/button'
+import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
-import { Form, Input, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
+import { WithShowNotification } from 'store/actions/notificationsActions'
 import { Market } from 'types/enums'
 import { formatMoney } from 'utils/money'
+import { withShowNotification } from 'utils/notifications'
 import { Checkmark, Cross } from '../../../icons'
 import { GenerateSetupDirectDebitLink } from './generate-setup-direct-debit-link'
 
@@ -39,6 +43,7 @@ const transactionDateSorter = (a, b) => {
 const CHARGE_MEMBER_MUTATION = gql`
   mutation ChargeMember($id: ID!, $amount: MonetaryAmount!) {
     chargeMember(id: $id, amount: $amount) {
+      memberId
       transactions {
         id
         amount {
@@ -54,18 +59,20 @@ const CHARGE_MEMBER_MUTATION = gql`
 `
 
 const TableRowColored = styled(Table.Row)<{
-  type: Transaction['type']
+  status: Transaction['status']
 }>`
-  background-color: ${({ type }) => {
-    switch (type) {
-      case 'INITIATED':
-        return '#FFFFDD'
-      case 'COMPLETED':
-        return '#DDFFDD'
-      case 'FAILED':
-        return '#FF8A80'
-    }
-  }} !important;
+  td {
+    background-color: ${({ status }) => {
+      switch (status) {
+        case 'INITIATED':
+          return '#FFFFDD'
+        case 'COMPLETED':
+          return '#DDFFDD'
+        case 'FAILED':
+          return '#FF8A80'
+      }
+    }} !important;
+  }
 `
 
 const MemberTransactionsTable: React.FC<{
@@ -83,7 +90,7 @@ const MemberTransactionsTable: React.FC<{
     </Table.Header>
     <Table.Body>
       {transactions.map((transaction) => (
-        <TableRowColored key={transaction.id} type={transaction.type!}>
+        <TableRowColored key={transaction.id} status={transaction.status!}>
           <Table.Cell>{transaction.id}</Table.Cell>
           <Table.Cell>
             <strong>{formatMoney(transaction.amount!)}</strong>
@@ -99,23 +106,25 @@ const MemberTransactionsTable: React.FC<{
   </Table>
 )
 
-export const PaymentsTab: React.FC<{
+const PaymentsTabComponent: React.FC<WithShowNotification & {
   memberId: string
   payoutRequest: (payoutFormData: PayoutFormData, memberId: string) => void
-}> = ({ memberId, payoutRequest }) => {
-  const { data, loading, error } = useGetMemberTransactionsQuery({
+}> = ({ memberId, payoutRequest, showNotification }) => {
+  const { data, loading, error, refetch } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
 
-  const [amount, setAmount] = useState<null | number>(null)
-  const [confirming, setConfirming] = useState(false)
-  const [confirmed, setConfirmed] = useState(false)
-
-  const handleChange = (e) => {
-    setAmount(+e.target.value)
-  }
+  const [amount, setAmount] = useState<string>('')
 
   const handleChargeSubmit = (mutation) => {
+    if (
+      !window.confirm(
+        `Are you sure you want to charge ${amount} ${data?.member?.contractMarketInfo?.preferredCurrency}?`,
+      )
+    ) {
+      setAmount('')
+      return
+    }
     mutation({
       variables: {
         id: memberId,
@@ -124,22 +133,24 @@ export const PaymentsTab: React.FC<{
           currency: data?.member?.contractMarketInfo?.preferredCurrency,
         },
       },
-    }).then(() => {
-      setAmount(null)
     })
-  }
-
-  const handleConfirmation = () => {
-    setConfirming(true)
-  }
-
-  const handleConfirmationChange = (e) => {
-    if (!confirming) {
-      return
-    }
-    if (e.target.value.replace(/ /g, '').toLowerCase() === 'a') {
-      setConfirmed(true)
-    }
+      .then(() => {
+        showNotification({
+          message: 'Member successfully charged',
+          header: 'Success',
+          type: 'olive',
+        })
+        setAmount('')
+      })
+      .catch((e) => {
+        showNotification({
+          message: e.message,
+          header: 'Error',
+          type: 'red',
+        })
+        throw e
+      })
+      .then(refetch)
   }
 
   if (error) {
@@ -158,11 +169,11 @@ export const PaymentsTab: React.FC<{
     <div>
       <p>
         Direct Debit activated:{' '}
-        {data.member?.directDebitStatus?.activated ? <Checkmark /> : <Cross />}
+        {data.member.directDebitStatus?.activated ? <Checkmark /> : <Cross />}
       </p>
       <p>
         Payout Method activated:{' '}
-        {data.member?.payoutMethodStatus?.activated ? <Checkmark /> : <Cross />}
+        {data.member.payoutMethodStatus?.activated ? <Checkmark /> : <Cross />}
       </p>
 
       <Spacing bottom>
@@ -172,52 +183,32 @@ export const PaymentsTab: React.FC<{
       {data.member?.directDebitStatus?.activated && (
         <Mutation mutation={CHARGE_MEMBER_MUTATION}>
           {(chargeMember) => (
-            <div>
-              <h3>Charge:</h3>
-              <Form>
-                <Form.Input
-                  onChange={handleChange}
-                  label={`Charge amount (${data?.member?.contractMarketInfo?.preferredCurrency})`}
-                  placeholder="ex. 100"
+            <>
+              <ThirdLevelHeadline>Charge:</ThirdLevelHeadline>
+              <Spacing bottom="small">
+                <Input
+                  type="number"
                   value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  label={data.member?.contractMarketInfo?.preferredCurrency}
+                  labelPosition="right"
+                  placeholder="ex. 100"
                 />
-                <br />
-                {!confirmed && (
-                  <Button variation="primary" onClick={handleConfirmation}>
-                    Charge
-                  </Button>
-                )}
-                {confirming && (
-                  <>
-                    <br />
-                    <br />
-                    <Input
-                      onChange={handleConfirmationChange}
-                      focus
-                      label="Type a to confirm"
-                      placeholder="a"
-                    />
-                    <br />
-                  </>
-                )}
-                {confirmed && (
-                  <>
-                    Success!! Press execute, to execute the order
-                    <br />
-                    <br />
-                    <Button onClick={() => handleChargeSubmit(chargeMember)}>
-                      Execute
-                    </Button>
-                  </>
-                )}
-              </Form>
-            </div>
+              </Spacing>
+              <Button
+                disabled={!amount}
+                variation="primary"
+                onClick={() => handleChargeSubmit(chargeMember)}
+              >
+                Submit
+              </Button>
+            </>
           )}
         </Mutation>
       )}
       <br />
-      {data.member?.payoutMethodStatus?.activated &&
-        data?.member?.contractMarketInfo?.market === Market.Sweden && (
+      {data.member.payoutMethodStatus?.activated &&
+        data.member.contractMarketInfo?.market === Market.Sweden && (
           <>
             <h3>Payout:</h3>
             <PayoutDetails memberId={memberId} payoutRequest={payoutRequest} />
@@ -226,8 +217,8 @@ export const PaymentsTab: React.FC<{
       <h3>Transactions:</h3>
       <MemberTransactionsTable
         transactions={
-          data!
-            .member!.transactions!.slice()
+          data.member
+            .transactions!.slice()
             .sort(transactionDateSorter)
             .reverse() as Transaction[]
         }
@@ -236,4 +227,4 @@ export const PaymentsTab: React.FC<{
   )
 }
 
-export default PaymentsTab
+export const PaymentsTab = withShowNotification(PaymentsTabComponent)

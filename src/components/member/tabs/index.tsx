@@ -1,7 +1,7 @@
 import { ContractTab } from 'components/member/tabs/contracts-tab'
 import { DetailsTab } from 'components/member/tabs/DetailsTab'
 import { MemberFile } from 'components/member/tabs/files-tab/FileTab'
-import PaymentsTab from 'components/member/tabs/payments-tab'
+import { PaymentsTab } from 'components/member/tabs/payments-tab'
 import { Quotes } from 'components/member/tabs/quote-tab'
 
 import styled from '@emotion/styled'
