@@ -67,7 +67,7 @@ export const ClaimListItem: React.FC<{
       active={active}
     >
       <MemberIdCell memberId={memberId} numberMemberGroups={numberMemberGroups}>
-        {item.member?.firstName + ' ' + item.member?.lastName} ({memberId}){' '}
+        {item.member?.firstName + ' ' + item.member?.lastName} ({memberId})
       </MemberIdCell>
       <Table.Cell>{formattedDate}</Table.Cell>
       <Table.Cell>{claimType}</Table.Cell>
