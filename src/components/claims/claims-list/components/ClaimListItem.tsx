@@ -10,7 +10,7 @@ import { Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { Table, TableRowProps } from 'semantic-ui-react'
-import { getMemberFlag, getMemberIdColor } from 'utils/member'
+import { getMemberIdColor } from 'utils/member'
 import { formatMoney } from 'utils/money'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
@@ -68,7 +68,6 @@ export const ClaimListItem: React.FC<{
     >
       <MemberIdCell memberId={memberId} numberMemberGroups={numberMemberGroups}>
         {item.member?.firstName + ' ' + item.member?.lastName} ({memberId}){' '}
-        {getMemberFlag(item.member.contractMarketInfo)}
       </MemberIdCell>
       <Table.Cell>{formattedDate}</Table.Cell>
       <Table.Cell>{claimType}</Table.Cell>
