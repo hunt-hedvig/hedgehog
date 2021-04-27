@@ -15,9 +15,12 @@ import {
 } from 'api/generated/graphql'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
+import { Spinner } from 'hedvig-ui/sipnner'
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
+import { WithShowNotification } from 'store/actions/notificationsActions'
 import { Market } from 'types/enums'
+import { withShowNotification } from 'utils/notifications'
 import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
@@ -85,7 +88,10 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
         ),
     }),
     amount: yup.string().required(),
-    note: yup.string().required(),
+    note: yup
+      .string()
+      .min(5) // for some reason payment service enforces at least 5 chars in the note
+      .required(),
     exGratia: yup.boolean(),
     type: yup
       .string()
@@ -109,13 +115,14 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
     }),
   })
 
-export const ClaimPayment: React.FC<Props> = ({
+export const ClaimPaymentComponent: React.FC<WithShowNotification & Props> = ({
   sanctionStatus,
   claimId,
   refetch,
   identified,
   market,
   carrier,
+  showNotification,
 }) => {
   const [createPayment, createPaymentProps] = useCreateClaimPaymentMutation()
   const [
@@ -184,7 +191,9 @@ export const ClaimPayment: React.FC<Props> = ({
               control={<Field component={Checkbox} name="exGratia" />}
             />
             <Field component={FieldSelect} name="type">
-              <MuiMenuItem value={ClaimPaymentType.Manual}>Manual</MuiMenuItem>
+              <MuiMenuItem value={ClaimPaymentType.Manual} disabled>
+                Manual
+              </MuiMenuItem>
               <MuiMenuItem value={ClaimPaymentType.Automatic}>
                 Automatic
               </MuiMenuItem>
@@ -227,8 +236,14 @@ export const ClaimPayment: React.FC<Props> = ({
               type="submit"
               variant="contained"
               color="primary"
-              disabled={!isValid}
+              disabled={
+                !isValid ||
+                createPaymentProps.loading ||
+                createSwishPaymentProps.loading
+              }
             >
+              {(createPaymentProps.loading ||
+                createSwishPaymentProps.loading) && <Spinner />}
               Create payment
             </SubmitButton>
           </PaymentForm>
@@ -257,27 +272,41 @@ export const ClaimPayment: React.FC<Props> = ({
                   carrier: carrier ?? undefined,
                 }
 
-                if (values.type === 'AutomaticSwish') {
-                  await createSwishPayment({
-                    variables: {
-                      id: claimId,
-                      payment: {
-                        ...(paymentInput as ClaimSwishPaymentInput),
-                        phoneNumber: values.phoneNumber!,
-                        message: values.message!,
+                try {
+                  if (values.type === 'AutomaticSwish') {
+                    await createSwishPayment({
+                      variables: {
+                        id: claimId,
+                        payment: {
+                          ...(paymentInput as ClaimSwishPaymentInput),
+                          phoneNumber: values.phoneNumber!,
+                          message: values.message!,
+                        },
                       },
-                    },
-                  })
-                } else {
-                  await createPayment({
-                    variables: {
-                      id: claimId,
-                      payment: {
-                        ...(paymentInput as ClaimPaymentInput),
-                        type: values.type,
+                    })
+                  } else {
+                    await createPayment({
+                      variables: {
+                        id: claimId,
+                        payment: {
+                          ...(paymentInput as ClaimPaymentInput),
+                          type: values.type,
+                        },
                       },
-                    },
+                    })
+                  }
+                  showNotification({
+                    type: 'olive',
+                    message: 'Claim payment was made successfully',
+                    header: 'Success',
                   })
+                } catch (e) {
+                  showNotification({
+                    type: 'red',
+                    message: 'Error while making claim payment: ' + e.message,
+                    header: 'Error',
+                  })
+                  throw e
                 }
                 await sleep(1000)
                 await refetch()
@@ -304,3 +333,5 @@ export const ClaimPayment: React.FC<Props> = ({
     </Formik>
   )
 }
+
+export const ClaimPayment = withShowNotification(ClaimPaymentComponent)
