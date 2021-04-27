@@ -10,15 +10,17 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { Market } from 'types/enums'
 import { sleep, tickAsync } from 'utils/sleep'
-import { ClaimPayment } from './ClaimPayment'
+import { ClaimPaymentComponent } from './ClaimPayment'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 it("doesn't submit empty form", async () => {
   const refetchPage = jest.fn(() => Promise.resolve())
+  const showNotification = jest.fn()
   const wrapper = mount(
     <MockedProvider>
-      <ClaimPayment
+      <ClaimPaymentComponent
         sanctionStatus={SanctionStatus.NoHit}
+        showNotification={showNotification}
         claimId={'abc123'}
         refetch={refetchPage}
         identified={true}
@@ -48,11 +50,12 @@ it('submits valid form with confirmation', async () => {
     },
     deductible: { amount: 10, currency: 'SEK' },
     sanctionListSkipped: false,
-    note: 'test',
+    note: 'test value with more than 5 chars',
     exGratia: false,
     carrier: 'Hedvig',
     type: ClaimPaymentType.Automatic,
   }
+  const showNotification = jest.fn()
 
   const wrapper = mount(
     <MockedProvider
@@ -79,13 +82,14 @@ it('submits valid form with confirmation', async () => {
         },
       ]}
     >
-      <ClaimPayment
+      <ClaimPaymentComponent
         sanctionStatus={SanctionStatus.NoHit}
         claimId={'abc123'}
         refetch={refetch}
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
+        showNotification={showNotification}
       />
     </MockedProvider>,
   )
@@ -100,7 +104,7 @@ it('submits valid form with confirmation', async () => {
       target: { value: '10', name: 'deductible' },
     })
     wrapper.find('input[name="note"]').simulate('change', {
-      target: { value: 'test', name: 'note' },
+      target: { value: 'test value with more than 5 chars', name: 'note' },
     })
     // Manually trigger `onChange` because MUI doesn't support native `change` simulations
     wrapper.find('SelectInput[name="type"]').prop('onChange')!({
@@ -141,4 +145,7 @@ it('submits valid form with confirmation', async () => {
   })
 
   expect(refetch).toHaveBeenCalled()
+  expect(showNotification.mock.calls[0][0]).toEqual(
+    expect.objectContaining({ type: 'olive', header: 'Success' }),
+  )
 })
