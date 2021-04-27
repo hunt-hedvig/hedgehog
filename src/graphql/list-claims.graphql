@@ -6,6 +6,9 @@ query ListClaims($options: ListClaimsOptions!) {
         memberId
         firstName
         lastName
+        contractMarketInfo {
+          market
+        }
       }
       registrationDate
       type {
