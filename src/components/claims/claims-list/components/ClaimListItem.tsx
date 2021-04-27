@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Claim, ClaimState } from 'api/generated/graphql'
-import { MemberFlag } from 'components/member/shared/member-flag'
 import { LinkRow } from 'components/shared'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
