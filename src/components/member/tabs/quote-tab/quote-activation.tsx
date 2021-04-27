@@ -6,7 +6,7 @@ import {
 import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Checkbox } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { getContractByAgreementId } from 'utils/contract'
@@ -28,6 +28,12 @@ export const QuoteActivation: React.FC<{
 }) => {
   const [useGap, setUseGap] = useState(false)
   const [contracts, { loading }] = useContracts(memberId)
+  const [activeFrom, setActiveFrom] = useState<Date | null>(null)
+  const [
+    previousAgreementActiveTo,
+    setPreviousAgreementActiveTo,
+  ] = useState<Date | null>(null)
+
   if (!quote.originatingProductId) {
     return (
       <>
@@ -35,6 +41,7 @@ export const QuoteActivation: React.FC<{
       </>
     )
   }
+
   if (loading) {
     return null
   }
@@ -48,13 +55,10 @@ export const QuoteActivation: React.FC<{
   if (contract.hasPendingAgreement && contract.isTerminated) {
     return <>Cannot active quote for a pending contract that is terminated</>
   }
-  const [activeFrom, setActiveFrom] = useState(() =>
-    getInitialActiveFrom(contract),
-  )
-  const [
-    previousAgreementActiveTo,
-    setPreviousAgreementActiveTo,
-  ] = useState<Date | null>(null)
+
+  useEffect(() => {
+    setActiveFrom(getInitialActiveFrom(contract))
+  }, [])
 
   const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
 
