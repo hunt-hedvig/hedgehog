@@ -147,7 +147,6 @@ export const ClaimPaymentComponent: React.FC<WithShowNotification & Props> = ({
     createPaymentProps.error,
     createSwishPaymentProps.data,
     createSwishPaymentProps.error,
-    setPaymentStatus,
   ])
 
   return (
