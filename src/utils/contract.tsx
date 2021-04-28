@@ -9,7 +9,7 @@ export const getSignSource = (signSource: SignSource): string => {
     case SignSource.Ios:
       return 'iOS'
     case SignSource.Hope:
-      return 'H.OPE.'
+      return 'Hope'
     case SignSource.Rapio:
       return 'Partner'
     case SignSource.Web:

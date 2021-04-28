@@ -84,6 +84,25 @@ export const getMarketFromPickedLocale = (
   }
 }
 
+export const getLanguageFlagFromPickedLocale = (
+  pickedLocale: string,
+): string | null => {
+  switch (pickedLocale) {
+    case PickedLocale.NbNo:
+      return '🇳🇴'
+    case PickedLocale.SvSe:
+      return '🇸🇪'
+    case PickedLocale.DaDk:
+      return '🇩🇰'
+    case PickedLocale.EnNo:
+    case PickedLocale.EnSe:
+    case PickedLocale.EnDk:
+      return '🇬🇧'
+    default:
+      return '🏳'
+  }
+}
+
 const getMemberFlagFromMarket = (market: Market): string => {
   switch (market) {
     case Market.Norway:

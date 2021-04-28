@@ -13,6 +13,7 @@ import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
 import {
   formatSsn,
+  getLanguageFlagFromPickedLocale,
   getMemberFlag,
   getMemberGroupName,
   getMemberIdColor,
@@ -258,6 +259,12 @@ export const MemberTabs: React.FC<RouteComponentProps<{
                     {memberId}
                   </MemberDetailLink>
                 </Popover>
+                {member?.pickedLocale && (
+                  <MemberDetail>
+                    Language:{' '}
+                    {getLanguageFlagFromPickedLocale(member.pickedLocale)}
+                  </MemberDetail>
+                )}
               </MemberDetails>
               <Tab
                 panes={panes}
