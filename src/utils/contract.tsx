@@ -1,10 +1,4 @@
-import {
-  Contract,
-  ContractMarketInfo,
-  GenericAgreement,
-  SignSource,
-} from 'api/generated/graphql'
-import { Market } from 'types/enums'
+import { Contract, GenericAgreement, SignSource } from 'api/generated/graphql'
 
 export const getSignSource = (signSource: SignSource): string => {
   switch (signSource) {

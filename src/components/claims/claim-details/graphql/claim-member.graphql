@@ -36,6 +36,7 @@ query ClaimMemberContractsMasterInception($memberId: ID!) {
     contractMarketInfo {
       market
     }
+    pickedLocale
     contracts {
       id
       contractTypeName

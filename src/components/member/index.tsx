@@ -20,7 +20,6 @@ import {
 } from 'utils/member'
 import { MemberHistoryContext } from 'utils/member-history'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
-import { MemberFlag } from './shared/member-flag'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',

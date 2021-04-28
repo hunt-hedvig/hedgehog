@@ -1882,6 +1882,7 @@ export type ClaimMemberContractsMasterInceptionQuery = {
       | 'fraudulentStatus'
       | 'sanctionStatus'
       | 'totalNumberOfClaims'
+      | 'pickedLocale'
     > & {
         person?: Maybe<{ __typename?: 'Person' } & Pick<Person, 'debtFlag'>>
         directDebitStatus?: Maybe<
@@ -2214,7 +2215,7 @@ export type MemberNameAndContractMarketInfoQuery = {
   member?: Maybe<
     { __typename?: 'Member' } & Pick<
       Member,
-      'memberId' | 'firstName' | 'lastName'
+      'memberId' | 'firstName' | 'lastName' | 'pickedLocale'
     > & {
         contractMarketInfo?: Maybe<
           { __typename?: 'ContractMarketInfo' } & Pick<
@@ -4009,6 +4010,7 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
       contractMarketInfo {
         market
       }
+      pickedLocale
       contracts {
         id
         contractTypeName
@@ -4954,6 +4956,7 @@ export const MemberNameAndContractMarketInfoDocument = gql`
       contractMarketInfo {
         market
       }
+      pickedLocale
     }
   }
 `
