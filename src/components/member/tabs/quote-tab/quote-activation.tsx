@@ -56,6 +56,8 @@ export const QuoteActivation: React.FC<{
     setActiveFrom(getInitialActiveFrom(originatingContract))
   }, [contracts?.length])
 
+  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
+
   if (loading) {
     return null
   }
@@ -69,8 +71,6 @@ export const QuoteActivation: React.FC<{
   if (contract.hasPendingAgreement && contract.isTerminated) {
     return <>Cannot active quote for a pending contract that is terminated</>
   }
-
-  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
 
   return (
     <form
