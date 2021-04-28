@@ -15,12 +15,11 @@ import { QuotesSubSection } from './quote-sub-section'
 export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   memberId,
 }) => {
-  const [
-    { quotes, contractMarket, pickedLocale },
-    { loading: quotesLoading },
-  ] = useQuotes(memberId)
+  const [{ quotes, contractMarket, pickedLocale }, { loading }] = useQuotes(
+    memberId,
+  )
 
-  if (quotesLoading) {
+  if (loading) {
     return <LoadingMessage paddingTop="10vh" />
   }
 
