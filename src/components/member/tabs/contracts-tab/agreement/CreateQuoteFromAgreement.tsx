@@ -16,12 +16,16 @@ export const CreateQuoteFromAgreement: React.FunctionComponent<{
   showNotification: (data: Notification) => void
 }> = ({ agreement, contract, showNotification }) => {
   const [createQuote] = useCreateQuoteFromAgreement()
-  const [quotes, { loading: loadingQuotes }] = useQuotes(
+  const [{ quotes }, { loading: loadingQuotes }] = useQuotes(
     contract.holderMemberId,
   )
 
   if (loadingQuotes) {
     return null
+  }
+
+  if (!quotes) {
+    return <>Unable to get quotes, please contact Tech</>
   }
 
   const quoteAlreadyExists = quotes

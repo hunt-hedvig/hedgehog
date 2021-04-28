@@ -2924,7 +2924,15 @@ export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
       | 'status'
       | 'signedOn'
       | 'createdOn'
-    >
+      | 'pickedLocale'
+    > & {
+        contractMarketInfo?: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market'
+          >
+        >
+      }
   >
 }
 
@@ -7032,6 +7040,10 @@ export const GetMemberInfoDocument = gql`
       status
       signedOn
       createdOn
+      contractMarketInfo {
+        market
+      }
+      pickedLocale
     }
   }
 `

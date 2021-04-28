@@ -30,7 +30,11 @@ export const useQuotes = (memberId: string): GetQuotesReturnTuple => {
   const pickedLocale = queryResult.data?.member?.pickedLocale
 
   return [
-    { quotes: quotes?.sort(latest), contractMarket, pickedLocale },
+    {
+      quotes: quotes ? [...quotes].sort(latest) : undefined,
+      contractMarket,
+      pickedLocale,
+    },
     queryResult,
   ]
 }

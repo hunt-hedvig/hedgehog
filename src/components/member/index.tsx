@@ -13,6 +13,7 @@ import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
 import {
   formatSsn,
+  getMemberFlag,
   getMemberGroupName,
   getMemberIdColor,
   MemberAge,
@@ -212,7 +213,10 @@ export const MemberTabs: React.FC<RouteComponentProps<{
                 {member && (
                   <>
                     <Flag>
-                      <MemberFlag memberId={member.memberId} />
+                      {getMemberFlag(
+                        member?.contractMarketInfo,
+                        member.pickedLocale,
+                      )}
                     </Flag>
                     <Badge
                       memberId={member.memberId}
