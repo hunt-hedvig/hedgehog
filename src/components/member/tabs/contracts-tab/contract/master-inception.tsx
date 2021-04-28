@@ -11,7 +11,7 @@ import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 
-const MasterInceptionComponent: React.FunctionComponent<{
+const MasterInceptionComponent: React.FC<{
   contract: Contract
 } & WithShowNotification> = ({ contract, showNotification }) => {
   if (!contract.hasPendingAgreement) {

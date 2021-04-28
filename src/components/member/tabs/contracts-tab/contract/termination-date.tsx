@@ -25,7 +25,7 @@ import { withShowNotification } from 'utils/notifications'
 const initialTerminationDate = (contract: Contract): Date =>
   contract.isTerminated ? new Date(contract.terminationDate) : new Date()
 
-const TerminationDateComponent: React.FunctionComponent<{
+const TerminationDateComponent: React.FC<{
   contract: Contract
 } & WithShowNotification> = ({ contract, showNotification }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)

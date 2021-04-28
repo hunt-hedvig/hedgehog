@@ -7,7 +7,7 @@ export default {
   decorators: [],
 }
 
-export const StandardCheckbox: React.FunctionComponent = () => {
+export const StandardCheckbox: React.FC = () => {
   const [isChecked, setIsChecked] = React.useState(false)
   return (
     <>

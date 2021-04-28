@@ -6,7 +6,7 @@ import { Input } from 'hedvig-ui/input'
 import React from 'react'
 import { Message } from 'semantic-ui-react'
 
-export const CampaignCodeInput: React.FunctionComponent<{
+export const CampaignCodeInput: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
   const [campaignCode, setCampaignCode] = React.useState('')

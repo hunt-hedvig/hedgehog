@@ -18,7 +18,7 @@ import { Notification } from 'store/actions/notificationsActions'
 const initialFromDate = (agreement: GenericAgreement): Date =>
   agreement.fromDate ? new Date(agreement.fromDate) : new Date()
 
-export const FromDate: React.FunctionComponent<{
+export const FromDate: React.FC<{
   agreement: GenericAgreement
   contract: Contract
   showNotification: (data: Notification) => void

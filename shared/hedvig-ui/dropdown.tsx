@@ -6,7 +6,7 @@ const StyledDropdown = styled(Dropdown)({
   width: '100%',
 })
 
-export const EnumDropdown: React.FunctionComponent<{
+export const EnumDropdown: React.FC<{
   enumToSelectFrom: any
   placeholder: string
   setValue: (value: any) => void

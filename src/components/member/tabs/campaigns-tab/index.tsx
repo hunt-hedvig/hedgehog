@@ -11,7 +11,7 @@ import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 
-export const CampaignsTab: React.FunctionComponent<{
+export const CampaignsTab: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
   const [

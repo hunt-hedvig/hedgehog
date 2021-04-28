@@ -9,7 +9,7 @@ import React from 'react'
 import Dropzone from 'react-dropzone'
 import { Notification } from 'store/actions/notificationsActions'
 
-export const InsuranceCertificate: React.FunctionComponent<{
+export const InsuranceCertificate: React.FC<{
   contract: Contract
   agreement: GenericAgreement
   showNotification: (data: Notification) => void

@@ -7,7 +7,7 @@ export default {
   decorators: [],
 }
 
-export const TextAreaThatGrows: React.FunctionComponent = () => {
+export const TextAreaThatGrows: React.FC = () => {
   const [text, setText] = React.useState('')
   return (
     <>

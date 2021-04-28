@@ -7,7 +7,7 @@ export default {
   component: Input,
 }
 
-export const StandardInput: React.FunctionComponent = () => {
+export const StandardInput: React.FC = () => {
   const [text, setText] = React.useState('')
   return (
     <>

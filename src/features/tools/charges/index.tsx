@@ -73,7 +73,7 @@ interface PaymentSchedule {
   amount: MonetaryAmount
 }
 
-const Row: React.FunctionComponent<{
+const Row: React.FC<{
   paymentSchedule: PaymentSchedule[]
 }> = ({ paymentSchedule }) => (
   <>

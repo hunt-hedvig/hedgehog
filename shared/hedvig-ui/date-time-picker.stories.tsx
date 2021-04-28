@@ -7,12 +7,12 @@ export default {
   decorators: [],
 }
 
-export const DateTimePickerOnlyDate: React.FunctionComponent = () => {
+export const DateTimePickerOnlyDate: React.FC = () => {
   const [date, setDate] = React.useState(new Date())
   return <DateTimePicker date={date} setDate={setDate} />
 }
 
-export const DateTimePickerWithTime: React.FunctionComponent = () => {
+export const DateTimePickerWithTime: React.FC = () => {
   const [date, setDate] = React.useState(new Date())
   return <DateTimePicker date={date} setDate={setDate} showTimePicker />
 }

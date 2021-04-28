@@ -13,7 +13,7 @@ import { QuoteListItem } from './quote-list-item'
 
 const Wrapper = styled('div')({})
 
-export const QuotesSubSection: React.FunctionComponent<{
+export const QuotesSubSection: React.FC<{
   memberId: string
   contractType: ContractType
   quotes: ReadonlyArray<Quote>

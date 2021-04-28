@@ -25,15 +25,11 @@ interface OrbProps {
   size?: IconSizeProp
 }
 
-export const FlagOrbIndicator: React.FunctionComponent<FlagOrbProps> = ({
-  flag,
-  size,
-}) => <OrbIndicator color={getFlagColor(flag)} size={size} />
+export const FlagOrbIndicator: React.FC<FlagOrbProps> = ({ flag, size }) => (
+  <OrbIndicator color={getFlagColor(flag)} size={size} />
+)
 
-export const OrbIndicator: React.FunctionComponent<OrbProps> = ({
-  color,
-  size,
-}) => {
+export const OrbIndicator: React.FC<OrbProps> = ({ color, size }) => {
   return (
     <Container>
       <span style={{ fontSize: '32px' }}>

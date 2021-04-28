@@ -8,7 +8,7 @@ interface FactorEditorProps {
   onChange: (newFactorString: string) => void
 }
 
-export const FactorEditor: React.FunctionComponent<FactorEditorProps> = ({
+export const FactorEditor: React.FC<FactorEditorProps> = ({
   factorName,
   onChange,
 }) => {

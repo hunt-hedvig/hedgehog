@@ -10,7 +10,7 @@ import React from 'react'
 import { Notification } from 'store/actions/notificationsActions'
 import { isExpired } from 'utils/quote'
 
-export const CreateQuoteFromAgreement: React.FunctionComponent<{
+export const CreateQuoteFromAgreement: React.FC<{
   agreement: GenericAgreement
   contract: Contract
   showNotification: (data: Notification) => void

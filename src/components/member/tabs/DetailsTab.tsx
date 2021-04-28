@@ -46,6 +46,7 @@ const DetailsTabComponent: React.FC<WithShowNotification & {
       case 'birthdate':
       case 'signedon':
       case 'status':
+      case 'pickedlocale':
       case 'createdon':
         return true
       default:
@@ -81,6 +82,7 @@ const DetailsTabComponent: React.FC<WithShowNotification & {
   }
 
   delete memberInfoWithoutSsn.__typename
+  delete memberInfoWithoutSsn.contractMarketInfo
 
   return memberInfoWithoutSsn ? (
     <FadeIn>
