@@ -34,17 +34,17 @@ const TabItem: React.FC<{ props: any; TabContent: any }> = ({
 
 export const memberPagePanes = (props, memberId, member, isHinting) => [
   {
-    tabName: 'member',
-    menuItem: `Member ${isHinting ? '(1)' : ''}`,
+    tabName: 'claims',
+    menuItem: `Claims ${isHinting ? '(1)' : ''}`,
     render: () => (
-      <TabItem props={{ ...props, member }} TabContent={DetailsTab} />
+      <TabItem props={{ ...props, memberId }} TabContent={ClaimsTab} />
     ),
   },
   {
-    tabName: 'claims',
-    menuItem: `Claims ${isHinting ? '(2)' : ''}`,
+    tabName: 'files',
+    menuItem: `Files ${isHinting ? '(2)' : ''}`,
     render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={ClaimsTab} />
+      <TabItem props={{ ...props, memberId }} TabContent={MemberFile} />
     ),
   },
   {
@@ -76,10 +76,10 @@ export const memberPagePanes = (props, memberId, member, isHinting) => [
     ),
   },
   {
-    tabName: 'files',
-    menuItem: `Files ${isHinting ? '(7)' : ''}`,
+    tabName: 'member',
+    menuItem: `Member ${isHinting ? '(7)' : ''}`,
     render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={MemberFile} />
+      <TabItem props={{ ...props, member }} TabContent={DetailsTab} />
     ),
   },
   {

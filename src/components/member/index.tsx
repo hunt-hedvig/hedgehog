@@ -107,49 +107,49 @@ export const MemberTabs: React.FC<RouteComponentProps<{
       },
     },
     {
-      label: `Member information`,
+      label: `${formattedFirstName} claims`,
       keys: [Keys.Control, Keys.One],
       onResolve: () => {
         navigateToTab(panes[0].tabName)
       },
     },
     {
-      label: `${formattedFirstName} claims`,
+      label: `${formattedFirstName} files`,
       keys: [Keys.Control, Keys.Two],
       onResolve: () => {
         navigateToTab(panes[1].tabName)
       },
     },
     {
-      label: `${formattedFirstName} files`,
+      label: `${formattedFirstName} contracts`,
       keys: [Keys.Control, Keys.Three],
       onResolve: () => {
         navigateToTab(panes[2].tabName)
       },
     },
     {
-      label: `${formattedFirstName} contracts`,
+      label: `${formattedFirstName} quotes`,
       keys: [Keys.Control, Keys.Four],
       onResolve: () => {
         navigateToTab(panes[3].tabName)
       },
     },
     {
-      label: `${formattedFirstName} quotes`,
+      label: `${formattedFirstName} payments`,
       keys: [Keys.Control, Keys.Five],
       onResolve: () => {
         navigateToTab(panes[4].tabName)
       },
     },
     {
-      label: `${formattedFirstName} payments`,
+      label: `${formattedFirstName} account`,
       keys: [Keys.Control, Keys.Six],
       onResolve: () => {
         navigateToTab(panes[5].tabName)
       },
     },
     {
-      label: `${formattedFirstName} account`,
+      label: `Member information`,
       keys: [Keys.Control, Keys.Seven],
       onResolve: () => {
         navigateToTab(panes[6].tabName)

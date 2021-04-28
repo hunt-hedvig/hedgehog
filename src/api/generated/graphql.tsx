@@ -3068,7 +3068,13 @@ export type GetQuotesQueryVariables = Exact<{
 
 export type GetQuotesQuery = { __typename?: 'QueryType' } & {
   member?: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+    { __typename?: 'Member' } & Pick<Member, 'memberId' | 'pickedLocale'> & {
+        contractMarketInfo?: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market' | 'preferredCurrency'
+          >
+        >
         quotes: Array<
           { __typename?: 'Quote' } & Pick<
             Quote,
@@ -7487,6 +7493,11 @@ export const GetQuotesDocument = gql`
   query GetQuotes($memberId: ID!) {
     member(id: $memberId) {
       memberId
+      contractMarketInfo {
+        market
+        preferredCurrency
+      }
+      pickedLocale
       quotes {
         id
         memberId

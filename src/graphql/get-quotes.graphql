@@ -1,6 +1,11 @@
 query GetQuotes($memberId: ID!) {
   member(id: $memberId) {
     memberId
+    contractMarketInfo {
+      market
+      preferredCurrency
+    }
+    pickedLocale
     quotes {
       id
       memberId

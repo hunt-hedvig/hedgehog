@@ -27,24 +27,6 @@ export const getSignSource = (signSource: SignSource): string => {
   }
 }
 
-export const isSwedishMarket = (
-  contractMarketInfo: ContractMarketInfo,
-): boolean => {
-  return contractMarketInfo.market === Market.Sweden
-}
-
-export const isNorwegianMarket = (
-  contractMarketInfo: ContractMarketInfo,
-): boolean => {
-  return contractMarketInfo.market === Market.Norway
-}
-
-export const isDanishMarket = (
-  contractMarketInfo: ContractMarketInfo,
-): boolean => {
-  return contractMarketInfo.market === Market.Denmark
-}
-
 export const currentAgreementForContract = (
   contract: Pick<Contract, 'genericAgreements' | 'currentAgreementId'>,
 ): GenericAgreement | undefined => {

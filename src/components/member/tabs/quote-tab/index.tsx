@@ -1,5 +1,4 @@
 import { Quote } from 'api/generated/graphql'
-import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { useQuotes } from 'graphql/use-get-quotes'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
@@ -9,46 +8,47 @@ import {
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import React from 'react'
 import { Tab } from 'semantic-ui-react'
-import { ContractType, QuoteProductType } from 'types/enums'
-import {
-  isDanishMarket,
-  isNorwegianMarket,
-  isSwedishMarket,
-} from 'utils/contract'
+import { ContractType, Market, QuoteProductType } from 'types/enums'
+import { getMarketFromPickedLocale } from 'utils/member'
 import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
   memberId,
 }) => {
-  const [quotes, { loading: quotesLoading }] = useQuotes(memberId)
-  const [contractMarket, { loading }] = useContractMarketInfo(memberId)
+  const [
+    { quotes, contractMarket, pickedLocale },
+    { loading: quotesLoading },
+  ] = useQuotes(memberId)
 
-  if (loading || quotesLoading) {
+  if (quotesLoading) {
     return <LoadingMessage paddingTop="10vh" />
   }
 
-  if (quotes.length === 0) {
+  if (!quotes?.length) {
     return <StandaloneMessage paddingTop="10vh">No quotes</StandaloneMessage>
   }
 
-  if (!contractMarket) {
+  if (!contractMarket && !pickedLocale) {
     return (
       <StandaloneMessage paddingTop="10vh">
-        Unable to get Market, the member most likely does not have a contract
+        Unable to get any market info, please contact Tech
       </StandaloneMessage>
     )
   }
 
+  const memberMarket =
+    contractMarket?.market ?? getMarketFromPickedLocale(pickedLocale!)
+
   const getUniqueContractTypes = () => {
-    if (isSwedishMarket(contractMarket)) {
+    if (memberMarket === Market.Sweden) {
       return [ContractType.SwedishApartment, ContractType.SwedishHouse]
     }
 
-    if (isNorwegianMarket(contractMarket)) {
+    if (memberMarket === Market.Norway) {
       return [ContractType.NorwegianHomeContent, ContractType.NorwegianTravel]
     }
 
-    if (isDanishMarket(contractMarket)) {
+    if (memberMarket === Market.Denmark) {
       return [
         ContractType.DanishHomeContent,
         ContractType.DanishTravel,
