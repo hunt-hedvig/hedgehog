@@ -33,8 +33,8 @@ interface Props {
   claimId: string
   refetch: () => Promise<any>
   identified: boolean
-  market?: string | null
-  carrier?: string | null
+  market: string
+  carrier: string
 }
 
 export interface PaymentFormData {
@@ -95,13 +95,7 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
     exGratia: yup.boolean(),
     type: yup
       .string()
-      .oneOf([
-        'Manual',
-        'Automatic',
-        'AutomaticSwish',
-        'IndemnityCost',
-        'Expense',
-      ])
+      .oneOf(['Automatic', 'AutomaticSwish', 'IndemnityCost', 'Expense'])
       .required(),
     phoneNumber: yup.string().when('type', {
       is: 'AutomaticSwish',
@@ -269,7 +263,7 @@ export const ClaimPaymentComponent: React.FC<WithShowNotification & Props> = ({
                   sanctionListSkipped: Boolean(values.overridden),
                   note: values.note,
                   exGratia: values.exGratia || false,
-                  carrier: carrier ?? undefined,
+                  carrier,
                 }
 
                 try {

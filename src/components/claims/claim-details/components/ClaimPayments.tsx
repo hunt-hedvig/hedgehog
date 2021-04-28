@@ -161,14 +161,15 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
 
       {!loadingPayments && (
         <>
-          {paymentsData?.claim?.agreement?.carrier ? (
+          {paymentsData?.claim?.agreement?.carrier &&
+          paymentsData?.claim.contract?.market ? (
             <ClaimPayment
               sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
               claimId={claimId}
               refetch={refetchPayments}
               identified={Boolean(identity)}
-              market={paymentsData?.claim?.contract?.market}
-              carrier={paymentsData?.claim?.agreement?.carrier}
+              market={paymentsData?.claim?.contract?.market!}
+              carrier={paymentsData?.claim?.agreement?.carrier!}
             />
           ) : (
             <Spacing top>
