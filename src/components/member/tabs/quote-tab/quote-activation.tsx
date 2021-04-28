@@ -6,7 +6,7 @@ import {
 import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Checkbox } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { getContractByAgreementId } from 'utils/contract'
@@ -26,8 +26,6 @@ export const QuoteActivation: React.FC<{
   onSubmitted = noopFunction,
   onWipChange = noopFunction,
 }) => {
-  const [useGap, setUseGap] = useState(false)
-  const [contracts, { loading }] = useContracts(memberId)
   if (!quote.originatingProductId) {
     return (
       <>
@@ -35,6 +33,31 @@ export const QuoteActivation: React.FC<{
       </>
     )
   }
+
+  const [useGap, setUseGap] = useState(false)
+  const [contracts, { loading }] = useContracts(memberId)
+  const [activeFrom, setActiveFrom] = useState<Date | null>(null)
+  const [
+    previousAgreementActiveTo,
+    setPreviousAgreementActiveTo,
+  ] = useState<Date | null>(null)
+
+  useEffect(() => {
+    if (!contracts) {
+      return
+    }
+    const originatingContract = getContractByAgreementId(
+      contracts,
+      quote.originatingProductId!,
+    )
+    if (!originatingContract) {
+      return
+    }
+    setActiveFrom(getInitialActiveFrom(originatingContract))
+  }, [contracts?.length])
+
+  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
+
   if (loading) {
     return null
   }
@@ -48,15 +71,6 @@ export const QuoteActivation: React.FC<{
   if (contract.hasPendingAgreement && contract.isTerminated) {
     return <>Cannot active quote for a pending contract that is terminated</>
   }
-  const [activeFrom, setActiveFrom] = useState(() =>
-    getInitialActiveFrom(contract),
-  )
-  const [
-    previousAgreementActiveTo,
-    setPreviousAgreementActiveTo,
-  ] = useState<Date | null>(null)
-
-  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
 
   return (
     <form

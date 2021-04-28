@@ -5,7 +5,6 @@ import {
   useClaimContractQuery,
   useClaimMemberContractsMasterInceptionQuery,
 } from 'api/generated/graphql'
-import { MemberFlag } from 'components/member/shared/member-flag'
 import copy from 'copy-to-clipboard'
 import { format, formatDistance, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
@@ -33,7 +32,7 @@ import {
   InfoText,
 } from 'hedvig-ui/info-row'
 import { Popover } from 'hedvig-ui/popover'
-import { formatSsn } from 'utils/member'
+import { formatSsn, getMemberFlag } from 'utils/member'
 import {
   convertCamelcaseToTitle,
   convertEnumOrSentenceToTitle,
@@ -127,7 +126,8 @@ export const MemberInformation: React.FC<{
         <Loadable loading={memberContractsDataLoading}>
           <MemberName>
             {member?.firstName ?? '-'} {member?.lastName ?? '-'}{' '}
-            {member && <MemberFlag memberId={memberId} />}
+            {member &&
+              getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}
           </MemberName>
           <InfoRow>
             Member ID

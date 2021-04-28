@@ -12,5 +12,9 @@ query GetMemberInfo($memberId: ID!) {
     status
     signedOn
     createdOn
+    contractMarketInfo {
+      market
+    }
+    pickedLocale
   }
 }
