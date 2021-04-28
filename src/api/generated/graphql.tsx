@@ -2060,6 +2060,38 @@ export type UpdateReserveMutation = { __typename?: 'MutationType' } & {
   >
 }
 
+export type CreateClaimPaymentMutationVariables = Exact<{
+  id: Scalars['ID']
+  payment: ClaimPaymentInput
+}>
+
+export type CreateClaimPaymentMutation = { __typename?: 'MutationType' } & {
+  createClaimPayment?: Maybe<
+    { __typename?: 'Claim' } & {
+      payments: Array<
+        { __typename?: 'ClaimPayment' } & Pick<ClaimPayment, 'id'>
+      >
+    }
+  >
+}
+
+export type CreateSwishClaimPaymentMutationVariables = Exact<{
+  id: Scalars['ID']
+  payment: ClaimSwishPaymentInput
+}>
+
+export type CreateSwishClaimPaymentMutation = {
+  __typename?: 'MutationType'
+} & {
+  createClaimSwishPayment?: Maybe<
+    { __typename?: 'Claim' } & {
+      payments: Array<
+        { __typename?: 'ClaimPayment' } & Pick<ClaimPayment, 'id'>
+      >
+    }
+  >
+}
+
 export type MarkClaimFileAsDeletedMutationVariables = Exact<{
   claimId: Scalars['ID']
   claimFileId: Scalars['ID']
@@ -4411,6 +4443,117 @@ export type UpdateReserveMutationResult = ApolloReactCommon.MutationResult<
 export type UpdateReserveMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateReserveMutation,
   UpdateReserveMutationVariables
+>
+export const CreateClaimPaymentDocument = gql`
+  mutation CreateClaimPayment($id: ID!, $payment: ClaimPaymentInput!) {
+    createClaimPayment(id: $id, payment: $payment) {
+      payments {
+        id
+      }
+    }
+  }
+`
+export type CreateClaimPaymentMutationFn = ApolloReactCommon.MutationFunction<
+  CreateClaimPaymentMutation,
+  CreateClaimPaymentMutationVariables
+>
+
+/**
+ * __useCreateClaimPaymentMutation__
+ *
+ * To run a mutation, you first call `useCreateClaimPaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClaimPaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClaimPaymentMutation, { data, loading, error }] = useCreateClaimPaymentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      payment: // value for 'payment'
+ *   },
+ * });
+ */
+export function useCreateClaimPaymentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateClaimPaymentMutation,
+    CreateClaimPaymentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    CreateClaimPaymentMutation,
+    CreateClaimPaymentMutationVariables
+  >(CreateClaimPaymentDocument, options)
+}
+export type CreateClaimPaymentMutationHookResult = ReturnType<
+  typeof useCreateClaimPaymentMutation
+>
+export type CreateClaimPaymentMutationResult = ApolloReactCommon.MutationResult<
+  CreateClaimPaymentMutation
+>
+export type CreateClaimPaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateClaimPaymentMutation,
+  CreateClaimPaymentMutationVariables
+>
+export const CreateSwishClaimPaymentDocument = gql`
+  mutation CreateSwishClaimPayment(
+    $id: ID!
+    $payment: ClaimSwishPaymentInput!
+  ) {
+    createClaimSwishPayment(id: $id, payment: $payment) {
+      payments {
+        id
+      }
+    }
+  }
+`
+export type CreateSwishClaimPaymentMutationFn = ApolloReactCommon.MutationFunction<
+  CreateSwishClaimPaymentMutation,
+  CreateSwishClaimPaymentMutationVariables
+>
+
+/**
+ * __useCreateSwishClaimPaymentMutation__
+ *
+ * To run a mutation, you first call `useCreateSwishClaimPaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSwishClaimPaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSwishClaimPaymentMutation, { data, loading, error }] = useCreateSwishClaimPaymentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      payment: // value for 'payment'
+ *   },
+ * });
+ */
+export function useCreateSwishClaimPaymentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateSwishClaimPaymentMutation,
+    CreateSwishClaimPaymentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    CreateSwishClaimPaymentMutation,
+    CreateSwishClaimPaymentMutationVariables
+  >(CreateSwishClaimPaymentDocument, options)
+}
+export type CreateSwishClaimPaymentMutationHookResult = ReturnType<
+  typeof useCreateSwishClaimPaymentMutation
+>
+export type CreateSwishClaimPaymentMutationResult = ApolloReactCommon.MutationResult<
+  CreateSwishClaimPaymentMutation
+>
+export type CreateSwishClaimPaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateSwishClaimPaymentMutation,
+  CreateSwishClaimPaymentMutationVariables
 >
 export const MarkClaimFileAsDeletedDocument = gql`
   mutation MarkClaimFileAsDeleted($claimId: ID!, $claimFileId: ID!) {

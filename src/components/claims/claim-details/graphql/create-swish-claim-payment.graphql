@@ -1,0 +1,7 @@
+mutation CreateSwishClaimPayment($id: ID!, $payment: ClaimSwishPaymentInput!) {
+  createClaimSwishPayment(id: $id, payment: $payment) {
+    payments {
+      id
+    }
+  }
+}

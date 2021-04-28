@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-04-27',
+    change: 'Swish claims payouts (feature flagged)',
+    authorGithubHandle: 'fredrikareschoug',
+  },
+  {
     date: '2021-04-23',
     change:
       'Speed up questions tab 🏎, add shortcuts to member suggestions in search, remove Emoji mart ☺',

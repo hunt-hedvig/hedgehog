@@ -1,0 +1,7 @@
+mutation CreateClaimPayment($id: ID!, $payment: ClaimPaymentInput!) {
+  createClaimPayment(id: $id, payment: $payment) {
+    payments {
+      id
+    }
+  }
+}
