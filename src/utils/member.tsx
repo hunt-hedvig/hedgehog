@@ -46,7 +46,9 @@ export const getMemberGroupName = (
 }
 
 export const getMemberFlag = (
-  contractMarketInfo?: ContractMarketInfo | null,
+  contractMarketInfo?: {
+    market: ContractMarketInfo['market']
+  } | null,
   pickedLocale: string | null = null,
 ): string => {
   if (contractMarketInfo?.market) {

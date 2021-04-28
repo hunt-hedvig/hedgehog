@@ -1882,6 +1882,7 @@ export type ClaimMemberContractsMasterInceptionQuery = {
       | 'fraudulentStatus'
       | 'sanctionStatus'
       | 'totalNumberOfClaims'
+      | 'pickedLocale'
     > & {
         person?: Maybe<{ __typename?: 'Person' } & Pick<Person, 'debtFlag'>>
         directDebitStatus?: Maybe<
@@ -2214,7 +2215,7 @@ export type MemberNameAndContractMarketInfoQuery = {
   member?: Maybe<
     { __typename?: 'Member' } & Pick<
       Member,
-      'memberId' | 'firstName' | 'lastName'
+      'memberId' | 'firstName' | 'lastName' | 'pickedLocale'
     > & {
         contractMarketInfo?: Maybe<
           { __typename?: 'ContractMarketInfo' } & Pick<
@@ -2924,7 +2925,15 @@ export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
       | 'status'
       | 'signedOn'
       | 'createdOn'
-    >
+      | 'pickedLocale'
+    > & {
+        contractMarketInfo?: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market'
+          >
+        >
+      }
   >
 }
 
@@ -3068,7 +3077,13 @@ export type GetQuotesQueryVariables = Exact<{
 
 export type GetQuotesQuery = { __typename?: 'QueryType' } & {
   member?: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+    { __typename?: 'Member' } & Pick<Member, 'memberId' | 'pickedLocale'> & {
+        contractMarketInfo?: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market' | 'preferredCurrency'
+          >
+        >
         quotes: Array<
           { __typename?: 'Quote' } & Pick<
             Quote,
@@ -3995,6 +4010,7 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
       contractMarketInfo {
         market
       }
+      pickedLocale
       contracts {
         id
         contractTypeName
@@ -4940,6 +4956,7 @@ export const MemberNameAndContractMarketInfoDocument = gql`
       contractMarketInfo {
         market
       }
+      pickedLocale
     }
   }
 `
@@ -7026,6 +7043,10 @@ export const GetMemberInfoDocument = gql`
       status
       signedOn
       createdOn
+      contractMarketInfo {
+        market
+      }
+      pickedLocale
     }
   }
 `
@@ -7487,6 +7508,11 @@ export const GetQuotesDocument = gql`
   query GetQuotes($memberId: ID!) {
     member(id: $memberId) {
       memberId
+      contractMarketInfo {
+        market
+        preferredCurrency
+      }
+      pickedLocale
       quotes {
         id
         memberId

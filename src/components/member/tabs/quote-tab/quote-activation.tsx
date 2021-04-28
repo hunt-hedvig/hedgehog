@@ -26,6 +26,14 @@ export const QuoteActivation: React.FC<{
   onSubmitted = noopFunction,
   onWipChange = noopFunction,
 }) => {
+  if (!quote.originatingProductId) {
+    return (
+      <>
+        Cannot active quote without <strong>Originating Product Id</strong>
+      </>
+    )
+  }
+
   const [useGap, setUseGap] = useState(false)
   const [contracts, { loading }] = useContracts(memberId)
   const [activeFrom, setActiveFrom] = useState<Date | null>(null)
@@ -34,13 +42,21 @@ export const QuoteActivation: React.FC<{
     setPreviousAgreementActiveTo,
   ] = useState<Date | null>(null)
 
-  if (!quote.originatingProductId) {
-    return (
-      <>
-        Cannot active quote without <strong>Originating Product Id</strong>
-      </>
+  useEffect(() => {
+    if (!contracts) {
+      return
+    }
+    const originatingContract = getContractByAgreementId(
+      contracts,
+      quote.originatingProductId!,
     )
-  }
+    if (!originatingContract) {
+      return
+    }
+    setActiveFrom(getInitialActiveFrom(originatingContract))
+  }, [contracts?.length])
+
+  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
 
   if (loading) {
     return null
@@ -55,12 +71,6 @@ export const QuoteActivation: React.FC<{
   if (contract.hasPendingAgreement && contract.isTerminated) {
     return <>Cannot active quote for a pending contract that is terminated</>
   }
-
-  useEffect(() => {
-    setActiveFrom(getInitialActiveFrom(contract))
-  }, [])
-
-  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
 
   return (
     <form

@@ -10,8 +10,8 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys, NumberKeys } from 'utils/hooks/key-press-hook'
+import { getMemberFlag } from 'utils/member'
 import { MemberHistoryContext } from 'utils/member-history'
-import { MemberFlag } from '../../member/shared/member-flag'
 
 export const MemberSuggestions: React.FC = () => {
   const { memberHistory } = useContext(MemberHistoryContext)
@@ -55,7 +55,10 @@ const MemberHistoryCard: React.FC<{
     <MemberHistoryCardWrapper muted={!data?.member} to={targetLocation}>
       <MemberName>
         {data?.member?.firstName} {data?.member?.lastName}&nbsp;
-        <MemberFlag memberId={memberId} />
+        {getMemberFlag(
+          data?.member?.contractMarketInfo,
+          data?.member?.pickedLocale,
+        )}
         {isHintingControl && <>({orderNumber})</>}
       </MemberName>
       <MemberId>{memberId}</MemberId>

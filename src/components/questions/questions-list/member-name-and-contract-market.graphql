@@ -6,5 +6,6 @@ query MemberNameAndContractMarketInfo($memberId: ID!) {
     contractMarketInfo {
       market
     }
+    pickedLocale
   }
 }
