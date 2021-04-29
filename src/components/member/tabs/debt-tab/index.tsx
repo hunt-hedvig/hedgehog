@@ -50,15 +50,25 @@ export const DebtTab: React.FC<{
   if (!person) {
     return (
       <StandaloneMessage paddingTop="10vh">
-        Issue retrieving debt flag for this member
+        Issue retrieving debt info for this member
       </StandaloneMessage>
     )
   }
 
-  const eligibleForWhitelist =
-    !person?.status?.whitelisted &&
-    (person?.debt?.paymentDefaults?.length !== 0 ||
-      (person?.debt?.totalAmountDebt.amount ?? 0) > 0)
+  const isEligibleForWhitelist = (): boolean => {
+    if (person?.status?.whitelisted) {
+      return false
+    }
+    if ((person?.debt?.paymentDefaults?.length ?? 0) > 0) {
+      return true
+    }
+    if ((person?.debt?.totalAmountDebt.amount ?? 0) > 0) {
+      return true
+    }
+    return false
+  }
+
+  const eligibleForWhitelist = isEligibleForWhitelist()
 
   return (
     <FadeIn>

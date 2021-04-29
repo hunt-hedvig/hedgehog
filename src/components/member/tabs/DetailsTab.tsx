@@ -55,7 +55,7 @@ const DetailsTabComponent: React.FC<WithShowNotification & {
   }
 
   const handleChange = (field) => (e) => {
-    const editedMemberDetails = editMemberInfoRequest
+    const editedMemberDetails = { ...editMemberInfoRequest }
     editedMemberDetails[field] = e.target.value
     setEditMemberInfoRequest(editedMemberDetails)
   }
