@@ -3,6 +3,7 @@ import { FilterState, getFilterColor } from 'components/questions/filter'
 import { differenceInYears, parse } from 'date-fns'
 import React from 'react'
 import { Market, PickedLocale } from 'types/enums'
+import { getBirthdayInfo, getBirthDayText } from 'utils/date'
 
 export const getGroupNumberForMember = (
   memberId: string,
@@ -26,7 +27,14 @@ export const MemberAge: React.FC<{
   }
   const age = differenceInYears(new Date(), birthDate)
 
-  return <>{age} years</>
+  return (
+    <>
+      {age} years
+      {getBirthdayInfo(birthDateString) && (
+        <> - {getBirthDayText(birthDateString)}</>
+      )}
+    </>
+  )
 }
 
 export const getMemberIdColor = (
