@@ -1,6 +1,10 @@
 query GetPerson($memberId: ID!) {
   member(id: $memberId) {
     memberId
+    pickedLocale
+    contractMarketInfo {
+      market
+    }
     person {
       debtFlag
       status {

@@ -3048,7 +3048,13 @@ export type GetPersonQueryVariables = Exact<{
 
 export type GetPersonQuery = { __typename?: 'QueryType' } & {
   member?: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+    { __typename?: 'Member' } & Pick<Member, 'memberId' | 'pickedLocale'> & {
+        contractMarketInfo?: Maybe<
+          { __typename?: 'ContractMarketInfo' } & Pick<
+            ContractMarketInfo,
+            'market'
+          >
+        >
         person?: Maybe<
           { __typename?: 'Person' } & Pick<Person, 'debtFlag'> & {
               status?: Maybe<
@@ -7508,6 +7514,10 @@ export const GetPersonDocument = gql`
   query GetPerson($memberId: ID!) {
     member(id: $memberId) {
       memberId
+      pickedLocale
+      contractMarketInfo {
+        market
+      }
       person {
         debtFlag
         status {
