@@ -56,7 +56,7 @@ export const DebtTab: React.FC<{
   }
 
   const isEligibleForWhitelist = (): boolean => {
-    if (person?.status?.whitelisted) {
+    if (!!person?.status?.whitelisted) {
       return false
     }
     if ((person?.debt?.paymentDefaults?.length ?? 0) > 0) {
