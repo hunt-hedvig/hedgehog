@@ -88,6 +88,8 @@ const AddEntryFormComponent: React.FC<{
   memberId: string
 } & WithShowNotification> = ({ memberId, showNotification }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
+  const [addAccountEntry] = useAddAccountEntryToMemberMutation()
+  const form = useForm()
 
   if (!Boolean(contractMarketInfo?.preferredCurrency)) {
     return (
@@ -98,9 +100,6 @@ const AddEntryFormComponent: React.FC<{
   }
 
   const preferredCurrency = contractMarketInfo!.preferredCurrency
-  const [addAccountEntry] = useAddAccountEntryToMemberMutation()
-
-  const form = useForm()
 
   const onSubmit = (data: FieldValues) => {
     if (!window.confirm('Are you sure you want to add this entry?')) {

@@ -17,6 +17,8 @@ const AddMonthlyEntryFormComponent: React.FC<WithShowNotification & {
   memberId: string
 }> = ({ memberId, showNotification }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
+  const [addMonthlyEntry] = useAddMonthlyEntry()
+  const form = useForm()
 
   if (!Boolean(contractMarketInfo?.preferredCurrency)) {
     return (
@@ -27,9 +29,6 @@ const AddMonthlyEntryFormComponent: React.FC<WithShowNotification & {
   }
   const preferredCurrency = contractMarketInfo!.preferredCurrency
 
-  const form = useForm()
-
-  const [addMonthlyEntry] = useAddMonthlyEntry()
   const onSubmit = (data: FieldValues) => {
     const dataCopy = { ...data }
     dataCopy.amount = {
