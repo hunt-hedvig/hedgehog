@@ -1,6 +1,5 @@
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
-import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import { useGetPerson } from 'graphql/use-get-person'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import {
@@ -15,18 +14,32 @@ import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
+import { getMarketFromPickedLocale } from 'utils/member'
 
 export const DebtTab: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
-  const [contractMarketInfo] = useContractMarketInfo(memberId)
-  const [person, { loading, error, refetch }] = useGetPerson(memberId)
+  const [
+    { person, contractMarketInfo, pickedLocale },
+    { loading, error, refetch },
+  ] = useGetPerson(memberId)
 
-  const eligibleForWhitelist =
-    !person?.status?.whitelisted && person?.debt?.paymentDefaults?.length !== 0
+  if (loading) {
+    return <LoadingMessage paddingTop="10vh" />
+  }
+
+  if (error) {
+    return (
+      <StandaloneMessage paddingTop="10vh">
+        Issue communicating with system, please contact Tech
+      </StandaloneMessage>
+    )
+  }
 
   // FIXME: We should not make market specific features like this, should use "have debt" or "don't have debt" instead
-  if (contractMarketInfo?.market !== Market.Sweden) {
+  const memberMarket =
+    contractMarketInfo?.market ?? getMarketFromPickedLocale(pickedLocale!)
+  if (memberMarket !== Market.Sweden) {
     return (
       <StandaloneMessage paddingTop="10vh">
         Only available in Sweden
@@ -34,17 +47,28 @@ export const DebtTab: React.FC<{
     )
   }
 
-  if (loading) {
-    return <LoadingMessage paddingTop="10vh" />
-  }
-
-  if (error || !person) {
+  if (!person) {
     return (
       <StandaloneMessage paddingTop="10vh">
-        Issue retrieving debt flag for this member
+        Issue retrieving debt info for this member
       </StandaloneMessage>
     )
   }
+
+  const isEligibleForWhitelist = (): boolean => {
+    if (!!person?.status?.whitelisted) {
+      return false
+    }
+    if ((person?.debt?.paymentDefaults?.length ?? 0) > 0) {
+      return true
+    }
+    if ((person?.debt?.totalAmountDebt.amount ?? 0) > 0) {
+      return true
+    }
+    return false
+  }
+
+  const eligibleForWhitelist = isEligibleForWhitelist()
 
   return (
     <FadeIn>

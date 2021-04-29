@@ -29,7 +29,7 @@ const NotAvailable: React.FC = () => (
   </SmallTopSpacing>
 )
 
-export const ReferralsInfo: React.FunctionComponent<{
+export const ReferralsInfo: React.FC<{
   referralInformation: ReferralInformation
 }> = ({ referralInformation }) => {
   const eligible = referralInformation.eligible

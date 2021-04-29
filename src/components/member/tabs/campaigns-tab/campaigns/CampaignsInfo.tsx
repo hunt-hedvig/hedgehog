@@ -5,7 +5,7 @@ import { TableHeadline } from 'components/member/tabs/campaigns-tab/styles'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import React from 'react'
 
-export const CampaignsInfo: React.FunctionComponent<{
+export const CampaignsInfo: React.FC<{
   memberId: string
   referralInformation: ReferralInformation
 }> = ({ memberId, referralInformation }) => {

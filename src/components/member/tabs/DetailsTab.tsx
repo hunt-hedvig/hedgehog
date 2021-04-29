@@ -46,6 +46,7 @@ const DetailsTabComponent: React.FC<WithShowNotification & {
       case 'birthdate':
       case 'signedon':
       case 'status':
+      case 'pickedlocale':
       case 'createdon':
         return true
       default:
@@ -54,7 +55,7 @@ const DetailsTabComponent: React.FC<WithShowNotification & {
   }
 
   const handleChange = (field) => (e) => {
-    const editedMemberDetails = editMemberInfoRequest
+    const editedMemberDetails = { ...editMemberInfoRequest }
     editedMemberDetails[field] = e.target.value
     setEditMemberInfoRequest(editedMemberDetails)
   }
@@ -81,6 +82,7 @@ const DetailsTabComponent: React.FC<WithShowNotification & {
   }
 
   delete memberInfoWithoutSsn.__typename
+  delete memberInfoWithoutSsn.contractMarketInfo
 
   return memberInfoWithoutSsn ? (
     <FadeIn>

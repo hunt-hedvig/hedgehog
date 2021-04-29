@@ -160,7 +160,8 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "prettier --write",
+      "pretty-quick",
+      "yarn lint --fix",
       "git add"
     ]
   },

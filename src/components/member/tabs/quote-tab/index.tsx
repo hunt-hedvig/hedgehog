@@ -12,9 +12,7 @@ import { ContractType, Market, QuoteProductType } from 'types/enums'
 import { getMarketFromPickedLocale } from 'utils/member'
 import { QuotesSubSection } from './quote-sub-section'
 
-export const Quotes: React.FunctionComponent<{ memberId: string }> = ({
-  memberId,
-}) => {
+export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [{ quotes, contractMarket, pickedLocale }, { loading }] = useQuotes(
     memberId,
   )

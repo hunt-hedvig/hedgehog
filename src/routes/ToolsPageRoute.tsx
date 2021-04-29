@@ -9,7 +9,7 @@ import { SwitcherAutomation } from 'features/tools/switcher-automation'
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-export const ToolsPageRoute: React.FunctionComponent = () => (
+export const ToolsPageRoute: React.FC = () => (
   <Switch>
     <Route component={Tools} path="/tools" exact />
     <Route component={ChargePage} path="/tools/charges" />

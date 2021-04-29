@@ -7,7 +7,7 @@ export default {
   decorators: [],
 }
 
-export const OrbStatusIndicator: React.FunctionComponent = () => {
+export const OrbStatusIndicator: React.FC = () => {
   return (
     <>
       <h2>Options:</h2>

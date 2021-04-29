@@ -24,7 +24,7 @@ export const useContracts = (memberId: string): ContractReturnTuple => {
     variables: { memberId },
   })
   const contracts = (queryResult.data?.member?.contracts ?? []) as Contract[]
-  return [contracts.sort(compareContracts), queryResult]
+  return [[...contracts].sort(compareContracts), queryResult]
 }
 
 const compareContracts = (a: Contract, b: Contract) =>

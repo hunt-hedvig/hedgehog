@@ -10,7 +10,7 @@ import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 
-export const ContractTab: React.FunctionComponent<{
+export const ContractTab: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
   const [contracts, { loading, refetch }] = useContracts(memberId)

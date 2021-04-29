@@ -31,7 +31,7 @@ const StyledInput = styled(Input)<{ fullWidth?: boolean }>`
   }
 `
 
-export const DateTimePicker: React.FunctionComponent<DatePickerProps> = ({
+export const DateTimePicker: React.FC<DatePickerProps> = ({
   date,
   setDate,
   maxDate,

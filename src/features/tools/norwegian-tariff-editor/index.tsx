@@ -26,7 +26,7 @@ const initialFactorState: NorwegianGripenFactorInput[] = Object.keys(
   }
 })
 
-const NorwegianTariffEditorComponent: React.FunctionComponent<WithShowNotification> = ({
+const NorwegianTariffEditorComponent: React.FC<WithShowNotification> = ({
   showNotification,
 }) => {
   const [baseFactors, setBaseFactors] = React.useState<string>('')

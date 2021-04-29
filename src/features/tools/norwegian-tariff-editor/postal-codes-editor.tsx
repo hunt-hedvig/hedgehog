@@ -10,7 +10,7 @@ interface PostalCodesEditorProps {
   showNotification: (data: Notification) => void
 }
 
-export const PostalCodesEditor: React.FunctionComponent<PostalCodesEditorProps> = ({
+export const PostalCodesEditor: React.FC<PostalCodesEditorProps> = ({
   showNotification,
 }) => {
   const [postalCodesString, setPostalCodesString] = React.useState<string>('')

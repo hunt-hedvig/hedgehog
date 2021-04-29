@@ -24,7 +24,7 @@ export const useQuotes = (memberId: string): GetQuotesReturnTuple => {
       memberId,
     },
   })
-  const quotes = queryResult.data?.member?.quotes as Quote[] | undefined
+  const quotes = queryResult.data?.member?.quotes
   const contractMarket =
     queryResult.data?.member?.contractMarketInfo ?? undefined
   const pickedLocale = queryResult.data?.member?.pickedLocale

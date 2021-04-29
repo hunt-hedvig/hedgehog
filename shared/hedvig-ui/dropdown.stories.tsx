@@ -13,7 +13,7 @@ enum Taste {
   TheHedvigFavorite = 'THE_HEDVIG_FAVORITE',
 }
 
-export const DropdownWithEnum: React.FunctionComponent = () => {
+export const DropdownWithEnum: React.FC = () => {
   const [taste, setTaste] = React.useState<Taste | null>(null)
   return (
     <>

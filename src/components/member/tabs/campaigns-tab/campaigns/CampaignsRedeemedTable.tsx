@@ -8,7 +8,7 @@ import { Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
 
-export const CampaignsRedeemedTable: React.FunctionComponent<{
+export const CampaignsRedeemedTable: React.FC<{
   memberId: string
   campaignsRedeemed: RedeemedCampaign[]
 }> = ({ memberId, campaignsRedeemed }) => {

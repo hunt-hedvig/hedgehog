@@ -19,7 +19,7 @@ const ContractWrapper = styled('div')`
   }
 `
 
-export const Contract: React.FunctionComponent<{
+export const Contract: React.FC<{
   contract: ContractType
   refetch: () => Promise<any>
   shouldPreSelectAgreement: boolean
