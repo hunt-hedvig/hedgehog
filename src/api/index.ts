@@ -60,7 +60,7 @@ const callApi = async <T = any>(
         return null as any
       }
 
-      if (retryCount >= 10) {
+      if (retryCount >= 20) {
         forceLogOut()
         return null as any
       }
