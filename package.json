@@ -117,6 +117,7 @@
     "lint-staged": "^7.3.0",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
+    "source-map-explorer": "^2.5.2",
     "thread-loader": "^2.1.2",
     "ts-jest": "^25.2.1",
     "tslint": "^5.11.0",
@@ -143,7 +144,8 @@
     "graphql:gen": "graphql-codegen --config graphql-codegen.yml",
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "analyze": "source-map-explorer 'build/*.js'"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
