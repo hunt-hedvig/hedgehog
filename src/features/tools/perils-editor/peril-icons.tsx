@@ -77,6 +77,15 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Death',
+    text: 'death',
+    value: 'death',
+    image: {
+      avatar: true,
+      src: 'https://graphql.dev.hedvigit.com/app-content-service/death.svg',
+    },
+  },
+  {
     key: 'Delayed luggage',
     text: 'delayed_luggage',
     value: 'delayed_luggage',
@@ -84,6 +93,16 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/delayed_luggage.svg',
+    },
+  },
+  {
+    key: 'Dental injury',
+    text: 'dental_injury',
+    value: 'dental_injury',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/dental_injury.svg',
     },
   },
   {
@@ -210,6 +229,16 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Permanent injury',
+    text: 'permanent_injury',
+    value: 'permanent_injury',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/permanent_injury.svg',
+    },
+  },
+  {
     key: 'Personal accident',
     text: 'personal_accident',
     value: 'personal_accident',
@@ -326,6 +355,16 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/sick_on_holiday.svg',
+    },
+  },
+  {
+    key: 'Treatment Costs',
+    text: 'treatment_costs',
+    value: 'treatment_costs',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/treatment_costs.svg',
     },
   },
   {
