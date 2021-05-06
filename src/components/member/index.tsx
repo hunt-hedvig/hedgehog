@@ -5,8 +5,7 @@ import { ChatPane } from 'components/member/tabs/ChatPane'
 import copy from 'copy-to-clipboard'
 import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
-import React, { useEffect, useState } from 'react'
-import { Mount } from 'react-lifecycle-components/dist'
+import React, { useContext, useEffect, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
@@ -93,6 +92,12 @@ export const MemberTabs: React.FC<RouteComponentProps<{
   const formattedFirstName = Boolean(member.firstName)
     ? member.firstName + (member.firstName!.slice(-1) === 's' ? "'" : "'s")
     : "Member's"
+
+  const { pushToMemberHistory } = useContext(MemberHistoryContext)
+
+  useEffect(() => {
+    pushToMemberHistory(memberId)
+  }, [])
 
   registerActions([
     {
@@ -195,90 +200,78 @@ export const MemberTabs: React.FC<RouteComponentProps<{
   const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
-    <MemberHistoryContext.Consumer>
-      {({ pushToMemberHistory }) => (
-        <Mount on={() => pushToMemberHistory(memberId)}>
-          <MemberPageWrapper>
-            <MemberPageContainer>
-              <Header size="huge">
-                <FraudulentStatus
-                  stateInfo={{
-                    state: member.fraudulentStatus,
-                    description: member.fraudulentStatusDescription,
-                  }}
-                />
-                {`${member.firstName || ''} ${member.lastName || ''}`}
-                {' ('}
-                <MemberAge birthDateString={member?.birthDate} />)
-                {member && (
-                  <>
-                    <Flag>
-                      {getMemberFlag(
-                        member?.contractMarketInfo,
-                        member.pickedLocale,
-                      )}
-                    </Flag>
-                    <Badge
-                      memberId={member.memberId}
-                      numberMemberGroups={numberMemberGroups}
-                    >
-                      {getMemberGroupName(member.memberId, numberMemberGroups)}
-                    </Badge>
-                  </>
-                )}
-              </Header>
-              <MemberDetails>
-                {member?.signedOn && member?.personalNumber && (
-                  <MemberDetail>
-                    {formatSsn(member.personalNumber)}
-                  </MemberDetail>
-                )}
-                {member?.email && (
-                  <MemberDetailLink href={`mailto:${member.email}`}>
-                    {member.email}
-                  </MemberDetailLink>
-                )}
-                {member?.phoneNumber && (
-                  <MemberDetailLink href={`tel:${member.phoneNumber}`}>
-                    {member.phoneNumber}
-                  </MemberDetailLink>
-                )}
-                <Popover contents={<>Click to copy</>}>
-                  <MemberDetailLink
-                    href={`${window.location.protocol}//${window.location.host}/members/${memberId}`}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      copy(
-                        `${window.location.protocol}//${window.location.host}/members/${memberId}`,
-                        {
-                          format: 'text/plain',
-                        },
-                      )
-                    }}
-                  >
-                    {memberId}
-                  </MemberDetailLink>
-                </Popover>
-                {member?.pickedLocale && (
-                  <MemberDetail>
-                    Language:{' '}
-                    {getLanguageFlagFromPickedLocale(member.pickedLocale)}
-                  </MemberDetail>
-                )}
-              </MemberDetails>
-              <Tab
-                panes={panes}
-                onTabChange={(_, { activeIndex }) =>
-                  navigateToTab(panes[activeIndex!].tabName)
-                }
-                renderActiveOnly={true}
-                activeIndex={currentIndex}
-              />
-            </MemberPageContainer>
-            <ChatPane memberId={memberId} />
-          </MemberPageWrapper>
-        </Mount>
-      )}
-    </MemberHistoryContext.Consumer>
+    <MemberPageWrapper>
+      <MemberPageContainer>
+        <Header size="huge">
+          <FraudulentStatus
+            stateInfo={{
+              state: member.fraudulentStatus,
+              description: member.fraudulentStatusDescription,
+            }}
+          />
+          {`${member.firstName || ''} ${member.lastName || ''}`}
+          {' ('}
+          <MemberAge birthDateString={member?.birthDate} />)
+          {member && (
+            <>
+              <Flag>
+                {getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}
+              </Flag>
+              <Badge
+                memberId={member.memberId}
+                numberMemberGroups={numberMemberGroups}
+              >
+                {getMemberGroupName(member.memberId, numberMemberGroups)}
+              </Badge>
+            </>
+          )}
+        </Header>
+        <MemberDetails>
+          {member?.signedOn && member?.personalNumber && (
+            <MemberDetail>{formatSsn(member.personalNumber)}</MemberDetail>
+          )}
+          {member?.email && (
+            <MemberDetailLink href={`mailto:${member.email}`}>
+              {member.email}
+            </MemberDetailLink>
+          )}
+          {member?.phoneNumber && (
+            <MemberDetailLink href={`tel:${member.phoneNumber}`}>
+              {member.phoneNumber}
+            </MemberDetailLink>
+          )}
+          <Popover contents={<>Click to copy</>}>
+            <MemberDetailLink
+              href={`${window.location.protocol}//${window.location.host}/members/${memberId}`}
+              onClick={(e) => {
+                e.preventDefault()
+                copy(
+                  `${window.location.protocol}//${window.location.host}/members/${memberId}`,
+                  {
+                    format: 'text/plain',
+                  },
+                )
+              }}
+            >
+              {memberId}
+            </MemberDetailLink>
+          </Popover>
+          {member?.pickedLocale && (
+            <MemberDetail>
+              Language: {getLanguageFlagFromPickedLocale(member.pickedLocale)}
+            </MemberDetail>
+          )}
+        </MemberDetails>
+        <Tab
+          panes={panes}
+          onTabChange={(_, { activeIndex }) =>
+            navigateToTab(panes[activeIndex!].tabName)
+          }
+          renderActiveOnly={true}
+          activeIndex={currentIndex}
+        />
+      </MemberPageContainer>
+      <ChatPane memberId={memberId} />
+    </MemberPageWrapper>
   )
 }
