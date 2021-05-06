@@ -1,24 +1,31 @@
 import styled from '@emotion/styled'
-import { match } from 'matchly'
 
-export const InsuranceStatusBadge = styled('div')<{ status: string }>(
-  ({ theme, status }) => ({
-    display: 'inline-block',
-    fontSize: '0.8rem',
-    padding: '0.25rem 0.8rem',
-    backgroundColor: match([
-      ['ACTIVE', theme.activeInsuranceBackground],
-      ['PENDING', theme.pendingInsuranceBackground],
-      ['TERMINATED', theme.terminatedInsuranceBackground],
-      [match.any(), theme.mutedBackground],
-    ])(status),
-    color: match([
-      ['ACTIVE', theme.activeInsuranceForeground],
-      ['PENDING', theme.pendingInsuranceForeground],
-      ['TERMINATED', theme.terminatedInsuranceForeground],
-      [match.any(), theme.mutedText],
-    ])(status),
-    textTransform: 'capitalize',
-    borderRadius: '1000px',
-  }),
-)
+export const InsuranceStatusBadge = styled.div<{ status: string }>`
+  display: inline-block;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.8rem;
+  background-color: ${({ status, theme }) => {
+    switch (status) {
+      case 'ACTIVE':
+        return theme.activeInsuranceBackground
+      case 'PENDING':
+        return theme.pendingInsuranceBackground
+      case 'TERMINATED':
+        return theme.terminatedInsuranceBackground
+    }
+    return theme.mutedBackground
+  }};
+  color: ${({ status, theme }) => {
+    switch (status) {
+      case 'ACTIVE':
+        return theme.activeInsuranceForeground
+      case 'PENDING':
+        return theme.pendingInsuranceForeground
+      case 'TERMINATED':
+        return theme.terminatedInsuranceForeground
+    }
+    return theme.mutedText
+  }};
+  text-transform: capitalize;
+  border-radius: 1000px;
+`

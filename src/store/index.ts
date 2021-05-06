@@ -3,7 +3,6 @@
 import * as history_ from 'history'
 import { routerMiddleware, routerReducer } from 'react-router-redux'
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
-import { reducer as reduxFormReducer } from 'redux-form'
 import createSagaMiddleware from 'redux-saga'
 import reducers from './reducers'
 import rootSaga from './sagas'
@@ -15,7 +14,6 @@ export const history =
 
 const rootReducer = combineReducers({
   ...reducers,
-  form: reduxFormReducer,
   routing: routerReducer,
 })
 

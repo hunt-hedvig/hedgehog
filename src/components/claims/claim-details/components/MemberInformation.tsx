@@ -6,7 +6,7 @@ import {
   useClaimMemberContractsMasterInceptionQuery,
 } from 'api/generated/graphql'
 import copy from 'copy-to-clipboard'
-import { format, formatDistance, parseISO } from 'date-fns'
+import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
 import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
@@ -245,9 +245,8 @@ export const MemberInformation: React.FC<{
               Signed
               <InfoText>
                 <Popover
-                  contents={formatDistance(
+                  contents={formatDistanceToNowStrict(
                     parseISO(member.signedOn),
-                    new Date(),
                     {
                       addSuffix: true,
                     },
@@ -266,9 +265,8 @@ export const MemberInformation: React.FC<{
               <Popover
                 contents={
                   firstMasterInception
-                    ? formatDistance(
-                        new Date(firstMasterInception),
-                        new Date(),
+                    ? formatDistanceToNowStrict(
+                        parse(firstMasterInception, 'yyyy-MM-dd', new Date()),
                         {
                           addSuffix: true,
                         },

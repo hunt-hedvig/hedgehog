@@ -2,7 +2,6 @@ import {
   CostDeduction,
   FreeMonths,
   Incentive,
-  IndefinitePercentageDiscount,
   MonthlyPercentageDiscountFixedPeriod,
   NoDiscount,
   VisibleNoDiscount,
@@ -32,11 +31,6 @@ export const isVisibleNoDiscount = (
 export const isNoDiscount = (
   incentiveData: IncentiveDataMaybe,
 ): incentiveData is NoDiscount => incentiveData?.__typename === 'NoDiscount'
-
-export const isIndefinitePercentageDiscount = (
-  incentiveData: IncentiveDataMaybe,
-): incentiveData is IndefinitePercentageDiscount =>
-  incentiveData?.__typename === 'IndefinitePercentageDiscount'
 
 const generateRange = (min: number, max: number, step: number): number[] => {
   return new Array(max).fill(0).map((_, index) => min + index * step)

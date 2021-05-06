@@ -30,13 +30,14 @@ const AddMonthlyEntryFormComponent: React.FC<WithShowNotification & {
   const preferredCurrency = contractMarketInfo!.preferredCurrency
 
   const onSubmit = (data: FieldValues) => {
-    const dataCopy = { ...data }
-    dataCopy.amount = {
-      ...dataCopy.amount,
-      currency: preferredCurrency,
+    const dataCopy = {
+      ...data,
+      amount: {
+        amount: data.amount.amount,
+        currency: preferredCurrency,
+      },
+      externalId: data.externalId.trim() === '' ? undefined : data.externalId,
     }
-    dataCopy.externalId =
-      dataCopy.externalId.trim() === '' ? undefined : dataCopy.externalId
     addMonthlyEntry(
       getAddMonthlyEntryOptions(memberId, dataCopy as MonthlyEntryInput),
     )

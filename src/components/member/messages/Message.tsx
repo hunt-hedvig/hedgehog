@@ -3,7 +3,22 @@ import styled from '@emotion/styled'
 import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
 import { format } from 'date-fns'
-import * as types from 'lib/messageTypes'
+import {
+  ACTIVATION_DATE,
+  AUDIO,
+  BANK_ID_COLLECT,
+  CANCELLATION_DATE,
+  DATE,
+  FILE_UPLOAD,
+  HERO,
+  MULTIPLE_SELECT,
+  NUMBER,
+  PARAGRAPH,
+  PHOTO,
+  SINGLE_SELECT,
+  TEXT,
+  VIDEO,
+} from 'lib/messageTypes'
 import React from 'react'
 
 const MessageRow = styled.div<
@@ -132,21 +147,27 @@ export const Message = React.forwardRef<
 
 const MessageContent = ({ content }) => {
   switch (content.type) {
-    case types.DATE:
+    case DATE:
       return <p>Date: {content.date}</p>
-    case types.AUDIO:
+    case AUDIO:
       return <audio src={content.URL} controls />
-    case types.VIDEO:
+    case VIDEO:
       return <Video src={content.URL} controls />
-    case types.PHOTO:
-    case types.PARAGRAPH:
-    case types.HERO:
+    case PHOTO:
+    case PARAGRAPH:
+    case HERO:
       return <ImageMessage content={content} />
-    case types.MULTIPLE_SELECT:
-    case types.SINGLE_SELECT:
+    case MULTIPLE_SELECT:
+    case SINGLE_SELECT:
       return <SelectMessage content={content} />
-    case types.FILE_UPLOAD:
+    case FILE_UPLOAD:
       return <a href={content.url}>Attached file</a>
+    case TEXT:
+    case NUMBER:
+    case ACTIVATION_DATE:
+    case CANCELLATION_DATE:
+    case BANK_ID_COLLECT:
+      return null
     default:
       return null
   }
