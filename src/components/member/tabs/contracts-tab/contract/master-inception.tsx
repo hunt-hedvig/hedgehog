@@ -31,7 +31,7 @@ const MasterInceptionComponent: React.FC<{
 
   return (
     <>
-      {!datePickerEnabled && !contract.isTerminated && (
+      {!datePickerEnabled && !contract.terminationDate && (
         <Button
           halfWidth
           variation={'success'}
@@ -40,7 +40,7 @@ const MasterInceptionComponent: React.FC<{
           Activate
         </Button>
       )}
-      {!datePickerEnabled && contract.isTerminated && (
+      {!datePickerEnabled && contract.terminationDate && (
         <Paragraph>Terminated contract cannot be activated</Paragraph>
       )}
       {datePickerEnabled && (

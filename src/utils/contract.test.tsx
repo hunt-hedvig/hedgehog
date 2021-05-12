@@ -85,7 +85,6 @@ it('getLastTerminationDate returns null if one contract is active', () => {
   const terminatedContracts = [
     {
       terminationDate: null,
-      isTerminated: false,
     },
   ]
   const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
@@ -96,7 +95,6 @@ it('getLastTerminationDate returns last termination date in time if one contract
   const terminatedContracts = [
     {
       terminationDate: '2020-03-01',
-      isTerminated: true,
     },
   ]
   const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
@@ -107,11 +105,9 @@ it('getLastTerminationDate returns last termination date in time if second is te
   const terminatedContracts = [
     {
       terminationDate: '2020-01-01',
-      isTerminated: true,
     },
     {
       terminationDate: '2020-03-01',
-      isTerminated: true,
     },
   ]
   const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
@@ -122,11 +118,9 @@ it('getLastTerminationDate returns last termination date in time if first is ter
   const terminatedContracts = [
     {
       terminationDate: '2020-03-01',
-      isTerminated: true,
     },
     {
       terminationDate: '2020-01-01',
-      isTerminated: true,
     },
   ]
   const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
@@ -136,11 +130,10 @@ it('getLastTerminationDate returns last termination date in time if first is ter
 it('getLastTerminationDate returns null first contract is active', () => {
   const oneActiveOneTerminated = [
     {
-      isTerminated: false,
+      terminationDate: null,
     },
     {
       terminationDate: '2020-03-01',
-      isTerminated: true,
     },
   ]
   const lastTerminationDate = getLastTerminationDate(
@@ -152,10 +145,10 @@ it('getLastTerminationDate returns null first contract is active', () => {
 it('getLastTerminationDate returns null if both contracts are active', () => {
   const bothInactive = [
     {
-      isTerminated: false,
+      terminationDate: null,
     },
     {
-      isTerminated: false,
+      terminationDate: null,
     },
   ]
   const lastTerminationDate = getLastTerminationDate(bothInactive as any)

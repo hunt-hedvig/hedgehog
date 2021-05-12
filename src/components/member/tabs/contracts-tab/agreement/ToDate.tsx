@@ -46,12 +46,12 @@ export const ToDate: React.FC<{
           </FourthLevelHeadline>
         </Spacing>
       )}
-      {!datePickerEnabled && agreement.toDate && !contract.isTerminated && (
+      {!datePickerEnabled && agreement.toDate && !contract.terminationDate && (
         <Button variation="primary" onClick={() => setDatePickerEnabled(true)}>
           Edit
         </Button>
       )}
-      {!datePickerEnabled && contract.isTerminated && (
+      {!datePickerEnabled && contract.terminationDate && (
         <Paragraph>Terminated</Paragraph>
       )}
       {datePickerEnabled && (

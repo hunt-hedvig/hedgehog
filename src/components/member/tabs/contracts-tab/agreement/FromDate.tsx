@@ -46,7 +46,7 @@ export const FromDate: React.FC<{
                 : 'Not set'}
             </FourthLevelHeadline>
           </Spacing>
-          {agreement.fromDate && !contract.isTerminated && (
+          {agreement.fromDate && !contract.terminationDate && (
             <Button
               variation="primary"
               onClick={() => setDatePickerEnabled(true)}
@@ -54,7 +54,7 @@ export const FromDate: React.FC<{
               Edit
             </Button>
           )}
-          {contract.isTerminated && <Paragraph>Terminated</Paragraph>}
+          {contract.terminationDate && <Paragraph>Terminated</Paragraph>}
         </>
       )}
       {datePickerEnabled && (

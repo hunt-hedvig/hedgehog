@@ -23,7 +23,7 @@ import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 
 const initialTerminationDate = (contract: Contract): Date =>
-  contract.isTerminated ? new Date(contract.terminationDate) : new Date()
+  contract.terminationDate ? new Date(contract.terminationDate) : new Date()
 
 const TerminationDateComponent: React.FC<{
   contract: Contract
@@ -55,7 +55,7 @@ const TerminationDateComponent: React.FC<{
     { loading: revertTerminationLoading },
   ] = useRevertTermination(contract)
 
-  if (contract.isTerminated) {
+  if (contract.terminationDate) {
     return (
       <>
         {!datePickerEnabled && (

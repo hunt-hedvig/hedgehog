@@ -41,7 +41,7 @@ export const ContractTab: React.FC<{
           contract={contract}
           refetch={refetch}
           shouldPreSelectAgreement={
-            contracts.length === 1 && !contract.isTerminated
+            contracts.length === 1 && !contract.terminationDate
           }
         />
       ))}
