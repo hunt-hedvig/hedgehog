@@ -59,7 +59,7 @@ export const getLastTerminationDate = (
     return null
   }
   const hasNonTerminatedContract = contracts.some(
-    (contract) => contract.terminationDate,
+    (contract) => !contract.terminationDate,
   )
   if (hasNonTerminatedContract) {
     return null
