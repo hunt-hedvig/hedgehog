@@ -68,7 +68,7 @@ export const QuoteActivation: React.FC<{
   if (!contract) {
     return <>Cannot find the contract for the quote, please contact Tech</>
   }
-  if (contract.hasPendingAgreement && contract.isTerminated) {
+  if (contract.hasPendingAgreement && contract.terminationDate) {
     return <>Cannot active quote for a pending contract that is terminated</>
   }
 
