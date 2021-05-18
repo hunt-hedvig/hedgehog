@@ -1,9 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  InputLabel as MuiInputLabel,
-  MenuItem as MuiMenuItem,
-  Select as MuiSelect,
-} from '@material-ui/core'
+import { MenuItem as MuiMenuItem, Select as MuiSelect } from '@material-ui/core'
 import { ClaimState, useClaimInformationQuery } from 'api/generated/graphql'
 
 import { Paper } from 'components/shared/Paper'
@@ -22,7 +18,7 @@ import {
 } from 'graphql/use-update-claim-state'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
-import { ErrorText, Paragraph } from 'hedvig-ui/typography'
+import { ErrorText, Label, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import { currentAgreementForContract } from 'utils/contract'
 import { sleep } from 'utils/sleep'
@@ -135,7 +131,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
           )}
         </div>
         <SelectWrapper>
-          <MuiInputLabel shrink>Status</MuiInputLabel>
+          <Label>Status</Label>
           <MuiSelect
             value={state}
             onChange={async (event) => {
@@ -152,7 +148,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
           </MuiSelect>
         </SelectWrapper>
         <SelectWrapper>
-          <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
+          <Label>Employee Claim</Label>
           <MuiSelect
             value={coveringEmployee ? 'True' : 'False'}
             onChange={async (event) => {
@@ -174,9 +170,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         </SelectWrapper>
         {contracts && (
           <SelectWrapper>
-            <MuiInputLabel shrink error={!selectedContract}>
-              Contract for Claim
-            </MuiInputLabel>
+            <Label>Contract for Claim</Label>
 
             <MuiSelect
               value={selectedContract?.id ? selectedContract.id : 'none'}
