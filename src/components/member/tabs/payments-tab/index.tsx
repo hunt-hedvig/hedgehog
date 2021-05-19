@@ -26,6 +26,7 @@ import { formatMoney } from 'utils/money'
 import { withShowNotification } from 'utils/notifications'
 import { Checkmark, Cross } from '../../../icons'
 import { GenerateSetupDirectDebitLink } from './generate-setup-direct-debit-link'
+import { useGetAccount } from 'graphql/use-get-account'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -122,24 +123,22 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
     variables: { id: memberId },
   })
 
-  const [amount, setAmount] = useState<string>('')
+  const [account] = useGetAccount(memberId)
 
   const handleChargeSubmit = (mutation) => {
     if (
       !window.confirm(
-        `Are you sure you want to charge ${amount} ${data?.member?.contractMarketInfo?.preferredCurrency}?`,
+        `Are you sure you want to charge ${formatMoney(
+          account?.currentBalance!,
+        )}?`,
       )
     ) {
-      setAmount('')
       return
     }
     mutation({
       variables: {
         id: memberId,
-        amount: {
-          amount,
-          currency: data?.member?.contractMarketInfo?.preferredCurrency,
-        },
+        amount: account?.currentBalance,
       },
     })
       .then(() => {
@@ -148,7 +147,6 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
           header: 'Success',
           type: 'olive',
         })
-        setAmount('')
       })
       .catch((e) => {
         showNotification({
@@ -188,32 +186,24 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
         <GenerateSetupDirectDebitLink memberId={memberId} />
       </Spacing>
 
-      {data.member?.directDebitStatus?.activated && (
-        <Mutation mutation={CHARGE_MEMBER_MUTATION}>
-          {(chargeMember) => (
-            <>
-              <ThirdLevelHeadline>Charge:</ThirdLevelHeadline>
-              <Spacing bottom="small">
-                <Input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  label={data.member?.contractMarketInfo?.preferredCurrency}
-                  labelPosition="right"
-                  placeholder="ex. 100"
-                />
-              </Spacing>
-              <Button
-                disabled={!amount}
-                variation="primary"
-                onClick={() => handleChargeSubmit(chargeMember)}
-              >
-                Submit
-              </Button>
-            </>
-          )}
-        </Mutation>
-      )}
+      {data.member?.directDebitStatus?.activated &&
+        Number(account?.currentBalance.amount) > 0.0 && (
+          <Mutation mutation={CHARGE_MEMBER_MUTATION}>
+            {(chargeMember) => (
+              <>
+                <ThirdLevelHeadline>
+                  Charge member's current calance:
+                </ThirdLevelHeadline>
+                <Button
+                  variation="primary"
+                  onClick={() => handleChargeSubmit(chargeMember)}
+                >
+                  Charge {formatMoney(account?.currentBalance!)}
+                </Button>
+              </>
+            )}
+          </Mutation>
+        )}
       <br />
       {data.member.payoutMethodStatus?.activated &&
         data.member.contractMarketInfo?.market === Market.Sweden && (
