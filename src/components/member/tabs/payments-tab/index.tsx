@@ -10,15 +10,15 @@ import {
 } from 'components/payouts/payout-details'
 import { format, parseISO } from 'date-fns'
 import gql from 'graphql-tag'
+import { useGetAccount } from 'graphql/use-get-account'
 import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { Button } from 'hedvig-ui/button'
-import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import React, { useState } from 'react'
+import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { Market } from 'types/enums'
@@ -26,7 +26,6 @@ import { formatMoney } from 'utils/money'
 import { withShowNotification } from 'utils/notifications'
 import { Checkmark, Cross } from '../../../icons'
 import { GenerateSetupDirectDebitLink } from './generate-setup-direct-debit-link'
-import { useGetAccount } from 'graphql/use-get-account'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
