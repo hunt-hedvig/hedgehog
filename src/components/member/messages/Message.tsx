@@ -118,7 +118,7 @@ export const Message = React.forwardRef<
 
   React.useEffect(() => {
     setVisible(true)
-  })
+  }, [])
 
   return (
     <MessageRow

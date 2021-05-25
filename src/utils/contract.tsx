@@ -53,7 +53,7 @@ export const getFirstMasterInception = (
 }
 
 export const getLastTerminationDate = (
-  contracts: ReadonlyArray<Pick<Contract, 'isTerminated' | 'terminationDate'>>,
+  contracts: ReadonlyArray<Pick<Contract, 'terminationDate'>>,
 ): string | null => {
   if (contracts.length === 0) {
     return null

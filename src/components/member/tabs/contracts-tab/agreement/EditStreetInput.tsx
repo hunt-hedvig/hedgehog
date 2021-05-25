@@ -35,7 +35,7 @@ const EditStreetInputComponent: React.FC<{
           closeEdit()
           return
         }
-        if (e.keyCode !== Keys.Return.code) {
+        if (e.keyCode !== Keys.Enter.code) {
           return
         }
         if (street.trim() === newStreet.trim()) {

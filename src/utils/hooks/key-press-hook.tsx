@@ -18,7 +18,7 @@ export const Keys: { [name: string]: Key } = {
     code: 9,
     hint: '⇥',
   },
-  Return: {
+  Enter: {
     code: 13,
     hint: '↩',
   },
