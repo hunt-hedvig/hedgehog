@@ -166,7 +166,7 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
     )
   }
 
-  if (loading || !data?.member) {
+  if (loading || !data?.member || !account) {
     return <LoadingMessage paddingTop="10vh" />
   }
 
@@ -185,24 +185,31 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
         <GenerateSetupDirectDebitLink memberId={memberId} />
       </Spacing>
 
-      {data.member?.directDebitStatus?.activated &&
-        Number(account?.currentBalance.amount) > 0.0 && (
-          <Mutation mutation={CHARGE_MEMBER_MUTATION}>
-            {(chargeMember) => (
-              <>
-                <ThirdLevelHeadline>
-                  Charge member's current balance:
-                </ThirdLevelHeadline>
-                <Button
-                  variation="primary"
-                  onClick={() => handleChargeSubmit(chargeMember)}
-                >
-                  Charge {formatMoney(account?.currentBalance!)}
-                </Button>
-              </>
-            )}
-          </Mutation>
-        )}
+      {data.member?.directDebitStatus?.activated && (
+        <>
+          <ThirdLevelHeadline>
+            Charge member's current balance:
+          </ThirdLevelHeadline>
+          {Number(account.currentBalance.amount) > 0.0 ? (
+            <Mutation mutation={CHARGE_MEMBER_MUTATION}>
+              {(chargeMember) => (
+                <>
+                  <Button
+                    variation="primary"
+                    onClick={() => handleChargeSubmit(chargeMember)}
+                  >
+                    Charge {formatMoney(account.currentBalance!)}
+                  </Button>
+                </>
+              )}
+            </Mutation>
+          ) : (
+            `Unable to charge member since the balance is ${formatMoney(
+              account.currentBalance!,
+            )}`
+          )}
+        </>
+      )}
       <br />
       {data.member.payoutMethodStatus?.activated &&
         data.member.contractMarketInfo?.market === Market.Sweden && (
