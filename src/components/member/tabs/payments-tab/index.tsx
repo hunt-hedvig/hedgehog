@@ -191,7 +191,7 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
             {(chargeMember) => (
               <>
                 <ThirdLevelHeadline>
-                  Charge member's current calance:
+                  Charge member's current balance:
                 </ThirdLevelHeadline>
                 <Button
                   variation="primary"
