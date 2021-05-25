@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-05-26',
+    change: 'Send chat messages via Cmd-Enter',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-04-29',
     change: 'Allow access to debt+quote tab when no contracts',
     authorGithubHandle: 'vonElfvin',
