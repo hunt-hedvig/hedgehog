@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Input } from 'hedvig-ui/input'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
@@ -8,7 +9,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled from '@emotion/styled'
 import { Icon } from 'semantic-ui-react'
 import {
   Key,
@@ -113,7 +113,7 @@ export const CommandLineComponent: React.FC<{
 
   const isUpPressed = useKeyIsPressed(Keys.Up)
   const isDownPressed = useKeyIsPressed(Keys.Down)
-  const isEnterPressed = useKeyIsPressed(Keys.Return)
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
 
   const maxActions = 10
   const [selectedActionIndex, setSelectedActionIndex] = useState(0)

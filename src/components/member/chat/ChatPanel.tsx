@@ -8,7 +8,7 @@ import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
-import { shouldIgnoreInput } from 'utils/hooks/key-press-hook'
+import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -51,11 +51,7 @@ export const ChatPanel = ({ memberId }) => {
   const [sendMessage, { loading }] = useSendMessage()
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    return (
-      !window.matchMedia('(max-width: 800px)').matches &&
-      e.keyCode === 13 &&
-      !e.shiftKey
-    )
+    return e.metaKey && e.keyCode === Keys.Enter.code
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

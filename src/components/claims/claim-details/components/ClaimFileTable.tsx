@@ -63,6 +63,10 @@ const fileUploadOptions = [
   },
 ]
 
+const RotatedImage = styled(Image)`
+  image-orientation: from-image;
+`
+
 const ClaimFileTableComponent: React.FC<WithShowNotification & {
   claimId: string
   memberId: string
@@ -130,7 +134,10 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
                         height="300px"
                       />
                     ) : (
-                      <Image src={claimFile.fileUploadUrl} size="large" />
+                      <RotatedImage
+                        src={claimFile.fileUploadUrl}
+                        size="large"
+                      />
                     )}
                   </Table.Cell>
                   <Table.Cell>
