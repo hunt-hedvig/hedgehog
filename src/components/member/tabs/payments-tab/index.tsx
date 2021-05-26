@@ -10,15 +10,15 @@ import {
 } from 'components/payouts/payout-details'
 import { format, parseISO } from 'date-fns'
 import gql from 'graphql-tag'
+import { useGetAccount } from 'graphql/use-get-account'
 import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
 import { Button } from 'hedvig-ui/button'
-import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
-import React, { useState } from 'react'
+import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { Market } from 'types/enums'
@@ -122,24 +122,22 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
     variables: { id: memberId },
   })
 
-  const [amount, setAmount] = useState<string>('')
+  const [account] = useGetAccount(memberId)
 
   const handleChargeSubmit = (mutation) => {
     if (
       !window.confirm(
-        `Are you sure you want to charge ${amount} ${data?.member?.contractMarketInfo?.preferredCurrency}?`,
+        `Are you sure you want to charge ${formatMoney(
+          account?.currentBalance!,
+        )}?`,
       )
     ) {
-      setAmount('')
       return
     }
     mutation({
       variables: {
         id: memberId,
-        amount: {
-          amount,
-          currency: data?.member?.contractMarketInfo?.preferredCurrency,
-        },
+        amount: account?.currentBalance,
       },
     })
       .then(() => {
@@ -148,7 +146,6 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
           header: 'Success',
           type: 'olive',
         })
-        setAmount('')
       })
       .catch((e) => {
         showNotification({
@@ -169,7 +166,7 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
     )
   }
 
-  if (loading || !data?.member) {
+  if (loading || !data?.member || !account) {
     return <LoadingMessage paddingTop="10vh" />
   }
 
@@ -189,30 +186,29 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
       </Spacing>
 
       {data.member?.directDebitStatus?.activated && (
-        <Mutation mutation={CHARGE_MEMBER_MUTATION}>
-          {(chargeMember) => (
-            <>
-              <ThirdLevelHeadline>Charge:</ThirdLevelHeadline>
-              <Spacing bottom="small">
-                <Input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  label={data.member?.contractMarketInfo?.preferredCurrency}
-                  labelPosition="right"
-                  placeholder="ex. 100"
-                />
-              </Spacing>
-              <Button
-                disabled={!amount}
-                variation="primary"
-                onClick={() => handleChargeSubmit(chargeMember)}
-              >
-                Submit
-              </Button>
-            </>
+        <>
+          <ThirdLevelHeadline>
+            Charge member's current balance:
+          </ThirdLevelHeadline>
+          {Number(account.currentBalance.amount) > 0.0 ? (
+            <Mutation mutation={CHARGE_MEMBER_MUTATION}>
+              {(chargeMember) => (
+                <>
+                  <Button
+                    variation="primary"
+                    onClick={() => handleChargeSubmit(chargeMember)}
+                  >
+                    Charge {formatMoney(account.currentBalance!)}
+                  </Button>
+                </>
+              )}
+            </Mutation>
+          ) : (
+            `Unable to charge member since the balance is ${formatMoney(
+              account.currentBalance!,
+            )}`
           )}
-        </Mutation>
+        </>
       )}
       <br />
       {data.member.payoutMethodStatus?.activated &&
