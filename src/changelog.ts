@@ -13,6 +13,12 @@ export interface Change {
 export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-05-26',
+    change:
+      "Limit the direct charge amount to only allow it to match the member's current balance",
+    authorGithubHandle: 'fredriklagerblad',
+  },
+  {
+    date: '2021-05-26',
     change: 'Send chat messages via Cmd-Enter',
     authorGithubHandle: 'vonElfvin',
   },

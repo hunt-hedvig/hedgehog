@@ -1,9 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  InputLabel as MuiInputLabel,
-  MenuItem as MuiMenuItem,
-  Select as MuiSelect,
-} from '@material-ui/core'
+import { MenuItem as MuiMenuItem, Select as MuiSelect } from '@material-ui/core'
 import { ClaimState, useClaimInformationQuery } from 'api/generated/graphql'
 
 import { Paper } from 'components/shared/Paper'
@@ -22,8 +18,14 @@ import {
 } from 'graphql/use-update-claim-state'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
-import { ErrorText, Paragraph } from 'hedvig-ui/typography'
-import React from 'react'
+import {
+  ErrorText,
+  Label,
+  Paragraph,
+  ThirdLevelHeadline,
+} from 'hedvig-ui/typography'
+import React, { useState } from 'react'
+import { CloudArrowDownFill } from 'react-bootstrap-icons'
 import { currentAgreementForContract } from 'utils/contract'
 import { sleep } from 'utils/sleep'
 import { convertEnumToTitle } from 'utils/text'
@@ -50,23 +52,61 @@ const validateSelectEmployeeClaimOption = (
   return value === 'True'
 }
 
-const getUrlWithoutParameters = (recordingUrl): string => {
-  const regex = recordingUrl.split(/\?/)
-  return regex[0]
-}
-
-const Audio = styled('audio')({
-  width: '100%',
-})
-
-const DownloadClaimFile = styled('a')({
-  display: 'block',
-  marginTop: '0.5rem',
-})
-
 const SelectWrapper = styled('div')({
   marginTop: '1.0rem',
 })
+
+const Audio = styled('audio')`
+  width: 100%;
+`
+
+const ClaimAudioWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  margin-right: 1em;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const DownloadWrapper = styled.a`
+  font-size: 1.5em;
+  margin: 0.5em 0em;
+  margin-left: 0.5em;
+  padding-top: 0.4em;
+`
+
+const DownloadButton = styled(CloudArrowDownFill)`
+  color: ${({ theme }) => theme.foreground};
+`
+
+const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
+  const [canPlay, setCanPlay] = useState<null | boolean>(null)
+
+  if (canPlay === false) {
+    return null
+  }
+
+  return (
+    <ClaimAudioWrapper>
+      <Audio
+        controls
+        controlsList="nodownload"
+        onCanPlay={() => setCanPlay(true)}
+        onError={() => setCanPlay(false)}
+      >
+        <source src={recordingUrl} type="audio/aac" />
+      </Audio>
+      <DownloadWrapper
+        href={recordingUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        download
+      >
+        <DownloadButton />
+      </DownloadWrapper>
+    </ClaimAudioWrapper>
+  )
+}
 
 export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   const {
@@ -94,48 +134,20 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
 
   return (
     <Paper>
-      <h3>Claim Information</h3>
+      <ThirdLevelHeadline>Claim Information</ThirdLevelHeadline>
       {queryError && <ErrorText>{queryError.message}</ErrorText>}
 
       <Loadable loading={claimInformationLoading}>
-        <div>
-          <InfoRow>
-            Registered at
-            <InfoText>
-              {registrationDate &&
-                format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
-            </InfoText>
-          </InfoRow>
-          {recordingUrl && (
-            <>
-              <Audio controls>
-                <source src={recordingUrl} type="audio/aac" />
-              </Audio>
-              <Audio controls>
-                <source
-                  src={getUrlWithoutParameters(recordingUrl)}
-                  type="audio/aac"
-                />
-              </Audio>
-              <DownloadClaimFile
-                href={recordingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Download claim file
-              </DownloadClaimFile>
-              <DownloadClaimFile
-                href={getUrlWithoutParameters(recordingUrl)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Download claim file
-              </DownloadClaimFile>
-            </>
-          )}
-        </div>
+        <InfoRow>
+          Registered at
+          <InfoText>
+            {registrationDate &&
+              format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
+          </InfoText>
+        </InfoRow>
+        {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
-          <MuiInputLabel shrink>Status</MuiInputLabel>
+          <Label>Status</Label>
           <MuiSelect
             value={state}
             onChange={async (event) => {
@@ -152,7 +164,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
           </MuiSelect>
         </SelectWrapper>
         <SelectWrapper>
-          <MuiInputLabel shrink>Employee Claim</MuiInputLabel>
+          <Label>Employee Claim</Label>
           <MuiSelect
             value={coveringEmployee ? 'True' : 'False'}
             onChange={async (event) => {
@@ -174,9 +186,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         </SelectWrapper>
         {contracts && (
           <SelectWrapper>
-            <MuiInputLabel shrink error={!selectedContract}>
-              Contract for Claim
-            </MuiInputLabel>
+            <Label>Contract for Claim</Label>
 
             <MuiSelect
               value={selectedContract?.id ? selectedContract.id : 'none'}
