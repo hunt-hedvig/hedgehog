@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import { FileUpload, useFileUploadsQueryQuery } from 'api/generated/graphql'
 import {
   LoadingMessage,
@@ -15,10 +14,6 @@ const sortFileDate = (a, b) => {
   return ((bDate as any) as number) - ((aDate as any) as number)
 }
 
-const RotatedImage = styled(Image)`
-  image-orientation: from-image;
-`
-
 const MemberFileTable: React.FC<{
   memberFiles: FileUpload[]
 }> = ({ memberFiles }) => (
@@ -34,7 +29,7 @@ const MemberFileTable: React.FC<{
       {[...memberFiles].sort(sortFileDate).map((memberFile) => (
         <Table.Row key={memberFile.fileUploadUrl}>
           <Table.Cell>
-            <RotatedImage src={memberFile.fileUploadUrl} size="medium" />
+            <Image src={memberFile.fileUploadUrl} size="medium" />
           </Table.Cell>
           <Table.Cell>
             {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
