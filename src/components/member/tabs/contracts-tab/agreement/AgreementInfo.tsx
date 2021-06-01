@@ -7,7 +7,11 @@ import { Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { PencilFill } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'
-import { convertEnumToTitle, formatPostalCode } from 'utils/text'
+import {
+  convertEnumToTitle,
+  formatPostalCode,
+  getCarrierText,
+} from 'utils/text'
 
 const AddressInfoRow = styled(Paragraph)`
   margin-bottom: 1rem;
@@ -101,6 +105,9 @@ export const AgreementInfo: React.FC<{
       <InfoRow>
         Line of Business{' '}
         <InfoText>{convertEnumToTitle(agreement.lineOfBusinessName)}</InfoText>
+      </InfoRow>
+      <InfoRow>
+        Carrier <InfoText>{getCarrierText(agreement.carrier)}</InfoText>
       </InfoRow>
       <InfoRow>
         Premium{' '}

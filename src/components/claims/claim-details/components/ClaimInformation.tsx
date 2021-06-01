@@ -28,7 +28,7 @@ import React, { useState } from 'react'
 import { CloudArrowDownFill } from 'react-bootstrap-icons'
 import { currentAgreementForContract } from 'utils/contract'
 import { sleep } from 'utils/sleep'
-import { convertEnumToTitle } from 'utils/text'
+import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
 interface Props {
   claimId: string
@@ -224,7 +224,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
           <>
             <InfoRow>
               Carrier
-              <InfoText>{selectedAgreement.carrier}</InfoText>
+              <InfoText>{getCarrierText(selectedAgreement.carrier)}</InfoText>
             </InfoRow>
             <InfoRow>
               Line of business

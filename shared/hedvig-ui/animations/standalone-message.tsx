@@ -1,23 +1,22 @@
+import styled from '@emotion/styled'
 import { fadeIn } from 'hedvig-ui/animations/utils'
 import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
-import styled from '@emotion/styled'
 
 interface StandaloneMessageProps {
+  opacity?: number
   paddingTop?: string
   paddingBottom?: string
   paddingLeft?: string
   paddingRight?: string
 }
 
-export const StandaloneMessage = styled('div')<StandaloneMessageProps>`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+const StandaloneMessageWrapper = styled.div<StandaloneMessageProps>`
+  display: grid;
+  place-self: center;
   text-align: center;
   opacity: 0;
-  animation: ${fadeIn(0.3)} 1000ms forwards;
+  animation: ${({ opacity = 0.3 }) => fadeIn(opacity)} 1000ms forwards;
   animation-delay: 20ms;
   width: 100%;
   margin: 0 auto;
@@ -28,6 +27,17 @@ export const StandaloneMessage = styled('div')<StandaloneMessageProps>`
   padding-left: ${({ paddingLeft }) => paddingLeft};
   padding-right: ${({ paddingRight }) => paddingRight};
 `
+
+export const StandaloneMessage: React.FC<StandaloneMessageProps> = ({
+  children,
+  ...props
+}) => {
+  return (
+    <StandaloneMessageWrapper {...props}>
+      <div>{children}</div>
+    </StandaloneMessageWrapper>
+  )
+}
 
 const LoadingMessageWrapper = styled.div`
   display: flex;
