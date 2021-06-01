@@ -5,7 +5,7 @@ import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { InsuranceStatusBadge } from 'utils/agreement'
 import { formatMoney } from 'utils/money'
-import { convertEnumToTitle } from 'utils/text'
+import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
 const SelectableTableRow = styled(Table.Row)({
   cursor: 'pointer',
@@ -66,7 +66,7 @@ export const AgreementsTable: React.FC<{
                 selected={isSelected}
                 status={agreement.status}
               >
-                {agreement.carrier}
+                {getCarrierText(agreement.carrier)}
               </SelectableTableCell>
               <SelectableTableCell
                 selected={isSelected}
