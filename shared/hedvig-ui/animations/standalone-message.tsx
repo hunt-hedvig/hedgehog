@@ -13,8 +13,7 @@ interface StandaloneMessageProps {
 
 const StandaloneMessageWrapper = styled.div<StandaloneMessageProps>`
   display: grid;
-  place-self: center;
-  text-align: center;
+  place-items: center;
   opacity: 0;
   animation: ${({ opacity = 0.3 }) => fadeIn(opacity)} 1000ms forwards;
   animation-delay: 20ms;
