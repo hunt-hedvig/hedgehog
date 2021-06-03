@@ -92,6 +92,8 @@ export enum AccountEntryType {
   BundleDiscountPercentageDeduction = 'BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION',
   CostDeduction = 'COST_DEDUCTION',
   Loss = 'LOSS',
+  LossAutomatic = 'LOSS_AUTOMATIC',
+  LossManual = 'LOSS_MANUAL',
 }
 
 export type ActivatePendingAgreementInput = {
