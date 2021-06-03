@@ -140,6 +140,7 @@
     "test": "NODE_ENV=test jest",
     "typecheck": "tsc",
     "lint": "tslint src/**/*.ts* shared/**/*.ts*",
+    "fix": "tslint src/**/*.ts* shared/**/*.ts* --fix && pretty-quick",
     "graphql:gen": "graphql-codegen --config graphql-codegen.yml",
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",

@@ -3,7 +3,6 @@ import {
   Checkbox as MuiCheckbox,
   FormControlLabel as MuiFormControlLabel,
   MenuItem as MuiMenuItem,
-  withStyles,
 } from '@material-ui/core'
 import {
   ClaimPaymentInput,
@@ -14,10 +13,10 @@ import {
   useCreateSwishClaimPaymentMutation,
 } from 'api/generated/graphql'
 
+import styled from '@emotion/styled'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import { Spinner } from 'hedvig-ui/sipnner'
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { Market } from 'types/enums'
 import { withShowNotification } from 'utils/notifications'
@@ -48,16 +47,16 @@ export interface PaymentFormData {
   message?: string
 }
 
-const PaymentForm = styled(Form)({
-  marginTop: '1rem',
-})
+const PaymentForm = styled(Form)`
+  margin-top: 1rem;
+`
 
-const SubmitButton = withStyles({
-  root: {
-    marginTop: '1rem',
-    display: 'block',
-  },
-})(MuiButton)
+const SubmitButton = styled(MuiButton)`
+  && {
+    margin-top: 1rem;
+    display: block;
+  }
+`
 
 const Checkbox: React.FC<FieldProps> = ({
   field: { onChange, onBlur, name, value },

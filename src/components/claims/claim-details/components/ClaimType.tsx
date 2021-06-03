@@ -19,6 +19,7 @@ import { ErrorText, Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
+import { getCarrierText } from 'utils/text'
 
 const hasLocation = (typename: ClaimTypes): boolean => {
   return [
@@ -224,9 +225,11 @@ const ClaimTypeComponent: React.FC<ClaimTypeProps & WithShowNotification> = ({
                   </div>
                 )}
                 <div>
-                  {claimInformationData?.claim?.agreement?.carrier ===
-                    'EIR' && <>⚠️ EIR </>}
-                  <Label htmlFor="date">Date</Label>
+                  {claimInformationData?.claim?.agreement?.carrier &&
+                    getCarrierText(
+                      claimInformationData.claim.agreement.carrier,
+                    )}
+                  <Label htmlFor="date">Date of Occurrence</Label>
                   <Field
                     component={FormikDateTimePicker}
                     name="date"

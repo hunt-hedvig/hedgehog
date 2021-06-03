@@ -1,11 +1,11 @@
-import { AgreementStatus, GenericAgreement } from 'api/generated/graphql'
-import React from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { AgreementStatus, GenericAgreement } from 'api/generated/graphql'
+import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { InsuranceStatusBadge } from 'utils/agreement'
 import { formatMoney } from 'utils/money'
-import { convertEnumToTitle } from 'utils/text'
+import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
 const SelectableTableRow = styled(Table.Row)({
   cursor: 'pointer',
@@ -35,6 +35,7 @@ export const AgreementsTable: React.FC<{
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Line of Business</Table.HeaderCell>
+          <Table.HeaderCell>Carrier</Table.HeaderCell>
           <Table.HeaderCell>From Date</Table.HeaderCell>
           <Table.HeaderCell>To Date</Table.HeaderCell>
           <Table.HeaderCell>Premium</Table.HeaderCell>
@@ -60,6 +61,12 @@ export const AgreementsTable: React.FC<{
                 status={agreement.status}
               >
                 {convertEnumToTitle(agreement.lineOfBusinessName)}
+              </SelectableTableCell>
+              <SelectableTableCell
+                selected={isSelected}
+                status={agreement.status}
+              >
+                {getCarrierText(agreement.carrier)}
               </SelectableTableCell>
               <SelectableTableCell
                 selected={isSelected}

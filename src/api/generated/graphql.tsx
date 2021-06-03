@@ -1963,6 +1963,24 @@ export type ClaimNotesQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type ClaimPageQueryVariables = Exact<{
+  claimId: Scalars['ID']
+}>
+
+export type ClaimPageQuery = { __typename?: 'QueryType' } & {
+  claim?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves' | 'state'> & {
+        contract?: Maybe<{ __typename?: 'Contract' } & Pick<Contract, 'id'>>
+        agreement?: Maybe<
+          { __typename?: 'GenericAgreement' } & Pick<
+            GenericAgreement,
+            'id' | 'carrier'
+          >
+        >
+      }
+  >
+}
+
 export type ClaimPaymentsQueryVariables = Exact<{
   claimId: Scalars['ID']
 }>
@@ -2009,20 +2027,6 @@ export type ClaimPaymentsQuery = { __typename?: 'QueryType' } & {
             | 'type'
             | 'timestamp'
           >
-        >
-      }
-  >
-}
-
-export type ClaimReservesQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimReservesQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves' | 'state'> & {
-        events: Array<
-          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
         >
       }
   >
@@ -2813,6 +2817,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'numberOfBathrooms'
                   | 'isSubleted'
                   | 'lineOfBusinessName'
+                  | 'carrier'
                 > & {
                     premium: { __typename?: 'MonetaryAmountV2' } & Pick<
                       MonetaryAmountV2,
@@ -4177,6 +4182,71 @@ export type ClaimNotesQueryResult = ApolloReactCommon.QueryResult<
   ClaimNotesQuery,
   ClaimNotesQueryVariables
 >
+export const ClaimPageDocument = gql`
+  query ClaimPage($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      reserves
+      state
+      contract {
+        id
+      }
+      agreement {
+        id
+        carrier
+      }
+    }
+  }
+`
+
+/**
+ * __useClaimPageQuery__
+ *
+ * To run a query within a React component, call `useClaimPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClaimPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClaimPageQuery({
+ *   variables: {
+ *      claimId: // value for 'claimId'
+ *   },
+ * });
+ */
+export function useClaimPageQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    ClaimPageQuery,
+    ClaimPageQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<ClaimPageQuery, ClaimPageQueryVariables>(
+    ClaimPageDocument,
+    options,
+  )
+}
+export function useClaimPageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ClaimPageQuery,
+    ClaimPageQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<ClaimPageQuery, ClaimPageQueryVariables>(
+    ClaimPageDocument,
+    options,
+  )
+}
+export type ClaimPageQueryHookResult = ReturnType<typeof useClaimPageQuery>
+export type ClaimPageLazyQueryHookResult = ReturnType<
+  typeof useClaimPageLazyQuery
+>
+export type ClaimPageQueryResult = ApolloReactCommon.QueryResult<
+  ClaimPageQuery,
+  ClaimPageQueryVariables
+>
 export const ClaimPaymentsDocument = gql`
   query ClaimPayments($claimId: ID!) {
     claim(id: $claimId) {
@@ -4265,70 +4335,6 @@ export type ClaimPaymentsLazyQueryHookResult = ReturnType<
 export type ClaimPaymentsQueryResult = ApolloReactCommon.QueryResult<
   ClaimPaymentsQuery,
   ClaimPaymentsQueryVariables
->
-export const ClaimReservesDocument = gql`
-  query ClaimReserves($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      reserves
-      state
-      events {
-        date
-        text
-      }
-    }
-  }
-`
-
-/**
- * __useClaimReservesQuery__
- *
- * To run a query within a React component, call `useClaimReservesQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimReservesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimReservesQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimReservesQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimReservesQuery,
-    ClaimReservesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    ClaimReservesQuery,
-    ClaimReservesQueryVariables
-  >(ClaimReservesDocument, options)
-}
-export function useClaimReservesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimReservesQuery,
-    ClaimReservesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ClaimReservesQuery,
-    ClaimReservesQueryVariables
-  >(ClaimReservesDocument, options)
-}
-export type ClaimReservesQueryHookResult = ReturnType<
-  typeof useClaimReservesQuery
->
-export type ClaimReservesLazyQueryHookResult = ReturnType<
-  typeof useClaimReservesLazyQuery
->
-export type ClaimReservesQueryResult = ApolloReactCommon.QueryResult<
-  ClaimReservesQuery,
-  ClaimReservesQueryVariables
 >
 export const ClaimTranscriptionsDocument = gql`
   query ClaimTranscriptions($claimId: ID!) {
@@ -6892,6 +6898,7 @@ export const GetContractsDocument = gql`
           }
           isSubleted
           lineOfBusinessName
+          carrier
         }
         hasQueuedRenewal
         renewal {

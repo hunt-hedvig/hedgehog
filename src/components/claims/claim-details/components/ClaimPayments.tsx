@@ -10,8 +10,7 @@ import {
 import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { Spacing } from 'hedvig-ui/spacing'
-import { Paragraph, ErrorText } from 'hedvig-ui/typography'
+import { ErrorText } from 'hedvig-ui/typography'
 
 import React from 'react'
 import { Market } from 'types/enums'
@@ -159,30 +158,18 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
         </PaymentTable>
       </ScrollX>
 
-      {!loadingPayments && (
-        <>
-          {paymentsData?.claim?.agreement?.carrier &&
-          paymentsData?.claim.contract?.market ? (
-            <ClaimPayment
-              sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
-              claimId={claimId}
-              refetch={refetchPayments}
-              identified={Boolean(identity)}
-              market={paymentsData?.claim?.contract?.market!}
-              carrier={paymentsData?.claim?.agreement?.carrier!}
-            />
-          ) : (
-            <Spacing top>
-              <Paragraph>
-                ⚠️ Can not make a payment without a carrier, please select a{' '}
-                <strong>contract</strong> and <strong>date of loss</strong>{' '}
-                above, while making sure the claim is{' '}
-                <strong>covered on that date</strong>
-              </Paragraph>
-            </Spacing>
-          )}
-        </>
-      )}
+      {!loadingPayments &&
+        paymentsData?.claim?.contract &&
+        paymentsData?.claim?.agreement?.carrier && (
+          <ClaimPayment
+            sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
+            claimId={claimId}
+            refetch={refetchPayments}
+            identified={Boolean(identity)}
+            market={paymentsData?.claim?.contract?.market}
+            carrier={paymentsData?.claim?.agreement?.carrier}
+          />
+        )}
     </Paper>
   )
 }

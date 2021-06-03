@@ -1,0 +1,14 @@
+query ClaimPage($claimId: ID!) {
+  claim(id: $claimId) {
+    id
+    reserves
+    state
+    contract {
+      id
+    }
+    agreement {
+      id
+      carrier
+    }
+  }
+}
