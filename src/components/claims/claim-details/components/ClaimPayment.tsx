@@ -52,8 +52,10 @@ const PaymentForm = styled(Form)`
 `
 
 const SubmitButton = styled(MuiButton)`
-  margin-top: 1rem;
-  display: block;
+  && {
+    margin-top: 1rem;
+    display: block;
+  }
 `
 
 const Checkbox: React.FC<FieldProps> = ({
