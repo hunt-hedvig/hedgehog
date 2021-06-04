@@ -12,12 +12,6 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-06-03',
-    change:
-      'Added LOSS_AUTOMATIC and LOSS_MANUAL values to AccountEntryType in Graphql schema',
-    authorGithubHandle: 'michael-duivestein',
-  },
-  {
     date: '2021-05-26',
     change:
       "Limit the direct charge amount to only allow it to match the member's current balance",
