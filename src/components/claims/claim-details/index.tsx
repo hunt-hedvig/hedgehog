@@ -81,10 +81,10 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
             </>
           ) : (
             <StandaloneMessage opacity={1.0}>
-              ⚠️ Cannot make a payment without a carrier, please select a{' '}
-              <strong>Contract</strong> and <strong>Date of Occurrence</strong>{' '}
-              above. Also, make sure the claim is{' '}
-              <strong>covered on that date</strong> (i.e. an agreement is active
+              ⚠️ Cannot make a payment or set a reserve without carrier, select
+              a <strong>Contract</strong> and{' '}
+              <strong>Date of Occurrence</strong>. Also, make sure the claim is{' '}
+              <strong>covered on the date</strong> (i.e. an agreement is active
               on the date of occurrence)
             </StandaloneMessage>
           )}
