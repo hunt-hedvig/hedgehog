@@ -8665,13 +8665,9 @@
                 "name": "type",
                 "description": null,
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "ENUM",
-                    "name": "ClaimTypes",
-                    "ofType": null
-                  }
+                  "kind": "ENUM",
+                  "name": "ClaimTypes",
+                  "ofType": null
                 },
                 "defaultValue": null
               }
