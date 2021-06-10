@@ -10,9 +10,10 @@ import {
 import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText } from 'hedvig-ui/typography'
 
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import React from 'react'
+import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
 import { Checkmark, Cross } from '../../../icons'
 import { Paper } from '../../../shared/Paper'
@@ -67,8 +68,18 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
 
   return (
     <Paper>
-      <h3>Payments</h3>
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+      <PaperTitle
+        title={'Payments'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
       {paymentsData?.claim?.contract?.market === Market.Norway && (
         <p>
           <strong>Identified: {identity ? <Checkmark /> : <Cross />}</strong>

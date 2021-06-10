@@ -4,11 +4,12 @@ import {
   withStyles,
 } from '@material-ui/core'
 import { useClaimEventsQuery } from 'api/generated/graphql'
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { Paper } from 'components/shared/Paper'
 import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText } from 'hedvig-ui/typography'
 import React from 'react'
+import { BugFill } from 'react-bootstrap-icons'
 
 interface Props {
   claimId: string
@@ -33,10 +34,20 @@ export const ClaimEvents: React.FC<Props> = ({ claimId }) => {
 
   return (
     <Paper>
-      <h3>Events</h3>
+      <PaperTitle
+        title={'Events'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
 
       {loadingClaimEvents && <Spinner />}
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
 
       <MuiList>
         {claimEventsData?.claim?.events.filter(Boolean).map((event) => (

@@ -5,10 +5,11 @@ import {
   withStyles,
 } from '@material-ui/core'
 import { useClaimTranscriptionsQuery } from 'api/generated/graphql'
-import { ErrorText } from 'hedvig-ui/typography'
 
 import React from 'react'
 
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { BugFill } from 'react-bootstrap-icons'
 import { Paper } from '../../../shared/Paper'
 
 interface Props {
@@ -54,9 +55,18 @@ const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
 
   return (
     <Paper>
-      <h3>Transcription</h3>
-
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+      <PaperTitle
+        title={'Transcription'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
 
       <MuiList>
         {claimTranscriptionsData?.claim?.transcriptions?.map(

@@ -13,8 +13,6 @@ const UploadClaimFileWrapper = styled('div')({
   minHeight: '20rem',
 })
 
-const UploadClaimFileHeader = styled('h3')({})
-
 export const Button = styled('button')(({ theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
@@ -80,7 +78,6 @@ const FileUploadComponent: React.FC<WithShowNotification & {
 
   return (
     <UploadClaimFileWrapper>
-      <UploadClaimFileHeader>Upload files here</UploadClaimFileHeader>
       <FileUploadContainer>
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => (

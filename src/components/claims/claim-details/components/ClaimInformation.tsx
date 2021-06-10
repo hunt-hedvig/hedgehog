@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { MenuItem as MuiMenuItem, Select as MuiSelect } from '@material-ui/core'
 import { ClaimState, useClaimInformationQuery } from 'api/generated/graphql'
 
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { Paper } from 'components/shared/Paper'
 import { format, parseISO } from 'date-fns'
 import {
@@ -18,14 +19,9 @@ import {
 } from 'graphql/use-update-claim-state'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
-import {
-  ErrorText,
-  Label,
-  Paragraph,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
+import { Label, Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
-import { CloudArrowDownFill } from 'react-bootstrap-icons'
+import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { currentAgreementForContract } from 'utils/contract'
 import { sleep } from 'utils/sleep'
 import { convertEnumToTitle, getCarrierText } from 'utils/text'
@@ -134,8 +130,18 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
 
   return (
     <Paper>
-      <ThirdLevelHeadline>Claim Information</ThirdLevelHeadline>
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+      <PaperTitle
+        title={'Claim Info'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
 
       <Loadable loading={claimInformationLoading}>
         <InfoRow>

@@ -8,7 +8,6 @@ import {
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
-import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 
 import { useHistory } from 'react-router'
@@ -23,6 +22,7 @@ import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
 
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import {
   InfoContainer,
   InfoRow,
@@ -32,6 +32,7 @@ import {
   InfoText,
 } from 'hedvig-ui/info-row'
 import { Popover } from 'hedvig-ui/popover'
+import { BugFill } from 'react-bootstrap-icons'
 import { formatSsn, getMemberFlag } from 'utils/member'
 import {
   convertCamelcaseToTitle,
@@ -119,8 +120,18 @@ export const MemberInformation: React.FC<{
 
   return (
     <Paper>
-      <ThirdLevelHeadline>Member Information</ThirdLevelHeadline>
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+      <PaperTitle
+        title={'Member Info'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
 
       <InfoContainer>
         <Loadable loading={memberContractsDataLoading}>
@@ -297,9 +308,9 @@ export const MemberInformation: React.FC<{
             <InfoText>
               {member?.numberFailedCharges?.numberFailedCharges ?? '-'}
               {(member?.numberFailedCharges?.numberFailedCharges ?? 0) === 1
-                ? 'payment'
+                ? ' payment'
                 : (member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
-                ? 'payments in a row'
+                ? ' payments in a row'
                 : ''}
             </InfoText>
           </InfoRow>

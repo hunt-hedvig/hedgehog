@@ -15,10 +15,11 @@ import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText } from 'hedvig-ui/typography'
 import React from 'react'
 import { sleep } from 'utils/sleep'
 
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { BugFill } from 'react-bootstrap-icons'
 import { Paper } from '../../../shared/Paper'
 
 interface Props {
@@ -91,9 +92,19 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
 
   return (
     <Paper>
-      <h3>Notes</h3>
+      <PaperTitle
+        title={'Notes'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
       {loadingClaimNotes && <Spinner />}
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
 
       <MuiList>
         {sortNotesByDate(notes).map((note) => (

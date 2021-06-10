@@ -1,4 +1,4 @@
-mutation SetClaimType($id: ID!, $type: ClaimTypes) {
+mutation SetClaimType($id: ID!, $type: ClaimTypes!) {
   setClaimType(id: $id, type: $type) {
     id
 

@@ -975,7 +975,7 @@ export type MutationTypeCreateClaimSwishPaymentArgs = {
 
 export type MutationTypeSetClaimTypeArgs = {
   id: Scalars['ID']
-  type?: Maybe<ClaimTypes>
+  type: ClaimTypes
 }
 
 export type MutationTypeSetClaimInformationArgs = {
@@ -2134,7 +2134,7 @@ export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
 
 export type SetClaimTypeMutationVariables = Exact<{
   id: Scalars['ID']
-  type?: Maybe<ClaimTypes>
+  type: ClaimTypes
 }>
 
 export type SetClaimTypeMutation = { __typename?: 'MutationType' } & {
@@ -4740,7 +4740,7 @@ export type SetClaimInformationMutationOptions = ApolloReactCommon.BaseMutationO
   SetClaimInformationMutationVariables
 >
 export const SetClaimTypeDocument = gql`
-  mutation SetClaimType($id: ID!, $type: ClaimTypes) {
+  mutation SetClaimType($id: ID!, $type: ClaimTypes!) {
     setClaimType(id: $id, type: $type) {
       id
       ...claimType
