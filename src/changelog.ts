@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-06-10',
+    change: 'Claim types are now searchable and prettier 💅',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-05-26',
     change:
       "Limit the direct charge amount to only allow it to match the member's current balance",

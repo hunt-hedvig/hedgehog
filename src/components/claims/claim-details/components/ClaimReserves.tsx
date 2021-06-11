@@ -1,6 +1,8 @@
-import { Spinner } from 'hedvig-ui/sipnner'
-import React from 'react'
 import styled from '@emotion/styled'
+import { InfoTag } from 'hedvig-ui/info-row'
+import { Spinner } from 'hedvig-ui/sipnner'
+import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import React from 'react'
 import { MonetaryAmount } from '../../../../lib/helpers'
 import { ClaimReserveForm } from './ClaimReserveForm'
 
@@ -11,16 +13,24 @@ interface Props {
   refetch: () => Promise<any>
 }
 
-const ReservesWrapper = styled('div')({
-  padding: '2rem',
-  borderRadius: '4px',
-  border: '1px solid rgba(0,0,0,0.08)',
-  backgroundColor: 'rgba(0,0,0,0.01)',
-})
+const ReservesCard = styled.div`
+  width: 100%;
+  padding: 2rem;
+  border-radius: 7px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.05);
+`
 
-const ReservesTotal = styled('span')({
-  fontSize: '1.125rem',
-})
+const ReservesTag = styled(InfoTag)`
+  font-weight: bold;
+  font-size: 0.9em;
+  width: auto;
+  margin-right: 0.5em;
+`
+
+const ReservesText = styled(Paragraph)`
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
 
 const ClaimReserves: React.FC<Props> = ({
   claimId,
@@ -33,13 +43,17 @@ const ClaimReserves: React.FC<Props> = ({
     reserves && reserves.currency ? reserves.currency : 'SEK'
   const reserveAmountInteger = Math.round(Number(reserveAmount))
   return (
-    <ReservesWrapper>
-      <ReservesTotal>
+    <ReservesCard>
+      <ThirdLevelHeadline>Reserves</ThirdLevelHeadline>
+      <div style={{ display: 'flex', marginBottom: '1.0em' }}>
         {loading && <Spinner />}
-        {reserveAmountInteger} {reserveCurrency} Reserved
-      </ReservesTotal>
+        <ReservesTag status={'highlight'}>
+          {reserveAmountInteger} {reserveCurrency}
+        </ReservesTag>{' '}
+        <ReservesText>reserved</ReservesText>
+      </div>
       <ClaimReserveForm claimId={claimId} refetch={refetch} />
-    </ReservesWrapper>
+    </ReservesCard>
   )
 }
 
