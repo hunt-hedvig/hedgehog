@@ -5,7 +5,6 @@ import {
   useSetClaimInformationMutation,
   useSetClaimTypeMutation,
 } from 'api/generated/graphql'
-import Select from 'react-select'
 
 import {
   PaperTitle,
@@ -16,6 +15,7 @@ import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Input } from 'hedvig-ui/input'
+import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
@@ -71,51 +71,6 @@ const hasTicket = (typename: ClaimTypes): boolean => {
   return typename === ClaimTypes.LuggageDelayClaim
 }
 
-export const SearchableDropdown = styled(Select)`
-  .searchable-type-select__control {
-    margin-top: 1px;
-    border-radius: 7px;
-    height: 44px;
-    box-shadow: none;
-    background-color: ${({ theme }) => theme.backgroundLight};
-    border: 1px solid ${({ theme }) => theme.border};
-    font-size: 1rem;
-  }
-
-  .searchable-type-select__input {
-    color: ${({ theme }) => theme.foreground};
-    padding-left: 0px;
-  }
-
-  .searchable-type-select__menu {
-    border-radius: 0;
-    hyphens: auto;
-    margin-top: 0px;
-    text-align: left;
-    word-wrap: break-word;
-    background: ${({ theme }) => theme.background};
-    color: ${({ theme }) => theme.foreground};
-  }
-
-  .searchable-type-select__option {
-    &:hover {
-      background: ${({ theme }) => theme.accentBackground};
-    }
-  }
-
-  .searchable-type-select__value-container {
-    padding-left: 16px;
-    overflow: visible;
-  }
-
-  .searchable-type-select__multi-value__remove {
-    display: none;
-  }
-
-  .searchable-type-select__single-value {
-    color: ${({ theme }) => theme.foreground};
-  }
-`
 const createClaimTypeOption = (claimType: string) => ({
   value: claimType,
   label: convertCamelcaseToTitle(claimType),
@@ -286,11 +241,9 @@ const ClaimTypeComponent: React.FC<{
           type?.__typename &&
           createClaimTypeOption(type?.__typename?.toString())
         }
-        classNamePrefix="searchable-type-select"
         placeholder={'What type of claim is this?'}
         isLoading={setClaimTypeLoading || loadingClaimInformation}
         isClearable={false}
-        isSearchable={true}
         onChange={(selection) => {
           setClaimType({
             variables: { id: claimId, type: selection?.value ?? null },
