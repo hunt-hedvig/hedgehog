@@ -13,6 +13,8 @@ import { Spinner } from 'hedvig-ui/sipnner'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { Card, CardContent } from 'hedvig-ui/card'
+import { InfoRow, InfoTag, InfoText } from 'hedvig-ui/info-row'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
@@ -42,6 +44,15 @@ const PaymentTableCell = withStyles({
 
 const TotalCell = styled(MuiTableCell)`
   font-size: 1.1rem;
+`
+
+const MemberIdentityCard = styled.div`
+  width: 100%;
+  padding: 2rem;
+  border-radius: 7px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.05);
+  margin-right: 2em;
 `
 
 export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
@@ -81,31 +92,48 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
               : null
           }
         />
-        {paymentsData?.claim?.contract?.market === Market.Norway && (
-          <p>
-            <strong>Identified: {identity ? <Checkmark /> : <Cross />}</strong>
-            <br />
-            {identity && (
-              <p>
-                <strong>Personal Number: </strong>
-                {identity.nationalIdentification.identification}
-                {identity.firstName && identity.lastName && (
-                  <p>
-                    <strong>Name:</strong> {identity.firstName}{' '}
-                    {identity.lastName}
-                  </p>
-                )}
-              </p>
-            )}
-          </p>
-        )}
-
-        <ClaimReserves
-          claimId={claimId}
-          reserves={paymentsData?.claim?.reserves}
-          refetch={refetchPayments}
-          loading={loadingPayments}
-        />
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {paymentsData?.claim?.contract?.market === Market.Norway && (
+            <MemberIdentityCard>
+              <ThirdLevelHeadline>Member Identity</ThirdLevelHeadline>
+              <InfoRow>
+                Identified
+                <InfoText>
+                  <InfoTag
+                    style={{ fontWeight: 'bold' }}
+                    status={identity ? 'success' : 'warning'}
+                  >
+                    {identity ? 'Yes' : 'No'}
+                  </InfoTag>
+                </InfoText>
+              </InfoRow>
+              {identity && (
+                <>
+                  <InfoRow>
+                    Personal Number
+                    <InfoText>
+                      {identity.nationalIdentification.identification}
+                    </InfoText>
+                  </InfoRow>
+                  {identity.firstName && identity.lastName && (
+                    <InfoRow>
+                      Name
+                      <InfoText>
+                        {identity.firstName} {identity.lastName}
+                      </InfoText>
+                    </InfoRow>
+                  )}
+                </>
+              )}
+            </MemberIdentityCard>
+          )}
+          <ClaimReserves
+            claimId={claimId}
+            reserves={paymentsData?.claim?.reserves}
+            refetch={refetchPayments}
+            loading={loadingPayments}
+          />
+        </div>
 
         <ScrollX>
           {loadingPayments && <Spinner />}

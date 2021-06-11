@@ -155,7 +155,7 @@ export const MemberInformation: React.FC<{
                     style={{ fontWeight: 'bold' }}
                     status={member.identity ? 'success' : 'warning'}
                   >
-                    {member.identity ? 'Identified' : 'Not identified'}
+                    {member.identity ? 'Yes' : 'No'}
                   </InfoTag>
                 </InfoText>
               </InfoRow>
