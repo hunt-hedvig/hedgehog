@@ -9,8 +9,8 @@ import { useClaimTranscriptionsQuery } from 'api/generated/graphql'
 import React from 'react'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { Card, CardContent } from 'hedvig-ui/card'
 import { BugFill } from 'react-bootstrap-icons'
-import { Paper } from '../../../shared/Paper'
 
 interface Props {
   claimId: string
@@ -54,38 +54,40 @@ const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
   }
 
   return (
-    <Paper>
-      <PaperTitle
-        title={'Transcription'}
-        badge={
-          queryError
-            ? {
-                icon: BugFill,
-                status: 'danger',
-                label: 'Internal Error',
-              }
-            : null
-        }
-      />
+    <Card span={1}>
+      <CardContent>
+        <PaperTitle
+          title={'Transcription'}
+          badge={
+            queryError
+              ? {
+                  icon: BugFill,
+                  status: 'danger',
+                  label: 'Internal Error',
+                }
+              : null
+          }
+        />
 
-      <MuiList>
-        {claimTranscriptionsData?.claim?.transcriptions?.map(
-          (transcription) => (
-            <ListItem key={transcription.text}>
-              <ClaimTranscription component="p">
-                {transcription.text}
-              </ClaimTranscription>
-              <MuiList>
-                <ClaimTranscriptionMetaData component="span">
-                  Confidence: {transcription.confidenceScore}
-                  <br /> Language code: {transcription.languageCode}
-                </ClaimTranscriptionMetaData>
-              </MuiList>
-            </ListItem>
-          ),
-        )}
-      </MuiList>
-    </Paper>
+        <MuiList>
+          {claimTranscriptionsData?.claim?.transcriptions?.map(
+            (transcription) => (
+              <ListItem key={transcription.text}>
+                <ClaimTranscription component="p">
+                  {transcription.text}
+                </ClaimTranscription>
+                <MuiList>
+                  <ClaimTranscriptionMetaData component="span">
+                    Confidence: {transcription.confidenceScore}
+                    <br /> Language code: {transcription.languageCode}
+                  </ClaimTranscriptionMetaData>
+                </MuiList>
+              </ListItem>
+            ),
+          )}
+        </MuiList>
+      </CardContent>
+    </Card>
   )
 }
 

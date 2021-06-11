@@ -10,10 +10,9 @@ import {
   PaperTitle,
   PaperTitleBadgeProps,
 } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { Paper } from 'components/shared/Paper'
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
-import { Card } from 'hedvig-ui/card'
+import { Card, CardContent } from 'hedvig-ui/card'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Input } from 'hedvig-ui/input'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
@@ -169,6 +168,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
       )}
       <Spacing top={'medium'} />
       <Button
+        fullWidth={true}
         disabled={formData === savedFormData || loading}
         variation={'primary'}
         onClick={() => {
@@ -235,37 +235,39 @@ const ClaimTypeComponent: React.FC<{
   }
 
   return (
-    <Card span={6}>
-      <PaperTitle title={'Claim Type'} badge={titleBadge()} />
-      <SearchableDropdown
-        value={
-          type?.__typename &&
-          createClaimTypeOption(type?.__typename?.toString())
-        }
-        placeholder={'What type of claim is this?'}
-        isLoading={setClaimTypeLoading || loadingClaimInformation}
-        isClearable={false}
-        onChange={(selection) => {
-          setClaimType({
-            variables: { id: claimId, type: selection?.value ?? null },
-          })
-            .then(() => {
-              refetch()
+    <Card span={3}>
+      <CardContent>
+        <PaperTitle title={'Claim Type'} badge={titleBadge()} />
+        <SearchableDropdown
+          value={
+            type?.__typename &&
+            createClaimTypeOption(type?.__typename?.toString())
+          }
+          placeholder={'What type of claim is this?'}
+          isLoading={setClaimTypeLoading || loadingClaimInformation}
+          isClearable={false}
+          onChange={(selection) => {
+            setClaimType({
+              variables: { id: claimId, type: selection?.value ?? null },
             })
-            .catch((e) => {
-              showNotification({
-                header: 'Error',
-                type: 'red',
-                message: e.message,
+              .then(() => {
+                refetch()
               })
-            })
-        }}
-        noOptionsMessage={() => 'No types found'}
-        options={Object.keys(ClaimTypes).map((claimType) =>
-          createClaimTypeOption(claimType),
-        )}
-      />
-      {type && <ClaimTypeDataForm type={type} claimId={claimId} />}
+              .catch((e) => {
+                showNotification({
+                  header: 'Error',
+                  type: 'red',
+                  message: e.message,
+                })
+              })
+          }}
+          noOptionsMessage={() => 'No types found'}
+          options={Object.keys(ClaimTypes).map((claimType) =>
+            createClaimTypeOption(claimType),
+          )}
+        />
+        {type && <ClaimTypeDataForm type={type} claimId={claimId} />}
+      </CardContent>
     </Card>
   )
 }

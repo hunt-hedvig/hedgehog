@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
 
-export const CardsWrapper = styled('div')`
+export const CardsWrapper = styled.div<{ contentWrap?: string }>`
   width: calc(100% + 1rem);
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  margin: -0.5rem;
+  flex-wrap: ${({ contentWrap = 'wrap' }) => contentWrap};
+  margin: 0rem -0.5rem;
 `
 
 type PaddingSize = 'none' | 'small' | 'medium' | 'large'
@@ -35,4 +35,8 @@ export const Card = styled('div')<CardProps>`
   background-color: ${({ theme }) => theme.accentLighter ?? colorsV3.white};
   border: 1px solid ${({ theme }) => theme.border ?? colorsV3.gray300};
   border-radius: 0.5rem;
+`
+
+export const CardContent = styled('div')`
+  width: 100%;
 `
