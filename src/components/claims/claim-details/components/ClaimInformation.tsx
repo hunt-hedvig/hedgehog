@@ -17,6 +17,7 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
+import { Card } from 'hedvig-ui/card'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
 import { Label, Paragraph } from 'hedvig-ui/typography'
@@ -129,7 +130,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   const [updateClaimState] = useUpdateClaimState()
 
   return (
-    <Paper>
+    <Card span={6}>
       <PaperTitle
         title={'Claim Info'}
         badge={
@@ -246,6 +247,6 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
           </Paragraph>
         )}
       </Loadable>
-    </Paper>
+    </Card>
   )
 }

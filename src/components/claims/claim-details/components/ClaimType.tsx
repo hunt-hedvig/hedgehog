@@ -13,6 +13,7 @@ import {
 import { Paper } from 'components/shared/Paper'
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
+import { Card } from 'hedvig-ui/card'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Input } from 'hedvig-ui/input'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
@@ -234,7 +235,7 @@ const ClaimTypeComponent: React.FC<{
   }
 
   return (
-    <Paper>
+    <Card span={6}>
       <PaperTitle title={'Claim Type'} badge={titleBadge()} />
       <SearchableDropdown
         value={
@@ -265,7 +266,7 @@ const ClaimTypeComponent: React.FC<{
         )}
       />
       {type && <ClaimTypeDataForm type={type} claimId={claimId} />}
-    </Paper>
+    </Card>
   )
 }
 

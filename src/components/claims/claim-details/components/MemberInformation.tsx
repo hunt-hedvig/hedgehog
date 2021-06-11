@@ -23,6 +23,7 @@ import { Keys } from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { Card } from 'hedvig-ui/card'
 import {
   InfoContainer,
   InfoRow,
@@ -119,7 +120,7 @@ export const MemberInformation: React.FC<{
   ])
 
   return (
-    <Paper>
+    <Card span={6}>
       <PaperTitle
         title={'Member Info'}
         badge={
@@ -318,6 +319,6 @@ export const MemberInformation: React.FC<{
           </InfoRow>
         </Loadable>
       </InfoContainer>
-    </Paper>
+    </Card>
   )
 }
