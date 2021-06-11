@@ -171,7 +171,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
           <Input
             value={formData.item}
             onChange={(e) => setFormData({ ...formData, item: e.target.value })}
-            placeholder={'Any specific item?'}
+            placeholder={'Any specific item(s)?'}
           />
         </DataField>
       )}
@@ -183,7 +183,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
             onChange={(e) =>
               setFormData({ ...formData, policeReport: e.target.value })
             }
-            placeholder={'Has a police report been filed?'}
+            placeholder={'Any info on a police report?'}
           />
         </DataField>
       )}
@@ -298,11 +298,11 @@ const ClaimTypeComponent: React.FC<{
             .then(() => {
               refetch()
             })
-            .catch(() => {
+            .catch((e) => {
               showNotification({
                 header: 'Error',
                 type: 'red',
-                message: 'Something went wrong, notify the tech team',
+                message: e.message,
               })
             })
         }}
@@ -311,7 +311,7 @@ const ClaimTypeComponent: React.FC<{
           createClaimTypeOption(claimType),
         )}
       />
-      {!!type && <ClaimTypeDataForm type={type} claimId={claimId} />}
+      {type && <ClaimTypeDataForm type={type} claimId={claimId} />}
     </Paper>
   )
 }

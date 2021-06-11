@@ -307,10 +307,8 @@ export const MemberInformation: React.FC<{
             Failed payments
             <InfoText>
               {member?.numberFailedCharges?.numberFailedCharges ?? '-'}
-              {(member?.numberFailedCharges?.numberFailedCharges ?? 0) === 1
-                ? ' payment'
-                : (member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
-                ? ' payments in a row'
+              {(member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
+                ? ' in a row'
                 : ''}
             </InfoText>
           </InfoRow>
