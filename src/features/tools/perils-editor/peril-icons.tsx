@@ -77,6 +77,16 @@ export const PerilIconOptions = [
     },
   },
   {
+    key: 'Crisis help',
+    text: 'crisis_help',
+    value: 'crisis_help',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/crisis_help.svg',
+    },
+  },
+  {
     key: 'Death',
     text: 'death',
     value: 'death',
@@ -93,6 +103,16 @@ export const PerilIconOptions = [
       avatar: true,
       src:
         'https://graphql.dev.hedvigit.com/app-content-service/delayed_luggage.svg',
+    },
+  },
+  {
+    key: 'Delayed travel',
+    text: 'delayed_travel',
+    value: 'delayed_travel',
+    image: {
+      avatar: true,
+      src:
+        'https://graphql.dev.hedvigit.com/app-content-service/delayed_travel.svg',
     },
   },
   {
