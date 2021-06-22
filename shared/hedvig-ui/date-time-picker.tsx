@@ -31,6 +31,12 @@ const StyledInput = styled(Input)<{ fullWidth?: boolean }>`
   }
 `
 
+const Wrapper = styled.div`
+  .datePicker {
+    width: 100%;
+  }
+`
+
 export const DateTimePicker: React.FC<DatePickerProps> = ({
   date,
   setDate,
@@ -43,31 +49,36 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
   name,
 }) => {
   return (
-    <DatePicker
-      autoComplete="off"
-      locale={'enGB'}
-      selected={date}
-      disabled={disabled}
-      placeholderText={placeholder}
-      onChange={(newDate) => {
-        setDate(newDate)
-      }}
-      showTimeSelect={showTimePicker}
-      maxDate={maxDate}
-      minDate={minDate}
-      name={name}
-      customInput={
-        <StyledInput
-          type="text"
-          fullWidth={fullWidth}
-          icon={showTimePicker ? 'clock outline' : 'calendar alternate outline'}
-          iconPosition={'left'}
-          maxLength={10}
-        />
-      }
-      dateFormat={showTimePicker ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'}
-      timeIntervals={1}
-    />
+    <Wrapper>
+      <DatePicker
+        wrapperClassName={fullWidth ? 'datePicker' : null}
+        autoComplete="off"
+        locale={'enGB'}
+        selected={date}
+        disabled={disabled}
+        placeholderText={placeholder}
+        onChange={(newDate) => {
+          setDate(newDate)
+        }}
+        showTimeSelect={showTimePicker}
+        maxDate={maxDate}
+        minDate={minDate}
+        name={name}
+        customInput={
+          <StyledInput
+            type="text"
+            fullWidth={fullWidth}
+            icon={
+              showTimePicker ? 'clock outline' : 'calendar alternate outline'
+            }
+            iconPosition={'left'}
+            maxLength={10}
+          />
+        }
+        dateFormat={showTimePicker ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'}
+        timeIntervals={1}
+      />
+    </Wrapper>
   )
 }
 

@@ -4,11 +4,12 @@ import {
   withStyles,
 } from '@material-ui/core'
 import { useClaimEventsQuery } from 'api/generated/graphql'
-import { Paper } from 'components/shared/Paper'
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
+import { Card, CardContent } from 'hedvig-ui/card'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText } from 'hedvig-ui/typography'
 import React from 'react'
+import { BugFill } from 'react-bootstrap-icons'
 
 interface Props {
   claimId: string
@@ -32,19 +33,32 @@ export const ClaimEvents: React.FC<Props> = ({ claimId }) => {
   })
 
   return (
-    <Paper>
-      <h3>Events</h3>
+    <Card span={1}>
+      <CardContent>
+        <PaperTitle
+          title={'Events'}
+          badge={
+            queryError
+              ? {
+                  icon: BugFill,
+                  status: 'danger',
+                  label: 'Internal Error',
+                }
+              : null
+          }
+        />
 
-      {loadingClaimEvents && <Spinner />}
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+        {loadingClaimEvents && <Spinner />}
 
-      <MuiList>
-        {claimEventsData?.claim?.events.filter(Boolean).map((event) => (
-          <ListItem key={event.date}>
-            {format(parseISO(event.date), 'yyyy-MM-dd HH:mm:ss')}: {event.text}
-          </ListItem>
-        ))}
-      </MuiList>
-    </Paper>
+        <MuiList>
+          {claimEventsData?.claim?.events.filter(Boolean).map((event) => (
+            <ListItem key={event.date}>
+              {format(parseISO(event.date), 'yyyy-MM-dd HH:mm:ss')}:{' '}
+              {event.text}
+            </ListItem>
+          ))}
+        </MuiList>
+      </CardContent>
+    </Card>
   )
 }

@@ -130,7 +130,9 @@ export const ButtonComponent = styled.button<ButtonProps>(
         borderColor: colors.highlighted,
       },
       '&:disabled': {
-        opacity: 0.5,
+        backgroundColor: theme.accentLight,
+        borderColor: theme.accentLight,
+        cursor: 'default',
       },
     }
   },

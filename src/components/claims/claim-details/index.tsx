@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import Grid from '@material-ui/core/Grid'
 import { ClaimState, useClaimPageQuery } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
+import { CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useContext, useEffect } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
@@ -19,7 +19,7 @@ import { ClaimTranscriptions } from './components/ClaimTranscriptions'
 import { ClaimTypeForm } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
 
-const GridWithChatPaneAdjustment = styled(Grid)`
+const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
 `
 
@@ -40,44 +40,39 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
 
   return (
     <>
+      <Prompt
+        when={
+          claimPageData?.claim?.state !== ClaimState.Closed &&
+          (claimPageData?.claim?.reserves === null ||
+            claimPageData?.claim?.reserves === undefined)
+        }
+        message="This claim has no reserves, do you want leave without it?"
+      />
       <ChatPane memberId={memberId} />
       <FadeIn>
-        <GridWithChatPaneAdjustment container spacing={8}>
-          <Prompt
-            when={
-              claimPageData?.claim?.state !== ClaimState.Closed &&
-              (claimPageData?.claim?.reserves === null ||
-                claimPageData?.claim?.reserves === undefined)
-            }
-            message="This claim has no reserves, do you want leave without it?"
-          />
-
-          <Grid item xs={12} sm={12} md={4}>
+        <ChatPaneAdjustedContainer>
+          <CardsWrapper contentWrap={'noWrap'}>
             <MemberInformation claimId={claimId} memberId={memberId} />
-          </Grid>
-          <Grid item xs={12} sm={12} md={4}>
             <ClaimInformation claimId={claimId} memberId={memberId} />
-          </Grid>
-          <Grid item xs={12} sm={12} md={4}>
             <ClaimTypeForm claimId={claimId} memberId={memberId} />
-          </Grid>
-          <Grid item xs={12}>
+          </CardsWrapper>
+          <CardsWrapper contentWrap={'noWrap'}>
             <ClaimTranscriptions claimId={claimId} />
-          </Grid>
-          <Grid item xs={12}>
+          </CardsWrapper>
+          <CardsWrapper contentWrap={'noWrap'}>
             <ClaimNotes claimId={claimId} />
-          </Grid>
-          <Grid item xs={12}>
+          </CardsWrapper>
+          <CardsWrapper contentWrap={'noWrap'}>
             <ClaimItems claimId={claimId} memberId={memberId} />
-          </Grid>
+          </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier ? (
             <>
               <MainHeadline>
                 {getCarrierText(claimPageData.claim.agreement.carrier)}
               </MainHeadline>
-              <Grid item xs={12}>
+              <CardsWrapper contentWrap={'noWrap'}>
                 <ClaimPayments claimId={claimId} />
-              </Grid>
+              </CardsWrapper>
             </>
           ) : (
             <StandaloneMessage opacity={1.0}>
@@ -89,13 +84,14 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
             </StandaloneMessage>
           )}
 
-          <Grid item xs={12}>
+          <CardsWrapper contentWrap={'noWrap'}>
             <ClaimFileTable claimId={claimId} memberId={memberId} />
-          </Grid>
-          <Grid item xs={12}>
+          </CardsWrapper>
+
+          <CardsWrapper contentWrap={'noWrap'}>
             <ClaimEvents claimId={claimId} />
-          </Grid>
-        </GridWithChatPaneAdjustment>
+          </CardsWrapper>
+        </ChatPaneAdjustedContainer>
       </FadeIn>
     </>
   )
