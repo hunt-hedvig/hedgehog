@@ -99,12 +99,12 @@ export const QuoteActivation: React.FC<{
               <strong>Activation date</strong>
             </div>
 
-            {contract.isTerminated && (
+            {contract.terminationDate && (
               <div>
                 <div>{contract.terminationDate}</div>
               </div>
             )}
-            {!contract.isTerminated && (
+            {!contract.terminationDate && (
               <div>
                 <DateTimePicker
                   date={activeFrom || new Date()}
