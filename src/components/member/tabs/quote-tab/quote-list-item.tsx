@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import { Quote } from 'api/generated/graphql'
+import { Contract, Quote } from 'api/generated/graphql'
 import { UpdateQuoteForm } from 'components/member/tabs/quote-tab/update-quote-form'
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
@@ -97,10 +97,12 @@ const QuoteDetails: React.FC<{
 )
 
 const QuoteListItemComponent: React.FC<{
+  contracts: ReadonlyArray<Contract>
   quote: Quote
   inactionable?: boolean
   memberId: string
 } & WithShowNotification> = ({
+  contracts,
   quote,
   inactionable,
   memberId,
@@ -169,7 +171,7 @@ const QuoteListItemComponent: React.FC<{
                 </Button>
               </BottomSpacerWrapper>
             )}
-            {quote.isReadyToSign && (
+            {quote.isReadyToSign && contracts.length > 0 && (
               <BottomSpacerWrapper>
                 <Button
                   fullWidth
@@ -179,6 +181,9 @@ const QuoteListItemComponent: React.FC<{
                   Sign
                 </Button>
               </BottomSpacerWrapper>
+            )}
+            {quote.isReadyToSign && contracts.length === 0 && (
+              <ErrorText>Member has to sign first contract</ErrorText>
             )}
           </ActionsButtonsWrapper>
         )}
