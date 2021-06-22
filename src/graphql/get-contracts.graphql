@@ -54,6 +54,7 @@ query GetContracts($memberId: ID!) {
       preferredCurrency
       market
       signSource
+      typeOfContract
       contractTypeName
       createdAt
     }
