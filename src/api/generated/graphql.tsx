@@ -2800,6 +2800,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
             | 'preferredCurrency'
             | 'market'
             | 'signSource'
+            | 'typeOfContract'
             | 'contractTypeName'
             | 'createdAt'
           > & {
@@ -6911,6 +6912,7 @@ export const GetContractsDocument = gql`
         preferredCurrency
         market
         signSource
+        typeOfContract
         contractTypeName
         createdAt
       }

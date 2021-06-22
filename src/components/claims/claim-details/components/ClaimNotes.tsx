@@ -15,11 +15,12 @@ import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText } from 'hedvig-ui/typography'
 import React from 'react'
 import { sleep } from 'utils/sleep'
 
-import { Paper } from '../../../shared/Paper'
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { Card, CardContent } from 'hedvig-ui/card'
+import { BugFill } from 'react-bootstrap-icons'
 
 interface Props {
   claimId: string
@@ -90,59 +91,71 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
   const [addClaimNote] = useClaimAddClaimNoteMutation()
 
   return (
-    <Paper>
-      <h3>Notes</h3>
-      {loadingClaimNotes && <Spinner />}
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+    <Card span={1}>
+      <CardContent>
+        <PaperTitle
+          title={'Notes'}
+          badge={
+            queryError
+              ? {
+                  icon: BugFill,
+                  status: 'danger',
+                  label: 'Internal Error',
+                }
+              : null
+          }
+        />
+        {loadingClaimNotes && <Spinner />}
 
-      <MuiList>
-        {sortNotesByDate(notes).map((note) => (
-          <ListItem key={note.date + note.handlerReference}>
-            <ClaimNote component="pre">{note.text}</ClaimNote>
-            <ClaimNoteFooter component="span">
-              {note.handlerReference && (
-                <>
-                  {note.handlerReference}
-                  <br />
-                </>
-              )}
-              {format(parseISO(note.date), 'yyyy-MM-dd HH:mm:ss')}
-            </ClaimNoteFooter>
-          </ListItem>
-        ))}
-      </MuiList>
-      <Formik<{ text: string }>
-        initialValues={{ text: '' }}
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
-          setSubmitting(true)
-          await addClaimNote({
-            variables: { claimId, note: { text: values.text } },
-          })
-          await sleep(1000)
-          await refetchClaimNotes()
-          setSubmitting(false)
-          resetForm()
-        }}
-      >
-        {({ isValid, isSubmitting }) => (
-          <Form>
-            <Field
-              component={TextArea}
-              placeholder="Type note content here"
-              name="text"
-            />
-            <SubmitButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={!isValid || isSubmitting}
-            >
-              Add note {isSubmitting && <Spinner push="left" />}
-            </SubmitButton>
-          </Form>
-        )}
-      </Formik>
-    </Paper>
+        <MuiList>
+          {sortNotesByDate(notes).map((note) => (
+            <ListItem key={note.date + note.handlerReference}>
+              <ClaimNote component="pre">{note.text}</ClaimNote>
+              <ClaimNoteFooter component="span">
+                {note.handlerReference && (
+                  <>
+                    {note.handlerReference}
+                    <br />
+                  </>
+                )}
+                {format(parseISO(note.date), 'yyyy-MM-dd HH:mm:ss')}
+              </ClaimNoteFooter>
+            </ListItem>
+          ))}
+        </MuiList>
+        <Formik<{ text: string }>
+          initialValues={{ text: '' }}
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
+            setSubmitting(true)
+            await addClaimNote({
+              variables: { claimId, note: { text: values.text } },
+            })
+            await sleep(1000)
+            await refetchClaimNotes()
+            setSubmitting(false)
+            resetForm()
+          }}
+        >
+          {({ isValid, isSubmitting }) => (
+            <Form>
+              <Field
+                component={TextArea}
+                placeholder="Type note content here"
+                name="text"
+              />
+              <SubmitButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={!isValid || isSubmitting}
+              >
+                Add note {isSubmitting && <Spinner push="left" />}
+              </SubmitButton>
+            </Form>
+          )}
+        </Formik>
+      </CardContent>
+    </Card>
   )
 }
 

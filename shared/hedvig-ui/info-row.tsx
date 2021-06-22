@@ -27,16 +27,7 @@ export const InfoSection = styled.div`
   margin-bottom: ${spacingMap.medium};
 `
 
-export const InfoDelimiter = styled.div<{ visible?: boolean }>`
-  height: 1px;
-  border-bottom: 1px solid
-    ${({ theme, visible = true }) =>
-      visible ? theme.placeholderColor : 'rgba(0, 0, 0, 0)'};
-  margin-top: ${spacingMap.medium};
-  margin-bottom: ${spacingMap.medium};
-`
-
-const mapInfoTagStatus = (status: 'success' | 'warning' | 'danger') => {
+const mapInfoTagStatus = (status: InfoTagStatus) => {
   const theme = useTheme()
 
   if (status === 'warning') {
@@ -47,10 +38,23 @@ const mapInfoTagStatus = (status: 'success' | 'warning' | 'danger') => {
     return { backgroundColor: theme.lightDanger, color: theme.danger }
   }
 
+  if (status === 'highlight') {
+    return { backgroundColor: theme.highlight, color: theme.darkHighlight }
+  }
+
+  if (status === 'neutral') {
+    return { backgroundColor: '#e7e7e7', color: '#777777' }
+  }
+
   return { backgroundColor: theme.lightSuccess, color: theme.success }
 }
 
-export type InfoTagStatus = 'success' | 'warning' | 'danger'
+export type InfoTagStatus =
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'highlight'
+  | 'neutral'
 
 export const InfoTag = styled.div<{
   status?: InfoTagStatus

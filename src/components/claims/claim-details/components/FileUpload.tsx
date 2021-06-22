@@ -1,43 +1,35 @@
 import styled from '@emotion/styled'
 import React from 'react'
+import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 
-const UploadClaimFileWrapper = styled('div')({
-  padding: '4rem',
-  alignItems: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  border: '1px solid rgba(0,0,0,0.08)',
-  minHeight: '20rem',
-})
+const UploadClaimFileWrapper = styled('div')`
+  padding: 1rem 1rem;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 20rem;
+`
 
-const UploadClaimFileHeader = styled('h3')({})
+const Button = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center,
+  font-size: inherit;
+  padding: 4rem;
+  border: none;
+  border-color: ${({ theme }) => theme.border};
+  border-radius: 5px;
+  color: ${({ theme }) => theme.semiStrongForeground};
+  cursor: pointer;
+  text-decoration: none;
 
-export const Button = styled('button')(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: 'inherit',
-  font: 'inherit',
-  padding: '4rem',
-  border: '1px solid',
-  borderColor: theme.border,
-  borderRadius: '5px',
-  color: theme.foreground,
-  background: theme.backgroundTransparent,
-  cursor: 'pointer',
-  textDecoration: 'none',
-  '&:hover, &:focus': {
-    color: theme.accent,
-    textDecoration: 'none',
-  },
-  '&:focus, &:hover': {
-    outline: 'none',
-    boxShadow: 'none',
-  },
-}))
+  border: 2px dashed rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.03);
+`
 
 const FileUploadContainer = styled('div')({
   padding: '2rem',
@@ -80,16 +72,18 @@ const FileUploadComponent: React.FC<WithShowNotification & {
 
   return (
     <UploadClaimFileWrapper>
-      <UploadClaimFileHeader>Upload files here</UploadClaimFileHeader>
       <FileUploadContainer>
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => (
             // @ts-ignore
             <Button {...getRootProps()}>
-              <input {...getInputProps()} />
-              {isDragActive
-                ? 'Drop files here to upload them'
-                : 'Click here or drag files to upload'}
+              <div style={{ width: '100%' }}>
+                <div style={{ fontSize: '4.0em' }}>
+                  {isDragActive ? <FileEarmarkArrowUpFill /> : <FileEarmark />}
+                </div>
+                <input {...getInputProps()} />
+                Click here or drag files to upload
+              </div>
             </Button>
           )}
         </Dropzone>
