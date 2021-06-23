@@ -335,6 +335,7 @@ type GenericAgreement {
   isSubleted: Boolean
   lineOfBusinessName: String!
   carrier: String!
+  partner: String
 }
 
 enum SwedishApartmentLineOfBusiness {

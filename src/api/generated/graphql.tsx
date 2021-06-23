@@ -575,6 +575,7 @@ export type GenericAgreement = {
   isSubleted?: Maybe<Scalars['Boolean']>
   lineOfBusinessName: Scalars['String']
   carrier: Scalars['String']
+  partner?: Maybe<Scalars['String']>
 }
 
 export type GetValuationInput = {
@@ -2825,6 +2826,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'isSubleted'
                   | 'lineOfBusinessName'
                   | 'carrier'
+                  | 'partner'
                 > & {
                     premium: { __typename?: 'MonetaryAmountV2' } & Pick<
                       MonetaryAmountV2,
@@ -6933,6 +6935,7 @@ export const GetContractsDocument = gql`
           isSubleted
           lineOfBusinessName
           carrier
+          partner
         }
         hasQueuedRenewal
         renewal {
