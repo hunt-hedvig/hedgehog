@@ -61,5 +61,8 @@ query ClaimInformation($claimId: ID!, $memberId: ID!) {
         }
       }
     }
+    trials {
+      id
+    }
   }
 }

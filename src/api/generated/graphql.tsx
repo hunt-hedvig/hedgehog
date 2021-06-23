@@ -1867,6 +1867,7 @@ export type ClaimInformationQuery = { __typename?: 'QueryType' } & {
               >
             }
         >
+        trials: Array<{ __typename?: 'Trial' } & Pick<Trial, 'id'>>
       }
   >
 }
@@ -3993,6 +3994,9 @@ export const ClaimInformationDocument = gql`
             currency
           }
         }
+      }
+      trials {
+        id
       }
     }
   }
