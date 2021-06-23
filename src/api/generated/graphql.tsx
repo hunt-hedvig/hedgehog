@@ -58,7 +58,7 @@ export type AccountChargeEstimation = {
 export type AccountEntry = {
   __typename?: 'AccountEntry'
   id: Scalars['ID']
-  type: AccountEntryType
+  type: Scalars['String']
   amount: MonetaryAmountV2
   fromDate: Scalars['LocalDate']
   reference: Scalars['String']
@@ -70,30 +70,13 @@ export type AccountEntry = {
 }
 
 export type AccountEntryInput = {
-  type: AccountEntryType
+  type: Scalars['String']
   amount: Scalars['MonetaryAmount']
   fromDate: Scalars['LocalDate']
   reference: Scalars['String']
   source: Scalars['String']
   title?: Maybe<Scalars['String']>
   comment?: Maybe<Scalars['String']>
-}
-
-export enum AccountEntryType {
-  Correction = 'CORRECTION',
-  Subscription = 'SUBSCRIPTION',
-  Campaign = 'CAMPAIGN',
-  Payout = 'PAYOUT',
-  Charge = 'CHARGE',
-  ReferralDiscount = 'REFERRAL_DISCOUNT',
-  FreeMonthDiscount = 'FREE_MONTH_DISCOUNT',
-  PercentageMonthDiscount = 'PERCENTAGE_MONTH_DISCOUNT',
-  BundleDiscountCostDeduction = 'BUNDLE_DISCOUNT_COST_DEDUCTION',
-  BundleDiscountPercentageDeduction = 'BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION',
-  CostDeduction = 'COST_DEDUCTION',
-  Loss = 'LOSS',
-  LossAutomatic = 'LOSS_AUTOMATIC',
-  LossManual = 'LOSS_MANUAL',
 }
 
 export type ActivatePendingAgreementInput = {
@@ -776,6 +759,7 @@ export type Member = {
   pickedLocale: Scalars['String']
   referralInformation?: Maybe<ReferralInformation>
   identity?: Maybe<Identity>
+  trials: Array<Trial>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -830,7 +814,7 @@ export type MonthlyEntry = {
   id: Scalars['ID']
   externalId?: Maybe<Scalars['String']>
   amount: MonetaryAmountV2
-  type: AccountEntryType
+  type: Scalars['String']
   source: Scalars['String']
   addedBy: Scalars['String']
   addedAt: Scalars['Instant']
@@ -841,7 +825,7 @@ export type MonthlyEntry = {
 export type MonthlyEntryInput = {
   externalId?: Maybe<Scalars['String']>
   amount: Scalars['MonetaryAmount']
-  type: AccountEntryType
+  type: Scalars['String']
   source: Scalars['String']
   title: Scalars['String']
   comment: Scalars['String']
@@ -1577,6 +1561,26 @@ export type TravelAccidentClaim = {
   date?: Maybe<Scalars['LocalDate']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
+}
+
+export type Trial = {
+  __typename?: 'Trial'
+  id: Scalars['ID']
+  fromDate: Scalars['LocalDate']
+  toDate: Scalars['LocalDate']
+  displayName: Scalars['String']
+  partner: Scalars['String']
+  address: TrialAddress
+}
+
+export type TrialAddress = {
+  __typename?: 'TrialAddress'
+  street: Scalars['String']
+  city: Scalars['String']
+  zipCode: Scalars['String']
+  livingSpace?: Maybe<Scalars['Int']>
+  apartmentNo?: Maybe<Scalars['String']>
+  floor?: Maybe<Scalars['Int']>
 }
 
 export type UnknownIncentive = {
@@ -3240,6 +3244,33 @@ export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
   QueryType,
   'quoteSchemaForContractType'
 >
+
+export type GetTrialsQueryVariables = Exact<{
+  memberId: Scalars['ID']
+}>
+
+export type GetTrialsQuery = { __typename?: 'QueryType' } & {
+  member?: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        trials: Array<
+          { __typename?: 'Trial' } & Pick<
+            Trial,
+            'id' | 'fromDate' | 'toDate' | 'displayName' | 'partner'
+          > & {
+              address: { __typename?: 'TrialAddress' } & Pick<
+                TrialAddress,
+                | 'street'
+                | 'city'
+                | 'zipCode'
+                | 'livingSpace'
+                | 'apartmentNo'
+                | 'floor'
+              >
+            }
+        >
+      }
+  >
+}
 
 export type ListClaimsQueryVariables = Exact<{
   options: ListClaimsOptions
@@ -7908,6 +7939,77 @@ export type GetSchemaForContractTypeLazyQueryHookResult = ReturnType<
 export type GetSchemaForContractTypeQueryResult = ApolloReactCommon.QueryResult<
   GetSchemaForContractTypeQuery,
   GetSchemaForContractTypeQueryVariables
+>
+export const GetTrialsDocument = gql`
+  query GetTrials($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      trials {
+        id
+        fromDate
+        toDate
+        displayName
+        partner
+        address {
+          street
+          city
+          zipCode
+          livingSpace
+          apartmentNo
+          floor
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetTrialsQuery__
+ *
+ * To run a query within a React component, call `useGetTrialsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTrialsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTrialsQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetTrialsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetTrialsQuery,
+    GetTrialsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<GetTrialsQuery, GetTrialsQueryVariables>(
+    GetTrialsDocument,
+    options,
+  )
+}
+export function useGetTrialsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetTrialsQuery,
+    GetTrialsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<GetTrialsQuery, GetTrialsQueryVariables>(
+    GetTrialsDocument,
+    options,
+  )
+}
+export type GetTrialsQueryHookResult = ReturnType<typeof useGetTrialsQuery>
+export type GetTrialsLazyQueryHookResult = ReturnType<
+  typeof useGetTrialsLazyQuery
+>
+export type GetTrialsQueryResult = ApolloReactCommon.QueryResult<
+  GetTrialsQuery,
+  GetTrialsQueryVariables
 >
 export const ListClaimsDocument = gql`
   query ListClaims($options: ListClaimsOptions!) {
