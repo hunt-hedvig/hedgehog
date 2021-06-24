@@ -33,14 +33,14 @@ export const ContractTab: React.FC<{
 
   return (
     <FadeIn>
-      {contracts.length > 0 ? (
+      {contracts.length > 0 && (
         <MainHeadline>
           Contracts
           <RefreshButton onClick={() => refetch()} loading={loading}>
             <ArrowRepeat />
           </RefreshButton>
         </MainHeadline>
-      ) : null}
+      )}
       {contracts.map((contract) => (
         <Contract
           key={contract.id}
