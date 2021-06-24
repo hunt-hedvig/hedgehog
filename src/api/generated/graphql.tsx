@@ -58,7 +58,7 @@ export type AccountChargeEstimation = {
 export type AccountEntry = {
   __typename?: 'AccountEntry'
   id: Scalars['ID']
-  type: AccountEntryType
+  type: Scalars['String']
   amount: MonetaryAmountV2
   fromDate: Scalars['LocalDate']
   reference: Scalars['String']
@@ -70,30 +70,13 @@ export type AccountEntry = {
 }
 
 export type AccountEntryInput = {
-  type: AccountEntryType
+  type: Scalars['String']
   amount: Scalars['MonetaryAmount']
   fromDate: Scalars['LocalDate']
   reference: Scalars['String']
   source: Scalars['String']
   title?: Maybe<Scalars['String']>
   comment?: Maybe<Scalars['String']>
-}
-
-export enum AccountEntryType {
-  Correction = 'CORRECTION',
-  Subscription = 'SUBSCRIPTION',
-  Campaign = 'CAMPAIGN',
-  Payout = 'PAYOUT',
-  Charge = 'CHARGE',
-  ReferralDiscount = 'REFERRAL_DISCOUNT',
-  FreeMonthDiscount = 'FREE_MONTH_DISCOUNT',
-  PercentageMonthDiscount = 'PERCENTAGE_MONTH_DISCOUNT',
-  BundleDiscountCostDeduction = 'BUNDLE_DISCOUNT_COST_DEDUCTION',
-  BundleDiscountPercentageDeduction = 'BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION',
-  CostDeduction = 'COST_DEDUCTION',
-  Loss = 'LOSS',
-  LossAutomatic = 'LOSS_AUTOMATIC',
-  LossManual = 'LOSS_MANUAL',
 }
 
 export type ActivatePendingAgreementInput = {
@@ -392,6 +375,8 @@ export type ClaimType =
   | SnowPressureClaim
   | StormDamageClaim
   | VerminAndPestsClaim
+  | OtherClaim
+  | DuplicateClaim
   | TestClaim
 
 export enum ClaimTypes {
@@ -416,6 +401,8 @@ export enum ClaimTypes {
   SnowPressureClaim = 'SnowPressureClaim',
   StormDamageClaim = 'StormDamageClaim',
   VerminAndPestsClaim = 'VerminAndPestsClaim',
+  DuplicateClaim = 'DuplicateClaim',
+  OtherClaim = 'OtherClaim',
   TestClaim = 'TestClaim',
 }
 
@@ -496,6 +483,11 @@ export type Debt = {
 export type DirectDebitStatus = {
   __typename?: 'DirectDebitStatus'
   activated?: Maybe<Scalars['Boolean']>
+}
+
+export type DuplicateClaim = {
+  __typename?: 'DuplicateClaim'
+  date?: Maybe<Scalars['LocalDate']>
 }
 
 export type EarthquakeClaim = {
@@ -773,7 +765,7 @@ export type Member = {
   contracts: Array<Contract>
   claims: Array<Claim>
   contractMarketInfo?: Maybe<ContractMarketInfo>
-  pickedLocale: Scalars['String']
+  pickedLocale?: Maybe<Scalars['String']>
   referralInformation?: Maybe<ReferralInformation>
   identity?: Maybe<Identity>
 }
@@ -830,7 +822,7 @@ export type MonthlyEntry = {
   id: Scalars['ID']
   externalId?: Maybe<Scalars['String']>
   amount: MonetaryAmountV2
-  type: AccountEntryType
+  type: Scalars['String']
   source: Scalars['String']
   addedBy: Scalars['String']
   addedAt: Scalars['Instant']
@@ -841,7 +833,7 @@ export type MonthlyEntry = {
 export type MonthlyEntryInput = {
   externalId?: Maybe<Scalars['String']>
   amount: Scalars['MonetaryAmount']
-  type: AccountEntryType
+  type: Scalars['String']
   source: Scalars['String']
   title: Scalars['String']
   comment: Scalars['String']
@@ -1233,6 +1225,15 @@ export type NumberFailedCharges = {
   __typename?: 'NumberFailedCharges'
   numberFailedCharges: Scalars['Int']
   lastFailedChargeAt?: Maybe<Scalars['Instant']>
+}
+
+export type OtherClaim = {
+  __typename?: 'OtherClaim'
+  location?: Maybe<Scalars['String']>
+  date?: Maybe<Scalars['LocalDate']>
+  item?: Maybe<Scalars['String']>
+  policeReport?: Maybe<Scalars['String']>
+  receipt?: Maybe<Scalars['String']>
 }
 
 export type PaymentCompletionResponse = {
@@ -2549,6 +2550,8 @@ export type ClaimTypeFragment = { __typename?: 'Claim' } & {
         VerminAndPestsClaim,
         'date'
       >)
+    | { __typename?: 'OtherClaim' }
+    | { __typename?: 'DuplicateClaim' }
     | ({ __typename?: 'TestClaim' } & Pick<TestClaim, 'date'>)
   >
 }
@@ -2937,6 +2940,8 @@ export type GetMemberClaimsQuery = { __typename?: 'QueryType' } & {
                 | { __typename: 'SnowPressureClaim' }
                 | { __typename: 'StormDamageClaim' }
                 | { __typename: 'VerminAndPestsClaim' }
+                | { __typename: 'OtherClaim' }
+                | { __typename: 'DuplicateClaim' }
                 | { __typename: 'TestClaim' }
               >
             }
@@ -3281,6 +3286,8 @@ export type ListClaimsQuery = { __typename?: 'QueryType' } & {
               | { __typename: 'SnowPressureClaim' }
               | { __typename: 'StormDamageClaim' }
               | { __typename: 'VerminAndPestsClaim' }
+              | { __typename: 'OtherClaim' }
+              | { __typename: 'DuplicateClaim' }
               | { __typename: 'TestClaim' }
             >
           }
@@ -9183,6 +9190,8 @@ const result: PossibleTypesResultData = {
       'SnowPressureClaim',
       'StormDamageClaim',
       'VerminAndPestsClaim',
+      'OtherClaim',
+      'DuplicateClaim',
       'TestClaim',
     ],
     ItemCategoryCore: [
