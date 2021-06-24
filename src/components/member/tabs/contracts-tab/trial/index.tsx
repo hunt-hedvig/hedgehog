@@ -61,12 +61,12 @@ export const TrialComponent: React.FC<{
               City
               <InfoText>{trial.address.city}</InfoText>
             </InfoRow>
-            {trial.address.floor ? (
+            {trial.address.floor && (
               <InfoRow>
                 Floor
                 <InfoText>{trial.address.floor}</InfoText>
               </InfoRow>
-            ) : null}
+            )}
             {trial.address.apartmentNo ? (
               <InfoRow>
                 Apartment No
