@@ -526,7 +526,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -990,7 +990,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1208,7 +1208,7 @@ enum ClaimState {
 enum ClaimPaymentType {
   Manual
   Automatic
-  IndemnityCost,
+  IndemnityCost
   Expense
 }
 

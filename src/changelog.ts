@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-06-24',
+    change: 'New claim types "Other" and "Duplicate"',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-06-17',
     change: 'New travel icons added to perils tool',
     authorGithubHandle: 'fredriklagerblad',
