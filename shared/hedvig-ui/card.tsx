@@ -37,18 +37,9 @@ export const Card = styled('div')<CardProps>`
   border-radius: 0.5rem;
 `
 
-export const DangerCard = styled('div')<CardProps>`
-  display: inline-flex;
-  min-width: ${({ span }) => `calc(100%/${span ?? 1} - 1rem)`};
-  margin: 0.5rem;
-  padding: ${({ padding = 'medium' }) => paddingMap[padding]};
-  align-items: flex-start;
-  flex-direction: column;
-  flex-grow: 1;
-  color: ${({ theme }) => theme.foreground ?? colorsV3.gray900};
-  background-color: ${({ theme }) => theme.danger ?? colorsV3.black};
+export const DangerCard = styled(Card)<CardProps>`
+  background-color: ${({ theme }) => theme.danger ?? colorsV3.white};
   border: 1px solid ${({ theme }) => theme.border ?? colorsV3.gray300};
-  border-radius: 0.5rem;
 `
 
 export const CardContent = styled('div')`
