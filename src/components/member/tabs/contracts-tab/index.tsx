@@ -51,7 +51,7 @@ export const ContractTab: React.FC<{
           }
         />
       ))}
-      {trials.length > 0 ? <MainHeadline>Trials</MainHeadline> : null}
+      {trials.length > 0 && <MainHeadline>Trials</MainHeadline>}
       {trials.map((trial) => (
         <TrialComponent key={trial.id} trial={trial} />
       ))}
