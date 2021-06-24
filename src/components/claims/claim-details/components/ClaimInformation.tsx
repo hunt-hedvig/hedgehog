@@ -246,13 +246,13 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
               ⚠️ No agreement covers the claim on the date of loss
             </Paragraph>
           )}
-          {contracts?.length === 0 && trials?.length > 0 ? (
+          { (contracts.length === 0 && trials.length > 0) && (
             <DangerCard>
               This member has a trial which may cover this claim, but no
               contract. This case can not be handled in Hope yet, please contact
               the MX tech team.
             </DangerCard>
-          ) : null}
+          )}
         </Loadable>
       </CardContent>
     </Card>
