@@ -1,0 +1,20 @@
+query GetTrials($memberId: ID!) {
+  member(id: $memberId) {
+    memberId
+    trials {
+      id
+      fromDate
+      toDate
+      displayName
+      partner
+      address {
+        street
+        city
+        zipCode
+        livingSpace
+        apartmentNo
+        floor
+      }
+    }
+  }
+}

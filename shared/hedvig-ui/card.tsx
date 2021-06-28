@@ -37,6 +37,11 @@ export const Card = styled('div')<CardProps>`
   border-radius: 0.5rem;
 `
 
+export const DangerCard = styled(Card)<CardProps>`
+  background-color: ${({ theme }) => theme.danger ?? colorsV3.white};
+  border: 1px solid ${({ theme }) => theme.border ?? colorsV3.gray300};
+`
+
 export const CardContent = styled('div')`
   width: 100%;
 `

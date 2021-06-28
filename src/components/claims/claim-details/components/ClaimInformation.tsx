@@ -16,7 +16,7 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
-import { Card, CardContent } from 'hedvig-ui/card'
+import { Card, CardContent, DangerCard } from 'hedvig-ui/card'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
 import { Label, Paragraph } from 'hedvig-ui/typography'
@@ -122,7 +122,8 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
     contract: selectedContract,
     agreement: selectedAgreement,
   } = data?.claim ?? {}
-  const contracts = data?.member?.contracts
+  const contracts = data?.member?.contracts ?? []
+  const trials = data?.member?.trials ?? []
 
   const [setContractForClaim] = useSetContractForClaim()
   const [setCoveringEmployee] = useSetCoveringEmployee()
@@ -244,6 +245,13 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
             <Paragraph>
               ⚠️ No agreement covers the claim on the date of loss
             </Paragraph>
+          )}
+          { (contracts.length === 0 && trials.length > 0) && (
+            <DangerCard>
+              This member has a trial which may cover this claim, but no
+              contract. This case can not be handled in Hope yet, please contact
+              the MX tech team.
+            </DangerCard>
           )}
         </Loadable>
       </CardContent>
