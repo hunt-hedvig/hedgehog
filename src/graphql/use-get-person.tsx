@@ -24,6 +24,6 @@ export const useGetPerson = (memberId: string): GetPersonReturnTuple => {
   const contractMarketInfo = queryResult.data?.member?.contractMarketInfo as
     | ContractMarketInfo
     | undefined
-  const pickedLocale = queryResult.data?.member?.pickedLocale
+  const pickedLocale = queryResult.data?.member?.pickedLocale ?? undefined
   return [{ person, contractMarketInfo, pickedLocale }, queryResult]
 }

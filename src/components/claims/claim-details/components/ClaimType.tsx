@@ -36,6 +36,7 @@ const hasLocation = (typename: ClaimTypes): boolean => {
     ClaimTypes.ApplianceClaim,
     ClaimTypes.BurglaryClaim,
     ClaimTypes.InstallationsClaim,
+    ClaimTypes.OtherClaim,
   ].includes(typename)
 }
 
@@ -46,6 +47,7 @@ const hasItem = (typename: ClaimTypes): boolean => {
     ClaimTypes.ApplianceClaim,
     ClaimTypes.BurglaryClaim,
     ClaimTypes.InstallationsClaim,
+    ClaimTypes.OtherClaim,
   ].includes(typename)
 }
 
@@ -56,6 +58,7 @@ const hasPoliceReport = (typename: ClaimTypes): boolean => {
     ClaimTypes.AssaultClaim,
     ClaimTypes.TravelAccidentClaim,
     ClaimTypes.BurglaryClaim,
+    ClaimTypes.OtherClaim,
   ].includes(typename)
 }
 
@@ -64,6 +67,7 @@ const hasReceipt = (typename: ClaimTypes): boolean => {
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.TravelAccidentClaim,
     ClaimTypes.BurglaryClaim,
+    ClaimTypes.OtherClaim,
   ].includes(typename)
 }
 
@@ -250,8 +254,8 @@ const ClaimTypeComponent: React.FC<{
             setClaimType({
               variables: { id: claimId, type: selection?.value ?? null },
             })
-              .then(() => {
-                refetch()
+              .then(async () => {
+                await refetch()
               })
               .catch((e) => {
                 showNotification({

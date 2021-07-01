@@ -682,7 +682,7 @@ type Member {
   contracts: [Contract!]!
   claims(filterByStates: [ClaimState!]): [Claim!]!
   contractMarketInfo: ContractMarketInfo
-  pickedLocale: String!
+  pickedLocale: String
   referralInformation: ReferralInformation
   identity: Identity
   trials: [Trial!]!
@@ -987,6 +987,8 @@ enum ClaimTypes {
   SnowPressureClaim
   StormDamageClaim
   VerminAndPestsClaim
+  DuplicateClaim
+  OtherClaim
   TestClaim
 }
 union ClaimType =
@@ -1011,6 +1013,8 @@ union ClaimType =
   | SnowPressureClaim
   | StormDamageClaim
   | VerminAndPestsClaim
+  | OtherClaim
+  | DuplicateClaim
   | TestClaim
 
 type TheftClaim {
@@ -1118,7 +1122,19 @@ type VerminAndPestsClaim {
   date: LocalDate
 }
 
+type OtherClaim {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+}
+
 type NotCoveredClaim {
+  date: LocalDate
+}
+
+type DuplicateClaim {
   date: LocalDate
 }
 
