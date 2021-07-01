@@ -132,7 +132,7 @@ const AddMonthlyEntryFormComponent: React.FC<WithShowNotification & {
               text: 'Subscription',
             },
           ]}
-          defaultValue={'SUBSCRIPTION'}
+          defaultValue="SUBSCRIPTION"
           label="Type"
           name="type"
           rules={{

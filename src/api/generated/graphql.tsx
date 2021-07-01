@@ -584,6 +584,7 @@ export type GenericAgreement = {
   isSubleted?: Maybe<Scalars['Boolean']>
   lineOfBusinessName: Scalars['String']
   carrier: Scalars['String']
+  partner?: Maybe<Scalars['String']>
 }
 
 export type GetValuationInput = {
@@ -768,6 +769,7 @@ export type Member = {
   pickedLocale?: Maybe<Scalars['String']>
   referralInformation?: Maybe<ReferralInformation>
   identity?: Maybe<Identity>
+  trials: Array<Trial>
 }
 
 export type MemberMonthlySubscriptionArgs = {
@@ -1580,6 +1582,26 @@ export type TravelAccidentClaim = {
   receipt?: Maybe<Scalars['String']>
 }
 
+export type Trial = {
+  __typename?: 'Trial'
+  id: Scalars['ID']
+  fromDate: Scalars['LocalDate']
+  toDate: Scalars['LocalDate']
+  displayName: Scalars['String']
+  partner: Scalars['String']
+  address: TrialAddress
+}
+
+export type TrialAddress = {
+  __typename?: 'TrialAddress'
+  street: Scalars['String']
+  city: Scalars['String']
+  zipCode: Scalars['String']
+  livingSpace?: Maybe<Scalars['Int']>
+  apartmentNo?: Maybe<Scalars['String']>
+  floor?: Maybe<Scalars['Int']>
+}
+
 export type UnknownIncentive = {
   __typename?: 'UnknownIncentive'
   _?: Maybe<Scalars['Boolean']>
@@ -1863,6 +1885,7 @@ export type ClaimInformationQuery = { __typename?: 'QueryType' } & {
               >
             }
         >
+        trials: Array<{ __typename?: 'Trial' } & Pick<Trial, 'id'>>
       }
   >
 }
@@ -2824,6 +2847,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'isSubleted'
                   | 'lineOfBusinessName'
                   | 'carrier'
+                  | 'partner'
                 > & {
                     premium: { __typename?: 'MonetaryAmountV2' } & Pick<
                       MonetaryAmountV2,
@@ -3245,6 +3269,33 @@ export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
   QueryType,
   'quoteSchemaForContractType'
 >
+
+export type GetTrialsQueryVariables = Exact<{
+  memberId: Scalars['ID']
+}>
+
+export type GetTrialsQuery = { __typename?: 'QueryType' } & {
+  member?: Maybe<
+    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+        trials: Array<
+          { __typename?: 'Trial' } & Pick<
+            Trial,
+            'id' | 'fromDate' | 'toDate' | 'displayName' | 'partner'
+          > & {
+              address: { __typename?: 'TrialAddress' } & Pick<
+                TrialAddress,
+                | 'street'
+                | 'city'
+                | 'zipCode'
+                | 'livingSpace'
+                | 'apartmentNo'
+                | 'floor'
+              >
+            }
+        >
+      }
+  >
+}
 
 export type ListClaimsQueryVariables = Exact<{
   options: ListClaimsOptions
@@ -3967,6 +4018,9 @@ export const ClaimInformationDocument = gql`
             currency
           }
         }
+      }
+      trials {
+        id
       }
     }
   }
@@ -6909,6 +6963,7 @@ export const GetContractsDocument = gql`
           isSubleted
           lineOfBusinessName
           carrier
+          partner
         }
         hasQueuedRenewal
         renewal {
@@ -7915,6 +7970,77 @@ export type GetSchemaForContractTypeLazyQueryHookResult = ReturnType<
 export type GetSchemaForContractTypeQueryResult = ApolloReactCommon.QueryResult<
   GetSchemaForContractTypeQuery,
   GetSchemaForContractTypeQueryVariables
+>
+export const GetTrialsDocument = gql`
+  query GetTrials($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      trials {
+        id
+        fromDate
+        toDate
+        displayName
+        partner
+        address {
+          street
+          city
+          zipCode
+          livingSpace
+          apartmentNo
+          floor
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetTrialsQuery__
+ *
+ * To run a query within a React component, call `useGetTrialsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTrialsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTrialsQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetTrialsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetTrialsQuery,
+    GetTrialsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<GetTrialsQuery, GetTrialsQueryVariables>(
+    GetTrialsDocument,
+    options,
+  )
+}
+export function useGetTrialsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetTrialsQuery,
+    GetTrialsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<GetTrialsQuery, GetTrialsQueryVariables>(
+    GetTrialsDocument,
+    options,
+  )
+}
+export type GetTrialsQueryHookResult = ReturnType<typeof useGetTrialsQuery>
+export type GetTrialsLazyQueryHookResult = ReturnType<
+  typeof useGetTrialsLazyQuery
+>
+export type GetTrialsQueryResult = ApolloReactCommon.QueryResult<
+  GetTrialsQuery,
+  GetTrialsQueryVariables
 >
 export const ListClaimsDocument = gql`
   query ListClaims($options: ListClaimsOptions!) {

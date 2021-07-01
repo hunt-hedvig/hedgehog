@@ -79,6 +79,11 @@ const sourceOptions = [
   },
   {
     key: 8,
+    value: 'manual_decease',
+    text: 'The member has passed away',
+  },
+  {
+    key: 9,
     value: 'other',
     text: 'Other',
   },

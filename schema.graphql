@@ -335,6 +335,7 @@ type GenericAgreement {
   isSubleted: Boolean
   lineOfBusinessName: String!
   carrier: String!
+  partner: String
 }
 
 enum SwedishApartmentLineOfBusiness {
@@ -684,6 +685,7 @@ type Member {
   pickedLocale: String
   referralInformation: ReferralInformation
   identity: Identity
+  trials: [Trial!]!
 }
 
 type Identity {
@@ -1284,6 +1286,24 @@ input SendMessageInput {
   memberId: ID!
   message: String!
   forceSendMessage: Boolean!
+}
+
+type Trial {
+  id: ID!
+  fromDate: LocalDate!
+  toDate: LocalDate!
+  displayName: String!
+  partner: String!
+  address: TrialAddress!
+}
+
+type TrialAddress {
+  street: String!
+  city: String!
+  zipCode: String!
+  livingSpace: Int
+  apartmentNo: String
+  floor: Int
 }
 
 type MonetaryAmountV2 {
