@@ -6,10 +6,13 @@ query GetSwitcherEmails {
       signedOn
       firstName
       lastName
+      email
     }
     switcherCompany
     queuedAt
     sentAt
     remindedAt
+    cancellationDate
+    switcherType
   }
 }

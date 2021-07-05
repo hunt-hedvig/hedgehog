@@ -23,7 +23,7 @@ import { Keys } from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { Card, CardContent } from 'hedvig-ui/card'
+import { CardContent } from 'hedvig-ui/card'
 import {
   InfoContainer,
   InfoRow,
@@ -118,216 +118,212 @@ export const MemberInformation: React.FC<{
   ])
 
   return (
-    <Card span={6}>
-      <CardContent>
-        <PaperTitle
-          title={'Member Info'}
-          badge={
-            queryError
-              ? {
-                  icon: BugFill,
-                  status: 'danger',
-                  label: 'Internal Error',
-                }
-              : null
-          }
-        />
+    <CardContent>
+      <PaperTitle
+        title={'Member Info'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
 
-        <InfoContainer>
-          <Loadable loading={memberContractsDataLoading}>
-            <MemberName>
-              {member?.firstName ?? '-'} {member?.lastName ?? '-'}{' '}
-              {member &&
-                getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}
-            </MemberName>
+      <InfoContainer>
+        <Loadable loading={memberContractsDataLoading}>
+          <MemberName>
+            {member?.firstName ?? '-'} {member?.lastName ?? '-'}{' '}
+            {member &&
+              getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}
+          </MemberName>
+          <InfoRow>
+            Member ID
+            <InfoText>
+              <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
+              {isHintingOption && '(M)'}
+            </InfoText>
+          </InfoRow>
+          {member?.contractMarketInfo?.market === Market.Norway && (
             <InfoRow>
-              Member ID
-              <InfoText>
-                <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
-                {isHintingOption && '(M)'}
-              </InfoText>
-            </InfoRow>
-            {member?.contractMarketInfo?.market === Market.Norway && (
-              <InfoRow>
-                Identified
-                <InfoText>
-                  <InfoTag
-                    style={{ fontWeight: 'bold' }}
-                    status={member.identity ? 'success' : 'warning'}
-                  >
-                    {member.identity ? 'Yes' : 'No'}
-                  </InfoTag>
-                </InfoText>
-              </InfoRow>
-            )}
-            <InfoRow>
-              Personal number
-              <InfoText>
-                {member?.personalNumber ? (
-                  <Popover contents={<>Click to copy</>}>
-                    <ClickableText
-                      onClick={() => {
-                        copy(member.personalNumber!)
-                      }}
-                    >
-                      {formatSsn(member.personalNumber)}
-                    </ClickableText>
-                  </Popover>
-                ) : (
-                  'No personal number'
-                )}
-              </InfoText>
-            </InfoRow>
-            {member?.sanctionStatus && (
-              <InfoRow>
-                Sanction status
-                <InfoText>
-                  <InfoTag
-                    style={{ fontWeight: 'bold' }}
-                    status={sanctionStatusMap[member.sanctionStatus]}
-                  >
-                    {convertCamelcaseToTitle(member.sanctionStatus)}
-                  </InfoTag>
-                </InfoText>
-              </InfoRow>
-            )}
-            {address && (
-              <InfoSection>
-                <InfoRow>
-                  Street
-                  <InfoText>
-                    {convertEnumOrSentenceToTitle(address.street)}
-                  </InfoText>
-                </InfoRow>
-                <InfoRow>
-                  Postal code
-                  <InfoText>{formatPostalCode(address.postalCode)}</InfoText>
-                </InfoRow>
-                {address.city && (
-                  <InfoRow>
-                    City
-                    <InfoText>
-                      {convertEnumOrSentenceToTitle(address.city)}
-                    </InfoText>
-                  </InfoRow>
-                )}
-              </InfoSection>
-            )}
-
-            {member?.fraudulentStatus && (
-              <InfoRow>
-                Fraudulent status
-                <InfoText>
-                  <InfoTag
-                    style={{ fontWeight: 'bold' }}
-                    status={fraudulentStatusMap[member.fraudulentStatus]}
-                  >
-                    {convertEnumOrSentenceToTitle(
-                      member.fraudulentStatus ?? '',
-                    )}
-                  </InfoTag>
-                </InfoText>
-              </InfoRow>
-            )}
-
-            <InfoRow>
-              Direct debit
+              Identified
               <InfoText>
                 <InfoTag
                   style={{ fontWeight: 'bold' }}
-                  status={
-                    member?.directDebitStatus?.activated ? 'success' : 'warning'
-                  }
+                  status={member.identity ? 'success' : 'warning'}
                 >
-                  {member?.directDebitStatus?.activated
-                    ? 'Activated'
-                    : 'Not Activated'}
+                  {member.identity ? 'Yes' : 'No'}
                 </InfoTag>
               </InfoText>
             </InfoRow>
-
-            {member?.person?.debtFlag && (
-              <InfoRow>
-                Debt status
-                <InfoText>
-                  <InfoTag
-                    style={{ fontWeight: 'bold' }}
-                    status={debtFlagMap[member.person.debtFlag]}
+          )}
+          <InfoRow>
+            Personal number
+            <InfoText>
+              {member?.personalNumber ? (
+                <Popover contents={<>Click to copy</>}>
+                  <ClickableText
+                    onClick={() => {
+                      copy(member.personalNumber!)
+                    }}
                   >
-                    {debtFlagDescriptionMap[member.person.debtFlag]}
-                  </InfoTag>
-                </InfoText>
-              </InfoRow>
-            )}
-
-            {member?.signedOn && (
-              <InfoRow>
-                Signed
-                <InfoText>
-                  <Popover
-                    contents={formatDistanceToNowStrict(
-                      parseISO(member.signedOn),
-                      {
-                        addSuffix: true,
-                      },
-                    )}
-                  >
-                    {member.signedOn &&
-                      format(parseISO(member.signedOn), 'yyyy-MM-dd HH:mm')}
-                  </Popover>
-                </InfoText>
-              </InfoRow>
-            )}
-
+                    {formatSsn(member.personalNumber)}
+                  </ClickableText>
+                </Popover>
+              ) : (
+                'No personal number'
+              )}
+            </InfoText>
+          </InfoRow>
+          {member?.sanctionStatus && (
             <InfoRow>
-              Master inception
+              Sanction status
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={sanctionStatusMap[member.sanctionStatus]}
+                >
+                  {convertCamelcaseToTitle(member.sanctionStatus)}
+                </InfoTag>
+              </InfoText>
+            </InfoRow>
+          )}
+          {address && (
+            <InfoSection>
+              <InfoRow>
+                Street
+                <InfoText>
+                  {convertEnumOrSentenceToTitle(address.street)}
+                </InfoText>
+              </InfoRow>
+              <InfoRow>
+                Postal code
+                <InfoText>{formatPostalCode(address.postalCode)}</InfoText>
+              </InfoRow>
+              {address.city && (
+                <InfoRow>
+                  City
+                  <InfoText>
+                    {convertEnumOrSentenceToTitle(address.city)}
+                  </InfoText>
+                </InfoRow>
+              )}
+            </InfoSection>
+          )}
+
+          {member?.fraudulentStatus && (
+            <InfoRow>
+              Fraudulent status
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={fraudulentStatusMap[member.fraudulentStatus]}
+                >
+                  {convertEnumOrSentenceToTitle(member.fraudulentStatus ?? '')}
+                </InfoTag>
+              </InfoText>
+            </InfoRow>
+          )}
+
+          <InfoRow>
+            Direct debit
+            <InfoText>
+              <InfoTag
+                style={{ fontWeight: 'bold' }}
+                status={
+                  member?.directDebitStatus?.activated ? 'success' : 'warning'
+                }
+              >
+                {member?.directDebitStatus?.activated
+                  ? 'Activated'
+                  : 'Not Activated'}
+              </InfoTag>
+            </InfoText>
+          </InfoRow>
+
+          {member?.person?.debtFlag && (
+            <InfoRow>
+              Debt status
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={debtFlagMap[member.person.debtFlag]}
+                >
+                  {debtFlagDescriptionMap[member.person.debtFlag]}
+                </InfoTag>
+              </InfoText>
+            </InfoRow>
+          )}
+
+          {member?.signedOn && (
+            <InfoRow>
+              Signed
               <InfoText>
                 <Popover
-                  contents={
-                    firstMasterInception
-                      ? formatDistanceToNowStrict(
-                          parse(firstMasterInception, 'yyyy-MM-dd', new Date()),
-                          {
-                            addSuffix: true,
-                          },
-                        )
-                      : 'Never active'
-                  }
+                  contents={formatDistanceToNowStrict(
+                    parseISO(member.signedOn),
+                    {
+                      addSuffix: true,
+                    },
+                  )}
                 >
-                  {firstMasterInception ?? 'Never active'}
+                  {member.signedOn &&
+                    format(parseISO(member.signedOn), 'yyyy-MM-dd HH:mm')}
                 </Popover>
               </InfoText>
             </InfoRow>
+          )}
 
-            {lastTermination && (
-              <InfoRow>
-                Last termination date
-                <InfoText>{lastTermination}</InfoText>
-              </InfoRow>
-            )}
+          <InfoRow>
+            Master inception
+            <InfoText>
+              <Popover
+                contents={
+                  firstMasterInception
+                    ? formatDistanceToNowStrict(
+                        parse(firstMasterInception, 'yyyy-MM-dd', new Date()),
+                        {
+                          addSuffix: true,
+                        },
+                      )
+                    : 'Never active'
+                }
+              >
+                {firstMasterInception ?? 'Never active'}
+              </Popover>
+            </InfoText>
+          </InfoRow>
+
+          {lastTermination && (
             <InfoRow>
-              Payments balance (min)
-              <InfoText>
-                {member?.account?.totalBalance &&
-                  formatMoney(member.account.totalBalance)}
-              </InfoText>
+              Last termination date
+              <InfoText>{lastTermination}</InfoText>
             </InfoRow>
-            <InfoRow>
-              Failed payments
-              <InfoText>
-                {member?.numberFailedCharges?.numberFailedCharges ?? '-'}
-                {(member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
-                  ? ' in a row'
-                  : ''}
-              </InfoText>
-            </InfoRow>
-            <InfoRow>
-              Total number of claims
-              <InfoText>{member?.totalNumberOfClaims ?? '-'}</InfoText>
-            </InfoRow>
-          </Loadable>
-        </InfoContainer>
-      </CardContent>
-    </Card>
+          )}
+          <InfoRow>
+            Payments balance (min)
+            <InfoText>
+              {member?.account?.totalBalance &&
+                formatMoney(member.account.totalBalance)}
+            </InfoText>
+          </InfoRow>
+          <InfoRow>
+            Failed payments
+            <InfoText>
+              {member?.numberFailedCharges?.numberFailedCharges ?? '-'}
+              {(member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
+                ? ' in a row'
+                : ''}
+            </InfoText>
+          </InfoRow>
+          <InfoRow>
+            Total number of claims
+            <InfoText>{member?.totalNumberOfClaims ?? '-'}</InfoText>
+          </InfoRow>
+        </Loadable>
+      </InfoContainer>
+    </CardContent>
   )
 }

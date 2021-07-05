@@ -168,16 +168,22 @@ export const ItemForm: React.FC<{
       </Grid>
       <Grid container spacing={16}>
         <Grid item xs={10}>
-          {contract?.typeOfContract && (
-            <ValuationInfo
-              request={request}
-              setValuation={setValuation}
-              customValuationAmount={customValuationAmount}
-              setCustomValuationAmount={setCustomValuationAmount}
-              defaultCurrency={defaultCurrency}
-              typeOfContract={contract.typeOfContract}
-            />
-          )}
+          {contract?.typeOfContract &&
+            request.itemFamilyId &&
+            request.purchasePrice &&
+            request.dateOfPurchase && (
+              <ValuationInfo
+                itemFamilyId={request.itemFamilyId}
+                itemTypeId={request.itemTypeId}
+                purchasePrice={request.purchasePrice}
+                dateOfPurchase={request.dateOfPurchase}
+                setValuation={setValuation}
+                customValuationAmount={customValuationAmount}
+                setCustomValuationAmount={setCustomValuationAmount}
+                defaultCurrency={defaultCurrency}
+                typeOfContract={contract.typeOfContract}
+              />
+            )}
         </Grid>
 
         <Grid item xs={true}>
