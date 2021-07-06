@@ -2390,11 +2390,17 @@ export type GetSwitcherEmailsQuery = { __typename?: 'QueryType' } & {
   switchableSwitcherEmails: Array<
     { __typename?: 'SwitchableSwitcherEmail' } & Pick<
       SwitchableSwitcherEmail,
-      'id' | 'switcherCompany' | 'queuedAt' | 'sentAt' | 'remindedAt'
+      | 'id'
+      | 'switcherCompany'
+      | 'queuedAt'
+      | 'sentAt'
+      | 'remindedAt'
+      | 'cancellationDate'
+      | 'switcherType'
     > & {
         member: { __typename?: 'Member' } & Pick<
           Member,
-          'memberId' | 'signedOn' | 'firstName' | 'lastName'
+          'memberId' | 'signedOn' | 'firstName' | 'lastName' | 'email'
         >
       }
   >
@@ -3296,7 +3302,14 @@ export type GetTrialsQuery = { __typename?: 'QueryType' } & {
         trials: Array<
           { __typename?: 'Trial' } & Pick<
             Trial,
-            'id' | 'fromDate' | 'toDate' | 'displayName' | 'partner'
+            | 'id'
+            | 'fromDate'
+            | 'toDate'
+            | 'displayName'
+            | 'partner'
+            | 'certificateUrl'
+            | 'status'
+            | 'createdAt'
           > & {
               address: { __typename?: 'TrialAddress' } & Pick<
                 TrialAddress,
@@ -5584,11 +5597,14 @@ export const GetSwitcherEmailsDocument = gql`
         signedOn
         firstName
         lastName
+        email
       }
       switcherCompany
       queuedAt
       sentAt
       remindedAt
+      cancellationDate
+      switcherType
     }
   }
 `
@@ -8013,6 +8029,9 @@ export const GetTrialsDocument = gql`
           apartmentNo
           floor
         }
+        certificateUrl
+        status
+        createdAt
       }
     }
   }

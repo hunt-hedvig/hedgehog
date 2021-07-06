@@ -17,6 +17,11 @@ export const changelog: ReadonlyArray<Change> = [
     authorGithubHandle: 'joacimastrom',
   },
   {
+    date: '2021-07-05',
+    change: 'Updated the Switcher Tool with more information and market filter',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-07-01',
     change: 'New claim types "Other" and "Duplicate"',
     authorGithubHandle: 'vonElfvin',

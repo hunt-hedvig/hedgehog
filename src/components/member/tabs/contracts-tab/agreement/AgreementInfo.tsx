@@ -111,7 +111,7 @@ export const AgreementInfo: React.FC<{
       </InfoRow>
       {agreement.partner ? (
         <InfoRow>
-          Partner <InfoText>{agreement.partner}</InfoText>
+          Partner <InfoText>{convertEnumToTitle(agreement.partner)}</InfoText>
         </InfoRow>
       ) : null}
       <InfoRow>

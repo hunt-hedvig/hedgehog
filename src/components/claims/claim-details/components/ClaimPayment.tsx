@@ -186,14 +186,18 @@ export const ClaimPaymentComponent: React.FC<WithShowNotification & Props> = ({
               <MuiMenuItem value={ClaimPaymentType.Manual} disabled>
                 Manual
               </MuiMenuItem>
-              <MuiMenuItem value={ClaimPaymentType.Automatic}>
-                Automatic
-              </MuiMenuItem>
-              {areSwishPayoutsEnabled() && market === Market.Sweden && (
-                <MuiMenuItem value="AutomaticSwish">
-                  Automatic (Swish)
+              {!values.exGratia && (
+                <MuiMenuItem value={ClaimPaymentType.Automatic}>
+                  Automatic
                 </MuiMenuItem>
               )}
+              {areSwishPayoutsEnabled() &&
+                market === Market.Sweden &&
+                !values.exGratia && (
+                  <MuiMenuItem value="AutomaticSwish">
+                    Automatic (Swish)
+                  </MuiMenuItem>
+                )}
               <MuiMenuItem value={ClaimPaymentType.IndemnityCost}>
                 Indemnity Cost
               </MuiMenuItem>

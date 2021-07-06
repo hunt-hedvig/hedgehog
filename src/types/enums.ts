@@ -75,3 +75,17 @@ export const TypeOfContractType: Record<TypeOfContract, ContractType> = {
   [TypeOfContract.DkTravel]: ContractType.DanishTravel,
   [TypeOfContract.DkTravelStudent]: ContractType.DanishTravel,
 }
+
+export enum SwitcherTypes {
+  SwedishHouse = 'SWEDISH_HOUSE',
+  SwedishApartment = 'SWEDISH_APARTMENT',
+  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
+  NorwegianTravel = 'NORWEGIAN_TRAVEL',
+}
+
+export const SwitcherTypeMarket: Record<SwitcherTypes, Market> = {
+  [SwitcherTypes.SwedishHouse]: Market.Sweden,
+  [SwitcherTypes.SwedishApartment]: Market.Sweden,
+  [SwitcherTypes.NorwegianHomeContent]: Market.Norway,
+  [SwitcherTypes.NorwegianTravel]: Market.Norway,
+}

@@ -54,7 +54,7 @@ const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
   }
 
   return (
-    <Card span={1}>
+    <Card>
       <CardContent>
         <PaperTitle
           title={'Transcription'}

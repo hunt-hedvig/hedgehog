@@ -1,16 +1,15 @@
-import { ClaimItemValuation, UpsertClaimItemInput } from 'api/generated/graphql'
+import { ClaimItemValuation } from 'api/generated/graphql'
 import React from 'react'
 import { DiscardChip } from './components/DiscardChip'
 import { InputChip } from './components/InputChip'
 
 export const CustomValuationChip: React.FC<{
-  request: UpsertClaimItemInput
+  itemFamilyId: string
   customValuationAmount: string
   customValuationCurrency: string
   setCustomValuationAmount: React.EventHandler<any>
   valuation: ClaimItemValuation | null
 }> = ({
-  request,
   customValuationAmount,
   customValuationCurrency,
   setCustomValuationAmount,
@@ -18,24 +17,18 @@ export const CustomValuationChip: React.FC<{
 }) => {
   return (
     <>
-      {request.itemFamilyId && (
-        <>
-          <InputChip
-            value={customValuationAmount}
-            currency={customValuationCurrency}
-            placeholder={
-              valuation?.valuationRule?.valuationType === 'MARKET_PRICE'
-                ? 'Add valuation'
-                : 'Custom valuation'
-            }
-            onChange={({ target: { value } }) =>
-              setCustomValuationAmount(value)
-            }
-          />
-          {customValuationAmount !== '' && (
-            <DiscardChip onClick={() => setCustomValuationAmount('')} />
-          )}
-        </>
+      <InputChip
+        value={customValuationAmount}
+        currency={customValuationCurrency}
+        placeholder={
+          valuation?.valuationRule?.valuationType === 'MARKET_PRICE'
+            ? 'Add valuation'
+            : 'Custom valuation'
+        }
+        onChange={({ target: { value } }) => setCustomValuationAmount(value)}
+      />
+      {customValuationAmount !== '' && (
+        <DiscardChip onClick={() => setCustomValuationAmount('')} />
       )}
     </>
   )

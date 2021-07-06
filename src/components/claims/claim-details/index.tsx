@@ -4,7 +4,7 @@ import { ClaimItems } from 'components/claims/claim-details/components/claim-ite
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
-import { CardsWrapper } from 'hedvig-ui/card'
+import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useContext, useEffect } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
@@ -52,18 +52,28 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
       <FadeIn>
         <ChatPaneAdjustedContainer>
           <CardsWrapper contentWrap={'noWrap'}>
-            <MemberInformation claimId={claimId} memberId={memberId} />
-            <ClaimInformation claimId={claimId} memberId={memberId} />
-            <ClaimTypeForm claimId={claimId} memberId={memberId} />
+            <Card span={3}>
+              <MemberInformation claimId={claimId} memberId={memberId} />
+            </Card>
+            <Card span={3}>
+              <ClaimInformation claimId={claimId} memberId={memberId} />
+            </Card>
+            <Card span={3}>
+              <ClaimTypeForm claimId={claimId} memberId={memberId} />
+            </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap={'noWrap'}>
             <ClaimTranscriptions claimId={claimId} />
           </CardsWrapper>
           <CardsWrapper contentWrap={'noWrap'}>
-            <ClaimNotes claimId={claimId} />
+            <Card>
+              <ClaimNotes claimId={claimId} />
+            </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap={'noWrap'}>
-            <ClaimItems claimId={claimId} memberId={memberId} />
+            <Card>
+              <ClaimItems claimId={claimId} memberId={memberId} />
+            </Card>
           </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier ? (
             <>
@@ -71,7 +81,9 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
                 {getCarrierText(claimPageData.claim.agreement.carrier)}
               </MainHeadline>
               <CardsWrapper contentWrap={'noWrap'}>
-                <ClaimPayments claimId={claimId} />
+                <Card>
+                  <ClaimPayments claimId={claimId} />
+                </Card>
               </CardsWrapper>
             </>
           ) : (
@@ -85,11 +97,15 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
           )}
 
           <CardsWrapper contentWrap={'noWrap'}>
-            <ClaimFileTable claimId={claimId} memberId={memberId} />
+            <Card>
+              <ClaimFileTable claimId={claimId} memberId={memberId} />
+            </Card>
           </CardsWrapper>
 
           <CardsWrapper contentWrap={'noWrap'}>
-            <ClaimEvents claimId={claimId} />
+            <Card>
+              <ClaimEvents claimId={claimId} />
+            </Card>
           </CardsWrapper>
         </ChatPaneAdjustedContainer>
       </FadeIn>
