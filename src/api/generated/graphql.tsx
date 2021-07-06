@@ -1865,7 +1865,12 @@ export type ClaimInformationQuery = { __typename?: 'QueryType' } & {
         contracts: Array<
           { __typename?: 'Contract' } & Pick<
             Contract,
-            'id' | 'currentAgreementId' | 'contractTypeName' | 'typeOfContract'
+            | 'id'
+            | 'currentAgreementId'
+            | 'contractTypeName'
+            | 'typeOfContract'
+            | 'masterInception'
+            | 'terminationDate'
           > & {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
@@ -4036,6 +4041,8 @@ export const ClaimInformationDocument = gql`
             currency
           }
         }
+        masterInception
+        terminationDate
       }
       trials {
         id
