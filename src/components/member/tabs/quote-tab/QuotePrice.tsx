@@ -1,9 +1,15 @@
 import styled from '@emotion/styled'
 import { IconButton } from '@material-ui/core'
-import { Quote } from 'api/generated/graphql'
+import {
+  GetQuotesDocument,
+  Quote,
+  useOverrideQuotePriceMutation,
+} from 'api/generated/graphql'
+import { Button } from 'hedvig-ui/button'
 import { Input } from 'hedvig-ui/input'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
+
 import { formatMoney } from 'utils/money'
 
 const PriceWrapper = styled('div')({
@@ -27,8 +33,16 @@ interface Props {
 const QuotePrice = ({ quote }: Props) => {
   const [editPrice, setEditPrice] = useState(false)
   const [newPrice, setNewPrice] = useState(quote.price)
+  const [overrideQuotePrice] = useOverrideQuotePriceMutation()
 
   const onPriceChange = (e) => setNewPrice(e.target.value)
+
+  const restorePrice = () => setNewPrice(quote.price)
+
+  const onCancel = () => {
+    restorePrice()
+    setEditPrice(false)
+  }
 
   const formattedPrice = quote.price
     ? formatMoney({
@@ -39,7 +53,25 @@ const QuotePrice = ({ quote }: Props) => {
 
   const onSubmitNewPrice = (e) => {
     e.preventDefault()
-    console.log(e)
+    if (newPrice) {
+      overrideQuotePrice({
+        variables: {
+          input: {
+            quoteId: quote.id,
+            price: newPrice,
+          },
+        },
+        refetchQueries: [
+          {
+            query: GetQuotesDocument,
+            variables: { memberId: quote.memberId },
+          },
+        ],
+      })
+    } else {
+      restorePrice()
+    }
+    setEditPrice(false)
   }
 
   return (
@@ -50,13 +82,10 @@ const QuotePrice = ({ quote }: Props) => {
             <div>
               <Input type="number" value={newPrice} onChange={onPriceChange} />
             </div>
-            <IconButton
-              style={{ marginLeft: '12px' }}
-              onClick={() => setEditPrice(true)}
-            >
+            <IconButton style={{ marginLeft: '12px' }} type="submit">
               <CheckCircleFill />
             </IconButton>
-            <IconButton onClick={() => setEditPrice(false)}>
+            <IconButton onClick={onCancel}>
               <XCircleFill />
             </IconButton>
           </AlignCenter>
