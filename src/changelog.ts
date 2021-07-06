@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-07-06',
+    change: 'Dates are now displayed when chosing contracts in claims',
+    authorGithubHandle: 'joacimastrom',
+  },
+  {
     date: '2021-07-05',
     change: 'Updated the Switcher Tool with more information and market filter',
     authorGithubHandle: 'vonElfvin',
