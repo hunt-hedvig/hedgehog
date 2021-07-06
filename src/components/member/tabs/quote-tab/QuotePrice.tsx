@@ -53,7 +53,12 @@ const QuotePrice = ({ quote }: Props) => {
 
   const onSubmitNewPrice = (e) => {
     e.preventDefault()
-    if (newPrice) {
+    if (
+      newPrice &&
+      window.confirm(
+        `Are you sure you want to change price from "${quote.price}" to "${newPrice}"?`,
+      )
+    ) {
       overrideQuotePrice({
         variables: {
           input: {
