@@ -25,6 +25,13 @@ const AlignCenter = styled('div')({
   alignItems: 'center',
 })
 
+const SubmitButton = styled(CheckCircleFill)`
+  color: ${({ theme }) => theme.success};
+`
+const CancelButton = styled(XCircleFill)`
+  color: ${({ theme }) => theme.accent};
+`
+
 interface Props {
   quote: Quote
 }
@@ -35,7 +42,6 @@ const QuotePrice = ({ quote }: Props) => {
   const [overrideQuotePrice] = useOverrideQuotePriceMutation()
 
   const onPriceChange = (e) => setNewPrice(e.target.value)
-
   const restorePrice = () => setNewPrice(quote.price)
 
   const onCancel = () => {
@@ -87,10 +93,10 @@ const QuotePrice = ({ quote }: Props) => {
               <Input type="number" value={newPrice} onChange={onPriceChange} />
             </div>
             <IconButton style={{ marginLeft: '12px' }} type="submit">
-              <CheckCircleFill />
+              <SubmitButton />
             </IconButton>
             <IconButton onClick={onCancel}>
-              <XCircleFill />
+              <CancelButton />
             </IconButton>
           </AlignCenter>
         </form>
