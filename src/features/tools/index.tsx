@@ -20,17 +20,17 @@ export const Tools: React.FC = () => (
     <CardsWrapper>
       <CardLink to="/tools/charges" span={4}>
         <Icon>💰</Icon>
-        Approve charges
+        Approve Charges
       </CardLink>
 
       <CardLink to="/tools/switcher-automation" span={4}>
         <Icon>🏡</Icon>
-        Switcher automation
+        Switcher Automation
       </CardLink>
 
       <CardLink to="/tools/perils-editor" span={4}>
         <Icon>📝</Icon>
-        Perils editor
+        Perils Editor
       </CardLink>
 
       <CardLink to="/tools/norwegian-tariff-creator" span={4}>

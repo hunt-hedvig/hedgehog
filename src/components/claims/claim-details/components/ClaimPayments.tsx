@@ -12,7 +12,7 @@ import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { Card, CardContent } from 'hedvig-ui/card'
+import { CardContent } from 'hedvig-ui/card'
 import { InfoRow, InfoTag, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
@@ -78,139 +78,137 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
     .reduce((acc, amount) => acc + amount, 0)
 
   return (
-    <Card span={1}>
-      <CardContent>
-        <PaperTitle
-          title={'Payments'}
-          badge={
-            queryError
-              ? {
-                  icon: BugFill,
-                  status: 'danger',
-                  label: 'Internal Error',
-                }
-              : null
-          }
-        />
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {paymentsData?.claim?.contract?.market === Market.Norway && (
-            <MemberIdentityCard>
-              <ThirdLevelHeadline>Member Identity</ThirdLevelHeadline>
-              <InfoRow>
-                Identified
-                <InfoText>
-                  <InfoTag
-                    style={{ fontWeight: 'bold' }}
-                    status={identity ? 'success' : 'warning'}
-                  >
-                    {identity ? 'Yes' : 'No'}
-                  </InfoTag>
-                </InfoText>
-              </InfoRow>
-              {identity && (
-                <>
+    <CardContent>
+      <PaperTitle
+        title={'Payments'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {paymentsData?.claim?.contract?.market === Market.Norway && (
+          <MemberIdentityCard>
+            <ThirdLevelHeadline>Member Identity</ThirdLevelHeadline>
+            <InfoRow>
+              Identified
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={identity ? 'success' : 'warning'}
+                >
+                  {identity ? 'Yes' : 'No'}
+                </InfoTag>
+              </InfoText>
+            </InfoRow>
+            {identity && (
+              <>
+                <InfoRow>
+                  Personal Number
+                  <InfoText>
+                    {identity.nationalIdentification.identification}
+                  </InfoText>
+                </InfoRow>
+                {identity.firstName && identity.lastName && (
                   <InfoRow>
-                    Personal Number
+                    Name
                     <InfoText>
-                      {identity.nationalIdentification.identification}
+                      {identity.firstName} {identity.lastName}
                     </InfoText>
                   </InfoRow>
-                  {identity.firstName && identity.lastName && (
-                    <InfoRow>
-                      Name
-                      <InfoText>
-                        {identity.firstName} {identity.lastName}
-                      </InfoText>
-                    </InfoRow>
-                  )}
-                </>
-              )}
-            </MemberIdentityCard>
-          )}
-          <ClaimReserves
-            claimId={claimId}
-            reserves={paymentsData?.claim?.reserves}
-            refetch={refetchPayments}
-            loading={loadingPayments}
-          />
-        </div>
+                )}
+              </>
+            )}
+          </MemberIdentityCard>
+        )}
+        <ClaimReserves
+          claimId={claimId}
+          reserves={paymentsData?.claim?.reserves}
+          refetch={refetchPayments}
+          loading={loadingPayments}
+        />
+      </div>
 
-        <ScrollX>
-          {loadingPayments && <Spinner />}
-          <PaymentTable>
-            <MuiTableHead>
-              <MuiTableRow>
-                <PaymentTableCell>Id</PaymentTableCell>
-                <PaymentTableCell>Amount</PaymentTableCell>
-                <PaymentTableCell>Deductible</PaymentTableCell>
-                <PaymentTableCell>Note</PaymentTableCell>
-                <PaymentTableCell>Date</PaymentTableCell>
-                <PaymentTableCell>Ex Gratia</PaymentTableCell>
-                <PaymentTableCell>Type</PaymentTableCell>
-                <PaymentTableCell>Status</PaymentTableCell>
+      <ScrollX>
+        {loadingPayments && <Spinner />}
+        <PaymentTable>
+          <MuiTableHead>
+            <MuiTableRow>
+              <PaymentTableCell>Id</PaymentTableCell>
+              <PaymentTableCell>Amount</PaymentTableCell>
+              <PaymentTableCell>Deductible</PaymentTableCell>
+              <PaymentTableCell>Note</PaymentTableCell>
+              <PaymentTableCell>Date</PaymentTableCell>
+              <PaymentTableCell>Ex Gratia</PaymentTableCell>
+              <PaymentTableCell>Type</PaymentTableCell>
+              <PaymentTableCell>Status</PaymentTableCell>
+            </MuiTableRow>
+          </MuiTableHead>
+          <MuiTableBody>
+            {payments.map((payment) => (
+              <MuiTableRow key={payment.id}>
+                <PaymentTableCell>{payment.id}</PaymentTableCell>
+                <PaymentTableCell>
+                  {payment.amount.amount}&nbsp;{payment.amount.currency}
+                </PaymentTableCell>
+                <PaymentTableCell>
+                  {payment.deductible.amount}&nbsp;
+                  {payment.deductible.currency}
+                </PaymentTableCell>
+                <PaymentTableCell>{payment.note}</PaymentTableCell>
+                <PaymentTableCell>
+                  {format(parseISO(payment.timestamp), 'yyyy-MM-dd HH:mm:ss')}
+                </PaymentTableCell>
+                <PaymentTableCell>
+                  {payment.exGratia ? <Checkmark /> : <Cross />}
+                </PaymentTableCell>
+                <PaymentTableCell>{payment.type}</PaymentTableCell>
+                <PaymentTableCell>{payment.status}</PaymentTableCell>
               </MuiTableRow>
-            </MuiTableHead>
-            <MuiTableBody>
-              {payments.map((payment) => (
-                <MuiTableRow key={payment.id}>
-                  <PaymentTableCell>{payment.id}</PaymentTableCell>
-                  <PaymentTableCell>
-                    {payment.amount.amount}&nbsp;{payment.amount.currency}
-                  </PaymentTableCell>
-                  <PaymentTableCell>
-                    {payment.deductible.amount}&nbsp;
-                    {payment.deductible.currency}
-                  </PaymentTableCell>
-                  <PaymentTableCell>{payment.note}</PaymentTableCell>
-                  <PaymentTableCell>
-                    {format(parseISO(payment.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-                  </PaymentTableCell>
-                  <PaymentTableCell>
-                    {payment.exGratia ? <Checkmark /> : <Cross />}
-                  </PaymentTableCell>
-                  <PaymentTableCell>{payment.type}</PaymentTableCell>
-                  <PaymentTableCell>{payment.status}</PaymentTableCell>
+            ))}
+            {totalAmount > 0 && (
+              <>
+                <MuiTableRow>
+                  <TotalCell>
+                    <b>Amount Total: </b>
+                  </TotalCell>
+                  <TotalCell align="right">
+                    {totalAmount.toFixed(2)}&nbsp;
+                    {payments[0]!.amount.currency}
+                  </TotalCell>
                 </MuiTableRow>
-              ))}
-              {totalAmount > 0 && (
-                <>
-                  <MuiTableRow>
-                    <TotalCell>
-                      <b>Amount Total: </b>
-                    </TotalCell>
-                    <TotalCell align="right">
-                      {totalAmount.toFixed(2)}&nbsp;
-                      {payments[0]!.amount.currency}
-                    </TotalCell>
-                  </MuiTableRow>
-                  <MuiTableRow>
-                    <TotalCell>
-                      <b>Deductible Total: </b>
-                    </TotalCell>
-                    <TotalCell align="right">
-                      {totalDeductible.toFixed(2)}&nbsp;
-                      {payments[0]!.deductible.currency}
-                    </TotalCell>
-                  </MuiTableRow>
-                </>
-              )}
-            </MuiTableBody>
-          </PaymentTable>
-        </ScrollX>
+                <MuiTableRow>
+                  <TotalCell>
+                    <b>Deductible Total: </b>
+                  </TotalCell>
+                  <TotalCell align="right">
+                    {totalDeductible.toFixed(2)}&nbsp;
+                    {payments[0]!.deductible.currency}
+                  </TotalCell>
+                </MuiTableRow>
+              </>
+            )}
+          </MuiTableBody>
+        </PaymentTable>
+      </ScrollX>
 
-        {!loadingPayments &&
-          paymentsData?.claim?.contract &&
-          paymentsData?.claim?.agreement?.carrier && (
-            <ClaimPayment
-              sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
-              claimId={claimId}
-              refetch={refetchPayments}
-              identified={Boolean(identity)}
-              market={paymentsData?.claim?.contract?.market}
-              carrier={paymentsData?.claim?.agreement?.carrier}
-            />
-          )}
-      </CardContent>
-    </Card>
+      {!loadingPayments &&
+        paymentsData?.claim?.contract &&
+        paymentsData?.claim?.agreement?.carrier && (
+          <ClaimPayment
+            sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
+            claimId={claimId}
+            refetch={refetchPayments}
+            identified={Boolean(identity)}
+            market={paymentsData?.claim?.contract?.market}
+            carrier={paymentsData?.claim?.agreement?.carrier}
+          />
+        )}
+    </CardContent>
   )
 }

@@ -12,7 +12,7 @@ import {
 } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
-import { Card, CardContent } from 'hedvig-ui/card'
+import { CardContent } from 'hedvig-ui/card'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Input } from 'hedvig-ui/input'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
@@ -239,40 +239,38 @@ const ClaimTypeComponent: React.FC<{
   }
 
   return (
-    <Card span={3}>
-      <CardContent>
-        <PaperTitle title={'Claim Type'} badge={titleBadge()} />
-        <SearchableDropdown
-          value={
-            type?.__typename &&
-            createClaimTypeOption(type?.__typename?.toString())
-          }
-          placeholder={'What type of claim is this?'}
-          isLoading={setClaimTypeLoading || loadingClaimInformation}
-          isClearable={false}
-          onChange={(selection) => {
-            setClaimType({
-              variables: { id: claimId, type: selection?.value ?? null },
+    <CardContent>
+      <PaperTitle title={'Claim Type'} badge={titleBadge()} />
+      <SearchableDropdown
+        value={
+          type?.__typename &&
+          createClaimTypeOption(type?.__typename?.toString())
+        }
+        placeholder={'What type of claim is this?'}
+        isLoading={setClaimTypeLoading || loadingClaimInformation}
+        isClearable={false}
+        onChange={(selection) => {
+          setClaimType({
+            variables: { id: claimId, type: selection?.value ?? null },
+          })
+            .then(async () => {
+              await refetch()
             })
-              .then(async () => {
-                await refetch()
+            .catch((e) => {
+              showNotification({
+                header: 'Error',
+                type: 'red',
+                message: e.message,
               })
-              .catch((e) => {
-                showNotification({
-                  header: 'Error',
-                  type: 'red',
-                  message: e.message,
-                })
-              })
-          }}
-          noOptionsMessage={() => 'No types found'}
-          options={Object.keys(ClaimTypes).map((claimType) =>
-            createClaimTypeOption(claimType),
-          )}
-        />
-        {type && <ClaimTypeDataForm type={type} claimId={claimId} />}
-      </CardContent>
-    </Card>
+            })
+        }}
+        noOptionsMessage={() => 'No types found'}
+        options={Object.keys(ClaimTypes).map((claimType) =>
+          createClaimTypeOption(claimType),
+        )}
+      />
+      {type && <ClaimTypeDataForm type={type} claimId={claimId} />}
+    </CardContent>
   )
 }
 

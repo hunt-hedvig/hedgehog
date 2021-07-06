@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 import { Trial } from 'api/generated/graphql'
+import { ButtonLink } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
+import { convertEnumToTitle } from 'utils/text'
 
 const TrialWrapper = styled('div')`
   &:not(:first-of-type) {
@@ -36,19 +38,21 @@ export const TrialComponent: React.FC<{
               Partner
               <InfoText>{trial.partner}</InfoText>
             </InfoRow>
-            {trial.address.livingSpace ? (
+            {trial.address.livingSpace && (
               <InfoRow>
                 Living space
                 <InfoText>{trial.address.livingSpace}</InfoText>
               </InfoRow>
-            ) : null}
+            )}
+            <InfoRow>
+              Status
+              <InfoText>{convertEnumToTitle(trial.status)}</InfoText>
+            </InfoRow>
           </InfoContainer>
         </Card>
         <Card span={2}>
+          <ThirdLevelHeadline>Address</ThirdLevelHeadline>
           <InfoContainer>
-            <InfoRow>
-              <ThirdLevelHeadline>Address</ThirdLevelHeadline>
-            </InfoRow>
             <InfoRow>
               Street
               <InfoText>{trial.address.street}</InfoText>
@@ -73,6 +77,29 @@ export const TrialComponent: React.FC<{
                 <InfoText>{trial.address.apartmentNo}</InfoText>
               </InfoRow>
             ) : null}
+          </InfoContainer>
+        </Card>
+        <Card span={2}>
+          <ThirdLevelHeadline>Trial Insurance Certificate</ThirdLevelHeadline>
+          {trial.certificateUrl ? (
+            <ButtonLink href={trial.certificateUrl} variation="primary">
+              View
+            </ButtonLink>
+          ) : (
+            <Paragraph>No insurance certificate available</Paragraph>
+          )}
+        </Card>
+        <Card span={2}>
+          <ThirdLevelHeadline>Debugging</ThirdLevelHeadline>
+          <InfoContainer>
+            <InfoRow>
+              Trial id
+              <InfoText>{trial.id}</InfoText>
+            </InfoRow>
+            <InfoRow>
+              Created at
+              <InfoText>{trial.createdAt}</InfoText>
+            </InfoRow>
           </InfoContainer>
         </Card>
       </CardsWrapper>

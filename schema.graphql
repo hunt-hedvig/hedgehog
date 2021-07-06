@@ -1199,6 +1199,8 @@ type SwitchableSwitcherEmail {
   queuedAt: Instant!
   sentAt: Instant
   remindedAt: Instant
+  cancellationDate: LocalDate
+  switcherType: String
 }
 
 enum ClaimState {
@@ -1295,6 +1297,9 @@ type Trial {
   displayName: String!
   partner: String!
   address: TrialAddress!
+  certificateUrl: String
+  status: String!
+  createdAt: Instant!
 }
 
 type TrialAddress {

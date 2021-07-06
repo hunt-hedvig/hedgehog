@@ -16,7 +16,7 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
-import { Card, CardContent, DangerCard } from 'hedvig-ui/card'
+import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
 import { Label, Paragraph } from 'hedvig-ui/typography'
@@ -130,131 +130,131 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   const [updateClaimState] = useUpdateClaimState()
 
   return (
-    <Card span={3}>
-      <CardContent>
-        <Loadable loading={claimInformationLoading}>
-          <PaperTitle
-            title={'Claim Info'}
-            badge={
-              queryError
-                ? {
-                    icon: BugFill,
-                    status: 'danger',
-                    label: 'Internal Error',
-                  }
-                : null
-            }
-          />
-          <InfoRow>
-            Registered at
-            <InfoText>
-              {registrationDate &&
-                format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
-            </InfoText>
-          </InfoRow>
-          {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
-          <SelectWrapper>
-            <Label>Status</Label>
-            <MuiSelect
-              value={state}
-              onChange={async (event) => {
-                await updateClaimState(
-                  updateClaimStateOptions(claimId, validateSelectOption(event)),
-                )
-              }}
-            >
-              {Object.values(ClaimState).map((s) => (
-                <MuiMenuItem key={s} value={s}>
-                  {s}
-                </MuiMenuItem>
-              ))}
-            </MuiSelect>
-          </SelectWrapper>
-          <SelectWrapper>
-            <Label>Employee Claim</Label>
-            <MuiSelect
-              value={coveringEmployee ? 'True' : 'False'}
-              onChange={async (event) => {
-                await setCoveringEmployee(
-                  setCoveringEmployeeOptions(
-                    claimId,
-                    validateSelectEmployeeClaimOption(event),
-                  ),
-                )
-              }}
-            >
-              <MuiMenuItem key={'True'} value={'True'}>
-                True
+    <CardContent>
+      <Loadable loading={claimInformationLoading}>
+        <PaperTitle
+          title={'Claim Info'}
+          badge={
+            queryError
+              ? {
+                  icon: BugFill,
+                  status: 'danger',
+                  label: 'Internal Error',
+                }
+              : null
+          }
+        />
+        <InfoRow>
+          Registered at
+          <InfoText>
+            {registrationDate &&
+              format(parseISO(registrationDate), 'yyyy-MM-dd HH:mm:ss')}
+          </InfoText>
+        </InfoRow>
+        {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
+        <SelectWrapper>
+          <Label>Status</Label>
+          <MuiSelect
+            value={state}
+            onChange={async (event) => {
+              await updateClaimState(
+                updateClaimStateOptions(claimId, validateSelectOption(event)),
+              )
+            }}
+          >
+            {Object.values(ClaimState).map((s) => (
+              <MuiMenuItem key={s} value={s}>
+                {s}
               </MuiMenuItem>
-              <MuiMenuItem key={'False'} value={'False'}>
-                False
-              </MuiMenuItem>
-            </MuiSelect>
-          </SelectWrapper>
-          {contracts && (
-            <SelectWrapper>
-              <Label>Contract for Claim</Label>
+            ))}
+          </MuiSelect>
+        </SelectWrapper>
+        <SelectWrapper>
+          <Label>Employee Claim</Label>
+          <MuiSelect
+            value={coveringEmployee ? 'True' : 'False'}
+            onChange={async (event) => {
+              await setCoveringEmployee(
+                setCoveringEmployeeOptions(
+                  claimId,
+                  validateSelectEmployeeClaimOption(event),
+                ),
+              )
+            }}
+          >
+            <MuiMenuItem key={'True'} value={'True'}>
+              True
+            </MuiMenuItem>
+            <MuiMenuItem key={'False'} value={'False'}>
+              False
+            </MuiMenuItem>
+          </MuiSelect>
+        </SelectWrapper>
+        {contracts && (
+          <SelectWrapper>
+            <Label>Contract for Claim</Label>
 
-              <MuiSelect
-                value={selectedContract?.id ? selectedContract.id : 'none'}
-                onChange={async (event) => {
-                  if (event.target.value === 'none') {
-                    return
-                  }
-                  await setContractForClaim(
-                    setContractForClaimOptions({
-                      claimId,
-                      memberId,
-                      contractId: event.target.value,
-                    }),
-                  )
-                  await sleep(250)
-                  await refetchClaimInformation()
-                }}
-              >
-                <MuiMenuItem disabled value={'none'} divider>
-                  None selected
-                </MuiMenuItem>
-                {contracts.map((contract) => {
-                  const address = currentAgreementForContract(contract)?.address
-                  return (
-                    <MuiMenuItem key={contract.id} value={contract.id}>
-                      {contract.contractTypeName}
-                      {address && <> ({address.street})</>}
-                    </MuiMenuItem>
-                  )
-                })}
-              </MuiSelect>
-            </SelectWrapper>
-          )}
-          {selectedAgreement && (
-            <>
-              <InfoRow>
-                Carrier
-                <InfoText>{getCarrierText(selectedAgreement.carrier)}</InfoText>
-              </InfoRow>
-              <InfoRow>
-                Line of business
-                <InfoText>
-                  {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
-                </InfoText>
-              </InfoRow>
-            </>
-          )}
-          {!selectedAgreement && (
-            <Paragraph>
-              ⚠️ No agreement covers the claim on the date of loss
-            </Paragraph>
-          )}
-          { (contracts.length === 0 && trials.length > 0) && (
+            <MuiSelect
+              value={selectedContract?.id ? selectedContract.id : 'none'}
+              onChange={async (event) => {
+                if (event.target.value === 'none') {
+                  return
+                }
+                await setContractForClaim(
+                  setContractForClaimOptions({
+                    claimId,
+                    memberId,
+                    contractId: event.target.value,
+                  }),
+                )
+                await sleep(250)
+                await refetchClaimInformation()
+              }}
+            >
+              <MuiMenuItem disabled value={'none'} divider>
+                None selected
+              </MuiMenuItem>
+              {contracts.map((contract) => {
+                const address = currentAgreementForContract(contract)?.address
+                return (
+                  <MuiMenuItem key={contract.id} value={contract.id}>
+                    {contract.contractTypeName}
+                    {address && <> ({address.street})</>}
+                  </MuiMenuItem>
+                )
+              })}
+            </MuiSelect>
+          </SelectWrapper>
+        )}
+        {selectedAgreement && (
+          <>
+            <InfoRow>
+              Carrier
+              <InfoText>{getCarrierText(selectedAgreement.carrier)}</InfoText>
+            </InfoRow>
+            <InfoRow>
+              Line of business
+              <InfoText>
+                {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
+              </InfoText>
+            </InfoRow>
+          </>
+        )}
+        {!selectedAgreement && (
+          <Paragraph>
+            ⚠️ No agreement covers the claim on the date of loss
+          </Paragraph>
+        )}
+        {contracts.length === 0 && trials.length > 0 && (
+          <CardsWrapper>
             <DangerCard>
               This member has a trial which may cover this claim, but no
               contract. This case can not be handled in Hope yet, please contact
               the MX tech team.
             </DangerCard>
-          )}
-        </Loadable>
-      </CardContent>
-    </Card>
+          </CardsWrapper>
+        )}
+      </Loadable>
+    </CardContent>
   )
 }
