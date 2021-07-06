@@ -5,7 +5,6 @@ import {
   Quote,
   useOverrideQuotePriceMutation,
 } from 'api/generated/graphql'
-import { Button } from 'hedvig-ui/button'
 import { Input } from 'hedvig-ui/input'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
