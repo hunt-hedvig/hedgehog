@@ -24,6 +24,7 @@ export type Scalars = {
   URL: any
   LocalDateTime: any
   JSON: any
+  BigDecimal: any
   ZonedDateTime: any
   LocalTime: any
 }
@@ -894,6 +895,7 @@ export type MutationType = {
   updateQuoteBySchema: Quote
   createQuoteForMemberBySchema: Quote
   signQuoteForNewContract: Quote
+  overrideQuotePrice: Quote
   upsertItemCompany: Scalars['ID']
   upsertItemType: Scalars['ID']
   upsertItemBrand: Scalars['ID']
@@ -1105,6 +1107,10 @@ export type MutationTypeSignQuoteForNewContractArgs = {
   activationDate?: Maybe<Scalars['LocalDate']>
 }
 
+export type MutationTypeOverrideQuotePriceArgs = {
+  input: OverrideQuotePriceInput
+}
+
 export type MutationTypeUpsertItemCompanyArgs = {
   request?: Maybe<UpsertItemCompanyInput>
 }
@@ -1236,6 +1242,11 @@ export type OtherClaim = {
   item?: Maybe<Scalars['String']>
   policeReport?: Maybe<Scalars['String']>
   receipt?: Maybe<Scalars['String']>
+}
+
+export type OverrideQuotePriceInput = {
+  quoteId: Scalars['ID']
+  price: Scalars['BigDecimal']
 }
 
 export type PaymentCompletionResponse = {
@@ -3430,6 +3441,14 @@ export type MemberSearchQuery = { __typename?: 'QueryType' } & {
           }
       >
     }
+}
+
+export type OverrideQuotePriceMutationVariables = Exact<{
+  input: OverrideQuotePriceInput
+}>
+
+export type OverrideQuotePriceMutation = { __typename?: 'MutationType' } & {
+  overrideQuotePrice: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
 
 export type RegenerateCertificateMutationVariables = Exact<{
@@ -8374,6 +8393,57 @@ export type MemberSearchLazyQueryHookResult = ReturnType<
 export type MemberSearchQueryResult = ApolloReactCommon.QueryResult<
   MemberSearchQuery,
   MemberSearchQueryVariables
+>
+export const OverrideQuotePriceDocument = gql`
+  mutation OverrideQuotePrice($input: OverrideQuotePriceInput!) {
+    overrideQuotePrice(input: $input) {
+      id
+    }
+  }
+`
+export type OverrideQuotePriceMutationFn = ApolloReactCommon.MutationFunction<
+  OverrideQuotePriceMutation,
+  OverrideQuotePriceMutationVariables
+>
+
+/**
+ * __useOverrideQuotePriceMutation__
+ *
+ * To run a mutation, you first call `useOverrideQuotePriceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOverrideQuotePriceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [overrideQuotePriceMutation, { data, loading, error }] = useOverrideQuotePriceMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useOverrideQuotePriceMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    OverrideQuotePriceMutation,
+    OverrideQuotePriceMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    OverrideQuotePriceMutation,
+    OverrideQuotePriceMutationVariables
+  >(OverrideQuotePriceDocument, options)
+}
+export type OverrideQuotePriceMutationHookResult = ReturnType<
+  typeof useOverrideQuotePriceMutation
+>
+export type OverrideQuotePriceMutationResult = ApolloReactCommon.MutationResult<
+  OverrideQuotePriceMutation
+>
+export type OverrideQuotePriceMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  OverrideQuotePriceMutation,
+  OverrideQuotePriceMutationVariables
 >
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {

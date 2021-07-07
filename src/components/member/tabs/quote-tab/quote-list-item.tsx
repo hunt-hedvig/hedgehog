@@ -6,13 +6,13 @@ import { Button } from 'hedvig-ui/button'
 import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
-import { formatMoney } from 'utils/money'
 import { withShowNotification } from 'utils/notifications'
 import { getSchemaDataInfo } from 'utils/quote'
 import { convertEnumToTitle } from 'utils/text'
 import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
+import QuotePrice from './QuotePrice'
 
 const OuterWrapper = styled('div')(({}) => ({
   width: '100%',
@@ -25,12 +25,6 @@ const QuoteWrapper = styled('div')(() => ({
 }))
 const DetailsWrapper = styled('div')({
   width: '100%',
-})
-const PriceWrapper = styled('div')({
-  display: 'flex',
-  paddingBottom: '1rem',
-  lineHeight: 1.2,
-  fontSize: '2rem',
 })
 const DetailWrapper = styled('div')(({ theme }) => ({
   color: theme.semiStrongForeground,
@@ -54,14 +48,7 @@ const QuoteDetails: React.FC<{
   quote: Quote
 }> = ({ quote }) => (
   <DetailsWrapper>
-    <PriceWrapper>
-      {quote.price
-        ? formatMoney({
-            amount: quote.price,
-            currency: quote.currency ?? 'SEK',
-          })
-        : '-'}
-    </PriceWrapper>
+    <QuotePrice quote={quote} />
     {(quote.breachedUnderwritingGuidelines?.length || 0) > 0 && (
       <DetailWrapper>
         <BreachedUnderwritingGuidelines>
