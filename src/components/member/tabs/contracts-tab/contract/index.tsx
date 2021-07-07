@@ -37,11 +37,9 @@ export const Contract: React.FC<{
       <CardsWrapper>
         <Card span={3}>
           <InfoContainer>
-            <InfoRow>
-              <ThirdLevelHeadline>
-                {contract.contractTypeName}
-              </ThirdLevelHeadline>
-            </InfoRow>
+            <ThirdLevelHeadline>
+              <InfoRow>{contract.contractTypeName}</InfoRow>
+            </ThirdLevelHeadline>
             <InfoRow>
               Holder{' '}
               <InfoText>

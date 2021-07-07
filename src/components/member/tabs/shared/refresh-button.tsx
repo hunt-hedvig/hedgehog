@@ -5,7 +5,7 @@ const spin = keyframes`
   from{transform: rotate(0deg)}
   to{transform: rotate(360deg)}
 `
-export const RefreshButton = styled.button<{ loading: boolean }>`
+export const RefreshButton = styled.button<{ loading?: boolean }>`
   background: transparent;
   font-size: 0.875em;
   color: ${({ theme }) => theme.mutedText};
