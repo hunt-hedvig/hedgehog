@@ -433,6 +433,7 @@ export type Contract = {
   signSource?: Maybe<SignSource>
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
+  isLocked?: Scalars['Boolean']
 }
 
 export type ContractMarketInfo = {

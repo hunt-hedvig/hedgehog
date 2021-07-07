@@ -8,6 +8,7 @@ import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
+import { LockFill } from 'react-bootstrap-icons'
 import { getSignSource } from 'utils/contract'
 import { convertEnumToTitle } from 'utils/text'
 
@@ -38,7 +39,10 @@ export const Contract: React.FC<{
         <Card span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>
-              <InfoRow>{contract.contractTypeName}</InfoRow>
+              <InfoRow>
+                {contract.contractTypeName}
+                {!contract.isLocked && <LockFill />}
+              </InfoRow>
             </ThirdLevelHeadline>
             <InfoRow>
               Holder{' '}
@@ -63,11 +67,25 @@ export const Contract: React.FC<{
           </InfoContainer>
         </Card>
         <Card span={3}>
-          <ThirdLevelHeadline>Master Inception</ThirdLevelHeadline>
+          <InfoContainer>
+            <ThirdLevelHeadline>
+              <InfoRow>
+                Master Inception
+                {!contract.isLocked && <LockFill />}
+              </InfoRow>
+            </ThirdLevelHeadline>
+          </InfoContainer>
           <MasterInception contract={contract} />
         </Card>
         <Card span={3}>
-          <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
+          <InfoContainer>
+            <ThirdLevelHeadline>
+              <InfoRow>
+                Termination Date
+                {!contract.isLocked && <LockFill />}
+              </InfoRow>
+            </ThirdLevelHeadline>
+          </InfoContainer>
           <TerminationDate contract={contract} />
         </Card>
       </CardsWrapper>

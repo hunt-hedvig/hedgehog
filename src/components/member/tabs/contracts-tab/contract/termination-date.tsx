@@ -19,6 +19,7 @@ import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
+import { LockFill } from 'react-bootstrap-icons'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 
@@ -65,45 +66,47 @@ const TerminationDateComponent: React.FC<{
                 {contract.terminationDate}
               </FourthLevelHeadline>
             </Spacing>
-            <ButtonsGroup>
-              <Button
-                fullWidth
-                variation={'secondary'}
-                onClick={() => setDatePickerEnabled(true)}
-              >
-                Change
-              </Button>
-              <Button
-                fullWidth
-                variation={'success'}
-                disabled={revertTerminationLoading}
-                onClick={() => {
-                  if (
-                    window.confirm('Are you want to revert the termination?')
-                  ) {
-                    revertTermination(revertTerminationOptions(contract))
-                      .then(() => {
-                        showNotification({
-                          type: 'olive',
-                          header: 'Termination reverted',
-                          message: 'Successfully reverted the termination',
+            {contract.isLocked && (
+              <ButtonsGroup>
+                <Button
+                  fullWidth
+                  variation={'secondary'}
+                  onClick={() => setDatePickerEnabled(true)}
+                >
+                  Change
+                </Button>
+                <Button
+                  fullWidth
+                  variation={'success'}
+                  disabled={revertTerminationLoading}
+                  onClick={() => {
+                    if (
+                      window.confirm('Are you want to revert the termination?')
+                    ) {
+                      revertTermination(revertTerminationOptions(contract))
+                        .then(() => {
+                          showNotification({
+                            type: 'olive',
+                            header: 'Termination reverted',
+                            message: 'Successfully reverted the termination',
+                          })
+                          reset()
                         })
-                        reset()
-                      })
-                      .catch((error) => {
-                        showNotification({
-                          type: 'red',
-                          header: 'Unable to revert termination',
-                          message: error.message,
+                        .catch((error) => {
+                          showNotification({
+                            type: 'red',
+                            header: 'Unable to revert termination',
+                            message: error.message,
+                          })
+                          throw error
                         })
-                        throw error
-                      })
-                  }
-                }}
-              >
-                Revert
-              </Button>
-            </ButtonsGroup>
+                    }
+                  }}
+                >
+                  Revert
+                </Button>
+              </ButtonsGroup>
+            )}
           </>
         )}
         {datePickerEnabled && (
