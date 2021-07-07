@@ -8,7 +8,9 @@ import {
 import { Input } from 'hedvig-ui/input'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
+import { withShowNotification } from 'utils/notifications'
 
+import { WithShowNotification } from 'src/store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
 
 const PriceWrapper = styled('div')({
@@ -36,7 +38,10 @@ interface Props {
   quote: Quote
 }
 
-const QuotePrice = ({ quote }: Props) => {
+const QuotePrice = ({
+  quote,
+  showNotification,
+}: Props & WithShowNotification) => {
   const [editPrice, setEditPrice] = useState(false)
   const [newPrice, setNewPrice] = useState(quote.price)
   const [overrideQuotePrice] = useOverrideQuotePriceMutation()
@@ -64,20 +69,29 @@ const QuotePrice = ({ quote }: Props) => {
         `Are you sure you want to change the price from "${quote.price}" to "${newPrice}"?`,
       )
     ) {
-      overrideQuotePrice({
-        variables: {
-          input: {
-            quoteId: quote.id,
-            price: newPrice,
+      try {
+        overrideQuotePrice({
+          variables: {
+            input: {
+              quoteId: quote.id,
+              price: newPrice,
+            },
           },
-        },
-        refetchQueries: [
-          {
-            query: GetQuotesDocument,
-            variables: { memberId: quote.memberId },
-          },
-        ],
-      })
+          refetchQueries: [
+            {
+              query: GetQuotesDocument,
+              variables: { memberId: quote.memberId },
+            },
+          ],
+        })
+      } catch (error) {
+        showNotification({
+          type: 'red',
+          header: 'Unable to override price',
+          message: error.message,
+        })
+        throw error
+      }
     } else {
       restorePrice()
     }
@@ -112,4 +126,4 @@ const QuotePrice = ({ quote }: Props) => {
   )
 }
 
-export default QuotePrice
+export default withShowNotification(QuotePrice)
