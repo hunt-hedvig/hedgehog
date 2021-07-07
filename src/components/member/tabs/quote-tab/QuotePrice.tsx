@@ -61,7 +61,7 @@ const QuotePrice = ({ quote }: Props) => {
     if (
       newPrice &&
       window.confirm(
-        `Are you sure you want to change price from "${quote.price}" to "${newPrice}"?`,
+        `Are you sure you want to change the price from "${quote.price}" to "${newPrice}"?`,
       )
     ) {
       overrideQuotePrice({
