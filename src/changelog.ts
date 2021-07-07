@@ -13,7 +13,7 @@ export interface Change {
 export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-07-06',
-    change: 'Allow quote price to be set manually',
+    change: 'Allow quote price to be overridden manually',
     authorGithubHandle: 'joacimastrom',
   },
   {
