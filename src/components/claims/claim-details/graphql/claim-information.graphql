@@ -60,6 +60,8 @@ query ClaimInformation($claimId: ID!, $memberId: ID!) {
           currency
         }
       }
+      masterInception
+      terminationDate
     }
     trials {
       id
