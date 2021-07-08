@@ -87,13 +87,13 @@ const QuotePrice = ({
           showNotification({
             type: 'olive',
             header: 'Price updated',
-            message: 'Successfully updated the quote price',
+            message: 'Successfully overrode the quote price',
           })
         })
         .catch((error) => {
           showNotification({
             type: 'red',
-            header: 'Unable to update quote price',
+            header: 'Failed to override quote price',
             message: error.message,
           })
           throw error
