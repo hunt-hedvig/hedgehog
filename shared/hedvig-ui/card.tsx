@@ -38,7 +38,6 @@ export interface CardProps {
   span?: number
   padding?: PaddingSize
   locked?: boolean
-  to?: string
   children: any
 }
 
@@ -59,20 +58,17 @@ const CardContainer = styled.div<CardProps>`
 
 export const CardLink = CardContainer.withComponent(Link)
 
-export const Card = ({ children, locked, to, ...cardProps }: CardProps) => {
-  const CardComponent = to ? CardLink : CardContainer
-  return (
-    <CardComponent to={to ?? ''} {...cardProps}>
-      {children}
-      {locked && (
-        <LockedOverlay>
-          Locked
-          <LockFill />
-        </LockedOverlay>
-      )}
-    </CardComponent>
-  )
-}
+export const Card = ({ children, locked, to, ...cardProps }: CardProps) => (
+  <CardContainer {...cardProps}>
+    {children}
+    {locked && (
+      <LockedOverlay>
+        Locked
+        <LockFill />
+      </LockedOverlay>
+    )}
+  </CardContainer>
+)
 
 export const DangerCard = styled(Card)<CardProps>`
   background-color: ${({ theme }) => theme.danger ?? colorsV3.white};
