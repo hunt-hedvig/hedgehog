@@ -4,7 +4,7 @@ import {
   stagingToolsAvailable,
 } from 'features/tools/staging-tools'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { CardLink, CardsWrapper } from 'hedvig-ui/card'
+import { Card, CardsWrapper } from 'hedvig-ui/card'
 import React from 'react'
 
 const Icon = styled('div')`
@@ -15,31 +15,32 @@ const Icon = styled('div')`
 export const Tools: React.FC = () => (
   <FadeIn>
     <CardsWrapper>
-      <CardLink to="/tools/charges" span={4}>
+      <Card to="/tools/charges" span={4}>
         <Icon>💰</Icon>
         Approve Charges
-      </CardLink>
-      <CardLink to="/tools/switcher-automation" span={4}>
+      </Card>
+      <Card to="/tools/switcher-automation" span={4}>
         <Icon>🏡</Icon>
         Switcher Automation
-      </CardLink>
-      <CardLink to="/tools/perils-editor" span={4}>
+      </Card>
+      <Card to="/tools/perils-editor" span={4}>
         <Icon>📝</Icon>
         Perils Editor
-      </CardLink>
-      <CardLink to="/tools/norwegian-tariff-creator" span={4}>
+      </Card>
+      <Card to="/tools/norwegian-tariff-creator" span={4}>
         <Icon>🛩</Icon>
         Norwegian Price Engine "Gripen"
-      </CardLink>
-      <CardLink to="/tools/campaign-codes" span={4}>
+      </Card>
+      <Card to="/tools/campaign-codes" span={4}>
         <Icon>💵</Icon>
         Campaign Codes
-      </CardLink>
-      <CardLink to="/tools/itemizer" span={4}>
+      </Card>
+      <Card to="/tools/itemizer" span={4}>
         <Icon>📱</Icon>
         Itemizer
-      </CardLink>
+      </Card>
     </CardsWrapper>
+
     {stagingToolsAvailable() && <StagingTools />}
   </FadeIn>
 )
