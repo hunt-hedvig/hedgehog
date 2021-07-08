@@ -69,29 +69,35 @@ const QuotePrice = ({
         `Are you sure you want to change the price from "${quote.price}" to "${newPrice}"?`,
       )
     ) {
-      try {
-        overrideQuotePrice({
-          variables: {
-            input: {
-              quoteId: quote.id,
-              price: newPrice,
-            },
+      overrideQuotePrice({
+        variables: {
+          input: {
+            quoteId: quote.id,
+            price: newPrice,
           },
-          refetchQueries: [
-            {
-              query: GetQuotesDocument,
-              variables: { memberId: quote.memberId },
-            },
-          ],
+        },
+        refetchQueries: [
+          {
+            query: GetQuotesDocument,
+            variables: { memberId: quote.memberId },
+          },
+        ],
+      })
+        .then(() => {
+          showNotification({
+            type: 'olive',
+            header: 'Price updated',
+            message: 'Successfully updated the quote price',
+          })
         })
-      } catch (error) {
-        showNotification({
-          type: 'red',
-          header: 'Unable to override price',
-          message: error.message,
+        .catch((error) => {
+          showNotification({
+            type: 'red',
+            header: 'Unable to update quote price',
+            message: error.message,
+          })
+          throw error
         })
-        throw error
-      }
     } else {
       restorePrice()
     }
