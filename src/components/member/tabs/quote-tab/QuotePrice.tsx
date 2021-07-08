@@ -8,13 +8,12 @@ import {
 import { Input } from 'hedvig-ui/input'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
-import { withShowNotification } from 'utils/notifications'
-
 import { WithShowNotification } from 'src/store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
+import { withShowNotification } from 'utils/notifications'
 
 const PriceWrapper = styled.div`
-  padding-bottom: '1rem';
+  padding-bottom: 1rem;
 `
 
 const DisplayPrice = styled.div`
@@ -118,7 +117,12 @@ const QuotePrice = ({
         <form onSubmit={onSubmitNewPrice}>
           <AlignCenter>
             <PriceInput>
-              <Input type="number" value={newPrice} onChange={onPriceChange} />
+              <Input
+                autoFocus
+                type="number"
+                value={newPrice}
+                onChange={onPriceChange}
+              />
             </PriceInput>
             <IconButton type="submit">
               <SubmitButton />
