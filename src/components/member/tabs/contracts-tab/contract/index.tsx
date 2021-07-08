@@ -20,6 +20,32 @@ const ContractWrapper = styled('div')`
   }
 `
 
+const LockedOverlay = styled('div')`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(255 255 255 / 70%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.5rem;
+`
+
+const ContractCard = ({ locked, children, ...cardProps }) => (
+  <Card {...cardProps} style={{ position: 'relative' }}>
+    {children}
+    {locked && (
+      <LockedOverlay>
+        Locked
+        <LockFill />
+      </LockedOverlay>
+    )}
+  </Card>
+)
+
 export const Contract: React.FC<{
   contract: ContractType
   refetch: () => Promise<any>
@@ -36,13 +62,14 @@ export const Contract: React.FC<{
   return (
     <ContractWrapper>
       <CardsWrapper>
-        <Card span={3}>
+        <ContractCard
+          locked={!contract.isLocked}
+          style={{ position: 'relative' }}
+          span={3}
+        >
           <InfoContainer>
             <ThirdLevelHeadline>
-              <InfoRow>
-                {contract.contractTypeName}
-                {!contract.isLocked && <LockFill />}
-              </InfoRow>
+              <InfoRow>{contract.contractTypeName}</InfoRow>
             </ThirdLevelHeadline>
             <InfoRow>
               Holder{' '}
@@ -65,7 +92,7 @@ export const Contract: React.FC<{
               </InfoRow>
             )}
           </InfoContainer>
-        </Card>
+        </ContractCard>
         <Card span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>

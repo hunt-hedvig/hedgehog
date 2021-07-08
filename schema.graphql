@@ -104,6 +104,7 @@ type MutationType {
     bypassUnderwritingGuidelines: Boolean!
   ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
+  overrideQuotePrice(input: OverrideQuotePriceInput!): Quote!
   upsertItemCompany(request: UpsertItemCompanyInput): ID!
   upsertItemType(request: UpsertItemTypeInput): ID!
   upsertItemBrand(request: UpsertItemBrandInput): ID!
@@ -284,6 +285,11 @@ input UpsertValuationRuleInput {
   depreciation: Float
 }
 
+input OverrideQuotePriceInput {
+  quoteId: ID!
+  price: BigDecimal!
+}
+
 type Contract {
   id: ID!
   holderMemberId: ID!
@@ -305,6 +311,7 @@ type Contract {
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
+  isLocked: Boolean!
 }
 
 enum ContractStatus {
@@ -1334,3 +1341,5 @@ scalar Instant
 scalar URL
 # A Json Object represtation of `JsonNode`
 scalar JSON
+
+scalar BigDecimal
