@@ -434,7 +434,7 @@ export type Contract = {
   signSource?: Maybe<SignSource>
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
-  isLocked?: Scalars['Boolean']
+  isLocked: Scalars['Boolean']
 }
 
 export type ContractMarketInfo = {
@@ -2857,6 +2857,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
             | 'typeOfContract'
             | 'contractTypeName'
             | 'createdAt'
+            | 'isLocked'
           > & {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
@@ -7025,6 +7026,7 @@ export const GetContractsDocument = gql`
         typeOfContract
         contractTypeName
         createdAt
+        isLocked
       }
     }
   }
