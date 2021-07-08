@@ -193,7 +193,6 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         {contracts && (
           <SelectWrapper>
             <Label>Contract for Claim</Label>
-
             <MuiSelect
               value={selectedContract?.id ? selectedContract.id : 'none'}
               onChange={async (event) => {
@@ -219,7 +218,13 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
                 return (
                   <MuiMenuItem key={contract.id} value={contract.id}>
                     {contract.contractTypeName}
-                    {address && <> ({address.street})</>}
+                    {address && `, ${address.street}`}
+                    <br />
+                    {contract.masterInception}
+                    {' - '}
+                    {contract.terminationDate
+                      ? contract.terminationDate
+                      : 'Ongoing'}
                   </MuiMenuItem>
                 )
               })}
