@@ -58,7 +58,7 @@ const CardContainer = styled.div<CardProps>`
 
 export const CardLink = CardContainer.withComponent(Link)
 
-export const Card = ({ children, locked, to, ...cardProps }: CardProps) => (
+export const Card = ({ children, locked, ...cardProps }: CardProps) => (
   <CardContainer {...cardProps}>
     {children}
     {locked && (
