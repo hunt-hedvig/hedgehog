@@ -8,22 +8,26 @@ import {
 import { Input } from 'hedvig-ui/input'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
-
+import { WithShowNotification } from 'src/store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
+import { withShowNotification } from 'utils/notifications'
 
-const PriceWrapper = styled('div')({
-  paddingBottom: '1rem',
-})
+const PriceWrapper = styled.div`
+  padding-bottom: 1rem;
+`
 
-const DisplayPrice = styled('div')({
-  lineHeight: 1.2,
-  fontSize: '2rem',
-})
+const DisplayPrice = styled.div`
+  line-height: 1.2;
+  font-size: 2rem;
+`
 
-const AlignCenter = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-})
+const AlignCenter = styled.div`
+  display: flex;
+  align-items: center;
+`
+const PriceInput = styled.div`
+  margin-right: 12px;
+`
 
 const SubmitButton = styled(CheckCircleFill)`
   color: ${({ theme }) => theme.success};
@@ -36,7 +40,10 @@ interface Props {
   quote: Quote
 }
 
-const QuotePrice = ({ quote }: Props) => {
+const QuotePrice = ({
+  quote,
+  showNotification,
+}: Props & WithShowNotification) => {
   const [editPrice, setEditPrice] = useState(false)
   const [newPrice, setNewPrice] = useState(quote.price)
   const [overrideQuotePrice] = useOverrideQuotePriceMutation()
@@ -56,15 +63,9 @@ const QuotePrice = ({ quote }: Props) => {
       })
     : '-'
 
-  const onSubmitNewPrice = (e) => {
-    e.preventDefault()
-    if (
-      newPrice &&
-      window.confirm(
-        `Are you sure you want to change the price from "${quote.price}" to "${newPrice}"?`,
-      )
-    ) {
-      overrideQuotePrice({
+  const updateQuotePrice = async () => {
+    try {
+      await overrideQuotePrice({
         variables: {
           input: {
             quoteId: quote.id,
@@ -78,6 +79,32 @@ const QuotePrice = ({ quote }: Props) => {
           },
         ],
       })
+      showNotification({
+        type: 'olive',
+        header: 'Price updated',
+        message: 'Successfully overrode the quote price',
+      })
+    } catch (error) {
+      showNotification({
+        type: 'red',
+        header: 'Failed to override quote price',
+        message: error.message,
+      })
+      restorePrice()
+    }
+  }
+
+  const onSubmitNewPrice = async (e) => {
+    e.preventDefault()
+    if (
+      newPrice &&
+      window.confirm(
+        `Are you sure you want to change the price from ${
+          quote.price
+        } ${quote.currency ?? ''} to ${newPrice} ${quote.currency ?? ''}?`,
+      )
+    ) {
+      await updateQuotePrice()
     } else {
       restorePrice()
     }
@@ -89,10 +116,15 @@ const QuotePrice = ({ quote }: Props) => {
       {editPrice ? (
         <form onSubmit={onSubmitNewPrice}>
           <AlignCenter>
-            <div>
-              <Input type="number" value={newPrice} onChange={onPriceChange} />
-            </div>
-            <IconButton style={{ marginLeft: '12px' }} type="submit">
+            <PriceInput>
+              <Input
+                autoFocus
+                type="number"
+                value={newPrice}
+                onChange={onPriceChange}
+              />
+            </PriceInput>
+            <IconButton type="submit">
               <SubmitButton />
             </IconButton>
             <IconButton onClick={onCancel}>
@@ -112,4 +144,4 @@ const QuotePrice = ({ quote }: Props) => {
   )
 }
 
-export default QuotePrice
+export default withShowNotification(QuotePrice)
