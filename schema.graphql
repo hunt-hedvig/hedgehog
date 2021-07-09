@@ -311,6 +311,7 @@ type Contract {
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
+  isLocked: Boolean!
 }
 
 enum ContractStatus {

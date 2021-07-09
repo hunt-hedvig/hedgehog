@@ -47,7 +47,6 @@ export const AgreementsTable: React.FC<{
           const isSelected = agreement.id === selectedAgreement
           return (
             <SelectableTableRow
-              singleLine
               key={agreement.id}
               onClick={() =>
                 selectedAgreement === agreement.id

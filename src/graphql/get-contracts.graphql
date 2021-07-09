@@ -58,6 +58,7 @@ query GetContracts($memberId: ID!) {
       typeOfContract
       contractTypeName
       createdAt
+      isLocked
     }
   }
 }

@@ -1,5 +1,8 @@
 import styled from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
+import React from 'react'
+import { LockFill } from 'react-bootstrap-icons'
+import { Link } from 'react-router-dom'
 
 export const CardsWrapper = styled.div<{ contentWrap?: string }>`
   width: calc(100% + 1rem);
@@ -7,6 +10,20 @@ export const CardsWrapper = styled.div<{ contentWrap?: string }>`
   flex-direction: row;
   flex-wrap: ${({ contentWrap = 'wrap' }) => contentWrap};
   margin: 0rem -0.5rem;
+`
+
+const LockedOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(255 255 255 / 70%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.5rem;
 `
 
 type PaddingSize = 'none' | 'small' | 'medium' | 'large'
@@ -17,13 +34,14 @@ export const paddingMap: Record<PaddingSize, string> = {
   medium: '2rem',
   large: '3rem',
 }
-
 export interface CardProps {
   span?: number
   padding?: PaddingSize
+  locked?: boolean
+  children: any
 }
 
-export const Card = styled('div')<CardProps>`
+const CardContainer = styled.div<CardProps>`
   display: inline-flex;
   min-width: ${({ span }) => `calc(100%/${span ?? 1} - 1rem)`};
   margin: 0.5rem;
@@ -35,7 +53,22 @@ export const Card = styled('div')<CardProps>`
   background-color: ${({ theme }) => theme.accentLighter ?? colorsV3.white};
   border: 1px solid ${({ theme }) => theme.border ?? colorsV3.gray300};
   border-radius: 0.5rem;
+  position: relative;
 `
+
+export const CardLink = CardContainer.withComponent(Link)
+
+export const Card = ({ children, locked, ...cardProps }: CardProps) => (
+  <CardContainer {...cardProps}>
+    {children}
+    {locked && (
+      <LockedOverlay>
+        Locked
+        <LockFill />
+      </LockedOverlay>
+    )}
+  </CardContainer>
+)
 
 export const DangerCard = styled(Card)<CardProps>`
   background-color: ${({ theme }) => theme.danger ?? colorsV3.white};

@@ -36,7 +36,10 @@ export const ContractTab: React.FC<{
       {contracts.length > 0 && (
         <MainHeadline>
           Contracts
-          <RefreshButton onClick={() => refetch()} loading={loading}>
+          <RefreshButton
+            onClick={() => refetch()}
+            loading={loading || undefined}
+          >
             <ArrowRepeat />
           </RefreshButton>
         </MainHeadline>

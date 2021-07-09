@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-07-09',
+    change: 'Locked contracts can no longer be interacted with',
+    authorGithubHandle: 'joacimastrom',
+  },
+  {
     date: '2021-07-06',
     change: 'Allow quote price to be overridden manually',
     authorGithubHandle: 'joacimastrom',
