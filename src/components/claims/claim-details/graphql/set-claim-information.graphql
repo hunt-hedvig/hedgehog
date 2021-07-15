@@ -7,6 +7,18 @@ mutation SetClaimInformation(
 
     ...claimType
 
+    agreement {
+      id
+      address {
+        street
+        postalCode
+        city
+      }
+      typeOfContract
+      lineOfBusinessName
+      carrier
+    }
+
     events {
       text
       date

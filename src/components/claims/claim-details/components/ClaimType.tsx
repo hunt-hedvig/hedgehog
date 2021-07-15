@@ -104,6 +104,14 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
 
   return (
     <>
+      <DataField style={{ marginTop: '1.0em' }}>
+        <Label>Date of Occurrence</Label>
+        <DateTimePicker
+          fullWidth={true}
+          date={formData.date}
+          setDate={(newDate) => setFormData({ ...formData, date: newDate })}
+        />
+      </DataField>
       {hasLocation(type.__typename as ClaimTypes) && (
         <DataField>
           <Label>Location</Label>
@@ -116,14 +124,6 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
           />
         </DataField>
       )}
-      <DataField style={{ marginTop: '1.0em' }}>
-        <Label>Date of Occurrence</Label>
-        <DateTimePicker
-          fullWidth={true}
-          date={formData.date ?? new Date()}
-          setDate={(newDate) => setFormData({ ...formData, date: newDate })}
-        />
-      </DataField>
       {hasItem(type.__typename as ClaimTypes) && (
         <DataField style={{ marginTop: '1.0em' }}>
           <Label>Item</Label>
