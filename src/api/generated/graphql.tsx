@@ -1753,6 +1753,7 @@ export type ClaimContractQuery = { __typename?: 'QueryType' } & {
                   | 'status'
                   | 'carrier'
                   | 'typeOfContract'
+                  | 'createdAt'
                 > & {
                     address?: Maybe<
                       { __typename?: 'Address' } & Pick<
@@ -1874,6 +1875,7 @@ export type ClaimInformationQuery = { __typename?: 'QueryType' } & {
                   | 'typeOfContract'
                   | 'lineOfBusinessName'
                   | 'carrier'
+                  | 'createdAt'
                 > & {
                     address?: Maybe<
                       { __typename?: 'Address' } & Pick<
@@ -3815,6 +3817,7 @@ export const ClaimContractDocument = gql`
           status
           carrier
           typeOfContract
+          createdAt
         }
         contractTypeName
         preferredCurrency
@@ -4058,6 +4061,7 @@ export const ClaimInformationDocument = gql`
             amount
             currency
           }
+          createdAt
         }
         masterInception
         terminationDate
