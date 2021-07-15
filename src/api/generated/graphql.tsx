@@ -2171,6 +2171,19 @@ export type SetClaimInformationMutationVariables = Exact<{
 export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
   setClaimInformation?: Maybe<
     { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+        agreement?: Maybe<
+          { __typename?: 'GenericAgreement' } & Pick<
+            GenericAgreement,
+            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
+          > & {
+              address?: Maybe<
+                { __typename?: 'Address' } & Pick<
+                  Address,
+                  'street' | 'postalCode' | 'city'
+                >
+              >
+            }
+        >
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
         >
@@ -4794,6 +4807,17 @@ export const SetClaimInformationDocument = gql`
     setClaimInformation(id: $id, information: $claimInformation) {
       id
       ...claimType
+      agreement {
+        id
+        address {
+          street
+          postalCode
+          city
+        }
+        typeOfContract
+        lineOfBusinessName
+        carrier
+      }
       events {
         text
         date
