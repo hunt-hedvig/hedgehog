@@ -11,6 +11,7 @@ import {
   House,
   Inbox,
   PersonBoundingBox,
+  PersonSquare,
   Search,
   ShieldShaded,
   Tools,
@@ -137,7 +138,9 @@ const MenuGroup = styled('div')({
   paddingBottom: '4rem',
 })
 
-type WithTransparent = { transparent?: boolean }
+interface WithTransparent {
+  transparent?: boolean
+}
 const MenuItem = styled<React.ComponentType<NavLinkProps & WithTransparent>>(
   ({ transparent: _transparent, ...rest }) => <NavLink {...rest} />,
 )<WithTransparent>(({ theme, transparent = false }) => ({
@@ -231,6 +234,7 @@ const routes = {
   trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
   adyen: 'https://ca-live.adyen.com',
   gsr: 'https://app.gsr.se/Account/SignIn',
+  foss: 'https://foss.finansnorge.no/#/account/login',
 }
 
 interface LatestClaim {
@@ -309,6 +313,13 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
       keys: [Keys.Option, Keys.G],
       onResolve: () => {
         window.open(routes.gsr)
+      },
+    },
+    {
+      label: 'FOSS',
+      keys: [Keys.Option, Keys.F],
+      onResolve: () => {
+        window.open(routes.foss)
       },
     },
     {
@@ -448,6 +459,11 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
                   <ArrowUpRight />
                   <PersonBoundingBox />
                   <MenuText>GSR {isHintingOption && '(G)'}</MenuText>
+                </MenuItemExternalLink>
+                <MenuItemExternalLink href={routes.foss} target="_blank">
+                  <ArrowUpRight />
+                  <PersonSquare />
+                  <MenuText>FOSS {isHintingOption && '(F)'}</MenuText>
                 </MenuItemExternalLink>
               </MenuGroup>
             </Menu>

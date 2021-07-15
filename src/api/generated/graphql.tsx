@@ -587,6 +587,7 @@ export type GenericAgreement = {
   lineOfBusinessName: Scalars['String']
   carrier: Scalars['String']
   partner?: Maybe<Scalars['String']>
+  createdAt: Scalars['Instant']
 }
 
 export type GetValuationInput = {
@@ -880,6 +881,7 @@ export type MutationType = {
   addAgreementFromQuote: Quote
   createQuoteFromAgreement: Quote
   markSwitchableSwitcherEmailAsReminded: Scalars['Boolean']
+  updateSwitcherEmailInfo: SwitchableSwitcherEmail
   terminateContract: Contract
   activatePendingAgreement: Contract
   changeTerminationDate: Contract
@@ -1030,6 +1032,11 @@ export type MutationTypeCreateQuoteFromAgreementArgs = {
 
 export type MutationTypeMarkSwitchableSwitcherEmailAsRemindedArgs = {
   id: Scalars['ID']
+}
+
+export type MutationTypeUpdateSwitcherEmailInfoArgs = {
+  id: Scalars['ID']
+  request?: Maybe<UpdateSwitcherEmailInfoInput>
 }
 
 export type MutationTypeTerminateContractArgs = {
@@ -1527,42 +1534,13 @@ export type SwitchableSwitcherEmail = {
   remindedAt?: Maybe<Scalars['Instant']>
   cancellationDate?: Maybe<Scalars['LocalDate']>
   switcherType?: Maybe<Scalars['String']>
+  note?: Maybe<Scalars['String']>
 }
 
 export type TerminateContractInput = {
   terminationDate: Scalars['LocalDate']
-  terminationReason: TerminationReason
+  terminationReason: Scalars['String']
   comment?: Maybe<Scalars['String']>
-}
-
-export enum TerminationReason {
-  NoFeedback = 'NO_FEEDBACK',
-  DissatisfiedWithService = 'DISSATISFIED_WITH_SERVICE',
-  DissatisfiedWithApp = 'DISSATISFIED_WITH_APP',
-  DissatisfiedWithHedvig = 'DISSATISFIED_WITH_HEDVIG',
-  DissatisfiedWithOther = 'DISSATISFIED_WITH_OTHER',
-  AlreadyHaveInsurance = 'ALREADY_HAVE_INSURANCE',
-  CoveredByPartnersInsurance = 'COVERED_BY_PARTNERS_INSURANCE',
-  PartnerAlreadyHasHedvigInsurance = 'PARTNER_ALREADY_HAS_HEDVIG_INSURANCE',
-  GotOfferFromJobOrUnionOrSimilar = 'GOT_OFFER_FROM_JOB_OR_UNION_OR_SIMILAR',
-  WantToKeepOldInsurance = 'WANT_TO_KEEP_OLD_INSURANCE',
-  StuckWithOldInsurance = 'STUCK_WITH_OLD_INSURANCE',
-  DontNeedInsurance = 'DONT_NEED_INSURANCE',
-  WantedOtherTypeOfInsurance = 'WANTED_OTHER_TYPE_OF_INSURANCE',
-  RegretByRightToWithraw = 'REGRET_BY_RIGHT_TO_WITHRAW',
-  Moved = 'MOVED',
-  MovedAbroad = 'MOVED_ABROAD',
-  MovedInWithParents = 'MOVED_IN_WITH_PARENTS',
-  Price = 'PRICE',
-  MissedPayments = 'MISSED_PAYMENTS',
-  MissedPaymentsBadRisk = 'MISSED_PAYMENTS_BAD_RISK',
-  PaymentIssues = 'PAYMENT_ISSUES',
-  DiscountPeriodOver = 'DISCOUNT_PERIOD_OVER',
-  ConfirmedFraud = 'CONFIRMED_FRAUD',
-  SuspectedFraud = 'SUSPECTED_FRAUD',
-  SignedByMistake = 'SIGNED_BY_MISTAKE',
-  Other = 'OTHER',
-  Unknown = 'UNKNOWN',
 }
 
 export type TestClaim = {
@@ -1622,6 +1600,10 @@ export type TrialAddress = {
 export type UnknownIncentive = {
   __typename?: 'UnknownIncentive'
   _?: Maybe<Scalars['Boolean']>
+}
+
+export type UpdateSwitcherEmailInfoInput = {
+  note?: Maybe<Scalars['String']>
 }
 
 export type UpsertClaimItemInput = {
@@ -2416,6 +2398,7 @@ export type GetSwitcherEmailsQuery = { __typename?: 'QueryType' } & {
       | 'remindedAt'
       | 'cancellationDate'
       | 'switcherType'
+      | 'note'
     > & {
         member: { __typename?: 'Member' } & Pick<
           Member,
@@ -2890,6 +2873,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
                   | 'lineOfBusinessName'
                   | 'carrier'
                   | 'partner'
+                  | 'createdAt'
                 > & {
                     premium: { __typename?: 'MonetaryAmountV2' } & Pick<
                       MonetaryAmountV2,
@@ -5638,6 +5622,7 @@ export const GetSwitcherEmailsDocument = gql`
       remindedAt
       cancellationDate
       switcherType
+      note
     }
   }
 `
@@ -7037,6 +7022,7 @@ export const GetContractsDocument = gql`
           lineOfBusinessName
           carrier
           partner
+          createdAt
         }
         hasQueuedRenewal
         renewal {

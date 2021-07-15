@@ -9,10 +9,10 @@ export const ButtonsGroup = styled('div')({
   width: '100%',
   display: 'flex',
   flexDirection: 'row',
-  '*:not(:last-child)': {
+  '*:not(:last-of-type)': {
     marginRight: '0.5rem',
   },
-  '*:not(:first-child)': {
+  '*:not(:first-of-type)': {
     marginLeft: '0.5rem',
   },
 })

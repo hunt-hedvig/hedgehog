@@ -1,4 +1,4 @@
-import { Contract, TerminationReason } from 'api/generated/graphql'
+import { Contract } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import {
   changeTerminationDateOptions,
@@ -20,6 +20,7 @@ import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
+import { TerminationReason } from 'types/enums'
 import { withShowNotification } from 'utils/notifications'
 
 const initialTerminationDate = (contract: Contract): Date =>

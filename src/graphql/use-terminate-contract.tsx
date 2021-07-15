@@ -4,10 +4,10 @@ import {
   TerminateContractMutation,
   TerminateContractMutationHookResult,
   TerminateContractMutationVariables,
-  TerminationReason,
   useTerminateContractMutation,
 } from 'api/generated/graphql'
 import { format } from 'date-fns'
+import { TerminationReason } from 'types/enums'
 import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useTerminateContract = (

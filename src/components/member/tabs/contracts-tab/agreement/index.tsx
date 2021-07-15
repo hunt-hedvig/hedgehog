@@ -85,19 +85,25 @@ const AgreementComponent: React.FC<{
         <Card span={2}>
           <ThirdLevelHeadline>Debugging</ThirdLevelHeadline>
           <InfoRow>
-            Contract id
+            Member Id <InfoText>{contract.holderMemberId}</InfoText>
+          </InfoRow>
+          <InfoRow>
+            Contract Id
             <InfoText>{contract.id}</InfoText>
-          </InfoRow>
-          <InfoRow>
-            Member id <InfoText>{contract.holderMemberId}</InfoText>
-          </InfoRow>
-          <InfoRow>
-            Agreement id <InfoText>{agreement.id}</InfoText>
           </InfoRow>
           <InfoRow>
             Contract created at{' '}
             <InfoText>
               {format(parseISO(contract.createdAt), 'yyyy-MM-dd hh:mm:ss')}
+            </InfoText>
+          </InfoRow>
+          <InfoRow>
+            Agreement Id <InfoText>{agreement.id}</InfoText>
+          </InfoRow>
+          <InfoRow>
+            Agreement created at{' '}
+            <InfoText>
+              {format(parseISO(agreement.createdAt), 'yyyy-MM-dd hh:mm:ss')}
             </InfoText>
           </InfoRow>
         </Card>
