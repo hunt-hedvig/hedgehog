@@ -8,7 +8,6 @@ import { lightTheme } from './themes'
 export const ButtonsGroup = styled('div')({
   width: '100%',
   display: 'flex',
-  flexDirection: 'row',
   '*:not(:last-of-type)': {
     marginRight: '0.5rem',
   },

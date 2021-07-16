@@ -122,45 +122,7 @@ const SwitcherEmailRowComponent: React.FC<Pick<
       </Table.Cell>
       <Table.Cell width={5}>
         <FourthLevelHeadline>{status}</FourthLevelHeadline>
-        {!editNote && (
-          <>
-            <Note>{note}</Note>
-            <ButtonsGroup>
-              <Button
-                size="small"
-                variation="primary"
-                onClick={() => setEditNote((current) => !current)}
-              >
-                Toggle note edit
-              </Button>
-              <Button
-                size="small"
-                variation="secondary"
-                disabled={!!remindedAtDate || markAsRemindedOptions.loading}
-                onClick={async () => {
-                  if (
-                    confirm(
-                      `Did you remind ${convertEnumToTitle(
-                        switcherCompany,
-                      )} about ${member.firstName} ${member.lastName} (${
-                        member.memberId
-                      })?`,
-                    )
-                  ) {
-                    await markAsReminded()
-                  }
-                }}
-              >
-                {markAsRemindedOptions.loading
-                  ? '...'
-                  : remindedAtDate
-                  ? `Reminded ${format(remindedAtDate, FORMAT_DATE_TIME)}`
-                  : 'Mark as reminded'}
-              </Button>
-            </ButtonsGroup>
-          </>
-        )}
-        {editNote && (
+        {editNote ? (
           <>
             <Input
               autofocus
@@ -207,6 +169,43 @@ const SwitcherEmailRowComponent: React.FC<Pick<
                   })
               }}
             />
+          </>
+        ) : (
+          <>
+            <Note>{note}</Note>
+            <ButtonsGroup>
+              <Button
+                size="small"
+                variation="primary"
+                onClick={() => setEditNote((current) => !current)}
+              >
+                Toggle note edit
+              </Button>
+              <Button
+                size="small"
+                variation="secondary"
+                disabled={!!remindedAtDate || markAsRemindedOptions.loading}
+                onClick={async () => {
+                  if (
+                    confirm(
+                      `Did you remind ${convertEnumToTitle(
+                        switcherCompany,
+                      )} about ${member.firstName} ${member.lastName} (${
+                        member.memberId
+                      })?`,
+                    )
+                  ) {
+                    await markAsReminded()
+                  }
+                }}
+              >
+                {markAsRemindedOptions.loading
+                  ? '...'
+                  : remindedAtDate
+                  ? `Reminded ${format(remindedAtDate, FORMAT_DATE_TIME)}`
+                  : 'Mark as reminded'}
+              </Button>
+            </ButtonsGroup>
           </>
         )}
       </Table.Cell>
@@ -279,9 +278,6 @@ export const SwitcherAutomation: React.FC = () => {
             <Table.Body>
               {switchers.data?.switchableSwitcherEmails
                 ?.filter((email) => {
-                  if (!selectedMarket && !selectedStatus) {
-                    return true
-                  }
                   if (!email.switcherType) {
                     return true
                   }
