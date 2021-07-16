@@ -14,5 +14,6 @@ query GetSwitcherEmails {
     remindedAt
     cancellationDate
     switcherType
+    note
   }
 }

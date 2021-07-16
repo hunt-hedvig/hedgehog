@@ -59,6 +59,7 @@ query ClaimInformation($claimId: ID!, $memberId: ID!) {
           amount
           currency
         }
+        createdAt
       }
       masterInception
       terminationDate

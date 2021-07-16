@@ -45,6 +45,7 @@ query GetContracts($memberId: ID!) {
         lineOfBusinessName
         carrier
         partner
+        createdAt
       }
       hasQueuedRenewal
       renewal {

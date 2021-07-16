@@ -19,6 +19,7 @@ query ClaimContract($claimId: ID!) {
         status
         carrier
         typeOfContract
+        createdAt
       }
       contractTypeName
       preferredCurrency

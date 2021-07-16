@@ -72,6 +72,10 @@ type MutationType {
 
   createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
+  updateSwitcherEmailInfo(
+    id: ID!
+    request: UpdateSwitcherEmailInfoInput
+  ): SwitchableSwitcherEmail!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
   activatePendingAgreement(
     contractId: ID!
@@ -343,6 +347,7 @@ type GenericAgreement {
   lineOfBusinessName: String!
   carrier: String!
   partner: String
+  createdAt: Instant!
 }
 
 enum SwedishApartmentLineOfBusiness {
@@ -402,7 +407,7 @@ input SetContractForClaim {
 
 input TerminateContractInput {
   terminationDate: LocalDate!
-  terminationReason: TerminationReason!
+  terminationReason: String!
   comment: String
 }
 
@@ -413,36 +418,6 @@ input ChangeTerminationDateInput {
 input ActivatePendingAgreementInput {
   pendingAgreementId: ID!
   fromDate: LocalDate!
-}
-
-enum TerminationReason {
-  NO_FEEDBACK
-  DISSATISFIED_WITH_SERVICE
-  DISSATISFIED_WITH_APP
-  DISSATISFIED_WITH_HEDVIG
-  DISSATISFIED_WITH_OTHER
-  ALREADY_HAVE_INSURANCE
-  COVERED_BY_PARTNERS_INSURANCE
-  PARTNER_ALREADY_HAS_HEDVIG_INSURANCE
-  GOT_OFFER_FROM_JOB_OR_UNION_OR_SIMILAR
-  WANT_TO_KEEP_OLD_INSURANCE
-  STUCK_WITH_OLD_INSURANCE
-  DONT_NEED_INSURANCE
-  WANTED_OTHER_TYPE_OF_INSURANCE
-  REGRET_BY_RIGHT_TO_WITHRAW
-  MOVED
-  MOVED_ABROAD
-  MOVED_IN_WITH_PARENTS
-  PRICE
-  MISSED_PAYMENTS
-  MISSED_PAYMENTS_BAD_RISK
-  PAYMENT_ISSUES
-  DISCOUNT_PERIOD_OVER
-  CONFIRMED_FRAUD
-  SUSPECTED_FRAUD
-  SIGNED_BY_MISTAKE
-  OTHER
-  UNKNOWN
 }
 
 input ChangeToDateInput {
@@ -1208,6 +1183,11 @@ type SwitchableSwitcherEmail {
   remindedAt: Instant
   cancellationDate: LocalDate
   switcherType: String
+  note: String
+}
+
+input UpdateSwitcherEmailInfoInput {
+  note: String
 }
 
 enum ClaimState {
