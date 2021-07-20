@@ -17,7 +17,7 @@ export const getSignSource = (signSource: string): string => {
     case 'WEBONBOARDING':
       return 'Web On-boarding'
     case 'SELF_CHANGE':
-      return 'Moving flow'
+      return 'Self-service'
     default:
       return signSource
   }
