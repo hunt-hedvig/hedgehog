@@ -155,7 +155,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         <SelectWrapper>
           <Label>Status</Label>
           <MuiSelect
-            value={state}
+            value={state || ''}
             onChange={async (event) => {
               await updateClaimState(
                 updateClaimStateOptions(claimId, validateSelectOption(event)),
