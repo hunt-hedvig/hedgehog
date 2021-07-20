@@ -1,4 +1,4 @@
-import { Contract, GenericAgreement, QuoteState } from 'api/generated/graphql'
+import { Contract, GenericAgreement } from 'api/generated/graphql'
 import {
   createQuoteFromAgreementOptions,
   useCreateQuoteFromAgreement,
@@ -29,7 +29,7 @@ export const CreateQuoteFromAgreement: React.FC<{
   }
 
   const quoteAlreadyExists = quotes
-    .filter((quote) => quote.state === QuoteState.Quoted && !isExpired(quote))
+    .filter((quote) => quote.state === 'QUOTED' && !isExpired(quote))
     .map((quote) => quote.originatingProductId)
     .includes(agreement.id)
 

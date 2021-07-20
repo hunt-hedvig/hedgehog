@@ -1,21 +1,23 @@
-import { Contract, GenericAgreement, SignSource } from 'api/generated/graphql'
+import { Contract, GenericAgreement } from 'api/generated/graphql'
 
-export const getSignSource = (signSource: SignSource): string => {
+export const getSignSource = (signSource: string): string => {
   switch (signSource) {
-    case SignSource.App:
+    case 'APP':
       return 'App'
-    case SignSource.Android:
+    case 'ANDROID':
       return 'Android'
-    case SignSource.Ios:
+    case 'IOS':
       return 'iOS'
-    case SignSource.Hope:
+    case 'HOPE':
       return 'Hope'
-    case SignSource.Rapio:
+    case 'RAPIO':
       return 'Partner'
-    case SignSource.Web:
+    case 'WEB':
       return 'Web'
-    case SignSource.Webonboarding:
+    case 'WEBONBOARDING':
       return 'Web On-boarding'
+    case 'SELF_CHANGED':
+      return 'Moving flow'
     default:
       return signSource
   }
