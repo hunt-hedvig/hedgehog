@@ -172,7 +172,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
       )}
       <Spacing top={'medium'} />
       <Button
-        fullWidth={true}
+        fullWidth
         disabled={formData === savedFormData || loading}
         variation={'primary'}
         onClick={() => {
