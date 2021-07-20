@@ -16,7 +16,7 @@ export const getSignSource = (signSource: string): string => {
       return 'Web'
     case 'WEBONBOARDING':
       return 'Web On-boarding'
-    case 'SELF_CHANGED':
+    case 'SELF_CHANGE':
       return 'Moving flow'
     default:
       return signSource
