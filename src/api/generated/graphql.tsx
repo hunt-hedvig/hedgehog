@@ -1950,14 +1950,16 @@ export type ClaimMemberContractsMasterInceptionQuery = {
         contractMarketInfo?: Maybe<
           { __typename?: 'ContractMarketInfo' } & Pick<
             ContractMarketInfo,
-            'market'
+            'market' | 'preferredCurrency'
           >
         >
         contracts: Array<
           { __typename?: 'Contract' } & Pick<
             Contract,
             | 'id'
+            | 'currentAgreementId'
             | 'contractTypeName'
+            | 'typeOfContract'
             | 'masterInception'
             | 'terminationDate'
             | 'isTerminated'
@@ -1965,15 +1967,28 @@ export type ClaimMemberContractsMasterInceptionQuery = {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
                   GenericAgreement,
-                  'id'
+                  | 'id'
+                  | 'status'
+                  | 'typeOfContract'
+                  | 'lineOfBusinessName'
+                  | 'carrier'
+                  | 'createdAt'
                 > & {
                     address?: Maybe<
-                      { __typename?: 'Address' } & Pick<Address, 'street'>
+                      { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    >
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
                     >
                   }
               >
             }
         >
+        trials: Array<{ __typename?: 'Trial' } & Pick<Trial, 'id'>>
       }
   >
 }
@@ -2001,15 +2016,88 @@ export type ClaimPageQueryVariables = Exact<{
 
 export type ClaimPageQuery = { __typename?: 'QueryType' } & {
   claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves' | 'state'> & {
-        contract?: Maybe<{ __typename?: 'Contract' } & Pick<Contract, 'id'>>
+    { __typename?: 'Claim' } & Pick<
+      Claim,
+      | 'id'
+      | 'recordingUrl'
+      | 'registrationDate'
+      | 'state'
+      | 'coveringEmployee'
+      | 'reserves'
+    > & {
+        contract?: Maybe<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'currentAgreementId'
+            | 'contractTypeName'
+            | 'preferredCurrency'
+            | 'typeOfContract'
+          > & {
+              genericAgreements: Array<
+                { __typename?: 'GenericAgreement' } & Pick<
+                  GenericAgreement,
+                  | 'id'
+                  | 'lineOfBusinessName'
+                  | 'status'
+                  | 'carrier'
+                  | 'typeOfContract'
+                  | 'createdAt'
+                > & {
+                    address?: Maybe<
+                      { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    >
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
         agreement?: Maybe<
           { __typename?: 'GenericAgreement' } & Pick<
             GenericAgreement,
-            'id' | 'carrier'
+            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
+          > & {
+              address?: Maybe<
+                { __typename?: 'Address' } & Pick<
+                  Address,
+                  'street' | 'postalCode' | 'city'
+                >
+              >
+            }
+        >
+        transcriptions: Array<
+          { __typename?: 'ClaimTranscription' } & Pick<
+            ClaimTranscription,
+            'confidenceScore' | 'languageCode' | 'text'
           >
         >
-      }
+        notes: Array<
+          { __typename?: 'ClaimNote' } & Pick<
+            ClaimNote,
+            'date' | 'handlerReference' | 'text'
+          >
+        >
+        claimFiles: Array<
+          { __typename?: 'ClaimFileUpload' } & Pick<
+            ClaimFileUpload,
+            | 'claimFileId'
+            | 'claimId'
+            | 'category'
+            | 'contentType'
+            | 'fileUploadUrl'
+            | 'uploadedAt'
+          >
+        >
+        events: Array<
+          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
+        >
+      } & ClaimTypeFragment
   >
 }
 
@@ -2154,7 +2242,7 @@ export type SetClaimInformationMutationVariables = Exact<{
 
 export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
   setClaimInformation?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves'> & {
         agreement?: Maybe<
           { __typename?: 'GenericAgreement' } & Pick<
             GenericAgreement,
@@ -2170,6 +2258,40 @@ export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
         >
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+        >
+        contract?: Maybe<
+          { __typename?: 'Contract' } & Pick<Contract, 'id' | 'market'>
+        >
+        member: { __typename?: 'Member' } & Pick<
+          Member,
+          'memberId' | 'sanctionStatus'
+        > & {
+            identity?: Maybe<
+              { __typename?: 'Identity' } & Pick<
+                Identity,
+                'firstName' | 'lastName'
+              > & {
+                  nationalIdentification: {
+                    __typename?: 'NationalIdentification'
+                  } & Pick<
+                    NationalIdentification,
+                    'identification' | 'nationality'
+                  >
+                }
+            >
+          }
+        payments: Array<
+          { __typename?: 'ClaimPayment' } & Pick<
+            ClaimPayment,
+            | 'id'
+            | 'deductible'
+            | 'amount'
+            | 'exGratia'
+            | 'status'
+            | 'note'
+            | 'type'
+            | 'timestamp'
+          >
         >
       } & ClaimTypeFragment
   >
@@ -4163,11 +4285,14 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
       }
       contractMarketInfo {
         market
+        preferredCurrency
       }
       pickedLocale
       contracts {
         id
+        currentAgreementId
         contractTypeName
+        typeOfContract
         masterInception
         terminationDate
         isTerminated
@@ -4175,8 +4300,22 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
           id
           address {
             street
+            postalCode
+            city
           }
+          status
+          typeOfContract
+          lineOfBusinessName
+          carrier
+          premium {
+            amount
+            currency
+          }
+          createdAt
         }
+      }
+      trials {
+        id
       }
     }
   }
@@ -4297,17 +4436,73 @@ export const ClaimPageDocument = gql`
   query ClaimPage($claimId: ID!) {
     claim(id: $claimId) {
       id
+      recordingUrl
+      registrationDate
+      state
+      coveringEmployee
+      ...claimType
       reserves
       state
       contract {
         id
+        currentAgreementId
+        genericAgreements {
+          id
+          address {
+            street
+            postalCode
+            city
+          }
+          lineOfBusinessName
+          premium {
+            amount
+            currency
+          }
+          status
+          carrier
+          typeOfContract
+          createdAt
+        }
+        contractTypeName
+        preferredCurrency
+        typeOfContract
       }
       agreement {
         id
+        address {
+          street
+          postalCode
+          city
+        }
+        typeOfContract
+        lineOfBusinessName
         carrier
+      }
+      transcriptions {
+        confidenceScore
+        languageCode
+        text
+      }
+      notes {
+        date
+        handlerReference
+        text
+      }
+      claimFiles {
+        claimFileId
+        claimId
+        category
+        contentType
+        fileUploadUrl
+        uploadedAt
+      }
+      events {
+        date
+        text
       }
     }
   }
+  ${ClaimTypeFragmentDoc}
 `
 
 /**
@@ -4809,6 +5004,33 @@ export const SetClaimInformationDocument = gql`
       events {
         text
         date
+      }
+      contract {
+        id
+        market
+      }
+      member {
+        memberId
+        sanctionStatus
+        identity {
+          firstName
+          lastName
+          nationalIdentification {
+            identification
+            nationality
+          }
+        }
+      }
+      reserves
+      payments {
+        id
+        deductible
+        amount
+        exGratia
+        status
+        note
+        type
+        timestamp
       }
     }
   }

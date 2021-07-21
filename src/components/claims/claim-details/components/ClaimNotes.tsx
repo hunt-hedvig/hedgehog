@@ -9,7 +9,7 @@ import {
 import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
-  useClaimNotesQuery,
+  useClaimPageQuery,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
@@ -84,7 +84,7 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
     refetch: refetchClaimNotes,
     loading: loadingClaimNotes,
     error: queryError,
-  } = useClaimNotesQuery({
+  } = useClaimPageQuery({
     variables: { claimId },
   })
   const notes = claimNotesData?.claim?.notes ?? []

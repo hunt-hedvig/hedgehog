@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {
   ClaimTypes,
-  useClaimInformationQuery,
+  useClaimPageQuery,
   useSetClaimInformationMutation,
   useSetClaimTypeMutation,
 } from 'api/generated/graphql'
@@ -201,15 +201,14 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
 
 const ClaimTypeComponent: React.FC<{
   claimId: string
-  memberId: string
-} & WithShowNotification> = ({ claimId, memberId, showNotification }) => {
+} & WithShowNotification> = ({ claimId, showNotification }) => {
   const {
     data: claimInformationData,
     loading: loadingClaimInformation,
     refetch,
     error: queryError,
-  } = useClaimInformationQuery({
-    variables: { claimId, memberId },
+  } = useClaimPageQuery({
+    variables: { claimId },
   })
 
   const [

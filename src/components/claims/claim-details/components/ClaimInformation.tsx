@@ -1,6 +1,10 @@
 import styled from '@emotion/styled'
 import { MenuItem as MuiMenuItem, Select as MuiSelect } from '@material-ui/core'
-import { ClaimState, useClaimInformationQuery } from 'api/generated/graphql'
+import {
+  ClaimState,
+  useClaimMemberContractsMasterInceptionQuery,
+  useClaimPageQuery,
+} from 'api/generated/graphql'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
@@ -23,7 +27,6 @@ import { Label, Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { currentAgreementForContract } from 'utils/contract'
-import { sleep } from 'utils/sleep'
 import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
 interface Props {
@@ -107,11 +110,14 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
 export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   const {
     data,
-    refetch: refetchClaimInformation,
     error: queryError,
     loading: claimInformationLoading,
-  } = useClaimInformationQuery({
-    variables: { claimId, memberId },
+  } = useClaimPageQuery({
+    variables: { claimId },
+  })
+
+  const { data: memberData } = useClaimMemberContractsMasterInceptionQuery({
+    variables: { memberId },
   })
 
   const {
@@ -122,8 +128,8 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
     contract: selectedContract,
     agreement: selectedAgreement,
   } = data?.claim ?? {}
-  const contracts = data?.member?.contracts ?? []
-  const trials = data?.member?.trials ?? []
+  const contracts = memberData?.member?.contracts ?? []
+  const trials = memberData?.member?.trials ?? []
 
   const [setContractForClaim] = useSetContractForClaim()
   const [setCoveringEmployee] = useSetCoveringEmployee()
@@ -206,8 +212,6 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
                     contractId: event.target.value,
                   }),
                 )
-                await sleep(250)
-                await refetchClaimInformation()
               }}
             >
               <MuiMenuItem disabled value={'none'} divider>

@@ -23,5 +23,36 @@ mutation SetClaimInformation(
       text
       date
     }
+
+    contract {
+      id
+      market
+    }
+
+    member {
+      memberId
+      sanctionStatus
+      identity {
+        firstName
+        lastName
+        nationalIdentification {
+          identification
+          nationality
+        }
+      }
+    }
+
+    reserves
+
+    payments {
+      id
+      deductible
+      amount
+      exGratia
+      status
+      note
+      type
+      timestamp
+    }
   }
 }

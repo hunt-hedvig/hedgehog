@@ -54,12 +54,13 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
           <CardsWrapper contentWrap={'noWrap'}>
             <Card span={3}>
               <MemberInformation claimId={claimId} memberId={memberId} />
+              <MemberInformation claimId={claimId} memberId={memberId} />
             </Card>
             <Card span={3}>
               <ClaimInformation claimId={claimId} memberId={memberId} />
             </Card>
             <Card span={3}>
-              <ClaimTypeForm claimId={claimId} memberId={memberId} />
+              <ClaimTypeForm claimId={claimId} />
             </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap={'noWrap'}>

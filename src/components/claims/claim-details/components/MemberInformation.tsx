@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import {
   Flag,
   SanctionStatus,
-  useClaimContractQuery,
   useClaimMemberContractsMasterInceptionQuery,
+  useClaimPageQuery,
 } from 'api/generated/graphql'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
@@ -87,7 +87,7 @@ export const MemberInformation: React.FC<{
   const {
     data: contractData,
     error: claimContractQueryError,
-  } = useClaimContractQuery({
+  } = useClaimPageQuery({
     variables: { claimId },
   })
   const {
