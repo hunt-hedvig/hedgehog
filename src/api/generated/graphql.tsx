@@ -431,7 +431,7 @@ export type Contract = {
   renewal?: Maybe<Renewal>
   preferredCurrency: Scalars['String']
   market: Scalars['String']
-  signSource?: Maybe<SignSource>
+  signSource?: Maybe<Scalars['String']>
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
   isLocked: Scalars['Boolean']
@@ -1387,7 +1387,7 @@ export type Quote = {
   price?: Maybe<Scalars['Float']>
   currency?: Maybe<Scalars['String']>
   productType?: Maybe<Scalars['String']>
-  state?: Maybe<QuoteState>
+  state?: Maybe<Scalars['String']>
   initiatedFrom?: Maybe<Scalars['String']>
   attributedTo?: Maybe<Scalars['String']>
   currentInsurer?: Maybe<Scalars['String']>
@@ -1401,13 +1401,6 @@ export type Quote = {
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
   isReadyToSign?: Maybe<Scalars['Boolean']>
-}
-
-export enum QuoteState {
-  Incomplete = 'INCOMPLETE',
-  Quoted = 'QUOTED',
-  Signed = 'SIGNED',
-  Expired = 'EXPIRED',
 }
 
 export type RedeemedCampaign = {
@@ -1495,16 +1488,6 @@ export type SetContractForClaim = {
   claimId: Scalars['String']
   memberId: Scalars['String']
   contractId: Scalars['String']
-}
-
-export enum SignSource {
-  Rapio = 'RAPIO',
-  Webonboarding = 'WEBONBOARDING',
-  Web = 'WEB',
-  App = 'APP',
-  Ios = 'IOS',
-  Android = 'ANDROID',
-  Hope = 'HOPE',
 }
 
 export type SnowPressureClaim = {

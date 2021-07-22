@@ -312,7 +312,7 @@ type Contract {
   renewal: Renewal
   preferredCurrency: String!
   market: String!
-  signSource: SignSource
+  signSource: String
   contractTypeName: String!
   createdAt: Instant!
   isLocked: Boolean!
@@ -381,16 +381,6 @@ type Address {
   street: String!
   postalCode: String!
   city: String
-}
-
-enum SignSource {
-  RAPIO
-  WEBONBOARDING
-  WEB
-  APP
-  IOS
-  ANDROID
-  HOPE
 }
 
 type Renewal {
@@ -742,7 +732,7 @@ type Quote {
   price: Float
   currency: String
   productType: String
-  state: QuoteState
+  state: String
   initiatedFrom: String
   attributedTo: String
   currentInsurer: String
@@ -756,13 +746,6 @@ type Quote {
   signedProductId: ID
   originatingProductId: ID
   isReadyToSign: Boolean
-}
-
-enum QuoteState {
-  INCOMPLETE
-  QUOTED
-  SIGNED
-  EXPIRED
 }
 
 input CampaignFilter {
