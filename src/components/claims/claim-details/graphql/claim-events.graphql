@@ -1,9 +1,0 @@
-query ClaimEvents($claimId: ID!) {
-  claim(id: $claimId) {
-    id
-    events {
-      date
-      text
-    }
-  }
-}

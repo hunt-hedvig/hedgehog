@@ -3,7 +3,7 @@ import {
   ListItem as MuiListItem,
   withStyles,
 } from '@material-ui/core'
-import { useClaimEventsQuery } from 'api/generated/graphql'
+import { useClaimPageQuery } from 'api/generated/graphql'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
 import { CardContent } from 'hedvig-ui/card'
@@ -28,7 +28,7 @@ export const ClaimEvents: React.FC<Props> = ({ claimId }) => {
     data: claimEventsData,
     loading: loadingClaimEvents,
     error: queryError,
-  } = useClaimEventsQuery({
+  } = useClaimPageQuery({
     variables: { claimId },
   })
 

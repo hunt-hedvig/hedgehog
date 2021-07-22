@@ -1,5 +1,5 @@
 import { Grid } from '@material-ui/core'
-import { useClaimContractQuery } from 'api/generated/graphql'
+import { useClaimPageQuery } from 'api/generated/graphql'
 import { CardContent } from 'hedvig-ui/card'
 import React from 'react'
 import { ItemForm } from './components/ItemForm'
@@ -9,7 +9,7 @@ export const ClaimItems: React.FC<{
   claimId: string
   memberId: string | null
 }> = ({ claimId, memberId }) => {
-  const { data: contractData } = useClaimContractQuery({
+  const { data: contractData } = useClaimPageQuery({
     variables: { claimId },
   })
   const contract = contractData?.claim?.contract

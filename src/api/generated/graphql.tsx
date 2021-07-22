@@ -9,6 +9,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]: Maybe<T[SubKey]> }
+const defaultOptions = {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -1711,173 +1712,6 @@ export type ClaimAddClaimNoteMutation = { __typename?: 'MutationType' } & {
   >
 }
 
-export type ClaimContractQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimContractQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        contract?: Maybe<
-          { __typename?: 'Contract' } & Pick<
-            Contract,
-            | 'id'
-            | 'currentAgreementId'
-            | 'contractTypeName'
-            | 'preferredCurrency'
-            | 'typeOfContract'
-          > & {
-              genericAgreements: Array<
-                { __typename?: 'GenericAgreement' } & Pick<
-                  GenericAgreement,
-                  | 'id'
-                  | 'lineOfBusinessName'
-                  | 'status'
-                  | 'carrier'
-                  | 'typeOfContract'
-                  | 'createdAt'
-                > & {
-                    address?: Maybe<
-                      { __typename?: 'Address' } & Pick<
-                        Address,
-                        'street' | 'postalCode' | 'city'
-                      >
-                    >
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                  }
-              >
-            }
-        >
-      }
-  >
-}
-
-export type ClaimEventsQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimEventsQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        events: Array<
-          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
-        >
-      }
-  >
-}
-
-export type ClaimFilesQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimFilesQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        claimFiles: Array<
-          { __typename?: 'ClaimFileUpload' } & Pick<
-            ClaimFileUpload,
-            | 'claimFileId'
-            | 'claimId'
-            | 'category'
-            | 'contentType'
-            | 'fileUploadUrl'
-            | 'uploadedAt'
-          >
-        >
-      }
-  >
-}
-
-export type ClaimInformationQueryVariables = Exact<{
-  claimId: Scalars['ID']
-  memberId: Scalars['ID']
-}>
-
-export type ClaimInformationQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<
-      Claim,
-      'id' | 'recordingUrl' | 'registrationDate' | 'state' | 'coveringEmployee'
-    > & {
-        contract?: Maybe<
-          { __typename?: 'Contract' } & Pick<
-            Contract,
-            'id' | 'currentAgreementId' | 'contractTypeName' | 'typeOfContract'
-          > & {
-              genericAgreements: Array<
-                { __typename?: 'GenericAgreement' } & Pick<
-                  GenericAgreement,
-                  'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
-                > & {
-                    address?: Maybe<
-                      { __typename?: 'Address' } & Pick<
-                        Address,
-                        'street' | 'postalCode' | 'city'
-                      >
-                    >
-                  }
-              >
-            }
-        >
-        agreement?: Maybe<
-          { __typename?: 'GenericAgreement' } & Pick<
-            GenericAgreement,
-            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
-          > & {
-              address?: Maybe<
-                { __typename?: 'Address' } & Pick<
-                  Address,
-                  'street' | 'postalCode' | 'city'
-                >
-              >
-            }
-        >
-      } & ClaimTypeFragment
-  >
-  member?: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
-        contracts: Array<
-          { __typename?: 'Contract' } & Pick<
-            Contract,
-            | 'id'
-            | 'currentAgreementId'
-            | 'contractTypeName'
-            | 'typeOfContract'
-            | 'masterInception'
-            | 'terminationDate'
-          > & {
-              genericAgreements: Array<
-                { __typename?: 'GenericAgreement' } & Pick<
-                  GenericAgreement,
-                  | 'id'
-                  | 'status'
-                  | 'typeOfContract'
-                  | 'lineOfBusinessName'
-                  | 'carrier'
-                  | 'createdAt'
-                > & {
-                    address?: Maybe<
-                      { __typename?: 'Address' } & Pick<
-                        Address,
-                        'street' | 'postalCode' | 'city'
-                      >
-                    >
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                  }
-              >
-            }
-        >
-        trials: Array<{ __typename?: 'Trial' } & Pick<Trial, 'id'>>
-      }
-  >
-}
-
 export type ClaimMemberContractsMasterInceptionQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -1932,14 +1766,16 @@ export type ClaimMemberContractsMasterInceptionQuery = {
         contractMarketInfo?: Maybe<
           { __typename?: 'ContractMarketInfo' } & Pick<
             ContractMarketInfo,
-            'market'
+            'market' | 'preferredCurrency'
           >
         >
         contracts: Array<
           { __typename?: 'Contract' } & Pick<
             Contract,
             | 'id'
+            | 'currentAgreementId'
             | 'contractTypeName'
+            | 'typeOfContract'
             | 'masterInception'
             | 'terminationDate'
             | 'isTerminated'
@@ -1947,32 +1783,28 @@ export type ClaimMemberContractsMasterInceptionQuery = {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
                   GenericAgreement,
-                  'id'
+                  | 'id'
+                  | 'status'
+                  | 'typeOfContract'
+                  | 'lineOfBusinessName'
+                  | 'carrier'
+                  | 'createdAt'
                 > & {
                     address?: Maybe<
-                      { __typename?: 'Address' } & Pick<Address, 'street'>
+                      { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    >
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
                     >
                   }
               >
             }
         >
-      }
-  >
-}
-
-export type ClaimNotesQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimNotesQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        notes: Array<
-          { __typename?: 'ClaimNote' } & Pick<
-            ClaimNote,
-            'date' | 'handlerReference' | 'text'
-          >
-        >
+        trials: Array<{ __typename?: 'Trial' } & Pick<Trial, 'id'>>
       }
   >
 }
@@ -1983,15 +1815,88 @@ export type ClaimPageQueryVariables = Exact<{
 
 export type ClaimPageQuery = { __typename?: 'QueryType' } & {
   claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves' | 'state'> & {
-        contract?: Maybe<{ __typename?: 'Contract' } & Pick<Contract, 'id'>>
+    { __typename?: 'Claim' } & Pick<
+      Claim,
+      | 'id'
+      | 'recordingUrl'
+      | 'registrationDate'
+      | 'state'
+      | 'coveringEmployee'
+      | 'reserves'
+    > & {
+        contract?: Maybe<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'currentAgreementId'
+            | 'contractTypeName'
+            | 'preferredCurrency'
+            | 'typeOfContract'
+          > & {
+              genericAgreements: Array<
+                { __typename?: 'GenericAgreement' } & Pick<
+                  GenericAgreement,
+                  | 'id'
+                  | 'lineOfBusinessName'
+                  | 'status'
+                  | 'carrier'
+                  | 'typeOfContract'
+                  | 'createdAt'
+                > & {
+                    address?: Maybe<
+                      { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    >
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
         agreement?: Maybe<
           { __typename?: 'GenericAgreement' } & Pick<
             GenericAgreement,
-            'id' | 'carrier'
+            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
+          > & {
+              address?: Maybe<
+                { __typename?: 'Address' } & Pick<
+                  Address,
+                  'street' | 'postalCode' | 'city'
+                >
+              >
+            }
+        >
+        transcriptions: Array<
+          { __typename?: 'ClaimTranscription' } & Pick<
+            ClaimTranscription,
+            'confidenceScore' | 'languageCode' | 'text'
           >
         >
-      }
+        notes: Array<
+          { __typename?: 'ClaimNote' } & Pick<
+            ClaimNote,
+            'date' | 'handlerReference' | 'text'
+          >
+        >
+        claimFiles: Array<
+          { __typename?: 'ClaimFileUpload' } & Pick<
+            ClaimFileUpload,
+            | 'claimFileId'
+            | 'claimId'
+            | 'category'
+            | 'contentType'
+            | 'fileUploadUrl'
+            | 'uploadedAt'
+          >
+        >
+        events: Array<
+          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
+        >
+      } & ClaimTypeFragment
   >
 }
 
@@ -2040,23 +1945,6 @@ export type ClaimPaymentsQuery = { __typename?: 'QueryType' } & {
             | 'note'
             | 'type'
             | 'timestamp'
-          >
-        >
-      }
-  >
-}
-
-export type ClaimTranscriptionsQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimTranscriptionsQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        transcriptions: Array<
-          { __typename?: 'ClaimTranscription' } & Pick<
-            ClaimTranscription,
-            'confidenceScore' | 'languageCode' | 'text'
           >
         >
       }
@@ -2136,7 +2024,7 @@ export type SetClaimInformationMutationVariables = Exact<{
 
 export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
   setClaimInformation?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves'> & {
         agreement?: Maybe<
           { __typename?: 'GenericAgreement' } & Pick<
             GenericAgreement,
@@ -2152,6 +2040,40 @@ export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
         >
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+        >
+        contract?: Maybe<
+          { __typename?: 'Contract' } & Pick<Contract, 'id' | 'market'>
+        >
+        member: { __typename?: 'Member' } & Pick<
+          Member,
+          'memberId' | 'sanctionStatus'
+        > & {
+            identity?: Maybe<
+              { __typename?: 'Identity' } & Pick<
+                Identity,
+                'firstName' | 'lastName'
+              > & {
+                  nationalIdentification: {
+                    __typename?: 'NationalIdentification'
+                  } & Pick<
+                    NationalIdentification,
+                    'identification' | 'nationality'
+                  >
+                }
+            >
+          }
+        payments: Array<
+          { __typename?: 'ClaimPayment' } & Pick<
+            ClaimPayment,
+            | 'id'
+            | 'deductible'
+            | 'amount'
+            | 'exGratia'
+            | 'status'
+            | 'note'
+            | 'type'
+            | 'timestamp'
+          >
         >
       } & ClaimTypeFragment
   >
@@ -3761,10 +3683,11 @@ export function useClaimAddClaimNoteMutation(
     ClaimAddClaimNoteMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     ClaimAddClaimNoteMutation,
     ClaimAddClaimNoteMutationVariables
-  >(ClaimAddClaimNoteDocument, baseOptions)
+  >(ClaimAddClaimNoteDocument, options)
 }
 export type ClaimAddClaimNoteMutationHookResult = ReturnType<
   typeof useClaimAddClaimNoteMutation
@@ -3775,328 +3698,6 @@ export type ClaimAddClaimNoteMutationResult = ApolloReactCommon.MutationResult<
 export type ClaimAddClaimNoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ClaimAddClaimNoteMutation,
   ClaimAddClaimNoteMutationVariables
->
-export const ClaimContractDocument = gql`
-  query ClaimContract($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      contract {
-        id
-        currentAgreementId
-        genericAgreements {
-          id
-          address {
-            street
-            postalCode
-            city
-          }
-          lineOfBusinessName
-          premium {
-            amount
-            currency
-          }
-          status
-          carrier
-          typeOfContract
-          createdAt
-        }
-        contractTypeName
-        preferredCurrency
-        typeOfContract
-      }
-    }
-  }
-`
-
-/**
- * __useClaimContractQuery__
- *
- * To run a query within a React component, call `useClaimContractQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimContractQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimContractQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimContractQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimContractQuery,
-    ClaimContractQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<
-    ClaimContractQuery,
-    ClaimContractQueryVariables
-  >(ClaimContractDocument, baseOptions)
-}
-export function useClaimContractLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimContractQuery,
-    ClaimContractQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    ClaimContractQuery,
-    ClaimContractQueryVariables
-  >(ClaimContractDocument, baseOptions)
-}
-export type ClaimContractQueryHookResult = ReturnType<
-  typeof useClaimContractQuery
->
-export type ClaimContractLazyQueryHookResult = ReturnType<
-  typeof useClaimContractLazyQuery
->
-export type ClaimContractQueryResult = ApolloReactCommon.QueryResult<
-  ClaimContractQuery,
-  ClaimContractQueryVariables
->
-export const ClaimEventsDocument = gql`
-  query ClaimEvents($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      events {
-        date
-        text
-      }
-    }
-  }
-`
-
-/**
- * __useClaimEventsQuery__
- *
- * To run a query within a React component, call `useClaimEventsQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimEventsQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimEventsQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimEventsQuery,
-    ClaimEventsQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<ClaimEventsQuery, ClaimEventsQueryVariables>(
-    ClaimEventsDocument,
-    baseOptions,
-  )
-}
-export function useClaimEventsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimEventsQuery,
-    ClaimEventsQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    ClaimEventsQuery,
-    ClaimEventsQueryVariables
-  >(ClaimEventsDocument, baseOptions)
-}
-export type ClaimEventsQueryHookResult = ReturnType<typeof useClaimEventsQuery>
-export type ClaimEventsLazyQueryHookResult = ReturnType<
-  typeof useClaimEventsLazyQuery
->
-export type ClaimEventsQueryResult = ApolloReactCommon.QueryResult<
-  ClaimEventsQuery,
-  ClaimEventsQueryVariables
->
-export const ClaimFilesDocument = gql`
-  query ClaimFiles($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      claimFiles {
-        claimFileId
-        claimId
-        category
-        contentType
-        fileUploadUrl
-        uploadedAt
-      }
-    }
-  }
-`
-
-/**
- * __useClaimFilesQuery__
- *
- * To run a query within a React component, call `useClaimFilesQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimFilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimFilesQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimFilesQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimFilesQuery,
-    ClaimFilesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<ClaimFilesQuery, ClaimFilesQueryVariables>(
-    ClaimFilesDocument,
-    baseOptions,
-  )
-}
-export function useClaimFilesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimFilesQuery,
-    ClaimFilesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    ClaimFilesQuery,
-    ClaimFilesQueryVariables
-  >(ClaimFilesDocument, baseOptions)
-}
-export type ClaimFilesQueryHookResult = ReturnType<typeof useClaimFilesQuery>
-export type ClaimFilesLazyQueryHookResult = ReturnType<
-  typeof useClaimFilesLazyQuery
->
-export type ClaimFilesQueryResult = ApolloReactCommon.QueryResult<
-  ClaimFilesQuery,
-  ClaimFilesQueryVariables
->
-export const ClaimInformationDocument = gql`
-  query ClaimInformation($claimId: ID!, $memberId: ID!) {
-    claim(id: $claimId) {
-      id
-      recordingUrl
-      registrationDate
-      state
-      coveringEmployee
-      ...claimType
-      contract {
-        id
-        currentAgreementId
-        contractTypeName
-        typeOfContract
-        genericAgreements {
-          id
-          address {
-            street
-            postalCode
-            city
-          }
-          typeOfContract
-          lineOfBusinessName
-          carrier
-        }
-      }
-      agreement {
-        id
-        address {
-          street
-          postalCode
-          city
-        }
-        typeOfContract
-        lineOfBusinessName
-        carrier
-      }
-    }
-    member(id: $memberId) {
-      memberId
-      contracts {
-        id
-        currentAgreementId
-        contractTypeName
-        typeOfContract
-        genericAgreements {
-          id
-          address {
-            street
-            postalCode
-            city
-          }
-          status
-          typeOfContract
-          lineOfBusinessName
-          carrier
-          premium {
-            amount
-            currency
-          }
-          createdAt
-        }
-        masterInception
-        terminationDate
-      }
-      trials {
-        id
-      }
-    }
-  }
-  ${ClaimTypeFragmentDoc}
-`
-
-/**
- * __useClaimInformationQuery__
- *
- * To run a query within a React component, call `useClaimInformationQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimInformationQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *      memberId: // value for 'memberId'
- *   },
- * });
- */
-export function useClaimInformationQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimInformationQuery,
-    ClaimInformationQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<
-    ClaimInformationQuery,
-    ClaimInformationQueryVariables
-  >(ClaimInformationDocument, baseOptions)
-}
-export function useClaimInformationLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimInformationQuery,
-    ClaimInformationQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    ClaimInformationQuery,
-    ClaimInformationQueryVariables
-  >(ClaimInformationDocument, baseOptions)
-}
-export type ClaimInformationQueryHookResult = ReturnType<
-  typeof useClaimInformationQuery
->
-export type ClaimInformationLazyQueryHookResult = ReturnType<
-  typeof useClaimInformationLazyQuery
->
-export type ClaimInformationQueryResult = ApolloReactCommon.QueryResult<
-  ClaimInformationQuery,
-  ClaimInformationQueryVariables
 >
 export const ClaimMemberContractsMasterInceptionDocument = gql`
   query ClaimMemberContractsMasterInception($memberId: ID!) {
@@ -4136,11 +3737,14 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
       }
       contractMarketInfo {
         market
+        preferredCurrency
       }
       pickedLocale
       contracts {
         id
+        currentAgreementId
         contractTypeName
+        typeOfContract
         masterInception
         terminationDate
         isTerminated
@@ -4148,8 +3752,22 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
           id
           address {
             street
+            postalCode
+            city
           }
+          status
+          typeOfContract
+          lineOfBusinessName
+          carrier
+          premium {
+            amount
+            currency
+          }
+          createdAt
         }
+      }
+      trials {
+        id
       }
     }
   }
@@ -4177,10 +3795,11 @@ export function useClaimMemberContractsMasterInceptionQuery(
     ClaimMemberContractsMasterInceptionQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     ClaimMemberContractsMasterInceptionQuery,
     ClaimMemberContractsMasterInceptionQueryVariables
-  >(ClaimMemberContractsMasterInceptionDocument, baseOptions)
+  >(ClaimMemberContractsMasterInceptionDocument, options)
 }
 export function useClaimMemberContractsMasterInceptionLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -4188,10 +3807,11 @@ export function useClaimMemberContractsMasterInceptionLazyQuery(
     ClaimMemberContractsMasterInceptionQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     ClaimMemberContractsMasterInceptionQuery,
     ClaimMemberContractsMasterInceptionQueryVariables
-  >(ClaimMemberContractsMasterInceptionDocument, baseOptions)
+  >(ClaimMemberContractsMasterInceptionDocument, options)
 }
 export type ClaimMemberContractsMasterInceptionQueryHookResult = ReturnType<
   typeof useClaimMemberContractsMasterInceptionQuery
@@ -4203,80 +3823,77 @@ export type ClaimMemberContractsMasterInceptionQueryResult = ApolloReactCommon.Q
   ClaimMemberContractsMasterInceptionQuery,
   ClaimMemberContractsMasterInceptionQueryVariables
 >
-export const ClaimNotesDocument = gql`
-  query ClaimNotes($claimId: ID!) {
+export const ClaimPageDocument = gql`
+  query ClaimPage($claimId: ID!) {
     claim(id: $claimId) {
       id
+      recordingUrl
+      registrationDate
+      state
+      coveringEmployee
+      ...claimType
+      reserves
+      state
+      contract {
+        id
+        currentAgreementId
+        genericAgreements {
+          id
+          address {
+            street
+            postalCode
+            city
+          }
+          lineOfBusinessName
+          premium {
+            amount
+            currency
+          }
+          status
+          carrier
+          typeOfContract
+          createdAt
+        }
+        contractTypeName
+        preferredCurrency
+        typeOfContract
+      }
+      agreement {
+        id
+        address {
+          street
+          postalCode
+          city
+        }
+        typeOfContract
+        lineOfBusinessName
+        carrier
+      }
+      transcriptions {
+        confidenceScore
+        languageCode
+        text
+      }
       notes {
         date
         handlerReference
         text
       }
-    }
-  }
-`
-
-/**
- * __useClaimNotesQuery__
- *
- * To run a query within a React component, call `useClaimNotesQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimNotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimNotesQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimNotesQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimNotesQuery,
-    ClaimNotesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<ClaimNotesQuery, ClaimNotesQueryVariables>(
-    ClaimNotesDocument,
-    baseOptions,
-  )
-}
-export function useClaimNotesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimNotesQuery,
-    ClaimNotesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    ClaimNotesQuery,
-    ClaimNotesQueryVariables
-  >(ClaimNotesDocument, baseOptions)
-}
-export type ClaimNotesQueryHookResult = ReturnType<typeof useClaimNotesQuery>
-export type ClaimNotesLazyQueryHookResult = ReturnType<
-  typeof useClaimNotesLazyQuery
->
-export type ClaimNotesQueryResult = ApolloReactCommon.QueryResult<
-  ClaimNotesQuery,
-  ClaimNotesQueryVariables
->
-export const ClaimPageDocument = gql`
-  query ClaimPage($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      reserves
-      state
-      contract {
-        id
+      claimFiles {
+        claimFileId
+        claimId
+        category
+        contentType
+        fileUploadUrl
+        uploadedAt
       }
-      agreement {
-        id
-        carrier
+      events {
+        date
+        text
       }
     }
   }
+  ${ClaimTypeFragmentDoc}
 `
 
 /**
@@ -4301,9 +3918,10 @@ export function useClaimPageQuery(
     ClaimPageQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<ClaimPageQuery, ClaimPageQueryVariables>(
     ClaimPageDocument,
-    baseOptions,
+    options,
   )
 }
 export function useClaimPageLazyQuery(
@@ -4312,9 +3930,10 @@ export function useClaimPageLazyQuery(
     ClaimPageQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<ClaimPageQuery, ClaimPageQueryVariables>(
     ClaimPageDocument,
-    baseOptions,
+    options,
   )
 }
 export type ClaimPageQueryHookResult = ReturnType<typeof useClaimPageQuery>
@@ -4386,10 +4005,11 @@ export function useClaimPaymentsQuery(
     ClaimPaymentsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     ClaimPaymentsQuery,
     ClaimPaymentsQueryVariables
-  >(ClaimPaymentsDocument, baseOptions)
+  >(ClaimPaymentsDocument, options)
 }
 export function useClaimPaymentsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -4397,10 +4017,11 @@ export function useClaimPaymentsLazyQuery(
     ClaimPaymentsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     ClaimPaymentsQuery,
     ClaimPaymentsQueryVariables
-  >(ClaimPaymentsDocument, baseOptions)
+  >(ClaimPaymentsDocument, options)
 }
 export type ClaimPaymentsQueryHookResult = ReturnType<
   typeof useClaimPaymentsQuery
@@ -4411,67 +4032,6 @@ export type ClaimPaymentsLazyQueryHookResult = ReturnType<
 export type ClaimPaymentsQueryResult = ApolloReactCommon.QueryResult<
   ClaimPaymentsQuery,
   ClaimPaymentsQueryVariables
->
-export const ClaimTranscriptionsDocument = gql`
-  query ClaimTranscriptions($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      transcriptions {
-        confidenceScore
-        languageCode
-        text
-      }
-    }
-  }
-`
-
-/**
- * __useClaimTranscriptionsQuery__
- *
- * To run a query within a React component, call `useClaimTranscriptionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimTranscriptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimTranscriptionsQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimTranscriptionsQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimTranscriptionsQuery,
-    ClaimTranscriptionsQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<
-    ClaimTranscriptionsQuery,
-    ClaimTranscriptionsQueryVariables
-  >(ClaimTranscriptionsDocument, baseOptions)
-}
-export function useClaimTranscriptionsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimTranscriptionsQuery,
-    ClaimTranscriptionsQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    ClaimTranscriptionsQuery,
-    ClaimTranscriptionsQueryVariables
-  >(ClaimTranscriptionsDocument, baseOptions)
-}
-export type ClaimTranscriptionsQueryHookResult = ReturnType<
-  typeof useClaimTranscriptionsQuery
->
-export type ClaimTranscriptionsLazyQueryHookResult = ReturnType<
-  typeof useClaimTranscriptionsLazyQuery
->
-export type ClaimTranscriptionsQueryResult = ApolloReactCommon.QueryResult<
-  ClaimTranscriptionsQuery,
-  ClaimTranscriptionsQueryVariables
 >
 export const UpdateReserveDocument = gql`
   mutation UpdateReserve($claimId: ID!, $amount: MonetaryAmount!) {
@@ -4514,10 +4074,11 @@ export function useUpdateReserveMutation(
     UpdateReserveMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UpdateReserveMutation,
     UpdateReserveMutationVariables
-  >(UpdateReserveDocument, baseOptions)
+  >(UpdateReserveDocument, options)
 }
 export type UpdateReserveMutationHookResult = ReturnType<
   typeof useUpdateReserveMutation
@@ -4567,10 +4128,11 @@ export function useCreateClaimPaymentMutation(
     CreateClaimPaymentMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     CreateClaimPaymentMutation,
     CreateClaimPaymentMutationVariables
-  >(CreateClaimPaymentDocument, baseOptions)
+  >(CreateClaimPaymentDocument, options)
 }
 export type CreateClaimPaymentMutationHookResult = ReturnType<
   typeof useCreateClaimPaymentMutation
@@ -4623,10 +4185,11 @@ export function useCreateSwishClaimPaymentMutation(
     CreateSwishClaimPaymentMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     CreateSwishClaimPaymentMutation,
     CreateSwishClaimPaymentMutationVariables
-  >(CreateSwishClaimPaymentDocument, baseOptions)
+  >(CreateSwishClaimPaymentDocument, options)
 }
 export type CreateSwishClaimPaymentMutationHookResult = ReturnType<
   typeof useCreateSwishClaimPaymentMutation
@@ -4672,10 +4235,11 @@ export function useMarkClaimFileAsDeletedMutation(
     MarkClaimFileAsDeletedMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     MarkClaimFileAsDeletedMutation,
     MarkClaimFileAsDeletedMutationVariables
-  >(MarkClaimFileAsDeletedDocument, baseOptions)
+  >(MarkClaimFileAsDeletedDocument, options)
 }
 export type MarkClaimFileAsDeletedMutationHookResult = ReturnType<
   typeof useMarkClaimFileAsDeletedMutation
@@ -4730,10 +4294,11 @@ export function useSetClaimFileCategoryMutation(
     SetClaimFileCategoryMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SetClaimFileCategoryMutation,
     SetClaimFileCategoryMutationVariables
-  >(SetClaimFileCategoryDocument, baseOptions)
+  >(SetClaimFileCategoryDocument, options)
 }
 export type SetClaimFileCategoryMutationHookResult = ReturnType<
   typeof useSetClaimFileCategoryMutation
@@ -4768,6 +4333,33 @@ export const SetClaimInformationDocument = gql`
         text
         date
       }
+      contract {
+        id
+        market
+      }
+      member {
+        memberId
+        sanctionStatus
+        identity {
+          firstName
+          lastName
+          nationalIdentification {
+            identification
+            nationality
+          }
+        }
+      }
+      reserves
+      payments {
+        id
+        deductible
+        amount
+        exGratia
+        status
+        note
+        type
+        timestamp
+      }
     }
   }
   ${ClaimTypeFragmentDoc}
@@ -4801,10 +4393,11 @@ export function useSetClaimInformationMutation(
     SetClaimInformationMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SetClaimInformationMutation,
     SetClaimInformationMutationVariables
-  >(SetClaimInformationDocument, baseOptions)
+  >(SetClaimInformationDocument, options)
 }
 export type SetClaimInformationMutationHookResult = ReturnType<
   typeof useSetClaimInformationMutation
@@ -4858,10 +4451,11 @@ export function useSetClaimTypeMutation(
     SetClaimTypeMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SetClaimTypeMutation,
     SetClaimTypeMutationVariables
-  >(SetClaimTypeDocument, baseOptions)
+  >(SetClaimTypeDocument, options)
 }
 export type SetClaimTypeMutationHookResult = ReturnType<
   typeof useSetClaimTypeMutation
@@ -4900,9 +4494,10 @@ export function useGetMeQuery(
     GetMeQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<GetMeQuery, GetMeQueryVariables>(
     GetMeDocument,
-    baseOptions,
+    options,
   )
 }
 export function useGetMeLazyQuery(
@@ -4911,9 +4506,10 @@ export function useGetMeLazyQuery(
     GetMeQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<GetMeQuery, GetMeQueryVariables>(
     GetMeDocument,
-    baseOptions,
+    options,
   )
 }
 export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>
@@ -4961,10 +4557,11 @@ export function useAddAccountEntryToMemberMutation(
     AddAccountEntryToMemberMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     AddAccountEntryToMemberMutation,
     AddAccountEntryToMemberMutationVariables
-  >(AddAccountEntryToMemberDocument, baseOptions)
+  >(AddAccountEntryToMemberDocument, options)
 }
 export type AddAccountEntryToMemberMutationHookResult = ReturnType<
   typeof useAddAccountEntryToMemberMutation
@@ -5011,10 +4608,11 @@ export function useBackfillSubscriptionsMutation(
     BackfillSubscriptionsMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     BackfillSubscriptionsMutation,
     BackfillSubscriptionsMutationVariables
-  >(BackfillSubscriptionsDocument, baseOptions)
+  >(BackfillSubscriptionsDocument, options)
 }
 export type BackfillSubscriptionsMutationHookResult = ReturnType<
   typeof useBackfillSubscriptionsMutation
@@ -5062,10 +4660,11 @@ export function useFileUploadsQueryQuery(
     FileUploadsQueryQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     FileUploadsQueryQuery,
     FileUploadsQueryQueryVariables
-  >(FileUploadsQueryDocument, baseOptions)
+  >(FileUploadsQueryDocument, options)
 }
 export function useFileUploadsQueryLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -5073,10 +4672,11 @@ export function useFileUploadsQueryLazyQuery(
     FileUploadsQueryQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     FileUploadsQueryQuery,
     FileUploadsQueryQueryVariables
-  >(FileUploadsQueryDocument, baseOptions)
+  >(FileUploadsQueryDocument, options)
 }
 export type FileUploadsQueryQueryHookResult = ReturnType<
   typeof useFileUploadsQueryQuery
@@ -5146,10 +4746,11 @@ export function useGetMemberTransactionsQuery(
     GetMemberTransactionsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetMemberTransactionsQuery,
     GetMemberTransactionsQueryVariables
-  >(GetMemberTransactionsDocument, baseOptions)
+  >(GetMemberTransactionsDocument, options)
 }
 export function useGetMemberTransactionsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -5157,10 +4758,11 @@ export function useGetMemberTransactionsLazyQuery(
     GetMemberTransactionsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetMemberTransactionsQuery,
     GetMemberTransactionsQueryVariables
-  >(GetMemberTransactionsDocument, baseOptions)
+  >(GetMemberTransactionsDocument, options)
 }
 export type GetMemberTransactionsQueryHookResult = ReturnType<
   typeof useGetMemberTransactionsQuery
@@ -5208,10 +4810,11 @@ export function useMemberNameAndContractMarketInfoQuery(
     MemberNameAndContractMarketInfoQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     MemberNameAndContractMarketInfoQuery,
     MemberNameAndContractMarketInfoQueryVariables
-  >(MemberNameAndContractMarketInfoDocument, baseOptions)
+  >(MemberNameAndContractMarketInfoDocument, options)
 }
 export function useMemberNameAndContractMarketInfoLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -5219,10 +4822,11 @@ export function useMemberNameAndContractMarketInfoLazyQuery(
     MemberNameAndContractMarketInfoQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     MemberNameAndContractMarketInfoQuery,
     MemberNameAndContractMarketInfoQueryVariables
-  >(MemberNameAndContractMarketInfoDocument, baseOptions)
+  >(MemberNameAndContractMarketInfoDocument, options)
 }
 export type MemberNameAndContractMarketInfoQueryHookResult = ReturnType<
   typeof useMemberNameAndContractMarketInfoQuery
@@ -5280,10 +4884,11 @@ export function usePaymentScheduleQueryQuery(
     PaymentScheduleQueryQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     PaymentScheduleQueryQuery,
     PaymentScheduleQueryQueryVariables
-  >(PaymentScheduleQueryDocument, baseOptions)
+  >(PaymentScheduleQueryDocument, options)
 }
 export function usePaymentScheduleQueryLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -5291,10 +4896,11 @@ export function usePaymentScheduleQueryLazyQuery(
     PaymentScheduleQueryQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     PaymentScheduleQueryQuery,
     PaymentScheduleQueryQueryVariables
-  >(PaymentScheduleQueryDocument, baseOptions)
+  >(PaymentScheduleQueryDocument, options)
 }
 export type PaymentScheduleQueryQueryHookResult = ReturnType<
   typeof usePaymentScheduleQueryQuery
@@ -5339,10 +4945,11 @@ export function useInsertItemCategoriesMutation(
     InsertItemCategoriesMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     InsertItemCategoriesMutation,
     InsertItemCategoriesMutationVariables
-  >(InsertItemCategoriesDocument, baseOptions)
+  >(InsertItemCategoriesDocument, options)
 }
 export type InsertItemCategoriesMutationHookResult = ReturnType<
   typeof useInsertItemCategoriesMutation
@@ -5387,10 +4994,11 @@ export function useInsertValuationRulesMutation(
     InsertValuationRulesMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     InsertValuationRulesMutation,
     InsertValuationRulesMutationVariables
-  >(InsertValuationRulesDocument, baseOptions)
+  >(InsertValuationRulesDocument, options)
 }
 export type InsertValuationRulesMutationHookResult = ReturnType<
   typeof useInsertValuationRulesMutation
@@ -5435,10 +5043,11 @@ export function useAddNorwegainPostalCodesMutation(
     AddNorwegainPostalCodesMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     AddNorwegainPostalCodesMutation,
     AddNorwegainPostalCodesMutationVariables
-  >(AddNorwegainPostalCodesDocument, baseOptions)
+  >(AddNorwegainPostalCodesDocument, options)
 }
 export type AddNorwegainPostalCodesMutationHookResult = ReturnType<
   typeof useAddNorwegainPostalCodesMutation
@@ -5485,10 +5094,11 @@ export function useCreateNorwegianGripenPriceEngineMutation(
     CreateNorwegianGripenPriceEngineMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     CreateNorwegianGripenPriceEngineMutation,
     CreateNorwegianGripenPriceEngineMutationVariables
-  >(CreateNorwegianGripenPriceEngineDocument, baseOptions)
+  >(CreateNorwegianGripenPriceEngineDocument, options)
 }
 export type CreateNorwegianGripenPriceEngineMutationHookResult = ReturnType<
   typeof useCreateNorwegianGripenPriceEngineMutation
@@ -5533,10 +5143,11 @@ export function useUnsignMemberMutation(
     UnsignMemberMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UnsignMemberMutation,
     UnsignMemberMutationVariables
-  >(UnsignMemberDocument, baseOptions)
+  >(UnsignMemberDocument, options)
 }
 export type UnsignMemberMutationHookResult = ReturnType<
   typeof useUnsignMemberMutation
@@ -5591,10 +5202,11 @@ export function useGetSwitcherEmailsQuery(
     GetSwitcherEmailsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetSwitcherEmailsQuery,
     GetSwitcherEmailsQueryVariables
-  >(GetSwitcherEmailsDocument, baseOptions)
+  >(GetSwitcherEmailsDocument, options)
 }
 export function useGetSwitcherEmailsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -5602,10 +5214,11 @@ export function useGetSwitcherEmailsLazyQuery(
     GetSwitcherEmailsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetSwitcherEmailsQuery,
     GetSwitcherEmailsQueryVariables
-  >(GetSwitcherEmailsDocument, baseOptions)
+  >(GetSwitcherEmailsDocument, options)
 }
 export type GetSwitcherEmailsQueryHookResult = ReturnType<
   typeof useGetSwitcherEmailsQuery
@@ -5650,10 +5263,11 @@ export function useMarkSwitcherEmailAsRemindedMutation(
     MarkSwitcherEmailAsRemindedMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     MarkSwitcherEmailAsRemindedMutation,
     MarkSwitcherEmailAsRemindedMutationVariables
-  >(MarkSwitcherEmailAsRemindedDocument, baseOptions)
+  >(MarkSwitcherEmailAsRemindedDocument, options)
 }
 export type MarkSwitcherEmailAsRemindedMutationHookResult = ReturnType<
   typeof useMarkSwitcherEmailAsRemindedMutation
@@ -5705,10 +5319,11 @@ export function useActivatePendingAgreementMutation(
     ActivatePendingAgreementMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     ActivatePendingAgreementMutation,
     ActivatePendingAgreementMutationVariables
-  >(ActivatePendingAgreementDocument, baseOptions)
+  >(ActivatePendingAgreementDocument, options)
 }
 export type ActivatePendingAgreementMutationHookResult = ReturnType<
   typeof useActivatePendingAgreementMutation
@@ -5771,10 +5386,11 @@ export function useAddAgreementFromQuoteMutation(
     AddAgreementFromQuoteMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     AddAgreementFromQuoteMutation,
     AddAgreementFromQuoteMutationVariables
-  >(AddAgreementFromQuoteDocument, baseOptions)
+  >(AddAgreementFromQuoteDocument, options)
 }
 export type AddAgreementFromQuoteMutationHookResult = ReturnType<
   typeof useAddAgreementFromQuoteMutation
@@ -5822,10 +5438,11 @@ export function useAddMonthlyEntryMutation(
     AddMonthlyEntryMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     AddMonthlyEntryMutation,
     AddMonthlyEntryMutationVariables
-  >(AddMonthlyEntryDocument, baseOptions)
+  >(AddMonthlyEntryDocument, options)
 }
 export type AddMonthlyEntryMutationHookResult = ReturnType<
   typeof useAddMonthlyEntryMutation
@@ -5872,10 +5489,11 @@ export function useAssignCampaignToPartnerFreeMonthsMutation(
     AssignCampaignToPartnerFreeMonthsMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     AssignCampaignToPartnerFreeMonthsMutation,
     AssignCampaignToPartnerFreeMonthsMutationVariables
-  >(AssignCampaignToPartnerFreeMonthsDocument, baseOptions)
+  >(AssignCampaignToPartnerFreeMonthsDocument, options)
 }
 export type AssignCampaignToPartnerFreeMonthsMutationHookResult = ReturnType<
   typeof useAssignCampaignToPartnerFreeMonthsMutation
@@ -5922,10 +5540,11 @@ export function useAssignCampaignToPartnerPercentageDiscountMutation(
     AssignCampaignToPartnerPercentageDiscountMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     AssignCampaignToPartnerPercentageDiscountMutation,
     AssignCampaignToPartnerPercentageDiscountMutationVariables
-  >(AssignCampaignToPartnerPercentageDiscountDocument, baseOptions)
+  >(AssignCampaignToPartnerPercentageDiscountDocument, options)
 }
 export type AssignCampaignToPartnerPercentageDiscountMutationHookResult = ReturnType<
   typeof useAssignCampaignToPartnerPercentageDiscountMutation
@@ -5972,10 +5591,11 @@ export function useAssignCampaignToPartnerVisibleNoDiscountMutation(
     AssignCampaignToPartnerVisibleNoDiscountMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     AssignCampaignToPartnerVisibleNoDiscountMutation,
     AssignCampaignToPartnerVisibleNoDiscountMutationVariables
-  >(AssignCampaignToPartnerVisibleNoDiscountDocument, baseOptions)
+  >(AssignCampaignToPartnerVisibleNoDiscountDocument, options)
 }
 export type AssignCampaignToPartnerVisibleNoDiscountMutationHookResult = ReturnType<
   typeof useAssignCampaignToPartnerVisibleNoDiscountMutation
@@ -6021,10 +5641,11 @@ export function useAnswerQuestionMutation(
     AnswerQuestionMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     AnswerQuestionMutation,
     AnswerQuestionMutationVariables
-  >(AnswerQuestionDocument, baseOptions)
+  >(AnswerQuestionDocument, options)
 }
 export type AnswerQuestionMutationHookResult = ReturnType<
   typeof useAnswerQuestionMutation
@@ -6079,10 +5700,11 @@ export function useCanValuateClaimItemQuery(
     CanValuateClaimItemQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     CanValuateClaimItemQuery,
     CanValuateClaimItemQueryVariables
-  >(CanValuateClaimItemDocument, baseOptions)
+  >(CanValuateClaimItemDocument, options)
 }
 export function useCanValuateClaimItemLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -6090,10 +5712,11 @@ export function useCanValuateClaimItemLazyQuery(
     CanValuateClaimItemQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     CanValuateClaimItemQuery,
     CanValuateClaimItemQueryVariables
-  >(CanValuateClaimItemDocument, baseOptions)
+  >(CanValuateClaimItemDocument, options)
 }
 export type CanValuateClaimItemQueryHookResult = ReturnType<
   typeof useCanValuateClaimItemQuery
@@ -6139,10 +5762,11 @@ export function useChangeFromDateMutation(
     ChangeFromDateMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     ChangeFromDateMutation,
     ChangeFromDateMutationVariables
-  >(ChangeFromDateDocument, baseOptions)
+  >(ChangeFromDateDocument, options)
 }
 export type ChangeFromDateMutationHookResult = ReturnType<
   typeof useChangeFromDateMutation
@@ -6194,10 +5818,11 @@ export function useChangeTerminationDateMutation(
     ChangeTerminationDateMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     ChangeTerminationDateMutation,
     ChangeTerminationDateMutationVariables
-  >(ChangeTerminationDateDocument, baseOptions)
+  >(ChangeTerminationDateDocument, options)
 }
 export type ChangeTerminationDateMutationHookResult = ReturnType<
   typeof useChangeTerminationDateMutation
@@ -6243,10 +5868,11 @@ export function useChangeToDateMutation(
     ChangeToDateMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     ChangeToDateMutation,
     ChangeToDateMutationVariables
-  >(ChangeToDateDocument, baseOptions)
+  >(ChangeToDateDocument, options)
 }
 export type ChangeToDateMutationHookResult = ReturnType<
   typeof useChangeToDateMutation
@@ -6297,10 +5923,11 @@ export function useCreateClaimMutation(
     CreateClaimMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     CreateClaimMutation,
     CreateClaimMutationVariables
-  >(CreateClaimDocument, baseOptions)
+  >(CreateClaimDocument, options)
 }
 export type CreateClaimMutationHookResult = ReturnType<
   typeof useCreateClaimMutation
@@ -6347,10 +5974,11 @@ export function useCreatePaymentCompletionLinkMutation(
     CreatePaymentCompletionLinkMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     CreatePaymentCompletionLinkMutation,
     CreatePaymentCompletionLinkMutationVariables
-  >(CreatePaymentCompletionLinkDocument, baseOptions)
+  >(CreatePaymentCompletionLinkDocument, options)
 }
 export type CreatePaymentCompletionLinkMutationHookResult = ReturnType<
   typeof useCreatePaymentCompletionLinkMutation
@@ -6407,10 +6035,11 @@ export function useCreateQuoteForMemberBySchemaMutation(
     CreateQuoteForMemberBySchemaMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     CreateQuoteForMemberBySchemaMutation,
     CreateQuoteForMemberBySchemaMutationVariables
-  >(CreateQuoteForMemberBySchemaDocument, baseOptions)
+  >(CreateQuoteForMemberBySchemaDocument, options)
 }
 export type CreateQuoteForMemberBySchemaMutationHookResult = ReturnType<
   typeof useCreateQuoteForMemberBySchemaMutation
@@ -6458,10 +6087,11 @@ export function useCreateQuoteFromAgreementMutation(
     CreateQuoteFromAgreementMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     CreateQuoteFromAgreementMutation,
     CreateQuoteFromAgreementMutationVariables
-  >(CreateQuoteFromAgreementDocument, baseOptions)
+  >(CreateQuoteFromAgreementDocument, options)
 }
 export type CreateQuoteFromAgreementMutationHookResult = ReturnType<
   typeof useCreateQuoteFromAgreementMutation
@@ -6506,10 +6136,11 @@ export function useDeleteClaimItemMutation(
     DeleteClaimItemMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     DeleteClaimItemMutation,
     DeleteClaimItemMutationVariables
-  >(DeleteClaimItemDocument, baseOptions)
+  >(DeleteClaimItemDocument, options)
 }
 export type DeleteClaimItemMutationHookResult = ReturnType<
   typeof useDeleteClaimItemMutation
@@ -6554,10 +6185,11 @@ export function useEditMemberInfoMutation(
     EditMemberInfoMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     EditMemberInfoMutation,
     EditMemberInfoMutationVariables
-  >(EditMemberInfoDocument, baseOptions)
+  >(EditMemberInfoDocument, options)
 }
 export type EditMemberInfoMutationHookResult = ReturnType<
   typeof useEditMemberInfoMutation
@@ -6654,9 +6286,10 @@ export function useGetAccountQuery(
     GetAccountQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<GetAccountQuery, GetAccountQueryVariables>(
     GetAccountDocument,
-    baseOptions,
+    options,
   )
 }
 export function useGetAccountLazyQuery(
@@ -6665,10 +6298,11 @@ export function useGetAccountLazyQuery(
     GetAccountQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetAccountQuery,
     GetAccountQueryVariables
-  >(GetAccountDocument, baseOptions)
+  >(GetAccountDocument, options)
 }
 export type GetAccountQueryHookResult = ReturnType<typeof useGetAccountQuery>
 export type GetAccountLazyQueryHookResult = ReturnType<
@@ -6720,10 +6354,11 @@ export function useGetClaimItemValuationQuery(
     GetClaimItemValuationQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetClaimItemValuationQuery,
     GetClaimItemValuationQueryVariables
-  >(GetClaimItemValuationDocument, baseOptions)
+  >(GetClaimItemValuationDocument, options)
 }
 export function useGetClaimItemValuationLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -6731,10 +6366,11 @@ export function useGetClaimItemValuationLazyQuery(
     GetClaimItemValuationQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetClaimItemValuationQuery,
     GetClaimItemValuationQueryVariables
-  >(GetClaimItemValuationDocument, baseOptions)
+  >(GetClaimItemValuationDocument, options)
 }
 export type GetClaimItemValuationQueryHookResult = ReturnType<
   typeof useGetClaimItemValuationQuery
@@ -6802,10 +6438,11 @@ export function useGetClaimItemsQuery(
     GetClaimItemsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetClaimItemsQuery,
     GetClaimItemsQueryVariables
-  >(GetClaimItemsDocument, baseOptions)
+  >(GetClaimItemsDocument, options)
 }
 export function useGetClaimItemsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -6813,10 +6450,11 @@ export function useGetClaimItemsLazyQuery(
     GetClaimItemsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetClaimItemsQuery,
     GetClaimItemsQueryVariables
-  >(GetClaimItemsDocument, baseOptions)
+  >(GetClaimItemsDocument, options)
 }
 export type GetClaimItemsQueryHookResult = ReturnType<
   typeof useGetClaimItemsQuery
@@ -6862,10 +6500,11 @@ export function useGetContractMarketInfoQuery(
     GetContractMarketInfoQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetContractMarketInfoQuery,
     GetContractMarketInfoQueryVariables
-  >(GetContractMarketInfoDocument, baseOptions)
+  >(GetContractMarketInfoDocument, options)
 }
 export function useGetContractMarketInfoLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -6873,10 +6512,11 @@ export function useGetContractMarketInfoLazyQuery(
     GetContractMarketInfoQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetContractMarketInfoQuery,
     GetContractMarketInfoQueryVariables
-  >(GetContractMarketInfoDocument, baseOptions)
+  >(GetContractMarketInfoDocument, options)
 }
 export type GetContractMarketInfoQueryHookResult = ReturnType<
   typeof useGetContractMarketInfoQuery
@@ -6978,10 +6618,11 @@ export function useGetContractsQuery(
     GetContractsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetContractsQuery,
     GetContractsQueryVariables
-  >(GetContractsDocument, baseOptions)
+  >(GetContractsDocument, options)
 }
 export function useGetContractsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -6989,10 +6630,11 @@ export function useGetContractsLazyQuery(
     GetContractsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetContractsQuery,
     GetContractsQueryVariables
-  >(GetContractsDocument, baseOptions)
+  >(GetContractsDocument, options)
 }
 export type GetContractsQueryHookResult = ReturnType<
   typeof useGetContractsQuery
@@ -7034,10 +6676,11 @@ export function useGetDashboardNumbersQuery(
     GetDashboardNumbersQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetDashboardNumbersQuery,
     GetDashboardNumbersQueryVariables
-  >(GetDashboardNumbersDocument, baseOptions)
+  >(GetDashboardNumbersDocument, options)
 }
 export function useGetDashboardNumbersLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7045,10 +6688,11 @@ export function useGetDashboardNumbersLazyQuery(
     GetDashboardNumbersQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetDashboardNumbersQuery,
     GetDashboardNumbersQueryVariables
-  >(GetDashboardNumbersDocument, baseOptions)
+  >(GetDashboardNumbersDocument, options)
 }
 export type GetDashboardNumbersQueryHookResult = ReturnType<
   typeof useGetDashboardNumbersQuery
@@ -7120,10 +6764,11 @@ export function useGetItemCategoriesQuery(
     GetItemCategoriesQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetItemCategoriesQuery,
     GetItemCategoriesQueryVariables
-  >(GetItemCategoriesDocument, baseOptions)
+  >(GetItemCategoriesDocument, options)
 }
 export function useGetItemCategoriesLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7131,10 +6776,11 @@ export function useGetItemCategoriesLazyQuery(
     GetItemCategoriesQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetItemCategoriesQuery,
     GetItemCategoriesQueryVariables
-  >(GetItemCategoriesDocument, baseOptions)
+  >(GetItemCategoriesDocument, options)
 }
 export type GetItemCategoriesQueryHookResult = ReturnType<
   typeof useGetItemCategoriesQuery
@@ -7190,10 +6836,11 @@ export function useGetMemberClaimsQuery(
     GetMemberClaimsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetMemberClaimsQuery,
     GetMemberClaimsQueryVariables
-  >(GetMemberClaimsDocument, baseOptions)
+  >(GetMemberClaimsDocument, options)
 }
 export function useGetMemberClaimsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7201,10 +6848,11 @@ export function useGetMemberClaimsLazyQuery(
     GetMemberClaimsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetMemberClaimsQuery,
     GetMemberClaimsQueryVariables
-  >(GetMemberClaimsDocument, baseOptions)
+  >(GetMemberClaimsDocument, options)
 }
 export type GetMemberClaimsQueryHookResult = ReturnType<
   typeof useGetMemberClaimsQuery
@@ -7261,10 +6909,11 @@ export function useGetMemberInfoQuery(
     GetMemberInfoQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetMemberInfoQuery,
     GetMemberInfoQueryVariables
-  >(GetMemberInfoDocument, baseOptions)
+  >(GetMemberInfoDocument, options)
 }
 export function useGetMemberInfoLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7272,10 +6921,11 @@ export function useGetMemberInfoLazyQuery(
     GetMemberInfoQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetMemberInfoQuery,
     GetMemberInfoQueryVariables
-  >(GetMemberInfoDocument, baseOptions)
+  >(GetMemberInfoDocument, options)
 }
 export type GetMemberInfoQueryHookResult = ReturnType<
   typeof useGetMemberInfoQuery
@@ -7319,10 +6969,11 @@ export function useGetMemberNameQuery(
     GetMemberNameQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetMemberNameQuery,
     GetMemberNameQueryVariables
-  >(GetMemberNameDocument, baseOptions)
+  >(GetMemberNameDocument, options)
 }
 export function useGetMemberNameLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7330,10 +6981,11 @@ export function useGetMemberNameLazyQuery(
     GetMemberNameQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetMemberNameQuery,
     GetMemberNameQueryVariables
-  >(GetMemberNameDocument, baseOptions)
+  >(GetMemberNameDocument, options)
 }
 export type GetMemberNameQueryHookResult = ReturnType<
   typeof useGetMemberNameQuery
@@ -7379,10 +7031,11 @@ export function useGetMessageHistoryQuery(
     GetMessageHistoryQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetMessageHistoryQuery,
     GetMessageHistoryQueryVariables
-  >(GetMessageHistoryDocument, baseOptions)
+  >(GetMessageHistoryDocument, options)
 }
 export function useGetMessageHistoryLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7390,10 +7043,11 @@ export function useGetMessageHistoryLazyQuery(
     GetMessageHistoryQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetMessageHistoryQuery,
     GetMessageHistoryQueryVariables
-  >(GetMessageHistoryDocument, baseOptions)
+  >(GetMessageHistoryDocument, options)
 }
 export type GetMessageHistoryQueryHookResult = ReturnType<
   typeof useGetMessageHistoryQuery
@@ -7434,10 +7088,11 @@ export function useGetPartnerCampaignOwnersQuery(
     GetPartnerCampaignOwnersQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetPartnerCampaignOwnersQuery,
     GetPartnerCampaignOwnersQueryVariables
-  >(GetPartnerCampaignOwnersDocument, baseOptions)
+  >(GetPartnerCampaignOwnersDocument, options)
 }
 export function useGetPartnerCampaignOwnersLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7445,10 +7100,11 @@ export function useGetPartnerCampaignOwnersLazyQuery(
     GetPartnerCampaignOwnersQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetPartnerCampaignOwnersQuery,
     GetPartnerCampaignOwnersQueryVariables
-  >(GetPartnerCampaignOwnersDocument, baseOptions)
+  >(GetPartnerCampaignOwnersDocument, options)
 }
 export type GetPartnerCampaignOwnersQueryHookResult = ReturnType<
   typeof useGetPartnerCampaignOwnersQuery
@@ -7513,10 +7169,11 @@ export function useFindPartnerCampaignsQuery(
     FindPartnerCampaignsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     FindPartnerCampaignsQuery,
     FindPartnerCampaignsQueryVariables
-  >(FindPartnerCampaignsDocument, baseOptions)
+  >(FindPartnerCampaignsDocument, options)
 }
 export function useFindPartnerCampaignsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7524,10 +7181,11 @@ export function useFindPartnerCampaignsLazyQuery(
     FindPartnerCampaignsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     FindPartnerCampaignsQuery,
     FindPartnerCampaignsQueryVariables
-  >(FindPartnerCampaignsDocument, baseOptions)
+  >(FindPartnerCampaignsDocument, options)
 }
 export type FindPartnerCampaignsQueryHookResult = ReturnType<
   typeof useFindPartnerCampaignsQuery
@@ -7584,9 +7242,10 @@ export function useGetPersonQuery(
     GetPersonQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<GetPersonQuery, GetPersonQueryVariables>(
     GetPersonDocument,
-    baseOptions,
+    options,
   )
 }
 export function useGetPersonLazyQuery(
@@ -7595,9 +7254,10 @@ export function useGetPersonLazyQuery(
     GetPersonQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<GetPersonQuery, GetPersonQueryVariables>(
     GetPersonDocument,
-    baseOptions,
+    options,
   )
 }
 export type GetPersonQueryHookResult = ReturnType<typeof useGetPersonQuery>
@@ -7656,10 +7316,11 @@ export function useGetQuestionsGroupsQuery(
     GetQuestionsGroupsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetQuestionsGroupsQuery,
     GetQuestionsGroupsQueryVariables
-  >(GetQuestionsGroupsDocument, baseOptions)
+  >(GetQuestionsGroupsDocument, options)
 }
 export function useGetQuestionsGroupsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7667,10 +7328,11 @@ export function useGetQuestionsGroupsLazyQuery(
     GetQuestionsGroupsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetQuestionsGroupsQuery,
     GetQuestionsGroupsQueryVariables
-  >(GetQuestionsGroupsDocument, baseOptions)
+  >(GetQuestionsGroupsDocument, options)
 }
 export type GetQuestionsGroupsQueryHookResult = ReturnType<
   typeof useGetQuestionsGroupsQuery
@@ -7735,9 +7397,10 @@ export function useGetQuotesQuery(
     GetQuotesQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<GetQuotesQuery, GetQuotesQueryVariables>(
     GetQuotesDocument,
-    baseOptions,
+    options,
   )
 }
 export function useGetQuotesLazyQuery(
@@ -7746,9 +7409,10 @@ export function useGetQuotesLazyQuery(
     GetQuotesQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<GetQuotesQuery, GetQuotesQueryVariables>(
     GetQuotesDocument,
-    baseOptions,
+    options,
   )
 }
 export type GetQuotesQueryHookResult = ReturnType<typeof useGetQuotesQuery>
@@ -7837,10 +7501,11 @@ export function useGetReferralInformationQuery(
     GetReferralInformationQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetReferralInformationQuery,
     GetReferralInformationQueryVariables
-  >(GetReferralInformationDocument, baseOptions)
+  >(GetReferralInformationDocument, options)
 }
 export function useGetReferralInformationLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7848,10 +7513,11 @@ export function useGetReferralInformationLazyQuery(
     GetReferralInformationQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetReferralInformationQuery,
     GetReferralInformationQueryVariables
-  >(GetReferralInformationDocument, baseOptions)
+  >(GetReferralInformationDocument, options)
 }
 export type GetReferralInformationQueryHookResult = ReturnType<
   typeof useGetReferralInformationQuery
@@ -7891,10 +7557,11 @@ export function useGetSchemaForContractTypeQuery(
     GetSchemaForContractTypeQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     GetSchemaForContractTypeQuery,
     GetSchemaForContractTypeQueryVariables
-  >(GetSchemaForContractTypeDocument, baseOptions)
+  >(GetSchemaForContractTypeDocument, options)
 }
 export function useGetSchemaForContractTypeLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -7902,10 +7569,11 @@ export function useGetSchemaForContractTypeLazyQuery(
     GetSchemaForContractTypeQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     GetSchemaForContractTypeQuery,
     GetSchemaForContractTypeQueryVariables
-  >(GetSchemaForContractTypeDocument, baseOptions)
+  >(GetSchemaForContractTypeDocument, options)
 }
 export type GetSchemaForContractTypeQueryHookResult = ReturnType<
   typeof useGetSchemaForContractTypeQuery
@@ -7965,9 +7633,10 @@ export function useGetTrialsQuery(
     GetTrialsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<GetTrialsQuery, GetTrialsQueryVariables>(
     GetTrialsDocument,
-    baseOptions,
+    options,
   )
 }
 export function useGetTrialsLazyQuery(
@@ -7976,9 +7645,10 @@ export function useGetTrialsLazyQuery(
     GetTrialsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<GetTrialsQuery, GetTrialsQueryVariables>(
     GetTrialsDocument,
-    baseOptions,
+    options,
   )
 }
 export type GetTrialsQueryHookResult = ReturnType<typeof useGetTrialsQuery>
@@ -8034,9 +7704,10 @@ export function useListClaimsQuery(
     ListClaimsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<ListClaimsQuery, ListClaimsQueryVariables>(
     ListClaimsDocument,
-    baseOptions,
+    options,
   )
 }
 export function useListClaimsLazyQuery(
@@ -8045,10 +7716,11 @@ export function useListClaimsLazyQuery(
     ListClaimsQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     ListClaimsQuery,
     ListClaimsQueryVariables
-  >(ListClaimsDocument, baseOptions)
+  >(ListClaimsDocument, options)
 }
 export type ListClaimsQueryHookResult = ReturnType<typeof useListClaimsQuery>
 export type ListClaimsLazyQueryHookResult = ReturnType<
@@ -8095,10 +7767,11 @@ export function useManualRedeemCampaignMutation(
     ManualRedeemCampaignMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     ManualRedeemCampaignMutation,
     ManualRedeemCampaignMutationVariables
-  >(ManualRedeemCampaignDocument, baseOptions)
+  >(ManualRedeemCampaignDocument, options)
 }
 export type ManualRedeemCampaignMutationHookResult = ReturnType<
   typeof useManualRedeemCampaignMutation
@@ -8147,10 +7820,11 @@ export function useManualUnRedeemCampaignMutation(
     ManualUnRedeemCampaignMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     ManualUnRedeemCampaignMutation,
     ManualUnRedeemCampaignMutationVariables
-  >(ManualUnRedeemCampaignDocument, baseOptions)
+  >(ManualUnRedeemCampaignDocument, options)
 }
 export type ManualUnRedeemCampaignMutationHookResult = ReturnType<
   typeof useManualUnRedeemCampaignMutation
@@ -8195,10 +7869,11 @@ export function useMarkQuestionAsResolvedMutation(
     MarkQuestionAsResolvedMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     MarkQuestionAsResolvedMutation,
     MarkQuestionAsResolvedMutationVariables
-  >(MarkQuestionAsResolvedDocument, baseOptions)
+  >(MarkQuestionAsResolvedDocument, options)
 }
 export type MarkQuestionAsResolvedMutationHookResult = ReturnType<
   typeof useMarkQuestionAsResolvedMutation
@@ -8258,10 +7933,11 @@ export function useMemberSearchQuery(
     MemberSearchQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
     MemberSearchQuery,
     MemberSearchQueryVariables
-  >(MemberSearchDocument, baseOptions)
+  >(MemberSearchDocument, options)
 }
 export function useMemberSearchLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
@@ -8269,10 +7945,11 @@ export function useMemberSearchLazyQuery(
     MemberSearchQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
     MemberSearchQuery,
     MemberSearchQueryVariables
-  >(MemberSearchDocument, baseOptions)
+  >(MemberSearchDocument, options)
 }
 export type MemberSearchQueryHookResult = ReturnType<
   typeof useMemberSearchQuery
@@ -8319,10 +7996,11 @@ export function useOverrideQuotePriceMutation(
     OverrideQuotePriceMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     OverrideQuotePriceMutation,
     OverrideQuotePriceMutationVariables
-  >(OverrideQuotePriceDocument, baseOptions)
+  >(OverrideQuotePriceDocument, options)
 }
 export type OverrideQuotePriceMutationHookResult = ReturnType<
   typeof useOverrideQuotePriceMutation
@@ -8367,10 +8045,11 @@ export function useRegenerateCertificateMutation(
     RegenerateCertificateMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     RegenerateCertificateMutation,
     RegenerateCertificateMutationVariables
-  >(RegenerateCertificateDocument, baseOptions)
+  >(RegenerateCertificateDocument, options)
 }
 export type RegenerateCertificateMutationHookResult = ReturnType<
   typeof useRegenerateCertificateMutation
@@ -8415,10 +8094,11 @@ export function useRemoveMonthlyEntryMutation(
     RemoveMonthlyEntryMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     RemoveMonthlyEntryMutation,
     RemoveMonthlyEntryMutationVariables
-  >(RemoveMonthlyEntryDocument, baseOptions)
+  >(RemoveMonthlyEntryDocument, options)
 }
 export type RemoveMonthlyEntryMutationHookResult = ReturnType<
   typeof useRemoveMonthlyEntryMutation
@@ -8466,10 +8146,11 @@ export function useRevertTerminationMutation(
     RevertTerminationMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     RevertTerminationMutation,
     RevertTerminationMutationVariables
-  >(RevertTerminationDocument, baseOptions)
+  >(RevertTerminationDocument, options)
 }
 export type RevertTerminationMutationHookResult = ReturnType<
   typeof useRevertTerminationMutation
@@ -8518,10 +8199,11 @@ export function useSafelyEditAgreementMutation(
     SafelyEditAgreementMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SafelyEditAgreementMutation,
     SafelyEditAgreementMutationVariables
-  >(SafelyEditAgreementDocument, baseOptions)
+  >(SafelyEditAgreementDocument, options)
 }
 export type SafelyEditAgreementMutationHookResult = ReturnType<
   typeof useSafelyEditAgreementMutation
@@ -8575,10 +8257,11 @@ export function useSendMessageMutation(
     SendMessageMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SendMessageMutation,
     SendMessageMutationVariables
-  >(SendMessageDocument, baseOptions)
+  >(SendMessageDocument, options)
 }
 export type SendMessageMutationHookResult = ReturnType<
   typeof useSendMessageMutation
@@ -8623,10 +8306,11 @@ export function useSetContractForClaimMutation(
     SetContractForClaimMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SetContractForClaimMutation,
     SetContractForClaimMutationVariables
-  >(SetContractForClaimDocument, baseOptions)
+  >(SetContractForClaimDocument, options)
 }
 export type SetContractForClaimMutationHookResult = ReturnType<
   typeof useSetContractForClaimMutation
@@ -8678,10 +8362,11 @@ export function useSetCoveringEmployeeMutation(
     SetCoveringEmployeeMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SetCoveringEmployeeMutation,
     SetCoveringEmployeeMutationVariables
-  >(SetCoveringEmployeeDocument, baseOptions)
+  >(SetCoveringEmployeeDocument, options)
 }
 export type SetCoveringEmployeeMutationHookResult = ReturnType<
   typeof useSetCoveringEmployeeMutation
@@ -8730,10 +8415,11 @@ export function useSetFraudulentStatusMutation(
     SetFraudulentStatusMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SetFraudulentStatusMutation,
     SetFraudulentStatusMutationVariables
-  >(SetFraudulentStatusDocument, baseOptions)
+  >(SetFraudulentStatusDocument, options)
 }
 export type SetFraudulentStatusMutationHookResult = ReturnType<
   typeof useSetFraudulentStatusMutation
@@ -8784,10 +8470,11 @@ export function useSignQuoteForNewContractMutation(
     SignQuoteForNewContractMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     SignQuoteForNewContractMutation,
     SignQuoteForNewContractMutationVariables
-  >(SignQuoteForNewContractDocument, baseOptions)
+  >(SignQuoteForNewContractDocument, options)
 }
 export type SignQuoteForNewContractMutationHookResult = ReturnType<
   typeof useSignQuoteForNewContractMutation
@@ -8839,10 +8526,11 @@ export function useTerminateContractMutation(
     TerminateContractMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     TerminateContractMutation,
     TerminateContractMutationVariables
-  >(TerminateContractDocument, baseOptions)
+  >(TerminateContractDocument, options)
 }
 export type TerminateContractMutationHookResult = ReturnType<
   typeof useTerminateContractMutation
@@ -8895,10 +8583,11 @@ export function useUpdateClaimStateMutation(
     UpdateClaimStateMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UpdateClaimStateMutation,
     UpdateClaimStateMutationVariables
-  >(UpdateClaimStateDocument, baseOptions)
+  >(UpdateClaimStateDocument, options)
 }
 export type UpdateClaimStateMutationHookResult = ReturnType<
   typeof useUpdateClaimStateMutation
@@ -8955,10 +8644,11 @@ export function useUpdateQuoteBySchemaMutation(
     UpdateQuoteBySchemaMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UpdateQuoteBySchemaMutation,
     UpdateQuoteBySchemaMutationVariables
-  >(UpdateQuoteBySchemaDocument, baseOptions)
+  >(UpdateQuoteBySchemaDocument, options)
 }
 export type UpdateQuoteBySchemaMutationHookResult = ReturnType<
   typeof useUpdateQuoteBySchemaMutation
@@ -9003,10 +8693,11 @@ export function useUpsertClaimItemMutation(
     UpsertClaimItemMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UpsertClaimItemMutation,
     UpsertClaimItemMutationVariables
-  >(UpsertClaimItemDocument, baseOptions)
+  >(UpsertClaimItemDocument, options)
 }
 export type UpsertClaimItemMutationHookResult = ReturnType<
   typeof useUpsertClaimItemMutation
@@ -9051,10 +8742,11 @@ export function useUpsertItemTypeMutation(
     UpsertItemTypeMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UpsertItemTypeMutation,
     UpsertItemTypeMutationVariables
-  >(UpsertItemTypeDocument, baseOptions)
+  >(UpsertItemTypeDocument, options)
 }
 export type UpsertItemTypeMutationHookResult = ReturnType<
   typeof useUpsertItemTypeMutation
@@ -9099,10 +8791,11 @@ export function useUpsertItemBrandMutation(
     UpsertItemBrandMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UpsertItemBrandMutation,
     UpsertItemBrandMutationVariables
-  >(UpsertItemBrandDocument, baseOptions)
+  >(UpsertItemBrandDocument, options)
 }
 export type UpsertItemBrandMutationHookResult = ReturnType<
   typeof useUpsertItemBrandMutation
@@ -9147,10 +8840,11 @@ export function useUpsertItemModelMutation(
     UpsertItemModelMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UpsertItemModelMutation,
     UpsertItemModelMutationVariables
-  >(UpsertItemModelDocument, baseOptions)
+  >(UpsertItemModelDocument, options)
 }
 export type UpsertItemModelMutationHookResult = ReturnType<
   typeof useUpsertItemModelMutation
@@ -9195,10 +8889,11 @@ export function useUpsertItemCompanyMutation(
     UpsertItemCompanyMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     UpsertItemCompanyMutation,
     UpsertItemCompanyMutationVariables
-  >(UpsertItemCompanyDocument, baseOptions)
+  >(UpsertItemCompanyDocument, options)
 }
 export type UpsertItemCompanyMutationHookResult = ReturnType<
   typeof useUpsertItemCompanyMutation
@@ -9243,10 +8938,11 @@ export function useWhitelistMemberMutation(
     WhitelistMemberMutationVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
     WhitelistMemberMutation,
     WhitelistMemberMutationVariables
-  >(WhitelistMemberDocument, baseOptions)
+  >(WhitelistMemberDocument, options)
 }
 export type WhitelistMemberMutationHookResult = ReturnType<
   typeof useWhitelistMemberMutation

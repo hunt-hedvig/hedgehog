@@ -4,7 +4,7 @@ import {
   Typography as MuiTypography,
   withStyles,
 } from '@material-ui/core'
-import { useClaimTranscriptionsQuery } from 'api/generated/graphql'
+import { useClaimPageQuery } from 'api/generated/graphql'
 
 import React from 'react'
 
@@ -45,7 +45,7 @@ const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
   const {
     data: claimTranscriptionsData,
     error: queryError,
-  } = useClaimTranscriptionsQuery({
+  } = useClaimPageQuery({
     variables: { claimId },
   })
 
