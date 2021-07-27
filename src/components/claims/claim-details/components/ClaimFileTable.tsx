@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {
   ClaimFileUpload,
-  useClaimFilesQuery,
+  useClaimPageQuery,
   useSetClaimFileCategoryMutation,
 } from 'api/generated/graphql'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
@@ -74,7 +74,7 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
     refetch,
     loading,
     error: queryError,
-  } = useClaimFilesQuery({
+  } = useClaimPageQuery({
     variables: { claimId },
   })
   const [setClaimFileCategory] = useSetClaimFileCategoryMutation()

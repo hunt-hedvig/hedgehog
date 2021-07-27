@@ -431,7 +431,7 @@ export type Contract = {
   renewal?: Maybe<Renewal>
   preferredCurrency: Scalars['String']
   market: Scalars['String']
-  signSource?: Maybe<SignSource>
+  signSource?: Maybe<Scalars['String']>
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
   isLocked: Scalars['Boolean']
@@ -1387,7 +1387,7 @@ export type Quote = {
   price?: Maybe<Scalars['Float']>
   currency?: Maybe<Scalars['String']>
   productType?: Maybe<Scalars['String']>
-  state?: Maybe<QuoteState>
+  state?: Maybe<Scalars['String']>
   initiatedFrom?: Maybe<Scalars['String']>
   attributedTo?: Maybe<Scalars['String']>
   currentInsurer?: Maybe<Scalars['String']>
@@ -1401,13 +1401,6 @@ export type Quote = {
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
   isReadyToSign?: Maybe<Scalars['Boolean']>
-}
-
-export enum QuoteState {
-  Incomplete = 'INCOMPLETE',
-  Quoted = 'QUOTED',
-  Signed = 'SIGNED',
-  Expired = 'EXPIRED',
 }
 
 export type RedeemedCampaign = {
@@ -1495,16 +1488,6 @@ export type SetContractForClaim = {
   claimId: Scalars['String']
   memberId: Scalars['String']
   contractId: Scalars['String']
-}
-
-export enum SignSource {
-  Rapio = 'RAPIO',
-  Webonboarding = 'WEBONBOARDING',
-  Web = 'WEB',
-  App = 'APP',
-  Ios = 'IOS',
-  Android = 'ANDROID',
-  Hope = 'HOPE',
 }
 
 export type SnowPressureClaim = {
@@ -1729,173 +1712,6 @@ export type ClaimAddClaimNoteMutation = { __typename?: 'MutationType' } & {
   >
 }
 
-export type ClaimContractQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimContractQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        contract?: Maybe<
-          { __typename?: 'Contract' } & Pick<
-            Contract,
-            | 'id'
-            | 'currentAgreementId'
-            | 'contractTypeName'
-            | 'preferredCurrency'
-            | 'typeOfContract'
-          > & {
-              genericAgreements: Array<
-                { __typename?: 'GenericAgreement' } & Pick<
-                  GenericAgreement,
-                  | 'id'
-                  | 'lineOfBusinessName'
-                  | 'status'
-                  | 'carrier'
-                  | 'typeOfContract'
-                  | 'createdAt'
-                > & {
-                    address?: Maybe<
-                      { __typename?: 'Address' } & Pick<
-                        Address,
-                        'street' | 'postalCode' | 'city'
-                      >
-                    >
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                  }
-              >
-            }
-        >
-      }
-  >
-}
-
-export type ClaimEventsQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimEventsQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        events: Array<
-          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
-        >
-      }
-  >
-}
-
-export type ClaimFilesQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimFilesQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        claimFiles: Array<
-          { __typename?: 'ClaimFileUpload' } & Pick<
-            ClaimFileUpload,
-            | 'claimFileId'
-            | 'claimId'
-            | 'category'
-            | 'contentType'
-            | 'fileUploadUrl'
-            | 'uploadedAt'
-          >
-        >
-      }
-  >
-}
-
-export type ClaimInformationQueryVariables = Exact<{
-  claimId: Scalars['ID']
-  memberId: Scalars['ID']
-}>
-
-export type ClaimInformationQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<
-      Claim,
-      'id' | 'recordingUrl' | 'registrationDate' | 'state' | 'coveringEmployee'
-    > & {
-        contract?: Maybe<
-          { __typename?: 'Contract' } & Pick<
-            Contract,
-            'id' | 'currentAgreementId' | 'contractTypeName' | 'typeOfContract'
-          > & {
-              genericAgreements: Array<
-                { __typename?: 'GenericAgreement' } & Pick<
-                  GenericAgreement,
-                  'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
-                > & {
-                    address?: Maybe<
-                      { __typename?: 'Address' } & Pick<
-                        Address,
-                        'street' | 'postalCode' | 'city'
-                      >
-                    >
-                  }
-              >
-            }
-        >
-        agreement?: Maybe<
-          { __typename?: 'GenericAgreement' } & Pick<
-            GenericAgreement,
-            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
-          > & {
-              address?: Maybe<
-                { __typename?: 'Address' } & Pick<
-                  Address,
-                  'street' | 'postalCode' | 'city'
-                >
-              >
-            }
-        >
-      } & ClaimTypeFragment
-  >
-  member?: Maybe<
-    { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
-        contracts: Array<
-          { __typename?: 'Contract' } & Pick<
-            Contract,
-            | 'id'
-            | 'currentAgreementId'
-            | 'contractTypeName'
-            | 'typeOfContract'
-            | 'masterInception'
-            | 'terminationDate'
-          > & {
-              genericAgreements: Array<
-                { __typename?: 'GenericAgreement' } & Pick<
-                  GenericAgreement,
-                  | 'id'
-                  | 'status'
-                  | 'typeOfContract'
-                  | 'lineOfBusinessName'
-                  | 'carrier'
-                  | 'createdAt'
-                > & {
-                    address?: Maybe<
-                      { __typename?: 'Address' } & Pick<
-                        Address,
-                        'street' | 'postalCode' | 'city'
-                      >
-                    >
-                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
-                      MonetaryAmountV2,
-                      'amount' | 'currency'
-                    >
-                  }
-              >
-            }
-        >
-        trials: Array<{ __typename?: 'Trial' } & Pick<Trial, 'id'>>
-      }
-  >
-}
-
 export type ClaimMemberContractsMasterInceptionQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -1950,14 +1766,16 @@ export type ClaimMemberContractsMasterInceptionQuery = {
         contractMarketInfo?: Maybe<
           { __typename?: 'ContractMarketInfo' } & Pick<
             ContractMarketInfo,
-            'market'
+            'market' | 'preferredCurrency'
           >
         >
         contracts: Array<
           { __typename?: 'Contract' } & Pick<
             Contract,
             | 'id'
+            | 'currentAgreementId'
             | 'contractTypeName'
+            | 'typeOfContract'
             | 'masterInception'
             | 'terminationDate'
             | 'isTerminated'
@@ -1965,32 +1783,28 @@ export type ClaimMemberContractsMasterInceptionQuery = {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
                   GenericAgreement,
-                  'id'
+                  | 'id'
+                  | 'status'
+                  | 'typeOfContract'
+                  | 'lineOfBusinessName'
+                  | 'carrier'
+                  | 'createdAt'
                 > & {
                     address?: Maybe<
-                      { __typename?: 'Address' } & Pick<Address, 'street'>
+                      { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    >
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
                     >
                   }
               >
             }
         >
-      }
-  >
-}
-
-export type ClaimNotesQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimNotesQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        notes: Array<
-          { __typename?: 'ClaimNote' } & Pick<
-            ClaimNote,
-            'date' | 'handlerReference' | 'text'
-          >
-        >
+        trials: Array<{ __typename?: 'Trial' } & Pick<Trial, 'id'>>
       }
   >
 }
@@ -2001,15 +1815,88 @@ export type ClaimPageQueryVariables = Exact<{
 
 export type ClaimPageQuery = { __typename?: 'QueryType' } & {
   claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves' | 'state'> & {
-        contract?: Maybe<{ __typename?: 'Contract' } & Pick<Contract, 'id'>>
+    { __typename?: 'Claim' } & Pick<
+      Claim,
+      | 'id'
+      | 'recordingUrl'
+      | 'registrationDate'
+      | 'state'
+      | 'coveringEmployee'
+      | 'reserves'
+    > & {
+        contract?: Maybe<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'currentAgreementId'
+            | 'contractTypeName'
+            | 'preferredCurrency'
+            | 'typeOfContract'
+          > & {
+              genericAgreements: Array<
+                { __typename?: 'GenericAgreement' } & Pick<
+                  GenericAgreement,
+                  | 'id'
+                  | 'lineOfBusinessName'
+                  | 'status'
+                  | 'carrier'
+                  | 'typeOfContract'
+                  | 'createdAt'
+                > & {
+                    address?: Maybe<
+                      { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    >
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
         agreement?: Maybe<
           { __typename?: 'GenericAgreement' } & Pick<
             GenericAgreement,
-            'id' | 'carrier'
+            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
+          > & {
+              address?: Maybe<
+                { __typename?: 'Address' } & Pick<
+                  Address,
+                  'street' | 'postalCode' | 'city'
+                >
+              >
+            }
+        >
+        transcriptions: Array<
+          { __typename?: 'ClaimTranscription' } & Pick<
+            ClaimTranscription,
+            'confidenceScore' | 'languageCode' | 'text'
           >
         >
-      }
+        notes: Array<
+          { __typename?: 'ClaimNote' } & Pick<
+            ClaimNote,
+            'date' | 'handlerReference' | 'text'
+          >
+        >
+        claimFiles: Array<
+          { __typename?: 'ClaimFileUpload' } & Pick<
+            ClaimFileUpload,
+            | 'claimFileId'
+            | 'claimId'
+            | 'category'
+            | 'contentType'
+            | 'fileUploadUrl'
+            | 'uploadedAt'
+          >
+        >
+        events: Array<
+          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
+        >
+      } & ClaimTypeFragment
   >
 }
 
@@ -2058,23 +1945,6 @@ export type ClaimPaymentsQuery = { __typename?: 'QueryType' } & {
             | 'note'
             | 'type'
             | 'timestamp'
-          >
-        >
-      }
-  >
-}
-
-export type ClaimTranscriptionsQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type ClaimTranscriptionsQuery = { __typename?: 'QueryType' } & {
-  claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-        transcriptions: Array<
-          { __typename?: 'ClaimTranscription' } & Pick<
-            ClaimTranscription,
-            'confidenceScore' | 'languageCode' | 'text'
           >
         >
       }
@@ -2154,7 +2024,7 @@ export type SetClaimInformationMutationVariables = Exact<{
 
 export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
   setClaimInformation?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves'> & {
         agreement?: Maybe<
           { __typename?: 'GenericAgreement' } & Pick<
             GenericAgreement,
@@ -2170,6 +2040,40 @@ export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
         >
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+        >
+        contract?: Maybe<
+          { __typename?: 'Contract' } & Pick<Contract, 'id' | 'market'>
+        >
+        member: { __typename?: 'Member' } & Pick<
+          Member,
+          'memberId' | 'sanctionStatus'
+        > & {
+            identity?: Maybe<
+              { __typename?: 'Identity' } & Pick<
+                Identity,
+                'firstName' | 'lastName'
+              > & {
+                  nationalIdentification: {
+                    __typename?: 'NationalIdentification'
+                  } & Pick<
+                    NationalIdentification,
+                    'identification' | 'nationality'
+                  >
+                }
+            >
+          }
+        payments: Array<
+          { __typename?: 'ClaimPayment' } & Pick<
+            ClaimPayment,
+            | 'id'
+            | 'deductible'
+            | 'amount'
+            | 'exGratia'
+            | 'status'
+            | 'note'
+            | 'type'
+            | 'timestamp'
+          >
         >
       } & ClaimTypeFragment
   >
@@ -3795,336 +3699,6 @@ export type ClaimAddClaimNoteMutationOptions = ApolloReactCommon.BaseMutationOpt
   ClaimAddClaimNoteMutation,
   ClaimAddClaimNoteMutationVariables
 >
-export const ClaimContractDocument = gql`
-  query ClaimContract($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      contract {
-        id
-        currentAgreementId
-        genericAgreements {
-          id
-          address {
-            street
-            postalCode
-            city
-          }
-          lineOfBusinessName
-          premium {
-            amount
-            currency
-          }
-          status
-          carrier
-          typeOfContract
-          createdAt
-        }
-        contractTypeName
-        preferredCurrency
-        typeOfContract
-      }
-    }
-  }
-`
-
-/**
- * __useClaimContractQuery__
- *
- * To run a query within a React component, call `useClaimContractQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimContractQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimContractQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimContractQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimContractQuery,
-    ClaimContractQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    ClaimContractQuery,
-    ClaimContractQueryVariables
-  >(ClaimContractDocument, options)
-}
-export function useClaimContractLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimContractQuery,
-    ClaimContractQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ClaimContractQuery,
-    ClaimContractQueryVariables
-  >(ClaimContractDocument, options)
-}
-export type ClaimContractQueryHookResult = ReturnType<
-  typeof useClaimContractQuery
->
-export type ClaimContractLazyQueryHookResult = ReturnType<
-  typeof useClaimContractLazyQuery
->
-export type ClaimContractQueryResult = ApolloReactCommon.QueryResult<
-  ClaimContractQuery,
-  ClaimContractQueryVariables
->
-export const ClaimEventsDocument = gql`
-  query ClaimEvents($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      events {
-        date
-        text
-      }
-    }
-  }
-`
-
-/**
- * __useClaimEventsQuery__
- *
- * To run a query within a React component, call `useClaimEventsQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimEventsQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimEventsQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimEventsQuery,
-    ClaimEventsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<ClaimEventsQuery, ClaimEventsQueryVariables>(
-    ClaimEventsDocument,
-    options,
-  )
-}
-export function useClaimEventsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimEventsQuery,
-    ClaimEventsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ClaimEventsQuery,
-    ClaimEventsQueryVariables
-  >(ClaimEventsDocument, options)
-}
-export type ClaimEventsQueryHookResult = ReturnType<typeof useClaimEventsQuery>
-export type ClaimEventsLazyQueryHookResult = ReturnType<
-  typeof useClaimEventsLazyQuery
->
-export type ClaimEventsQueryResult = ApolloReactCommon.QueryResult<
-  ClaimEventsQuery,
-  ClaimEventsQueryVariables
->
-export const ClaimFilesDocument = gql`
-  query ClaimFiles($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      claimFiles {
-        claimFileId
-        claimId
-        category
-        contentType
-        fileUploadUrl
-        uploadedAt
-      }
-    }
-  }
-`
-
-/**
- * __useClaimFilesQuery__
- *
- * To run a query within a React component, call `useClaimFilesQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimFilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimFilesQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimFilesQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimFilesQuery,
-    ClaimFilesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<ClaimFilesQuery, ClaimFilesQueryVariables>(
-    ClaimFilesDocument,
-    options,
-  )
-}
-export function useClaimFilesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimFilesQuery,
-    ClaimFilesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ClaimFilesQuery,
-    ClaimFilesQueryVariables
-  >(ClaimFilesDocument, options)
-}
-export type ClaimFilesQueryHookResult = ReturnType<typeof useClaimFilesQuery>
-export type ClaimFilesLazyQueryHookResult = ReturnType<
-  typeof useClaimFilesLazyQuery
->
-export type ClaimFilesQueryResult = ApolloReactCommon.QueryResult<
-  ClaimFilesQuery,
-  ClaimFilesQueryVariables
->
-export const ClaimInformationDocument = gql`
-  query ClaimInformation($claimId: ID!, $memberId: ID!) {
-    claim(id: $claimId) {
-      id
-      recordingUrl
-      registrationDate
-      state
-      coveringEmployee
-      ...claimType
-      contract {
-        id
-        currentAgreementId
-        contractTypeName
-        typeOfContract
-        genericAgreements {
-          id
-          address {
-            street
-            postalCode
-            city
-          }
-          typeOfContract
-          lineOfBusinessName
-          carrier
-        }
-      }
-      agreement {
-        id
-        address {
-          street
-          postalCode
-          city
-        }
-        typeOfContract
-        lineOfBusinessName
-        carrier
-      }
-    }
-    member(id: $memberId) {
-      memberId
-      contracts {
-        id
-        currentAgreementId
-        contractTypeName
-        typeOfContract
-        genericAgreements {
-          id
-          address {
-            street
-            postalCode
-            city
-          }
-          status
-          typeOfContract
-          lineOfBusinessName
-          carrier
-          premium {
-            amount
-            currency
-          }
-          createdAt
-        }
-        masterInception
-        terminationDate
-      }
-      trials {
-        id
-      }
-    }
-  }
-  ${ClaimTypeFragmentDoc}
-`
-
-/**
- * __useClaimInformationQuery__
- *
- * To run a query within a React component, call `useClaimInformationQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimInformationQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *      memberId: // value for 'memberId'
- *   },
- * });
- */
-export function useClaimInformationQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimInformationQuery,
-    ClaimInformationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    ClaimInformationQuery,
-    ClaimInformationQueryVariables
-  >(ClaimInformationDocument, options)
-}
-export function useClaimInformationLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimInformationQuery,
-    ClaimInformationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ClaimInformationQuery,
-    ClaimInformationQueryVariables
-  >(ClaimInformationDocument, options)
-}
-export type ClaimInformationQueryHookResult = ReturnType<
-  typeof useClaimInformationQuery
->
-export type ClaimInformationLazyQueryHookResult = ReturnType<
-  typeof useClaimInformationLazyQuery
->
-export type ClaimInformationQueryResult = ApolloReactCommon.QueryResult<
-  ClaimInformationQuery,
-  ClaimInformationQueryVariables
->
 export const ClaimMemberContractsMasterInceptionDocument = gql`
   query ClaimMemberContractsMasterInception($memberId: ID!) {
     member(id: $memberId) {
@@ -4163,11 +3737,14 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
       }
       contractMarketInfo {
         market
+        preferredCurrency
       }
       pickedLocale
       contracts {
         id
+        currentAgreementId
         contractTypeName
+        typeOfContract
         masterInception
         terminationDate
         isTerminated
@@ -4175,8 +3752,22 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
           id
           address {
             street
+            postalCode
+            city
           }
+          status
+          typeOfContract
+          lineOfBusinessName
+          carrier
+          premium {
+            amount
+            currency
+          }
+          createdAt
         }
+      }
+      trials {
+        id
       }
     }
   }
@@ -4232,82 +3823,77 @@ export type ClaimMemberContractsMasterInceptionQueryResult = ApolloReactCommon.Q
   ClaimMemberContractsMasterInceptionQuery,
   ClaimMemberContractsMasterInceptionQueryVariables
 >
-export const ClaimNotesDocument = gql`
-  query ClaimNotes($claimId: ID!) {
+export const ClaimPageDocument = gql`
+  query ClaimPage($claimId: ID!) {
     claim(id: $claimId) {
       id
+      recordingUrl
+      registrationDate
+      state
+      coveringEmployee
+      ...claimType
+      reserves
+      state
+      contract {
+        id
+        currentAgreementId
+        genericAgreements {
+          id
+          address {
+            street
+            postalCode
+            city
+          }
+          lineOfBusinessName
+          premium {
+            amount
+            currency
+          }
+          status
+          carrier
+          typeOfContract
+          createdAt
+        }
+        contractTypeName
+        preferredCurrency
+        typeOfContract
+      }
+      agreement {
+        id
+        address {
+          street
+          postalCode
+          city
+        }
+        typeOfContract
+        lineOfBusinessName
+        carrier
+      }
+      transcriptions {
+        confidenceScore
+        languageCode
+        text
+      }
       notes {
         date
         handlerReference
         text
       }
-    }
-  }
-`
-
-/**
- * __useClaimNotesQuery__
- *
- * To run a query within a React component, call `useClaimNotesQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimNotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimNotesQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimNotesQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimNotesQuery,
-    ClaimNotesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<ClaimNotesQuery, ClaimNotesQueryVariables>(
-    ClaimNotesDocument,
-    options,
-  )
-}
-export function useClaimNotesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimNotesQuery,
-    ClaimNotesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ClaimNotesQuery,
-    ClaimNotesQueryVariables
-  >(ClaimNotesDocument, options)
-}
-export type ClaimNotesQueryHookResult = ReturnType<typeof useClaimNotesQuery>
-export type ClaimNotesLazyQueryHookResult = ReturnType<
-  typeof useClaimNotesLazyQuery
->
-export type ClaimNotesQueryResult = ApolloReactCommon.QueryResult<
-  ClaimNotesQuery,
-  ClaimNotesQueryVariables
->
-export const ClaimPageDocument = gql`
-  query ClaimPage($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      reserves
-      state
-      contract {
-        id
+      claimFiles {
+        claimFileId
+        claimId
+        category
+        contentType
+        fileUploadUrl
+        uploadedAt
       }
-      agreement {
-        id
-        carrier
+      events {
+        date
+        text
       }
     }
   }
+  ${ClaimTypeFragmentDoc}
 `
 
 /**
@@ -4446,69 +4032,6 @@ export type ClaimPaymentsLazyQueryHookResult = ReturnType<
 export type ClaimPaymentsQueryResult = ApolloReactCommon.QueryResult<
   ClaimPaymentsQuery,
   ClaimPaymentsQueryVariables
->
-export const ClaimTranscriptionsDocument = gql`
-  query ClaimTranscriptions($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      transcriptions {
-        confidenceScore
-        languageCode
-        text
-      }
-    }
-  }
-`
-
-/**
- * __useClaimTranscriptionsQuery__
- *
- * To run a query within a React component, call `useClaimTranscriptionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useClaimTranscriptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClaimTranscriptionsQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useClaimTranscriptionsQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ClaimTranscriptionsQuery,
-    ClaimTranscriptionsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    ClaimTranscriptionsQuery,
-    ClaimTranscriptionsQueryVariables
-  >(ClaimTranscriptionsDocument, options)
-}
-export function useClaimTranscriptionsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ClaimTranscriptionsQuery,
-    ClaimTranscriptionsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ClaimTranscriptionsQuery,
-    ClaimTranscriptionsQueryVariables
-  >(ClaimTranscriptionsDocument, options)
-}
-export type ClaimTranscriptionsQueryHookResult = ReturnType<
-  typeof useClaimTranscriptionsQuery
->
-export type ClaimTranscriptionsLazyQueryHookResult = ReturnType<
-  typeof useClaimTranscriptionsLazyQuery
->
-export type ClaimTranscriptionsQueryResult = ApolloReactCommon.QueryResult<
-  ClaimTranscriptionsQuery,
-  ClaimTranscriptionsQueryVariables
 >
 export const UpdateReserveDocument = gql`
   mutation UpdateReserve($claimId: ID!, $amount: MonetaryAmount!) {
@@ -4809,6 +4332,33 @@ export const SetClaimInformationDocument = gql`
       events {
         text
         date
+      }
+      contract {
+        id
+        market
+      }
+      member {
+        memberId
+        sanctionStatus
+        identity {
+          firstName
+          lastName
+          nationalIdentification {
+            identification
+            nationality
+          }
+        }
+      }
+      reserves
+      payments {
+        id
+        deductible
+        amount
+        exGratia
+        status
+        note
+        type
+        timestamp
       }
     }
   }

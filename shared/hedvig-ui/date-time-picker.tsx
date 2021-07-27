@@ -20,13 +20,8 @@ interface DatePickerProps {
 }
 
 const StyledInput = styled(Input)<{ fullWidth?: boolean }>`
-  && {
-    width: ${({ fullWidth }) => (fullWidth ? '100%' : '150px')};
-  }
-  && input:hover {
-    cursor: pointer !important;
-  }
   && input {
+    cursor: pointer;
     caret-color: transparent;
   }
 `
@@ -67,7 +62,7 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
         customInput={
           <StyledInput
             type="text"
-            fullWidth={fullWidth}
+            fluid={fullWidth}
             icon={
               showTimePicker ? 'clock outline' : 'calendar alternate outline'
             }
