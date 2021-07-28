@@ -505,6 +505,15 @@ export type EditMemberInfoInput = {
   phoneNumber?: Maybe<Scalars['String']>
 }
 
+export type Employee = {
+  __typename?: 'Employee'
+  id: Scalars['ID']
+  email: Scalars['String']
+  role: Scalars['String']
+  firstGrantedAt: Scalars['Instant']
+  deletedAt: Scalars['Instant']
+}
+
 export type ExtraBuilding = {
   __typename?: 'ExtraBuilding'
   id?: Maybe<Scalars['ID']>
@@ -1311,6 +1320,7 @@ export type QueryType = {
   quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
+  listEmployees: Array<Employee>
 }
 
 export type QueryTypeMemberArgs = {
@@ -3283,6 +3293,17 @@ export type ListClaimsQuery = { __typename?: 'QueryType' } & {
           }
       >
     }
+}
+
+export type ListEmployeesQueryVariables = Exact<{ [key: string]: never }>
+
+export type ListEmployeesQuery = { __typename?: 'QueryType' } & {
+  listEmployees: Array<
+    { __typename?: 'Employee' } & Pick<
+      Employee,
+      'id' | 'email' | 'role' | 'firstGrantedAt' | 'deletedAt'
+    >
+  >
 }
 
 export type ManualRedeemCampaignMutationVariables = Exact<{
@@ -7729,6 +7750,67 @@ export type ListClaimsLazyQueryHookResult = ReturnType<
 export type ListClaimsQueryResult = ApolloReactCommon.QueryResult<
   ListClaimsQuery,
   ListClaimsQueryVariables
+>
+export const ListEmployeesDocument = gql`
+  query ListEmployees {
+    listEmployees {
+      id
+      email
+      role
+      firstGrantedAt
+      deletedAt
+    }
+  }
+`
+
+/**
+ * __useListEmployeesQuery__
+ *
+ * To run a query within a React component, call `useListEmployeesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListEmployeesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListEmployeesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListEmployeesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ListEmployeesQuery,
+    ListEmployeesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    ListEmployeesQuery,
+    ListEmployeesQueryVariables
+  >(ListEmployeesDocument, options)
+}
+export function useListEmployeesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ListEmployeesQuery,
+    ListEmployeesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    ListEmployeesQuery,
+    ListEmployeesQueryVariables
+  >(ListEmployeesDocument, options)
+}
+export type ListEmployeesQueryHookResult = ReturnType<
+  typeof useListEmployeesQuery
+>
+export type ListEmployeesLazyQueryHookResult = ReturnType<
+  typeof useListEmployeesLazyQuery
+>
+export type ListEmployeesQueryResult = ApolloReactCommon.QueryResult<
+  ListEmployeesQuery,
+  ListEmployeesQueryVariables
 >
 export const ManualRedeemCampaignDocument = gql`
   mutation ManualRedeemCampaign(

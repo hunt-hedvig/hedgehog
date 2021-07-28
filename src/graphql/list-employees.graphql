@@ -1,0 +1,9 @@
+query ListEmployees {
+  listEmployees {
+    id
+    email
+    role
+    firstGrantedAt
+    deletedAt
+  }
+}

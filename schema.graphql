@@ -28,6 +28,15 @@ type QueryType {
     options: MemberSearchOptions!
   ): MemberSearchResult!
   listClaims(options: ListClaimsOptions!): ListClaimsResult!
+  listEmployees: [Employee!]!
+}
+
+type Employee {
+  id: ID!
+  email: String!
+  role: String!
+  firstGrantedAt: Instant!
+  deletedAt: Instant!
 }
 
 type MutationType {
