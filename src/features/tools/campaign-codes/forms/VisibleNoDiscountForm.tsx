@@ -1,5 +1,4 @@
-import { AssignVoucherVisibleNoDiscount } from 'api/generated/graphql'
-import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
+import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
 import {
   addPartnerVisibleNoDiscountCodeOptions,
   useAddPartnerVisibleNoDiscountCode,
@@ -7,31 +6,41 @@ import {
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
+import { Label } from 'hedvig-ui/typography'
 import React from 'react'
 import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
-import { DateTimePickerWrapper, Row } from '../styles'
 import { mapCampaignOwners } from '../utils'
 
-const initialFormData: AssignVoucherVisibleNoDiscount = {
+interface VisibleNoDiscountFormData {
+  code: string
+  partnerId: string | null
+  validFrom?: Scalars['Instant']
+  validUntil?: Scalars['Instant']
+}
+
+const initialFormData: VisibleNoDiscountFormData = {
   code: '',
   partnerId: '',
   validFrom: null,
   validUntil: null,
 }
 
-const formIsValid = (formData: AssignVoucherVisibleNoDiscount) => {
-  return formData.partnerId !== '' && formData.code !== ''
+const formIsValid = (formData: VisibleNoDiscountFormData) => {
+  const { partnerId, code } = formData
+
+  return !(!partnerId || !code)
 }
 
 const VisibleNoDiscount: React.FC<WithShowNotification> = ({
   showNotification,
 }) => {
-  const [formData, setFormData] = React.useState<
-    AssignVoucherVisibleNoDiscount
-  >(initialFormData)
+  const [formData, setFormData] = React.useState<VisibleNoDiscountFormData>(
+    initialFormData,
+  )
 
   const [partnerCampaignOwners] = usePartnerCampaignOwners()
   const [
@@ -43,19 +52,30 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
 
   return (
     <>
-      <label>Partner</label>
-      <Dropdown
-        value={formData.partnerId}
-        disabled={loading}
-        placeholder={'Partner'}
-        onChange={(_, { value: partnerId }) =>
-          setFormData({ ...formData, partnerId: partnerId as string })
+      <Label>Partner</Label>
+      <SearchableDropdown
+        value={
+          formData.partnerId
+            ? {
+                value: formData.partnerId,
+                label: formData.partnerId,
+              }
+            : null
         }
-        onClear={() => setFormData({ ...formData, partnerId: '' })}
+        placeholder={'Which partner?'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
+          setFormData({
+            ...formData,
+            partnerId: data ? (data.value as string) : null,
+          })
+        }
+        noOptionsMessage={() => 'No partners found'}
         options={mapCampaignOwners(partnerCampaignOwners)}
       />
       <Spacing top={'small'} />
-      <label>Code</label>
+      <Label>Code</Label>
       <Input
         value={formData.code}
         fluid
@@ -66,57 +86,62 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
         placeholder="Code"
       />
       <Spacing top={'small'} />
-      <label>Valid period</label>
-      <Row>
-        <DateTimePickerWrapper>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ width: '100%', paddingRight: '1.0em' }}>
+          <Label>Valid from</Label>
           <DateTimePicker
-            fullWidth
-            disabled={loading}
-            date={formData.validFrom!}
-            placeholder={'Valid from'}
+            fullWidth={true}
+            date={formData.validFrom}
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
+        </div>
+        <div style={{ width: '100%', paddingLeft: '1.0em' }}>
+          <Label>Valid to</Label>
           <DateTimePicker
-            fullWidth
-            disabled={loading}
-            date={formData.validUntil!}
-            placeholder={'Valid until'}
+            fullWidth={true}
+            date={formData.validUntil}
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
-        </DateTimePickerWrapper>
-      </Row>
+        </div>
+      </div>
       <Spacing top={'small'} />
-      <Button
-        variation="primary"
-        loading={loading}
-        disabled={loading || !formIsValid(formData)}
-        onClick={() => {
-          if (!window.confirm(`Create new campaign code "${formData.code}"?`)) {
-            return
-          }
-          setPartnerVisibleNoDiscount(
-            addPartnerVisibleNoDiscountCodeOptions(formData),
-          )
-            .then(() => {
-              reset()
-              showNotification({
-                type: 'olive',
-                header: 'Success',
-                message: `Successfully created a new visible no discount campaign for partner ${formData.partnerId}`,
+      <div>
+        <Button
+          variation="primary"
+          loading={loading}
+          disabled={loading || !formIsValid(formData)}
+          onClick={() => {
+            if (
+              !window.confirm(`Create new campaign code "${formData.code}"?`)
+            ) {
+              return
+            }
+            setPartnerVisibleNoDiscount(
+              addPartnerVisibleNoDiscountCodeOptions(
+                formData as AssignVoucherVisibleNoDiscount,
+              ),
+            )
+              .then(() => {
+                reset()
+                showNotification({
+                  type: 'olive',
+                  header: 'Success',
+                  message: `Successfully created a new visible no discount campaign for partner ${formData.partnerId}`,
+                })
               })
-            })
-            .catch((error) => {
-              showNotification({
-                type: 'red',
-                header: 'Error',
-                message: error.message,
+              .catch((error) => {
+                showNotification({
+                  type: 'red',
+                  header: 'Error',
+                  message: error.message,
+                })
+                throw error
               })
-              throw error
-            })
-        }}
-      >
-        Create New Campaign
-      </Button>
+          }}
+        >
+          Create New Campaign
+        </Button>
+      </div>
     </>
   )
 }

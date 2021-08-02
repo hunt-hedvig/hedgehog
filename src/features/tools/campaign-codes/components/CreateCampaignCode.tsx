@@ -55,15 +55,6 @@ export const CreateCampaignCode: React.FC = () => {
         noOptionsMessage={() => 'No incentive type found'}
         options={incentiveTypeOptions}
       />
-      {/*<ClearableDropdown
-        value={incentiveType ?? ''}
-        options={incentiveTypeOptions}
-        placeholder={'Incentive type'}
-        onChange={(_, {value}) =>
-          setIncentiveType(value as CreatableIncentiveTypes)
-        }
-        onClear={() => setIncentiveType(null)}
-      />*/}
       <Spacing bottom={'small'} />
       {incentiveType && getIncentiveTypeForm(incentiveType)}
     </InfoContainer>

@@ -1,4 +1,8 @@
-import { AssignVoucherPercentageDiscount, Scalars } from 'api/generated/graphql'
+import {
+  AssignVoucherPercentageDiscount,
+  Scalars,
+  useCreateCampaignPartnerMutation,
+} from 'api/generated/graphql'
 import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerPercentageDiscountCodeOptions,
@@ -31,8 +35,6 @@ const initialFormData: MonthlyPercentageFormData = {
 const formLooksGood = (formData: MonthlyPercentageFormData) => {
   const { partnerId, code, percentageDiscount, numberOfMonths } = formData
 
-  console.log(formData)
-
   return !(!partnerId || !numberOfMonths || !code || !percentageDiscount)
 }
 
@@ -48,11 +50,12 @@ interface MonthlyPercentageFormData {
 const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
+  const [createCampaignPartner] = useCreateCampaignPartnerMutation()
   const [formData, setFormData] = React.useState<MonthlyPercentageFormData>(
     initialFormData,
   )
 
-  const [partnerCampaignOwners] = usePartnerCampaignOwners()
+  const [partnerCampaignOwners, { refetch }] = usePartnerCampaignOwners()
 
   const [
     setPartnerPercentageDiscount,
@@ -65,6 +68,41 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
     <>
       <Label>Partner</Label>
       <SearchableDropdown
+        creatable={true}
+        formatCreateLabel={(value) => (
+          <span>
+            Create partner "<b>{value}</b>"?
+          </span>
+        )}
+        onCreateOption={(option) => {
+          if (!option) {
+            return
+          }
+          createCampaignPartner({
+            variables: {
+              partnerId: option
+                .toLowerCase()
+                .trim()
+                .replace(' ', '_'),
+              partnerName: option,
+            },
+          }).then((result) => {
+            if (result?.data?.createCampaignPartner) {
+              showNotification({
+                type: 'olive',
+                header: 'Success',
+                message: `Successfully created a new partner ${option}`,
+              })
+              refetch()
+            } else {
+              showNotification({
+                type: 'red',
+                header: 'Error',
+                message: `Could not create a new partner ${option}`,
+              })
+            }
+          })
+        }}
         value={
           formData.partnerId
             ? {
@@ -76,6 +114,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
         placeholder={'Which partner?'}
         isLoading={loading}
         isClearable={true}
+        isCreatable={true}
         onChange={(data) =>
           setFormData({
             ...formData,
