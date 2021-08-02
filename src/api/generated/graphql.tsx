@@ -908,6 +908,7 @@ export type MutationType = {
   insertItemCategories: Array<Scalars['Boolean']>
   insertValuationRules: Array<Scalars['Boolean']>
   upsertValuationRule: Scalars['ID']
+  createCampaignPartner: Scalars['Boolean']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   assignCampaignToPartnerFreeMonths: Scalars['Boolean']
   assignCampaignToPartnerVisibleNoDiscount: Scalars['Boolean']
@@ -1153,6 +1154,11 @@ export type MutationTypeInsertValuationRulesArgs = {
 
 export type MutationTypeUpsertValuationRuleArgs = {
   request?: Maybe<UpsertValuationRuleInput>
+}
+
+export type MutationTypeCreateCampaignPartnerArgs = {
+  partnerId: Scalars['ID']
+  partnerName: Scalars['String']
 }
 
 export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
