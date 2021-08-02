@@ -41,13 +41,14 @@ export const PartnerDropdownComponent: React.FC<{
           },
         }).then((result) => {
           if (result?.data?.createCampaignPartner) {
-            refetch().then(() =>
+            refetch().then(() => {
+              onChange({ value: option })
               showNotification({
                 type: 'olive',
                 header: 'Success',
                 message: `Successfully created a new partner ${option}`,
-              }),
-            )
+              })
+            })
           } else {
             showNotification({
               type: 'red',
