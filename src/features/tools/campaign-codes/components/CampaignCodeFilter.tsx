@@ -29,7 +29,6 @@ export const CampaignCodeFilter: React.FC<{
       <Spacing top={'small'} />
       <Input
         value={filter.code ?? ''}
-        fullWidth
         onChange={({ currentTarget: { value: code } }) => {
           setFilter({
             ...filter,

@@ -12,7 +12,7 @@ import React from 'react'
 import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
-import { Centered, DateTimePickerWrapper, Row } from '../styles'
+import { DateTimePickerWrapper, Row } from '../styles'
 import { mapCampaignOwners } from '../utils'
 
 const initialFormData: AssignVoucherVisibleNoDiscount = {
@@ -86,41 +86,37 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
         </DateTimePickerWrapper>
       </Row>
       <Spacing top={'small'} />
-      <Centered>
-        <Button
-          variation="primary"
-          loading={loading}
-          disabled={loading || !formIsValid(formData)}
-          onClick={() => {
-            if (
-              !window.confirm(`Create new campaign code "${formData.code}"?`)
-            ) {
-              return
-            }
-            setPartnerVisibleNoDiscount(
-              addPartnerVisibleNoDiscountCodeOptions(formData),
-            )
-              .then(() => {
-                reset()
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: `Successfully created a new visible no discount campaign for partner ${formData.partnerId}`,
-                })
+      <Button
+        variation="primary"
+        loading={loading}
+        disabled={loading || !formIsValid(formData)}
+        onClick={() => {
+          if (!window.confirm(`Create new campaign code "${formData.code}"?`)) {
+            return
+          }
+          setPartnerVisibleNoDiscount(
+            addPartnerVisibleNoDiscountCodeOptions(formData),
+          )
+            .then(() => {
+              reset()
+              showNotification({
+                type: 'olive',
+                header: 'Success',
+                message: `Successfully created a new visible no discount campaign for partner ${formData.partnerId}`,
               })
-              .catch((error) => {
-                showNotification({
-                  type: 'red',
-                  header: 'Error',
-                  message: error.message,
-                })
-                throw error
+            })
+            .catch((error) => {
+              showNotification({
+                type: 'red',
+                header: 'Error',
+                message: error.message,
               })
-          }}
-        >
-          Create New Campaign
-        </Button>
-      </Centered>
+              throw error
+            })
+        }}
+      >
+        Create New Campaign
+      </Button>
     </>
   )
 }

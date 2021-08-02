@@ -1,5 +1,5 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 import { Dropdown, DropdownProps, Icon } from 'semantic-ui-react'
 
 const Container = styled.div`
@@ -9,9 +9,8 @@ const Container = styled.div`
 `
 
 export interface DropdownOption {
-  key: any
   value: any
-  text: any
+  label: any
 }
 
 type DropdownEvent = (

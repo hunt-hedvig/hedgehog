@@ -1,6 +1,4 @@
-import { AssignVoucherPercentageDiscount } from 'api/generated/graphql'
-import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
-import { Centered, Row } from 'features/tools/campaign-codes/styles'
+import { AssignVoucherPercentageDiscount, Scalars } from 'api/generated/graphql'
 import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerPercentageDiscountCodeOptions,
@@ -9,7 +7,9 @@ import {
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
+import { Label } from 'hedvig-ui/typography'
 import React from 'react'
 import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
@@ -19,25 +19,38 @@ import {
 } from 'utils/campaignCodes'
 import { withShowNotification } from 'utils/notifications'
 
-const initialFormData: AssignVoucherPercentageDiscount = {
+const initialFormData: MonthlyPercentageFormData = {
   code: '',
-  partnerId: '',
-  numberOfMonths: 1,
-  percentageDiscount: 5,
+  partnerId: null,
+  numberOfMonths: null,
+  percentageDiscount: null,
   validFrom: null,
   validUntil: null,
 }
 
-const formLooksGood = (formData: AssignVoucherPercentageDiscount) => {
-  return formData.partnerId !== '' && formData.code !== ''
+const formLooksGood = (formData: MonthlyPercentageFormData) => {
+  const { partnerId, code, percentageDiscount, numberOfMonths } = formData
+
+  console.log(formData)
+
+  return !(!partnerId || !numberOfMonths || !code || !percentageDiscount)
+}
+
+interface MonthlyPercentageFormData {
+  partnerId: string | null
+  numberOfMonths: number | null
+  percentageDiscount: number | null
+  code: string
+  validFrom?: Scalars['Instant']
+  validUntil?: Scalars['Instant']
 }
 
 const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
-  const [formData, setFormData] = React.useState<
-    AssignVoucherPercentageDiscount
-  >(initialFormData)
+  const [formData, setFormData] = React.useState<MonthlyPercentageFormData>(
+    initialFormData,
+  )
 
   const [partnerCampaignOwners] = usePartnerCampaignOwners()
 
@@ -50,19 +63,30 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
 
   return (
     <>
-      <label>Partner</label>
-      <Dropdown
-        value={formData.partnerId}
-        disabled={loading}
-        placeholder={'Partner'}
-        onChange={(_, { value: partnerId }) =>
-          setFormData({ ...formData, partnerId: partnerId as string })
+      <Label>Partner</Label>
+      <SearchableDropdown
+        value={
+          formData.partnerId
+            ? {
+                value: formData.partnerId,
+                label: formData.partnerId,
+              }
+            : null
         }
-        onClear={() => setFormData({ ...formData, partnerId: '' })}
+        placeholder={'Which partner?'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
+          setFormData({
+            ...formData,
+            partnerId: data ? (data.value as string) : null,
+          })
+        }
+        noOptionsMessage={() => 'No partners found'}
         options={mapCampaignOwners(partnerCampaignOwners)}
       />
       <Spacing top={'small'} />
-      <label>Code</label>
+      <Label>Code</Label>
       <Input
         value={formData.code}
         fluid
@@ -73,69 +97,84 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
         placeholder="Code"
       />
       <Spacing top={'small'} />
-      <label>Valid period</label>
-      <Row>
-        <div style={{ float: 'left' }}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ width: '100%', paddingRight: '1.0em' }}>
+          <Label>Valid from</Label>
           <DateTimePicker
-            fullWidth
-            disabled={loading}
-            date={formData.validFrom!}
-            placeholder={'Valid from'}
+            fullWidth={true}
+            date={formData.validFrom}
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>
-        <div style={{ float: 'right' }}>
+        <div style={{ width: '100%', paddingLeft: '1.0em' }}>
+          <Label>Valid to</Label>
           <DateTimePicker
-            fullWidth
-            disabled={loading}
-            date={formData.validUntil!}
-            placeholder={'Valid until'}
+            fullWidth={true}
+            date={formData.validUntil}
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
-      </Row>
+      </div>
       <Spacing top={'small'} />
-      <label>Percentage discount</label>
-      <Dropdown
-        value={formData.percentageDiscount}
-        disabled={loading}
-        placeholder={'Discount %'}
-        onChange={(_, { value: percentageDiscount }) =>
+      <Label>Percentage discount</Label>
+      <SearchableDropdown
+        value={
+          formData.percentageDiscount
+            ? {
+                value: formData.percentageDiscount,
+                label: formData.percentageDiscount + '%',
+              }
+            : null
+        }
+        placeholder={'How much percentage discount?'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
           setFormData({
             ...formData,
-            percentageDiscount: percentageDiscount as number,
+            percentageDiscount: data ? (data.value as number) : null,
           })
         }
+        noOptionsMessage={() => 'Option not found'}
         options={percentageDiscountOptions}
       />
       <Spacing top={'small'} />
-      <label>Months</label>
-      <Dropdown
-        value={formData.numberOfMonths}
-        onChange={(_, { value: numberOfMonths }) => {
+      <Label>Months</Label>
+      <SearchableDropdown
+        value={
+          formData.numberOfMonths
+            ? { value: formData.numberOfMonths, label: formData.numberOfMonths }
+            : null
+        }
+        placeholder={'How many months?'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
           setFormData({
             ...formData,
-            numberOfMonths: numberOfMonths as number,
+            numberOfMonths: data ? (data.value as number) : null,
           })
-        }}
-        placeholder="Months"
-        disabled={loading}
+        }
+        noOptionsMessage={() => 'Option not found'}
         options={numberOfMonthsOptions}
       />
       <Spacing top={'small'} />
-      <Centered>
+      <div>
         <Button
           variation="primary"
           loading={loading}
           disabled={loading || !formLooksGood(formData)}
           onClick={() => {
+            console.log(formData)
             if (
               !window.confirm(`Create new campaign code "${formData.code}"?`)
             ) {
               return
             }
             setPartnerPercentageDiscount(
-              addPartnerPercentageDiscountCodeOptions(formData),
+              addPartnerPercentageDiscountCodeOptions(
+                formData as AssignVoucherPercentageDiscount,
+              ),
             )
               .then(() => {
                 reset()
@@ -157,7 +196,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
         >
           Create New Campaign
         </Button>
-      </Centered>
+      </div>
     </>
   )
 }

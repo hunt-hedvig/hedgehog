@@ -38,9 +38,8 @@ export const mapCampaignOwners = (
   partnerCampaignOwners: readonly CampaignOwnerPartner[],
 ): DropdownOption[] =>
   partnerCampaignOwners.map(({ partnerId }) => ({
-    key: partnerId,
     value: partnerId,
-    text: partnerId,
+    label: partnerId,
   }))
 
 export const getIncentiveText = (incentive?: Incentive | null) => {
