@@ -1,10 +1,9 @@
 import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
-import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
+import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
   addPartnerFreeMonthsCodeOptions,
   useAddPartnerFreeMonthsCode,
 } from 'graphql/use-add-partner-free-months-code'
-import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
@@ -45,7 +44,6 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
     initialFormData,
   )
 
-  const [partnerCampaignOwners] = usePartnerCampaignOwners()
   const [setPartnerFreeMonths, { loading }] = useAddPartnerFreeMonthsCode()
 
   const reset = () => setFormData(initialFormData)
@@ -53,26 +51,15 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
   return (
     <>
       <Label>Partner</Label>
-      <SearchableDropdown
-        value={
-          formData.partnerId
-            ? {
-                value: formData.partnerId,
-                label: formData.partnerId,
-              }
-            : null
-        }
-        placeholder={'Which partner?'}
-        isLoading={loading}
-        isClearable={true}
+      <PartnerDropdown
+        loading={loading}
         onChange={(data) =>
           setFormData({
             ...formData,
             partnerId: data ? (data.value as string) : null,
           })
         }
-        noOptionsMessage={() => 'No partners found'}
-        options={mapCampaignOwners(partnerCampaignOwners)}
+        value={formData.partnerId ?? ''}
       />
       <Spacing top={'small'} />
       <Label>Code</Label>

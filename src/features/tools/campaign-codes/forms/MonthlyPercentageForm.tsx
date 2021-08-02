@@ -1,14 +1,9 @@
-import {
-  AssignVoucherPercentageDiscount,
-  Scalars,
-  useCreateCampaignPartnerMutation,
-} from 'api/generated/graphql'
-import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
+import { AssignVoucherPercentageDiscount, Scalars } from 'api/generated/graphql'
+import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
   addPartnerPercentageDiscountCodeOptions,
   useAddPartnerPercentageDiscountCode,
 } from 'graphql/use-add-partner-percentage-discount-code'
-import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
@@ -50,12 +45,9 @@ interface MonthlyPercentageFormData {
 const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
-  const [createCampaignPartner] = useCreateCampaignPartnerMutation()
   const [formData, setFormData] = React.useState<MonthlyPercentageFormData>(
     initialFormData,
   )
-
-  const [partnerCampaignOwners, { refetch }] = usePartnerCampaignOwners()
 
   const [
     setPartnerPercentageDiscount,
@@ -67,62 +59,15 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
   return (
     <>
       <Label>Partner</Label>
-      <SearchableDropdown
-        creatable={true}
-        formatCreateLabel={(value) => (
-          <span>
-            Create partner "<b>{value}</b>"?
-          </span>
-        )}
-        onCreateOption={(option) => {
-          if (!option) {
-            return
-          }
-          createCampaignPartner({
-            variables: {
-              partnerId: option
-                .toLowerCase()
-                .trim()
-                .replace(' ', '_'),
-              partnerName: option,
-            },
-          }).then((result) => {
-            if (result?.data?.createCampaignPartner) {
-              showNotification({
-                type: 'olive',
-                header: 'Success',
-                message: `Successfully created a new partner ${option}`,
-              })
-              refetch()
-            } else {
-              showNotification({
-                type: 'red',
-                header: 'Error',
-                message: `Could not create a new partner ${option}`,
-              })
-            }
-          })
-        }}
-        value={
-          formData.partnerId
-            ? {
-                value: formData.partnerId,
-                label: formData.partnerId,
-              }
-            : null
-        }
-        placeholder={'Which partner?'}
-        isLoading={loading}
-        isClearable={true}
-        isCreatable={true}
+      <PartnerDropdown
+        loading={loading}
         onChange={(data) =>
           setFormData({
             ...formData,
             partnerId: data ? (data.value as string) : null,
           })
         }
-        noOptionsMessage={() => 'No partners found'}
-        options={mapCampaignOwners(partnerCampaignOwners)}
+        value={formData.partnerId ?? ''}
       />
       <Spacing top={'small'} />
       <Label>Code</Label>

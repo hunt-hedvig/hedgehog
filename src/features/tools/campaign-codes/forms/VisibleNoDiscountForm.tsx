@@ -1,19 +1,17 @@
 import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
+import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
   addPartnerVisibleNoDiscountCodeOptions,
   useAddPartnerVisibleNoDiscountCode,
 } from 'graphql/use-add-partner-visible-no-discount-code'
-import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'
 import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
-import { mapCampaignOwners } from '../utils'
 
 interface VisibleNoDiscountFormData {
   code: string
@@ -42,7 +40,6 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
     initialFormData,
   )
 
-  const [partnerCampaignOwners] = usePartnerCampaignOwners()
   const [
     setPartnerVisibleNoDiscount,
     { loading },
@@ -53,26 +50,15 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
   return (
     <>
       <Label>Partner</Label>
-      <SearchableDropdown
-        value={
-          formData.partnerId
-            ? {
-                value: formData.partnerId,
-                label: formData.partnerId,
-              }
-            : null
-        }
-        placeholder={'Which partner?'}
-        isLoading={loading}
-        isClearable={true}
+      <PartnerDropdown
+        loading={loading}
         onChange={(data) =>
           setFormData({
             ...formData,
             partnerId: data ? (data.value as string) : null,
           })
         }
-        noOptionsMessage={() => 'No partners found'}
-        options={mapCampaignOwners(partnerCampaignOwners)}
+        value={formData.partnerId ?? ''}
       />
       <Spacing top={'small'} />
       <Label>Code</Label>
