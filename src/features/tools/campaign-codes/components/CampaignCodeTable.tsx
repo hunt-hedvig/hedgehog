@@ -27,7 +27,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
     )
   }
 
-  if (partnerCampaigns.length !== 0) {
+  if (partnerCampaigns.length === 0) {
     return (
       <Card span={1}>
         <StandaloneMessage>No campaigns found</StandaloneMessage>
