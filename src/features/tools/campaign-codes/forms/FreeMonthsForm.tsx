@@ -85,7 +85,7 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
           <DateTimePicker
             fullWidth={true}
             date={formData.validFrom}
-            placeholder={'End of time'}
+            placeholder={'Beginning of time'}
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>

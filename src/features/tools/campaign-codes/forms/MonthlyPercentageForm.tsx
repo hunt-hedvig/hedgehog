@@ -88,6 +88,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
           <DateTimePicker
             fullWidth={true}
             date={formData.validFrom}
+            placeholder={'Beginning of time'}
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>
@@ -96,6 +97,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
           <DateTimePicker
             fullWidth={true}
             date={formData.validUntil}
+            placeholder={'End of time'}
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>

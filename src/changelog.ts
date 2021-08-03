@@ -13,6 +13,11 @@ export interface Change {
 export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-07-16',
+    change: 'Allow creation of new campaign partners',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
+    date: '2021-07-16',
     change: 'Add status and notes to switcher emails',
     authorGithubHandle: 'vonElfvin',
   },
