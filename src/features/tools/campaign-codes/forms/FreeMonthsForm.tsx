@@ -79,6 +79,7 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
           <DateTimePicker
             fullWidth={true}
             date={formData.validFrom}
+            placeholder={'End of time'}
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>
@@ -87,6 +88,7 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
           <DateTimePicker
             fullWidth={true}
             date={formData.validUntil}
+            placeholder={'End of time'}
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
