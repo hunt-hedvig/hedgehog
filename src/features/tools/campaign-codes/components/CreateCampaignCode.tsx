@@ -1,4 +1,3 @@
-import { DropdownOption } from 'features/tools/campaign-codes/components/ClearableDropdown'
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
@@ -29,14 +28,14 @@ export const CreateCampaignCode: React.FC = () => {
     setIncentiveType,
   ] = React.useState<CreatableIncentiveTypes | null>(null)
 
-  const incentiveTypeOptions: DropdownOption[] = Object.values(
-    CreatableIncentiveTypes,
-  ).map((value) => {
-    return {
-      value: value as string,
-      label: getTextFromEnumValue(value as string),
-    }
-  })
+  const incentiveTypeOptions = Object.values(CreatableIncentiveTypes).map(
+    (value) => {
+      return {
+        value: value as string,
+        label: getTextFromEnumValue(value as string),
+      }
+    },
+  )
 
   return (
     <InfoContainer>

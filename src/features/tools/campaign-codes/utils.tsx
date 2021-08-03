@@ -6,7 +6,6 @@ import {
   VoucherCampaign,
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
-import { DropdownOption } from 'features/tools/campaign-codes/components/ClearableDropdown'
 import { Badge } from 'hedvig-ui/badge'
 import React from 'react'
 import {
@@ -51,7 +50,7 @@ export const initialCampaignFilter: CampaignFilter = {
 
 export const mapCampaignOwners = (
   partnerCampaignOwners: readonly CampaignOwnerPartner[],
-): DropdownOption[] =>
+) =>
   partnerCampaignOwners.map(({ partnerId }) => ({
     value: partnerId,
     label: partnerId,

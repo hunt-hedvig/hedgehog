@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
@@ -30,6 +31,11 @@ const initialFormData: FreeMonthsFormData = {
   validFrom: null,
   validUntil: null,
 }
+
+const DateRangeWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`
 
 const formLooksGood = (formData: FreeMonthsFormData) => {
   const { partnerId, code, numberOfFreeMonths } = formData
@@ -73,7 +79,7 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
         placeholder="Code"
       />
       <Spacing top={'small'} />
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <DateRangeWrapper>
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
           <DateTimePicker
@@ -92,7 +98,7 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
-      </div>
+      </DateRangeWrapper>
       <Spacing top={'small'} />
       <Label>Months</Label>
       <SearchableDropdown

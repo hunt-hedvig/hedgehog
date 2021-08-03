@@ -5,6 +5,10 @@ import {
   getValidity,
 } from 'features/tools/campaign-codes/utils'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
+import {
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import { Card } from 'hedvig-ui/card'
 import { Popover } from 'hedvig-ui/popover'
 import React from 'react'
@@ -16,11 +20,19 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
   const [partnerCampaigns, { loading }] = usePartnerCampaigns(filter)
 
   if (loading) {
-    return <Card span={1}>Loading partner campaigns...</Card>
+    return (
+      <Card span={1}>
+        <LoadingMessage />
+      </Card>
+    )
   }
 
-  if (partnerCampaigns.length === 0) {
-    return <Card span={1}>No partner campaigns available</Card>
+  if (partnerCampaigns.length !== 0) {
+    return (
+      <Card span={1}>
+        <StandaloneMessage>No campaigns found</StandaloneMessage>
+      </Card>
+    )
   }
 
   return (
