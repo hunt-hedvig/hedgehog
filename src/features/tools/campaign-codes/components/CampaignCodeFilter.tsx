@@ -1,32 +1,21 @@
 import { CampaignFilter } from 'api/generated/graphql'
-import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
-import {
-  DateTimePickerWrapper,
-  Row,
-} from 'features/tools/campaign-codes/styles'
-import {
-  initialCampaignFilter,
-  mapCampaignOwners,
-} from 'features/tools/campaign-codes/utils'
-import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
+import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
+import { initialCampaignFilter } from 'features/tools/campaign-codes/utils'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { InfoContainer } from 'hedvig-ui/info-row'
+import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { Label, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { Input } from 'semantic-ui-react'
 
 export const CampaignCodeFilter: React.FC<{
   filter: CampaignFilter
   setFilter: React.Dispatch<React.SetStateAction<CampaignFilter>>
 }> = ({ filter, setFilter }) => {
-  const [partnerCampaignOwners] = usePartnerCampaignOwners()
-
   return (
     <InfoContainer>
-      <ThirdLevelHeadline>Filter codes</ThirdLevelHeadline>
-      <Spacing top={'small'} />
+      <ThirdLevelHeadline>Filter Codes</ThirdLevelHeadline>
       <Input
         value={filter.code ?? ''}
         onChange={({ currentTarget: { value: code } }) => {
@@ -38,58 +27,56 @@ export const CampaignCodeFilter: React.FC<{
         placeholder="Code"
       />
       <Spacing top={'small'} />
-      <Dropdown
-        options={mapCampaignOwners(partnerCampaignOwners)}
+      <PartnerDropdown
+        onChange={(data) =>
+          setFilter({
+            ...filter,
+            partnerId: data ? (data.value as string) : null,
+          })
+        }
         value={filter.partnerId ?? ''}
-        placeholder="Partner"
-        onChange={(_, { value: partnerId }) => {
-          setFilter({
-            ...filter,
-            partnerId: partnerId as string,
-          })
-        }}
-        onClear={() => {
-          setFilter({
-            ...filter,
-            partnerId: null,
-          })
-        }}
+        placeholder={'Partner name'}
       />
       <Spacing top={'small'} />
-      <Row>
-        <DateTimePickerWrapper>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ width: '100%', paddingRight: '1.0em' }}>
+          <Label>Valid from</Label>
           <DateTimePicker
-            fullWidth
-            date={filter.activeFrom!!}
-            placeholder={'Active from'}
-            setDate={(activeFrom) => {
+            fullWidth={true}
+            date={filter.activeFrom}
+            setDate={(activeFrom) =>
               setFilter({
                 ...filter,
                 activeFrom,
               })
-            }}
+            }
           />
+        </div>
+        <div style={{ width: '100%', paddingLeft: '1.0em' }}>
+          <Label>Valid to</Label>
           <DateTimePicker
-            fullWidth
-            placeholder={'Active to'}
-            date={filter.activeTo!}
-            setDate={(activeTo) => {
+            fullWidth={true}
+            date={filter.activeTo}
+            setDate={(activeTo) =>
               setFilter({
                 ...filter,
                 activeTo,
               })
-            }}
+            }
           />
-          <Button
-            variation="primary"
-            onClick={() => {
-              setFilter(initialCampaignFilter)
-            }}
-          >
-            Clear
-          </Button>
-        </DateTimePickerWrapper>
-      </Row>
+        </div>
+      </div>
+      <Spacing top={'small'} />
+      <div>
+        <Button
+          variation="primary"
+          onClick={() => {
+            setFilter(initialCampaignFilter)
+          }}
+        >
+          Clear
+        </Button>
+      </div>
     </InfoContainer>
   )
 }

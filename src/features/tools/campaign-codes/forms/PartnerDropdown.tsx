@@ -10,18 +10,22 @@ export const PartnerDropdownComponent: React.FC<{
   onChange: (data: any) => void
   value: string
   loading?: boolean
+  creatable?: boolean
+  placeholder?: string
 } & WithShowNotification> = ({
   onChange,
   value,
-  loading = false,
   showNotification,
+  loading = false,
+  creatable = false,
+  placeholder = 'Which partner?',
 }) => {
   const [partnerCampaignOwners, { refetch }] = usePartnerCampaignOwners()
   const [createCampaignPartner] = useCreateCampaignPartnerMutation()
 
   return (
     <SearchableDropdown
-      creatable={true}
+      creatable={creatable}
       formatCreateLabel={(optionValue) => (
         <span>
           Create partner "<b>{optionValue}</b>"?
@@ -66,7 +70,7 @@ export const PartnerDropdownComponent: React.FC<{
             }
           : null
       }
-      placeholder={'Which partner?'}
+      placeholder={placeholder}
       isLoading={loading}
       isClearable={true}
       isCreatable={true}
