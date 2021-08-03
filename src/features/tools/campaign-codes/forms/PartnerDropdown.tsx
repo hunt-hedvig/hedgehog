@@ -17,7 +17,7 @@ export const PartnerDropdownComponent: React.FC<{
   value,
   showNotification,
   loading = false,
-  creatable = false,
+  creatable = true,
   placeholder = 'Which partner?',
 }) => {
   const [partnerCampaignOwners, { refetch }] = usePartnerCampaignOwners()
