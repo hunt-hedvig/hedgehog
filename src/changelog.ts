@@ -12,7 +12,7 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-07-16',
+    date: '2021-08-03',
     change: 'Allow creation of new campaign partners',
     authorGithubHandle: 'rasmusguterstam',
   },
