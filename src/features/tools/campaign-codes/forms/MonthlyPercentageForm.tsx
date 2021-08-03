@@ -17,6 +17,7 @@ import {
   percentageDiscountOptions,
 } from 'utils/campaignCodes'
 import { withShowNotification } from 'utils/notifications'
+import { DateRangeWrapper } from './FreeMonthsForm'
 
 const initialFormData: MonthlyPercentageFormData = {
   code: '',
@@ -81,7 +82,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
         placeholder="Code"
       />
       <Spacing top={'small'} />
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <DateRangeWrapper>
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
           <DateTimePicker
@@ -98,7 +99,7 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
-      </div>
+      </DateRangeWrapper>
       <Spacing top={'small'} />
       <Label>Percentage discount</Label>
       <SearchableDropdown

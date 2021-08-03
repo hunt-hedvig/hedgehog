@@ -1,4 +1,5 @@
 import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
+import { DateRangeWrapper } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
   addPartnerVisibleNoDiscountCodeOptions,
@@ -72,7 +73,7 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
         placeholder="Code"
       />
       <Spacing top={'small'} />
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <DateRangeWrapper>
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
           <DateTimePicker
@@ -89,7 +90,7 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
-      </div>
+      </DateRangeWrapper>
       <Spacing top={'small'} />
       <div>
         <Button

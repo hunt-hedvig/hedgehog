@@ -32,7 +32,7 @@ const initialFormData: FreeMonthsFormData = {
   validUntil: null,
 }
 
-const DateRangeWrapper = styled.div`
+export const DateRangeWrapper = styled.div`
   display: flex;
   flex-direction: row;
 `
