@@ -38,7 +38,7 @@ const generateRange = (min: number, max: number, step: number): number[] => {
 
 export const numberOfMonthsOptions = generateRange(1, 12, 1).map(
   (noOfMonths) => ({
-    key: noOfMonths,
+    label: noOfMonths,
     value: noOfMonths,
     text: noOfMonths,
   }),
@@ -46,7 +46,7 @@ export const numberOfMonthsOptions = generateRange(1, 12, 1).map(
 
 export const percentageDiscountOptions = generateRange(5, 20, 5).map(
   (percentage) => ({
-    key: percentage + '%',
+    label: percentage + '%',
     value: percentage,
     text: percentage + '%',
   }),
