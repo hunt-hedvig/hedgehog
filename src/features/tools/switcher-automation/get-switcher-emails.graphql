@@ -10,6 +10,15 @@ query GetSwitcherEmails {
     }
     switcherCompany
     queuedAt
+    contract {
+      id
+      currentAgreementId
+      masterInception
+      status
+      contractTypeName
+      isTerminated
+      terminationDate
+    }
     sentAt
     remindedAt
     cancellationDate
