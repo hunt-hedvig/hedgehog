@@ -908,6 +908,7 @@ export type MutationType = {
   insertItemCategories: Array<Scalars['Boolean']>
   insertValuationRules: Array<Scalars['Boolean']>
   upsertValuationRule: Scalars['ID']
+  createCampaignPartner: Scalars['Boolean']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   assignCampaignToPartnerFreeMonths: Scalars['Boolean']
   assignCampaignToPartnerVisibleNoDiscount: Scalars['Boolean']
@@ -1153,6 +1154,11 @@ export type MutationTypeInsertValuationRulesArgs = {
 
 export type MutationTypeUpsertValuationRuleArgs = {
   request?: Maybe<UpsertValuationRuleInput>
+}
+
+export type MutationTypeCreateCampaignPartnerArgs = {
+  partnerId: Scalars['ID']
+  partnerName: Scalars['String']
 }
 
 export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
@@ -2521,6 +2527,15 @@ export type ClaimTypeFragment = { __typename?: 'Claim' } & {
     | ({ __typename?: 'TestClaim' } & Pick<TestClaim, 'date'>)
   >
 }
+
+export type CreateCampaignPartnerMutationVariables = Exact<{
+  partnerId: Scalars['ID']
+  partnerName: Scalars['String']
+}>
+
+export type CreateCampaignPartnerMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'createCampaignPartner'>
 
 export type CreateClaimMutationVariables = Exact<{
   memberId: Scalars['ID']
@@ -5905,6 +5920,56 @@ export type ChangeToDateMutationResult = ApolloReactCommon.MutationResult<
 export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
+>
+export const CreateCampaignPartnerDocument = gql`
+  mutation CreateCampaignPartner($partnerId: ID!, $partnerName: String!) {
+    createCampaignPartner(partnerId: $partnerId, partnerName: $partnerName)
+  }
+`
+export type CreateCampaignPartnerMutationFn = ApolloReactCommon.MutationFunction<
+  CreateCampaignPartnerMutation,
+  CreateCampaignPartnerMutationVariables
+>
+
+/**
+ * __useCreateCampaignPartnerMutation__
+ *
+ * To run a mutation, you first call `useCreateCampaignPartnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCampaignPartnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCampaignPartnerMutation, { data, loading, error }] = useCreateCampaignPartnerMutation({
+ *   variables: {
+ *      partnerId: // value for 'partnerId'
+ *      partnerName: // value for 'partnerName'
+ *   },
+ * });
+ */
+export function useCreateCampaignPartnerMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateCampaignPartnerMutation,
+    CreateCampaignPartnerMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    CreateCampaignPartnerMutation,
+    CreateCampaignPartnerMutationVariables
+  >(CreateCampaignPartnerDocument, options)
+}
+export type CreateCampaignPartnerMutationHookResult = ReturnType<
+  typeof useCreateCampaignPartnerMutation
+>
+export type CreateCampaignPartnerMutationResult = ApolloReactCommon.MutationResult<
+  CreateCampaignPartnerMutation
+>
+export type CreateCampaignPartnerMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateCampaignPartnerMutation,
+  CreateCampaignPartnerMutationVariables
 >
 export const CreateClaimDocument = gql`
   mutation createClaim(
