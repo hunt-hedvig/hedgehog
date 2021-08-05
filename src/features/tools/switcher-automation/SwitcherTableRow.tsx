@@ -2,11 +2,10 @@ import { useMutation } from '@apollo/client'
 import { gql } from '@apollo/client/core'
 import styled from '@emotion/styled'
 import {
+  Contract,
   GetSwitcherEmailsDocument,
   SwitchableSwitcherEmail,
-  useActivatePendingAgreementMutation,
   useMarkSwitcherEmailAsRemindedMutation,
-  useTerminateContractMutation,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
@@ -80,6 +79,14 @@ const SwitcherEmailRowComponent: React.FC<Pick<
   | 'contract'
 > & {
   status: SwitcherEmailStatus
+  onTerminate: (
+    contract: Contract,
+    terminationDate: Date,
+    terminationReason: TerminationReason,
+    comment: string,
+  ) => void
+  onActivate: (contract: Contract, activeFrom: Date) => void
+  loading?: boolean
 } & WithShowNotification> = ({
   id,
   member,
@@ -92,6 +99,9 @@ const SwitcherEmailRowComponent: React.FC<Pick<
   status,
   contract,
   showNotification,
+  onTerminate,
+  onActivate,
+  loading = false,
 }) => {
   const [
     markAsReminded,
@@ -107,11 +117,6 @@ const SwitcherEmailRowComponent: React.FC<Pick<
   const [activeFrom, setActiveFrom] = useState(new Date())
   const [activateContractView, setActivateContractView] = useState(false)
 
-  const [
-    activateContract,
-    { loading: activateContractLoading },
-  ] = useActivatePendingAgreementMutation()
-
   const [terminateContractView, setTerminateContractView] = useState(false)
   const [terminationDate, setTerminationDate] = useState(new Date())
   const [
@@ -119,11 +124,6 @@ const SwitcherEmailRowComponent: React.FC<Pick<
     setTerminationReason,
   ] = useState<TerminationReason | null>(null)
   const [comment, setComment] = React.useState('')
-
-  const [
-    terminateContract,
-    { loading: terminateContractLoading },
-  ] = useTerminateContractMutation()
 
   const sentAtDate = sentAt && parseISO(sentAt)
   const remindedAtDate = remindedAt && parseISO(remindedAt)
@@ -275,44 +275,18 @@ const SwitcherEmailRowComponent: React.FC<Pick<
                   <ButtonsGroup>
                     <Button
                       variation={'success'}
-                      disabled={activateContractLoading}
+                      disabled={loading}
                       onClick={() => {
-                        const confirmed = window.confirm(
-                          `Are you sure you want to activate this contract with master inception of ${format(
-                            activeFrom,
-                            'yyyy-MM-dd',
-                          )}?`,
-                        )
-                        if (confirmed) {
-                          activateContract({
-                            variables: {
-                              contractId: contract.id,
-                              request: {
-                                pendingAgreementId: contract.currentAgreementId,
-                                fromDate: format(activeFrom, 'yyyy-MM-dd'),
-                              },
-                            },
-                            refetchQueries: () => {
-                              console.log('refetching')
-                              return [{ query: GetSwitcherEmailsDocument }]
-                            },
-                          })
-                            .then(() => {
-                              showNotification({
-                                type: 'olive',
-                                header: 'Contract activated',
-                                message: 'Successfully activated the contract.',
-                              })
-                              setActivateContractView(false)
-                            })
-                            .catch((error) => {
-                              showNotification({
-                                type: 'red',
-                                header: 'Unable to activate the contract',
-                                message: error.message,
-                              })
-                              throw error
-                            })
+                        if (
+                          window.confirm(
+                            `Are you sure you want to activate this contract with master inception of ${format(
+                              activeFrom,
+                              'yyyy-MM-dd',
+                            )}?`,
+                          )
+                        ) {
+                          onActivate(contract, activeFrom)
+                          setActivateContractView(false)
                         }
                       }}
                     >
@@ -355,52 +329,25 @@ const SwitcherEmailRowComponent: React.FC<Pick<
                   <ButtonsGroup>
                     <Button
                       variation={'danger'}
-                      disabled={
-                        terminationReason === null || terminateContractLoading
-                      }
+                      disabled={terminationReason === null || loading}
                       onClick={() => {
-                        const confirmed = window.confirm(
-                          `Are you sure you want to terminate this contract with the termination date ${format(
-                            terminationDate,
-                            'yyyy-MM-dd',
-                          )}?`,
-                        )
-                        if (confirmed) {
-                          terminateContract({
-                            variables: {
-                              contractId: contract.id,
-                              request: {
-                                terminationDate: format(
-                                  terminationDate,
-                                  'yyyy-MM-dd',
-                                ),
-                                terminationReason: terminationReason!,
-                                comment,
-                              },
-                            },
-                            refetchQueries: () => {
-                              console.log('refetching')
-                              return ['GetSwitcherEmails']
-                            },
-                            awaitRefetchQueries: true,
-                          })
-                            .then(() => {
-                              showNotification({
-                                type: 'olive',
-                                header: 'Contract terminated',
-                                message:
-                                  'Successfully terminated the contract.',
-                              })
-                              setTerminateContractView(false)
-                            })
-                            .catch((error) => {
-                              showNotification({
-                                type: 'red',
-                                header: 'Unable to terminate',
-                                message: error.message,
-                              })
-                              throw error
-                            })
+                        if (
+                          window.confirm(
+                            `Are you sure you want to terminate this contract with the termination date ${format(
+                              terminationDate,
+                              'yyyy-MM-dd',
+                            )}?`,
+                          )
+                        ) {
+                          if (terminationReason) {
+                            onTerminate(
+                              contract,
+                              terminationDate,
+                              terminationReason,
+                              comment,
+                            )
+                            setTerminateContractView(false)
+                          }
                         }
                       }}
                     >

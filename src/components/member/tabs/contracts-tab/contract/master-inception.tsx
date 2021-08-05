@@ -29,8 +29,6 @@ const MasterInceptionComponent: React.FC<{
     { loading: activateContractLoading },
   ] = useActivateContract(contract)
 
-  console.log(contract)
-
   return (
     <>
       {!datePickerEnabled && !contract.terminationDate && (
