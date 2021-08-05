@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-08-05',
+    change: 'Allow contract activation and termination in switcher view',
+    authorGithubHandle: 'cpiehl1',
+  },
+  {
     date: '2021-08-03',
     change: 'Allow creation of new campaign partners',
     authorGithubHandle: 'rasmusguterstam',

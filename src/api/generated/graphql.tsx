@@ -1519,6 +1519,7 @@ export type SwitchableSwitcherEmail = {
   member: Member
   switcherCompany: Scalars['String']
   queuedAt: Scalars['Instant']
+  contract?: Maybe<Contract>
   sentAt?: Maybe<Scalars['Instant']>
   remindedAt?: Maybe<Scalars['Instant']>
   cancellationDate?: Maybe<Scalars['LocalDate']>
@@ -2315,6 +2316,18 @@ export type GetSwitcherEmailsQuery = { __typename?: 'QueryType' } & {
         member: { __typename?: 'Member' } & Pick<
           Member,
           'memberId' | 'signedOn' | 'firstName' | 'lastName' | 'email'
+        >
+        contract?: Maybe<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'currentAgreementId'
+            | 'masterInception'
+            | 'status'
+            | 'contractTypeName'
+            | 'isTerminated'
+            | 'terminationDate'
+          >
         >
       }
   >
@@ -5187,6 +5200,15 @@ export const GetSwitcherEmailsDocument = gql`
       }
       switcherCompany
       queuedAt
+      contract {
+        id
+        currentAgreementId
+        masterInception
+        status
+        contractTypeName
+        isTerminated
+        terminationDate
+      }
       sentAt
       remindedAt
       cancellationDate

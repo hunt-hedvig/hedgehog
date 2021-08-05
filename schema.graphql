@@ -1163,6 +1163,7 @@ type SwitchableSwitcherEmail {
   member: Member!
   switcherCompany: String!
   queuedAt: Instant!
+  contract: Contract
   sentAt: Instant
   remindedAt: Instant
   cancellationDate: LocalDate

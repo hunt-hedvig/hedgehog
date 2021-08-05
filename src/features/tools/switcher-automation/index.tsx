@@ -1,221 +1,26 @@
-import { useMutation } from '@apollo/client'
-import { gql } from '@apollo/client/core'
-import styled from '@emotion/styled'
 import {
-  GetSwitcherEmailsDocument,
+  Contract,
   Member,
-  SwitchableSwitcherEmail,
+  useActivatePendingAgreementMutation,
   useGetSwitcherEmailsQuery,
-  useMarkSwitcherEmailAsRemindedMutation,
+  useTerminateContractMutation,
 } from 'api/generated/graphql'
-import { format, parseISO } from 'date-fns'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
+import { format } from 'date-fns'
 import { Checkbox } from 'hedvig-ui/checkbox'
-import { Input } from 'hedvig-ui/input'
-import {
-  FourthLevelHeadline,
-  MainHeadline,
-  SecondLevelHeadline,
-} from 'hedvig-ui/typography'
+import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { Market, SwitcherEmailStatus, SwitcherTypeMarket } from 'types/enums'
-import { Keys } from 'utils/hooks/key-press-hook'
 import { withShowNotification } from 'utils/notifications'
+import { sleep } from 'utils/sleep'
 import { getSwitcherEmailStatus } from 'utils/switcher-emails'
 import { convertEnumToTitle, getFlagFromMarket } from 'utils/text'
+import { StatusTableRow, SwitcherEmailRow } from './SwitcherTableRow'
 
-const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
-
-export const StatusTableRow = styled(Table.Row)()
-
-const SubText = styled.p`
-  font-size: 0.9rem;
-`
-
-const UPDATE_INFO = gql`
-  mutation UpdateSwitcherEmailInfo(
-    $id: ID!
-    $input: UpdateSwitcherEmailInfoInput
-  ) {
-    updateSwitcherEmailInfo(id: $id, request: $input) {
-      id
-      note
-    }
-  }
-`
-
-const Note = styled.div`
-  font-size: 1rem;
-  margin: 0.5rem 0;
-`
-
-const SwitcherEmailRowComponent: React.FC<Pick<
-  SwitchableSwitcherEmail,
-  | 'id'
-  | 'member'
-  | 'sentAt'
-  | 'remindedAt'
-  | 'switcherCompany'
-  | 'switcherType'
-  | 'cancellationDate'
-  | 'note'
-> & {
-  status: SwitcherEmailStatus
-} & WithShowNotification> = ({
-  id,
-  member,
-  sentAt,
-  remindedAt,
-  switcherCompany,
-  switcherType,
-  cancellationDate,
-  note,
-  status,
+export const SwitcherAutomationComponent: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
-  const [
-    markAsReminded,
-    markAsRemindedOptions,
-  ] = useMarkSwitcherEmailAsRemindedMutation({
-    variables: { id },
-    refetchQueries: () => [{ query: GetSwitcherEmailsDocument }],
-  })
-
-  const [editNote, setEditNote] = useState(false)
-  const [newNote, setNewNote] = useState(note)
-
-  const sentAtDate = sentAt && parseISO(sentAt)
-  const remindedAtDate = remindedAt && parseISO(remindedAt)
-  const signedDate = member.signedOn && parseISO(member.signedOn)
-
-  const [updateSwitcherEmailInfo] = useMutation(UPDATE_INFO)
-
-  return (
-    <StatusTableRow>
-      <Table.Cell>
-        <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
-        <>
-          {' '}
-          ({member.firstName} {member.lastName})
-          <SubText>{member.email}</SubText>
-        </>
-      </Table.Cell>
-      <Table.Cell>
-        {convertEnumToTitle(switcherCompany)}
-        <SubText>
-          {switcherType ? convertEnumToTitle(switcherType) : 'Unknown'}
-        </SubText>
-      </Table.Cell>
-      <Table.Cell>
-        {'📝 '}
-        {signedDate ? format(signedDate, FORMAT_DATE_TIME) : '-'}
-      </Table.Cell>
-      <Table.Cell>
-        {'💌 '}
-        {sentAtDate ? format(sentAtDate, FORMAT_DATE_TIME) : '-'}
-        {cancellationDate && (
-          <SubText>with cancellation date {cancellationDate}</SubText>
-        )}
-      </Table.Cell>
-      <Table.Cell width={5}>
-        <FourthLevelHeadline>{status}</FourthLevelHeadline>
-        {editNote ? (
-          <>
-            <Input
-              autofocus
-              value={newNote}
-              onChange={(e) => setNewNote(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.keyCode === Keys.Escape.code) {
-                  setEditNote(false)
-                  setNewNote(note)
-                  return
-                }
-                if (e.keyCode !== Keys.Enter.code) {
-                  return
-                }
-                if (!newNote) {
-                  return
-                }
-                if (note && note.trim() === newNote.trim()) {
-                  return
-                }
-                updateSwitcherEmailInfo({
-                  variables: {
-                    id,
-                    input: {
-                      note: newNote,
-                    },
-                  },
-                })
-                  .then(() => {
-                    showNotification({
-                      message: `Note changed to "${newNote}"`,
-                      header: 'Success!',
-                      type: 'olive',
-                    })
-                    setEditNote(false)
-                  })
-                  .catch((error) => {
-                    showNotification({
-                      message: error.message,
-                      header: 'Error',
-                      type: 'red',
-                    })
-                    throw error
-                  })
-              }}
-            />
-          </>
-        ) : (
-          <>
-            <Note>{note}</Note>
-            <ButtonsGroup>
-              <Button
-                size="small"
-                variation="primary"
-                onClick={() => setEditNote((current) => !current)}
-              >
-                Toggle note edit
-              </Button>
-              <Button
-                size="small"
-                variation="secondary"
-                disabled={!!remindedAtDate || markAsRemindedOptions.loading}
-                onClick={async () => {
-                  if (
-                    confirm(
-                      `Did you remind ${convertEnumToTitle(
-                        switcherCompany,
-                      )} about ${member.firstName} ${member.lastName} (${
-                        member.memberId
-                      })?`,
-                    )
-                  ) {
-                    await markAsReminded()
-                  }
-                }}
-              >
-                {markAsRemindedOptions.loading
-                  ? '...'
-                  : remindedAtDate
-                  ? `Reminded ${format(remindedAtDate, FORMAT_DATE_TIME)}`
-                  : 'Mark as reminded'}
-              </Button>
-            </ButtonsGroup>
-          </>
-        )}
-      </Table.Cell>
-    </StatusTableRow>
-  )
-}
-
-export const SwitcherEmailRow = withShowNotification(SwitcherEmailRowComponent)
-
-export const SwitcherAutomation: React.FC = () => {
   const switchers = useGetSwitcherEmailsQuery()
 
   const [selectedMarket, setSelectedMarket] = useState<Market | null>(null)
@@ -223,6 +28,16 @@ export const SwitcherAutomation: React.FC = () => {
     selectedStatus,
     setSelectedStatus,
   ] = useState<SwitcherEmailStatus | null>(null)
+
+  const [
+    activateContract,
+    { loading: activateContractLoading },
+  ] = useActivatePendingAgreementMutation()
+
+  const [
+    terminateContract,
+    { loading: terminateContractLoading },
+  ] = useTerminateContractMutation()
 
   return (
     <>
@@ -265,7 +80,7 @@ export const SwitcherAutomation: React.FC = () => {
               </div>
             )
           })}
-          <Table>
+          <Table style={{ overflow: 'visible' }}>
             <Table.Header>
               <StatusTableRow>
                 <Table.HeaderCell>Member</Table.HeaderCell>
@@ -273,6 +88,7 @@ export const SwitcherAutomation: React.FC = () => {
                 <Table.HeaderCell>Sign date</Table.HeaderCell>
                 <Table.HeaderCell>Sent date</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>Contract</Table.HeaderCell>
               </StatusTableRow>
             </Table.Header>
             <Table.Body>
@@ -298,6 +114,77 @@ export const SwitcherAutomation: React.FC = () => {
                     {...email}
                     status={getSwitcherEmailStatus(email)}
                     member={email.member as Member}
+                    contract={email.contract as Contract}
+                    loading={
+                      activateContractLoading || terminateContractLoading
+                    }
+                    onActivate={(contract, activeFrom) => {
+                      activateContract({
+                        variables: {
+                          contractId: contract.id,
+                          request: {
+                            pendingAgreementId: contract.currentAgreementId,
+                            fromDate: format(activeFrom, 'yyyy-MM-dd'),
+                          },
+                        },
+                      })
+                        .then(async () => {
+                          await sleep(1000)
+                          switchers.refetch().then(() => {
+                            showNotification({
+                              type: 'olive',
+                              header: 'Contract activated',
+                              message: 'Successfully activated the contract.',
+                            })
+                          })
+                        })
+                        .catch((error) => {
+                          showNotification({
+                            type: 'red',
+                            header: 'Unable to activate the contract',
+                            message: error.message,
+                          })
+                          throw error
+                        })
+                    }}
+                    onTerminate={(
+                      contract,
+                      terminationDate,
+                      terminationReason,
+                      comment,
+                    ) => {
+                      terminateContract({
+                        variables: {
+                          contractId: contract.id,
+                          request: {
+                            terminationDate: format(
+                              terminationDate,
+                              'yyyy-MM-dd',
+                            ),
+                            terminationReason: terminationReason!,
+                            comment,
+                          },
+                        },
+                      })
+                        .then(async () => {
+                          await sleep(1000)
+                          switchers.refetch().then(() => {
+                            showNotification({
+                              type: 'olive',
+                              header: 'Contract terminated',
+                              message: 'Successfully terminated the contract.',
+                            })
+                          })
+                        })
+                        .catch((error) => {
+                          showNotification({
+                            type: 'red',
+                            header: 'Unable to terminate',
+                            message: error.message,
+                          })
+                          throw error
+                        })
+                    }}
                   />
                 )) ?? null}
             </Table.Body>
@@ -307,3 +194,7 @@ export const SwitcherAutomation: React.FC = () => {
     </>
   )
 }
+
+export const SwitcherAutomation = withShowNotification(
+  SwitcherAutomationComponent,
+)
