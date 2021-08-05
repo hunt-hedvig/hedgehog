@@ -130,10 +130,12 @@ export const SwitcherAutomationComponent: React.FC<{} & WithShowNotification> = 
                       })
                         .then(async () => {
                           await sleep(1000)
-                          showNotification({
-                            type: 'olive',
-                            header: 'Contract activated',
-                            message: 'Successfully activated the contract.',
+                          switchers.refetch().then(() => {
+                            showNotification({
+                              type: 'olive',
+                              header: 'Contract activated',
+                              message: 'Successfully activated the contract.',
+                            })
                           })
                         })
                         .catch((error) => {
