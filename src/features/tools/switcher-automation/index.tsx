@@ -80,7 +80,7 @@ export const SwitcherAutomationComponent: React.FC<{} & WithShowNotification> = 
               </div>
             )
           })}
-          <Table>
+          <Table style={{ overflow: 'visible' }}>
             <Table.Header>
               <StatusTableRow>
                 <Table.HeaderCell>Member</Table.HeaderCell>
