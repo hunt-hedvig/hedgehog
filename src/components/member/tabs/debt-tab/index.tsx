@@ -79,7 +79,7 @@ export const DebtTab: React.FC<{
         </RefreshButton>
       </MainHeadline>
       <CardsWrapper>
-        <Card span={2}>
+        <Card span={1}>
           <InfoContainer>
             <InfoRow>
               Member flag
@@ -98,9 +98,11 @@ export const DebtTab: React.FC<{
               </InfoText>
             </InfoRow>
           </InfoContainer>
-          <Spacing top={'large'} />
           {eligibleForWhitelist && (
-            <WhitelistMemberButton memberId={memberId} />
+            <>
+              <Spacing top={'large'} />
+              <WhitelistMemberButton memberId={memberId} />
+            </>
           )}
         </Card>
       </CardsWrapper>
