@@ -39,6 +39,7 @@ const ChatHeaderStyle = styled.div<{ visible: boolean }>`
   justify-content: space-between;
   width: 100%;
   background-color: ${({ theme }) => theme.background};
+  cursor: pointer;
 `
 
 export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
@@ -104,7 +105,7 @@ const ChatHeader: React.FC<{
   isHinting: boolean
   onResizeClick: () => void
 }> = ({ visible, isHinting, onResizeClick }) => (
-  <ChatHeaderStyle visible={visible}>
+  <ChatHeaderStyle onClick={onResizeClick} visible={visible}>
     <h4>Chat</h4>
     {isHinting ? (
       '(W)'
@@ -113,7 +114,6 @@ const ChatHeader: React.FC<{
         name={visible ? 'angle double up' : 'angle double down'}
         size={'large'}
         link
-        onClick={onResizeClick}
       />
     )}
   </ChatHeaderStyle>
