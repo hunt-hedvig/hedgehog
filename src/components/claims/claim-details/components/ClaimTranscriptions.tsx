@@ -1,47 +1,36 @@
-import {
-  List as MuiList,
-  ListItem as MuiListItem,
-  Typography as MuiTypography,
-  withStyles,
-} from '@material-ui/core'
+import { List as MuiList } from '@material-ui/core'
 import { useClaimPageQuery } from 'api/generated/graphql'
 
 import React from 'react'
 
+import styled from '@emotion/styled'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { Card, CardContent } from 'hedvig-ui/card'
+import { List, ListItem } from 'hedvig-ui/list'
+import { Paragraph } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
 
-interface Props {
-  claimId: string
-}
+const ClaimTranscriptionWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 0.5em;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundTransparent};
+`
 
-const ListItem = withStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingLeft: 0,
-    paddingRight: 0,
-    borderBottom: '1px solid rgba(0,0,0,0.08)',
-  },
-})(MuiListItem)
+const ClaimTranscription = styled(Paragraph)`
+  font-size: 1rem;
+  max-width: 80%;
+  white-space: pre-wrap;
+`
 
-const ClaimTranscription = withStyles({
-  root: {
-    fontSize: '1rem',
-    maxWidth: '80%',
-  },
-})(MuiTypography)
+const ClaimTranscriptionMetaData = styled(Paragraph)`
+  font-size: 0.875rem;
+  text-align: right;
+`
 
-const ClaimTranscriptionMetaData = withStyles({
-  root: {
-    fontSize: '0.875rem',
-  },
-})(MuiTypography)
-
-const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
+const ClaimTranscriptions: React.FC<{ claimId: string }> = ({ claimId }) => {
   const {
     data: claimTranscriptionsData,
     error: queryError,
@@ -69,23 +58,23 @@ const ClaimTranscriptions: React.FC<Props> = ({ claimId }) => {
           }
         />
 
-        <MuiList>
+        <List>
           {claimTranscriptionsData?.claim?.transcriptions?.map(
             (transcription) => (
               <ListItem key={transcription.text}>
-                <ClaimTranscription component="p">
-                  {transcription.text}
-                </ClaimTranscription>
-                <MuiList>
-                  <ClaimTranscriptionMetaData component="span">
-                    Confidence: {transcription.confidenceScore}
-                    <br /> Language code: {transcription.languageCode}
-                  </ClaimTranscriptionMetaData>
-                </MuiList>
+                <ClaimTranscriptionWrapper>
+                  <ClaimTranscription>{transcription.text}</ClaimTranscription>
+                  <MuiList>
+                    <ClaimTranscriptionMetaData>
+                      Confidence: {transcription.confidenceScore}
+                      <br /> Language code: {transcription.languageCode}
+                    </ClaimTranscriptionMetaData>
+                  </MuiList>
+                </ClaimTranscriptionWrapper>
               </ListItem>
             ),
           )}
-        </MuiList>
+        </List>
       </CardContent>
     </Card>
   )
