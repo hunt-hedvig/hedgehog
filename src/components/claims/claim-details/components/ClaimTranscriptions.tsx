@@ -1,4 +1,3 @@
-import { List as MuiList } from '@material-ui/core'
 import { useClaimPageQuery } from 'api/generated/graphql'
 
 import React from 'react'
@@ -15,8 +14,6 @@ const ClaimTranscriptionWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0 0.5em;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundTransparent};
 `
 
 const ClaimTranscription = styled(Paragraph)`
@@ -64,12 +61,12 @@ const ClaimTranscriptions: React.FC<{ claimId: string }> = ({ claimId }) => {
               <ListItem key={transcription.text}>
                 <ClaimTranscriptionWrapper>
                   <ClaimTranscription>{transcription.text}</ClaimTranscription>
-                  <MuiList>
+                  <List>
                     <ClaimTranscriptionMetaData>
                       Confidence: {transcription.confidenceScore}
                       <br /> Language code: {transcription.languageCode}
                     </ClaimTranscriptionMetaData>
-                  </MuiList>
+                  </List>
                 </ClaimTranscriptionWrapper>
               </ListItem>
             ),

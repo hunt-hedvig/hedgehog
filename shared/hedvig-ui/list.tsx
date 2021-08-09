@@ -8,5 +8,16 @@ export const List = styled.ul`
 
 export const ListItem = styled.li`
   list-style-type: none;
-  margin: 1.5em 0;
+  margin: 0;
+  padding: 1em 0;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundTransparent};
+
+  :first-child {
+    margin-top: 0;
+  }
+
+  :last-child {
+    border: none;
+    margin-bottom: 0;
+  }
 `
