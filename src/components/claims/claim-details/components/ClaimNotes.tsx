@@ -1,84 +1,49 @@
 import {
-  Button as MuiButton,
-  List as MuiList,
-  ListItem as MuiListItem,
-  TextField as MuiTextField,
-  Typography as MuiTypography,
-  withStyles,
-} from '@material-ui/core'
-import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
   useClaimPageQuery,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
-
-import { Field, FieldProps, Form, Formik } from 'formik'
 import { Spinner } from 'hedvig-ui/sipnner'
-import React from 'react'
+import React, { useState } from 'react'
 import { sleep } from 'utils/sleep'
 
+import styled from '@emotion/styled'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { Button } from 'hedvig-ui/button'
 import { CardContent } from 'hedvig-ui/card'
+import { List, ListItem } from 'hedvig-ui/list'
+import { Spacing } from 'hedvig-ui/spacing'
+import { TextArea } from 'hedvig-ui/text-area'
+import { Paragraph } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
-
-interface Props {
-  claimId: string
-}
-
-const TextArea: React.SFC<FieldProps<string>> = ({
-  field: { onChange, onBlur, name, value },
-}) => (
-  <MuiTextField
-    onChange={onChange}
-    onBlur={onBlur}
-    name={name}
-    value={value || ''}
-    multiline
-    fullWidth
-    placeholder="Type note here..."
-  />
-)
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
     return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
   })
 
-const ListItem = withStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingLeft: 0,
-    paddingRight: 0,
-    borderBottom: '1px solid rgba(0,0,0,0.08)',
-  },
-})(MuiListItem)
+const ClaimNoteWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 0.5em;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundTransparent};
+`
 
-const ClaimNote = withStyles({
-  root: {
-    fontSize: '1rem',
-    maxWidth: '80%',
-    whiteSpace: 'pre-wrap',
-  },
-})(MuiTypography)
+const ClaimNote = styled(Paragraph)`
+  font-size: 1rem;
+  max-width: 80%;
+  white-space: pre-wrap;
+`
 
-const ClaimNoteFooter = withStyles({
-  root: {
-    fontSize: '0.875rem',
-    textAlign: 'right',
-  },
-})(MuiTypography)
+const ClaimNoteFooter = styled(Paragraph)`
+  font-size: 0.875rem;
+  text-align: right;
+`
 
-const SubmitButton = withStyles({
-  root: {
-    marginTop: '1rem',
-  },
-})(MuiButton)
-
-const ClaimNotes: React.FC<Props> = ({ claimId }) => {
+const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const {
     data: claimNotesData,
     refetch: refetchClaimNotes,
@@ -89,6 +54,8 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
   })
   const notes = claimNotesData?.claim?.notes ?? []
   const [addClaimNote] = useClaimAddClaimNoteMutation()
+  const [note, setNote] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   return (
     <CardContent>
@@ -106,53 +73,47 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
       />
       {loadingClaimNotes && <Spinner />}
 
-      <MuiList>
-        {sortNotesByDate(notes).map((note) => (
-          <ListItem key={note.date + note.handlerReference}>
-            <ClaimNote component="pre">{note.text}</ClaimNote>
-            <ClaimNoteFooter component="span">
-              {note.handlerReference && (
-                <>
-                  {note.handlerReference}
-                  <br />
-                </>
-              )}
-              {format(parseISO(note.date), 'yyyy-MM-dd HH:mm:ss')}
-            </ClaimNoteFooter>
+      <List>
+        {sortNotesByDate(notes).map(({ date, handlerReference, text }) => (
+          <ListItem key={date + handlerReference}>
+            <ClaimNoteWrapper>
+              <ClaimNote>{text}</ClaimNote>
+              <ClaimNoteFooter>
+                {handlerReference && (
+                  <>
+                    {handlerReference}
+                    <br />
+                  </>
+                )}
+                {format(parseISO(date), 'yyyy-MM-dd HH:mm:ss')}
+              </ClaimNoteFooter>
+            </ClaimNoteWrapper>
           </ListItem>
         ))}
-      </MuiList>
-      <Formik<{ text: string }>
-        initialValues={{ text: '' }}
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
+      </List>
+
+      <TextArea
+        placeholder={'Your note goes here...'}
+        value={note}
+        onChange={setNote}
+      />
+      <Spacing top={'small'} />
+      <Button
+        loading={submitting}
+        variation={'primary'}
+        onClick={async () => {
           setSubmitting(true)
           await addClaimNote({
-            variables: { claimId, note: { text: values.text } },
+            variables: { claimId, note: { text: note } },
           })
           await sleep(1000)
           await refetchClaimNotes()
+          setNote('')
           setSubmitting(false)
-          resetForm()
         }}
       >
-        {({ isValid, isSubmitting }) => (
-          <Form>
-            <Field
-              component={TextArea}
-              placeholder="Type note content here"
-              name="text"
-            />
-            <SubmitButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={!isValid || isSubmitting}
-            >
-              Add note {isSubmitting && <Spinner push="left" />}
-            </SubmitButton>
-          </Form>
-        )}
-      </Formik>
+        Add note
+      </Button>
     </CardContent>
   )
 }

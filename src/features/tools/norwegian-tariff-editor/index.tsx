@@ -48,7 +48,7 @@ const NorwegianTariffEditorComponent: React.FC<WithShowNotification> = ({
               'Add Base Factors from excel including "Product" (Columns: Fire, Leakage, Other, All risk and Travel), include "Base factor" and "Index per year"...'
             }
             value={baseFactors}
-            setValue={setBaseFactors}
+            onChange={setBaseFactors}
           />
         </Card>
       </CardsWrapper>
