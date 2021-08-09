@@ -110,6 +110,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
           fullWidth={true}
           date={formData.date}
           setDate={(newDate) => setFormData({ ...formData, date: newDate })}
+          placeholder={'When did it happen?'}
         />
       </DataField>
       {hasLocation(type.__typename as ClaimTypes) && (

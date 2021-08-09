@@ -6,11 +6,11 @@ import {
 } from 'graphql/use-add-partner-percentage-discount-code'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { Input } from 'hedvig-ui/input'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'
-import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import {
   numberOfMonthsOptions,
@@ -74,7 +74,6 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
       <Label>Code</Label>
       <Input
         value={formData.code}
-        fluid
         disabled={loading}
         onChange={({ currentTarget: { value: code } }) =>
           setFormData({ ...formData, code })
