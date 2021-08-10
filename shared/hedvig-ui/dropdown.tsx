@@ -19,7 +19,9 @@ export const Dropdown: React.FC<{
   options: DropdownValue[] | string[]
   onChange: (value: string) => void
   value: string
-}> = ({ options, onChange, value, ...props }) => {
+  loading?: boolean
+}> = ({ options, onChange, value, loading, ...props }) => {
+  const [autoLoading, setAutoLoading] = useState(false)
   const getOptions = (): DropdownValue[] =>
     Object(options).map((option) => {
       if (typeof option === 'string') {
@@ -36,7 +38,12 @@ export const Dropdown: React.FC<{
   return (
     <StyledDropdown
       value={value}
-      onChange={(_, { value: selection }) => onChange(selection as string)}
+      loading={loading ?? autoLoading}
+      onChange={async (_, { value: selection }) => {
+        setAutoLoading(true)
+        await onChange(selection as string)
+        setAutoLoading(false)
+      }}
       options={getOptions()}
       selection
       {...props}
@@ -47,10 +54,10 @@ export const Dropdown: React.FC<{
 export const EnumDropdown: React.FC<{
   value?: any
   enumToSelectFrom: any
-  placeholder: string
+  placeholder?: string
   setValue: (value: any) => void
   loading?: boolean
-}> = ({ enumToSelectFrom, placeholder, setValue, value, loading }) => {
+}> = ({ enumToSelectFrom, placeholder = '', setValue, value, loading }) => {
   const [autoLoading, setAutoLoading] = useState(false)
   const dropdownOptions: DropdownItemProps[] = Object.values(
     enumToSelectFrom,

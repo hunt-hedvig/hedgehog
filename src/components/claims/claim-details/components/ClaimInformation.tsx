@@ -21,7 +21,7 @@ import {
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
 import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
-import { EnumDropdown } from 'hedvig-ui/dropdown'
+import { Dropdown, EnumDropdown } from 'hedvig-ui/dropdown'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
 import { Label, Paragraph } from 'hedvig-ui/typography'
@@ -37,10 +37,7 @@ const validateSelectOption = (value: any): ClaimState => {
   return value as ClaimState
 }
 
-const validateSelectEmployeeClaimOption = (
-  event: React.ChangeEvent<HTMLSelectElement>,
-): boolean => {
-  const { value } = event.target
+const validateSelectEmployeeClaimOption = (value: any): boolean => {
   return value === 'True'
 }
 
@@ -107,6 +104,7 @@ export const ClaimInformation: React.FC<{
     data,
     error: queryError,
     loading: claimInformationLoading,
+    refetch,
   } = useClaimPageQuery({
     variables: { claimId },
   })
@@ -165,45 +163,39 @@ export const ClaimInformation: React.FC<{
               )
             }}
           />
-          <MuiSelect
-            value={state || ''}
-            onChange={async (event) => {
-              await updateClaimState(
-                updateClaimStateOptions(claimId, validateSelectOption(event)),
-              )
-            }}
-          >
-            {Object.values(ClaimState).map((s) => (
-              <MuiMenuItem key={s} value={s}>
-                {s}
-              </MuiMenuItem>
-            ))}
-          </MuiSelect>
         </SelectWrapper>
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <MuiSelect
+          <Dropdown
             value={coveringEmployee ? 'True' : 'False'}
-            onChange={async (event) => {
+            onChange={async (value) => {
               await setCoveringEmployee(
                 setCoveringEmployeeOptions(
                   claimId,
-                  validateSelectEmployeeClaimOption(event),
+                  validateSelectEmployeeClaimOption(value),
                 ),
               )
+              await refetch()
             }}
-          >
-            <MuiMenuItem key={'True'} value={'True'}>
-              True
-            </MuiMenuItem>
-            <MuiMenuItem key={'False'} value={'False'}>
-              False
-            </MuiMenuItem>
-          </MuiSelect>
+            options={['True', 'False']}
+          />
         </SelectWrapper>
         {contracts && (
           <SelectWrapper>
             <Label>Contract for Claim</Label>
+            <Dropdown
+              options={[]}
+              onChange={async (value) => {
+                await setContractForClaim(
+                  setContractForClaimOptions({
+                    claimId,
+                    memberId,
+                    contractId: value,
+                  }),
+                )
+              }}
+              value={selectedContract?.id ? selectedContract.id : 'none'}
+            />
             <MuiSelect
               value={selectedContract?.id ? selectedContract.id : 'none'}
               onChange={async (event) => {
