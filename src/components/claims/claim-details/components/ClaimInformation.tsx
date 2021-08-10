@@ -24,7 +24,7 @@ import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
 import { Dropdown, EnumDropdown } from 'hedvig-ui/dropdown'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
-import { Label, Paragraph, Shadowed } from 'hedvig-ui/typography'
+import { Label, Paragraph, Placeholder, Shadowed } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { currentAgreementForContract } from 'utils/contract'
@@ -293,7 +293,7 @@ export const ClaimInformation: React.FC<{
               }}
               onRender={() => {
                 if (!selectedContract) {
-                  return null
+                  return <Placeholder>None selected</Placeholder>
                 }
 
                 return getContractDropdownItemContent(
