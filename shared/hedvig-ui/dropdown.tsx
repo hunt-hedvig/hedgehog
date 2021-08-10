@@ -5,14 +5,14 @@ import {
   DropdownItemProps,
 } from 'semantic-ui-react'
 
-const StyledDropdown = styled(SemanticDropdown)({
-  width: '100%',
-})
+const StyledDropdown = styled(SemanticDropdown)`
+  width: 100%;
+`
 
 interface DropdownValue {
   key?: string
   value: string
-  text: string
+  content: React.ReactElement
 }
 
 export const Dropdown: React.FC<{
@@ -20,10 +20,23 @@ export const Dropdown: React.FC<{
   onChange: (value: string) => void
   value: string
   loading?: boolean
-}> = ({ options, onChange, value, loading, ...props }) => {
+  onRender?: () => React.ReactNode | null
+  emptyLabel?: string
+  className?: string
+}> = ({
+  options,
+  onChange,
+  value,
+  loading,
+  onRender,
+  emptyLabel,
+  className,
+  ...props
+}) => {
   const [autoLoading, setAutoLoading] = useState(false)
-  const getOptions = (): DropdownValue[] =>
-    Object(options).map((option) => {
+
+  const getOptions = (): DropdownValue[] => [
+    ...Object(options).map((option) => {
       if (typeof option === 'string') {
         return {
           key: option + new Date().toString(),
@@ -33,10 +46,12 @@ export const Dropdown: React.FC<{
       }
 
       return option
-    })
+    }),
+  ]
 
   return (
     <StyledDropdown
+      icon={getOptions().length === 0 ? null : undefined}
       value={value}
       loading={loading ?? autoLoading}
       onChange={async (_, { value: selection }) => {
@@ -45,7 +60,10 @@ export const Dropdown: React.FC<{
         setAutoLoading(false)
       }}
       options={getOptions()}
-      selection
+      selectOnBlur={false}
+      selectOnNavigation={false}
+      className={'selection ' + (className ?? '')}
+      trigger={onRender ? onRender() : undefined}
       {...props}
     />
   )

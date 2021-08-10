@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import { MenuItem as MuiMenuItem, Select as MuiSelect } from '@material-ui/core'
 import {
   ClaimState,
+  Contract,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
 } from 'api/generated/graphql'
@@ -24,7 +24,7 @@ import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
 import { Dropdown, EnumDropdown } from 'hedvig-ui/dropdown'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
-import { Label, Paragraph } from 'hedvig-ui/typography'
+import { Label, Paragraph, Shadowed } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { currentAgreementForContract } from 'utils/contract'
@@ -41,9 +41,9 @@ const validateSelectEmployeeClaimOption = (value: any): boolean => {
   return value === 'True'
 }
 
-const SelectWrapper = styled('div')({
-  marginTop: '1.0rem',
-})
+const SelectWrapper = styled.div`
+  margin-top: 1em;
+`
 
 const Audio = styled('audio')`
   width: 100%;
@@ -96,6 +96,95 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
   )
 }
 
+const ContractItemTypeName = styled.div`
+  font-size: 1.2em;
+  padding-bottom: 0.6em;
+`
+
+const ContractItemAddress = styled.div`
+  font-size: 0.8em;
+  padding-bottom: 0.25em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const ContractItemCarrier = styled.div`
+  padding-top: 0.15em;
+  font-size: 0.9em;
+  padding-bottom: 0.8em;
+`
+
+const ContractItemDateRange = styled.div`
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const ContractItemLineOfBusiness = styled.div`
+  padding-top: 0.15em;
+  font-size: 0.9em;
+  padding-bottom: 0.8em;
+`
+
+const ContractItemTopTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin-bottom: 0.7em;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundTransparent};
+`
+
+const ContractDropdown = styled(Dropdown)`
+  .visible.menu.transition {
+    max-height: 500px;
+  }
+
+  &&&.selection.visible {
+    background-color: ${({ theme }) => theme.accentSecondary};
+  }
+
+  && .item:hover {
+    background-color: ${({ theme }) => theme.accentSecondary} !important;
+  }
+`
+
+const getContractDropdownItemContent = (contract: Contract) => {
+  const currentAgreement = currentAgreementForContract(contract)
+  const address = currentAgreement?.address
+  const lineOfBusiness =
+    currentAgreement && convertEnumToTitle(currentAgreement.lineOfBusinessName)
+
+  return (
+    <>
+      <ContractItemTopTitle>
+        {currentAgreement && (
+          <ContractItemCarrier>
+            <Shadowed>{getCarrierText(currentAgreement?.carrier)}</Shadowed>
+          </ContractItemCarrier>
+        )}
+        {lineOfBusiness && (
+          <ContractItemLineOfBusiness
+            style={{ paddingLeft: currentAgreement && '0.5em' }}
+          >
+            <Shadowed>{lineOfBusiness}</Shadowed>
+          </ContractItemLineOfBusiness>
+        )}
+      </ContractItemTopTitle>
+      <ContractItemTypeName>{contract.contractTypeName}</ContractItemTypeName>
+      {address && (
+        <>
+          <ContractItemAddress>{address && address.street}</ContractItemAddress>
+        </>
+      )}
+
+      <ContractItemDateRange>
+        {contract.masterInception}
+        {' - '}
+        {contract.terminationDate ? contract.terminationDate : 'Ongoing'}
+      </ContractItemDateRange>
+    </>
+  )
+}
+
 export const ClaimInformation: React.FC<{
   claimId: string
   memberId: string
@@ -121,6 +210,7 @@ export const ClaimInformation: React.FC<{
     contract: selectedContract,
     agreement: selectedAgreement,
   } = data?.claim ?? {}
+
   const contracts = memberData?.member?.contracts ?? []
   const trials = memberData?.member?.trials ?? []
 
@@ -183,8 +273,14 @@ export const ClaimInformation: React.FC<{
         {contracts && (
           <SelectWrapper>
             <Label>Contract for Claim</Label>
-            <Dropdown
-              options={[]}
+            <ContractDropdown
+              options={contracts
+                .filter((contract) => contract.id !== selectedContract?.id)
+                .map((contract) => ({
+                  key: contract.id,
+                  value: contract.id,
+                  content: getContractDropdownItemContent(contract as Contract),
+                }))}
               onChange={async (value) => {
                 await setContractForClaim(
                   setContractForClaimOptions({
@@ -193,61 +289,23 @@ export const ClaimInformation: React.FC<{
                     contractId: value,
                   }),
                 )
+                await refetch()
               }}
-              value={selectedContract?.id ? selectedContract.id : 'none'}
-            />
-            <MuiSelect
-              value={selectedContract?.id ? selectedContract.id : 'none'}
-              onChange={async (event) => {
-                if (event.target.value === 'none') {
-                  return
+              onRender={() => {
+                if (!selectedContract) {
+                  return null
                 }
-                await setContractForClaim(
-                  setContractForClaimOptions({
-                    claimId,
-                    memberId,
-                    contractId: event.target.value,
-                  }),
+
+                return getContractDropdownItemContent(
+                  selectedContract as Contract,
                 )
               }}
-            >
-              <MuiMenuItem disabled value={'none'} divider>
-                None selected
-              </MuiMenuItem>
-              {contracts.map((contract) => {
-                const address = currentAgreementForContract(contract)?.address
-                return (
-                  <MuiMenuItem key={contract.id} value={contract.id}>
-                    {contract.contractTypeName}
-                    {address && `, ${address.street}`}
-                    <br />
-                    {contract.masterInception}
-                    {' - '}
-                    {contract.terminationDate
-                      ? contract.terminationDate
-                      : 'Ongoing'}
-                  </MuiMenuItem>
-                )
-              })}
-            </MuiSelect>
+              value={selectedContract?.id ?? 'none'}
+            />
           </SelectWrapper>
         )}
-        {selectedAgreement && (
-          <>
-            <InfoRow>
-              Carrier
-              <InfoText>{getCarrierText(selectedAgreement.carrier)}</InfoText>
-            </InfoRow>
-            <InfoRow>
-              Line of business
-              <InfoText>
-                {convertEnumToTitle(selectedAgreement.lineOfBusinessName)}
-              </InfoText>
-            </InfoRow>
-          </>
-        )}
         {!selectedAgreement && (
-          <Paragraph>
+          <Paragraph style={{ marginTop: '1.0em' }}>
             ⚠️ No agreement covers the claim on the date of loss
           </Paragraph>
         )}

@@ -1839,6 +1839,8 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
             | 'contractTypeName'
             | 'preferredCurrency'
             | 'typeOfContract'
+            | 'masterInception'
+            | 'terminationDate'
           > & {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
@@ -3885,6 +3887,8 @@ export const ClaimPageDocument = gql`
         contractTypeName
         preferredCurrency
         typeOfContract
+        masterInception
+        terminationDate
       }
       agreement {
         id

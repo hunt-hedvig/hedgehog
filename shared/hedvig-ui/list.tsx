@@ -12,7 +12,7 @@ export const ListItem = styled.li`
   padding: 1em 0;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundTransparent};
 
-  :first-child {
+  :first-of-type {
     margin-top: 0;
   }
 
