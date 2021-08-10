@@ -36,7 +36,7 @@ type Employee {
   email: String!
   role: String!
   firstGrantedAt: Instant!
-  deletedAt: Instant!
+  deletedAt: Instant
 }
 
 type MutationType {

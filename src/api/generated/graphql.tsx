@@ -511,7 +511,7 @@ export type Employee = {
   email: Scalars['String']
   role: Scalars['String']
   firstGrantedAt: Scalars['Instant']
-  deletedAt: Scalars['Instant']
+  deletedAt?: Maybe<Scalars['Instant']>
 }
 
 export type ExtraBuilding = {
