@@ -141,10 +141,7 @@ type MutationType {
     memberId: ID!
     request: MemberFraudulentStatusInput!
   ): Boolean!
-  updateEmployeeRole(
-    employeeEmail: String!
-    role: Role!
-  ): Boolean!
+  updateEmployeeRole(employeeEmail: String!, role: Role!): Boolean!
   removeEmployee(employeeEmail: String!): Boolean!
 }
 
@@ -343,10 +340,10 @@ type Employee {
 }
 
 enum Role {
-  NOBODY,
-  IEX,
-  IEX_EXTENDED,
-  DEV,
+  NOBODY
+  IEX
+  IEX_EXTENDED
+  DEV
   ROOT
 }
 
@@ -521,7 +518,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -979,7 +976,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

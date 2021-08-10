@@ -11,19 +11,29 @@ import { Card } from 'hedvig-ui/card'
 import { dateTimeFormatter } from 'lib/helpers'
 import React, { useState } from 'react'
 import { Dropdown, DropdownItemProps, Table } from 'semantic-ui-react'
+import { WithShowNotification } from 'store/actions/notificationsActions'
+import { withShowNotification } from 'utils/notifications'
 
 const StyledDropdown = styled(Dropdown)({
   width: '100%',
 })
 
-export const EmployeeTable: React.FC = () => {
+const EmployeeTable: React.FC<WithShowNotification> = ({
+  showNotification,
+}) => {
   const employees = useListEmployeesQuery()
 
-  const [updateRole] = useUpdateEmployeeRoleMutation({
+  const [
+    updateRole,
+    { loading: updateRoleLoading },
+  ] = useUpdateEmployeeRoleMutation({
     refetchQueries: () => [{ query: ListEmployeesDocument }],
   })
 
-  const [removeEmployee] = useRemoveEmployeeMutation({
+  const [
+    removeEmployee,
+    { loading: removeEmployeeLoading },
+  ] = useRemoveEmployeeMutation({
     refetchQueries: () => [{ query: ListEmployeesDocument }],
   })
 
@@ -104,7 +114,9 @@ export const EmployeeTable: React.FC = () => {
                           <ButtonsGroup>
                             <Button
                               variation={'primary'}
-                              disabled={!selectedRoles?.[id]}
+                              disabled={
+                                !selectedRoles?.[id] || updateRoleLoading
+                              }
                               onClick={() =>
                                 updateRole({
                                   variables: {
@@ -112,17 +124,54 @@ export const EmployeeTable: React.FC = () => {
                                     role: selectedRoles?.[id],
                                   },
                                 })
+                                  .then(() => {
+                                    showNotification({
+                                      type: 'olive',
+                                      header: 'Role updated',
+                                      message: 'Successfully updated role.',
+                                    })
+                                  })
+                                  .catch((error) => {
+                                    showNotification({
+                                      type: 'red',
+                                      header: 'Unable to update role.',
+                                      message: error.message,
+                                    })
+                                    throw error
+                                  })
                               }
                             >
                               Update Role
                             </Button>
                             <Button
                               variation={'danger'}
-                              onClick={() =>
-                                removeEmployee({
-                                  variables: { employeeEmail: email },
-                                })
-                              }
+                              disabled={removeEmployeeLoading}
+                              onClick={() => {
+                                const confirmed = window.confirm(
+                                  `Are you sure you want to remove employee ${email}?`,
+                                )
+                                if (confirmed) {
+                                  removeEmployee({
+                                    variables: { employeeEmail: email },
+                                  })
+                                    .then(() => {
+                                      showNotification({
+                                        type: 'olive',
+                                        header: 'Employee removed',
+                                        message:
+                                          'Successfully removed employee.',
+                                      })
+                                    })
+                                    .catch((error) => {
+                                      showNotification({
+                                        type: 'red',
+                                        header: 'Unable to remove employee.',
+                                        message: error.message,
+                                      })
+                                      throw error
+                                    })
+                                }
+                              }}
                             >
                               Remove
                             </Button>
@@ -139,3 +188,5 @@ export const EmployeeTable: React.FC = () => {
     </>
   )
 }
+
+export const Employee = withShowNotification(EmployeeTable)
