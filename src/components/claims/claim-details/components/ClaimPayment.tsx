@@ -27,15 +27,6 @@ import { TextField } from '../../../shared/inputs/TextField'
 import { MutationFeedbackBlock } from '../../../shared/MutationFeedbackBlock'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
-interface Props {
-  sanctionStatus?: SanctionStatus | null
-  claimId: string
-  refetch: () => Promise<any>
-  identified: boolean
-  market: string
-  carrier: string
-}
-
 export interface PaymentFormData {
   amount: string
   deductible: string
@@ -108,7 +99,14 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
     }),
   })
 
-export const ClaimPaymentComponent: React.FC<WithShowNotification & Props> = ({
+export const ClaimPaymentComponent: React.FC<WithShowNotification & {
+  sanctionStatus?: SanctionStatus | null
+  claimId: string
+  refetch: () => Promise<any>
+  identified: boolean
+  market: string
+  carrier: string
+}> = ({
   sanctionStatus,
   claimId,
   refetch,
