@@ -926,6 +926,7 @@ export type MutationType = {
   unsignMember: Scalars['Boolean']
   editMemberInfo: Scalars['Boolean']
   setFraudulentStatus: Scalars['Boolean']
+  createEmployee: Scalars['Boolean']
   updateEmployeeRole: Scalars['Boolean']
   removeEmployee: Scalars['Boolean']
 }
@@ -1205,13 +1206,17 @@ export type MutationTypeSetFraudulentStatusArgs = {
   request: MemberFraudulentStatusInput
 }
 
+export type MutationTypeCreateEmployeeArgs = {
+  email: Scalars['String']
+}
+
 export type MutationTypeUpdateEmployeeRoleArgs = {
-  employeeEmail: Scalars['String']
+  email: Scalars['String']
   role: Role
 }
 
 export type MutationTypeRemoveEmployeeArgs = {
-  employeeEmail: Scalars['String']
+  email: Scalars['String']
 }
 
 export type NationalIdentification = {
@@ -2549,6 +2554,15 @@ export type CreateClaimMutation = { __typename?: 'MutationType' } & Pick<
   'createClaim'
 >
 
+export type CreateEmployeeMutationVariables = Exact<{
+  email: Scalars['String']
+}>
+
+export type CreateEmployeeMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'createEmployee'
+>
+
 export type CreatePaymentCompletionLinkMutationVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -3405,7 +3419,7 @@ export type RegenerateCertificateMutation = {
 } & Pick<MutationType, 'regenerateCertificate'>
 
 export type RemoveEmployeeMutationVariables = Exact<{
-  employeeEmail: Scalars['String']
+  email: Scalars['String']
 }>
 
 export type RemoveEmployeeMutation = { __typename?: 'MutationType' } & Pick<
@@ -3527,7 +3541,7 @@ export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
 }
 
 export type UpdateEmployeeRoleMutationVariables = Exact<{
-  employeeEmail: Scalars['String']
+  email: Scalars['String']
   role: Role
 }>
 
@@ -5998,6 +6012,55 @@ export type CreateClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateClaimMutation,
   CreateClaimMutationVariables
 >
+export const CreateEmployeeDocument = gql`
+  mutation CreateEmployee($email: String!) {
+    createEmployee(email: $email)
+  }
+`
+export type CreateEmployeeMutationFn = ApolloReactCommon.MutationFunction<
+  CreateEmployeeMutation,
+  CreateEmployeeMutationVariables
+>
+
+/**
+ * __useCreateEmployeeMutation__
+ *
+ * To run a mutation, you first call `useCreateEmployeeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEmployeeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEmployeeMutation, { data, loading, error }] = useCreateEmployeeMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useCreateEmployeeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateEmployeeMutation,
+    CreateEmployeeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    CreateEmployeeMutation,
+    CreateEmployeeMutationVariables
+  >(CreateEmployeeDocument, options)
+}
+export type CreateEmployeeMutationHookResult = ReturnType<
+  typeof useCreateEmployeeMutation
+>
+export type CreateEmployeeMutationResult = ApolloReactCommon.MutationResult<
+  CreateEmployeeMutation
+>
+export type CreateEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateEmployeeMutation,
+  CreateEmployeeMutationVariables
+>
 export const CreatePaymentCompletionLinkDocument = gql`
   mutation CreatePaymentCompletionLink($memberId: ID!) {
     createPaymentCompletionLink(memberId: $memberId) {
@@ -8182,8 +8245,8 @@ export type RegenerateCertificateMutationOptions = ApolloReactCommon.BaseMutatio
   RegenerateCertificateMutationVariables
 >
 export const RemoveEmployeeDocument = gql`
-  mutation RemoveEmployee($employeeEmail: String!) {
-    removeEmployee(employeeEmail: $employeeEmail)
+  mutation RemoveEmployee($email: String!) {
+    removeEmployee(email: $email)
   }
 `
 export type RemoveEmployeeMutationFn = ApolloReactCommon.MutationFunction<
@@ -8204,7 +8267,7 @@ export type RemoveEmployeeMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [removeEmployeeMutation, { data, loading, error }] = useRemoveEmployeeMutation({
  *   variables: {
- *      employeeEmail: // value for 'employeeEmail'
+ *      email: // value for 'email'
  *   },
  * });
  */
@@ -8769,8 +8832,8 @@ export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOpti
   UpdateClaimStateMutationVariables
 >
 export const UpdateEmployeeRoleDocument = gql`
-  mutation UpdateEmployeeRole($employeeEmail: String!, $role: Role!) {
-    updateEmployeeRole(employeeEmail: $employeeEmail, role: $role)
+  mutation UpdateEmployeeRole($email: String!, $role: Role!) {
+    updateEmployeeRole(email: $email, role: $role)
   }
 `
 export type UpdateEmployeeRoleMutationFn = ApolloReactCommon.MutationFunction<
@@ -8791,7 +8854,7 @@ export type UpdateEmployeeRoleMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [updateEmployeeRoleMutation, { data, loading, error }] = useUpdateEmployeeRoleMutation({
  *   variables: {
- *      employeeEmail: // value for 'employeeEmail'
+ *      email: // value for 'email'
  *      role: // value for 'role'
  *   },
  * });

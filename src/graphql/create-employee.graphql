@@ -1,0 +1,3 @@
+mutation CreateEmployee($email: String!) {
+  createEmployee(email: $email)
+}
