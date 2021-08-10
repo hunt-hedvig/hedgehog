@@ -31,14 +31,6 @@ type QueryType {
   listEmployees: [Employee!]!
 }
 
-type Employee {
-  id: ID!
-  email: String!
-  role: String!
-  firstGrantedAt: Instant!
-  deletedAt: Instant
-}
-
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
   addAccountEntryToMember(
@@ -337,6 +329,22 @@ enum ContractStatus {
   TERMINATED
 }
 
+type Employee {
+  id: ID!
+  email: String!
+  role: Role!
+  firstGrantedAt: Instant!
+  deletedAt: Instant
+}
+
+enum Role {
+  NOBODY,
+  IEX,
+  IEX_EXTENDED,
+  DEV,
+  ROOT
+}
+
 type GenericAgreement {
   id: ID!
   fromDate: LocalDate
@@ -508,7 +516,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -966,7 +974,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

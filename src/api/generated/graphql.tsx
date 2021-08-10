@@ -509,7 +509,7 @@ export type Employee = {
   __typename?: 'Employee'
   id: Scalars['ID']
   email: Scalars['String']
-  role: Scalars['String']
+  role: Role
   firstGrantedAt: Scalars['Instant']
   deletedAt?: Maybe<Scalars['Instant']>
 }
@@ -1450,6 +1450,14 @@ export type Renewal = {
   renewalDate: Scalars['LocalDate']
   draftCertificateUrl?: Maybe<Scalars['String']>
   draftOfAgreementId?: Maybe<Scalars['ID']>
+}
+
+export enum Role {
+  Nobody = 'NOBODY',
+  Iex = 'IEX',
+  IexExtended = 'IEX_EXTENDED',
+  Dev = 'DEV',
+  Root = 'ROOT',
 }
 
 export type SafelyEditAgreementInput = {
