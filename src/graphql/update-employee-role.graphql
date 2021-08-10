@@ -1,0 +1,3 @@
+mutation UpdateEmployeeRole($employeeEmail: String!, $role: Role!) {
+  updateEmployeeRole(employeeEmail: $employeeEmail, role: $role)
+}
