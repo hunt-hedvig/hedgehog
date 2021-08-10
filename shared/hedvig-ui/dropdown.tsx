@@ -1,19 +1,60 @@
 import styled from '@emotion/styled'
-import React from 'react'
-import { Dropdown, DropdownItemProps } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import {
+  Dropdown as SemanticDropdown,
+  DropdownItemProps,
+} from 'semantic-ui-react'
 
-const StyledDropdown = styled(Dropdown)({
+const StyledDropdown = styled(SemanticDropdown)({
   width: '100%',
 })
 
+interface DropdownValue {
+  key?: string
+  value: string
+  text: string
+}
+
+export const Dropdown: React.FC<{
+  options: DropdownValue[] | string[]
+  onChange: (value: string) => void
+  value: string
+}> = ({ options, onChange, value, ...props }) => {
+  const getOptions = (): DropdownValue[] =>
+    Object(options).map((option) => {
+      if (typeof option === 'string') {
+        return {
+          key: option + new Date().toString(),
+          value: option,
+          text: option,
+        }
+      }
+
+      return option
+    })
+
+  return (
+    <StyledDropdown
+      value={value}
+      onChange={(_, { value: selection }) => onChange(selection as string)}
+      options={getOptions()}
+      selection
+      {...props}
+    />
+  )
+}
+
 export const EnumDropdown: React.FC<{
+  value?: any
   enumToSelectFrom: any
   placeholder: string
   setValue: (value: any) => void
-}> = ({ enumToSelectFrom, placeholder, setValue }) => {
+  loading?: boolean
+}> = ({ enumToSelectFrom, placeholder, setValue, value, loading }) => {
+  const [autoLoading, setAutoLoading] = useState(false)
   const dropdownOptions: DropdownItemProps[] = Object.values(
     enumToSelectFrom,
-  ).map((value, index) => {
+  ).map((selection, index) => {
     if (typeof value === 'number') {
       throw new Error(
         `EnumDropdown does not support enums with ordinal values (yet), enumToSelectFrom: ${JSON.stringify(
@@ -23,17 +64,23 @@ export const EnumDropdown: React.FC<{
     }
     return {
       key: index + 1,
-      value: value as string,
-      text: getTextFromEnumValue(value as string),
+      value: selection as string,
+      text: getTextFromEnumValue(selection as string),
     }
   })
 
   return (
     <StyledDropdown
+      value={value}
       placeholder={placeholder}
       options={dropdownOptions}
+      loading={loading ?? autoLoading}
       selection
-      onChange={(_, { value }) => setValue(value)}
+      onChange={async (_, { value: selection }) => {
+        setAutoLoading(true)
+        await setValue(selection)
+        setAutoLoading(false)
+      }}
     />
   )
 }

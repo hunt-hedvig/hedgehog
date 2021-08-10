@@ -91,7 +91,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
 
-  if (carrier) {
+  if (!carrier) {
     return (
       <CardContent>
         <PaperTitle title={'Payments'} />

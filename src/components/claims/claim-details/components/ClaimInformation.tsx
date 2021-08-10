@@ -21,6 +21,7 @@ import {
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
 import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
+import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
 import { Label, Paragraph } from 'hedvig-ui/typography'
@@ -29,15 +30,7 @@ import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { currentAgreementForContract } from 'utils/contract'
 import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
-interface Props {
-  claimId: string
-  memberId: string
-}
-
-const validateSelectOption = (
-  event: React.ChangeEvent<HTMLSelectElement>,
-): ClaimState => {
-  const { value } = event.target
+const validateSelectOption = (value: any): ClaimState => {
   if (!Object.values(ClaimState).includes(value as any)) {
     throw new Error(`invalid ClaimState: ${value}`)
   }
@@ -69,8 +62,7 @@ const ClaimAudioWrapper = styled.div`
 
 const DownloadWrapper = styled.a`
   font-size: 1.5em;
-  margin: 0.5em 0em;
-  margin-left: 0.5em;
+  margin: 0.5em 0 0.5em 0.5em;
   padding-top: 0.4em;
 `
 
@@ -107,7 +99,10 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
   )
 }
 
-export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
+export const ClaimInformation: React.FC<{
+  claimId: string
+  memberId: string
+}> = ({ claimId, memberId }) => {
   const {
     data,
     error: queryError,
@@ -160,6 +155,16 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
+          <EnumDropdown
+            value={state || ''}
+            enumToSelectFrom={ClaimState}
+            placeholder={''}
+            setValue={async (value) => {
+              await updateClaimState(
+                updateClaimStateOptions(claimId, validateSelectOption(value)),
+              )
+            }}
+          />
           <MuiSelect
             value={state || ''}
             onChange={async (event) => {
