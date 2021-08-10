@@ -7,6 +7,7 @@ import {
 } from 'api/generated/graphql'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { ContractDropdown } from 'components/claims/claim-details/components/ContractDropdown'
 import { format, parseISO } from 'date-fns'
 import {
   setContractForClaimOptions,
@@ -24,11 +25,9 @@ import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
 import { Dropdown, EnumDropdown } from 'hedvig-ui/dropdown'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
-import { Label, Paragraph, Placeholder, Shadowed } from 'hedvig-ui/typography'
+import { Label, Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
-import { currentAgreementForContract } from 'utils/contract'
-import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
 const validateSelectOption = (value: any): ClaimState => {
   if (!Object.values(ClaimState).includes(value as any)) {
@@ -95,96 +94,6 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
     </ClaimAudioWrapper>
   )
 }
-
-const ContractItemTypeName = styled.div`
-  font-size: 1.2em;
-  padding-bottom: 0.6em;
-`
-
-const ContractItemAddress = styled.div`
-  font-size: 0.8em;
-  padding-bottom: 0.25em;
-  color: ${({ theme }) => theme.semiStrongForeground};
-`
-
-const ContractItemCarrier = styled.div`
-  padding-top: 0.15em;
-  font-size: 0.9em;
-  padding-bottom: 0.8em;
-`
-
-const ContractItemDateRange = styled.div`
-  font-size: 0.8em;
-  color: ${({ theme }) => theme.semiStrongForeground};
-`
-
-const ContractItemLineOfBusiness = styled.div`
-  padding-top: 0.15em;
-  font-size: 0.9em;
-  padding-bottom: 0.8em;
-`
-
-const ContractItemTopTitle = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-  margin-bottom: 0.7em;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundTransparent};
-`
-
-const ContractDropdown = styled(Dropdown)`
-  .visible.menu.transition {
-    max-height: 500px;
-  }
-
-  &&&.selection.visible {
-    background-color: ${({ theme }) => theme.accentSecondary};
-  }
-
-  && .item:hover {
-    background-color: ${({ theme }) => theme.accentSecondary} !important;
-  }
-`
-
-const getContractDropdownItemContent = (contract: Contract) => {
-  const currentAgreement = currentAgreementForContract(contract)
-  const address = currentAgreement?.address
-  const lineOfBusiness =
-    currentAgreement && convertEnumToTitle(currentAgreement.lineOfBusinessName)
-
-  return (
-    <>
-      <ContractItemTopTitle>
-        {currentAgreement && (
-          <ContractItemCarrier>
-            <Shadowed>{getCarrierText(currentAgreement?.carrier)}</Shadowed>
-          </ContractItemCarrier>
-        )}
-        {lineOfBusiness && (
-          <ContractItemLineOfBusiness
-            style={{ paddingLeft: currentAgreement && '0.5em' }}
-          >
-            <Shadowed>{lineOfBusiness}</Shadowed>
-          </ContractItemLineOfBusiness>
-        )}
-      </ContractItemTopTitle>
-      <ContractItemTypeName>{contract.contractTypeName}</ContractItemTypeName>
-      {address && (
-        <>
-          <ContractItemAddress>{address && address.street}</ContractItemAddress>
-        </>
-      )}
-
-      <ContractItemDateRange>
-        {contract.masterInception}
-        {' - '}
-        {contract.terminationDate ? contract.terminationDate : 'Ongoing'}
-      </ContractItemDateRange>
-    </>
-  )
-}
-
 export const ClaimInformation: React.FC<{
   claimId: string
   memberId: string
@@ -274,13 +183,8 @@ export const ClaimInformation: React.FC<{
           <SelectWrapper>
             <Label>Contract for Claim</Label>
             <ContractDropdown
-              options={contracts
-                .filter((contract) => contract.id !== selectedContract?.id)
-                .map((contract) => ({
-                  key: contract.id,
-                  value: contract.id,
-                  content: getContractDropdownItemContent(contract as Contract),
-                }))}
+              contracts={contracts as Contract[]}
+              selectedContract={selectedContract as Contract}
               onChange={async (value) => {
                 await setContractForClaim(
                   setContractForClaimOptions({
@@ -291,16 +195,6 @@ export const ClaimInformation: React.FC<{
                 )
                 await refetch()
               }}
-              onRender={() => {
-                if (!selectedContract) {
-                  return <Placeholder>None selected</Placeholder>
-                }
-
-                return getContractDropdownItemContent(
-                  selectedContract as Contract,
-                )
-              }}
-              value={selectedContract?.id ?? 'none'}
             />
           </SelectWrapper>
         )}
