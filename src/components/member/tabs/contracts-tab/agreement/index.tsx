@@ -14,7 +14,6 @@ import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
 
 const Divider = styled.hr`
@@ -30,12 +29,7 @@ export const Agreement: React.FC<{
   agreement: AgreementType
   contract: Contract
   refetch: () => Promise<void>
-} & WithShowNotification> = ({
-  agreement,
-  contract,
-  showNotification,
-  refetch,
-}) => {
+}> = ({ agreement, contract, refetch }) => {
   return (
     <>
       <CardsWrapper>
@@ -45,25 +39,16 @@ export const Agreement: React.FC<{
         {agreement.status !== AgreementStatus.Pending && (
           <>
             <Card span={2}>
-              <FromDate
-                agreement={agreement}
-                contract={contract}
-                showNotification={showNotification}
-              />
+              <FromDate agreement={agreement} contract={contract} />
               <Divider />
               <div>
-                <ToDate
-                  agreement={agreement}
-                  contract={contract}
-                  showNotification={showNotification}
-                />
+                <ToDate agreement={agreement} contract={contract} />
               </div>
             </Card>
             <Card span={2}>
               <InsuranceCertificate
                 contract={contract}
                 agreement={agreement}
-                showNotification={showNotification}
                 refetch={refetch}
               />
             </Card>

@@ -7,14 +7,13 @@ import { Button, ButtonLink, ButtonsGroup } from 'hedvig-ui/button'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import { Notification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 
 export const InsuranceCertificate: React.FC<{
   contract: Contract
   agreement: GenericAgreement
-  showNotification: (data: Notification) => void
   refetch: () => Promise<void>
-}> = ({ contract, agreement, showNotification, refetch }) => {
+}> = ({ contract, agreement, refetch }) => {
   const [regenerateCertificate, { loading }] = useRegenerateCertificate(
     contract,
   )
@@ -23,25 +22,18 @@ export const InsuranceCertificate: React.FC<{
     const certificateForm = new FormData()
     certificateForm.set('file', files[0])
 
-    fetch(`/_/agreements/${agreementId}/certificates`, {
-      method: 'POST',
-      body: certificateForm,
-    })
-      .then(() => {
-        showNotification({
-          type: 'olive',
-          header: 'Success',
-          message: 'Successfully uploaded certificate.',
-        })
-      })
-      .catch((error) => {
-        showNotification({
-          type: 'red',
-          header: 'Unable to upload certificate',
-          message: error.message,
-        })
-        throw error
-      })
+    toast
+      .promise(
+        fetch(`/_/agreements/${agreementId}/certificates`, {
+          method: 'POST',
+          body: certificateForm,
+        }),
+        {
+          loading: 'Uploading certificate',
+          success: 'Certificate uploaded',
+          error: 'Could not upload certificate',
+        },
+      )
       .then(() => refetch())
   }
 
@@ -71,22 +63,15 @@ export const InsuranceCertificate: React.FC<{
             ) {
               return
             }
-            regenerateCertificate(regenerateCertificateOptions(agreement.id))
-              .then(() => {
-                showNotification({
-                  header: 'Success',
-                  message: 'Successfully regenerate the certificate',
-                  type: 'olive',
-                })
-              })
-              .catch((error) => {
-                showNotification({
-                  header: 'Error',
-                  message: error.message,
-                  type: 'red',
-                })
-                throw error
-              })
+
+            toast.promise(
+              regenerateCertificate(regenerateCertificateOptions(agreement.id)),
+              {
+                loading: 'Regenerating certificate',
+                success: 'Certificate generated',
+                error: 'Could not regenerate certificate',
+              },
+            )
           }}
         >
           Regenerate

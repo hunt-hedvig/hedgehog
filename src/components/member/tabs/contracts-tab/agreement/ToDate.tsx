@@ -13,7 +13,7 @@ import {
   ThirdLevelHeadline,
 } from 'hedvig-ui/typography'
 import React from 'react'
-import { Notification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 
 const initialToDate = (agreement: GenericAgreement): Date =>
   agreement.toDate ? new Date(agreement.toDate) : new Date()
@@ -21,8 +21,7 @@ const initialToDate = (agreement: GenericAgreement): Date =>
 export const ToDate: React.FC<{
   agreement: GenericAgreement
   contract: Contract
-  showNotification: (data: Notification) => void
-}> = ({ agreement, contract, showNotification }) => {
+}> = ({ agreement, contract }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
   const [toDate, setToDate] = React.useState(initialToDate(agreement))
   const [changeToDate] = useChangeToDate(contract)
@@ -69,23 +68,18 @@ export const ToDate: React.FC<{
                 ) {
                   return
                 }
-                changeToDate(changeToDateOptions(agreement, toDate))
-                  .then(() => {
-                    showNotification({
-                      type: 'olive',
-                      header: 'Success',
-                      message: `Successfully changed the to date to ${formattedToDate}`,
-                    })
-                    reset()
-                  })
-                  .catch((error) => {
-                    showNotification({
-                      type: 'red',
-                      header: 'Error',
-                      message: error.message,
-                    })
-                    throw error
-                  })
+
+                toast.promise(
+                  changeToDate(changeToDateOptions(agreement, toDate)),
+                  {
+                    loading: 'Changing date',
+                    success: () => {
+                      reset()
+                      return 'Date changed'
+                    },
+                    error: 'Could not change date',
+                  },
+                )
               }}
             >
               Confirm
