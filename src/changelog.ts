@@ -12,7 +12,7 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-08.10',
+    date: '2021-08-10',
     change: 'Disable button to create quotes on locked contracts',
     authorGithubHandle: 'joacimastrom',
   },
