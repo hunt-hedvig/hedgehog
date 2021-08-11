@@ -177,7 +177,7 @@ const TerminationDateComponent: React.FC<{
           <EnumDropdown
             enumToSelectFrom={TerminationReason}
             placeholder={'Termination reason'}
-            setValue={setTerminationReason}
+            onChange={setTerminationReason}
           />
           <Spacing top bottom>
             <TextArea

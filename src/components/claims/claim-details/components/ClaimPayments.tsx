@@ -164,7 +164,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
         />
       </div>
 
-      {payments.length !== 0 ? (
+      {payments.length ? (
         <ScrollX>
           {loadingPayments && <Spinner />}
           <PaymentTable>

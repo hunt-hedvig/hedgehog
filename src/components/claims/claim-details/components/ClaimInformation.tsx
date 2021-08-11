@@ -66,6 +66,10 @@ const DownloadButton = styled(CloudArrowDownFill)`
   color: ${({ theme }) => theme.foreground};
 `
 
+const NoAgreementWarning = styled(Paragraph)`
+  margin-top: 1em;
+`
+
 const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
   const [canPlay, setCanPlay] = useState<null | boolean>(null)
 
@@ -156,7 +160,7 @@ export const ClaimInformation: React.FC<{
             value={state || ''}
             enumToSelectFrom={ClaimState}
             placeholder={''}
-            setValue={async (value) => {
+            onChange={async (value) => {
               await updateClaimState(
                 updateClaimStateOptions(claimId, validateSelectOption(value)),
               )
@@ -174,9 +178,11 @@ export const ClaimInformation: React.FC<{
                   validateSelectEmployeeClaimOption(value),
                 ),
               )
-              await refetch()
             }}
-            options={['True', 'False']}
+            options={[
+              { key: 0, value: 'True', text: 'True' },
+              { key: 1, value: 'False', text: 'False' },
+            ]}
           />
         </SelectWrapper>
         {contracts && (
@@ -199,9 +205,9 @@ export const ClaimInformation: React.FC<{
           </SelectWrapper>
         )}
         {!selectedAgreement && (
-          <Paragraph style={{ marginTop: '1.0em' }}>
+          <NoAgreementWarning>
             ⚠️ No agreement covers the claim on the date of loss
-          </Paragraph>
+          </NoAgreementWarning>
         )}
         {contracts.length === 0 && trials.length > 0 && (
           <CardsWrapper>

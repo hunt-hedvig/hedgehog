@@ -20,7 +20,7 @@ export const DropdownWithEnum: React.FC = () => {
       <EnumDropdown
         enumToSelectFrom={Taste}
         placeholder={'Select a taste'}
-        setValue={setTaste}
+        onChange={setTaste}
       />
       <h3>
         <strong>Selected taste:</strong>

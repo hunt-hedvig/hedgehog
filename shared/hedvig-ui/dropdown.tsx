@@ -1,22 +1,11 @@
-import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import {
   Dropdown as SemanticDropdown,
   DropdownItemProps,
 } from 'semantic-ui-react'
 
-const StyledDropdown = styled(SemanticDropdown)`
-  width: 100%;
-`
-
-interface DropdownValue {
-  key?: string
-  value: string
-  content: React.ReactElement
-}
-
 export const Dropdown: React.FC<{
-  options: DropdownValue[] | string[]
+  options: DropdownItemProps[]
   onChange: (value: string) => void
   value: string
   loading?: boolean
@@ -33,33 +22,13 @@ export const Dropdown: React.FC<{
   className,
   ...props
 }) => {
-  const [autoLoading, setAutoLoading] = useState(false)
-
-  const getOptions = (): DropdownValue[] => [
-    ...Object(options).map((option) => {
-      if (typeof option === 'string') {
-        return {
-          key: option + new Date().toString(),
-          value: option,
-          text: option,
-        }
-      }
-
-      return option
-    }),
-  ]
-
   return (
-    <StyledDropdown
-      icon={getOptions().length === 0 ? null : undefined}
+    <SemanticDropdown
       value={value}
-      loading={loading ?? autoLoading}
-      onChange={async (_, { value: selection }) => {
-        setAutoLoading(true)
-        await onChange(selection as string)
-        setAutoLoading(false)
-      }}
-      options={getOptions()}
+      loading={loading}
+      onChange={(_, { value: selection }) => onChange(selection as string)}
+      fluid
+      options={options}
       selectOnBlur={false}
       selectOnNavigation={false}
       className={'selection ' + (className ?? '')}
@@ -73,39 +42,37 @@ export const EnumDropdown: React.FC<{
   value?: any
   enumToSelectFrom: any
   placeholder?: string
-  setValue: (value: any) => void
+  onChange: (value: any) => void
   loading?: boolean
-}> = ({ enumToSelectFrom, placeholder = '', setValue, value, loading }) => {
-  const [autoLoading, setAutoLoading] = useState(false)
-  const dropdownOptions: DropdownItemProps[] = Object.values(
-    enumToSelectFrom,
-  ).map((selection, index) => {
-    if (typeof value === 'number') {
-      throw new Error(
-        `EnumDropdown does not support enums with ordinal values (yet), enumToSelectFrom: ${JSON.stringify(
-          enumToSelectFrom,
-        )}`,
-      )
-    }
-    return {
-      key: index + 1,
-      value: selection as string,
-      text: getTextFromEnumValue(selection as string),
-    }
-  })
+}> = ({ enumToSelectFrom, placeholder = '', onChange, value, loading }) => {
+  const dropdownOptions = useMemo(
+    () =>
+      Object.values(enumToSelectFrom).map((selection, index) => {
+        if (typeof value === 'number') {
+          throw new Error(
+            `EnumDropdown does not support enums with ordinal values (yet), enumToSelectFrom: ${JSON.stringify(
+              enumToSelectFrom,
+            )}`,
+          )
+        }
+        return {
+          key: index + 1,
+          value: selection as string,
+          text: getTextFromEnumValue(selection as string),
+        }
+      }),
+    [enumToSelectFrom],
+  )
 
   return (
-    <StyledDropdown
+    <SemanticDropdown
       value={value}
       placeholder={placeholder}
       options={dropdownOptions}
-      loading={loading ?? autoLoading}
+      loading={loading}
       selection
-      onChange={async (_, { value: selection }) => {
-        setAutoLoading(true)
-        await setValue(selection)
-        setAutoLoading(false)
-      }}
+      fluid
+      onChange={(_, { value: selection }) => onChange(selection)}
     />
   )
 }
