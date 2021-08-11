@@ -10,12 +10,15 @@ import {
 import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText } from 'hedvig-ui/typography'
 
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { CardContent } from 'hedvig-ui/card'
+import { InfoRow, InfoTag, InfoText } from 'hedvig-ui/info-row'
+import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
+import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
 import { Checkmark, Cross } from '../../../icons'
-import { Paper } from '../../../shared/Paper'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
 
@@ -43,6 +46,15 @@ const TotalCell = styled(MuiTableCell)`
   font-size: 1.1rem;
 `
 
+const MemberIdentityCard = styled.div`
+  width: 100%;
+  padding: 2rem;
+  border-radius: 7px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.05);
+  margin-right: 2em;
+`
+
 export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
   const {
     data: paymentsData,
@@ -66,34 +78,61 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
     .reduce((acc, amount) => acc + amount, 0)
 
   return (
-    <Paper>
-      <h3>Payments</h3>
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
-      {paymentsData?.claim?.contract?.market === Market.Norway && (
-        <p>
-          <strong>Identified: {identity ? <Checkmark /> : <Cross />}</strong>
-          <br />
-          {identity && (
-            <p>
-              <strong>Personal Number: </strong>
-              {identity.nationalIdentification.identification}
-              {identity.firstName && identity.lastName && (
-                <p>
-                  <strong>Name:</strong> {identity.firstName}{' '}
-                  {identity.lastName}
-                </p>
-              )}
-            </p>
-          )}
-        </p>
-      )}
-
-      <ClaimReserves
-        claimId={claimId}
-        reserves={paymentsData?.claim?.reserves}
-        refetch={refetchPayments}
-        loading={loadingPayments}
+    <CardContent>
+      <PaperTitle
+        title={'Payments'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
       />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {paymentsData?.claim?.contract?.market === Market.Norway && (
+          <MemberIdentityCard>
+            <ThirdLevelHeadline>Member Identity</ThirdLevelHeadline>
+            <InfoRow>
+              Identified
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={identity ? 'success' : 'warning'}
+                >
+                  {identity ? 'Yes' : 'No'}
+                </InfoTag>
+              </InfoText>
+            </InfoRow>
+            {identity && (
+              <>
+                <InfoRow>
+                  Personal Number
+                  <InfoText>
+                    {identity.nationalIdentification.identification}
+                  </InfoText>
+                </InfoRow>
+                {identity.firstName && identity.lastName && (
+                  <InfoRow>
+                    Name
+                    <InfoText>
+                      {identity.firstName} {identity.lastName}
+                    </InfoText>
+                  </InfoRow>
+                )}
+              </>
+            )}
+          </MemberIdentityCard>
+        )}
+        <ClaimReserves
+          claimId={claimId}
+          reserves={paymentsData?.claim?.reserves}
+          refetch={refetchPayments}
+          loading={loadingPayments}
+        />
+      </div>
 
       <ScrollX>
         {loadingPayments && <Spinner />}
@@ -170,6 +209,6 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
             carrier={paymentsData?.claim?.agreement?.carrier}
           />
         )}
-    </Paper>
+    </CardContent>
   )
 }

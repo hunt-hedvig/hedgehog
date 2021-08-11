@@ -8,13 +8,13 @@ const fade = keyframes`
   100% { opacity: 0.3; }
 `
 
-const LoadableWrapper = styled.div<{ loading: boolean }>`
+const LoadableWrapper = styled.div<{ isLoading: boolean }>`
   > * {
     transition: opacity 300ms;
   }
 
-  ${({ loading }) =>
-    loading &&
+  ${({ isLoading }) =>
+    isLoading &&
     css`
       > * {
         opacity: 0.3;
@@ -53,10 +53,8 @@ const LoadableWrapper = styled.div<{ loading: boolean }>`
 export const Loadable: React.FC<{
   loading?: boolean
   as?: React.ComponentType
-}> = ({ loading, as, children }) => {
-  return (
-    <LoadableWrapper as={as} loading={Boolean(loading)}>
-      {children}
-    </LoadableWrapper>
-  )
-}
+}> = ({ loading, as, children }) => (
+  <LoadableWrapper as={as} isLoading={Boolean(loading)}>
+    {children}
+  </LoadableWrapper>
+)

@@ -6,10 +6,23 @@ query GetSwitcherEmails {
       signedOn
       firstName
       lastName
+      email
     }
     switcherCompany
     queuedAt
+    contract {
+      id
+      currentAgreementId
+      masterInception
+      status
+      contractTypeName
+      isTerminated
+      terminationDate
+    }
     sentAt
     remindedAt
+    cancellationDate
+    switcherType
+    note
   }
 }

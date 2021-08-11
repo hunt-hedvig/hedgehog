@@ -1,6 +1,6 @@
 import { Grid } from '@material-ui/core'
-import { useClaimContractQuery } from 'api/generated/graphql'
-import { Paper } from 'components/shared/Paper'
+import { useClaimPageQuery } from 'api/generated/graphql'
+import { CardContent } from 'hedvig-ui/card'
 import React from 'react'
 import { ItemForm } from './components/ItemForm'
 import { ItemList } from './components/ItemList'
@@ -9,13 +9,13 @@ export const ClaimItems: React.FC<{
   claimId: string
   memberId: string | null
 }> = ({ claimId, memberId }) => {
-  const { data: contractData } = useClaimContractQuery({
+  const { data: contractData } = useClaimPageQuery({
     variables: { claimId },
   })
   const contract = contractData?.claim?.contract
 
   return (
-    <Paper>
+    <CardContent>
       <Grid container spacing={24}>
         <Grid item xs={12}>
           <div>
@@ -31,6 +31,6 @@ export const ClaimItems: React.FC<{
           )}
         </Grid>
       </Grid>
-    </Paper>
+    </CardContent>
   )
 }

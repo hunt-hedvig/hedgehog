@@ -9,17 +9,18 @@ import {
 import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
-  useClaimNotesQuery,
+  useClaimPageQuery,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
 import { Field, FieldProps, Form, Formik } from 'formik'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText } from 'hedvig-ui/typography'
 import React from 'react'
 import { sleep } from 'utils/sleep'
 
-import { Paper } from '../../../shared/Paper'
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { CardContent } from 'hedvig-ui/card'
+import { BugFill } from 'react-bootstrap-icons'
 
 interface Props {
   claimId: string
@@ -83,17 +84,27 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
     refetch: refetchClaimNotes,
     loading: loadingClaimNotes,
     error: queryError,
-  } = useClaimNotesQuery({
+  } = useClaimPageQuery({
     variables: { claimId },
   })
   const notes = claimNotesData?.claim?.notes ?? []
   const [addClaimNote] = useClaimAddClaimNoteMutation()
 
   return (
-    <Paper>
-      <h3>Notes</h3>
+    <CardContent>
+      <PaperTitle
+        title={'Notes'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
       {loadingClaimNotes && <Spinner />}
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
 
       <MuiList>
         {sortNotesByDate(notes).map((note) => (
@@ -142,7 +153,7 @@ const ClaimNotes: React.FC<Props> = ({ claimId }) => {
           </Form>
         )}
       </Formik>
-    </Paper>
+    </CardContent>
   )
 }
 

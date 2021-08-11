@@ -35,13 +35,11 @@ export const Contract: React.FC<{
   return (
     <ContractWrapper>
       <CardsWrapper>
-        <Card span={3}>
+        <Card locked={contract.isLocked} span={3}>
           <InfoContainer>
-            <InfoRow>
-              <ThirdLevelHeadline>
-                {contract.contractTypeName}
-              </ThirdLevelHeadline>
-            </InfoRow>
+            <ThirdLevelHeadline>
+              <InfoRow>{contract.contractTypeName}</InfoRow>
+            </ThirdLevelHeadline>
             <InfoRow>
               Holder{' '}
               <InfoText>
@@ -64,11 +62,11 @@ export const Contract: React.FC<{
             )}
           </InfoContainer>
         </Card>
-        <Card span={3}>
+        <Card locked={contract.isLocked} span={3}>
           <ThirdLevelHeadline>Master Inception</ThirdLevelHeadline>
           <MasterInception contract={contract} />
         </Card>
-        <Card span={3}>
+        <Card locked={contract.isLocked} span={3}>
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>

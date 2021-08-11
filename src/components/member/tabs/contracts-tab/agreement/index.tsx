@@ -9,6 +9,7 @@ import { FromDate } from 'components/member/tabs/contracts-tab/agreement/FromDat
 import { InsuranceCertificate } from 'components/member/tabs/contracts-tab/agreement/InsuranceCertificate'
 import { InsuranceMandate } from 'components/member/tabs/contracts-tab/agreement/InsuranceMandate'
 import { ToDate } from 'components/member/tabs/contracts-tab/agreement/ToDate'
+import { format, parseISO } from 'date-fns'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
@@ -84,14 +85,26 @@ const AgreementComponent: React.FC<{
         <Card span={2}>
           <ThirdLevelHeadline>Debugging</ThirdLevelHeadline>
           <InfoRow>
-            Contract id
+            Member Id <InfoText>{contract.holderMemberId}</InfoText>
+          </InfoRow>
+          <InfoRow>
+            Contract Id
             <InfoText>{contract.id}</InfoText>
           </InfoRow>
           <InfoRow>
-            Member id <InfoText>{contract.holderMemberId}</InfoText>
+            Contract created at{' '}
+            <InfoText>
+              {format(parseISO(contract.createdAt), 'yyyy-MM-dd hh:mm:ss')}
+            </InfoText>
           </InfoRow>
           <InfoRow>
-            Agreement id <InfoText>{agreement.id}</InfoText>
+            Agreement Id <InfoText>{agreement.id}</InfoText>
+          </InfoRow>
+          <InfoRow>
+            Agreement created at{' '}
+            <InfoText>
+              {format(parseISO(agreement.createdAt), 'yyyy-MM-dd hh:mm:ss')}
+            </InfoText>
           </InfoRow>
         </Card>
       </CardsWrapper>

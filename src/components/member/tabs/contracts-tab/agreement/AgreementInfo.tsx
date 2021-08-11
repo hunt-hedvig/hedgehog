@@ -109,6 +109,11 @@ export const AgreementInfo: React.FC<{
       <InfoRow>
         Carrier <InfoText>{getCarrierText(agreement.carrier)}</InfoText>
       </InfoRow>
+      {agreement.partner ? (
+        <InfoRow>
+          Partner <InfoText>{convertEnumToTitle(agreement.partner)}</InfoText>
+        </InfoRow>
+      ) : null}
       <InfoRow>
         Premium{' '}
         <InfoText>

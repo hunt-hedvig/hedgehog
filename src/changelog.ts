@@ -12,6 +12,66 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-08.10',
+    change: 'Disable button to create quotes on locked contracts',
+    authorGithubHandle: 'joacimastrom',
+  },
+  {
+    date: '2021-08-05',
+    change: 'Allow contract activation and termination in switcher view',
+    authorGithubHandle: 'cpiehl1',
+  },
+  {
+    date: '2021-08-03',
+    change: 'Allow creation of new campaign partners',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
+    date: '2021-07-16',
+    change: 'Add status and notes to switcher emails',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2021-07-09',
+    change: 'Locked contracts can no longer be interacted with',
+    authorGithubHandle: 'joacimastrom',
+  },
+  {
+    date: '2021-07-06',
+    change: 'Allow quote price to be overridden manually',
+    authorGithubHandle: 'joacimastrom',
+  },
+  {
+    date: '2021-07-06',
+    change: 'Dates are now displayed when chosing contracts in claims',
+    authorGithubHandle: 'joacimastrom',
+  },
+  {
+    date: '2021-07-05',
+    change: 'Updated the Switcher Tool with more information and market filter',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2021-07-01',
+    change: 'New claim types "Other" and "Duplicate"',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
+    date: '2021-06-23',
+    change: 'Add information about trials',
+    authorGithubHandle: 'tobiasbexelius',
+  },
+  {
+    date: '2021-06-17',
+    change: 'New travel icons added to perils tool',
+    authorGithubHandle: 'fredriklagerblad',
+  },
+  {
+    date: '2021-06-10',
+    change: 'Claim types are now searchable and prettier 💅',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-05-26',
     change:
       "Limit the direct charge amount to only allow it to match the member's current balance",

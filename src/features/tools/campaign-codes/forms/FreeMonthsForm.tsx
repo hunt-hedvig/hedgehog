@@ -1,63 +1,76 @@
-import { AssignVoucherFreeMonths } from 'api/generated/graphql'
-import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
-import { Centered, Row } from 'features/tools/campaign-codes/styles'
-import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
+import styled from '@emotion/styled'
+import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
+import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
   addPartnerFreeMonthsCodeOptions,
   useAddPartnerFreeMonthsCode,
 } from 'graphql/use-add-partner-free-months-code'
-import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { Input } from 'hedvig-ui/input'
+import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
+import { Label } from 'hedvig-ui/typography'
 import React from 'react'
-import { Input } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { numberOfMonthsOptions } from 'utils/campaignCodes'
 import { withShowNotification } from 'utils/notifications'
 
-const initialFormData: AssignVoucherFreeMonths = {
+interface FreeMonthsFormData {
+  partnerId: string | null
+  numberOfFreeMonths: number | null
+  code: string
+  validFrom?: Scalars['Instant']
+  validUntil?: Scalars['Instant']
+}
+
+const initialFormData: FreeMonthsFormData = {
   code: '',
   partnerId: '',
-  numberOfFreeMonths: 1,
+  numberOfFreeMonths: null,
   validFrom: null,
   validUntil: null,
 }
 
-const formLooksGood = (formData: AssignVoucherFreeMonths) => {
-  return formData.partnerId !== '' && formData.code !== ''
+export const DateRangeWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const formLooksGood = (formData: FreeMonthsFormData) => {
+  const { partnerId, code, numberOfFreeMonths } = formData
+
+  return !(!partnerId || !code || !numberOfFreeMonths)
 }
 
 const FreeMonths: React.FC<{} & WithShowNotification> = ({
   showNotification,
 }) => {
-  const [formData, setFormData] = React.useState<AssignVoucherFreeMonths>(
+  const [formData, setFormData] = React.useState<FreeMonthsFormData>(
     initialFormData,
   )
 
-  const [partnerCampaignOwners] = usePartnerCampaignOwners()
   const [setPartnerFreeMonths, { loading }] = useAddPartnerFreeMonthsCode()
 
   const reset = () => setFormData(initialFormData)
 
   return (
     <>
-      <label>Partner</label>
-      <Dropdown
-        value={formData.partnerId}
-        disabled={loading}
-        placeholder={'Partner'}
-        onChange={(_, { value: partnerId }) =>
-          setFormData({ ...formData, partnerId: partnerId as string })
+      <Label>Partner</Label>
+      <PartnerDropdown
+        loading={loading}
+        onChange={(data) =>
+          setFormData({
+            ...formData,
+            partnerId: data ? (data.value as string) : null,
+          })
         }
-        onClear={() => setFormData({ ...formData, partnerId: '' })}
-        options={mapCampaignOwners(partnerCampaignOwners)}
+        value={formData.partnerId ?? ''}
       />
       <Spacing top={'small'} />
-      <label>Code</label>
+      <Label>Code</Label>
       <Input
         value={formData.code}
-        fluid
         disabled={loading}
         onChange={({ currentTarget: { value: code } }) =>
           setFormData({ ...formData, code })
@@ -65,43 +78,51 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
         placeholder="Code"
       />
       <Spacing top={'small'} />
-      <label>Valid period</label>
-      <Row>
-        <div style={{ float: 'left' }}>
+      <DateRangeWrapper>
+        <div style={{ width: '100%', paddingRight: '1.0em' }}>
+          <Label>Valid from</Label>
           <DateTimePicker
-            fullWidth
-            disabled={loading}
-            date={formData.validFrom!}
-            placeholder={'Valid from'}
+            fullWidth={true}
+            date={formData.validFrom}
+            placeholder={'Beginning of time'}
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>
-        <div style={{ float: 'right' }}>
+        <div style={{ width: '100%', paddingLeft: '1.0em' }}>
+          <Label>Valid to</Label>
           <DateTimePicker
-            fullWidth
-            disabled={loading}
-            date={formData.validUntil!}
-            placeholder={'Valid until'}
+            fullWidth={true}
+            date={formData.validUntil}
+            placeholder={'End of time'}
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
-      </Row>
+      </DateRangeWrapper>
       <Spacing top={'small'} />
-      <label>Months</label>
-      <Dropdown
-        value={formData.numberOfFreeMonths}
-        onChange={(_, { value: numberOfFreeMonths }) => {
+      <Label>Months</Label>
+      <SearchableDropdown
+        value={
+          formData.numberOfFreeMonths
+            ? {
+                value: formData.numberOfFreeMonths,
+                label: formData.numberOfFreeMonths,
+              }
+            : null
+        }
+        placeholder={'How many free months?'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
           setFormData({
             ...formData,
-            numberOfFreeMonths: numberOfFreeMonths as number,
+            numberOfFreeMonths: data ? (data.value as number) : null,
           })
-        }}
-        placeholder="Months"
-        disabled={loading}
+        }
+        noOptionsMessage={() => 'Option not found'}
         options={numberOfMonthsOptions}
       />
       <Spacing top={'small'} />
-      <Centered>
+      <div>
         <Button
           variation="primary"
           loading={loading}
@@ -112,7 +133,11 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
             ) {
               return
             }
-            setPartnerFreeMonths(addPartnerFreeMonthsCodeOptions(formData))
+            setPartnerFreeMonths(
+              addPartnerFreeMonthsCodeOptions(
+                formData as AssignVoucherFreeMonths,
+              ),
+            )
               .then(() => {
                 reset()
                 showNotification({
@@ -133,7 +158,7 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
         >
           Create New Campaign
         </Button>
-      </Centered>
+      </div>
     </>
   )
 }

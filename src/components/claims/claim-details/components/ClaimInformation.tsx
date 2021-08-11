@@ -1,8 +1,12 @@
 import styled from '@emotion/styled'
 import { MenuItem as MuiMenuItem, Select as MuiSelect } from '@material-ui/core'
-import { ClaimState, useClaimInformationQuery } from 'api/generated/graphql'
+import {
+  ClaimState,
+  useClaimMemberContractsMasterInceptionQuery,
+  useClaimPageQuery,
+} from 'api/generated/graphql'
 
-import { Paper } from 'components/shared/Paper'
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
 import {
   setContractForClaimOptions,
@@ -16,18 +20,13 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
+import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
-import {
-  ErrorText,
-  Label,
-  Paragraph,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
+import { Label, Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
-import { CloudArrowDownFill } from 'react-bootstrap-icons'
+import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { currentAgreementForContract } from 'utils/contract'
-import { sleep } from 'utils/sleep'
 import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
 interface Props {
@@ -111,11 +110,14 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
 export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
   const {
     data,
-    refetch: refetchClaimInformation,
     error: queryError,
     loading: claimInformationLoading,
-  } = useClaimInformationQuery({
-    variables: { claimId, memberId },
+  } = useClaimPageQuery({
+    variables: { claimId },
+  })
+
+  const { data: memberData } = useClaimMemberContractsMasterInceptionQuery({
+    variables: { memberId },
   })
 
   const {
@@ -126,18 +128,28 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
     contract: selectedContract,
     agreement: selectedAgreement,
   } = data?.claim ?? {}
-  const contracts = data?.member?.contracts
+  const contracts = memberData?.member?.contracts ?? []
+  const trials = memberData?.member?.trials ?? []
 
   const [setContractForClaim] = useSetContractForClaim()
   const [setCoveringEmployee] = useSetCoveringEmployee()
   const [updateClaimState] = useUpdateClaimState()
 
   return (
-    <Paper>
-      <ThirdLevelHeadline>Claim Information</ThirdLevelHeadline>
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
-
+    <CardContent>
       <Loadable loading={claimInformationLoading}>
+        <PaperTitle
+          title={'Claim Info'}
+          badge={
+            queryError
+              ? {
+                  icon: BugFill,
+                  status: 'danger',
+                  label: 'Internal Error',
+                }
+              : null
+          }
+        />
         <InfoRow>
           Registered at
           <InfoText>
@@ -149,7 +161,7 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         <SelectWrapper>
           <Label>Status</Label>
           <MuiSelect
-            value={state}
+            value={state || ''}
             onChange={async (event) => {
               await updateClaimState(
                 updateClaimStateOptions(claimId, validateSelectOption(event)),
@@ -187,7 +199,6 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
         {contracts && (
           <SelectWrapper>
             <Label>Contract for Claim</Label>
-
             <MuiSelect
               value={selectedContract?.id ? selectedContract.id : 'none'}
               onChange={async (event) => {
@@ -201,8 +212,6 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
                     contractId: event.target.value,
                   }),
                 )
-                await sleep(250)
-                await refetchClaimInformation()
               }}
             >
               <MuiMenuItem disabled value={'none'} divider>
@@ -213,7 +222,13 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
                 return (
                   <MuiMenuItem key={contract.id} value={contract.id}>
                     {contract.contractTypeName}
-                    {address && <> ({address.street})</>}
+                    {address && `, ${address.street}`}
+                    <br />
+                    {contract.masterInception}
+                    {' - '}
+                    {contract.terminationDate
+                      ? contract.terminationDate
+                      : 'Ongoing'}
                   </MuiMenuItem>
                 )
               })}
@@ -239,7 +254,16 @@ export const ClaimInformation: React.FC<Props> = ({ claimId, memberId }) => {
             ⚠️ No agreement covers the claim on the date of loss
           </Paragraph>
         )}
+        {contracts.length === 0 && trials.length > 0 && (
+          <CardsWrapper>
+            <DangerCard>
+              This member has a trial which may cover this claim, but no
+              contract. This case can not be handled in Hope yet, please contact
+              the MX tech team.
+            </DangerCard>
+          </CardsWrapper>
+        )}
       </Loadable>
-    </Paper>
+    </CardContent>
   )
 }

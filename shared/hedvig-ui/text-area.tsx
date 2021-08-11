@@ -8,7 +8,7 @@ const TextAreaWrapper = styled('div')({
 
 export const TextArea: React.FC<{
   placeholder: string
-  value: string
+  value: string | undefined
   setValue: (value: string) => void
 }> = ({ placeholder, value: inputValue, setValue: setInputValue }) => {
   return (

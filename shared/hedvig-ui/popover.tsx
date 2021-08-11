@@ -11,6 +11,8 @@ const Contents = styled.div`
   padding: 0.5rem;
   border-radius: 0.25rem;
 
+  min-width: 150px;
+
   ${({ theme }) => css`
     background: ${theme.foreground};
     color: ${theme.background};

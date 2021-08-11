@@ -35,11 +35,14 @@ query ClaimMemberContractsMasterInception($memberId: ID!) {
     }
     contractMarketInfo {
       market
+      preferredCurrency
     }
     pickedLocale
     contracts {
       id
+      currentAgreementId
       contractTypeName
+      typeOfContract
       masterInception
       terminationDate
       isTerminated
@@ -47,8 +50,22 @@ query ClaimMemberContractsMasterInception($memberId: ID!) {
         id
         address {
           street
+          postalCode
+          city
         }
+        status
+        typeOfContract
+        lineOfBusinessName
+        carrier
+        premium {
+          amount
+          currency
+        }
+        createdAt
       }
+    }
+    trials {
+      id
     }
   }
 }

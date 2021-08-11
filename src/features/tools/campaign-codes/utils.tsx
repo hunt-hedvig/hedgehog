@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   CampaignFilter,
   CampaignOwnerPartner,
@@ -5,12 +6,7 @@ import {
   VoucherCampaign,
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
-import { DropdownOption } from 'features/tools/campaign-codes/components/ClearableDropdown'
-import {
-  Badge,
-  BadgeRow,
-  ValidityText,
-} from 'features/tools/campaign-codes/styles'
+import { Badge } from 'hedvig-ui/badge'
 import React from 'react'
 import {
   isCostDeduction,
@@ -20,6 +16,24 @@ import {
   isVisibleNoDiscount,
 } from 'utils/campaignCodes'
 import { formatMoney } from 'utils/money'
+
+export const BadgeRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+`
+
+export const ValidityText = styled.span`
+  font-size: 0.9em;
+  display: flex;
+  justify-content: center;
+`
+
+export const DateTimePickerWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`
 
 export enum CreatableIncentiveTypes {
   MonthlyPercentageDiscountFixedPeriod = 'Monthly Percentage',
@@ -36,11 +50,10 @@ export const initialCampaignFilter: CampaignFilter = {
 
 export const mapCampaignOwners = (
   partnerCampaignOwners: readonly CampaignOwnerPartner[],
-): DropdownOption[] =>
+) =>
   partnerCampaignOwners.map(({ partnerId }) => ({
-    key: partnerId,
     value: partnerId,
-    text: partnerId,
+    label: partnerId,
   }))
 
 export const getIncentiveText = (incentive?: Incentive | null) => {
@@ -70,7 +83,7 @@ export const getIncentiveText = (incentive?: Incentive | null) => {
 }
 
 const DiscountDetailBadge: React.FC<{ label: string }> = ({ label }) => (
-  <Badge variant="success" width={'40%'}>
+  <Badge variant="success">
     <span style={{ fontWeight: 'bold' }}>{label}</span>
   </Badge>
 )
@@ -82,7 +95,7 @@ const DiscountMonthBadge: React.FC<{ months?: number | null }> = ({
     return <></>
   }
   return (
-    <Badge width={'45%'}>
+    <Badge>
       <span style={{ fontWeight: 'bold' }}>
         {months} {`month${months > 1 ? 's' : ''}`}
       </span>
@@ -91,7 +104,7 @@ const DiscountMonthBadge: React.FC<{ months?: number | null }> = ({
 }
 
 const ForeverBadge = () => (
-  <Badge width={'45%'}>
+  <Badge>
     <span style={{ fontWeight: 'bold' }}>Forever</span>
   </Badge>
 )

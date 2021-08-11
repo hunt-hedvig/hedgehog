@@ -1,11 +1,8 @@
-import {
-  ClearableDropdown,
-  DropdownOption,
-} from 'features/tools/campaign-codes/components/ClearableDropdown'
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
 import { InfoContainer } from 'hedvig-ui/info-row'
+import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
@@ -31,27 +28,31 @@ export const CreateCampaignCode: React.FC = () => {
     setIncentiveType,
   ] = React.useState<CreatableIncentiveTypes | null>(null)
 
-  const incentiveTypeOptions: DropdownOption[] = Object.values(
-    CreatableIncentiveTypes,
-  ).map((value, index) => {
-    return {
-      key: index + 1,
-      value: value as string,
-      text: getTextFromEnumValue(value as string),
-    }
-  })
+  const incentiveTypeOptions = Object.values(CreatableIncentiveTypes).map(
+    (value) => {
+      return {
+        value: value as string,
+        label: getTextFromEnumValue(value as string),
+      }
+    },
+  )
 
   return (
     <InfoContainer>
       <ThirdLevelHeadline>Create New Code</ThirdLevelHeadline>
-      <ClearableDropdown
-        value={incentiveType ?? ''}
-        options={incentiveTypeOptions}
-        placeholder={'Incentive type'}
-        onChange={(_, { value }) =>
-          setIncentiveType(value as CreatableIncentiveTypes)
+      <SearchableDropdown
+        value={
+          incentiveType ? { label: incentiveType, value: incentiveType } : null
         }
-        onClear={() => setIncentiveType(null)}
+        placeholder={'Which incentive type?'}
+        isClearable={true}
+        onChange={(data) =>
+          setIncentiveType(
+            data ? (data.value as CreatableIncentiveTypes) : null,
+          )
+        }
+        noOptionsMessage={() => 'No incentive type found'}
+        options={incentiveTypeOptions}
       />
       <Spacing bottom={'small'} />
       {incentiveType && getIncentiveTypeForm(incentiveType)}

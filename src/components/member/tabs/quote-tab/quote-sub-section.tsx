@@ -1,13 +1,14 @@
+import styled from '@emotion/styled'
 import { Quote } from 'api/generated/graphql'
 import { CreateQuoteForm } from 'components/member/tabs/quote-tab/create-quote-form'
+import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import styled from '@emotion/styled'
 import { showNotification } from 'store/actions/notificationsActions'
-import { ContractType } from 'types/enums'
-import { isSigned, isSignedOrExpired } from 'utils/quote'
+import { ContractType, TypeOfContractType } from 'types/enums'
+import { isSignedOrExpired } from 'utils/quote'
 import { ActionsWrapper, Muted } from './common'
 import { QuoteListItem } from './quote-list-item'
 
@@ -20,16 +21,25 @@ export const QuotesSubSection: React.FC<{
 }> = ({ memberId, contractType, quotes }) => {
   const [isWip, setIsWip] = React.useState(false)
   const activeQuotes = quotes.filter((quote) => !isSignedOrExpired(quote))
-  const signedQuotes = quotes.filter(isSigned)
-  const hasActiveQuotes = activeQuotes.length > 0
-  const hasSignedQuotes = signedQuotes.length > 0
+  const [contracts, { loading }] = useContracts(memberId)
+
+  if (loading) {
+    return null
+  }
+
+  const hasActiveContracts =
+    contracts.filter(
+      (contract) =>
+        TypeOfContractType[contract.typeOfContract] === contractType &&
+        !contract.terminationDate,
+    ).length > 0
 
   return (
     <Wrapper>
-      {!hasActiveQuotes && !hasSignedQuotes && (
+      {!hasActiveContracts && (
         <Button onClick={() => setIsWip(!isWip)}>Create</Button>
       )}
-      {!hasActiveQuotes && !hasSignedQuotes && isWip && (
+      {isWip && (
         <ActionsWrapper>
           <CreateQuoteForm
             memberId={memberId}
@@ -51,7 +61,11 @@ export const QuotesSubSection: React.FC<{
       <CardsWrapper>
         {activeQuotes.map((quote) => (
           <Card key={quote.id}>
-            <QuoteListItem quote={quote} memberId={memberId} />
+            <QuoteListItem
+              quote={quote}
+              memberId={memberId}
+              contracts={contracts}
+            />
           </Card>
         ))}
       </CardsWrapper>
@@ -61,7 +75,12 @@ export const QuotesSubSection: React.FC<{
         <CardsWrapper>
           {quotes.filter(isSignedOrExpired).map((quote) => (
             <Card key={quote.id}>
-              <QuoteListItem quote={quote} memberId={memberId} inactionable />
+              <QuoteListItem
+                quote={quote}
+                memberId={memberId}
+                contracts={contracts}
+                inactionable
+              />
             </Card>
           ))}
         </CardsWrapper>

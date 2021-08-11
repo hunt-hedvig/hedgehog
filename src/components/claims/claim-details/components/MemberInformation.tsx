@@ -2,13 +2,12 @@ import styled from '@emotion/styled'
 import {
   Flag,
   SanctionStatus,
-  useClaimContractQuery,
   useClaimMemberContractsMasterInceptionQuery,
+  useClaimPageQuery,
 } from 'api/generated/graphql'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
-import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 
 import { useHistory } from 'react-router'
@@ -23,6 +22,8 @@ import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
 
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { CardContent } from 'hedvig-ui/card'
 import {
   InfoContainer,
   InfoRow,
@@ -32,14 +33,13 @@ import {
   InfoText,
 } from 'hedvig-ui/info-row'
 import { Popover } from 'hedvig-ui/popover'
+import { BugFill } from 'react-bootstrap-icons'
 import { formatSsn, getMemberFlag } from 'utils/member'
 import {
   convertCamelcaseToTitle,
   convertEnumOrSentenceToTitle,
   formatPostalCode,
 } from 'utils/text'
-import { Checkmark, Cross } from '../../../icons'
-import { Paper } from '../../../shared/Paper'
 
 type FraudulentStatus = 'NOT_FRAUD' | 'SUSPECTED_FRAUD' | 'CONFIRMED_FRAUD'
 
@@ -87,7 +87,7 @@ export const MemberInformation: React.FC<{
   const {
     data: contractData,
     error: claimContractQueryError,
-  } = useClaimContractQuery({
+  } = useClaimPageQuery({
     variables: { claimId },
   })
   const {
@@ -118,9 +118,19 @@ export const MemberInformation: React.FC<{
   ])
 
   return (
-    <Paper>
-      <ThirdLevelHeadline>Member Information</ThirdLevelHeadline>
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
+    <CardContent>
+      <PaperTitle
+        title={'Member Info'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
 
       <InfoContainer>
         <Loadable loading={memberContractsDataLoading}>
@@ -139,7 +149,14 @@ export const MemberInformation: React.FC<{
           {member?.contractMarketInfo?.market === Market.Norway && (
             <InfoRow>
               Identified
-              <InfoText>{member.identity ? <Checkmark /> : <Cross />}</InfoText>
+              <InfoText>
+                <InfoTag
+                  style={{ fontWeight: 'bold' }}
+                  status={member.identity ? 'success' : 'warning'}
+                >
+                  {member.identity ? 'Yes' : 'No'}
+                </InfoTag>
+              </InfoText>
             </InfoRow>
           )}
           <InfoRow>
@@ -296,10 +313,8 @@ export const MemberInformation: React.FC<{
             Failed payments
             <InfoText>
               {member?.numberFailedCharges?.numberFailedCharges ?? '-'}
-              {(member?.numberFailedCharges?.numberFailedCharges ?? 0) === 1
-                ? 'payment'
-                : (member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
-                ? 'payments in a row'
+              {(member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
+                ? ' in a row'
                 : ''}
             </InfoText>
           </InfoRow>
@@ -309,6 +324,6 @@ export const MemberInformation: React.FC<{
           </InfoRow>
         </Loadable>
       </InfoContainer>
-    </Paper>
+    </CardContent>
   )
 }

@@ -3,10 +3,10 @@ import {
   Contract,
   MonetaryAmountV2,
   UpsertClaimItemInput,
+  useClaimMemberContractsMasterInceptionQuery,
   useUpsertClaimItemMutation,
 } from 'api/generated/graphql'
 import { format, isAfter, isValid, parseISO } from 'date-fns'
-import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import React from 'react'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
 import { ValuationInfo } from './ValuationInfo'
@@ -36,8 +36,16 @@ export const ItemForm: React.FC<{
     null,
   )
   const [customValuationAmount, setCustomValuationAmount] = React.useState('')
-  const [contractMarketInfo] = useContractMarketInfo(memberId ?? '')
-  const defaultCurrency = contractMarketInfo?.preferredCurrency ?? 'SEK'
+
+  const { data } = useClaimMemberContractsMasterInceptionQuery({
+    variables: { memberId: memberId || '' },
+  })
+
+  const contractMarketInfo = data?.member?.contractMarketInfo || {
+    preferredCurrency: 'SEK ',
+  }
+
+  const { preferredCurrency: defaultCurrency } = contractMarketInfo
 
   const [
     upsertClaimItem,
@@ -168,16 +176,22 @@ export const ItemForm: React.FC<{
       </Grid>
       <Grid container spacing={16}>
         <Grid item xs={10}>
-          {contract?.typeOfContract && (
-            <ValuationInfo
-              request={request}
-              setValuation={setValuation}
-              customValuationAmount={customValuationAmount}
-              setCustomValuationAmount={setCustomValuationAmount}
-              defaultCurrency={defaultCurrency}
-              typeOfContract={contract.typeOfContract}
-            />
-          )}
+          {contract?.typeOfContract &&
+            request.itemFamilyId &&
+            request.purchasePrice &&
+            request.dateOfPurchase && (
+              <ValuationInfo
+                itemFamilyId={request.itemFamilyId}
+                itemTypeId={request.itemTypeId}
+                purchasePrice={request.purchasePrice}
+                dateOfPurchase={request.dateOfPurchase}
+                setValuation={setValuation}
+                customValuationAmount={customValuationAmount}
+                setCustomValuationAmount={setCustomValuationAmount}
+                defaultCurrency={defaultCurrency}
+                typeOfContract={contract.typeOfContract}
+              />
+            )}
         </Grid>
 
         <Grid item xs={true}>

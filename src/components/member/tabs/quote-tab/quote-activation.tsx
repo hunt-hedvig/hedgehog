@@ -7,7 +7,6 @@ import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React, { useEffect, useState } from 'react'
-import { Checkbox } from 'semantic-ui-react'
 import { noopFunction } from 'utils'
 import { getContractByAgreementId } from 'utils/contract'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
@@ -33,14 +32,9 @@ export const QuoteActivation: React.FC<{
       </>
     )
   }
-
-  const [useGap, setUseGap] = useState(false)
   const [contracts, { loading }] = useContracts(memberId)
   const [activeFrom, setActiveFrom] = useState<Date | null>(null)
-  const [
-    previousAgreementActiveTo,
-    setPreviousAgreementActiveTo,
-  ] = useState<Date | null>(null)
+  const [previousAgreementActiveTo] = useState<Date | null>(null)
 
   useEffect(() => {
     if (!contracts) {
@@ -104,54 +98,26 @@ export const QuoteActivation: React.FC<{
             <div>
               <strong>Activation date</strong>
             </div>
-            <div>
-              <DateTimePicker
-                date={activeFrom || new Date()}
-                setDate={(value) => {
-                  if (onWipChange) {
-                    onWipChange(true)
-                  }
-                  setActiveFrom(value)
-                }}
-              />
-            </div>
-          </BottomSpacerWrapper>
 
-          <BottomSpacerWrapper>
-            <Checkbox
-              onChange={(_, { checked }) => {
-                if (onWipChange) {
-                  onWipChange(true)
-                }
-                if (!checked) {
-                  setPreviousAgreementActiveTo(null)
-                }
-                setUseGap(!!checked)
-              }}
-              label="Create gap between insurances"
-              checked={useGap}
-            />
-          </BottomSpacerWrapper>
-
-          {useGap && (
-            <BottomSpacerWrapper>
+            {contract.terminationDate && (
               <div>
-                <strong>Terminate current insurance at</strong>
+                <div>{contract.terminationDate}</div>
               </div>
+            )}
+            {!contract.terminationDate && (
               <div>
                 <DateTimePicker
-                  date={previousAgreementActiveTo || new Date()}
+                  date={activeFrom || new Date()}
                   setDate={(value) => {
                     if (onWipChange) {
                       onWipChange(true)
                     }
-                    setPreviousAgreementActiveTo(value)
+                    setActiveFrom(value)
                   }}
-                  maxDate={activeFrom ?? undefined}
                 />
               </div>
-            </BottomSpacerWrapper>
-          )}
+            )}
+          </BottomSpacerWrapper>
         </>
       )}
       {contract.hasPendingAgreement && (

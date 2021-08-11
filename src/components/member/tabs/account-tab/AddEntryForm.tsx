@@ -28,7 +28,7 @@ const entryTypeOptions = [
   },
   {
     key: 3,
-    value: 'LOSS',
+    value: 'LOSS_MANUAL',
     text:
       'Loss: The member owes us money we will never get (e.g. the member terminated its insurance or we had a too early start date)',
   },
@@ -79,6 +79,11 @@ const sourceOptions = [
   },
   {
     key: 8,
+    value: 'manual_decease',
+    text: 'The member has passed away',
+  },
+  {
+    key: 9,
     value: 'other',
     text: 'Other',
   },

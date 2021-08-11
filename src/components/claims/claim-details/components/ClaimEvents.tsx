@@ -3,12 +3,13 @@ import {
   ListItem as MuiListItem,
   withStyles,
 } from '@material-ui/core'
-import { useClaimEventsQuery } from 'api/generated/graphql'
-import { Paper } from 'components/shared/Paper'
+import { useClaimPageQuery } from 'api/generated/graphql'
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
+import { CardContent } from 'hedvig-ui/card'
 import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText } from 'hedvig-ui/typography'
 import React from 'react'
+import { BugFill } from 'react-bootstrap-icons'
 
 interface Props {
   claimId: string
@@ -27,16 +28,26 @@ export const ClaimEvents: React.FC<Props> = ({ claimId }) => {
     data: claimEventsData,
     loading: loadingClaimEvents,
     error: queryError,
-  } = useClaimEventsQuery({
+  } = useClaimPageQuery({
     variables: { claimId },
   })
 
   return (
-    <Paper>
-      <h3>Events</h3>
+    <CardContent>
+      <PaperTitle
+        title={'Events'}
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
 
       {loadingClaimEvents && <Spinner />}
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
 
       <MuiList>
         {claimEventsData?.claim?.events.filter(Boolean).map((event) => (
@@ -45,6 +56,6 @@ export const ClaimEvents: React.FC<Props> = ({ claimId }) => {
           </ListItem>
         ))}
       </MuiList>
-    </Paper>
+    </CardContent>
   )
 }

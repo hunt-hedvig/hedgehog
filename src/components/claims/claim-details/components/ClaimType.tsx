@@ -1,25 +1,28 @@
 import styled from '@emotion/styled'
-import { Button as MuiButton, MenuItem as MuiMenuItem } from '@material-ui/core'
 import {
   ClaimTypes,
-  useClaimInformationQuery,
+  useClaimPageQuery,
   useSetClaimInformationMutation,
   useSetClaimTypeMutation,
 } from 'api/generated/graphql'
 
-import { FieldSelect } from 'components/shared/inputs/FieldSelect'
-import { TextField } from 'components/shared/inputs/TextField'
-import { Paper } from 'components/shared/Paper'
+import {
+  PaperTitle,
+  PaperTitleBadgeProps,
+} from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
-import { Field, Form, Formik } from 'formik'
-import { FormikDateTimePicker } from 'hedvig-ui/date-time-picker'
-import { Loadable } from 'hedvig-ui/loadable'
-import { Spinner } from 'hedvig-ui/sipnner'
-import { ErrorText, Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
-import React from 'react'
+import { Button } from 'hedvig-ui/button'
+import { CardContent } from 'hedvig-ui/card'
+import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { Input } from 'hedvig-ui/input'
+import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
+import { Spacing } from 'hedvig-ui/spacing'
+import { Label } from 'hedvig-ui/typography'
+import React, { useState } from 'react'
+import { BugFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
-import { getCarrierText } from 'utils/text'
+import { convertCamelcaseToTitle } from 'utils/text'
 
 const hasLocation = (typename: ClaimTypes): boolean => {
   return [
@@ -33,6 +36,7 @@ const hasLocation = (typename: ClaimTypes): boolean => {
     ClaimTypes.ApplianceClaim,
     ClaimTypes.BurglaryClaim,
     ClaimTypes.InstallationsClaim,
+    ClaimTypes.OtherClaim,
   ].includes(typename)
 }
 
@@ -43,6 +47,7 @@ const hasItem = (typename: ClaimTypes): boolean => {
     ClaimTypes.ApplianceClaim,
     ClaimTypes.BurglaryClaim,
     ClaimTypes.InstallationsClaim,
+    ClaimTypes.OtherClaim,
   ].includes(typename)
 }
 
@@ -53,6 +58,7 @@ const hasPoliceReport = (typename: ClaimTypes): boolean => {
     ClaimTypes.AssaultClaim,
     ClaimTypes.TravelAccidentClaim,
     ClaimTypes.BurglaryClaim,
+    ClaimTypes.OtherClaim,
   ].includes(typename)
 }
 
@@ -61,6 +67,7 @@ const hasReceipt = (typename: ClaimTypes): boolean => {
     ClaimTypes.AccidentalDamageClaim,
     ClaimTypes.TravelAccidentClaim,
     ClaimTypes.BurglaryClaim,
+    ClaimTypes.OtherClaim,
   ].includes(typename)
 }
 
@@ -68,242 +75,202 @@ const hasTicket = (typename: ClaimTypes): boolean => {
   return typename === ClaimTypes.LuggageDelayClaim
 }
 
-interface ClaimTypeProps {
-  claimId: string
-  memberId: string
-}
-
-const Label = styled.label`
-  display: block;
-`
-
-const SubmitButton = MuiButton
-
-const ClaimTypeInformationForm = styled(Form)({
-  marginTop: '1rem',
+const createClaimTypeOption = (claimType: string) => ({
+  value: claimType,
+  label: convertCamelcaseToTitle(claimType),
+  searchTerms: claimType,
 })
 
-const handleError = (showNotification: (data: any) => void) => () => {
-  showNotification({
-    type: 'error',
-    message: 'Something went wrong, notify the tech team plz',
-    headline: '):',
-  })
-}
-
-const DangerParagraph = styled(Paragraph)`
-  color: ${({ theme }) => theme.danger};
+const DataField = styled.div`
+  margin-top: 1em;
 `
 
-const ClaimTypeComponent: React.FC<ClaimTypeProps & WithShowNotification> = ({
+const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
+  type,
   claimId,
-  memberId,
-  showNotification,
 }) => {
-  const [isSetClaimTypeLoading, setSetClaimTypeLoading] = React.useState(false)
-  const {
-    data: claimInformationData,
-    refetch: refetchClaimInformation,
-    loading: loadingClaimInformation,
-    error: queryError,
-  } = useClaimInformationQuery({
-    variables: { claimId, memberId },
-  })
-  const [setClaimType, setClaimTypeProps] = useSetClaimTypeMutation({
-    onError: handleError(showNotification),
-  })
-  const [
-    setClaimInformation,
-    setClaimInformationProps,
-  ] = useSetClaimInformationMutation({ onError: handleError(showNotification) })
+  const [setClaimInformation, { loading }] = useSetClaimInformationMutation()
 
-  const { contract, type } = claimInformationData?.claim ?? {}
-  const typeAny: any = type
-  const claimTypeType = type?.__typename as ClaimTypes
+  const [formData, setFormData] = useState({
+    location: type?.location || '',
+    date: type?.date ? parseISO(type.date) : null,
+    item: type?.item || '',
+    policeReport: type?.policeReport || '',
+    receipt: type?.receipt || '',
+    ticket: type?.ticket || '',
+  })
+
+  const [savedFormData, setSavedFormData] = useState(formData)
 
   return (
-    <Paper>
-      <ThirdLevelHeadline>Claim Type</ThirdLevelHeadline>
-
-      {queryError && <ErrorText>{queryError.message}</ErrorText>}
-
-      <Loadable loading={loadingClaimInformation}>
-        {!contract && !loadingClaimInformation && (
-          <DangerParagraph>⚠️ No contract set</DangerParagraph>
-        )}
-        <Formik<{ selectedType?: ClaimTypes | '' }>
-          enableReinitialize
-          initialValues={{
-            selectedType: claimTypeType || '',
-          }}
-          onSubmit={async (values) => {
-            if (!values.selectedType) {
-              return
+    <>
+      <DataField style={{ marginTop: '1.0em' }}>
+        <Label>Date of Occurrence</Label>
+        <DateTimePicker
+          fullWidth={true}
+          date={formData.date}
+          setDate={(newDate) => setFormData({ ...formData, date: newDate })}
+          placeholder={'When did it happen?'}
+        />
+      </DataField>
+      {hasLocation(type.__typename as ClaimTypes) && (
+        <DataField>
+          <Label>Location</Label>
+          <Input
+            value={formData.location}
+            onChange={(e) =>
+              setFormData({ ...formData, location: e.target.value })
             }
-            setSetClaimTypeLoading(true)
-            await setClaimType({
-              variables: { id: claimId, type: values.selectedType },
+            placeholder={'Any specific location?'}
+          />
+        </DataField>
+      )}
+      {hasItem(type.__typename as ClaimTypes) && (
+        <DataField style={{ marginTop: '1.0em' }}>
+          <Label>Item</Label>
+          <Input
+            value={formData.item}
+            onChange={(e) => setFormData({ ...formData, item: e.target.value })}
+            placeholder={'Any specific item(s)?'}
+          />
+        </DataField>
+      )}
+      {hasPoliceReport(type.__typename as ClaimTypes) && (
+        <DataField style={{ marginTop: '1.0em' }}>
+          <Label>Police report</Label>
+          <Input
+            value={formData.policeReport}
+            onChange={(e) =>
+              setFormData({ ...formData, policeReport: e.target.value })
+            }
+            placeholder={'Any info on a police report?'}
+          />
+        </DataField>
+      )}
+      {hasReceipt(type.__typename as ClaimTypes) && (
+        <DataField style={{ marginTop: '1.0em' }}>
+          <Label>Receipt</Label>
+          <Input
+            value={formData.receipt}
+            onChange={(e) =>
+              setFormData({ ...formData, receipt: e.target.value })
+            }
+            placeholder={'Is there a receipt?'}
+          />
+        </DataField>
+      )}
+      {hasTicket(type.__typename as ClaimTypes) && (
+        <DataField style={{ marginTop: '1.0em' }}>
+          <Label>Ticket</Label>
+          <Input
+            value={formData.ticket}
+            onChange={(e) =>
+              setFormData({ ...formData, ticket: e.target.value })
+            }
+            placeholder={'Is there a ticket?'}
+          />
+        </DataField>
+      )}
+      <Spacing top={'medium'} />
+      <Button
+        fullWidth
+        disabled={formData === savedFormData || loading}
+        variation={'primary'}
+        onClick={() => {
+          setClaimInformation({
+            variables: {
+              id: claimId,
+              claimInformation: {
+                ...formData,
+                date: formData.date && format(formData.date, 'yyyy-MM-dd'),
+              },
+            },
+          }).then(() => {
+            setSavedFormData(formData)
+          })
+        }}
+      >
+        {loading
+          ? 'Saving...'
+          : formData !== savedFormData
+          ? 'Save changes'
+          : 'Changes saved'}
+      </Button>
+    </>
+  )
+}
+
+const ClaimTypeComponent: React.FC<{
+  claimId: string
+} & WithShowNotification> = ({ claimId, showNotification }) => {
+  const {
+    data: claimInformationData,
+    loading: loadingClaimInformation,
+    refetch,
+    error: queryError,
+  } = useClaimPageQuery({
+    variables: { claimId },
+  })
+
+  const [
+    setClaimType,
+    { loading: setClaimTypeLoading },
+  ] = useSetClaimTypeMutation()
+
+  const { contract, type } = claimInformationData?.claim ?? {}
+
+  const titleBadge = (): PaperTitleBadgeProps | null => {
+    if (queryError) {
+      return {
+        icon: BugFill,
+        status: 'danger',
+        label: 'Internal Error',
+      }
+    }
+    if (!contract && !loadingClaimInformation) {
+      return {
+        icon: ExclamationCircleFill,
+        status: 'warning',
+        label: 'No contract set',
+      }
+    }
+
+    return null
+  }
+
+  return (
+    <CardContent>
+      <PaperTitle title={'Claim Type'} badge={titleBadge()} />
+      <SearchableDropdown
+        value={
+          type?.__typename &&
+          createClaimTypeOption(type?.__typename?.toString())
+        }
+        placeholder={'What type of claim is this?'}
+        isLoading={setClaimTypeLoading || loadingClaimInformation}
+        isClearable={false}
+        onChange={(selection) => {
+          setClaimType({
+            variables: { id: claimId, type: selection?.value ?? null },
+          })
+            .then(async () => {
+              await refetch()
             })
-            await refetchClaimInformation()
-            setSetClaimTypeLoading(false)
-          }}
-        >
-          {({ isValid }) => (
-            <Form>
-              <div>
-                <Field component={FieldSelect} name="selectedType">
-                  <MuiMenuItem disabled value="">
-                    Select a type...
-                  </MuiMenuItem>
-                  {Object.keys(ClaimTypes).map((t) => (
-                    <MuiMenuItem key={t} value={t}>
-                      {t}
-                    </MuiMenuItem>
-                  ))}
-                </Field>
-              </div>
-              <div>
-                <SubmitButton
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  disabled={
-                    !isValid ||
-                    setClaimTypeProps.loading ||
-                    isSetClaimTypeLoading
-                  }
-                >
-                  Set type
-                  {(setClaimTypeProps.loading || isSetClaimTypeLoading) && (
-                    <Spinner push="left" />
-                  )}
-                </SubmitButton>
-              </div>
-            </Form>
-          )}
-        </Formik>
-        {type ? (
-          <Formik<{
-            location?: string
-            date: Date | null
-            item?: string
-            policeReport?: string
-            receipt?: string
-            ticket?: string
-          }>
-            initialValues={{
-              location: typeAny?.location || '',
-              date: typeAny?.date ? parseISO(typeAny.date) : null,
-              item: typeAny?.item || '',
-              policeReport: typeAny?.policeReport || '',
-              receipt: typeAny?.receipt || '',
-              ticket: typeAny?.ticket || '',
-            }}
-            onSubmit={async (values) => {
-              await setClaimInformation({
-                variables: {
-                  id: claimId,
-                  claimInformation: {
-                    ...values,
-                    date: values.date && format(values.date, 'yyyy-MM-dd'),
-                  },
-                },
+            .catch((e) => {
+              showNotification({
+                header: 'Error',
+                type: 'red',
+                message: e.message,
               })
-            }}
-          >
-            {({ isValid }) => (
-              <ClaimTypeInformationForm>
-                {hasLocation(claimTypeType) && (
-                  <div>
-                    <Label htmlFor="location">Location</Label>
-                    <Field
-                      component={TextField}
-                      name="location"
-                      id="location"
-                      placeholder="Location"
-                    />
-                  </div>
-                )}
-                <div>
-                  {claimInformationData?.claim?.agreement?.carrier &&
-                    getCarrierText(
-                      claimInformationData.claim.agreement.carrier,
-                    )}
-                  <Label htmlFor="date">Date of Occurrence</Label>
-                  <Field
-                    component={FormikDateTimePicker}
-                    name="date"
-                    id="date"
-                    placeholder="Date"
-                  />
-                </div>
-                {hasItem(claimTypeType) && (
-                  <div>
-                    <Label htmlFor="item">Item</Label>
-                    <Field
-                      component={TextField}
-                      name="item"
-                      id="item"
-                      placeholder="Item"
-                    />
-                  </div>
-                )}
-                {hasPoliceReport(claimTypeType) && (
-                  <div>
-                    <Label htmlFor="police-report">Police report</Label>
-                    <Field
-                      component={TextField}
-                      name="policeReport"
-                      id="police-report"
-                      placeholder="Police Report"
-                    />
-                  </div>
-                )}
-                {hasReceipt(claimTypeType) && (
-                  <div>
-                    <Label htmlFor="receipt">Receipt</Label>
-                    <Field
-                      component={TextField}
-                      name="receipt"
-                      id="receipt"
-                      placeholder="Receipt"
-                    />
-                  </div>
-                )}
-                {hasTicket(claimTypeType) && (
-                  <div>
-                    <Label htmlFor="ticket">Ticket</Label>
-                    <Field
-                      component={TextField}
-                      name="ticket"
-                      id="ticket"
-                      placeholder="Ticket"
-                    />
-                  </div>
-                )}
-                <div>
-                  <SubmitButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={
-                      !isValid ||
-                      setClaimInformationProps.loading ||
-                      isSetClaimTypeLoading
-                    }
-                  >
-                    Update claim information
-                    {setClaimInformationProps.loading && (
-                      <Spinner push="left" />
-                    )}
-                  </SubmitButton>
-                </div>
-              </ClaimTypeInformationForm>
-            )}
-          </Formik>
-        ) : null}
-      </Loadable>
-    </Paper>
+            })
+        }}
+        noOptionsMessage={() => 'No types found'}
+        options={Object.keys(ClaimTypes).map((claimType) =>
+          createClaimTypeOption(claimType),
+        )}
+      />
+      {type && <ClaimTypeDataForm type={type} claimId={claimId} />}
+    </CardContent>
   )
 }
 

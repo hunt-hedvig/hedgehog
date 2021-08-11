@@ -72,6 +72,10 @@ type MutationType {
 
   createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
+  updateSwitcherEmailInfo(
+    id: ID!
+    request: UpdateSwitcherEmailInfoInput
+  ): SwitchableSwitcherEmail!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
   activatePendingAgreement(
     contractId: ID!
@@ -104,6 +108,7 @@ type MutationType {
     bypassUnderwritingGuidelines: Boolean!
   ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
+  overrideQuotePrice(input: OverrideQuotePriceInput!): Quote!
   upsertItemCompany(request: UpsertItemCompanyInput): ID!
   upsertItemType(request: UpsertItemTypeInput): ID!
   upsertItemBrand(request: UpsertItemBrandInput): ID!
@@ -113,6 +118,7 @@ type MutationType {
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
   insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
   upsertValuationRule(request: UpsertValuationRuleInput): ID!
+  createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
@@ -284,6 +290,11 @@ input UpsertValuationRuleInput {
   depreciation: Float
 }
 
+input OverrideQuotePriceInput {
+  quoteId: ID!
+  price: BigDecimal!
+}
+
 type Contract {
   id: ID!
   holderMemberId: ID!
@@ -302,9 +313,10 @@ type Contract {
   renewal: Renewal
   preferredCurrency: String!
   market: String!
-  signSource: SignSource
+  signSource: String
   contractTypeName: String!
   createdAt: Instant!
+  isLocked: Boolean!
 }
 
 enum ContractStatus {
@@ -335,6 +347,8 @@ type GenericAgreement {
   isSubleted: Boolean
   lineOfBusinessName: String!
   carrier: String!
+  partner: String
+  createdAt: Instant!
 }
 
 enum SwedishApartmentLineOfBusiness {
@@ -370,16 +384,6 @@ type Address {
   city: String
 }
 
-enum SignSource {
-  RAPIO
-  WEBONBOARDING
-  WEB
-  APP
-  IOS
-  ANDROID
-  HOPE
-}
-
 type Renewal {
   renewalDate: LocalDate!
   draftCertificateUrl: String
@@ -394,7 +398,7 @@ input SetContractForClaim {
 
 input TerminateContractInput {
   terminationDate: LocalDate!
-  terminationReason: TerminationReason!
+  terminationReason: String!
   comment: String
 }
 
@@ -405,36 +409,6 @@ input ChangeTerminationDateInput {
 input ActivatePendingAgreementInput {
   pendingAgreementId: ID!
   fromDate: LocalDate!
-}
-
-enum TerminationReason {
-  NO_FEEDBACK
-  DISSATISFIED_WITH_SERVICE
-  DISSATISFIED_WITH_APP
-  DISSATISFIED_WITH_HEDVIG
-  DISSATISFIED_WITH_OTHER
-  ALREADY_HAVE_INSURANCE
-  COVERED_BY_PARTNERS_INSURANCE
-  PARTNER_ALREADY_HAS_HEDVIG_INSURANCE
-  GOT_OFFER_FROM_JOB_OR_UNION_OR_SIMILAR
-  WANT_TO_KEEP_OLD_INSURANCE
-  STUCK_WITH_OLD_INSURANCE
-  DONT_NEED_INSURANCE
-  WANTED_OTHER_TYPE_OF_INSURANCE
-  REGRET_BY_RIGHT_TO_WITHRAW
-  MOVED
-  MOVED_ABROAD
-  MOVED_IN_WITH_PARENTS
-  PRICE
-  MISSED_PAYMENTS
-  MISSED_PAYMENTS_BAD_RISK
-  PAYMENT_ISSUES
-  DISCOUNT_PERIOD_OVER
-  CONFIRMED_FRAUD
-  SUSPECTED_FRAUD
-  SIGNED_BY_MISTAKE
-  OTHER
-  UNKNOWN
 }
 
 input ChangeToDateInput {
@@ -681,9 +655,10 @@ type Member {
   contracts: [Contract!]!
   claims(filterByStates: [ClaimState!]): [Claim!]!
   contractMarketInfo: ContractMarketInfo
-  pickedLocale: String!
+  pickedLocale: String
   referralInformation: ReferralInformation
   identity: Identity
+  trials: [Trial!]!
 }
 
 type Identity {
@@ -758,7 +733,7 @@ type Quote {
   price: Float
   currency: String
   productType: String
-  state: QuoteState
+  state: String
   initiatedFrom: String
   attributedTo: String
   currentInsurer: String
@@ -772,13 +747,6 @@ type Quote {
   signedProductId: ID
   originatingProductId: ID
   isReadyToSign: Boolean
-}
-
-enum QuoteState {
-  INCOMPLETE
-  QUOTED
-  SIGNED
-  EXPIRED
 }
 
 input CampaignFilter {
@@ -858,7 +826,7 @@ type MonthlyEntry {
   id: ID!
   externalId: String
   amount: MonetaryAmountV2!
-  type: AccountEntryType!
+  type: String!
   source: String!
   addedBy: String!
   addedAt: Instant!
@@ -891,14 +859,14 @@ input MemberChargeApproval {
 input MonthlyEntryInput {
   externalId: String
   amount: MonetaryAmount!
-  type: AccountEntryType!
+  type: String!
   source: String!
   title: String!
   comment: String!
 }
 
 input AccountEntryInput {
-  type: AccountEntryType!
+  type: String!
   amount: MonetaryAmount!
   fromDate: LocalDate!
   reference: String!
@@ -909,7 +877,7 @@ input AccountEntryInput {
 
 type AccountEntry {
   id: ID!
-  type: AccountEntryType!
+  type: String!
   amount: MonetaryAmountV2!
   fromDate: LocalDate!
   reference: String!
@@ -918,21 +886,6 @@ type AccountEntry {
   comment: String
   failedAt: Instant
   chargedAt: Instant
-}
-
-enum AccountEntryType {
-  CORRECTION
-  SUBSCRIPTION
-  CAMPAIGN
-  PAYOUT
-  CHARGE
-  REFERRAL_DISCOUNT
-  FREE_MONTH_DISCOUNT
-  PERCENTAGE_MONTH_DISCOUNT
-  BUNDLE_DISCOUNT_COST_DEDUCTION
-  BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION
-  COST_DEDUCTION
-  LOSS
 }
 
 enum ClaimSource {
@@ -1000,6 +953,8 @@ enum ClaimTypes {
   SnowPressureClaim
   StormDamageClaim
   VerminAndPestsClaim
+  DuplicateClaim
+  OtherClaim
   TestClaim
 }
 union ClaimType =
@@ -1024,6 +979,8 @@ union ClaimType =
   | SnowPressureClaim
   | StormDamageClaim
   | VerminAndPestsClaim
+  | OtherClaim
+  | DuplicateClaim
   | TestClaim
 
 type TheftClaim {
@@ -1131,7 +1088,19 @@ type VerminAndPestsClaim {
   date: LocalDate
 }
 
+type OtherClaim {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+}
+
 type NotCoveredClaim {
+  date: LocalDate
+}
+
+type DuplicateClaim {
   date: LocalDate
 }
 
@@ -1194,8 +1163,16 @@ type SwitchableSwitcherEmail {
   member: Member!
   switcherCompany: String!
   queuedAt: Instant!
+  contract: Contract
   sentAt: Instant
   remindedAt: Instant
+  cancellationDate: LocalDate
+  switcherType: String
+  note: String
+}
+
+input UpdateSwitcherEmailInfoInput {
+  note: String
 }
 
 enum ClaimState {
@@ -1285,6 +1262,27 @@ input SendMessageInput {
   forceSendMessage: Boolean!
 }
 
+type Trial {
+  id: ID!
+  fromDate: LocalDate!
+  toDate: LocalDate!
+  displayName: String!
+  partner: String!
+  address: TrialAddress!
+  certificateUrl: String
+  status: String!
+  createdAt: Instant!
+}
+
+type TrialAddress {
+  street: String!
+  city: String!
+  zipCode: String!
+  livingSpace: Int
+  apartmentNo: String
+  floor: Int
+}
+
 type MonetaryAmountV2 {
   amount: String!
   currency: String!
@@ -1308,3 +1306,5 @@ scalar Instant
 scalar URL
 # A Json Object represtation of `JsonNode`
 scalar JSON
+
+scalar BigDecimal

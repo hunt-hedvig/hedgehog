@@ -4,6 +4,7 @@ import { differenceInYears, parse } from 'date-fns'
 import React from 'react'
 import { Market, PickedLocale } from 'types/enums'
 import { getBirthdayInfo, getBirthDayText } from 'utils/date'
+import { getFlagFromMarket } from 'utils/text'
 
 export const getGroupNumberForMember = (
   memberId: string,
@@ -60,7 +61,7 @@ export const getMemberFlag = (
   pickedLocale: string | null = null,
 ): string => {
   if (contractMarketInfo?.market) {
-    return getMemberFlagFromMarket(contractMarketInfo.market as Market)
+    return getFlagFromMarket(contractMarketInfo.market as Market)
   }
 
   if (!pickedLocale) {
@@ -71,7 +72,7 @@ export const getMemberFlag = (
     return '🏳'
   }
 
-  return `${getMemberFlagFromMarket(market)} & 🏳`
+  return `${getFlagFromMarket(market)} & 🏳`
 }
 
 export const getMarketFromPickedLocale = (
@@ -106,19 +107,6 @@ export const getLanguageFlagFromPickedLocale = (
     case PickedLocale.EnSe:
     case PickedLocale.EnDk:
       return '🇬🇧'
-    default:
-      return '🏳'
-  }
-}
-
-const getMemberFlagFromMarket = (market: Market): string => {
-  switch (market) {
-    case Market.Norway:
-      return '🇳🇴'
-    case Market.Sweden:
-      return '🇸🇪'
-    case Market.Denmark:
-      return '🇩🇰'
     default:
       return '🏳'
   }

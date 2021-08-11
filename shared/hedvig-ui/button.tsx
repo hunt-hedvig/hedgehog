@@ -5,17 +5,13 @@ import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { lightTheme } from './themes'
 
-export const ButtonsGroup = styled('div')({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'row',
-  '*:not(:last-child)': {
-    marginRight: '0.5rem',
-  },
-  '*:not(:first-child)': {
-    marginLeft: '0.5rem',
-  },
-})
+export const ButtonsGroup = styled.div`
+  width: 100%;
+  display: flex;
+  * + * {
+    margin-left: 1rem;
+  }
+`
 
 export interface ButtonProps {
   variation?:
@@ -130,7 +126,9 @@ export const ButtonComponent = styled.button<ButtonProps>(
         borderColor: colors.highlighted,
       },
       '&:disabled': {
-        opacity: 0.5,
+        backgroundColor: theme.accentLight,
+        borderColor: theme.accentLight,
+        cursor: 'default',
       },
     }
   },

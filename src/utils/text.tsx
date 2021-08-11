@@ -1,3 +1,5 @@
+import { Market } from 'types/enums'
+
 export const convertEnumToTitle = (enumText: string) => {
   return enumText
     .toLowerCase()
@@ -37,4 +39,17 @@ export const getCarrierText = (carrier: string) => {
       return '🗄 HDI'
   }
   return carrier
+}
+
+export const getFlagFromMarket = (market: Market): string => {
+  switch (market) {
+    case Market.Norway:
+      return '🇳🇴'
+    case Market.Sweden:
+      return '🇸🇪'
+    case Market.Denmark:
+      return '🇩🇰'
+    default:
+      return '🏳'
+  }
 }

@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import Grid from '@material-ui/core/Grid'
 import { ClaimState, useClaimPageQuery } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
+import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useContext, useEffect } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
@@ -19,7 +19,7 @@ import { ClaimTranscriptions } from './components/ClaimTranscriptions'
 import { ClaimTypeForm } from './components/ClaimType'
 import { MemberInformation } from './components/MemberInformation'
 
-const GridWithChatPaneAdjustment = styled(Grid)`
+const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
 `
 
@@ -40,62 +40,74 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
 
   return (
     <>
+      <Prompt
+        when={
+          claimPageData?.claim?.state !== ClaimState.Closed &&
+          (claimPageData?.claim?.reserves === null ||
+            claimPageData?.claim?.reserves === undefined)
+        }
+        message="This claim has no reserves, do you want leave without it?"
+      />
       <ChatPane memberId={memberId} />
       <FadeIn>
-        <GridWithChatPaneAdjustment container spacing={8}>
-          <Prompt
-            when={
-              claimPageData?.claim?.state !== ClaimState.Closed &&
-              (claimPageData?.claim?.reserves === null ||
-                claimPageData?.claim?.reserves === undefined)
-            }
-            message="This claim has no reserves, do you want leave without it?"
-          />
-
-          <Grid item xs={12} sm={12} md={4}>
-            <MemberInformation claimId={claimId} memberId={memberId} />
-          </Grid>
-          <Grid item xs={12} sm={12} md={4}>
-            <ClaimInformation claimId={claimId} memberId={memberId} />
-          </Grid>
-          <Grid item xs={12} sm={12} md={4}>
-            <ClaimTypeForm claimId={claimId} memberId={memberId} />
-          </Grid>
-          <Grid item xs={12}>
+        <ChatPaneAdjustedContainer>
+          <CardsWrapper contentWrap={'noWrap'}>
+            <Card span={3}>
+              <MemberInformation claimId={claimId} memberId={memberId} />
+            </Card>
+            <Card span={3}>
+              <ClaimInformation claimId={claimId} memberId={memberId} />
+            </Card>
+            <Card span={3}>
+              <ClaimTypeForm claimId={claimId} />
+            </Card>
+          </CardsWrapper>
+          <CardsWrapper contentWrap={'noWrap'}>
             <ClaimTranscriptions claimId={claimId} />
-          </Grid>
-          <Grid item xs={12}>
-            <ClaimNotes claimId={claimId} />
-          </Grid>
-          <Grid item xs={12}>
-            <ClaimItems claimId={claimId} memberId={memberId} />
-          </Grid>
+          </CardsWrapper>
+          <CardsWrapper contentWrap={'noWrap'}>
+            <Card>
+              <ClaimNotes claimId={claimId} />
+            </Card>
+          </CardsWrapper>
+          <CardsWrapper contentWrap={'noWrap'}>
+            <Card>
+              <ClaimItems claimId={claimId} memberId={memberId} />
+            </Card>
+          </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier ? (
             <>
               <MainHeadline>
                 {getCarrierText(claimPageData.claim.agreement.carrier)}
               </MainHeadline>
-              <Grid item xs={12}>
-                <ClaimPayments claimId={claimId} />
-              </Grid>
+              <CardsWrapper contentWrap={'noWrap'}>
+                <Card>
+                  <ClaimPayments claimId={claimId} />
+                </Card>
+              </CardsWrapper>
             </>
           ) : (
             <StandaloneMessage opacity={1.0}>
-              ⚠️ Cannot make a payment without a carrier, please select a{' '}
-              <strong>Contract</strong> and <strong>Date of Occurrence</strong>{' '}
-              above. Also, make sure the claim is{' '}
-              <strong>covered on that date</strong> (i.e. an agreement is active
+              ⚠️ Cannot make a payment or set a reserve without carrier, select
+              a <strong>Contract</strong> and{' '}
+              <strong>Date of Occurrence</strong>. Also, make sure the claim is{' '}
+              <strong>covered on the date</strong> (i.e. an agreement is active
               on the date of occurrence)
             </StandaloneMessage>
           )}
 
-          <Grid item xs={12}>
-            <ClaimFileTable claimId={claimId} memberId={memberId} />
-          </Grid>
-          <Grid item xs={12}>
-            <ClaimEvents claimId={claimId} />
-          </Grid>
-        </GridWithChatPaneAdjustment>
+          <CardsWrapper contentWrap={'noWrap'}>
+            <Card>
+              <ClaimFileTable claimId={claimId} memberId={memberId} />
+            </Card>
+          </CardsWrapper>
+
+          <CardsWrapper contentWrap={'noWrap'}>
+            <Card>
+              <ClaimEvents claimId={claimId} />
+            </Card>
+          </CardsWrapper>
+        </ChatPaneAdjustedContainer>
       </FadeIn>
     </>
   )
