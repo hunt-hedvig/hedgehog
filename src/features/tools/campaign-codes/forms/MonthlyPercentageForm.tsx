@@ -166,7 +166,7 @@ export const MonthlyPercentageForm: React.FC = () => {
             )
           }}
         >
-          Create New Campaign
+          Create Campaign
         </Button>
       </div>
     </>

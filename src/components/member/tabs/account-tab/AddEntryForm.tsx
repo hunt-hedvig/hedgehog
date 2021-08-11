@@ -10,8 +10,7 @@ import { Form, FormDropdown, FormInput, SubmitButton } from 'hedvig-ui/form'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
 const entryTypeOptions = [
   {
@@ -89,9 +88,9 @@ const sourceOptions = [
   },
 ]
 
-const AddEntryFormComponent: React.FC<{
+export const AddEntryForm: React.FC<{
   memberId: string
-} & WithShowNotification> = ({ memberId, showNotification }) => {
+}> = ({ memberId }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
   const [addAccountEntry] = useAddAccountEntryToMemberMutation()
   const form = useForm()
@@ -120,29 +119,22 @@ const AddEntryFormComponent: React.FC<{
       },
     }
 
-    addAccountEntry({
-      variables: {
-        memberId,
-        accountEntry: dataCopy as AccountEntryInput,
+    toast.promise(
+      addAccountEntry({
+        variables: {
+          memberId,
+          accountEntry: dataCopy as AccountEntryInput,
+        },
+      }),
+      {
+        loading: 'Adding entry',
+        success: () => {
+          form.reset()
+          return 'Entry added'
+        },
+        error: 'Could not add entry',
       },
-    })
-      .then(() => {
-        showNotification({
-          header: 'Success',
-          message: 'Account entry added.',
-          type: 'olive',
-        })
-        form.reset()
-      })
-      .catch((error) => {
-        showNotification({
-          header: 'Error',
-          message: error.message,
-          type: 'red',
-        })
-
-        throw error
-      })
+    )
   }
 
   return (
@@ -230,5 +222,3 @@ const AddEntryFormComponent: React.FC<{
     </FormProvider>
   )
 }
-
-export const AddEntryForm = withShowNotification(AddEntryFormComponent)

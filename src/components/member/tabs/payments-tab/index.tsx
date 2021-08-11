@@ -19,11 +19,10 @@ import { Button } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { Market } from 'types/enums'
 import { formatMoney } from 'utils/money'
-import { withShowNotification } from 'utils/notifications'
 import { Checkmark, Cross } from '../../../icons'
 import { GenerateSetupDirectDebitLink } from './generate-setup-direct-debit-link'
 
@@ -114,10 +113,10 @@ const MemberTransactionsTable: React.FC<{
   </Table>
 )
 
-const PaymentsTabComponent: React.FC<WithShowNotification & {
+export const PaymentsTab: React.FC<{
   memberId: string
   payoutRequest: (payoutFormData: PayoutFormData, memberId: string) => void
-}> = ({ memberId, payoutRequest, showNotification }) => {
+}> = ({ memberId, payoutRequest }) => {
   const { data, loading, error, refetch } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
@@ -134,28 +133,22 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
     ) {
       return
     }
-    mutation({
-      variables: {
-        id: memberId,
-        amount: account?.currentBalance,
-      },
-    })
-      .then(() => {
-        showNotification({
-          message: 'Member successfully charged',
-          header: 'Success',
-          type: 'olive',
-        })
-      })
-      .catch((e) => {
-        showNotification({
-          message: e.message,
-          header: 'Error',
-          type: 'red',
-        })
-        throw e
-      })
-      .then(refetch)
+
+    toast
+      .promise(
+        mutation({
+          variables: {
+            id: memberId,
+            amount: account?.currentBalance,
+          },
+        }),
+        {
+          loading: 'Charging member',
+          success: 'Member charged',
+          error: 'Could not charge member',
+        },
+      )
+      .then(() => refetch())
   }
 
   if (error) {
@@ -230,5 +223,3 @@ const PaymentsTabComponent: React.FC<WithShowNotification & {
     </div>
   )
 }
-
-export const PaymentsTab = withShowNotification(PaymentsTabComponent)

@@ -10,7 +10,7 @@ import { convertEnumToTitle } from 'utils/text'
 import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
-import QuotePrice from './QuotePrice'
+import { QuotePrice } from './QuotePrice'
 
 const OuterWrapper = styled('div')(({}) => ({
   width: '100%',

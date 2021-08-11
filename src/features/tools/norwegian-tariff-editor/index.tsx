@@ -11,11 +11,7 @@ import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import {
-  Notification,
-  WithShowNotification,
-} from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
 const initialFactorState: NorwegianGripenFactorInput[] = Object.keys(
   NorwegianGripenFactorType,
@@ -26,9 +22,7 @@ const initialFactorState: NorwegianGripenFactorInput[] = Object.keys(
   }
 })
 
-const NorwegianTariffEditorComponent: React.FC<WithShowNotification> = ({
-  showNotification,
-}) => {
+export const NorwegianTariffCreator: React.FC = () => {
   const [baseFactors, setBaseFactors] = React.useState<string>('')
   const [factors, setFactors] = React.useState<NorwegianGripenFactorInput[]>(
     initialFactorState,
@@ -82,36 +76,27 @@ const NorwegianTariffEditorComponent: React.FC<WithShowNotification> = ({
             ) {
               return
             }
-            useCreateNorwegianGripenPriceEngine({
-              variables: {
-                request: {
-                  baseFactorString: baseFactors,
-                  factors,
+
+            toast.promise(
+              useCreateNorwegianGripenPriceEngine({
+                variables: {
+                  request: {
+                    baseFactorString: baseFactors,
+                    factors,
+                  },
                 },
+              }),
+              {
+                loading: 'Creating price engine',
+                success: 'Price engine created',
+                error: 'Could not create price engine',
               },
-            })
-              .then(() => {
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: 'Successfully created price engine',
-                })
-              })
-              .catch((error) => {
-                showNotification({
-                  type: 'red',
-                  header: 'Error',
-                  message: error.message,
-                })
-                throw error
-              })
+            )
           }}
         >
           Create Norwegian Gripen Price Engine
         </Button>
-        <PostalCodesEditor
-          showNotification={(data: Notification) => showNotification(data)}
-        />
+        <PostalCodesEditor />
       </Spacing>
     </>
   )
@@ -137,7 +122,3 @@ const getSetFactorStringFunction = (
     )
   }
 }
-
-export const NorwegianTariffCreator = withShowNotification(
-  NorwegianTariffEditorComponent,
-)

@@ -13,8 +13,8 @@ import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { FraudulentStatusEdit } from 'lib/fraudulentStatus'
 import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 
 const memberFieldFormatters = {
@@ -22,9 +22,9 @@ const memberFieldFormatters = {
   createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
-const DetailsTabComponent: React.FC<WithShowNotification & {
+const DetailsTabComponent: React.FC<{
   member: Member
-}> = ({ member, showNotification }) => {
+}> = ({ member }) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [editMemberInfoRequest, setEditMemberInfoRequest] = useState({
     memberId: member.memberId,
@@ -104,26 +104,19 @@ const DetailsTabComponent: React.FC<WithShowNotification & {
             }}
             getState={() => editingFraud}
             action={(newFraudulentStatus, newFraudulentStatusDescription) => {
-              setFraudulentStatus(
-                getSetFraudulentStatusOptions(memberInfo.memberId, {
-                  fraudulentStatus: newFraudulentStatus,
-                  fraudulentStatusDescription: newFraudulentStatusDescription,
-                }),
+              toast.promise(
+                setFraudulentStatus(
+                  getSetFraudulentStatusOptions(memberInfo.memberId, {
+                    fraudulentStatus: newFraudulentStatus,
+                    fraudulentStatusDescription: newFraudulentStatusDescription,
+                  }),
+                ),
+                {
+                  loading: 'Updating fraudulent status',
+                  success: 'Fraudulent status updated',
+                  error: 'Could not update fraudulent status',
+                },
               )
-                .then(() => {
-                  showNotification({
-                    header: 'Success!',
-                    message: 'Changed the fraudulent status',
-                    type: 'green',
-                  })
-                })
-                .catch((error) => {
-                  showNotification({
-                    header: 'Error',
-                    message: error.message,
-                    type: 'red',
-                  })
-                })
             }}
           />
         </Table.Body>

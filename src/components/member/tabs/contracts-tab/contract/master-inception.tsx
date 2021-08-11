@@ -8,12 +8,11 @@ import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
-const MasterInceptionComponent: React.FC<{
+export const MasterInception: React.FC<{
   contract: Contract
-} & WithShowNotification> = ({ contract, showNotification }) => {
+}> = ({ contract }) => {
   if (!contract.hasPendingAgreement) {
     return <FourthLevelHeadline>{contract.masterInception}</FourthLevelHeadline>
   }
@@ -58,25 +57,19 @@ const MasterInceptionComponent: React.FC<{
                   )}?`,
                 )
                 if (confirmed) {
-                  activateContract(
-                    activateContractOptions(contract, activeFrom),
+                  toast.promise(
+                    activateContract(
+                      activateContractOptions(contract, activeFrom),
+                    ),
+                    {
+                      loading: 'Activating contract',
+                      success: () => {
+                        reset()
+                        return 'Contract activated'
+                      },
+                      error: 'Could not activate contract',
+                    },
                   )
-                    .then(() => {
-                      showNotification({
-                        type: 'olive',
-                        header: 'Contract activated',
-                        message: 'Successfully activated the contract.',
-                      })
-                      reset()
-                    })
-                    .catch((error) => {
-                      showNotification({
-                        type: 'red',
-                        header: 'Unable to activate the contract',
-                        message: error.message,
-                      })
-                      throw error
-                    })
                 }
               }}
               variation={'success'}
@@ -92,5 +85,3 @@ const MasterInceptionComponent: React.FC<{
     </>
   )
 }
-
-export const MasterInception = withShowNotification(MasterInceptionComponent)
