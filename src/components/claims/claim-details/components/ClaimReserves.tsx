@@ -32,16 +32,16 @@ const ReservesText = styled(Paragraph)`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-const ClaimReserves: React.FC<Props> = ({
+export const ClaimReserves: React.FC<Props> = ({
   claimId,
   reserves,
   loading,
-  refetch,
 }) => {
   const reserveAmount = reserves && reserves.amount ? reserves.amount : '0.00'
   const reserveCurrency =
     reserves && reserves.currency ? reserves.currency : 'SEK'
   const reserveAmountInteger = Math.round(Number(reserveAmount))
+
   return (
     <ReservesCard>
       <ThirdLevelHeadline>Reserves</ThirdLevelHeadline>
@@ -52,9 +52,7 @@ const ClaimReserves: React.FC<Props> = ({
         </ReservesTag>{' '}
         <ReservesText>reserved</ReservesText>
       </div>
-      <ClaimReserveForm claimId={claimId} refetch={refetch} />
+      <ClaimReserveForm claimId={claimId} />
     </ReservesCard>
   )
 }
-
-export { ClaimReserves }

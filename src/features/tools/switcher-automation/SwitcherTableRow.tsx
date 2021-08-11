@@ -313,7 +313,7 @@ const SwitcherEmailRowComponent: React.FC<Pick<
                   <EnumDropdown
                     enumToSelectFrom={TerminationReason}
                     placeholder={''}
-                    setValue={setTerminationReason}
+                    onChange={setTerminationReason}
                   />
                 </OverlayItem>
                 <OverlayItem>

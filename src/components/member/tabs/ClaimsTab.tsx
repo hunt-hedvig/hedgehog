@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { ClaimSource, useCreateClaimMutation } from 'api/generated/graphql'
 import { ClaimListHeader } from 'components/claims/claims-list/components/ClaimListHeader'
 import { ClaimListItem } from 'components/claims/claims-list/components/ClaimListItem'
@@ -16,7 +17,6 @@ import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
 import { Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
@@ -64,7 +64,7 @@ const ClaimsTabComponent: React.FC<{
               <EnumDropdown
                 enumToSelectFrom={ClaimSource}
                 placeholder={'Claim Source'}
-                setValue={(source) => setClaimSource(source)}
+                onChange={(source) => setClaimSource(source)}
               />
               <Spacing left={'small'}>
                 <DateTimePicker

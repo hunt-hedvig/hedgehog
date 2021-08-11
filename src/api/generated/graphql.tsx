@@ -1839,6 +1839,8 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
             | 'contractTypeName'
             | 'preferredCurrency'
             | 'typeOfContract'
+            | 'masterInception'
+            | 'terminationDate'
           > & {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
@@ -3452,7 +3454,7 @@ export type SetCoveringEmployeeMutationVariables = Exact<{
 
 export type SetCoveringEmployeeMutation = { __typename?: 'MutationType' } & {
   setCoveringEmployee?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'coveringEmployee'> & {
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'coveringEmployee'> & {
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
         >
@@ -3885,6 +3887,8 @@ export const ClaimPageDocument = gql`
         contractTypeName
         preferredCurrency
         typeOfContract
+        masterInception
+        terminationDate
       }
       agreement {
         id
@@ -8412,6 +8416,7 @@ export type SetContractForClaimMutationOptions = ApolloReactCommon.BaseMutationO
 export const SetCoveringEmployeeDocument = gql`
   mutation SetCoveringEmployee($id: ID!, $coveringEmployee: Boolean!) {
     setCoveringEmployee(id: $id, coveringEmployee: $coveringEmployee) {
+      id
       coveringEmployee
       events {
         text

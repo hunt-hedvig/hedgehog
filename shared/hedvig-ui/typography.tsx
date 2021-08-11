@@ -34,6 +34,12 @@ export const Bold = styled.strong`
   color: inherit !important;
 `
 
+export const Shadowed = styled.span`
+  background-color: ${({ theme }) => theme.backgroundTransparent};
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+`
+
 export const ErrorText = styled.p`
   color: ${({ theme }) => theme.danger};
   font-weight: bold;

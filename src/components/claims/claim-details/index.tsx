@@ -3,7 +3,6 @@ import { ClaimState, useClaimPageQuery } from 'api/generated/graphql'
 import { ClaimItems } from 'components/claims/claim-details/components/claim-items'
 import { ChatPane } from 'components/member/tabs/ChatPane'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useContext, useEffect } from 'react'
@@ -75,26 +74,22 @@ export const ClaimDetails: React.FC<RouteComponentProps<{
               <ClaimItems claimId={claimId} memberId={memberId} />
             </Card>
           </CardsWrapper>
-          {claimPageData?.claim?.agreement?.carrier ? (
+          {claimPageData?.claim?.agreement?.carrier && (
             <>
               <MainHeadline>
                 {getCarrierText(claimPageData.claim.agreement.carrier)}
               </MainHeadline>
-              <CardsWrapper contentWrap={'noWrap'}>
-                <Card>
-                  <ClaimPayments claimId={claimId} />
-                </Card>
-              </CardsWrapper>
             </>
-          ) : (
-            <StandaloneMessage opacity={1.0}>
-              ⚠️ Cannot make a payment or set a reserve without carrier, select
-              a <strong>Contract</strong> and{' '}
-              <strong>Date of Occurrence</strong>. Also, make sure the claim is{' '}
-              <strong>covered on the date</strong> (i.e. an agreement is active
-              on the date of occurrence)
-            </StandaloneMessage>
           )}
+
+          <CardsWrapper contentWrap={'noWrap'}>
+            <Card>
+              <ClaimPayments
+                claimId={claimId}
+                carrier={claimPageData?.claim?.agreement?.carrier}
+              />
+            </Card>
+          </CardsWrapper>
 
           <CardsWrapper contentWrap={'noWrap'}>
             <Card>
