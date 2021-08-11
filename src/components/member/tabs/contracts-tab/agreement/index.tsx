@@ -15,7 +15,6 @@ import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
 
 const Divider = styled.hr`
@@ -27,7 +26,7 @@ const Divider = styled.hr`
   width: 100%;
 `
 
-const AgreementComponent: React.FC<{
+export const Agreement: React.FC<{
   agreement: AgreementType
   contract: Contract
   refetch: () => Promise<void>
@@ -71,11 +70,7 @@ const AgreementComponent: React.FC<{
           </>
         )}
         <Card span={2}>
-          <CreateQuoteFromAgreement
-            agreement={agreement}
-            contract={contract}
-            showNotification={showNotification}
-          />
+          <CreateQuoteFromAgreement agreement={agreement} contract={contract} />
         </Card>
 
         <Card span={2}>
@@ -111,5 +106,3 @@ const AgreementComponent: React.FC<{
     </>
   )
 }
-
-export const Agreement = withShowNotification(AgreementComponent)

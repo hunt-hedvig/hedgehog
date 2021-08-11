@@ -11,8 +11,7 @@ import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
 interface VisibleNoDiscountFormData {
   code: string
@@ -34,9 +33,7 @@ const formIsValid = (formData: VisibleNoDiscountFormData) => {
   return !(!partnerId || !code)
 }
 
-const VisibleNoDiscount: React.FC<WithShowNotification> = ({
-  showNotification,
-}) => {
+export const VisibleNoDiscountForm: React.FC = () => {
   const [formData, setFormData] = React.useState<VisibleNoDiscountFormData>(
     initialFormData,
   )
@@ -104,34 +101,27 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
             ) {
               return
             }
-            setPartnerVisibleNoDiscount(
-              addPartnerVisibleNoDiscountCodeOptions(
-                formData as AssignVoucherVisibleNoDiscount,
+
+            toast.promise(
+              setPartnerVisibleNoDiscount(
+                addPartnerVisibleNoDiscountCodeOptions(
+                  formData as AssignVoucherVisibleNoDiscount,
+                ),
               ),
+              {
+                loading: 'Creating campaign',
+                success: () => {
+                  reset()
+                  return 'Campaign created'
+                },
+                error: 'Could not create campaign',
+              },
             )
-              .then(() => {
-                reset()
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: `Successfully created a new visible no discount campaign for partner ${formData.partnerId}`,
-                })
-              })
-              .catch((error) => {
-                showNotification({
-                  type: 'red',
-                  header: 'Error',
-                  message: error.message,
-                })
-                throw error
-              })
           }}
         >
-          Create New Campaign
+          Create Campaign
         </Button>
       </div>
     </>
   )
 }
-
-export const VisibleNoDiscountForm = withShowNotification(VisibleNoDiscount)

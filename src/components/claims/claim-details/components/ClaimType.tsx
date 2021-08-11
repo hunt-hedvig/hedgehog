@@ -20,8 +20,7 @@ import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, ExclamationCircleFill } from 'react-bootstrap-icons'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 import { convertCamelcaseToTitle } from 'utils/text'
 
 const hasLocation = (typename: ClaimTypes): boolean => {
@@ -200,9 +199,9 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
   )
 }
 
-const ClaimTypeComponent: React.FC<{
+export const ClaimTypeForm: React.FC<{
   claimId: string
-} & WithShowNotification> = ({ claimId, showNotification }) => {
+}> = ({ claimId }) => {
   const {
     data: claimInformationData,
     loading: loadingClaimInformation,
@@ -249,20 +248,12 @@ const ClaimTypeComponent: React.FC<{
         placeholder={'What type of claim is this?'}
         isLoading={setClaimTypeLoading || loadingClaimInformation}
         isClearable={false}
-        onChange={(selection) => {
+        onChange={async (selection) => {
           setClaimType({
             variables: { id: claimId, type: selection?.value ?? null },
-          })
-            .then(async () => {
-              await refetch()
-            })
-            .catch((e) => {
-              showNotification({
-                header: 'Error',
-                type: 'red',
-                message: e.message,
-              })
-            })
+          }).catch(() => toast.error('Could not set type'))
+
+          await refetch()
         }}
         noOptionsMessage={() => 'No types found'}
         options={Object.keys(ClaimTypes).map((claimType) =>
@@ -273,5 +264,3 @@ const ClaimTypeComponent: React.FC<{
     </CardContent>
   )
 }
-
-export const ClaimTypeForm = withShowNotification(ClaimTypeComponent)

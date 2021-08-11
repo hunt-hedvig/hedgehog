@@ -46,6 +46,7 @@
     "react-dropzone": "^10.1.10",
     "react-hook-form": "^6.11.2",
     "react-hot-loader": "^4.3.11",
+    "react-hot-toast": "^2.1.0",
     "react-media": "^1.10.0",
     "react-redux": "^5.0.7",
     "react-router": "^5.2.0",

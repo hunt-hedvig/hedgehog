@@ -7,6 +7,7 @@ import { useContracts } from 'graphql/use-contracts'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { noopFunction } from 'utils'
 import { getContractByAgreementId } from 'utils/contract'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
@@ -26,11 +27,8 @@ export const QuoteActivation: React.FC<{
   onWipChange = noopFunction,
 }) => {
   if (!quote.originatingProductId) {
-    return (
-      <>
-        Cannot active quote without <strong>Originating Product Id</strong>
-      </>
-    )
+    toast.error('Cannot activate quote without Originating Product ID')
+    return null
   }
   const [contracts, { loading }] = useContracts(memberId)
   const [activeFrom, setActiveFrom] = useState<Date | null>(null)
@@ -78,15 +76,23 @@ export const QuoteActivation: React.FC<{
         ) {
           return
         }
-        await addAgreement(
-          addAgreementFromQuoteOptions(
-            contract,
-            activeFrom,
-            null,
-            previousAgreementActiveTo,
-            quote,
+        await toast.promise(
+          addAgreement(
+            addAgreementFromQuoteOptions(
+              contract,
+              activeFrom,
+              null,
+              previousAgreementActiveTo,
+              quote,
+            ),
           ),
+          {
+            loading: 'Activating quote',
+            success: 'Quote activated',
+            error: 'Could not activate quote',
+          },
         )
+
         if (onSubmitted) {
           onSubmitted()
         }

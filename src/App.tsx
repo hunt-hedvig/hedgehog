@@ -17,6 +17,7 @@ import {
 } from 'hedvig-ui/themes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
+import { Toaster } from 'react-hot-toast'
 import { Provider } from 'react-redux'
 import { Redirect, Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
@@ -169,6 +170,14 @@ const App: React.FC = () => {
           </Provider>
         </ThemeProvider>
       </MuiThemeProvider>
+      <Toaster
+        position={'top-center'}
+        toastOptions={{
+          style: {
+            padding: '20px 25px',
+          },
+        }}
+      />
     </DarkmodeContext.Provider>
   )
 }

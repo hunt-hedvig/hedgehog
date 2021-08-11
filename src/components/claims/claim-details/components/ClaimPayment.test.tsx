@@ -10,17 +10,15 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { Market } from 'types/enums'
 import { sleep, tickAsync } from 'utils/sleep'
-import { ClaimPaymentComponent } from './ClaimPayment'
+import { ClaimPayment } from './ClaimPayment'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 it("doesn't submit empty form", async () => {
   const refetchPage = jest.fn(() => Promise.resolve())
-  const showNotification = jest.fn()
   const wrapper = mount(
     <MockedProvider>
-      <ClaimPaymentComponent
+      <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
-        showNotification={showNotification}
         claimId={'abc123'}
         refetch={refetchPage}
         identified={true}
@@ -82,14 +80,13 @@ it('submits valid form with confirmation', async () => {
         },
       ]}
     >
-      <ClaimPaymentComponent
+      <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
         claimId={'abc123'}
         refetch={refetch}
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
-        showNotification={showNotification}
       />
     </MockedProvider>,
   )

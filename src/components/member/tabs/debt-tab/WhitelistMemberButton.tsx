@@ -2,12 +2,12 @@ import { useWhitelistMemberMutation } from 'api/generated/graphql'
 import { useGetMemberName } from 'graphql/use-get-member-name'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 import { withShowNotification } from 'utils/notifications'
 
 const WhitelistMemberButtonComponent: React.FC<{
   memberId: string
-} & WithShowNotification> = ({ memberId, showNotification }) => {
+}> = ({ memberId }) => {
   const [whitelistMember] = useWhitelistMemberMutation()
   const [memberName] = useGetMemberName(memberId)
 
@@ -24,26 +24,19 @@ const WhitelistMemberButtonComponent: React.FC<{
           return
         }
 
-        whitelistMember({
-          variables: {
-            memberId,
+        toast.promise(
+          whitelistMember({
+            variables: {
+              memberId,
+            },
+            refetchQueries: ['GetPerson'],
+          }),
+          {
+            loading: 'Whitelisting member',
+            success: 'Member whitelisted',
+            error: 'Could not whitelist member',
           },
-          refetchQueries: ['GetPerson'],
-        })
-          .then(() =>
-            showNotification({
-              message: 'Member whitelisted.',
-              header: 'Success',
-              type: 'olive',
-            }),
-          )
-          .catch((whitelistError) =>
-            showNotification({
-              message: whitelistError.message,
-              header: 'Error',
-              type: 'red',
-            }),
-          )
+        )
       }}
     >
       Whitelist Member

@@ -7,8 +7,7 @@ import {
 } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { refreshAccessToken } from 'api/index'
-import { Store } from 'redux'
-import { showNotification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 import { forceLogOut } from 'utils/auth'
 
 export const apolloClient = (() => {
@@ -25,25 +24,12 @@ export const apolloClient = (() => {
 
         refreshAccessToken()
           .then(() => {
-            ;((window as any).__store as Store).dispatch(
-              showNotification({
-                header: 'Authentication error',
-                message:
-                  'The request failed because the authentication needed to refresh, please try again',
-                type: 'yellow',
-              }),
-            )
+            toast.loading('Authenticating')
           })
           .catch((e) => {
             console.error('Failed to refresh access token', e)
-            ;((window as any).__store as Store).dispatch(
-              showNotification({
-                header: 'Authentication failed',
-                message:
-                  "The request failed because the authentication needed to refresh, but it failed. You're being logged out",
-                type: 'red',
-              }),
-            )
+            toast.error('Authentication failed')
+            toast.loading('Signing out')
             forceLogOut()
           })
       }),
