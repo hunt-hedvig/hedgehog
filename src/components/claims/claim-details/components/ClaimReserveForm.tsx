@@ -1,4 +1,7 @@
-import { useUpdateReserveMutation } from 'api/generated/graphql'
+import {
+  ClaimPaymentsDocument,
+  useUpdateReserveMutation,
+} from 'api/generated/graphql'
 import React, { useState } from 'react'
 
 import { Button } from 'hedvig-ui/button'
@@ -30,7 +33,11 @@ const ClaimReserveForm: React.FC<{ claimId: string }> = ({ claimId }) => {
                 currency: 'SEK',
               },
             },
+            refetchQueries: [
+              { query: ClaimPaymentsDocument, variables: { claimId } },
+            ],
           })
+          setValue('')
         }}
       >
         Update Reserve
