@@ -17,7 +17,6 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { SwitcherEmailStatus, TerminationReason } from 'types/enums'
 import { Keys } from 'utils/hooks/key-press-hook'
 import { convertEnumToTitle } from 'utils/text'
@@ -87,7 +86,7 @@ export const SwitcherEmailRow: React.FC<Pick<
   ) => void
   onActivate: (contract: Contract, activeFrom: Date) => void
   loading?: boolean
-} & WithShowNotification> = ({
+}> = ({
   id,
   member,
   sentAt,

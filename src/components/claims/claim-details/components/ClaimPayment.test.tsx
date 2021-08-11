@@ -53,7 +53,6 @@ it('submits valid form with confirmation', async () => {
     carrier: 'Hedvig',
     type: ClaimPaymentType.Automatic,
   }
-  const showNotification = jest.fn()
 
   const wrapper = mount(
     <MockedProvider
@@ -142,7 +141,4 @@ it('submits valid form with confirmation', async () => {
   })
 
   expect(refetch).toHaveBeenCalled()
-  expect(showNotification.mock.calls[0][0]).toEqual(
-    expect.objectContaining({ type: 'olive', header: 'Success' }),
-  )
 })
