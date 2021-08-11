@@ -15,14 +15,13 @@ import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
-import { withShowNotification } from 'utils/notifications'
 
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
   createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
-const DetailsTabComponent: React.FC<{
+export const DetailsTab: React.FC<{
   member: Member
 }> = ({ member }) => {
   const [modalOpen, setModalOpen] = useState(false)
@@ -183,5 +182,3 @@ const DetailsTabComponent: React.FC<{
     <Header>No member info</Header>
   )
 }
-
-export const DetailsTab = withShowNotification(DetailsTabComponent)

@@ -16,7 +16,6 @@ const initialState: BackofficeStore = {
     requesting: false,
     requestResult: PayoutRequestResult.READY,
   },
-  notifications: [],
 }
 
 export default initialState

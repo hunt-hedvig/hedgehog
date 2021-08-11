@@ -3,9 +3,8 @@ import { useGetMemberName } from 'graphql/use-get-member-name'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { withShowNotification } from 'utils/notifications'
 
-const WhitelistMemberButtonComponent: React.FC<{
+export const WhitelistMemberButton: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
   const [whitelistMember] = useWhitelistMemberMutation()
@@ -43,7 +42,3 @@ const WhitelistMemberButtonComponent: React.FC<{
     </Button>
   )
 }
-
-export const WhitelistMemberButton = withShowNotification(
-  WhitelistMemberButtonComponent,
-)

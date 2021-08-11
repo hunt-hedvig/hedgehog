@@ -10,7 +10,4 @@ export interface BackofficeStore {
   login: any
   client: any
   payoutDetails: any
-  notifications: any
 }
-
-export type Gender = 'MALE' | 'FEMALE' | 'OTHER'

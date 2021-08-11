@@ -4,9 +4,8 @@ import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owner
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { withShowNotification } from 'utils/notifications'
 
-export const PartnerDropdownComponent: React.FC<{
+export const PartnerDropdown: React.FC<{
   onChange: (data: any) => void
   value: string
   loading?: boolean
@@ -72,5 +71,3 @@ export const PartnerDropdownComponent: React.FC<{
     />
   )
 }
-
-export const PartnerDropdown = withShowNotification(PartnerDropdownComponent)

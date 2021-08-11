@@ -2,9 +2,8 @@ import { useBackfillSubscriptionsMutation } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { withShowNotification } from 'utils/notifications'
 
-const BackfillSubscriptionsButtonComponent: React.FC<{
+export const BackfillSubscriptionsButton: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
   const [
@@ -37,7 +36,3 @@ const BackfillSubscriptionsButtonComponent: React.FC<{
     </Button>
   )
 }
-
-export const BackfillSubscriptionsButton = withShowNotification(
-  BackfillSubscriptionsButtonComponent,
-)

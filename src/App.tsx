@@ -7,7 +7,6 @@ import { DashboardPage } from 'components/dashboard'
 import { QuestionsPage } from 'components/questions'
 import { Navigation } from 'components/shared/navigation'
 import Breadcrumbs from 'components/shared/navigation/breadcrumbs/Breadcrumbs'
-import Notifications from 'containers/NotificationService'
 import {
   darkTheme,
   darkUiTheme,
@@ -160,7 +159,14 @@ const App: React.FC = () => {
                           />
                           <Redirect from="*" to="/dashborad" />
                         </Switch>
-                        <Notifications />
+                        <Toaster
+                          position={'top-center'}
+                          toastOptions={{
+                            style: {
+                              padding: '20px 25px',
+                            },
+                          }}
+                        />
                       </Main>
                     </Layout>
                   </CommandLineProvider>
@@ -170,14 +176,6 @@ const App: React.FC = () => {
           </Provider>
         </ThemeProvider>
       </MuiThemeProvider>
-      <Toaster
-        position={'top-center'}
-        toastOptions={{
-          style: {
-            padding: '20px 25px',
-          },
-        }}
-      />
     </DarkmodeContext.Provider>
   )
 }
