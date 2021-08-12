@@ -59,8 +59,8 @@ export const QuotePrice = ({ quote }: Props) => {
       })
     : '-'
 
-  const updateQuotePrice = async () => {
-    await toast.promise(
+  const updateQuotePrice = () => {
+    toast.promise(
       overrideQuotePrice({
         variables: {
           input: {

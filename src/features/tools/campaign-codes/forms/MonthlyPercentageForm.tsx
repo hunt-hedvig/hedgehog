@@ -145,14 +145,13 @@ export const MonthlyPercentageForm: React.FC = () => {
           variation="primary"
           loading={loading}
           disabled={loading || !formLooksGood(formData)}
-          onClick={async () => {
-            console.log(formData)
+          onClick={() => {
             if (
               !window.confirm(`Create new campaign code "${formData.code}"?`)
             ) {
               return
             }
-            await toast.promise(
+            toast.promise(
               setPartnerPercentageDiscount(
                 addPartnerPercentageDiscountCodeOptions(
                   formData as AssignVoucherPercentageDiscount,

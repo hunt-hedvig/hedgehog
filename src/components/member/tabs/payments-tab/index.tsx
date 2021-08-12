@@ -204,7 +204,7 @@ export const PaymentsTab: React.FC<{
         </>
       )}
       <br />
-      {!data.member.payoutMethodStatus?.activated &&
+      {data.member.payoutMethodStatus?.activated &&
         data.member.contractMarketInfo?.market === Market.Sweden && (
           <>
             <h3>Payout:</h3>

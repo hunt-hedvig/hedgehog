@@ -24,7 +24,7 @@ export const apolloClient = (() => {
 
         refreshAccessToken()
           .then(() => {
-            toast.loading('Authenticating')
+            toast.error('Authentication error')
           })
           .catch((e) => {
             console.error('Failed to refresh access token', e)
