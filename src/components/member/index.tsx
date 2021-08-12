@@ -6,6 +6,7 @@ import copy from 'copy-to-clipboard'
 import { Popover } from 'hedvig-ui/popover'
 import { FraudulentStatus } from 'lib/fraudulentStatus'
 import React, { useContext, useEffect, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
@@ -110,6 +111,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
             format: 'text/plain',
           },
         )
+        toast.success('Member link copied')
       },
     },
     {
@@ -186,6 +188,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
           copy(member.email!, {
             format: 'text/plain',
           })
+          toast.success('Email copied')
         },
       },
     ])

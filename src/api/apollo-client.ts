@@ -22,16 +22,12 @@ export const apolloClient = (() => {
           return
         }
 
-        refreshAccessToken()
-          .then(() => {
-            toast.error('Authentication error')
-          })
-          .catch((e) => {
-            console.error('Failed to refresh access token', e)
-            toast.error('Authentication failed')
-            toast.loading('Signing out')
-            forceLogOut()
-          })
+        refreshAccessToken().catch((e) => {
+          console.error('Failed to refresh access token', e)
+          toast.error('Authentication failed')
+          toast.loading('Signing out')
+          forceLogOut()
+        })
       }),
       new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
     ]),
