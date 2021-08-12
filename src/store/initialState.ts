@@ -7,9 +7,6 @@ const initialState: BackofficeStore = {
     state: AuthState.UNKNOWN,
     scopes: [],
   },
-  login: {
-    requesting: false,
-  },
   payoutDetails: {
     data: null,
     requesting: false,
