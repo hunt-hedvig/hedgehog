@@ -1,16 +1,16 @@
 import styled from '@emotion/styled'
 import {
   ListEmployeesDocument,
-  Role,
   useListEmployeesQuery,
   useRemoveEmployeeMutation,
   useUpdateEmployeeRoleMutation,
 } from 'api/generated/graphql'
+import { dropdownOptions } from 'features/tools/employees/utils'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Card } from 'hedvig-ui/card'
 import { dateTimeFormatter } from 'lib/helpers'
 import React, { useState } from 'react'
-import { Dropdown, DropdownItemProps, Table } from 'semantic-ui-react'
+import { Dropdown, Table } from 'semantic-ui-react'
 import { WithShowNotification } from 'store/actions/notificationsActions'
 import { withShowNotification } from 'utils/notifications'
 
@@ -18,9 +18,9 @@ const StyledDropdown = styled(Dropdown)({
   width: '100%',
 })
 
-const EmployeeTable: React.FC<WithShowNotification> = ({
-  showNotification,
-}) => {
+const Employee: React.FC<{
+  filter: { email; role }
+} & WithShowNotification> = ({ filter, showNotification }) => {
   const employees = useListEmployeesQuery()
 
   const [
@@ -37,23 +37,13 @@ const EmployeeTable: React.FC<WithShowNotification> = ({
     refetchQueries: () => [{ query: ListEmployeesDocument }],
   })
 
-  const dropdownOptions: DropdownItemProps[] = Object.values(Role).map(
-    (value, index) => {
-      return {
-        key: index + 1,
-        value: value as string,
-        text: (value as string).replace('_', ' '),
-      }
-    },
-  )
-
   const currentRoles =
     employees.data?.listEmployees.reduce((acc, curr) => {
       acc[curr.id] = curr.role
       return acc
     }, {}) ?? {}
 
-  const [selectedRoles, setSelectedRoles] = useState(currentRoles)
+  const [selectedRoles, setSelectedRoles] = useState({})
 
   return (
     <>
@@ -83,6 +73,13 @@ const EmployeeTable: React.FC<WithShowNotification> = ({
                       firstGrantedAt,
                       deletedAt,
                     } = employee
+
+                    if (
+                      (filter.role && role !== filter.role) ||
+                      !email.includes(filter.email)
+                    ) {
+                      return
+                    }
 
                     return (
                       <Table.Row key={id}>
@@ -115,13 +112,15 @@ const EmployeeTable: React.FC<WithShowNotification> = ({
                             <Button
                               variation={'primary'}
                               disabled={
-                                !selectedRoles?.[id] || updateRoleLoading
+                                !selectedRoles[id] ||
+                                selectedRoles[id] === currentRoles[id] ||
+                                updateRoleLoading
                               }
                               onClick={() =>
                                 updateRole({
                                   variables: {
-                                    employeeEmail: email,
-                                    role: selectedRoles?.[id],
+                                    email,
+                                    role: selectedRoles[id],
                                   },
                                 })
                                   .then(() => {
@@ -152,7 +151,7 @@ const EmployeeTable: React.FC<WithShowNotification> = ({
                                 )
                                 if (confirmed) {
                                   removeEmployee({
-                                    variables: { employeeEmail: email },
+                                    variables: { email },
                                   })
                                     .then(() => {
                                       showNotification({
@@ -189,4 +188,4 @@ const EmployeeTable: React.FC<WithShowNotification> = ({
   )
 }
 
-export const Employee = withShowNotification(EmployeeTable)
+export const EmployeeTable = withShowNotification(Employee)

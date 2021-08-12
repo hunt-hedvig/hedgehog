@@ -1,5 +1,5 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 import { Dropdown, DropdownProps, Icon } from 'semantic-ui-react'
 
 const Container = styled.div`
@@ -40,7 +40,7 @@ export const ClearableDropdown: React.FC<{
         options={options}
         onChange={onChange}
       />
-      {!disabled && value !== '' && onClear !== undefined && (
+      {!disabled && value !== '' && onClear !== undefined && value !== null && (
         <Icon
           name="x"
           link

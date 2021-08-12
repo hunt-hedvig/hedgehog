@@ -1,14 +1,28 @@
-import { Employee } from 'features/tools/employees/EmployeeTable'
-import { CardsWrapper } from 'hedvig-ui/card'
+import { CreateEmployee } from 'features/tools/employees/components/CreateEmployee'
+import { EmployeeFilter } from 'features/tools/employees/components/EmployeeFilter'
+import { EmployeeTable } from 'features/tools/employees/components/EmployeeTable'
+import { Row } from 'features/tools/employees/utils'
+import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
-import React from 'react'
+import React, { useState } from 'react'
 
 export const EmployeesComponent: React.FC = () => {
+  const [filter, setFilter] = useState({
+    email: '',
+    role: null,
+  })
+
   return (
     <>
-      <MainHeadline>Employees</MainHeadline>
+      <Row>
+        <MainHeadline>Employees</MainHeadline>
+        <CreateEmployee />
+      </Row>
       <CardsWrapper>
-        <Employee />
+        <Card>
+          <EmployeeFilter filter={filter} setFilter={setFilter} />
+        </Card>
+        <EmployeeTable filter={filter} />
       </CardsWrapper>
     </>
   )
