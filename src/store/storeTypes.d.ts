@@ -8,6 +8,5 @@ export interface BackofficeStore {
     email?: string
   }
   login: any
-  client: any
   payoutDetails: any
 }

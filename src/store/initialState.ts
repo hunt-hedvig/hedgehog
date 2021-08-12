@@ -10,7 +10,6 @@ const initialState: BackofficeStore = {
   login: {
     requesting: false,
   },
-  client: {},
   payoutDetails: {
     data: null,
     requesting: false,
