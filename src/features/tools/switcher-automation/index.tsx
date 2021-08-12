@@ -9,18 +9,15 @@ import { format } from 'date-fns'
 import { Checkbox } from 'hedvig-ui/checkbox'
 import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { Market, SwitcherEmailStatus, SwitcherTypeMarket } from 'types/enums'
-import { withShowNotification } from 'utils/notifications'
 import { sleep } from 'utils/sleep'
 import { getSwitcherEmailStatus } from 'utils/switcher-emails'
 import { convertEnumToTitle, getFlagFromMarket } from 'utils/text'
 import { StatusTableRow, SwitcherEmailRow } from './SwitcherTableRow'
 
-export const SwitcherAutomationComponent: React.FC<{} & WithShowNotification> = ({
-  showNotification,
-}) => {
+export const SwitcherAutomation: React.FC = () => {
   const switchers = useGetSwitcherEmailsQuery()
 
   const [selectedMarket, setSelectedMarket] = useState<Market | null>(null)
@@ -118,72 +115,56 @@ export const SwitcherAutomationComponent: React.FC<{} & WithShowNotification> = 
                     loading={
                       activateContractLoading || terminateContractLoading
                     }
-                    onActivate={(contract, activeFrom) => {
-                      activateContract({
-                        variables: {
-                          contractId: contract.id,
-                          request: {
-                            pendingAgreementId: contract.currentAgreementId,
-                            fromDate: format(activeFrom, 'yyyy-MM-dd'),
+                    onActivate={async (contract, activeFrom) => {
+                      await toast.promise(
+                        activateContract({
+                          variables: {
+                            contractId: contract.id,
+                            request: {
+                              pendingAgreementId: contract.currentAgreementId,
+                              fromDate: format(activeFrom, 'yyyy-MM-dd'),
+                            },
                           },
+                        }),
+                        {
+                          loading: 'Activating contract',
+                          success: 'Contract activated',
+                          error: 'Could not activate contract',
                         },
-                      })
-                        .then(async () => {
-                          await sleep(1000)
-                          switchers.refetch().then(() => {
-                            showNotification({
-                              type: 'olive',
-                              header: 'Contract activated',
-                              message: 'Successfully activated the contract.',
-                            })
-                          })
-                        })
-                        .catch((error) => {
-                          showNotification({
-                            type: 'red',
-                            header: 'Unable to activate the contract',
-                            message: error.message,
-                          })
-                          throw error
-                        })
+                      )
+
+                      await sleep(1000)
+                      await switchers.refetch()
                     }}
-                    onTerminate={(
+                    onTerminate={async (
                       contract,
                       terminationDate,
                       terminationReason,
                       comment,
                     ) => {
-                      terminateContract({
-                        variables: {
-                          contractId: contract.id,
-                          request: {
-                            terminationDate: format(
-                              terminationDate,
-                              'yyyy-MM-dd',
-                            ),
-                            terminationReason: terminationReason!,
-                            comment,
+                      await toast.promise(
+                        terminateContract({
+                          variables: {
+                            contractId: contract.id,
+                            request: {
+                              terminationDate: format(
+                                terminationDate,
+                                'yyyy-MM-dd',
+                              ),
+                              terminationReason: terminationReason!,
+                              comment,
+                            },
                           },
+                        }),
+                        {
+                          loading: 'Terminating contract',
+                          success: 'Contract terminated',
+                          error: 'Could not terminate contract',
                         },
-                      })
-                        .then(async () => {
-                          await sleep(1000)
-                          switchers.refetch().then(() => {
-                            showNotification({
-                              type: 'olive',
-                              header: 'Contract terminated',
-                              message: 'Successfully terminated the contract.',
-                            })
-                          })
-                        })
-                        .catch((error) => {
-                          showNotification({
-                            type: 'red',
-                            header: 'Unable to terminate',
-                            message: error.message,
-                          })
-                          throw error
-                        })
+                      )
+
+                      await sleep(1000)
+                      await switchers.refetch()
                     }}
                   />
                 )) ?? null}
@@ -194,7 +175,3 @@ export const SwitcherAutomationComponent: React.FC<{} & WithShowNotification> = 
     </>
   )
 }
-
-export const SwitcherAutomation = withShowNotification(
-  SwitcherAutomationComponent,
-)

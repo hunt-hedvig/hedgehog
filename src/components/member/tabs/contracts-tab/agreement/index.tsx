@@ -14,8 +14,6 @@ import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
 
 const Divider = styled.hr`
@@ -27,16 +25,11 @@ const Divider = styled.hr`
   width: 100%;
 `
 
-const AgreementComponent: React.FC<{
+export const Agreement: React.FC<{
   agreement: AgreementType
   contract: Contract
   refetch: () => Promise<void>
-} & WithShowNotification> = ({
-  agreement,
-  contract,
-  showNotification,
-  refetch,
-}) => {
+}> = ({ agreement, contract, refetch }) => {
   return (
     <>
       <CardsWrapper>
@@ -46,36 +39,23 @@ const AgreementComponent: React.FC<{
         {agreement.status !== AgreementStatus.Pending && (
           <>
             <Card span={2}>
-              <FromDate
-                agreement={agreement}
-                contract={contract}
-                showNotification={showNotification}
-              />
+              <FromDate agreement={agreement} contract={contract} />
               <Divider />
               <div>
-                <ToDate
-                  agreement={agreement}
-                  contract={contract}
-                  showNotification={showNotification}
-                />
+                <ToDate agreement={agreement} contract={contract} />
               </div>
             </Card>
             <Card span={2}>
               <InsuranceCertificate
                 contract={contract}
                 agreement={agreement}
-                showNotification={showNotification}
                 refetch={refetch}
               />
             </Card>
           </>
         )}
         <Card span={2}>
-          <CreateQuoteFromAgreement
-            agreement={agreement}
-            contract={contract}
-            showNotification={showNotification}
-          />
+          <CreateQuoteFromAgreement agreement={agreement} contract={contract} />
         </Card>
 
         <Card span={2}>
@@ -111,5 +91,3 @@ const AgreementComponent: React.FC<{
     </>
   )
 }
-
-export const Agreement = withShowNotification(AgreementComponent)

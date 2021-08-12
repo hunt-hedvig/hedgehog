@@ -9,12 +9,11 @@ import { Form, FormDropdown, FormInput, SubmitButton } from 'hedvig-ui/form'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
-const AddMonthlyEntryFormComponent: React.FC<WithShowNotification & {
+export const AddMonthlyEntryForm: React.FC<{
   memberId: string
-}> = ({ memberId, showNotification }) => {
+}> = ({ memberId }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
   const [addMonthlyEntry] = useAddMonthlyEntry()
   const form = useForm()
@@ -37,24 +36,17 @@ const AddMonthlyEntryFormComponent: React.FC<WithShowNotification & {
       },
       externalId: data.externalId.trim() === '' ? undefined : data.externalId,
     }
-    addMonthlyEntry(
-      getAddMonthlyEntryOptions(memberId, dataCopy as MonthlyEntryInput),
+
+    toast.promise(
+      addMonthlyEntry(
+        getAddMonthlyEntryOptions(memberId, dataCopy as MonthlyEntryInput),
+      ),
+      {
+        loading: 'Adding monthly entry',
+        success: 'Monthly entry added',
+        error: 'Could not add monthly entry',
+      },
     )
-      .then(() => {
-        showNotification({
-          message: 'Monthly entry added',
-          header: 'Success',
-          type: 'olive',
-        })
-        form.reset()
-      })
-      .catch((e) => {
-        showNotification({
-          message: e.message,
-          header: 'Error',
-          type: 'red',
-        })
-      })
   }
 
   return (
@@ -148,7 +140,3 @@ const AddMonthlyEntryFormComponent: React.FC<WithShowNotification & {
     </FormProvider>
   )
 }
-
-export const AddMonthlyEntryForm = withShowNotification(
-  AddMonthlyEntryFormComponent,
-)

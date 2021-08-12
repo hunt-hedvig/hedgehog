@@ -39,7 +39,7 @@ export const CreateCampaignCode: React.FC = () => {
 
   return (
     <InfoContainer>
-      <ThirdLevelHeadline>Create New Code</ThirdLevelHeadline>
+      <ThirdLevelHeadline>Create Campaign</ThirdLevelHeadline>
       <SearchableDropdown
         value={
           incentiveType ? { label: incentiveType, value: incentiveType } : null

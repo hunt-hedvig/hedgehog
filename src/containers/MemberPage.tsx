@@ -24,8 +24,6 @@ const mapStateToProps = ({ auth, payoutDetails }) => ({
 export default connect(
   mapStateToProps,
   {
-    ...actions.clientActions,
-    ...actions.notificationsActions,
     ...actions.payoutDetailsActions,
   },
   null,

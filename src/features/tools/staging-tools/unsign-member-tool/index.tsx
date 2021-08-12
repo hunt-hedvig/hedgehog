@@ -4,12 +4,9 @@ import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
-const UnsignMemberToolComponent: React.FC<{} & WithShowNotification> = ({
-  showNotification,
-}) => {
+export const UnsignMemberTool: React.FC = () => {
   const [ssn, setSsn] = React.useState('')
   const [useUnsignMember, { loading }] = useUnsignMemberMutation()
 
@@ -35,34 +32,19 @@ const UnsignMemberToolComponent: React.FC<{} & WithShowNotification> = ({
           ) {
             return
           }
-          useUnsignMember({
-            variables: {
-              ssn,
+
+          toast.promise(
+            useUnsignMember({
+              variables: {
+                ssn,
+              },
+            }),
+            {
+              loading: 'Unsigning member',
+              success: 'Member unsigned',
+              error: 'Could not unsign member',
             },
-          })
-            .then((result) => {
-              if (result) {
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: `Successfully unsigned member`,
-                })
-              } else {
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: `Member was not signed!`,
-                })
-              }
-            })
-            .catch((error) => {
-              showNotification({
-                type: 'red',
-                header: 'Error',
-                message: error.message,
-              })
-              throw error
-            })
+          )
         }}
       >
         Unsign
@@ -70,5 +52,3 @@ const UnsignMemberToolComponent: React.FC<{} & WithShowNotification> = ({
     </>
   )
 }
-
-export const UnsignMemberTool = withShowNotification(UnsignMemberToolComponent)

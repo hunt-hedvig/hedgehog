@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import { ClaimSource, useCreateClaimMutation } from 'api/generated/graphql'
 import { ClaimListHeader } from 'components/claims/claims-list/components/ClaimListHeader'
 import { ClaimListItem } from 'components/claims/claims-list/components/ClaimListItem'
-import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { format } from 'date-fns'
 import { useGetMemberClaims } from 'graphql/use-get-member-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
@@ -16,10 +15,8 @@ import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { ArrowRepeat } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
 
 const HeaderWrapper = styled.div`
   display: flex;
@@ -32,9 +29,9 @@ const FormWrapper = styled.div`
   height: 100%;
 `
 
-const ClaimsTabComponent: React.FC<{
+export const ClaimsTab: React.FC<{
   memberId: string
-} & WithShowNotification> = ({ memberId, showNotification }) => {
+}> = ({ memberId }) => {
   const [claims, { loading, refetch }] = useGetMemberClaims(memberId)
   const [
     createClaim,
@@ -51,12 +48,7 @@ const ClaimsTabComponent: React.FC<{
   return (
     <FadeIn>
       <HeaderWrapper>
-        <MainHeadline>
-          Claims
-          <RefreshButton onClick={() => refetch()} loading={loading}>
-            <ArrowRepeat />
-          </RefreshButton>
-        </MainHeadline>
+        <MainHeadline>Claims</MainHeadline>
 
         <FormWrapper>
           {showForm ? (
@@ -100,38 +92,32 @@ const ClaimsTabComponent: React.FC<{
                   }
                   variation="success"
                   color="success"
-                  onClick={() => {
+                  onClick={async () => {
                     if (claimSource === null || claimDate === null) {
                       return
                     }
 
-                    createClaim({
-                      variables: {
-                        memberId,
-                        date: format(claimDate, "yyyy-MM-dd'T'HH:mm:ss"),
-                        source: claimSource,
+                    await toast.promise(
+                      createClaim({
+                        variables: {
+                          memberId,
+                          date: format(claimDate, "yyyy-MM-dd'T'HH:mm:ss"),
+                          source: claimSource,
+                        },
+                      }),
+                      {
+                        loading: 'Creating claim',
+                        success: () => {
+                          setShowForm(false)
+                          setClaimDate(new Date())
+                          setClaimSource(null)
+                          return 'Claim created'
+                        },
+                        error: 'Could not create claim',
                       },
-                    })
-                      .then(() => {
-                        setShowForm(false)
-                        setClaimDate(new Date())
-                        setClaimSource(null)
-                        refetch().then(() => {
-                          showNotification({
-                            header: 'Success!',
-                            message: 'Claim created',
-                            type: 'green',
-                          })
-                        })
-                      })
-                      .catch((error) => {
-                        showNotification({
-                          type: 'red',
-                          header: 'Error',
-                          message: error.message,
-                        })
-                        throw error
-                      })
+                    )
+
+                    await refetch()
                   }}
                 >
                   Add
@@ -166,5 +152,3 @@ const ClaimsTabComponent: React.FC<{
     </FadeIn>
   )
 }
-
-export const ClaimsTab = withShowNotification(ClaimsTabComponent)

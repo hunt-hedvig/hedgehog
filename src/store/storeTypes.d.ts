@@ -7,10 +7,5 @@ export interface BackofficeStore {
     id?: string
     email?: string
   }
-  login: any
-  client: any
   payoutDetails: any
-  notifications: any
 }
-
-export type Gender = 'MALE' | 'FEMALE' | 'OTHER'

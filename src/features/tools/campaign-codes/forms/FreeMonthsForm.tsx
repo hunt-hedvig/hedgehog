@@ -12,9 +12,8 @@ import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 import { numberOfMonthsOptions } from 'utils/campaignCodes'
-import { withShowNotification } from 'utils/notifications'
 
 interface FreeMonthsFormData {
   partnerId: string | null
@@ -43,9 +42,7 @@ const formLooksGood = (formData: FreeMonthsFormData) => {
   return !(!partnerId || !code || !numberOfFreeMonths)
 }
 
-const FreeMonths: React.FC<{} & WithShowNotification> = ({
-  showNotification,
-}) => {
+export const FreeMonthsForm: React.FC = () => {
   const [formData, setFormData] = React.useState<FreeMonthsFormData>(
     initialFormData,
   )
@@ -133,34 +130,26 @@ const FreeMonths: React.FC<{} & WithShowNotification> = ({
             ) {
               return
             }
-            setPartnerFreeMonths(
-              addPartnerFreeMonthsCodeOptions(
-                formData as AssignVoucherFreeMonths,
+            toast.promise(
+              setPartnerFreeMonths(
+                addPartnerFreeMonthsCodeOptions(
+                  formData as AssignVoucherFreeMonths,
+                ),
               ),
+              {
+                loading: 'Creating campaign',
+                success: () => {
+                  reset()
+                  return 'Campaign created'
+                },
+                error: 'Could not create campaign',
+              },
             )
-              .then(() => {
-                reset()
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: `Successfully created a new free month campaign for partner ${formData.partnerId}`,
-                })
-              })
-              .catch((error) => {
-                showNotification({
-                  type: 'red',
-                  header: 'Error',
-                  message: error.message,
-                })
-                throw error
-              })
           }}
         >
-          Create New Campaign
+          Create Campaign
         </Button>
       </div>
     </>
   )
 }
-
-export const FreeMonthsForm = withShowNotification(FreeMonths)

@@ -17,9 +17,8 @@ import styled from '@emotion/styled'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import { Spinner } from 'hedvig-ui/sipnner'
 import React, { useEffect, useState } from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 import { Market } from 'types/enums'
-import { withShowNotification } from 'utils/notifications'
 import { sleep } from 'utils/sleep'
 import * as yup from 'yup'
 import { FieldSelect } from '../../../shared/inputs/FieldSelect'
@@ -99,22 +98,14 @@ const getPaymentValidationSchema = (isPotentiallySanctioned: boolean) =>
     }),
   })
 
-export const ClaimPaymentComponent: React.FC<WithShowNotification & {
+export const ClaimPayment: React.FC<{
   sanctionStatus?: SanctionStatus | null
   claimId: string
   refetch: () => Promise<any>
   identified: boolean
   market: string
   carrier: string
-}> = ({
-  sanctionStatus,
-  claimId,
-  refetch,
-  identified,
-  market,
-  carrier,
-  showNotification,
-}) => {
+}> = ({ sanctionStatus, claimId, refetch, identified, market, carrier }) => {
   const [createPayment, createPaymentProps] = useCreateClaimPaymentMutation()
   const [
     createSwishPayment,
@@ -266,9 +257,9 @@ export const ClaimPaymentComponent: React.FC<WithShowNotification & {
                   carrier,
                 }
 
-                try {
-                  if (values.type === 'AutomaticSwish') {
-                    await createSwishPayment({
+                if (values.type === 'AutomaticSwish') {
+                  await toast.promise(
+                    createSwishPayment({
                       variables: {
                         id: claimId,
                         payment: {
@@ -277,9 +268,16 @@ export const ClaimPaymentComponent: React.FC<WithShowNotification & {
                           message: values.message!,
                         },
                       },
-                    })
-                  } else {
-                    await createPayment({
+                    }),
+                    {
+                      loading: 'Creating Swish payment',
+                      success: 'Claim Swish payment done',
+                      error: 'Could not make Swish payment',
+                    },
+                  )
+                } else {
+                  await toast.promise(
+                    createPayment({
                       variables: {
                         id: claimId,
                         payment: {
@@ -287,20 +285,13 @@ export const ClaimPaymentComponent: React.FC<WithShowNotification & {
                           type: values.type,
                         },
                       },
-                    })
-                  }
-                  showNotification({
-                    type: 'olive',
-                    message: 'Claim payment was made successfully',
-                    header: 'Success',
-                  })
-                } catch (e) {
-                  showNotification({
-                    type: 'red',
-                    message: 'Error while making claim payment: ' + e.message,
-                    header: 'Error',
-                  })
-                  throw e
+                    }),
+                    {
+                      loading: 'Creating payment',
+                      success: 'Claim payment done',
+                      error: 'Could not make payment',
+                    },
+                  )
                 }
                 await sleep(1000)
                 await refetch()
@@ -327,5 +318,3 @@ export const ClaimPaymentComponent: React.FC<WithShowNotification & {
     </Formik>
   )
 }
-
-export const ClaimPayment = withShowNotification(ClaimPaymentComponent)

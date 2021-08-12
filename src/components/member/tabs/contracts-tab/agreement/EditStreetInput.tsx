@@ -5,27 +5,23 @@ import {
 } from 'graphql/use-safely-edit-agreement'
 import { Input } from 'hedvig-ui/input'
 import React, { useEffect, useState } from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 import { Keys } from 'utils/hooks/key-press-hook'
-import { withShowNotification } from 'utils/notifications'
 
-const EditStreetInputComponent: React.FC<{
+export const EditStreetInput: React.FC<{
   agreementId: string
   contract: Contract
   street: string
   closeEdit: () => void
-} & WithShowNotification> = ({
-  agreementId,
-  contract,
-  street,
-  closeEdit,
-  showNotification,
-}) => {
+}> = ({ agreementId, contract, street, closeEdit }) => {
   const [newStreet, setNewStreet] = useState(street)
+
   useEffect(() => {
     setNewStreet(street)
   }, [agreementId])
+
   const [safelyEditAgreement] = useSafelyEditAgreement(contract)
+
   return (
     <Input
       value={newStreet}
@@ -48,26 +44,21 @@ const EditStreetInputComponent: React.FC<{
         ) {
           return
         }
-        safelyEditAgreement(safelyEditAgreementOptions(agreementId, newStreet))
-          .then(() => {
-            showNotification({
-              message: `Street changed to "${newStreet}"`,
-              header: 'Success!',
-              type: 'olive',
-            })
-            closeEdit()
-          })
-          .catch((error) => {
-            showNotification({
-              message: error.message,
-              header: 'Error',
-              type: 'red',
-            })
-            throw error
-          })
+
+        toast.promise(
+          safelyEditAgreement(
+            safelyEditAgreementOptions(agreementId, newStreet),
+          ),
+          {
+            loading: 'Changing street',
+            success: () => {
+              closeEdit()
+              return 'Street changed'
+            },
+            error: 'Could not change street',
+          },
+        )
       }}
     />
   )
 }
-
-export const EditStreetInput = withShowNotification(EditStreetInputComponent)

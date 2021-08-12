@@ -5,14 +5,12 @@ import { format, parseISO } from 'date-fns'
 import { Button } from 'hedvig-ui/button'
 import { ErrorText, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
 import { getSchemaDataInfo } from 'utils/quote'
 import { convertEnumToTitle } from 'utils/text'
 import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
-import QuotePrice from './QuotePrice'
+import { QuotePrice } from './QuotePrice'
 
 const OuterWrapper = styled('div')(({}) => ({
   width: '100%',
@@ -83,18 +81,12 @@ const QuoteDetails: React.FC<{
   </DetailsWrapper>
 )
 
-const QuoteListItemComponent: React.FC<{
+export const QuoteListItem: React.FC<{
   contracts: ReadonlyArray<Contract>
   quote: Quote
   inactionable?: boolean
   memberId: string
-} & WithShowNotification> = ({
-  contracts,
-  quote,
-  inactionable,
-  memberId,
-  showNotification,
-}) => {
+}> = ({ contracts, quote, inactionable, memberId }) => {
   const [action, setAction] = React.useState<Action | null>(null)
   const [isWip, setIsWip] = React.useState(false)
 
@@ -182,13 +174,6 @@ const QuoteListItemComponent: React.FC<{
             memberId={memberId}
             onWipChange={setIsWip}
             onSubmitted={() => {
-              if (showNotification) {
-                showNotification({
-                  header: 'Activated',
-                  message: 'Quote activated',
-                  type: 'olive',
-                })
-              }
               setIsWip(false)
               setAction(null)
             }}
@@ -202,15 +187,6 @@ const QuoteListItemComponent: React.FC<{
             quote={quote}
             memberId={memberId}
             onWipChange={setIsWip}
-            onSubmitted={() => {
-              if (showNotification) {
-                showNotification({
-                  header: 'Contract Created',
-                  message: 'Contract created successfully!!',
-                  type: 'olive',
-                })
-              }
-            }}
           />
         </ActionsWrapper>
       )}
@@ -220,14 +196,6 @@ const QuoteListItemComponent: React.FC<{
           <UpdateQuoteForm
             quote={quote}
             onSubmitted={() => {
-              if (showNotification) {
-                showNotification({
-                  header: 'Saved',
-                  message: <>Quote saved</>,
-                  type: 'olive',
-                })
-              }
-
               setIsWip(false)
               setAction(null)
             }}
@@ -237,5 +205,3 @@ const QuoteListItemComponent: React.FC<{
     </OuterWrapper>
   )
 }
-
-export const QuoteListItem = withShowNotification(QuoteListItemComponent)

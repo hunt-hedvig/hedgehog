@@ -5,21 +5,15 @@ import {
 import { useSchemaForContractType } from 'graphql/use-get-schema-for-contract-type'
 import { JsonSchemaForm } from 'hedvig-ui/json-schema-form'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Checkbox } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { ContractType } from 'types/enums'
-import { withShowNotification } from 'utils/notifications'
 
-const CreateQuoteFormComponent: React.FC<{
+export const CreateQuoteForm: React.FC<{
   memberId: string
   contractType: ContractType
   onSubmitted: () => void
-} & WithShowNotification> = ({
-  memberId,
-  contractType,
-  onSubmitted,
-  showNotification,
-}) => {
+}> = ({ memberId, contractType, onSubmitted }) => {
   const [bypassUwgl, setBypassUwgl] = useState(false)
 
   const [schema, { loading }] = useSchemaForContractType(contractType)
@@ -27,24 +21,24 @@ const CreateQuoteFormComponent: React.FC<{
   const [createQuoteForMember] = useCreateQuoteForMemberBySchema()
 
   const createQuote = (formData: Record<string, unknown>) => {
-    createQuoteForMember(
-      getCreateQuoteForMemberBySchemaOptions({
-        memberId,
-        schema,
-        formData,
-        bypassUnderwritingGuidelines: bypassUwgl,
-      }),
+    toast.promise(
+      createQuoteForMember(
+        getCreateQuoteForMemberBySchemaOptions({
+          memberId,
+          schema,
+          formData,
+          bypassUnderwritingGuidelines: bypassUwgl,
+        }),
+      ),
+      {
+        loading: 'Saving quote',
+        success: () => {
+          onSubmitted()
+          return 'Quote saved'
+        },
+        error: 'Could not save quote',
+      },
     )
-      .then(() => {
-        onSubmitted()
-      })
-      .catch((error) => {
-        showNotification({
-          type: 'red',
-          header: 'Error',
-          message: error.message,
-        })
-      })
   }
 
   if (loading) {
@@ -66,5 +60,3 @@ const CreateQuoteFormComponent: React.FC<{
     </JsonSchemaForm>
   )
 }
-
-export const CreateQuoteForm = withShowNotification(CreateQuoteFormComponent)

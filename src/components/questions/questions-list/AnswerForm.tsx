@@ -13,8 +13,7 @@ import { Form, FormTextArea, SubmitButton } from 'hedvig-ui/form'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
 const MarkAsResolvedWrapper = styled.div`
   padding-left: 1rem;
@@ -29,16 +28,11 @@ const FlexGrid = styled(Grid)`
   display: flex;
 `
 
-export const AnswerFormComponent: React.FC<{
+export const AnswerForm: React.FC<{
   memberId: string
   onDone: () => void
   onError: () => void
-} & WithShowNotification> = ({
-  memberId,
-  onDone,
-  onError,
-  showNotification,
-}) => {
+}> = ({ memberId, onDone, onError }) => {
   const form = useForm()
 
   const [
@@ -58,44 +52,32 @@ export const AnswerFormComponent: React.FC<{
 
   const onSubmit = (data: FieldValues) => {
     onDone()
-    answerQuestion(getAnswerQuestionOptions(memberId, data.answer.trim()))
-      .then(() => {
-        showNotification({
-          type: 'olive',
-          header: 'Success',
-          message: `Successfully sent an answer to ${memberId}`,
-        })
-      })
-      .catch((error) => {
-        onError()
-        showNotification({
-          type: 'red',
-          header: `Unable to send the answer to ${memberId}`,
-          message: error.message,
-        })
-        throw error
-      })
+    toast.promise(
+      answerQuestion(getAnswerQuestionOptions(memberId, data.answer.trim())),
+      {
+        loading: 'Sending answer',
+        success: 'Answer sent',
+        error: () => {
+          onError()
+          return 'Could not send answer'
+        },
+      },
+    )
   }
 
   const handleMarkAsResolved = () => {
     onDone()
-    markQuestionAsResolved(getMarkQuestionAsResolvedOptions(memberId))
-      .then(() => {
-        showNotification({
-          type: 'olive',
-          header: 'Success',
-          message: `Successfully marked question as resolved for ${memberId}`,
-        })
-      })
-      .catch((error) => {
-        onError()
-        showNotification({
-          type: 'red',
-          header: `Unable to mark the question as resolved for ${memberId}`,
-          message: error.message,
-        })
-        throw error
-      })
+    toast.promise(
+      markQuestionAsResolved(getMarkQuestionAsResolvedOptions(memberId)),
+      {
+        loading: 'Resolving',
+        success: 'Marked as resolved',
+        error: () => {
+          onError()
+          return 'Could not mark as resolved'
+        },
+      },
+    )
   }
 
   return (
@@ -136,5 +118,3 @@ export const AnswerFormComponent: React.FC<{
     </>
   )
 }
-
-export const AnswerForm = withShowNotification(AnswerFormComponent)

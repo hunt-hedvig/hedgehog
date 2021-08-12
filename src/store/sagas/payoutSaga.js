@@ -1,9 +1,9 @@
 import api from 'api'
 import config from 'api/config'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { showNotification } from 'store/actions/notificationsActions'
 import * as actions from '../actions/payoutDetailsActions'
 import { PAYOUT_REQUESTING } from '../constants/payout'
+import { toast } from 'react-hot-toast'
 
 function* createPayout({ data, memberId }) {
   try {
@@ -21,18 +21,12 @@ function* createPayout({ data, memberId }) {
 
     yield [
       put(actions.payoutRequestSuccess()),
-      put(
-        showNotification({
-          message: 'Payout successful!',
-          header: 'Payout',
-          type: 'olive',
-        }),
-      ),
+      put(toast.success('Payout successful')),
     ]
   } catch (error) {
     yield [
       put(actions.payoutRequestError(error)),
-      put(showNotification({ message: error.message, header: 'Payout' })),
+      put(toast.error('Payout failed')),
     ]
   }
 }

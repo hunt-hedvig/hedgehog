@@ -11,12 +11,11 @@ import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 import {
   numberOfMonthsOptions,
   percentageDiscountOptions,
 } from 'utils/campaignCodes'
-import { withShowNotification } from 'utils/notifications'
 import { DateRangeWrapper } from './FreeMonthsForm'
 
 const initialFormData: MonthlyPercentageFormData = {
@@ -43,9 +42,7 @@ interface MonthlyPercentageFormData {
   validUntil?: Scalars['Instant']
 }
 
-const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
-  showNotification,
-}) => {
+export const MonthlyPercentageForm: React.FC = () => {
   const [formData, setFormData] = React.useState<MonthlyPercentageFormData>(
     initialFormData,
   )
@@ -54,8 +51,6 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
     setPartnerPercentageDiscount,
     { loading },
   ] = useAddPartnerPercentageDiscountCode()
-
-  const reset = () => setFormData(initialFormData)
 
   return (
     <>
@@ -151,40 +146,28 @@ const MonthlyPercentage: React.FC<{} & WithShowNotification> = ({
           loading={loading}
           disabled={loading || !formLooksGood(formData)}
           onClick={() => {
-            console.log(formData)
             if (
               !window.confirm(`Create new campaign code "${formData.code}"?`)
             ) {
               return
             }
-            setPartnerPercentageDiscount(
-              addPartnerPercentageDiscountCodeOptions(
-                formData as AssignVoucherPercentageDiscount,
+            toast.promise(
+              setPartnerPercentageDiscount(
+                addPartnerPercentageDiscountCodeOptions(
+                  formData as AssignVoucherPercentageDiscount,
+                ),
               ),
+              {
+                loading: 'Creating campaign',
+                success: 'Campaign created',
+                error: 'Could not create campaign',
+              },
             )
-              .then(() => {
-                reset()
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: `Successfully created a new percentage campaign for partner ${formData.partnerId}`,
-                })
-              })
-              .catch((error) => {
-                showNotification({
-                  type: 'red',
-                  header: 'Error',
-                  message: error.message,
-                })
-                throw error
-              })
           }}
         >
-          Create New Campaign
+          Create Campaign
         </Button>
       </div>
     </>
   )
 }
-
-export const MonthlyPercentageForm = withShowNotification(MonthlyPercentage)

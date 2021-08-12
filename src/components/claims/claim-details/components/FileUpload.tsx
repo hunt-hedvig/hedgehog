@@ -2,8 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
 const UploadClaimFileWrapper = styled('div')`
   padding: 1rem 1rem;
@@ -16,7 +15,7 @@ const UploadClaimFileWrapper = styled('div')`
 const Button = styled.button`
   display: inline-flex;
   align-items: center;
-  justify-content: center,
+  justify-content: center;
   font-size: inherit;
   padding: 4rem;
   border: none;
@@ -35,11 +34,11 @@ const FileUploadContainer = styled('div')({
   padding: '2rem',
 })
 
-const FileUploadComponent: React.FC<WithShowNotification & {
+export const FileUpload: React.FC<{
   claimId: string
   memberId: string
   onUpload: () => void
-}> = ({ claimId, memberId, onUpload, showNotification }) => {
+}> = ({ claimId, memberId, onUpload }) => {
   const handleDrop = (acceptedFiles: ReadonlyArray<File>) => {
     const claimFiles = new FormData()
 
@@ -48,26 +47,20 @@ const FileUploadComponent: React.FC<WithShowNotification & {
     }
     claimFiles.append('memberId', memberId)
 
-    fetch(`/api/claims/${claimId}/claimFiles`, {
-      method: 'POST',
-      body: claimFiles,
-    })
-      .then(() => {
-        showNotification({
-          message: 'Upload successful!',
-          header: 'Approved',
-          type: 'olive',
-        })
-        onUpload()
-      })
-      .catch((error) => {
-        showNotification({
-          message: error.message,
-          header: 'Error',
-          type: 'red',
-        })
-        throw error
-      })
+    toast.promise(
+      fetch(`/api/claims/${claimId}/claimFiles`, {
+        method: 'POST',
+        body: claimFiles,
+      }),
+      {
+        loading: 'Uploading file',
+        success: () => {
+          onUpload()
+          return 'File uploaded'
+        },
+        error: 'Could not upload file',
+      },
+    )
   }
 
   return (
@@ -91,5 +84,3 @@ const FileUploadComponent: React.FC<WithShowNotification & {
     </UploadClaimFileWrapper>
   )
 }
-
-export const FileUpload = withShowNotification(FileUploadComponent)

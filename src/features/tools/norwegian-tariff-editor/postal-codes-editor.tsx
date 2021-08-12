@@ -4,15 +4,9 @@ import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { Notification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 
-interface PostalCodesEditorProps {
-  showNotification: (data: Notification) => void
-}
-
-export const PostalCodesEditor: React.FC<PostalCodesEditorProps> = ({
-  showNotification,
-}) => {
+export const PostalCodesEditor: React.FC = () => {
   const [postalCodesString, setPostalCodesString] = React.useState<string>('')
   const [
     addNorwegianPostalCodes,
@@ -40,26 +34,19 @@ export const PostalCodesEditor: React.FC<PostalCodesEditorProps> = ({
             ) {
               return
             }
-            addNorwegianPostalCodes({
-              variables: {
-                postalCodesString,
+
+            toast.promise(
+              addNorwegianPostalCodes({
+                variables: {
+                  postalCodesString,
+                },
+              }),
+              {
+                loading: 'Adding postal codes',
+                success: 'Postal codes added',
+                error: 'Could not add postal codes',
               },
-            })
-              .then(() => {
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: 'Successfully added Norwegian Postal Codes',
-                })
-              })
-              .catch((error) => {
-                showNotification({
-                  type: 'red',
-                  header: 'Error',
-                  message: error.message,
-                })
-                throw error
-              })
+            )
           }}
         >
           Add Norwegian Postal Codes

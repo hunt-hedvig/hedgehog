@@ -6,6 +6,7 @@ import {
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
 
@@ -34,8 +35,15 @@ export const QuoteContractCreation: React.FC<{
         ) {
           return
         }
-        await signQuote(
-          getSignQuoteForNewContractOptions(quote.id, activeFrom, memberId),
+        await toast.promise(
+          signQuote(
+            getSignQuoteForNewContractOptions(quote.id, activeFrom, memberId),
+          ),
+          {
+            loading: 'Creating contract',
+            success: 'Contract created',
+            error: 'Could not create contract',
+          },
         )
         if (onSubmitted) {
           onSubmitted()

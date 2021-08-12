@@ -14,12 +14,11 @@ import { EnumDropdown } from 'hedvig-ui/dropdown'
 import { Input } from 'hedvig-ui/input'
 import { FourthLevelHeadline, Label } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { SwitcherEmailStatus, TerminationReason } from 'types/enums'
 import { Keys } from 'utils/hooks/key-press-hook'
-import { withShowNotification } from 'utils/notifications'
 import { convertEnumToTitle } from 'utils/text'
 
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
@@ -66,7 +65,7 @@ const Note = styled.div`
   margin: 0.5rem 0;
 `
 
-const SwitcherEmailRowComponent: React.FC<Pick<
+export const SwitcherEmailRow: React.FC<Pick<
   SwitchableSwitcherEmail,
   | 'id'
   | 'member'
@@ -87,7 +86,7 @@ const SwitcherEmailRowComponent: React.FC<Pick<
   ) => void
   onActivate: (contract: Contract, activeFrom: Date) => void
   loading?: boolean
-} & WithShowNotification> = ({
+}> = ({
   id,
   member,
   sentAt,
@@ -98,7 +97,6 @@ const SwitcherEmailRowComponent: React.FC<Pick<
   note,
   status,
   contract,
-  showNotification,
   onTerminate,
   onActivate,
   loading = false,
@@ -181,30 +179,25 @@ const SwitcherEmailRowComponent: React.FC<Pick<
                 if (note && note.trim() === newNote.trim()) {
                   return
                 }
-                updateSwitcherEmailInfo({
-                  variables: {
-                    id,
-                    input: {
-                      note: newNote,
+
+                toast.promise(
+                  updateSwitcherEmailInfo({
+                    variables: {
+                      id,
+                      input: {
+                        note: newNote,
+                      },
                     },
+                  }),
+                  {
+                    loading: 'Saving note',
+                    success: () => {
+                      setEditNote(false)
+                      return 'Note saved'
+                    },
+                    error: 'Could not save note',
                   },
-                })
-                  .then(() => {
-                    showNotification({
-                      message: `Note changed to "${newNote}"`,
-                      header: 'Success!',
-                      type: 'olive',
-                    })
-                    setEditNote(false)
-                  })
-                  .catch((error) => {
-                    showNotification({
-                      message: error.message,
-                      header: 'Error',
-                      type: 'red',
-                    })
-                    throw error
-                  })
+                )
               }}
             />
           </>
@@ -366,5 +359,3 @@ const SwitcherEmailRowComponent: React.FC<Pick<
     </StatusTableRow>
   )
 }
-
-export const SwitcherEmailRow = withShowNotification(SwitcherEmailRowComponent)

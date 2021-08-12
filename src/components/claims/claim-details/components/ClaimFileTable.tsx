@@ -11,8 +11,6 @@ import { dateTimeFormatter } from 'lib/helpers'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
 import { sleep } from 'utils/sleep'
 import { DeleteButton } from './DeleteClaimFileButton'
 import { FileUpload } from './FileUpload'
@@ -65,10 +63,10 @@ const fileUploadOptions = [
   },
 ]
 
-const ClaimFileTableComponent: React.FC<WithShowNotification & {
+export const ClaimFileTable: React.FC<{
   claimId: string
   memberId: string
-}> = ({ claimId, memberId, showNotification }) => {
+}> = ({ claimId, memberId }) => {
   const {
     data: claimFilesData,
     refetch,
@@ -176,7 +174,6 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
                       <DeleteButton
                         claimId={claimId}
                         claimFileId={claimFile.claimFileId!}
-                        showNotification={showNotification}
                         onDeleted={async () => {
                           await sleep(500)
                           await refetch()
@@ -193,5 +190,3 @@ const ClaimFileTableComponent: React.FC<WithShowNotification & {
     </CardContent>
   )
 }
-
-export const ClaimFileTable = withShowNotification(ClaimFileTableComponent)

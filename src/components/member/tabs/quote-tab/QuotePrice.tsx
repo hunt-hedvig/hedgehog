@@ -8,9 +8,8 @@ import {
 import { Input } from 'hedvig-ui/input'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
-import { WithShowNotification } from 'src/store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 import { formatMoney } from 'utils/money'
-import { withShowNotification } from 'utils/notifications'
 
 const PriceWrapper = styled.div`
   padding-bottom: 1rem;
@@ -40,10 +39,7 @@ interface Props {
   quote: Quote
 }
 
-const QuotePrice = ({
-  quote,
-  showNotification,
-}: Props & WithShowNotification) => {
+export const QuotePrice = ({ quote }: Props) => {
   const [editPrice, setEditPrice] = useState(false)
   const [newPrice, setNewPrice] = useState(quote.price)
   const [overrideQuotePrice] = useOverrideQuotePriceMutation()
@@ -63,9 +59,9 @@ const QuotePrice = ({
       })
     : '-'
 
-  const updateQuotePrice = async () => {
-    try {
-      await overrideQuotePrice({
+  const updateQuotePrice = () => {
+    toast.promise(
+      overrideQuotePrice({
         variables: {
           input: {
             quoteId: quote.id,
@@ -78,20 +74,16 @@ const QuotePrice = ({
             variables: { memberId: quote.memberId },
           },
         ],
-      })
-      showNotification({
-        type: 'olive',
-        header: 'Price updated',
-        message: 'Successfully overrode the quote price',
-      })
-    } catch (error) {
-      showNotification({
-        type: 'red',
-        header: 'Failed to override quote price',
-        message: error.message,
-      })
-      restorePrice()
-    }
+      }),
+      {
+        loading: 'Overriding quote price',
+        success: 'Quote price overriden',
+        error: () => {
+          restorePrice()
+          return 'Could not override quote price'
+        },
+      },
+    )
   }
 
   const onSubmitNewPrice = async (e) => {
@@ -143,5 +135,3 @@ const QuotePrice = ({
     </PriceWrapper>
   )
 }
-
-export default withShowNotification(QuotePrice)

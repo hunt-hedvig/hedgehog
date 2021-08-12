@@ -12,11 +12,10 @@ import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import { MainHeadline } from 'hedvig-ui/typography'
 import { MonetaryAmount } from 'lib/helpers'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
-import { withShowNotification } from 'utils/notifications'
 
 const approveMemberCharge = gql`
   mutation approveMemberCharge($approvals: [MemberChargeApproval!]!) {
@@ -115,9 +114,7 @@ const Row: React.FC<{
   </>
 )
 
-export const ChargePageComponent: React.FC<WithShowNotification> = ({
-  showNotification,
-}) => {
+export const ChargePage: React.FC = () => {
   const [confirming, setConfirming] = useState(false)
   const { data, loading, error } = usePaymentScheduleQueryQuery({
     variables: {
@@ -194,30 +191,25 @@ export const ChargePageComponent: React.FC<WithShowNotification> = ({
                         if (mutationProps.loading) {
                           return
                         }
-                        mutation({
-                          variables: {
-                            approvals: data.paymentSchedule!.map((payment) => ({
-                              memberId: payment!.member!.memberId,
-                              amount: payment!.member!.account!.currentBalance,
-                            })),
+
+                        toast.promise(
+                          mutation({
+                            variables: {
+                              approvals: data.paymentSchedule!.map(
+                                (payment) => ({
+                                  memberId: payment!.member!.memberId,
+                                  amount: payment!.member!.account!
+                                    .currentBalance,
+                                }),
+                              ),
+                            },
+                          }),
+                          {
+                            loading: 'Approving',
+                            success: 'Charges sent for approval',
+                            error: 'An error occurred',
                           },
-                        })
-                          .then(() => {
-                            setConfirming(false)
-                            showNotification({
-                              message: 'Charges sent for approval',
-                              header: 'Approved',
-                              type: 'olive',
-                            })
-                          })
-                          .catch((error_) => {
-                            showNotification({
-                              message: error_.message,
-                              header: 'Error',
-                              type: 'red',
-                            })
-                            throw error_
-                          })
+                        )
                       }
                     : () => setConfirming(true)
                 }
@@ -232,5 +224,3 @@ export const ChargePageComponent: React.FC<WithShowNotification> = ({
     </FadeIn>
   )
 }
-
-export const ChargePage = withShowNotification(ChargePageComponent)

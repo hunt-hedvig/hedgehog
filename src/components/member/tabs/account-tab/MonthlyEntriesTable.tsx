@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { IconButton } from '@material-ui/core'
 import { MonthlyEntry } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
@@ -9,24 +10,18 @@ import { Popover } from 'hedvig-ui/popover'
 import { Bold, Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
+import { toast } from 'react-hot-toast'
 import { Grid, Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
 import { formatMoney } from 'utils/money'
-import { withShowNotification } from 'utils/notifications'
 
 const StyledTable = styled(Table)`
   overflow: visible !important;
 `
 
-export const MonthlyEntriesTableComponent: React.FC<{
+export const MonthlyEntriesTable: React.FC<{
   memberId: string
   monthlyEntries: ReadonlyArray<MonthlyEntry>
-} & WithShowNotification> = ({
-  memberId,
-  monthlyEntries,
-  showNotification,
-}) => {
+}> = ({ memberId, monthlyEntries }) => {
   const [removeMonthlyEntry] = useRemoveMonthlyEntry()
 
   return (
@@ -107,24 +102,16 @@ export const MonthlyEntriesTableComponent: React.FC<{
                     if (!confirm) {
                       return
                     }
-                    removeMonthlyEntry(
-                      getRemoveMonthlyEntryOptions(memberId, monthlyEntry.id),
+                    toast.promise(
+                      removeMonthlyEntry(
+                        getRemoveMonthlyEntryOptions(memberId, monthlyEntry.id),
+                      ),
+                      {
+                        loading: 'Removing monthly entry',
+                        success: 'Monthly entry removed',
+                        error: 'Could not remove monthly entry',
+                      },
                     )
-                      .then(() => {
-                        showNotification({
-                          message: 'Monthly entry removed',
-                          header: 'Success',
-                          type: 'olive',
-                        })
-                      })
-                      .catch((e) => {
-                        showNotification({
-                          message: e.message,
-                          header: 'Error',
-                          type: 'red',
-                        })
-                        throw e
-                      })
                   }}
                 >
                   <Trash color="red" />
@@ -137,7 +124,3 @@ export const MonthlyEntriesTableComponent: React.FC<{
     </StyledTable>
   )
 }
-
-export const MonthlyEntriesTable = withShowNotification(
-  MonthlyEntriesTableComponent,
-)

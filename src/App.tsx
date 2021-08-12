@@ -7,7 +7,6 @@ import { DashboardPage } from 'components/dashboard'
 import { QuestionsPage } from 'components/questions'
 import { Navigation } from 'components/shared/navigation'
 import Breadcrumbs from 'components/shared/navigation/breadcrumbs/Breadcrumbs'
-import Notifications from 'containers/NotificationService'
 import {
   darkTheme,
   darkUiTheme,
@@ -17,6 +16,7 @@ import {
 } from 'hedvig-ui/themes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
+import { Toaster } from 'react-hot-toast'
 import { Provider } from 'react-redux'
 import { Redirect, Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
@@ -159,7 +159,14 @@ const App: React.FC = () => {
                           />
                           <Redirect from="*" to="/dashborad" />
                         </Switch>
-                        <Notifications />
+                        <Toaster
+                          position={'top-center'}
+                          toastOptions={{
+                            style: {
+                              padding: '20px 25px',
+                            },
+                          }}
+                        />
                       </Main>
                     </Layout>
                   </CommandLineProvider>

@@ -1,12 +1,11 @@
 import { useBackfillSubscriptionsMutation } from 'api/generated/graphql'
 import { Button } from 'hedvig-ui/button'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
-const BackfillSubscriptionsButtonComponent: React.FC<{
+export const BackfillSubscriptionsButton: React.FC<{
   memberId: string
-} & WithShowNotification> = ({ memberId, showNotification }) => {
+}> = ({ memberId }) => {
   const [
     backfillSubscriptions,
     { loading },
@@ -21,31 +20,19 @@ const BackfillSubscriptionsButtonComponent: React.FC<{
           return
         }
 
-        backfillSubscriptions({
-          variables: { memberId },
-        })
-          .then(() => {
-            showNotification({
-              message: 'Member subscriptions backfilled.',
-              header: 'Success',
-              type: 'olive',
-            })
-          })
-          .catch((error) => {
-            showNotification({
-              message: error.message,
-              header: 'Error',
-              type: 'red',
-            })
-            throw error
-          })
+        toast.promise(
+          backfillSubscriptions({
+            variables: { memberId },
+          }),
+          {
+            loading: 'Backfilling',
+            success: 'Subscriptions backfilled',
+            error: 'Could not backfill subscriptions',
+          },
+        )
       }}
     >
       Backfill All Subscriptions
     </Button>
   )
 }
-
-export const BackfillSubscriptionsButton = withShowNotification(
-  BackfillSubscriptionsButtonComponent,
-)

@@ -5,14 +5,13 @@ import {
 } from 'graphql/use-update-quote-by-schema'
 import { JsonSchemaForm } from 'hedvig-ui/json-schema-form'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Checkbox } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
 
-const UpdateQuoteFormComponent: React.FC<{
+export const UpdateQuoteForm: React.FC<{
   quote: Quote
   onSubmitted: () => void
-} & WithShowNotification> = ({ quote, onSubmitted, showNotification }) => {
+}> = ({ quote, onSubmitted }) => {
   const [bypassUwgl, setBypassUwgl] = useState(false)
   const [updateQuote] = useUpdateQuoteBySchema()
 
@@ -27,13 +26,10 @@ const UpdateQuoteFormComponent: React.FC<{
     updateQuote(options)
       .then(() => {
         onSubmitted()
+        toast.success('Quote saved')
       })
-      .catch((error) => {
-        showNotification({
-          type: 'red',
-          header: 'Error',
-          message: error.message,
-        })
+      .catch(() => {
+        toast.error('Could not save quote')
       })
   }
 
@@ -53,5 +49,3 @@ const UpdateQuoteFormComponent: React.FC<{
     </JsonSchemaForm>
   )
 }
-
-export const UpdateQuoteForm = withShowNotification(UpdateQuoteFormComponent)

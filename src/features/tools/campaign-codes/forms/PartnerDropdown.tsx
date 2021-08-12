@@ -3,19 +3,17 @@ import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
 
-export const PartnerDropdownComponent: React.FC<{
+export const PartnerDropdown: React.FC<{
   onChange: (data: any) => void
   value: string
   loading?: boolean
   creatable?: boolean
   placeholder?: string
-} & WithShowNotification> = ({
+}> = ({
   onChange,
   value,
-  showNotification,
   loading = false,
   creatable = true,
   placeholder = 'Which partner?',
@@ -35,32 +33,25 @@ export const PartnerDropdownComponent: React.FC<{
         if (!option) {
           return
         }
-        createCampaignPartner({
-          variables: {
-            partnerId: option
-              .toLowerCase()
-              .trim()
-              .replace(' ', '_'),
-            partnerName: option,
-          },
-        }).then((result) => {
-          if (result?.data?.createCampaignPartner) {
-            refetch().then(() => {
-              onChange({ value: option })
-              showNotification({
-                type: 'olive',
-                header: 'Success',
-                message: `Successfully created a new partner ${option}`,
-              })
-            })
-          } else {
-            showNotification({
-              type: 'red',
-              header: 'Error',
-              message: `Could not create a new partner ${option}`,
-            })
-          }
-        })
+
+        toast
+          .promise(
+            createCampaignPartner({
+              variables: {
+                partnerId: option
+                  .toLowerCase()
+                  .trim()
+                  .replace(' ', '_'),
+                partnerName: option,
+              },
+            }),
+            {
+              loading: 'Creating partner...',
+              success: 'Partner created',
+              error: 'Could not create partner',
+            },
+          )
+          .then(() => refetch())
       }}
       value={
         value
@@ -80,5 +71,3 @@ export const PartnerDropdownComponent: React.FC<{
     />
   )
 }
-
-export const PartnerDropdown = withShowNotification(PartnerDropdownComponent)

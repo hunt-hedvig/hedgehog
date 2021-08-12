@@ -6,7 +6,6 @@ import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { showNotification } from 'store/actions/notificationsActions'
 import { ContractType, TypeOfContractType } from 'types/enums'
 import { isSignedOrExpired } from 'utils/quote'
 import { ActionsWrapper, Muted } from './common'
@@ -45,13 +44,6 @@ export const QuotesSubSection: React.FC<{
             memberId={memberId}
             contractType={contractType}
             onSubmitted={() => {
-              if (showNotification) {
-                showNotification({
-                  header: 'Saved',
-                  message: <>Quote saved</>,
-                  type: 'olive',
-                })
-              }
               setIsWip(false)
             }}
           />
