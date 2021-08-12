@@ -1,31 +1,48 @@
+import styled from '@emotion/styled'
 import { AccountEntry } from 'api/generated/graphql'
 import { Popover } from 'hedvig-ui/popover'
 import { Bold, Capitalized, Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
 import { Grid, Table } from 'semantic-ui-react'
 import { formatMoney } from 'utils/money'
 
 const getAccountEntryColor = (theme, entry: AccountEntry) => {
   if (entry.failedAt) {
-    return theme.danger
+    return theme.lightDanger
+  }
+
+  if (entry.chargedAt && entry.type === 'CHARGE') {
+    return theme.lightSuccess
   }
 
   if (parseFloat(entry.amount.amount) < 0) {
-    return theme.warning
+    return theme.lightWarning
   }
 
   return theme.backgroundTransparent
 }
 
-const FirstCell = styled(Table.Cell)<{ entry: AccountEntry }>`
-  border-left: 7px solid
-    ${({ theme, entry }) => getAccountEntryColor(theme, entry)} !important;
+const TableRowColored = styled(Table.Row)<{
+  entry: AccountEntry
+}>`
+  td {
+    background-color: ${({ theme, entry }) =>
+      getAccountEntryColor(theme, entry)} !important;
+  }
 `
 
 const StyledTable = styled(Table)`
   overflow: visible !important;
+  tr td {
+    border-left: 0;
+  }
+`
+
+const AmountCell = styled(Table.Cell)<{
+  entry: AccountEntry
+}>`
+  text-decoration: ${({ entry }) => (entry.failedAt ? 'line-through' : '')};
 `
 
 export const AccountEntryTable: React.FC<{
@@ -45,24 +62,22 @@ export const AccountEntryTable: React.FC<{
 
       <Table.Body>
         {accountEntries.map((entry) => (
-          <Table.Row key={entry.id}>
-            <FirstCell entry={entry}>{entry.fromDate}</FirstCell>
+          <TableRowColored entry={entry} key={entry.id}>
+            <Table.Cell entry={entry}>{entry.fromDate}</Table.Cell>
             <Table.Cell>
               <Capitalized>{entry.type}</Capitalized>
             </Table.Cell>
             <Table.Cell>
-              {entry.title && entry.title !== '' ? (
-                entry.title
-              ) : (
-                <Placeholder>Not specified</Placeholder>
-              )}
+              {entry.title && entry.title !== ''
+                ? entry.title
+                : 'Not specified'}
             </Table.Cell>
-            <Table.Cell>
+            <AmountCell entry={entry}>
               {formatMoney(entry.amount, {
                 useGrouping: true,
                 minimumFractionDigits: 2,
               })}
-            </Table.Cell>
+            </AmountCell>
             <Table.Cell textAlign="center">
               <Popover
                 contents={
@@ -103,7 +118,7 @@ export const AccountEntryTable: React.FC<{
                 <InfoCircleFill />
               </Popover>
             </Table.Cell>
-          </Table.Row>
+          </TableRowColored>
         ))}
       </Table.Body>
     </StyledTable>
