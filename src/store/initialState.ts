@@ -7,16 +7,11 @@ const initialState: BackofficeStore = {
     state: AuthState.UNKNOWN,
     scopes: [],
   },
-  login: {
-    requesting: false,
-  },
-  client: {},
   payoutDetails: {
     data: null,
     requesting: false,
     requestResult: PayoutRequestResult.READY,
   },
-  notifications: [],
 }
 
 export default initialState

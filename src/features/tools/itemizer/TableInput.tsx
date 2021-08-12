@@ -59,7 +59,7 @@ export const TableInput: React.FC<{
         <TextArea
           placeholder={'Tab & newline separated table (i.e. Excel)'}
           value={dataString}
-          setValue={setDataString}
+          onChange={setDataString}
         />
       )}
       <Button

@@ -119,6 +119,7 @@ type MutationType {
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
   insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
   upsertValuationRule(request: UpsertValuationRuleInput): ID!
+  createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
@@ -1182,6 +1183,7 @@ type SwitchableSwitcherEmail {
   member: Member!
   switcherCompany: String!
   queuedAt: Instant!
+  contract: Contract
   sentAt: Instant
   remindedAt: Instant
   cancellationDate: LocalDate

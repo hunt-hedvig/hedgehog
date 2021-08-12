@@ -20,7 +20,6 @@ import MediaQuery from 'react-media'
 import { connect } from 'react-redux'
 import { matchPath, useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
-import actions from 'store/actions'
 import { authLogOut, AuthState } from 'store/actions/auth'
 import { BackofficeStore } from 'store/storeTypes'
 import { DarkmodeContext } from 'utils/darkmode-context'
@@ -504,7 +503,6 @@ export const VerticalMenu = connect(
   }),
   {
     authLogOut,
-    ...actions.clientActions,
   },
   null,
   { pure: false },

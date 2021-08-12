@@ -12,19 +12,16 @@ import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import { CardContent } from 'hedvig-ui/card'
 import { InfoRow, InfoTag, InfoText } from 'hedvig-ui/info-row'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { Paragraph, Shadowed, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
 import { Checkmark, Cross } from '../../../icons'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
-
-interface Props {
-  claimId: string
-}
 
 const ScrollX = styled.div`
   overflow-x: scroll;
@@ -55,7 +52,24 @@ const MemberIdentityCard = styled.div`
   margin-right: 2em;
 `
 
-export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
+const NoPaymentsMessage = styled(StandaloneMessage)`
+  padding: 3em 0;
+`
+
+const NoCarrierMessage = styled(StandaloneMessage)`
+  padding: 3em 0;
+  text-align: center;
+`
+
+const NoCarrierSubtitle = styled(Paragraph)`
+  font-size: 0.8em;
+  padding-top: 1em;
+`
+
+export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
+  claimId,
+  carrier,
+}) => {
   const {
     data: paymentsData,
     refetch: refetchPayments,
@@ -76,6 +90,22 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
   const totalDeductible = payments
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
+
+  if (!carrier) {
+    return (
+      <CardContent>
+        <PaperTitle title={'Payments'} />
+        <NoCarrierMessage opacity={0.6}>
+          Cannot make a payment or set a reserve without a carrier.
+          <NoCarrierSubtitle>
+            Select a <Shadowed>Contract</Shadowed> and{' '}
+            <Shadowed>Date of Occurrence</Shadowed> such that the claim is
+            covered on the date.
+          </NoCarrierSubtitle>
+        </NoCarrierMessage>
+      </CardContent>
+    )
+  }
 
   return (
     <CardContent>
@@ -134,68 +164,72 @@ export const ClaimPayments: React.FC<Props> = ({ claimId }) => {
         />
       </div>
 
-      <ScrollX>
-        {loadingPayments && <Spinner />}
-        <PaymentTable>
-          <MuiTableHead>
-            <MuiTableRow>
-              <PaymentTableCell>Id</PaymentTableCell>
-              <PaymentTableCell>Amount</PaymentTableCell>
-              <PaymentTableCell>Deductible</PaymentTableCell>
-              <PaymentTableCell>Note</PaymentTableCell>
-              <PaymentTableCell>Date</PaymentTableCell>
-              <PaymentTableCell>Ex Gratia</PaymentTableCell>
-              <PaymentTableCell>Type</PaymentTableCell>
-              <PaymentTableCell>Status</PaymentTableCell>
-            </MuiTableRow>
-          </MuiTableHead>
-          <MuiTableBody>
-            {payments.map((payment) => (
-              <MuiTableRow key={payment.id}>
-                <PaymentTableCell>{payment.id}</PaymentTableCell>
-                <PaymentTableCell>
-                  {payment.amount.amount}&nbsp;{payment.amount.currency}
-                </PaymentTableCell>
-                <PaymentTableCell>
-                  {payment.deductible.amount}&nbsp;
-                  {payment.deductible.currency}
-                </PaymentTableCell>
-                <PaymentTableCell>{payment.note}</PaymentTableCell>
-                <PaymentTableCell>
-                  {format(parseISO(payment.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-                </PaymentTableCell>
-                <PaymentTableCell>
-                  {payment.exGratia ? <Checkmark /> : <Cross />}
-                </PaymentTableCell>
-                <PaymentTableCell>{payment.type}</PaymentTableCell>
-                <PaymentTableCell>{payment.status}</PaymentTableCell>
+      {payments.length ? (
+        <ScrollX>
+          {loadingPayments && <Spinner />}
+          <PaymentTable>
+            <MuiTableHead>
+              <MuiTableRow>
+                <PaymentTableCell>Id</PaymentTableCell>
+                <PaymentTableCell>Amount</PaymentTableCell>
+                <PaymentTableCell>Deductible</PaymentTableCell>
+                <PaymentTableCell>Note</PaymentTableCell>
+                <PaymentTableCell>Date</PaymentTableCell>
+                <PaymentTableCell>Ex Gratia</PaymentTableCell>
+                <PaymentTableCell>Type</PaymentTableCell>
+                <PaymentTableCell>Status</PaymentTableCell>
               </MuiTableRow>
-            ))}
-            {totalAmount > 0 && (
-              <>
-                <MuiTableRow>
-                  <TotalCell>
-                    <b>Amount Total: </b>
-                  </TotalCell>
-                  <TotalCell align="right">
-                    {totalAmount.toFixed(2)}&nbsp;
-                    {payments[0]!.amount.currency}
-                  </TotalCell>
+            </MuiTableHead>
+            <MuiTableBody>
+              {payments.map((payment) => (
+                <MuiTableRow key={payment.id}>
+                  <PaymentTableCell>{payment.id}</PaymentTableCell>
+                  <PaymentTableCell>
+                    {payment.amount.amount}&nbsp;{payment.amount.currency}
+                  </PaymentTableCell>
+                  <PaymentTableCell>
+                    {payment.deductible.amount}&nbsp;
+                    {payment.deductible.currency}
+                  </PaymentTableCell>
+                  <PaymentTableCell>{payment.note}</PaymentTableCell>
+                  <PaymentTableCell>
+                    {format(parseISO(payment.timestamp), 'yyyy-MM-dd HH:mm:ss')}
+                  </PaymentTableCell>
+                  <PaymentTableCell>
+                    {payment.exGratia ? <Checkmark /> : <Cross />}
+                  </PaymentTableCell>
+                  <PaymentTableCell>{payment.type}</PaymentTableCell>
+                  <PaymentTableCell>{payment.status}</PaymentTableCell>
                 </MuiTableRow>
-                <MuiTableRow>
-                  <TotalCell>
-                    <b>Deductible Total: </b>
-                  </TotalCell>
-                  <TotalCell align="right">
-                    {totalDeductible.toFixed(2)}&nbsp;
-                    {payments[0]!.deductible.currency}
-                  </TotalCell>
-                </MuiTableRow>
-              </>
-            )}
-          </MuiTableBody>
-        </PaymentTable>
-      </ScrollX>
+              ))}
+              {totalAmount > 0 && (
+                <>
+                  <MuiTableRow>
+                    <TotalCell>
+                      <b>Amount Total: </b>
+                    </TotalCell>
+                    <TotalCell align="right">
+                      {totalAmount.toFixed(2)}&nbsp;
+                      {payments[0]!.amount.currency}
+                    </TotalCell>
+                  </MuiTableRow>
+                  <MuiTableRow>
+                    <TotalCell>
+                      <b>Deductible Total: </b>
+                    </TotalCell>
+                    <TotalCell align="right">
+                      {totalDeductible.toFixed(2)}&nbsp;
+                      {payments[0]!.deductible.currency}
+                    </TotalCell>
+                  </MuiTableRow>
+                </>
+              )}
+            </MuiTableBody>
+          </PaymentTable>
+        </ScrollX>
+      ) : (
+        <NoPaymentsMessage>No payments have been made</NoPaymentsMessage>
+      )}
 
       {!loadingPayments &&
         paymentsData?.claim?.contract &&

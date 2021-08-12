@@ -1,11 +1,10 @@
+import styled from '@emotion/styled'
 import { Button } from 'hedvig-ui/button'
 import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import ReactDropZone from 'react-dropzone'
-import styled from '@emotion/styled'
+import { toast } from 'react-hot-toast'
 import { Dropdown, Form, TextArea } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
 import { OnBlurChangeInput } from './inputs'
 import { PerilIconOptions } from './peril-icons'
 
@@ -55,9 +54,7 @@ interface Peril {
   iconName: string
 }
 
-export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
-  showNotification,
-}) => {
+export const PerilsEditor: React.FC = () => {
   const [fileName, setFileName] = React.useState(() =>
     localStorage.getItem(PERIL_FILE_KEY),
   )
@@ -90,11 +87,7 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
       const result = event.target!.result as string
 
       if (!isValidJson(result)) {
-        showNotification({
-          message: 'Unable to parse this file',
-          type: 'red',
-          header: 'Invalid file',
-        })
+        toast.error('Unable to parse file')
         return
       }
 
@@ -324,8 +317,6 @@ export const PerilsEditorComponent: React.FC<WithShowNotification> = ({
     </>
   )
 }
-
-export const PerilsEditor = withShowNotification(PerilsEditorComponent)
 
 const isValidJson = (thing: string): boolean => {
   try {

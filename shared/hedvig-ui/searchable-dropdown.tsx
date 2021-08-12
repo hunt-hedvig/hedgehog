@@ -1,14 +1,23 @@
 import styled from '@emotion/styled'
 import React from 'react'
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 
-export const SearchableDropdown = styled((props) => (
-  <Select
-    {...props}
-    classNamePrefix="searchable-type-select"
-    isSearchable={true}
-  />
-))`
+export const SearchableDropdown = styled((props) =>
+  props.creatable ? (
+    <CreatableSelect
+      {...props}
+      classNamePrefix="searchable-type-select"
+      isSearchable={true}
+    />
+  ) : (
+    <Select
+      {...props}
+      classNamePrefix="searchable-type-select"
+      isSearchable={true}
+    />
+  ),
+)`
   .searchable-type-select__control {
     border-radius: 7px;
     height: 44px;

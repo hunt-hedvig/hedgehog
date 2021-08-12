@@ -1,71 +1,48 @@
-import styled from '@emotion/styled'
-import { Button as MuiButton, withStyles } from '@material-ui/core'
-import { useUpdateReserveMutation } from 'api/generated/graphql'
-import { Field, Form, Formik } from 'formik'
-import React from 'react'
-import * as yup from 'yup'
+import {
+  ClaimPaymentsDocument,
+  useUpdateReserveMutation,
+} from 'api/generated/graphql'
+import React, { useState } from 'react'
 
-import { TextField } from '../../../shared/inputs/TextField'
+import { Button } from 'hedvig-ui/button'
+import { Input } from 'hedvig-ui/input'
+import { Spacing } from 'hedvig-ui/spacing'
 
-interface Props {
-  claimId: string
-  refetch: () => Promise<any>
-}
+const isStringNumber = (s: string) => /^-?\d+$/.test(s) || /^\d+\.\d+$/.test(s)
 
-interface ReserveFormData {
-  amount: number
-}
-
-const validationSchema = yup.object().shape({
-  amount: yup.string().required(),
-})
-
-const ReserveForm = styled(Form)({})
-
-const SubmitButton = withStyles({
-  root: {
-    marginTop: '1rem',
-  },
-})(MuiButton)
-
-const ClaimReserveForm: React.FC<Props> = ({ claimId }) => {
-  const [updateReserve] = useUpdateReserveMutation()
+const ClaimReserveForm: React.FC<{ claimId: string }> = ({ claimId }) => {
+  const [updateReserve, { loading }] = useUpdateReserveMutation()
+  const [value, setValue] = useState('')
 
   return (
-    <Formik<ReserveFormData>
-      initialValues={{ amount: 0 }}
-      onSubmit={async (values, { resetForm }) => {
-        await updateReserve({
-          variables: {
-            claimId,
-            amount: {
-              amount: +values.amount,
-              currency: 'SEK',
+    <>
+      <Input
+        placeholder={'Reserve amount'}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
+      <Spacing top={'small'} />
+      <Button
+        variation="primary"
+        disabled={!isStringNumber(value) || value === '' || loading}
+        onClick={async () => {
+          await updateReserve({
+            variables: {
+              claimId,
+              amount: {
+                amount: value,
+                currency: 'SEK',
+              },
             },
-          },
-        })
-        resetForm()
-      }}
-      validationSchema={validationSchema}
-    >
-      {({ isValid, isSubmitting }) => (
-        <ReserveForm>
-          <Field
-            component={TextField}
-            placeholder={'Reserve amount'}
-            name="amount"
-          />
-          <SubmitButton
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={!isValid || isSubmitting}
-          >
-            Update Reserve
-          </SubmitButton>
-        </ReserveForm>
-      )}
-    </Formik>
+            refetchQueries: [
+              { query: ClaimPaymentsDocument, variables: { claimId } },
+            ],
+          })
+          setValue('')
+        }}
+      >
+        Update Reserve
+      </Button>
+    </>
   )
 }
 

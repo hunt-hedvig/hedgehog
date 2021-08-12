@@ -33,6 +33,8 @@ query ClaimPage($claimId: ID!) {
       contractTypeName
       preferredCurrency
       typeOfContract
+      masterInception
+      terminationDate
     }
 
     agreement {

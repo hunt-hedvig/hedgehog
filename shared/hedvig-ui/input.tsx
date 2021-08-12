@@ -27,13 +27,18 @@ const StyledSemanticInput = styled(SemanticInput)<CustomInputProps>`
 
       transition: background 300ms, border-color 300ms;
       ${({ muted, theme }) =>
-        muted &&
-        css`
-          background-color: ${theme.mutedBackground ?? colorsV3.gray300};
-          border-color: ${theme.mutedBackground ?? colorsV3.gray300};
-          color: ${theme.mutedText ?? colorsV3.gray500};
-        `};
-    }
+        muted
+          ? css`
+              background-color: ${theme.mutedBackground ?? colorsV3.gray300};
+              border-color: ${theme.mutedBackground ?? colorsV3.gray300};
+              color: ${theme.mutedText ?? colorsV3.gray500};
+            `
+          : css`
+              :focus {
+                border-color: ${theme.accent};
+              }
+            `}
+
   }
 `
 

@@ -19,16 +19,15 @@ import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
+import { toast } from 'react-hot-toast'
 import { TerminationReason } from 'types/enums'
-import { withShowNotification } from 'utils/notifications'
 
 const initialTerminationDate = (contract: Contract): Date =>
   contract.terminationDate ? new Date(contract.terminationDate) : new Date()
 
-const TerminationDateComponent: React.FC<{
+export const TerminationDate: React.FC<{
   contract: Contract
-} & WithShowNotification> = ({ contract, showNotification }) => {
+}> = ({ contract }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
   const [terminationDate, setTerminationDate] = React.useState(
     initialTerminationDate(contract),
@@ -82,23 +81,17 @@ const TerminationDateComponent: React.FC<{
                   if (
                     window.confirm('Are you want to revert the termination?')
                   ) {
-                    revertTermination(revertTerminationOptions(contract))
-                      .then(() => {
-                        showNotification({
-                          type: 'olive',
-                          header: 'Termination reverted',
-                          message: 'Successfully reverted the termination',
-                        })
-                        reset()
-                      })
-                      .catch((error) => {
-                        showNotification({
-                          type: 'red',
-                          header: 'Unable to revert termination',
-                          message: error.message,
-                        })
-                        throw error
-                      })
+                    toast.promise(
+                      revertTermination(revertTerminationOptions(contract)),
+                      {
+                        loading: 'Reverting termination',
+                        success: () => {
+                          reset()
+                          return 'Termination reverted'
+                        },
+                        error: 'Could not revert termination',
+                      },
+                    )
                   }
                 }}
               >
@@ -127,25 +120,19 @@ const TerminationDateComponent: React.FC<{
                     } to ${format(terminationDate, 'yyyy-MM-dd')}?`,
                   )
                   if (confirmed) {
-                    changeTerminationDate(
-                      changeTerminationDateOptions(contract, terminationDate),
+                    toast.promise(
+                      changeTerminationDate(
+                        changeTerminationDateOptions(contract, terminationDate),
+                      ),
+                      {
+                        loading: 'Changing termination date',
+                        success: () => {
+                          reset()
+                          return 'Termination date changed'
+                        },
+                        error: 'Could not change termination date',
+                      },
                     )
-                      .then(() => {
-                        showNotification({
-                          type: 'olive',
-                          header: 'Termination date changed',
-                          message: 'Successfully changed termination date.',
-                        })
-                        reset()
-                      })
-                      .catch((error) => {
-                        showNotification({
-                          type: 'red',
-                          header: 'Unable to change termination date',
-                          message: error.message,
-                        })
-                        throw error
-                      })
                   }
                 }}
               >
@@ -177,13 +164,13 @@ const TerminationDateComponent: React.FC<{
           <EnumDropdown
             enumToSelectFrom={TerminationReason}
             placeholder={'Termination reason'}
-            setValue={setTerminationReason}
+            onChange={setTerminationReason}
           />
           <Spacing top bottom>
             <TextArea
               placeholder={'Comment on the reason of termination...'}
               value={comment}
-              setValue={setComment}
+              onChange={setComment}
             />
           </Spacing>
           <ButtonsGroup>
@@ -199,30 +186,24 @@ const TerminationDateComponent: React.FC<{
                   )}?`,
                 )
                 if (confirmed) {
-                  terminateContract(
-                    terminateContractOptions(
-                      contract,
-                      terminationDate,
-                      terminationReason!,
-                      comment,
+                  toast.promise(
+                    terminateContract(
+                      terminateContractOptions(
+                        contract,
+                        terminationDate,
+                        terminationReason!,
+                        comment,
+                      ),
                     ),
+                    {
+                      loading: 'Terminating contract',
+                      success: () => {
+                        reset()
+                        return 'Contract terminated'
+                      },
+                      error: 'Could not terminate contract',
+                    },
                   )
-                    .then(() => {
-                      showNotification({
-                        type: 'olive',
-                        header: 'Contract terminated',
-                        message: 'Successfully terminated the contract.',
-                      })
-                      reset()
-                    })
-                    .catch((error) => {
-                      showNotification({
-                        type: 'red',
-                        header: 'Unable to terminate',
-                        message: error.message,
-                      })
-                      throw error
-                    })
                 }
               }}
             >
@@ -237,5 +218,3 @@ const TerminationDateComponent: React.FC<{
     </>
   )
 }
-
-export const TerminationDate = withShowNotification(TerminationDateComponent)

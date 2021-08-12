@@ -1,39 +1,43 @@
-import { AssignVoucherVisibleNoDiscount } from 'api/generated/graphql'
-import { ClearableDropdown as Dropdown } from 'features/tools/campaign-codes/components/ClearableDropdown'
+import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
+import { DateRangeWrapper } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
+import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
   addPartnerVisibleNoDiscountCodeOptions,
   useAddPartnerVisibleNoDiscountCode,
 } from 'graphql/use-add-partner-visible-no-discount-code'
-import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
+import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
+import { Label } from 'hedvig-ui/typography'
 import React from 'react'
-import { Input } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
-import { Centered, DateTimePickerWrapper, Row } from '../styles'
-import { mapCampaignOwners } from '../utils'
+import { toast } from 'react-hot-toast'
 
-const initialFormData: AssignVoucherVisibleNoDiscount = {
+interface VisibleNoDiscountFormData {
+  code: string
+  partnerId: string | null
+  validFrom?: Scalars['Instant']
+  validUntil?: Scalars['Instant']
+}
+
+const initialFormData: VisibleNoDiscountFormData = {
   code: '',
   partnerId: '',
   validFrom: null,
   validUntil: null,
 }
 
-const formIsValid = (formData: AssignVoucherVisibleNoDiscount) => {
-  return formData.partnerId !== '' && formData.code !== ''
+const formIsValid = (formData: VisibleNoDiscountFormData) => {
+  const { partnerId, code } = formData
+
+  return !(!partnerId || !code)
 }
 
-const VisibleNoDiscount: React.FC<WithShowNotification> = ({
-  showNotification,
-}) => {
-  const [formData, setFormData] = React.useState<
-    AssignVoucherVisibleNoDiscount
-  >(initialFormData)
+export const VisibleNoDiscountForm: React.FC = () => {
+  const [formData, setFormData] = React.useState<VisibleNoDiscountFormData>(
+    initialFormData,
+  )
 
-  const [partnerCampaignOwners] = usePartnerCampaignOwners()
   const [
     setPartnerVisibleNoDiscount,
     { loading },
@@ -43,22 +47,21 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
 
   return (
     <>
-      <label>Partner</label>
-      <Dropdown
-        value={formData.partnerId}
-        disabled={loading}
-        placeholder={'Partner'}
-        onChange={(_, { value: partnerId }) =>
-          setFormData({ ...formData, partnerId: partnerId as string })
+      <Label>Partner</Label>
+      <PartnerDropdown
+        loading={loading}
+        onChange={(data) =>
+          setFormData({
+            ...formData,
+            partnerId: data ? (data.value as string) : null,
+          })
         }
-        onClear={() => setFormData({ ...formData, partnerId: '' })}
-        options={mapCampaignOwners(partnerCampaignOwners)}
+        value={formData.partnerId ?? ''}
       />
       <Spacing top={'small'} />
-      <label>Code</label>
+      <Label>Code</Label>
       <Input
         value={formData.code}
-        fluid
         disabled={loading}
         onChange={({ currentTarget: { value: code } }) =>
           setFormData({ ...formData, code })
@@ -66,27 +69,28 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
         placeholder="Code"
       />
       <Spacing top={'small'} />
-      <label>Valid period</label>
-      <Row>
-        <DateTimePickerWrapper>
+      <DateRangeWrapper>
+        <div style={{ width: '100%', paddingRight: '1.0em' }}>
+          <Label>Valid from</Label>
           <DateTimePicker
-            fullWidth
-            disabled={loading}
-            date={formData.validFrom!}
-            placeholder={'Valid from'}
+            fullWidth={true}
+            date={formData.validFrom}
+            placeholder={'Beginning of time'}
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
+        </div>
+        <div style={{ width: '100%', paddingLeft: '1.0em' }}>
+          <Label>Valid to</Label>
           <DateTimePicker
-            fullWidth
-            disabled={loading}
-            date={formData.validUntil!}
-            placeholder={'Valid until'}
+            fullWidth={true}
+            date={formData.validUntil}
+            placeholder={'End of time'}
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
-        </DateTimePickerWrapper>
-      </Row>
+        </div>
+      </DateRangeWrapper>
       <Spacing top={'small'} />
-      <Centered>
+      <div>
         <Button
           variation="primary"
           loading={loading}
@@ -97,32 +101,27 @@ const VisibleNoDiscount: React.FC<WithShowNotification> = ({
             ) {
               return
             }
-            setPartnerVisibleNoDiscount(
-              addPartnerVisibleNoDiscountCodeOptions(formData),
+
+            toast.promise(
+              setPartnerVisibleNoDiscount(
+                addPartnerVisibleNoDiscountCodeOptions(
+                  formData as AssignVoucherVisibleNoDiscount,
+                ),
+              ),
+              {
+                loading: 'Creating campaign',
+                success: () => {
+                  reset()
+                  return 'Campaign created'
+                },
+                error: 'Could not create campaign',
+              },
             )
-              .then(() => {
-                reset()
-                showNotification({
-                  type: 'olive',
-                  header: 'Success',
-                  message: `Successfully created a new visible no discount campaign for partner ${formData.partnerId}`,
-                })
-              })
-              .catch((error) => {
-                showNotification({
-                  type: 'red',
-                  header: 'Error',
-                  message: error.message,
-                })
-                throw error
-              })
           }}
         >
-          Create New Campaign
+          Create Campaign
         </Button>
-      </Centered>
+      </div>
     </>
   )
 }
-
-export const VisibleNoDiscountForm = withShowNotification(VisibleNoDiscount)
