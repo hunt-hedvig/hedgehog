@@ -14,7 +14,7 @@ import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
 
 export const EmployeeTable: React.FC<{
-  filter: { email; role }
+  filter: { email; role; showDeleted }
 }> = ({ filter }) => {
   const employees = useListEmployeesQuery()
 
@@ -71,7 +71,8 @@ export const EmployeeTable: React.FC<{
 
                     if (
                       (filter.role && role !== filter.role) ||
-                      !email.includes(filter.email)
+                      !email.includes(filter.email) ||
+                      (deletedAt && !filter.showDeleted)
                     ) {
                       return
                     }

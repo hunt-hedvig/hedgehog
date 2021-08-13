@@ -9,6 +9,7 @@ export const EmployeesComponent: React.FC = () => {
   const [filter, setFilter] = useState({
     email: '',
     role: null,
+    showDeleted: false,
   })
 
   return (

@@ -4,15 +4,16 @@ import { CreateEmployee } from 'features/tools/employees/components/CreateEmploy
 import { Row } from 'features/tools/employees/utils'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React from 'react'
-import { Input } from 'semantic-ui-react'
+import { Checkbox, Input } from 'semantic-ui-react'
 
 const StyledDropdown = styled(SearchableDropdown)`
   width: 12em;
+  padding: 0 1em;
 `
 
 export const EmployeeFilter: React.FC<{
-  filter: { email; role }
-  setFilter: React.Dispatch<React.SetStateAction<{ email; role }>>
+  filter: { email; role; showDeleted }
+  setFilter: React.Dispatch<React.SetStateAction<{ email; role; showDeleted }>>
 }> = ({ filter, setFilter }) => {
   const options = Object.values(Role).map((value) => {
     return {
@@ -33,7 +34,6 @@ export const EmployeeFilter: React.FC<{
             })
           }}
           placeholder="Filter email"
-          style={{ paddingRight: '1em' }}
         />
         <StyledDropdown
           options={options}
@@ -49,6 +49,16 @@ export const EmployeeFilter: React.FC<{
           isClearable
           isSearchable={false}
           placeholder={'Filter role'}
+        />
+        <Checkbox
+          checked={filter.showDeleted}
+          label={<label>{'Show deleted'}</label>}
+          onChange={(_, { checked }) =>
+            setFilter({
+              ...filter,
+              showDeleted: checked,
+            })
+          }
         />
       </Row>
       <CreateEmployee />
