@@ -43,7 +43,7 @@ export const CreateEmployee: React.FC = () => {
         <ButtonsGroup>
           <Button
             variation={'primary'}
-            onClick={() =>
+            onClick={() => {
               toast.promise(createEmployee({ variables: { email } }), {
                 loading: 'Creating employee',
                 success: () => {
@@ -52,7 +52,7 @@ export const CreateEmployee: React.FC = () => {
                 },
                 error: 'Could not create employee',
               })
-            }
+            }}
           >
             Create
           </Button>
