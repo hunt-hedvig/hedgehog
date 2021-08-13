@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Popover } from 'hedvig-ui/popover'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link45deg } from 'react-bootstrap-icons'
 
 const CopyableWrapper = styled.div`
@@ -11,32 +11,18 @@ const CopyableWrapper = styled.div`
   justify-content: center;
 
   .link-icon {
-    transition: all 300ms;
     background-color: ${({ theme }) => theme.backgroundTransparent};
     border-radius: 6px;
     font-size: 1.1em;
-    opacity: 0;
+    opacity: 1;
   }
 
   .component {
-    transition: all 300ms;
-    margin-right: -1em;
+    margin-right: 0.25em;
   }
 
-  :hover {
-    transition: all 300ms;
-    .component {
-      transition: all 300ms;
-      margin-right: 0.25em;
-    }
-    .link-icon {
-      transition: all 300ms;
-      font-size: 1.1em;
-      opacity: 1;
-    }
-    .link-icon:hover {
-      cursor: pointer;
-    }
+  .link-icon:hover {
+    cursor: pointer;
   }
 `
 
@@ -48,23 +34,41 @@ interface PopoverLabel {
 export const Copyable: React.FC<{
   children: React.ReactNode
   onClick: () => void
+  icon?: boolean
   copyLabel?: PopoverLabel
-}> = ({ copyLabel, children, onClick }) => {
+}> = ({ copyLabel, children, onClick, icon = false }) => {
   const [copied, setCopied] = useState(false)
 
   const { before = 'Copy', after = 'Copied!' } = copyLabel ?? {}
 
+  useEffect(() => {
+    setTimeout(() => setCopied(false), 1000)
+  }, [copied])
+
+  const handleCopy = () => {
+    onClick()
+    setCopied(true)
+  }
+
+  if (icon) {
+    return (
+      <CopyableWrapper onMouseLeave={() => setCopied(false)}>
+        <Popover contents={copied ? after : before}>
+          <div className="component" onClick={() => !icon && handleCopy()}>
+            {children}
+          </div>
+        </Popover>
+      </CopyableWrapper>
+    )
+  }
+
   return (
     <CopyableWrapper onMouseLeave={() => setCopied(false)}>
-      <div className="component">{children}</div>
+      <div className="component" onClick={() => !icon && handleCopy()}>
+        {children}
+      </div>
       <Popover contents={copied ? after : before}>
-        <Link45deg
-          onClick={() => {
-            onClick()
-            setCopied(true)
-          }}
-          className="link-icon"
-        />
+        <Link45deg onClick={handleCopy} className="link-icon" />
       </Popover>
     </CopyableWrapper>
   )
