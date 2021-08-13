@@ -34,9 +34,6 @@ const TableRowColored = styled(Table.Row)<{
 
 const StyledTable = styled(Table)`
   overflow: visible !important;
-  tr td {
-    border-left: 0;
-  }
 `
 
 const AmountCell = styled(Table.Cell)<{
@@ -47,80 +44,76 @@ const AmountCell = styled(Table.Cell)<{
 
 export const AccountEntryTable: React.FC<{
   accountEntries: AccountEntry[]
-}> = ({ accountEntries }) => {
-  return (
-    <StyledTable>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Date</Table.HeaderCell>
-          <Table.HeaderCell>Type</Table.HeaderCell>
-          <Table.HeaderCell>Title</Table.HeaderCell>
-          <Table.HeaderCell>Amount</Table.HeaderCell>
-          <Table.HeaderCell width={1}>Details</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
+}> = ({ accountEntries }) => (
+  <StyledTable>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>Date</Table.HeaderCell>
+        <Table.HeaderCell>Type</Table.HeaderCell>
+        <Table.HeaderCell>Title</Table.HeaderCell>
+        <Table.HeaderCell>Amount</Table.HeaderCell>
+        <Table.HeaderCell width={1}>Details</Table.HeaderCell>
+      </Table.Row>
+    </Table.Header>
 
-      <Table.Body>
-        {accountEntries.map((entry) => (
-          <TableRowColored entry={entry} key={entry.id}>
-            <Table.Cell entry={entry}>{entry.fromDate}</Table.Cell>
-            <Table.Cell>
-              <Capitalized>{entry.type}</Capitalized>
-            </Table.Cell>
-            <Table.Cell>
-              {entry.title && entry.title !== ''
-                ? entry.title
-                : 'Not specified'}
-            </Table.Cell>
-            <AmountCell entry={entry}>
-              {formatMoney(entry.amount, {
-                useGrouping: true,
-                minimumFractionDigits: 2,
-              })}
-            </AmountCell>
-            <Table.Cell textAlign="center">
-              <Popover
-                contents={
-                  <Grid>
+    <Table.Body>
+      {accountEntries.map((entry) => (
+        <TableRowColored entry={entry} key={entry.id}>
+          <Table.Cell entry={entry}>{entry.fromDate}</Table.Cell>
+          <Table.Cell>
+            <Capitalized>{entry.type}</Capitalized>
+          </Table.Cell>
+          <Table.Cell>
+            {entry.title && entry.title !== '' ? entry.title : 'Not specified'}
+          </Table.Cell>
+          <AmountCell entry={entry}>
+            {formatMoney(entry.amount, {
+              useGrouping: true,
+              minimumFractionDigits: 2,
+            })}
+          </AmountCell>
+          <Table.Cell textAlign="center">
+            <Popover
+              contents={
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Bold>Entry ID</Bold>
+                      <br />
+                      {entry.id}
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Bold>Reference</Bold>
+                      <br />
+                      {entry.reference}
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Bold>Source</Bold>
+                      <br />
+                      {entry.source}
+                    </Grid.Column>
+                  </Grid.Row>
+                  {entry.comment && (
                     <Grid.Row>
                       <Grid.Column>
-                        <Bold>Entry ID</Bold>
+                        <Bold>Comment</Bold>
                         <br />
-                        {entry.id}
+                        {entry.comment}
                       </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row>
-                      <Grid.Column>
-                        <Bold>Reference</Bold>
-                        <br />
-                        {entry.reference}
-                      </Grid.Column>
-                    </Grid.Row>
-                    <Grid.Row>
-                      <Grid.Column>
-                        <Bold>Source</Bold>
-                        <br />
-                        {entry.source}
-                      </Grid.Column>
-                    </Grid.Row>
-                    {entry.comment && (
-                      <Grid.Row>
-                        <Grid.Column>
-                          <Bold>Comment</Bold>
-                          <br />
-                          {entry.comment}
-                        </Grid.Column>
-                      </Grid.Row>
-                    )}
-                  </Grid>
-                }
-              >
-                <InfoCircleFill />
-              </Popover>
-            </Table.Cell>
-          </TableRowColored>
-        ))}
-      </Table.Body>
-    </StyledTable>
-  )
-}
+                  )}
+                </Grid>
+              }
+            >
+              <InfoCircleFill />
+            </Popover>
+          </Table.Cell>
+        </TableRowColored>
+      ))}
+    </Table.Body>
+  </StyledTable>
+)
