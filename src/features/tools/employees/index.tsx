@@ -1,4 +1,3 @@
-import { CreateEmployee } from 'features/tools/employees/components/CreateEmployee'
 import { EmployeeFilter } from 'features/tools/employees/components/EmployeeFilter'
 import { EmployeeTable } from 'features/tools/employees/components/EmployeeTable'
 import { Row } from 'features/tools/employees/utils'
@@ -16,7 +15,6 @@ export const EmployeesComponent: React.FC = () => {
     <>
       <Row>
         <MainHeadline>Employees</MainHeadline>
-        <CreateEmployee />
       </Row>
       <CardsWrapper>
         <Card>

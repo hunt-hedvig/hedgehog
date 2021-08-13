@@ -12,7 +12,7 @@ export const dropdownOptions: DropdownOption[] = Object.values(Role).map(
   (value, index) => {
     return {
       key: index + 1,
-      value: value as string,
+      value,
       text: (value as string).replace('_', ' '),
     }
   },

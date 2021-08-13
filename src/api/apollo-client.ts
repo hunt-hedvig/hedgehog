@@ -59,6 +59,9 @@ export const apolloClient = (() => {
         ClaimNote: {
           keyFields: ['date', 'handlerReference'],
         },
+        Employee: {
+          keyFields: ['id'],
+        },
       },
     }),
   })

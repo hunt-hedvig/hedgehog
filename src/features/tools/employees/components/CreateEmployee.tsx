@@ -1,14 +1,10 @@
 import styled from '@emotion/styled'
-import {
-  ListEmployeesDocument,
-  useCreateEmployeeMutation,
-} from 'api/generated/graphql'
+import { useCreateEmployeeMutation } from 'api/generated/graphql'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Input } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,13 +13,11 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-const Employee: React.FC<WithShowNotification> = ({ showNotification }) => {
+export const CreateEmployee: React.FC = () => {
   const [createPressed, setCreatePressed] = useState(false)
   const [email, setEmail] = useState('')
 
-  const [createEmployee, { loading }] = useCreateEmployeeMutation({
-    refetchQueries: () => [{ query: ListEmployeesDocument }],
-  })
+  const [createEmployee, { loading }] = useCreateEmployeeMutation()
 
   const reset = () => {
     setCreatePressed(false)
@@ -45,23 +39,14 @@ const Employee: React.FC<WithShowNotification> = ({ showNotification }) => {
           <Button
             variation={'primary'}
             onClick={() =>
-              createEmployee({ variables: { email } })
-                .then(() => {
-                  showNotification({
-                    type: 'olive',
-                    header: 'Employee created',
-                    message: 'Successfully created employee.',
-                  })
+              toast.promise(createEmployee({ variables: { email } }), {
+                loading: 'Creating employee',
+                success: () => {
                   reset()
-                })
-                .catch((error) => {
-                  showNotification({
-                    type: 'red',
-                    header: 'Unable to create employee.',
-                    message: error.message,
-                  })
-                  throw error
-                })
+                  return 'Employee created'
+                },
+                error: 'Could not create employee',
+              })
             }
           >
             Create
@@ -76,5 +61,3 @@ const Employee: React.FC<WithShowNotification> = ({ showNotification }) => {
     </Button>
   )
 }
-
-export const CreateEmployee = withShowNotification(Employee)

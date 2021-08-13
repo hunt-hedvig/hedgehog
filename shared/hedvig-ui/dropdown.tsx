@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import {
   Dropdown as SemanticDropdown,
   DropdownItemProps,
+  DropdownProps,
 } from 'semantic-ui-react'
 
 export const Dropdown: React.FC<{
@@ -12,7 +13,7 @@ export const Dropdown: React.FC<{
   onRender?: () => React.ReactNode | null
   emptyLabel?: string
   className?: string
-}> = ({
+} & DropdownProps> = ({
   options,
   onChange,
   value,

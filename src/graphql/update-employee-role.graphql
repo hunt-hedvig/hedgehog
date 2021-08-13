@@ -1,3 +1,9 @@
 mutation UpdateEmployeeRole($email: String!, $role: Role!) {
-  updateEmployeeRole(email: $email, role: $role)
+  updateEmployeeRole(email: $email, role: $role) {
+    id
+    email
+    role
+    firstGrantedAt
+    deletedAt
+  }
 }

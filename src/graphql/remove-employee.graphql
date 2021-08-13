@@ -1,3 +1,9 @@
 mutation RemoveEmployee($email: String!) {
-  removeEmployee(email: $email)
+  removeEmployee(email: $email) {
+    id
+    email
+    role
+    firstGrantedAt
+    deletedAt
+  }
 }

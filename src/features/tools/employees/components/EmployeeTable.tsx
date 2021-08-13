@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import {
   ListEmployeesDocument,
   useListEmployeesQuery,
@@ -8,19 +7,15 @@ import {
 import { dropdownOptions } from 'features/tools/employees/utils'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Card } from 'hedvig-ui/card'
+import { Dropdown } from 'hedvig-ui/dropdown'
 import { dateTimeFormatter } from 'lib/helpers'
 import React, { useState } from 'react'
-import { Dropdown, Table } from 'semantic-ui-react'
-import { WithShowNotification } from 'store/actions/notificationsActions'
-import { withShowNotification } from 'utils/notifications'
+import { toast } from 'react-hot-toast'
+import { Table } from 'semantic-ui-react'
 
-const StyledDropdown = styled(Dropdown)({
-  width: '100%',
-})
-
-const Employee: React.FC<{
+export const EmployeeTable: React.FC<{
   filter: { email; role }
-} & WithShowNotification> = ({ filter, showNotification }) => {
+}> = ({ filter }) => {
   const employees = useListEmployeesQuery()
 
   const [
@@ -83,29 +78,32 @@ const Employee: React.FC<{
 
                     return (
                       <Table.Row key={id}>
-                        <Table.Cell>{email}</Table.Cell>
-                        <Table.Cell>
-                          <StyledDropdown
-                            options={dropdownOptions}
-                            onChange={(_, { value }) =>
-                              setSelectedRoles({
-                                ...selectedRoles,
-                                [id]: value,
-                              })
-                            }
-                            placeholder={role}
-                            selection
-                            defaultValue={role}
-                          />
-                        </Table.Cell>
-                        <Table.Cell>
-                          {dateTimeFormatter(
-                            firstGrantedAt,
-                            'yyyy-MM-dd HH:mm:ss',
+                        <Table.Cell width={5}>{email}</Table.Cell>
+                        <Table.Cell width={3}>
+                          {!deletedAt ? (
+                            <Dropdown
+                              options={dropdownOptions}
+                              onChange={(value) =>
+                                setSelectedRoles({
+                                  ...selectedRoles,
+                                  [id]: value,
+                                })
+                              }
+                              selection
+                              value={selectedRoles[id] ?? role}
+                            />
+                          ) : (
+                            role
                           )}
                         </Table.Cell>
-                        <Table.Cell>
-                          {dateTimeFormatter(deletedAt, 'yyyy-MM-dd HH:mm:ss')}
+                        <Table.Cell width={3}>
+                          {dateTimeFormatter(
+                            firstGrantedAt,
+                            'yyyy-MM-dd HH:mm',
+                          )}
+                        </Table.Cell>
+                        <Table.Cell width={3}>
+                          {dateTimeFormatter(deletedAt, 'yyyy-MM-dd HH:mm')}
                         </Table.Cell>
                         <Table.Cell width={1}>
                           <ButtonsGroup>
@@ -117,58 +115,41 @@ const Employee: React.FC<{
                                 updateRoleLoading
                               }
                               onClick={() =>
-                                updateRole({
-                                  variables: {
-                                    email,
-                                    role: selectedRoles[id],
+                                toast.promise(
+                                  updateRole({
+                                    variables: {
+                                      email,
+                                      role: selectedRoles[id],
+                                    },
+                                  }),
+                                  {
+                                    loading: 'Updating role',
+                                    success: 'Role updated',
+                                    error: 'Could not update role',
                                   },
-                                })
-                                  .then(() => {
-                                    showNotification({
-                                      type: 'olive',
-                                      header: 'Role updated',
-                                      message: 'Successfully updated role.',
-                                    })
-                                  })
-                                  .catch((error) => {
-                                    showNotification({
-                                      type: 'red',
-                                      header: 'Unable to update role.',
-                                      message: error.message,
-                                    })
-                                    throw error
-                                  })
+                                )
                               }
                             >
                               Update Role
                             </Button>
                             <Button
                               variation={'danger'}
-                              disabled={removeEmployeeLoading}
+                              disabled={removeEmployeeLoading || deletedAt}
                               onClick={() => {
                                 const confirmed = window.confirm(
                                   `Are you sure you want to remove employee ${email}?`,
                                 )
                                 if (confirmed) {
-                                  removeEmployee({
-                                    variables: { email },
-                                  })
-                                    .then(() => {
-                                      showNotification({
-                                        type: 'olive',
-                                        header: 'Employee removed',
-                                        message:
-                                          'Successfully removed employee.',
-                                      })
-                                    })
-                                    .catch((error) => {
-                                      showNotification({
-                                        type: 'red',
-                                        header: 'Unable to remove employee.',
-                                        message: error.message,
-                                      })
-                                      throw error
-                                    })
+                                  toast.promise(
+                                    removeEmployee({
+                                      variables: { email },
+                                    }),
+                                    {
+                                      loading: 'Removing employee',
+                                      success: 'Employee removed',
+                                      error: 'Could not remove employee',
+                                    },
+                                  )
                                 }
                               }}
                             >
@@ -187,5 +168,3 @@ const Employee: React.FC<{
     </>
   )
 }
-
-export const EmployeeTable = withShowNotification(Employee)

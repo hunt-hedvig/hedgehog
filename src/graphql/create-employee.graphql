@@ -1,3 +1,9 @@
 mutation CreateEmployee($email: String!) {
-  createEmployee(email: $email)
+  createEmployee(email: $email) {
+    id
+    email
+    role
+    firstGrantedAt
+    deletedAt
+  }
 }
