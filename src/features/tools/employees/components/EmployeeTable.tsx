@@ -21,9 +21,7 @@ export const EmployeeTable: React.FC<{
   const [
     updateRole,
     { loading: updateRoleLoading },
-  ] = useUpdateEmployeeRoleMutation({
-    refetchQueries: () => [{ query: ListEmployeesDocument }],
-  })
+  ] = useUpdateEmployeeRoleMutation()
 
   const [
     removeEmployee,
@@ -121,6 +119,16 @@ export const EmployeeTable: React.FC<{
                                     variables: {
                                       email,
                                       role: selectedRoles[id],
+                                    },
+                                    optimisticResponse: {
+                                      updateEmployeeRole: {
+                                        id,
+                                        __typename: 'Employee',
+                                        email,
+                                        role: selectedRoles[id],
+                                        firstGrantedAt,
+                                        deletedAt,
+                                      },
                                     },
                                   }),
                                   {

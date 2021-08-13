@@ -1,5 +1,8 @@
 import styled from '@emotion/styled'
-import { useCreateEmployeeMutation } from 'api/generated/graphql'
+import {
+  ListEmployeesDocument,
+  useCreateEmployeeMutation,
+} from 'api/generated/graphql'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import React, { useState } from 'react'
@@ -17,7 +20,9 @@ export const CreateEmployee: React.FC = () => {
   const [createPressed, setCreatePressed] = useState(false)
   const [email, setEmail] = useState('')
 
-  const [createEmployee, { loading }] = useCreateEmployeeMutation()
+  const [createEmployee, { loading }] = useCreateEmployeeMutation({
+    refetchQueries: () => [{ query: ListEmployeesDocument }],
+  })
 
   const reset = () => {
     setCreatePressed(false)
