@@ -439,7 +439,6 @@ export const SemanticOverrides = styled.div`
         padding: 1.125rem;
         border: 0;
         border-top: 1px solid ${theme.border};
-        border-left: 1px solid ${theme.border};
       }
       td:first-of-type {
         border-left: 0;
