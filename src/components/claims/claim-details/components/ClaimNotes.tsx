@@ -19,8 +19,7 @@ import { TextArea } from 'hedvig-ui/text-area'
 import { Paragraph, Shadowed } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys } from 'utils/hooks/key-press-hook'
+import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
@@ -74,15 +73,14 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
 
   const { data } = useGetMeQuery()
 
-  const { registerActions } = useCommandLine()
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
 
-  registerActions([
-    {
-      label: 'Add note',
-      keys: [Keys.Option, Keys.Enter],
-      onResolve: () => !submitting && textFieldFocused && handleSubmitNote(),
-    },
-  ])
+  React.useEffect(() => {
+    if (isOptionPressed && isEnterPressed && !submitting && textFieldFocused) {
+      handleSubmitNote()
+    }
+  }, [isEnterPressed, isOptionPressed])
 
   const handleSubmitNote = () => {
     setSubmitting(true)
