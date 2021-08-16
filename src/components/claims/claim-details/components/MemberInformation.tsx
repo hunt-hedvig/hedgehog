@@ -24,6 +24,7 @@ import { formatMoney } from 'utils/money'
 
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { CardContent } from 'hedvig-ui/card'
+import { Copyable } from 'hedvig-ui/copyable'
 import {
   InfoContainer,
   InfoRow,
@@ -75,9 +76,6 @@ const MemberName = styled('h2')({
 
 const ClickableText = styled.span`
   color: ${({ theme }) => theme.accent};
-  &:hover {
-    cursor: pointer;
-  }
 `
 
 export const MemberInformation: React.FC<{
@@ -142,8 +140,15 @@ export const MemberInformation: React.FC<{
           <InfoRow>
             Member ID
             <InfoText>
-              <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
-              {isHintingOption && '(M)'}
+              <Copyable
+                copyLabel={{ before: 'Copy link' }}
+                onClick={() => {
+                  copy(`${window.location.origin}/members/${memberId}`)
+                }}
+              >
+                <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
+                {isHintingOption && '(M)'}
+              </Copyable>
             </InfoText>
           </InfoRow>
           {member?.contractMarketInfo?.market === Market.Norway && (
@@ -163,15 +168,11 @@ export const MemberInformation: React.FC<{
             Personal number
             <InfoText>
               {member?.personalNumber ? (
-                <Popover contents={<>Click to copy</>}>
-                  <ClickableText
-                    onClick={() => {
-                      copy(member.personalNumber!)
-                    }}
-                  >
+                <Copyable onClick={() => copy(member.personalNumber!)}>
+                  <ClickableText>
                     {formatSsn(member.personalNumber)}
                   </ClickableText>
-                </Popover>
+                </Copyable>
               ) : (
                 'No personal number'
               )}

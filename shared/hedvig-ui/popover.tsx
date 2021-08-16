@@ -11,7 +11,7 @@ const Contents = styled.div`
   padding: 0.5rem;
   border-radius: 0.25rem;
 
-  min-width: 150px;
+  min-width: 100px;
 
   ${({ theme }) => css`
     background: ${theme.foreground};
@@ -21,7 +21,7 @@ const Contents = styled.div`
 
 const PopoverWrapper = styled.div<{ disableHover: boolean }>`
   position: relative;
-  display: inline-block;
+  display: inline-flex;
 
   ${Contents} {
     display: none;
@@ -55,6 +55,7 @@ interface PopoverProps {
   onOpen?: () => void
   onClose?: () => void
 }
+
 export const Popover: React.FC<PopoverProps> = ({
   contents,
   className,
@@ -66,16 +67,8 @@ export const Popover: React.FC<PopoverProps> = ({
   return (
     <PopoverWrapper
       className={className}
-      onMouseOver={() => {
-        if (onOpen) {
-          onOpen()
-        }
-      }}
-      onMouseLeave={() => {
-        if (onClose) {
-          onClose()
-        }
-      }}
+      onMouseOver={() => onOpen?.()}
+      onMouseLeave={() => onClose?.()}
       disableHover={!!disable}
     >
       <Contents>

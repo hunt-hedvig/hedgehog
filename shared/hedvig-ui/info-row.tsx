@@ -1,7 +1,6 @@
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { spacingMap } from 'hedvig-ui/spacing'
-import { Paragraph } from 'hedvig-ui/typography'
 
 export const InfoContainer = styled('div')`
   display: flex;
@@ -9,8 +8,8 @@ export const InfoContainer = styled('div')`
   width: 100%;
 `
 
-export const InfoRow = styled(Paragraph)`
-  margin-bottom: 0.5rem;
+export const InfoRow = styled.span`
+  margin-bottom: 0.25rem;
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -61,7 +60,7 @@ export const InfoTag = styled.div<{
 }>`
   background-color: ${({ status = 'success' }) =>
     mapInfoTagStatus(status).backgroundColor};
-  padding: 0em 0.7em;
+  padding: 0 0.7em;
   color: ${({ status = 'success' }) => mapInfoTagStatus(status).color};
   border-radius: 7px;
   font-size: 0.85em;
