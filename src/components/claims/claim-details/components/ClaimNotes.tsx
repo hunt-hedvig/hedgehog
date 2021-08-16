@@ -2,6 +2,7 @@ import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
   useClaimPageQuery,
+  useGetMeQuery,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
@@ -9,18 +10,28 @@ import React, { useState } from 'react'
 
 import styled from '@emotion/styled'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
+import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Button } from 'hedvig-ui/button'
 import { CardContent } from 'hedvig-ui/card'
 import { List, ListItem } from 'hedvig-ui/list'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
-import { Paragraph } from 'hedvig-ui/typography'
+import { Paragraph, Shadowed } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
     return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
   })
+
+const getTodayInUTC = () => {
+  const isoDate = new Date().toISOString()
+
+  return `${isoDate.substr(0, 10)} ${isoDate.substr(11, 8)}`
+}
 
 const ClaimNoteWrapper = styled.div`
   display: flex;
@@ -41,6 +52,12 @@ const ClaimNoteFooter = styled(Paragraph)`
   text-align: right;
 `
 
+const NoteTip = styled(Paragraph)`
+  text-align: right;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
 const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const {
     data: claimNotesData,
@@ -53,6 +70,50 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [addClaimNote] = useClaimAddClaimNoteMutation()
   const [note, setNote] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [textFieldFocused, setTextFieldFocused] = useState(false)
+
+  const { data } = useGetMeQuery()
+
+  const { registerActions } = useCommandLine()
+
+  registerActions([
+    {
+      label: 'Add note',
+      keys: [Keys.Option, Keys.Enter],
+      onResolve: () => !submitting && textFieldFocused && handleSubmitNote(),
+    },
+  ])
+
+  const handleSubmitNote = () => {
+    setSubmitting(true)
+    addClaimNote({
+      variables: { claimId, note: { text: note } },
+      optimisticResponse: {
+        addClaimNote: {
+          id: claimId,
+          __typename: 'Claim',
+          notes: [
+            {
+              id: 'temp-id',
+              text: note,
+              handlerReference: data?.me ?? '',
+              date: getTodayInUTC(),
+            },
+            ...notes,
+          ],
+          events: [],
+        },
+      },
+    })
+      .then(() => {
+        setNote('')
+        setSubmitting(false)
+      })
+      .catch(() => {
+        toast.error('Could not create note')
+        setSubmitting(false)
+      })
+  }
 
   return (
     <CardContent>
@@ -71,14 +132,13 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
       {loadingClaimNotes && <Spinner />}
 
       <List>
-        {sortNotesByDate(notes).map(({ id, date, handlerReference, text }) => (
+        {sortNotesByDate(notes).map(({ date, handlerReference, text }) => (
           <ListItem key={date + handlerReference}>
             <ClaimNoteWrapper>
               <ClaimNote>{text}</ClaimNote>
               <ClaimNoteFooter>
                 {handlerReference && (
                   <>
-                    {id}
                     {handlerReference}
                     <br />
                   </>
@@ -89,27 +149,34 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
           </ListItem>
         ))}
       </List>
-
       <TextArea
         placeholder={'Your note goes here...'}
-        value={note}
+        value={submitting ? '' : note}
         onChange={setNote}
+        onFocus={() => setTextFieldFocused(true)}
+        onBlur={() => setTextFieldFocused(false)}
       />
       <Spacing top={'small'} />
-      <Button
-        loading={submitting}
-        variation={'primary'}
-        onClick={async () => {
-          setSubmitting(true)
-          await addClaimNote({
-            variables: { claimId, note: { text: note } },
-          })
-          setNote('')
-          setSubmitting(false)
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexDirection: 'row',
         }}
       >
-        Add note
-      </Button>
+        <Button variation={'primary'} onClick={async () => handleSubmitNote()}>
+          Add note
+        </Button>
+        {textFieldFocused && (
+          <FadeIn duration={200}>
+            <NoteTip>
+              Press <Shadowed>Option</Shadowed> + <Shadowed>Return</Shadowed> to
+              add note
+            </NoteTip>
+          </FadeIn>
+        )}
+      </div>
     </CardContent>
   )
 }
