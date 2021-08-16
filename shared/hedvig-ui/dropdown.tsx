@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import {
   Dropdown as SemanticDropdown,
   DropdownItemProps,
+  DropdownProps,
 } from 'semantic-ui-react'
 
 export const Dropdown: React.FC<{
@@ -12,8 +13,7 @@ export const Dropdown: React.FC<{
   onRender?: () => React.ReactNode | null
   emptyLabel?: string
   className?: string
-  selection?: boolean
-}> = ({
+} & Omit<DropdownProps, 'onChange' | 'selection'>> = ({
   options,
   onChange,
   value,
@@ -29,7 +29,6 @@ export const Dropdown: React.FC<{
       loading={loading}
       onChange={(_, { value: selection }) => onChange(selection as string)}
       fluid
-      selection
       options={options}
       selectOnBlur={false}
       selectOnNavigation={false}
