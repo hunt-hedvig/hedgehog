@@ -57,6 +57,13 @@ const NoteTip = styled(Paragraph)`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
+const SubNoteWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row;
+`
+
 const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const {
     data: claimNotesData,
@@ -77,7 +84,13 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const isOptionPressed = useKeyIsPressed(Keys.Option)
 
   React.useEffect(() => {
-    if (isOptionPressed && isEnterPressed && !submitting && textFieldFocused) {
+    if (
+      isOptionPressed &&
+      isEnterPressed &&
+      !submitting &&
+      textFieldFocused &&
+      note
+    ) {
       handleSubmitNote()
     }
   }, [isEnterPressed, isOptionPressed])
@@ -155,15 +168,12 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         onBlur={() => setTextFieldFocused(false)}
       />
       <Spacing top={'small'} />
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          flexDirection: 'row',
-        }}
-      >
-        <Button variation={'primary'} onClick={async () => handleSubmitNote()}>
+      <SubNoteWrapper>
+        <Button
+          disabled={!note}
+          variation={'primary'}
+          onClick={async () => handleSubmitNote()}
+        >
           Add note
         </Button>
         {textFieldFocused && (
@@ -174,7 +184,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
             </NoteTip>
           </FadeIn>
         )}
-      </div>
+      </SubNoteWrapper>
     </CardContent>
   )
 }
