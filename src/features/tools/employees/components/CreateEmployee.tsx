@@ -43,6 +43,7 @@ export const CreateEmployee: React.FC = () => {
         <ButtonsGroup>
           <Button
             variation={'primary'}
+            disabled={loading || !email.endsWith('@hedvig.com')}
             onClick={() => {
               toast.promise(createEmployee({ variables: { email } }), {
                 loading: 'Creating employee',
