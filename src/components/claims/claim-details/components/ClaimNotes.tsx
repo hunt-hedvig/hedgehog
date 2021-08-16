@@ -73,6 +73,8 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
     variables: { claimId },
   })
   const notes = claimNotesData?.claim?.notes ?? []
+  const events = claimNotesData?.claim?.events ?? []
+
   const [addClaimNote] = useClaimAddClaimNoteMutation()
   const [note, setNote] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -96,6 +98,8 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   }, [isEnterPressed, isOptionPressed])
 
   const handleSubmitNote = () => {
+    const today = getTodayInUTC()
+
     setSubmitting(true)
     addClaimNote({
       variables: { claimId, note: { text: note } },
@@ -108,11 +112,17 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
               id: 'temp-id',
               text: note,
               handlerReference: data?.me ?? '',
-              date: getTodayInUTC(),
+              date: today,
             },
             ...notes,
           ],
-          events: [],
+          events: [
+            {
+              text: `Note added: ${note}`,
+              date: today,
+            },
+            ...events,
+          ],
         },
       },
     })
