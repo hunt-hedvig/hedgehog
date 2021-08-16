@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-08-15',
+    change: 'Add view for viewing and editing employees',
+    authorGithubHandle: 'cpiehl1',
+  },
+  {
     date: '2021-08-13',
     change: 'Adjust color-coding for account entries and transactions',
     authorGithubHandle: 'joacimastrom',
