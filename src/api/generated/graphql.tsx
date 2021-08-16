@@ -275,6 +275,7 @@ export type ClaimItemValuation = {
 
 export type ClaimNote = {
   __typename?: 'ClaimNote'
+  id: Scalars['ID']
   text: Scalars['String']
   date: Scalars['LocalDateTime']
   handlerReference?: Maybe<Scalars['String']>
@@ -1709,7 +1710,7 @@ export type ClaimAddClaimNoteMutation = { __typename?: 'MutationType' } & {
         notes: Array<
           { __typename?: 'ClaimNote' } & Pick<
             ClaimNote,
-            'text' | 'date' | 'handlerReference'
+            'id' | 'text' | 'date' | 'handlerReference'
           >
         >
         events: Array<
@@ -1888,7 +1889,7 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
         notes: Array<
           { __typename?: 'ClaimNote' } & Pick<
             ClaimNote,
-            'date' | 'handlerReference' | 'text'
+            'id' | 'date' | 'handlerReference' | 'text'
           >
         >
         claimFiles: Array<
@@ -3673,6 +3674,7 @@ export const ClaimAddClaimNoteDocument = gql`
     addClaimNote(id: $claimId, note: $note) {
       id
       notes {
+        id
         text
         date
         handlerReference
@@ -3907,6 +3909,7 @@ export const ClaimPageDocument = gql`
         text
       }
       notes {
+        id
         date
         handlerReference
         text

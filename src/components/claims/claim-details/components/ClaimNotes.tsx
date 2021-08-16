@@ -6,7 +6,6 @@ import {
 import { format, parseISO } from 'date-fns'
 import { Spinner } from 'hedvig-ui/sipnner'
 import React, { useState } from 'react'
-import { sleep } from 'utils/sleep'
 
 import styled from '@emotion/styled'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
@@ -45,7 +44,6 @@ const ClaimNoteFooter = styled(Paragraph)`
 const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const {
     data: claimNotesData,
-    refetch: refetchClaimNotes,
     loading: loadingClaimNotes,
     error: queryError,
   } = useClaimPageQuery({
@@ -73,13 +71,14 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
       {loadingClaimNotes && <Spinner />}
 
       <List>
-        {sortNotesByDate(notes).map(({ date, handlerReference, text }) => (
+        {sortNotesByDate(notes).map(({ id, date, handlerReference, text }) => (
           <ListItem key={date + handlerReference}>
             <ClaimNoteWrapper>
               <ClaimNote>{text}</ClaimNote>
               <ClaimNoteFooter>
                 {handlerReference && (
                   <>
+                    {id}
                     {handlerReference}
                     <br />
                   </>
@@ -105,8 +104,6 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
           await addClaimNote({
             variables: { claimId, note: { text: note } },
           })
-          await sleep(1000)
-          await refetchClaimNotes()
           setNote('')
           setSubmitting(false)
         }}
