@@ -62,17 +62,17 @@ const TableRowColored = styled(Table.Row)<{
   type: Transaction['type']
 }>`
   td {
-    background-color: ${({ status, type }) => {
+    background-color: ${({ theme, status, type }) => {
       if (type === 'PAYOUT') {
-        return '#E0EAF3'
+        return theme.accentLighter
       }
       switch (status) {
         case 'INITIATED':
-          return '#FFFFDD'
+          return theme.lightWarning
         case 'COMPLETED':
-          return '#DDFFDD'
+          return theme.lightSuccess
         case 'FAILED':
-          return '#FF8A80'
+          return theme.lightDanger
       }
     }} !important;
   }

@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-08-13',
+    change: 'Adjust color-coding for account entries and transactions',
+    authorGithubHandle: 'joacimastrom',
+  },
+  {
     date: '2021-08-10',
     change: 'Disable button to create quotes on locked contracts',
     authorGithubHandle: 'joacimastrom',
