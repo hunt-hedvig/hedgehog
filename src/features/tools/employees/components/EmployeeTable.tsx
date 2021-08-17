@@ -1,4 +1,5 @@
 import {
+  Employee,
   EmployeesDocument,
   useAvailableEmployeeRolesQuery,
   useEmployeesQuery,
@@ -21,7 +22,8 @@ export const EmployeeTable: React.FC<{
   scopes: readonly string[]
   filter: { email: string; role: string }
 }> = ({ scopes, filter }) => {
-  const employees = useEmployeesQuery()
+  const { data, loading } = useEmployeesQuery()
+  const employees = data?.employees ?? []
 
   const [
     updateRole,
@@ -47,17 +49,24 @@ export const EmployeeTable: React.FC<{
     }) ?? []
 
   const currentRoles =
-    employees.data?.employees.reduce((acc, curr) => {
+    employees.reduce((acc, curr) => {
       acc[curr.id] = curr.role
       return acc
     }, {}) ?? {}
 
   const [selectedRoles, setSelectedRoles] = useState({})
 
-  if (employees.loading) {
+  const filterEmployee = (employee: Employee) => {
+    return (
+      employee.email.includes(filter.email) &&
+      (!filter.role || filter.role === employee.role)
+    )
+  }
+
+  if (loading) {
     return <LoadingMessage paddingTop={'25vh'} />
   }
-  if (employees.data?.employees.length === 0) {
+  if (employees.length === 0) {
     return (
       <StandaloneMessage paddingTop="25vh">
         No employees exist in the database
@@ -77,15 +86,8 @@ export const EmployeeTable: React.FC<{
         </Table.Header>
         <Table.Body>
           <>
-            {employees.data?.employees.map((employee) => {
+            {employees.filter(filterEmployee).map((employee) => {
               const { id, email, role, firstGrantedAt } = employee
-
-              if (
-                (filter.role && role !== filter.role) ||
-                !email.includes(filter.email)
-              ) {
-                return
-              }
 
               return (
                 <Table.Row key={id}>

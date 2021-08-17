@@ -16,10 +16,11 @@ export const EmployeeFilter: React.FC<{
   filter: { email: string; role: string }
   setFilter: React.Dispatch<React.SetStateAction<{ email; role }>>
 }> = ({ scopes, filter, setFilter }) => {
-  const roles = useAvailableEmployeeRolesQuery()
+  const { data } = useAvailableEmployeeRolesQuery()
+  const roles = data?.availableEmployeeRoles ?? []
 
   const options =
-    roles.data?.availableEmployeeRoles.map((value, index) => {
+    roles.map((value, index) => {
       return {
         key: index + 1,
         value,
@@ -45,10 +46,10 @@ export const EmployeeFilter: React.FC<{
           value={
             filter.role ? { value: filter.role, label: filter.role } : null
           }
-          onChange={(data) =>
+          onChange={(val) =>
             setFilter({
               ...filter,
-              role: data?.value,
+              role: val?.value,
             })
           }
           isClearable
