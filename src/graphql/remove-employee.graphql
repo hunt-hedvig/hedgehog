@@ -1,9 +1,3 @@
 mutation RemoveEmployee($id: ID!) {
-  removeEmployee(id: $id) {
-    id
-    email
-    role
-    firstGrantedAt
-    deletedAt
-  }
+  removeEmployee(id: $id)
 }

@@ -511,7 +511,6 @@ export type Employee = {
   email: Scalars['String']
   role: Scalars['String']
   firstGrantedAt: Scalars['Instant']
-  deletedAt?: Maybe<Scalars['Instant']>
 }
 
 export type ExtraBuilding = {
@@ -929,7 +928,7 @@ export type MutationType = {
   setFraudulentStatus: Scalars['Boolean']
   createEmployee: Employee
   updateEmployeeRole: Employee
-  removeEmployee: Employee
+  removeEmployee: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -2593,7 +2592,7 @@ export type CreateEmployeeMutationVariables = Exact<{
 export type CreateEmployeeMutation = { __typename?: 'MutationType' } & {
   createEmployee: { __typename?: 'Employee' } & Pick<
     Employee,
-    'id' | 'email' | 'role' | 'firstGrantedAt' | 'deletedAt'
+    'id' | 'email' | 'role' | 'firstGrantedAt'
   >
 }
 
@@ -2654,7 +2653,7 @@ export type EmployeesQuery = { __typename?: 'QueryType' } & {
   employees: Array<
     { __typename?: 'Employee' } & Pick<
       Employee,
-      'id' | 'email' | 'role' | 'firstGrantedAt' | 'deletedAt'
+      'id' | 'email' | 'role' | 'firstGrantedAt'
     >
   >
 }
@@ -3456,12 +3455,10 @@ export type RemoveEmployeeMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type RemoveEmployeeMutation = { __typename?: 'MutationType' } & {
-  removeEmployee: { __typename?: 'Employee' } & Pick<
-    Employee,
-    'id' | 'email' | 'role' | 'firstGrantedAt' | 'deletedAt'
-  >
-}
+export type RemoveEmployeeMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'removeEmployee'
+>
 
 export type RemoveMonthlyEntryMutationVariables = Exact<{
   id: Scalars['ID']
@@ -3584,7 +3581,7 @@ export type UpdateEmployeeRoleMutationVariables = Exact<{
 export type UpdateEmployeeRoleMutation = { __typename?: 'MutationType' } & {
   updateEmployeeRole: { __typename?: 'Employee' } & Pick<
     Employee,
-    'id' | 'email' | 'role' | 'firstGrantedAt' | 'deletedAt'
+    'id' | 'email' | 'role' | 'firstGrantedAt'
   >
 }
 
@@ -6173,7 +6170,6 @@ export const CreateEmployeeDocument = gql`
       email
       role
       firstGrantedAt
-      deletedAt
     }
   }
 `
@@ -6490,7 +6486,6 @@ export const EmployeesDocument = gql`
       email
       role
       firstGrantedAt
-      deletedAt
     }
   }
 `
@@ -8404,13 +8399,7 @@ export type RegenerateCertificateMutationOptions = ApolloReactCommon.BaseMutatio
 >
 export const RemoveEmployeeDocument = gql`
   mutation RemoveEmployee($id: ID!) {
-    removeEmployee(id: $id) {
-      id
-      email
-      role
-      firstGrantedAt
-      deletedAt
-    }
+    removeEmployee(id: $id)
   }
 `
 export type RemoveEmployeeMutationFn = ApolloReactCommon.MutationFunction<
@@ -9003,7 +8992,6 @@ export const UpdateEmployeeRoleDocument = gql`
       email
       role
       firstGrantedAt
-      deletedAt
     }
   }
 `

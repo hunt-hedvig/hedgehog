@@ -145,7 +145,7 @@ type MutationType {
   ): Boolean!
   createEmployee(email: String!): Employee!
   updateEmployeeRole(id: ID!, role: String!): Employee!
-  removeEmployee(id: ID!): Employee!
+  removeEmployee(id: ID!): Boolean!
 }
 
 type ListClaimsResult {
@@ -339,7 +339,6 @@ type Employee {
   email: String!
   role: String!
   firstGrantedAt: Instant!
-  deletedAt: Instant
 }
 
 type GenericAgreement {
@@ -513,7 +512,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -971,7 +970,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

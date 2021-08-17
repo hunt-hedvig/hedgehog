@@ -7,13 +7,12 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { BackofficeStore } from 'store/storeTypes'
 
-export const EmployeesComponent: React.FC<{ scopes: readonly string[] }> = (
+export const EmployeesComponent: React.FC<{ scopes: readonly string[] }> = ({
   scopes,
-) => {
+}) => {
   const [filter, setFilter] = useState({
     email: '',
-    role: null,
-    showDeleted: false,
+    role: '',
   })
 
   return (
@@ -24,12 +23,12 @@ export const EmployeesComponent: React.FC<{ scopes: readonly string[] }> = (
       <CardsWrapper>
         <Card>
           <EmployeeFilter
-            scopes={scopes.scopes}
+            scopes={scopes}
             filter={filter}
             setFilter={setFilter}
           />
         </Card>
-        <EmployeeTable scopes={scopes.scopes} filter={filter} />
+        <EmployeeTable scopes={scopes} filter={filter} />
       </CardsWrapper>
     </>
   )

@@ -15,7 +15,7 @@ import { Table } from 'semantic-ui-react'
 
 export const EmployeeTable: React.FC<{
   scopes: readonly string[]
-  filter: { email; role; showDeleted }
+  filter: { email: string; role: string }
 }> = ({ scopes, filter }) => {
   const employees = useEmployeesQuery()
 
@@ -64,25 +64,17 @@ export const EmployeeTable: React.FC<{
                   <Table.HeaderCell>Email</Table.HeaderCell>
                   <Table.HeaderCell>Role</Table.HeaderCell>
                   <Table.HeaderCell>First granted at</Table.HeaderCell>
-                  <Table.HeaderCell>Removed at</Table.HeaderCell>
                   <Table.HeaderCell>Actions</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
                 <>
                   {employees.data?.employees.map((employee) => {
-                    const {
-                      id,
-                      email,
-                      role,
-                      firstGrantedAt,
-                      deletedAt,
-                    } = employee
+                    const { id, email, role, firstGrantedAt } = employee
 
                     if (
                       (filter.role && role !== filter.role) ||
-                      !email.includes(filter.email) ||
-                      (deletedAt && !filter.showDeleted)
+                      !email.includes(filter.email)
                     ) {
                       return
                     }
@@ -91,7 +83,7 @@ export const EmployeeTable: React.FC<{
                       <Table.Row key={id}>
                         <Table.Cell width={5}>{email}</Table.Cell>
                         <Table.Cell width={3}>
-                          {!deletedAt && scopes.includes('employees:manage') ? (
+                          {scopes.includes('employees:manage') ? (
                             <Dropdown
                               options={options}
                               onChange={(value) =>
@@ -112,9 +104,6 @@ export const EmployeeTable: React.FC<{
                             firstGrantedAt,
                             'yyyy-MM-dd HH:mm',
                           )}
-                        </Table.Cell>
-                        <Table.Cell width={3}>
-                          {dateTimeFormatter(deletedAt, 'yyyy-MM-dd HH:mm')}
                         </Table.Cell>
                         <Table.Cell width={1}>
                           <ButtonsGroup>
@@ -147,7 +136,6 @@ export const EmployeeTable: React.FC<{
                               variation={'danger'}
                               disabled={
                                 removeEmployeeLoading ||
-                                deletedAt ||
                                 !scopes.includes('employees:manage')
                               }
                               onClick={() => {

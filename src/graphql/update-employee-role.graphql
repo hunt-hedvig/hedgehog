@@ -4,6 +4,5 @@ mutation UpdateEmployeeRole($id: ID!, $role: String!) {
     email
     role
     firstGrantedAt
-    deletedAt
   }
 }

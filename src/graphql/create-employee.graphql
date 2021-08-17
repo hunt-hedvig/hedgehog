@@ -4,6 +4,5 @@ mutation CreateEmployee($email: String!) {
     email
     role
     firstGrantedAt
-    deletedAt
   }
 }
