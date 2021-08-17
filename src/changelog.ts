@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-08-16',
+    change:
+      'Claim notes can be added with a shortcut, and they are added instantly!',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-08-13',
     change: 'Adjust color-coding for account entries and transactions',
     authorGithubHandle: 'joacimastrom',
