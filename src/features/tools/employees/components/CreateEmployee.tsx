@@ -31,7 +31,19 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
     setEmail('')
   }
 
-  return createPressed ? (
+  if (!createPressed) {
+    return (
+      <Button
+        disabled={!scopes.includes('employees:manage')}
+        variation={'primary'}
+        onClick={() => setCreatePressed(true)}
+      >
+        Create employee
+      </Button>
+    )
+  }
+
+  return (
     <Wrapper>
       <Spacing right={'small'}>
         <Input
@@ -63,13 +75,5 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
         </ButtonsGroup>
       </Spacing>
     </Wrapper>
-  ) : (
-    <Button
-      disabled={!scopes.includes('employees:manage')}
-      variation={'primary'}
-      onClick={() => setCreatePressed(true)}
-    >
-      Create employee
-    </Button>
   )
 }

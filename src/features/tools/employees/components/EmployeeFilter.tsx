@@ -29,7 +29,7 @@ export const EmployeeFilter: React.FC<{
 
   return (
     <Row style={{ width: '100%' }}>
-      <Row style={{ justifyContent: 'start' }}>
+      <Row style={{ justifyContent: 'flex-start' }}>
         <Input
           value={filter.email ?? ''}
           onChange={({ currentTarget: { value } }) => {
