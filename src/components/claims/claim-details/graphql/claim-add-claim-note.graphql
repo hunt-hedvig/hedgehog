@@ -2,7 +2,6 @@ mutation ClaimAddClaimNote($claimId: ID!, $note: ClaimNoteInput!) {
   addClaimNote(id: $claimId, note: $note) {
     id
     notes {
-      id
       text
       date
       handlerReference

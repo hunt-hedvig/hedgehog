@@ -56,7 +56,6 @@ query ClaimPage($claimId: ID!) {
     }
 
     notes {
-      id
       date
       handlerReference
       text

@@ -920,7 +920,6 @@ type ClaimItemSet {
 }
 
 type ClaimNote {
-  id: ID!
   text: String!
   date: LocalDateTime!
   handlerReference: String

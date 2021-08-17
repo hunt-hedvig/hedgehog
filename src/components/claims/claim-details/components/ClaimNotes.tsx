@@ -109,7 +109,6 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
           __typename: 'Claim',
           notes: [
             {
-              id: 'temp-id',
               text: note,
               handlerReference: data?.me ?? '',
               date: today,
