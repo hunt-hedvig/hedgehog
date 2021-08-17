@@ -29,6 +29,7 @@ type QueryType {
   ): MemberSearchResult!
   listClaims(options: ListClaimsOptions!): ListClaimsResult!
   employees: [Employee!]!
+  availableEmployeeRoles: [String!]!
 }
 
 type MutationType {
@@ -119,10 +120,7 @@ type MutationType {
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
   insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
   upsertValuationRule(request: UpsertValuationRuleInput): ID!
-  createCampaignPartner(
-    partnerId: ID!
-    partnerName: String!
-  ): Boolean!
+  createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
@@ -146,10 +144,7 @@ type MutationType {
     request: MemberFraudulentStatusInput!
   ): Boolean!
   createEmployee(email: String!): Employee!
-  updateEmployeeRole(
-    id: ID!
-    role: Role!
-  ): Employee!
+  updateEmployeeRole(id: ID!, role: String!): Employee!
   removeEmployee(id: ID!): Employee!
 }
 
@@ -342,17 +337,9 @@ enum ContractStatus {
 type Employee {
   id: ID!
   email: String!
-  role: Role!
+  role: String!
   firstGrantedAt: Instant!
   deletedAt: Instant
-}
-
-enum Role {
-  NOBODY,
-  IEX,
-  IEX_EXTENDED,
-  DEV,
-  ROOT
 }
 
 type GenericAgreement {
@@ -526,7 +513,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -984,7 +971,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

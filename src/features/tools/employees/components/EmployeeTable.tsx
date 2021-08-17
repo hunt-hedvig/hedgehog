@@ -1,10 +1,10 @@
 import {
   EmployeesDocument,
+  useAvailableEmployeeRolesQuery,
   useEmployeesQuery,
   useRemoveEmployeeMutation,
   useUpdateEmployeeRoleMutation,
 } from 'api/generated/graphql'
-import { dropdownOptions } from 'features/tools/employees/utils'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Card } from 'hedvig-ui/card'
 import { Dropdown } from 'hedvig-ui/dropdown'
@@ -30,6 +30,17 @@ export const EmployeeTable: React.FC<{
   ] = useRemoveEmployeeMutation({
     refetchQueries: () => [{ query: EmployeesDocument }],
   })
+
+  const availableRoles = useAvailableEmployeeRolesQuery()
+
+  const options =
+    availableRoles.data?.availableEmployeeRoles.map((value, index) => {
+      return {
+        key: index + 1,
+        value,
+        text: (value as string).replace('_', ' '),
+      }
+    }) ?? []
 
   const currentRoles =
     employees.data?.employees.reduce((acc, curr) => {
@@ -82,7 +93,7 @@ export const EmployeeTable: React.FC<{
                         <Table.Cell width={3}>
                           {!deletedAt && scopes.includes('employees:manage') ? (
                             <Dropdown
-                              options={dropdownOptions}
+                              options={options}
                               onChange={(value) =>
                                 setSelectedRoles({
                                   ...selectedRoles,

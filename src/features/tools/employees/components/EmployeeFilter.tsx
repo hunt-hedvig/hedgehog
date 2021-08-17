@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Role } from 'api/generated/graphql'
+import { useAvailableEmployeeRolesQuery } from 'api/generated/graphql'
 import { CreateEmployee } from 'features/tools/employees/components/CreateEmployee'
 import { Row } from 'features/tools/employees/utils'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
@@ -16,12 +16,16 @@ export const EmployeeFilter: React.FC<{
   filter: { email; role; showDeleted }
   setFilter: React.Dispatch<React.SetStateAction<{ email; role; showDeleted }>>
 }> = ({ scopes, filter, setFilter }) => {
-  const options = Object.values(Role).map((value) => {
-    return {
-      value,
-      label: (value as string).replace('_', ' '),
-    }
-  })
+  const roles = useAvailableEmployeeRolesQuery()
+
+  const options =
+    roles.data?.availableEmployeeRoles.map((value, index) => {
+      return {
+        key: index + 1,
+        value,
+        label: (value as string).replace('_', ' '),
+      }
+    }) ?? []
 
   return (
     <Row style={{ width: '100%' }}>

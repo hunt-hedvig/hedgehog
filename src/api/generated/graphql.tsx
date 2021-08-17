@@ -509,7 +509,7 @@ export type Employee = {
   __typename?: 'Employee'
   id: Scalars['ID']
   email: Scalars['String']
-  role: Role
+  role: Scalars['String']
   firstGrantedAt: Scalars['Instant']
   deletedAt?: Maybe<Scalars['Instant']>
 }
@@ -1218,7 +1218,7 @@ export type MutationTypeCreateEmployeeArgs = {
 
 export type MutationTypeUpdateEmployeeRoleArgs = {
   id: Scalars['ID']
-  role: Role
+  role: Scalars['String']
 }
 
 export type MutationTypeRemoveEmployeeArgs = {
@@ -1343,6 +1343,7 @@ export type QueryType = {
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
   employees: Array<Employee>
+  availableEmployeeRoles: Array<Scalars['String']>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1472,14 +1473,6 @@ export type Renewal = {
   renewalDate: Scalars['LocalDate']
   draftCertificateUrl?: Maybe<Scalars['String']>
   draftOfAgreementId?: Maybe<Scalars['ID']>
-}
-
-export enum Role {
-  Nobody = 'NOBODY',
-  Iex = 'IEX',
-  IexExtended = 'IEX_EXTENDED',
-  Dev = 'DEV',
-  Root = 'ROOT',
 }
 
 export type SafelyEditAgreementInput = {
@@ -2444,6 +2437,15 @@ export type AnswerQuestionMutationVariables = Exact<{
 export type AnswerQuestionMutation = { __typename?: 'MutationType' } & Pick<
   MutationType,
   'answerQuestion'
+>
+
+export type AvailableEmployeeRolesQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type AvailableEmployeeRolesQuery = { __typename?: 'QueryType' } & Pick<
+  QueryType,
+  'availableEmployeeRoles'
 >
 
 export type CanValuateClaimItemQueryVariables = Exact<{
@@ -3576,7 +3578,7 @@ export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
 
 export type UpdateEmployeeRoleMutationVariables = Exact<{
   id: Scalars['ID']
-  role: Role
+  role: Scalars['String']
 }>
 
 export type UpdateEmployeeRoleMutation = { __typename?: 'MutationType' } & {
@@ -5776,6 +5778,61 @@ export type AnswerQuestionMutationResult = ApolloReactCommon.MutationResult<
 export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AnswerQuestionMutation,
   AnswerQuestionMutationVariables
+>
+export const AvailableEmployeeRolesDocument = gql`
+  query AvailableEmployeeRoles {
+    availableEmployeeRoles
+  }
+`
+
+/**
+ * __useAvailableEmployeeRolesQuery__
+ *
+ * To run a query within a React component, call `useAvailableEmployeeRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAvailableEmployeeRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAvailableEmployeeRolesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAvailableEmployeeRolesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    AvailableEmployeeRolesQuery,
+    AvailableEmployeeRolesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    AvailableEmployeeRolesQuery,
+    AvailableEmployeeRolesQueryVariables
+  >(AvailableEmployeeRolesDocument, options)
+}
+export function useAvailableEmployeeRolesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    AvailableEmployeeRolesQuery,
+    AvailableEmployeeRolesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    AvailableEmployeeRolesQuery,
+    AvailableEmployeeRolesQueryVariables
+  >(AvailableEmployeeRolesDocument, options)
+}
+export type AvailableEmployeeRolesQueryHookResult = ReturnType<
+  typeof useAvailableEmployeeRolesQuery
+>
+export type AvailableEmployeeRolesLazyQueryHookResult = ReturnType<
+  typeof useAvailableEmployeeRolesLazyQuery
+>
+export type AvailableEmployeeRolesQueryResult = ApolloReactCommon.QueryResult<
+  AvailableEmployeeRolesQuery,
+  AvailableEmployeeRolesQueryVariables
 >
 export const CanValuateClaimItemDocument = gql`
   query CanValuateClaimItem(
@@ -8940,7 +8997,7 @@ export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOpti
   UpdateClaimStateMutationVariables
 >
 export const UpdateEmployeeRoleDocument = gql`
-  mutation UpdateEmployeeRole($id: ID!, $role: Role!) {
+  mutation UpdateEmployeeRole($id: ID!, $role: String!) {
     updateEmployeeRole(id: $id, role: $role) {
       id
       email
