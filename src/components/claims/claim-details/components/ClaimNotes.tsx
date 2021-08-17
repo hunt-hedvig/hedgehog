@@ -19,7 +19,7 @@ import { TextArea } from 'hedvig-ui/text-area'
 import { Paragraph, Shadowed } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
@@ -47,8 +47,9 @@ const ClaimNote = styled(Paragraph)`
 `
 
 const ClaimNoteFooter = styled(Paragraph)`
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   text-align: right;
+  color: ${({ theme }) => theme.semiStrongForeground};
 `
 
 const NoteTip = styled(Paragraph)`
@@ -81,21 +82,6 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [textFieldFocused, setTextFieldFocused] = useState(false)
 
   const { data } = useGetMeQuery()
-
-  const isEnterPressed = useKeyIsPressed(Keys.Enter)
-  const isOptionPressed = useKeyIsPressed(Keys.Option)
-
-  React.useEffect(() => {
-    if (
-      isOptionPressed &&
-      isEnterPressed &&
-      !submitting &&
-      textFieldFocused &&
-      note
-    ) {
-      handleSubmitNote()
-    }
-  }, [isEnterPressed, isOptionPressed])
 
   const handleSubmitNote = () => {
     const today = getTodayInUTC()
@@ -175,13 +161,23 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         onChange={setNote}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
+        onKeyPress={(e) => {
+          if (
+            e.altKey &&
+            e.charCode === Keys.Enter.code &&
+            !submitting &&
+            note
+          ) {
+            handleSubmitNote()
+          }
+        }}
       />
       <Spacing top={'small'} />
       <SubNoteWrapper>
         <Button
           disabled={!note}
           variation={'primary'}
-          onClick={async () => handleSubmitNote()}
+          onClick={() => handleSubmitNote()}
         >
           Add note
         </Button>
