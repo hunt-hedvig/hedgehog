@@ -1,6 +1,6 @@
 import {
-  ListEmployeesDocument,
-  useListEmployeesQuery,
+  EmployeesDocument,
+  useEmployeesQuery,
   useRemoveEmployeeMutation,
   useUpdateEmployeeRoleMutation,
 } from 'api/generated/graphql'
@@ -14,9 +14,10 @@ import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
 
 export const EmployeeTable: React.FC<{
+  scopes: readonly string[]
   filter: { email; role; showDeleted }
-}> = ({ filter }) => {
-  const employees = useListEmployeesQuery()
+}> = ({ scopes, filter }) => {
+  const employees = useEmployeesQuery()
 
   const [
     updateRole,
@@ -27,11 +28,11 @@ export const EmployeeTable: React.FC<{
     removeEmployee,
     { loading: removeEmployeeLoading },
   ] = useRemoveEmployeeMutation({
-    refetchQueries: () => [{ query: ListEmployeesDocument }],
+    refetchQueries: () => [{ query: EmployeesDocument }],
   })
 
   const currentRoles =
-    employees.data?.listEmployees.reduce((acc, curr) => {
+    employees.data?.employees.reduce((acc, curr) => {
       acc[curr.id] = curr.role
       return acc
     }, {}) ?? {}
@@ -41,10 +42,10 @@ export const EmployeeTable: React.FC<{
   return (
     <>
       {(employees.loading && <Card span={1}>Loading employees...</Card>) ||
-        (employees.data?.listEmployees.length === 0 && (
+        (employees.data?.employees.length === 0 && (
           <Card span={1}>No employees exist in the database</Card>
         )) ||
-        (employees.data?.listEmployees.length !== 0 && (
+        (employees.data?.employees.length !== 0 && (
           <Card span={1}>
             <Table celled style={{ fontSize: '1.0rem', overflow: 'visible' }}>
               <Table.Header>
@@ -58,7 +59,7 @@ export const EmployeeTable: React.FC<{
               </Table.Header>
               <Table.Body>
                 <>
-                  {employees.data?.listEmployees.map((employee) => {
+                  {employees.data?.employees.map((employee) => {
                     const {
                       id,
                       email,
@@ -79,7 +80,7 @@ export const EmployeeTable: React.FC<{
                       <Table.Row key={id}>
                         <Table.Cell width={5}>{email}</Table.Cell>
                         <Table.Cell width={3}>
-                          {!deletedAt ? (
+                          {!deletedAt && scopes.includes('employees:manage') ? (
                             <Dropdown
                               options={dropdownOptions}
                               onChange={(value) =>
@@ -117,18 +118,8 @@ export const EmployeeTable: React.FC<{
                                 toast.promise(
                                   updateRole({
                                     variables: {
-                                      email,
+                                      id,
                                       role: selectedRoles[id],
-                                    },
-                                    optimisticResponse: {
-                                      updateEmployeeRole: {
-                                        id,
-                                        __typename: 'Employee',
-                                        email,
-                                        role: selectedRoles[id],
-                                        firstGrantedAt,
-                                        deletedAt,
-                                      },
                                     },
                                   }),
                                   {
@@ -143,7 +134,11 @@ export const EmployeeTable: React.FC<{
                             </Button>
                             <Button
                               variation={'danger'}
-                              disabled={removeEmployeeLoading || deletedAt}
+                              disabled={
+                                removeEmployeeLoading ||
+                                deletedAt ||
+                                !scopes.includes('employees:manage')
+                              }
                               onClick={() => {
                                 const confirmed = window.confirm(
                                   `Are you sure you want to remove employee ${email}?`,
@@ -151,7 +146,7 @@ export const EmployeeTable: React.FC<{
                                 if (confirmed) {
                                   toast.promise(
                                     removeEmployee({
-                                      variables: { email },
+                                      variables: { id },
                                     }),
                                     {
                                       loading: 'Removing employee',

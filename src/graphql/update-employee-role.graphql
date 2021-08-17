@@ -1,5 +1,5 @@
-mutation UpdateEmployeeRole($email: String!, $role: Role!) {
-  updateEmployeeRole(email: $email, role: $role) {
+mutation UpdateEmployeeRole($id: ID!, $role: Role!) {
+  updateEmployeeRole(id: $id, role: $role) {
     id
     email
     role

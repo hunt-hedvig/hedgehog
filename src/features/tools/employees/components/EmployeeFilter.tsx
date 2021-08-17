@@ -12,9 +12,10 @@ const StyledDropdown = styled(SearchableDropdown)`
 `
 
 export const EmployeeFilter: React.FC<{
+  scopes: readonly string[]
   filter: { email; role; showDeleted }
   setFilter: React.Dispatch<React.SetStateAction<{ email; role; showDeleted }>>
-}> = ({ filter, setFilter }) => {
+}> = ({ scopes, filter, setFilter }) => {
   const options = Object.values(Role).map((value) => {
     return {
       value,
@@ -61,7 +62,7 @@ export const EmployeeFilter: React.FC<{
           }
         />
       </Row>
-      <CreateEmployee />
+      <CreateEmployee scopes={scopes} />
     </Row>
   )
 }

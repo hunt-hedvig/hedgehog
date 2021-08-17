@@ -1,5 +1,5 @@
-mutation RemoveEmployee($email: String!) {
-  removeEmployee(email: $email) {
+mutation RemoveEmployee($id: ID!) {
+  removeEmployee(id: $id) {
     id
     email
     role

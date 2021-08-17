@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {
-  ListEmployeesDocument,
+  EmployeesDocument,
   useCreateEmployeeMutation,
 } from 'api/generated/graphql'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
@@ -16,12 +16,14 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-export const CreateEmployee: React.FC = () => {
+export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
+  scopes,
+}) => {
   const [createPressed, setCreatePressed] = useState(false)
   const [email, setEmail] = useState('')
 
   const [createEmployee, { loading }] = useCreateEmployeeMutation({
-    refetchQueries: () => [{ query: ListEmployeesDocument }],
+    refetchQueries: () => [{ query: EmployeesDocument }],
   })
 
   const reset = () => {
@@ -62,7 +64,11 @@ export const CreateEmployee: React.FC = () => {
       </Spacing>
     </Wrapper>
   ) : (
-    <Button variation={'primary'} onClick={() => setCreatePressed(true)}>
+    <Button
+      disabled={!scopes.includes('employees:manage')}
+      variation={'primary'}
+      onClick={() => setCreatePressed(true)}
+    >
       Create employee
     </Button>
   )

@@ -4,8 +4,12 @@ import { Row } from 'features/tools/employees/utils'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { BackofficeStore } from 'store/storeTypes'
 
-export const EmployeesComponent: React.FC = () => {
+export const EmployeesComponent: React.FC<{ scopes: readonly string[] }> = (
+  scopes,
+) => {
   const [filter, setFilter] = useState({
     email: '',
     role: null,
@@ -19,10 +23,18 @@ export const EmployeesComponent: React.FC = () => {
       </Row>
       <CardsWrapper>
         <Card>
-          <EmployeeFilter filter={filter} setFilter={setFilter} />
+          <EmployeeFilter
+            scopes={scopes.scopes}
+            filter={filter}
+            setFilter={setFilter}
+          />
         </Card>
-        <EmployeeTable filter={filter} />
+        <EmployeeTable scopes={scopes.scopes} filter={filter} />
       </CardsWrapper>
     </>
   )
 }
+
+export const Employees = connect((state: BackofficeStore) => ({
+  scopes: state.auth.scopes,
+}))(EmployeesComponent)

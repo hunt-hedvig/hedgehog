@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Role } from 'api/generated/graphql'
-import { DropdownOption } from 'features/tools/campaign-codes/components/ClearableDropdown'
+import { DropdownItemProps } from 'semantic-ui-react'
 
 export const Row = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ export const Row = styled.div`
   align-items: center;
 `
 
-export const dropdownOptions: DropdownOption[] = Object.values(Role).map(
+export const dropdownOptions: DropdownItemProps[] = Object.values(Role).map(
   (value, index) => {
     return {
       key: index + 1,
