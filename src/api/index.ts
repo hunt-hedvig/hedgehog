@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { forceLogOut } from 'utils/auth'
+import { forceLogOut } from '../utils/auth'
 import config from './config'
 
 const axiosInstance = axios.create({
@@ -21,7 +21,7 @@ const setItemWithExpiry = (key, value, ttl) =>
     }),
   )
 
-const getItemWithExpiry = (key) => {
+export const getItemWithExpiry = (key) => {
   const itemStr = localStorage.getItem(key)
 
   if (!itemStr) {
