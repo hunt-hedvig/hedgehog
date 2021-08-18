@@ -1,11 +1,18 @@
+import styled from '@emotion/styled'
 import { EmployeeFilter } from 'features/tools/employees/components/EmployeeFilter'
 import { EmployeeTable } from 'features/tools/employees/components/EmployeeTable'
-import { Row } from 'features/tools/employees/utils'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { BackofficeStore } from 'store/storeTypes'
+
+export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
 
 export const EmployeesComponent: React.FC<{ scopes: readonly string[] }> = ({
   scopes,
