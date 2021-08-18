@@ -13,13 +13,13 @@ const axiosInstance = axios.create({
 })
 
 export const refreshAccessToken = async () => {
-  if ((window as any).__hvg_refreshingAccessToken) {
+  if (localStorage.getItem('hvg:refreshingAccessToken') === 'true') {
     // bail if we're already refreshing
     return
   }
 
   try {
-    ;(window as any).__hvg_refreshingAccessToken = true
+    localStorage.setItem('hvg:refreshingAccessToken', 'true')
     await axios.post('/login/refresh', null, {
       headers: {
         accept: 'application/json',
@@ -29,7 +29,7 @@ export const refreshAccessToken = async () => {
     })
     await axiosInstance.post('/settings/auth-success')
   } finally {
-    ;(window as any).__hvg_refreshingAccessToken = false
+    localStorage.setItem('hvg:refreshingAccessToken', 'false')
   }
 }
 
