@@ -1,10 +1,10 @@
+import styled from '@emotion/styled'
 import { QuestionGroup } from 'api/generated/graphql'
 import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
 import { lightTheme } from 'hedvig-ui/themes'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
 import { range } from 'utils/array'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {
@@ -13,7 +13,7 @@ import {
   doMemberGroupFilter,
 } from 'utils/questionGroup'
 
-export const totalNumberMemberGroups = 2
+export const totalNumberMemberGroups = 3
 
 export enum FilterState {
   First,
