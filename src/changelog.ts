@@ -12,9 +12,15 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-08-15',
+    date: '2021-08-18',
     change: 'Add view for viewing and editing employees',
     authorGithubHandle: 'cpiehl1',
+  },
+  {
+    date: '2021-08-16',
+    change:
+      'Claim notes can be added with a shortcut, and they are added instantly!',
+    authorGithubHandle: 'rasmusguterstam',
   },
   {
     date: '2021-08-13',
