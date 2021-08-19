@@ -55,6 +55,13 @@ export const apolloClient = (() => {
         ClaimNote: {
           keyFields: ['date', 'handlerReference'],
         },
+        Query: {
+          fields: {
+            employees: {
+              merge: false,
+            },
+          },
+        },
       },
     }),
   })
