@@ -18,7 +18,10 @@ export const apolloClient = (() => {
   return new ApolloClient({
     link: ApolloLink.from([
       onError((error) => {
-        if ((error?.networkError as ServerError)?.response?.status !== 403) {
+        if (
+          document.hidden ||
+          (error?.networkError as ServerError)?.response?.status !== 403
+        ) {
           return
         }
 
