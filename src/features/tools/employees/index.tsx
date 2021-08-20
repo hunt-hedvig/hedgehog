@@ -20,6 +20,7 @@ export const EmployeesComponent: React.FC<{ scopes: readonly string[] }> = ({
   const [filter, setFilter] = useState({
     email: '',
     role: '',
+    label: '',
   })
 
   return (
