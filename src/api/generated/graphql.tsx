@@ -1213,6 +1213,7 @@ export type MutationTypeSetFraudulentStatusArgs = {
 
 export type MutationTypeCreateEmployeeArgs = {
   email: Scalars['String']
+  role: Scalars['String']
 }
 
 export type MutationTypeUpdateEmployeeRoleArgs = {
@@ -2587,6 +2588,7 @@ export type CreateClaimMutation = { __typename?: 'MutationType' } & Pick<
 
 export type CreateEmployeeMutationVariables = Exact<{
   email: Scalars['String']
+  role: Scalars['String']
 }>
 
 export type CreateEmployeeMutation = { __typename?: 'MutationType' } & {
@@ -6164,8 +6166,8 @@ export type CreateClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateClaimMutationVariables
 >
 export const CreateEmployeeDocument = gql`
-  mutation CreateEmployee($email: String!) {
-    createEmployee(email: $email) {
+  mutation CreateEmployee($email: String!, $role: String!) {
+    createEmployee(email: $email, role: $role) {
       id
       email
       role
@@ -6192,6 +6194,7 @@ export type CreateEmployeeMutationFn = ApolloReactCommon.MutationFunction<
  * const [createEmployeeMutation, { data, loading, error }] = useCreateEmployeeMutation({
  *   variables: {
  *      email: // value for 'email'
+ *      role: // value for 'role'
  *   },
  * });
  */
