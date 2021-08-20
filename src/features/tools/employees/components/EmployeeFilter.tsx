@@ -13,8 +13,8 @@ const StyledDropdown = styled(SearchableDropdown)`
 
 export const EmployeeFilter: React.FC<{
   scopes: readonly string[]
-  filter: { email: string; role: string }
-  setFilter: React.Dispatch<React.SetStateAction<{ email; role }>>
+  filter: { email: string; role: string; label: string }
+  setFilter: React.Dispatch<React.SetStateAction<{ email; role; label }>>
 }> = ({ scopes, filter, setFilter }) => {
   const { data } = useAvailableEmployeeRolesQuery()
   const roles = data?.availableEmployeeRoles ?? []
@@ -44,12 +44,13 @@ export const EmployeeFilter: React.FC<{
         <StyledDropdown
           options={options}
           value={
-            filter.role ? { value: filter.role, label: filter.role } : null
+            filter.role ? { value: filter.role, label: filter.label } : null
           }
           onChange={(val) =>
             setFilter({
               ...filter,
               role: val?.value,
+              label: val?.label,
             })
           }
           isClearable
