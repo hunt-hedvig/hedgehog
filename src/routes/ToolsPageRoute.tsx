@@ -1,6 +1,7 @@
 import { Tools } from 'features/tools'
 import { CampaignCodeInfo } from 'features/tools/campaign-codes'
 import { ChargePage } from 'features/tools/charges'
+import { Employees } from 'features/tools/employees'
 import { ItemizerComponent } from 'features/tools/itemizer'
 import { NorwegianTariffCreator } from 'features/tools/norwegian-tariff-editor'
 import { PerilsEditor } from 'features/tools/perils-editor'
@@ -20,6 +21,7 @@ export const ToolsPageRoute: React.FC = () => (
       path="/tools/norwegian-tariff-creator"
     />
     <Route component={ItemizerComponent} path="/tools/itemizer" />
+    <Route component={Employees} path="/tools/employees" />
     <Route component={CampaignCodeInfo} path="/tools/campaign-codes" />
     <Route component={UnsignMemberTool} path="/tools/unsign-member" />
   </Switch>

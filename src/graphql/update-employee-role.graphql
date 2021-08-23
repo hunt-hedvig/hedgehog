@@ -1,0 +1,8 @@
+mutation UpdateEmployeeRole($id: ID!, $role: String!) {
+  updateEmployeeRole(id: $id, role: $role) {
+    id
+    email
+    role
+    firstGrantedAt
+  }
+}

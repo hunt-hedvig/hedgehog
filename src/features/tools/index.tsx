@@ -39,6 +39,10 @@ export const Tools: React.FC = () => (
         <Icon>📱</Icon>
         Itemizer
       </CardLink>
+      <CardLink to="/tools/employees" span={4}>
+        <Icon>👩🏼‍🦰</Icon>
+        Employees
+      </CardLink>
     </CardsWrapper>
 
     {stagingToolsAvailable() && <StagingTools />}

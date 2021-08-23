@@ -1,0 +1,8 @@
+mutation CreateEmployee($email: String!, $role: String!) {
+  createEmployee(email: $email, role: $role) {
+    id
+    email
+    role
+    firstGrantedAt
+  }
+}

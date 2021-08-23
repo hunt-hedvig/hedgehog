@@ -28,6 +28,8 @@ type QueryType {
     options: MemberSearchOptions!
   ): MemberSearchResult!
   listClaims(options: ListClaimsOptions!): ListClaimsResult!
+  employees: [Employee!]!
+  availableEmployeeRoles: [String!]!
 }
 
 type MutationType {
@@ -141,6 +143,9 @@ type MutationType {
     memberId: ID!
     request: MemberFraudulentStatusInput!
   ): Boolean!
+  createEmployee(email: String!, role: String!): Employee!
+  updateEmployeeRole(id: ID!, role: String!): Employee!
+  removeEmployee(id: ID!): Boolean!
 }
 
 type ListClaimsResult {
@@ -327,6 +332,13 @@ enum ContractStatus {
   TERMINATED_TODAY
   TERMINATED_IN_FUTURE
   TERMINATED
+}
+
+type Employee {
+  id: ID!
+  email: String!
+  role: String!
+  firstGrantedAt: Instant!
 }
 
 type GenericAgreement {
