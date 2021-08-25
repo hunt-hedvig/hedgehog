@@ -15,6 +15,7 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
+  availableMarketingChannels: [String!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
   canValuateClaimItem(

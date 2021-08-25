@@ -1,0 +1,3 @@
+query AvailableMarketingChannels {
+  availableMarketingChannels
+}

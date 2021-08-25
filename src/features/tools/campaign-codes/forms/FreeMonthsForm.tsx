@@ -1,5 +1,9 @@
 import styled from '@emotion/styled'
-import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
+import {
+  AssignVoucherFreeMonths,
+  Scalars,
+  useAvailableMarketingChannelsQuery,
+} from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
   addPartnerFreeMonthsCodeOptions,
@@ -21,6 +25,7 @@ interface FreeMonthsFormData {
   code: string
   validFrom?: Scalars['Instant']
   validUntil?: Scalars['Instant']
+  marketingChannel?: string | null
 }
 
 const initialFormData: FreeMonthsFormData = {
@@ -29,6 +34,7 @@ const initialFormData: FreeMonthsFormData = {
   numberOfFreeMonths: null,
   validFrom: null,
   validUntil: null,
+  marketingChannel: null,
 }
 
 export const DateRangeWrapper = styled.div`
@@ -48,6 +54,18 @@ export const FreeMonthsForm: React.FC = () => {
   )
 
   const [setPartnerFreeMonths, { loading }] = useAddPartnerFreeMonthsCode()
+
+  const marketingChannelsQuery = useAvailableMarketingChannelsQuery()
+  const marketingChannels =
+    marketingChannelsQuery.data?.availableMarketingChannels ?? []
+  const marketingChannelOptions =
+    marketingChannels.map((value, index) => {
+      return {
+        key: index + 1,
+        value,
+        label: (value as string).replace('_', ' '),
+      }
+    }) ?? []
 
   const reset = () => setFormData(initialFormData)
 
@@ -117,6 +135,29 @@ export const FreeMonthsForm: React.FC = () => {
         }
         noOptionsMessage={() => 'Option not found'}
         options={numberOfMonthsOptions}
+      />
+      <Spacing top={'small'} />
+      <Label>Marketing Channel</Label>
+      <SearchableDropdown
+        value={
+          formData.marketingChannel
+            ? {
+                value: formData.marketingChannel,
+                label: formData.marketingChannel,
+              }
+            : null
+        }
+        placeholder={'Marketing Channel'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
+          setFormData({
+            ...formData,
+            marketingChannel: data ? data.value : null,
+          })
+        }
+        noOptionsMessage={() => 'Option not found'}
+        options={marketingChannelOptions}
       />
       <Spacing top={'small'} />
       <div>

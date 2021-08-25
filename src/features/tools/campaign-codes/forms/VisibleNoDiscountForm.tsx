@@ -1,4 +1,8 @@
-import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
+import {
+  AssignVoucherVisibleNoDiscount,
+  Scalars,
+  useAvailableMarketingChannelsQuery,
+} from 'api/generated/graphql'
 import { DateRangeWrapper } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import {
@@ -8,6 +12,7 @@ import {
 import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Input } from 'hedvig-ui/input'
+import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'
@@ -18,6 +23,7 @@ interface VisibleNoDiscountFormData {
   partnerId: string | null
   validFrom?: Scalars['Instant']
   validUntil?: Scalars['Instant']
+  marketingChannel?: string | null
 }
 
 const initialFormData: VisibleNoDiscountFormData = {
@@ -25,6 +31,7 @@ const initialFormData: VisibleNoDiscountFormData = {
   partnerId: '',
   validFrom: null,
   validUntil: null,
+  marketingChannel: null,
 }
 
 const formIsValid = (formData: VisibleNoDiscountFormData) => {
@@ -42,6 +49,18 @@ export const VisibleNoDiscountForm: React.FC = () => {
     setPartnerVisibleNoDiscount,
     { loading },
   ] = useAddPartnerVisibleNoDiscountCode()
+
+  const marketingChannelsQuery = useAvailableMarketingChannelsQuery()
+  const marketingChannels =
+    marketingChannelsQuery.data?.availableMarketingChannels ?? []
+  const marketingChannelOptions =
+    marketingChannels.map((value, index) => {
+      return {
+        key: index + 1,
+        value,
+        label: (value as string).replace('_', ' '),
+      }
+    }) ?? []
 
   const reset = () => setFormData(initialFormData)
 
@@ -89,6 +108,29 @@ export const VisibleNoDiscountForm: React.FC = () => {
           />
         </div>
       </DateRangeWrapper>
+      <Spacing top={'small'} />
+      <Label>Marketing Channel</Label>
+      <SearchableDropdown
+        value={
+          formData.marketingChannel
+            ? {
+                value: formData.marketingChannel,
+                label: formData.marketingChannel,
+              }
+            : null
+        }
+        placeholder={'Marketing Channel'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
+          setFormData({
+            ...formData,
+            marketingChannel: data ? data.value : null,
+          })
+        }
+        noOptionsMessage={() => 'Option not found'}
+        options={marketingChannelOptions}
+      />
       <Spacing top={'small'} />
       <div>
         <Button

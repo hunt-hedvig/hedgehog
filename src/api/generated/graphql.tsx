@@ -1339,6 +1339,7 @@ export type QueryType = {
   claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
+  availableMarketingChannels: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
   getClaimItemValuation: ClaimItemValuation
   canValuateClaimItem?: Maybe<CanValuateClaimItem>
@@ -2451,6 +2452,14 @@ export type AvailableEmployeeRolesQuery = { __typename?: 'QueryType' } & Pick<
   QueryType,
   'availableEmployeeRoles'
 >
+
+export type AvailableMarketingChannelsQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type AvailableMarketingChannelsQuery = {
+  __typename?: 'QueryType'
+} & Pick<QueryType, 'availableMarketingChannels'>
 
 export type CanValuateClaimItemQueryVariables = Exact<{
   typeOfContract: Scalars['String']
@@ -5837,6 +5846,61 @@ export type AvailableEmployeeRolesLazyQueryHookResult = ReturnType<
 export type AvailableEmployeeRolesQueryResult = ApolloReactCommon.QueryResult<
   AvailableEmployeeRolesQuery,
   AvailableEmployeeRolesQueryVariables
+>
+export const AvailableMarketingChannelsDocument = gql`
+  query AvailableMarketingChannels {
+    availableMarketingChannels
+  }
+`
+
+/**
+ * __useAvailableMarketingChannelsQuery__
+ *
+ * To run a query within a React component, call `useAvailableMarketingChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAvailableMarketingChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAvailableMarketingChannelsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAvailableMarketingChannelsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    AvailableMarketingChannelsQuery,
+    AvailableMarketingChannelsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    AvailableMarketingChannelsQuery,
+    AvailableMarketingChannelsQueryVariables
+  >(AvailableMarketingChannelsDocument, options)
+}
+export function useAvailableMarketingChannelsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    AvailableMarketingChannelsQuery,
+    AvailableMarketingChannelsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    AvailableMarketingChannelsQuery,
+    AvailableMarketingChannelsQueryVariables
+  >(AvailableMarketingChannelsDocument, options)
+}
+export type AvailableMarketingChannelsQueryHookResult = ReturnType<
+  typeof useAvailableMarketingChannelsQuery
+>
+export type AvailableMarketingChannelsLazyQueryHookResult = ReturnType<
+  typeof useAvailableMarketingChannelsLazyQuery
+>
+export type AvailableMarketingChannelsQueryResult = ApolloReactCommon.QueryResult<
+  AvailableMarketingChannelsQuery,
+  AvailableMarketingChannelsQueryVariables
 >
 export const CanValuateClaimItemDocument = gql`
   query CanValuateClaimItem(
