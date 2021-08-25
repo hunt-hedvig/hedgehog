@@ -120,6 +120,7 @@ export type AssignVoucherFreeMonths = {
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
+  marketingChannel?: Maybe<Scalars['String']>
 }
 
 export type AssignVoucherPercentageDiscount = {
@@ -129,6 +130,7 @@ export type AssignVoucherPercentageDiscount = {
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
+  marketingChannel?: Maybe<Scalars['String']>
 }
 
 export type AssignVoucherVisibleNoDiscount = {
@@ -136,6 +138,7 @@ export type AssignVoucherVisibleNoDiscount = {
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
+  marketingChannel?: Maybe<Scalars['String']>
 }
 
 export type BurglaryClaim = {
@@ -1702,6 +1705,7 @@ export type VoucherCampaign = {
   validFrom?: Maybe<Scalars['Instant']>
   validTo?: Maybe<Scalars['Instant']>
   incentive?: Maybe<Incentive>
+  marketingChannel?: Maybe<Scalars['String']>
 }
 
 export type WaterDamageBathroomClaim = {
@@ -3080,6 +3084,7 @@ export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
       | 'partnerName'
       | 'validFrom'
       | 'validTo'
+      | 'marketingChannel'
     > & {
         incentive?: Maybe<
           | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
@@ -7482,6 +7487,7 @@ export const FindPartnerCampaignsDocument = gql`
           percentageDiscount
         }
       }
+      marketingChannel
     }
   }
 `

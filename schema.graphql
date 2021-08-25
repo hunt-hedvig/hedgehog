@@ -451,6 +451,7 @@ input AssignVoucherPercentageDiscount {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  marketingChannel: String
 }
 
 input AssignVoucherFreeMonths {
@@ -459,6 +460,7 @@ input AssignVoucherFreeMonths {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  marketingChannel: String
 }
 
 input AssignVoucherVisibleNoDiscount {
@@ -466,6 +468,7 @@ input AssignVoucherVisibleNoDiscount {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  marketingChannel: String
 }
 
 type CampaignOwnerPartner {
@@ -480,6 +483,7 @@ type VoucherCampaign {
   validFrom: Instant
   validTo: Instant
   incentive: Incentive
+  marketingChannel: String
 }
 
 type MonthlyPercentageDiscountFixedPeriod {
@@ -512,7 +516,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -970,7 +974,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

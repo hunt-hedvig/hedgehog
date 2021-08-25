@@ -24,5 +24,6 @@ query FindPartnerCampaigns($input: CampaignFilter!) {
         percentageDiscount
       }
     }
+    marketingChannel
   }
 }

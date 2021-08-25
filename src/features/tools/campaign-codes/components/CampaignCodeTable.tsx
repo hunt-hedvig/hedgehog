@@ -44,10 +44,17 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
               Valid Period
             </Table.HeaderCell>
             <Table.HeaderCell textAlign="left">Campaign Code</Table.HeaderCell>
-            <Table.HeaderCell>Campaign Owner</Table.HeaderCell>
-            <Table.HeaderCell>Incentive Type</Table.HeaderCell>
+            <Table.HeaderCell textAlign={'center'}>
+              Campaign Owner
+            </Table.HeaderCell>
+            <Table.HeaderCell textAlign={'center'}>
+              Incentive Type
+            </Table.HeaderCell>
             <Table.HeaderCell textAlign="center" width={3}>
               Discount
+            </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">
+              Marketing Channel
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -59,6 +66,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                 incentive,
                 partnerId,
                 partnerName,
+                marketingChannel,
               } = campaign
 
               return (
@@ -66,15 +74,18 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                   <Table.Cell textAlign="center">
                     {getValidity(campaign)}
                   </Table.Cell>
-                  <Table.Cell>{campaignCode}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell textAlign={'center'}>{campaignCode}</Table.Cell>
+                  <Table.Cell textAlign={'center'}>
                     <Popover contents={partnerId}>{partnerName}</Popover>
                   </Table.Cell>
-                  <Table.Cell width={3}>
+                  <Table.Cell width={3} textAlign={'center'}>
                     {getIncentiveText(incentive)}
                   </Table.Cell>
-                  <Table.Cell width={3}>
+                  <Table.Cell width={3} textAlign={'center'}>
                     {getDiscountDetails(incentive)}
+                  </Table.Cell>
+                  <Table.Cell width={3} textAlign={'center'}>
+                    {marketingChannel}
                   </Table.Cell>
                 </Table.Row>
               )
