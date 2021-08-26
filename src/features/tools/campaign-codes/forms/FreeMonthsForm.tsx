@@ -1,10 +1,7 @@
 import styled from '@emotion/styled'
-import {
-  AssignVoucherFreeMonths,
-  Scalars,
-  useAvailableMarketingChannelsQuery,
-} from 'api/generated/graphql'
+import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
+import { getMarketingChannelOptions } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerFreeMonthsCodeOptions,
   useAddPartnerFreeMonthsCode,
@@ -55,17 +52,7 @@ export const FreeMonthsForm: React.FC = () => {
 
   const [setPartnerFreeMonths, { loading }] = useAddPartnerFreeMonthsCode()
 
-  const marketingChannelsQuery = useAvailableMarketingChannelsQuery()
-  const marketingChannels =
-    marketingChannelsQuery.data?.availableMarketingChannels ?? []
-  const marketingChannelOptions =
-    marketingChannels.map((value, index) => {
-      return {
-        key: index + 1,
-        value,
-        label: (value as string).replace('_', ' '),
-      }
-    }) ?? []
+  const marketingChannelOptions = getMarketingChannelOptions()
 
   const reset = () => setFormData(initialFormData)
 

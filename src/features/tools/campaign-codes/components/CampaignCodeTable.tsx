@@ -1,7 +1,11 @@
-import { CampaignFilter } from 'api/generated/graphql'
+import {
+  CampaignFilter,
+  useSetCampaignMarketingChannelMutation,
+} from 'api/generated/graphql'
 import {
   getDiscountDetails,
   getIncentiveText,
+  getMarketingChannelOptions,
   getValidity,
 } from 'features/tools/campaign-codes/utils'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
@@ -11,13 +15,20 @@ import {
 } from 'hedvig-ui/animations/standalone-message'
 import { Card } from 'hedvig-ui/card'
 import { Popover } from 'hedvig-ui/popover'
+import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
 
 export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
   filter,
 }) => {
   const [partnerCampaigns, { loading }] = usePartnerCampaigns(filter)
+  const marketingChannelOptions = getMarketingChannelOptions()
+  const [
+    setMarketingChannel,
+    { loading: loadingSetMarketingChannel },
+  ] = useSetCampaignMarketingChannelMutation()
 
   if (loading) {
     return (
@@ -37,7 +48,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
 
   return (
     <Card span={1}>
-      <Table celled style={{ fontSize: '1.0rem' }}>
+      <Table celled style={{ fontSize: '1.0rem', overflow: 'visible' }}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell textAlign="center" width={3}>
@@ -62,6 +73,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
           <>
             {partnerCampaigns.map((campaign) => {
               const {
+                id,
                 campaignCode,
                 incentive,
                 partnerId,
@@ -70,7 +82,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
               } = campaign
 
               return (
-                <Table.Row key={campaign.id}>
+                <Table.Row key={id}>
                   <Table.Cell textAlign="center">
                     {getValidity(campaign)}
                   </Table.Cell>
@@ -85,7 +97,40 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                     {getDiscountDetails(incentive)}
                   </Table.Cell>
                   <Table.Cell width={3} textAlign={'center'}>
-                    {marketingChannel}
+                    <SearchableDropdown
+                      value={
+                        marketingChannel
+                          ? {
+                              value: marketingChannel,
+                              label: marketingChannel,
+                            }
+                          : null
+                      }
+                      placeholder={'No channel'}
+                      isLoading={loadingSetMarketingChannel}
+                      isClearable={true}
+                      onChange={(data) =>
+                        toast.promise(
+                          setMarketingChannel({
+                            variables: { id, marketingChannel: data?.value },
+                            optimisticResponse: {
+                              setCampaignMarketingChannel: {
+                                __typename: 'VoucherCampaign',
+                                marketingChannel: data?.value,
+                                ...campaign,
+                              },
+                            },
+                          }),
+                          {
+                            loading: 'Updating marketing channel',
+                            success: 'Marketing channel updated',
+                            error: 'Could not update marketing channel',
+                          },
+                        )
+                      }
+                      noOptionsMessage={() => 'Option not found'}
+                      options={marketingChannelOptions}
+                    />
                   </Table.Cell>
                 </Table.Row>
               )

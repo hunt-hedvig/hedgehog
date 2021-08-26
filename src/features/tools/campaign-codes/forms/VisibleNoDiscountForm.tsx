@@ -1,10 +1,7 @@
-import {
-  AssignVoucherVisibleNoDiscount,
-  Scalars,
-  useAvailableMarketingChannelsQuery,
-} from 'api/generated/graphql'
+import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
 import { DateRangeWrapper } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
+import { getMarketingChannelOptions } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerVisibleNoDiscountCodeOptions,
   useAddPartnerVisibleNoDiscountCode,
@@ -50,17 +47,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
     { loading },
   ] = useAddPartnerVisibleNoDiscountCode()
 
-  const marketingChannelsQuery = useAvailableMarketingChannelsQuery()
-  const marketingChannels =
-    marketingChannelsQuery.data?.availableMarketingChannels ?? []
-  const marketingChannelOptions =
-    marketingChannels.map((value, index) => {
-      return {
-        key: index + 1,
-        value,
-        label: (value as string).replace('_', ' '),
-      }
-    }) ?? []
+  const marketingChannelOptions = getMarketingChannelOptions()
 
   const reset = () => setFormData(initialFormData)
 

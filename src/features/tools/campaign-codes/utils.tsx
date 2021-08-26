@@ -3,6 +3,7 @@ import {
   CampaignFilter,
   CampaignOwnerPartner,
   Incentive,
+  useAvailableMarketingChannelsQuery,
   VoucherCampaign,
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
@@ -167,5 +168,20 @@ export const getValidity = (campaign: VoucherCampaign) => {
     <ValidityText>
       {validFrom} - {validTo}
     </ValidityText>
+  )
+}
+
+export const getMarketingChannelOptions = () => {
+  const marketingChannelsQuery = useAvailableMarketingChannelsQuery()
+  const marketingChannels =
+    marketingChannelsQuery.data?.availableMarketingChannels ?? []
+  return (
+    marketingChannels.map((value, index) => {
+      return {
+        key: index + 1,
+        value,
+        label: (value as string).replace('_', ' '),
+      }
+    }) ?? []
   )
 }

@@ -923,6 +923,7 @@ export type MutationType = {
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   assignCampaignToPartnerFreeMonths: Scalars['Boolean']
   assignCampaignToPartnerVisibleNoDiscount: Scalars['Boolean']
+  setCampaignMarketingChannel?: Maybe<VoucherCampaign>
   setContractForClaim: Scalars['Boolean']
   manualRedeemCampaign: Scalars['Boolean']
   manualUnRedeemCampaign: Scalars['Boolean']
@@ -1185,6 +1186,11 @@ export type MutationTypeAssignCampaignToPartnerFreeMonthsArgs = {
 
 export type MutationTypeAssignCampaignToPartnerVisibleNoDiscountArgs = {
   request?: Maybe<AssignVoucherVisibleNoDiscount>
+}
+
+export type MutationTypeSetCampaignMarketingChannelArgs = {
+  id: Scalars['ID']
+  marketingChannel?: Maybe<Scalars['String']>
 }
 
 export type MutationTypeSetContractForClaimArgs = {
@@ -3519,6 +3525,44 @@ export type SendMessageMutation = { __typename?: 'MutationType' } & {
         SendMessageFailed,
         'memberId' | 'errorCode' | 'errorMessage'
       >)
+}
+
+export type SetCampaignMarketingChannelMutationVariables = Exact<{
+  id: Scalars['ID']
+  marketingChannel?: Maybe<Scalars['String']>
+}>
+
+export type SetCampaignMarketingChannelMutation = {
+  __typename?: 'MutationType'
+} & {
+  setCampaignMarketingChannel?: Maybe<
+    { __typename?: 'VoucherCampaign' } & Pick<
+      VoucherCampaign,
+      | 'id'
+      | 'campaignCode'
+      | 'partnerId'
+      | 'partnerName'
+      | 'validFrom'
+      | 'validTo'
+      | 'marketingChannel'
+    > & {
+        incentive?: Maybe<
+          | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
+              MonthlyPercentageDiscountFixedPeriod,
+              'numberOfMonths' | 'percentage'
+            >)
+          | ({ __typename?: 'FreeMonths' } & Pick<FreeMonths, 'numberOfMonths'>)
+          | ({ __typename?: 'CostDeduction' } & Pick<CostDeduction, 'amount'>)
+          | { __typename: 'NoDiscount' }
+          | ({ __typename?: 'IndefinitePercentageDiscount' } & Pick<
+              IndefinitePercentageDiscount,
+              'percentageDiscount'
+            >)
+          | { __typename?: 'VisibleNoDiscount' }
+          | { __typename?: 'UnknownIncentive' }
+        >
+      }
+  >
 }
 
 export type SetContractForClaimMutationVariables = Exact<{
@@ -8730,6 +8774,82 @@ export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
 export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SendMessageMutation,
   SendMessageMutationVariables
+>
+export const SetCampaignMarketingChannelDocument = gql`
+  mutation SetCampaignMarketingChannel($id: ID!, $marketingChannel: String) {
+    setCampaignMarketingChannel(id: $id, marketingChannel: $marketingChannel) {
+      id
+      campaignCode
+      partnerId
+      partnerName
+      validFrom
+      validTo
+      incentive {
+        ... on MonthlyPercentageDiscountFixedPeriod {
+          numberOfMonths
+          percentage
+        }
+        ... on FreeMonths {
+          numberOfMonths
+        }
+        ... on CostDeduction {
+          amount
+        }
+        ... on NoDiscount {
+          __typename
+        }
+        ... on IndefinitePercentageDiscount {
+          percentageDiscount
+        }
+      }
+      marketingChannel
+    }
+  }
+`
+export type SetCampaignMarketingChannelMutationFn = ApolloReactCommon.MutationFunction<
+  SetCampaignMarketingChannelMutation,
+  SetCampaignMarketingChannelMutationVariables
+>
+
+/**
+ * __useSetCampaignMarketingChannelMutation__
+ *
+ * To run a mutation, you first call `useSetCampaignMarketingChannelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetCampaignMarketingChannelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setCampaignMarketingChannelMutation, { data, loading, error }] = useSetCampaignMarketingChannelMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      marketingChannel: // value for 'marketingChannel'
+ *   },
+ * });
+ */
+export function useSetCampaignMarketingChannelMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetCampaignMarketingChannelMutation,
+    SetCampaignMarketingChannelMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SetCampaignMarketingChannelMutation,
+    SetCampaignMarketingChannelMutationVariables
+  >(SetCampaignMarketingChannelDocument, options)
+}
+export type SetCampaignMarketingChannelMutationHookResult = ReturnType<
+  typeof useSetCampaignMarketingChannelMutation
+>
+export type SetCampaignMarketingChannelMutationResult = ApolloReactCommon.MutationResult<
+  SetCampaignMarketingChannelMutation
+>
+export type SetCampaignMarketingChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetCampaignMarketingChannelMutation,
+  SetCampaignMarketingChannelMutationVariables
 >
 export const SetContractForClaimDocument = gql`
   mutation SetContractForClaim($request: SetContractForClaim!) {

@@ -129,6 +129,7 @@ type MutationType {
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
+  setCampaignMarketingChannel(id: ID!, marketingChannel: String): VoucherCampaign
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(
     memberId: ID!
