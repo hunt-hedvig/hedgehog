@@ -1,0 +1,3 @@
+mutation PayoutMember($memberId: ID!, $request: PayoutMemberInput!) {
+  payoutMember(memberId: $memberId, request: $request)
+}

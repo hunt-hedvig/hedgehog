@@ -2255,6 +2255,16 @@ export type GetMemberTransactionsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type PayoutMemberMutationVariables = Exact<{
+  memberId: Scalars['ID']
+  request: PayoutMemberInput
+}>
+
+export type PayoutMemberMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'payoutMember'
+>
+
 export type MemberNameAndContractMarketInfoQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -4914,6 +4924,56 @@ export type GetMemberTransactionsLazyQueryHookResult = ReturnType<
 export type GetMemberTransactionsQueryResult = ApolloReactCommon.QueryResult<
   GetMemberTransactionsQuery,
   GetMemberTransactionsQueryVariables
+>
+export const PayoutMemberDocument = gql`
+  mutation PayoutMember($memberId: ID!, $request: PayoutMemberInput!) {
+    payoutMember(memberId: $memberId, request: $request)
+  }
+`
+export type PayoutMemberMutationFn = ApolloReactCommon.MutationFunction<
+  PayoutMemberMutation,
+  PayoutMemberMutationVariables
+>
+
+/**
+ * __usePayoutMemberMutation__
+ *
+ * To run a mutation, you first call `usePayoutMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePayoutMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [payoutMemberMutation, { data, loading, error }] = usePayoutMemberMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function usePayoutMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PayoutMemberMutation,
+    PayoutMemberMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    PayoutMemberMutation,
+    PayoutMemberMutationVariables
+  >(PayoutMemberDocument, options)
+}
+export type PayoutMemberMutationHookResult = ReturnType<
+  typeof usePayoutMemberMutation
+>
+export type PayoutMemberMutationResult = ApolloReactCommon.MutationResult<
+  PayoutMemberMutation
+>
+export type PayoutMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PayoutMemberMutation,
+  PayoutMemberMutationVariables
 >
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {

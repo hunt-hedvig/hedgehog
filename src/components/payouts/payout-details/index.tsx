@@ -4,16 +4,13 @@ import {
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
+import { usePayoutMemberMutation } from 'api/generated/graphql'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import * as yup from 'yup'
 import { FieldSelect } from '../../shared/inputs/FieldSelect'
 import { TextField } from '../../shared/inputs/TextField'
-
-export interface PayoutProps {
-  memberId
-  payoutRequest: (payoutFormData: PayoutFormData, memberId: string) => void
-}
 
 export interface PayoutFormData {
   match: any
@@ -46,22 +43,44 @@ const getPayoutValidationSchema = () =>
     referenceId: yup.string().required(),
   })
 
-export const PayoutDetails: React.FC<PayoutProps> = ({
-  memberId,
-  payoutRequest,
-}) => {
+export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [confirmed, setConfirmed] = useState(false)
+
+  const [payoutMember] = usePayoutMemberMutation()
 
   return (
     <Formik
       initialValues={{ category: '', amount: '', note: '', referenceId: '' }}
-      onSubmit={(payoutFormData: any, { resetForm }) => {
+      onSubmit={(data: any, { resetForm }) => {
         if (!confirmed) {
           return
         }
-        payoutRequest(payoutFormData, memberId)
-        resetForm()
-        setConfirmed(false)
+
+        toast.promise(
+          payoutMember({
+            variables: {
+              memberId,
+              request: {
+                amount: {
+                  amount: data.amount,
+                  currency: 'SEK',
+                },
+                category: data.category,
+                referenceId: data.referenceId,
+                note: data.note,
+              },
+            },
+          }),
+          {
+            loading: 'Creating payout...',
+            success: () => {
+              resetForm()
+              setConfirmed(false)
+              return 'Payout created'
+            },
+            error: 'Could not create payout',
+          },
+        )
       }}
       validationSchema={getPayoutValidationSchema()}
     >
