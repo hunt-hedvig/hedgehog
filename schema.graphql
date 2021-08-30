@@ -131,7 +131,7 @@ type MutationType {
   ): Boolean!
   setCampaignMarketingChannel(
     id: ID!
-    marketingChannel: String
+    marketingChannel: String!
   ): VoucherCampaign
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(

@@ -100,15 +100,13 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                     <SearchableDropdown
                       value={
                         marketingChannel
-                          ? {
-                              value: marketingChannel,
-                              label: marketingChannel,
-                            }
+                          ? marketingChannelOptions.find(
+                              (c) => c.value === marketingChannel,
+                            )
                           : null
                       }
                       placeholder={'No channel'}
                       isLoading={loadingSetMarketingChannel}
-                      isClearable={true}
                       onChange={(data) =>
                         toast.promise(
                           setMarketingChannel({

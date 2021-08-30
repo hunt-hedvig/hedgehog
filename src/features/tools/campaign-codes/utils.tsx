@@ -180,7 +180,7 @@ export const getMarketingChannelOptions = () => {
       return {
         key: index + 1,
         value,
-        label: (value as string).replace('_', ' '),
+        label: (value as string).replace(/_/g, ' '),
       }
     }) ?? []
   )

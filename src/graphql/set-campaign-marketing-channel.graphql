@@ -1,4 +1,4 @@
-mutation SetCampaignMarketingChannel($id: ID!, $marketingChannel: String) {
+mutation SetCampaignMarketingChannel($id: ID!, $marketingChannel: String!) {
   setCampaignMarketingChannel(id: $id, marketingChannel: $marketingChannel) {
     id
     campaignCode

@@ -149,10 +149,9 @@ export const MonthlyPercentageForm: React.FC = () => {
       <SearchableDropdown
         value={
           formData.marketingChannel
-            ? {
-                value: formData.marketingChannel,
-                label: formData.marketingChannel,
-              }
+            ? marketingChannelOptions.find(
+                (c) => c.value === formData.marketingChannel,
+              )
             : null
         }
         placeholder={'Marketing Channel'}
