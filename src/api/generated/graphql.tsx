@@ -929,6 +929,7 @@ export type MutationType = {
   createEmployee: Employee
   updateEmployeeRole: Employee
   removeEmployee: Scalars['Boolean']
+  payoutMember?: Maybe<Scalars['ID']>
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1225,6 +1226,11 @@ export type MutationTypeRemoveEmployeeArgs = {
   id: Scalars['ID']
 }
 
+export type MutationTypePayoutMemberArgs = {
+  memberId: Scalars['ID']
+  request: PayoutMemberInput
+}
+
 export type NationalIdentification = {
   __typename?: 'NationalIdentification'
   identification: Scalars['String']
@@ -1302,6 +1308,22 @@ export type PaymentDefault = {
   amount?: Maybe<Scalars['MonetaryAmount']>
   caseId?: Maybe<Scalars['String']>
   claimant?: Maybe<Scalars['String']>
+}
+
+export enum PayoutCategory {
+  Marketing = 'MARKETING',
+  Referral = 'REFERRAL',
+  Refund = 'REFUND',
+}
+
+export type PayoutMemberInput = {
+  amount: Scalars['MonetaryAmount']
+  sanctionBypassed?: Maybe<Scalars['Boolean']>
+  category?: Maybe<PayoutCategory>
+  referenceId?: Maybe<Scalars['String']>
+  note?: Maybe<Scalars['String']>
+  carrier?: Maybe<Scalars['String']>
+  payoutDetails?: Maybe<SelectedPayoutDetails>
 }
 
 export type PayoutMethodStatus = {
@@ -1495,6 +1517,13 @@ export type SchedulerState = {
   changedAt: Scalars['Instant']
   amount?: Maybe<Scalars['MonetaryAmount']>
   transactionId?: Maybe<Scalars['ID']>
+}
+
+export type SelectedPayoutDetails = {
+  type: Scalars['String']
+  phoneNumber?: Maybe<Scalars['String']>
+  ssn?: Maybe<Scalars['String']>
+  message?: Maybe<Scalars['String']>
 }
 
 export type SendMessageFailed = {
