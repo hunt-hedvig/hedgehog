@@ -207,7 +207,6 @@ export const PaymentsTab: React.FC<{
             <PayoutDetails memberId={memberId} />
           </>
         )}
-      <PayoutDetails memberId={memberId} />
       <h3>Transactions:</h3>
       <MemberTransactionsTable
         transactions={
