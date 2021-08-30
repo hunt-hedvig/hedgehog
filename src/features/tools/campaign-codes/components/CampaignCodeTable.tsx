@@ -118,9 +118,9 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                             },
                           }),
                           {
-                            loading: 'Updating marketing channel',
-                            success: 'Marketing channel updated',
-                            error: 'Could not update marketing channel',
+                            loading: 'Updating code type',
+                            success: 'Code type updated',
+                            error: 'Could not update code type',
                           },
                         )
                       }
