@@ -10,11 +10,11 @@ import gql from 'graphql-tag'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import { MainHeadline } from 'hedvig-ui/typography'
-import { MonetaryAmount } from 'lib/helpers'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
+import { MonetaryAmount } from 'utils/helpers'
 import { formatMoney } from 'utils/money'
 
 const approveMemberCharge = gql`

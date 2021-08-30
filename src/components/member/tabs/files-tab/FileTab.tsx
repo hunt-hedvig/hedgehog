@@ -3,9 +3,9 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { dateTimeFormatter } from 'lib/helpers'
 import React from 'react'
 import { Image, Table } from 'semantic-ui-react'
+import { dateTimeFormatter } from 'utils/helpers'
 
 const sortFileDate = (a, b) => {
   const aDate = new Date(a.timestamp)

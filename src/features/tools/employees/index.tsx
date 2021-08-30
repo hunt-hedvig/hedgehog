@@ -4,8 +4,7 @@ import { EmployeeTable } from 'features/tools/employees/components/EmployeeTable
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import { BackofficeStore } from 'store/storeTypes'
+import { useScopes } from 'utils/auth'
 
 export const Row = styled.div`
   display: flex;
@@ -14,9 +13,8 @@ export const Row = styled.div`
   align-items: center;
 `
 
-export const EmployeesComponent: React.FC<{ scopes: readonly string[] }> = ({
-  scopes,
-}) => {
+export const Employees: React.FC = () => {
+  const scopes = useScopes()
   const [filter, setFilter] = useState({
     email: '',
     role: '',
@@ -41,7 +39,3 @@ export const EmployeesComponent: React.FC<{ scopes: readonly string[] }> = ({
     </>
   )
 }
-
-export const Employees = connect((state: BackofficeStore) => ({
-  scopes: state.auth.scopes,
-}))(EmployeesComponent)
