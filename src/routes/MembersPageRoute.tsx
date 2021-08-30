@@ -3,7 +3,7 @@ import MemberPage from 'containers/MemberPage'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import PrivateRoute from 'routes/PrivateRoute'
+import { PrivateRoute } from './PrivateRoute'
 
 const MessagesPageRouter = ({ store }) => (
   <Switch>

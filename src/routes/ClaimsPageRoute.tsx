@@ -3,7 +3,7 @@ import { ClaimDetails } from 'components/claims/claim-details'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import PrivateRoute from 'routes/PrivateRoute'
+import { PrivateRoute } from 'routes/PrivateRoute'
 
 const ClaimsPageRoute = ({ store }) => (
   <Switch>

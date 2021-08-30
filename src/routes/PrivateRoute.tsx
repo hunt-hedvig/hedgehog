@@ -1,33 +1,22 @@
+import { useGetMeQuery } from 'api/generated/graphql'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
-import { connect } from 'react-redux'
 import { Redirect, Route } from 'react-router'
-import { authCheck as authCheckAction, AuthState } from 'store/actions/auth'
-import { BackofficeStore } from 'store/storeTypes'
 
-const PrivateRouteComponent = ({
-  component: Component,
-  authState,
-  authCheck,
-  ...rest
-}) => {
-  React.useEffect(() => {
-    if (authState === AuthState.UNKNOWN) {
-      authCheck()
-    }
-  }, [authState])
+export const PrivateRoute = ({ component: Component, ...rest }) => {
+  const { data, loading, error } = useGetMeQuery()
 
   return (
     <Route
       {...rest}
       render={(props) => {
-        if (authState === AuthState.UNKNOWN) {
+        if (loading) {
           return (
             <LoadingMessage paddingTop={'25vh'}>Authenticating</LoadingMessage>
           )
         }
 
-        if (authState === AuthState.UNAUTHENTICATED) {
+        if (error || !data?.me) {
           return (
             <Redirect
               to={{
@@ -43,15 +32,3 @@ const PrivateRouteComponent = ({
     />
   )
 }
-
-const mapState = (state: BackofficeStore) => ({
-  authState: state.auth.state,
-})
-
-const mapActions = { authCheck: authCheckAction }
-
-const PrivateRoute = connect(mapState, mapActions, null, { pure: false })(
-  PrivateRouteComponent,
-)
-
-export default PrivateRoute
