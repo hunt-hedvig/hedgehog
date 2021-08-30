@@ -120,7 +120,7 @@ export type AssignVoucherFreeMonths = {
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
-  marketingChannel?: Maybe<Scalars['String']>
+  codeType?: Maybe<Scalars['String']>
 }
 
 export type AssignVoucherPercentageDiscount = {
@@ -130,7 +130,7 @@ export type AssignVoucherPercentageDiscount = {
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
-  marketingChannel?: Maybe<Scalars['String']>
+  codeType?: Maybe<Scalars['String']>
 }
 
 export type AssignVoucherVisibleNoDiscount = {
@@ -138,7 +138,7 @@ export type AssignVoucherVisibleNoDiscount = {
   code: Scalars['String']
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
-  marketingChannel?: Maybe<Scalars['String']>
+  codeType?: Maybe<Scalars['String']>
 }
 
 export type BurglaryClaim = {
@@ -923,7 +923,7 @@ export type MutationType = {
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   assignCampaignToPartnerFreeMonths: Scalars['Boolean']
   assignCampaignToPartnerVisibleNoDiscount: Scalars['Boolean']
-  setCampaignMarketingChannel?: Maybe<VoucherCampaign>
+  setCampaignCodeType?: Maybe<VoucherCampaign>
   setContractForClaim: Scalars['Boolean']
   manualRedeemCampaign: Scalars['Boolean']
   manualUnRedeemCampaign: Scalars['Boolean']
@@ -1188,9 +1188,9 @@ export type MutationTypeAssignCampaignToPartnerVisibleNoDiscountArgs = {
   request?: Maybe<AssignVoucherVisibleNoDiscount>
 }
 
-export type MutationTypeSetCampaignMarketingChannelArgs = {
+export type MutationTypeSetCampaignCodeTypeArgs = {
   id: Scalars['ID']
-  marketingChannel?: Maybe<Scalars['String']>
+  codeType: Scalars['String']
 }
 
 export type MutationTypeSetContractForClaimArgs = {
@@ -1345,7 +1345,7 @@ export type QueryType = {
   claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
-  availableMarketingChannels: Array<Scalars['String']>
+  availableCampaignCodeTypes: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
   getClaimItemValuation: ClaimItemValuation
   canValuateClaimItem?: Maybe<CanValuateClaimItem>
@@ -1712,7 +1712,7 @@ export type VoucherCampaign = {
   validFrom?: Maybe<Scalars['Instant']>
   validTo?: Maybe<Scalars['Instant']>
   incentive?: Maybe<Incentive>
-  marketingChannel?: Maybe<Scalars['String']>
+  codeType?: Maybe<Scalars['String']>
 }
 
 export type WaterDamageBathroomClaim = {
@@ -2459,13 +2459,13 @@ export type AvailableEmployeeRolesQuery = { __typename?: 'QueryType' } & Pick<
   'availableEmployeeRoles'
 >
 
-export type AvailableMarketingChannelsQueryVariables = Exact<{
+export type AvailableCampaignCodeTypesQueryVariables = Exact<{
   [key: string]: never
 }>
 
-export type AvailableMarketingChannelsQuery = {
+export type AvailableCampaignCodeTypesQuery = {
   __typename?: 'QueryType'
-} & Pick<QueryType, 'availableMarketingChannels'>
+} & Pick<QueryType, 'availableCampaignCodeTypes'>
 
 export type CanValuateClaimItemQueryVariables = Exact<{
   typeOfContract: Scalars['String']
@@ -3099,7 +3099,7 @@ export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
       | 'partnerName'
       | 'validFrom'
       | 'validTo'
-      | 'marketingChannel'
+      | 'codeType'
     > & {
         incentive?: Maybe<
           | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
@@ -3527,15 +3527,13 @@ export type SendMessageMutation = { __typename?: 'MutationType' } & {
       >)
 }
 
-export type SetCampaignMarketingChannelMutationVariables = Exact<{
+export type SetCampaignCodeTypeMutationVariables = Exact<{
   id: Scalars['ID']
-  marketingChannel?: Maybe<Scalars['String']>
+  codeType: Scalars['String']
 }>
 
-export type SetCampaignMarketingChannelMutation = {
-  __typename?: 'MutationType'
-} & {
-  setCampaignMarketingChannel?: Maybe<
+export type SetCampaignCodeTypeMutation = { __typename?: 'MutationType' } & {
+  setCampaignCodeType?: Maybe<
     { __typename?: 'VoucherCampaign' } & Pick<
       VoucherCampaign,
       | 'id'
@@ -3544,7 +3542,7 @@ export type SetCampaignMarketingChannelMutation = {
       | 'partnerName'
       | 'validFrom'
       | 'validTo'
-      | 'marketingChannel'
+      | 'codeType'
     > & {
         incentive?: Maybe<
           | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
@@ -5891,60 +5889,60 @@ export type AvailableEmployeeRolesQueryResult = ApolloReactCommon.QueryResult<
   AvailableEmployeeRolesQuery,
   AvailableEmployeeRolesQueryVariables
 >
-export const AvailableMarketingChannelsDocument = gql`
-  query AvailableMarketingChannels {
-    availableMarketingChannels
+export const AvailableCampaignCodeTypesDocument = gql`
+  query AvailableCampaignCodeTypes {
+    availableCampaignCodeTypes
   }
 `
 
 /**
- * __useAvailableMarketingChannelsQuery__
+ * __useAvailableCampaignCodeTypesQuery__
  *
- * To run a query within a React component, call `useAvailableMarketingChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAvailableMarketingChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useAvailableCampaignCodeTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAvailableCampaignCodeTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAvailableMarketingChannelsQuery({
+ * const { data, loading, error } = useAvailableCampaignCodeTypesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useAvailableMarketingChannelsQuery(
+export function useAvailableCampaignCodeTypesQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    AvailableMarketingChannelsQuery,
-    AvailableMarketingChannelsQueryVariables
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
-    AvailableMarketingChannelsQuery,
-    AvailableMarketingChannelsQueryVariables
-  >(AvailableMarketingChannelsDocument, options)
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
+  >(AvailableCampaignCodeTypesDocument, options)
 }
-export function useAvailableMarketingChannelsLazyQuery(
+export function useAvailableCampaignCodeTypesLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    AvailableMarketingChannelsQuery,
-    AvailableMarketingChannelsQueryVariables
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
-    AvailableMarketingChannelsQuery,
-    AvailableMarketingChannelsQueryVariables
-  >(AvailableMarketingChannelsDocument, options)
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
+  >(AvailableCampaignCodeTypesDocument, options)
 }
-export type AvailableMarketingChannelsQueryHookResult = ReturnType<
-  typeof useAvailableMarketingChannelsQuery
+export type AvailableCampaignCodeTypesQueryHookResult = ReturnType<
+  typeof useAvailableCampaignCodeTypesQuery
 >
-export type AvailableMarketingChannelsLazyQueryHookResult = ReturnType<
-  typeof useAvailableMarketingChannelsLazyQuery
+export type AvailableCampaignCodeTypesLazyQueryHookResult = ReturnType<
+  typeof useAvailableCampaignCodeTypesLazyQuery
 >
-export type AvailableMarketingChannelsQueryResult = ApolloReactCommon.QueryResult<
-  AvailableMarketingChannelsQuery,
-  AvailableMarketingChannelsQueryVariables
+export type AvailableCampaignCodeTypesQueryResult = ApolloReactCommon.QueryResult<
+  AvailableCampaignCodeTypesQuery,
+  AvailableCampaignCodeTypesQueryVariables
 >
 export const CanValuateClaimItemDocument = gql`
   query CanValuateClaimItem(
@@ -7595,7 +7593,7 @@ export const FindPartnerCampaignsDocument = gql`
           percentageDiscount
         }
       }
-      marketingChannel
+      codeType
     }
   }
 `
@@ -8775,9 +8773,9 @@ export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SendMessageMutation,
   SendMessageMutationVariables
 >
-export const SetCampaignMarketingChannelDocument = gql`
-  mutation SetCampaignMarketingChannel($id: ID!, $marketingChannel: String) {
-    setCampaignMarketingChannel(id: $id, marketingChannel: $marketingChannel) {
+export const SetCampaignCodeTypeDocument = gql`
+  mutation SetCampaignCodeType($id: ID!, $codeType: String!) {
+    setCampaignCodeType(id: $id, codeType: $codeType) {
       id
       campaignCode
       partnerId
@@ -8802,54 +8800,54 @@ export const SetCampaignMarketingChannelDocument = gql`
           percentageDiscount
         }
       }
-      marketingChannel
+      codeType
     }
   }
 `
-export type SetCampaignMarketingChannelMutationFn = ApolloReactCommon.MutationFunction<
-  SetCampaignMarketingChannelMutation,
-  SetCampaignMarketingChannelMutationVariables
+export type SetCampaignCodeTypeMutationFn = ApolloReactCommon.MutationFunction<
+  SetCampaignCodeTypeMutation,
+  SetCampaignCodeTypeMutationVariables
 >
 
 /**
- * __useSetCampaignMarketingChannelMutation__
+ * __useSetCampaignCodeTypeMutation__
  *
- * To run a mutation, you first call `useSetCampaignMarketingChannelMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetCampaignMarketingChannelMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSetCampaignCodeTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetCampaignCodeTypeMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [setCampaignMarketingChannelMutation, { data, loading, error }] = useSetCampaignMarketingChannelMutation({
+ * const [setCampaignCodeTypeMutation, { data, loading, error }] = useSetCampaignCodeTypeMutation({
  *   variables: {
  *      id: // value for 'id'
- *      marketingChannel: // value for 'marketingChannel'
+ *      codeType: // value for 'codeType'
  *   },
  * });
  */
-export function useSetCampaignMarketingChannelMutation(
+export function useSetCampaignCodeTypeMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    SetCampaignMarketingChannelMutation,
-    SetCampaignMarketingChannelMutationVariables
+    SetCampaignCodeTypeMutation,
+    SetCampaignCodeTypeMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
-    SetCampaignMarketingChannelMutation,
-    SetCampaignMarketingChannelMutationVariables
-  >(SetCampaignMarketingChannelDocument, options)
+    SetCampaignCodeTypeMutation,
+    SetCampaignCodeTypeMutationVariables
+  >(SetCampaignCodeTypeDocument, options)
 }
-export type SetCampaignMarketingChannelMutationHookResult = ReturnType<
-  typeof useSetCampaignMarketingChannelMutation
+export type SetCampaignCodeTypeMutationHookResult = ReturnType<
+  typeof useSetCampaignCodeTypeMutation
 >
-export type SetCampaignMarketingChannelMutationResult = ApolloReactCommon.MutationResult<
-  SetCampaignMarketingChannelMutation
+export type SetCampaignCodeTypeMutationResult = ApolloReactCommon.MutationResult<
+  SetCampaignCodeTypeMutation
 >
-export type SetCampaignMarketingChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetCampaignMarketingChannelMutation,
-  SetCampaignMarketingChannelMutationVariables
+export type SetCampaignCodeTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetCampaignCodeTypeMutation,
+  SetCampaignCodeTypeMutationVariables
 >
 export const SetContractForClaimDocument = gql`
   mutation SetContractForClaim($request: SetContractForClaim!) {

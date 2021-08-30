@@ -1,11 +1,11 @@
 import {
   CampaignFilter,
-  useSetCampaignMarketingChannelMutation,
+  useSetCampaignCodeTypeMutation,
 } from 'api/generated/graphql'
 import {
+  getCodeTypeOptions,
   getDiscountDetails,
   getIncentiveText,
-  getMarketingChannelOptions,
   getValidity,
 } from 'features/tools/campaign-codes/utils'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
@@ -24,11 +24,11 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
   filter,
 }) => {
   const [partnerCampaigns, { loading }] = usePartnerCampaigns(filter)
-  const marketingChannelOptions = getMarketingChannelOptions()
+  const codeTypeOptions = getCodeTypeOptions()
   const [
-    setMarketingChannel,
-    { loading: loadingSetMarketingChannel },
-  ] = useSetCampaignMarketingChannelMutation()
+    setCodeType,
+    { loading: loadingSetCodeType },
+  ] = useSetCampaignCodeTypeMutation()
 
   if (loading) {
     return (
@@ -78,7 +78,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                 incentive,
                 partnerId,
                 partnerName,
-                marketingChannel,
+                codeType,
               } = campaign
 
               return (
@@ -99,22 +99,20 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                   <Table.Cell width={3} textAlign={'center'}>
                     <SearchableDropdown
                       value={
-                        marketingChannel
-                          ? marketingChannelOptions.find(
-                              (c) => c.value === marketingChannel,
-                            )
+                        codeType
+                          ? codeTypeOptions.find((c) => c.value === codeType)
                           : null
                       }
                       placeholder={'No channel'}
-                      isLoading={loadingSetMarketingChannel}
+                      isLoading={loadingSetCodeType}
                       onChange={(data) =>
                         toast.promise(
-                          setMarketingChannel({
-                            variables: { id, marketingChannel: data?.value },
+                          setCodeType({
+                            variables: { id, codeType: data?.value },
                             optimisticResponse: {
-                              setCampaignMarketingChannel: {
+                              setCampaignCodeType: {
                                 __typename: 'VoucherCampaign',
-                                marketingChannel: data?.value,
+                                codeType: data?.value,
                                 ...campaign,
                               },
                             },
@@ -127,7 +125,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                         )
                       }
                       noOptionsMessage={() => 'Option not found'}
-                      options={marketingChannelOptions}
+                      options={codeTypeOptions}
                     />
                   </Table.Cell>
                 </Table.Row>

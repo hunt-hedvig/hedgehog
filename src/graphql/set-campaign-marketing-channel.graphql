@@ -1,5 +1,5 @@
-mutation SetCampaignMarketingChannel($id: ID!, $marketingChannel: String!) {
-  setCampaignMarketingChannel(id: $id, marketingChannel: $marketingChannel) {
+mutation SetCampaignCodeType($id: ID!, $codeType: String!) {
+  setCampaignCodeType(id: $id, codeType: $codeType) {
     id
     campaignCode
     partnerId
@@ -24,6 +24,6 @@ mutation SetCampaignMarketingChannel($id: ID!, $marketingChannel: String!) {
         percentageDiscount
       }
     }
-    marketingChannel
+    codeType
   }
 }

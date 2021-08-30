@@ -1,7 +1,7 @@
 import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
 import { DateRangeWrapper } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
-import { getMarketingChannelOptions } from 'features/tools/campaign-codes/utils'
+import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerVisibleNoDiscountCodeOptions,
   useAddPartnerVisibleNoDiscountCode,
@@ -20,7 +20,7 @@ interface VisibleNoDiscountFormData {
   partnerId: string | null
   validFrom?: Scalars['Instant']
   validUntil?: Scalars['Instant']
-  marketingChannel?: string | null
+  codeType?: string | null
 }
 
 const initialFormData: VisibleNoDiscountFormData = {
@@ -28,7 +28,7 @@ const initialFormData: VisibleNoDiscountFormData = {
   partnerId: '',
   validFrom: null,
   validUntil: null,
-  marketingChannel: null,
+  codeType: null,
 }
 
 const formIsValid = (formData: VisibleNoDiscountFormData) => {
@@ -47,7 +47,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
     { loading },
   ] = useAddPartnerVisibleNoDiscountCode()
 
-  const marketingChannelOptions = getMarketingChannelOptions()
+  const codeTypeOptions = getCodeTypeOptions()
 
   const reset = () => setFormData(initialFormData)
 
@@ -99,10 +99,8 @@ export const VisibleNoDiscountForm: React.FC = () => {
       <Label>Marketing Channel</Label>
       <SearchableDropdown
         value={
-          formData.marketingChannel
-            ? marketingChannelOptions.find(
-                (c) => c.value === formData.marketingChannel,
-              )
+          formData.codeType
+            ? codeTypeOptions.find((c) => c.value === formData.codeType)
             : null
         }
         placeholder={'Marketing Channel'}
@@ -111,11 +109,11 @@ export const VisibleNoDiscountForm: React.FC = () => {
         onChange={(data) =>
           setFormData({
             ...formData,
-            marketingChannel: data ? data.value : null,
+            codeType: data ? data.value : null,
           })
         }
         noOptionsMessage={() => 'Option not found'}
-        options={marketingChannelOptions}
+        options={codeTypeOptions}
       />
       <Spacing top={'small'} />
       <div>

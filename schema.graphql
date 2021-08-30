@@ -15,7 +15,7 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
-  availableMarketingChannels: [String!]!
+  availableCampaignCodeTypes: [String!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
   canValuateClaimItem(
@@ -129,10 +129,7 @@ type MutationType {
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
-  setCampaignMarketingChannel(
-    id: ID!
-    marketingChannel: String!
-  ): VoucherCampaign
+  setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(
     memberId: ID!
@@ -456,7 +453,7 @@ input AssignVoucherPercentageDiscount {
   code: String!
   validFrom: Instant
   validUntil: Instant
-  marketingChannel: String
+  codeType: String
 }
 
 input AssignVoucherFreeMonths {
@@ -465,7 +462,7 @@ input AssignVoucherFreeMonths {
   code: String!
   validFrom: Instant
   validUntil: Instant
-  marketingChannel: String
+  codeType: String
 }
 
 input AssignVoucherVisibleNoDiscount {
@@ -473,7 +470,7 @@ input AssignVoucherVisibleNoDiscount {
   code: String!
   validFrom: Instant
   validUntil: Instant
-  marketingChannel: String
+  codeType: String
 }
 
 type CampaignOwnerPartner {
@@ -488,7 +485,7 @@ type VoucherCampaign {
   validFrom: Instant
   validTo: Instant
   incentive: Incentive
-  marketingChannel: String
+  codeType: String
 }
 
 type MonthlyPercentageDiscountFixedPeriod {
@@ -521,7 +518,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -979,7 +976,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

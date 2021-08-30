@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
-import { getMarketingChannelOptions } from 'features/tools/campaign-codes/utils'
+import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerFreeMonthsCodeOptions,
   useAddPartnerFreeMonthsCode,
@@ -22,7 +22,7 @@ interface FreeMonthsFormData {
   code: string
   validFrom?: Scalars['Instant']
   validUntil?: Scalars['Instant']
-  marketingChannel?: string | null
+  codeType?: string | null
 }
 
 const initialFormData: FreeMonthsFormData = {
@@ -31,7 +31,7 @@ const initialFormData: FreeMonthsFormData = {
   numberOfFreeMonths: null,
   validFrom: null,
   validUntil: null,
-  marketingChannel: null,
+  codeType: null,
 }
 
 export const DateRangeWrapper = styled.div`
@@ -52,7 +52,7 @@ export const FreeMonthsForm: React.FC = () => {
 
   const [setPartnerFreeMonths, { loading }] = useAddPartnerFreeMonthsCode()
 
-  const marketingChannelOptions = getMarketingChannelOptions()
+  const codeTypeOptions = getCodeTypeOptions()
 
   const reset = () => setFormData(initialFormData)
 
@@ -127,10 +127,8 @@ export const FreeMonthsForm: React.FC = () => {
       <Label>Marketing Channel</Label>
       <SearchableDropdown
         value={
-          formData.marketingChannel
-            ? marketingChannelOptions.find(
-                (c) => c.value === formData.marketingChannel,
-              )
+          formData.codeType
+            ? codeTypeOptions.find((c) => c.value === formData.codeType)
             : null
         }
         placeholder={'Marketing Channel'}
@@ -139,11 +137,11 @@ export const FreeMonthsForm: React.FC = () => {
         onChange={(data) =>
           setFormData({
             ...formData,
-            marketingChannel: data ? data.value : null,
+            codeType: data ? data.value : null,
           })
         }
         noOptionsMessage={() => 'Option not found'}
-        options={marketingChannelOptions}
+        options={codeTypeOptions}
       />
       <Spacing top={'small'} />
       <div>
