@@ -124,35 +124,17 @@ const App: React.FC = () => {
                               return null
                             }}
                           />
-                          <Routes.PrivateRoute
-                            path="/dashborad"
-                            store={store}
-                            component={DashboardPage}
-                          />
-                          <Routes.PrivateRoute
-                            path="/questions"
-                            store={store}
-                            component={QuestionsPage}
-                          />
+                          <Route path="/dashborad" component={DashboardPage} />
+                          <Route path="/questions" component={QuestionsPage} />
                           <Route
                             path="/claims"
-                            render={(routeProps) => (
-                              <Routes.ClaimsPageRoute
-                                {...routeProps}
-                                store={store}
-                              />
-                            )}
+                            component={Routes.ClaimsPageRoute}
                           />
                           <Route
                             path="/members"
-                            render={(routeProps) => (
-                              <Routes.MembersPageRoute
-                                {...routeProps}
-                                store={store}
-                              />
-                            )}
+                            component={Routes.MembersPageRoute}
                           />
-                          <Routes.PrivateRoute
+                          <Route
                             path="/tools"
                             store={store}
                             component={Routes.ToolsPageRoute}
