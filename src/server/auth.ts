@@ -1,5 +1,4 @@
 import { addDays, addMinutes } from 'date-fns'
-import jwt_decode from 'jwt-decode'
 import { ExtendableContext, Middleware } from 'koa'
 import fetch from 'node-fetch'
 import { config } from './config'
@@ -14,18 +13,6 @@ function setTokenCookies(
   ctx: ExtendableContext,
   { accessToken, refreshToken }: Tokens,
 ) {
-  try {
-    const { scopes } = jwt_decode(accessToken)
-    ctx.cookies.set('_hvg_scope', JSON.stringify(scopes), {
-      path: '/',
-      httpOnly: false,
-      secure: config.useSecureCookies,
-      expires: addMinutes(new Date(), 3 * 60),
-    })
-  } catch {
-    ctx.cookies.set('_hvg_scope', '')
-  }
-
   ctx.cookies.set('_hvg_at', accessToken, {
     path: '/',
     httpOnly: true,

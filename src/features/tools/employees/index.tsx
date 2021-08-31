@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
+import { useGetMeQuery } from 'api/generated/graphql'
 import { EmployeeFilter } from 'features/tools/employees/components/EmployeeFilter'
 import { EmployeeTable } from 'features/tools/employees/components/EmployeeTable'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
-import { useScopes } from 'utils/auth'
 
 export const Row = styled.div`
   display: flex;
@@ -14,7 +14,9 @@ export const Row = styled.div`
 `
 
 export const Employees: React.FC = () => {
-  const scopes = useScopes()
+  const { data } = useGetMeQuery()
+  const scopes = data?.me?.scopes ?? []
+
   const [filter, setFilter] = useState({
     email: '',
     role: '',

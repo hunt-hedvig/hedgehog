@@ -12,7 +12,7 @@ const StyledDropdown = styled(SearchableDropdown)`
 `
 
 export const EmployeeFilter: React.FC<{
-  scopes: readonly string[]
+  scopes: string[]
   filter: { email: string; role: string; label: string }
   setFilter: React.Dispatch<React.SetStateAction<{ email; role; label }>>
 }> = ({ scopes, filter, setFilter }) => {
