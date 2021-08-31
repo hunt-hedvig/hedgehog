@@ -69,7 +69,10 @@ export const DashboardPage: React.FC = () => {
         {data?.me && (
           <MainHeadline>
             Hi there{' '}
-            <Capitalized>{getLowercaseNameFromEmail(data.me)}</Capitalized>!
+            <Capitalized>
+              {data?.me && getLowercaseNameFromEmail(data?.me.email)}
+            </Capitalized>
+            !
           </MainHeadline>
         )}
       </Spacing>

@@ -748,6 +748,13 @@ export type ManualUnRedeemCampaignInput = {
   campaignCode: Scalars['String']
 }
 
+export type Me = {
+  __typename?: 'Me'
+  email: Scalars['String']
+  scopes: Array<Scalars['String']>
+  role: Scalars['String']
+}
+
 export type Member = {
   __typename?: 'Member'
   memberId: Scalars['ID']
@@ -1328,7 +1335,7 @@ export type QueryType = {
   member?: Maybe<Member>
   claim?: Maybe<Claim>
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
-  me?: Maybe<Scalars['String']>
+  me?: Maybe<Me>
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
@@ -2132,7 +2139,9 @@ export type SetClaimTypeMutation = { __typename?: 'MutationType' } & {
 
 export type GetMeQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetMeQuery = { __typename?: 'QueryType' } & Pick<QueryType, 'me'>
+export type GetMeQuery = { __typename?: 'QueryType' } & {
+  me?: Maybe<{ __typename?: 'Me' } & Pick<Me, 'email' | 'scopes' | 'role'>>
+}
 
 export type AddAccountEntryToMemberMutationVariables = Exact<{
   memberId: Scalars['ID']
@@ -4581,7 +4590,11 @@ export type SetClaimTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
 >
 export const GetMeDocument = gql`
   query GetMe {
-    me
+    me {
+      email
+      scopes
+      role
+    }
   }
 `
 
