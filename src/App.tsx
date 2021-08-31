@@ -15,6 +15,7 @@ import {
   SemanticOverrides,
 } from 'hedvig-ui/themes'
 import React, { useState } from 'react'
+import { CookiesProvider } from 'react-cookie'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Provider } from 'react-redux'
@@ -105,56 +106,64 @@ const App: React.FC = () => {
         <Global styles={globalCss} />
         <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
           <Provider store={store}>
-            <MemberHistoryProvider>
-              <NumberMemberGroupsProvider>
-                <Router history={history}>
-                  <CommandLineProvider>
-                    <Layout>
-                      <Navigation history={history} store={store} />
-                      <Main
-                        dark={history.location.pathname.startsWith('/login')}
-                      >
-                        <Breadcrumbs />
-                        <Switch>
-                          <Route
-                            path="/login"
-                            exact
-                            component={() => {
-                              redirectToLogin()
-                              return null
+            <CookiesProvider>
+              <MemberHistoryProvider>
+                <NumberMemberGroupsProvider>
+                  <Router history={history}>
+                    <CommandLineProvider>
+                      <Layout>
+                        <Navigation history={history} store={store} />
+                        <Main
+                          dark={history.location.pathname.startsWith('/login')}
+                        >
+                          <Breadcrumbs />
+                          <Switch>
+                            <Route
+                              path="/login"
+                              exact
+                              component={() => {
+                                redirectToLogin()
+                                return null
+                              }}
+                            />
+                            <Route
+                              path="/dashborad"
+                              component={DashboardPage}
+                            />
+                            <Route
+                              path="/questions"
+                              component={QuestionsPage}
+                            />
+                            <Route
+                              path="/claims"
+                              component={Routes.ClaimsPageRoute}
+                            />
+                            <Route
+                              path="/members"
+                              component={Routes.MembersPageRoute}
+                            />
+                            <Route
+                              path="/tools"
+                              store={store}
+                              component={Routes.ToolsPageRoute}
+                            />
+                            <Redirect from="*" to="/dashborad" />
+                          </Switch>
+                          <Toaster
+                            position={'top-center'}
+                            toastOptions={{
+                              style: {
+                                padding: '20px 25px',
+                              },
                             }}
                           />
-                          <Route path="/dashborad" component={DashboardPage} />
-                          <Route path="/questions" component={QuestionsPage} />
-                          <Route
-                            path="/claims"
-                            component={Routes.ClaimsPageRoute}
-                          />
-                          <Route
-                            path="/members"
-                            component={Routes.MembersPageRoute}
-                          />
-                          <Route
-                            path="/tools"
-                            store={store}
-                            component={Routes.ToolsPageRoute}
-                          />
-                          <Redirect from="*" to="/dashborad" />
-                        </Switch>
-                        <Toaster
-                          position={'top-center'}
-                          toastOptions={{
-                            style: {
-                              padding: '20px 25px',
-                            },
-                          }}
-                        />
-                      </Main>
-                    </Layout>
-                  </CommandLineProvider>
-                </Router>
-              </NumberMemberGroupsProvider>
-            </MemberHistoryProvider>
+                        </Main>
+                      </Layout>
+                    </CommandLineProvider>
+                  </Router>
+                </NumberMemberGroupsProvider>
+              </MemberHistoryProvider>
+            </CookiesProvider>
           </Provider>
         </ThemeProvider>
       </MuiThemeProvider>
