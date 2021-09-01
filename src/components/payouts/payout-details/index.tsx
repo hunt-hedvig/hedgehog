@@ -9,6 +9,7 @@ import {
   GetMemberTransactionsDocument,
   GetMemberTransactionsQuery,
   PayoutMemberMutation,
+  useGetContractMarketInfoQuery,
   usePayoutMemberMutation,
 } from 'api/generated/graphql'
 import { Field, Form, Formik } from 'formik'
@@ -43,6 +44,12 @@ const getPayoutValidationSchema = () =>
 export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [confirmed, setConfirmed] = useState(false)
   const [payoutMember] = usePayoutMemberMutation()
+  const { data: contractMarketInfo } = useGetContractMarketInfoQuery({
+    variables: { memberId },
+  })
+
+  const preferredCurrency =
+    contractMarketInfo?.member?.contractMarketInfo?.preferredCurrency ?? 'SEK'
 
   const updateCache = (
     cache: ApolloCache<any>,
@@ -83,7 +90,7 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
               request: {
                 amount: {
                   amount: data.amount,
-                  currency: 'SEK',
+                  currency: preferredCurrency,
                 },
                 category: data.category,
                 referenceId: data.referenceId,
