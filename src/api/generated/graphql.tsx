@@ -929,7 +929,7 @@ export type MutationType = {
   createEmployee: Employee
   updateEmployeeRole: Employee
   removeEmployee: Scalars['Boolean']
-  payoutMember?: Maybe<Scalars['ID']>
+  payoutMember?: Maybe<Transaction>
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -2260,10 +2260,21 @@ export type PayoutMemberMutationVariables = Exact<{
   request: PayoutMemberInput
 }>
 
-export type PayoutMemberMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'payoutMember'
->
+export type PayoutMemberMutation = { __typename?: 'MutationType' } & {
+  payoutMember?: Maybe<
+    { __typename?: 'Transaction' } & Pick<
+      Transaction,
+      'id' | 'timestamp' | 'type' | 'status'
+    > & {
+        amount?: Maybe<
+          { __typename?: 'MonetaryAmountV2' } & Pick<
+            MonetaryAmountV2,
+            'amount' | 'currency'
+          >
+        >
+      }
+  >
+}
 
 export type MemberNameAndContractMarketInfoQueryVariables = Exact<{
   memberId: Scalars['ID']
@@ -4927,7 +4938,16 @@ export type GetMemberTransactionsQueryResult = ApolloReactCommon.QueryResult<
 >
 export const PayoutMemberDocument = gql`
   mutation PayoutMember($memberId: ID!, $request: PayoutMemberInput!) {
-    payoutMember(memberId: $memberId, request: $request)
+    payoutMember(memberId: $memberId, request: $request) {
+      id
+      amount {
+        amount
+        currency
+      }
+      timestamp
+      type
+      status
+    }
   }
 `
 export type PayoutMemberMutationFn = ApolloReactCommon.MutationFunction<

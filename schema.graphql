@@ -146,7 +146,7 @@ type MutationType {
   createEmployee(email: String!, role: String!): Employee!
   updateEmployeeRole(id: ID!, role: String!): Employee!
   removeEmployee(id: ID!): Boolean!
-  payoutMember(memberId: ID!, request: PayoutMemberInput!): ID
+  payoutMember(memberId: ID!, request: PayoutMemberInput!): Transaction
 }
 
 enum PayoutCategory {
@@ -536,7 +536,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -994,7 +994,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

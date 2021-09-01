@@ -1,25 +1,22 @@
+import { ApolloCache } from '@apollo/client'
 import styled from '@emotion/styled'
 import {
   Button as MuiButton,
   MenuItem as MuiMenuItem,
   withStyles,
 } from '@material-ui/core'
-import { usePayoutMemberMutation } from 'api/generated/graphql'
+import {
+  GetMemberTransactionsDocument,
+  GetMemberTransactionsQuery,
+  PayoutMemberMutation,
+  usePayoutMemberMutation,
+} from 'api/generated/graphql'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import * as yup from 'yup'
 import { FieldSelect } from '../../shared/inputs/FieldSelect'
 import { TextField } from '../../shared/inputs/TextField'
-
-export interface PayoutFormData {
-  match: any
-  memberId: string
-  category: 'MARKETING' | 'REFERRAL' | 'REFUND'
-  amount: string
-  note: string
-  referenceId: string
-}
 
 const SubmitButton = withStyles({
   root: {
@@ -45,8 +42,31 @@ const getPayoutValidationSchema = () =>
 
 export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [confirmed, setConfirmed] = useState(false)
-
   const [payoutMember] = usePayoutMemberMutation()
+
+  const updateCache = (
+    cache: ApolloCache<any>,
+    response: PayoutMemberMutation,
+  ) => {
+    const transaction = response?.payoutMember
+    const cachedData = cache.readQuery({
+      query: GetMemberTransactionsDocument,
+      variables: { id: memberId },
+    })
+
+    const member = (cachedData as GetMemberTransactionsQuery).member
+    const transactions = member?.transactions ?? []
+
+    const newMember = {
+      ...member,
+      transactions: [...transactions, transaction],
+    }
+
+    cache.writeQuery({
+      query: GetMemberTransactionsDocument,
+      data: { member: newMember },
+    })
+  }
 
   return (
     <Formik
@@ -69,6 +89,12 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
                 referenceId: data.referenceId,
                 note: data.note,
               },
+            },
+            update: (cache, { data: response }) => {
+              if (!response) {
+                return
+              }
+              updateCache(cache, response)
             },
           }),
           {
