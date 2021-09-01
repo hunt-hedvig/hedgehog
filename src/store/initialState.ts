@@ -1,16 +1,10 @@
 import { AuthState } from 'store/actions/auth'
 import { BackofficeStore } from './storeTypes'
-import { PayoutRequestResult } from './types/payoutTypes'
 
 const initialState: BackofficeStore = {
   auth: {
     state: AuthState.UNKNOWN,
     scopes: [],
-  },
-  payoutDetails: {
-    data: null,
-    requesting: false,
-    requestResult: PayoutRequestResult.READY,
   },
 }
 
