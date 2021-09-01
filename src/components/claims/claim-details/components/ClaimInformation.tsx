@@ -14,7 +14,7 @@ import {
   useSetContractForClaim,
 } from 'graphql/use-add-contract-id-to-claim'
 import {
-  setCoveringEmployeeOptions,
+  // setCoveringEmployeeOptions,
   useSetCoveringEmployee,
 } from 'graphql/use-set-covering-employee'
 import {
@@ -180,12 +180,20 @@ export const ClaimInformation: React.FC<{
           <Dropdown
             value={coveringEmployee ? 'True' : 'False'}
             onChange={async (value) => {
-              await setCoveringEmployee(
-                setCoveringEmployeeOptions(
-                  claimId,
-                  validateSelectEmployeeClaimOption(value),
-                ),
-              )
+              await setCoveringEmployee({
+                variables: {
+                  id: claimId,
+                  coveringEmployee: validateSelectEmployeeClaimOption(value),
+                },
+                optimisticResponse: {
+                  setCoveringEmployee: {
+                    id: claimId,
+                    __typename: 'Claim',
+                    coveringEmployee: validateSelectEmployeeClaimOption(value),
+                    events: [],
+                  },
+                },
+              })
             }}
             options={[
               { key: 0, value: 'True', text: 'True' },
