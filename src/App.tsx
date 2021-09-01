@@ -136,7 +136,6 @@ const App: React.FC = () => {
                           />
                           <Route
                             path="/tools"
-                            store={store}
                             component={Routes.ToolsPageRoute}
                           />
                           <Redirect from="*" to="/dashborad" />
