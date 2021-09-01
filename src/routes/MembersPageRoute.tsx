@@ -1,5 +1,5 @@
 import { MembersSearch } from 'components/members-search'
-import MemberPage from 'containers/MemberPage'
+import { MemberPage } from 'containers/MemberPage'
 import React from 'react'
 import { Route, Switch } from 'react-router'
 
