@@ -18,7 +18,7 @@ import {
   useSetCoveringEmployee,
 } from 'graphql/use-set-covering-employee'
 import {
-  updateClaimStateOptions,
+  // updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
 import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
@@ -161,9 +161,17 @@ export const ClaimInformation: React.FC<{
             enumToSelectFrom={ClaimState}
             placeholder={''}
             onChange={async (value) => {
-              await updateClaimState(
-                updateClaimStateOptions(claimId, validateSelectOption(value)),
-              )
+              await updateClaimState({
+                variables: { id: claimId, state: validateSelectOption(value) },
+                optimisticResponse: {
+                  updateClaimState: {
+                    id: claimId,
+                    __typename: 'Claim',
+                    state: validateSelectOption(value),
+                    events: [],
+                  },
+                },
+              })
             }}
           />
         </SelectWrapper>
