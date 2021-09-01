@@ -38,7 +38,11 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
 
   const getUniqueContractTypes = () => {
     if (memberMarket === Market.Sweden) {
-      return [ContractType.SwedishApartment, ContractType.SwedishHouse]
+      return [
+        ContractType.SwedishApartment,
+        ContractType.SwedishHouse,
+        ContractType.SwedishAccident,
+      ]
     }
 
     if (memberMarket === Market.Norway) {
@@ -79,7 +83,10 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
       )
     }
     if (quote.productType === QuoteProductType.Accident) {
-      return contractType === ContractType.DanishAccident
+      return (
+        contractType === ContractType.DanishAccident ||
+        contractType === ContractType.SwedishAccident
+      )
     }
 
     return false
