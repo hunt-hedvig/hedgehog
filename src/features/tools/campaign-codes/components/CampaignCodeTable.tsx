@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   CampaignFilter,
   useSetCampaignCodeTypeMutation,
@@ -19,6 +20,10 @@ import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
+
+const CenteredCell = styled(Table.Cell)`
+  text-align: center;
+`
 
 export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
   filter,
@@ -83,20 +88,18 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
 
               return (
                 <Table.Row key={id}>
-                  <Table.Cell textAlign="center">
-                    {getValidity(campaign)}
-                  </Table.Cell>
-                  <Table.Cell textAlign={'center'}>{campaignCode}</Table.Cell>
-                  <Table.Cell textAlign={'center'}>
+                  <CenteredCell>{getValidity(campaign)}</CenteredCell>
+                  <CenteredCell>{campaignCode}</CenteredCell>
+                  <CenteredCell>
                     <Popover contents={partnerId}>{partnerName}</Popover>
-                  </Table.Cell>
-                  <Table.Cell width={3} textAlign={'center'}>
+                  </CenteredCell>
+                  <CenteredCell width={3}>
                     {getIncentiveText(incentive)}
-                  </Table.Cell>
-                  <Table.Cell width={3} textAlign={'center'}>
+                  </CenteredCell>
+                  <CenteredCell width={3}>
                     {getDiscountDetails(incentive)}
-                  </Table.Cell>
-                  <Table.Cell width={3} textAlign={'center'}>
+                  </CenteredCell>
+                  <CenteredCell width={3}>
                     <SearchableDropdown
                       value={
                         codeType
@@ -127,7 +130,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                       noOptionsMessage={() => 'Option not found'}
                       options={codeTypeOptions}
                     />
-                  </Table.Cell>
+                  </CenteredCell>
                 </Table.Row>
               )
             })}
