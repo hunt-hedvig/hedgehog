@@ -2610,8 +2610,11 @@ export type ClaimTypeFragment = { __typename?: 'Claim' } & {
         VerminAndPestsClaim,
         'date'
       >)
-    | { __typename?: 'OtherClaim' }
-    | { __typename?: 'DuplicateClaim' }
+    | ({ __typename?: 'OtherClaim' } & Pick<
+        OtherClaim,
+        'location' | 'date' | 'item' | 'policeReport' | 'receipt'
+      >)
+    | ({ __typename?: 'DuplicateClaim' } & Pick<DuplicateClaim, 'date'>)
     | ({ __typename?: 'TestClaim' } & Pick<TestClaim, 'date'>)
   >
 }
@@ -3794,6 +3797,16 @@ export const ClaimTypeFragmentDoc = gql`
       }
       ... on VerminAndPestsClaim {
         date
+      }
+      ... on DuplicateClaim {
+        date
+      }
+      ... on OtherClaim {
+        location
+        date
+        item
+        policeReport
+        receipt
       }
     }
   }
