@@ -3,10 +3,12 @@ import {
   CampaignFilter,
   CampaignOwnerPartner,
   Incentive,
+  useAvailableCampaignCodeTypesQuery,
   VoucherCampaign,
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
 import { Badge } from 'hedvig-ui/badge'
+import { capitalize } from 'lib/helpers'
 import React from 'react'
 import {
   isCostDeduction,
@@ -167,5 +169,22 @@ export const getValidity = (campaign: VoucherCampaign) => {
     <ValidityText>
       {validFrom} - {validTo}
     </ValidityText>
+  )
+}
+
+export const getCodeTypeOptions = () => {
+  const codeTypesQuery = useAvailableCampaignCodeTypesQuery()
+  const codeTypes = codeTypesQuery.data?.availableCampaignCodeTypes ?? []
+  return (
+    codeTypes.map((value, index) => {
+      return {
+        key: index + 1,
+        value,
+        label: (value as string)
+          .split('_')
+          .map(capitalize)
+          .join(' '),
+      }
+    }) ?? []
   )
 }

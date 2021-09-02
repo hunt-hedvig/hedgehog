@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
+import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerFreeMonthsCodeOptions,
   useAddPartnerFreeMonthsCode,
@@ -21,6 +22,7 @@ interface FreeMonthsFormData {
   code: string
   validFrom?: Scalars['Instant']
   validUntil?: Scalars['Instant']
+  codeType?: string | null
 }
 
 const initialFormData: FreeMonthsFormData = {
@@ -29,6 +31,7 @@ const initialFormData: FreeMonthsFormData = {
   numberOfFreeMonths: null,
   validFrom: null,
   validUntil: null,
+  codeType: null,
 }
 
 export const DateRangeWrapper = styled.div`
@@ -48,6 +51,8 @@ export const FreeMonthsForm: React.FC = () => {
   )
 
   const [setPartnerFreeMonths, { loading }] = useAddPartnerFreeMonthsCode()
+
+  const codeTypeOptions = getCodeTypeOptions()
 
   const reset = () => setFormData(initialFormData)
 
@@ -117,6 +122,26 @@ export const FreeMonthsForm: React.FC = () => {
         }
         noOptionsMessage={() => 'Option not found'}
         options={numberOfMonthsOptions}
+      />
+      <Spacing top={'small'} />
+      <Label>Marketing Channel</Label>
+      <SearchableDropdown
+        value={
+          formData.codeType
+            ? codeTypeOptions.find((c) => c.value === formData.codeType)
+            : null
+        }
+        placeholder={'Marketing Channel'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
+          setFormData({
+            ...formData,
+            codeType: data ? data.value : null,
+          })
+        }
+        noOptionsMessage={() => 'Option not found'}
+        options={codeTypeOptions}
       />
       <Spacing top={'small'} />
       <div>
