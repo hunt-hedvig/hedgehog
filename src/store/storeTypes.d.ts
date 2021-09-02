@@ -7,5 +7,4 @@ export interface BackofficeStore {
     id?: string
     email?: string
   }
-  payoutDetails: any
 }

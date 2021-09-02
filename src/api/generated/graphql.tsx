@@ -933,6 +933,7 @@ export type MutationType = {
   createEmployee: Employee
   updateEmployeeRole: Employee
   removeEmployee: Scalars['Boolean']
+  payoutMember?: Maybe<Transaction>
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1234,6 +1235,11 @@ export type MutationTypeRemoveEmployeeArgs = {
   id: Scalars['ID']
 }
 
+export type MutationTypePayoutMemberArgs = {
+  memberId: Scalars['ID']
+  request: PayoutMemberInput
+}
+
 export type NationalIdentification = {
   __typename?: 'NationalIdentification'
   identification: Scalars['String']
@@ -1311,6 +1317,22 @@ export type PaymentDefault = {
   amount?: Maybe<Scalars['MonetaryAmount']>
   caseId?: Maybe<Scalars['String']>
   claimant?: Maybe<Scalars['String']>
+}
+
+export enum PayoutCategory {
+  Marketing = 'MARKETING',
+  Referral = 'REFERRAL',
+  Refund = 'REFUND',
+}
+
+export type PayoutMemberInput = {
+  amount: Scalars['MonetaryAmount']
+  sanctionBypassed?: Maybe<Scalars['Boolean']>
+  category?: Maybe<PayoutCategory>
+  referenceId?: Maybe<Scalars['String']>
+  note?: Maybe<Scalars['String']>
+  carrier?: Maybe<Scalars['String']>
+  payoutDetails?: Maybe<SelectedPayoutDetails>
 }
 
 export type PayoutMethodStatus = {
@@ -1505,6 +1527,13 @@ export type SchedulerState = {
   changedAt: Scalars['Instant']
   amount?: Maybe<Scalars['MonetaryAmount']>
   transactionId?: Maybe<Scalars['ID']>
+}
+
+export type SelectedPayoutDetails = {
+  type: Scalars['String']
+  phoneNumber?: Maybe<Scalars['String']>
+  ssn?: Maybe<Scalars['String']>
+  message?: Maybe<Scalars['String']>
 }
 
 export type SendMessageFailed = {
@@ -2231,6 +2260,27 @@ export type GetMemberTransactionsQuery = { __typename?: 'QueryType' } & {
                   >
                 }
             >
+          >
+        >
+      }
+  >
+}
+
+export type PayoutMemberMutationVariables = Exact<{
+  memberId: Scalars['ID']
+  request: PayoutMemberInput
+}>
+
+export type PayoutMemberMutation = { __typename?: 'MutationType' } & {
+  payoutMember?: Maybe<
+    { __typename?: 'Transaction' } & Pick<
+      Transaction,
+      'id' | 'timestamp' | 'type' | 'status'
+    > & {
+        amount?: Maybe<
+          { __typename?: 'MonetaryAmountV2' } & Pick<
+            MonetaryAmountV2,
+            'amount' | 'currency'
           >
         >
       }
@@ -4941,6 +4991,65 @@ export type GetMemberTransactionsLazyQueryHookResult = ReturnType<
 export type GetMemberTransactionsQueryResult = ApolloReactCommon.QueryResult<
   GetMemberTransactionsQuery,
   GetMemberTransactionsQueryVariables
+>
+export const PayoutMemberDocument = gql`
+  mutation PayoutMember($memberId: ID!, $request: PayoutMemberInput!) {
+    payoutMember(memberId: $memberId, request: $request) {
+      id
+      amount {
+        amount
+        currency
+      }
+      timestamp
+      type
+      status
+    }
+  }
+`
+export type PayoutMemberMutationFn = ApolloReactCommon.MutationFunction<
+  PayoutMemberMutation,
+  PayoutMemberMutationVariables
+>
+
+/**
+ * __usePayoutMemberMutation__
+ *
+ * To run a mutation, you first call `usePayoutMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePayoutMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [payoutMemberMutation, { data, loading, error }] = usePayoutMemberMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function usePayoutMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PayoutMemberMutation,
+    PayoutMemberMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    PayoutMemberMutation,
+    PayoutMemberMutationVariables
+  >(PayoutMemberDocument, options)
+}
+export type PayoutMemberMutationHookResult = ReturnType<
+  typeof usePayoutMemberMutation
+>
+export type PayoutMemberMutationResult = ApolloReactCommon.MutationResult<
+  PayoutMemberMutation
+>
+export type PayoutMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PayoutMemberMutation,
+  PayoutMemberMutationVariables
 >
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {

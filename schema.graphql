@@ -148,6 +148,30 @@ type MutationType {
   createEmployee(email: String!, role: String!): Employee!
   updateEmployeeRole(id: ID!, role: String!): Employee!
   removeEmployee(id: ID!): Boolean!
+  payoutMember(memberId: ID!, request: PayoutMemberInput!): Transaction
+}
+
+enum PayoutCategory {
+  MARKETING
+  REFERRAL
+  REFUND
+}
+
+input SelectedPayoutDetails {
+  type: String!
+  phoneNumber: String
+  ssn: String
+  message: String
+}
+
+input PayoutMemberInput {
+  amount: MonetaryAmount!
+  sanctionBypassed: Boolean
+  category: PayoutCategory
+  referenceId: String
+  note: String
+  carrier: String
+  payoutDetails: SelectedPayoutDetails
 }
 
 type ListClaimsResult {
