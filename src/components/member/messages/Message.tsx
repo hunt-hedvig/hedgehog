@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import ImageMessage from 'components/member/messages/ImageMessage'
 import SelectMessage from 'components/member/messages/SelectMessage'
 import { format } from 'date-fns'
+import React from 'react'
 import {
   ACTIVATION_DATE,
   AUDIO,
@@ -18,8 +19,7 @@ import {
   SINGLE_SELECT,
   TEXT,
   VIDEO,
-} from 'lib/messageTypes'
-import React from 'react'
+} from 'utils/messageTypes'
 
 const MessageRow = styled.div<
   WithLeft & { isQuestion?: boolean; isVisible: boolean }

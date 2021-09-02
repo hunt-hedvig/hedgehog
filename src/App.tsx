@@ -5,8 +5,8 @@ import { CssBaseline } from '@material-ui/core'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { DashboardPage } from 'components/dashboard'
 import { QuestionsPage } from 'components/questions'
-import { Navigation } from 'components/shared/navigation'
 import Breadcrumbs from 'components/shared/navigation/breadcrumbs/Breadcrumbs'
+import { VerticalMenu } from 'components/shared/navigation/sidebar/VerticalMenu'
 import {
   darkTheme,
   darkUiTheme,
@@ -14,26 +14,19 @@ import {
   lightUiTheme,
   SemanticOverrides,
 } from 'hedvig-ui/themes'
+import { createBrowserHistory, createMemoryHistory } from 'history'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
-import { Provider } from 'react-redux'
 import { Redirect, Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
-import Store, { history } from 'store'
 import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
 import { CommandLineProvider } from 'utils/hooks/command-line-hook'
 import { MemberHistoryProvider } from 'utils/member-history'
 import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
 
-const store = Store.configureStore()
-
-if (process.env.NODE_ENV !== 'production') {
-  if (typeof window !== 'undefined') {
-    // @ts-ignore
-    window.__store = store
-  }
-}
+export const history =
+  typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
 
 const Layout = styled(SemanticOverrides)`
   display: flex;
@@ -104,76 +97,55 @@ const App: React.FC = () => {
         <CssBaseline />
         <Global styles={globalCss} />
         <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
-          <Provider store={store}>
-            <MemberHistoryProvider>
-              <NumberMemberGroupsProvider>
-                <Router history={history}>
-                  <CommandLineProvider>
-                    <Layout>
-                      <Navigation history={history} store={store} />
-                      <Main
-                        dark={history.location.pathname.startsWith('/login')}
-                      >
-                        <Breadcrumbs />
-                        <Switch>
-                          <Route
-                            path="/login"
-                            exact
-                            component={() => {
-                              redirectToLogin()
-                              return null
-                            }}
-                          />
-                          <Routes.PrivateRoute
-                            path="/dashborad"
-                            store={store}
-                            component={DashboardPage}
-                          />
-                          <Routes.PrivateRoute
-                            path="/questions"
-                            store={store}
-                            component={QuestionsPage}
-                          />
-                          <Route
-                            path="/claims"
-                            render={(routeProps) => (
-                              <Routes.ClaimsPageRoute
-                                {...routeProps}
-                                store={store}
-                              />
-                            )}
-                          />
-                          <Route
-                            path="/members"
-                            render={(routeProps) => (
-                              <Routes.MembersPageRoute
-                                {...routeProps}
-                                store={store}
-                              />
-                            )}
-                          />
-                          <Routes.PrivateRoute
-                            path="/tools"
-                            store={store}
-                            component={Routes.ToolsPageRoute}
-                          />
-                          <Redirect from="*" to="/dashborad" />
-                        </Switch>
-                        <Toaster
-                          position={'top-center'}
-                          toastOptions={{
-                            style: {
-                              padding: '20px 25px',
-                            },
+          <MemberHistoryProvider>
+            <NumberMemberGroupsProvider>
+              <Router history={history}>
+                <CommandLineProvider>
+                  <Layout>
+                    {!history.location.pathname.startsWith('/login') && (
+                      <VerticalMenu history={history} />
+                    )}
+                    <Main dark={history.location.pathname.startsWith('/login')}>
+                      <Breadcrumbs />
+                      <Switch>
+                        <Route
+                          path="/login"
+                          exact
+                          component={() => {
+                            redirectToLogin()
+                            return null
                           }}
                         />
-                      </Main>
-                    </Layout>
-                  </CommandLineProvider>
-                </Router>
-              </NumberMemberGroupsProvider>
-            </MemberHistoryProvider>
-          </Provider>
+                        <Route path="/dashborad" component={DashboardPage} />
+                        <Route path="/questions" component={QuestionsPage} />
+                        <Route
+                          path="/claims"
+                          component={Routes.ClaimsPageRoute}
+                        />
+                        <Route
+                          path="/members"
+                          component={Routes.MembersPageRoute}
+                        />
+                        <Route
+                          path="/tools"
+                          component={Routes.ToolsPageRoute}
+                        />
+                        <Redirect from="*" to="/dashborad" />
+                      </Switch>
+                      <Toaster
+                        position={'top-center'}
+                        toastOptions={{
+                          style: {
+                            padding: '20px 25px',
+                          },
+                        }}
+                      />
+                    </Main>
+                  </Layout>
+                </CommandLineProvider>
+              </Router>
+            </NumberMemberGroupsProvider>
+          </MemberHistoryProvider>
         </ThemeProvider>
       </MuiThemeProvider>
     </DarkmodeContext.Provider>

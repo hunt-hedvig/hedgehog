@@ -7,7 +7,7 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
-  me: String
+  me: Me!
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
@@ -31,6 +31,12 @@ type QueryType {
   listClaims(options: ListClaimsOptions!): ListClaimsResult!
   employees: [Employee!]!
   availableEmployeeRoles: [String!]!
+}
+
+type Me {
+  email: String!
+  scopes: [String!]!
+  role: String!
 }
 
 type MutationType {

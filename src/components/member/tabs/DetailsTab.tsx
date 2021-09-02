@@ -10,11 +10,11 @@ import {
   useSetFraudulentStatus,
 } from 'graphql/use-set-fraudulent-status'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { FraudulentStatusEdit } from 'lib/fraudulentStatus'
-import { dateTimeFormatter, getFieldName, getFieldValue } from 'lib/helpers'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
+import { dateTimeFormatter, getFieldName, getFieldValue } from 'utils/helpers'
 
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
