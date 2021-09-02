@@ -8,7 +8,6 @@ import {
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
 import { Badge } from 'hedvig-ui/badge'
-import { capitalize } from 'lib/helpers'
 import React from 'react'
 import {
   isCostDeduction,
@@ -17,6 +16,7 @@ import {
   isNoDiscount,
   isVisibleNoDiscount,
 } from 'utils/campaignCodes'
+import { capitalize } from 'utils/helpers'
 import { formatMoney } from 'utils/money'
 
 export const BadgeRow = styled.div`
