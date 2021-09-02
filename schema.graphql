@@ -15,6 +15,7 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
+  availableCampaignCodeTypes: [String!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
   canValuateClaimItem(
@@ -134,6 +135,7 @@ type MutationType {
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
+  setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(
     memberId: ID!
@@ -481,6 +483,7 @@ input AssignVoucherPercentageDiscount {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  codeType: String
 }
 
 input AssignVoucherFreeMonths {
@@ -489,6 +492,7 @@ input AssignVoucherFreeMonths {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  codeType: String
 }
 
 input AssignVoucherVisibleNoDiscount {
@@ -496,6 +500,7 @@ input AssignVoucherVisibleNoDiscount {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  codeType: String
 }
 
 type CampaignOwnerPartner {
@@ -510,6 +515,7 @@ type VoucherCampaign {
   validFrom: Instant
   validTo: Instant
   incentive: Incentive
+  codeType: String
 }
 
 type MonthlyPercentageDiscountFixedPeriod {

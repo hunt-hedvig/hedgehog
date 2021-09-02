@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-08-30',
+    change: 'Added code type to campaign codes',
+    authorGithubHandle: 'cpiehl1',
+  },
+  {
     date: '2021-08-18',
     change: 'Add view for viewing and editing employees',
     authorGithubHandle: 'cpiehl1',
