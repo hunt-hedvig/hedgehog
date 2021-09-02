@@ -17,11 +17,9 @@ import {
   Tools,
 } from 'react-bootstrap-icons'
 import MediaQuery from 'react-media'
-import { connect } from 'react-redux'
 import { matchPath, useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
-import { authLogOut, AuthState } from 'store/actions/auth'
-import { BackofficeStore } from 'store/storeTypes'
+import { forceLogOut } from 'utils/auth'
 import { DarkmodeContext } from 'utils/darkmode-context'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
@@ -242,9 +240,7 @@ interface LatestClaim {
   location: string
 }
 
-export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
-  authLogOut: authLogOut_,
-  loginState,
+export const VerticalMenu: React.FC<any & { history: History }> = ({
   history,
 }) => {
   const { pathname } = useLocation()
@@ -478,14 +474,14 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
               <MenuItem
                 onClick={(e) => {
                   e.preventDefault()
-                  authLogOut_()
+                  forceLogOut()
                 }}
                 to="#"
                 transparent
               >
                 <BoxArrowLeft />
                 <MenuText>
-                  {loginState === AuthState.LOGOUT_LOADING ? '...' : 'Logout'}{' '}
+                  Logout
                   {isHintingOption && '(L)'}
                 </MenuText>
               </MenuItem>
@@ -496,14 +492,3 @@ export const VerticalMenuComponent: React.FC<any & { history: History }> = ({
     </MediaQuery>
   )
 }
-
-export const VerticalMenu = connect(
-  (state) => ({
-    loginState: (state as BackofficeStore).auth.state,
-  }),
-  {
-    authLogOut,
-  },
-  null,
-  { pure: false },
-)(VerticalMenuComponent)

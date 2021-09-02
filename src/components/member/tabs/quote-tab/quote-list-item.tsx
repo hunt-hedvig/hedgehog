@@ -28,6 +28,7 @@ const DetailWrapper = styled('div')(({ theme }) => ({
   color: theme.semiStrongForeground,
   paddingBottom: '1rem',
 }))
+
 const BreachedUnderwritingGuidelines = styled('div')(({ theme }) => ({
   color: theme.danger,
 }))

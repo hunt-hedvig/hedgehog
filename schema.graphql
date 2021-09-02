@@ -7,7 +7,7 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
-  me: String
+  me: Me!
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
@@ -15,6 +15,7 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
+  availableCampaignCodeTypes: [String!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
   canValuateClaimItem(
@@ -30,6 +31,12 @@ type QueryType {
   listClaims(options: ListClaimsOptions!): ListClaimsResult!
   employees: [Employee!]!
   availableEmployeeRoles: [String!]!
+}
+
+type Me {
+  email: String!
+  scopes: [String!]!
+  role: String!
 }
 
 type MutationType {
@@ -128,6 +135,7 @@ type MutationType {
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
+  setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(
     memberId: ID!
@@ -475,6 +483,7 @@ input AssignVoucherPercentageDiscount {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  codeType: String
 }
 
 input AssignVoucherFreeMonths {
@@ -483,6 +492,7 @@ input AssignVoucherFreeMonths {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  codeType: String
 }
 
 input AssignVoucherVisibleNoDiscount {
@@ -490,6 +500,7 @@ input AssignVoucherVisibleNoDiscount {
   code: String!
   validFrom: Instant
   validUntil: Instant
+  codeType: String
 }
 
 type CampaignOwnerPartner {
@@ -504,6 +515,7 @@ type VoucherCampaign {
   validFrom: Instant
   validTo: Instant
   incentive: Incentive
+  codeType: String
 }
 
 type MonthlyPercentageDiscountFixedPeriod {

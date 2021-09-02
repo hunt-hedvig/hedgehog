@@ -3,7 +3,7 @@ import { InfoTag } from 'hedvig-ui/info-row'
 import { Spinner } from 'hedvig-ui/sipnner'
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
-import { MonetaryAmount } from '../../../../lib/helpers'
+import { MonetaryAmount } from '../../../../utils/helpers'
 import { ClaimReserveForm } from './ClaimReserveForm'
 
 interface Props {

@@ -13,10 +13,10 @@ import {
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Card } from 'hedvig-ui/card'
 import { Dropdown } from 'hedvig-ui/dropdown'
-import { dateTimeFormatter } from 'lib/helpers'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
+import { dateTimeFormatter } from 'utils/helpers'
 
 export const EmployeeTable: React.FC<{
   scopes: readonly string[]

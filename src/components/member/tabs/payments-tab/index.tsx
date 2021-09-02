@@ -4,10 +4,7 @@ import {
   Transaction,
   useGetMemberTransactionsQuery,
 } from 'api/generated/graphql'
-import {
-  PayoutDetails,
-  PayoutFormData,
-} from 'components/payouts/payout-details'
+import { PayoutDetails } from 'components/payouts/payout-details'
 import { format, parseISO } from 'date-fns'
 import gql from 'graphql-tag'
 import { useGetAccount } from 'graphql/use-get-account'
@@ -115,8 +112,7 @@ const MemberTransactionsTable: React.FC<{
 
 export const PaymentsTab: React.FC<{
   memberId: string
-  payoutRequest: (payoutFormData: PayoutFormData, memberId: string) => void
-}> = ({ memberId, payoutRequest }) => {
+}> = ({ memberId }) => {
   const { data, loading, error, refetch } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
@@ -208,7 +204,7 @@ export const PaymentsTab: React.FC<{
         data.member.contractMarketInfo?.market === Market.Sweden && (
           <>
             <h3>Payout:</h3>
-            <PayoutDetails memberId={memberId} payoutRequest={payoutRequest} />
+            <PayoutDetails memberId={memberId} />
           </>
         )}
       <h3>Transactions:</h3>

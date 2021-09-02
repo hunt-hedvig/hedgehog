@@ -1,9 +1,9 @@
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
-import { range } from 'lib/helpers'
-import React from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Button, ButtonsGroup } from 'hedvig-ui/button'
+import React from 'react'
 import { Table } from 'semantic-ui-react'
+import { range } from 'utils/helpers'
 
 interface PageState {
   startPage: number
