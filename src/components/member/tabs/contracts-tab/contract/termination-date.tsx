@@ -1,7 +1,10 @@
-import { Contract, useRevertTerminationMutation } from 'api/generated/graphql'
+import {
+  Contract,
+  useChangeTerminationDateMutation,
+  useRevertTerminationMutation,
+  useTerminateContractMutation,
+} from 'api/generated/graphql'
 import { format } from 'date-fns'
-import { useChangeTerminationDate } from 'graphql/use-change-termination-date'
-import { useTerminateContract } from 'graphql/use-terminate-contract'
 import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { EnumDropdown } from 'hedvig-ui/dropdown'
@@ -35,11 +38,11 @@ export const TerminationDate: React.FC<{
   const [
     terminateContract,
     { loading: terminateContractLoading },
-  ] = useTerminateContract(contract)
+  ] = useTerminateContractMutation()
   const [
     changeTerminationDate,
     { loading: changeTerminationDateLoading },
-  ] = useChangeTerminationDate(contract)
+  ] = useChangeTerminationDateMutation()
   const [
     revertTermination,
     { loading: revertTerminationLoading },
@@ -215,6 +218,7 @@ export const TerminationDate: React.FC<{
                           __typename: 'Contract',
                           id: contract.id,
                           holderMemberId: contract.holderMemberId,
+                          terminationDate,
                         },
                       },
                     }),
