@@ -95,7 +95,7 @@ const FraudulentStatusEdit = (props) => {
         <ButtonsBlock>
           {!props.getState() ? (
             <Button
-              onClick={(e) =>
+              onClick={() =>
                 props.setState(true, fraudulentStatusValue, descriptionValue)
               }
             >
@@ -104,7 +104,7 @@ const FraudulentStatusEdit = (props) => {
           ) : (
             <>
               <Button
-                onClick={(e) => {
+                onClick={() => {
                   props.action(fraudulentStatusValue, descriptionValue)
                   props.setState(false, fraudulentStatusValue, descriptionValue)
                 }}
@@ -112,7 +112,7 @@ const FraudulentStatusEdit = (props) => {
               >
                 Save
               </Button>
-              <Button onClick={(e) => props.setState(false)}>Cancel</Button>
+              <Button onClick={() => props.setState(false)}>Cancel</Button>
             </>
           )}
         </ButtonsBlock>

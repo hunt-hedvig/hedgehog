@@ -1,7 +1,6 @@
 import { addDays, addMinutes } from 'date-fns'
 import { ExtendableContext, Middleware } from 'koa'
 import fetch from 'node-fetch'
-import apiConfig from '../api/config'
 import { config } from './config'
 import { LoggingMiddleware } from './request-enhancers'
 
@@ -40,14 +39,6 @@ export const loginCallback: Middleware<object> = async (ctx) => {
   const accessToken = getTokenFromQuery(ctx.request.query['access-token'])
   const refreshToken = getTokenFromQuery(ctx.request.query['refresh-token'])
   setTokenCookies(ctx, { accessToken, refreshToken })
-
-  await fetch(
-    process.env.API_URL + apiConfig.baseUrl + apiConfig.login.authSuccess.url,
-    {
-      headers: { Cookie: encodeURI('_hvg_at=' + accessToken) },
-      method: 'POST',
-    },
-  )
 
   ctx.redirect('/dashborad')
 }

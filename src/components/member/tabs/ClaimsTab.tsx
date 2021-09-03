@@ -45,6 +45,7 @@ export const ClaimsTab: React.FC<{
   if (loading || !claims) {
     return <LoadingMessage paddingTop="25vh" />
   }
+
   return (
     <FadeIn>
       <HeaderWrapper>

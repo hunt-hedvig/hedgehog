@@ -1,5 +1,6 @@
 import { AssignVoucherPercentageDiscount, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
+import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
 import {
   addPartnerPercentageDiscountCodeOptions,
   useAddPartnerPercentageDiscountCode,
@@ -25,6 +26,7 @@ const initialFormData: MonthlyPercentageFormData = {
   percentageDiscount: null,
   validFrom: null,
   validUntil: null,
+  codeType: null,
 }
 
 const formLooksGood = (formData: MonthlyPercentageFormData) => {
@@ -40,6 +42,7 @@ interface MonthlyPercentageFormData {
   code: string
   validFrom?: Scalars['Instant']
   validUntil?: Scalars['Instant']
+  codeType?: string | null
 }
 
 export const MonthlyPercentageForm: React.FC = () => {
@@ -51,6 +54,8 @@ export const MonthlyPercentageForm: React.FC = () => {
     setPartnerPercentageDiscount,
     { loading },
   ] = useAddPartnerPercentageDiscountCode()
+
+  const codeTypeOptions = getCodeTypeOptions()
 
   return (
     <>
@@ -138,6 +143,26 @@ export const MonthlyPercentageForm: React.FC = () => {
         }
         noOptionsMessage={() => 'Option not found'}
         options={numberOfMonthsOptions}
+      />
+      <Spacing top={'small'} />
+      <Label>Marketing Channel</Label>
+      <SearchableDropdown
+        value={
+          formData.codeType
+            ? codeTypeOptions.find((c) => c.value === formData.codeType)
+            : null
+        }
+        placeholder={'Marketing Channel'}
+        isLoading={loading}
+        isClearable={true}
+        onChange={(data) =>
+          setFormData({
+            ...formData,
+            codeType: data ? data.value : null,
+          })
+        }
+        noOptionsMessage={() => 'Option not found'}
+        options={codeTypeOptions}
       />
       <Spacing top={'small'} />
       <div>
