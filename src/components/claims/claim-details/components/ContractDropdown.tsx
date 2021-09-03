@@ -126,7 +126,9 @@ export const ContractDropdown: React.FC<{
         return (
           <ContractItem
             contract={selectedContract}
-            agreement={selectedAgreement}
+            agreement={
+              selectedAgreement ?? currentAgreementForContract(selectedContract)
+            }
           />
         )
       }}
