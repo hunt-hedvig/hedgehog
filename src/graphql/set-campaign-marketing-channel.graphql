@@ -1,5 +1,5 @@
-query FindPartnerCampaigns($input: CampaignFilter!) {
-  findPartnerCampaigns(input: $input) {
+mutation SetCampaignCodeType($id: ID!, $codeType: String!) {
+  setCampaignCodeType(id: $id, codeType: $codeType) {
     id
     campaignCode
     partnerId

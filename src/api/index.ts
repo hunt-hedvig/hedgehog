@@ -53,7 +53,6 @@ export const refreshAccessToken = async () => {
       },
       withCredentials: true,
     })
-    await axiosInstance.post('/settings/auth-success')
   } finally {
     localStorage.removeItem('hvg:refreshingAccessToken')
   }

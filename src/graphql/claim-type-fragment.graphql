@@ -91,5 +91,15 @@ fragment claimType on Claim {
     ... on VerminAndPestsClaim {
       date
     }
+    ... on DuplicateClaim {
+      date
+    }
+    ... on OtherClaim {
+      location
+      date
+      item
+      policeReport
+      receipt
+    }
   }
 }
