@@ -13,6 +13,7 @@ export const Label = styled.label`
   font-size: 0.95rem;
   margin-bottom: 0.4em;
   color: ${({ theme }) => theme.semiStrongForeground};
+  font-weight: normal;
 `
 
 export const Capitalized = styled.div`
