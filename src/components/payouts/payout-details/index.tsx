@@ -7,7 +7,7 @@ import {
   usePayoutMemberMutation,
 } from 'api/generated/graphql'
 import { Form, FormDropdown, FormInput, SubmitButton } from 'hedvig-ui/form'
-import React, { useState } from 'react'
+import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
@@ -31,7 +31,6 @@ const entryTypeOptions = [
 
 export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   const form = useForm()
-  const [confirmed, setConfirmed] = useState(false)
   const [payoutMember] = usePayoutMemberMutation()
   const { data: contractMarketInfo } = useGetContractMarketInfoQuery({
     variables: { memberId },
@@ -65,8 +64,8 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const onSubmitHandler = (data: FieldValues) => {
-    if (!confirmed) {
-      setConfirmed((currentConfirmed) => !currentConfirmed)
+    const confirmationStr = `Are you sure you want to payout ${data.amount} ${preferredCurrency}?`
+    if (!window.confirm(confirmationStr)) {
       return
     }
 
@@ -95,7 +94,6 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
         loading: 'Creating payout...',
         success: () => {
           form.reset()
-          setConfirmed(false)
           return 'Payout created'
         },
         error: 'Could not create payout',
@@ -147,11 +145,7 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
         />
         <FormInput label="Note" name="note" defaultValue="" />
 
-        {!confirmed ? (
-          <SubmitButton variation="secondary">Confirm payout</SubmitButton>
-        ) : (
-          <SubmitButton variation="primary">Create payout</SubmitButton>
-        )}
+        <SubmitButton variation="primary">Create payout</SubmitButton>
       </Form>
     </FormProvider>
   )
