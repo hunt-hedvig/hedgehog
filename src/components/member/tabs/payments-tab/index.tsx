@@ -17,7 +17,11 @@ import {
 import { Button } from 'hedvig-ui/button'
 import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoRow, InfoTag, InfoText } from 'hedvig-ui/info-row'
-import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import {
+  MainHeadline,
+  Shadowed,
+  ThirdLevelHeadline,
+} from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
@@ -74,6 +78,11 @@ const TableRowColored = styled(Table.Row)<{
       }
     }} !important;
   }
+`
+
+const ChargeNotAvailableMessage = styled(StandaloneMessage)`
+  font-size: 1.2em;
+  padding: 1.5em 0;
 `
 
 const MemberTransactionsTable: React.FC<{
@@ -248,9 +257,12 @@ export const PaymentsTab: React.FC<{
                 )}
               </Mutation>
             ) : (
-              `Unable to charge member since the balance is ${formatMoney(
-                account.currentBalance!,
-              )}`
+              <ChargeNotAvailableMessage opacity={0.6}>
+                Not available since the balance is{' '}
+                <Shadowed style={{ fontWeight: 'bold' }}>
+                  {formatMoney(account.currentBalance!)}
+                </Shadowed>
+              </ChargeNotAvailableMessage>
             )}
           </Card>
         )}
