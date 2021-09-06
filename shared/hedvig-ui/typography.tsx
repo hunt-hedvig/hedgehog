@@ -9,7 +9,7 @@ export const FourthLevelHeadline = styled('h4')`
 `
 export const Paragraph = styled.p``
 
-export const Label = styled('p')`
+export const Label = styled.label`
   font-size: 0.95rem;
   margin-bottom: 0.4em;
   color: ${({ theme }) => theme.semiStrongForeground};
