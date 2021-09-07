@@ -51,6 +51,21 @@ const GroupTag = styled.span<{ memberId: string; numberMemberGroups: number }>`
   text-align: center;
 `
 
+const TableColumnSubtext = styled.span`
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 export const ClaimsList: React.FC<RouteComponentProps<{
   page?: string
 }>> = ({ match }) => {
@@ -86,6 +101,7 @@ export const ClaimsList: React.FC<RouteComponentProps<{
       <FadeIn>
         <Header size="huge">Claims</Header>
       </FadeIn>
+
       {loading && !claims ? <LoadingMessage paddingTop={'25vh'} /> : <></>}
 
       <Table>
@@ -106,34 +122,24 @@ export const ClaimsList: React.FC<RouteComponentProps<{
             'HH:mm',
           )
           return (
-            <TableRow>
+            <TableRow
+              key={claim.id}
+              onClick={() =>
+                history.push(
+                  `/claims/${claim.id}/members/${claim.member.memberId}`,
+                )
+              }
+            >
               <TableColumn>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <span>
-                    {claim.member.firstName} {claim.member.lastName}
-                  </span>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                    }}
-                  >
+                <FlexColumn>
+                  {claim.member.firstName} {claim.member.lastName}
+                  <FlexRow>
                     <div style={{ minWidth: '80px' }}>
-                      <span
-                        style={{
-                          fontSize: '0.8em',
-                          color: '#848484',
-                        }}
-                      >
+                      <TableColumnSubtext>
                         {claim.member.memberId}
-                      </span>
+                      </TableColumnSubtext>
                     </div>
-                    <div style={{ width: '100%' }}>
+                    <div>
                       <GroupTag
                         memberId={claim.member.memberId}
                         numberMemberGroups={numberMemberGroups}
@@ -144,16 +150,16 @@ export const ClaimsList: React.FC<RouteComponentProps<{
                         )}
                       </GroupTag>
                     </div>
-                  </div>
-                </div>
+                  </FlexRow>
+                </FlexColumn>
               </TableColumn>
               <TableColumn>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span>{registrationDateString}</span>
-                  <span style={{ fontSize: '0.8em', color: '#848484' }}>
+                <FlexColumn>
+                  {registrationDateString}
+                  <TableColumnSubtext>
                     {registrationDateTime}
-                  </span>
-                </div>
+                  </TableColumnSubtext>
+                </FlexColumn>
               </TableColumn>
 
               <TableColumn>
