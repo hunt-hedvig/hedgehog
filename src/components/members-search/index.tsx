@@ -97,7 +97,10 @@ export const MembersSearch: React.FC = () => {
       {members.length > 0 && (
         <ListWrapper>
           <FadeIn>
-            <MembersList members={members} />
+            <MembersList
+              navigationStep={currentKeyboardNavigationStep}
+              members={members}
+            />
             <TablePageSelect
               currentPage={page}
               totalPages={totalPages}

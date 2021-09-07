@@ -59,7 +59,8 @@ const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
 
 export const MembersList: React.FC<{
   members: Member[]
-}> = ({ members }) => {
+  navigationStep?: number
+}> = ({ members, navigationStep }) => {
   const history = useHistory()
 
   return (
@@ -72,7 +73,7 @@ export const MembersList: React.FC<{
           <TableHeader>Last Termination Date</TableHeader>
           <TableHeader>Contracts</TableHeader>
         </TableRow>
-        {members.map((member) => {
+        {members.map((member, index) => {
           const {
             ACTIVE_IN_FUTURE: activeInFutureContracts = 0,
             ACTIVE: activeContracts = 0,
@@ -83,6 +84,7 @@ export const MembersList: React.FC<{
           return (
             <TableRow
               key={member.memberId}
+              active={navigationStep === index}
               onClick={() => history.push(`/members/${member.memberId}`)}
             >
               <TableColumn style={{ maxWidth: '250px' }}>
