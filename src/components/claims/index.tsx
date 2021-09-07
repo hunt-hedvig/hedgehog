@@ -1,24 +1,23 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Claim, ClaimState } from 'api/generated/graphql'
+import { ClaimState } from 'api/generated/graphql'
 import { ListPage } from 'components/shared'
-import { Paginator } from 'components/shared/paginator/Paginator'
+import { getPageLimits } from 'components/shared/paginator/Paginator'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'graphql/use-list-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
-import { Spacing } from 'hedvig-ui/spacing'
 import { Table, TableColumn, TableHeader, TableRow } from 'hedvig-ui/table'
 import { Monetary, Placeholder } from 'hedvig-ui/typography'
 import React, { useEffect } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { Header } from 'semantic-ui-react'
+import { range } from 'utils/helpers'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 import { getMemberGroupName, getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { convertEnumToTitle } from 'utils/text'
-import { ClaimListHeader } from './claims-list/components/ClaimListHeader'
-import { ClaimListItem } from './claims-list/components/ClaimListItem'
 
 const splitOnUpperCase = (s: string) => {
   const splitResult = s.match(/[A-Z][a-z]+|[0-9]+/g)
@@ -56,15 +55,79 @@ const TableColumnSubtext = styled.span`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-const FlexColumn = styled.div`
+const FlexVertically = styled.div`
   display: flex;
   flex-direction: column;
 `
 
-const FlexRow = styled.div`
+const FlexHorizontally = styled.div`
   display: flex;
   flex-direction: row;
 `
+
+const PageLink = styled.span<{ disabled: boolean }>`
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+  padding: 0 1em;
+  color: ${({ theme, disabled }) =>
+    disabled ? theme.placeholderColor : theme.accent};
+  transition: all 100ms;
+
+  ${({ theme, disabled }) => {
+    return (
+      !disabled &&
+      css`
+        :hover {
+          color: ${theme.accentLight};
+        }
+      `
+    )
+  }}
+`
+
+const PageSelectWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1em;
+`
+
+const PageSelect: React.FC<{
+  currentPage: number
+  totalPages: number
+  onSelect: (page: number) => void
+}> = ({ currentPage, totalPages, onSelect }) => {
+  const { startPage, endPage } = getPageLimits(totalPages, currentPage)
+  return (
+    <PageSelectWrapper>
+      <PageLink disabled={currentPage === 0} onClick={() => onSelect(1)}>
+        First
+      </PageLink>
+
+      {range(startPage, endPage).map((page, id) => (
+        <PageLink
+          key={id}
+          disabled={currentPage === page}
+          onClick={() => {
+            onSelect(page + 1)
+          }}
+        >
+          {page + 1}
+        </PageLink>
+      ))}
+
+      <PageLink
+        disabled={currentPage === totalPages - 1}
+        onClick={() => {
+          onSelect(totalPages - 1)
+        }}
+      >
+        Last
+      </PageLink>
+    </PageSelectWrapper>
+  )
+}
 
 export const ClaimsList: React.FC<RouteComponentProps<{
   page?: string
@@ -96,13 +159,22 @@ export const ClaimsList: React.FC<RouteComponentProps<{
     listClaims({ page: selectedPage - 1 ?? 0 })
   }, [selectedPage])
 
+  if (loading) {
+    return (
+      <ListPage>
+        <FadeIn>
+          <Header size="huge">Claims</Header>
+        </FadeIn>
+        <LoadingMessage paddingTop={'25vh'} />
+      </ListPage>
+    )
+  }
+
   return (
     <ListPage>
       <FadeIn>
         <Header size="huge">Claims</Header>
       </FadeIn>
-
-      {loading && !claims ? <LoadingMessage paddingTop={'25vh'} /> : <></>}
 
       <Table>
         <TableRow>
@@ -112,7 +184,7 @@ export const ClaimsList: React.FC<RouteComponentProps<{
           <TableHeader>Claim State</TableHeader>
           <TableHeader>Claim Reserves</TableHeader>
         </TableRow>
-        {claims.map((claim) => {
+        {claims.map((claim, index) => {
           const registrationDateString = formatDate(
             parseISO(claim.registrationDate),
             'dd MMMM, yyyy',
@@ -124,6 +196,7 @@ export const ClaimsList: React.FC<RouteComponentProps<{
           return (
             <TableRow
               key={claim.id}
+              active={currentKeyboardNavigationStep === index}
               onClick={() =>
                 history.push(
                   `/claims/${claim.id}/members/${claim.member.memberId}`,
@@ -131,9 +204,9 @@ export const ClaimsList: React.FC<RouteComponentProps<{
               }
             >
               <TableColumn>
-                <FlexColumn>
+                <FlexVertically>
                   {claim.member.firstName} {claim.member.lastName}
-                  <FlexRow>
+                  <FlexHorizontally>
                     <div style={{ minWidth: '80px' }}>
                       <TableColumnSubtext>
                         {claim.member.memberId}
@@ -150,16 +223,16 @@ export const ClaimsList: React.FC<RouteComponentProps<{
                         )}
                       </GroupTag>
                     </div>
-                  </FlexRow>
-                </FlexColumn>
+                  </FlexHorizontally>
+                </FlexVertically>
               </TableColumn>
               <TableColumn>
-                <FlexColumn>
+                <FlexVertically>
                   {registrationDateString}
                   <TableColumnSubtext>
                     {registrationDateTime}
                   </TableColumnSubtext>
-                </FlexColumn>
+                </FlexVertically>
               </TableColumn>
 
               <TableColumn>
@@ -187,50 +260,11 @@ export const ClaimsList: React.FC<RouteComponentProps<{
           )
         })}
       </Table>
-    </ListPage>
-  )
-
-  return (
-    <ListPage>
-      <FadeIn>
-        <Header size="huge">Claims List</Header>
-      </FadeIn>
-      {loading && !claims ? (
-        <LoadingMessage paddingTop={'25vh'} />
-      ) : (
-        <Spacing top={'small'}>
-          <FadeIn delay={'200ms'}>
-            <Paginator<Claim>
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onChangePage={(nextPage) =>
-                history.push(`/claims/list/${nextPage + 1}`)
-              }
-              pagedItems={claims}
-              itemContent={(claim, index) => (
-                <ClaimListItem
-                  index={index}
-                  item={claim}
-                  active={currentKeyboardNavigationStep === index}
-                />
-              )}
-              tableHeader={
-                <ClaimListHeader
-                  onSort={(column, direction) => {
-                    listClaims({
-                      includeAll: true,
-                      page: currentPage,
-                      pageSize: 20,
-                      sortBy: column,
-                      sortDirection: direction,
-                    })
-                  }}
-                />
-              }
-            />
-          </FadeIn>
-        </Spacing>
-      )}
+      <PageSelect
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onSelect={(page) => history.push(`/claims/list/${page}`)}
+      />
     </ListPage>
   )
 }

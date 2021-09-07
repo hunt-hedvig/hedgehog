@@ -33,12 +33,13 @@ export const TableHeader = styled.th`
   }
 `
 
-export const TableRow = styled.tr`
+export const TableRow = styled.tr<{ active?: boolean }>`
   width: 100%;
   transition: all 150ms;
 
   :hover {
     background-color: ${({ theme }) => theme.accentLight};
   }
-  background-color: ${({ theme }) => theme.accentLighter};
+  background-color: ${({ theme, active }) =>
+    active ? theme.accentLight : theme.accentLighter};
 `
