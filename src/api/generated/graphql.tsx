@@ -883,7 +883,7 @@ export type MutationType = {
   approveMemberCharge?: Maybe<Scalars['Boolean']>
   createPaymentCompletionLink: PaymentCompletionResponse
   updateClaimState?: Maybe<Claim>
-  createClaim?: Maybe<Scalars['ID']>
+  createClaim?: Maybe<Claim>
   addClaimNote?: Maybe<Claim>
   createClaimPayment?: Maybe<Claim>
   createClaimSwishPayment?: Maybe<Claim>
@@ -891,14 +891,14 @@ export type MutationType = {
   setClaimInformation?: Maybe<Claim>
   updateReserve?: Maybe<Claim>
   setCoveringEmployee?: Maybe<Claim>
-  whitelistMember?: Maybe<Scalars['Boolean']>
+  whitelistMember: Member
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
-  setClaimFileCategory?: Maybe<Scalars['String']>
+  setClaimFileCategory?: Maybe<ClaimFileUpload>
   activateQuote: Quote
   addAgreementFromQuote: Quote
   createQuoteFromAgreement: Quote
-  markSwitchableSwitcherEmailAsReminded: Scalars['Boolean']
+  markSwitchableSwitcherEmailAsReminded: SwitchableSwitcherEmail
   updateSwitcherEmailInfo: SwitchableSwitcherEmail
   terminateContract: Contract
   activatePendingAgreement: Contract
@@ -906,10 +906,10 @@ export type MutationType = {
   revertTermination: Contract
   createNorwegianGripenPriceEngine: Scalars['Boolean']
   addNorwegianPostalCodes: Scalars['Boolean']
-  changeToDate: Scalars['ID']
-  changeFromDate: Scalars['ID']
-  safelyEdit: Scalars['ID']
-  regenerateCertificate: Scalars['ID']
+  changeToDate: Contract
+  changeFromDate: Contract
+  safelyEdit: Contract
+  regenerateCertificate: Contract
   sendMessage: SendMessageResponse
   markQuestionAsResolved: Scalars['Boolean']
   answerQuestion: Scalars['Boolean']
@@ -922,7 +922,7 @@ export type MutationType = {
   upsertItemBrand: Scalars['ID']
   upsertItemModel: Scalars['ID']
   upsertClaimItem: Scalars['ID']
-  deleteClaimItem?: Maybe<Scalars['ID']>
+  deleteClaimItem: Scalars['Boolean']
   insertItemCategories: Array<Scalars['Boolean']>
   insertValuationRules: Array<Scalars['Boolean']>
   upsertValuationRule: Scalars['ID']
@@ -931,12 +931,12 @@ export type MutationType = {
   assignCampaignToPartnerFreeMonths: Scalars['Boolean']
   assignCampaignToPartnerVisibleNoDiscount: Scalars['Boolean']
   setCampaignCodeType?: Maybe<VoucherCampaign>
-  setContractForClaim: Scalars['Boolean']
-  manualRedeemCampaign: Scalars['Boolean']
-  manualUnRedeemCampaign: Scalars['Boolean']
+  setContractForClaim: Claim
+  manualRedeemCampaign: Member
+  manualUnRedeemCampaign: Member
   unsignMember: Scalars['Boolean']
-  editMemberInfo: Scalars['Boolean']
-  setFraudulentStatus: Scalars['Boolean']
+  editMemberInfo: Member
+  setFraudulentStatus: Member
   createEmployee: Employee
   updateEmployeeRole: Employee
   removeEmployee: Scalars['Boolean']
@@ -1366,7 +1366,7 @@ export type QueryType = {
   member?: Maybe<Member>
   claim?: Maybe<Claim>
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
-  me?: Maybe<Me>
+  me: Me
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
@@ -2096,9 +2096,14 @@ export type SetClaimFileCategoryMutationVariables = Exact<{
   category?: Maybe<Scalars['String']>
 }>
 
-export type SetClaimFileCategoryMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'setClaimFileCategory'>
+export type SetClaimFileCategoryMutation = { __typename?: 'MutationType' } & {
+  setClaimFileCategory?: Maybe<
+    { __typename?: 'ClaimFileUpload' } & Pick<
+      ClaimFileUpload,
+      'claimId' | 'claimFileId'
+    >
+  >
+}
 
 export type SetClaimInformationMutationVariables = Exact<{
   id: Scalars['ID']
@@ -2180,7 +2185,7 @@ export type SetClaimTypeMutation = { __typename?: 'MutationType' } & {
 export type GetMeQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetMeQuery = { __typename?: 'QueryType' } & {
-  me?: Maybe<{ __typename?: 'Me' } & Pick<Me, 'email' | 'scopes' | 'role'>>
+  me: { __typename?: 'Me' } & Pick<Me, 'email' | 'scopes' | 'role'>
 }
 
 export type AddAccountEntryToMemberMutationVariables = Exact<{
@@ -2438,7 +2443,11 @@ export type MarkSwitcherEmailAsRemindedMutationVariables = Exact<{
 
 export type MarkSwitcherEmailAsRemindedMutation = {
   __typename?: 'MutationType'
-} & Pick<MutationType, 'markSwitchableSwitcherEmailAsReminded'>
+} & {
+  markSwitchableSwitcherEmailAsReminded: {
+    __typename?: 'SwitchableSwitcherEmail'
+  } & Pick<SwitchableSwitcherEmail, 'id'>
+}
 
 export type ActivatePendingAgreementMutationVariables = Exact<{
   contractId: Scalars['ID']
@@ -2546,10 +2555,16 @@ export type ChangeFromDateMutationVariables = Exact<{
   request?: Maybe<ChangeFromDateInput>
 }>
 
-export type ChangeFromDateMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'changeFromDate'
->
+export type ChangeFromDateMutation = { __typename?: 'MutationType' } & {
+  changeFromDate: { __typename?: 'Contract' } & Pick<Contract, 'id'> & {
+      genericAgreements: Array<
+        { __typename?: 'GenericAgreement' } & Pick<
+          GenericAgreement,
+          'id' | 'fromDate'
+        >
+      >
+    }
+}
 
 export type ChangeTerminationDateMutationVariables = Exact<{
   contractId: Scalars['ID']
@@ -2568,10 +2583,16 @@ export type ChangeToDateMutationVariables = Exact<{
   request?: Maybe<ChangeToDateInput>
 }>
 
-export type ChangeToDateMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'changeToDate'
->
+export type ChangeToDateMutation = { __typename?: 'MutationType' } & {
+  changeToDate: { __typename?: 'Contract' } & Pick<Contract, 'id'> & {
+      genericAgreements: Array<
+        { __typename?: 'GenericAgreement' } & Pick<
+          GenericAgreement,
+          'id' | 'toDate'
+        >
+      >
+    }
+}
 
 export type ClaimTypeFragment = { __typename?: 'Claim' } & {
   type?: Maybe<
@@ -2662,10 +2683,19 @@ export type CreateClaimMutationVariables = Exact<{
   source: ClaimSource
 }>
 
-export type CreateClaimMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'createClaim'
->
+export type CreateClaimMutation = { __typename?: 'MutationType' } & {
+  createClaim?: Maybe<
+    { __typename?: 'Claim' } & Pick<
+      Claim,
+      'id' | 'state' | 'registrationDate'
+    > & {
+        member: { __typename?: 'Member' } & Pick<
+          Member,
+          'memberId' | 'firstName' | 'lastName'
+        >
+      }
+  >
+}
 
 export type CreateEmployeeMutationVariables = Exact<{
   email: Scalars['String']
@@ -2725,10 +2755,12 @@ export type EditMemberInfoMutationVariables = Exact<{
   request: EditMemberInfoInput
 }>
 
-export type EditMemberInfoMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'editMemberInfo'
->
+export type EditMemberInfoMutation = { __typename?: 'MutationType' } & {
+  editMemberInfo: { __typename?: 'Member' } & Pick<
+    Member,
+    'memberId' | 'firstName' | 'lastName' | 'email' | 'phoneNumber'
+  >
+}
 
 export type EmployeesQueryVariables = Exact<{ [key: string]: never }>
 
@@ -3461,18 +3493,37 @@ export type ManualRedeemCampaignMutationVariables = Exact<{
   request: ManualRedeemCampaignInput
 }>
 
-export type ManualRedeemCampaignMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'manualRedeemCampaign'>
+export type ManualRedeemCampaignMutation = { __typename?: 'MutationType' } & {
+  manualRedeemCampaign: { __typename?: 'Member' } & Pick<Member, 'memberId'> & {
+      referralInformation?: Maybe<
+        { __typename?: 'ReferralInformation' } & {
+          redeemedCampaigns: Array<
+            { __typename?: 'RedeemedCampaign' } & Pick<RedeemedCampaign, 'code'>
+          >
+        }
+      >
+    }
+}
 
 export type ManualUnRedeemCampaignMutationVariables = Exact<{
   memberId: Scalars['ID']
   request: ManualUnRedeemCampaignInput
 }>
 
-export type ManualUnRedeemCampaignMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'manualUnRedeemCampaign'>
+export type ManualUnRedeemCampaignMutation = { __typename?: 'MutationType' } & {
+  manualUnRedeemCampaign: { __typename?: 'Member' } & Pick<
+    Member,
+    'memberId'
+  > & {
+      referralInformation?: Maybe<
+        { __typename?: 'ReferralInformation' } & {
+          redeemedCampaigns: Array<
+            { __typename?: 'RedeemedCampaign' } & Pick<RedeemedCampaign, 'code'>
+          >
+        }
+      >
+    }
+}
 
 export type MarkQuestionAsResolvedMutationVariables = Exact<{
   memberId: Scalars['ID']
@@ -3531,9 +3582,16 @@ export type RegenerateCertificateMutationVariables = Exact<{
   agreementId: Scalars['ID']
 }>
 
-export type RegenerateCertificateMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'regenerateCertificate'>
+export type RegenerateCertificateMutation = { __typename?: 'MutationType' } & {
+  regenerateCertificate: { __typename?: 'Contract' } & Pick<Contract, 'id'> & {
+      genericAgreements: Array<
+        { __typename?: 'GenericAgreement' } & Pick<
+          GenericAgreement,
+          'id' | 'certificateUrl'
+        >
+      >
+    }
+}
 
 export type RemoveEmployeeMutationVariables = Exact<{
   id: Scalars['ID']
@@ -3569,9 +3627,15 @@ export type SafelyEditAgreementMutationVariables = Exact<{
   request: SafelyEditAgreementInput
 }>
 
-export type SafelyEditAgreementMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'safelyEdit'>
+export type SafelyEditAgreementMutation = { __typename?: 'MutationType' } & {
+  safelyEdit: { __typename?: 'Contract' } & {
+    genericAgreements: Array<
+      { __typename?: 'GenericAgreement' } & Pick<GenericAgreement, 'id'> & {
+          address?: Maybe<{ __typename?: 'Address' } & Pick<Address, 'street'>>
+        }
+    >
+  }
+}
 
 export type SendMessageMutationVariables = Exact<{
   input: SendMessageInput
@@ -3629,9 +3693,12 @@ export type SetContractForClaimMutationVariables = Exact<{
   request: SetContractForClaim
 }>
 
-export type SetContractForClaimMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'setContractForClaim'>
+export type SetContractForClaimMutation = { __typename?: 'MutationType' } & {
+  setContractForClaim: { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+      member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+      contract?: Maybe<{ __typename?: 'Contract' } & Pick<Contract, 'id'>>
+    }
+}
 
 export type SetCoveringEmployeeMutationVariables = Exact<{
   id: Scalars['ID']
@@ -3653,9 +3720,12 @@ export type SetFraudulentStatusMutationVariables = Exact<{
   request: MemberFraudulentStatusInput
 }>
 
-export type SetFraudulentStatusMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'setFraudulentStatus'>
+export type SetFraudulentStatusMutation = { __typename?: 'MutationType' } & {
+  setFraudulentStatus: { __typename?: 'Member' } & Pick<
+    Member,
+    'fraudulentStatus' | 'fraudulentStatusDescription'
+  >
+}
 
 export type SignQuoteForNewContractMutationVariables = Exact<{
   quoteId: Scalars['ID']
@@ -3764,10 +3834,9 @@ export type WhitelistMemberMutationVariables = Exact<{
   memberId: Scalars['ID']
 }>
 
-export type WhitelistMemberMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'whitelistMember'
->
+export type WhitelistMemberMutation = { __typename?: 'MutationType' } & {
+  whitelistMember: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+}
 
 export const ClaimTypeFragmentDoc = gql`
   fragment claimType on Claim {
@@ -4501,7 +4570,10 @@ export const SetClaimFileCategoryDocument = gql`
       claimId: $claimId
       claimFileId: $claimFileId
       category: $category
-    )
+    ) {
+      claimId
+      claimFileId
+    }
   }
 `
 export type SetClaimFileCategoryMutationFn = ApolloReactCommon.MutationFunction<
@@ -5544,7 +5616,9 @@ export type GetSwitcherEmailsQueryResult = ApolloReactCommon.QueryResult<
 >
 export const MarkSwitcherEmailAsRemindedDocument = gql`
   mutation MarkSwitcherEmailAsReminded($id: ID!) {
-    markSwitchableSwitcherEmailAsReminded(id: $id)
+    markSwitchableSwitcherEmailAsReminded(id: $id) {
+      id
+    }
   }
 `
 export type MarkSwitcherEmailAsRemindedMutationFn = ApolloReactCommon.MutationFunction<
@@ -6152,7 +6226,13 @@ export type CanValuateClaimItemQueryResult = ApolloReactCommon.QueryResult<
 >
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
-    changeFromDate(agreementId: $agreementId, request: $request)
+    changeFromDate(agreementId: $agreementId, request: $request) {
+      id
+      genericAgreements {
+        id
+        fromDate
+      }
+    }
   }
 `
 export type ChangeFromDateMutationFn = ApolloReactCommon.MutationFunction<
@@ -6258,7 +6338,13 @@ export type ChangeTerminationDateMutationOptions = ApolloReactCommon.BaseMutatio
 >
 export const ChangeToDateDocument = gql`
   mutation ChangeToDate($agreementId: ID!, $request: ChangeToDateInput) {
-    changeToDate(agreementId: $agreementId, request: $request)
+    changeToDate(agreementId: $agreementId, request: $request) {
+      id
+      genericAgreements {
+        id
+        toDate
+      }
+    }
   }
 `
 export type ChangeToDateMutationFn = ApolloReactCommon.MutationFunction<
@@ -6362,7 +6448,16 @@ export const CreateClaimDocument = gql`
     $date: LocalDateTime!
     $source: ClaimSource!
   ) {
-    createClaim(memberId: $memberId, date: $date, source: $source)
+    createClaim(memberId: $memberId, date: $date, source: $source) {
+      id
+      state
+      registrationDate
+      member {
+        memberId
+        firstName
+        lastName
+      }
+    }
   }
 `
 export type CreateClaimMutationFn = ApolloReactCommon.MutationFunction<
@@ -6681,7 +6776,13 @@ export type DeleteClaimItemMutationOptions = ApolloReactCommon.BaseMutationOptio
 >
 export const EditMemberInfoDocument = gql`
   mutation EditMemberInfo($request: EditMemberInfoInput!) {
-    editMemberInfo(request: $request)
+    editMemberInfo(request: $request) {
+      memberId
+      firstName
+      lastName
+      email
+      phoneNumber
+    }
   }
 `
 export type EditMemberInfoMutationFn = ApolloReactCommon.MutationFunction<
@@ -8321,7 +8422,14 @@ export const ManualRedeemCampaignDocument = gql`
     $memberId: ID!
     $request: ManualRedeemCampaignInput!
   ) {
-    manualRedeemCampaign(memberId: $memberId, request: $request)
+    manualRedeemCampaign(memberId: $memberId, request: $request) {
+      memberId
+      referralInformation {
+        redeemedCampaigns {
+          code
+        }
+      }
+    }
   }
 `
 export type ManualRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
@@ -8374,7 +8482,14 @@ export const ManualUnRedeemCampaignDocument = gql`
     $memberId: ID!
     $request: ManualUnRedeemCampaignInput!
   ) {
-    manualUnRedeemCampaign(memberId: $memberId, request: $request)
+    manualUnRedeemCampaign(memberId: $memberId, request: $request) {
+      memberId
+      referralInformation {
+        redeemedCampaigns {
+          code
+        }
+      }
+    }
   }
 `
 export type ManualUnRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
@@ -8600,7 +8715,13 @@ export type OverrideQuotePriceMutationOptions = ApolloReactCommon.BaseMutationOp
 >
 export const RegenerateCertificateDocument = gql`
   mutation RegenerateCertificate($agreementId: ID!) {
-    regenerateCertificate(agreementId: $agreementId)
+    regenerateCertificate(agreementId: $agreementId) {
+      id
+      genericAgreements {
+        id
+        certificateUrl
+      }
+    }
   }
 `
 export type RegenerateCertificateMutationFn = ApolloReactCommon.MutationFunction<
@@ -8802,7 +8923,14 @@ export const SafelyEditAgreementDocument = gql`
     $agreementId: ID!
     $request: SafelyEditAgreementInput!
   ) {
-    safelyEdit(agreementId: $agreementId, request: $request)
+    safelyEdit(agreementId: $agreementId, request: $request) {
+      genericAgreements {
+        id
+        address {
+          street
+        }
+      }
+    }
   }
 `
 export type SafelyEditAgreementMutationFn = ApolloReactCommon.MutationFunction<
@@ -8986,7 +9114,15 @@ export type SetCampaignCodeTypeMutationOptions = ApolloReactCommon.BaseMutationO
 >
 export const SetContractForClaimDocument = gql`
   mutation SetContractForClaim($request: SetContractForClaim!) {
-    setContractForClaim(request: $request)
+    setContractForClaim(request: $request) {
+      id
+      member {
+        memberId
+      }
+      contract {
+        id
+      }
+    }
   }
 `
 export type SetContractForClaimMutationFn = ApolloReactCommon.MutationFunction<
@@ -9095,7 +9231,10 @@ export const SetFraudulentStatusDocument = gql`
     $memberId: ID!
     $request: MemberFraudulentStatusInput!
   ) {
-    setFraudulentStatus(memberId: $memberId, request: $request)
+    setFraudulentStatus(memberId: $memberId, request: $request) {
+      fraudulentStatus
+      fraudulentStatusDescription
+    }
   }
 `
 export type SetFraudulentStatusMutationFn = ApolloReactCommon.MutationFunction<
@@ -9674,7 +9813,9 @@ export type UpsertItemCompanyMutationOptions = ApolloReactCommon.BaseMutationOpt
 >
 export const WhitelistMemberDocument = gql`
   mutation whitelistMember($memberId: ID!) {
-    whitelistMember(memberId: $memberId)
+    whitelistMember(memberId: $memberId) {
+      memberId
+    }
   }
 `
 export type WhitelistMemberMutationFn = ApolloReactCommon.MutationFunction<

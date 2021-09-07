@@ -1,3 +1,5 @@
 mutation whitelistMember($memberId: ID!) {
-  whitelistMember(memberId: $memberId)
+  whitelistMember(memberId: $memberId) {
+    memberId
+  }
 }
