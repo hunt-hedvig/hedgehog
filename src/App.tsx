@@ -138,6 +138,7 @@ const App: React.FC = () => {
                               path="/tools"
                               component={Routes.ToolsPageRoute}
                             />
+                            <Route exact path={'/'} component={DashboardPage} />
                             <Route
                               component={() => (
                                 <StandaloneMessage paddingTop={'25vh'}>
