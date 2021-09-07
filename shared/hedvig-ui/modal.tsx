@@ -23,84 +23,74 @@ export const useClickOutside = (ref: any, handler: (e: any) => void) => {
   }, [ref, handler])
 }
 
-const ModalWrapperStyled = styled.div<{
+export const ModalWrapperStyled = styled.div<{
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
-}>`
-  width: 100vw;
-  height: 100vh;
-
-  padding: 50px;
-
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-
-  display: flex;
-
-  align-items: ${({ position }) =>
+}>(({ position, side, theme }) => ({
+  width: '100vw',
+  height: '100vh',
+  padding: '50px',
+  backgroundColor: theme.backgroundTransparent,
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  zIndex: 1000,
+  display: 'flex',
+  alignItems:
     position === 'top'
       ? 'flex-start'
       : position === 'bottom'
       ? 'flex-end'
-      : 'center'};
+      : 'center',
+  justifyContent:
+    side === 'left' ? 'flex-start' : side === 'right' ? 'flex-end' : 'center',
+}))
 
-  justify-content: ${({ side }) =>
-    side === 'left' ? 'flex-start' : side === 'right' ? 'flex-end' : 'center'};
+export const ModalContent = styled.div<{
+  width?: string
+  height?: string
+}>(({ width, height, theme }) => ({
+  width: width || '350px',
+  maxWidth: '900px',
+  height: height || '150px',
+  maxHeight: '600px',
+  borderRadius: '0.5rem',
+  display: 'flex',
+  flexDirection: 'column',
+  backgroundColor: theme.background,
+  boxShadow: `0 5px 40px ${theme.backgroundTransparent}`,
+}))
 
-  background-color: rgba(0, 0, 0, 0.3);
-`
+export const ModalHeader = styled.div(({ theme }) => ({
+  padding: '10px 15px',
+  display: 'grid',
+  gridTemplateColumns: '1fr 20px',
+  columnGap: '10px',
+  alignItems: 'center',
+  boxSizing: 'content-box',
+  borderBottom: `1px solid ${theme.border}`,
+  '.modal-title': {
+    color: theme.foreground,
+    flex: 1,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  '.modal-close': {
+    color: theme.foreground,
+    width: 20,
+    height: 20,
+    cursor: 'pointer',
+  },
+}))
 
-const ModalContent = styled.div<{ height?: string; width?: string }>`
-  width: ${({ width }) => width || '350px'};
-  max-width: 900px;
-
-  height: ${({ height }) => height || '150px'};
-  max-height: 600px;
-
-  border-radius: 0.5rem;
-
-  display: flex;
-  flex-direction: column;
-
-  background-color: #ffffff;
-`
-
-const ModalHeader = styled.div`
-  height: 40px;
-
-  padding: 0 15px;
-
-  display: grid;
-  grid-template-columns: 1fr 20px;
-  column-gap: 10px;
-  align-items: center;
-
-  box-sizing: content-box;
-
-  border-bottom: 1px solid #cccccc;
-
-  .modal-title {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+export const ModalBody = styled.div(({ theme }) => {
+  return {
+    flex: 1,
+    padding: 15,
+    color: theme.foreground,
   }
-
-  .modal-close {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-`
-
-const ModalBody = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 15px;
-`
-
+})
 export interface ModalProps {
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'

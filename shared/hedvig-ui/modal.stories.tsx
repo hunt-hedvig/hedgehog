@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { boolean, number, select } from '@storybook/addon-knobs'
+import { boolean, number, select, text } from '@storybook/addon-knobs'
 import { Button } from 'hedvig-ui/button'
 import { Modal, ModalProps } from 'hedvig-ui/modal'
 import React from 'react'
@@ -45,7 +45,7 @@ export const StandartModal = () => {
           title="Modal Title"
           close={() => setIsModal(false)}
         >
-          Modal Body
+          {text('Body content', 'Modal body')}
         </Modal>
       )}
     </>
