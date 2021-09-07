@@ -13,14 +13,8 @@ import {
   setContractForClaimOptions,
   useSetContractForClaim,
 } from 'graphql/use-add-contract-id-to-claim'
-import {
-  // setCoveringEmployeeOptions,
-  useSetCoveringEmployee,
-} from 'graphql/use-set-covering-employee'
-import {
-  // updateClaimStateOptions,
-  useUpdateClaimState,
-} from 'graphql/use-update-claim-state'
+import { useSetCoveringEmployee } from 'graphql/use-set-covering-employee'
+import { useUpdateClaimState } from 'graphql/use-update-claim-state'
 import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
 import { Dropdown, EnumDropdown } from 'hedvig-ui/dropdown'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
