@@ -1366,7 +1366,7 @@ export type QueryType = {
   member?: Maybe<Member>
   claim?: Maybe<Claim>
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
-  me?: Maybe<Me>
+  me: Me
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
@@ -2180,7 +2180,7 @@ export type SetClaimTypeMutation = { __typename?: 'MutationType' } & {
 export type GetMeQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetMeQuery = { __typename?: 'QueryType' } & {
-  me?: Maybe<{ __typename?: 'Me' } & Pick<Me, 'email' | 'scopes' | 'role'>>
+  me: { __typename?: 'Me' } & Pick<Me, 'email' | 'scopes' | 'role'>
 }
 
 export type AddAccountEntryToMemberMutationVariables = Exact<{
