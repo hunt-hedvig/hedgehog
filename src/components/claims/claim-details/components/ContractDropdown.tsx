@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Contract } from 'api/generated/graphql'
+import { Contract, GenericAgreement } from 'api/generated/graphql'
 import { Dropdown } from 'hedvig-ui/dropdown'
 import { Placeholder, Shadowed } from 'hedvig-ui/typography'
 import React from 'react'
@@ -57,23 +57,25 @@ const StyledContractDropdown = styled(Dropdown)`
   }
 `
 
-const ContractItem: React.FC<{ contract: Contract }> = ({ contract }) => {
-  const currentAgreement = currentAgreementForContract(contract)
-  const address = currentAgreement?.address
+const ContractItem: React.FC<{
+  contract: Contract
+  agreement?: GenericAgreement
+}> = ({ contract, agreement }) => {
+  const address = agreement?.address
   const lineOfBusiness =
-    currentAgreement && convertEnumToTitle(currentAgreement.lineOfBusinessName)
+    agreement && convertEnumToTitle(agreement.lineOfBusinessName)
 
   return (
     <>
       <ContractItemTopTitle>
-        {currentAgreement && (
+        {agreement && (
           <ContractItemCarrier>
-            <Shadowed>{getCarrierText(currentAgreement?.carrier)}</Shadowed>
+            <Shadowed>{getCarrierText(agreement?.carrier)}</Shadowed>
           </ContractItemCarrier>
         )}
         {lineOfBusiness && (
           <ContractItemLineOfBusiness
-            style={{ paddingLeft: currentAgreement && '0.5em' }}
+            style={{ paddingLeft: agreement && '0.5em' }}
           >
             <Shadowed>{lineOfBusiness}</Shadowed>
           </ContractItemLineOfBusiness>
@@ -97,9 +99,10 @@ const ContractItem: React.FC<{ contract: Contract }> = ({ contract }) => {
 
 export const ContractDropdown: React.FC<{
   contracts: Contract[]
-  selectedContract: Contract
+  selectedContract?: Contract
+  selectedAgreement?: GenericAgreement
   onChange: (value: string) => void
-}> = ({ contracts, selectedContract, onChange }) => {
+}> = ({ contracts, selectedContract, selectedAgreement, onChange }) => {
   return (
     <StyledContractDropdown
       options={contracts
@@ -107,7 +110,12 @@ export const ContractDropdown: React.FC<{
         .map((contract) => ({
           key: contract.id,
           value: contract.id,
-          content: <ContractItem contract={contract} />,
+          content: (
+            <ContractItem
+              contract={contract}
+              agreement={currentAgreementForContract(contract)}
+            />
+          ),
         }))}
       onChange={onChange}
       onRender={() => {
@@ -115,7 +123,14 @@ export const ContractDropdown: React.FC<{
           return <Placeholder>None selected</Placeholder>
         }
 
-        return <ContractItem contract={selectedContract} />
+        return (
+          <ContractItem
+            contract={selectedContract}
+            agreement={
+              selectedAgreement ?? currentAgreementForContract(selectedContract)
+            }
+          />
+        )
       }}
       value={selectedContract?.id ?? 'none'}
     />

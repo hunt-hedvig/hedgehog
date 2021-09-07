@@ -373,7 +373,12 @@ export const SemanticOverrides = styled.div`
         background: ${theme.background};
         color: ${theme.foreground};
         border: 1px solid ${theme.border};
-        border-radius: 0.5rem;
+      }
+      label {
+        font-size: 0.95rem;
+        margin-bottom: 0.4em;
+        color: ${theme.semiStrongForeground};
+        font-weight: normal;
       }
     }
 

@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import {
   ClaimState,
   Contract,
+  GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
 } from 'api/generated/graphql'
@@ -200,7 +201,10 @@ export const ClaimInformation: React.FC<{
             <Label>Contract for Claim</Label>
             <ContractDropdown
               contracts={contracts as Contract[]}
-              selectedContract={selectedContract as Contract}
+              selectedContract={selectedContract as Contract | undefined}
+              selectedAgreement={
+                selectedAgreement as GenericAgreement | undefined
+              }
               onChange={async (value) => {
                 await setContractForClaim(
                   setContractForClaimOptions({

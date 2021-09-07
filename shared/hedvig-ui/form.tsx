@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { ErrorMessage } from '@hookform/error-message'
 import { Button, ButtonProps } from 'hedvig-ui/button'
 import { CustomInputProps, Input } from 'hedvig-ui/input'
+import { Label } from 'hedvig-ui/typography'
 import React from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
@@ -36,11 +37,11 @@ const ErrorMessageWrapper = styled('div')`
 
 const FormLabel: React.FC<{ name: string } & React.HTMLProps<
   HTMLLabelElement
->> = ({ name, children, ...props }) => {
+>> = ({ as, name, children, ...props }) => {
   return (
-    <label htmlFor={name} {...props}>
+    <Label htmlFor={name} {...props}>
       {children}
-    </label>
+    </Label>
   )
 }
 
