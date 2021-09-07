@@ -3,10 +3,12 @@ import styled from '@emotion/styled'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { CssBaseline } from '@material-ui/core'
 import { MuiThemeProvider } from '@material-ui/core/styles'
+import { history } from 'clientEntry'
 import { DashboardPage } from 'components/dashboard'
 import { QuestionsPage } from 'components/questions'
 import Breadcrumbs from 'components/shared/navigation/breadcrumbs/Breadcrumbs'
 import { VerticalMenu } from 'components/shared/navigation/sidebar/VerticalMenu'
+import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import {
   darkTheme,
   darkUiTheme,
@@ -14,19 +16,16 @@ import {
   lightUiTheme,
   SemanticOverrides,
 } from 'hedvig-ui/themes'
-import { createBrowserHistory, createMemoryHistory } from 'history'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
-import { Redirect, Route, Router, Switch } from 'react-router'
+import { Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
+import { useAuthenticate } from 'utils/auth'
 import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
 import { CommandLineProvider } from 'utils/hooks/command-line-hook'
 import { MemberHistoryProvider } from 'utils/member-history'
 import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
-
-export const history =
-  typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
 
 const Layout = styled(SemanticOverrides)`
   display: flex;
@@ -73,6 +72,7 @@ const globalCss = css`
 
 const App: React.FC = () => {
   const [isDarkmode, setIsDarkmode] = useState(getDefaultIsDarkmode())
+  const { me } = useAuthenticate()
 
   const redirectToLogin = () => {
     window.location.href = `${(window as any).GATEKEEPER_HOST}/sso?redirect=${
@@ -116,21 +116,37 @@ const App: React.FC = () => {
                             return null
                           }}
                         />
-                        <Route path="/dashborad" component={DashboardPage} />
-                        <Route path="/questions" component={QuestionsPage} />
-                        <Route
-                          path="/claims"
-                          component={Routes.ClaimsPageRoute}
-                        />
-                        <Route
-                          path="/members"
-                          component={Routes.MembersPageRoute}
-                        />
-                        <Route
-                          path="/tools"
-                          component={Routes.ToolsPageRoute}
-                        />
-                        <Redirect from="*" to="/dashborad" />
+                        {me && (
+                          <Switch>
+                            <Route
+                              path="/dashborad"
+                              component={DashboardPage}
+                            />
+                            <Route
+                              path="/questions"
+                              component={QuestionsPage}
+                            />
+                            <Route
+                              path="/claims"
+                              component={Routes.ClaimsPageRoute}
+                            />
+                            <Route
+                              path="/members"
+                              component={Routes.MembersPageRoute}
+                            />
+                            <Route
+                              path="/tools"
+                              component={Routes.ToolsPageRoute}
+                            />
+                            <Route
+                              component={() => (
+                                <StandaloneMessage paddingTop={'25vh'}>
+                                  Page not found
+                                </StandaloneMessage>
+                              )}
+                            />
+                          </Switch>
+                        )}
                       </Switch>
                       <Toaster
                         position={'top-center'}
