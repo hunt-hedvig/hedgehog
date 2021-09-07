@@ -28,6 +28,8 @@ const ContractCountNumber = styled.div<{ variation?: CircleVariation }>`
   padding: 0.2em 0.6em;
   border-radius: 6px;
   font-size: 0.8em;
+  min-width: 2em;
+  text-align: center;
 `
 
 const ContractCountLabel = styled.div`
@@ -83,8 +85,8 @@ export const MembersList: React.FC<{
               key={member.memberId}
               onClick={() => history.push(`/members/${member.memberId}`)}
             >
-              <TableColumn>
-                <MemberInfoTableCell member={member} />
+              <TableColumn style={{ maxWidth: '250px' }}>
+                <MemberInfoTableCell member={member} age={true} flag={true} />
               </TableColumn>
               <TableColumn>
                 {member.signedOn && (
@@ -100,57 +102,53 @@ export const MembersList: React.FC<{
                 )}
               </TableColumn>
               <TableColumn>
-                <div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <ContractCountWrapper>
-                      <ContractCountNumber
-                        variation={
-                          pendingContracts ? 'warning' : 'placeholderColor'
-                        }
-                      >
-                        {pendingContracts}
-                      </ContractCountNumber>
-                      <ContractCountLabel>Pending</ContractCountLabel>
-                    </ContractCountWrapper>
-                    <ContractCountWrapper>
-                      <ContractCountNumber
-                        variation={
-                          activeInFutureContracts
-                            ? 'accent'
-                            : 'placeholderColor'
-                        }
-                      >
-                        {activeInFutureContracts}
-                      </ContractCountNumber>
-                      <ContractCountLabel>Active in future</ContractCountLabel>
-                    </ContractCountWrapper>
-                    <ContractCountWrapper>
-                      <ContractCountNumber
-                        variation={
-                          activeContracts ? 'success' : 'placeholderColor'
-                        }
-                      >
-                        {activeContracts}
-                      </ContractCountNumber>
-                      <ContractCountLabel>Active</ContractCountLabel>
-                    </ContractCountWrapper>
-                    <ContractCountWrapper>
-                      <ContractCountNumber
-                        variation={
-                          terminatedContracts ? 'danger' : 'placeholderColor'
-                        }
-                      >
-                        {terminatedContracts}
-                      </ContractCountNumber>
-                      <ContractCountLabel>Terminated</ContractCountLabel>
-                    </ContractCountWrapper>
-                  </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <ContractCountWrapper>
+                    <ContractCountNumber
+                      variation={
+                        pendingContracts ? 'warning' : 'placeholderColor'
+                      }
+                    >
+                      {pendingContracts}
+                    </ContractCountNumber>
+                    <ContractCountLabel>Pending</ContractCountLabel>
+                  </ContractCountWrapper>
+                  <ContractCountWrapper>
+                    <ContractCountNumber
+                      variation={
+                        activeInFutureContracts ? 'accent' : 'placeholderColor'
+                      }
+                    >
+                      {activeInFutureContracts}
+                    </ContractCountNumber>
+                    <ContractCountLabel>Active in future</ContractCountLabel>
+                  </ContractCountWrapper>
+                  <ContractCountWrapper>
+                    <ContractCountNumber
+                      variation={
+                        activeContracts ? 'success' : 'placeholderColor'
+                      }
+                    >
+                      {activeContracts}
+                    </ContractCountNumber>
+                    <ContractCountLabel>Active</ContractCountLabel>
+                  </ContractCountWrapper>
+                  <ContractCountWrapper>
+                    <ContractCountNumber
+                      variation={
+                        terminatedContracts ? 'danger' : 'placeholderColor'
+                      }
+                    >
+                      {terminatedContracts}
+                    </ContractCountNumber>
+                    <ContractCountLabel>Terminated</ContractCountLabel>
+                  </ContractCountWrapper>
                 </div>
               </TableColumn>
             </TableRow>
