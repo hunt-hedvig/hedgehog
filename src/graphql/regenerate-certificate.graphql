@@ -1,3 +1,9 @@
 mutation RegenerateCertificate($agreementId: ID!) {
-  regenerateCertificate(agreementId: $agreementId)
+  regenerateCertificate(agreementId: $agreementId) {
+    id
+    genericAgreements {
+      id
+      certificateUrl
+    }
+  }
 }

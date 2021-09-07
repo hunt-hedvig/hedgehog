@@ -1,3 +1,9 @@
 mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
-  changeFromDate(agreementId: $agreementId, request: $request)
+  changeFromDate(agreementId: $agreementId, request: $request) {
+    id
+    genericAgreements {
+      id
+      fromDate
+    }
+  }
 }
