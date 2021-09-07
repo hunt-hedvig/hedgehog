@@ -1,19 +1,22 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { ClaimState } from 'api/generated/graphql'
 import { ListPage } from 'components/shared'
-import { getPageLimits } from 'components/shared/paginator/Paginator'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'graphql/use-list-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
-import { Table, TableColumn, TableHeader, TableRow } from 'hedvig-ui/table'
+import {
+  PageSelect,
+  Table,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from 'hedvig-ui/table'
 import { Monetary, Placeholder } from 'hedvig-ui/typography'
 import React, { useEffect } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { Header } from 'semantic-ui-react'
-import { range } from 'utils/helpers'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 import { getMemberGroupName, getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
@@ -65,76 +68,13 @@ const FlexHorizontally = styled.div`
   flex-direction: row;
 `
 
-const PageLink = styled.span<{ disabled: boolean }>`
-  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  padding: 0 1em;
-  color: ${({ theme, disabled }) =>
-    disabled ? theme.placeholderColor : theme.accent};
-  transition: all 100ms;
-
-  ${({ theme, disabled }) => {
-    return (
-      !disabled &&
-      css`
-        :hover {
-          color: ${theme.accentLight};
-        }
-      `
-    )
-  }}
-`
-
-const PageSelectWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 1em;
-`
-
-const PageSelect: React.FC<{
-  currentPage: number
-  totalPages: number
-  onSelect: (page: number) => void
-}> = ({ currentPage, totalPages, onSelect }) => {
-  const { startPage, endPage } = getPageLimits(totalPages, currentPage)
-  return (
-    <PageSelectWrapper>
-      <PageLink disabled={currentPage === 0} onClick={() => onSelect(1)}>
-        First
-      </PageLink>
-
-      {range(startPage, endPage).map((page, id) => (
-        <PageLink
-          key={id}
-          disabled={currentPage === page}
-          onClick={() => {
-            onSelect(page + 1)
-          }}
-        >
-          {page + 1}
-        </PageLink>
-      ))}
-
-      <PageLink
-        disabled={currentPage === totalPages - 1}
-        onClick={() => {
-          onSelect(totalPages - 1)
-        }}
-      >
-        Last
-      </PageLink>
-    </PageSelectWrapper>
-  )
-}
-
 export const ClaimsList: React.FC<RouteComponentProps<{
   page?: string
 }>> = ({ match }) => {
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const selectedPage = parseInt(match.params.page ?? '1', 10)
+
   const [
     { claims, page: currentPage, totalPages },
     listClaims,
