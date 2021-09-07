@@ -68,7 +68,6 @@ const FilterName = styled.label`
 `
 
 const ColorBadge = styled.div<{ filter: FilterState }>`
-  background-color:
   display: inline-block;
   width: 1.5em;
   height: 1.5em;
