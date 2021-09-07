@@ -2,5 +2,12 @@ mutation SafelyEditAgreement(
   $agreementId: ID!
   $request: SafelyEditAgreementInput!
 ) {
-  safelyEdit(agreementId: $agreementId, request: $request)
+  safelyEdit(agreementId: $agreementId, request: $request) {
+    genericAgreements {
+      id
+      address {
+        street
+      }
+    }
+  }
 }
