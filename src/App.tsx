@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { CssBaseline } from '@material-ui/core'
 import { MuiThemeProvider } from '@material-ui/core/styles'
-import { Me, useGetMeQuery } from 'api/generated/graphql'
 import { history } from 'clientEntry'
 import { DashboardPage } from 'components/dashboard'
 import { QuestionsPage } from 'components/questions'
@@ -17,11 +16,12 @@ import {
   lightUiTheme,
   SemanticOverrides,
 } from 'hedvig-ui/themes'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
 import Routes from 'routes'
+import { useAuthenticate } from 'utils/auth'
 import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
 import { CommandLineProvider } from 'utils/hooks/command-line-hook'
 import { MemberHistoryProvider } from 'utils/member-history'
@@ -69,29 +69,6 @@ const globalCss = css`
     font-weight: 400;
   }
 `
-
-interface UseAuthenticateResult {
-  me?: Me
-  loading: boolean
-}
-
-const useAuthenticate = (): UseAuthenticateResult => {
-  const { data, startPolling, stopPolling } = useGetMeQuery({
-    fetchPolicy: 'no-cache',
-  })
-
-  useEffect(() => {
-    startPolling(500)
-  }, [])
-
-  useEffect(() => {
-    if (data?.me) {
-      stopPolling()
-    }
-  }, [data])
-
-  return data?.me ? { me: data.me, loading: false } : { loading: true }
-}
 
 const App: React.FC = () => {
   const [isDarkmode, setIsDarkmode] = useState(getDefaultIsDarkmode())
