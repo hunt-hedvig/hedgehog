@@ -7,5 +7,8 @@ mutation SetClaimFileCategory(
     claimId: $claimId
     claimFileId: $claimFileId
     category: $category
-  )
+  ) {
+    claimId
+    claimFileId
+  }
 }

@@ -2,5 +2,8 @@ mutation SetFraudulentStatus(
   $memberId: ID!
   $request: MemberFraudulentStatusInput!
 ) {
-  setFraudulentStatus(memberId: $memberId, request: $request)
+  setFraudulentStatus(memberId: $memberId, request: $request) {
+    fraudulentStatus
+    fraudulentStatusDescription
+  }
 }
