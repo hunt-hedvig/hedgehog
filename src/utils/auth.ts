@@ -29,6 +29,7 @@ export const useAuthenticate = (): UseAuthenticateResult => {
     if (data?.me || refetchAttempt >= maxRefetchAttempts) {
       setRefetchAttempt(0)
       stopPolling()
+      return
     }
     setRefetchAttempt((prevRefetchAttempt) => prevRefetchAttempt + 1)
   }, [data, loading])
