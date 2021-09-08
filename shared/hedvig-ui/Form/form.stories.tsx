@@ -1,4 +1,4 @@
-import { Form, FormDropdown, FormInput, SubmitButton } from 'hedvig-ui/form'
+import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
