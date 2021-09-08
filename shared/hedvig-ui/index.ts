@@ -39,6 +39,7 @@ import {
   InfoText,
 } from './InfoRow/info-row'
 import { CustomInputProps, Input } from './Input/input'
+import { List, ListItem } from './List/list'
 
 export {
   Badge,
@@ -74,4 +75,6 @@ export {
   InfoText,
   Input,
   CustomInputProps,
+  List,
+  ListItem,
 }
