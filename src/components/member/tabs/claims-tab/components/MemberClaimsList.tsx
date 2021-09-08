@@ -1,18 +1,18 @@
 import styled from '@emotion/styled'
 import { ClaimState } from 'api/generated/graphql'
-import { ClaimTypeTableCell } from 'components/molecules/ClaimTypeTableCell'
-import { DateTimeTableCell } from 'components/molecules/DateTimeTableCell'
-import { MemberInfoTableCell } from 'components/molecules/MemberInfoTableCell'
-import { TablePageSelect } from 'components/molecules/TablePageSelect'
 import { parseISO } from 'date-fns'
-import { useListClaims } from 'graphql/use-list-claims'
-import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
+import formatDate from 'date-fns/format'
+import { useGetMemberClaims } from 'graphql/use-get-member-claims'
+import {
+  LoadingMessage,
+  StandaloneMessage,
+} from 'hedvig-ui/animations/standalone-message'
 import { Table, TableColumn, TableHeader, TableRow } from 'hedvig-ui/table'
 import { Monetary, Placeholder } from 'hedvig-ui/typography'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
-import { convertEnumToTitle } from 'utils/text'
+import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
@@ -26,22 +26,28 @@ const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   border-radius: 8px;
 `
 
-export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
-  const history = useHistory()
-  const [
-    { claims, page: currentPage, totalPages },
-    listClaims,
-  ] = useListClaims()
+const TableColumnSubtext = styled.span`
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
 
-  useEffect(() => {
-    listClaims({ page: page - 1 ?? 0 })
-  }, [page])
+const FlexVertically = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const MemberClaimsList: React.FC<{ memberId: string }> = ({
+  memberId,
+}) => {
+  const history = useHistory()
+  const [memberClaims, { loading }] = useGetMemberClaims(memberId)
+
+  const claims = memberClaims ?? []
 
   const [currentKeyboardNavigationStep] = useVerticalKeyboardNavigation({
     maxStep: claims.length - 1,
     onPerformNavigation: (index) => {
       const claimId = claims[index].id
-      const memberId = claims[index].member?.memberId
 
       if (!claimId || !memberId) {
         return
@@ -51,21 +57,37 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
     },
   })
 
-  if (!claims) {
-    return <LoadingMessage paddingTop={'25vh'} />
+  if (loading) {
+    return <LoadingMessage paddingTop={'10vh'} />
+  }
+
+  if (!claims || claims.length === 0) {
+    return (
+      <StandaloneMessage paddingTop={'10vh'}>
+        No claims for member
+      </StandaloneMessage>
+    )
   }
 
   return (
     <>
       <Table>
         <TableRow>
-          <TableHeader>Member</TableHeader>
           <TableHeader>Date Registered</TableHeader>
           <TableHeader>Claim Type</TableHeader>
           <TableHeader>Claim State</TableHeader>
           <TableHeader>Claim Reserves</TableHeader>
         </TableRow>
         {claims.map((claim, index) => {
+          const registrationDateString = formatDate(
+            parseISO(claim.registrationDate),
+            'dd MMMM, yyyy',
+          )
+          const registrationDateTimeString = formatDate(
+            parseISO(claim.registrationDate),
+            'HH:mm',
+          )
+
           return (
             <TableRow
               key={claim.id}
@@ -77,15 +99,20 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
               }
             >
               <TableColumn>
-                <MemberInfoTableCell member={claim.member} />
+                <FlexVertically>
+                  {registrationDateString}
+                  <TableColumnSubtext>
+                    {registrationDateTimeString}
+                  </TableColumnSubtext>
+                </FlexVertically>
               </TableColumn>
 
               <TableColumn>
-                <DateTimeTableCell date={parseISO(claim.registrationDate)} />
-              </TableColumn>
-
-              <TableColumn>
-                <ClaimTypeTableCell type={claim.type} />
+                {claim.type?.__typename ? (
+                  splitOnUpperCase(claim.type.__typename.toString())
+                ) : (
+                  <Placeholder>Not specified</Placeholder>
+                )}
               </TableColumn>
 
               <TableColumn>
@@ -105,11 +132,6 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
           )
         })}
       </Table>
-      <TablePageSelect
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onSelect={(newPage) => history.push(`/claims/list/${newPage}`)}
-      />
     </>
   )
 }

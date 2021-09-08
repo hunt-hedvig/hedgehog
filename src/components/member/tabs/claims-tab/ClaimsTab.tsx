@@ -4,7 +4,7 @@ import {
   GetMemberClaimsDocument,
   useCreateClaimMutation,
 } from 'api/generated/graphql'
-import { MemberClaimsList } from 'components/organisms/MemberClaimsList'
+import { MemberClaimsList } from 'components/member/tabs/claims-tab/components/MemberClaimsList'
 import { format } from 'date-fns'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Button } from 'hedvig-ui/button'

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Contract, ContractStatus, Member } from 'api/generated/graphql'
-import { DateTimeTableCell } from 'components/molecules/DateTimeTableCell'
 import { MemberInfoTableCell } from 'components/molecules/MemberInfoTableCell'
 import { parseISO } from 'date-fns'
+import formatDate from 'date-fns/format'
 import { Table, TableColumn, TableHeader, TableRow } from 'hedvig-ui/table'
 import { Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
@@ -36,6 +36,16 @@ const ContractCountLabel = styled.div`
   font-size: 0.7em;
   color: ${({ theme }) => theme.semiStrongForeground};
   margin-top: 0.3em;
+`
+
+const TableColumnSubtext = styled.span`
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const FlexVertically = styled.div`
+  display: flex;
+  flex-direction: column;
 `
 
 type NumberOfContracts = {
@@ -81,6 +91,12 @@ export const MembersList: React.FC<{
             TERMINATED: terminatedContracts = 0,
           } = countContractsByStatus(member.contracts)
 
+          const dateString = formatDate(
+            parseISO(member.signedOn),
+            'dd MMMM, yyyy',
+          )
+          const timeString = formatDate(parseISO(member.signedOn), 'HH:mm')
+
           return (
             <TableRow
               key={member.memberId}
@@ -92,7 +108,10 @@ export const MembersList: React.FC<{
               </TableColumn>
               <TableColumn>
                 {member.signedOn && (
-                  <DateTimeTableCell date={parseISO(member.signedOn)} />
+                  <FlexVertically>
+                    {dateString}
+                    <TableColumnSubtext>{timeString}</TableColumnSubtext>
+                  </FlexVertically>
                 )}
               </TableColumn>
               <TableColumn>

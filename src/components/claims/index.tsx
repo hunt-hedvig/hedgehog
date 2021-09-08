@@ -1,4 +1,4 @@
-import { LargeClaimsList } from 'components/organisms/LargeClaimsList'
+import { LargeClaimsList } from 'components/claims/claims-list/components/LargeClaimsList'
 import { ListPage } from 'components/shared'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
