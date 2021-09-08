@@ -7,7 +7,7 @@ import {
   VoucherCampaign,
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
-import { Badge } from 'hedvig-ui/badge'
+import { Badge } from 'hedvig-ui/Badge/badge'
 import React from 'react'
 import {
   isCostDeduction,

@@ -5,7 +5,7 @@ import { NumberMemberGroupsRadioButtons } from 'components/questions/number-memb
 import { differenceInCalendarDays, format } from 'date-fns'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { Badge } from 'hedvig-ui/badge'
+import { Badge } from 'hedvig-ui/Badge/badge'
 import { CasualList, CasualListItem } from 'hedvig-ui/casual-list'
 import { Spacing } from 'hedvig-ui/spacing'
 import {
