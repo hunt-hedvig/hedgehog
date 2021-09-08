@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Checkbox as StandardCheckbox } from '@hedvig-ui'
 import { QuestionGroup } from 'api/generated/graphql'
-import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
 import { lightTheme } from 'hedvig-ui/themes'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
@@ -68,7 +68,6 @@ const FilterName = styled.label`
 `
 
 const ColorBadge = styled.div<{ filter: FilterState }>`
-  background-color:
   display: inline-block;
   width: 1.5em;
   height: 1.5em;

@@ -7,6 +7,7 @@ import {
   ButtonsGroup,
   buttonSizeMap,
 } from './Button/button'
+import { Checkbox } from './Checkbox/checkbox'
 
 export {
   Badge,
@@ -16,4 +17,5 @@ export {
   buttonColorMap,
   ButtonLink,
   ButtonProps,
+  Checkbox,
 }

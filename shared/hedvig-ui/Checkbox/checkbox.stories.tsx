@@ -1,4 +1,4 @@
-import { Checkbox } from 'hedvig-ui/checkbox'
+import { Checkbox } from '@hedvig-ui'
 import React from 'react'
 
 export default {
