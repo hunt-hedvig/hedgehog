@@ -53,7 +53,7 @@ type MutationType {
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
   createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
   updateClaimState(id: ID!, state: ClaimState!): Claim
-  createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
+  createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): Claim
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
   createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
@@ -61,10 +61,14 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  whitelistMember(memberId: ID!): Boolean
+  whitelistMember(memberId: ID!): Member!
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
-  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
+  setClaimFileCategory(
+    claimId: ID!
+    claimFileId: ID!
+    category: String
+  ): ClaimFileUpload
   activateQuote(
     id: ID!
     activationDate: LocalDate!
@@ -80,7 +84,7 @@ type MutationType {
   ): Quote!
 
   createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
-  markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
+  markSwitchableSwitcherEmailAsReminded(id: ID!): SwitchableSwitcherEmail!
   updateSwitcherEmailInfo(
     id: ID!
     request: UpdateSwitcherEmailInfoInput
@@ -99,10 +103,10 @@ type MutationType {
     request: CreateNorwegianGripenInput
   ): Boolean!
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
-  changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
-  changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
-  safelyEdit(agreementId: ID!, request: SafelyEditAgreementInput): ID!
-  regenerateCertificate(agreementId: ID!): ID!
+  changeToDate(agreementId: ID!, request: ChangeToDateInput): Contract!
+  changeFromDate(agreementId: ID!, request: ChangeFromDateInput): Contract!
+  safelyEdit(agreementId: ID!, request: SafelyEditAgreementInput): Contract!
+  regenerateCertificate(agreementId: ID!): Contract!
   sendMessage(input: SendMessageInput!): SendMessageResponse!
   markQuestionAsResolved(memberId: ID!): Boolean!
   answerQuestion(memberId: ID!, answer: String!): Boolean!
@@ -123,7 +127,7 @@ type MutationType {
   upsertItemBrand(request: UpsertItemBrandInput): ID!
   upsertItemModel(request: UpsertItemModelInput): ID!
   upsertClaimItem(request: UpsertClaimItemInput): ID!
-  deleteClaimItem(claimItemId: ID!): ID
+  deleteClaimItem(claimItemId: ID!): Boolean!
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
   insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
   upsertValuationRule(request: UpsertValuationRuleInput): ID!
@@ -136,21 +140,21 @@ type MutationType {
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
   setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
-  setContractForClaim(request: SetContractForClaim!): Boolean!
+  setContractForClaim(request: SetContractForClaim!): Claim!
   manualRedeemCampaign(
     memberId: ID!
     request: ManualRedeemCampaignInput!
-  ): Boolean!
+  ): Member!
   manualUnRedeemCampaign(
     memberId: ID!
     request: ManualUnRedeemCampaignInput!
-  ): Boolean!
+  ): Member!
   unsignMember(ssn: String!): Boolean!
-  editMemberInfo(request: EditMemberInfoInput!): Boolean!
+  editMemberInfo(request: EditMemberInfoInput!): Member!
   setFraudulentStatus(
     memberId: ID!
     request: MemberFraudulentStatusInput!
-  ): Boolean!
+  ): Member!
   createEmployee(email: String!, role: String!): Employee!
   updateEmployeeRole(id: ID!, role: String!): Employee!
   removeEmployee(id: ID!): Boolean!
