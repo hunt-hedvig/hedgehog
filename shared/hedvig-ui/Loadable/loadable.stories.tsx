@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Loadable } from '@hedvig-ui'
 import { boolean } from '@storybook/addon-knobs'
-import { Loadable } from 'hedvig-ui/loadable'
 import React from 'react'
 
 export default {

@@ -41,6 +41,7 @@ import {
 import { CustomInputProps, Input } from './Input/input'
 import { JsonSchemaForm } from './JsonSchemaForm/json-schema-form'
 import { List, ListItem } from './List/list'
+import { Loadable } from './Loadable/loadable'
 
 export {
   Badge,
@@ -79,4 +80,5 @@ export {
   List,
   ListItem,
   JsonSchemaForm,
+  Loadable,
 }
