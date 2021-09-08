@@ -39,6 +39,7 @@ import {
   InfoText,
 } from './InfoRow/info-row'
 import { CustomInputProps, Input } from './Input/input'
+import { JsonSchemaForm } from './JsonSchemaForm/json-schema-form'
 import { List, ListItem } from './List/list'
 
 export {
@@ -77,4 +78,5 @@ export {
   CustomInputProps,
   List,
   ListItem,
+  JsonSchemaForm,
 }
