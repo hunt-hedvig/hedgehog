@@ -1,15 +1,27 @@
 import styled from '@emotion/styled'
 import {
+  CardContent,
+  Copyable,
+  InfoContainer,
+  InfoRow,
+  InfoSection,
+  InfoTag,
+  InfoTagStatus,
+  InfoText,
+} from '@hedvig-ui'
+import {
   Flag,
   SanctionStatus,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
 } from 'api/generated/graphql'
+import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
 import { Loadable } from 'hedvig-ui/loadable'
+import { Popover } from 'hedvig-ui/popover'
 import React from 'react'
-
+import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Market } from 'types/enums'
@@ -20,21 +32,8 @@ import {
 } from 'utils/contract'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
-import { formatMoney } from 'utils/money'
-
-import { CardContent, Copyable } from '@hedvig-ui'
-import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import {
-  InfoContainer,
-  InfoRow,
-  InfoSection,
-  InfoTag,
-  InfoTagStatus,
-  InfoText,
-} from 'hedvig-ui/info-row'
-import { Popover } from 'hedvig-ui/popover'
-import { BugFill } from 'react-bootstrap-icons'
 import { formatSsn, getMemberFlag } from 'utils/member'
+import { formatMoney } from 'utils/money'
 import {
   convertCamelcaseToTitle,
   convertEnumOrSentenceToTitle,

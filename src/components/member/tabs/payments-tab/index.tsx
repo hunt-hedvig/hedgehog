@@ -1,6 +1,13 @@
 import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
-import { Button, Card, CardsWrapper } from '@hedvig-ui'
+import {
+  Button,
+  Card,
+  CardsWrapper,
+  InfoRow,
+  InfoTag,
+  InfoText,
+} from '@hedvig-ui'
 import {
   Transaction,
   useCreatePaymentCompletionLinkMutation,
@@ -15,7 +22,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { InfoRow, InfoTag, InfoText } from 'hedvig-ui/info-row'
 import {
   MainHeadline,
   Shadowed,

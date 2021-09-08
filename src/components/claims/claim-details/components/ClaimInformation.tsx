@@ -13,6 +13,8 @@ import {
   DangerCard,
   Dropdown,
   EnumDropdown,
+  InfoRow,
+  InfoText,
 } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { ContractDropdown } from 'components/claims/claim-details/components/ContractDropdown'
@@ -29,7 +31,6 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
-import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Loadable } from 'hedvig-ui/loadable'
 import { Label, Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'

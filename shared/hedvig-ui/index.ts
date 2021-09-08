@@ -30,6 +30,14 @@ import {
   FormTextArea,
   SubmitButton,
 } from './Form/form'
+import {
+  InfoContainer,
+  InfoRow,
+  InfoSection,
+  InfoTag,
+  InfoTagStatus,
+  InfoText,
+} from './InfoRow/info-row'
 
 export {
   Badge,
@@ -57,4 +65,10 @@ export {
   FormDropdown,
   FormInput,
   FormTextArea,
+  InfoRow,
+  InfoContainer,
+  InfoSection,
+  InfoTag,
+  InfoTagStatus,
+  InfoText,
 }

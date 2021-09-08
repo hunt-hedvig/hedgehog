@@ -1,4 +1,10 @@
-import { Card, CardsWrapper } from '@hedvig-ui'
+import {
+  Card,
+  CardsWrapper,
+  InfoContainer,
+  InfoRow,
+  InfoText,
+} from '@hedvig-ui'
 import {
   ExpansionPanel,
   ExpansionPanelDetails,
@@ -17,7 +23,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'

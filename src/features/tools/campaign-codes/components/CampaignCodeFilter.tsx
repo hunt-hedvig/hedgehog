@@ -1,6 +1,6 @@
+import { InfoContainer } from '@hedvig-ui'
 import { CampaignFilter } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
-import { InfoContainer } from 'hedvig-ui/info-row'
 import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'

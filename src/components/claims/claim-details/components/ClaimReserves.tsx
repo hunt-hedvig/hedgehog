@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { InfoTag } from 'hedvig-ui/info-row'
+import { InfoTag } from '@hedvig-ui'
 import { Spinner } from 'hedvig-ui/sipnner'
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
