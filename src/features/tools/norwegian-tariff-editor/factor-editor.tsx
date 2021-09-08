@@ -1,4 +1,4 @@
-import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { Card, CardsWrapper } from '@hedvig-ui'
 import { TextArea } from 'hedvig-ui/text-area'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'

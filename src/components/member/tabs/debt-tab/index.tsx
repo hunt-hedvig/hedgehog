@@ -1,3 +1,4 @@
+import { Card, CardsWrapper } from '@hedvig-ui'
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
@@ -6,7 +7,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'

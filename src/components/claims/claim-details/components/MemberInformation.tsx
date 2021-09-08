@@ -22,8 +22,8 @@ import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
 import { formatMoney } from 'utils/money'
 
+import { CardContent } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { CardContent } from 'hedvig-ui/card'
 import { Copyable } from 'hedvig-ui/copyable'
 import {
   InfoContainer,

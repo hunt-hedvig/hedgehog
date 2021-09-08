@@ -1,4 +1,4 @@
-import { Button, ButtonsGroup } from '@hedvig-ui'
+import { Button, ButtonsGroup, Card } from '@hedvig-ui'
 import {
   Employee,
   EmployeesDocument,
@@ -11,7 +11,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { Card } from 'hedvig-ui/card'
 import { Dropdown } from 'hedvig-ui/dropdown'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'

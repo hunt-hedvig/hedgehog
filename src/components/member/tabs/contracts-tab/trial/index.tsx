@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
-import { ButtonLink } from '@hedvig-ui'
+import { ButtonLink, Card, CardsWrapper } from '@hedvig-ui'
 import { Trial } from 'api/generated/graphql'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'

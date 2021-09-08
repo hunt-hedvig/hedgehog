@@ -1,4 +1,4 @@
-import { Card, CardsWrapper } from 'hedvig-ui/card'
+import { Card, CardsWrapper } from '@hedvig-ui'
 import React from 'react'
 
 export default {

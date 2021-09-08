@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { CardLink, CardsWrapper } from 'hedvig-ui/card'
+import { CardLink, CardsWrapper } from '@hedvig-ui'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 

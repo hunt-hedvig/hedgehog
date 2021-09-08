@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Card, CardsWrapper } from '@hedvig-ui'
 import {
   AgreementStatus,
   Contract,
@@ -10,7 +11,6 @@ import { InsuranceCertificate } from 'components/member/tabs/contracts-tab/agree
 import { InsuranceMandate } from 'components/member/tabs/contracts-tab/agreement/InsuranceMandate'
 import { ToDate } from 'components/member/tabs/contracts-tab/agreement/ToDate'
 import { format, parseISO } from 'date-fns'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
 import { InfoRow, InfoText } from 'hedvig-ui/info-row'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
