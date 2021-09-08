@@ -44,6 +44,7 @@ import { List, ListItem } from './List/list'
 import { Loadable } from './Loadable/loadable'
 import { FlagOrbIndicator, OrbIndicator } from './OrbIndicator/orb-indicator'
 import { Popover } from './Popover/popover'
+import { RadioGroup } from './Radio/radio'
 
 export {
   Badge,
@@ -86,4 +87,5 @@ export {
   Popover,
   OrbIndicator,
   FlagOrbIndicator,
+  RadioGroup,
 }

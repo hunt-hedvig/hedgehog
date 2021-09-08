@@ -1,4 +1,4 @@
-import { RadioGroup } from 'hedvig-ui/radio'
+import { RadioGroup } from '@hedvig-ui'
 import { Paragraph, SecondLevelHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 
