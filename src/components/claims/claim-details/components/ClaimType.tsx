@@ -12,13 +12,13 @@ import {
   DateTimePicker,
   Input,
   SearchableDropdown,
+  Spacing,
 } from '@hedvig-ui'
 import {
   PaperTitle,
   PaperTitleBadgeProps,
 } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
-import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, ExclamationCircleFill } from 'react-bootstrap-icons'

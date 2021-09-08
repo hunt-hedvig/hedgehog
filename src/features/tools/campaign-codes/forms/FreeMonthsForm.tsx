@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import { Button, DateTimePicker, Input, SearchableDropdown } from '@hedvig-ui'
+import {
+  Button,
+  DateTimePicker,
+  Input,
+  SearchableDropdown,
+  Spacing,
+} from '@hedvig-ui'
 import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
@@ -7,7 +13,6 @@ import {
   addPartnerFreeMonthsCodeOptions,
   useAddPartnerFreeMonthsCode,
 } from 'graphql/use-add-partner-free-months-code'
-import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'

@@ -46,6 +46,7 @@ import { FlagOrbIndicator, OrbIndicator } from './OrbIndicator/orb-indicator'
 import { Popover } from './Popover/popover'
 import { RadioGroup } from './Radio/radio'
 import { SearchableDropdown } from './SearchableDropdown/searchable-dropdown'
+import { Spacing, spacingMap, SpacingSize } from './Spacing/spacing'
 import { Spinner } from './Spinner/spinner'
 
 export {
@@ -92,4 +93,7 @@ export {
   RadioGroup,
   SearchableDropdown,
   Spinner,
+  Spacing,
+  SpacingSize,
+  spacingMap,
 }

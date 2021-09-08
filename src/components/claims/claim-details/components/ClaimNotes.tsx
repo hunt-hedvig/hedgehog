@@ -8,10 +8,16 @@ import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 
 import styled from '@emotion/styled'
-import { Button, CardContent, List, ListItem, Spinner } from '@hedvig-ui'
+import {
+  Button,
+  CardContent,
+  List,
+  ListItem,
+  Spacing,
+  Spinner,
+} from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { Paragraph, Shadowed } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'

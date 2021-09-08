@@ -5,6 +5,7 @@ import {
   InfoContainer,
   InfoRow,
   InfoText,
+  Spacing,
 } from '@hedvig-ui'
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
@@ -14,7 +15,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'

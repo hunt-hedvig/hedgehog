@@ -4,6 +4,7 @@ import {
   InfoContainer,
   InfoRow,
   InfoText,
+  Spacing,
 } from '@hedvig-ui'
 import {
   ExpansionPanel,
@@ -23,7 +24,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat, ChevronDown } from 'react-bootstrap-icons'

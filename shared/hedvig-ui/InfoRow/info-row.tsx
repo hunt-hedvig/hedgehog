@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
-import { spacingMap } from 'hedvig-ui/spacing'
+import { spacingMap } from '@hedvig-ui'
 
 export const InfoContainer = styled('div')`
   display: flex;

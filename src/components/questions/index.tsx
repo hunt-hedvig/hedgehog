@@ -1,3 +1,4 @@
+import { Spacing } from '@hedvig-ui'
 import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'components/questions/questions-list/QuestionGroups'
 import { ListPage } from 'components/shared'
@@ -7,7 +8,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { useInsecurePersistentState } from 'utils/state'

@@ -1,4 +1,10 @@
-import { Button, DateTimePicker, Input, SearchableDropdown } from '@hedvig-ui'
+import {
+  Button,
+  DateTimePicker,
+  Input,
+  SearchableDropdown,
+  Spacing,
+} from '@hedvig-ui'
 import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
 import { DateRangeWrapper } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
@@ -7,7 +13,6 @@ import {
   addPartnerVisibleNoDiscountCodeOptions,
   useAddPartnerVisibleNoDiscountCode,
 } from 'graphql/use-add-partner-visible-no-discount-code'
-import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'

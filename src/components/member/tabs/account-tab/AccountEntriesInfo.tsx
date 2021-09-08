@@ -1,4 +1,4 @@
-import { Spacing } from 'hedvig-ui/spacing'
+import { Spacing } from '@hedvig-ui'
 import { FourthLevelHeadline, MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 

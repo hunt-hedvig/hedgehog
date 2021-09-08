@@ -1,5 +1,4 @@
-import { Input } from '@hedvig-ui'
-import { Spacing } from 'hedvig-ui/spacing'
+import { Input, Spacing } from '@hedvig-ui'
 import {
   Bold,
   Capitalized,
