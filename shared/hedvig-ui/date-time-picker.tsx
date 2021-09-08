@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import enGB from 'date-fns/locale/en-GB'
-import { FieldProps } from 'formik'
 import React from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Input } from 'semantic-ui-react'
+
 registerLocale('enGB', enGB)
 
 interface DatePickerProps {
@@ -74,20 +74,5 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
         timeIntervals={1}
       />
     </Wrapper>
-  )
-}
-
-export const FormikDateTimePicker: React.FC<FieldProps & DatePickerProps> = ({
-  field: { value, name },
-  form: { setFieldValue },
-  ...props
-}) => {
-  return (
-    <DateTimePicker
-      {...props}
-      date={value}
-      setDate={(newValue: Date) => setFieldValue(name, newValue)}
-      name={name}
-    />
   )
 }
