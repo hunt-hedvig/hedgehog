@@ -16,6 +16,7 @@ import {
 } from './Card/card'
 import { CasualList, CasualListItem } from './CasualList/casual-list'
 import { Checkbox } from './Checkbox/checkbox'
+import { Copyable } from './Copyable/copyable'
 import {
   Dropdown,
   EnumDropdown,
@@ -41,4 +42,5 @@ export {
   Dropdown,
   EnumDropdown,
   getTextFromEnumValue,
+  Copyable,
 }
