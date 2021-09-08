@@ -23,7 +23,7 @@ export const useClickOutside = (ref: any, handler: (e: any) => void) => {
   }, [ref, handler])
 }
 
-export const ModalWrapperStyled = styled.div<{
+const ModalWrapperStyled = styled.div<{
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
 }>(({ position, side, theme }) => ({
@@ -46,7 +46,7 @@ export const ModalWrapperStyled = styled.div<{
     side === 'left' ? 'flex-start' : side === 'right' ? 'flex-end' : 'center',
 }))
 
-export const ModalContent = styled.div<{
+const ModalContent = styled.div<{
   width?: string
   height?: string
 }>(({ width, height, theme }) => ({
@@ -61,7 +61,7 @@ export const ModalContent = styled.div<{
   boxShadow: `0 5px 40px ${theme.backgroundTransparent}`,
 }))
 
-export const ModalHeader = styled.div(({ theme }) => ({
+const ModalHeader = styled.div(({ theme }) => ({
   padding: '10px 15px',
   display: 'grid',
   gridTemplateColumns: '1fr 20px',
@@ -84,13 +84,14 @@ export const ModalHeader = styled.div(({ theme }) => ({
   },
 }))
 
-export const ModalBody = styled.div(({ theme }) => {
+const ModalBody = styled.div(({ theme }) => {
   return {
     flex: 1,
     padding: 15,
     color: theme.foreground,
   }
 })
+
 export interface ModalProps {
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
