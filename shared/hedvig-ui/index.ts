@@ -38,6 +38,7 @@ import {
   InfoTagStatus,
   InfoText,
 } from './InfoRow/info-row'
+import { CustomInputProps, Input } from './Input/input'
 
 export {
   Badge,
@@ -71,4 +72,6 @@ export {
   InfoTag,
   InfoTagStatus,
   InfoText,
+  Input,
+  CustomInputProps,
 }

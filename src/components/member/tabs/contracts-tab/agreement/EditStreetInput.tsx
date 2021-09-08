@@ -1,9 +1,9 @@
+import { Input } from '@hedvig-ui'
 import { Contract } from 'api/generated/graphql'
 import {
   safelyEditAgreementOptions,
   useSafelyEditAgreement,
 } from 'graphql/use-safely-edit-agreement'
-import { Input } from 'hedvig-ui/input'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Keys } from 'utils/hooks/key-press-hook'

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
+import { Input } from '@hedvig-ui'
 import { IconButton } from '@material-ui/core'
 import {
   GetQuotesDocument,
   Quote,
   useOverrideQuotePriceMutation,
 } from 'api/generated/graphql'
-import { Input } from 'hedvig-ui/input'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'

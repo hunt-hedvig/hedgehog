@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Input } from '@hedvig-ui'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { Input } from 'hedvig-ui/input'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import React, {
   createContext,

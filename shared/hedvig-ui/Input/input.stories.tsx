@@ -1,5 +1,5 @@
+import { Input } from '@hedvig-ui'
 import { boolean } from '@storybook/addon-knobs'
-import { Input } from 'hedvig-ui/input'
 import React from 'react'
 
 export default {
