@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Spinner } from '@hedvig-ui'
 import { fadeIn } from 'hedvig-ui/animations/utils'
-import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
 
 interface StandaloneMessageProps {

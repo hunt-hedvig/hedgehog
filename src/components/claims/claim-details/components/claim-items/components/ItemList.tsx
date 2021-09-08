@@ -1,3 +1,4 @@
+import { Spinner } from '@hedvig-ui'
 import {
   Grid,
   IconButton,
@@ -10,7 +11,6 @@ import {
 } from '@material-ui/core'
 import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
-import { Spinner } from 'hedvig-ui/sipnner'
 import { Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { ChevronRight, InfoCircleFill, Trash } from 'react-bootstrap-icons'

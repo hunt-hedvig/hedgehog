@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { InfoTag } from '@hedvig-ui'
-import { Spinner } from 'hedvig-ui/sipnner'
+import { InfoTag, Spinner } from '@hedvig-ui'
 import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { MonetaryAmount } from '../../../../utils/helpers'

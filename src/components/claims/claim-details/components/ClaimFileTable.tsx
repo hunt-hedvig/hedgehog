@@ -1,12 +1,11 @@
 import styled from '@emotion/styled'
-import { CardContent } from '@hedvig-ui'
+import { CardContent, Spinner } from '@hedvig-ui'
 import {
   ClaimFileUpload,
   useClaimPageQuery,
   useSetClaimFileCategoryMutation,
 } from 'api/generated/graphql'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Dropdown, Image, Table } from 'semantic-ui-react'

@@ -5,11 +5,10 @@ import {
   useGetMeQuery,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
-import { Spinner } from 'hedvig-ui/sipnner'
 import React, { useState } from 'react'
 
 import styled from '@emotion/styled'
-import { Button, CardContent, List, ListItem } from '@hedvig-ui'
+import { Button, CardContent, List, ListItem, Spinner } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Spacing } from 'hedvig-ui/spacing'

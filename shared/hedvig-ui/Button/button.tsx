@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Spinner } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { Spinner } from 'hedvig-ui/sipnner'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { lightTheme } from '../themes'

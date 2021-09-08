@@ -9,9 +9,8 @@ import {
 } from '@material-ui/core'
 import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
-import { Spinner } from 'hedvig-ui/sipnner'
 
-import { CardContent, InfoRow, InfoTag, InfoText } from '@hedvig-ui'
+import { CardContent, InfoRow, InfoTag, InfoText, Spinner } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import { Paragraph, Shadowed, ThirdLevelHeadline } from 'hedvig-ui/typography'

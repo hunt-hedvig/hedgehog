@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Spinner } from 'hedvig-ui/sipnner'
+import { Spinner } from '@hedvig-ui'
 import React from 'react'
 
 export default {
