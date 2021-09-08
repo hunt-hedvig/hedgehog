@@ -14,6 +14,7 @@ import {
   CardsWrapper,
   DangerCard,
 } from './Card/card'
+import { CasualList, CasualListItem } from './CasualList/casual-list'
 import { Checkbox } from './Checkbox/checkbox'
 
 export {
@@ -29,5 +30,7 @@ export {
   CardContent,
   CardLink,
   CardsWrapper,
+  CasualList,
+  CasualListItem,
   DangerCard,
 }

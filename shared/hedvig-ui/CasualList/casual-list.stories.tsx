@@ -1,4 +1,4 @@
-import { CasualList, CasualListItem } from 'hedvig-ui/casual-list'
+import { CasualList, CasualListItem } from '@hedvig-ui'
 import React from 'react'
 
 export const DefaultCasualList = () => {

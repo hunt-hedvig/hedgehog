@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { CasualList, CasualListItem } from '@hedvig-ui'
 import { useGetMeQuery } from 'api/generated/graphql'
 import { changelog } from 'changelog'
 import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
@@ -6,7 +7,6 @@ import { differenceInCalendarDays, format } from 'date-fns'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { Badge } from 'hedvig-ui/Badge/badge'
-import { CasualList, CasualListItem } from 'hedvig-ui/casual-list'
 import { Spacing } from 'hedvig-ui/spacing'
 import {
   Capitalized,
