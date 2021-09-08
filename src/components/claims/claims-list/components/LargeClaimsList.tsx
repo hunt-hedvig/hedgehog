@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { ClaimState } from 'api/generated/graphql'
-import { MemberInfoTableCell } from 'components/molecules/MemberInfoTableCell'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'graphql/use-list-claims'
@@ -100,7 +99,12 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
               }
             >
               <TableColumn>
-                <MemberInfoTableCell member={claim.member} />
+                <FlexVertically>
+                  {claim.member.firstName} {claim.member.lastName}{' '}
+                  <TableColumnSubtext>
+                    {claim.member.memberId}
+                  </TableColumnSubtext>
+                </FlexVertically>
               </TableColumn>
 
               <TableColumn>

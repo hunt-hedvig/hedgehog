@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Contract, ContractStatus, Member } from 'api/generated/graphql'
-import { MemberInfoTableCell } from 'components/molecules/MemberInfoTableCell'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { Table, TableColumn, TableHeader, TableRow } from 'hedvig-ui/table'
@@ -8,6 +7,8 @@ import { Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
+import { getMemberFlag, getMemberIdColor, MemberAge } from 'utils/member'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 type CircleVariation =
   | 'success'
@@ -48,6 +49,32 @@ const FlexVertically = styled.div`
   flex-direction: column;
 `
 
+const FlexHorizontally = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
+
+const MemberAgeWrapper = styled.span`
+  font-size: 0.7em;
+  margin-left: 0.7em;
+  margin-right: -0.7em;
+  padding-top: 0.3em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const MemberIdCell = styled(TableColumn)<{
+  memberId: string
+  numberMemberGroups: number
+}>`
+  border-left: 7px solid
+    ${({ memberId, numberMemberGroups }) =>
+      getMemberIdColor(memberId, numberMemberGroups)};
+
+  padding-left: 1em;
+  height: 100%;
+`
+
 type NumberOfContracts = {
   [key in ContractStatus]?: number
 }
@@ -72,6 +99,7 @@ export const MembersList: React.FC<{
   navigationStep?: number
 }> = ({ members, navigationStep }) => {
   const history = useHistory()
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <>
@@ -103,9 +131,26 @@ export const MembersList: React.FC<{
               active={navigationStep === index}
               onClick={() => history.push(`/members/${member.memberId}`)}
             >
-              <TableColumn style={{ maxWidth: '250px' }}>
-                <MemberInfoTableCell member={member} age={true} flag={true} />
-              </TableColumn>
+              <div>
+                <MemberIdCell
+                  numberMemberGroups={numberMemberGroups}
+                  memberId={member.memberId}
+                  style={{
+                    maxWidth: '250px',
+                  }}
+                >
+                  <FlexVertically>
+                    {member.firstName} {member.lastName}{' '}
+                    {getMemberFlag(member.contractMarketInfo)}
+                    <FlexHorizontally>
+                      <TableColumnSubtext>{member.memberId}</TableColumnSubtext>
+                      <MemberAgeWrapper>
+                        <MemberAge birthDateString={member.birthDate} />
+                      </MemberAgeWrapper>
+                    </FlexHorizontally>
+                  </FlexVertically>
+                </MemberIdCell>
+              </div>
               <TableColumn>
                 {member.signedOn && (
                   <FlexVertically>
