@@ -15,6 +15,8 @@ import { Monetary, Placeholder } from 'hedvig-ui/typography'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
+import { getMemberIdColor } from 'utils/member'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
@@ -39,8 +41,22 @@ const FlexVertically = styled.div`
   flex-direction: column;
 `
 
+const MemberIdCell = styled(TableColumn)<{
+  memberId: string
+  numberMemberGroups: number
+}>`
+  border-left: 7px solid
+    ${({ memberId, numberMemberGroups }) =>
+      getMemberIdColor(memberId, numberMemberGroups)};
+
+  padding-left: 1em;
+  height: 100%;
+`
+
 export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
   const history = useHistory()
+  const { numberMemberGroups } = useNumberMemberGroups()
+
   const [
     { claims, page: currentPage, totalPages },
     listClaims,
@@ -98,14 +114,22 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
                 )
               }
             >
-              <TableColumn>
-                <FlexVertically>
-                  {claim.member.firstName} {claim.member.lastName}{' '}
-                  <TableColumnSubtext>
-                    {claim.member.memberId}
-                  </TableColumnSubtext>
-                </FlexVertically>
-              </TableColumn>
+              <div>
+                <MemberIdCell
+                  numberMemberGroups={numberMemberGroups}
+                  memberId={claim.member.memberId}
+                  style={{
+                    maxWidth: '250px',
+                  }}
+                >
+                  <FlexVertically>
+                    {claim.member.firstName} {claim.member.lastName}{' '}
+                    <TableColumnSubtext>
+                      {claim.member.memberId}
+                    </TableColumnSubtext>
+                  </FlexVertically>
+                </MemberIdCell>
+              </div>
 
               <TableColumn>
                 <FlexVertically>
