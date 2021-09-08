@@ -16,6 +16,11 @@ import {
 } from './Card/card'
 import { CasualList, CasualListItem } from './CasualList/casual-list'
 import { Checkbox } from './Checkbox/checkbox'
+import {
+  Dropdown,
+  EnumDropdown,
+  getTextFromEnumValue,
+} from './Dropdown/dropdown'
 
 export {
   Badge,
@@ -33,4 +38,7 @@ export {
   CasualList,
   CasualListItem,
   DangerCard,
+  Dropdown,
+  EnumDropdown,
+  getTextFromEnumValue,
 }

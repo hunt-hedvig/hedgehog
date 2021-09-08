@@ -1,4 +1,4 @@
-import { EnumDropdown } from 'hedvig-ui/dropdown'
+import { EnumDropdown } from '@hedvig-ui'
 import React from 'react'
 
 export default {
