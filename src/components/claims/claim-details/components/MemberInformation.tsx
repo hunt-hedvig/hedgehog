@@ -9,6 +9,7 @@ import {
   InfoTagStatus,
   InfoText,
   Loadable,
+  Popover,
 } from '@hedvig-ui'
 import {
   Flag,
@@ -19,7 +20,6 @@ import {
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
-import { Popover } from 'hedvig-ui/popover'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'

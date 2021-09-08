@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Popover } from '@hedvig-ui'
 import { action } from '@storybook/addon-actions'
-import { Popover } from 'hedvig-ui/popover'
 import React from 'react'
 
 export default {

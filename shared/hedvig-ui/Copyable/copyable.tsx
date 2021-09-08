@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Popover } from 'hedvig-ui/popover'
+import { Popover } from '@hedvig-ui'
 import React, { useEffect, useState } from 'react'
 import { Link45deg } from 'react-bootstrap-icons'
 

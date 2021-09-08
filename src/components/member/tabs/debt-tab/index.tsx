@@ -1,6 +1,7 @@
 import {
   Card,
   CardsWrapper,
+  FlagOrbIndicator,
   InfoContainer,
   InfoRow,
   InfoText,
@@ -13,7 +14,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
 import { Spacing } from 'hedvig-ui/spacing'
 import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'

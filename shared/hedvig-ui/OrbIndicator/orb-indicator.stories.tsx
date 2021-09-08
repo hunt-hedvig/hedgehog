@@ -1,4 +1,4 @@
-import { OrbIndicator } from 'hedvig-ui/orb-indicator'
+import { OrbIndicator } from '@hedvig-ui'
 import React from 'react'
 
 export default {

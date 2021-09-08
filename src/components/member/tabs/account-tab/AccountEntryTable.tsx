@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Popover } from '@hedvig-ui'
 import { AccountEntry } from 'api/generated/graphql'
-import { Popover } from 'hedvig-ui/popover'
 import { Bold, Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'

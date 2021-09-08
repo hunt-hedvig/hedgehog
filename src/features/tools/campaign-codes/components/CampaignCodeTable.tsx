@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Card } from '@hedvig-ui'
+import { Card, Popover } from '@hedvig-ui'
 import {
   CampaignFilter,
   useSetCampaignCodeTypeMutation,
@@ -15,7 +15,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { Popover } from 'hedvig-ui/popover'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React from 'react'
 import { toast } from 'react-hot-toast'
