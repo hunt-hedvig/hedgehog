@@ -4,7 +4,7 @@ import {
 } from 'api/generated/graphql'
 import React, { useState } from 'react'
 
-import { Button } from 'hedvig-ui/button'
+import { Button } from '@hedvig-ui'
 import { Input } from 'hedvig-ui/input'
 import { Spacing } from 'hedvig-ui/spacing'
 

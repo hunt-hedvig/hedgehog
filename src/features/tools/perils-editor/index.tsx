@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from 'hedvig-ui/button'
+import { Button } from '@hedvig-ui'
 import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import ReactDropZone from 'react-dropzone'

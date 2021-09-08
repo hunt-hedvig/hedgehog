@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Button, ButtonsGroup } from '@hedvig-ui'
 import { Grid, IconButton } from '@material-ui/core'
 import {
   AjvError,
@@ -8,7 +9,6 @@ import {
 } from '@rjsf/core'
 import Form from '@rjsf/semantic-ui'
 import { TrashIconWrapper } from 'components/claims/claim-details/components/claim-items/components/styles'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { Spacing } from 'hedvig-ui/spacing'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import { JSONSchema7 } from 'json-schema'

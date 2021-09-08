@@ -1,9 +1,9 @@
+import { Button } from '@hedvig-ui'
 import { Quote } from 'api/generated/graphql'
 import {
   getSignQuoteForNewContractOptions,
   useSignQuoteForNewContract,
 } from 'graphql/use-sign-quote-for-new-contract'
-import { Button } from 'hedvig-ui/button'
 import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React from 'react'
 import { toast } from 'react-hot-toast'

@@ -1,6 +1,6 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Button } from 'hedvig-ui/button'
+import { Button } from '@hedvig-ui'
 import { Input } from 'hedvig-ui/input'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'

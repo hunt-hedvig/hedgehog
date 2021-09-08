@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
+import { Button, ButtonsGroup } from '@hedvig-ui'
 import {
   EmployeesDocument,
   useAvailableEmployeeRolesQuery,
   useCreateEmployeeMutation,
 } from 'api/generated/graphql'
 import { Row } from 'features/tools/employees'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'

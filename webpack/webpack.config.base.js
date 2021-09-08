@@ -23,8 +23,8 @@ module.exports = ({
       path.resolve(context, 'shared'),
     ],
     alias: {
-      "@hedvig-ui": path.resolve(context, 'shared/hedvig-ui')
-    }
+      '@hedvig-ui': path.resolve(context, 'shared/hedvig-ui'),
+    },
   },
   entry,
   module: {

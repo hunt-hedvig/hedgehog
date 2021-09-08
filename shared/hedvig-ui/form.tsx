@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Button, ButtonProps } from '@hedvig-ui'
 import { ErrorMessage } from '@hookform/error-message'
-import { Button, ButtonProps } from 'hedvig-ui/button'
 import { CustomInputProps, Input } from 'hedvig-ui/input'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'

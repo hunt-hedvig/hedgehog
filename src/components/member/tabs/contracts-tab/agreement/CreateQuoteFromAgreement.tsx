@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Button } from '@hedvig-ui'
 import { Contract, GenericAgreement } from 'api/generated/graphql'
 import {
   createQuoteFromAgreementOptions,
@@ -6,7 +7,6 @@ import {
 } from 'graphql/use-create-quote'
 import { useQuotes } from 'graphql/use-get-quotes'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
-import { Button } from 'hedvig-ui/button'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'

@@ -3,7 +3,7 @@ import { colorsV3 } from '@hedviginsurance/brand'
 import { Spinner } from 'hedvig-ui/sipnner'
 import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
-import { lightTheme } from './themes'
+import { lightTheme } from '../themes'
 
 export const ButtonsGroup = styled.div`
   width: 100%;
