@@ -118,9 +118,6 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
                 <MemberIdCell
                   numberMemberGroups={numberMemberGroups}
                   memberId={claim.member.memberId}
-                  style={{
-                    maxWidth: '250px',
-                  }}
                 >
                   <FlexVertically>
                     {claim.member.firstName} {claim.member.lastName}{' '}

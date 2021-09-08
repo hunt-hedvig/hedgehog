@@ -1,9 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
 import { forceLogOut } from '../utils/auth'
-import config from './config'
 
 const axiosInstance = axios.create({
-  baseURL: config.baseUrl,
+  baseURL: '/api/',
   timeout: 10000,
   withCredentials: false,
   headers: {
