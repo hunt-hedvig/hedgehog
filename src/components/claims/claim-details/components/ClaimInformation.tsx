@@ -15,7 +15,9 @@ import {
   EnumDropdown,
   InfoRow,
   InfoText,
+  Label,
   Loadable,
+  Paragraph,
 } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { ContractDropdown } from 'components/claims/claim-details/components/ContractDropdown'
@@ -32,7 +34,6 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
-import { Label, Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 

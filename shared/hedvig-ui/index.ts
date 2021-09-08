@@ -50,6 +50,20 @@ import { Spacing, spacingMap, SpacingSize } from './Spacing/spacing'
 import { Spinner } from './Spinner/spinner'
 import { TextArea } from './TextArea/text-area'
 
+import {
+  Bold,
+  Capitalized,
+  ErrorText,
+  FourthLevelHeadline,
+  Label,
+  MainHeadline,
+  Paragraph,
+  Placeholder,
+  SecondLevelHeadline,
+  Shadowed,
+  ThirdLevelHeadline,
+} from './Typography/typography'
+
 export {
   Badge,
   Button,
@@ -98,4 +112,15 @@ export {
   SpacingSize,
   spacingMap,
   TextArea,
+  FourthLevelHeadline,
+  ThirdLevelHeadline,
+  MainHeadline,
+  Shadowed,
+  SecondLevelHeadline,
+  Placeholder,
+  Paragraph,
+  Label,
+  Bold,
+  Capitalized,
+  ErrorText,
 }

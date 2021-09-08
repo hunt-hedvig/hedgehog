@@ -2,6 +2,7 @@ import {
   Button,
   DateTimePicker,
   Input,
+  Label,
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
@@ -13,7 +14,6 @@ import {
   addPartnerVisibleNoDiscountCodeOptions,
   useAddPartnerVisibleNoDiscountCode,
 } from 'graphql/use-add-partner-visible-no-discount-code'
-import { Label } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 

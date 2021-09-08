@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import { Button, DateTimePicker, EnumDropdown, Spacing } from '@hedvig-ui'
+import {
+  Button,
+  DateTimePicker,
+  EnumDropdown,
+  MainHeadline,
+  Spacing,
+} from '@hedvig-ui'
 import { ClaimSource, useCreateClaimMutation } from 'api/generated/graphql'
 import { ClaimListHeader } from 'components/claims/claims-list/components/ClaimListHeader'
 import { ClaimListItem } from 'components/claims/claims-list/components/ClaimListItem'
@@ -10,7 +16,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

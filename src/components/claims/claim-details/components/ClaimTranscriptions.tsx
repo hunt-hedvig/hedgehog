@@ -3,9 +3,8 @@ import { useClaimPageQuery } from 'api/generated/graphql'
 import React from 'react'
 
 import styled from '@emotion/styled'
-import { Card, CardContent, List, ListItem } from '@hedvig-ui'
+import { Card, CardContent, List, ListItem, Paragraph } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { Paragraph } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
 
 const ClaimTranscriptionWrapper = styled.div`

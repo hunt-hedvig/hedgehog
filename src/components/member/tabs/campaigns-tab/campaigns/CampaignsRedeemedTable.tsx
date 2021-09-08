@@ -1,10 +1,9 @@
-import { Button } from '@hedvig-ui'
+import { Button, Capitalized } from '@hedvig-ui'
 import {
   RedeemedCampaign,
   useManualUnRedeemCampaignMutation,
 } from 'api/generated/graphql'
 import { format } from 'date-fns'
-import { Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
 

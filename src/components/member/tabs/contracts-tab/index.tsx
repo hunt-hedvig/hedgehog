@@ -1,3 +1,4 @@
+import { MainHeadline } from '@hedvig-ui'
 import { Trial, useGetTrialsQuery } from 'api/generated/graphql'
 import { Contract } from 'components/member/tabs/contracts-tab/contract'
 import { TrialComponent } from 'components/member/tabs/contracts-tab/trial'
@@ -8,7 +9,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 

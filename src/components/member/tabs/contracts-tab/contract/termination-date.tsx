@@ -3,6 +3,7 @@ import {
   ButtonsGroup,
   DateTimePicker,
   EnumDropdown,
+  FourthLevelHeadline,
   Spacing,
   TextArea,
 } from '@hedvig-ui'
@@ -20,7 +21,6 @@ import {
   terminateContractOptions,
   useTerminateContract,
 } from 'graphql/use-terminate-contract'
-import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { TerminationReason } from 'types/enums'

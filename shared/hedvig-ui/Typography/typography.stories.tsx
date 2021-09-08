@@ -1,15 +1,16 @@
-import { Input, Spacing } from '@hedvig-ui'
 import {
   Bold,
   Capitalized,
   ErrorText,
   FourthLevelHeadline,
+  Input,
   MainHeadline,
   Paragraph,
   Placeholder,
   SecondLevelHeadline,
+  Spacing,
   ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
+} from '@hedvig-ui'
 import React from 'react'
 
 export default {

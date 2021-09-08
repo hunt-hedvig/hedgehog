@@ -6,7 +6,9 @@ import {
   ButtonsGroup,
   DateTimePicker,
   EnumDropdown,
+  FourthLevelHeadline,
   Input,
+  Label,
 } from '@hedvig-ui'
 import {
   Contract,
@@ -15,7 +17,6 @@ import {
   useMarkSwitcherEmailAsRemindedMutation,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
-import { FourthLevelHeadline, Label } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'

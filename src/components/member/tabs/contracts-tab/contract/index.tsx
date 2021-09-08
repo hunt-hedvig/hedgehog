@@ -5,13 +5,13 @@ import {
   InfoContainer,
   InfoRow,
   InfoText,
+  ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { Contract as ContractType } from 'api/generated/graphql'
 import { Agreement } from 'components/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'components/member/tabs/contracts-tab/agreement/AgreementsTable'
 import { MasterInception } from 'components/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'components/member/tabs/contracts-tab/contract/termination-date'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { getSignSource } from 'utils/contract'
 import { convertEnumToTitle } from 'utils/text'

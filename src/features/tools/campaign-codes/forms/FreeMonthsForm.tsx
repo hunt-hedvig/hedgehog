@@ -3,6 +3,7 @@ import {
   Button,
   DateTimePicker,
   Input,
+  Label,
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
@@ -13,7 +14,6 @@ import {
   addPartnerFreeMonthsCodeOptions,
   useAddPartnerFreeMonthsCode,
 } from 'graphql/use-add-partner-free-months-code'
-import { Label } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { numberOfMonthsOptions } from 'utils/campaignCodes'

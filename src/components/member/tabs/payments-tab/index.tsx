@@ -7,6 +7,9 @@ import {
   InfoRow,
   InfoTag,
   InfoText,
+  MainHeadline,
+  Shadowed,
+  ThirdLevelHeadline,
 } from '@hedvig-ui'
 import {
   Transaction,
@@ -22,11 +25,6 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import {
-  MainHeadline,
-  Shadowed,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

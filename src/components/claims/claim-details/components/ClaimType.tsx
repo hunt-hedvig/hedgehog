@@ -11,6 +11,7 @@ import {
   CardContent,
   DateTimePicker,
   Input,
+  Label,
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
@@ -19,7 +20,6 @@ import {
   PaperTitleBadgeProps,
 } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
-import { Label } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'

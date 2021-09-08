@@ -1,7 +1,6 @@
-import { InfoContainer, Input, Spacing } from '@hedvig-ui'
+import { InfoContainer, Input, Spacing, ThirdLevelHeadline } from '@hedvig-ui'
 import { CampaignFilter } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 
 export const CampaignCodeFilter: React.FC<{

@@ -13,13 +13,14 @@ import {
   CardContent,
   List,
   ListItem,
+  Paragraph,
+  Shadowed,
   Spacing,
   Spinner,
   TextArea,
 } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { Paragraph, Shadowed } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Keys } from 'utils/hooks/key-press-hook'

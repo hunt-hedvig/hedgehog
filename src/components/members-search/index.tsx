@@ -1,3 +1,4 @@
+import { MainHeadline } from '@hedvig-ui'
 import { Member } from 'api/generated/graphql'
 import { ListHeader } from 'components/members-search/components/ListHeader'
 import { ListItem } from 'components/members-search/components/ListItem'
@@ -12,7 +13,6 @@ import {
 import { Paginator } from 'components/shared/paginator/Paginator'
 import { useMemberSearch } from 'graphql/use-member-search'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'

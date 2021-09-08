@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
-import { Card, CardsWrapper } from '@hedvig-ui'
+import { Card, CardsWrapper, MainHeadline } from '@hedvig-ui'
 import { useGetMeQuery } from 'api/generated/graphql'
 import { EmployeeFilter } from 'features/tools/employees/components/EmployeeFilter'
 import { EmployeeTable } from 'features/tools/employees/components/EmployeeTable'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 
 export const Row = styled.div`

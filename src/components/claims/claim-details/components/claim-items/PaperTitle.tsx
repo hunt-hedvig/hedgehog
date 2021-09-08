@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { InfoTag, InfoTagStatus } from '@hedvig-ui'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { InfoTag, InfoTagStatus, ThirdLevelHeadline } from '@hedvig-ui'
 import React from 'react'
 
 export interface PaperTitleBadgeProps {

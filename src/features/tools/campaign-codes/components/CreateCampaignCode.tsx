@@ -3,10 +3,10 @@ import {
   InfoContainer,
   SearchableDropdown,
   Spacing,
+  ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { FreeMonthsForm } from '../forms/FreeMonthsForm'
 import { MonthlyPercentageForm } from '../forms/MonthlyPercentageForm'

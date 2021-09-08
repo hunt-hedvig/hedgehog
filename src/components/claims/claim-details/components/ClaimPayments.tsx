@@ -10,10 +10,18 @@ import {
 import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 
-import { CardContent, InfoRow, InfoTag, InfoText, Spinner } from '@hedvig-ui'
+import {
+  CardContent,
+  InfoRow,
+  InfoTag,
+  InfoText,
+  Paragraph,
+  Shadowed,
+  Spinner,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
-import { Paragraph, Shadowed, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
