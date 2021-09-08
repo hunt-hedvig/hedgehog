@@ -1,7 +1,10 @@
-import { getTextFromEnumValue, InfoContainer } from '@hedvig-ui'
+import {
+  getTextFromEnumValue,
+  InfoContainer,
+  SearchableDropdown,
+} from '@hedvig-ui'
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
-import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'

@@ -29,13 +29,13 @@ export const SearchableDropdown = styled((props) =>
 
   .searchable-type-select__input {
     color: ${({ theme }) => theme.foreground};
-    padding-left: 0px;
+    padding-left: 0;
   }
 
   .searchable-type-select__menu {
     border-radius: 0;
     hyphens: auto;
-    margin-top: 0px;
+    margin-top: 0;
     text-align: left;
     word-wrap: break-word;
     background: ${({ theme }) => theme.background};

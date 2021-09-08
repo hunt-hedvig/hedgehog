@@ -1,4 +1,4 @@
-import { Button, DateTimePicker, Input } from '@hedvig-ui'
+import { Button, DateTimePicker, Input, SearchableDropdown } from '@hedvig-ui'
 import { AssignVoucherPercentageDiscount, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
@@ -6,7 +6,6 @@ import {
   addPartnerPercentageDiscountCodeOptions,
   useAddPartnerPercentageDiscountCode,
 } from 'graphql/use-add-partner-percentage-discount-code'
-import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'
 import { Label } from 'hedvig-ui/typography'
 import React from 'react'

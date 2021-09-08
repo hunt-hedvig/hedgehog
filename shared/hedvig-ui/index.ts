@@ -45,6 +45,7 @@ import { Loadable } from './Loadable/loadable'
 import { FlagOrbIndicator, OrbIndicator } from './OrbIndicator/orb-indicator'
 import { Popover } from './Popover/popover'
 import { RadioGroup } from './Radio/radio'
+import { SearchableDropdown } from './SearchableDropdown/searchable-dropdown'
 
 export {
   Badge,
@@ -88,4 +89,5 @@ export {
   OrbIndicator,
   FlagOrbIndicator,
   RadioGroup,
+  SearchableDropdown,
 }
