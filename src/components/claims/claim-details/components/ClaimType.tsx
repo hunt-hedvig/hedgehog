@@ -6,13 +6,12 @@ import {
   useSetClaimTypeMutation,
 } from 'api/generated/graphql'
 
-import { Button, CardContent } from '@hedvig-ui'
+import { Button, CardContent, DateTimePicker } from '@hedvig-ui'
 import {
   PaperTitle,
   PaperTitleBadgeProps,
 } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Input } from 'hedvig-ui/input'
 import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import { Spacing } from 'hedvig-ui/spacing'

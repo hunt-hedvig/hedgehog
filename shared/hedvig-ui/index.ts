@@ -17,6 +17,7 @@ import {
 import { CasualList, CasualListItem } from './CasualList/casual-list'
 import { Checkbox } from './Checkbox/checkbox'
 import { Copyable } from './Copyable/copyable'
+import { DateTimePicker } from './DateTimePicker/date-time-picker'
 import {
   Dropdown,
   EnumDropdown,
@@ -43,4 +44,5 @@ export {
   EnumDropdown,
   getTextFromEnumValue,
   Copyable,
+  DateTimePicker,
 }

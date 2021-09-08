@@ -1,11 +1,10 @@
-import { Button, ButtonsGroup } from '@hedvig-ui'
+import { Button, ButtonsGroup, DateTimePicker } from '@hedvig-ui'
 import { Contract, GenericAgreement } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import {
   changeToDateOptions,
   useChangeToDate,
 } from 'graphql/use-change-to-date-for-agreement'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Spacing } from 'hedvig-ui/spacing'
 import {
   FourthLevelHeadline,

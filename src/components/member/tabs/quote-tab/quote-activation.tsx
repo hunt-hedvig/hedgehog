@@ -1,11 +1,10 @@
-import { Button } from '@hedvig-ui'
+import { Button, DateTimePicker } from '@hedvig-ui'
 import { Contract, Quote } from 'api/generated/graphql'
 import {
   addAgreementFromQuoteOptions,
   useAddAgreementFromQuote,
 } from 'graphql/use-add-agreement-from-quote'
 import { useContracts } from 'graphql/use-contracts'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { noopFunction } from 'utils'

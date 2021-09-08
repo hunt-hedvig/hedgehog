@@ -1,4 +1,4 @@
-import { Button, ButtonsGroup, EnumDropdown } from '@hedvig-ui'
+import { Button, ButtonsGroup, DateTimePicker, EnumDropdown } from '@hedvig-ui'
 import { Contract } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import {
@@ -13,7 +13,6 @@ import {
   terminateContractOptions,
   useTerminateContract,
 } from 'graphql/use-terminate-contract'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Spacing } from 'hedvig-ui/spacing'
 import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'

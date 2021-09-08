@@ -1,11 +1,10 @@
-import { Button, ButtonsGroup } from '@hedvig-ui'
+import { Button, ButtonsGroup, DateTimePicker } from '@hedvig-ui'
 import { Contract } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import {
   activateContractOptions,
   useActivateContract,
 } from 'graphql/use-activate-contract'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'

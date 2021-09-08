@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client'
 import { gql } from '@apollo/client/core'
 import styled from '@emotion/styled'
-import { Button, ButtonsGroup, EnumDropdown } from '@hedvig-ui'
+import { Button, ButtonsGroup, DateTimePicker, EnumDropdown } from '@hedvig-ui'
 import {
   Contract,
   GetSwitcherEmailsDocument,
@@ -9,7 +9,6 @@ import {
   useMarkSwitcherEmailAsRemindedMutation,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
 import { Input } from 'hedvig-ui/input'
 import { FourthLevelHeadline, Label } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
