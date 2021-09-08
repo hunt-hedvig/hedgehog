@@ -4,6 +4,7 @@ import {
   DateTimePicker,
   EnumDropdown,
   Spacing,
+  TextArea,
 } from '@hedvig-ui'
 import { Contract } from 'api/generated/graphql'
 import { format } from 'date-fns'
@@ -19,7 +20,6 @@ import {
   terminateContractOptions,
   useTerminateContract,
 } from 'graphql/use-terminate-contract'
-import { TextArea } from 'hedvig-ui/text-area'
 import { FourthLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'

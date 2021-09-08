@@ -1,4 +1,4 @@
-import { TextArea } from 'hedvig-ui/text-area'
+import { TextArea } from '@hedvig-ui'
 import React from 'react'
 
 export default {

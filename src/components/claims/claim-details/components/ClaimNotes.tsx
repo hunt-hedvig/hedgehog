@@ -15,10 +15,10 @@ import {
   ListItem,
   Spacing,
   Spinner,
+  TextArea,
 } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { TextArea } from 'hedvig-ui/text-area'
 import { Paragraph, Shadowed } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'

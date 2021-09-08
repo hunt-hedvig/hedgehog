@@ -1,6 +1,5 @@
-import { Button, Spacing } from '@hedvig-ui'
+import { Button, Spacing, TextArea } from '@hedvig-ui'
 import { useAddNorwegainPostalCodesMutation } from 'api/generated/graphql'
-import { TextArea } from 'hedvig-ui/text-area'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'

@@ -1,3 +1,4 @@
+import { TextArea } from '@hedvig-ui'
 import {
   Button,
   Table,
@@ -6,7 +7,6 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core'
-import { TextArea } from 'hedvig-ui/text-area'
 import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 

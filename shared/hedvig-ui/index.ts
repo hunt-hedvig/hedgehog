@@ -48,6 +48,7 @@ import { RadioGroup } from './Radio/radio'
 import { SearchableDropdown } from './SearchableDropdown/searchable-dropdown'
 import { Spacing, spacingMap, SpacingSize } from './Spacing/spacing'
 import { Spinner } from './Spinner/spinner'
+import { TextArea } from './TextArea/text-area'
 
 export {
   Badge,
@@ -96,4 +97,5 @@ export {
   Spacing,
   SpacingSize,
   spacingMap,
+  TextArea,
 }
