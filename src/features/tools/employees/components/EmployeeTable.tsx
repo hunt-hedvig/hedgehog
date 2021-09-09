@@ -1,4 +1,12 @@
 import {
+  Button,
+  ButtonsGroup,
+  Card,
+  Dropdown,
+  LoadingMessage,
+  StandaloneMessage,
+} from '@hedvig-ui'
+import {
   Employee,
   EmployeesDocument,
   useAvailableEmployeeRolesQuery,
@@ -6,13 +14,6 @@ import {
   useRemoveEmployeeMutation,
   useUpdateEmployeeRoleMutation,
 } from 'api/generated/graphql'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
-import { Card } from 'hedvig-ui/card'
-import { Dropdown } from 'hedvig-ui/dropdown'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

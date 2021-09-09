@@ -1,6 +1,6 @@
-import { Chip } from '@material-ui/core'
-import { Popover } from 'hedvig-ui/popover'
 import styled from '@emotion/styled'
+import { Popover } from '@hedvig-ui/Popover/popover'
+import { Chip } from '@material-ui/core'
 import CreatableSelect from 'react-select/creatable'
 
 export const StyledCreatableSelect = styled(CreatableSelect)`
@@ -22,7 +22,7 @@ export const StyledCreatableSelect = styled(CreatableSelect)`
   .custom-select__menu {
     border-radius: 0;
     hyphens: auto;
-    margin-top: 0px;
+    margin-top: 0;
     text-align: left;
     word-wrap: break-word;
     background: ${({ theme }) => theme.background};

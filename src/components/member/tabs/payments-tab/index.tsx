@@ -1,6 +1,19 @@
 import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
 import {
+  Button,
+  Card,
+  CardsWrapper,
+  InfoRow,
+  InfoTag,
+  InfoText,
+  LoadingMessage,
+  MainHeadline,
+  Shadowed,
+  StandaloneMessage,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
+import {
   Transaction,
   useCreatePaymentCompletionLinkMutation,
   useGetMemberTransactionsQuery,
@@ -10,18 +23,6 @@ import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import gql from 'graphql-tag'
 import { useGetAccount } from 'graphql/use-get-account'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
-import { Button } from 'hedvig-ui/button'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { InfoRow, InfoTag, InfoText } from 'hedvig-ui/info-row'
-import {
-  MainHeadline,
-  Shadowed,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

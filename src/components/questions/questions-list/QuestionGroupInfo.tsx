@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { Popover } from '@hedvig-ui'
 import { IconButton } from '@material-ui/core'
-import { Popover } from 'hedvig-ui/popover'
 import React from 'react'
 import { ShieldShaded } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'

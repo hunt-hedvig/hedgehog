@@ -1,8 +1,8 @@
+import { MainHeadline } from '@hedvig-ui'
 import {
   useInsertItemCategoriesMutation,
   useInsertValuationRulesMutation,
 } from 'api/generated/graphql'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { TableInput } from './TableInput'
 

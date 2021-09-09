@@ -7,6 +7,18 @@ import {
   useClaimPageQuery,
 } from 'api/generated/graphql'
 
+import {
+  CardContent,
+  CardsWrapper,
+  DangerCard,
+  Dropdown,
+  EnumDropdown,
+  InfoRow,
+  InfoText,
+  Label,
+  Loadable,
+  Paragraph,
+} from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { ContractDropdown } from 'components/claims/claim-details/components/ContractDropdown'
 import { format, parseISO } from 'date-fns'
@@ -22,11 +34,6 @@ import {
   updateClaimStateOptions,
   useUpdateClaimState,
 } from 'graphql/use-update-claim-state'
-import { CardContent, CardsWrapper, DangerCard } from 'hedvig-ui/card'
-import { Dropdown, EnumDropdown } from 'hedvig-ui/dropdown'
-import { InfoRow, InfoText } from 'hedvig-ui/info-row'
-import { Loadable } from 'hedvig-ui/loadable'
-import { Label, Paragraph } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 

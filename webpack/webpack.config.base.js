@@ -19,7 +19,7 @@ module.exports = ({
     extensions: ['.ts', '.tsx', '.mjs', '.js', '.json', '.css'],
     modules: [
       path.resolve(context, 'node_modules'),
-      path.resolve(/**/ context, 'src'),
+      path.resolve(context, 'src'),
       path.resolve(context, 'shared'),
     ],
   },

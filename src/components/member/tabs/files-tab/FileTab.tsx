@@ -1,8 +1,5 @@
+import { LoadingMessage, StandaloneMessage } from '@hedvig-ui'
 import { FileUpload, useFileUploadsQueryQuery } from 'api/generated/graphql'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { Image, Table } from 'semantic-ui-react'
 import { dateTimeFormatter } from 'utils/helpers'

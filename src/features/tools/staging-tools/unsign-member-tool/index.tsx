@@ -1,8 +1,5 @@
+import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
 import { useUnsignMemberMutation } from 'api/generated/graphql'
-import { Button } from 'hedvig-ui/button'
-import { Input } from 'hedvig-ui/input'
-import { Spacing } from 'hedvig-ui/spacing'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 

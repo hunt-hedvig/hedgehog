@@ -1,7 +1,7 @@
-import { Contract, ContractStatus } from 'api/generated/graphql'
-import { Popover } from 'hedvig-ui/popover'
-import React from 'react'
 import styled from '@emotion/styled'
+import { Popover } from '@hedvig-ui'
+import { Contract, ContractStatus } from 'api/generated/graphql'
+import React from 'react'
 
 type CircleVariation =
   | 'success'

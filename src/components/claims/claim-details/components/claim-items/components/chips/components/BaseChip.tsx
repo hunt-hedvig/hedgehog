@@ -1,7 +1,7 @@
+import styled from '@emotion/styled'
 import { Chip } from '@material-ui/core'
 import { ChipProps } from '@material-ui/core/Chip'
 import React from 'react'
-import styled from '@emotion/styled'
 
 const ChipIconBase = styled.span`
   && {

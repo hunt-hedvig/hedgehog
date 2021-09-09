@@ -1,10 +1,14 @@
+import {
+  Button,
+  ButtonLink,
+  ButtonsGroup,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { Contract, GenericAgreement } from 'api/generated/graphql'
 import {
   regenerateCertificateOptions,
   useRegenerateCertificate,
 } from 'graphql/use-regenerate-certificate'
-import { Button, ButtonLink, ButtonsGroup } from 'hedvig-ui/button'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'

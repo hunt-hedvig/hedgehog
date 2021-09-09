@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { CardLink, CardsWrapper } from 'hedvig-ui/card'
-import { MainHeadline } from 'hedvig-ui/typography'
+import { CardLink, CardsWrapper, MainHeadline } from '@hedvig-ui'
 import React from 'react'
 
 const Icon = styled('div')`

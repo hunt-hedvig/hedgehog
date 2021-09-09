@@ -1,17 +1,18 @@
+import {
+  Button,
+  ButtonsGroup,
+  DateTimePicker,
+  FourthLevelHeadline,
+  Paragraph,
+  Spacing,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { Contract, GenericAgreement } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import {
   changeFromDateOptions,
   useChangeFromDate,
 } from 'graphql/use-change-from-date-for-agreement'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { Spacing } from 'hedvig-ui/spacing'
-import {
-  FourthLevelHeadline,
-  Paragraph,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 
