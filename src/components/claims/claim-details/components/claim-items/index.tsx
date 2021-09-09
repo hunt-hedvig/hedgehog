@@ -1,6 +1,6 @@
+import { CardContent } from '@hedvig-ui'
 import { Grid } from '@material-ui/core'
 import { useClaimPageQuery } from 'api/generated/graphql'
-import { CardContent } from 'hedvig-ui/card'
 import React from 'react'
 import { ItemForm } from './components/ItemForm'
 import { ItemList } from './components/ItemList'

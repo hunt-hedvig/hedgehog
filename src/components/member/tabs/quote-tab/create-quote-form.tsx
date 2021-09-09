@@ -1,9 +1,9 @@
+import { JsonSchemaForm } from '@hedvig-ui'
 import {
   getCreateQuoteForMemberBySchemaOptions,
   useCreateQuoteForMemberBySchema,
 } from 'graphql/use-create-quote-for-member-by-schema'
 import { useSchemaForContractType } from 'graphql/use-get-schema-for-contract-type'
-import { JsonSchemaForm } from 'hedvig-ui/json-schema-form'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Checkbox } from 'semantic-ui-react'

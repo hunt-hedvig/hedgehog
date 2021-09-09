@@ -1,8 +1,6 @@
+import { Button, DateTimePicker, Input } from '@hedvig-ui'
 import { useManualRedeemCampaignMutation } from 'api/generated/graphql'
 import { Group } from 'components/member/tabs/campaigns-tab/styles'
-import { Button } from 'hedvig-ui/button'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { Input } from 'hedvig-ui/input'
 import React from 'react'
 import { Message } from 'semantic-ui-react'
 

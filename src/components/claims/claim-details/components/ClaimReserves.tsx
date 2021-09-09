@@ -1,7 +1,5 @@
 import styled from '@emotion/styled'
-import { InfoTag } from 'hedvig-ui/info-row'
-import { Spinner } from 'hedvig-ui/sipnner'
-import { Paragraph, ThirdLevelHeadline } from 'hedvig-ui/typography'
+import { InfoTag, Paragraph, Spinner, ThirdLevelHeadline } from '@hedvig-ui'
 import React from 'react'
 import { MonetaryAmount } from '../../../../utils/helpers'
 import { ClaimReserveForm } from './ClaimReserveForm'
