@@ -10,7 +10,7 @@ export interface SpacingProps
   inline?: boolean
 }
 
-export const spacingMap: Record<SpacingSize, string> = {
+const spacingMap: Record<SpacingSize, string> = {
   small: '1rem',
   medium: '2rem',
   large: '3rem',

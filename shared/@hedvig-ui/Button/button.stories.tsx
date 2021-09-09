@@ -1,7 +1,6 @@
-import { Button, buttonColorMap, ButtonProps } from '@hedvig-ui'
+import { Button, buttonColorMap, ButtonProps, lightTheme } from '@hedvig-ui'
 import { action } from '@storybook/addon-actions'
 import { boolean, select } from '@storybook/addon-knobs'
-import { lightTheme } from 'hedvig-ui'
 import React from 'react'
 import { WithStory } from '../story-utils'
 

@@ -1,6 +1,5 @@
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
-import { spacingMap } from '@hedvig-ui'
 
 export const InfoContainer = styled('div')`
   display: flex;
@@ -22,8 +21,8 @@ export const InfoText = styled('span')`
 `
 
 export const InfoSection = styled.div`
-  margin-top: ${spacingMap.medium};
-  margin-bottom: ${spacingMap.medium};
+  margin-top: 2em;
+  margin-bottom: 2em;
 `
 
 const mapInfoTagStatus = (status: InfoTagStatus) => {

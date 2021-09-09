@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Popover } from '@hedvig-ui'
+import { Popover } from '@hedvig-ui/Popover/popover'
 import { Chip } from '@material-ui/core'
 import CreatableSelect from 'react-select/creatable'
 

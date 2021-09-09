@@ -19,8 +19,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "paths": {
-      "*": ["*", "node_modules/*", "src/*", "shared/*"],
-      "@hedvig-ui": ["shared/hedvig-ui/*"]
+      "*": ["*", "node_modules/*", "src/*", "shared/*"]
     }
   },
   "include": ["./shared", "./src"],
