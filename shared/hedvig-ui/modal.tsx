@@ -53,9 +53,9 @@ const ModalContent = styled.div<{
   width?: string
   height?: string
 }>`
-  width: ${({ width }) => width || '350px'};
+  width: ${({ width }) => width || 'auto'};
   max-width: 900px;
-  height: ${({ height }) => height || '350px'};
+  height: ${({ height }) => height || 'auto'};
   max-height: 600px;
 
   border-radius: 0.5rem;
