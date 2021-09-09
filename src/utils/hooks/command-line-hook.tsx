@@ -291,45 +291,15 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     actions.current = actions.current.filter((action) => action.label !== label)
   }
 
-  return (
-    <CommandLineContext.Provider
-      value={{
-        registerActions: addAction,
-        isHintingOption: isOptionPressed,
-        isHintingControl: isControlPressed,
-      }}
-    >
-      <CommandSpace
-        actions={actions.current}
-        hide={() => setShowCommandLine(false)}
-      >
-        {children}
-        {showCommandLine && (
-          <CommandLineWrapper ref={commandLine}>
-            <CommandLineComponent
-              hide={() => setShowCommandLine(false)}
-              actions={actions.current}
-            />
-          </CommandLineWrapper>
-        )}
-      </CommandSpace>
-    </CommandLineContext.Provider>
-  )
-}
-
-const CommandSpace: React.FC<{
-  actions: CommandLineAction[]
-  hide: () => void
-}> = ({ actions, hide, children }) => {
-  const [actionKeyCodes, setActionKeyCodes] = useState<number[][]>([])
+  const actionKeyCodes = useRef<number[][]>([])
   useEffect(() => {
-    setActionKeyCodes(
-      actions.map((action) => action.keys.map((key) => key.code)),
+    actionKeyCodes.current = actions.current.map((action) =>
+      action.keys.map((key) => key.code),
     )
-  }, [actions])
+  }, [actions.current])
 
   // tslint:disable:no-unused-expression
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     const modifiers: number[] = []
     e.shiftKey && modifiers.push(Keys.Shift.code)
     e.ctrlKey && modifiers.push(Keys.Control.code)
@@ -340,19 +310,37 @@ const CommandSpace: React.FC<{
     }
     const keys = modifiers.concat(e.keyCode)
 
-    const matchIndex = actionKeyCodes.findIndex((keyCodes) => {
+    const matchIndex = actionKeyCodes.current.findIndex((keyCodes) => {
       return keyCodes.every((keyCode, index) => keyCode === keys[index])
     })
 
     if (matchIndex > -1) {
-      actions[matchIndex].onResolve()
-      hide()
+      actions.current[matchIndex].onResolve()
+      setShowCommandLine(false)
     }
   }
 
+  document.addEventListener('keydown', handleKeyDown, {
+    capture: true,
+  })
+
   return (
-    <div tabIndex={-1} onKeyDown={handleKeyDown}>
+    <CommandLineContext.Provider
+      value={{
+        registerActions: addAction,
+        isHintingOption: isOptionPressed,
+        isHintingControl: isControlPressed,
+      }}
+    >
       {children}
-    </div>
+      {showCommandLine && (
+        <CommandLineWrapper ref={commandLine}>
+          <CommandLineComponent
+            hide={() => setShowCommandLine(false)}
+            actions={actions.current}
+          />
+        </CommandLineWrapper>
+      )}
+    </CommandLineContext.Provider>
   )
 }
