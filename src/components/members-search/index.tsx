@@ -1,3 +1,4 @@
+import { FadeIn, MainHeadline } from '@hedvig-ui'
 import { MembersList } from 'components/members-search/components/MembersList'
 import { SearchForm } from 'components/members-search/components/SearchForm'
 import {
@@ -8,9 +9,6 @@ import {
   NoMembers,
 } from 'components/members-search/styles'
 import { useMemberSearch } from 'graphql/use-member-search'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { TablePageSelect } from 'hedvig-ui/table'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'

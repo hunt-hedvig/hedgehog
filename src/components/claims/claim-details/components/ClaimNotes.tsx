@@ -5,18 +5,22 @@ import {
   useGetMeQuery,
 } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
-import { Spinner } from 'hedvig-ui/sipnner'
 import React, { useState } from 'react'
 
 import styled from '@emotion/styled'
+import {
+  Button,
+  CardContent,
+  FadeIn,
+  List,
+  ListItem,
+  Paragraph,
+  Shadowed,
+  Spacing,
+  Spinner,
+  TextArea,
+} from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { Button } from 'hedvig-ui/button'
-import { CardContent } from 'hedvig-ui/card'
-import { List, ListItem } from 'hedvig-ui/list'
-import { Spacing } from 'hedvig-ui/spacing'
-import { TextArea } from 'hedvig-ui/text-area'
-import { Paragraph, Shadowed } from 'hedvig-ui/typography'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Keys } from 'utils/hooks/key-press-hook'

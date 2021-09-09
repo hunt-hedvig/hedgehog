@@ -1,12 +1,10 @@
+import { Badge, Capitalized, Card, CardsWrapper, Placeholder } from '@hedvig-ui'
 import { MemberReferral, ReferralInformation } from 'api/generated/graphql'
 import {
   BadgeRow,
   SmallTopSpacing,
   TableHeadline,
 } from 'components/member/tabs/campaigns-tab/styles'
-import { Badge } from 'hedvig-ui/badge'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { Capitalized, Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { MembersReferredTable } from './MembersReferredTable'

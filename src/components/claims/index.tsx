@@ -1,6 +1,6 @@
+import { FadeIn } from '@hedvig-ui'
 import { LargeClaimsList } from 'components/claims/claims-list/components/LargeClaimsList'
 import { ListPage } from 'components/shared'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Header } from 'semantic-ui-react'

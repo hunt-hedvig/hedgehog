@@ -1,5 +1,5 @@
+import { Button } from '@hedvig-ui'
 import { useMarkClaimFileAsDeletedMutation } from 'api/generated/graphql'
-import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 

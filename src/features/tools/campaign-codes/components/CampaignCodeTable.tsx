@@ -1,5 +1,12 @@
 import styled from '@emotion/styled'
 import {
+  Card,
+  LoadingMessage,
+  Popover,
+  SearchableDropdown,
+  StandaloneMessage,
+} from '@hedvig-ui'
+import {
   CampaignFilter,
   useSetCampaignCodeTypeMutation,
 } from 'api/generated/graphql'
@@ -10,13 +17,6 @@ import {
   getValidity,
 } from 'features/tools/campaign-codes/utils'
 import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
-import { Card } from 'hedvig-ui/card'
-import { Popover } from 'hedvig-ui/popover'
-import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

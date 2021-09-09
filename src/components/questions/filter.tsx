@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
+import {
+  Checkbox as StandardCheckbox,
+  lightTheme,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { QuestionGroup } from 'api/generated/graphql'
-import { Checkbox as StandardCheckbox } from 'hedvig-ui/checkbox'
-import { lightTheme } from 'hedvig-ui/themes'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { range } from 'utils/array'

@@ -1,16 +1,19 @@
+import {
+  Card,
+  CardsWrapper,
+  FadeIn,
+  FlagOrbIndicator,
+  InfoContainer,
+  InfoRow,
+  InfoText,
+  LoadingMessage,
+  MainHeadline,
+  Spacing,
+  StandaloneMessage,
+} from '@hedvig-ui'
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
-import { FlagOrbIndicator } from 'hedvig-ui/orb-indicator'
-import { Spacing } from 'hedvig-ui/spacing'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'

@@ -1,3 +1,4 @@
+import { Checkbox, MainHeadline, SecondLevelHeadline } from '@hedvig-ui'
 import {
   Contract,
   Member,
@@ -6,8 +7,6 @@ import {
   useTerminateContractMutation,
 } from 'api/generated/graphql'
 import { format } from 'date-fns'
-import { Checkbox } from 'hedvig-ui/checkbox'
-import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

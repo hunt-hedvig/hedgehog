@@ -1,17 +1,19 @@
 import styled from '@emotion/styled'
 import {
+  Button,
+  DateTimePicker,
+  EnumDropdown,
+  FadeIn,
+  MainHeadline,
+  Spacing,
+} from '@hedvig-ui'
+import {
   ClaimSource,
   GetMemberClaimsDocument,
   useCreateClaimMutation,
 } from 'api/generated/graphql'
 import { MemberClaimsList } from 'components/member/tabs/claims-tab/components/MemberClaimsList'
 import { format } from 'date-fns'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { Button } from 'hedvig-ui/button'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { EnumDropdown } from 'hedvig-ui/dropdown'
-import { Spacing } from 'hedvig-ui/spacing'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 

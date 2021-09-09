@@ -1,12 +1,16 @@
+import {
+  Button,
+  ButtonsGroup,
+  DateTimePicker,
+  FourthLevelHeadline,
+  Paragraph,
+} from '@hedvig-ui'
 import { Contract } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import {
   activateContractOptions,
   useActivateContract,
 } from 'graphql/use-activate-contract'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { FourthLevelHeadline, Paragraph } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 
