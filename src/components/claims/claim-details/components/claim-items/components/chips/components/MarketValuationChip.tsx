@@ -1,6 +1,6 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import { Gem } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
 import { BaseChip } from './BaseChip'
 
 const Chip = styled(BaseChip)`

@@ -14,8 +14,8 @@ import {
 } from 'api/generated/graphql'
 
 import styled from '@emotion/styled'
+import { Spinner } from '@hedvig-ui'
 import { Field, FieldProps, Form, Formik } from 'formik'
-import { Spinner } from 'hedvig-ui/sipnner'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Market } from 'types/enums'

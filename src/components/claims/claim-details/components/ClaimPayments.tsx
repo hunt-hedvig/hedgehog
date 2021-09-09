@@ -9,13 +9,19 @@ import {
 } from '@material-ui/core'
 import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
-import { Spinner } from 'hedvig-ui/sipnner'
 
+import {
+  CardContent,
+  InfoRow,
+  InfoTag,
+  InfoText,
+  Paragraph,
+  Shadowed,
+  Spinner,
+  StandaloneMessage,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
-import { CardContent } from 'hedvig-ui/card'
-import { InfoRow, InfoTag, InfoText } from 'hedvig-ui/info-row'
-import { Paragraph, Shadowed, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'

@@ -1,19 +1,19 @@
 import styled from '@emotion/styled'
+import {
+  Button,
+  DateTimePicker,
+  EnumDropdown,
+  FadeIn,
+  LoadingMessage,
+  MainHeadline,
+  Spacing,
+  StandaloneMessage,
+} from '@hedvig-ui'
 import { ClaimSource, useCreateClaimMutation } from 'api/generated/graphql'
 import { ClaimListHeader } from 'components/claims/claims-list/components/ClaimListHeader'
 import { ClaimListItem } from 'components/claims/claims-list/components/ClaimListItem'
 import { format } from 'date-fns'
 import { useGetMemberClaims } from 'graphql/use-get-member-claims'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
-import { Button } from 'hedvig-ui/button'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { EnumDropdown } from 'hedvig-ui/dropdown'
-import { Spacing } from 'hedvig-ui/spacing'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

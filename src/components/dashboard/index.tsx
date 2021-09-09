@@ -1,19 +1,20 @@
 import styled from '@emotion/styled'
+import {
+  Badge,
+  Capitalized,
+  CasualList,
+  CasualListItem,
+  FadeIn,
+  MainHeadline,
+  SecondLevelHeadline,
+  Spacing,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { useGetMeQuery } from 'api/generated/graphql'
 import { changelog } from 'changelog'
 import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { Badge } from 'hedvig-ui/badge'
-import { CasualList, CasualListItem } from 'hedvig-ui/casual-list'
-import { Spacing } from 'hedvig-ui/spacing'
-import {
-  Capitalized,
-  MainHeadline,
-  SecondLevelHeadline,
-  ThirdLevelHeadline,
-} from 'hedvig-ui/typography'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
