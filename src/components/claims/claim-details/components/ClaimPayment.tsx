@@ -86,7 +86,7 @@ export const ClaimPayment: React.FC<{
     createSwishPaymentProps.error,
   ])
 
-  const onSubmitHandler = (e: any) => {
+  const onSubmitHandler = () => {
     setIsConfirming(true)
   }
 
