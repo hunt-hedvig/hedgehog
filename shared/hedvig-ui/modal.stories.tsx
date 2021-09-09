@@ -42,7 +42,7 @@ export const StandartModal = () => {
           width={`${number('Width of modal', 350)}px`}
           position={select('Position', positions, 'center')}
           side={select('Side', sides, 'center')}
-          title="Modal Title"
+          title={text('Title content', 'Modal title')}
           close={() => setIsModal(false)}
         >
           {text('Body content', 'Modal body')}
