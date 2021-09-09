@@ -24,6 +24,7 @@ import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
 
 const ScrollX = styled.div`
+  margin-bottom: 1rem;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
 `

@@ -95,6 +95,7 @@ export const ClaimPayment: React.FC<{
       <Form onSubmit={onSubmitHandler}>
         <FormInput
           placeholder="Payout amount"
+          onChange={() => form.control.updateFormState()}
           name="amount"
           defaultValue=""
           type="number"
@@ -160,7 +161,7 @@ export const ClaimPayment: React.FC<{
           />
         )}
 
-        {form.getValues().type === 'AutomaticSwish' && (
+        {form.watch('type') === 'AutomaticSwish' && !isExGratia && (
           <>
             <FormInput
               defaultValue=""
@@ -208,37 +209,51 @@ export const ClaimPayment: React.FC<{
               }
 
               if (form.getValues().type === 'AutomaticSwish') {
+                const data = {
+                  id: claimId,
+                  payment: {
+                    ...(paymentInput as ClaimSwishPaymentInput),
+                    phoneNumber: form.getValues().phoneNumber!,
+                    message: form.getValues().message!,
+                  },
+                }
+
                 await toast.promise(
                   createSwishPayment({
-                    variables: {
-                      id: claimId,
-                      payment: {
-                        ...(paymentInput as ClaimSwishPaymentInput),
-                        phoneNumber: form.getValues().phoneNumber!,
-                        message: form.getValues().message!,
-                      },
-                    },
+                    variables: data,
                   }),
                   {
                     loading: 'Creating Swish payment',
-                    success: 'Claim Swish payment done',
+                    success: () => {
+                      form.reset()
+                      setIsConfirming(false)
+                      setIsExGratia(false)
+                      return 'Claim Swish payment done'
+                    },
                     error: 'Could not make Swish payment',
                   },
                 )
               } else {
+                const data = {
+                  id: claimId,
+                  payment: {
+                    ...(paymentInput as ClaimPaymentInput),
+                    type: form.getValues().type,
+                  },
+                }
+
                 await toast.promise(
                   createPayment({
-                    variables: {
-                      id: claimId,
-                      payment: {
-                        ...(paymentInput as ClaimPaymentInput),
-                        type: form.getValues().type,
-                      },
-                    },
+                    variables: data,
                   }),
                   {
                     loading: 'Creating payment',
-                    success: 'Claim payment done',
+                    success: () => {
+                      form.reset()
+                      setIsConfirming(false)
+                      setIsExGratia(false)
+                      return 'Claim payment done'
+                    },
                     error: 'Could not make payment',
                   },
                 )
