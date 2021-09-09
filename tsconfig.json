@@ -20,7 +20,7 @@
     "sourceMap": true,
     "paths": {
       "*": ["*", "node_modules/*", "src/*", "shared/*"],
-      "@hedvig-ui": ["shared/hedvig-ui"]
+      "@hedvig-ui": ["shared/hedvig-ui/*"]
     }
   },
   "include": ["./shared", "./src"],

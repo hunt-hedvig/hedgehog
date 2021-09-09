@@ -1,11 +1,16 @@
-import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
+import {
+  Form,
+  FormDropdown,
+  FormInput,
+  StandaloneMessage,
+  SubmitButton,
+} from '@hedvig-ui'
 import { MonthlyEntryInput } from 'api/generated/graphql'
 import {
   getAddMonthlyEntryOptions,
   useAddMonthlyEntry,
 } from 'graphql/use-add-monthly-entry'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'

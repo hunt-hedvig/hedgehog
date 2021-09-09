@@ -4,8 +4,10 @@ import {
   InfoContainer,
   InfoRow,
   InfoText,
+  LoadingMessage,
   MainHeadline,
   Spacing,
+  StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import {
@@ -22,10 +24,6 @@ import { MonthlyEntriesInfo } from 'components/member/tabs/account-tab/MonthlyEn
 import { MonthlyEntriesTable } from 'components/member/tabs/account-tab/MonthlyEntriesTable'
 import { useGetAccount } from 'graphql/use-get-account'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { ArrowRepeat, ChevronDown } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'

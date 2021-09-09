@@ -20,7 +20,6 @@ module.exports = ({
     modules: [
       path.resolve(context, 'node_modules'),
       path.resolve(context, 'src'),
-      path.resolve(context, 'shared'),
     ],
     alias: {
       '@hedvig-ui': path.resolve(context, 'shared/hedvig-ui'),

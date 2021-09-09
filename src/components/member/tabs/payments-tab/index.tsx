@@ -7,8 +7,10 @@ import {
   InfoRow,
   InfoTag,
   InfoText,
+  LoadingMessage,
   MainHeadline,
   Shadowed,
+  StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import {
@@ -21,10 +23,6 @@ import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import gql from 'graphql-tag'
 import { useGetAccount } from 'graphql/use-get-account'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

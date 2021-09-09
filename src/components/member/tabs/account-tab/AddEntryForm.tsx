@@ -3,6 +3,7 @@ import {
   FormDropdown,
   FormInput,
   Spacing,
+  StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
 import {
@@ -12,7 +13,6 @@ import {
 import { AddEntryInformation } from 'components/member/tabs/account-tab/AddEntryInformation'
 import { format } from 'date-fns'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'

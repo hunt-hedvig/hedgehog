@@ -46,10 +46,14 @@ import { FlagOrbIndicator, OrbIndicator } from './OrbIndicator/orb-indicator'
 import { Popover } from './Popover/popover'
 import { RadioGroup } from './Radio/radio'
 import { SearchableDropdown } from './SearchableDropdown/searchable-dropdown'
-import { Spacing, spacingMap, SpacingSize } from './Spacing/spacing'
 import { Spinner } from './Spinner/spinner'
 import { TextArea } from './TextArea/text-area'
 
+import {
+  LoadingMessage,
+  StandaloneMessage,
+} from './animations/standalone-message'
+import { Spacing, spacingMap, SpacingSize } from './Spacing/spacing'
 import {
   Bold,
   Capitalized,
@@ -123,4 +127,6 @@ export {
   Bold,
   Capitalized,
   ErrorText,
+  StandaloneMessage,
+  LoadingMessage,
 }

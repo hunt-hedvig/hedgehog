@@ -18,10 +18,10 @@ import {
   Paragraph,
   Shadowed,
   Spinner,
+  StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'

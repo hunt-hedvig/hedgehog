@@ -3,8 +3,10 @@ import {
   Button,
   DateTimePicker,
   EnumDropdown,
+  LoadingMessage,
   MainHeadline,
   Spacing,
+  StandaloneMessage,
 } from '@hedvig-ui'
 import { ClaimSource, useCreateClaimMutation } from 'api/generated/graphql'
 import { ClaimListHeader } from 'components/claims/claims-list/components/ClaimListHeader'
@@ -12,10 +14,6 @@ import { ClaimListItem } from 'components/claims/claims-list/components/ClaimLis
 import { format } from 'date-fns'
 import { useGetMemberClaims } from 'graphql/use-get-member-claims'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

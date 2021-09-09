@@ -1,14 +1,10 @@
-import { MainHeadline } from '@hedvig-ui'
+import { LoadingMessage, MainHeadline, StandaloneMessage } from '@hedvig-ui'
 import { Trial, useGetTrialsQuery } from 'api/generated/graphql'
 import { Contract } from 'components/member/tabs/contracts-tab/contract'
 import { TrialComponent } from 'components/member/tabs/contracts-tab/trial'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useContracts } from 'graphql/use-contracts'
 import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 
