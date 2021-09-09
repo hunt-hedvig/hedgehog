@@ -1,4 +1,4 @@
-import { FadeIn, MainHeadline } from '@hedvig-ui'
+import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
 import { MembersList } from 'components/members-search/components/MembersList'
 import { SearchForm } from 'components/members-search/components/SearchForm'
 import {

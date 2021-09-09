@@ -1,18 +1,19 @@
 import styled from '@emotion/styled'
-import { ClaimState } from 'api/generated/graphql'
-import { parseISO } from 'date-fns'
-import formatDate from 'date-fns/format'
-import { useListClaims } from 'graphql/use-list-claims'
-import { LoadingMessage } from 'hedvig-ui/animations/standalone-message'
 import {
+  LoadingMessage,
+  Monetary,
+  Placeholder,
   Table,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
   TablePageSelect,
   TableRow,
-} from 'hedvig-ui/table'
-import { Monetary, Placeholder } from 'hedvig-ui/typography'
+} from '@hedvig-ui'
+import { ClaimState } from 'api/generated/graphql'
+import { parseISO } from 'date-fns'
+import formatDate from 'date-fns/format'
+import { useListClaims } from 'graphql/use-list-claims'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { getMemberIdColor } from 'utils/member'

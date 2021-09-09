@@ -1,15 +1,15 @@
 import styled from '@emotion/styled'
-import { Contract, ContractStatus, Member } from 'api/generated/graphql'
-import { parseISO } from 'date-fns'
-import formatDate from 'date-fns/format'
 import {
+  Placeholder,
   Table,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
   TableRow,
-} from 'hedvig-ui/table'
-import { Placeholder } from 'hedvig-ui/typography'
+} from '@hedvig-ui'
+import { Contract, ContractStatus, Member } from 'api/generated/graphql'
+import { parseISO } from 'date-fns'
+import formatDate from 'date-fns/format'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
