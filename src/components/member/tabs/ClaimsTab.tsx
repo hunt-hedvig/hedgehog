@@ -3,6 +3,7 @@ import {
   Button,
   DateTimePicker,
   EnumDropdown,
+  FadeIn,
   LoadingMessage,
   MainHeadline,
   Spacing,
@@ -13,7 +14,6 @@ import { ClaimListHeader } from 'components/claims/claims-list/components/ClaimL
 import { ClaimListItem } from 'components/claims/claims-list/components/ClaimListItem'
 import { format } from 'date-fns'
 import { useGetMemberClaims } from 'graphql/use-get-member-claims'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'

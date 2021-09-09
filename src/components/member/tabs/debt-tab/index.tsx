@@ -1,6 +1,7 @@
 import {
   Card,
   CardsWrapper,
+  FadeIn,
   FlagOrbIndicator,
   InfoContainer,
   InfoRow,
@@ -13,7 +14,6 @@ import {
 import { WhitelistMemberButton } from 'components/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'

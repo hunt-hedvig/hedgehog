@@ -11,6 +11,7 @@ import styled from '@emotion/styled'
 import {
   Button,
   CardContent,
+  FadeIn,
   List,
   ListItem,
   Paragraph,
@@ -20,7 +21,6 @@ import {
   TextArea,
 } from '@hedvig-ui'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Keys } from 'utils/hooks/key-press-hook'

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { withFadeIn } from '@hedvig-ui'
 import { Member } from 'api/generated/graphql'
 import { ContractCountCircles } from 'components/members-search/components/ContractCountCircles'
 import {
@@ -6,7 +7,6 @@ import {
   MemberAgeWrapper,
 } from 'components/members-search/styles'
 import { format, parseISO } from 'date-fns'
-import { withFadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table, TableRowProps } from 'semantic-ui-react'

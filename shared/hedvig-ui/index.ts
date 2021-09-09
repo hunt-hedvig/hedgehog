@@ -49,6 +49,7 @@ import { SearchableDropdown } from './SearchableDropdown/searchable-dropdown'
 import { Spinner } from './Spinner/spinner'
 import { TextArea } from './TextArea/text-area'
 
+import { FadeIn, withFadeIn } from './animations/fade-in'
 import {
   LoadingMessage,
   StandaloneMessage,
@@ -129,4 +130,6 @@ export {
   ErrorText,
   StandaloneMessage,
   LoadingMessage,
+  FadeIn,
+  withFadeIn,
 }

@@ -1,6 +1,6 @@
 import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
-import { LoadingMessage, MainHeadline } from '@hedvig-ui'
+import { FadeIn, LoadingMessage, MainHeadline } from '@hedvig-ui'
 import { colors } from '@hedviginsurance/brand'
 import {
   PaymentScheduleQueryDocument,
@@ -8,7 +8,6 @@ import {
 } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'

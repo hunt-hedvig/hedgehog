@@ -1,4 +1,5 @@
 import {
+  FadeIn,
   LoadingMessage,
   Spacing,
   StandaloneMessage,
@@ -8,7 +9,6 @@ import { NumberMemberGroupsRadioButtons } from 'components/questions/number-memb
 import { QuestionGroups } from 'components/questions/questions-list/QuestionGroups'
 import { ListPage } from 'components/shared'
 import { useQuestionGroups } from 'graphql/use-question-groups'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { useInsecurePersistentState } from 'utils/state'
 import { FilterState, QuestionsFilter } from './filter'

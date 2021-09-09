@@ -1,11 +1,11 @@
 import {
+  FadeIn,
   getTextFromEnumValue,
   LoadingMessage,
   StandaloneMessage,
 } from '@hedvig-ui'
 import { Quote } from 'api/generated/graphql'
 import { useQuotes } from 'graphql/use-get-quotes'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { Tab } from 'semantic-ui-react'
 import { ContractType, Market, QuoteProductType } from 'types/enums'

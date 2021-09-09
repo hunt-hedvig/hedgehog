@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import { CardLink, CardsWrapper } from '@hedvig-ui'
+import { CardLink, CardsWrapper, FadeIn } from '@hedvig-ui'
 import {
   StagingTools,
   stagingToolsAvailable,
 } from 'features/tools/staging-tools'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 
 const Icon = styled('div')`

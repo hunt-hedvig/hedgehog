@@ -1,6 +1,7 @@
 import {
   Card,
   CardsWrapper,
+  FadeIn,
   InfoContainer,
   InfoRow,
   InfoText,
@@ -23,7 +24,6 @@ import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/
 import { MonthlyEntriesInfo } from 'components/member/tabs/account-tab/MonthlyEntriesInfo'
 import { MonthlyEntriesTable } from 'components/member/tabs/account-tab/MonthlyEntriesTable'
 import { useGetAccount } from 'graphql/use-get-account'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React from 'react'
 import { ArrowRepeat, ChevronDown } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'
