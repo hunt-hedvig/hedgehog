@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
+import { Dropdown, Placeholder, Shadowed } from '@hedvig-ui'
 import { Contract, GenericAgreement } from 'api/generated/graphql'
-import { Dropdown } from 'hedvig-ui/dropdown'
-import { Placeholder, Shadowed } from 'hedvig-ui/typography'
 import React from 'react'
 import { currentAgreementForContract } from 'utils/contract'
 import { convertEnumToTitle, getCarrierText } from 'utils/text'

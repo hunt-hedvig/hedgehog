@@ -1,9 +1,7 @@
+import { CardContent, List, ListItem, Spinner } from '@hedvig-ui'
 import { useClaimPageQuery } from 'api/generated/graphql'
 import { PaperTitle } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
-import { CardContent } from 'hedvig-ui/card'
-import { List, ListItem } from 'hedvig-ui/list'
-import { Spinner } from 'hedvig-ui/sipnner'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 

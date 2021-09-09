@@ -1,10 +1,12 @@
+import {
+  getTextFromEnumValue,
+  InfoContainer,
+  SearchableDropdown,
+  Spacing,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
-import { getTextFromEnumValue } from 'hedvig-ui/dropdown'
-import { InfoContainer } from 'hedvig-ui/info-row'
-import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
-import { Spacing } from 'hedvig-ui/spacing'
-import { ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { FreeMonthsForm } from '../forms/FreeMonthsForm'
 import { MonthlyPercentageForm } from '../forms/MonthlyPercentageForm'

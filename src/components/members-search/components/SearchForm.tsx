@@ -1,3 +1,4 @@
+import { Checkbox } from '@hedvig-ui'
 import {
   EscapeButton,
   Group,
@@ -6,7 +7,6 @@ import {
   SearchInput,
   SearchInputGroup,
 } from 'components/members-search/styles'
-import { Checkbox } from 'hedvig-ui/checkbox'
 import React from 'react'
 import { shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 

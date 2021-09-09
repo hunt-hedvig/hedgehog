@@ -1,5 +1,5 @@
+import { RadioGroup } from '@hedvig-ui'
 import { totalNumberMemberGroups } from 'components/questions/filter'
-import { RadioGroup } from 'hedvig-ui/radio'
 import React from 'react'
 import { range } from 'utils/array'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'

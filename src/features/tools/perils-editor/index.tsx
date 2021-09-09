@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from 'hedvig-ui/button'
-import { MainHeadline, SecondLevelHeadline } from 'hedvig-ui/typography'
+import { Button, MainHeadline, SecondLevelHeadline } from '@hedvig-ui'
 import React from 'react'
 import ReactDropZone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
