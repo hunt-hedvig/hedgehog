@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export interface Key {
   code: number
@@ -256,6 +256,71 @@ export const Keys: { [name: string]: Key } = {
   },
 }
 
+export const KeyCodes: { [code: number]: Key } = {
+  27: Keys.Escape,
+  8: Keys.Backspace,
+  9: Keys.Tab,
+  13: Keys.Enter,
+  16: Keys.Shift,
+  17: Keys.Control,
+  18: Keys.Option,
+  20: Keys.CapsLock,
+  91: Keys.Command,
+  32: Keys.Space,
+  37: Keys.Left,
+  38: Keys.Up,
+  39: Keys.Right,
+  40: Keys.Down,
+  48: Keys.Zero,
+  49: Keys.One,
+  50: Keys.Two,
+  51: Keys.Three,
+  52: Keys.Four,
+  53: Keys.Five,
+  54: Keys.Six,
+  55: Keys.Seven,
+  56: Keys.Eight,
+  57: Keys.Nine,
+  65: Keys.A,
+  66: Keys.B,
+  67: Keys.C,
+  68: Keys.D,
+  69: Keys.E,
+  70: Keys.F,
+  71: Keys.G,
+  72: Keys.H,
+  73: Keys.I,
+  74: Keys.J,
+  75: Keys.K,
+  76: Keys.L,
+  77: Keys.M,
+  78: Keys.N,
+  79: Keys.O,
+  80: Keys.P,
+  81: Keys.Q,
+  82: Keys.R,
+  83: Keys.S,
+  84: Keys.T,
+  85: Keys.U,
+  86: Keys.V,
+  87: Keys.W,
+  88: Keys.X,
+  89: Keys.Y,
+  90: Keys.Z,
+  112: Keys.F1,
+  113: Keys.F2,
+  114: Keys.F3,
+  115: Keys.F4,
+  116: Keys.F5,
+  117: Keys.F6,
+  118: Keys.F7,
+  119: Keys.F8,
+  120: Keys.F9,
+  121: Keys.F10,
+  122: Keys.F11,
+  123: Keys.F12,
+}
+
 export const NumberKeys: ReadonlyArray<Key> = [
   Keys.Zero,
   Keys.One,
@@ -334,60 +399,4 @@ export const useKeyIsPressed = (key: Key): boolean => {
   }, [])
 
   return keyPressed
-}
-
-export const usePressedKeys = (): number[] => {
-  const pressedKeysRef = useRef<Set<number>>(new Set())
-  const [pressedKeys, setPressedKeys] = useState<number[]>([])
-
-  const isModifierKey = (keyCode) =>
-    keyCode === Keys.Option.code || keyCode === Keys.Control.code
-  const modifierIsPressed = () =>
-    pressedKeysRef.current.has(Keys.Option.code) ||
-    pressedKeysRef.current.has(Keys.Control.code)
-
-  const reset = () => {
-    pressedKeysRef.current = new Set()
-    setPressedKeys([])
-  }
-
-  const handleKeydown = (e) => {
-    if (isModifierKey(e.keyCode)) {
-      reset()
-    }
-    if (isModifierKey(e.keyCode) || modifierIsPressed()) {
-      pressedKeysRef.current.add(e.keyCode)
-      setPressedKeys(Array.from(pressedKeysRef.current))
-    }
-  }
-
-  const handleKeyup = (e) => {
-    if (isModifierKey(e.keyCode) || modifierIsPressed()) {
-      pressedKeysRef.current.delete(e.keyCode)
-      setPressedKeys(Array.from(pressedKeysRef.current))
-    }
-  }
-
-  const handleVisibility = () => {
-    if (document.hidden) {
-      reset()
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeydown, {
-      capture: true,
-    })
-    window.addEventListener('keyup', handleKeyup, {
-      capture: true,
-    })
-    document.addEventListener('visibilitychange', handleVisibility, {})
-    return () => {
-      window.removeEventListener('keydown', handleKeydown)
-      window.removeEventListener('keyup', handleKeyup)
-      document.removeEventListener('visibilitychange', handleVisibility)
-    }
-  }, [])
-
-  return pressedKeys
 }
