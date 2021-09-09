@@ -60,6 +60,7 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
   const [
     { claims, page: currentPage, totalPages },
     listClaims,
+    { loading },
   ] = useListClaims()
 
   useEffect(() => {
@@ -80,7 +81,7 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
     },
   })
 
-  if (!claims) {
+  if (loading) {
     return <LoadingMessage paddingTop={'25vh'} />
   }
 

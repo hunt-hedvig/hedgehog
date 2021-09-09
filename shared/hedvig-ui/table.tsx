@@ -16,9 +16,7 @@ export const TableColumn = styled.td`
   padding: 1.6em 1em;
   font-size: 1.05em;
   transition: all 100ms;
-  :hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 `
 
 export const TableHeader = styled.th`
