@@ -323,7 +323,6 @@ const CommandSpace: React.FC<{
   actions: CommandLineAction[]
   hide: () => void
 }> = ({ actions, hide, children }) => {
-  console.log(actions)
   const [actionKeyCodes, setActionKeyCodes] = useState<number[][]>([])
   useEffect(() => {
     setActionKeyCodes(
