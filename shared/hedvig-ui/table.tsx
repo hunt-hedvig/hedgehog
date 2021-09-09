@@ -1,25 +1,64 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { getPageLimits } from 'components/shared/paginator/Paginator'
-import React from 'react'
+import React, { TableHTMLAttributes } from 'react'
 import { range } from 'utils/helpers'
+import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 
-export const Table = styled.table`
+export const Table: React.FC<{
+  onPerformNavigation?: (index) => void
+} & TableHTMLAttributes<HTMLTableElement>> = ({
+  onPerformNavigation,
+  children,
+  ...props
+}) => {
+  const numberOfRows = React.Children.count(children)
+
+  const [navigationStep] = useVerticalKeyboardNavigation({
+    maxStep: numberOfRows - 2,
+    onPerformNavigation: (index) => {
+      if (onPerformNavigation) {
+        onPerformNavigation(index)
+      }
+    },
+  })
+
+  return (
+    <StyledTable
+      activeRow={onPerformNavigation ? navigationStep : -1}
+      {...props}
+    >
+      {children}
+    </StyledTable>
+  )
+}
+
+const StyledTable = styled.table<{ activeRow: number }>`
   margin-top: 2em;
   font-weight: normal;
   text-align: left;
   width: 100%;
   border-collapse: collapse;
+
+  ${({ activeRow, theme }) => {
+    if (activeRow !== -1) {
+      return css`
+        tr:nth-of-type(${activeRow + 2}) {
+          background-color: ${theme.accentLight};
+        }
+      `
+    }
+  }}
 `
 
 export const TableColumn = styled.td`
-  padding: 1.6em 1em;
+  padding: 0.9em 1em;
   font-size: 1.05em;
   transition: all 100ms;
   cursor: pointer;
 `
 
-export const TableHeader = styled.th`
+export const TableHeaderColumn = styled.th`
   font-weight: lighter;
   color: ${({ theme }) => theme.semiStrongForeground};
   font-size: 0.8em;
@@ -42,8 +81,13 @@ export const TableRow = styled.tr<{ active?: boolean }>`
   :hover {
     background-color: ${({ theme }) => theme.accentLight};
   }
+
   background-color: ${({ theme, active }) =>
     active ? theme.accentLight : theme.accentLighter};
+`
+
+export const TableHeader = styled.tr`
+  width: 100%;
 `
 
 const PageLink = styled.span<{ disabled: boolean }>`

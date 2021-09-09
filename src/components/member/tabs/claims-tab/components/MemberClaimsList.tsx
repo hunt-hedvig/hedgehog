@@ -7,11 +7,16 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from 'hedvig-ui/animations/standalone-message'
-import { Table, TableColumn, TableHeader, TableRow } from 'hedvig-ui/table'
+import {
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+} from 'hedvig-ui/table'
 import { Monetary, Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { useHistory } from 'react-router'
-import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
@@ -44,19 +49,6 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
 
   const claims = memberClaims ?? []
 
-  const [currentKeyboardNavigationStep] = useVerticalKeyboardNavigation({
-    maxStep: claims.length - 1,
-    onPerformNavigation: (index) => {
-      const claimId = claims[index].id
-
-      if (!claimId || !memberId) {
-        return
-      }
-
-      history.push(`/claims/${claimId}/members/${memberId}`)
-    },
-  })
-
   if (loading) {
     return <LoadingMessage paddingTop={'10vh'} />
   }
@@ -71,14 +63,24 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
 
   return (
     <>
-      <Table>
-        <TableRow>
-          <TableHeader>Date Registered</TableHeader>
-          <TableHeader>Claim Type</TableHeader>
-          <TableHeader>Claim State</TableHeader>
-          <TableHeader>Claim Reserves</TableHeader>
-        </TableRow>
-        {claims.map((claim, index) => {
+      <Table
+        onPerformNavigation={(index) => {
+          const claimId = claims[index].id
+
+          if (!claimId || !memberId) {
+            return
+          }
+
+          history.push(`/claims/${claimId}/members/${memberId}`)
+        }}
+      >
+        <TableHeader>
+          <TableHeaderColumn>Date Registered</TableHeaderColumn>
+          <TableHeaderColumn>Claim Type</TableHeaderColumn>
+          <TableHeaderColumn>Claim State</TableHeaderColumn>
+          <TableHeaderColumn>Claim Reserves</TableHeaderColumn>
+        </TableHeader>
+        {claims.map((claim) => {
           const registrationDateString = formatDate(
             parseISO(claim.registrationDate),
             'dd MMMM, yyyy',
@@ -91,7 +93,6 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
           return (
             <TableRow
               key={claim.id}
-              active={currentKeyboardNavigationStep === index}
               onClick={() =>
                 history.push(
                   `/claims/${claim.id}/members/${claim.member.memberId}`,

@@ -2,7 +2,13 @@ import styled from '@emotion/styled'
 import { Contract, ContractStatus, Member } from 'api/generated/graphql'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
-import { Table, TableColumn, TableHeader, TableRow } from 'hedvig-ui/table'
+import {
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+} from 'hedvig-ui/table'
 import { Placeholder } from 'hedvig-ui/typography'
 import React from 'react'
 import { useHistory } from 'react-router'
@@ -104,13 +110,13 @@ export const MembersList: React.FC<{
   return (
     <>
       <Table>
-        <TableRow>
-          <TableHeader>Member</TableHeader>
-          <TableHeader>Signed Up</TableHeader>
-          <TableHeader>First Master Inception</TableHeader>
-          <TableHeader>Last Termination Date</TableHeader>
-          <TableHeader>Contracts</TableHeader>
-        </TableRow>
+        <TableHeader>
+          <TableHeaderColumn>Member</TableHeaderColumn>
+          <TableHeaderColumn>Signed Up</TableHeaderColumn>
+          <TableHeaderColumn>First Master Inception</TableHeaderColumn>
+          <TableHeaderColumn>Last Termination Date</TableHeaderColumn>
+          <TableHeaderColumn>Contracts</TableHeaderColumn>
+        </TableHeader>
         {members.map((member, index) => {
           const {
             ACTIVE_IN_FUTURE: activeInFutureContracts = 0,
