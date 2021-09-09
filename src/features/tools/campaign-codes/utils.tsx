@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Badge } from '@hedvig-ui'
 import {
   CampaignFilter,
   CampaignOwnerPartner,
@@ -7,7 +8,6 @@ import {
   VoucherCampaign,
 } from 'api/generated/graphql'
 import formatDate from 'date-fns/format'
-import { Badge } from 'hedvig-ui/Badge/badge'
 import React from 'react'
 import {
   isCostDeduction,

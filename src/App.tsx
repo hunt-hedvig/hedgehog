@@ -1,6 +1,13 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
 import styled from '@emotion/styled'
-import { StandaloneMessage } from '@hedvig-ui'
+import {
+  darkTheme,
+  darkUiTheme,
+  lightTheme,
+  lightUiTheme,
+  SemanticOverrides,
+  StandaloneMessage,
+} from '@hedvig-ui'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { CssBaseline } from '@material-ui/core'
 import { MuiThemeProvider } from '@material-ui/core/styles'
@@ -9,13 +16,6 @@ import { DashboardPage } from 'components/dashboard'
 import { QuestionsPage } from 'components/questions'
 import Breadcrumbs from 'components/shared/navigation/breadcrumbs/Breadcrumbs'
 import { VerticalMenu } from 'components/shared/navigation/sidebar/VerticalMenu'
-import {
-  darkTheme,
-  darkUiTheme,
-  lightTheme,
-  lightUiTheme,
-  SemanticOverrides,
-} from 'hedvig-ui/themes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'

@@ -1,5 +1,5 @@
+import { Badge, BadgeProps } from '@hedvig-ui'
 import { boolean, select } from '@storybook/addon-knobs'
-import { Badge, BadgeProps } from 'hedvig-ui/Badge/badge'
 
 import React from 'react'
 

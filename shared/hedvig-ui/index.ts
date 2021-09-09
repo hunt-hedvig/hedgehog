@@ -1,4 +1,4 @@
-import { Badge } from './Badge/badge'
+import { Badge, BadgeProps } from './Badge/badge'
 import {
   Button,
   buttonColorMap,
@@ -56,6 +56,13 @@ import {
 } from './animations/standalone-message'
 import { Spacing, spacingMap, SpacingSize } from './Spacing/spacing'
 import {
+  darkTheme,
+  darkUiTheme,
+  lightTheme,
+  lightUiTheme,
+  SemanticOverrides,
+} from './themes'
+import {
   Bold,
   Capitalized,
   ErrorText,
@@ -74,6 +81,7 @@ export {
   Button,
   ButtonsGroup,
   buttonSizeMap,
+  BadgeProps,
   buttonColorMap,
   ButtonLink,
   ButtonProps,
@@ -132,4 +140,9 @@ export {
   LoadingMessage,
   FadeIn,
   withFadeIn,
+  darkTheme,
+  darkUiTheme,
+  lightTheme,
+  lightUiTheme,
+  SemanticOverrides,
 }

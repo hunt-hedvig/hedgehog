@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {
+  Badge,
   Capitalized,
   CasualList,
   CasualListItem,
@@ -14,7 +15,6 @@ import { changelog } from 'changelog'
 import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
-import { Badge } from 'hedvig-ui/Badge/badge'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
