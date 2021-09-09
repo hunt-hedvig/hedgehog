@@ -1,6 +1,11 @@
 export { Spacing } from './Spacing/spacing'
 export { Badge } from './Badge/badge'
 import { BadgeProps as _BadgeProps } from './Badge/badge'
+import { ButtonProps as _ButtonProps } from './Button/button'
+import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
+import { CustomInputProps as _CustomInputProps } from './Input/input'
+import { SpacingSize as _SpacingSize } from './Spacing/spacing'
+
 export type BadgeProps = _BadgeProps
 export {
   Button,
@@ -9,7 +14,16 @@ export {
   ButtonsGroup,
   buttonSizeMap,
 } from './Button/button'
-import { ButtonProps as _ButtonProps } from './Button/button'
+
+export {
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TablePageSelect,
+  TableRow,
+} from './Table/table'
+
 export type ButtonProps = _ButtonProps
 export {
   Card,
@@ -41,10 +55,8 @@ export {
   InfoTag,
   InfoText,
 } from './InfoRow/info-row'
-import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 export type InfoTagStatus = _InfoTagStatus
 export { Input } from './Input/input'
-import { CustomInputProps as _CustomInputProps } from './Input/input'
 export type CustomInputProps = _CustomInputProps
 export { JsonSchemaForm } from './JsonSchemaForm/json-schema-form'
 export { List, ListItem } from './List/list'
@@ -63,7 +75,6 @@ export {
 } from './animations/standalone-message'
 export { fadeIn } from './animations/utils'
 
-import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 export type SpacingSize = _SpacingSize
 
 export {
@@ -86,4 +97,5 @@ export {
   SecondLevelHeadline,
   Shadowed,
   ThirdLevelHeadline,
+  Monetary,
 } from './Typography/typography'

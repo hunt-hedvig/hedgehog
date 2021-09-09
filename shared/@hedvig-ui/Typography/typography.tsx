@@ -1,4 +1,6 @@
 import styled from '@emotion/styled'
+import { MonetaryAmountV2 } from 'api/generated/graphql'
+import React from 'react'
 
 export const MainHeadline = styled('h1')``
 export const SecondLevelHeadline = styled('h2')``
@@ -40,6 +42,25 @@ export const Shadowed = styled.span`
   border-radius: 4px;
   padding: 0.1em 0.35em;
 `
+
+const MonetaryAmount = styled.span`
+  border-bottom: 1px solid ${({ theme }) => theme.foreground};
+`
+
+const MonetaryCurrency = styled.span`
+  font-size: 0.7em;
+`
+
+export const Monetary: React.FC<{ amount: MonetaryAmountV2 }> = ({
+  amount,
+}) => {
+  return (
+    <MonetaryAmount>
+      {Number(amount.amount).toLocaleString(undefined, { useGrouping: true })}{' '}
+      <MonetaryCurrency>{amount.currency}</MonetaryCurrency>
+    </MonetaryAmount>
+  )
+}
 
 export const ErrorText = styled.p`
   color: ${({ theme }) => theme.danger};

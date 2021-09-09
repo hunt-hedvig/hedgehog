@@ -53,3 +53,8 @@ export const getFlagFromMarket = (market: Market): string => {
       return '🏳'
   }
 }
+
+export const splitOnUpperCase = (s: string) => {
+  const splitResult = s.match(/[A-Z][a-z]+|[0-9]+/g)
+  return splitResult?.join(' ') ?? null
+}
