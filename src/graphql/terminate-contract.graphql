@@ -2,5 +2,6 @@ mutation TerminateContract($contractId: ID!, $request: TerminateContractInput) {
   terminateContract(contractId: $contractId, request: $request) {
     id
     holderMemberId
+    terminationDate
   }
 }
