@@ -50,11 +50,11 @@ export const ClaimPayment: React.FC<{
   const [isOverridden, setIsOverridden] = useState(false)
 
   const categoryOptions = [
-    ...Object.keys(ClaimPaymentType).map((el, idx) => ({
-      key: idx + 1,
-      value: el,
-      text: el,
-      disabled: el === ClaimPaymentType.Manual,
+    ...Object.keys(ClaimPaymentType).map((paymentType, index) => ({
+      key: index + 1,
+      value: paymentType,
+      text: paymentType,
+      disabled: paymentType === ClaimPaymentType.Manual,
     })),
     {
       key: 5,
@@ -131,7 +131,6 @@ export const ClaimPayment: React.FC<{
         },
       )
     }
-    await refetch()
   }
 
   return (
@@ -139,7 +138,6 @@ export const ClaimPayment: React.FC<{
       <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
           placeholder="Payout amount"
-          onChange={() => form.control.updateFormState()}
           name="amount"
           defaultValue=""
           type="number"

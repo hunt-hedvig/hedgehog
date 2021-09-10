@@ -2056,21 +2056,21 @@ export type CreateClaimPaymentMutationVariables = Exact<{
 
 export type CreateClaimPaymentMutation = { __typename?: 'MutationType' } & {
   createClaimPayment?: Maybe<
-    { __typename?: 'Claim' } & {
-      payments: Array<
-        { __typename?: 'ClaimPayment' } & Pick<
-          ClaimPayment,
-          | 'id'
-          | 'amount'
-          | 'deductible'
-          | 'exGratia'
-          | 'note'
-          | 'timestamp'
-          | 'type'
-          | 'status'
+    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+        payments: Array<
+          { __typename?: 'ClaimPayment' } & Pick<
+            ClaimPayment,
+            | 'id'
+            | 'amount'
+            | 'deductible'
+            | 'exGratia'
+            | 'note'
+            | 'timestamp'
+            | 'type'
+            | 'status'
+          >
         >
-      >
-    }
+      }
   >
 }
 
@@ -2083,11 +2083,21 @@ export type CreateSwishClaimPaymentMutation = {
   __typename?: 'MutationType'
 } & {
   createClaimSwishPayment?: Maybe<
-    { __typename?: 'Claim' } & {
-      payments: Array<
-        { __typename?: 'ClaimPayment' } & Pick<ClaimPayment, 'id'>
-      >
-    }
+    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+        payments: Array<
+          { __typename?: 'ClaimPayment' } & Pick<
+            ClaimPayment,
+            | 'id'
+            | 'amount'
+            | 'deductible'
+            | 'exGratia'
+            | 'note'
+            | 'timestamp'
+            | 'type'
+            | 'status'
+          >
+        >
+      }
   >
 }
 
@@ -4412,6 +4422,7 @@ export type UpdateReserveMutationOptions = ApolloReactCommon.BaseMutationOptions
 export const CreateClaimPaymentDocument = gql`
   mutation CreateClaimPayment($id: ID!, $payment: ClaimPaymentInput!) {
     createClaimPayment(id: $id, payment: $payment) {
+      id
       payments {
         id
         amount
@@ -4476,8 +4487,16 @@ export const CreateSwishClaimPaymentDocument = gql`
     $payment: ClaimSwishPaymentInput!
   ) {
     createClaimSwishPayment(id: $id, payment: $payment) {
+      id
       payments {
         id
+        amount
+        deductible
+        exGratia
+        note
+        timestamp
+        type
+        status
       }
     }
   }
