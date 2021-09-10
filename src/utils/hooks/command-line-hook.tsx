@@ -320,9 +320,14 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     }
   }
 
-  document.addEventListener('keydown', handleKeyDown, {
-    capture: true,
-  })
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown, {
+      capture: true,
+    })
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   return (
     <CommandLineContext.Provider
