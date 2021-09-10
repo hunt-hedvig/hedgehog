@@ -9,10 +9,19 @@
     "no-implicit-dependencies": false,
     "no-console": false,
     "variable-name": {
-      "options": ["ban-keywords", "allow-pascal-case", "check-format", "allow-leading-underscore", "allow-trailing-underscore"]
+      "options": [
+        "ban-keywords",
+        "allow-pascal-case",
+        "check-format",
+        "allow-leading-underscore",
+        "allow-trailing-underscore"
+      ]
     }
   },
   "linterOptions": {
-    "exclude": ["./src/api/generated/graphql.tsx", "./src/types/generated/graphql.tsx"]
+    "exclude": [
+      "./src/api/generated/graphql.tsx",
+      "./src/types/generated/graphql.tsx"
+    ]
   }
 }
