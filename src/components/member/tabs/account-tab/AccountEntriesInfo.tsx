@@ -1,5 +1,4 @@
-import { Spacing } from 'hedvig-ui/spacing'
-import { FourthLevelHeadline, MainHeadline } from 'hedvig-ui/typography'
+import { FourthLevelHeadline, MainHeadline, Spacing } from '@hedvig-ui'
 import React from 'react'
 
 export const AccountEntriesInfo: React.FC = () => {

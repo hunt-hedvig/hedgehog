@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
+import { StandaloneMessage, withFadeIn } from '@hedvig-ui'
 import { QuestionGroup } from 'api/generated/graphql'
-import { withFadeIn } from 'hedvig-ui/animations/fade-in'
-import { StandaloneMessage } from 'hedvig-ui/animations/standalone-message'
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
 import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'

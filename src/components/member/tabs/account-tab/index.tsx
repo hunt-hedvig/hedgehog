@@ -1,4 +1,17 @@
 import {
+  Card,
+  CardsWrapper,
+  FadeIn,
+  InfoContainer,
+  InfoRow,
+  InfoText,
+  LoadingMessage,
+  MainHeadline,
+  Spacing,
+  StandaloneMessage,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
+import {
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
@@ -11,15 +24,6 @@ import { BackfillSubscriptionsButton } from 'components/member/tabs/account-tab/
 import { MonthlyEntriesInfo } from 'components/member/tabs/account-tab/MonthlyEntriesInfo'
 import { MonthlyEntriesTable } from 'components/member/tabs/account-tab/MonthlyEntriesTable'
 import { useGetAccount } from 'graphql/use-get-account'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { InfoContainer, InfoRow, InfoText } from 'hedvig-ui/info-row'
-import { Spacing } from 'hedvig-ui/spacing'
-import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat, ChevronDown } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'

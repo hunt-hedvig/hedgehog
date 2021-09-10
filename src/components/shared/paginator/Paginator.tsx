@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Button, ButtonsGroup } from 'hedvig-ui/button'
+import { Button, ButtonsGroup } from '@hedvig-ui'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { range } from 'utils/helpers'
@@ -10,7 +10,10 @@ interface PageState {
   endPage: number
 }
 
-const getPageLimits = (totalPages: number, currentPage: number): PageState => {
+export const getPageLimits = (
+  totalPages: number,
+  currentPage: number,
+): PageState => {
   let start = currentPage - 3
   let end = currentPage + 4
 

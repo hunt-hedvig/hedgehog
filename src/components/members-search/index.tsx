@@ -1,6 +1,5 @@
-import { Member } from 'api/generated/graphql'
-import { ListHeader } from 'components/members-search/components/ListHeader'
-import { ListItem } from 'components/members-search/components/ListItem'
+import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
+import { MembersList } from 'components/members-search/components/MembersList'
 import { SearchForm } from 'components/members-search/components/SearchForm'
 import {
   ExtraInstruction,
@@ -9,10 +8,7 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'components/members-search/styles'
-import { Paginator } from 'components/shared/paginator/Paginator'
 import { useMemberSearch } from 'graphql/use-member-search'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'
@@ -99,25 +95,14 @@ export const MembersSearch: React.FC = () => {
       {members.length > 0 && (
         <ListWrapper>
           <FadeIn>
-            <Paginator<Member>
+            <MembersList
+              navigationStep={currentKeyboardNavigationStep}
+              members={members}
+            />
+            <TablePageSelect
               currentPage={page}
               totalPages={totalPages}
-              onChangePage={(nextPage) =>
-                memberSearch(query, {
-                  includeAll,
-                  page: nextPage,
-                  pageSize: 25,
-                })
-              }
-              pagedItems={members}
-              itemContent={(member, index) => (
-                <ListItem
-                  index={index}
-                  member={member}
-                  active={currentKeyboardNavigationStep === index}
-                />
-              )}
-              tableHeader={<ListHeader />}
+              onSelect={(nextPage) => history.push(`/members/list/${nextPage}`)}
             />
           </FadeIn>
         </ListWrapper>

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
+import { Button } from '@hedvig-ui'
 import {
   FormControlLabel as MuiFormControlLabel,
   Switch as MuiSwitch,
   TextField as MuiTextField,
 } from '@material-ui/core'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
-import { Button } from 'hedvig-ui/button'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
 import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'

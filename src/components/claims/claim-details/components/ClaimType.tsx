@@ -7,18 +7,20 @@ import {
 } from 'api/generated/graphql'
 
 import {
+  Button,
+  CardContent,
+  DateTimePicker,
+  FadeIn,
+  Input,
+  Label,
+  SearchableDropdown,
+  Spacing,
+} from '@hedvig-ui'
+import {
   PaperTitle,
   PaperTitleBadgeProps,
 } from 'components/claims/claim-details/components/claim-items/PaperTitle'
 import { format, parseISO } from 'date-fns'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import { Button } from 'hedvig-ui/button'
-import { CardContent } from 'hedvig-ui/card'
-import { DateTimePicker } from 'hedvig-ui/date-time-picker'
-import { Input } from 'hedvig-ui/input'
-import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
-import { Spacing } from 'hedvig-ui/spacing'
-import { Label } from 'hedvig-ui/typography'
 import React, { useState } from 'react'
 import { BugFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'

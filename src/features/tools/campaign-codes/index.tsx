@@ -1,10 +1,9 @@
+import { Card, CardsWrapper, MainHeadline } from '@hedvig-ui'
 import { CampaignFilter } from 'api/generated/graphql'
 import { CampaignCodeFilter } from 'features/tools/campaign-codes/components/CampaignCodeFilter'
 import { CampaignCodeTable } from 'features/tools/campaign-codes/components/CampaignCodeTable'
 import { CreateCampaignCode } from 'features/tools/campaign-codes/components/CreateCampaignCode'
 import { initialCampaignFilter } from 'features/tools/campaign-codes/utils'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 
 export const CampaignCodeInfo: React.FC = () => {
