@@ -10,7 +10,10 @@ interface PageState {
   endPage: number
 }
 
-const getPageLimits = (totalPages: number, currentPage: number): PageState => {
+export const getPageLimits = (
+  totalPages: number,
+  currentPage: number,
+): PageState => {
   let start = currentPage - 3
   let end = currentPage + 4
 
