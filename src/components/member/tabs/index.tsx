@@ -5,7 +5,7 @@ import { PaymentsTab } from 'components/member/tabs/payments-tab'
 import { Quotes } from 'components/member/tabs/quote-tab'
 
 import styled from '@emotion/styled'
-import { ClaimsTab } from 'components/member/tabs/ClaimsTab'
+import { ClaimsTab } from 'components/member/tabs/claims-tab/ClaimsTab'
 import React from 'react'
 import { Tab } from 'semantic-ui-react'
 import { AccountTab } from './account-tab'
