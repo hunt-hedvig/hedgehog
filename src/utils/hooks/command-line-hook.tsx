@@ -8,12 +8,7 @@ import React, {
   useState,
 } from 'react'
 import { Icon } from 'semantic-ui-react'
-import {
-  Key,
-  Keys,
-  useKeyIsPressed,
-  usePressedKeys,
-} from 'utils/hooks/key-press-hook'
+import { Key, Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const CommandLineWindow = styled.div`
   position: absolute;
@@ -247,14 +242,11 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const commandLine = useRef<HTMLInputElement>(null)
   const [showCommandLine, setShowCommandLine] = useState(false)
   const actions = useRef<CommandLineAction[]>([])
-  const [actionKeyCodes, setActionKeyCodes] = useState<number[][]>([])
 
   const isOptionPressed = useKeyIsPressed(Keys.Option)
   const isControlPressed = useKeyIsPressed(Keys.Control)
   const isSpacePressed = useKeyIsPressed(Keys.Space)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
-
-  const keys = usePressedKeys()
 
   const onMouseDown = (event) => {
     if (commandLine.current && commandLine.current.contains(event.target)) {
@@ -262,23 +254,6 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     }
     setShowCommandLine(false)
   }
-
-  useEffect(() => {
-    setActionKeyCodes(
-      actions.current.map((action) => action.keys.map((key) => key.code)),
-    )
-  }, [actions.current])
-
-  useEffect(() => {
-    const matchIndex = actionKeyCodes.findIndex((keyCodes) => {
-      return keyCodes.every((keyCode, index) => keyCode === keys[index])
-    })
-
-    if (matchIndex > -1) {
-      actions.current[matchIndex].onResolve()
-      setShowCommandLine(false)
-    }
-  }, [keys])
 
   useEffect(() => {
     document.addEventListener('mousedown', onMouseDown)
@@ -295,7 +270,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     if (isOptionPressed && isSpacePressed) {
       setShowCommandLine(true)
     }
-  }, [keys])
+  }, [isOptionPressed, isSpacePressed])
 
   useEffect(() => {
     setShowCommandLine(false)
@@ -315,6 +290,39 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const removeAction = (label: string) => {
     actions.current = actions.current.filter((action) => action.label !== label)
   }
+
+  const actionKeyCodes = useRef<number[][]>([])
+  useEffect(() => {
+    actionKeyCodes.current = actions.current.map((action) =>
+      action.keys.map((key) => key.code),
+    )
+  }, [actions.current])
+
+  // tslint:disable:no-unused-expression
+  const handleKeyDown = (e: KeyboardEvent) => {
+    const modifiers: number[] = []
+    e.shiftKey && modifiers.push(Keys.Shift.code)
+    e.ctrlKey && modifiers.push(Keys.Control.code)
+    e.altKey && modifiers.push(Keys.Option.code)
+    e.metaKey && modifiers.push(Keys.Command.code)
+    if (modifiers.includes(e.keyCode) || modifiers.length === 0) {
+      return
+    }
+    const keys = modifiers.concat(e.keyCode)
+
+    const matchIndex = actionKeyCodes.current.findIndex((keyCodes) => {
+      return keyCodes.every((keyCode, index) => keyCode === keys[index])
+    })
+
+    if (matchIndex > -1) {
+      actions.current[matchIndex].onResolve()
+      setShowCommandLine(false)
+    }
+  }
+
+  document.addEventListener('keydown', handleKeyDown, {
+    capture: true,
+  })
 
   return (
     <CommandLineContext.Provider
