@@ -1,6 +1,6 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import { Gem } from 'react-bootstrap-icons'
-import styled from '@emotion/styled'
 import { MonetaryAmountV2 } from 'src/api/generated/graphql'
 import { formatMoney } from 'utils/money'
 import { BaseChip, BaseChipProps } from './BaseChip'
@@ -21,7 +21,7 @@ const AdornmentChip = styled(BaseChip)`
     color: ${({ theme }) => theme.accentContrast};
     margin-left: -6px;
     margin-right: 6px;
-    padding-left: 0px;
+    padding-left: 0;
     text-decoration: ${(props: BaseChipProps) =>
       props.ignored ? 'line-through' : 'none'};
   }

@@ -1,6 +1,6 @@
+import { Button } from '@hedvig-ui'
 import { useWhitelistMemberMutation } from 'api/generated/graphql'
 import { useGetMemberName } from 'graphql/use-get-member-name'
-import { Button } from 'hedvig-ui/button'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 

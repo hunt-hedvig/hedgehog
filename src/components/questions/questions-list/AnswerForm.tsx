@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Checkbox, Form, FormTextArea, Spacing, SubmitButton } from '@hedvig-ui'
 import Grid from '@material-ui/core/Grid'
 import {
   getAnswerQuestionOptions,
@@ -8,9 +9,6 @@ import {
   getMarkQuestionAsResolvedOptions,
   useMarkQuestionAsResolved,
 } from 'graphql/use-mark-question-as-resolved'
-import { Checkbox } from 'hedvig-ui/checkbox'
-import { Form, FormTextArea, SubmitButton } from 'hedvig-ui/form'
-import { Spacing } from 'hedvig-ui/spacing'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'

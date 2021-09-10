@@ -1,7 +1,7 @@
+import { SearchableDropdown } from '@hedvig-ui'
 import { useCreateCampaignPartnerMutation } from 'api/generated/graphql'
 import { mapCampaignOwners } from 'features/tools/campaign-codes/utils'
 import { usePartnerCampaignOwners } from 'graphql/use-get-partner-campaign-owners'
-import { SearchableDropdown } from 'hedvig-ui/searchable-dropdown'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 

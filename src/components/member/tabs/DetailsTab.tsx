@@ -1,3 +1,4 @@
+import { FadeIn } from '@hedvig-ui'
 import { Member } from 'api/generated/graphql'
 import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
@@ -9,7 +10,6 @@ import {
   getSetFraudulentStatusOptions,
   useSetFraudulentStatus,
 } from 'graphql/use-set-fraudulent-status'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'

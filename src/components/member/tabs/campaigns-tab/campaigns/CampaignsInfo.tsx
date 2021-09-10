@@ -1,8 +1,8 @@
+import { Card, CardsWrapper } from '@hedvig-ui'
 import { ReferralInformation } from 'api/generated/graphql'
 import { CampaignCodeInput } from 'components/member/tabs/campaigns-tab/campaigns/CampaignCodeInput'
 import { CampaignsRedeemedTable } from 'components/member/tabs/campaigns-tab/campaigns/CampaignsRedeemedTable'
 import { TableHeadline } from 'components/member/tabs/campaigns-tab/styles'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
 import React from 'react'
 
 export const CampaignsInfo: React.FC<{

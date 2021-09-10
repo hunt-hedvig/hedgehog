@@ -1,13 +1,13 @@
+import {
+  FadeIn,
+  LoadingMessage,
+  MainHeadline,
+  StandaloneMessage,
+} from '@hedvig-ui'
 import { CampaignsInfo } from 'components/member/tabs/campaigns-tab/campaigns/CampaignsInfo'
 import { ReferralsInfo } from 'components/member/tabs/campaigns-tab/referrals/ReferralsInfo'
 import { RefreshButton } from 'components/member/tabs/shared/refresh-button'
 import { useGetReferralInformation } from 'graphql/use-get-referral-information'
-import { FadeIn } from 'hedvig-ui/animations/fade-in'
-import {
-  LoadingMessage,
-  StandaloneMessage,
-} from 'hedvig-ui/animations/standalone-message'
-import { MainHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 

@@ -1,15 +1,19 @@
 import {
+  Button,
+  Card,
+  CardsWrapper,
+  MainHeadline,
+  Spacing,
+  TextArea,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
+import {
   NorwegianGripenFactorInput,
   NorwegianGripenFactorType,
   useCreateNorwegianGripenPriceEngineMutation,
 } from 'api/generated/graphql'
 import { FactorEditor } from 'features/tools/norwegian-tariff-editor/factor-editor'
 import { PostalCodesEditor } from 'features/tools/norwegian-tariff-editor/postal-codes-editor'
-import { Button } from 'hedvig-ui/button'
-import { Card, CardsWrapper } from 'hedvig-ui/card'
-import { Spacing } from 'hedvig-ui/spacing'
-import { TextArea } from 'hedvig-ui/text-area'
-import { MainHeadline, ThirdLevelHeadline } from 'hedvig-ui/typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 

@@ -1,4 +1,11 @@
 import {
+  Checkbox,
+  Form,
+  FormDropdown,
+  FormInput,
+  SubmitButton,
+} from '@hedvig-ui'
+import {
   ClaimPaymentInput,
   ClaimPaymentType,
   ClaimSwishPaymentInput,
@@ -6,8 +13,6 @@ import {
   useCreateClaimPaymentMutation,
   useCreateSwishClaimPaymentMutation,
 } from 'api/generated/graphql'
-import { Checkbox } from 'hedvig-ui/checkbox'
-import { Form, FormDropdown, FormInput, SubmitButton } from 'hedvig-ui/form'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Bold, Capitalized, Popover } from '@hedvig-ui'
 import { IconButton } from '@material-ui/core'
 import { MonthlyEntry } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
@@ -6,8 +7,6 @@ import {
   getRemoveMonthlyEntryOptions,
   useRemoveMonthlyEntry,
 } from 'graphql/use-remove-monthly-entry'
-import { Popover } from 'hedvig-ui/popover'
-import { Bold, Capitalized } from 'hedvig-ui/typography'
 import React from 'react'
 import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'

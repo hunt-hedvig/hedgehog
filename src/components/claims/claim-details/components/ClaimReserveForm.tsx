@@ -4,9 +4,7 @@ import {
 } from 'api/generated/graphql'
 import React, { useState } from 'react'
 
-import { Button } from 'hedvig-ui/button'
-import { Input } from 'hedvig-ui/input'
-import { Spacing } from 'hedvig-ui/spacing'
+import { Button, Input, Spacing } from '@hedvig-ui'
 
 const isStringNumber = (s: string) => /^-?\d+$/.test(s) || /^\d+\.\d+$/.test(s)
 
