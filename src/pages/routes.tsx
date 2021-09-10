@@ -4,7 +4,6 @@ import { ClaimDetails } from 'components/claims/claim-details'
 import { DashboardPage } from 'components/dashboard'
 import { MembersSearch } from 'components/members-search'
 import { QuestionsPage } from 'components/questions'
-import { MemberPage } from 'containers/MemberPage'
 import { Tools } from 'features/tools'
 import { CampaignCodeInfo } from 'features/tools/campaign-codes'
 import { ChargePage } from 'features/tools/charges'
@@ -16,6 +15,7 @@ import { UnsignMemberTool } from 'features/tools/staging-tools/unsign-member-too
 import { SwitcherAutomation } from 'features/tools/switcher-automation'
 import React from 'react'
 import { Route, Switch } from 'react-router'
+import { MemberPage } from './members/[memberId]/[tab]'
 
 export const Routes: React.FC = () => {
   return (
