@@ -30,6 +30,7 @@ import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
 
 const ScrollX = styled.div`
+  margin-bottom: 1rem;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
 `
@@ -243,7 +244,6 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
           <ClaimPayment
             sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
             claimId={claimId}
-            refetch={refetchPayments}
             identified={Boolean(identity)}
             market={paymentsData?.claim?.contract?.market}
             carrier={paymentsData?.claim?.agreement?.carrier}

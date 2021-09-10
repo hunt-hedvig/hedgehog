@@ -14,13 +14,11 @@ import { ClaimPayment } from './ClaimPayment'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 it("doesn't submit empty form", async () => {
-  const refetchPage = jest.fn(() => Promise.resolve())
   const wrapper = mount(
     <MockedProvider>
       <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
         claimId={'abc123'}
-        refetch={refetchPage}
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
@@ -31,7 +29,7 @@ it("doesn't submit empty form", async () => {
   await act(() => tickAsync())
 
   await act(() => {
-    wrapper.find('Form').simulate('submit')
+    wrapper.find('FormProvider').simulate('submit')
     return tickAsync()
   })
 
@@ -82,7 +80,6 @@ it('submits valid form with confirmation', async () => {
       <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
         claimId={'abc123'}
-        refetch={refetch}
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
@@ -102,13 +99,7 @@ it('submits valid form with confirmation', async () => {
     wrapper.find('input[name="note"]').simulate('change', {
       target: { value: 'test value with more than 5 chars', name: 'note' },
     })
-    // Manually trigger `onChange` because MUI doesn't support native `change` simulations
-    wrapper.find('SelectInput[name="type"]').prop('onChange')!({
-      target: {
-        value: ClaimPaymentType.Automatic,
-        name: 'type',
-      },
-    } as any)
+
     await tickAsync()
 
     wrapper.find('form').simulate('submit', {})
@@ -139,6 +130,4 @@ it('submits valid form with confirmation', async () => {
     await sleep(1001)
     await tickAsync()
   })
-
-  expect(refetch).toHaveBeenCalled()
 })
