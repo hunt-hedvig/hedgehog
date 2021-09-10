@@ -1,15 +1,30 @@
 import styled from '@emotion/styled'
-import { CardLink, CardsWrapper, FadeIn } from '@hedvig-ui'
-import {
-  StagingTools,
-  stagingToolsAvailable,
-} from 'features/tools/staging-tools'
+import { CardLink, CardsWrapper, FadeIn, MainHeadline } from '@hedvig-ui'
+
 import React from 'react'
 
 const Icon = styled('div')`
   font-size: 2rem;
   padding-bottom: 1rem;
 `
+
+const stagingToolsAvailable = () => {
+  return (window as any).HOPE_FEATURES?.stagingSpecificTools ?? false
+}
+
+const StagingTools: React.FC = () => {
+  return (
+    <>
+      <MainHeadline>Staging specific tools</MainHeadline>
+      <CardsWrapper>
+        <CardLink to="/tools/unsign-member" span={4}>
+          <Icon>✍️</Icon>
+          Unsign member
+        </CardLink>
+      </CardsWrapper>
+    </>
+  )
+}
 
 export const ToolsPage: React.FC = () => (
   <FadeIn>
