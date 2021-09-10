@@ -3,6 +3,7 @@ build/*
 node_modules/*
 yarn-error.log
 .idea
+.vscode
 .env
 /tsconfig-diff-master.json
 *.iml

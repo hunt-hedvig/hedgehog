@@ -26,14 +26,8 @@ import {
   setContractForClaimOptions,
   useSetContractForClaim,
 } from 'graphql/use-add-contract-id-to-claim'
-import {
-  setCoveringEmployeeOptions,
-  useSetCoveringEmployee,
-} from 'graphql/use-set-covering-employee'
-import {
-  updateClaimStateOptions,
-  useUpdateClaimState,
-} from 'graphql/use-update-claim-state'
+import { useSetCoveringEmployee } from 'graphql/use-set-covering-employee'
+import { useUpdateClaimState } from 'graphql/use-update-claim-state'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 
@@ -169,9 +163,17 @@ export const ClaimInformation: React.FC<{
             enumToSelectFrom={ClaimState}
             placeholder={''}
             onChange={async (value) => {
-              await updateClaimState(
-                updateClaimStateOptions(claimId, validateSelectOption(value)),
-              )
+              await updateClaimState({
+                variables: { id: claimId, state: validateSelectOption(value) },
+                optimisticResponse: {
+                  updateClaimState: {
+                    id: claimId,
+                    __typename: 'Claim',
+                    state: validateSelectOption(value),
+                    events: data?.claim?.events ?? [],
+                  },
+                },
+              })
             }}
           />
         </SelectWrapper>
@@ -180,12 +182,20 @@ export const ClaimInformation: React.FC<{
           <Dropdown
             value={coveringEmployee ? 'True' : 'False'}
             onChange={async (value) => {
-              await setCoveringEmployee(
-                setCoveringEmployeeOptions(
-                  claimId,
-                  validateSelectEmployeeClaimOption(value),
-                ),
-              )
+              await setCoveringEmployee({
+                variables: {
+                  id: claimId,
+                  coveringEmployee: validateSelectEmployeeClaimOption(value),
+                },
+                optimisticResponse: {
+                  setCoveringEmployee: {
+                    id: claimId,
+                    __typename: 'Claim',
+                    coveringEmployee: validateSelectEmployeeClaimOption(value),
+                    events: data?.claim?.events ?? [],
+                  },
+                },
+              })
             }}
             options={[
               { key: 0, value: 'True', text: 'True' },
