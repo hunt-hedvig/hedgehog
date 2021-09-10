@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
+import { Button, Modal, ModalProps } from '@hedvig-ui'
 import { boolean, number, select, text } from '@storybook/addon-knobs'
-import { Button } from 'hedvig-ui/button'
-import { Modal, ModalProps } from 'hedvig-ui/modal'
 import React from 'react'
 
 const ConfirmButtons = styled.div`

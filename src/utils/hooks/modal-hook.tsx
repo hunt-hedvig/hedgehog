@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from 'hedvig-ui/button'
-import { Modal } from 'hedvig-ui/modal'
+import { Button, Modal } from '@hedvig-ui'
 import React, { createContext, useContext, useRef, useState } from 'react'
 import { Key } from 'utils/hooks/key-press-hook'
 

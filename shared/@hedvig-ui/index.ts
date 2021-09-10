@@ -99,3 +99,5 @@ export {
   ThirdLevelHeadline,
   Monetary,
 } from './Typography/typography'
+
+export { Modal, ModalProps } from './Modal'
