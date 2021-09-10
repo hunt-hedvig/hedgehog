@@ -2058,7 +2058,17 @@ export type CreateClaimPaymentMutation = { __typename?: 'MutationType' } & {
   createClaimPayment?: Maybe<
     { __typename?: 'Claim' } & {
       payments: Array<
-        { __typename?: 'ClaimPayment' } & Pick<ClaimPayment, 'id'>
+        { __typename?: 'ClaimPayment' } & Pick<
+          ClaimPayment,
+          | 'id'
+          | 'amount'
+          | 'deductible'
+          | 'exGratia'
+          | 'note'
+          | 'timestamp'
+          | 'type'
+          | 'status'
+        >
       >
     }
   >
@@ -4404,6 +4414,13 @@ export const CreateClaimPaymentDocument = gql`
     createClaimPayment(id: $id, payment: $payment) {
       payments {
         id
+        amount
+        deductible
+        exGratia
+        note
+        timestamp
+        type
+        status
       }
     }
   }

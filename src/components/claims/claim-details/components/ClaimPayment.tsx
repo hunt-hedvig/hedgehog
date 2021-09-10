@@ -13,12 +13,10 @@ import {
   useCreateClaimPaymentMutation,
   useCreateSwishClaimPaymentMutation,
 } from 'api/generated/graphql'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { Market } from 'types/enums'
-import { sleep } from 'utils/sleep'
-import { MutationFeedbackBlock } from '../../../shared/MutationFeedbackBlock'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 export interface PaymentFormData {
@@ -44,18 +42,13 @@ export const ClaimPayment: React.FC<{
   market: string
   carrier: string
 }> = ({ sanctionStatus, carrier, claimId, identified, market, refetch }) => {
-  const [createPayment, createPaymentProps] = useCreateClaimPaymentMutation()
-  const [
-    createSwishPayment,
-    createSwishPaymentProps,
-  ] = useCreateSwishClaimPaymentMutation()
+  const [createPayment] = useCreateClaimPaymentMutation()
+  const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
   const [isConfirming, setIsConfirming] = useState(false)
   const [isExGratia, setIsExGratia] = useState(false)
   const [isOverridden, setIsOverridden] = useState(false)
-  const [paymentStatus, setPaymentStatus] = useState<
-    'COMPLETED' | 'FAILED' | null
-  >(null)
+
   const categoryOptions = [
     ...Object.keys(ClaimPaymentType).map((el, idx) => ({
       key: idx + 1,
@@ -75,25 +68,6 @@ export const ClaimPayment: React.FC<{
   const isPotentiallySanctioned =
     sanctionStatus === SanctionStatus.Undetermined ||
     sanctionStatus === SanctionStatus.PartialHit
-
-  useEffect(() => {
-    if (createPaymentProps.data || createSwishPaymentProps.data) {
-      setPaymentStatus('COMPLETED')
-    } else if (createPaymentProps.error || createSwishPaymentProps.data) {
-      setPaymentStatus('FAILED')
-    } else {
-      setPaymentStatus(null)
-    }
-  }, [
-    createPaymentProps.data,
-    createPaymentProps.error,
-    createSwishPaymentProps.data,
-    createSwishPaymentProps.error,
-  ])
-
-  const onSubmitHandler = () => {
-    setIsConfirming(true)
-  }
 
   const createPaymentHandler = async () => {
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
@@ -157,13 +131,12 @@ export const ClaimPayment: React.FC<{
         },
       )
     }
-    await sleep(1000)
     await refetch()
   }
 
   return (
     <FormProvider {...form}>
-      <Form onSubmit={onSubmitHandler}>
+      <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
           placeholder="Payout amount"
           onChange={() => form.control.updateFormState()}
@@ -265,18 +238,6 @@ export const ClaimPayment: React.FC<{
             amount={form.getValues().amount}
             identified={identified}
             market={market}
-          />
-        )}
-
-        {!!paymentStatus && (
-          <MutationFeedbackBlock
-            status={paymentStatus}
-            messages={{
-              COMPLETED: 'Payment was completed',
-              FAILED:
-                'Payment failed. Please contact tech support if failure is persistent.',
-            }}
-            onTimeout={() => setPaymentStatus(null)}
           />
         )}
       </Form>
