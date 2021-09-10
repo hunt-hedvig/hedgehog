@@ -128,7 +128,7 @@ export const Modal = (props: ModalProps) => {
   return (
     <Portal>
       <ModalWrapperStyled position={props.position} side={props.side}>
-        <FadeIn>
+        <FadeIn duration={250}>
           <ModalContent
             ref={modalRef}
             height={props.height}
