@@ -14,13 +14,11 @@ import { ClaimPayment } from './ClaimPayment'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 it("doesn't submit empty form", async () => {
-  const refetchPage = jest.fn(() => Promise.resolve())
   const wrapper = mount(
     <MockedProvider>
       <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
         claimId={'abc123'}
-        refetch={refetchPage}
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
@@ -82,7 +80,6 @@ it('submits valid form with confirmation', async () => {
       <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
         claimId={'abc123'}
-        refetch={refetch}
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"

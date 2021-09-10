@@ -244,7 +244,6 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
           <ClaimPayment
             sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
             claimId={claimId}
-            refetch={refetchPayments}
             identified={Boolean(identity)}
             market={paymentsData?.claim?.contract?.market}
             carrier={paymentsData?.claim?.agreement?.carrier}

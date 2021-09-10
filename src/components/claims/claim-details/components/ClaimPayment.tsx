@@ -37,11 +37,10 @@ const areSwishPayoutsEnabled = () => {
 export const ClaimPayment: React.FC<{
   sanctionStatus?: SanctionStatus | null
   claimId: string
-  refetch: () => Promise<any>
   identified: boolean
   market: string
   carrier: string
-}> = ({ sanctionStatus, carrier, claimId, identified, market, refetch }) => {
+}> = ({ sanctionStatus, carrier, claimId, identified, market }) => {
   const [createPayment] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
