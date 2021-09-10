@@ -15,7 +15,6 @@ import {
 } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
-import { PayoutDetails } from 'features/payouts/payout-details'
 import gql from 'graphql-tag'
 import { useGetAccount } from 'graphql/use-get-account'
 import React from 'react'
@@ -28,6 +27,7 @@ import {
   useGetMemberTransactionsQuery,
 } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
+import { PayoutDetails } from './PayoutDetails'
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
