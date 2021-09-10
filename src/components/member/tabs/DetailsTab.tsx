@@ -1,7 +1,6 @@
+import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
 import { Member } from 'api/generated/graphql'
-import { WideModal } from 'components/shared/modals/WideModal'
-import TableFields from 'components/shared/table-fields/TableFields'
 import {
   getEditMemberInfoOptions,
   useEditMemberInfo,
@@ -20,6 +19,12 @@ const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
   createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
+
+const isClient = typeof window !== 'undefined'
+
+export const WideModal = styled(Modal)({
+  height: isClient ? window.innerHeight + 100 : '120%',
+})
 
 export const DetailsTab: React.FC<{
   member: Member
@@ -87,10 +92,19 @@ export const DetailsTab: React.FC<{
     <FadeIn>
       <Table selectable>
         <Table.Body>
-          <TableFields
-            fields={memberInfoWithoutSsn}
-            fieldFormatters={memberFieldFormatters}
-          />
+          {Object.keys(memberInfoWithoutSsn).map((field, id) => {
+            const formatter = memberFieldFormatters[field]
+            return (
+              <Table.Row key={id}>
+                <Table.Cell>{getFieldName(field)}</Table.Cell>
+                <Table.Cell>
+                  {formatter
+                    ? formatter(memberInfoWithoutSsn[field])
+                    : getFieldValue(memberInfoWithoutSsn[field])}
+                </Table.Cell>
+              </Table.Row>
+            )
+          })}
           <FraudulentStatusEdit
             getFraudStatusInfo={() => ({
               status: fraudStatus || fraudulentStatus,

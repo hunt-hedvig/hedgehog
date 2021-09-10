@@ -1,6 +1,5 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { getPageLimits } from 'components/shared/paginator/Paginator'
 import React, { TableHTMLAttributes } from 'react'
 import { range } from 'utils/helpers'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
@@ -152,4 +151,30 @@ export const TablePageSelect: React.FC<{
       </PageLink>
     </PageSelectWrapper>
   )
+}
+
+interface PageState {
+  startPage: number
+  endPage: number
+}
+
+const getPageLimits = (totalPages: number, currentPage: number): PageState => {
+  let start = currentPage - 3
+  let end = currentPage + 4
+
+  if (start < 0) {
+    end += -start
+  }
+
+  if (end > totalPages) {
+    start -= end - totalPages
+  }
+
+  start = Math.max(start, 0)
+  end = Math.min(end, totalPages)
+
+  return {
+    startPage: start,
+    endPage: end,
+  }
 }

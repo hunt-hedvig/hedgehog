@@ -16,7 +16,7 @@ const BreadcrumbsContainer = styled.div`
   }
 `
 
-const Breadcrumbs: React.FC = () => {
+export const Breadcrumbs: React.FC = () => {
   const { pathname } = useLocation()
 
   if (pathname.startsWith('/login')) {
@@ -48,5 +48,3 @@ const Breadcrumbs: React.FC = () => {
     </BreadcrumbsContainer>
   )
 }
-
-export default Breadcrumbs

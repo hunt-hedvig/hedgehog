@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   FadeIn,
   LoadingMessage,
@@ -5,13 +6,20 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { FilterState, QuestionsFilter } from 'components/questions/filter'
 import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'components/questions/questions-list/QuestionGroups'
-import { ListPage } from 'components/shared'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React from 'react'
-import { FilterState, QuestionsFilter } from 'src/components/questions/filter'
 import { useInsecurePersistentState } from 'utils/state'
+
+const ListPage = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0;
+`
 
 export const QuestionsPage: React.FC = () => {
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<

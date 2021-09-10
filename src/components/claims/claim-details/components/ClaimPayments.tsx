@@ -25,7 +25,6 @@ import { PaperTitle } from 'components/claims/claim-details/components/claim-ite
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
-import { Checkmark, Cross } from '../../../icons'
 import { ClaimPayment } from './ClaimPayment'
 import { ClaimReserves } from './ClaimReserves'
 
@@ -71,6 +70,11 @@ const NoCarrierMessage = styled(StandaloneMessage)`
 const NoCarrierSubtitle = styled(Paragraph)`
   font-size: 0.8em;
   padding-top: 1em;
+`
+
+const ExGratiaTag = styled(InfoTag)`
+  font-weight: bold;
+  text-align: center;
 `
 
 export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
@@ -203,7 +207,11 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
                     {format(parseISO(payment.timestamp), 'yyyy-MM-dd HH:mm:ss')}
                   </PaymentTableCell>
                   <PaymentTableCell>
-                    {payment.exGratia ? <Checkmark /> : <Cross />}
+                    {payment.exGratia ? (
+                      <ExGratiaTag status={'success'}>Yes</ExGratiaTag>
+                    ) : (
+                      <ExGratiaTag status={'danger'}>No</ExGratiaTag>
+                    )}
                   </PaymentTableCell>
                   <PaymentTableCell>{payment.type}</PaymentTableCell>
                   <PaymentTableCell>{payment.status}</PaymentTableCell>
