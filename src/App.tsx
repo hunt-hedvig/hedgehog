@@ -6,21 +6,18 @@ import {
   lightTheme,
   lightUiTheme,
   SemanticOverrides,
-  StandaloneMessage,
 } from '@hedvig-ui'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { CssBaseline } from '@material-ui/core'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { history } from 'clientEntry'
-import { DashboardPage } from 'components/dashboard'
-import { QuestionsPage } from 'components/questions'
 import Breadcrumbs from 'components/shared/navigation/breadcrumbs/Breadcrumbs'
 import { VerticalMenu } from 'components/shared/navigation/sidebar/VerticalMenu'
+import { Routes } from 'pages/routes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
-import Routes from 'routes'
 import { useAuthenticate } from 'utils/auth'
 import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
 import { CommandLineProvider } from 'utils/hooks/command-line-hook'
@@ -120,42 +117,7 @@ const App: React.FC = () => {
                               return null
                             }}
                           />
-                          {me && (
-                            <Switch>
-                              <Route
-                                path="/dashborad"
-                                component={DashboardPage}
-                              />
-                              <Route
-                                path="/questions"
-                                component={QuestionsPage}
-                              />
-                              <Route
-                                path="/claims"
-                                component={Routes.ClaimsPageRoute}
-                              />
-                              <Route
-                                path="/members"
-                                component={Routes.MembersPageRoute}
-                              />
-                              <Route
-                                path="/tools"
-                                component={Routes.ToolsPageRoute}
-                              />
-                              <Route
-                                exact
-                                path={'/'}
-                                component={DashboardPage}
-                              />
-                              <Route
-                                component={() => (
-                                  <StandaloneMessage paddingTop={'25vh'}>
-                                    Page not found
-                                  </StandaloneMessage>
-                                )}
-                              />
-                            </Switch>
-                          )}
+                          {me && <Routes />}
                         </Switch>
                         <Toaster
                           position={'top-center'}
