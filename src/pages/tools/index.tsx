@@ -11,7 +11,7 @@ const Icon = styled('div')`
   padding-bottom: 1rem;
 `
 
-export const Tools: React.FC = () => (
+export const ToolsPage: React.FC = () => (
   <FadeIn>
     <CardsWrapper>
       <CardLink to="/tools/charges" span={4}>

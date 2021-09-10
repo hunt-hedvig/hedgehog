@@ -12,7 +12,7 @@ export const Row = styled.div`
   align-items: center;
 `
 
-export const Employees: React.FC = () => {
+export const EmployeesPage: React.FC = () => {
   const { data } = useGetMeQuery()
   const scopes = data?.me?.scopes ?? []
 

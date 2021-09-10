@@ -16,7 +16,7 @@ import { getSwitcherEmailStatus } from 'utils/switcher-emails'
 import { convertEnumToTitle, getFlagFromMarket } from 'utils/text'
 import { StatusTableRow, SwitcherEmailRow } from './SwitcherTableRow'
 
-export const SwitcherAutomation: React.FC = () => {
+export const SwitcherAutomationPage: React.FC = () => {
   const switchers = useGetSwitcherEmailsQuery()
 
   const [selectedMarket, setSelectedMarket] = useState<Market | null>(null)

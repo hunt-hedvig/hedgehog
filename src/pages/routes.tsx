@@ -1,48 +1,52 @@
 import { StandaloneMessage } from '@hedvig-ui'
-import { MembersSearch } from 'features/members-search'
-import { Tools } from 'features/tools'
-import { CampaignCodeInfo } from 'features/tools/campaign-codes'
-import { ChargePage } from 'features/tools/charges'
-import { Employees } from 'features/tools/employees'
-import { ItemizerComponent } from 'features/tools/itemizer'
-import { NorwegianTariffCreator } from 'features/tools/norwegian-tariff-editor'
-import { PerilsEditor } from 'features/tools/perils-editor'
-import { UnsignMemberTool } from 'features/tools/staging-tools/unsign-member-tool'
-import { SwitcherAutomation } from 'features/tools/switcher-automation'
+import { CampaignCodesPage } from 'features/tools/campaign-codes'
+import { ChargesPage } from 'features/tools/charges'
+import { EmployeesPage } from 'features/tools/employees'
+import { ItemizerPage } from 'features/tools/itemizer'
+import { NorwegianTariffCreatorPage } from 'features/tools/norwegian-tariff-editor'
+import { PerilsEditorPage } from 'features/tools/perils-editor'
+import { UnsignMemberPage } from 'features/tools/staging-tools/unsign-member-tool'
+import { SwitcherAutomationPage } from 'features/tools/switcher-automation'
 import React from 'react'
 import { Route, Switch } from 'react-router'
 import { ClaimDetails } from './claims/[claimId]/members/[memberId]'
 import { ClaimsPage } from './claims/list/[page]'
 import { DashboardPage } from './dashborad'
+import { MembersPage } from './members'
 import { MemberPage } from './members/[memberId]/[tab]'
 import { QuestionsPage } from './questions'
+import { ToolsPage } from './tools'
 
 export const Routes: React.FC = () => {
   return (
     <Switch>
+      <Route path={'/'} exact component={DashboardPage} />
       <Route path="/dashborad" component={DashboardPage} />
       <Route path="/questions" component={QuestionsPage} />
-      <Route exact path="/claims/list/:page?" component={ClaimsPage} />
+      <Route path="/claims/list/:page?" exact component={ClaimsPage} />
       <Route
-        exact
         path="/claims/:claimId/members/:memberId"
+        exact
         component={ClaimDetails}
       />
-      <Route exact path="/members" component={MembersSearch} />
+      <Route exact path="/members" component={MembersPage} />
       <Route path="/members/:memberId/:tab?" component={MemberPage} />
-      <Route component={Tools} path="/tools" exact />
-      <Route component={ChargePage} path="/tools/charges" />
-      <Route component={SwitcherAutomation} path="/tools/switcher-automation" />
-      <Route component={PerilsEditor} path="/tools/perils-editor" />
+
+      <Route path="/tools" exactcomponent={ToolsPage} />
+      <Route path="/tools/charges" component={ChargesPage} />
       <Route
-        component={NorwegianTariffCreator}
-        path="/tools/norwegian-tariff-creator"
+        path="/tools/switcher-automation"
+        component={SwitcherAutomationPage}
       />
-      <Route component={ItemizerComponent} path="/tools/itemizer" />
-      <Route component={Employees} path="/tools/employees" />
-      <Route component={CampaignCodeInfo} path="/tools/campaign-codes" />
-      <Route component={UnsignMemberTool} path="/tools/unsign-member" />
-      <Route exact path={'/'} component={DashboardPage} />
+      <Route path="/tools/perils-editor" component={PerilsEditorPage} />
+      <Route
+        path="/tools/norwegian-tariff-creator"
+        component={NorwegianTariffCreatorPage}
+      />
+      <Route path="/tools/itemizer" component={ItemizerPage} />
+      <Route path="/tools/employees" component={EmployeesPage} />
+      <Route path="/tools/campaign-codes" component={CampaignCodesPage} />
+      <Route path="/tools/unsign-member" component={UnsignMemberPage} />
       <Route
         component={() => (
           <StandaloneMessage paddingTop={'25vh'}>

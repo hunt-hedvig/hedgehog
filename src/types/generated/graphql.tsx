@@ -2202,12 +2202,6 @@ export type SetClaimTypeMutation = { __typename?: 'MutationType' } & {
   >
 }
 
-export type GetMeQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetMeQuery = { __typename?: 'QueryType' } & {
-  me: { __typename?: 'Me' } & Pick<Me, 'email' | 'scopes' | 'role'>
-}
-
 export type AddAccountEntryToMemberMutationVariables = Exact<{
   memberId: Scalars['ID']
   accountEntry: AccountEntryInput
@@ -3080,6 +3074,12 @@ export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type GetMeQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetMeQuery = { __typename?: 'QueryType' } & {
+  me: { __typename?: 'Me' } & Pick<Me, 'email' | 'scopes' | 'role'>
+}
+
 export type GetMemberClaimsQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -3743,7 +3743,7 @@ export type SetFraudulentStatusMutationVariables = Exact<{
 export type SetFraudulentStatusMutation = { __typename?: 'MutationType' } & {
   setFraudulentStatus: { __typename?: 'Member' } & Pick<
     Member,
-    'fraudulentStatus' | 'fraudulentStatusDescription'
+    'memberId' | 'fraudulentStatus' | 'fraudulentStatusDescription'
   >
 }
 
@@ -4814,61 +4814,6 @@ export type SetClaimTypeMutationResult = ApolloReactCommon.MutationResult<
 export type SetClaimTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetClaimTypeMutation,
   SetClaimTypeMutationVariables
->
-export const GetMeDocument = gql`
-  query GetMe {
-    me {
-      email
-      scopes
-      role
-    }
-  }
-`
-
-/**
- * __useGetMeQuery__
- *
- * To run a query within a React component, call `useGetMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetMeQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetMeQuery,
-    GetMeQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetMeQuery, GetMeQueryVariables>(
-    GetMeDocument,
-    options,
-  )
-}
-export function useGetMeLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetMeQuery,
-    GetMeQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetMeQuery, GetMeQueryVariables>(
-    GetMeDocument,
-    options,
-  )
-}
-export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>
-export type GetMeLazyQueryHookResult = ReturnType<typeof useGetMeLazyQuery>
-export type GetMeQueryResult = ApolloReactCommon.QueryResult<
-  GetMeQuery,
-  GetMeQueryVariables
 >
 export const AddAccountEntryToMemberDocument = gql`
   mutation addAccountEntryToMember(
@@ -7515,6 +7460,61 @@ export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
   GetItemCategoriesQuery,
   GetItemCategoriesQueryVariables
 >
+export const GetMeDocument = gql`
+  query GetMe {
+    me {
+      email
+      scopes
+      role
+    }
+  }
+`
+
+/**
+ * __useGetMeQuery__
+ *
+ * To run a query within a React component, call `useGetMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMeQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMeQuery,
+    GetMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<GetMeQuery, GetMeQueryVariables>(
+    GetMeDocument,
+    options,
+  )
+}
+export function useGetMeLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMeQuery,
+    GetMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<GetMeQuery, GetMeQueryVariables>(
+    GetMeDocument,
+    options,
+  )
+}
+export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>
+export type GetMeLazyQueryHookResult = ReturnType<typeof useGetMeLazyQuery>
+export type GetMeQueryResult = ApolloReactCommon.QueryResult<
+  GetMeQuery,
+  GetMeQueryVariables
+>
 export const GetMemberClaimsDocument = gql`
   query GetMemberClaims($memberId: ID!) {
     member(id: $memberId) {
@@ -9270,6 +9270,7 @@ export const SetFraudulentStatusDocument = gql`
     $request: MemberFraudulentStatusInput!
   ) {
     setFraudulentStatus(memberId: $memberId, request: $request) {
+      memberId
       fraudulentStatus
       fraudulentStatusDescription
     }

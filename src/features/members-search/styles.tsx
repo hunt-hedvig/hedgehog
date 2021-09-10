@@ -147,10 +147,3 @@ export const MemberId = styled.span`
   display: block;
   color: ${({ theme }) => theme.mutedText};
 `
-
-export const CircleWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${({ theme }) => theme.accentContrast};
-`

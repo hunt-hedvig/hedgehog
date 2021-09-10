@@ -6,7 +6,7 @@ import {
 } from 'types/generated/graphql'
 import { TableInput } from './TableInput'
 
-export const ItemizerComponent: React.FC = () => {
+export const ItemizerPage: React.FC = () => {
   const [insertItemCategories] = useInsertItemCategoriesMutation()
   const [insertValuationRules] = useInsertValuationRulesMutation()
 
