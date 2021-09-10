@@ -3,6 +3,7 @@ mutation SetFraudulentStatus(
   $request: MemberFraudulentStatusInput!
 ) {
   setFraudulentStatus(memberId: $memberId, request: $request) {
+    memberId
     fraudulentStatus
     fraudulentStatusDescription
   }
