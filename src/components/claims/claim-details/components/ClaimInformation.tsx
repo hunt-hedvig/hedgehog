@@ -170,7 +170,7 @@ export const ClaimInformation: React.FC<{
                     id: claimId,
                     __typename: 'Claim',
                     state: validateSelectOption(value),
-                    events: [],
+                    events: data?.claim?.events ?? [],
                   },
                 },
               })
@@ -192,7 +192,7 @@ export const ClaimInformation: React.FC<{
                     id: claimId,
                     __typename: 'Claim',
                     coveringEmployee: validateSelectEmployeeClaimOption(value),
-                    events: [],
+                    events: data?.claim?.events ?? [],
                   },
                 },
               })
