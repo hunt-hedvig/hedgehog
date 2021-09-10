@@ -1,15 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
-import { forceLogOut } from '../utils/auth'
-
-const axiosInstance = axios.create({
-  baseURL: '/api/',
-  timeout: 10000,
-  withCredentials: false,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-})
+import axios from 'axios'
 
 const setItemWithExpiry = (key, value, ttl) =>
   localStorage.setItem(
@@ -20,7 +9,7 @@ const setItemWithExpiry = (key, value, ttl) =>
     }),
   )
 
-export const getItemWithExpiry = (key) => {
+const getItemWithExpiry = (key) => {
   const itemStr = localStorage.getItem(key)
 
   if (!itemStr) {
@@ -56,42 +45,3 @@ export const refreshAccessToken = async () => {
     localStorage.removeItem('hvg:refreshingAccessToken')
   }
 }
-
-const callApi = async <T = any>(
-  conf: any,
-  data: any,
-  id: string | number | undefined,
-  params: any,
-  retryCount = 0,
-): Promise<AxiosResponse<T>> => {
-  try {
-    return await axiosInstance.request<T>({
-      url: `${conf.url}${id ? '/' + id : ''}`,
-      method: conf.method,
-      withCredentials: true,
-      data,
-      params,
-    })
-  } catch (error) {
-    if (
-      error.response &&
-      (error.response.status === 403 || error.response.status === 401)
-    ) {
-      try {
-        await refreshAccessToken()
-      } catch (e) {
-        forceLogOut()
-        return null as any
-      }
-
-      if (retryCount >= 20) {
-        forceLogOut()
-        return null as any
-      }
-
-      return callApi(conf, data, id, params, retryCount + 1)
-    }
-    throw new Error(error)
-  }
-}
-export default callApi
