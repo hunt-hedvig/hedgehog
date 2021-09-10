@@ -4,9 +4,9 @@ import {
   lightTheme,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { QuestionGroup } from 'api/generated/graphql'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
+import { QuestionGroup } from 'types/generated/graphql'
 import { range } from 'utils/array'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {

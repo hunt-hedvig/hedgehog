@@ -9,10 +9,10 @@ import {
   TableRow,
   withStyles,
 } from '@material-ui/core'
-import { useDeleteClaimItemMutation } from 'api/generated/graphql'
 import { useGetClaimItems } from 'graphql/use-get-claim-items'
 import React from 'react'
 import { ChevronRight, InfoCircleFill, Trash } from 'react-bootstrap-icons'
+import { useDeleteClaimItemMutation } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 import {
   ChevronRightWrapper,

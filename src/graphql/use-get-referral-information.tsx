@@ -2,7 +2,7 @@ import {
   GetReferralInformationQueryHookResult,
   ReferralInformation,
   useGetReferralInformationQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type ReferralInformationReturnTuple = [
   ReferralInformation | undefined,

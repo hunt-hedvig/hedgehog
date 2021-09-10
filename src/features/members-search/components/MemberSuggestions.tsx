@@ -1,4 +1,3 @@
-import { useMemberNameAndContractMarketInfoQuery } from 'api/generated/graphql'
 import {
   EmptyState,
   MemberHistoryCardWrapper,
@@ -8,6 +7,7 @@ import {
 } from 'features/members-search/styles'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
+import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys, NumberKeys } from 'utils/hooks/key-press-hook'
 import { getMemberFlag } from 'utils/member'

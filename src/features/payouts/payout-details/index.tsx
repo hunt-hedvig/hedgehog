@@ -1,15 +1,15 @@
 import { ApolloCache } from '@apollo/client'
 import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
+import React from 'react'
+import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
 import {
   GetMemberTransactionsDocument,
   GetMemberTransactionsQuery,
   PayoutMemberMutation,
   useGetContractMarketInfoQuery,
   usePayoutMemberMutation,
-} from 'api/generated/graphql'
-import React from 'react'
-import { FieldValues, FormProvider, useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
+} from 'types/generated/graphql'
 
 const entryTypeOptions = [
   {

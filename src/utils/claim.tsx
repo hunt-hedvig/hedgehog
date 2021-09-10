@@ -1,4 +1,4 @@
-import { Claim, ClaimState } from 'api/generated/graphql'
+import { Claim, ClaimState } from 'types/generated/graphql'
 
 export const hasOpenClaim = (claims: ReadonlyArray<Claim>): boolean => {
   return claims.some(

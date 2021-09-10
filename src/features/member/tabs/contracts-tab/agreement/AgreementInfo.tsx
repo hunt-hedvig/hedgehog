@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import { InfoContainer, InfoRow, InfoText, Paragraph } from '@hedvig-ui'
 import { IconButton } from '@material-ui/core'
-import { Contract, GenericAgreement } from 'api/generated/graphql'
 import { EditStreetInput } from 'features/member/tabs/contracts-tab/agreement/EditStreetInput'
 import React, { useState } from 'react'
 import { PencilFill } from 'react-bootstrap-icons'
+import { Contract, GenericAgreement } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 import {
   convertEnumToTitle,

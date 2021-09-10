@@ -8,17 +8,17 @@ import {
   FormControlLabel,
 } from '@material-ui/core'
 import {
-  ItemCategoryKind,
-  useUpsertItemBrandMutation,
-  useUpsertItemModelMutation,
-  useUpsertItemTypeMutation,
-} from 'api/generated/graphql'
-import {
   useUpsertItemBrandOptions,
   useUpsertItemModelOptions,
   useUpsertItemTypeOptions,
 } from 'graphql/use-upsert-item-category'
 import React from 'react'
+import {
+  ItemCategoryKind,
+  useUpsertItemBrandMutation,
+  useUpsertItemModelMutation,
+  useUpsertItemTypeMutation,
+} from 'types/generated/graphql'
 import { CategoryChain } from './CategoryChain'
 import { SelectedItemCategory } from './CategorySelect'
 import { CompanySelect } from './CompanySelect'

@@ -1,4 +1,4 @@
-import { useClaimPageQuery } from 'api/generated/graphql'
+import { useClaimPageQuery } from 'types/generated/graphql'
 
 import React from 'react'
 

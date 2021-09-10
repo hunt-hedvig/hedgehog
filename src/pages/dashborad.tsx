@@ -10,13 +10,13 @@ import {
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useGetMeQuery } from 'api/generated/graphql'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useGetMeQuery } from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import { MonetaryAmountV2 } from 'api/generated/graphql'
 import React from 'react'
 import { Gem } from 'react-bootstrap-icons'
+import { MonetaryAmountV2 } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 import { BaseChip, BaseChipProps } from './BaseChip'
 

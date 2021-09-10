@@ -4,7 +4,7 @@ import {
   useClaimPageQuery,
   useSetClaimInformationMutation,
   useSetClaimTypeMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 import {
   Button,

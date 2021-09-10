@@ -6,15 +6,15 @@ import {
   FadeIn,
   MainHeadline,
 } from '@hedvig-ui'
-import {
-  ClaimSource,
-  GetMemberClaimsDocument,
-  useCreateClaimMutation,
-} from 'api/generated/graphql'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'features/member/tabs/claims-tab/components/MemberClaimsList'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import {
+  ClaimSource,
+  GetMemberClaimsDocument,
+  useCreateClaimMutation,
+} from 'types/generated/graphql'
 
 const HeaderWrapper = styled.div`
   display: flex;

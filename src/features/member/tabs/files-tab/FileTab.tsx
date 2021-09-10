@@ -1,7 +1,7 @@
 import { LoadingMessage, StandaloneMessage } from '@hedvig-ui'
-import { FileUpload, useFileUploadsQueryQuery } from 'api/generated/graphql'
 import React from 'react'
 import { Image, Table } from 'semantic-ui-react'
+import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
 
 const sortFileDate = (a, b) => {

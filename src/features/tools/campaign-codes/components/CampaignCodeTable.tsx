@@ -7,10 +7,6 @@ import {
   StandaloneMessage,
 } from '@hedvig-ui'
 import {
-  CampaignFilter,
-  useSetCampaignCodeTypeMutation,
-} from 'api/generated/graphql'
-import {
   getCodeTypeOptions,
   getDiscountDetails,
   getIncentiveText,
@@ -20,6 +16,10 @@ import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
+import {
+  CampaignFilter,
+  useSetCampaignCodeTypeMutation,
+} from 'types/generated/graphql'
 
 const CenteredCell = styled(Table.Cell)`
   text-align: center;

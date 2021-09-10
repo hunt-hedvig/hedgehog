@@ -1,5 +1,4 @@
 import { Badge, Capitalized, Card, CardsWrapper, Placeholder } from '@hedvig-ui'
-import { MemberReferral, ReferralInformation } from 'api/generated/graphql'
 import {
   BadgeRow,
   SmallTopSpacing,
@@ -7,6 +6,7 @@ import {
 } from 'features/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { MemberReferral, ReferralInformation } from 'types/generated/graphql'
 import { MembersReferredTable } from './MembersReferredTable'
 
 const MemberLink: React.FC<{ memberReferral: MemberReferral }> = ({

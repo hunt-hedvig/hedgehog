@@ -1,7 +1,7 @@
 import { Typography } from '@material-ui/core'
-import { ItemCategoryKind } from 'api/generated/graphql'
 import React from 'react'
 import { ChevronDoubleRight, ChevronRight } from 'react-bootstrap-icons'
+import { ItemCategoryKind } from 'types/generated/graphql'
 import { SelectedItemCategory } from './CategorySelect'
 import {
   Bold,

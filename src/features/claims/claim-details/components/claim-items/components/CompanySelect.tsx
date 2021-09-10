@@ -7,13 +7,13 @@ import {
   DialogTitle,
   Typography,
 } from '@material-ui/core'
-import {
-  ItemCategoryKind,
-  useUpsertItemCompanyMutation,
-} from 'api/generated/graphql'
 import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import { useUpsertItemCompanyOptions } from 'graphql/use-upsert-item-category'
 import React from 'react'
+import {
+  ItemCategoryKind,
+  useUpsertItemCompanyMutation,
+} from 'types/generated/graphql'
 import { ItemCompanySelection } from './CategoryDialog'
 import { Bold, StyledCreatableSelect } from './styles'
 

@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
 import { CardContent, Spinner } from '@hedvig-ui'
-import {
-  ClaimFileUpload,
-  useClaimPageQuery,
-  useSetClaimFileCategoryMutation,
-} from 'api/generated/graphql'
 import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
+import {
+  ClaimFileUpload,
+  useClaimPageQuery,
+  useSetClaimFileCategoryMutation,
+} from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
 import { sleep } from 'utils/sleep'
 import { DeleteButton } from './DeleteClaimFileButton'

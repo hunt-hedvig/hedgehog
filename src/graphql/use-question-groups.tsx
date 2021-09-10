@@ -2,7 +2,7 @@ import {
   GetQuestionsGroupsQueryHookResult,
   QuestionGroup,
   useGetQuestionsGroupsQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type UseQuestionGroupsReturnTuple = [
   ReadonlyArray<QuestionGroup>,

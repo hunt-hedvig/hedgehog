@@ -1,7 +1,7 @@
 import { Button } from '@hedvig-ui'
-import { useBackfillSubscriptionsMutation } from 'api/generated/graphql'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useBackfillSubscriptionsMutation } from 'types/generated/graphql'
 
 export const BackfillSubscriptionsButton: React.FC<{
   memberId: string

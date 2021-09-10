@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { StandaloneMessage, withFadeIn } from '@hedvig-ui'
-import { QuestionGroup } from 'api/generated/graphql'
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
+import { QuestionGroup } from 'types/generated/graphql'
 import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'
 
 const List = styled(Segment)`

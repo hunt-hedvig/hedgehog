@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import { SearchableDropdown } from '@hedvig-ui'
-import { useAvailableEmployeeRolesQuery } from 'api/generated/graphql'
 import { Row } from 'features/tools/employees'
 import { CreateEmployee } from 'features/tools/employees/components/CreateEmployee'
 import React from 'react'
 import { Input } from 'semantic-ui-react'
+import { useAvailableEmployeeRolesQuery } from 'types/generated/graphql'
 
 const StyledDropdown = styled(SearchableDropdown)`
   width: 12em;

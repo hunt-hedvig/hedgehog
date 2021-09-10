@@ -1,14 +1,14 @@
 import { MockedProvider } from '@apollo/client/testing'
+import { mount } from 'enzyme'
+import React from 'react'
+import { act } from 'react-dom/test-utils'
+import { Market } from 'types/enums'
 import {
   ClaimPaymentInput,
   ClaimPaymentType,
   CreateClaimPaymentDocument,
   SanctionStatus,
-} from 'api/generated/graphql'
-import { mount } from 'enzyme'
-import React from 'react'
-import { act } from 'react-dom/test-utils'
-import { Market } from 'types/enums'
+} from 'types/generated/graphql'
 import { sleep, tickAsync } from 'utils/sleep'
 import { ClaimPayment } from './ClaimPayment'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'

@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
 import { Button, ButtonsGroup, SearchableDropdown } from '@hedvig-ui'
-import {
-  EmployeesDocument,
-  useAvailableEmployeeRolesQuery,
-  useCreateEmployeeMutation,
-} from 'api/generated/graphql'
 import { Row } from 'features/tools/employees'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Input } from 'semantic-ui-react'
+import {
+  EmployeesDocument,
+  useAvailableEmployeeRolesQuery,
+  useCreateEmployeeMutation,
+} from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   display: flex;

@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
-import { Member } from 'api/generated/graphql'
 import {
   getEditMemberInfoOptions,
   useEditMemberInfo,
@@ -12,6 +11,7 @@ import {
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import { Member } from 'types/generated/graphql'
 import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
 import { dateTimeFormatter, getFieldName, getFieldValue } from 'utils/helpers'
 

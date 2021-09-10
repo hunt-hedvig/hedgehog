@@ -13,11 +13,6 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import {
-  Transaction,
-  useCreatePaymentCompletionLinkMutation,
-  useGetMemberTransactionsQuery,
-} from 'api/generated/graphql'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import { PayoutDetails } from 'features/payouts/payout-details'
@@ -27,6 +22,11 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
 import { Market } from 'types/enums'
+import {
+  Transaction,
+  useCreatePaymentCompletionLinkMutation,
+  useGetMemberTransactionsQuery,
+} from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 
 const transactionDateSorter = (a, b) => {

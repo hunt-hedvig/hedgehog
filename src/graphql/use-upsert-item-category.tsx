@@ -8,7 +8,7 @@ import {
   UpsertItemModelMutationVariables,
   UpsertItemTypeMutation,
   UpsertItemTypeMutationVariables,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useUpsertItemTypeOptions = (
   name: string,

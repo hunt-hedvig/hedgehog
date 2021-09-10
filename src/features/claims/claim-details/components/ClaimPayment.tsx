@@ -5,6 +5,10 @@ import {
   FormInput,
   SubmitButton,
 } from '@hedvig-ui'
+import React, { useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
+import { Market } from 'types/enums'
 import {
   ClaimPaymentInput,
   ClaimPaymentType,
@@ -12,11 +16,7 @@ import {
   SanctionStatus,
   useCreateClaimPaymentMutation,
   useCreateSwishClaimPaymentMutation,
-} from 'api/generated/graphql'
-import React, { useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
-import { Market } from 'types/enums'
+} from 'types/generated/graphql'
 import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 export interface PaymentFormData {

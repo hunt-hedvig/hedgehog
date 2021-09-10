@@ -1,8 +1,8 @@
 import { Placeholder } from '@hedvig-ui'
-import { ItemCategoryKind } from 'api/generated/graphql'
 import { useGetItemCategories } from 'graphql/use-get-item-categories'
 import React from 'react'
 import { components } from 'react-select'
+import { ItemCategoryKind } from 'types/generated/graphql'
 import { CategoryDialog } from './CategoryDialog'
 import { StyledCreatableSelect } from './styles'
 

@@ -7,16 +7,16 @@ import {
   Spacing,
   TextArea,
 } from '@hedvig-ui'
+import { format } from 'date-fns'
+import React from 'react'
+import { toast } from 'react-hot-toast'
+import { TerminationReason } from 'types/enums'
 import {
   Contract,
   useChangeTerminationDateMutation,
   useRevertTerminationMutation,
   useTerminateContractMutation,
-} from 'api/generated/graphql'
-import { format } from 'date-fns'
-import React from 'react'
-import { toast } from 'react-hot-toast'
-import { TerminationReason } from 'types/enums'
+} from 'types/generated/graphql'
 
 const initialTerminationDate = (contract: Contract): Date =>
   contract.terminationDate ? new Date(contract.terminationDate) : new Date()

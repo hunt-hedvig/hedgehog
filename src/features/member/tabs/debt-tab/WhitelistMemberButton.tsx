@@ -1,8 +1,8 @@
 import { Button } from '@hedvig-ui'
-import { useWhitelistMemberMutation } from 'api/generated/graphql'
 import { useGetMemberName } from 'graphql/use-get-member-name'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useWhitelistMemberMutation } from 'types/generated/graphql'
 
 export const WhitelistMemberButton: React.FC<{
   memberId: string

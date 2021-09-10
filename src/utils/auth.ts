@@ -1,6 +1,6 @@
-import { Me, useGetMeQuery } from 'api/generated/graphql'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
+import { Me, useGetMeQuery } from 'types/generated/graphql'
 
 export const forceLogOut = () => {
   window.location.pathname = '/login/logout'

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import { QuestionGroup } from 'api/generated/graphql'
 import { QuestionGroupInfo } from 'features/questions/questions-list/QuestionGroupInfo'
 import React from 'react'
+import { QuestionGroup } from 'types/generated/graphql'
 import { AnswerForm } from './AnswerForm'
 
 const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`

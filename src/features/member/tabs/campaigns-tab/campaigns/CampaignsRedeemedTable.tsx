@@ -1,11 +1,11 @@
 import { Button, Capitalized } from '@hedvig-ui'
-import {
-  RedeemedCampaign,
-  useManualUnRedeemCampaignMutation,
-} from 'api/generated/graphql'
 import { format } from 'date-fns'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
+import {
+  RedeemedCampaign,
+  useManualUnRedeemCampaignMutation,
+} from 'types/generated/graphql'
 
 export const CampaignsRedeemedTable: React.FC<{
   memberId: string

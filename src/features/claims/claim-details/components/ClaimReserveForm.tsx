@@ -1,8 +1,8 @@
+import React, { useState } from 'react'
 import {
   ClaimPaymentsDocument,
   useUpdateReserveMutation,
-} from 'api/generated/graphql'
-import React, { useState } from 'react'
+} from 'types/generated/graphql'
 
 import { Button, Input, Spacing } from '@hedvig-ui'
 

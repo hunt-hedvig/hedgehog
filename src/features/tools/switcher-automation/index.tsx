@@ -1,16 +1,16 @@
 import { Checkbox, MainHeadline, SecondLevelHeadline } from '@hedvig-ui'
+import { format } from 'date-fns'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { Table } from 'semantic-ui-react'
+import { Market, SwitcherEmailStatus, SwitcherTypeMarket } from 'types/enums'
 import {
   Contract,
   Member,
   useActivatePendingAgreementMutation,
   useGetSwitcherEmailsQuery,
   useTerminateContractMutation,
-} from 'api/generated/graphql'
-import { format } from 'date-fns'
-import React, { useState } from 'react'
-import { toast } from 'react-hot-toast'
-import { Table } from 'semantic-ui-react'
-import { Market, SwitcherEmailStatus, SwitcherTypeMarket } from 'types/enums'
+} from 'types/generated/graphql'
 import { sleep } from 'utils/sleep'
 import { getSwitcherEmailStatus } from 'utils/switcher-emails'
 import { convertEnumToTitle, getFlagFromMarket } from 'utils/text'

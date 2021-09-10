@@ -4,13 +4,13 @@ import {
   MainHeadline,
   StandaloneMessage,
 } from '@hedvig-ui'
-import { Trial, useGetTrialsQuery } from 'api/generated/graphql'
 import { Contract } from 'features/member/tabs/contracts-tab/contract'
 import { TrialComponent } from 'features/member/tabs/contracts-tab/trial'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
 import { useContracts } from 'graphql/use-contracts'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
+import { Trial, useGetTrialsQuery } from 'types/generated/graphql'
 
 export const ContractTab: React.FC<{
   memberId: string

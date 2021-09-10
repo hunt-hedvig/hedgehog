@@ -1,7 +1,7 @@
 import { Button, Spacing, TextArea, ThirdLevelHeadline } from '@hedvig-ui'
-import { useAddNorwegainPostalCodesMutation } from 'api/generated/graphql'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useAddNorwegainPostalCodesMutation } from 'types/generated/graphql'
 
 export const PostalCodesEditor: React.FC = () => {
   const [postalCodesString, setPostalCodesString] = React.useState<string>('')

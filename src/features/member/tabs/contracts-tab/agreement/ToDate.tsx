@@ -7,7 +7,6 @@ import {
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { Contract, GenericAgreement } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import {
   changeToDateOptions,
@@ -15,6 +14,7 @@ import {
 } from 'graphql/use-change-to-date-for-agreement'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { Contract, GenericAgreement } from 'types/generated/graphql'
 
 const initialToDate = (agreement: GenericAgreement): Date =>
   agreement.toDate ? new Date(agreement.toDate) : new Date()

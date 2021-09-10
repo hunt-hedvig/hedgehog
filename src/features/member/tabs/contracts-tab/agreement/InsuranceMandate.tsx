@@ -1,6 +1,6 @@
 import { ButtonLink, ThirdLevelHeadline } from '@hedvig-ui'
-import { Contract } from 'api/generated/graphql'
 import React from 'react'
+import { Contract } from 'types/generated/graphql'
 
 export const InsuranceMandate: React.FC<{
   contract: Contract

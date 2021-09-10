@@ -1,9 +1,9 @@
 import { MainHeadline } from '@hedvig-ui'
+import React from 'react'
 import {
   useInsertItemCategoriesMutation,
   useInsertValuationRulesMutation,
-} from 'api/generated/graphql'
-import React from 'react'
+} from 'types/generated/graphql'
 import { TableInput } from './TableInput'
 
 export const ItemizerComponent: React.FC = () => {

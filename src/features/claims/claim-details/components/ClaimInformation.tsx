@@ -5,7 +5,7 @@ import {
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 import {
   CardContent,

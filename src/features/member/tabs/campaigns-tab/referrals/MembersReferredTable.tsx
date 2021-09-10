@@ -1,9 +1,9 @@
 import { Capitalized } from '@hedvig-ui'
-import { MemberReferral } from 'api/generated/graphql'
 import { MemberStatusBadge } from 'features/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
+import { MemberReferral } from 'types/generated/graphql'
 
 export const MembersReferredTable: React.FC<{
   members: MemberReferral[]

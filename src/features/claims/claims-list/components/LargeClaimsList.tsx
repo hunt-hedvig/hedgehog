@@ -10,12 +10,12 @@ import {
   TablePageSelect,
   TableRow,
 } from '@hedvig-ui'
-import { ClaimState } from 'api/generated/graphql'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'graphql/use-list-claims'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
+import { ClaimState } from 'types/generated/graphql'
 import { getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'

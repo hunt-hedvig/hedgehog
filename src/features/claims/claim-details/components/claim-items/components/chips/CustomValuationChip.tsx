@@ -1,5 +1,5 @@
-import { ClaimItemValuation } from 'api/generated/graphql'
 import React from 'react'
+import { ClaimItemValuation } from 'types/generated/graphql'
 import { DiscardChip } from './components/DiscardChip'
 import { InputChip } from './components/InputChip'
 

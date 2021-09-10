@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Card, CardsWrapper, FadeIn, MainHeadline } from '@hedvig-ui'
-import { ClaimState, useClaimPageQuery } from 'api/generated/graphql'
 import { ClaimItems } from 'features/claims/claim-details/components/claim-items'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
@@ -13,6 +12,7 @@ import { MemberInformation } from 'features/claims/claim-details/components/Memb
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import React, { useContext, useEffect } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
+import { ClaimState, useClaimPageQuery } from 'types/generated/graphql'
 import { MemberHistoryContext } from 'utils/member-history'
 import { getCarrierText } from 'utils/text'
 

@@ -1,5 +1,5 @@
-import { MonetaryAmountV2 } from 'api/generated/graphql'
 import React from 'react'
+import { MonetaryAmountV2 } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 
 export const AddEntryInformation: React.FC<{

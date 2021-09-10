@@ -1,11 +1,11 @@
 import { Input } from '@hedvig-ui'
-import { Contract } from 'api/generated/graphql'
 import {
   safelyEditAgreementOptions,
   useSafelyEditAgreement,
 } from 'graphql/use-safely-edit-agreement'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { Contract } from 'types/generated/graphql'
 import { Keys } from 'utils/hooks/key-press-hook'
 
 export const EditStreetInput: React.FC<{

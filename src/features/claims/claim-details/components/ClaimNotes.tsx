@@ -1,11 +1,11 @@
+import { format, parseISO } from 'date-fns'
+import React, { useState } from 'react'
 import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
   useClaimPageQuery,
   useGetMeQuery,
-} from 'api/generated/graphql'
-import { format, parseISO } from 'date-fns'
-import React, { useState } from 'react'
+} from 'types/generated/graphql'
 
 import styled from '@emotion/styled'
 import {

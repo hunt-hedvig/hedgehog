@@ -7,8 +7,8 @@ import {
   TableRow as MuiTableRow,
   withStyles,
 } from '@material-ui/core'
-import { useClaimPaymentsQuery } from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
+import { useClaimPaymentsQuery } from 'types/generated/graphql'
 
 import {
   CardContent,

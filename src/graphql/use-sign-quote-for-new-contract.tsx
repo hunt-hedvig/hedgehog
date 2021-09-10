@@ -1,4 +1,5 @@
 import { MutationFunctionOptions } from '@apollo/client'
+import { format } from 'date-fns'
 import {
   GetContractsDocument,
   GetQuotesDocument,
@@ -6,8 +7,7 @@ import {
   SignQuoteForNewContractMutationHookResult,
   SignQuoteForNewContractMutationVariables,
   useSignQuoteForNewContractMutation,
-} from 'api/generated/graphql'
-import { format } from 'date-fns'
+} from 'types/generated/graphql'
 
 export const useSignQuoteForNewContract = (): SignQuoteForNewContractMutationHookResult =>
   useSignQuoteForNewContractMutation()

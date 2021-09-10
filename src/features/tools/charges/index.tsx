@@ -2,16 +2,16 @@ import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
 import { FadeIn, LoadingMessage, MainHeadline } from '@hedvig-ui'
 import { colors } from '@hedviginsurance/brand'
-import {
-  PaymentScheduleQueryDocument,
-  usePaymentScheduleQueryQuery,
-} from 'api/generated/graphql'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
+import {
+  PaymentScheduleQueryDocument,
+  usePaymentScheduleQueryQuery,
+} from 'types/generated/graphql'
 import { MonetaryAmount } from 'utils/helpers'
 import { formatMoney } from 'utils/money'
 

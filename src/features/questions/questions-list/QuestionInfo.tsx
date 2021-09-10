@@ -1,7 +1,7 @@
-import { Question } from 'api/generated/graphql'
 import { parseISO } from 'date-fns'
 import { Message } from 'features/member/messages/Message'
 import React from 'react'
+import { Question } from 'types/generated/graphql'
 
 export const QuestionInfo: React.FC<{ question: Question }> = ({
   question,

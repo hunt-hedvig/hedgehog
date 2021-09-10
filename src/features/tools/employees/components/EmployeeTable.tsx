@@ -6,6 +6,9 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from '@hedvig-ui'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { Table } from 'semantic-ui-react'
 import {
   Employee,
   EmployeesDocument,
@@ -13,10 +16,7 @@ import {
   useEmployeesQuery,
   useRemoveEmployeeMutation,
   useUpdateEmployeeRoleMutation,
-} from 'api/generated/graphql'
-import React, { useState } from 'react'
-import { toast } from 'react-hot-toast'
-import { Table } from 'semantic-ui-react'
+} from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
 
 export const EmployeeTable: React.FC<{

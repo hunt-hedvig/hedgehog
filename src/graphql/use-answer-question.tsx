@@ -4,7 +4,7 @@ import {
   AnswerQuestionMutationVariables,
   GetQuestionsGroupsDocument,
   useAnswerQuestionMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useAnswerQuestion = () => useAnswerQuestionMutation()
 

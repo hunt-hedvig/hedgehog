@@ -5,7 +5,6 @@ import {
   StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
-import { MonthlyEntryInput } from 'api/generated/graphql'
 import {
   getAddMonthlyEntryOptions,
   useAddMonthlyEntry,
@@ -15,6 +14,7 @@ import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
 import { toast } from 'react-hot-toast'
+import { MonthlyEntryInput } from 'types/generated/graphql'
 
 export const AddMonthlyEntryForm: React.FC<{
   memberId: string

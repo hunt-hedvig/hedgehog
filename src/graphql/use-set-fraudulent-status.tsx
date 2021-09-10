@@ -6,7 +6,7 @@ import {
   SetFraudulentStatusMutationHookResult,
   SetFraudulentStatusMutationVariables,
   useSetFraudulentStatusMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useSetFraudulentStatus = (): SetFraudulentStatusMutationHookResult => {
   return useSetFraudulentStatusMutation()

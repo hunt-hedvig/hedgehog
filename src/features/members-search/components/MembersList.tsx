@@ -7,11 +7,11 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { Contract, ContractStatus, Member } from 'api/generated/graphql'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'
 import { useHistory } from 'react-router'
+import { Contract, ContractStatus, Member } from 'types/generated/graphql'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
 import { getMemberFlag, getMemberIdColor, MemberAge } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'

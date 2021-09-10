@@ -9,8 +9,8 @@ import {
   Paragraph,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { Trial } from 'api/generated/graphql'
 import React from 'react'
+import { Trial } from 'types/generated/graphql'
 import { convertEnumToTitle } from 'utils/text'
 
 const TrialWrapper = styled('div')`

@@ -4,7 +4,6 @@ import {
   ButtonsGroup,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { Contract, GenericAgreement } from 'api/generated/graphql'
 import {
   regenerateCertificateOptions,
   useRegenerateCertificate,
@@ -12,6 +11,7 @@ import {
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
+import { Contract, GenericAgreement } from 'types/generated/graphql'
 
 export const InsuranceCertificate: React.FC<{
   contract: Contract

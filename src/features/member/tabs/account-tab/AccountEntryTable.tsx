@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Bold, Capitalized, Popover } from '@hedvig-ui'
-import { AccountEntry } from 'api/generated/graphql'
 import React from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
 import { Grid, Table } from 'semantic-ui-react'
+import { AccountEntry } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 
 const getAccountEntryColor = (theme, entry: AccountEntry) => {

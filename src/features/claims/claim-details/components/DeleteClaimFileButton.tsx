@@ -1,7 +1,7 @@
 import { Button } from '@hedvig-ui'
-import { useMarkClaimFileAsDeletedMutation } from 'api/generated/graphql'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useMarkClaimFileAsDeletedMutation } from 'types/generated/graphql'
 
 export const DeleteButton: React.FC<{
   claimId: string

@@ -7,15 +7,15 @@ import {
   TextArea,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import {
-  NorwegianGripenFactorInput,
-  NorwegianGripenFactorType,
-  useCreateNorwegianGripenPriceEngineMutation,
-} from 'api/generated/graphql'
 import { FactorEditor } from 'features/tools/norwegian-tariff-editor/factor-editor'
 import { PostalCodesEditor } from 'features/tools/norwegian-tariff-editor/postal-codes-editor'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import {
+  NorwegianGripenFactorInput,
+  NorwegianGripenFactorType,
+  useCreateNorwegianGripenPriceEngineMutation,
+} from 'types/generated/graphql'
 
 const initialFactorState: NorwegianGripenFactorInput[] = Object.keys(
   NorwegianGripenFactorType,

@@ -6,11 +6,6 @@ import {
   InfoText,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import {
-  AgreementStatus,
-  Contract,
-  GenericAgreement as AgreementType,
-} from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import { AgreementInfo } from 'features/member/tabs/contracts-tab/agreement/AgreementInfo'
 import { FromDate } from 'features/member/tabs/contracts-tab/agreement/FromDate'
@@ -18,6 +13,11 @@ import { InsuranceCertificate } from 'features/member/tabs/contracts-tab/agreeme
 import { InsuranceMandate } from 'features/member/tabs/contracts-tab/agreement/InsuranceMandate'
 import { ToDate } from 'features/member/tabs/contracts-tab/agreement/ToDate'
 import React from 'react'
+import {
+  AgreementStatus,
+  Contract,
+  GenericAgreement as AgreementType,
+} from 'types/generated/graphql'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
 
 const Divider = styled.hr`

@@ -5,7 +5,6 @@ import {
   FourthLevelHeadline,
   Paragraph,
 } from '@hedvig-ui'
-import { Contract } from 'api/generated/graphql'
 import { format } from 'date-fns'
 import {
   activateContractOptions,
@@ -13,6 +12,7 @@ import {
 } from 'graphql/use-activate-contract'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { Contract } from 'types/generated/graphql'
 
 export const MasterInception: React.FC<{
   contract: Contract

@@ -4,11 +4,11 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from '@hedvig-ui'
-import { Quote } from 'api/generated/graphql'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
 import { Tab } from 'semantic-ui-react'
 import { ContractType, Market, QuoteProductType } from 'types/enums'
+import { Quote } from 'types/generated/graphql'
 import { getMarketFromPickedLocale } from 'utils/member'
 import { QuotesSubSection } from './quote-sub-section'
 

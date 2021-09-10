@@ -5,7 +5,7 @@ import {
   UpdateClaimStateMutationHookResult,
   UpdateClaimStateMutationVariables,
   useUpdateClaimStateMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useUpdateClaimState = (): UpdateClaimStateMutationHookResult =>
   useUpdateClaimStateMutation()

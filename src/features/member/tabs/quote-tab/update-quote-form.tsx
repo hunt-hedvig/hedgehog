@@ -1,5 +1,4 @@
 import { JsonSchemaForm } from '@hedvig-ui'
-import { Quote } from 'api/generated/graphql'
 import {
   getUpdateQuoteSchemaOptions,
   useUpdateQuoteBySchema,
@@ -7,6 +6,7 @@ import {
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Checkbox } from 'semantic-ui-react'
+import { Quote } from 'types/generated/graphql'
 
 export const UpdateQuoteForm: React.FC<{
   quote: Quote

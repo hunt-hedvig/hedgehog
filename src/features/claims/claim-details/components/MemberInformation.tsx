@@ -11,12 +11,6 @@ import {
   Loadable,
   Popover,
 } from '@hedvig-ui'
-import {
-  Flag,
-  SanctionStatus,
-  useClaimMemberContractsMasterInceptionQuery,
-  useClaimPageQuery,
-} from 'api/generated/graphql'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
 import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
@@ -25,6 +19,12 @@ import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Market } from 'types/enums'
+import {
+  Flag,
+  SanctionStatus,
+  useClaimMemberContractsMasterInceptionQuery,
+  useClaimPageQuery,
+} from 'types/generated/graphql'
 import {
   currentAgreementForContract,
   getFirstMasterInception,

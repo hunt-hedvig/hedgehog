@@ -1,13 +1,13 @@
 import { Button, Grid, MenuItem, TextField } from '@material-ui/core'
+import { format, isAfter, isValid, parseISO } from 'date-fns'
+import React from 'react'
 import {
   Contract,
   MonetaryAmountV2,
   UpsertClaimItemInput,
   useClaimMemberContractsMasterInceptionQuery,
   useUpsertClaimItemMutation,
-} from 'api/generated/graphql'
-import { format, isAfter, isValid, parseISO } from 'date-fns'
-import React from 'react'
+} from 'types/generated/graphql'
 import { CategorySelect, SelectedItemCategory } from './CategorySelect'
 import { ValuationInfo } from './ValuationInfo'
 

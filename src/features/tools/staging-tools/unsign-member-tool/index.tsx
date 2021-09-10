@@ -1,7 +1,7 @@
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
-import { useUnsignMemberMutation } from 'api/generated/graphql'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useUnsignMemberMutation } from 'types/generated/graphql'
 
 export const UnsignMemberTool: React.FC = () => {
   const [ssn, setSsn] = React.useState('')

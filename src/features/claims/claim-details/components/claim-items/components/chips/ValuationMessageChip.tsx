@@ -1,5 +1,8 @@
-import { CanValuateClaimItem, ClaimItemValuation } from 'api/generated/graphql'
 import React from 'react'
+import {
+  CanValuateClaimItem,
+  ClaimItemValuation,
+} from 'types/generated/graphql'
 import { getValuationExplanation } from 'utils/claim-item'
 import { ExplanationPopover } from '../styles'
 import { InfoChip } from './components/InfoChip'

@@ -1,8 +1,8 @@
 import { Button, DateTimePicker, Input } from '@hedvig-ui'
-import { useManualRedeemCampaignMutation } from 'api/generated/graphql'
 import { Group } from 'features/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { Message } from 'semantic-ui-react'
+import { useManualRedeemCampaignMutation } from 'types/generated/graphql'
 
 export const CampaignCodeInput: React.FC<{
   memberId: string
