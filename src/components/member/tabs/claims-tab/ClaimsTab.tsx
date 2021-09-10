@@ -5,7 +5,6 @@ import {
   EnumDropdown,
   FadeIn,
   MainHeadline,
-  Spacing,
 } from '@hedvig-ui'
 import {
   ClaimSource,
@@ -20,11 +19,13 @@ import { toast } from 'react-hot-toast'
 const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  height: 100%;
 `
 
 const FormWrapper = styled.div`
-  display: inline-flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 130px 170px auto auto;
+  column-gap: 14px;
   height: 100%;
 `
 
@@ -45,94 +46,85 @@ export const ClaimsTab: React.FC<{
       <HeaderWrapper>
         <MainHeadline>Claims</MainHeadline>
 
-        <FormWrapper>
-          {showForm ? (
-            <>
-              <EnumDropdown
-                enumToSelectFrom={ClaimSource}
-                placeholder={'Claim Source'}
-                onChange={(source) => setClaimSource(source)}
-              />
-              <Spacing left={'small'}>
-                <DateTimePicker
-                  disabled={createClaimLoading}
-                  date={claimDate}
-                  fullWidth={true}
-                  setDate={(date) => setClaimDate(date)}
-                  placeholder="Notification date"
-                  maxDate={new Date()}
-                  showTimePicker
-                />
-              </Spacing>
-              <Spacing left={'small'}>
-                <Button
-                  disabled={createClaimLoading}
-                  variation="danger"
-                  color="danger"
-                  onClick={() => {
-                    setShowForm(false)
-                    setClaimDate(new Date())
-                    setClaimSource(null)
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Spacing>
-              <Spacing left={'small'}>
-                <Button
-                  disabled={
-                    claimSource === null ||
-                    claimDate === null ||
-                    createClaimLoading
-                  }
-                  variation="success"
-                  color="success"
-                  onClick={async () => {
-                    if (claimSource === null || claimDate === null) {
-                      return
-                    }
-
-                    await toast.promise(
-                      createClaim({
-                        variables: {
-                          memberId,
-                          date: format(claimDate, "yyyy-MM-dd'T'HH:mm:ss"),
-                          source: claimSource,
-                        },
-                        refetchQueries: [
-                          {
-                            query: GetMemberClaimsDocument,
-                            variables: { memberId },
-                          },
-                        ],
-                      }),
-                      {
-                        loading: 'Creating claim',
-                        success: () => {
-                          setShowForm(false)
-                          setClaimDate(new Date())
-                          setClaimSource(null)
-                          return 'Claim created'
-                        },
-                        error: 'Could not create claim',
-                      },
-                    )
-                  }}
-                >
-                  Add
-                </Button>
-              </Spacing>
-            </>
-          ) : (
+        {showForm ? (
+          <FormWrapper>
+            <EnumDropdown
+              enumToSelectFrom={ClaimSource}
+              placeholder={'Claim Source'}
+              onChange={(source) => setClaimSource(source)}
+            />
+            <DateTimePicker
+              disabled={createClaimLoading}
+              date={claimDate}
+              fullWidth={true}
+              setDate={(date) => setClaimDate(date)}
+              placeholder="Notification date"
+              maxDate={new Date()}
+              showTimePicker
+            />
             <Button
-              variation="primary"
-              color="primary"
-              onClick={() => setShowForm(true)}
+              disabled={createClaimLoading}
+              variation="danger"
+              color="danger"
+              onClick={() => {
+                setShowForm(false)
+                setClaimDate(new Date())
+                setClaimSource(null)
+              }}
             >
-              Add new claim
+              Cancel
             </Button>
-          )}
-        </FormWrapper>
+            <Button
+              disabled={
+                claimSource === null || claimDate === null || createClaimLoading
+              }
+              variation="success"
+              color="success"
+              onClick={async () => {
+                if (claimSource === null || claimDate === null) {
+                  return
+                }
+
+                await toast.promise(
+                  createClaim({
+                    variables: {
+                      memberId,
+                      date: format(claimDate, "yyyy-MM-dd'T'HH:mm:ss"),
+                      source: claimSource,
+                    },
+                    refetchQueries: [
+                      {
+                        query: GetMemberClaimsDocument,
+                        variables: { memberId },
+                      },
+                    ],
+                  }),
+                  {
+                    loading: 'Creating claim',
+                    success: () => {
+                      setShowForm(false)
+                      setClaimDate(new Date())
+                      setClaimSource(null)
+                      return 'Claim created'
+                    },
+                    error: 'Could not create claim',
+                  },
+                )
+              }}
+            >
+              Add
+            </Button>
+          </FormWrapper>
+        ) : (
+          <Button
+            variation="primary"
+            color="primary"
+            onClick={() => setShowForm(true)}
+            style={{ height: 39 }}
+          >
+            Add new claim
+          </Button>
+        )}
       </HeaderWrapper>
       <MemberClaimsList memberId={memberId} />
     </FadeIn>
