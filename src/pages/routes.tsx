@@ -1,9 +1,5 @@
 import { StandaloneMessage } from '@hedvig-ui'
-import { ClaimsList } from 'components/claims'
-import { ClaimDetails } from 'components/claims/claim-details'
-import { DashboardPage } from 'components/dashboard'
 import { MembersSearch } from 'components/members-search'
-import { QuestionsPage } from 'components/questions'
 import { Tools } from 'features/tools'
 import { CampaignCodeInfo } from 'features/tools/campaign-codes'
 import { ChargePage } from 'features/tools/charges'
@@ -15,14 +11,18 @@ import { UnsignMemberTool } from 'features/tools/staging-tools/unsign-member-too
 import { SwitcherAutomation } from 'features/tools/switcher-automation'
 import React from 'react'
 import { Route, Switch } from 'react-router'
+import { ClaimDetails } from './claims/[claimId]/members/[memberId]'
+import { ClaimsPage } from './claims/list/[page]'
+import { DashboardPage } from './dashborad'
 import { MemberPage } from './members/[memberId]/[tab]'
+import { QuestionsPage } from './questions'
 
 export const Routes: React.FC = () => {
   return (
     <Switch>
       <Route path="/dashborad" component={DashboardPage} />
       <Route path="/questions" component={QuestionsPage} />
-      <Route exact path="/claims/list/:page?" component={ClaimsList} />
+      <Route exact path="/claims/list/:page?" component={ClaimsPage} />
       <Route
         exact
         path="/claims/:claimId/members/:memberId"
