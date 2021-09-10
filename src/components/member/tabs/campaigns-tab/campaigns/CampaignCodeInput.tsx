@@ -3,6 +3,7 @@ import { useManualRedeemCampaignMutation } from 'api/generated/graphql'
 import { Group } from 'components/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { Message } from 'semantic-ui-react'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const CampaignCodeInput: React.FC<{
   memberId: string
@@ -11,6 +12,7 @@ export const CampaignCodeInput: React.FC<{
   const [success, setSuccess] = React.useState<boolean | null>(null)
   const [activationDate, setActivationDate] = React.useState<Date | null>(null)
   const [manualRedeemCampaign, { loading }] = useManualRedeemCampaignMutation()
+  const { confirm } = useConfirmDialog()
 
   const getStatusMessage = () => {
     if (success) {
@@ -74,10 +76,9 @@ export const CampaignCodeInput: React.FC<{
           disabled={campaignCode === '' || success === false}
           loading={loading}
           onClick={() => {
-            const confirm = window.confirm(
+            confirm(
               `Are you sure you want to redeem the campaign code ${campaignCode.toUpperCase()}?`,
-            )
-            if (confirm) {
+            ).then(() => {
               manualRedeemCampaign({
                 variables: {
                   memberId,
@@ -92,7 +93,7 @@ export const CampaignCodeInput: React.FC<{
                 .catch(() => {
                   setSuccess(false)
                 })
-            }
+            })
           }}
         >
           Redeem

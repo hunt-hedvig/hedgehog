@@ -18,7 +18,7 @@ export const ConfirmDialogComponent: React.FC<{
     <Modal
       withoutHeader={true}
       disableClickOutside={true}
-      height={'110px'}
+      height={'auto'}
       width={'400px'}
       position={'top'}
       side={'center'}

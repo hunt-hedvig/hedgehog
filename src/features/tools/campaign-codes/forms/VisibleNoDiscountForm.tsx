@@ -16,6 +16,7 @@ import {
 } from 'graphql/use-add-partner-visible-no-discount-code'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 interface VisibleNoDiscountFormData {
   code: string
@@ -52,6 +53,8 @@ export const VisibleNoDiscountForm: React.FC = () => {
   const codeTypeOptions = getCodeTypeOptions()
 
   const reset = () => setFormData(initialFormData)
+
+  const { confirm } = useConfirmDialog()
 
   return (
     <>
@@ -124,27 +127,23 @@ export const VisibleNoDiscountForm: React.FC = () => {
           loading={loading}
           disabled={loading || !formIsValid(formData)}
           onClick={() => {
-            if (
-              !window.confirm(`Create new campaign code "${formData.code}"?`)
-            ) {
-              return
-            }
-
-            toast.promise(
-              setPartnerVisibleNoDiscount(
-                addPartnerVisibleNoDiscountCodeOptions(
-                  formData as AssignVoucherVisibleNoDiscount,
+            confirm(`Create new campaign code "${formData.code}"?`).then(() => {
+              toast.promise(
+                setPartnerVisibleNoDiscount(
+                  addPartnerVisibleNoDiscountCodeOptions(
+                    formData as AssignVoucherVisibleNoDiscount,
+                  ),
                 ),
-              ),
-              {
-                loading: 'Creating campaign',
-                success: () => {
-                  reset()
-                  return 'Campaign created'
+                {
+                  loading: 'Creating campaign',
+                  success: () => {
+                    reset()
+                    return 'Campaign created'
+                  },
+                  error: 'Could not create campaign',
                 },
-                error: 'Could not create campaign',
-              },
-            )
+              )
+            })
           }}
         >
           Create Campaign

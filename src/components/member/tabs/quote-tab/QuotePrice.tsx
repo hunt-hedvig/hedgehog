@@ -9,6 +9,7 @@ import {
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { formatMoney } from 'utils/money'
 
 const PriceWrapper = styled.div`
@@ -43,6 +44,7 @@ export const QuotePrice = ({ quote }: Props) => {
   const [editPrice, setEditPrice] = useState(false)
   const [newPrice, setNewPrice] = useState(quote.price)
   const [overrideQuotePrice] = useOverrideQuotePriceMutation()
+  const { confirm } = useConfirmDialog()
 
   const onPriceChange = (e) => setNewPrice(e.target.value)
   const restorePrice = () => setNewPrice(quote.price)
@@ -88,18 +90,14 @@ export const QuotePrice = ({ quote }: Props) => {
 
   const onSubmitNewPrice = async (e) => {
     e.preventDefault()
-    if (
-      newPrice &&
-      window.confirm(
-        `Are you sure you want to change the price from ${
-          quote.price
-        } ${quote.currency ?? ''} to ${newPrice} ${quote.currency ?? ''}?`,
-      )
-    ) {
-      await updateQuotePrice()
-    } else {
-      restorePrice()
-    }
+    const confirmMsg = `Are you sure you want to change the price from ${
+      quote.price
+    } ${quote.currency ?? ''} to ${newPrice} ${quote.currency ?? ''}?`
+
+    await confirm(confirmMsg)
+      .then(async () => updateQuotePrice())
+      .catch(() => restorePrice())
+
     setEditPrice(false)
   }
 

@@ -27,6 +27,7 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
 import { Market } from 'types/enums'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { formatMoney } from 'utils/money'
 
 const transactionDateSorter = (a, b) => {
@@ -134,32 +135,29 @@ export const PaymentsTab: React.FC<{
 
   const [account] = useGetAccount(memberId)
 
-  const handleChargeSubmit = (mutation) => {
-    if (
-      !window.confirm(
-        `Are you sure you want to charge ${formatMoney(
-          account?.currentBalance!,
-        )}?`,
-      )
-    ) {
-      return
-    }
+  const { confirm } = useConfirmDialog()
 
-    toast
-      .promise(
-        mutation({
-          variables: {
-            id: memberId,
-            amount: account?.currentBalance,
+  const handleChargeSubmit = (mutation) => {
+    const confirmMsg = `Are you sure you want to charge ${formatMoney(
+      account?.currentBalance!,
+    )}?`
+    confirm(confirmMsg).then(() => {
+      toast
+        .promise(
+          mutation({
+            variables: {
+              id: memberId,
+              amount: account?.currentBalance,
+            },
+          }),
+          {
+            loading: 'Charging member',
+            success: 'Member charged',
+            error: 'Could not charge member',
           },
-        }),
-        {
-          loading: 'Charging member',
-          success: 'Member charged',
-          error: 'Could not charge member',
-        },
-      )
-      .then(() => refetch())
+        )
+        .then(() => refetch())
+    })
   }
 
   if (error) {

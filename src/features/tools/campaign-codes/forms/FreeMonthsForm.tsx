@@ -17,6 +17,7 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { numberOfMonthsOptions } from 'utils/campaignCodes'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 interface FreeMonthsFormData {
   partnerId: string | null
@@ -57,6 +58,8 @@ export const FreeMonthsForm: React.FC = () => {
   const codeTypeOptions = getCodeTypeOptions()
 
   const reset = () => setFormData(initialFormData)
+
+  const { confirm } = useConfirmDialog()
 
   return (
     <>
@@ -152,26 +155,23 @@ export const FreeMonthsForm: React.FC = () => {
           loading={loading}
           disabled={loading || !formLooksGood(formData)}
           onClick={() => {
-            if (
-              !window.confirm(`Create new campaign code "${formData.code}"?`)
-            ) {
-              return
-            }
-            toast.promise(
-              setPartnerFreeMonths(
-                addPartnerFreeMonthsCodeOptions(
-                  formData as AssignVoucherFreeMonths,
+            confirm(`Create new campaign code "${formData.code}"?`).then(() => {
+              toast.promise(
+                setPartnerFreeMonths(
+                  addPartnerFreeMonthsCodeOptions(
+                    formData as AssignVoucherFreeMonths,
+                  ),
                 ),
-              ),
-              {
-                loading: 'Creating campaign',
-                success: () => {
-                  reset()
-                  return 'Campaign created'
+                {
+                  loading: 'Creating campaign',
+                  success: () => {
+                    reset()
+                    return 'Campaign created'
+                  },
+                  error: 'Could not create campaign',
                 },
-                error: 'Could not create campaign',
-              },
-            )
+              )
+            })
           }}
         >
           Create Campaign

@@ -16,6 +16,7 @@ import { FactorEditor } from 'features/tools/norwegian-tariff-editor/factor-edit
 import { PostalCodesEditor } from 'features/tools/norwegian-tariff-editor/postal-codes-editor'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialFactorState: NorwegianGripenFactorInput[] = Object.keys(
   NorwegianGripenFactorType,
@@ -35,6 +36,9 @@ export const NorwegianTariffCreator: React.FC = () => {
     useCreateNorwegianGripenPriceEngine,
     { loading },
   ] = useCreateNorwegianGripenPriceEngineMutation()
+
+  const { confirm } = useConfirmDialog()
+
   return (
     <>
       <MainHeadline>Create Norwegian Price Engine "Gripen"</MainHeadline>
@@ -73,27 +77,23 @@ export const NorwegianTariffCreator: React.FC = () => {
           variation={'primary'}
           disabled={loading}
           onClick={() => {
-            if (
-              !window.confirm(
-                'Are you sure you want to create the price engine?',
-              )
-            ) {
-              return
-            }
-
-            toast.promise(
-              useCreateNorwegianGripenPriceEngine({
-                variables: {
-                  request: {
-                    baseFactorString: baseFactors,
-                    factors,
+            confirm('Are you sure you want to create the price engine?').then(
+              () => {
+                toast.promise(
+                  useCreateNorwegianGripenPriceEngine({
+                    variables: {
+                      request: {
+                        baseFactorString: baseFactors,
+                        factors,
+                      },
+                    },
+                  }),
+                  {
+                    loading: 'Creating price engine',
+                    success: 'Price engine created',
+                    error: 'Could not create price engine',
                   },
-                },
-              }),
-              {
-                loading: 'Creating price engine',
-                success: 'Price engine created',
-                error: 'Could not create price engine',
+                )
               },
             )
           }}

@@ -2,10 +2,12 @@ import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
 import { useUnsignMemberMutation } from 'api/generated/graphql'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const UnsignMemberTool: React.FC = () => {
   const [ssn, setSsn] = React.useState('')
   const [useUnsignMember, { loading }] = useUnsignMemberMutation()
+  const { confirm } = useConfirmDialog()
 
   return (
     <>
@@ -22,26 +24,22 @@ export const UnsignMemberTool: React.FC = () => {
         variation="primary"
         disabled={loading || ssn === ''}
         onClick={() => {
-          if (
-            !window.confirm(
-              `Are you sure you want to unsign member with SSN ${ssn}?`,
-            )
-          ) {
-            return
-          }
-
-          toast.promise(
-            useUnsignMember({
-              variables: {
-                ssn,
+          confirm(
+            `Are you sure you want to unsign member with SSN ${ssn}?`,
+          ).then(() => {
+            toast.promise(
+              useUnsignMember({
+                variables: {
+                  ssn,
+                },
+              }),
+              {
+                loading: 'Unsigning member',
+                success: 'Member unsigned',
+                error: 'Could not unsign member',
               },
-            }),
-            {
-              loading: 'Unsigning member',
-              success: 'Member unsigned',
-              error: 'Could not unsign member',
-            },
-          )
+            )
+          })
         }}
       >
         Unsign
