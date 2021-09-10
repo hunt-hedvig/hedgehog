@@ -242,6 +242,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const commandLine = useRef<HTMLInputElement>(null)
   const [showCommandLine, setShowCommandLine] = useState(false)
   const actions = useRef<CommandLineAction[]>([])
+  const actionKeyCodes = useRef<number[][]>([])
 
   const isOptionPressed = useKeyIsPressed(Keys.Option)
   const isControlPressed = useKeyIsPressed(Keys.Control)
@@ -279,10 +280,12 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const addAction = (newActions: CommandLineAction[]) => {
     useEffect(() => {
       actions.current = [...newActions, ...actions.current]
+      updateActionKeyCodes()
       return () => {
         newActions.forEach((newAction) => {
           removeAction(newAction.label)
         })
+        updateActionKeyCodes()
       }
     }, [])
   }
@@ -291,12 +294,11 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     actions.current = actions.current.filter((action) => action.label !== label)
   }
 
-  const actionKeyCodes = useRef<number[][]>([])
-  useEffect(() => {
+  const updateActionKeyCodes = () => {
     actionKeyCodes.current = actions.current.map((action) =>
       action.keys.map((key) => key.code),
     )
-  }, [actions.current])
+  }
 
   // tslint:disable:no-unused-expression
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -320,9 +322,14 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     }
   }
 
-  document.addEventListener('keydown', handleKeyDown, {
-    capture: true,
-  })
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown, {
+      capture: true,
+    })
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   return (
     <CommandLineContext.Provider
