@@ -2574,7 +2574,7 @@ export type ChangeTerminationDateMutationVariables = Exact<{
 export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
   changeTerminationDate: { __typename?: 'Contract' } & Pick<
     Contract,
-    'id' | 'holderMemberId'
+    'id' | 'holderMemberId' | 'terminationDate'
   >
 }
 
@@ -3618,7 +3618,7 @@ export type RevertTerminationMutationVariables = Exact<{
 export type RevertTerminationMutation = { __typename?: 'MutationType' } & {
   revertTermination: { __typename?: 'Contract' } & Pick<
     Contract,
-    'id' | 'holderMemberId'
+    'id' | 'holderMemberId' | 'terminationDate'
   >
 }
 
@@ -3744,7 +3744,7 @@ export type TerminateContractMutationVariables = Exact<{
 export type TerminateContractMutation = { __typename?: 'MutationType' } & {
   terminateContract: { __typename?: 'Contract' } & Pick<
     Contract,
-    'id' | 'holderMemberId'
+    'id' | 'holderMemberId' | 'terminationDate'
   >
 }
 
@@ -6288,6 +6288,7 @@ export const ChangeTerminationDateDocument = gql`
     changeTerminationDate(contractId: $contractId, request: $request) {
       id
       holderMemberId
+      terminationDate
     }
   }
 `
@@ -8871,6 +8872,7 @@ export const RevertTerminationDocument = gql`
     revertTermination(contractId: $contractId) {
       id
       holderMemberId
+      terminationDate
     }
   }
 `
@@ -9345,6 +9347,7 @@ export const TerminateContractDocument = gql`
     terminateContract(contractId: $contractId, request: $request) {
       id
       holderMemberId
+      terminationDate
     }
   }
 `

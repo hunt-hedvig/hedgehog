@@ -7,20 +7,13 @@ import {
   Spacing,
   TextArea,
 } from '@hedvig-ui'
-import { Contract } from 'api/generated/graphql'
+import {
+  Contract,
+  useChangeTerminationDateMutation,
+  useRevertTerminationMutation,
+  useTerminateContractMutation,
+} from 'api/generated/graphql'
 import { format } from 'date-fns'
-import {
-  changeTerminationDateOptions,
-  useChangeTerminationDate,
-} from 'graphql/use-change-termination-date'
-import {
-  revertTerminationOptions,
-  useRevertTermination,
-} from 'graphql/use-revert-termination'
-import {
-  terminateContractOptions,
-  useTerminateContract,
-} from 'graphql/use-terminate-contract'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { TerminationReason } from 'types/enums'
@@ -48,15 +41,15 @@ export const TerminationDate: React.FC<{
   const [
     terminateContract,
     { loading: terminateContractLoading },
-  ] = useTerminateContract(contract)
+  ] = useTerminateContractMutation()
   const [
     changeTerminationDate,
     { loading: changeTerminationDateLoading },
-  ] = useChangeTerminationDate(contract)
+  ] = useChangeTerminationDateMutation()
   const [
     revertTermination,
     { loading: revertTerminationLoading },
-  ] = useRevertTermination(contract)
+  ] = useRevertTerminationMutation()
 
   if (contract.terminationDate) {
     return (
@@ -85,11 +78,22 @@ export const TerminationDate: React.FC<{
                     window.confirm('Are you want to revert the termination?')
                   ) {
                     toast.promise(
-                      revertTermination(revertTerminationOptions(contract)),
+                      revertTermination({
+                        variables: {
+                          contractId: contract.id,
+                        },
+                        optimisticResponse: {
+                          revertTermination: {
+                            __typename: 'Contract',
+                            id: contract.id,
+                            holderMemberId: contract.holderMemberId,
+                            terminationDate: null,
+                          },
+                        },
+                      }),
                       {
                         loading: 'Reverting termination',
                         success: () => {
-                          reset()
                           return 'Termination reverted'
                         },
                         error: 'Could not revert termination',
@@ -124,9 +128,19 @@ export const TerminationDate: React.FC<{
                   )
                   if (confirmed) {
                     toast.promise(
-                      changeTerminationDate(
-                        changeTerminationDateOptions(contract, terminationDate),
-                      ),
+                      changeTerminationDate({
+                        variables: {
+                          contractId: contract.id,
+                        },
+                        optimisticResponse: {
+                          changeTerminationDate: {
+                            __typename: 'Contract',
+                            id: contract.id,
+                            holderMemberId: contract.holderMemberId,
+                            terminationDate,
+                          },
+                        },
+                      }),
                       {
                         loading: 'Changing termination date',
                         success: () => {
@@ -190,14 +204,27 @@ export const TerminationDate: React.FC<{
                 )
                 if (confirmed) {
                   toast.promise(
-                    terminateContract(
-                      terminateContractOptions(
-                        contract,
-                        terminationDate,
-                        terminationReason!,
-                        comment,
-                      ),
-                    ),
+                    terminateContract({
+                      variables: {
+                        contractId: contract.id,
+                        request: {
+                          terminationDate: format(
+                            terminationDate,
+                            'yyyy-MM-dd',
+                          ),
+                          terminationReason: terminationReason || '',
+                          comment,
+                        },
+                      },
+                      optimisticResponse: {
+                        terminateContract: {
+                          __typename: 'Contract',
+                          id: contract.id,
+                          holderMemberId: contract.holderMemberId,
+                          terminationDate,
+                        },
+                      },
+                    }),
                     {
                       loading: 'Terminating contract',
                       success: () => {

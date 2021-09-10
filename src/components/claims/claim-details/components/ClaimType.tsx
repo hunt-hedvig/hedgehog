@@ -10,6 +10,7 @@ import {
   Button,
   CardContent,
   DateTimePicker,
+  FadeIn,
   Input,
   Label,
   SearchableDropdown,
@@ -248,11 +249,19 @@ export const ClaimTypeForm: React.FC<{
           createClaimTypeOption(type?.__typename?.toString())
         }
         placeholder={'What type of claim is this?'}
-        isLoading={setClaimTypeLoading || loadingClaimInformation}
         isClearable={false}
         onChange={async (selection) => {
           setClaimType({
             variables: { id: claimId, type: selection?.value ?? null },
+            optimisticResponse: {
+              setClaimType: {
+                ...claimInformationData,
+                __typename: 'Claim',
+                id: claimId,
+                type: selection?.value ?? null,
+                events: claimInformationData?.claim?.events ?? [],
+              },
+            },
           }).catch(() => toast.error('Could not set type'))
 
           await refetch()
@@ -262,7 +271,11 @@ export const ClaimTypeForm: React.FC<{
           createClaimTypeOption(claimType),
         )}
       />
-      {type && <ClaimTypeDataForm type={type} claimId={claimId} />}
+      {!(setClaimTypeLoading || loadingClaimInformation) && type && (
+        <FadeIn>
+          <ClaimTypeDataForm type={type} claimId={claimId} />
+        </FadeIn>
+      )}
     </CardContent>
   )
 }
