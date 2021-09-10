@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Button, ButtonsGroup, SearchableDropdown } from '@hedvig-ui'
-import { Row } from 'features/tools/employees'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Input } from 'semantic-ui-react'
@@ -10,6 +9,12 @@ import {
   useCreateEmployeeMutation,
 } from 'types/generated/graphql'
 
+export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
