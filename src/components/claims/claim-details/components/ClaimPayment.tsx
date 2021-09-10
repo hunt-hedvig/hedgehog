@@ -90,6 +90,72 @@ export const ClaimPayment: React.FC<{
     setIsConfirming(true)
   }
 
+  const createPaymentHandler = async () => {
+    const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
+      amount: {
+        amount: +form.getValues().amount,
+        currency: 'SEK',
+      },
+      deductible: {
+        amount: +form.getValues().deductible,
+        currency: 'SEK',
+      },
+      sanctionListSkipped: Boolean(isOverridden),
+      note: form.getValues().note,
+      exGratia: isExGratia,
+      carrier,
+    }
+
+    if (form.getValues().type === 'AutomaticSwish') {
+      await toast.promise(
+        createSwishPayment({
+          variables: {
+            id: claimId,
+            payment: {
+              ...(paymentInput as ClaimSwishPaymentInput),
+              phoneNumber: form.getValues().phoneNumber!,
+              message: form.getValues().message!,
+            },
+          },
+        }),
+        {
+          loading: 'Creating Swish payment',
+          success: () => {
+            form.reset()
+            setIsConfirming(false)
+            setIsExGratia(false)
+            return 'Claim Swish payment done'
+          },
+          error: 'Could not make Swish payment',
+        },
+      )
+    } else {
+      await toast.promise(
+        createPayment({
+          variables: {
+            id: claimId,
+            payment: {
+              ...(paymentInput as ClaimPaymentInput),
+              type: form.getValues().type,
+            },
+          },
+        }),
+        {
+          loading: 'Creating payment',
+          success: () => {
+            form.reset()
+            setIsConfirming(false)
+            setIsExGratia(false)
+            return 'Claim payment done'
+          },
+          error: 'Could not make payment',
+        },
+      )
+    }
+    await sleep(1000)
+    await refetch()
+  }
+
   return (
     <FormProvider {...form}>
       <Form onSubmit={onSubmitHandler}>
@@ -190,77 +256,7 @@ export const ClaimPayment: React.FC<{
               setIsConfirming(false)
               form.reset()
             }}
-            onSubmit={async () => {
-              const paymentInput: Partial<
-                ClaimPaymentInput | ClaimSwishPaymentInput
-              > = {
-                amount: {
-                  amount: +form.getValues().amount,
-                  currency: 'SEK',
-                },
-                deductible: {
-                  amount: +form.getValues().deductible,
-                  currency: 'SEK',
-                },
-                sanctionListSkipped: Boolean(isOverridden),
-                note: form.getValues().note,
-                exGratia: isExGratia,
-                carrier,
-              }
-
-              if (form.getValues().type === 'AutomaticSwish') {
-                const data = {
-                  id: claimId,
-                  payment: {
-                    ...(paymentInput as ClaimSwishPaymentInput),
-                    phoneNumber: form.getValues().phoneNumber!,
-                    message: form.getValues().message!,
-                  },
-                }
-
-                await toast.promise(
-                  createSwishPayment({
-                    variables: data,
-                  }),
-                  {
-                    loading: 'Creating Swish payment',
-                    success: () => {
-                      form.reset()
-                      setIsConfirming(false)
-                      setIsExGratia(false)
-                      return 'Claim Swish payment done'
-                    },
-                    error: 'Could not make Swish payment',
-                  },
-                )
-              } else {
-                const data = {
-                  id: claimId,
-                  payment: {
-                    ...(paymentInput as ClaimPaymentInput),
-                    type: form.getValues().type,
-                  },
-                }
-
-                await toast.promise(
-                  createPayment({
-                    variables: data,
-                  }),
-                  {
-                    loading: 'Creating payment',
-                    success: () => {
-                      form.reset()
-                      setIsConfirming(false)
-                      setIsExGratia(false)
-                      return 'Claim payment done'
-                    },
-                    error: 'Could not make payment',
-                  },
-                )
-              }
-              await sleep(1000)
-              await refetch()
-            }}
+            onSubmit={createPaymentHandler}
             amount={form.getValues().amount}
             identified={identified}
             market={market}
