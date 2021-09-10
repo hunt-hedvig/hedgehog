@@ -24,6 +24,7 @@ import Routes from 'routes'
 import { useAuthenticate } from 'utils/auth'
 import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
 import { CommandLineProvider } from 'utils/hooks/command-line-hook'
+import { ConfirmDialogProvider } from 'utils/hooks/modal-hook'
 import { MemberHistoryProvider } from 'utils/member-history'
 import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
 
@@ -101,64 +102,72 @@ const App: React.FC = () => {
             <NumberMemberGroupsProvider>
               <Router history={history}>
                 <CommandLineProvider>
-                  <Layout>
-                    {!history.location.pathname.startsWith('/login') && (
-                      <VerticalMenu history={history} />
-                    )}
-                    <Main dark={history.location.pathname.startsWith('/login')}>
-                      <Breadcrumbs />
-                      <Switch>
-                        <Route
-                          path="/login"
-                          exact
-                          component={() => {
-                            redirectToLogin()
-                            return null
+                  <ConfirmDialogProvider>
+                    <Layout>
+                      {!history.location.pathname.startsWith('/login') && (
+                        <VerticalMenu history={history} />
+                      )}
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
+                        <Breadcrumbs />
+                        <Switch>
+                          <Route
+                            path="/login"
+                            exact
+                            component={() => {
+                              redirectToLogin()
+                              return null
+                            }}
+                          />
+                          {me && (
+                            <Switch>
+                              <Route
+                                path="/dashborad"
+                                component={DashboardPage}
+                              />
+                              <Route
+                                path="/questions"
+                                component={QuestionsPage}
+                              />
+                              <Route
+                                path="/claims"
+                                component={Routes.ClaimsPageRoute}
+                              />
+                              <Route
+                                path="/members"
+                                component={Routes.MembersPageRoute}
+                              />
+                              <Route
+                                path="/tools"
+                                component={Routes.ToolsPageRoute}
+                              />
+                              <Route
+                                exact
+                                path={'/'}
+                                component={DashboardPage}
+                              />
+                              <Route
+                                component={() => (
+                                  <StandaloneMessage paddingTop={'25vh'}>
+                                    Page not found
+                                  </StandaloneMessage>
+                                )}
+                              />
+                            </Switch>
+                          )}
+                        </Switch>
+                        <Toaster
+                          position={'top-center'}
+                          toastOptions={{
+                            style: {
+                              padding: '20px 25px',
+                            },
                           }}
                         />
-                        {me && (
-                          <Switch>
-                            <Route
-                              path="/dashborad"
-                              component={DashboardPage}
-                            />
-                            <Route
-                              path="/questions"
-                              component={QuestionsPage}
-                            />
-                            <Route
-                              path="/claims"
-                              component={Routes.ClaimsPageRoute}
-                            />
-                            <Route
-                              path="/members"
-                              component={Routes.MembersPageRoute}
-                            />
-                            <Route
-                              path="/tools"
-                              component={Routes.ToolsPageRoute}
-                            />
-                            <Route exact path={'/'} component={DashboardPage} />
-                            <Route
-                              component={() => (
-                                <StandaloneMessage paddingTop={'25vh'}>
-                                  Page not found
-                                </StandaloneMessage>
-                              )}
-                            />
-                          </Switch>
-                        )}
-                      </Switch>
-                      <Toaster
-                        position={'top-center'}
-                        toastOptions={{
-                          style: {
-                            padding: '20px 25px',
-                          },
-                        }}
-                      />
-                    </Main>
-                  </Layout>
+                      </Main>
+                    </Layout>
+                  </ConfirmDialogProvider>
                 </CommandLineProvider>
               </Router>
             </NumberMemberGroupsProvider>
