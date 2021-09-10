@@ -26,6 +26,7 @@ const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: 130px 170px auto auto;
   column-gap: 14px;
+  align-items: center;
   height: 100%;
 `
 
