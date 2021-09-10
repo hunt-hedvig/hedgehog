@@ -1,7 +1,15 @@
 mutation CreateClaimPayment($id: ID!, $payment: ClaimPaymentInput!) {
   createClaimPayment(id: $id, payment: $payment) {
+    id
     payments {
       id
+      amount
+      deductible
+      exGratia
+      note
+      timestamp
+      type
+      status
     }
   }
 }
