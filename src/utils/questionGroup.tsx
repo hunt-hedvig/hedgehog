@@ -1,5 +1,5 @@
 import { QuestionGroup } from 'api/generated/graphql'
-import { FilterState } from 'components/questions/filter'
+import { FilterState } from 'features/questions/filter'
 import { Market } from 'types/enums'
 import { range } from 'utils/array'
 import { hasOpenClaim } from 'utils/claim'

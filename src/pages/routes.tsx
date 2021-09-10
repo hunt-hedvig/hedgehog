@@ -1,5 +1,5 @@
 import { StandaloneMessage } from '@hedvig-ui'
-import { MembersSearch } from 'components/members-search'
+import { MembersSearch } from 'features/members-search'
 import { Tools } from 'features/tools'
 import { CampaignCodeInfo } from 'features/tools/campaign-codes'
 import { ChargePage } from 'features/tools/charges'

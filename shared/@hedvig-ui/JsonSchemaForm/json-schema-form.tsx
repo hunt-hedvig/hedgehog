@@ -8,7 +8,7 @@ import {
   WidgetProps,
 } from '@rjsf/core'
 import Form from '@rjsf/semantic-ui'
-import { TrashIconWrapper } from 'components/claims/claim-details/components/claim-items/components/styles'
+import { TrashIconWrapper } from 'features/claims/claim-details/components/claim-items/components/styles'
 import { JSONSchema7 } from 'json-schema'
 import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'

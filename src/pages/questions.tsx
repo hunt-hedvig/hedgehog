@@ -6,9 +6,9 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { FilterState, QuestionsFilter } from 'components/questions/filter'
-import { NumberMemberGroupsRadioButtons } from 'components/questions/number-member-groups-radio-buttons'
-import { QuestionGroups } from 'components/questions/questions-list/QuestionGroups'
+import { FilterState, QuestionsFilter } from 'features/questions/filter'
+import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
+import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React from 'react'
 import { useInsecurePersistentState } from 'utils/state'

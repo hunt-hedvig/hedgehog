@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
-import { LargeClaimsList } from 'components/claims/claims-list/components/LargeClaimsList'
+import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Header } from 'semantic-ui-react'

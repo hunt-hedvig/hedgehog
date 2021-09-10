@@ -1,6 +1,6 @@
 import { ContractMarketInfo } from 'api/generated/graphql'
-import { FilterState, getFilterColor } from 'components/questions/filter'
 import { differenceInYears, parse } from 'date-fns'
+import { FilterState, getFilterColor } from 'features/questions/filter'
 import React from 'react'
 import { Market, PickedLocale } from 'types/enums'
 import { getBirthdayInfo, getBirthDayText } from 'utils/date'

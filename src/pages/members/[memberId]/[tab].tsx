@@ -1,4 +1,4 @@
-import { MemberTabs } from 'components/member'
+import { MemberTabs } from 'features/member'
 import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
