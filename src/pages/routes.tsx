@@ -31,7 +31,7 @@ export const Routes: React.FC = () => {
       <Route exact path="/members" component={MemberSearchPage} />
       <Route path="/members/:memberId/:tab?" component={MemberPage} />
 
-      <Route path="/tools" exactcomponent={ToolsPage} />
+      <Route path="/tools" exact component={ToolsPage} />
       <Route path="/tools/charges" component={ChargesPage} />
       <Route
         path="/tools/switcher-automation"
