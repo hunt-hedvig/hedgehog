@@ -10,6 +10,7 @@ import {
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const entryTypeOptions = [
   {
@@ -35,6 +36,7 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   const { data: contractMarketInfo } = useGetContractMarketInfoQuery({
     variables: { memberId },
   })
+  const { confirm } = useConfirmDialog()
 
   const preferredCurrency =
     contractMarketInfo?.member?.contractMarketInfo?.preferredCurrency ?? 'SEK'
@@ -64,41 +66,40 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const onSubmitHandler = (data: FieldValues) => {
-    const confirmationStr = `Are you sure you want to payout ${data.amount} ${preferredCurrency}?`
-    if (!window.confirm(confirmationStr)) {
-      return
-    }
+    const confirmMessage = `Are you sure you want to payout ${data.amount} ${preferredCurrency}?`
 
-    toast.promise(
-      payoutMember({
-        variables: {
-          memberId,
-          request: {
-            amount: {
-              amount: data.amount,
-              currency: preferredCurrency,
+    confirm(confirmMessage).then(() => {
+      toast.promise(
+        payoutMember({
+          variables: {
+            memberId,
+            request: {
+              amount: {
+                amount: data.amount,
+                currency: preferredCurrency,
+              },
+              category: data.category,
+              referenceId: data.referenceId,
+              note: data.note,
             },
-            category: data.category,
-            referenceId: data.referenceId,
-            note: data.note,
           },
+          update: (cache, { data: response }) => {
+            if (!response) {
+              return
+            }
+            updateCache(cache, response)
+          },
+        }),
+        {
+          loading: 'Creating payout...',
+          success: () => {
+            form.reset()
+            return 'Payout created'
+          },
+          error: 'Could not create payout',
         },
-        update: (cache, { data: response }) => {
-          if (!response) {
-            return
-          }
-          updateCache(cache, response)
-        },
-      }),
-      {
-        loading: 'Creating payout...',
-        success: () => {
-          form.reset()
-          return 'Payout created'
-        },
-        error: 'Could not create payout',
-      },
-    )
+      )
+    })
   }
 
   return (

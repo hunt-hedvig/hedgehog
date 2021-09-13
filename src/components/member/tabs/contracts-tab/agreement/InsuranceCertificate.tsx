@@ -12,6 +12,7 @@ import {
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const InsuranceCertificate: React.FC<{
   contract: Contract
@@ -21,6 +22,8 @@ export const InsuranceCertificate: React.FC<{
   const [regenerateCertificate, { loading }] = useRegenerateCertificate(
     contract,
   )
+
+  const { confirm } = useConfirmDialog()
 
   const onUpload = (files, agreementId) => {
     const certificateForm = new FormData()
@@ -60,22 +63,20 @@ export const InsuranceCertificate: React.FC<{
           variation="third"
           fullWidth
           onClick={() => {
-            if (
-              !window.confirm(
-                'Are you sure you want to regenerate the certificate?',
+            confirm(
+              'Are you sure you want to regenerate the certificate?',
+            ).then(() => {
+              toast.promise(
+                regenerateCertificate(
+                  regenerateCertificateOptions(agreement.id),
+                ),
+                {
+                  loading: 'Regenerating certificate',
+                  success: 'Certificate generated',
+                  error: 'Could not regenerate certificate',
+                },
               )
-            ) {
-              return
-            }
-
-            toast.promise(
-              regenerateCertificate(regenerateCertificateOptions(agreement.id)),
-              {
-                loading: 'Regenerating certificate',
-                success: 'Certificate generated',
-                error: 'Could not regenerate certificate',
-              },
-            )
+            })
           }}
         >
           Regenerate

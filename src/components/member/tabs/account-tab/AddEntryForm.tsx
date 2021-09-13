@@ -16,6 +16,7 @@ import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-in
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const entryTypeOptions = [
   {
@@ -99,6 +100,7 @@ export const AddEntryForm: React.FC<{
   const [contractMarketInfo] = useContractMarketInfo(memberId)
   const [addAccountEntry] = useAddAccountEntryToMemberMutation()
   const form = useForm()
+  const { confirm } = useConfirmDialog()
 
   if (!Boolean(contractMarketInfo?.preferredCurrency)) {
     return (
@@ -111,35 +113,33 @@ export const AddEntryForm: React.FC<{
   const preferredCurrency = contractMarketInfo!.preferredCurrency
 
   const onSubmit = (data: FieldValues) => {
-    if (!window.confirm('Are you sure you want to add this entry?')) {
-      return
-    }
-
-    const dataCopy = {
-      ...data,
-      fromDate: format(new Date(), 'yyyy-MM-dd'),
-      amount: {
-        amount: data.amount.amount,
-        currency: preferredCurrency,
-      },
-    }
-
-    toast.promise(
-      addAccountEntry({
-        variables: {
-          memberId,
-          accountEntry: dataCopy as AccountEntryInput,
+    confirm('Are you sure you want to add this entry?').then(() => {
+      const dataCopy = {
+        ...data,
+        fromDate: format(new Date(), 'yyyy-MM-dd'),
+        amount: {
+          amount: data.amount.amount,
+          currency: preferredCurrency,
         },
-      }),
-      {
-        loading: 'Adding entry',
-        success: () => {
-          form.reset()
-          return 'Entry added'
+      }
+
+      toast.promise(
+        addAccountEntry({
+          variables: {
+            memberId,
+            accountEntry: dataCopy as AccountEntryInput,
+          },
+        }),
+        {
+          loading: 'Adding entry',
+          success: () => {
+            form.reset()
+            return 'Entry added'
+          },
+          error: 'Could not add entry',
         },
-        error: 'Could not add entry',
-      },
-    )
+      )
+    })
   }
 
   return (

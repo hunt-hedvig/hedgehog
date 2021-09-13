@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { FadeIn } from '@hedvig-ui'
 import React, { useEffect, useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
@@ -127,17 +128,23 @@ export const Modal = (props: ModalProps) => {
   return (
     <Portal>
       <ModalWrapperStyled position={props.position} side={props.side}>
-        <ModalContent ref={modalRef} height={props.height} width={props.width}>
-          {!props.withoutHeader && (
-            <ModalHeader>
-              <span className="modal-title" title={props.title}>
-                {props.title}
-              </span>
-              <CloseIcon className="modal-close" onClick={props.close} />
-            </ModalHeader>
-          )}
-          <ModalBody>{props.children}</ModalBody>
-        </ModalContent>
+        <FadeIn duration={250}>
+          <ModalContent
+            ref={modalRef}
+            height={props.height}
+            width={props.width}
+          >
+            {!props.withoutHeader && (
+              <ModalHeader>
+                <span className="modal-title" title={props.title}>
+                  {props.title}
+                </span>
+                <CloseIcon className="modal-close" onClick={props.close} />
+              </ModalHeader>
+            )}
+            <ModalBody>{props.children}</ModalBody>
+          </ModalContent>
+        </FadeIn>
       </ModalWrapperStyled>
     </Portal>
   )
