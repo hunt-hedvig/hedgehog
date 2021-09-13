@@ -20,6 +20,8 @@ interface SearchFieldProps {
   setIncludeAll: (includeAll: boolean) => void
   currentResultSize: number
   searchFieldRef: React.Ref<any>
+  luckySearch: boolean
+  setLuckySearch: (luckySearch: boolean) => void
 }
 
 export const SearchForm: React.FC<SearchFieldProps> = ({
@@ -32,6 +34,8 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
   setIncludeAll,
   currentResultSize,
   searchFieldRef,
+  luckySearch,
+  setLuckySearch,
 }) => {
   return (
     <form
@@ -81,6 +85,15 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
           }}
           checked={includeAll}
           label="Wide search"
+        />
+
+        <Checkbox
+          onChange={(_, { checked }) => {
+            setLuckySearch(checked!)
+          }}
+          checked={luckySearch}
+          label="Lucky search"
+          style={{ marginLeft: 15 }}
         />
 
         <EscapeButton

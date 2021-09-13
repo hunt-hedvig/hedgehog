@@ -34,6 +34,7 @@ const findInputFieldDomElementHackishly = (
 export const MembersSearch: React.FC = () => {
   const [query, setQuery] = React.useState('')
   const [includeAll, setIncludeAll] = React.useState(false)
+  const [luckySearch, setLuckySearch] = React.useState(false)
   const history = useHistory()
   const searchField = useRef<React.ReactElement>()
 
@@ -75,6 +76,12 @@ export const MembersSearch: React.FC = () => {
     resetKeyboardNavigationStep()
   }, [query])
 
+  React.useEffect(() => {
+    if (members.length && luckySearch) {
+      history.push(`/members/${members[0].memberId}`)
+    }
+  }, [members])
+
   return (
     <>
       <SearchForm
@@ -90,6 +97,8 @@ export const MembersSearch: React.FC = () => {
         setIncludeAll={setIncludeAll}
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
+        luckySearch={luckySearch}
+        setLuckySearch={setLuckySearch}
         onFocus={resetKeyboardNavigationStep}
       />
       {members.length > 0 && (
