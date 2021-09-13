@@ -1,9 +1,15 @@
-import { Badge, Capitalized, Card, CardsWrapper, Placeholder } from '@hedvig-ui'
+import styled from '@emotion/styled'
 import {
-  BadgeRow,
-  SmallTopSpacing,
-  TableHeadline,
-} from 'features/member/tabs/campaigns-tab/styles'
+  Card,
+  CardsWrapper,
+  InfoRow,
+  InfoTag,
+  InfoText,
+  Placeholder,
+  StandaloneMessage,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
+import { SmallTopSpacing } from 'features/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { MemberReferral, ReferralInformation } from 'types/generated/graphql'
@@ -27,53 +33,77 @@ const NotAvailable: React.FC = () => (
   </SmallTopSpacing>
 )
 
+const NoMembersReferredMessage = styled(StandaloneMessage)`
+  font-size: 1.2em;
+`
+
 export const ReferralsInfo: React.FC<{
   referralInformation: ReferralInformation
 }> = ({ referralInformation }) => {
-  const eligible = referralInformation.eligible
+  const { eligible } = referralInformation
 
   return (
     <>
       <CardsWrapper>
         <Card>
-          <BadgeRow>
-            <SmallTopSpacing>Hedvig Forever</SmallTopSpacing>
-            {referralInformation ? (
-              <Badge size="small" variant={eligible ? 'success' : 'danger'}>
-                <Capitalized>{eligible ? 'Activated' : 'Disabled'}</Capitalized>
-              </Badge>
-            ) : (
-              <NotAvailable />
-            )}
-          </BadgeRow>
-          <BadgeRow>
-            <SmallTopSpacing>Referral Code</SmallTopSpacing>
-            {eligible ? (
-              <Badge size="medium" bold>
-                {referralInformation?.campaign.code.toUpperCase()}
-              </Badge>
-            ) : (
-              <NotAvailable />
-            )}
-          </BadgeRow>
-          <BadgeRow>
-            <SmallTopSpacing>Referred By</SmallTopSpacing>
-            {eligible && referralInformation?.referredBy ? (
-              <MemberLink memberReferral={referralInformation?.referredBy} />
-            ) : (
-              <NotAvailable />
-            )}
-          </BadgeRow>
+          <ThirdLevelHeadline>Referral Information</ThirdLevelHeadline>
+          <InfoRow>
+            Hedvig Forever
+            <InfoText>
+              {referralInformation ? (
+                <InfoTag status={eligible ? 'success' : 'danger'}>
+                  <span style={{ fontWeight: 'bold' }}>
+                    {eligible ? 'Activated' : 'Disabled'}
+                  </span>
+                </InfoTag>
+              ) : (
+                <NotAvailable />
+              )}
+            </InfoText>
+          </InfoRow>
+          <InfoRow>
+            Referral code
+            <InfoText>
+              {eligible ? (
+                <InfoTag status={'highlight'}>
+                  <span style={{ fontWeight: 'bold' }}>
+                    {referralInformation?.campaign.code.toUpperCase()}
+                  </span>
+                </InfoTag>
+              ) : (
+                <NotAvailable />
+              )}
+            </InfoText>
+          </InfoRow>
+          <InfoRow>
+            Referred by
+            <InfoText>
+              {eligible && referralInformation?.referredBy ? (
+                <MemberLink memberReferral={referralInformation?.referredBy} />
+              ) : (
+                <NotAvailable />
+              )}
+            </InfoText>
+          </InfoRow>
         </Card>
       </CardsWrapper>
 
       {eligible && (
-        <>
-          <TableHeadline>Members referred</TableHeadline>
-          <MembersReferredTable
-            members={referralInformation?.hasReferred ?? []}
-          />
-        </>
+        <CardsWrapper>
+          <Card>
+            <ThirdLevelHeadline>Members referred</ThirdLevelHeadline>
+            {referralInformation?.hasReferred?.length !== 0 ? (
+              <MembersReferredTable members={referralInformation.hasReferred} />
+            ) : (
+              <NoMembersReferredMessage
+                paddingTop={'2em'}
+                paddingBottom={'2em'}
+              >
+                No members referred
+              </NoMembersReferredMessage>
+            )}
+          </Card>
+        </CardsWrapper>
       )}
     </>
   )
