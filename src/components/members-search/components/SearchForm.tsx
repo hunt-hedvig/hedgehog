@@ -1,24 +1,14 @@
-import styled from '@emotion/styled'
-import { Checkbox, FadeIn, Paragraph, Shadowed } from '@hedvig-ui'
+import { Checkbox, FadeIn, Shadowed } from '@hedvig-ui'
 import {
   EscapeButton,
   Group,
-  SearchButton,
   SearchIcon,
   SearchInput,
   SearchInputGroup,
+  SearchTip,
 } from 'components/members-search/styles'
 import React, { useState } from 'react'
 import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
-
-const NoteTip = styled(Paragraph)`
-  position: absolute;
-  top: -6rem;
-  left: 1rem;
-  width: fit-content;
-  font-size: 0.8em;
-  color: ${({ theme }) => theme.semiStrongForeground};
-`
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
@@ -88,27 +78,9 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
               }
             }}
           />
-          <SearchButton
-            type="submit"
-            disabled={loading}
-            variation="primary"
-            size="large"
-            visible={Boolean(query)}
-          >
-            Search
-          </SearchButton>
         </SearchInputGroup>
-
-        {textFieldFocused && (
-          <FadeIn duration={200}>
-            <NoteTip>
-              Press <Shadowed>Option</Shadowed> + <Shadowed>Enter</Shadowed> to
-              use lucky search
-            </NoteTip>
-          </FadeIn>
-        )}
       </Group>
-      <Group pushLeft>
+      <Group pushLeft style={{ display: 'flex', alignItems: 'center' }}>
         <Checkbox
           onChange={(_, { checked }) => {
             setIncludeAll(checked!)
@@ -125,6 +97,15 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
         >
           Clear
         </EscapeButton>
+
+        {textFieldFocused && (
+          <FadeIn duration={200}>
+            <SearchTip>
+              Press <Shadowed>Option</Shadowed> + <Shadowed>Enter</Shadowed> to
+              use lucky search
+            </SearchTip>
+          </FadeIn>
+        )}
       </Group>
     </form>
   )
