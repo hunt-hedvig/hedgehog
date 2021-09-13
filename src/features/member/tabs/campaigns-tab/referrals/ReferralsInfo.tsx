@@ -9,7 +9,6 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { MemberReferral, ReferralInformation } from 'api/generated/graphql'
 import { SmallTopSpacing } from 'features/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { Link } from 'react-router-dom'

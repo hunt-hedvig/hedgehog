@@ -5,9 +5,8 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { ReferralInformation } from 'api/generated/graphql'
-import { CampaignCodeInput } from 'components/member/tabs/campaigns-tab/campaigns/CampaignCodeInput'
-import { CampaignsRedeemedTable } from 'components/member/tabs/campaigns-tab/campaigns/CampaignsRedeemedTable'
+import { CampaignCodeInput } from 'features/member/tabs/campaigns-tab/campaigns/CampaignCodeInput'
+import { CampaignsRedeemedTable } from 'features/member/tabs/campaigns-tab/campaigns/CampaignsRedeemedTable'
 import React from 'react'
 import { ReferralInformation } from 'types/generated/graphql'
 

@@ -1,8 +1,5 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
-import { Member, useSetFraudulentStatusMutation } from 'api/generated/graphql'
-import { WideModal } from 'components/shared/modals/WideModal'
-import TableFields from 'components/shared/table-fields/TableFields'
 import {
   getEditMemberInfoOptions,
   useEditMemberInfo,
@@ -10,7 +7,7 @@ import {
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
-import { Member } from 'types/generated/graphql'
+import { Member, useSetFraudulentStatusMutation } from 'types/generated/graphql'
 import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
 import { dateTimeFormatter, getFieldName, getFieldValue } from 'utils/helpers'
 
@@ -21,9 +18,9 @@ const memberFieldFormatters = {
 
 const isClient = typeof window !== 'undefined'
 
-export const WideModal = styled(Modal)({
-  height: isClient ? window.innerHeight + 100 : '120%',
-})
+const WideModal = styled(Modal)`
+  height: ${isClient ? window.innerHeight + 100 : '120%'};
+`
 
 export const DetailsTab: React.FC<{
   member: Member
