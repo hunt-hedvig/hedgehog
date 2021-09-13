@@ -43,7 +43,7 @@ export const ConfirmDialogComponent: React.FC<{
       width={'400px'}
       position={'top'}
       side={'center'}
-      close={close}
+      onClose={close}
     >
       <div>
         <h3>{content}</h3>

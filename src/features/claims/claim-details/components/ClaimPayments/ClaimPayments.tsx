@@ -25,8 +25,8 @@ import {
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
+import { ClaimReserves } from '../ClaimReserves'
 import { ClaimPayment } from './ClaimPayment'
-import { ClaimReserves } from './ClaimReserves'
 
 const ScrollX = styled.div`
   margin-bottom: 1rem;

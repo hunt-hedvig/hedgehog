@@ -42,7 +42,7 @@ export const StandartModal = () => {
           position={select('Position', positions, 'center')}
           side={select('Side', sides, 'center')}
           title={text('Title content', 'Modal title')}
-          close={() => setIsModal(false)}
+          onClose={() => setIsModal(false)}
         >
           {text('Body content', 'Modal body')}
         </Modal>
@@ -67,7 +67,7 @@ export const ConfirmModal = () => {
           width={`${number('Width of modal', 400)}px`}
           position={select('Position', positions, 'top')}
           side={select('Side', sides, 'center')}
-          close={() => setIsModal(false)}
+          onClose={() => setIsModal(false)}
         >
           <div>
             <h3>Are you sure?</h3>

@@ -17,7 +17,7 @@ import {
   useCreateClaimPaymentMutation,
   useCreateSwishClaimPaymentMutation,
 } from 'types/generated/graphql'
-import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
+import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 
 export interface PaymentFormData {
   amount: string
@@ -226,7 +226,7 @@ export const ClaimPayment: React.FC<{
         <SubmitButton variation="primary">Create payment</SubmitButton>
 
         {isConfirming && (
-          <PaymentConfirmationDialog
+          <PaymentConfirmationModal
             onClose={() => {
               setIsConfirming(false)
               form.reset()
@@ -237,6 +237,19 @@ export const ClaimPayment: React.FC<{
             market={market}
           />
         )}
+
+        {/*isConfirming && (
+          <PaymentConfirmationDialog
+            onClose={() => {
+              setIsConfirming(false)
+              form.reset()
+            }}
+            onSubmit={createPaymentHandler}
+            amount={form.getValues().amount}
+            identified={identified}
+            market={market}
+          />
+        )*/}
       </Form>
     </FormProvider>
   )

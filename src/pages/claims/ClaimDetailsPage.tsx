@@ -11,7 +11,7 @@ import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvent
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation'
 import { ClaimNotes } from 'features/claims/claim-details/components/ClaimNotes'
-import { ClaimPayments } from 'features/claims/claim-details/components/ClaimPayments'
+import { ClaimPayments } from 'features/claims/claim-details/components/ClaimPayments/ClaimPayments'
 import { ClaimTranscriptions } from 'features/claims/claim-details/components/ClaimTranscriptions'
 import { ClaimTypeForm } from 'features/claims/claim-details/components/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
