@@ -112,10 +112,7 @@ export const DetailsTab: React.FC<{
                 {
                   loading: 'Updating fraudulent status',
                   success: 'Fraudulent status updated',
-                  error: (e) => {
-                    console.log(e)
-                    return 'Could not update fraudulent status'
-                  },
+                  error: 'Could not update fraudulent status',
                 },
               )
             }}

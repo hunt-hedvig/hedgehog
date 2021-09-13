@@ -44,7 +44,6 @@ export const CampaignsTab: React.FC<{
         referralInformation={referralInformation}
       />
 
-      <MainHeadline>Referrals</MainHeadline>
       <ReferralsInfo referralInformation={referralInformation} />
     </FadeIn>
   )
