@@ -1,7 +1,13 @@
 import styled from '@emotion/styled'
 import { Button, Modal } from '@hedvig-ui'
-import React, { createContext, useContext, useRef, useState } from 'react'
-import { Key } from 'utils/hooks/key-press-hook'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import { Key, Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const ConfirmButtons = styled.div`
   display: grid;
@@ -14,11 +20,26 @@ export const ConfirmDialogComponent: React.FC<{
   close: () => void
   confirm: () => void
 }> = ({ content, close, confirm }) => {
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  const isEscapePressed = useKeyIsPressed(Keys.Escape)
+
+  useEffect(() => {
+    if (isEnterPressed) {
+      confirm()
+    }
+  }, [isEnterPressed])
+
+  useEffect(() => {
+    if (isEscapePressed) {
+      close()
+    }
+  }, [isEscapePressed])
+
   return (
     <Modal
       withoutHeader={true}
       disableClickOutside={true}
-      height={'110px'}
+      height={'auto'}
       width={'400px'}
       position={'top'}
       side={'center'}

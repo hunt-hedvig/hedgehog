@@ -15,6 +15,7 @@ import {
 } from 'graphql/use-change-from-date-for-agreement'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialFromDate = (agreement: GenericAgreement): Date =>
   agreement.fromDate ? new Date(agreement.fromDate) : new Date()
@@ -26,10 +27,13 @@ export const FromDate: React.FC<{
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
   const [fromDate, setFromDate] = React.useState(initialFromDate(agreement))
   const [changeFromDate] = useChangeFromDate(contract)
+  const { confirm } = useConfirmDialog()
+
   const reset = () => {
     setFromDate(initialFromDate(agreement))
     setDatePickerEnabled(false)
   }
+
   React.useEffect(() => {
     reset()
   }, [agreement])
@@ -67,21 +71,21 @@ export const FromDate: React.FC<{
               variation="secondary"
               onClick={() => {
                 const formattedFromDate = format(fromDate, 'yyyy-MM-dd')
-                if (
-                  !window.confirm(`Change from date to ${formattedFromDate}?`)
-                ) {
-                  return
-                }
-
-                toast.promise(
-                  changeFromDate(changeFromDateOptions(agreement, fromDate)),
-                  {
-                    loading: 'Changing date',
-                    success: () => {
-                      reset()
-                      return 'Date changed'
-                    },
-                    error: 'Could not change date',
+                confirm(`Change from date to ${formattedFromDate}?`).then(
+                  () => {
+                    toast.promise(
+                      changeFromDate(
+                        changeFromDateOptions(agreement, fromDate),
+                      ),
+                      {
+                        loading: 'Changing date',
+                        success: () => {
+                          reset()
+                          return 'Date changed'
+                        },
+                        error: 'Could not change date',
+                      },
+                    )
                   },
                 )
               }}
