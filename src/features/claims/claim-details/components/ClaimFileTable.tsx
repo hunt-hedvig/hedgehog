@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { CardContent, Spinner } from '@hedvig-ui'
-import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
+import { CardContent, CardTitle, Spinner } from '@hedvig-ui'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
@@ -80,7 +79,7 @@ export const ClaimFileTable: React.FC<{
 
   return (
     <CardContent>
-      <PaperTitle
+      <CardTitle
         title={'Files'}
         badge={
           queryError

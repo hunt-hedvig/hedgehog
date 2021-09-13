@@ -49,10 +49,6 @@ export const ToolsPage: React.FC = () => (
         <Icon>💵</Icon>
         Campaign Codes
       </CardLink>
-      <CardLink to="/tools/itemizer" span={4}>
-        <Icon>📱</Icon>
-        Itemizer
-      </CardLink>
       <CardLink to="/tools/employees" span={4}>
         <Icon>👩🏼‍🦰</Icon>
         Employees

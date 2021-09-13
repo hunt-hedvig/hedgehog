@@ -10,7 +10,6 @@ import { QuestionsPage } from './QuestionsPage'
 import { CampaignCodesPage } from './tools/CampaignCodesPage'
 import { ChargesPage } from './tools/ChargesPage'
 import { EmployeesPage } from './tools/EmployeesPage'
-import { ItemizerPage } from './tools/ItemizerPage'
 import { NorwegianTariffCreatorPage } from './tools/NorwegianTariffCreatorPage'
 import { PerilsEditorPage } from './tools/PerilsEditorPage'
 import { SwitcherAutomationPage } from './tools/SwitcherAutomationPage'
@@ -32,7 +31,7 @@ export const Routes: React.FC = () => {
       <Route exact path="/members" component={MemberSearchPage} />
       <Route path="/members/:memberId/:tab?" component={MemberPage} />
 
-      <Route path="/tools" exactcomponent={ToolsPage} />
+      <Route path="/tools" exact component={ToolsPage} />
       <Route path="/tools/charges" component={ChargesPage} />
       <Route
         path="/tools/switcher-automation"
@@ -43,7 +42,6 @@ export const Routes: React.FC = () => {
         path="/tools/norwegian-tariff-creator"
         component={NorwegianTariffCreatorPage}
       />
-      <Route path="/tools/itemizer" component={ItemizerPage} />
       <Route path="/tools/employees" component={EmployeesPage} />
       <Route path="/tools/campaign-codes" component={CampaignCodesPage} />
       <Route path="/tools/unsign-member" component={UnsignMemberPage} />

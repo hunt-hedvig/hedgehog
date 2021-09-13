@@ -1,6 +1,5 @@
-import { CardContent, List, ListItem, Spinner } from '@hedvig-ui'
+import { CardContent, CardTitle, List, ListItem, Spinner } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
-import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { useClaimPageQuery } from 'types/generated/graphql'
@@ -16,7 +15,7 @@ export const ClaimEvents: React.FC<{ claimId: string }> = ({ claimId }) => {
 
   return (
     <CardContent>
-      <PaperTitle
+      <CardTitle
         title={'Events'}
         badge={
           queryError

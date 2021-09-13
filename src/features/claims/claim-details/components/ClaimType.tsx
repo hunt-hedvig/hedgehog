@@ -9,6 +9,8 @@ import {
 import {
   Button,
   CardContent,
+  CardTitle,
+  CardTitleBadgeProps,
   DateTimePicker,
   FadeIn,
   Input,
@@ -17,10 +19,6 @@ import {
   Spacing,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
-import {
-  PaperTitle,
-  PaperTitleBadgeProps,
-} from 'features/claims/claim-details/components/claim-items/PaperTitle'
 import React, { useState } from 'react'
 import { BugFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
@@ -221,7 +219,7 @@ export const ClaimTypeForm: React.FC<{
 
   const { contract, type } = claimInformationData?.claim ?? {}
 
-  const titleBadge = (): PaperTitleBadgeProps | null => {
+  const titleBadge = (): CardTitleBadgeProps | null => {
     if (queryError) {
       return {
         icon: BugFill,
@@ -242,7 +240,7 @@ export const ClaimTypeForm: React.FC<{
 
   return (
     <CardContent>
-      <PaperTitle title={'Claim Type'} badge={titleBadge()} />
+      <CardTitle title={'Claim Type'} badge={titleBadge()} />
       <SearchableDropdown
         value={
           type?.__typename &&

@@ -3,8 +3,14 @@ import { useClaimPageQuery } from 'types/generated/graphql'
 import React from 'react'
 
 import styled from '@emotion/styled'
-import { Card, CardContent, List, ListItem, Paragraph } from '@hedvig-ui'
-import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  List,
+  ListItem,
+  Paragraph,
+} from '@hedvig-ui'
 import { BugFill } from 'react-bootstrap-icons'
 
 const ClaimTranscriptionWrapper = styled.div`
@@ -40,7 +46,7 @@ const ClaimTranscriptions: React.FC<{ claimId: string }> = ({ claimId }) => {
   return (
     <Card>
       <CardContent>
-        <PaperTitle
+        <CardTitle
           title={'Transcription'}
           badge={
             queryError

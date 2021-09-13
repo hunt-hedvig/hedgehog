@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import {
+  Button,
   Card,
   CardsWrapper,
   FadeIn,
   LoadingMessage,
   MainHeadline,
 } from '@hedvig-ui'
-import { ClaimItems } from 'features/claims/claim-details/components/claim-items'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation'
@@ -16,7 +16,7 @@ import { ClaimTranscriptions } from 'features/claims/claim-details/components/Cl
 import { ClaimTypeForm } from 'features/claims/claim-details/components/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
 import { ChatPane } from 'features/member/tabs/ChatPane'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
 import { ClaimState, useClaimPageQuery } from 'types/generated/graphql'
 import { MemberHistoryContext } from 'utils/member-history'
@@ -26,11 +26,19 @@ const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
 `
 
+const ShowEventButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 1em;
+`
+
 export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
 }>> = ({ match }) => {
   const { claimId } = match.params
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
+  const [showEvents, setShowEvents] = useState(false)
 
   const { data: claimPageData } = useClaimPageQuery({
     variables: { claimId },
@@ -82,11 +90,6 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
               <ClaimNotes claimId={claimId} />
             </Card>
           </CardsWrapper>
-          <CardsWrapper contentWrap={'noWrap'}>
-            <Card>
-              <ClaimItems claimId={claimId} memberId={memberId} />
-            </Card>
-          </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier && (
             <>
               <MainHeadline>
@@ -110,11 +113,19 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
             </Card>
           </CardsWrapper>
 
-          <CardsWrapper contentWrap={'noWrap'}>
-            <Card>
-              <ClaimEvents claimId={claimId} />
-            </Card>
-          </CardsWrapper>
+          {showEvents ? (
+            <CardsWrapper contentWrap={'noWrap'}>
+              <Card>
+                <ClaimEvents claimId={claimId} />
+              </Card>
+            </CardsWrapper>
+          ) : (
+            <ShowEventButtonWrapper>
+              <Button variation={'ghost'} onClick={() => setShowEvents(true)}>
+                Show events
+              </Button>
+            </ShowEventButtonWrapper>
+          )}
         </ChatPaneAdjustedContainer>
       </FadeIn>
     </>

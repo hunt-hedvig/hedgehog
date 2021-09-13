@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { InfoTag, InfoTagStatus, ThirdLevelHeadline } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
 import React from 'react'
 import { LockFill } from 'react-bootstrap-icons'
@@ -78,3 +79,51 @@ export const DangerCard = styled(Card)<CardProps>`
 export const CardContent = styled('div')`
   width: 100%;
 `
+
+export interface CardTitleBadgeProps {
+  icon?: React.ElementType
+  status: InfoTagStatus
+  label: string
+}
+
+const CardTitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+`
+
+export const CardTitle: React.FC<{
+  title: string
+  badge?: CardTitleBadgeProps | null
+}> = ({ title, badge }) => {
+  const BadgeIcon = badge?.icon
+
+  return (
+    <CardTitleWrapper>
+      <div>
+        <ThirdLevelHeadline>{title}</ThirdLevelHeadline>
+      </div>
+      {badge && (
+        <InfoTag
+          style={{
+            fontWeight: 'bold',
+            padding: '0.2em 0.7em',
+            fontSize: '0.85em',
+          }}
+          status={badge.status}
+        >
+          {BadgeIcon && (
+            <BadgeIcon
+              style={{
+                paddingTop: '0.2em',
+                marginRight: '0.5em',
+              }}
+            />
+          )}
+          {badge.label}
+        </InfoTag>
+      )}
+    </CardTitleWrapper>
+  )
+}

@@ -10,6 +10,7 @@ import {
 import {
   CardContent,
   CardsWrapper,
+  CardTitle,
   DangerCard,
   Dropdown,
   EnumDropdown,
@@ -20,7 +21,6 @@ import {
   Paragraph,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
-import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
 import { ContractDropdown } from 'features/claims/claim-details/components/ContractDropdown'
 import {
   setContractForClaimOptions,
@@ -136,7 +136,7 @@ export const ClaimInformation: React.FC<{
   return (
     <CardContent>
       <Loadable loading={claimInformationLoading}>
-        <PaperTitle
+        <CardTitle
           title={'Claim Info'}
           badge={
             queryError

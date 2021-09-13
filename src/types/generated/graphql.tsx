@@ -2376,22 +2376,6 @@ export type PaymentScheduleQueryQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type InsertItemCategoriesMutationVariables = Exact<{
-  request?: Maybe<InsertItemCategoriesInput>
-}>
-
-export type InsertItemCategoriesMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'insertItemCategories'>
-
-export type InsertValuationRulesMutationVariables = Exact<{
-  request?: Maybe<InsertValuationRulesInput>
-}>
-
-export type InsertValuationRulesMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'insertValuationRules'>
-
 export type AddNorwegainPostalCodesMutationVariables = Exact<{
   postalCodesString?: Maybe<Scalars['String']>
 }>
@@ -5271,104 +5255,6 @@ export type PaymentScheduleQueryLazyQueryHookResult = ReturnType<
 export type PaymentScheduleQueryQueryResult = ApolloReactCommon.QueryResult<
   PaymentScheduleQueryQuery,
   PaymentScheduleQueryQueryVariables
->
-export const InsertItemCategoriesDocument = gql`
-  mutation InsertItemCategories($request: InsertItemCategoriesInput) {
-    insertItemCategories(request: $request)
-  }
-`
-export type InsertItemCategoriesMutationFn = ApolloReactCommon.MutationFunction<
-  InsertItemCategoriesMutation,
-  InsertItemCategoriesMutationVariables
->
-
-/**
- * __useInsertItemCategoriesMutation__
- *
- * To run a mutation, you first call `useInsertItemCategoriesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useInsertItemCategoriesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [insertItemCategoriesMutation, { data, loading, error }] = useInsertItemCategoriesMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useInsertItemCategoriesMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    InsertItemCategoriesMutation,
-    InsertItemCategoriesMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    InsertItemCategoriesMutation,
-    InsertItemCategoriesMutationVariables
-  >(InsertItemCategoriesDocument, options)
-}
-export type InsertItemCategoriesMutationHookResult = ReturnType<
-  typeof useInsertItemCategoriesMutation
->
-export type InsertItemCategoriesMutationResult = ApolloReactCommon.MutationResult<
-  InsertItemCategoriesMutation
->
-export type InsertItemCategoriesMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  InsertItemCategoriesMutation,
-  InsertItemCategoriesMutationVariables
->
-export const InsertValuationRulesDocument = gql`
-  mutation InsertValuationRules($request: InsertValuationRulesInput) {
-    insertValuationRules(request: $request)
-  }
-`
-export type InsertValuationRulesMutationFn = ApolloReactCommon.MutationFunction<
-  InsertValuationRulesMutation,
-  InsertValuationRulesMutationVariables
->
-
-/**
- * __useInsertValuationRulesMutation__
- *
- * To run a mutation, you first call `useInsertValuationRulesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useInsertValuationRulesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [insertValuationRulesMutation, { data, loading, error }] = useInsertValuationRulesMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useInsertValuationRulesMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    InsertValuationRulesMutation,
-    InsertValuationRulesMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    InsertValuationRulesMutation,
-    InsertValuationRulesMutationVariables
-  >(InsertValuationRulesDocument, options)
-}
-export type InsertValuationRulesMutationHookResult = ReturnType<
-  typeof useInsertValuationRulesMutation
->
-export type InsertValuationRulesMutationResult = ApolloReactCommon.MutationResult<
-  InsertValuationRulesMutation
->
-export type InsertValuationRulesMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  InsertValuationRulesMutation,
-  InsertValuationRulesMutationVariables
 >
 export const AddNorwegainPostalCodesDocument = gql`
   mutation AddNorwegainPostalCodes($postalCodesString: String) {
