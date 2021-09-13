@@ -2,6 +2,7 @@ import { Button, Spacing, TextArea, ThirdLevelHeadline } from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useAddNorwegainPostalCodesMutation } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const PostalCodesEditor: React.FC = () => {
   const [postalCodesString, setPostalCodesString] = React.useState<string>('')
@@ -9,6 +10,7 @@ export const PostalCodesEditor: React.FC = () => {
     addNorwegianPostalCodes,
     { loading },
   ] = useAddNorwegainPostalCodesMutation()
+  const { confirm } = useConfirmDialog()
 
   return (
     <Spacing top>
@@ -26,22 +28,20 @@ export const PostalCodesEditor: React.FC = () => {
           variation={'secondary'}
           disabled={loading}
           onClick={() => {
-            if (
-              !window.confirm('Are you sure you want to add the postal codes?')
-            ) {
-              return
-            }
-
-            toast.promise(
-              addNorwegianPostalCodes({
-                variables: {
-                  postalCodesString,
-                },
-              }),
-              {
-                loading: 'Adding postal codes',
-                success: 'Postal codes added',
-                error: 'Could not add postal codes',
+            confirm('Are you sure you want to add the postal codes?').then(
+              () => {
+                toast.promise(
+                  addNorwegianPostalCodes({
+                    variables: {
+                      postalCodesString,
+                    },
+                  }),
+                  {
+                    loading: 'Adding postal codes',
+                    success: 'Postal codes added',
+                    error: 'Could not add postal codes',
+                  },
+                )
               },
             )
           }}

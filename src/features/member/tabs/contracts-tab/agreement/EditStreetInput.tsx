@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract } from 'types/generated/graphql'
 import { Keys } from 'utils/hooks/key-press-hook'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const EditStreetInput: React.FC<{
   agreementId: string
@@ -15,6 +16,7 @@ export const EditStreetInput: React.FC<{
   closeEdit: () => void
 }> = ({ agreementId, contract, street, closeEdit }) => {
   const [newStreet, setNewStreet] = useState(street)
+  const { confirm } = useConfirmDialog()
 
   useEffect(() => {
     setNewStreet(street)
@@ -37,27 +39,23 @@ export const EditStreetInput: React.FC<{
         if (street.trim() === newStreet.trim()) {
           return
         }
-        if (
-          !window.confirm(
-            `Are you sure you want to change the street from "${street}" to "${newStreet}"?`,
-          )
-        ) {
-          return
-        }
-
-        toast.promise(
-          safelyEditAgreement(
-            safelyEditAgreementOptions(agreementId, newStreet),
-          ),
-          {
-            loading: 'Changing street',
-            success: () => {
-              closeEdit()
-              return 'Street changed'
+        confirm(
+          `Are you sure you want to change the street from "${street}" to "${newStreet}"?`,
+        ).then(() => {
+          toast.promise(
+            safelyEditAgreement(
+              safelyEditAgreementOptions(agreementId, newStreet),
+            ),
+            {
+              loading: 'Changing street',
+              success: () => {
+                closeEdit()
+                return 'Street changed'
+              },
+              error: 'Could not change street',
             },
-            error: 'Could not change street',
-          },
-        )
+          )
+        })
       }}
     />
   )

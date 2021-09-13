@@ -22,6 +22,8 @@ export const InsuranceCertificate: React.FC<{
     contract,
   )
 
+  const { confirm } = useConfirmDialog()
+
   const onUpload = (files, agreementId) => {
     const certificateForm = new FormData()
     certificateForm.set('file', files[0])
@@ -60,22 +62,20 @@ export const InsuranceCertificate: React.FC<{
           variation="third"
           fullWidth
           onClick={() => {
-            if (
-              !window.confirm(
-                'Are you sure you want to regenerate the certificate?',
+            confirm(
+              'Are you sure you want to regenerate the certificate?',
+            ).then(() => {
+              toast.promise(
+                regenerateCertificate(
+                  regenerateCertificateOptions(agreement.id),
+                ),
+                {
+                  loading: 'Regenerating certificate',
+                  success: 'Certificate generated',
+                  error: 'Could not regenerate certificate',
+                },
               )
-            ) {
-              return
-            }
-
-            toast.promise(
-              regenerateCertificate(regenerateCertificateOptions(agreement.id)),
-              {
-                loading: 'Regenerating certificate',
-                success: 'Certificate generated',
-                error: 'Could not regenerate certificate',
-              },
-            )
+            })
           }}
         >
           Regenerate

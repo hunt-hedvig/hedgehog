@@ -15,6 +15,7 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialToDate = (agreement: GenericAgreement): Date =>
   agreement.toDate ? new Date(agreement.toDate) : new Date()
@@ -26,10 +27,13 @@ export const ToDate: React.FC<{
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
   const [toDate, setToDate] = React.useState(initialToDate(agreement))
   const [changeToDate] = useChangeToDate(contract)
+  const { confirm } = useConfirmDialog()
+
   const reset = () => {
     setToDate(initialToDate(agreement))
     setDatePickerEnabled(false)
   }
+
   React.useEffect(() => {
     reset()
   }, [agreement])
@@ -64,21 +68,19 @@ export const ToDate: React.FC<{
               variation="secondary"
               onClick={() => {
                 const formattedToDate = format(toDate, 'yyyy-MM-dd')
-                if (
-                  !window.confirm(`Change the to date to ${formattedToDate}?`)
-                ) {
-                  return
-                }
-
-                toast.promise(
-                  changeToDate(changeToDateOptions(agreement, toDate)),
-                  {
-                    loading: 'Changing date',
-                    success: () => {
-                      reset()
-                      return 'Date changed'
-                    },
-                    error: 'Could not change date',
+                confirm(`Change the to date to ${formattedToDate}?`).then(
+                  () => {
+                    toast.promise(
+                      changeToDate(changeToDateOptions(agreement, toDate)),
+                      {
+                        loading: 'Changing date',
+                        success: () => {
+                          reset()
+                          return 'Date changed'
+                        },
+                        error: 'Could not change date',
+                      },
+                    )
                   },
                 )
               }}

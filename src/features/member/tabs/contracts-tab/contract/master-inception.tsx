@@ -13,6 +13,7 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const MasterInception: React.FC<{
   contract: Contract
@@ -31,6 +32,7 @@ export const MasterInception: React.FC<{
     activateContract,
     { loading: activateContractLoading },
   ] = useActivateContract(contract)
+  const { confirm } = useConfirmDialog()
 
   return (
     <>
@@ -54,13 +56,12 @@ export const MasterInception: React.FC<{
               fullWidth
               disabled={activateContractLoading}
               onClick={() => {
-                const confirmed = window.confirm(
-                  `Are you sure you want to activate this contract with master inception of ${format(
-                    activeFrom,
-                    'yyyy-MM-dd',
-                  )}?`,
-                )
-                if (confirmed) {
+                const confirmMessage = `Are you sure you want to activate this contract with master inception of ${format(
+                  activeFrom,
+                  'yyyy-MM-dd',
+                )}?`
+
+                confirm(confirmMessage).then(() => {
                   toast.promise(
                     activateContract(
                       activateContractOptions(contract, activeFrom),
@@ -74,7 +75,7 @@ export const MasterInception: React.FC<{
                       error: 'Could not activate contract',
                     },
                   )
-                }
+                })
               }}
               variation={'success'}
             >

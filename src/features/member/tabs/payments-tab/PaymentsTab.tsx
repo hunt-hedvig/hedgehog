@@ -26,6 +26,7 @@ import {
   useCreatePaymentCompletionLinkMutation,
   useGetMemberTransactionsQuery,
 } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { formatMoney } from 'utils/money'
 import { PayoutDetails } from './PayoutDetails'
 
@@ -134,32 +135,29 @@ export const PaymentsTab: React.FC<{
 
   const [account] = useGetAccount(memberId)
 
-  const handleChargeSubmit = (mutation) => {
-    if (
-      !window.confirm(
-        `Are you sure you want to charge ${formatMoney(
-          account?.currentBalance!,
-        )}?`,
-      )
-    ) {
-      return
-    }
+  const { confirm } = useConfirmDialog()
 
-    toast
-      .promise(
-        mutation({
-          variables: {
-            id: memberId,
-            amount: account?.currentBalance,
+  const handleChargeSubmit = (mutation) => {
+    const confirmMessage = `Are you sure you want to charge ${formatMoney(
+      account?.currentBalance!,
+    )}?`
+    confirm(confirmMessage).then(() => {
+      toast
+        .promise(
+          mutation({
+            variables: {
+              id: memberId,
+              amount: account?.currentBalance,
+            },
+          }),
+          {
+            loading: 'Charging member',
+            success: 'Member charged',
+            error: 'Could not charge member',
           },
-        }),
-        {
-          loading: 'Charging member',
-          success: 'Member charged',
-          error: 'Could not charge member',
-        },
-      )
-      .then(() => refetch())
+        )
+        .then(() => refetch())
+    })
   }
 
   if (error) {

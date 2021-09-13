@@ -17,6 +17,7 @@ import {
   useRevertTerminationMutation,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialTerminationDate = (contract: Contract): Date =>
   contract.terminationDate ? new Date(contract.terminationDate) : new Date()
@@ -51,6 +52,8 @@ export const TerminationDate: React.FC<{
     { loading: revertTerminationLoading },
   ] = useRevertTerminationMutation()
 
+  const { confirm } = useConfirmDialog()
+
   if (contract.terminationDate) {
     return (
       <>
@@ -74,32 +77,32 @@ export const TerminationDate: React.FC<{
                 variation={'success'}
                 disabled={revertTerminationLoading}
                 onClick={() => {
-                  if (
-                    window.confirm('Are you want to revert the termination?')
-                  ) {
-                    toast.promise(
-                      revertTermination({
-                        variables: {
-                          contractId: contract.id,
-                        },
-                        optimisticResponse: {
-                          revertTermination: {
-                            __typename: 'Contract',
-                            id: contract.id,
-                            holderMemberId: contract.holderMemberId,
-                            terminationDate: null,
+                  confirm('Are you want to revert the termination?').then(
+                    () => {
+                      toast.promise(
+                        revertTermination({
+                          variables: {
+                            contractId: contract.id,
                           },
+                          optimisticResponse: {
+                            revertTermination: {
+                              __typename: 'Contract',
+                              id: contract.id,
+                              holderMemberId: contract.holderMemberId,
+                              terminationDate: null,
+                            },
+                          },
+                        }),
+                        {
+                          loading: 'Reverting termination',
+                          success: () => {
+                            return 'Termination reverted'
+                          },
+                          error: 'Could not revert termination',
                         },
-                      }),
-                      {
-                        loading: 'Reverting termination',
-                        success: () => {
-                          return 'Termination reverted'
-                        },
-                        error: 'Could not revert termination',
-                      },
-                    )
-                  }
+                      )
+                    },
+                  )
                 }}
               >
                 Revert
@@ -121,12 +124,11 @@ export const TerminationDate: React.FC<{
                 variation={'primary'}
                 disabled={changeTerminationDateLoading}
                 onClick={() => {
-                  const confirmed = window.confirm(
-                    `Are you sure you want to change the termination date from ${
-                      contract.terminationDate
-                    } to ${format(terminationDate, 'yyyy-MM-dd')}?`,
-                  )
-                  if (confirmed) {
+                  const confirmMessage = `Are you sure you want to change the termination date from ${
+                    contract.terminationDate
+                  } to ${format(terminationDate, 'yyyy-MM-dd')}?`
+
+                  confirm(confirmMessage).then(() => {
                     toast.promise(
                       changeTerminationDate({
                         variables: {
@@ -150,7 +152,7 @@ export const TerminationDate: React.FC<{
                         error: 'Could not change termination date',
                       },
                     )
-                  }
+                  })
                 }}
               >
                 Confirm
@@ -196,13 +198,12 @@ export const TerminationDate: React.FC<{
               variation={'danger'}
               disabled={terminationReason === null || terminateContractLoading}
               onClick={() => {
-                const confirmed = window.confirm(
-                  `Are you sure you want to terminate this contract with the termination date ${format(
-                    terminationDate,
-                    'yyyy-MM-dd',
-                  )}?`,
-                )
-                if (confirmed) {
+                const confirmedMsg = `Are you sure you want to terminate this contract with the termination date ${format(
+                  terminationDate,
+                  'yyyy-MM-dd',
+                )}?`
+
+                confirm(confirmedMsg).then(() => {
                   toast.promise(
                     terminateContract({
                       variables: {
@@ -234,7 +235,7 @@ export const TerminationDate: React.FC<{
                       error: 'Could not terminate contract',
                     },
                   )
-                }
+                })
               }}
             >
               Terminate

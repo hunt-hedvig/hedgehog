@@ -11,6 +11,7 @@ import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Grid, Table } from 'semantic-ui-react'
 import { MonthlyEntry } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { formatMoney } from 'utils/money'
 
 const StyledTable = styled(Table)`
@@ -22,6 +23,7 @@ export const MonthlyEntriesTable: React.FC<{
   monthlyEntries: ReadonlyArray<MonthlyEntry>
 }> = ({ memberId, monthlyEntries }) => {
   const [removeMonthlyEntry] = useRemoveMonthlyEntry()
+  const { confirm } = useConfirmDialog()
 
   return (
     <StyledTable>
@@ -95,22 +97,23 @@ export const MonthlyEntriesTable: React.FC<{
               <Table.Cell>
                 <IconButton
                   onClick={() => {
-                    const confirm = window.confirm(
+                    confirm(
                       `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,
-                    )
-                    if (!confirm) {
-                      return
-                    }
-                    toast.promise(
-                      removeMonthlyEntry(
-                        getRemoveMonthlyEntryOptions(memberId, monthlyEntry.id),
-                      ),
-                      {
-                        loading: 'Removing monthly entry',
-                        success: 'Monthly entry removed',
-                        error: 'Could not remove monthly entry',
-                      },
-                    )
+                    ).then(() => {
+                      toast.promise(
+                        removeMonthlyEntry(
+                          getRemoveMonthlyEntryOptions(
+                            memberId,
+                            monthlyEntry.id,
+                          ),
+                        ),
+                        {
+                          loading: 'Removing monthly entry',
+                          success: 'Monthly entry removed',
+                          error: 'Could not remove monthly entry',
+                        },
+                      )
+                    })
                   }}
                 >
                   <Trash color="red" />

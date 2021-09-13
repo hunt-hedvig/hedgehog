@@ -8,6 +8,7 @@ import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { isExpired } from 'utils/quote'
 
 const QuoteMessage = styled(StandaloneMessage)`
@@ -22,6 +23,7 @@ export const CreateQuoteFromAgreement: React.FC<{
   const [{ quotes }, { loading: loadingQuotes }] = useQuotes(
     contract.holderMemberId,
   )
+  const { confirm } = useConfirmDialog()
 
   if (loadingQuotes) {
     return null
@@ -52,19 +54,18 @@ export const CreateQuoteFromAgreement: React.FC<{
             disabled={contract.isLocked}
             variation="primary"
             onClick={async () => {
-              if (!window.confirm(`Create new quote?`)) {
-                return
-              }
-              await toast.promise(
-                createQuote(
-                  createQuoteFromAgreementOptions(agreement, contract),
-                ),
-                {
-                  loading: 'Creating quote',
-                  success: 'Quote created, find it under the quotes tab',
-                  error: 'Could not create quote',
-                },
-              )
+              confirm(`Create new quote?`).then(async () => {
+                await toast.promise(
+                  createQuote(
+                    createQuoteFromAgreementOptions(agreement, contract),
+                  ),
+                  {
+                    loading: 'Creating quote',
+                    success: 'Quote created, find it under the quotes tab',
+                    error: 'Could not create quote',
+                  },
+                )
+              })
             }}
           >
             Create a new quote

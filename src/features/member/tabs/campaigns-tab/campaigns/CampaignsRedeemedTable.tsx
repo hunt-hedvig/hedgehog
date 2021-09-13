@@ -6,6 +6,7 @@ import {
   RedeemedCampaign,
   useManualUnRedeemCampaignMutation,
 } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const CampaignsRedeemedTable: React.FC<{
   memberId: string
@@ -15,6 +16,8 @@ export const CampaignsRedeemedTable: React.FC<{
     manualUnRedeemCampaign,
     { loading },
   ] = useManualUnRedeemCampaignMutation()
+  const { confirm } = useConfirmDialog()
+
   return (
     <Table celled>
       <Table.Header>
@@ -51,10 +54,9 @@ export const CampaignsRedeemedTable: React.FC<{
                     fullWidth
                     disabled={loading}
                     onClick={() => {
-                      const confirm = window.confirm(
+                      confirm(
                         `Are you sure you want to unredeem the campaign ${campaign.code.toUpperCase()}?`,
-                      )
-                      if (confirm) {
+                      ).then(() => {
                         manualUnRedeemCampaign({
                           variables: {
                             memberId,
@@ -62,7 +64,7 @@ export const CampaignsRedeemedTable: React.FC<{
                           },
                           refetchQueries: () => ['GetReferralInformation'],
                         })
-                      }
+                      })
                     }}
                   >
                     Unredeem
