@@ -6,7 +6,6 @@ import {
   LoadingMessage,
   MainHeadline,
 } from '@hedvig-ui'
-import { ClaimItems } from 'features/claims/claim-details/components/claim-items'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation'
@@ -80,11 +79,6 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
           <CardsWrapper contentWrap={'noWrap'}>
             <Card>
               <ClaimNotes claimId={claimId} />
-            </Card>
-          </CardsWrapper>
-          <CardsWrapper contentWrap={'noWrap'}>
-            <Card>
-              <ClaimItems claimId={claimId} memberId={memberId} />
             </Card>
           </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier && (

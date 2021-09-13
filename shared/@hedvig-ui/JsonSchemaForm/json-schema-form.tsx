@@ -8,7 +8,6 @@ import {
   WidgetProps,
 } from '@rjsf/core'
 import Form from '@rjsf/semantic-ui'
-import { TrashIconWrapper } from 'features/claims/claim-details/components/claim-items/components/styles'
 import { JSONSchema7 } from 'json-schema'
 import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
@@ -61,6 +60,11 @@ const ItemTitleWrapper = styled('div')`
 
 const ItemRemoveButton = styled(IconButton)`
   padding: 0.5rem;
+`
+
+const TrashIconWrapper = styled.span`
+  color: ${({ theme }) => theme.danger};
+  font-size: 0.9rem;
 `
 
 const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
