@@ -12,6 +12,7 @@ import React from 'react'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const InsuranceCertificate: React.FC<{
   contract: Contract
