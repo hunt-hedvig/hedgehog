@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, ButtonsGroup, FourthLevelHeadline, Spacing } from '@hedvig-ui'
-import { Grid, IconButton } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import {
   AjvError,
   ArrayFieldTemplateProps,
@@ -58,10 +58,6 @@ const ItemTitleWrapper = styled('div')`
   justify-content: space-between;
 `
 
-const ItemRemoveButton = styled(IconButton)`
-  padding: 0.5rem;
-`
-
 const TrashIconWrapper = styled.span`
   color: ${({ theme }) => theme.danger};
   font-size: 0.9rem;
@@ -86,11 +82,15 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
           <ItemWrapper key={element.key}>
             <ItemTitleWrapper>
               <strong>{index + 1}.</strong>
-              <ItemRemoveButton onClick={element.onDropIndexClick(index)}>
+              <Button
+                variation={'icon'}
+                style={{ paddingRight: '0.5em' }}
+                onClick={element.onDropIndexClick(index)}
+              >
                 <TrashIconWrapper>
                   <Trash />
                 </TrashIconWrapper>
-              </ItemRemoveButton>
+              </Button>
             </ItemTitleWrapper>
             {element.children}
           </ItemWrapper>

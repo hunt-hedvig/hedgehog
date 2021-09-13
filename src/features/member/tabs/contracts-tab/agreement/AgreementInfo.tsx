@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { InfoContainer, InfoRow, InfoText, Paragraph } from '@hedvig-ui'
-import { IconButton } from '@material-ui/core'
+import { Button, InfoContainer, InfoRow, InfoText, Paragraph } from '@hedvig-ui'
 import { EditStreetInput } from 'features/member/tabs/contracts-tab/agreement/EditStreetInput'
 import React, { useState } from 'react'
 import { PencilFill } from 'react-bootstrap-icons'
@@ -34,11 +33,11 @@ export const AgreementInfo: React.FC<{
           {!editStreet && (
             <>
               {agreement.address.street}{' '}
-              <IconButton onClick={() => setEditStreet(true)}>
+              <Button variation={'icon'} onClick={() => setEditStreet(true)}>
                 <EditIconWrapper>
                   <PencilFill />
                 </EditIconWrapper>
-              </IconButton>
+              </Button>
             </>
           )}
           {editStreet && (

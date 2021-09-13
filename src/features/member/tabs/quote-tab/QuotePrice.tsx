@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { Input } from '@hedvig-ui'
-import { IconButton } from '@material-ui/core'
+import { Button, Input } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
@@ -114,20 +113,20 @@ export const QuotePrice = ({ quote }: Props) => {
                 onChange={onPriceChange}
               />
             </PriceInput>
-            <IconButton type="submit">
-              <SubmitButton />
-            </IconButton>
-            <IconButton onClick={onCancel}>
-              <CancelButton />
-            </IconButton>
+            <Button variation={'icon'} type={'submit'}>
+              <SubmitButton size={'1.6em'} />
+            </Button>
+            <Button variation={'icon'} onClick={onCancel}>
+              <CancelButton size={'1.6em'} />
+            </Button>
           </AlignCenter>
         </form>
       ) : (
         <AlignCenter>
           <DisplayPrice>{formattedPrice}</DisplayPrice>
-          <IconButton onClick={() => setEditPrice(true)}>
+          <Button variation={'icon'} onClick={() => setEditPrice(true)}>
             <PencilFill />
-          </IconButton>
+          </Button>
         </AlignCenter>
       )}
     </PriceWrapper>

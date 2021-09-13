@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { Popover } from '@hedvig-ui'
-import { IconButton } from '@material-ui/core'
+import { Button, Popover } from '@hedvig-ui'
 import React from 'react'
 import { ShieldShaded } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
@@ -56,13 +55,16 @@ export const QuestionGroupInfo = ({ questionGroup }) => {
                   </>
                 }
               >
-                <IconButton
+                <Button
+                  variation={'icon'}
                   disabled={member.claims.length > 1}
                   onClick={() => history.push(`/claims/${member.claims[0].id}`)}
                   color={'primary'}
+                  size={'large'}
+                  style={{ padding: '0em', marginRight: '1em' }}
                 >
                   <ShieldShaded />
-                </IconButton>
+                </Button>
               </StyledPopover>
             )}
             {member?.firstName} {member?.lastName}{' '}

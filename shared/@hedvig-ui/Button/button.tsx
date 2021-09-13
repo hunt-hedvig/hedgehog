@@ -22,6 +22,7 @@ export interface ButtonProps {
     | 'warning'
     | 'danger'
     | 'ghost'
+    | 'icon'
   fullWidth?: boolean
   halfWidth?: boolean
   basic?: boolean
@@ -77,6 +78,11 @@ export const buttonColorMap: (
     background: 'transparent',
     highlighted: theme.accentBackground,
   },
+  icon: {
+    foreground: theme.semiStrongForeground,
+    background: 'transparent',
+    highlighted: 'transparent',
+  },
 })
 
 export const buttonSizeMap: Record<
@@ -118,7 +124,10 @@ export const ButtonComponent = styled.button<ButtonProps>(
       width: fullWidth ? '100%' : 'auto',
       minWidth: halfWidth ? '50%' : 'auto',
       background: basic ? 'transparent' : colors.background,
-      color: (basic ? colors.background : colors.foreground) + ' !important',
+      color:
+        variation === 'icon'
+          ? theme.accent
+          : (basic ? colors.background : colors.foreground) + ' !important',
       border: `1px solid ${colors.background}`,
       boxShadow: 'none !important',
       borderRadius: 8,
@@ -131,8 +140,10 @@ export const ButtonComponent = styled.button<ButtonProps>(
         borderColor: colors.highlighted,
       },
       '&:disabled': {
-        backgroundColor: theme.accentLight,
-        borderColor: theme.accentLight,
+        backgroundColor:
+          variation === 'icon' ? 'transparent' : theme.accentLight,
+        borderColor: variation === 'icon' ? 'transparent' : theme.accentLight,
+        opacity: variation === 'icon' ? 0.7 : 1,
         cursor: 'default',
       },
     }

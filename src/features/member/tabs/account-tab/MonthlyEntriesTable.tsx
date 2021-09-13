@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { Bold, Capitalized, Popover } from '@hedvig-ui'
-import { IconButton } from '@material-ui/core'
+import { Bold, Button, Capitalized, Popover } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
 import {
   getRemoveMonthlyEntryOptions,
@@ -95,7 +94,8 @@ export const MonthlyEntriesTable: React.FC<{
                 </Popover>
               </Table.Cell>
               <Table.Cell>
-                <IconButton
+                <Button
+                  variation={'icon'}
                   onClick={() => {
                     confirm(
                       `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,
@@ -117,7 +117,7 @@ export const MonthlyEntriesTable: React.FC<{
                   }}
                 >
                   <Trash color="red" />
-                </IconButton>
+                </Button>
               </Table.Cell>
             </Table.Row>
           )
