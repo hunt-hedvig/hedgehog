@@ -1,4 +1,4 @@
-import { Contract, GenericAgreement } from 'api/generated/graphql'
+import { Contract, GenericAgreement } from 'types/generated/graphql'
 
 export const getSignSource = (signSource: string): string => {
   switch (signSource) {

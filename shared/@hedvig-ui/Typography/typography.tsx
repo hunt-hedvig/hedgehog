@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { MonetaryAmountV2 } from 'api/generated/graphql'
 import React from 'react'
+import { MonetaryAmountV2 } from 'types/generated/graphql'
 
 export const MainHeadline = styled('h1')``
 export const SecondLevelHeadline = styled('h2')``

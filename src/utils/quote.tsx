@@ -1,5 +1,5 @@
-import { Quote } from 'api/generated/graphql'
 import React from 'react'
+import { Quote } from 'types/generated/graphql'
 import {
   convertCamelcaseToTitle,
   convertEnumOrSentenceToTitle,

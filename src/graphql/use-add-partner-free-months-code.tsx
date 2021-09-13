@@ -5,7 +5,7 @@ import {
   AssignCampaignToPartnerFreeMonthsMutationVariables,
   AssignVoucherFreeMonths,
   useAssignCampaignToPartnerFreeMonthsMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useAddPartnerFreeMonthsCode = (): AssignCampaignToPartnerFreeMonthsMutationHookResult =>
   useAssignCampaignToPartnerFreeMonthsMutation()

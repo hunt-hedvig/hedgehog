@@ -1,10 +1,10 @@
 import { ApolloProvider } from '@apollo/client'
-import { apolloClient } from 'api/apollo-client'
 import { HotApp } from 'App'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
+import { apolloClient } from 'server/apollo-client'
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()

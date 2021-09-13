@@ -3,7 +3,7 @@ import {
   ListClaimsOptions,
   ListClaimsResult,
   useListClaimsLazyQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type ListClaimsReturnTuple = [
   ListClaimsResult,

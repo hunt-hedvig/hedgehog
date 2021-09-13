@@ -8,7 +8,7 @@ import {
   GetContractsDocument,
   GetQuotesDocument,
   useCreateQuoteFromAgreementMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useCreateQuoteFromAgreement = (): CreateQuoteFromAgreementMutationHookResult =>
   useCreateQuoteFromAgreementMutation()

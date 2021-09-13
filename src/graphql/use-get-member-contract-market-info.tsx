@@ -2,7 +2,7 @@ import {
   ContractMarketInfo,
   GetContractMarketInfoQueryHookResult,
   useGetContractMarketInfoQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type ContractMarketInfoReturnTuple = [
   ContractMarketInfo | undefined,

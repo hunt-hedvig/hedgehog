@@ -7,7 +7,6 @@ import {
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
-import { AssignVoucherFreeMonths, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
 import {
@@ -16,6 +15,7 @@ import {
 } from 'graphql/use-add-partner-free-months-code'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { AssignVoucherFreeMonths, Scalars } from 'types/generated/graphql'
 import { numberOfMonthsOptions } from 'utils/campaignCodes'
 import { useConfirmDialog } from 'utils/hooks/modal-hook'
 

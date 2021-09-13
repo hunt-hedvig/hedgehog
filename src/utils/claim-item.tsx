@@ -1,4 +1,4 @@
-import { ValuationRule } from '../api/generated/graphql'
+import { ValuationRule } from 'types/generated/graphql'
 
 export const getValuationExplanation = (
   valuationRule: ValuationRule | null | undefined,

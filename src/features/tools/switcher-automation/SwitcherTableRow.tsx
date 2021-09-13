@@ -10,18 +10,18 @@ import {
   Input,
   Label,
 } from '@hedvig-ui'
-import {
-  Contract,
-  GetSwitcherEmailsDocument,
-  SwitchableSwitcherEmail,
-  useMarkSwitcherEmailAsRemindedMutation,
-} from 'api/generated/graphql'
 import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { SwitcherEmailStatus, TerminationReason } from 'types/enums'
+import {
+  Contract,
+  GetSwitcherEmailsDocument,
+  SwitchableSwitcherEmail,
+  useMarkSwitcherEmailAsRemindedMutation,
+} from 'types/generated/graphql'
 import { Keys } from 'utils/hooks/key-press-hook'
 import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { convertEnumToTitle } from 'utils/text'

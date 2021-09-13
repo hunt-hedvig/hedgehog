@@ -1,7 +1,7 @@
 import { Button, Spacing, TextArea, ThirdLevelHeadline } from '@hedvig-ui'
-import { useAddNorwegainPostalCodesMutation } from 'api/generated/graphql'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { useAddNorwegainPostalCodesMutation } from 'types/generated/graphql'
 import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const PostalCodesEditor: React.FC = () => {

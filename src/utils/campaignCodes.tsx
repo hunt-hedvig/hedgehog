@@ -5,7 +5,7 @@ import {
   MonthlyPercentageDiscountFixedPeriod,
   NoDiscount,
   VisibleNoDiscount,
-} from '/api/generated/graphql'
+} from '/types/generated/graphql'
 
 type IncentiveDataMaybe = Incentive | null | undefined
 

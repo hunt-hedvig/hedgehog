@@ -2,7 +2,7 @@ import {
   Account,
   GetAccountQueryHookResult,
   useGetAccountQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type AccountReturnTuple = [Account | undefined, GetAccountQueryHookResult]
 
