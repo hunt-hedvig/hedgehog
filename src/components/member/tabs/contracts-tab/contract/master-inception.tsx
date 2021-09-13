@@ -56,12 +56,12 @@ export const MasterInception: React.FC<{
               fullWidth
               disabled={activateContractLoading}
               onClick={() => {
-                const confirmMsg = `Are you sure you want to activate this contract with master inception of ${format(
+                const confirmMessage = `Are you sure you want to activate this contract with master inception of ${format(
                   activeFrom,
                   'yyyy-MM-dd',
                 )}?`
 
-                confirm(confirmMsg).then(() => {
+                confirm(confirmMessage).then(() => {
                   toast.promise(
                     activateContract(
                       activateContractOptions(contract, activeFrom),

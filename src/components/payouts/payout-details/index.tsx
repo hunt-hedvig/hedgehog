@@ -66,9 +66,9 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const onSubmitHandler = (data: FieldValues) => {
-    const confirmMsg = `Are you sure you want to payout ${data.amount} ${preferredCurrency}?`
+    const confirmMessage = `Are you sure you want to payout ${data.amount} ${preferredCurrency}?`
 
-    confirm(confirmMsg).then(() => {
+    confirm(confirmMessage).then(() => {
       toast.promise(
         payoutMember({
           variables: {

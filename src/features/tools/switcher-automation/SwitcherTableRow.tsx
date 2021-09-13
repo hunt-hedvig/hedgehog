@@ -277,12 +277,12 @@ export const SwitcherEmailRow: React.FC<Pick<
                       variation={'success'}
                       disabled={loading}
                       onClick={() => {
-                        const confirmMsg = `Are you sure you want to activate this contract with master inception of ${format(
+                        const confirmMessage = `Are you sure you want to activate this contract with master inception of ${format(
                           activeFrom,
                           'yyyy-MM-dd',
                         )}?`
 
-                        confirm(confirmMsg).then(() => {
+                        confirm(confirmMessage).then(() => {
                           onActivate(contract, activeFrom)
                           setActivateContractView(false)
                         })
@@ -329,12 +329,12 @@ export const SwitcherEmailRow: React.FC<Pick<
                       variation={'danger'}
                       disabled={terminationReason === null || loading}
                       onClick={() => {
-                        const confirmMsg = `Are you sure you want to terminate this contract with the termination date ${format(
+                        const confirmMessage = `Are you sure you want to terminate this contract with the termination date ${format(
                           terminationDate,
                           'yyyy-MM-dd',
                         )}?`
 
-                        confirm(confirmMsg).then(() => {
+                        confirm(confirmMessage).then(() => {
                           if (terminationReason) {
                             onTerminate(
                               contract,

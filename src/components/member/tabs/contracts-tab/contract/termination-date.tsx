@@ -124,11 +124,11 @@ export const TerminationDate: React.FC<{
                 variation={'primary'}
                 disabled={changeTerminationDateLoading}
                 onClick={() => {
-                  const confirmMsg = `Are you sure you want to change the termination date from ${
+                  const confirmMessage = `Are you sure you want to change the termination date from ${
                     contract.terminationDate
                   } to ${format(terminationDate, 'yyyy-MM-dd')}?`
 
-                  confirm(confirmMsg).then(() => {
+                  confirm(confirmMessage).then(() => {
                     toast.promise(
                       changeTerminationDate({
                         variables: {

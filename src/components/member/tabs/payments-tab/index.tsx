@@ -138,10 +138,10 @@ export const PaymentsTab: React.FC<{
   const { confirm } = useConfirmDialog()
 
   const handleChargeSubmit = (mutation) => {
-    const confirmMsg = `Are you sure you want to charge ${formatMoney(
+    const confirmMessage = `Are you sure you want to charge ${formatMoney(
       account?.currentBalance!,
     )}?`
-    confirm(confirmMsg).then(() => {
+    confirm(confirmMessage).then(() => {
       toast
         .promise(
           mutation({

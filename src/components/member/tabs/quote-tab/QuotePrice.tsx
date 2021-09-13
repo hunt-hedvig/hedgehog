@@ -90,11 +90,11 @@ export const QuotePrice = ({ quote }: Props) => {
 
   const onSubmitNewPrice = async (e) => {
     e.preventDefault()
-    const confirmMsg = `Are you sure you want to change the price from ${
+    const confirmMessage = `Are you sure you want to change the price from ${
       quote.price
     } ${quote.currency ?? ''} to ${newPrice} ${quote.currency ?? ''}?`
 
-    await confirm(confirmMsg)
+    await confirm(confirmMessage)
       .then(async () => updateQuotePrice())
       .catch(() => restorePrice())
 
