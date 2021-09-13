@@ -1,6 +1,6 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Button, Input } from '@hedvig-ui'
+import { Button, Input, Paragraph } from '@hedvig-ui'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 
@@ -99,7 +99,7 @@ export const EscapeButton = styled(Button)<{ visible: boolean }>(
   ({ visible }) => ({
     opacity: visible ? 1 : 0,
     transition: 'opacity 300ms',
-    marginLeft: '2rem',
+    marginLeft: '4rem',
   }),
 )
 
@@ -146,4 +146,11 @@ export const MemberName = styled.span`
 export const MemberId = styled.span`
   display: block;
   color: ${({ theme }) => theme.mutedText};
+`
+
+export const SearchTip = styled(Paragraph)`
+  width: fit-content;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+  margin-left: 4rem;
 `
