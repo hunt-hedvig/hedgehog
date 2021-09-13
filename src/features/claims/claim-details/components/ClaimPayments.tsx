@@ -12,6 +12,7 @@ import { useClaimPaymentsQuery } from 'types/generated/graphql'
 
 import {
   CardContent,
+  CardTitle,
   InfoRow,
   InfoTag,
   InfoText,
@@ -21,7 +22,6 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { CardTitle } from 'features/claims/claim-details/components/claim-items/CardTitle'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'

@@ -11,6 +11,7 @@ import styled from '@emotion/styled'
 import {
   Button,
   CardContent,
+  CardTitle,
   FadeIn,
   List,
   ListItem,
@@ -20,7 +21,6 @@ import {
   Spinner,
   TextArea,
 } from '@hedvig-ui'
-import { CardTitle } from 'features/claims/claim-details/components/claim-items/CardTitle'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Keys } from 'utils/hooks/key-press-hook'

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {
   CardContent,
+  CardTitle,
   Copyable,
   InfoContainer,
   InfoRow,
@@ -13,7 +14,6 @@ import {
 } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
-import { CardTitle } from 'features/claims/claim-details/components/claim-items/CardTitle'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
