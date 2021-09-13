@@ -77,7 +77,7 @@ export const MembersSearch: React.FC = () => {
   }, [query])
 
   React.useEffect(() => {
-    if (members.length && luckySearch) {
+    if ((members.length && luckySearch) || members.length === 1) {
       history.push(`/members/${members[0].memberId}`)
     }
   }, [members])
