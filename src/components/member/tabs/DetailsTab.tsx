@@ -1,15 +1,11 @@
 import { FadeIn } from '@hedvig-ui'
-import { Member } from 'api/generated/graphql'
+import { Member, useSetFraudulentStatusMutation } from 'api/generated/graphql'
 import { WideModal } from 'components/shared/modals/WideModal'
 import TableFields from 'components/shared/table-fields/TableFields'
 import {
   getEditMemberInfoOptions,
   useEditMemberInfo,
 } from 'graphql/use-edit-member-info'
-import {
-  getSetFraudulentStatusOptions,
-  useSetFraudulentStatus,
-} from 'graphql/use-set-fraudulent-status'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
@@ -32,7 +28,7 @@ export const DetailsTab: React.FC<{
   const [fraudStatus, setFraudStatus] = useState(null)
   const [fraudDescription, setFraudDescription] = useState(null)
   const [editMemberInfo] = useEditMemberInfo()
-  const [setFraudulentStatus] = useSetFraudulentStatus()
+  const [setFraudulentStatus] = useSetFraudulentStatusMutation()
 
   const handleOpen = () => setModalOpen(true)
 
@@ -104,16 +100,22 @@ export const DetailsTab: React.FC<{
             getState={() => editingFraud}
             action={(newFraudulentStatus, newFraudulentStatusDescription) => {
               toast.promise(
-                setFraudulentStatus(
-                  getSetFraudulentStatusOptions(memberInfo.memberId, {
-                    fraudulentStatus: newFraudulentStatus,
-                    fraudulentStatusDescription: newFraudulentStatusDescription,
-                  }),
-                ),
+                setFraudulentStatus({
+                  variables: {
+                    memberId: memberInfo.memberId,
+                    request: {
+                      fraudulentStatus: newFraudulentStatus,
+                      fraudulentStatusDescription: newFraudulentStatusDescription,
+                    },
+                  },
+                }),
                 {
                   loading: 'Updating fraudulent status',
                   success: 'Fraudulent status updated',
-                  error: 'Could not update fraudulent status',
+                  error: (e) => {
+                    console.log(e)
+                    return 'Could not update fraudulent status'
+                  },
                 },
               )
             }}

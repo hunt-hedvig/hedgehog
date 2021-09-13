@@ -3743,7 +3743,7 @@ export type SetFraudulentStatusMutationVariables = Exact<{
 export type SetFraudulentStatusMutation = { __typename?: 'MutationType' } & {
   setFraudulentStatus: { __typename?: 'Member' } & Pick<
     Member,
-    'fraudulentStatus' | 'fraudulentStatusDescription'
+    'memberId' | 'fraudulentStatus' | 'fraudulentStatusDescription'
   >
 }
 
@@ -9270,6 +9270,7 @@ export const SetFraudulentStatusDocument = gql`
     $request: MemberFraudulentStatusInput!
   ) {
     setFraudulentStatus(memberId: $memberId, request: $request) {
+      memberId
       fraudulentStatus
       fraudulentStatusDescription
     }
