@@ -20,7 +20,7 @@ const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
 `
 
-export const ClaimDetails: React.FC<RouteComponentProps<{
+export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
   memberId: string
 }>> = ({ match }) => {

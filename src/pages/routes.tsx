@@ -1,21 +1,21 @@
 import { StandaloneMessage } from '@hedvig-ui'
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import { ClaimDetails } from './claims/[claimId]/members/[memberId]'
-import { ClaimsPage } from './claims/list/[page]'
-import { DashboardPage } from './index'
-import { MembersPage } from './members'
-import { MemberPage } from './members/[memberId]/[tab]'
-import { QuestionsPage } from './questions'
-import { ToolsPage } from './tools'
-import { CampaignCodesPage } from './tools/campaign-codes'
-import { ChargesPage } from './tools/charges'
-import { EmployeesPage } from './tools/employees'
-import { ItemizerPage } from './tools/itemizer'
-import { NorwegianTariffCreatorPage } from './tools/norwegian-tariff-creator'
-import { PerilsEditorPage } from './tools/perils-editor'
-import { SwitcherAutomationPage } from './tools/switcher-automation'
-import { UnsignMemberPage } from './tools/unsign-member'
+import { ClaimDetailsPage } from './claims/ClaimDetailsPage'
+import { ClaimsListPage } from './claims/list/ClaimsListPage'
+import { DashboardPage } from './DashboardPage'
+import { MemberPage } from './members/MemberPage'
+import { MemberSearchPage } from './members/MemberSearchPage'
+import { QuestionsPage } from './QuestionsPage'
+import { CampaignCodesPage } from './tools/CampaignCodesPage'
+import { ChargesPage } from './tools/ChargesPage'
+import { EmployeesPage } from './tools/EmployeesPage'
+import { ItemizerPage } from './tools/ItemizerPage'
+import { NorwegianTariffCreatorPage } from './tools/NorwegianTariffCreatorPage'
+import { PerilsEditorPage } from './tools/PerilsEditorPage'
+import { SwitcherAutomationPage } from './tools/SwitcherAutomationPage'
+import { ToolsPage } from './tools/ToolsPage'
+import { UnsignMemberPage } from './tools/UnsignMemberPage'
 
 export const Routes: React.FC = () => {
   return (
@@ -23,13 +23,13 @@ export const Routes: React.FC = () => {
       <Route path={'/'} exact component={DashboardPage} />
       <Route path="/dashborad" component={DashboardPage} />
       <Route path="/questions" component={QuestionsPage} />
-      <Route path="/claims/list/:page?" exact component={ClaimsPage} />
+      <Route path="/claims/list/:page?" exact component={ClaimsListPage} />
       <Route
         path="/claims/:claimId/members/:memberId"
         exact
-        component={ClaimDetails}
+        component={ClaimDetailsPage}
       />
-      <Route exact path="/members" component={MembersPage} />
+      <Route exact path="/members" component={MemberSearchPage} />
       <Route path="/members/:memberId/:tab?" component={MemberPage} />
 
       <Route path="/tools" exactcomponent={ToolsPage} />

@@ -13,7 +13,7 @@ const ListPage = styled.div`
   margin: 0;
 `
 
-export const ClaimsPage: React.FC<RouteComponentProps<{
+export const ClaimsListPage: React.FC<RouteComponentProps<{
   page?: string
 }>> = ({
   match: {
