@@ -6,7 +6,6 @@ import {
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
-import { AssignVoucherPercentageDiscount, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
 import {
@@ -16,9 +15,14 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
+  AssignVoucherPercentageDiscount,
+  Scalars,
+} from 'types/generated/graphql'
+import {
   numberOfMonthsOptions,
   percentageDiscountOptions,
 } from 'utils/campaignCodes'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { DateRangeWrapper } from './FreeMonthsForm'
 
 const initialFormData: MonthlyPercentageFormData = {
@@ -58,6 +62,8 @@ export const MonthlyPercentageForm: React.FC = () => {
   ] = useAddPartnerPercentageDiscountCode()
 
   const codeTypeOptions = getCodeTypeOptions()
+
+  const { confirm } = useConfirmDialog()
 
   return (
     <>
@@ -173,23 +179,20 @@ export const MonthlyPercentageForm: React.FC = () => {
           loading={loading}
           disabled={loading || !formLooksGood(formData)}
           onClick={() => {
-            if (
-              !window.confirm(`Create new campaign code "${formData.code}"?`)
-            ) {
-              return
-            }
-            toast.promise(
-              setPartnerPercentageDiscount(
-                addPartnerPercentageDiscountCodeOptions(
-                  formData as AssignVoucherPercentageDiscount,
+            confirm(`Create new campaign code "${formData.code}"?`).then(() => {
+              toast.promise(
+                setPartnerPercentageDiscount(
+                  addPartnerPercentageDiscountCodeOptions(
+                    formData as AssignVoucherPercentageDiscount,
+                  ),
                 ),
-              ),
-              {
-                loading: 'Creating campaign',
-                success: 'Campaign created',
-                error: 'Could not create campaign',
-              },
-            )
+                {
+                  loading: 'Creating campaign',
+                  success: 'Campaign created',
+                  error: 'Could not create campaign',
+                },
+              )
+            })
           }}
         >
           Create Campaign

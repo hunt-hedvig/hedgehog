@@ -1,8 +1,8 @@
 // @ts-nocheck
 import styled from '@emotion/styled'
-import { Member } from 'api/generated/graphql'
 import React from 'react'
 import { Button, Dropdown, Icon, Input, Table } from 'semantic-ui-react'
+import { Member } from 'types/generated/graphql'
 
 const ButtonsBlock = styled('div')((_) => ({
   floar: 'right',

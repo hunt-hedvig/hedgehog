@@ -2,7 +2,7 @@ import {
   DashboardNumbers,
   GetDashboardNumbersQueryHookResult,
   useGetDashboardNumbersQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type DashboardNumbersReturnTuple = [
   DashboardNumbers | undefined,

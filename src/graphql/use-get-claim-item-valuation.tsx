@@ -3,7 +3,7 @@ import {
   GetClaimItemValuationQueryHookResult,
   GetValuationInput,
   useGetClaimItemValuationQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type GetClaimItemValuationReturnTuple = [
   ClaimItemValuation | undefined,

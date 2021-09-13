@@ -1,4 +1,4 @@
-import { MonetaryAmountV2 } from 'api/generated/graphql'
+import { MonetaryAmountV2 } from 'types/generated/graphql'
 
 type Money =
   | MonetaryAmountV2

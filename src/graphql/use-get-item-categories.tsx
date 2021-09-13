@@ -3,7 +3,7 @@ import {
   ItemCategory,
   ItemCategoryKind,
   useGetItemCategoriesQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type GetItemCategoriesReturnTuple = [
   ReadonlyArray<ItemCategory>,

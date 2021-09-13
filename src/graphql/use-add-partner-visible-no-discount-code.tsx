@@ -5,7 +5,7 @@ import {
   AssignCampaignToPartnerVisibleNoDiscountMutationVariables,
   AssignVoucherVisibleNoDiscount,
   useAssignCampaignToPartnerVisibleNoDiscountMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useAddPartnerVisibleNoDiscountCode = (): AssignCampaignToPartnerVisibleNoDiscountMutationHookResult =>
   useAssignCampaignToPartnerVisibleNoDiscountMutation()

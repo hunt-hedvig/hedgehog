@@ -4,7 +4,7 @@ import {
   RemoveMonthlyEntryMutation,
   RemoveMonthlyEntryMutationVariables,
   useRemoveMonthlyEntryMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useRemoveMonthlyEntry = () => useRemoveMonthlyEntryMutation()
 

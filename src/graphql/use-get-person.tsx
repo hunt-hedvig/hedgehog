@@ -3,7 +3,7 @@ import {
   GetPersonQueryHookResult,
   Person,
   useGetPersonQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type GetPersonReturnTuple = [
   {

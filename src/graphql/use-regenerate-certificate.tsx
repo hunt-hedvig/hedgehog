@@ -1,12 +1,12 @@
 import { MutationFunctionOptions } from '@apollo/client'
+import { withDelayedRefetchContracts } from 'graphql/use-contracts'
 import {
   Contract,
   RegenerateCertificateMutation,
   RegenerateCertificateMutationHookResult,
   RegenerateCertificateMutationVariables,
   useRegenerateCertificateMutation,
-} from 'api/generated/graphql'
-import { withDelayedRefetchContracts } from 'graphql/use-contracts'
+} from 'types/generated/graphql'
 
 export const useRegenerateCertificate = (
   contract: Contract,

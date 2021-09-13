@@ -1,0 +1,50 @@
+import styled from '@emotion/styled'
+import React from 'react'
+import { useLocation } from 'react-router'
+import { Link } from 'react-router-dom'
+import { Breadcrumb } from 'semantic-ui-react'
+
+const BreadcrumbsContainer = styled.div`
+  display: flex;
+  margin: 20px 0;
+  text-transform: capitalize;
+  padding-bottom: 6rem;
+
+  &,
+  a {
+    color: ${({ theme }) => theme.mutedText};
+  }
+`
+
+export const Breadcrumbs: React.FC = () => {
+  const { pathname } = useLocation()
+
+  if (pathname.startsWith('/login')) {
+    return null
+  }
+
+  const paths = pathname.split('/').map((path, i, arr) => {
+    if (i === 0) {
+      return {
+        key: i,
+        content: <span>Dashborad</span>,
+        active: true,
+      }
+    }
+
+    return {
+      key: i,
+      content: (
+        <Link to={`${arr.slice(0, i + 1).join('/')}`}>
+          {path.toLowerCase()}
+        </Link>
+      ),
+      active: true,
+    }
+  })
+  return (
+    <BreadcrumbsContainer>
+      <Breadcrumb sections={paths} />
+    </BreadcrumbsContainer>
+  )
+}

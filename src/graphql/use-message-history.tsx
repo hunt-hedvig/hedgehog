@@ -2,7 +2,7 @@ import {
   ChatMessage,
   GetMessageHistoryQueryHookResult,
   useGetMessageHistoryQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export type Message = ChatMessage & {
   body: any

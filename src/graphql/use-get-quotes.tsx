@@ -1,10 +1,10 @@
+import { parseISO } from 'date-fns'
 import {
   ContractMarketInfo,
   GetQuotesQueryHookResult,
   Quote,
   useGetQuotesQuery,
-} from 'api/generated/graphql'
-import { parseISO } from 'date-fns'
+} from 'types/generated/graphql'
 
 type GetQuotesReturnTuple = [
   {

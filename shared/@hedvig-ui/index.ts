@@ -100,4 +100,6 @@ export {
   Monetary,
 } from './Typography/typography'
 
-export { Modal, ModalProps } from './Modal'
+export { Modal } from './Modal'
+import { ModalProps as _ModalProps } from './Modal'
+export type ModalProps = _ModalProps

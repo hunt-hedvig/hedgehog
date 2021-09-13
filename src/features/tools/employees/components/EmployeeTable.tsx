@@ -6,6 +6,9 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from '@hedvig-ui'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { Table } from 'semantic-ui-react'
 import {
   Employee,
   EmployeesDocument,
@@ -13,17 +16,17 @@ import {
   useEmployeesQuery,
   useRemoveEmployeeMutation,
   useUpdateEmployeeRoleMutation,
-} from 'api/generated/graphql'
-import React, { useState } from 'react'
-import { toast } from 'react-hot-toast'
-import { Table } from 'semantic-ui-react'
+} from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
+import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const EmployeeTable: React.FC<{
   scopes: readonly string[]
   filter: { email: string; role: string }
 }> = ({ scopes, filter }) => {
   const { data, loading } = useEmployeesQuery()
+  const { confirm } = useConfirmDialog()
+
   const employees = data?.employees ?? []
 
   const [
@@ -147,10 +150,9 @@ export const EmployeeTable: React.FC<{
                           !scopes.includes('employees:manage')
                         }
                         onClick={() => {
-                          const confirmed = window.confirm(
+                          confirm(
                             `Are you sure you want to remove employee ${email}?`,
-                          )
-                          if (confirmed) {
+                          ).then(() => {
                             toast.promise(
                               removeEmployee({
                                 variables: { id },
@@ -161,7 +163,7 @@ export const EmployeeTable: React.FC<{
                                 error: 'Could not remove employee',
                               },
                             )
-                          }
+                          })
                         }}
                       >
                         Remove

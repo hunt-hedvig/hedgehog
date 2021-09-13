@@ -2,7 +2,7 @@ import {
   GetMemberInfoQueryResult,
   Member,
   useGetMemberInfoQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type UseGetMemberInfoReturnTuple = [
   Member | undefined,

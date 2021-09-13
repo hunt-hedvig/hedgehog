@@ -3,7 +3,7 @@ import {
   MemberSearchOptions,
   MemberSearchResult,
   useMemberSearchLazyQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type MemberSearchReturnTuple = [
   MemberSearchResult,
