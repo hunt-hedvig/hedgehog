@@ -1,6 +1,11 @@
 import styled from '@emotion/styled'
-import { Button, ButtonsGroup, FourthLevelHeadline, Spacing } from '@hedvig-ui'
-import { Grid } from '@material-ui/core'
+import {
+  Button,
+  ButtonsGroup,
+  FourthLevelHeadline,
+  Label,
+  Spacing,
+} from '@hedvig-ui'
 import {
   AjvError,
   ArrayFieldTemplateProps,
@@ -25,10 +30,10 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
 }) => {
   return (
     <>
-      <Grid container={true} spacing={8}>
+      <div>
         {properties.map((property, index) => {
           return (
-            <Grid item={true} xs={6} key={property.name}>
+            <div>
               <ContentWrapper
                 pushTop={
                   property.content.props.schema.type === 'boolean' &&
@@ -37,10 +42,10 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
               >
                 {property.content}
               </ContentWrapper>
-            </Grid>
+            </div>
           )
         })}
-      </Grid>
+      </div>
     </>
   )
 }
@@ -118,7 +123,7 @@ const CustomSelectWidget: React.FC<WidgetProps> = ({
 }) => {
   return (
     <FormField>
-      <label htmlFor={id}>{label}</label>
+      <Label htmlFor={id}>{label}</Label>
       <Dropdown
         id={id}
         style={{ borderRadius: '0.5rem' }}
