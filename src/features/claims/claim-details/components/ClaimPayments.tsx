@@ -21,7 +21,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
+import { CardTitle } from 'features/claims/claim-details/components/claim-items/CardTitle'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Market } from 'types/enums'
@@ -105,7 +105,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
   if (!carrier) {
     return (
       <CardContent>
-        <PaperTitle title={'Payments'} />
+        <CardTitle title={'Payments'} />
         <NoCarrierMessage opacity={0.6}>
           Cannot make a payment or set a reserve without a carrier.
           <NoCarrierSubtitle>
@@ -120,7 +120,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
 
   return (
     <CardContent>
-      <PaperTitle
+      <CardTitle
         title={'Payments'}
         badge={
           queryError

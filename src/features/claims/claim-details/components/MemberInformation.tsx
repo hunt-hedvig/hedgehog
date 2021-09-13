@@ -13,7 +13,7 @@ import {
 } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
-import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
+import { CardTitle } from 'features/claims/claim-details/components/claim-items/CardTitle'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
@@ -115,7 +115,7 @@ export const MemberInformation: React.FC<{
 
   return (
     <CardContent>
-      <PaperTitle
+      <CardTitle
         title={'Member Info'}
         badge={
           queryError

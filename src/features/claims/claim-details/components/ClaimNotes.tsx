@@ -20,7 +20,7 @@ import {
   Spinner,
   TextArea,
 } from '@hedvig-ui'
-import { PaperTitle } from 'features/claims/claim-details/components/claim-items/PaperTitle'
+import { CardTitle } from 'features/claims/claim-details/components/claim-items/CardTitle'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Keys } from 'utils/hooks/key-press-hook'
@@ -127,7 +127,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
 
   return (
     <CardContent>
-      <PaperTitle
+      <CardTitle
         title={'Notes'}
         badge={
           queryError

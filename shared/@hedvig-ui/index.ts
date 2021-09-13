@@ -2,10 +2,13 @@ export { Spacing } from './Spacing/spacing'
 export { Badge } from './Badge/badge'
 import { BadgeProps as _BadgeProps } from './Badge/badge'
 import { ButtonProps as _ButtonProps } from './Button/button'
+import { CardTitleBadgeProps as _CardTitleBadgeProps } from './Card/card'
 import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 import { CustomInputProps as _CustomInputProps } from './Input/input'
+import { ModalProps as _ModalProps } from './Modal'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 
+export type CardTitleBadgeProps = _CardTitleBadgeProps
 export type BadgeProps = _BadgeProps
 export {
   Button,
@@ -31,6 +34,7 @@ export {
   CardLink,
   CardsWrapper,
   DangerCard,
+  CardTitle,
 } from './Card/card'
 export { CasualList, CasualListItem } from './CasualList/casual-list'
 export { Checkbox } from './Checkbox/checkbox'
@@ -101,5 +105,4 @@ export {
 } from './Typography/typography'
 
 export { Modal } from './Modal'
-import { ModalProps as _ModalProps } from './Modal'
 export type ModalProps = _ModalProps
