@@ -54,6 +54,7 @@ export const ListWrapper = styled('div')({
 })
 
 export const Group = styled('div')<{ pushLeft?: boolean }>(({ pushLeft }) => ({
+  position: 'relative',
   paddingBottom: '1rem',
   paddingLeft: pushLeft ? '1rem' : 0,
 }))

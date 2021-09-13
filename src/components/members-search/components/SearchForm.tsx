@@ -1,4 +1,5 @@
-import { Checkbox } from '@hedvig-ui'
+import styled from '@emotion/styled'
+import { Checkbox, FadeIn, Paragraph, Shadowed } from '@hedvig-ui'
 import {
   EscapeButton,
   Group,
@@ -7,8 +8,17 @@ import {
   SearchInput,
   SearchInputGroup,
 } from 'components/members-search/styles'
-import React from 'react'
-import { shouldIgnoreInput } from 'utils/hooks/key-press-hook'
+import React, { useState } from 'react'
+import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
+
+const NoteTip = styled(Paragraph)`
+  position: absolute;
+  top: -6rem;
+  left: 1rem;
+  width: fit-content;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
@@ -20,7 +30,6 @@ interface SearchFieldProps {
   setIncludeAll: (includeAll: boolean) => void
   currentResultSize: number
   searchFieldRef: React.Ref<any>
-  luckySearch: boolean
   setLuckySearch: (luckySearch: boolean) => void
 }
 
@@ -34,9 +43,10 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
   setIncludeAll,
   currentResultSize,
   searchFieldRef,
-  luckySearch,
   setLuckySearch,
 }) => {
+  const [textFieldFocused, setTextFieldFocused] = useState(false)
+
   return (
     <form
       onSubmit={(e) => {
@@ -64,7 +74,19 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             autoFocus
             muted={!query}
             ref={searchFieldRef}
-            onFocus={onFocus}
+            onFocus={() => {
+              setTextFieldFocused(true)
+              onFocus()
+            }}
+            onBlur={() => setTextFieldFocused(false)}
+            onKeyPress={(e) => {
+              if (e.altKey && e.charCode === Keys.Enter.code && query) {
+                setLuckySearch(true)
+                onSubmit(query, includeAll)
+              } else {
+                setLuckySearch(false)
+              }
+            }}
           />
           <SearchButton
             type="submit"
@@ -76,6 +98,15 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             Search
           </SearchButton>
         </SearchInputGroup>
+
+        {textFieldFocused && (
+          <FadeIn duration={200}>
+            <NoteTip>
+              Press <Shadowed>Option</Shadowed> + <Shadowed>Enter</Shadowed> to
+              use lucky search
+            </NoteTip>
+          </FadeIn>
+        )}
       </Group>
       <Group pushLeft>
         <Checkbox
@@ -85,15 +116,6 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
           }}
           checked={includeAll}
           label="Wide search"
-        />
-
-        <Checkbox
-          onChange={(_, { checked }) => {
-            setLuckySearch(checked!)
-          }}
-          checked={luckySearch}
-          label="Lucky search"
-          style={{ marginLeft: 15 }}
         />
 
         <EscapeButton

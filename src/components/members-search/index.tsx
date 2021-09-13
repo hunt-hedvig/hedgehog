@@ -97,7 +97,6 @@ export const MembersSearch: React.FC = () => {
         setIncludeAll={setIncludeAll}
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
-        luckySearch={luckySearch}
         setLuckySearch={setLuckySearch}
         onFocus={resetKeyboardNavigationStep}
       />
