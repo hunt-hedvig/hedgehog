@@ -21,6 +21,7 @@ export interface ButtonProps {
     | 'success'
     | 'warning'
     | 'danger'
+    | 'ghost'
   fullWidth?: boolean
   halfWidth?: boolean
   basic?: boolean
@@ -70,6 +71,11 @@ export const buttonColorMap: (
     foreground: '#000',
     background: theme.warning,
     highlighted: theme.warning,
+  },
+  ghost: {
+    foreground: theme.semiStrongForeground,
+    background: 'transparent',
+    highlighted: theme.accentBackground,
   },
 })
 
