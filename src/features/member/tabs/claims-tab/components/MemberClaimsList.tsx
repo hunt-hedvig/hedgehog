@@ -70,7 +70,7 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
             return
           }
 
-          history.push(`/claims/${claimId}/members/${memberId}`)
+          history.push(`/claims/${claimId}`)
         }}
       >
         <TableHeader>
@@ -92,11 +92,7 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
           return (
             <TableRow
               key={claim.id}
-              onClick={() =>
-                history.push(
-                  `/claims/${claim.id}/members/${claim.member.memberId}`,
-                )
-              }
+              onClick={() => history.push(`/claims/${claim.id}`)}
             >
               <TableColumn>
                 <FlexVertically>

@@ -1905,6 +1905,7 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'coveringEmployee'
       | 'reserves'
     > & {
+        member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
         contract?: Maybe<
           { __typename?: 'Contract' } & Pick<
             Contract,
@@ -2406,15 +2407,6 @@ export type CreateNorwegianGripenPriceEngineMutationVariables = Exact<{
 export type CreateNorwegianGripenPriceEngineMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'createNorwegianGripenPriceEngine'>
-
-export type UnsignMemberMutationVariables = Exact<{
-  ssn: Scalars['String']
-}>
-
-export type UnsignMemberMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'unsignMember'
->
 
 export type GetSwitcherEmailsQueryVariables = Exact<{ [key: string]: never }>
 
@@ -3768,6 +3760,15 @@ export type TerminateContractMutation = { __typename?: 'MutationType' } & {
   >
 }
 
+export type UnsignMemberMutationVariables = Exact<{
+  ssn: Scalars['String']
+}>
+
+export type UnsignMemberMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'unsignMember'
+>
+
 export type UpdateClaimStateMutationVariables = Exact<{
   id: Scalars['ID']
   state: ClaimState
@@ -4159,6 +4160,9 @@ export const ClaimPageDocument = gql`
       state
       coveringEmployee
       ...claimType
+      member {
+        memberId
+      }
       reserves
       state
       contract {
@@ -5465,55 +5469,6 @@ export type CreateNorwegianGripenPriceEngineMutationResult = ApolloReactCommon.M
 export type CreateNorwegianGripenPriceEngineMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateNorwegianGripenPriceEngineMutation,
   CreateNorwegianGripenPriceEngineMutationVariables
->
-export const UnsignMemberDocument = gql`
-  mutation UnsignMember($ssn: String!) {
-    unsignMember(ssn: $ssn)
-  }
-`
-export type UnsignMemberMutationFn = ApolloReactCommon.MutationFunction<
-  UnsignMemberMutation,
-  UnsignMemberMutationVariables
->
-
-/**
- * __useUnsignMemberMutation__
- *
- * To run a mutation, you first call `useUnsignMemberMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnsignMemberMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unsignMemberMutation, { data, loading, error }] = useUnsignMemberMutation({
- *   variables: {
- *      ssn: // value for 'ssn'
- *   },
- * });
- */
-export function useUnsignMemberMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UnsignMemberMutation,
-    UnsignMemberMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UnsignMemberMutation,
-    UnsignMemberMutationVariables
-  >(UnsignMemberDocument, options)
-}
-export type UnsignMemberMutationHookResult = ReturnType<
-  typeof useUnsignMemberMutation
->
-export type UnsignMemberMutationResult = ApolloReactCommon.MutationResult<
-  UnsignMemberMutation
->
-export type UnsignMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UnsignMemberMutation,
-  UnsignMemberMutationVariables
 >
 export const GetSwitcherEmailsDocument = gql`
   query GetSwitcherEmails {
@@ -9432,6 +9387,55 @@ export type TerminateContractMutationResult = ApolloReactCommon.MutationResult<
 export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
   TerminateContractMutation,
   TerminateContractMutationVariables
+>
+export const UnsignMemberDocument = gql`
+  mutation UnsignMember($ssn: String!) {
+    unsignMember(ssn: $ssn)
+  }
+`
+export type UnsignMemberMutationFn = ApolloReactCommon.MutationFunction<
+  UnsignMemberMutation,
+  UnsignMemberMutationVariables
+>
+
+/**
+ * __useUnsignMemberMutation__
+ *
+ * To run a mutation, you first call `useUnsignMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsignMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsignMemberMutation, { data, loading, error }] = useUnsignMemberMutation({
+ *   variables: {
+ *      ssn: // value for 'ssn'
+ *   },
+ * });
+ */
+export function useUnsignMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnsignMemberMutation,
+    UnsignMemberMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UnsignMemberMutation,
+    UnsignMemberMutationVariables
+  >(UnsignMemberDocument, options)
+}
+export type UnsignMemberMutationHookResult = ReturnType<
+  typeof useUnsignMemberMutation
+>
+export type UnsignMemberMutationResult = ApolloReactCommon.MutationResult<
+  UnsignMemberMutation
+>
+export type UnsignMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnsignMemberMutation,
+  UnsignMemberMutationVariables
 >
 export const UpdateClaimStateDocument = gql`
   mutation UpdateClaimState($id: ID!, $state: ClaimState!) {

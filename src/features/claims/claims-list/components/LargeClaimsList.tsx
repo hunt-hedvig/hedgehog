@@ -77,13 +77,12 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
       <Table
         onPerformNavigation={(index) => {
           const claimId = claims[index].id
-          const memberId = claims[index].member?.memberId
 
-          if (!claimId || !memberId) {
+          if (!claimId) {
             return
           }
 
-          history.push(`/claims/${claimId}/members/${memberId}`)
+          history.push(`/claims/${claimId}`)
         }}
       >
         <TableHeader>
@@ -106,11 +105,7 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
           return (
             <TableRow
               key={claim.id}
-              onClick={() =>
-                history.push(
-                  `/claims/${claim.id}/members/${claim.member.memberId}`,
-                )
-              }
+              onClick={() => history.push(`/claims/${claim.id}`)}
             >
               <div>
                 <MemberIdCell

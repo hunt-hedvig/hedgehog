@@ -1,6 +1,6 @@
 import { StandaloneMessage } from '@hedvig-ui'
 import React from 'react'
-import { Route, Switch } from 'react-router'
+import { Redirect, Route, Switch } from 'react-router'
 import { ClaimDetailsPage } from './claims/ClaimDetailsPage'
 import { ClaimsListPage } from './claims/list/ClaimsListPage'
 import { DashboardPage } from './DashboardPage'
@@ -24,10 +24,10 @@ export const Routes: React.FC = () => {
       <Route path="/dashborad" component={DashboardPage} />
       <Route path="/questions" component={QuestionsPage} />
       <Route path="/claims/list/:page?" exact component={ClaimsListPage} />
-      <Route
+      <Route path="/claims/:claimId" exact component={ClaimDetailsPage} />
+      <Redirect
         path="/claims/:claimId/members/:memberId"
-        exact
-        component={ClaimDetailsPage}
+        to={'/claims/:claimId'}
       />
       <Route exact path="/members" component={MemberSearchPage} />
       <Route path="/members/:memberId/:tab?" component={MemberPage} />

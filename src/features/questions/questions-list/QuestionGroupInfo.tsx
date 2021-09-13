@@ -58,11 +58,7 @@ export const QuestionGroupInfo = ({ questionGroup }) => {
               >
                 <IconButton
                   disabled={member.claims.length > 1}
-                  onClick={() =>
-                    history.push(
-                      `/claims/${member.claims[0].id}/members/${member.memberId}`,
-                    )
-                  }
+                  onClick={() => history.push(`/claims/${member.claims[0].id}`)}
                   color={'primary'}
                 >
                   <ShieldShaded />

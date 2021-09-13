@@ -339,7 +339,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   React.useEffect(() => {
     for (const location of locations) {
       const match = matchPath(location, {
-        path: '/claims/:claimId/members/:memberId',
+        path: '/claims/:claimId',
         exact: true,
         strict: false,
       })

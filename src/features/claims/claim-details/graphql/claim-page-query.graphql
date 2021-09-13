@@ -7,6 +7,10 @@ query ClaimPage($claimId: ID!) {
     coveringEmployee
     ...claimType
 
+    member {
+      memberId
+    }
+
     reserves
     state
 

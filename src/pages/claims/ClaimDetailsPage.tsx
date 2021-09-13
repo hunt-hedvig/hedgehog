@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import { Card, CardsWrapper, FadeIn, MainHeadline } from '@hedvig-ui'
+import {
+  Card,
+  CardsWrapper,
+  FadeIn,
+  LoadingMessage,
+  MainHeadline,
+} from '@hedvig-ui'
 import { ClaimItems } from 'features/claims/claim-details/components/claim-items'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
@@ -22,18 +28,27 @@ const ChatPaneAdjustedContainer = styled.div`
 
 export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
-  memberId: string
 }>> = ({ match }) => {
-  const { memberId, claimId } = match.params
-
+  const { claimId } = match.params
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
 
   const { data: claimPageData } = useClaimPageQuery({
     variables: { claimId },
   })
+
+  const memberId = claimPageData?.claim?.member.memberId
+
   useEffect(() => {
+    if (!memberId) {
+      return
+    }
+
     pushToMemberHistory(memberId)
-  }, [memberId])
+  }, [claimPageData])
+
+  if (!memberId) {
+    return <LoadingMessage paddingTop={'25vh'} />
+  }
 
   return (
     <>
