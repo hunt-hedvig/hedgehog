@@ -5,7 +5,7 @@ import {
   SafelyEditAgreementMutationHookResult,
   SafelyEditAgreementMutationVariables,
   useSafelyEditAgreementMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useSafelyEditAgreement = (

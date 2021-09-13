@@ -6,7 +6,7 @@ import {
   EditMemberInfoMutationVariables,
   GetMemberInfoDocument,
   useEditMemberInfoMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useEditMemberInfo = (): EditMemberInfoMutationHookResult => {
   return useEditMemberInfoMutation()

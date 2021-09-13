@@ -3,12 +3,12 @@ import {
   MutationTuple,
   OperationVariables,
 } from '@apollo/client'
+import { useState } from 'react'
 import {
   Contract,
   GetContractsQueryHookResult,
   useGetContractsQuery,
-} from 'api/generated/graphql'
-import { useState } from 'react'
+} from 'types/generated/graphql'
 import { sleep } from 'utils/sleep'
 
 type DelayedRefetch = () => Promise<void>

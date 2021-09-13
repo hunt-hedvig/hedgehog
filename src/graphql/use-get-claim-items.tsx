@@ -2,7 +2,7 @@ import {
   ClaimItem,
   GetClaimItemsQueryHookResult,
   useGetClaimItemsQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type GetClaimItemsReturnTuple = [ClaimItem[], GetClaimItemsQueryHookResult]
 

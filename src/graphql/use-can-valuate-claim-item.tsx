@@ -2,7 +2,7 @@ import {
   CanValuateClaimItem,
   CanValuateClaimItemQueryHookResult,
   useCanValuateClaimItemQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type CanValuateClaimItemReturnTuple = [
   CanValuateClaimItem | undefined,

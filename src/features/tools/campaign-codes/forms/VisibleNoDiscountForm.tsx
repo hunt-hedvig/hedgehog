@@ -6,7 +6,6 @@ import {
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
-import { AssignVoucherVisibleNoDiscount, Scalars } from 'api/generated/graphql'
 import { DateRangeWrapper } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
@@ -16,6 +15,10 @@ import {
 } from 'graphql/use-add-partner-visible-no-discount-code'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import {
+  AssignVoucherVisibleNoDiscount,
+  Scalars,
+} from 'types/generated/graphql'
 import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 interface VisibleNoDiscountFormData {

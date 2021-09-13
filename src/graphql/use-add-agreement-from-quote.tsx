@@ -1,4 +1,5 @@
 import { MutationFunctionOptions } from '@apollo/client'
+import { format } from 'date-fns'
 import {
   AddAgreementFromQuoteMutation,
   AddAgreementFromQuoteMutationHookResult,
@@ -7,8 +8,7 @@ import {
   GetQuotesDocument,
   Quote,
   useAddAgreementFromQuoteMutation,
-} from 'api/generated/graphql'
-import { format } from 'date-fns'
+} from 'types/generated/graphql'
 
 export const useAddAgreementFromQuote = (): AddAgreementFromQuoteMutationHookResult =>
   useAddAgreementFromQuoteMutation()

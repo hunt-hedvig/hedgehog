@@ -1,9 +1,9 @@
+import { JSONSchema7 } from 'json-schema'
+import { ContractType } from 'types/enums'
 import {
   GetSchemaForContractTypeQueryHookResult,
   useGetSchemaForContractTypeQuery,
-} from 'api/generated/graphql'
-import { JSONSchema7 } from 'json-schema'
-import { ContractType } from 'types/enums'
+} from 'types/generated/graphql'
 
 type GetSchemaForContractTypeReturnTuple = [
   JSONSchema7,

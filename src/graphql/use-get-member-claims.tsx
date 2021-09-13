@@ -1,9 +1,9 @@
+import { parseISO } from 'date-fns'
 import {
   Claim,
   GetMemberClaimsQueryResult,
   useGetMemberClaimsQuery,
-} from 'api/generated/graphql'
-import { parseISO } from 'date-fns'
+} from 'types/generated/graphql'
 
 type UseGetMemberClaimsReturnTuple = [
   ReadonlyArray<Claim> | undefined,

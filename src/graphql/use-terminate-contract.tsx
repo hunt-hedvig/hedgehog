@@ -1,13 +1,13 @@
 import { MutationFunctionOptions } from '@apollo/client'
+import { format } from 'date-fns'
+import { TerminationReason } from 'types/enums'
 import {
   Contract,
   TerminateContractMutation,
   TerminateContractMutationHookResult,
   TerminateContractMutationVariables,
   useTerminateContractMutation,
-} from 'api/generated/graphql'
-import { format } from 'date-fns'
-import { TerminationReason } from 'types/enums'
+} from 'types/generated/graphql'
 import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useTerminateContract = (

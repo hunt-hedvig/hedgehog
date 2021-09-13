@@ -6,7 +6,6 @@ import {
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
-import { AssignVoucherPercentageDiscount, Scalars } from 'api/generated/graphql'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
 import {
@@ -15,6 +14,10 @@ import {
 } from 'graphql/use-add-partner-percentage-discount-code'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import {
+  AssignVoucherPercentageDiscount,
+  Scalars,
+} from 'types/generated/graphql'
 import {
   numberOfMonthsOptions,
   percentageDiscountOptions,

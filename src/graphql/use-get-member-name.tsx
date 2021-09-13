@@ -1,7 +1,7 @@
 import {
   GetMemberNameQueryHookResult,
   useGetMemberNameQuery,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 type GetPersonReturnTuple = [
   MemberName | undefined,

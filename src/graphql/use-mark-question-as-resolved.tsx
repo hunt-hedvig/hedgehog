@@ -4,7 +4,7 @@ import {
   MarkQuestionAsResolvedMutation,
   MarkQuestionAsResolvedMutationVariables,
   useMarkQuestionAsResolvedMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useMarkQuestionAsResolved = () =>
   useMarkQuestionAsResolvedMutation()

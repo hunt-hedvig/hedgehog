@@ -1,11 +1,11 @@
 import { MutationFunctionOptions } from '@apollo/client'
+import { JSONSchema7 } from 'json-schema'
 import {
   GetQuotesDocument,
   UpdateQuoteBySchemaMutation,
   UpdateQuoteBySchemaMutationVariables,
   useUpdateQuoteBySchemaMutation,
-} from 'api/generated/graphql'
-import { JSONSchema7 } from 'json-schema'
+} from 'types/generated/graphql'
 
 export const useUpdateQuoteBySchema = () => useUpdateQuoteBySchemaMutation()
 

@@ -1,12 +1,12 @@
 import { MutationFunctionOptions } from '@apollo/client'
+import { format } from 'date-fns'
 import {
   ChangeTerminationDateMutation,
   ChangeTerminationDateMutationHookResult,
   ChangeTerminationDateMutationVariables,
   Contract,
   useChangeTerminationDateMutation,
-} from 'api/generated/graphql'
-import { format } from 'date-fns'
+} from 'types/generated/graphql'
 import { withDelayedRefetchContracts } from './use-contracts'
 
 export const useChangeTerminationDate = (

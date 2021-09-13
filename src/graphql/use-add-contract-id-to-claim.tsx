@@ -5,7 +5,7 @@ import {
   SetContractForClaimMutationHookResult,
   SetContractForClaimMutationVariables,
   useSetContractForClaimMutation,
-} from 'api/generated/graphql'
+} from 'types/generated/graphql'
 
 export const useSetContractForClaim = (): SetContractForClaimMutationHookResult =>
   useSetContractForClaimMutation()

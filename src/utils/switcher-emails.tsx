@@ -1,6 +1,6 @@
-import { SwitchableSwitcherEmail } from 'api/generated/graphql'
 import { isPast, parseISO } from 'date-fns'
 import { SwitcherEmailStatus } from 'types/enums'
+import { SwitchableSwitcherEmail } from 'types/generated/graphql'
 
 export const getSwitcherEmailStatus = (
   switcherEmail: Pick<
