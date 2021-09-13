@@ -43,12 +43,15 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
         To perform the payment, confirm it by entering "{amount}" below.
       </Explanation>
       <Input
+        autoFocus
+        name="confirmation"
         placeholder={'Amount'}
         value={confirmAmount}
         onChange={(e) => setConfirmAmount(e.currentTarget.value)}
       />
       <ButtonWrapper>
         <Button
+          type="submit"
           variation={'primary'}
           disabled={confirmAmount !== amount}
           onClick={() => {

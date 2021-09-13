@@ -237,19 +237,6 @@ export const ClaimPayment: React.FC<{
             market={market}
           />
         )}
-
-        {/*isConfirming && (
-          <PaymentConfirmationDialog
-            onClose={() => {
-              setIsConfirming(false)
-              form.reset()
-            }}
-            onSubmit={createPaymentHandler}
-            amount={form.getValues().amount}
-            identified={identified}
-            market={market}
-          />
-        )*/}
       </Form>
     </FormProvider>
   )

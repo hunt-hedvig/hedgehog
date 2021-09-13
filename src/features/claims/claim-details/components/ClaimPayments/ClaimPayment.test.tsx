@@ -1,5 +1,6 @@
 import { MockedProvider } from '@apollo/client/testing'
 import { mount } from 'enzyme'
+import { PaymentConfirmationModal } from 'features/claims/claim-details/components/ClaimPayments/PaymentConfirmationModal'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { Market } from 'types/enums'
@@ -11,7 +12,6 @@ import {
 } from 'types/generated/graphql'
 import { sleep, tickAsync } from 'utils/sleep'
 import { ClaimPayment } from './ClaimPayment'
-import { PaymentConfirmationDialog } from './PaymentConfirmationDialog'
 
 it("doesn't submit empty form", async () => {
   const wrapper = mount(
@@ -33,7 +33,7 @@ it("doesn't submit empty form", async () => {
     return tickAsync()
   })
 
-  expect(wrapper.exists(PaymentConfirmationDialog)).toBe(false)
+  expect(wrapper.exists(PaymentConfirmationModal)).toBe(false)
 })
 
 it('submits valid form with confirmation', async () => {
@@ -108,17 +108,17 @@ it('submits valid form with confirmation', async () => {
 
   wrapper.update()
 
-  expect(wrapper.exists(PaymentConfirmationDialog)).toBe(true)
+  expect(wrapper.exists(PaymentConfirmationModal)).toBe(true)
 
   await act(async () => {
     wrapper
-      .find(PaymentConfirmationDialog)
-      .find('TextField[name="confirmation"]')
+      .find(PaymentConfirmationModal)
+      .find('input[name="confirmation"]')
       .simulate('change', { target: { value: '100' } })
 
     await tickAsync()
 
-    wrapper.find(PaymentConfirmationDialog).prop('onSubmit')()
+    wrapper.find(PaymentConfirmationModal).prop('onSubmit')()
 
     await tickAsync()
   })
