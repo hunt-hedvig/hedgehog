@@ -16,6 +16,7 @@ import { useListClaims } from 'graphql/use-list-claims'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'
@@ -105,6 +106,13 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
           return (
             <TableRow
               key={claim.id}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.keyCode === Keys.Enter.code) {
+                  e.preventDefault()
+                  history.push(`/claims/${claim.id}`)
+                }
+              }}
               onClick={() => history.push(`/claims/${claim.id}`)}
             >
               <div>
