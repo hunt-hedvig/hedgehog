@@ -13,7 +13,6 @@
     "@emotion/styled": "^11.1.5",
     "@hedviginsurance/brand": "^3.0.7",
     "@hookform/error-message": "^0.0.4",
-    "@material-ui/core": "3.9.3",
     "@rjsf/core": "^2.4.0",
     "@rjsf/semantic-ui": "^2.4.0",
     "@types/json-schema": "^7.0.6",
