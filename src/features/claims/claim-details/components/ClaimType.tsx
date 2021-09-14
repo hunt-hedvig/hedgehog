@@ -104,9 +104,10 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
 
   return (
     <>
-      <DataField style={{ marginTop: '1.0em' }}>
+      <DataField style={{ marginTop: '1.0em' }} tabIndex={-1}>
         <Label>Date of Occurrence</Label>
         <DateTimePicker
+          tabIndex={-1}
           fullWidth={true}
           date={formData.date}
           setDate={(newDate) => setFormData({ ...formData, date: newDate })}
