@@ -160,11 +160,6 @@ export const AccountTab: React.FC<{
               </Button>
             </div>
           </TitleWrapper>
-          {/*<FourthLevelHeadline>
-            The total amount from the account entries, called the <i>balance</i>
-            , at the end of a month, is the amount we will charge a member that
-            month.
-          </FourthLevelHeadline>*/}
           {showAccountEntryForm && (
             <FadeIn duration={200} style={{ width: '100%' }}>
               <Spacing top={'medium'} bottom={'large'}>
