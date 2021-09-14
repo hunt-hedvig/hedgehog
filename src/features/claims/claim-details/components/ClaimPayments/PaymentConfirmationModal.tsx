@@ -1,13 +1,7 @@
 import styled from '@emotion/styled'
-import { Button, Input, Modal, Paragraph } from '@hedvig-ui'
+import { Button, ButtonsGroup, Input, Modal, Paragraph } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { Market } from 'types/enums'
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-top: 1em;
-`
 
 const Explanation = styled(Paragraph)`
   margin-top: 2em;
@@ -49,7 +43,7 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
         value={confirmAmount}
         onChange={(e) => setConfirmAmount(e.currentTarget.value)}
       />
-      <ButtonWrapper>
+      <ButtonsGroup style={{ marginTop: '1em' }}>
         <Button
           type="submit"
           variation={'primary'}
@@ -71,7 +65,7 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
         >
           Cancel
         </Button>
-      </ButtonWrapper>
+      </ButtonsGroup>
     </Modal>
   )
 }

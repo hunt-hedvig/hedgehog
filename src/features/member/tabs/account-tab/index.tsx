@@ -151,10 +151,10 @@ export const AccountTab: React.FC<{
             <div>
               <BackfillSubscriptionsButton memberId={memberId} />
               <Button
-                style={{ marginLeft: '1.0em' }}
                 variation={'primary'}
                 onClick={() => setShowAccountEntryForm(true)}
                 disabled={showAccountEntryForm}
+                style={{ marginLeft: '1.0em' }}
               >
                 New account entry
               </Button>
@@ -176,7 +176,7 @@ export const AccountTab: React.FC<{
               <AccountEntryTable accountEntries={account.entries} />
             </Spacing>
           ) : (
-            <NoTableMessage paddingTop={'2em'} paddingBottom={'2em'}>
+            <NoTableMessage paddingTop={'4em'} paddingBottom={'2em'}>
               No account entries
             </NoTableMessage>
           )}
@@ -217,7 +217,7 @@ export const AccountTab: React.FC<{
               />
             </Spacing>
           ) : (
-            <NoTableMessage paddingTop={'2em'} paddingBottom={'2em'}>
+            <NoTableMessage paddingTop={'4em'} paddingBottom={'2em'}>
               No monthly entries
             </NoTableMessage>
           )}

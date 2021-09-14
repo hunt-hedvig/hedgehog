@@ -29,24 +29,22 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
   properties,
 }) => {
   return (
-    <>
-      <div>
-        {properties.map((property, index) => {
-          return (
-            <div>
-              <ContentWrapper
-                pushTop={
-                  property.content.props.schema.type === 'boolean' &&
-                  index % 2 === 1
-                }
-              >
-                {property.content}
-              </ContentWrapper>
-            </div>
-          )
-        })}
-      </div>
-    </>
+    <div>
+      {properties.map((property, index) => {
+        return (
+          <div>
+            <ContentWrapper
+              pushTop={
+                property.content.props.schema.type === 'boolean' &&
+                index % 2 === 1
+              }
+            >
+              {property.content}
+            </ContentWrapper>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 

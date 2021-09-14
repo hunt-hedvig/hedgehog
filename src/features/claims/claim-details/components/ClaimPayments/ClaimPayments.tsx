@@ -226,10 +226,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
                 <TableRow
                   key={payment.id}
                   onClick={() => {
-                    if (!payment?.id) {
-                      return
-                    }
-                    copy(payment.id, {
+                    copy(payment.id!, {
                       format: 'text/plain',
                     })
                     toast.success('Copied payment ID')

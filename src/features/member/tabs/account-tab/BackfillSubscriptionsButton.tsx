@@ -15,7 +15,7 @@ export const BackfillSubscriptionsButton: React.FC<{
 
   return (
     <Button
-      variation="primary"
+      variation="third"
       loading={loading}
       onClick={() => {
         confirm('Are you sure? (Have you talked to Elvin?)').then(() => {
@@ -32,7 +32,7 @@ export const BackfillSubscriptionsButton: React.FC<{
         })
       }}
     >
-      Backfill all subscriptions
+      Backfill monthly premiums and discounts
     </Button>
   )
 }

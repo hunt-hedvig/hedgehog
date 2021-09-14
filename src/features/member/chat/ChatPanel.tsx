@@ -38,6 +38,7 @@ const ChatTextArea = styled(TextArea)<{ error?: boolean }>`
 `
 
 export const ChatPanel = ({ memberId }) => {
+  const [error, setError] = useState(false)
   const [currentMessage, setCurrentMessage] = useState('')
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [sendMessage, { loading }] = useSendMessage()
@@ -54,26 +55,28 @@ export const ChatPanel = ({ memberId }) => {
       return
     }
     setCurrentMessage(value)
+    setError(false)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (loading) {
       return
     }
-    toast.promise(
-      sendMessage(
-        getSendMessageOptions(memberId, currentMessage, forceSendMessage),
-      ),
-      {
-        loading: 'Sending message',
-        success: () => {
-          setCurrentMessage('')
-          setForceSendMessage(false)
-          return 'Message sent'
-        },
-        error: 'Could not send message',
-      },
+
+    const { data } = await sendMessage(
+      getSendMessageOptions(memberId, currentMessage, forceSendMessage),
     )
+
+    if (data?.sendMessage.__typename === 'SendMessageFailed') {
+      toast.error('Could not send message')
+      setError(true)
+      return
+    }
+
+    setCurrentMessage('')
+    setForceSendMessage(false)
+    setError(false)
+    toast.success('Message sent')
   }
 
   // @ts-ignore
@@ -83,6 +86,7 @@ export const ChatPanel = ({ memberId }) => {
         <ChatTextArea
           autoFocus
           rows={5}
+          error={error}
           value={currentMessage}
           onChange={handleInputChange}
           onKeyDown={(event) => {

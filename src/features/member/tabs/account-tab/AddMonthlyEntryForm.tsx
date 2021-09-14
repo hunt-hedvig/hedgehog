@@ -3,6 +3,7 @@ import {
   Form,
   FormDropdown,
   FormInput,
+  Spacing,
   StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
@@ -147,13 +148,11 @@ export const AddMonthlyEntryForm: React.FC<{
           }}
         />
         <SubmitButton variation="primary">Add Monthly Entry</SubmitButton>
-        <Button
-          variation="ghost"
-          onClick={onCancel}
-          style={{ marginLeft: '1.0em' }}
-        >
-          Cancel
-        </Button>
+        <Spacing left={'small'}>
+          <Button variation="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+        </Spacing>
       </Form>
     </FormProvider>
   )
