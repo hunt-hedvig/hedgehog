@@ -1,4 +1,5 @@
 import {
+  Button,
   Form,
   FormDropdown,
   FormInput,
@@ -18,7 +19,9 @@ import { MonthlyEntryInput } from 'types/generated/graphql'
 
 export const AddMonthlyEntryForm: React.FC<{
   memberId: string
-}> = ({ memberId }) => {
+  onCancel: () => void
+  onSuccess: () => void
+}> = ({ memberId, onCancel, onSuccess }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
   const [addMonthlyEntry] = useAddMonthlyEntry()
   const form = useForm()
@@ -48,7 +51,10 @@ export const AddMonthlyEntryForm: React.FC<{
       ),
       {
         loading: 'Adding monthly entry',
-        success: 'Monthly entry added',
+        success: () => {
+          onSuccess()
+          return 'Monthly entry added'
+        },
         error: 'Could not add monthly entry',
       },
     )
@@ -141,6 +147,13 @@ export const AddMonthlyEntryForm: React.FC<{
           }}
         />
         <SubmitButton variation="primary">Add Monthly Entry</SubmitButton>
+        <Button
+          variation="ghost"
+          onClick={onCancel}
+          style={{ marginLeft: '1.0em' }}
+        >
+          Cancel
+        </Button>
       </Form>
     </FormProvider>
   )

@@ -1,4 +1,6 @@
+import styled from '@emotion/styled'
 import {
+  Button,
   Card,
   CardsWrapper,
   FadeIn,
@@ -11,21 +13,14 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import {
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-} from '@material-ui/core'
-import { AccountEntriesInfo } from 'features/member/tabs/account-tab/AccountEntriesInfo'
 import { AccountEntryTable } from 'features/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'features/member/tabs/account-tab/AddEntryForm'
 import { AddMonthlyEntryForm } from 'features/member/tabs/account-tab/AddMonthlyEntryForm'
 import { BackfillSubscriptionsButton } from 'features/member/tabs/account-tab/BackfillSubscriptionsButton'
-import { MonthlyEntriesInfo } from 'features/member/tabs/account-tab/MonthlyEntriesInfo'
 import { MonthlyEntriesTable } from 'features/member/tabs/account-tab/MonthlyEntriesTable'
 import { useGetAccount } from 'graphql/use-get-account'
-import React from 'react'
-import { ArrowRepeat, ChevronDown } from 'react-bootstrap-icons'
+import React, { useState } from 'react'
+import { ArrowRepeat } from 'react-bootstrap-icons'
 import { formatMoney } from 'utils/money'
 import { RefreshButton } from '../shared/refresh-button'
 
@@ -34,9 +29,22 @@ const moneyOptions = {
   useGrouping: true,
 }
 
+const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+`
+
+const NoTableMessage = styled(StandaloneMessage)`
+  font-size: 1.1em;
+`
+
 export const AccountTab: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
+  const [showAccountEntryForm, setShowAccountEntryForm] = useState(false)
+  const [showMonthlyEntryForm, setShowMonthlyEntryForm] = useState(false)
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
 
   if (loading) {
@@ -133,45 +141,93 @@ export const AccountTab: React.FC<{
           </InfoContainer>
         </Card>
       </CardsWrapper>
-      <AccountEntriesInfo />
-      <Spacing top bottom>
-        <CardsWrapper>
-          <Card padding="small">
-            <ExpansionPanel style={{ width: '100%' }}>
-              <ExpansionPanelSummary expandIcon={<ChevronDown />}>
-                Add entry to account
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <AddEntryForm memberId={memberId} />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          </Card>
-        </CardsWrapper>
-        <AccountEntryTable accountEntries={account.entries} />
-      </Spacing>
 
-      <div>
-        <BackfillSubscriptionsButton memberId={memberId} />
-      </div>
-      <MonthlyEntriesInfo />
-      <Spacing top bottom>
-        <CardsWrapper>
-          <Card padding="small">
-            <ExpansionPanel style={{ width: '100%' }}>
-              <ExpansionPanelSummary expandIcon={<ChevronDown />}>
-                Add monthly entry
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <AddMonthlyEntryForm memberId={memberId} />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          </Card>
-        </CardsWrapper>
-        <MonthlyEntriesTable
-          memberId={memberId}
-          monthlyEntries={account.monthlyEntries}
-        />
-      </Spacing>
+      <CardsWrapper>
+        <Card>
+          <TitleWrapper>
+            <div>
+              <ThirdLevelHeadline>Account Entries</ThirdLevelHeadline>
+            </div>
+            <div>
+              <BackfillSubscriptionsButton memberId={memberId} />
+              <Button
+                style={{ marginLeft: '1.0em' }}
+                variation={'primary'}
+                onClick={() => setShowAccountEntryForm(true)}
+                disabled={showAccountEntryForm}
+              >
+                New account entry
+              </Button>
+            </div>
+          </TitleWrapper>
+          {/*<FourthLevelHeadline>
+            The total amount from the account entries, called the <i>balance</i>
+            , at the end of a month, is the amount we will charge a member that
+            month.
+          </FourthLevelHeadline>*/}
+          {showAccountEntryForm && (
+            <FadeIn duration={200} style={{ width: '100%' }}>
+              <Spacing top={'medium'} bottom={'large'}>
+                <AddEntryForm
+                  memberId={memberId}
+                  onCancel={() => setShowAccountEntryForm(false)}
+                  onSuccess={() => setShowAccountEntryForm(false)}
+                />
+              </Spacing>
+            </FadeIn>
+          )}
+          {account.entries.length !== 0 ? (
+            <Spacing top={'medium'}>
+              <AccountEntryTable accountEntries={account.entries} />
+            </Spacing>
+          ) : (
+            <NoTableMessage paddingTop={'2em'} paddingBottom={'2em'}>
+              No account entries
+            </NoTableMessage>
+          )}
+        </Card>
+      </CardsWrapper>
+      <CardsWrapper>
+        <Card>
+          <TitleWrapper>
+            <div>
+              <ThirdLevelHeadline>Monthly Entries</ThirdLevelHeadline>
+            </div>
+            <Button
+              variation={'primary'}
+              onClick={() => setShowMonthlyEntryForm(true)}
+              disabled={showMonthlyEntryForm}
+            >
+              New monthly entry
+            </Button>
+          </TitleWrapper>
+
+          {showMonthlyEntryForm && (
+            <FadeIn duration={200} style={{ width: '100%' }}>
+              <Spacing top={'medium'} bottom={'large'}>
+                <AddMonthlyEntryForm
+                  memberId={memberId}
+                  onCancel={() => setShowMonthlyEntryForm(false)}
+                  onSuccess={() => setShowMonthlyEntryForm(false)}
+                />
+              </Spacing>
+            </FadeIn>
+          )}
+
+          {account.monthlyEntries.length !== 0 ? (
+            <Spacing top={'medium'}>
+              <MonthlyEntriesTable
+                memberId={memberId}
+                monthlyEntries={account.monthlyEntries}
+              />
+            </Spacing>
+          ) : (
+            <NoTableMessage paddingTop={'2em'} paddingBottom={'2em'}>
+              No monthly entries
+            </NoTableMessage>
+          )}
+        </Card>
+      </CardsWrapper>
     </FadeIn>
   )
 }

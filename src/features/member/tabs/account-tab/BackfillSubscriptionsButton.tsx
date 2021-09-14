@@ -32,7 +32,7 @@ export const BackfillSubscriptionsButton: React.FC<{
         })
       }}
     >
-      Backfill All Subscriptions
+      Backfill all subscriptions
     </Button>
   )
 }

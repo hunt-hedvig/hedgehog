@@ -76,7 +76,7 @@ export const buttonColorMap: (
   ghost: {
     foreground: theme.semiStrongForeground,
     background: 'transparent',
-    highlighted: theme.accentBackground,
+    highlighted: theme.backgroundTransparent,
   },
   icon: {
     foreground: theme.semiStrongForeground,
