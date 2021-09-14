@@ -6,9 +6,11 @@ import {
   FadeIn,
   InfoContainer,
   InfoRow,
+  InfoTag,
   InfoText,
   LoadingMessage,
   MainHeadline,
+  Popover,
   Spacing,
   StandaloneMessage,
   ThirdLevelHeadline,
@@ -145,8 +147,26 @@ export const AccountTab: React.FC<{
       <CardsWrapper>
         <Card>
           <TitleWrapper>
-            <div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
+            >
               <ThirdLevelHeadline>Account Entries</ThirdLevelHeadline>
+              <Spacing left={'small'}>
+                <Popover
+                  contents={
+                    <>
+                      The total amount from the account entries, <br />
+                      called the balance, is the amount we will
+                      <br /> charge a member that month.
+                    </>
+                  }
+                >
+                  <InfoTag status={'info'}>How does it work?</InfoTag>
+                </Popover>
+              </Spacing>
             </div>
             <div>
               <BackfillSubscriptionsButton memberId={memberId} />
@@ -185,8 +205,27 @@ export const AccountTab: React.FC<{
       <CardsWrapper>
         <Card>
           <TitleWrapper>
-            <div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
+            >
               <ThirdLevelHeadline>Monthly Entries</ThirdLevelHeadline>
+              <Spacing left={'small'}>
+                <Popover
+                  contents={
+                    <>
+                      Entries that will be added once every month to the
+                      member's account. <br /> Note that they are always added,
+                      regardless of contract status, <br /> to their full
+                      amount. You can remove them though.
+                    </>
+                  }
+                >
+                  <InfoTag status={'info'}>How does it work?</InfoTag>
+                </Popover>
+              </Spacing>
             </div>
             <Button
               variation={'primary'}

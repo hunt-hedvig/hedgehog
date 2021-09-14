@@ -35,6 +35,10 @@ const SubmitButton = styled(Button)`
 const ChatTextArea = styled(TextArea)<{ error?: boolean }>`
   overflow-y: scroll;
   max-height: 150px;
+
+  background-color: ${({ error, theme }) =>
+    error ? theme.lightDanger : 'default'} !important;
+  border: 1px solid ${({ error, theme }) => (error ? theme.danger : 'default')} !important;
 `
 
 export const ChatPanel = ({ memberId }) => {
