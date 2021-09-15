@@ -30,7 +30,7 @@ export const StandartModal = () => {
 
   return (
     <>
-      <Button variation={'primary'} onClick={() => setIsModal(true)}>
+      <Button variation="primary" onClick={() => setIsModal(true)}>
         Open Modal
       </Button>
       {isModal && (
@@ -56,7 +56,7 @@ export const ConfirmModal = () => {
 
   return (
     <>
-      <Button variation={'danger'} onClick={() => setIsModal(true)}>
+      <Button variation="danger" onClick={() => setIsModal(true)}>
         Delete
       </Button>
       {isModal && (
@@ -74,14 +74,14 @@ export const ConfirmModal = () => {
             <ConfirmButtons>
               <Button
                 fullWidth
-                variation={'success'}
+                variation="success"
                 onClick={() => setIsModal(false)}
               >
                 Confirm
               </Button>
               <Button
                 fullWidth
-                variation={'secondary'}
+                variation="secondary"
                 onClick={() => setIsModal(false)}
               >
                 Cancel

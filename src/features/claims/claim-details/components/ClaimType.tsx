@@ -110,7 +110,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
           fullWidth={true}
           date={formData.date}
           setDate={(newDate) => setFormData({ ...formData, date: newDate })}
-          placeholder={'When did it happen?'}
+          placeholder="When did it happen?"
         />
       </DataField>
       {hasLocation(type.__typename as ClaimTypes) && (
@@ -121,7 +121,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
             onChange={(e) =>
               setFormData({ ...formData, location: e.target.value })
             }
-            placeholder={'Any specific location?'}
+            placeholder="Any specific location?"
           />
         </DataField>
       )}
@@ -131,7 +131,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
           <Input
             value={formData.item}
             onChange={(e) => setFormData({ ...formData, item: e.target.value })}
-            placeholder={'Any specific item(s)?'}
+            placeholder="Any specific item(s)?"
           />
         </DataField>
       )}
@@ -143,7 +143,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
             onChange={(e) =>
               setFormData({ ...formData, policeReport: e.target.value })
             }
-            placeholder={'Any info on a police report?'}
+            placeholder="Any info on a police report?"
           />
         </DataField>
       )}
@@ -155,7 +155,7 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
             onChange={(e) =>
               setFormData({ ...formData, receipt: e.target.value })
             }
-            placeholder={'Is there a receipt?'}
+            placeholder="Is there a receipt?"
           />
         </DataField>
       )}
@@ -167,15 +167,15 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
             onChange={(e) =>
               setFormData({ ...formData, ticket: e.target.value })
             }
-            placeholder={'Is there a ticket?'}
+            placeholder="Is there a ticket?"
           />
         </DataField>
       )}
-      <Spacing top={'medium'} />
+      <Spacing top="medium" />
       <Button
         fullWidth
         disabled={formData === savedFormData || loading}
-        variation={'primary'}
+        variation="primary"
         onClick={() => {
           setClaimInformation({
             variables: {
@@ -240,13 +240,13 @@ export const ClaimTypeForm: React.FC<{
 
   return (
     <CardContent>
-      <CardTitle title={'Claim Type'} badge={titleBadge()} />
+      <CardTitle title="Claim Type" badge={titleBadge()} />
       <SearchableDropdown
         value={
           type?.__typename &&
           createClaimTypeOption(type?.__typename?.toString())
         }
-        placeholder={'What type of claim is this?'}
+        placeholder="What type of claim is this?"
         isClearable={false}
         onChange={async (selection) => {
           setClaimType({

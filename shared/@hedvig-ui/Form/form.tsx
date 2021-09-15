@@ -87,7 +87,7 @@ export const SubmitButton: React.FC<ButtonProps> = ({ children, ...props }) => {
     formState: { isSubmitting },
   } = useFormContext()
   return (
-    <Button disabled={isSubmitting} type={'submit'} {...props}>
+    <Button disabled={isSubmitting} type="submit" {...props}>
       {children}
     </Button>
   )

@@ -39,7 +39,7 @@ export const MasterInception: React.FC<{
       {!datePickerEnabled && !contract.terminationDate && (
         <Button
           halfWidth
-          variation={'success'}
+          variation="success"
           onClick={() => setDatePickerEnabled(true)}
         >
           Activate
@@ -77,7 +77,7 @@ export const MasterInception: React.FC<{
                   )
                 })
               }}
-              variation={'success'}
+              variation="success"
             >
               Confirm
             </Button>

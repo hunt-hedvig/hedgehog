@@ -108,7 +108,7 @@ const App: React.FC = () => {
                         {me && <Routes />}
                       </Switch>
                       <Toaster
-                        position={'top-center'}
+                        position="top-center"
                         toastOptions={{
                           style: {
                             padding: '20px 25px',

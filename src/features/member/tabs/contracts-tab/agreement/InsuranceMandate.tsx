@@ -9,7 +9,7 @@ export const InsuranceMandate: React.FC<{
     <>
       <ThirdLevelHeadline>Insurance Mandate</ThirdLevelHeadline>
       <ButtonLink
-        variation={'primary'}
+        variation="primary"
         halfWidth
         target="_blank"
         href={`/api/member/mandate/${contract.holderMemberId}`}

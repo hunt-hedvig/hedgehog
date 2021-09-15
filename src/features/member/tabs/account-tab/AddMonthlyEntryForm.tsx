@@ -148,7 +148,7 @@ export const AddMonthlyEntryForm: React.FC<{
           }}
         />
         <SubmitButton variation="primary">Add Monthly Entry</SubmitButton>
-        <Spacing left={'small'}>
+        <Spacing left="small">
           <Button variation="ghost" onClick={onCancel}>
             Cancel
           </Button>

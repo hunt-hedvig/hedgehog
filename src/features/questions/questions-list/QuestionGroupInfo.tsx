@@ -56,11 +56,11 @@ export const QuestionGroupInfo = ({ questionGroup }) => {
                 }
               >
                 <Button
-                  variation={'icon'}
+                  variation="icon"
                   disabled={member.claims.length > 1}
                   onClick={() => history.push(`/claims/${member.claims[0].id}`)}
-                  color={'primary'}
-                  size={'large'}
+                  color="primary"
+                  size="large"
                   style={{ padding: '0em', marginRight: '1em' }}
                 >
                   <ShieldShaded />

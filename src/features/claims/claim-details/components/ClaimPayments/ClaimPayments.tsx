@@ -135,7 +135,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
   if (!carrier) {
     return (
       <CardContent>
-        <CardTitle title={'Payments'} />
+        <CardTitle title="Payments" />
         <NoCarrierMessage opacity={0.6}>
           Cannot make a payment or set a reserve without a carrier.
           <NoCarrierSubtitle>
@@ -151,7 +151,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
   return (
     <CardContent>
       <CardTitle
-        title={'Payments'}
+        title="Payments"
         badge={
           queryError
             ? {
@@ -248,9 +248,9 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
                   </TableColumn>
                   <TableColumn>
                     {payment.exGratia ? (
-                      <ExGratiaTag status={'success'}>Yes</ExGratiaTag>
+                      <ExGratiaTag status="success">Yes</ExGratiaTag>
                     ) : (
-                      <ExGratiaTag status={'danger'}>No</ExGratiaTag>
+                      <ExGratiaTag status="danger">No</ExGratiaTag>
                     )}
                   </TableColumn>
                   <TableColumn>{payment.note}</TableColumn>
@@ -298,7 +298,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
         <NoPaymentsMessage>No payments have been made</NoPaymentsMessage>
       )}
 
-      <Spacing top={'medium'} />
+      <Spacing top="medium" />
       {!loadingPayments &&
         paymentsData?.claim?.contract &&
         paymentsData?.claim?.agreement?.carrier && (

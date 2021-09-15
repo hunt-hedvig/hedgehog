@@ -103,14 +103,14 @@ export const ChatPanel = ({ memberId }) => {
               handleSubmit()
             }
           }}
-          placeholder={'Your message goes here...'}
+          placeholder="Your message goes here..."
         />
       </ChatForm>
 
       <OptionsContainer>
         <div style={{ marginLeft: '2.0em' }}>
           <Checkbox
-            label={'Force message'}
+            label="Force message"
             color="primary"
             checked={forceSendMessage}
             onChange={(e) => setForceSendMessage(e.currentTarget.checked)}

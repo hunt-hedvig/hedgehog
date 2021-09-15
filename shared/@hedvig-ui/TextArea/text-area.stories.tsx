@@ -12,7 +12,7 @@ export const TextAreaThatGrows: React.FC = () => {
   return (
     <>
       <TextArea
-        placeholder={'Write your life story here...'}
+        placeholder="Write your life story here..."
         value={text}
         onChange={setText}
       />

@@ -74,7 +74,7 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
   return (
     <>
       {title && (
-        <Spacing bottom={'small'}>
+        <Spacing bottom="small">
           <FourthLevelHeadline>
             {convertCamelcaseToTitle(title)}
           </FourthLevelHeadline>
@@ -86,7 +86,7 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
             <ItemTitleWrapper>
               <strong>{index + 1}.</strong>
               <Button
-                variation={'icon'}
+                variation="icon"
                 style={{ paddingRight: '0.5em' }}
                 onClick={element.onDropIndexClick(index)}
               >
@@ -220,7 +220,7 @@ export const JsonSchemaForm: React.FC<{
       widgets={{ SelectWidget: CustomSelectWidget }}
     >
       <ButtonsGroup>
-        <Button halfWidth variation={'primary'} type="submit">
+        <Button halfWidth variation="primary" type="submit">
           {submitText ?? 'Submit'}
         </Button>
         {children}

@@ -19,7 +19,7 @@ export const UnsignMemberPage: React.FC = () => {
         }}
         placeholder="Social Security Number"
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Button
         variation="primary"
         disabled={loading || ssn === ''}

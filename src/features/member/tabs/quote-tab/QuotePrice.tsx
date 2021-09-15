@@ -113,18 +113,18 @@ export const QuotePrice = ({ quote }: Props) => {
                 onChange={onPriceChange}
               />
             </PriceInput>
-            <Button variation={'icon'} type={'submit'}>
-              <SubmitButton size={'1.6em'} />
+            <Button variation="icon" type="submit">
+              <SubmitButton size="1.6em" />
             </Button>
-            <Button variation={'icon'} onClick={onCancel}>
-              <CancelButton size={'1.6em'} />
+            <Button variation="icon" onClick={onCancel}>
+              <CancelButton size="1.6em" />
             </Button>
           </AlignCenter>
         </form>
       ) : (
         <AlignCenter>
           <DisplayPrice>{formattedPrice}</DisplayPrice>
-          <Button variation={'icon'} onClick={() => setEditPrice(true)}>
+          <Button variation="icon" onClick={() => setEditPrice(true)}>
             <PencilFill />
           </Button>
         </AlignCenter>

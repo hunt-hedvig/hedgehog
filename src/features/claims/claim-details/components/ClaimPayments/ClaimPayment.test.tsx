@@ -18,7 +18,7 @@ it("doesn't submit empty form", async () => {
     <MockedProvider>
       <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
-        claimId={'abc123'}
+        claimId="abc123"
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
@@ -79,7 +79,7 @@ it('submits valid form with confirmation', async () => {
     >
       <ClaimPayment
         sanctionStatus={SanctionStatus.NoHit}
-        claimId={'abc123'}
+        claimId="abc123"
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"

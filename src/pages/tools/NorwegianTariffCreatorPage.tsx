@@ -74,7 +74,7 @@ export const NorwegianTariffCreatorPage: React.FC = () => {
       <Spacing top>
         <Button
           fullWidth
-          variation={'primary'}
+          variation="primary"
           disabled={loading}
           onClick={() => {
             confirm('Are you sure you want to create the price engine?').then(

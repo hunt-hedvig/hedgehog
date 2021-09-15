@@ -66,14 +66,14 @@ export const AccountTab: React.FC<{
             <InfoRow>
               <ThirdLevelHeadline>Balance</ThirdLevelHeadline>
             </InfoRow>
-            <Spacing top={'small'} />
+            <Spacing top="small" />
             <InfoRow>
               Current Month
               <InfoText>
                 {formatMoney(account?.currentBalance, moneyOptions)}
               </InfoText>
             </InfoRow>
-            <Spacing top={'small'} />
+            <Spacing top="small" />
             <InfoRow>
               Total
               <InfoText>
@@ -89,7 +89,7 @@ export const AccountTab: React.FC<{
                 Upcoming Charge Information
               </ThirdLevelHeadline>
             </InfoRow>
-            <Spacing top={'small'} />
+            <Spacing top="small" />
             <InfoRow>
               Current Balance
               <InfoText>
@@ -118,7 +118,7 @@ export const AccountTab: React.FC<{
                 </InfoText>
               </InfoRow>
             )}
-            <Spacing top={'small'} />
+            <Spacing top="small" />
             {account?.chargeEstimation?.discountCodes.length > 0 && (
               <InfoRow>
                 Discount References
@@ -127,7 +127,7 @@ export const AccountTab: React.FC<{
                 </InfoText>
               </InfoRow>
             )}
-            <Spacing top={'small'} />
+            <Spacing top="small" />
             <InfoRow>
               Upcoming Charge
               <InfoText>
@@ -140,10 +140,10 @@ export const AccountTab: React.FC<{
 
       <CardsWrapper>
         <Card>
-          <Flex justify={'space-between'}>
+          <Flex justify="space-between">
             <Flex>
               <ThirdLevelHeadline>Account Entries</ThirdLevelHeadline>
-              <Spacing left={'small'}>
+              <Spacing left="small">
                 <Popover
                   contents={
                     <>
@@ -153,14 +153,14 @@ export const AccountTab: React.FC<{
                     </>
                   }
                 >
-                  <InfoTag status={'info'}>How does it work?</InfoTag>
+                  <InfoTag status="info">How does it work?</InfoTag>
                 </Popover>
               </Spacing>
             </Flex>
             <div>
               <BackfillSubscriptionsButton memberId={memberId} />
               <Button
-                variation={'primary'}
+                variation="primary"
                 onClick={() => setShowAccountEntryForm(true)}
                 disabled={showAccountEntryForm}
                 style={{ marginLeft: '1.0em' }}
@@ -171,7 +171,7 @@ export const AccountTab: React.FC<{
           </Flex>
           {showAccountEntryForm && (
             <FadeIn duration={200} style={{ width: '100%' }}>
-              <Spacing top={'medium'} bottom={'large'}>
+              <Spacing top="medium" bottom="large">
                 <AddEntryForm
                   memberId={memberId}
                   onCancel={() => setShowAccountEntryForm(false)}
@@ -181,11 +181,11 @@ export const AccountTab: React.FC<{
             </FadeIn>
           )}
           {account.entries.length !== 0 ? (
-            <Spacing top={'medium'}>
+            <Spacing top="medium">
               <AccountEntryTable accountEntries={account.entries} />
             </Spacing>
           ) : (
-            <NoTableMessage paddingTop={'4em'} paddingBottom={'2em'}>
+            <NoTableMessage paddingTop="4em" paddingBottom="2em">
               No account entries
             </NoTableMessage>
           )}
@@ -193,10 +193,10 @@ export const AccountTab: React.FC<{
       </CardsWrapper>
       <CardsWrapper>
         <Card>
-          <Flex justify={'space-between'}>
-            <Flex direction={'row'}>
+          <Flex justify="space-between">
+            <Flex direction="row">
               <ThirdLevelHeadline>Monthly Entries</ThirdLevelHeadline>
-              <Spacing left={'small'}>
+              <Spacing left="small">
                 <Popover
                   contents={
                     <>
@@ -207,12 +207,12 @@ export const AccountTab: React.FC<{
                     </>
                   }
                 >
-                  <InfoTag status={'info'}>How does it work?</InfoTag>
+                  <InfoTag status="info">How does it work?</InfoTag>
                 </Popover>
               </Spacing>
             </Flex>
             <Button
-              variation={'primary'}
+              variation="primary"
               onClick={() => setShowMonthlyEntryForm(true)}
               disabled={showMonthlyEntryForm}
             >
@@ -222,7 +222,7 @@ export const AccountTab: React.FC<{
 
           {showMonthlyEntryForm && (
             <FadeIn duration={200} style={{ width: '100%' }}>
-              <Spacing top={'medium'} bottom={'large'}>
+              <Spacing top="medium" bottom="large">
                 <AddMonthlyEntryForm
                   memberId={memberId}
                   onCancel={() => setShowMonthlyEntryForm(false)}
@@ -233,14 +233,14 @@ export const AccountTab: React.FC<{
           )}
 
           {account.monthlyEntries.length ? (
-            <Spacing top={'medium'}>
+            <Spacing top="medium">
               <MonthlyEntriesTable
                 memberId={memberId}
                 monthlyEntries={account.monthlyEntries}
               />
             </Spacing>
           ) : (
-            <NoTableMessage paddingTop={'4em'} paddingBottom={'2em'}>
+            <NoTableMessage paddingTop="4em" paddingBottom="2em">
               No monthly entries
             </NoTableMessage>
           )}

@@ -27,7 +27,7 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
   const [confirmAmount, setConfirmAmount] = useState('')
 
   return (
-    <Modal onClose={onClose} title={'Confirm payout'} width={'500px'}>
+    <Modal onClose={onClose} title="Confirm payout" width="500px">
       {!identified && market === Market.Norway && (
         <Explanation>
           ⚠️ Please note that this member is not identified
@@ -39,14 +39,14 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
       <Input
         autoFocus
         name="confirmation"
-        placeholder={'Amount'}
+        placeholder="Amount"
         value={confirmAmount}
         onChange={(e) => setConfirmAmount(e.currentTarget.value)}
       />
       <ButtonsGroup style={{ marginTop: '1em' }}>
         <Button
           type="submit"
-          variation={'primary'}
+          variation="primary"
           disabled={confirmAmount !== amount}
           onClick={() => {
             onSubmit()
@@ -57,7 +57,7 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
           Confirm
         </Button>
         <Button
-          variation={'ghost'}
+          variation="ghost"
           style={{ marginLeft: '1.0em' }}
           onClick={() => {
             onClose()

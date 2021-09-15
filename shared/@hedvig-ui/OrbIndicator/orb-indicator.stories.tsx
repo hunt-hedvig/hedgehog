@@ -24,10 +24,10 @@ export const OrbStatusIndicator: React.FC = () => {
         Grey & Tiny (Default): <OrbIndicator />
       </p>
       <p>
-        Green & Large: <OrbIndicator color={'green'} size={'large'} />
+        Green & Large: <OrbIndicator color="green" size="large" />
       </p>
       <p>
-        Purple & Small: <OrbIndicator color={'purple'} size={'small'} />
+        Purple & Small: <OrbIndicator color="purple" size="small" />
       </p>
     </>
   )
