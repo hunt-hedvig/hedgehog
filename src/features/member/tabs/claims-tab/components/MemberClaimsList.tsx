@@ -49,12 +49,12 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
   const claims = memberClaims ?? []
 
   if (loading) {
-    return <LoadingMessage paddingTop={'10vh'} />
+    return <LoadingMessage paddingTop="10vh" />
   }
 
   if (!claims || claims.length === 0) {
     return (
-      <StandaloneMessage paddingTop={'10vh'}>
+      <StandaloneMessage paddingTop="10vh">
         No claims for member
       </StandaloneMessage>
     )

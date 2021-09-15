@@ -1,52 +1,40 @@
 import styled from '@emotion/styled'
-import {
-  Table as MuiTable,
-  TableBody as MuiTableBody,
-  TableCell as MuiTableCell,
-  TableHead as MuiTableHead,
-  TableRow as MuiTableRow,
-  withStyles,
-} from '@material-ui/core'
 import { format, parseISO } from 'date-fns'
 import { useClaimPaymentsQuery } from 'types/generated/graphql'
 
 import {
+  Capitalized,
   CardContent,
   CardTitle,
+  FadeIn,
   InfoRow,
   InfoTag,
   InfoText,
+  Label,
+  Monetary,
   Paragraph,
   Shadowed,
-  Spinner,
+  Spacing,
   StandaloneMessage,
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import React from 'react'
+import copy from 'copy-to-clipboard'
+import React, { useState } from 'react'
 import { BugFill } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
 import { Market } from 'types/enums'
+import { ClaimReserves } from '../ClaimReserves'
 import { ClaimPayment } from './ClaimPayment'
-import { ClaimReserves } from './ClaimReserves'
 
 const ScrollX = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
-`
-const PaymentTable = withStyles({
-  root: {
-    marginTop: '1rem',
-  },
-})(MuiTable)
-
-const PaymentTableCell = withStyles({
-  root: {
-    fontSize: '1rem',
-  },
-})(MuiTableCell)
-
-const TotalCell = styled(MuiTableCell)`
-  font-size: 1.1rem;
 `
 
 const MemberIdentityCard = styled.div`
@@ -77,10 +65,52 @@ const ExGratiaTag = styled(InfoTag)`
   text-align: center;
 `
 
+const TableColumnSubtext = styled.span`
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const FlexVertically = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const Tip = styled(Paragraph)`
+  text-align: right;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const PaymentTableFooter = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 2em;
+`
+
+const PaymentTotalWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding-left: 1em;
+`
+
+const TotalAmount = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const TotalDeductible = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 2em;
+`
+
 export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
   claimId,
   carrier,
 }) => {
+  const [tableHovered, setTableHovered] = useState(false)
+
   const {
     data: paymentsData,
     refetch: refetchPayments,
@@ -105,7 +135,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
   if (!carrier) {
     return (
       <CardContent>
-        <CardTitle title={'Payments'} />
+        <CardTitle title="Payments" />
         <NoCarrierMessage opacity={0.6}>
           Cannot make a payment or set a reserve without a carrier.
           <NoCarrierSubtitle>
@@ -121,7 +151,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
   return (
     <CardContent>
       <CardTitle
-        title={'Payments'}
+        title="Payments"
         badge={
           queryError
             ? {
@@ -176,76 +206,99 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
       </div>
 
       {payments.length ? (
-        <ScrollX>
-          {loadingPayments && <Spinner />}
-          <PaymentTable>
-            <MuiTableHead>
-              <MuiTableRow>
-                <PaymentTableCell>Id</PaymentTableCell>
-                <PaymentTableCell>Amount</PaymentTableCell>
-                <PaymentTableCell>Deductible</PaymentTableCell>
-                <PaymentTableCell>Note</PaymentTableCell>
-                <PaymentTableCell>Date</PaymentTableCell>
-                <PaymentTableCell>Ex Gratia</PaymentTableCell>
-                <PaymentTableCell>Type</PaymentTableCell>
-                <PaymentTableCell>Status</PaymentTableCell>
-              </MuiTableRow>
-            </MuiTableHead>
-            <MuiTableBody>
+        <>
+          <ScrollX>
+            <Table
+              style={{ fontSize: '0.8em' }}
+              onMouseEnter={() => setTableHovered(true)}
+              onMouseLeave={() => setTableHovered(false)}
+            >
+              <TableHeader>
+                <TableHeaderColumn>Amount</TableHeaderColumn>
+                <TableHeaderColumn>Deductible</TableHeaderColumn>
+                <TableHeaderColumn>Date</TableHeaderColumn>
+                <TableHeaderColumn>Ex Gratia</TableHeaderColumn>
+                <TableHeaderColumn>Note</TableHeaderColumn>
+                <TableHeaderColumn>Type</TableHeaderColumn>
+                <TableHeaderColumn>Status</TableHeaderColumn>
+              </TableHeader>
               {payments.map((payment) => (
-                <MuiTableRow key={payment.id}>
-                  <PaymentTableCell>{payment.id}</PaymentTableCell>
-                  <PaymentTableCell>
-                    {payment.amount.amount}&nbsp;{payment.amount.currency}
-                  </PaymentTableCell>
-                  <PaymentTableCell>
-                    {payment.deductible.amount}&nbsp;
-                    {payment.deductible.currency}
-                  </PaymentTableCell>
-                  <PaymentTableCell>{payment.note}</PaymentTableCell>
-                  <PaymentTableCell>
-                    {format(parseISO(payment.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-                  </PaymentTableCell>
-                  <PaymentTableCell>
+                <TableRow
+                  key={payment.id}
+                  onClick={() => {
+                    copy(payment.id!, {
+                      format: 'text/plain',
+                    })
+                    toast.success('Copied payment ID')
+                  }}
+                >
+                  <TableColumn>
+                    <Monetary amount={payment.amount} />
+                  </TableColumn>
+                  <TableColumn>
+                    <Monetary amount={payment.deductible} />
+                  </TableColumn>
+                  <TableColumn>
+                    <FlexVertically>
+                      {format(parseISO(payment.timestamp), 'yyyy-MM-dd')}
+                      <TableColumnSubtext>
+                        {format(parseISO(payment.timestamp), 'HH:mm:ss')}
+                      </TableColumnSubtext>
+                    </FlexVertically>
+                  </TableColumn>
+                  <TableColumn>
                     {payment.exGratia ? (
-                      <ExGratiaTag status={'success'}>Yes</ExGratiaTag>
+                      <ExGratiaTag status="success">Yes</ExGratiaTag>
                     ) : (
-                      <ExGratiaTag status={'danger'}>No</ExGratiaTag>
+                      <ExGratiaTag status="danger">No</ExGratiaTag>
                     )}
-                  </PaymentTableCell>
-                  <PaymentTableCell>{payment.type}</PaymentTableCell>
-                  <PaymentTableCell>{payment.status}</PaymentTableCell>
-                </MuiTableRow>
+                  </TableColumn>
+                  <TableColumn>{payment.note}</TableColumn>
+                  <TableColumn>{payment.type}</TableColumn>
+                  <TableColumn>
+                    <Capitalized>{payment.status}</Capitalized>
+                  </TableColumn>
+                </TableRow>
               ))}
-              {totalAmount > 0 && (
-                <>
-                  <MuiTableRow>
-                    <TotalCell>
-                      <b>Amount Total: </b>
-                    </TotalCell>
-                    <TotalCell align="right">
-                      {totalAmount.toFixed(2)}&nbsp;
-                      {payments[0]!.amount.currency}
-                    </TotalCell>
-                  </MuiTableRow>
-                  <MuiTableRow>
-                    <TotalCell>
-                      <b>Deductible Total: </b>
-                    </TotalCell>
-                    <TotalCell align="right">
-                      {totalDeductible.toFixed(2)}&nbsp;
-                      {payments[0]!.deductible.currency}
-                    </TotalCell>
-                  </MuiTableRow>
-                </>
-              )}
-            </MuiTableBody>
-          </PaymentTable>
-        </ScrollX>
+            </Table>
+          </ScrollX>
+          <PaymentTableFooter>
+            <PaymentTotalWrapper>
+              <TotalAmount>
+                <Label>Total amount</Label>
+                <Monetary
+                  amount={{
+                    amount: totalAmount.toFixed(2),
+                    currency: payments[0]!.amount.currency,
+                  }}
+                />
+              </TotalAmount>
+              <TotalDeductible>
+                <Label>Total deductible</Label>
+                <Monetary
+                  amount={{
+                    amount: totalDeductible.toFixed(2),
+                    currency: payments[0]!.amount.currency,
+                  }}
+                />
+              </TotalDeductible>
+            </PaymentTotalWrapper>
+            {tableHovered ? (
+              <FadeIn duration={200}>
+                <Tip>Click on a payment row to copy the payment ID</Tip>
+              </FadeIn>
+            ) : (
+              <div>
+                <Tip>&nbsp;</Tip>
+              </div>
+            )}
+          </PaymentTableFooter>
+        </>
       ) : (
         <NoPaymentsMessage>No payments have been made</NoPaymentsMessage>
       )}
 
+      <Spacing top="medium" />
       {!loadingPayments &&
         paymentsData?.claim?.contract &&
         paymentsData?.claim?.agreement?.carrier && (

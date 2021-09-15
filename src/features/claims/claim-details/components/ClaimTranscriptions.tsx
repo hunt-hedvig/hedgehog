@@ -47,7 +47,7 @@ const ClaimTranscriptions: React.FC<{ claimId: string }> = ({ claimId }) => {
     <Card>
       <CardContent>
         <CardTitle
-          title={'Transcription'}
+          title="Transcription"
           badge={
             queryError
               ? {

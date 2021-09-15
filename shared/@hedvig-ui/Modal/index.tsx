@@ -108,7 +108,7 @@ export interface ModalProps {
   title?: string
   withoutHeader?: boolean
   disableClickOutside?: boolean
-  close: () => void
+  onClose: () => void
   children: any
 }
 
@@ -117,7 +117,7 @@ export const Modal = (props: ModalProps) => {
 
   const clickOutsideCloseHandler = () => {
     if (!props.disableClickOutside) {
-      return props.close()
+      return props.onClose()
     } else {
       return
     }
@@ -139,7 +139,7 @@ export const Modal = (props: ModalProps) => {
                 <span className="modal-title" title={props.title}>
                   {props.title}
                 </span>
-                <CloseIcon className="modal-close" onClick={props.close} />
+                <CloseIcon className="modal-close" onClick={props.onClose} />
               </ModalHeader>
             )}
             <ModalBody>{props.children}</ModalBody>

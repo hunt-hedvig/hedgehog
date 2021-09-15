@@ -88,7 +88,7 @@ export const DebtTab: React.FC<{
               Member flag
               <InfoText>
                 {person?.status?.flag && (
-                  <FlagOrbIndicator flag={person.status.flag} size={'tiny'} />
+                  <FlagOrbIndicator flag={person.status.flag} size="tiny" />
                 )}
               </InfoText>
             </InfoRow>
@@ -103,7 +103,7 @@ export const DebtTab: React.FC<{
           </InfoContainer>
           {eligibleForWhitelist && (
             <>
-              <Spacing top={'large'} />
+              <Spacing top="large" />
               <WhitelistMemberButton memberId={memberId} />
             </>
           )}

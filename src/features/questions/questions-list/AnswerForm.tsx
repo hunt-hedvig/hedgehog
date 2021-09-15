@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Checkbox, Form, FormTextArea, Spacing, SubmitButton } from '@hedvig-ui'
-import Grid from '@material-ui/core/Grid'
 import {
   getAnswerQuestionOptions,
   useAnswerQuestion,
@@ -13,17 +12,11 @@ import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
-const MarkAsResolvedWrapper = styled.div`
-  padding-left: 1rem;
-`
-
-const SubmitButtonWrapper = styled.div`
+const AnswerControls = styled.div`
   display: flex;
-  align-items: flex-end;
-`
-
-const FlexGrid = styled(Grid)`
-  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `
 
 export const AnswerForm: React.FC<{
@@ -83,36 +76,28 @@ export const AnswerForm: React.FC<{
       <Spacing top="small" bottom="small">
         <FormProvider {...form}>
           <Form onSubmit={onSubmit}>
-            <Grid container spacing={24}>
-              <Grid item xs={9}>
-                <FormTextArea
-                  name="answer"
-                  defaultValue=""
-                  rules={{
-                    required: 'Cannot send an empty message',
-                    pattern: {
-                      value: /[^\s]/,
-                      message: 'Cannot send a message without text',
-                    },
-                  }}
-                />
-              </Grid>
-              <FlexGrid item xs={2}>
-                <SubmitButtonWrapper>
-                  <SubmitButton variation="primary">Send</SubmitButton>
-                </SubmitButtonWrapper>
-              </FlexGrid>
-            </Grid>
+            <FormTextArea
+              name="answer"
+              defaultValue=""
+              rules={{
+                required: 'Cannot send an empty message',
+                pattern: {
+                  value: /[^\s]/,
+                  message: 'Cannot send a message without text',
+                },
+              }}
+            />
+            <AnswerControls>
+              <Checkbox
+                label="Mark as resolved"
+                onClick={() => handleMarkAsResolved()}
+                disabled={loading}
+              />
+              <SubmitButton variation="primary">Send</SubmitButton>
+            </AnswerControls>
           </Form>
         </FormProvider>
       </Spacing>
-      <MarkAsResolvedWrapper>
-        <Checkbox
-          label="Mark as resolved"
-          onClick={() => handleMarkAsResolved()}
-          disabled={loading}
-        />
-      </MarkAsResolvedWrapper>
     </>
   )
 }

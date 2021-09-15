@@ -72,7 +72,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
         }
         value={formData.partnerId ?? ''}
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Label>Code</Label>
       <Input
         value={formData.code}
@@ -82,14 +82,14 @@ export const VisibleNoDiscountForm: React.FC = () => {
         }
         placeholder="Code"
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <DateRangeWrapper>
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
           <DateTimePicker
             fullWidth={true}
             date={formData.validFrom}
-            placeholder={'Beginning of time'}
+            placeholder="Beginning of time"
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>
@@ -98,12 +98,12 @@ export const VisibleNoDiscountForm: React.FC = () => {
           <DateTimePicker
             fullWidth={true}
             date={formData.validUntil}
-            placeholder={'End of time'}
+            placeholder="End of time"
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
       </DateRangeWrapper>
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Label>Marketing Channel</Label>
       <SearchableDropdown
         value={
@@ -111,7 +111,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
             ? codeTypeOptions.find((c) => c.value === formData.codeType)
             : null
         }
-        placeholder={'Marketing Channel'}
+        placeholder="Marketing Channel"
         isLoading={loading}
         isClearable={true}
         onChange={(data) =>
@@ -123,7 +123,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
         noOptionsMessage={() => 'Option not found'}
         options={codeTypeOptions}
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <div>
         <Button
           variation="primary"

@@ -51,7 +51,7 @@ export const ClaimsTab: React.FC<{
           <FormWrapper>
             <EnumDropdown
               enumToSelectFrom={ClaimSource}
-              placeholder={'Claim Source'}
+              placeholder="Claim Source"
               onChange={(source) => setClaimSource(source)}
             />
             <DateTimePicker

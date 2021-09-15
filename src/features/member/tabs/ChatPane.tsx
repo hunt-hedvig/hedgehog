@@ -112,7 +112,7 @@ const ChatHeader: React.FC<{
     ) : (
       <Icon
         name={visible ? 'angle double up' : 'angle double down'}
-        size={'large'}
+        size="large"
         link
       />
     )}

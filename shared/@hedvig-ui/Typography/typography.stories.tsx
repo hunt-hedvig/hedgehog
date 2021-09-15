@@ -33,11 +33,11 @@ export const Utilities: React.FC = () => {
   return (
     <>
       <Input value={text} onChange={(e) => setText(e.currentTarget.value)} />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Capitalized>{text}</Capitalized>
-      <Spacing top={'medium'} />
+      <Spacing top="medium" />
       <Placeholder>This is a placeholder</Placeholder>
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <ErrorText>This is an error</ErrorText>
     </>
   )

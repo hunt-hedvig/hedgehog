@@ -38,13 +38,13 @@ export const UpdateQuoteForm: React.FC<{
       schema={quote.schema}
       initialFormData={quote.schemaData}
       onSubmit={performQuoteUpdate}
-      submitText={'Save'}
+      submitText="Save"
     >
       <Checkbox
         style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}
         onChange={(_, { checked }) => setBypassUwgl(Boolean(checked))}
-        label={'Bypass underwriting guidelines'}
+        label="Bypass underwriting guidelines"
       />
     </JsonSchemaForm>
   )

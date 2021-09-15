@@ -30,7 +30,7 @@ export const CampaignsInfo: React.FC<{
         )}
 
         {referralInformation.redeemedCampaigns.length === 0 && (
-          <NoRedeemedCampaignsMessage paddingTop={'2em'} paddingBottom={'2em'}>
+          <NoRedeemedCampaignsMessage paddingTop="2em" paddingBottom="2em">
             No campaigns redeemed
           </NoRedeemedCampaignsMessage>
         )}
