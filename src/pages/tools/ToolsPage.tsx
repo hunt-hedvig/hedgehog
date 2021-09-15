@@ -65,6 +65,6 @@ export const ToolsPage: React.FC = () => (
       </Row>
     </CardsWrapper>
 
-    {!stagingToolsAvailable() && <StagingTools />}
+    {stagingToolsAvailable() && <StagingTools />}
   </FadeIn>
 )
