@@ -101,6 +101,7 @@ export const ChatPanel = ({ memberId }) => {
             Please note that the member does not have notifications enabled
           </Tip>
         </Flex>,
+        { duration: 4000 },
       )
     } else {
       toast.success('Message sent')
@@ -136,7 +137,11 @@ export const ChatPanel = ({ memberId }) => {
             label="Force message"
             color="primary"
             checked={forceSendMessage}
-            onChange={(e) => setForceSendMessage(e.currentTarget.checked)}
+            onChange={() =>
+              setForceSendMessage(
+                (prevForceSendMessage) => !prevForceSendMessage,
+              )
+            }
           />
         </div>
 
