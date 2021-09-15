@@ -8,6 +8,8 @@ import { CustomInputProps as _CustomInputProps } from './Input/input'
 import { ModalProps as _ModalProps } from './Modal'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 
+export { Flex } from './Flex/flex'
+
 export type CardTitleBadgeProps = _CardTitleBadgeProps
 export type BadgeProps = _BadgeProps
 export {

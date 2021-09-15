@@ -4,6 +4,7 @@ import {
   Card,
   CardsWrapper,
   FadeIn,
+  Flex,
   InfoContainer,
   InfoRow,
   InfoTag,
@@ -30,13 +31,6 @@ const moneyOptions = {
   minimumFractionDigits: 2,
   useGrouping: true,
 }
-
-const TitleWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`
 
 const NoTableMessage = styled(StandaloneMessage)`
   font-size: 1.1em;
@@ -146,13 +140,8 @@ export const AccountTab: React.FC<{
 
       <CardsWrapper>
         <Card>
-          <TitleWrapper>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-              }}
-            >
+          <Flex justify={'space-between'}>
+            <Flex>
               <ThirdLevelHeadline>Account Entries</ThirdLevelHeadline>
               <Spacing left={'small'}>
                 <Popover
@@ -167,7 +156,7 @@ export const AccountTab: React.FC<{
                   <InfoTag status={'info'}>How does it work?</InfoTag>
                 </Popover>
               </Spacing>
-            </div>
+            </Flex>
             <div>
               <BackfillSubscriptionsButton memberId={memberId} />
               <Button
@@ -179,7 +168,7 @@ export const AccountTab: React.FC<{
                 New account entry
               </Button>
             </div>
-          </TitleWrapper>
+          </Flex>
           {showAccountEntryForm && (
             <FadeIn duration={200} style={{ width: '100%' }}>
               <Spacing top={'medium'} bottom={'large'}>
@@ -204,13 +193,8 @@ export const AccountTab: React.FC<{
       </CardsWrapper>
       <CardsWrapper>
         <Card>
-          <TitleWrapper>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-              }}
-            >
+          <Flex justify={'space-between'}>
+            <Flex direction={'row'}>
               <ThirdLevelHeadline>Monthly Entries</ThirdLevelHeadline>
               <Spacing left={'small'}>
                 <Popover
@@ -226,7 +210,7 @@ export const AccountTab: React.FC<{
                   <InfoTag status={'info'}>How does it work?</InfoTag>
                 </Popover>
               </Spacing>
-            </div>
+            </Flex>
             <Button
               variation={'primary'}
               onClick={() => setShowMonthlyEntryForm(true)}
@@ -234,7 +218,7 @@ export const AccountTab: React.FC<{
             >
               New monthly entry
             </Button>
-          </TitleWrapper>
+          </Flex>
 
           {showMonthlyEntryForm && (
             <FadeIn duration={200} style={{ width: '100%' }}>
@@ -248,7 +232,7 @@ export const AccountTab: React.FC<{
             </FadeIn>
           )}
 
-          {account.monthlyEntries.length !== 0 ? (
+          {account.monthlyEntries.length ? (
             <Spacing top={'medium'}>
               <MonthlyEntriesTable
                 memberId={memberId}
