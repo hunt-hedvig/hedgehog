@@ -65,7 +65,7 @@ interface FormFieldProps {
 }
 
 interface FormFieldWithRefProps extends FormFieldProps {
-  isFocus?: boolean
+  focus?: boolean
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -153,16 +153,16 @@ const FormTextAreaWithRefComponent: React.FC<FormFieldWithRefProps> = ({
   name,
   rules,
   defaultValue,
-  isFocus,
+  focus,
   ...props
 }) => {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
     if (ref.current) {
-      isFocus ? ref.current.focus() : ref.current.blur()
+      focus ? ref.current.focus() : ref.current.blur()
     }
-  }, [isFocus])
+  }, [focus])
 
   return (
     <Controller

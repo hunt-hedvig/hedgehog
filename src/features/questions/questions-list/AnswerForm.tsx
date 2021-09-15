@@ -117,7 +117,7 @@ export const AnswerForm: React.FC<{
             <Grid container spacing={24}>
               <Grid item xs={9}>
                 <FormTextAreaWithRef
-                  isFocus={isFocused}
+                  focus={isFocused}
                   name="answer"
                   defaultValue=""
                   rules={{
