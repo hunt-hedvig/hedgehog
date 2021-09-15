@@ -34,7 +34,7 @@ const SubmitButton = styled(Button)`
 
 const ChatTextArea = styled(TextArea)<{ error?: boolean }>`
   overflow-y: scroll;
-  max-height: 150px;
+  max-height: 200px;
 
   background-color: ${({ error, theme }) =>
     error ? theme.lightDanger : 'default'} !important;
@@ -89,7 +89,7 @@ export const ChatPanel = ({ memberId }) => {
       <ChatForm onSubmit={handleSubmit}>
         <ChatTextArea
           autoFocus
-          rows={5}
+          rows={7}
           error={error}
           value={currentMessage}
           onChange={handleInputChange}
