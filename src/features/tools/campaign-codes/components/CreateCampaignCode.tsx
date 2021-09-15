@@ -46,7 +46,7 @@ export const CreateCampaignCode: React.FC = () => {
         value={
           incentiveType ? { label: incentiveType, value: incentiveType } : null
         }
-        placeholder={'Which incentive type?'}
+        placeholder="Which incentive type?"
         isClearable={true}
         onChange={(data) =>
           setIncentiveType(
@@ -56,7 +56,7 @@ export const CreateCampaignCode: React.FC = () => {
         noOptionsMessage={() => 'No incentive type found'}
         options={incentiveTypeOptions}
       />
-      <Spacing bottom={'small'} />
+      <Spacing bottom="small" />
       {incentiveType && getIncentiveTypeForm(incentiveType)}
     </InfoContainer>
   )

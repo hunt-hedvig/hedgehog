@@ -44,10 +44,15 @@ const mapInfoTagStatus = (status: InfoTagStatus) => {
     return { backgroundColor: '#e7e7e7', color: '#777777' }
   }
 
+  if (status === 'info') {
+    return { backgroundColor: theme.accentLight, color: theme.accent }
+  }
+
   return { backgroundColor: theme.lightSuccess, color: theme.success }
 }
 
 export type InfoTagStatus =
+  | 'info'
   | 'success'
   | 'warning'
   | 'danger'

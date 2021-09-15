@@ -1,6 +1,11 @@
 import styled from '@emotion/styled'
-import { Button, ButtonsGroup, FourthLevelHeadline, Spacing } from '@hedvig-ui'
-import { Grid, IconButton } from '@material-ui/core'
+import {
+  Button,
+  ButtonsGroup,
+  FourthLevelHeadline,
+  Label,
+  Spacing,
+} from '@hedvig-ui'
 import {
   AjvError,
   ArrayFieldTemplateProps,
@@ -24,24 +29,22 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
   properties,
 }) => {
   return (
-    <>
-      <Grid container={true} spacing={8}>
-        {properties.map((property, index) => {
-          return (
-            <Grid item={true} xs={6} key={property.name}>
-              <ContentWrapper
-                pushTop={
-                  property.content.props.schema.type === 'boolean' &&
-                  index % 2 === 1
-                }
-              >
-                {property.content}
-              </ContentWrapper>
-            </Grid>
-          )
-        })}
-      </Grid>
-    </>
+    <div>
+      {properties.map((property, index) => {
+        return (
+          <div>
+            <ContentWrapper
+              pushTop={
+                property.content.props.schema.type === 'boolean' &&
+                index % 2 === 1
+              }
+            >
+              {property.content}
+            </ContentWrapper>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
@@ -58,10 +61,6 @@ const ItemTitleWrapper = styled('div')`
   justify-content: space-between;
 `
 
-const ItemRemoveButton = styled(IconButton)`
-  padding: 0.5rem;
-`
-
 const TrashIconWrapper = styled.span`
   color: ${({ theme }) => theme.danger};
   font-size: 0.9rem;
@@ -75,7 +74,7 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
   return (
     <>
       {title && (
-        <Spacing bottom={'small'}>
+        <Spacing bottom="small">
           <FourthLevelHeadline>
             {convertCamelcaseToTitle(title)}
           </FourthLevelHeadline>
@@ -86,11 +85,15 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
           <ItemWrapper key={element.key}>
             <ItemTitleWrapper>
               <strong>{index + 1}.</strong>
-              <ItemRemoveButton onClick={element.onDropIndexClick(index)}>
+              <Button
+                variation="icon"
+                style={{ paddingRight: '0.5em' }}
+                onClick={element.onDropIndexClick(index)}
+              >
                 <TrashIconWrapper>
                   <Trash />
                 </TrashIconWrapper>
-              </ItemRemoveButton>
+              </Button>
             </ItemTitleWrapper>
             {element.children}
           </ItemWrapper>
@@ -118,7 +121,7 @@ const CustomSelectWidget: React.FC<WidgetProps> = ({
 }) => {
   return (
     <FormField>
-      <label htmlFor={id}>{label}</label>
+      <Label htmlFor={id}>{label}</Label>
       <Dropdown
         id={id}
         style={{ borderRadius: '0.5rem' }}
@@ -217,7 +220,7 @@ export const JsonSchemaForm: React.FC<{
       widgets={{ SelectWidget: CustomSelectWidget }}
     >
       <ButtonsGroup>
-        <Button halfWidth variation={'primary'} type="submit">
+        <Button halfWidth variation="primary" type="submit">
           {submitText ?? 'Submit'}
         </Button>
         {children}

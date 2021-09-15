@@ -59,7 +59,7 @@ export const TerminationDate: React.FC<{
       <>
         {!datePickerEnabled && (
           <>
-            <Spacing bottom width={'auto'}>
+            <Spacing bottom width="auto">
               <FourthLevelHeadline>
                 {contract.terminationDate}
               </FourthLevelHeadline>
@@ -67,14 +67,14 @@ export const TerminationDate: React.FC<{
             <ButtonsGroup>
               <Button
                 fullWidth
-                variation={'secondary'}
+                variation="secondary"
                 onClick={() => setDatePickerEnabled(true)}
               >
                 Change
               </Button>
               <Button
                 fullWidth
-                variation={'success'}
+                variation="success"
                 disabled={revertTerminationLoading}
                 onClick={() => {
                   confirm('Are you want to revert the termination?').then(
@@ -112,7 +112,7 @@ export const TerminationDate: React.FC<{
         )}
         {datePickerEnabled && (
           <>
-            <Spacing bottom width={'auto'}>
+            <Spacing bottom width="auto">
               <DateTimePicker
                 date={terminationDate}
                 setDate={setTerminationDate}
@@ -121,7 +121,7 @@ export const TerminationDate: React.FC<{
             <ButtonsGroup>
               <Button
                 fullWidth
-                variation={'primary'}
+                variation="primary"
                 disabled={changeTerminationDateLoading}
                 onClick={() => {
                   const confirmMessage = `Are you sure you want to change the termination date from ${
@@ -171,7 +171,7 @@ export const TerminationDate: React.FC<{
       {!datePickerEnabled && (
         <Button
           halfWidth
-          variation={'danger'}
+          variation="danger"
           onClick={() => setDatePickerEnabled(true)}
         >
           Terminate contract
@@ -182,12 +182,12 @@ export const TerminationDate: React.FC<{
           <DateTimePicker date={terminationDate} setDate={setTerminationDate} />
           <EnumDropdown
             enumToSelectFrom={TerminationReason}
-            placeholder={'Termination reason'}
+            placeholder="Termination reason"
             onChange={setTerminationReason}
           />
           <Spacing top bottom>
             <TextArea
-              placeholder={'Comment on the reason of termination...'}
+              placeholder="Comment on the reason of termination..."
               value={comment}
               onChange={setComment}
             />
@@ -195,7 +195,7 @@ export const TerminationDate: React.FC<{
           <ButtonsGroup>
             <Button
               fullWidth
-              variation={'danger'}
+              variation="danger"
               disabled={terminationReason === null || terminateContractLoading}
               onClick={() => {
                 const confirmedMsg = `Are you sure you want to terminate this contract with the termination date ${format(

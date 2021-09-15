@@ -54,7 +54,7 @@ export const EmployeeFilter: React.FC<{
           }
           isClearable
           isSearchable={false}
-          placeholder={'Filter role'}
+          placeholder="Filter role"
         />
       </Row>
       <CreateEmployee scopes={scopes} />

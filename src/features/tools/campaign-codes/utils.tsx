@@ -128,7 +128,7 @@ export const getDiscountDetails = (incentive?: Incentive | null) => {
   if (isFreeMonths(incentive)) {
     return (
       <BadgeRow>
-        <DiscountDetailBadge label={'Free'} />
+        <DiscountDetailBadge label="Free" />
         <DiscountMonthBadge months={incentive.numberOfMonths} />
       </BadgeRow>
     )

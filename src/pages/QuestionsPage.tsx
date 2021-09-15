@@ -37,7 +37,7 @@ export const QuestionsPage: React.FC = () => {
   const [questionGroups, { loading }] = useQuestionGroups()
 
   if (loading) {
-    return <LoadingMessage paddingTop={'25vh'} />
+    return <LoadingMessage paddingTop="25vh" />
   }
 
   if (!questionGroups) {

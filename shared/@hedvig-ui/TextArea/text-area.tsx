@@ -24,7 +24,7 @@ export const TextArea: React.FC<{
   ...props
 }) => {
   return (
-    <TextAreaWrapper className={'ui form'}>
+    <TextAreaWrapper className="ui form">
       <StyledSemanticTextArea
         placeholder={placeholder}
         value={inputValue}

@@ -60,10 +60,10 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
               Valid Period
             </Table.HeaderCell>
             <Table.HeaderCell textAlign="left">Campaign Code</Table.HeaderCell>
-            <Table.HeaderCell textAlign={'center'}>
+            <Table.HeaderCell textAlign="center">
               Campaign Owner
             </Table.HeaderCell>
-            <Table.HeaderCell textAlign={'center'}>
+            <Table.HeaderCell textAlign="center">
               Incentive Type
             </Table.HeaderCell>
             <Table.HeaderCell textAlign="center" width={3}>
@@ -106,7 +106,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                           ? codeTypeOptions.find((c) => c.value === codeType)
                           : null
                       }
-                      placeholder={'No channel'}
+                      placeholder="No channel"
                       isLoading={loadingSetCodeType}
                       onChange={(data) =>
                         toast.promise(

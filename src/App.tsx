@@ -1,15 +1,7 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
 import styled from '@emotion/styled'
-import {
-  darkTheme,
-  darkUiTheme,
-  lightTheme,
-  lightUiTheme,
-  SemanticOverrides,
-} from '@hedvig-ui'
+import { darkTheme, lightTheme, SemanticOverrides } from '@hedvig-ui'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
-import { CssBaseline } from '@material-ui/core'
-import { MuiThemeProvider } from '@material-ui/core/styles'
 import { history } from 'clientEntry'
 import { Breadcrumbs } from 'features/navigation/breadcrumbs/Breadcrumbs'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
@@ -91,51 +83,46 @@ const App: React.FC = () => {
         },
       }}
     >
-      <MuiThemeProvider theme={isDarkmode ? darkUiTheme : lightUiTheme}>
-        <CssBaseline />
-        <Global styles={globalCss} />
-        <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
-          <MemberHistoryProvider>
-            <NumberMemberGroupsProvider>
-              <Router history={history}>
-                <CommandLineProvider>
-                  <ConfirmDialogProvider>
-                    <Layout>
-                      {!history.location.pathname.startsWith('/login') && (
-                        <VerticalMenu history={history} />
-                      )}
-                      <Main
-                        dark={history.location.pathname.startsWith('/login')}
-                      >
-                        <Breadcrumbs />
-                        <Switch>
-                          <Route
-                            path="/login"
-                            exact
-                            component={() => {
-                              redirectToLogin()
-                              return null
-                            }}
-                          />
-                          {me && <Routes />}
-                        </Switch>
-                        <Toaster
-                          position={'top-center'}
-                          toastOptions={{
-                            style: {
-                              padding: '20px 25px',
-                            },
+      <Global styles={globalCss} />
+      <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
+        <MemberHistoryProvider>
+          <NumberMemberGroupsProvider>
+            <Router history={history}>
+              <CommandLineProvider>
+                <ConfirmDialogProvider>
+                  <Layout>
+                    {!history.location.pathname.startsWith('/login') && (
+                      <VerticalMenu history={history} />
+                    )}
+                    <Main dark={history.location.pathname.startsWith('/login')}>
+                      <Breadcrumbs />
+                      <Switch>
+                        <Route
+                          path="/login"
+                          exact
+                          component={() => {
+                            redirectToLogin()
+                            return null
                           }}
                         />
-                      </Main>
-                    </Layout>
-                  </ConfirmDialogProvider>
-                </CommandLineProvider>
-              </Router>
-            </NumberMemberGroupsProvider>
-          </MemberHistoryProvider>
-        </ThemeProvider>
-      </MuiThemeProvider>
+                        {me && <Routes />}
+                      </Switch>
+                      <Toaster
+                        position="top-center"
+                        toastOptions={{
+                          style: {
+                            padding: '20px 25px',
+                          },
+                        }}
+                      />
+                    </Main>
+                  </Layout>
+                </ConfirmDialogProvider>
+              </CommandLineProvider>
+            </Router>
+          </NumberMemberGroupsProvider>
+        </MemberHistoryProvider>
+      </ThemeProvider>
     </DarkmodeContext.Provider>
   )
 }

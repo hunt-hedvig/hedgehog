@@ -78,7 +78,7 @@ export const MonthlyPercentageForm: React.FC = () => {
         }
         value={formData.partnerId ?? ''}
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Label>Code</Label>
       <Input
         value={formData.code}
@@ -88,14 +88,14 @@ export const MonthlyPercentageForm: React.FC = () => {
         }
         placeholder="Code"
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <DateRangeWrapper>
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
           <DateTimePicker
             fullWidth={true}
             date={formData.validFrom}
-            placeholder={'Beginning of time'}
+            placeholder="Beginning of time"
             setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>
@@ -104,12 +104,12 @@ export const MonthlyPercentageForm: React.FC = () => {
           <DateTimePicker
             fullWidth={true}
             date={formData.validUntil}
-            placeholder={'End of time'}
+            placeholder="End of time"
             setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
       </DateRangeWrapper>
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Label>Percentage discount</Label>
       <SearchableDropdown
         value={
@@ -120,7 +120,7 @@ export const MonthlyPercentageForm: React.FC = () => {
               }
             : null
         }
-        placeholder={'How much percentage discount?'}
+        placeholder="How much percentage discount?"
         isLoading={loading}
         isClearable={true}
         onChange={(data) =>
@@ -132,7 +132,7 @@ export const MonthlyPercentageForm: React.FC = () => {
         noOptionsMessage={() => 'Option not found'}
         options={percentageDiscountOptions}
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Label>Months</Label>
       <SearchableDropdown
         value={
@@ -140,7 +140,7 @@ export const MonthlyPercentageForm: React.FC = () => {
             ? { value: formData.numberOfMonths, label: formData.numberOfMonths }
             : null
         }
-        placeholder={'How many months?'}
+        placeholder="How many months?"
         isLoading={loading}
         isClearable={true}
         onChange={(data) =>
@@ -152,7 +152,7 @@ export const MonthlyPercentageForm: React.FC = () => {
         noOptionsMessage={() => 'Option not found'}
         options={numberOfMonthsOptions}
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Label>Marketing Channel</Label>
       <SearchableDropdown
         value={
@@ -160,7 +160,7 @@ export const MonthlyPercentageForm: React.FC = () => {
             ? codeTypeOptions.find((c) => c.value === formData.codeType)
             : null
         }
-        placeholder={'Marketing Channel'}
+        placeholder="Marketing Channel"
         isLoading={loading}
         isClearable={true}
         onChange={(data) =>
@@ -172,7 +172,7 @@ export const MonthlyPercentageForm: React.FC = () => {
         noOptionsMessage={() => 'Option not found'}
         options={codeTypeOptions}
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <div>
         <Button
           variation="primary"

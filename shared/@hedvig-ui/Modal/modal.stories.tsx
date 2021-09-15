@@ -30,7 +30,7 @@ export const StandartModal = () => {
 
   return (
     <>
-      <Button variation={'primary'} onClick={() => setIsModal(true)}>
+      <Button variation="primary" onClick={() => setIsModal(true)}>
         Open Modal
       </Button>
       {isModal && (
@@ -42,7 +42,7 @@ export const StandartModal = () => {
           position={select('Position', positions, 'center')}
           side={select('Side', sides, 'center')}
           title={text('Title content', 'Modal title')}
-          close={() => setIsModal(false)}
+          onClose={() => setIsModal(false)}
         >
           {text('Body content', 'Modal body')}
         </Modal>
@@ -56,7 +56,7 @@ export const ConfirmModal = () => {
 
   return (
     <>
-      <Button variation={'danger'} onClick={() => setIsModal(true)}>
+      <Button variation="danger" onClick={() => setIsModal(true)}>
         Delete
       </Button>
       {isModal && (
@@ -67,21 +67,21 @@ export const ConfirmModal = () => {
           width={`${number('Width of modal', 400)}px`}
           position={select('Position', positions, 'top')}
           side={select('Side', sides, 'center')}
-          close={() => setIsModal(false)}
+          onClose={() => setIsModal(false)}
         >
           <div>
             <h3>Are you sure?</h3>
             <ConfirmButtons>
               <Button
                 fullWidth
-                variation={'success'}
+                variation="success"
                 onClick={() => setIsModal(false)}
               >
                 Confirm
               </Button>
               <Button
                 fullWidth
-                variation={'secondary'}
+                variation="secondary"
                 onClick={() => setIsModal(false)}
               >
                 Cancel

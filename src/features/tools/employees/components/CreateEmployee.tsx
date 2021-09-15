@@ -58,7 +58,7 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
     return (
       <Button
         disabled={!scopes.includes('employees:manage')}
-        variation={'primary'}
+        variation="primary"
         onClick={() => setCreatePressed(true)}
       >
         Create employee
@@ -71,7 +71,7 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
       <Row style={{ justifyContent: 'flex-start' }}>
         <Input
           value={email}
-          placeholder={'Email'}
+          placeholder="Email"
           disabled={loading}
           onChange={({ currentTarget: { value } }) => setEmail(value)}
         />
@@ -86,12 +86,12 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
             setSelectedRole({ role: val?.value, label: val?.label })
           }}
           isSearchable={false}
-          placeholder={'Select role'}
+          placeholder="Select role"
         />
       </Row>
       <ButtonsGroup>
         <Button
-          variation={'primary'}
+          variation="primary"
           disabled={
             loading || !email.endsWith('@hedvig.com') || !selectedRole.role
           }
