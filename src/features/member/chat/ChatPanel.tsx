@@ -73,6 +73,7 @@ export const ChatPanel = ({ memberId }) => {
       return
     }
 
+    console.log(forceSendMessage)
     const { data } = await sendMessage(
       getSendMessageOptions(memberId, currentMessage, forceSendMessage),
     )
@@ -136,7 +137,7 @@ export const ChatPanel = ({ memberId }) => {
             label="Force message"
             color="primary"
             checked={forceSendMessage}
-            onChange={(e) => setForceSendMessage(e.currentTarget.checked)}
+            onChange={() => setForceSendMessage(!forceSendMessage)}
           />
         </div>
 
