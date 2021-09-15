@@ -73,7 +73,6 @@ export const ChatPanel = ({ memberId }) => {
       return
     }
 
-    console.log(forceSendMessage)
     const { data } = await sendMessage(
       getSendMessageOptions(memberId, currentMessage, forceSendMessage),
     )
@@ -102,6 +101,7 @@ export const ChatPanel = ({ memberId }) => {
             Please note that the member does not have notifications enabled
           </Tip>
         </Flex>,
+        { duration: 4000 },
       )
     } else {
       toast.success('Message sent')
