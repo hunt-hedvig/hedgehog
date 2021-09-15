@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, Checkbox, TextArea } from '@hedvig-ui'
+import { Button, Checkbox, Flex, TextArea } from '@hedvig-ui'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
@@ -30,6 +30,12 @@ const OptionsContainer = styled.div`
 
 const SubmitButton = styled(Button)`
   margin: 1rem;
+`
+
+const Tip = styled.span`
+  margin-top: 0.2em;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
 `
 
 const ChatTextArea = styled(TextArea)<{ error?: boolean }>`
@@ -71,7 +77,10 @@ export const ChatPanel = ({ memberId }) => {
       getSendMessageOptions(memberId, currentMessage, forceSendMessage),
     )
 
-    if (data?.sendMessage.__typename === 'SendMessageFailed') {
+    if (
+      data?.sendMessage.__typename === 'SendMessageFailed' &&
+      !data.sendMessage.errorMessage.includes('notification')
+    ) {
       toast.error('Could not send message')
       setError(true)
       return
@@ -80,7 +89,22 @@ export const ChatPanel = ({ memberId }) => {
     setCurrentMessage('')
     setForceSendMessage(false)
     setError(false)
-    toast.success('Message sent')
+
+    if (
+      data?.sendMessage.__typename === 'SendMessageFailed' &&
+      data.sendMessage.errorMessage.includes('notification')
+    ) {
+      toast.success(
+        <Flex direction="column" style={{ marginLeft: '1.0em' }}>
+          <span>Message sent</span>
+          <Tip>
+            Please note that the member does not have notifications enabled
+          </Tip>
+        </Flex>,
+      )
+    } else {
+      toast.success('Message sent')
+    }
   }
 
   // @ts-ignore
@@ -106,7 +130,6 @@ export const ChatPanel = ({ memberId }) => {
           placeholder="Your message goes here..."
         />
       </ChatForm>
-
       <OptionsContainer>
         <div style={{ marginLeft: '2.0em' }}>
           <Checkbox
