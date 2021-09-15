@@ -37,6 +37,7 @@ const globalCss = css`
     box-sizing: border-box;
     font-family: ${fonts.FAVORIT}, sans-serif;
     transition: background 1000ms, color 1000ms;
+    -webkit-font-smoothing: antialiased;
   }
 
   body {
