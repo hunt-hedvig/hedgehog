@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Button, ButtonProps, CustomInputProps, Input, Label } from '@hedvig-ui'
 import { ErrorMessage } from '@hookform/error-message'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
 import {
@@ -9,6 +9,7 @@ import {
   DropdownItemProps,
   Form as SemanticForm,
   FormProps,
+  Ref,
   TextArea,
 } from 'semantic-ui-react'
 
@@ -61,6 +62,10 @@ interface FormFieldProps {
   name: string
   defaultValue: unknown
   rules?: RegisterOptions
+}
+
+interface FormFieldWithRefProps extends FormFieldProps {
+  isFocus?: boolean
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -144,10 +149,49 @@ const FormTextAreaComponent: React.FC<FormFieldProps> = ({
   )
 }
 
+const FormTextAreaWithRefComponent: React.FC<FormFieldWithRefProps> = ({
+  name,
+  rules,
+  defaultValue,
+  isFocus,
+  ...props
+}) => {
+  const ref = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (ref.current) {
+      isFocus ? ref.current.focus() : ref.current.blur()
+    }
+  }, [isFocus])
+
+  return (
+    <Controller
+      name={name}
+      rules={rules}
+      defaultValue={defaultValue}
+      as={
+        <Ref innerRef={ref}>
+          <TextArea {...props} />
+        </Ref>
+      }
+    />
+  )
+}
+
 export const FormTextArea: React.FC<FormFieldProps> = ({ ...props }) => {
   return (
     <FormField {...props}>
       <FormTextAreaComponent {...props} />
+    </FormField>
+  )
+}
+
+export const FormTextAreaWithRef: React.FC<FormFieldWithRefProps> = ({
+  ...props
+}) => {
+  return (
+    <FormField {...props}>
+      <FormTextAreaWithRefComponent {...props} />
     </FormField>
   )
 }

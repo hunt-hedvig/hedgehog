@@ -1,5 +1,13 @@
 import styled from '@emotion/styled'
-import { Checkbox, Form, FormTextArea, Spacing, SubmitButton } from '@hedvig-ui'
+import {
+  Checkbox,
+  FadeIn,
+  Form,
+  FormTextAreaWithRef,
+  Shadowed,
+  Spacing,
+  SubmitButton,
+} from '@hedvig-ui'
 import Grid from '@material-ui/core/Grid'
 import {
   getAnswerQuestionOptions,
@@ -9,9 +17,10 @@ import {
   getMarkQuestionAsResolvedOptions,
   useMarkQuestionAsResolved,
 } from 'graphql/use-mark-question-as-resolved'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const MarkAsResolvedWrapper = styled.div`
   padding-left: 1rem;
@@ -26,12 +35,25 @@ const FlexGrid = styled(Grid)`
   display: flex;
 `
 
+const CheckTip = styled.div`
+  width: fit-content;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+
+  position: absolute;
+  right: 0;
+`
+
 export const AnswerForm: React.FC<{
   memberId: string
   onDone: () => void
   onError: () => void
-}> = ({ memberId, onDone, onError }) => {
+  isFocused: boolean
+  isGroupFocused: boolean
+}> = ({ memberId, onDone, onError, isGroupFocused, isFocused }) => {
   const form = useForm()
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
 
   const [
     answerQuestion,
@@ -78,6 +100,17 @@ export const AnswerForm: React.FC<{
     )
   }
 
+  useEffect(() => {
+    if (isEnterPressed && isOptionPressed && isGroupFocused && !isFocused) {
+      console.log('Resolve')
+      // handleMarkAsResolved()
+    }
+    if (isEnterPressed && isOptionPressed && isFocused) {
+      console.log('Send')
+      // onSubmit(form.getValues())
+    }
+  }, [isEnterPressed, isOptionPressed])
+
   return (
     <>
       <Spacing top="small" bottom="small">
@@ -85,7 +118,8 @@ export const AnswerForm: React.FC<{
           <Form onSubmit={onSubmit}>
             <Grid container spacing={24}>
               <Grid item xs={9}>
-                <FormTextArea
+                <FormTextAreaWithRef
+                  isFocus={isFocused}
                   name="answer"
                   defaultValue=""
                   rules={{
@@ -113,6 +147,22 @@ export const AnswerForm: React.FC<{
           disabled={loading}
         />
       </MarkAsResolvedWrapper>
+      {isGroupFocused && !isFocused && (
+        <FadeIn duration={200}>
+          <CheckTip>
+            Press <Shadowed>Option</Shadowed> + <Shadowed>Enter</Shadowed> to
+            mark as resolved
+          </CheckTip>
+        </FadeIn>
+      )}
+      {isFocused && (
+        <FadeIn duration={200}>
+          <CheckTip>
+            Press <Shadowed>Option</Shadowed> + <Shadowed>Enter</Shadowed> to
+            send
+          </CheckTip>
+        </FadeIn>
+      )}
     </>
   )
 }
