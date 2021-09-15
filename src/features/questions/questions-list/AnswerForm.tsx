@@ -102,12 +102,10 @@ export const AnswerForm: React.FC<{
 
   useEffect(() => {
     if (isEnterPressed && isOptionPressed && isGroupFocused && !isFocused) {
-      console.log('Resolve')
-      // handleMarkAsResolved()
+      handleMarkAsResolved()
     }
     if (isEnterPressed && isOptionPressed && isFocused) {
-      console.log('Send')
-      // onSubmit(form.getValues())
+      onSubmit(form.getValues())
     }
   }, [isEnterPressed, isOptionPressed])
 
