@@ -244,7 +244,6 @@ export const ClaimTypeForm: React.FC<{
   }
 
   useEffect(() => {
-    console.log(dropdownRef)
     if (dropdownRef.current && focus) {
       dropdownRef.current.focus()
     }
