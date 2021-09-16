@@ -32,21 +32,15 @@ export const FilteredQuestionGroups: React.FC<{
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
-    if (
-      !focusedInsideItem &&
-      isDownPressed &&
-      focusedItem < filterQuestionGroups.length
-    ) {
+    const length = filterQuestionGroups.length
+
+    if (!focusedInsideItem && isDownPressed && focusedItem < length) {
       setFocusedItem((prev) => prev + 1)
     } else if (!focusedInsideItem && isUpPressed && focusedItem > 1) {
       setFocusedItem((prev) => prev - 1)
     } else if (!focusedInsideItem && isUpPressed && focusedItem === 1) {
-      setFocusedItem(filterQuestionGroups.length)
-    } else if (
-      !focusedInsideItem &&
-      isDownPressed &&
-      focusedItem === filterQuestionGroups.length
-    ) {
+      setFocusedItem(length)
+    } else if (!focusedInsideItem && isDownPressed && focusedItem === length) {
       setFocusedItem(1)
     }
   }, [isUpPressed, isDownPressed])
