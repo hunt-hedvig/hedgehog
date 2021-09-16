@@ -6,8 +6,6 @@ import {
   useSetClaimTypeMutation,
 } from 'types/generated/graphql'
 
-import { Ref } from 'semantic-ui-react'
-
 import {
   Button,
   CardContent,
@@ -17,11 +15,11 @@ import {
   FadeIn,
   Input,
   Label,
-  SearchableDropdown,
+  SearchableDropdownWithRef,
   Spacing,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { BugFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { convertCamelcaseToTitle } from 'utils/text'
@@ -221,7 +219,6 @@ export const ClaimTypeForm: React.FC<{
     { loading: setClaimTypeLoading },
   ] = useSetClaimTypeMutation()
 
-  const dropdownRef = useRef<HTMLElement>(null)
   const { contract, type } = claimInformationData?.claim ?? {}
 
   const titleBadge = (): CardTitleBadgeProps | null => {
@@ -243,45 +240,38 @@ export const ClaimTypeForm: React.FC<{
     return null
   }
 
-  useEffect(() => {
-    if (dropdownRef.current && focus) {
-      dropdownRef.current.focus()
-    }
-  }, [focus])
-
   return (
     <CardContent>
       <CardTitle title={'Claim Type'} badge={titleBadge()} />
-      <Ref innerRef={dropdownRef}>
-        <SearchableDropdown
-          value={
-            type?.__typename &&
-            createClaimTypeOption(type?.__typename?.toString())
-          }
-          placeholder={'What type of claim is this?'}
-          isClearable={false}
-          onChange={async (selection) => {
-            setClaimType({
-              variables: { id: claimId, type: selection?.value ?? null },
-              optimisticResponse: {
-                setClaimType: {
-                  ...claimInformationData,
-                  __typename: 'Claim',
-                  id: claimId,
-                  type: selection?.value ?? null,
-                  events: claimInformationData?.claim?.events ?? [],
-                },
+      <SearchableDropdownWithRef
+        focus={focus}
+        value={
+          type?.__typename &&
+          createClaimTypeOption(type?.__typename?.toString())
+        }
+        placeholder={'What type of claim is this?'}
+        isClearable={false}
+        onChange={async (selection) => {
+          setClaimType({
+            variables: { id: claimId, type: selection?.value ?? null },
+            optimisticResponse: {
+              setClaimType: {
+                ...claimInformationData,
+                __typename: 'Claim',
+                id: claimId,
+                type: selection?.value ?? null,
+                events: claimInformationData?.claim?.events ?? [],
               },
-            }).catch(() => toast.error('Could not set type'))
+            },
+          }).catch(() => toast.error('Could not set type'))
 
-            await refetch()
-          }}
-          noOptionsMessage={() => 'No types found'}
-          options={Object.keys(ClaimTypes).map((claimType) =>
-            createClaimTypeOption(claimType),
-          )}
-        />
-      </Ref>
+          await refetch()
+        }}
+        noOptionsMessage={() => 'No types found'}
+        options={Object.keys(ClaimTypes).map((claimType) =>
+          createClaimTypeOption(claimType),
+        )}
+      />
 
       {!(setClaimTypeLoading || loadingClaimInformation) && type && (
         <FadeIn>
