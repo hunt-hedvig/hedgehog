@@ -12,6 +12,7 @@ import {
   Ref,
   TextArea,
 } from 'semantic-ui-react'
+import { sleep } from 'utils/sleep'
 
 const StyledForm = styled(SemanticForm)`
   width: 100%;
@@ -159,9 +160,13 @@ const FormTextAreaWithRefComponent: React.FC<FormFieldWithRefProps> = ({
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    if (ref.current) {
-      focus ? ref.current.focus() : ref.current.blur()
+    const setFocus = async () => {
+      await sleep(1)
+      if (ref.current) {
+        focus ? ref.current.focus() : ref.current.blur()
+      }
     }
+    setFocus()
   }, [focus])
 
   return (
