@@ -64,7 +64,8 @@ const fileUploadOptions = [
 export const ClaimFileTable: React.FC<{
   claimId: string
   memberId: string
-}> = ({ claimId, memberId }) => {
+  focus: boolean
+}> = ({ claimId, memberId, focus }) => {
   const {
     data: claimFilesData,
     refetch,
@@ -92,6 +93,7 @@ export const ClaimFileTable: React.FC<{
         }
       />
       <FileUpload
+        focus={focus}
         claimId={claimId}
         memberId={memberId}
         onUpload={async () => {

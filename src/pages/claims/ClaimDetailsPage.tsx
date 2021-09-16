@@ -19,6 +19,8 @@ import { ChatPane } from 'features/member/tabs/ChatPane'
 import React, { useContext, useEffect, useState } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
 import { ClaimState, useClaimPageQuery } from 'types/generated/graphql'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { MemberHistoryContext } from 'utils/member-history'
 import { getCarrierText } from 'utils/text'
 
@@ -33,12 +35,40 @@ const ShowEventButtonWrapper = styled.div`
   margin-top: 1em;
 `
 
+const ClaimTip = styled.div`
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+`
+
+const DEFAULT_FOCUSES = {
+  memberInfo: false,
+  claimInfo: false,
+  type: false,
+  notes: false,
+  files: false,
+}
+
+const DEFAULT_KEYS = ['One', 'Two', 'Three', 'Four', 'Five']
+
 export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
 }>> = ({ match }) => {
   const { claimId } = match.params
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
   const [showEvents, setShowEvents] = useState(false)
+  const { registerActions, isHintingOption } = useCommandLine()
+  const [focus, setFocus] = useState(DEFAULT_FOCUSES)
+
+  registerActions(
+    Object.keys(DEFAULT_FOCUSES).map((section, index) => ({
+      label: `Focus on ${section}`,
+      keys: [Keys.Option, Keys[DEFAULT_KEYS[index]]],
+      onResolve: () => {
+        setFocus({ ...DEFAULT_FOCUSES, [section]: true })
+      },
+    })),
+  )
 
   const { data: claimPageData } = useClaimPageQuery({
     variables: { claimId },
@@ -73,13 +103,24 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
         <ChatPaneAdjustedContainer>
           <CardsWrapper contentWrap={'noWrap'}>
             <Card span={3}>
-              <MemberInformation claimId={claimId} memberId={memberId} />
+              {isHintingOption && <ClaimTip>(1)</ClaimTip>}
+              <MemberInformation
+                focus={focus.memberInfo}
+                claimId={claimId}
+                memberId={memberId}
+              />
             </Card>
             <Card span={3}>
-              <ClaimInformation claimId={claimId} memberId={memberId} />
+              {isHintingOption && <ClaimTip>(2)</ClaimTip>}
+              <ClaimInformation
+                focus={focus.claimInfo}
+                claimId={claimId}
+                memberId={memberId}
+              />
             </Card>
             <Card span={3}>
-              <ClaimTypeForm claimId={claimId} />
+              {isHintingOption && <ClaimTip>(3)</ClaimTip>}
+              <ClaimTypeForm focus={focus.type} claimId={claimId} />
             </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap={'noWrap'}>
@@ -87,7 +128,8 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
           </CardsWrapper>
           <CardsWrapper contentWrap={'noWrap'}>
             <Card>
-              <ClaimNotes claimId={claimId} />
+              {isHintingOption && <ClaimTip>(4)</ClaimTip>}
+              <ClaimNotes focus={focus.notes} claimId={claimId} />
             </Card>
           </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier && (
@@ -109,7 +151,12 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
 
           <CardsWrapper contentWrap={'noWrap'}>
             <Card>
-              <ClaimFileTable claimId={claimId} memberId={memberId} />
+              {isHintingOption && <ClaimTip>(5)</ClaimTip>}
+              <ClaimFileTable
+                focus={focus.files}
+                claimId={claimId}
+                memberId={memberId}
+              />
             </Card>
           </CardsWrapper>
 

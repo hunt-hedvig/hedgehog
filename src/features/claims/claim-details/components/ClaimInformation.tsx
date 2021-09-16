@@ -28,7 +28,7 @@ import {
 } from 'graphql/use-add-contract-id-to-claim'
 import { useSetCoveringEmployee } from 'graphql/use-set-covering-employee'
 import { useUpdateClaimState } from 'graphql/use-update-claim-state'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 
 const validateSelectOption = (value: any): ClaimState => {
@@ -103,7 +103,8 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
 export const ClaimInformation: React.FC<{
   claimId: string
   memberId: string
-}> = ({ claimId, memberId }) => {
+  focus: boolean
+}> = ({ claimId, memberId, focus }) => {
   const {
     data,
     error: queryError,
@@ -159,6 +160,7 @@ export const ClaimInformation: React.FC<{
         <SelectWrapper>
           <Label>Status</Label>
           <EnumDropdown
+            focus={focus}
             value={state || ''}
             enumToSelectFrom={ClaimState}
             placeholder={''}

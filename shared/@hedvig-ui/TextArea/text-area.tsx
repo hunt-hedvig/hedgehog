@@ -1,6 +1,11 @@
 import styled from '@emotion/styled'
-import React from 'react'
-import { TextArea as SemanticTextArea, TextAreaProps } from 'semantic-ui-react'
+import React, { useEffect, useRef } from 'react'
+import {
+  Ref,
+  TextArea as SemanticTextArea,
+  TextAreaProps,
+} from 'semantic-ui-react'
+import { sleep } from 'utils/sleep'
 
 const TextAreaWrapper = styled.div`
   width: 100%;
@@ -17,20 +22,37 @@ export const TextArea: React.FC<{
   placeholder: string
   value: string | undefined
   onChange: (value: string) => void
+  focus?: boolean
 } & Omit<TextAreaProps, 'onChange'>> = ({
   placeholder,
   value: inputValue,
   onChange,
+  focus,
   ...props
 }) => {
+  const textAreaRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const setFocus = async () => {
+      await sleep(1)
+      if (textAreaRef.current && focus) {
+        textAreaRef.current.focus()
+      }
+    }
+
+    setFocus()
+  }, [focus])
+
   return (
     <TextAreaWrapper className={'ui form'}>
-      <StyledSemanticTextArea
-        placeholder={placeholder}
-        value={inputValue}
-        onChange={(_, { value }) => onChange(value as string)}
-        {...props}
-      />
+      <Ref innerRef={textAreaRef}>
+        <StyledSemanticTextArea
+          placeholder={placeholder}
+          value={inputValue}
+          onChange={(_, { value }) => onChange(value as string)}
+          {...props}
+        />
+      </Ref>
     </TextAreaWrapper>
   )
 }
