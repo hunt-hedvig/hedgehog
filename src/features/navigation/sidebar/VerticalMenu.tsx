@@ -433,12 +433,6 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   {!isCollapsed && (
                     <HotkeyView hotkey="C" hint={isHintingOption}>
                       Claims
-                      {/*
-                          For what?
-                          {isHintingOption && latestClaim.current && (
-                            <Backspace />
-                          )}
-                        */}
                     </HotkeyView>
                   )}
                 </MenuItem>
