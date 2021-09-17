@@ -23,7 +23,7 @@ export const FilteredQuestionGroups: React.FC<{
   filterQuestionGroups: ReadonlyArray<QuestionGroup>
 }> = ({ filterQuestionGroups }) => {
   const [focusedItem, setFocusedItem] = useState(1)
-  const [focusedInsideItem, setFocusedInsedItem] = useState(0)
+  const [focusedInsideItem, setFocusedInsideItem] = useState(0)
 
   const isUpPressed = useKeyIsPressed(Keys.Up)
   const isDownPressed = useKeyIsPressed(Keys.Down)
@@ -47,13 +47,13 @@ export const FilteredQuestionGroups: React.FC<{
 
   useEffect(() => {
     if (isEnterPressed && !isOptionPressed && !focusedInsideItem) {
-      setFocusedInsedItem(focusedItem)
+      setFocusedInsideItem(focusedItem)
     }
   }, [isEnterPressed])
 
   useEffect(() => {
     if (isEscapePressed && focusedInsideItem) {
-      setFocusedInsedItem(0)
+      setFocusedInsideItem(0)
     }
   }, [isEscapePressed])
 
