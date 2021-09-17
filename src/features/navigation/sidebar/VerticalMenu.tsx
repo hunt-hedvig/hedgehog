@@ -393,7 +393,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   }
                 >
                   <House />
-                  <HotkeyView hotkey="D" isHintingOption={isHintingOption}>
+                  <HotkeyView hotkey="D" hint={isHintingOption}>
                     Dashborad
                   </HotkeyView>
                 </MenuItem>
@@ -406,7 +406,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Search />
-                  <HotkeyView hotkey="S" isHintingOption={isHintingOption}>
+                  <HotkeyView hotkey="S" hint={isHintingOption}>
                     Member Search
                   </HotkeyView>
                 </MenuItem>
@@ -419,7 +419,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Inbox />
-                  <HotkeyView hotkey="Q" isHintingOption={isHintingOption}>
+                  <HotkeyView hotkey="Q" hint={isHintingOption}>
                     Questions
                   </HotkeyView>
                 </MenuItem>
@@ -431,7 +431,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 >
                   <ShieldShaded />
                   {!isCollapsed && (
-                    <HotkeyView hotkey="C" isHintingOption={isHintingOption}>
+                    <HotkeyView hotkey="C" hint={isHintingOption}>
                       Claims
                       {/*
                           For what?
@@ -446,7 +446,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
               <MenuGroup>
                 <MenuItem to={routes.tools}>
                   <Tools />
-                  <HotkeyView hotkey="T" isHintingOption={isHintingOption}>
+                  <HotkeyView hotkey="T" hint={isHintingOption}>
                     Tools
                   </HotkeyView>
                 </MenuItem>
@@ -456,28 +456,28 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 <MenuItemExternalLink href={routes.trustly} target="_blank">
                   <ArrowUpRight />
                   <CreditCard />
-                  <HotkeyView hotkey="R" isHintingOption={isHintingOption}>
+                  <HotkeyView hotkey="R" hint={isHintingOption}>
                     Trustly
                   </HotkeyView>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
                   <ArrowUpRight />
                   <CreditCard2Front />
-                  <HotkeyView hotkey="A" isHintingOption={isHintingOption}>
+                  <HotkeyView hotkey="A" hint={isHintingOption}>
                     Adyen
                   </HotkeyView>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.gsr} target="_blank">
                   <ArrowUpRight />
                   <PersonBoundingBox />
-                  <HotkeyView hotkey="G" isHintingOption={isHintingOption}>
+                  <HotkeyView hotkey="G" hint={isHintingOption}>
                     GSR
                   </HotkeyView>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.foss} target="_blank">
                   <ArrowUpRight />
                   <PersonSquare />
-                  <HotkeyView hotkey="F" isHintingOption={isHintingOption}>
+                  <HotkeyView hotkey="F" hint={isHintingOption}>
                     FOSS
                   </HotkeyView>
                 </MenuItemExternalLink>
@@ -501,7 +501,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 transparent
               >
                 <BoxArrowLeft />
-                <HotkeyView hotkey="L" isHintingOption={isHintingOption}>
+                <HotkeyView hotkey="L" hint={isHintingOption}>
                   Logout
                 </HotkeyView>
               </MenuItem>

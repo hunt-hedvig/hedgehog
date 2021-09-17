@@ -83,7 +83,7 @@ export const HotkeyView = (props) => {
   return (
     <HotkeyWrapper>
       {props.children}
-      {props.isHintingOption && <HotkeyStyled>{props.hotkey}</HotkeyStyled>}
+      {props.hint && <HotkeyStyled>{props.hotkey}</HotkeyStyled>}
     </HotkeyWrapper>
   )
 }
