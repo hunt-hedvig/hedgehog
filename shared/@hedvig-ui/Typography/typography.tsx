@@ -66,3 +66,24 @@ export const ErrorText = styled.p`
   color: ${({ theme }) => theme.danger};
   font-weight: bold;
 `
+
+const HotkeyWrapper = styled.div`
+  position: relative;
+`
+
+const HotkeyStyled = styled(Shadowed)`
+  position: absolute;
+  right: -2rem;
+  top: 0;
+  font-size: 13px;
+  background-color: ${({ theme }) => theme.backgroundTransparentContrast};
+`
+
+export const HotkeyView = (props) => {
+  return (
+    <HotkeyWrapper>
+      {props.children}
+      {props.isHintingOption && <HotkeyStyled>{props.hotkey}</HotkeyStyled>}
+    </HotkeyWrapper>
+  )
+}
