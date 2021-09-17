@@ -28,7 +28,7 @@ import {
 } from 'graphql/use-add-contract-id-to-claim'
 import { useSetCoveringEmployee } from 'graphql/use-set-covering-employee'
 import { useUpdateClaimState } from 'graphql/use-update-claim-state'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 
 const validateSelectOption = (value: any): ClaimState => {

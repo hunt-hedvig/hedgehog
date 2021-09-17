@@ -1,5 +1,5 @@
 import { format, parseISO } from 'date-fns'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
