@@ -1,4 +1,5 @@
 import {
+  Button,
   Form,
   FormDropdown,
   FormInput,
@@ -96,7 +97,9 @@ const sourceOptions = [
 
 export const AddEntryForm: React.FC<{
   memberId: string
-}> = ({ memberId }) => {
+  onCancel: () => void
+  onSuccess: () => void
+}> = ({ memberId, onCancel, onSuccess }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
   const [addAccountEntry] = useAddAccountEntryToMemberMutation()
   const form = useForm()
@@ -134,6 +137,7 @@ export const AddEntryForm: React.FC<{
           loading: 'Adding entry',
           success: () => {
             form.reset()
+            onSuccess()
             return 'Entry added'
           },
           error: 'Could not add entry',
@@ -155,7 +159,8 @@ export const AddEntryForm: React.FC<{
           }}
         />
         <FormInput
-          label="Amount (If positive the member will be charged more, if negative the member will be charged less)"
+          label="Amount"
+          placeholder="A positive amount will charge more, a negative will charge less"
           name="amount.amount"
           defaultValue=""
           type="number"
@@ -187,7 +192,8 @@ export const AddEntryForm: React.FC<{
           }}
         />
         <FormInput
-          label="Reference (Reference of source, e.g. object insurance id, campaign code (BENIFY, SPRING etc.), travel insurance destination)"
+          label="Reference"
+          placeholder="Reference of source, e.g. object insurance id, campaign code (BENIFY, SPRING etc.), travel insurance destination)"
           name="reference"
           defaultValue=""
           rules={{
@@ -199,7 +205,8 @@ export const AddEntryForm: React.FC<{
           }}
         />
         <FormInput
-          label="Title (If this is to be shown in the app at a later point, this is the title of the entry)"
+          label="Title"
+          placeholder="If this is to be shown in the app at a later point, this is the title of the entry"
           name="title"
           defaultValue=""
           rules={{
@@ -210,7 +217,8 @@ export const AddEntryForm: React.FC<{
           }}
         />
         <FormInput
-          label="Comment (Notes on what happened)"
+          label="Comment"
+          placeholder="Notes on what happened"
           name="comment"
           defaultValue=""
         />
@@ -223,6 +231,13 @@ export const AddEntryForm: React.FC<{
           />
         </Spacing>
         <SubmitButton variation="primary">Add entry</SubmitButton>
+        <Button
+          variation="ghost"
+          onClick={onCancel}
+          style={{ marginLeft: '1.0em' }}
+        >
+          Cancel
+        </Button>
       </Form>
     </FormProvider>
   )

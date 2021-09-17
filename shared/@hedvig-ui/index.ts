@@ -8,6 +8,8 @@ import { CustomInputProps as _CustomInputProps } from './Input/input'
 import { ModalProps as _ModalProps } from './Modal'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 
+export { Flex } from './Flex/flex'
+
 export type CardTitleBadgeProps = _CardTitleBadgeProps
 export type BadgeProps = _BadgeProps
 export {
@@ -82,13 +84,7 @@ export { fadeIn } from './animations/utils'
 
 export type SpacingSize = _SpacingSize
 
-export {
-  darkTheme,
-  darkUiTheme,
-  lightTheme,
-  lightUiTheme,
-  SemanticOverrides,
-} from './themes'
+export { darkTheme, lightTheme, SemanticOverrides } from './themes'
 
 export {
   Bold,

@@ -12,7 +12,7 @@ export const StandardInput: React.FC = () => {
   return (
     <>
       <Input
-        placeholder={'Write your life story here...'}
+        placeholder="Write your life story here..."
         value={text}
         onChange={(_e, { value }) => setText(value)}
         muted={boolean('Muted', false)}

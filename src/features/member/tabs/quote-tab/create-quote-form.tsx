@@ -46,16 +46,12 @@ export const CreateQuoteForm: React.FC<{
   }
 
   return (
-    <JsonSchemaForm
-      schema={schema}
-      onSubmit={createQuote}
-      submitText={'Create'}
-    >
+    <JsonSchemaForm schema={schema} onSubmit={createQuote} submitText="Create">
       <Checkbox
         style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}
         onChange={(_, { checked }) => setBypassUwgl(Boolean(checked))}
-        label={'Bypass underwriting guidelines'}
+        label="Bypass underwriting guidelines"
       />
     </JsonSchemaForm>
   )

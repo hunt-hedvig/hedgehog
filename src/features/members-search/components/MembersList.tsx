@@ -125,12 +125,6 @@ export const MembersList: React.FC<{
             TERMINATED: terminatedContracts = 0,
           } = countContractsByStatus(member.contracts)
 
-          const dateString = formatDate(
-            parseISO(member.signedOn),
-            'dd MMMM, yyyy',
-          )
-          const timeString = formatDate(parseISO(member.signedOn), 'HH:mm')
-
           return (
             <TableRow
               key={member.memberId}
@@ -160,8 +154,10 @@ export const MembersList: React.FC<{
               <TableColumn>
                 {member.signedOn && (
                   <FlexVertically>
-                    {dateString}
-                    <TableColumnSubtext>{timeString}</TableColumnSubtext>
+                    {formatDate(parseISO(member.signedOn), 'dd MMMM, yyyy')}
+                    <TableColumnSubtext>
+                      {formatDate(parseISO(member.signedOn), 'HH:mm')}
+                    </TableColumnSubtext>
                   </FlexVertically>
                 )}
               </TableColumn>

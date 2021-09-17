@@ -25,7 +25,7 @@ export const PostalCodesEditor: React.FC = () => {
       <Spacing top>
         <Button
           fullWidth
-          variation={'secondary'}
+          variation="secondary"
           disabled={loading}
           onClick={() => {
             confirm('Are you sure you want to add the postal codes?').then(

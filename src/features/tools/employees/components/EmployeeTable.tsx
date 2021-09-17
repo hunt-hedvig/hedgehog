@@ -68,7 +68,7 @@ export const EmployeeTable: React.FC<{
   }
 
   if (loading) {
-    return <LoadingMessage paddingTop={'25vh'} />
+    return <LoadingMessage paddingTop="25vh" />
   }
   if (employees.length === 0) {
     return (
@@ -119,7 +119,7 @@ export const EmployeeTable: React.FC<{
                   <Table.Cell width={1}>
                     <ButtonsGroup>
                       <Button
-                        variation={'primary'}
+                        variation="primary"
                         disabled={
                           !selectedRoles[id] ||
                           selectedRoles[id] === currentRoles[id] ||
@@ -144,7 +144,7 @@ export const EmployeeTable: React.FC<{
                         Update Role
                       </Button>
                       <Button
-                        variation={'danger'}
+                        variation="danger"
                         disabled={
                           removeEmployeeLoading ||
                           !scopes.includes('employees:manage')

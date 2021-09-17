@@ -43,7 +43,7 @@ export const FromDate: React.FC<{
       <ThirdLevelHeadline>From Date</ThirdLevelHeadline>
       {!datePickerEnabled && (
         <>
-          <Spacing bottom width={'auto'}>
+          <Spacing bottom width="auto">
             <FourthLevelHeadline>
               {agreement.fromDate !== null
                 ? format(new Date(agreement.fromDate), 'yyyy-MM-dd')
@@ -63,7 +63,7 @@ export const FromDate: React.FC<{
       )}
       {datePickerEnabled && (
         <>
-          <Spacing bottom width={'auto'}>
+          <Spacing bottom width="auto">
             <DateTimePicker date={fromDate} setDate={setFromDate} />
           </Spacing>
           <ButtonsGroup>

@@ -11,7 +11,7 @@ import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvent
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation'
 import { ClaimNotes } from 'features/claims/claim-details/components/ClaimNotes'
-import { ClaimPayments } from 'features/claims/claim-details/components/ClaimPayments'
+import { ClaimPayments } from 'features/claims/claim-details/components/ClaimPayments/ClaimPayments'
 import { ClaimTranscriptions } from 'features/claims/claim-details/components/ClaimTranscriptions'
 import { ClaimTypeForm } from 'features/claims/claim-details/components/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
@@ -55,7 +55,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   }, [claimPageData])
 
   if (!memberId) {
-    return <LoadingMessage paddingTop={'25vh'} />
+    return <LoadingMessage paddingTop="25vh" />
   }
 
   return (
@@ -71,7 +71,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
       <ChatPane memberId={memberId} />
       <FadeIn>
         <ChatPaneAdjustedContainer>
-          <CardsWrapper contentWrap={'noWrap'}>
+          <CardsWrapper contentWrap="noWrap">
             <Card span={3}>
               <MemberInformation claimId={claimId} memberId={memberId} />
             </Card>
@@ -82,10 +82,10 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
               <ClaimTypeForm claimId={claimId} />
             </Card>
           </CardsWrapper>
-          <CardsWrapper contentWrap={'noWrap'}>
+          <CardsWrapper contentWrap="noWrap">
             <ClaimTranscriptions claimId={claimId} />
           </CardsWrapper>
-          <CardsWrapper contentWrap={'noWrap'}>
+          <CardsWrapper contentWrap="noWrap">
             <Card>
               <ClaimNotes claimId={claimId} />
             </Card>
@@ -98,7 +98,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
             </>
           )}
 
-          <CardsWrapper contentWrap={'noWrap'}>
+          <CardsWrapper contentWrap="noWrap">
             <Card>
               <ClaimPayments
                 claimId={claimId}
@@ -107,21 +107,21 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
             </Card>
           </CardsWrapper>
 
-          <CardsWrapper contentWrap={'noWrap'}>
+          <CardsWrapper contentWrap="noWrap">
             <Card>
               <ClaimFileTable claimId={claimId} memberId={memberId} />
             </Card>
           </CardsWrapper>
 
           {showEvents ? (
-            <CardsWrapper contentWrap={'noWrap'}>
+            <CardsWrapper contentWrap="noWrap">
               <Card>
                 <ClaimEvents claimId={claimId} />
               </Card>
             </CardsWrapper>
           ) : (
             <ShowEventButtonWrapper>
-              <Button variation={'ghost'} onClick={() => setShowEvents(true)}>
+              <Button variation="ghost" onClick={() => setShowEvents(true)}>
                 Show events
               </Button>
             </ShowEventButtonWrapper>

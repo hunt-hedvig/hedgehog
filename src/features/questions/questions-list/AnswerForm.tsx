@@ -24,6 +24,7 @@ import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const MarkAsResolvedWrapper = styled.div`
   padding-left: 1rem;
+  display: flex;
 `
 
 const SubmitButtonWrapper = styled.div`

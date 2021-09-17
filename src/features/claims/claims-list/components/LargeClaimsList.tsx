@@ -69,7 +69,7 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
   }, [page])
 
   if (loading) {
-    return <LoadingMessage paddingTop={'25vh'} />
+    return <LoadingMessage paddingTop="25vh" />
   }
 
   return (

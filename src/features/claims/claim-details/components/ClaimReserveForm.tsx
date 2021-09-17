@@ -15,10 +15,10 @@ const ClaimReserveForm: React.FC<{ claimId: string }> = ({ claimId }) => {
   return (
     <>
       <Input
-        placeholder={'Reserve amount'}
+        placeholder="Reserve amount"
         onChange={(e) => setValue(e.currentTarget.value)}
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <Button
         variation="primary"
         disabled={!isStringNumber(value) || value === '' || loading}

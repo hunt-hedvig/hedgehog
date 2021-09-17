@@ -137,7 +137,7 @@ export const ClaimInformation: React.FC<{
     <CardContent>
       <Loadable loading={claimInformationLoading}>
         <CardTitle
-          title={'Claim Info'}
+          title="Claim Info"
           badge={
             queryError
               ? {
@@ -161,7 +161,7 @@ export const ClaimInformation: React.FC<{
           <EnumDropdown
             value={state || ''}
             enumToSelectFrom={ClaimState}
-            placeholder={''}
+            placeholder=""
             onChange={async (value) => {
               await updateClaimState({
                 variables: { id: claimId, state: validateSelectOption(value) },

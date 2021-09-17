@@ -251,7 +251,7 @@ export const PerilsEditorPage: React.FC = () => {
 
                 <span>Add Icon</span>
                 <Dropdown
-                  placeholder={'Icon Name'}
+                  placeholder="Icon Name"
                   value={peril.iconName}
                   fluid
                   selection

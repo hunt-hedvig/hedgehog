@@ -45,7 +45,7 @@ export const ClaimReserves: React.FC<Props> = ({
       <ThirdLevelHeadline>Reserves</ThirdLevelHeadline>
       <div style={{ display: 'flex', marginBottom: '1.0em' }}>
         {loading && <Spinner />}
-        <ReservesTag status={'highlight'}>
+        <ReservesTag status="highlight">
           {reserveAmountInteger} {reserveCurrency}
         </ReservesTag>{' '}
         <ReservesText>reserved</ReservesText>

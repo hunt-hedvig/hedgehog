@@ -50,7 +50,7 @@ const FraudulentStatus: React.FC<{
           ? fraudulentStatuses[props.stateInfo.state]
           : 'green'
       }
-      size={'tiny'}
+      size="tiny"
     />
   </StatusBallBlock>
 )

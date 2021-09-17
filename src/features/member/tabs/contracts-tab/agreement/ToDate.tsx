@@ -42,7 +42,7 @@ export const ToDate: React.FC<{
     <>
       <ThirdLevelHeadline>To Date</ThirdLevelHeadline>
       {!datePickerEnabled && (
-        <Spacing bottom width={'auto'}>
+        <Spacing bottom width="auto">
           <FourthLevelHeadline>
             {agreement.toDate !== null
               ? format(new Date(agreement.toDate), 'yyyy-MM-dd')
@@ -60,7 +60,7 @@ export const ToDate: React.FC<{
       )}
       {datePickerEnabled && (
         <>
-          <Spacing bottom width={'auto'}>
+          <Spacing bottom width="auto">
             <DateTimePicker date={toDate} setDate={setToDate} />
           </Spacing>
           <ButtonsGroup>
