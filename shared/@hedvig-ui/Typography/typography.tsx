@@ -67,6 +67,12 @@ export const ErrorText = styled.p`
   font-weight: bold;
 `
 
+interface HotkeyProps {
+  hotkey: string
+  hinting: boolean
+  children: any
+}
+
 const HotkeyWrapper = styled.div`
   position: relative;
 `
@@ -79,11 +85,11 @@ const HotkeyStyled = styled(Shadowed)`
   background-color: ${({ theme }) => theme.backgroundTransparentContrast};
 `
 
-export const HotkeyView = (props) => {
+export const Hotkey = (props: HotkeyProps) => {
   return (
     <HotkeyWrapper>
       {props.children}
-      {props.hint && <HotkeyStyled>{props.hotkey}</HotkeyStyled>}
+      {props.hinting && <HotkeyStyled>{props.hotkey}</HotkeyStyled>}
     </HotkeyWrapper>
   )
 }

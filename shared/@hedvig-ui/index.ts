@@ -98,7 +98,7 @@ export {
   Shadowed,
   ThirdLevelHeadline,
   Monetary,
-  HotkeyView,
+  Hotkey,
 } from './Typography/typography'
 
 export { Modal } from './Modal'
