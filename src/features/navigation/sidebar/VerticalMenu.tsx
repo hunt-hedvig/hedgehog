@@ -4,7 +4,6 @@ import { colorsV3 } from '@hedviginsurance/brand'
 import React, { useContext, useRef, useState } from 'react'
 import {
   ArrowUpRight,
-  Backspace,
   BoxArrowLeft,
   ChevronLeft,
   CreditCard,
