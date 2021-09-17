@@ -6,6 +6,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { EnableConversationsNotification } from 'features/conversations/EnableConversationsNotification'
 import { FilterState, QuestionsFilter } from 'features/questions/filter'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
@@ -50,6 +51,7 @@ export const QuestionsPage: React.FC = () => {
 
   return (
     <ListPage>
+      <EnableConversationsNotification />
       <Spacing bottom="large">
         <FadeIn>
           <Spacing bottom>
