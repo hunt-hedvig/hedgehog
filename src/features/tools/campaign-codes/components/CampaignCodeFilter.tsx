@@ -20,7 +20,7 @@ export const CampaignCodeFilter: React.FC<{
         }}
         placeholder="Code"
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <PartnerDropdown
         onChange={(data) =>
           setFilter({
@@ -29,9 +29,9 @@ export const CampaignCodeFilter: React.FC<{
           })
         }
         value={filter.partnerId ?? ''}
-        placeholder={'Partner name'}
+        placeholder="Partner name"
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
     </InfoContainer>
   )
 }

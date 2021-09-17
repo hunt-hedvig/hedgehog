@@ -81,7 +81,7 @@ export const ClaimFileTable: React.FC<{
   return (
     <CardContent>
       <CardTitle
-        title={'Files'}
+        title="Files"
         badge={
           queryError
             ? {

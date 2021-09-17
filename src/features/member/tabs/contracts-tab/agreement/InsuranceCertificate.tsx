@@ -50,7 +50,7 @@ export const InsuranceCertificate: React.FC<{
       <ButtonsGroup>
         {agreement.certificateUrl && (
           <ButtonLink
-            variation={'primary'}
+            variation="primary"
             fullWidth
             target="_blank"
             href={agreement.certificateUrl!!}

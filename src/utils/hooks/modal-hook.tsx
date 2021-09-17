@@ -39,19 +39,19 @@ export const ConfirmDialogComponent: React.FC<{
     <Modal
       withoutHeader={true}
       disableClickOutside={true}
-      height={'auto'}
-      width={'400px'}
-      position={'top'}
-      side={'center'}
-      close={close}
+      height="auto"
+      width="400px"
+      position="top"
+      side="center"
+      onClose={close}
     >
       <div>
         <h3>{content}</h3>
         <ConfirmButtons>
-          <Button fullWidth variation={'success'} onClick={confirm}>
+          <Button fullWidth variation="success" onClick={confirm}>
             Confirm
           </Button>
-          <Button fullWidth variation={'secondary'} onClick={close}>
+          <Button fullWidth variation="secondary" onClick={close}>
             Cancel
           </Button>
         </ConfirmButtons>

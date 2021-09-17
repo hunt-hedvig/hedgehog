@@ -19,14 +19,14 @@ import { UnsignMemberPage } from './tools/UnsignMemberPage'
 export const Routes: React.FC = () => {
   return (
     <Switch>
-      <Route path={'/'} exact component={DashboardPage} />
+      <Route path="/" exact component={DashboardPage} />
       <Route path="/dashborad" component={DashboardPage} />
       <Route path="/questions" component={QuestionsPage} />
       <Route path="/claims/list/:page?" exact component={ClaimsListPage} />
       <Route path="/claims/:claimId" exact component={ClaimDetailsPage} />
       <Redirect
         path="/claims/:claimId/members/:memberId"
-        to={'/claims/:claimId'}
+        to="/claims/:claimId"
       />
       <Route exact path="/members" component={MemberSearchPage} />
       <Route path="/members/:memberId/:tab?" component={MemberPage} />
@@ -47,7 +47,7 @@ export const Routes: React.FC = () => {
       <Route path="/tools/unsign-member" component={UnsignMemberPage} />
       <Route
         component={() => (
-          <StandaloneMessage paddingTop={'25vh'}>
+          <StandaloneMessage paddingTop="25vh">
             Page not found
           </StandaloneMessage>
         )}

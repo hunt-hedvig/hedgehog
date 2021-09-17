@@ -131,7 +131,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
   return (
     <CardContent>
       <CardTitle
-        title={'Notes'}
+        title="Notes"
         badge={
           queryError
             ? {
@@ -163,7 +163,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         ))}
       </List>
       <TextArea
-        placeholder={'Your note goes here...'}
+        placeholder="Your note goes here..."
         value={submitting ? '' : note}
         onChange={setNote}
         focus={focus}
@@ -180,11 +180,11 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
           }
         }}
       />
-      <Spacing top={'small'} />
+      <Spacing top="small" />
       <SubNoteWrapper>
         <Button
           disabled={!note}
-          variation={'primary'}
+          variation="primary"
           onClick={() => handleSubmitNote()}
         >
           Add note

@@ -51,7 +51,7 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
         tabIndex={tabIndex}
         wrapperClassName={fullWidth ? 'datePicker' : null}
         autoComplete="off"
-        locale={'enGB'}
+        locale="enGB"
         selected={date}
         disabled={disabled}
         placeholderText={placeholder}
@@ -69,7 +69,7 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
             icon={
               showTimePicker ? 'clock outline' : 'calendar alternate outline'
             }
-            iconPosition={'left'}
+            iconPosition="left"
             maxLength={10}
           />
         }

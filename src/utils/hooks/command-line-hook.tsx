@@ -196,7 +196,7 @@ export const CommandLineComponent: React.FC<{
           iconPosition="left"
           placeholder="What can I help you with?"
           transparent
-          size={'large'}
+          size="large"
         />
       </SearchWrapper>
       <SearchResultWrapper>

@@ -17,7 +17,7 @@ export const CampaignCodeInput: React.FC<{
     <>
       <Group>
         <Input
-          placeholder={'Campaign code'}
+          placeholder="Campaign code"
           value={campaignCode}
           onChange={(_e, { value }) => {
             setCampaignCode(value)

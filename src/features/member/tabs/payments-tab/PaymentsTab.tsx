@@ -215,7 +215,7 @@ export const PaymentsTab: React.FC<{
         <Card span={2}>
           <ThirdLevelHeadline>Payments Link</ThirdLevelHeadline>
           <Button
-            variation={'primary'}
+            variation="primary"
             onClick={(e) => {
               e.preventDefault()
               toast.promise(createPaymentCompletionLink(), {

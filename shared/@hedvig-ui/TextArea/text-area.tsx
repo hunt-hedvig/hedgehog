@@ -44,7 +44,7 @@ export const TextArea: React.FC<{
   }, [focus])
 
   return (
-    <TextAreaWrapper className={'ui form'}>
+    <TextAreaWrapper className="ui form">
       <Ref innerRef={textAreaRef}>
         <StyledSemanticTextArea
           placeholder={placeholder}

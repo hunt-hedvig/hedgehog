@@ -16,7 +16,7 @@ export const ClaimEvents: React.FC<{ claimId: string }> = ({ claimId }) => {
   return (
     <CardContent>
       <CardTitle
-        title={'Events'}
+        title="Events"
         badge={
           queryError
             ? {

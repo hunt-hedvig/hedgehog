@@ -125,7 +125,7 @@ export const MemberInformation: React.FC<{
   return (
     <CardContent>
       <CardTitle
-        title={'Member Info'}
+        title="Member Info"
         badge={
           queryError
             ? {

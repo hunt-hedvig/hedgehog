@@ -65,7 +65,7 @@ export const ReferralsInfo: React.FC<{
             Referral code
             <InfoText>
               {eligible ? (
-                <InfoTag status={'highlight'}>
+                <InfoTag status="highlight">
                   <span style={{ fontWeight: 'bold' }}>
                     {referralInformation?.campaign.code.toUpperCase()}
                   </span>
@@ -95,10 +95,7 @@ export const ReferralsInfo: React.FC<{
             {referralInformation?.hasReferred?.length !== 0 ? (
               <MembersReferredTable members={referralInformation.hasReferred} />
             ) : (
-              <NoMembersReferredMessage
-                paddingTop={'2em'}
-                paddingBottom={'2em'}
-              >
+              <NoMembersReferredMessage paddingTop="2em" paddingBottom="2em">
                 No members referred
               </NoMembersReferredMessage>
             )}

@@ -243,7 +243,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
               {member.phoneNumber}
             </MemberDetailLink>
           )}
-          <Popover contents={'Click to copy'}>
+          <Popover contents="Click to copy">
             <MemberDetailLink
               href={`${window.location.protocol}//${window.location.host}/members/${memberId}`}
               onClick={(e) => {

@@ -252,13 +252,13 @@ export const SwitcherEmailRow: React.FC<Pick<
           <>
             <ButtonsGroup>
               <Button
-                variation={'success'}
+                variation="success"
                 onClick={() => setActivateContractView(true)}
               >
                 Activate
               </Button>
               <Button
-                variation={'danger'}
+                variation="danger"
                 onClick={() => setTerminateContractView(true)}
               >
                 Terminate
@@ -274,7 +274,7 @@ export const SwitcherEmailRow: React.FC<Pick<
                   <Label>&nbsp;</Label>
                   <ButtonsGroup>
                     <Button
-                      variation={'success'}
+                      variation="success"
                       disabled={loading}
                       onClick={() => {
                         const confirmMessage = `Are you sure you want to activate this contract with master inception of ${format(
@@ -310,14 +310,14 @@ export const SwitcherEmailRow: React.FC<Pick<
                   <Label>Termination Reason</Label>
                   <EnumDropdown
                     enumToSelectFrom={TerminationReason}
-                    placeholder={''}
+                    placeholder=""
                     onChange={setTerminationReason}
                   />
                 </OverlayItem>
                 <OverlayItem>
                   <Label>Termination Reason</Label>
                   <Input
-                    placeholder={'Comment on the reason of termination...'}
+                    placeholder="Comment on the reason of termination..."
                     value={comment}
                     onChange={(e) => setComment(e.currentTarget.value)}
                   />
@@ -326,7 +326,7 @@ export const SwitcherEmailRow: React.FC<Pick<
                   <Label>&nbsp;</Label>
                   <ButtonsGroup>
                     <Button
-                      variation={'danger'}
+                      variation="danger"
                       disabled={terminationReason === null || loading}
                       onClick={() => {
                         const confirmMessage = `Are you sure you want to terminate this contract with the termination date ${format(
