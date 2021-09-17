@@ -43,6 +43,19 @@ export const CreateQuoteFromAgreement: React.FC<{
     .map((quote) => quote.originatingProductId)
     .includes(agreement.id)
 
+  const createQuoteHandler = () => {
+    confirm(`Create new quote?`).then(() => {
+      toast.promise(
+        createQuote(createQuoteFromAgreementOptions(agreement, contract)),
+        {
+          loading: 'Creating quote',
+          success: 'Quote created, find it under the quotes tab',
+          error: 'Could not create quote',
+        },
+      )
+    })
+  }
+
   return (
     <>
       <ThirdLevelHeadline>Create Quote</ThirdLevelHeadline>
@@ -53,20 +66,7 @@ export const CreateQuoteFromAgreement: React.FC<{
           <Button
             disabled={contract.isLocked}
             variation="primary"
-            onClick={async () => {
-              confirm(`Create new quote?`).then(async () => {
-                await toast.promise(
-                  createQuote(
-                    createQuoteFromAgreementOptions(agreement, contract),
-                  ),
-                  {
-                    loading: 'Creating quote',
-                    success: 'Quote created, find it under the quotes tab',
-                    error: 'Could not create quote',
-                  },
-                )
-              })
-            }}
+            onClick={createQuoteHandler}
           >
             Create a new quote
           </Button>
