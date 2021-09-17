@@ -6313,7 +6313,11 @@ export function useCreateClaimMutation(
     CreateClaimMutationVariables
   >,
 ) {
-  const options = { ...defaultOptions, ...baseOptions }
+  const options = {
+    ...defaultOptions,
+    ...baseOptions,
+    context: { clientTzOffset: -60 },
+  }
   return ApolloReactHooks.useMutation<
     CreateClaimMutation,
     CreateClaimMutationVariables
