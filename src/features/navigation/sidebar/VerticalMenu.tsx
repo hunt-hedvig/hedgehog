@@ -1,9 +1,9 @@
 import styled, { StyledComponent } from '@emotion/styled'
+import { Hotkey } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
 import React, { useContext, useRef, useState } from 'react'
 import {
   ArrowUpRight,
-  Backspace,
   BoxArrowLeft,
   ChevronLeft,
   CreditCard,
@@ -393,7 +393,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   }
                 >
                   <House />
-                  <MenuText>Dashborad {isHintingOption && '(D)'}</MenuText>
+                  <Hotkey hotkey="D" hinting={isHintingOption}>
+                    Dashborad
+                  </Hotkey>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -404,7 +406,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Search />
-                  <MenuText>Member Search {isHintingOption && '(S)'}</MenuText>
+                  <Hotkey hotkey="S" hinting={isHintingOption}>
+                    Member Search
+                  </Hotkey>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
@@ -415,7 +419,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   }
                 >
                   <Inbox />
-                  <MenuText>Questions {isHintingOption && '(Q)'}</MenuText>
+                  <Hotkey hotkey="Q" hinting={isHintingOption}>
+                    Questions
+                  </Hotkey>
                 </MenuItem>
                 <MenuItem
                   to={routes.claims}
@@ -425,17 +431,18 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 >
                   <ShieldShaded />
                   {!isCollapsed && (
-                    <MenuText>
-                      Claims {isHintingOption && '(C)'}
-                      {isHintingOption && latestClaim.current && <Backspace />}
-                    </MenuText>
+                    <Hotkey hotkey="C" hinting={isHintingOption}>
+                      Claims
+                    </Hotkey>
                   )}
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
                 <MenuItem to={routes.tools}>
                   <Tools />
-                  <MenuText>Tools {isHintingOption && '(T)'}</MenuText>
+                  <Hotkey hotkey="T" hinting={isHintingOption}>
+                    Tools
+                  </Hotkey>
                 </MenuItem>
               </MenuGroup>
 
@@ -443,22 +450,30 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 <MenuItemExternalLink href={routes.trustly} target="_blank">
                   <ArrowUpRight />
                   <CreditCard />
-                  <MenuText>Trustly {isHintingOption && '(R)'}</MenuText>
+                  <Hotkey hotkey="R" hinting={isHintingOption}>
+                    Trustly
+                  </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
                   <ArrowUpRight />
                   <CreditCard2Front />
-                  <MenuText>Adyen {isHintingOption && '(A)'}</MenuText>
+                  <Hotkey hotkey="A" hinting={isHintingOption}>
+                    Adyen
+                  </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.gsr} target="_blank">
                   <ArrowUpRight />
                   <PersonBoundingBox />
-                  <MenuText>GSR {isHintingOption && '(G)'}</MenuText>
+                  <Hotkey hotkey="G" hinting={isHintingOption}>
+                    GSR
+                  </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.foss} target="_blank">
                   <ArrowUpRight />
                   <PersonSquare />
-                  <MenuText>FOSS {isHintingOption && '(F)'}</MenuText>
+                  <Hotkey hotkey="F" hinting={isHintingOption}>
+                    FOSS
+                  </Hotkey>
                 </MenuItemExternalLink>
               </MenuGroup>
             </Menu>
@@ -480,10 +495,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 transparent
               >
                 <BoxArrowLeft />
-                <MenuText>
+                <Hotkey hotkey="L" hinting={isHintingOption}>
                   Logout
-                  {isHintingOption && '(L)'}
-                </MenuText>
+                </Hotkey>
               </MenuItem>
             </BottomSection>
           </InnerWrapper>

@@ -48,7 +48,12 @@ export const ConfirmDialogComponent: React.FC<{
       <div>
         <h3>{content}</h3>
         <ConfirmButtons>
-          <Button fullWidth variation="success" onClick={confirm}>
+          <Button
+            autoFocus={true}
+            fullWidth
+            variation="success"
+            onClick={confirm}
+          >
             Confirm
           </Button>
           <Button fullWidth variation="secondary" onClick={close}>
