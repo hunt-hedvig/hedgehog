@@ -8,7 +8,6 @@ import {
   Spacing,
   SubmitButton,
 } from '@hedvig-ui'
-import Grid from '@material-ui/core/Grid'
 import {
   getAnswerQuestionOptions,
   useAnswerQuestion,
@@ -30,10 +29,6 @@ const MarkAsResolvedWrapper = styled.div`
 const SubmitButtonWrapper = styled.div`
   display: flex;
   align-items: flex-end;
-`
-
-const FlexGrid = styled(Grid)`
-  display: flex;
 `
 
 const CheckTip = styled.div`
@@ -115,27 +110,21 @@ export const AnswerForm: React.FC<{
       <Spacing top="small" bottom="small">
         <FormProvider {...form}>
           <Form onSubmit={onSubmit}>
-            <Grid container spacing={24}>
-              <Grid item xs={9}>
-                <FormTextAreaWithRef
-                  focus={isFocused}
-                  name="answer"
-                  defaultValue=""
-                  rules={{
-                    required: 'Cannot send an empty message',
-                    pattern: {
-                      value: /[^\s]/,
-                      message: 'Cannot send a message without text',
-                    },
-                  }}
-                />
-              </Grid>
-              <FlexGrid item xs={2}>
-                <SubmitButtonWrapper>
-                  <SubmitButton variation="primary">Send</SubmitButton>
-                </SubmitButtonWrapper>
-              </FlexGrid>
-            </Grid>
+            <FormTextAreaWithRef
+              focus={isFocused}
+              name="answer"
+              defaultValue=""
+              rules={{
+                required: 'Cannot send an empty message',
+                pattern: {
+                  value: /[^\s]/,
+                  message: 'Cannot send a message without text',
+                },
+              }}
+            />
+            <SubmitButtonWrapper>
+              <SubmitButton variation="primary">Send</SubmitButton>
+            </SubmitButtonWrapper>
           </Form>
         </FormProvider>
       </Spacing>
