@@ -2,6 +2,9 @@ import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { useSendMessageMutation } from 'types/generated/graphql'
+import { Keys } from 'utils/hooks/key-press-hook'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -39,6 +42,7 @@ export const ConversationChat: React.FC<{ memberId: string }> = ({
 }) => {
   const [message, setMessage] = useState('')
   const [inputFocused, setInputFocused] = useState(false)
+  const [sendMessage, { loading }] = useSendMessageMutation()
 
   return (
     <>
@@ -53,6 +57,34 @@ export const ConversationChat: React.FC<{ memberId: string }> = ({
             placeholder={'Your message goes here...'}
             value={message}
             onChange={(value) => setMessage(value)}
+            onKeyPress={(e) => {
+              if (
+                e.altKey &&
+                e.charCode === Keys.Enter.code &&
+                !loading &&
+                message
+              ) {
+                toast.promise(
+                  sendMessage({
+                    variables: {
+                      input: {
+                        memberId,
+                        message,
+                        forceSendMessage: false,
+                      },
+                    },
+                  }),
+                  {
+                    loading: 'Sending message',
+                    success: () => {
+                      setMessage('')
+                      return 'Message sent'
+                    },
+                    error: 'Could not send message',
+                  },
+                )
+              }
+            }}
           />
         </ConversationFooter>
       </ConversationContent>
