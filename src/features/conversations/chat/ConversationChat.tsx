@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
+import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useState } from 'react'
 
 const ConversationContent = styled.div`
@@ -33,14 +34,18 @@ const NoteTip = styled(Paragraph)`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-export const ConversationChat: React.FC<{}> = () => {
+export const ConversationChat: React.FC<{ memberId: string }> = ({
+  memberId,
+}) => {
   const [message, setMessage] = useState('')
   const [inputFocused, setInputFocused] = useState(false)
 
   return (
     <>
       <ConversationContent>
-        <Flex></Flex>
+        <Flex style={{ overflowY: 'hidden' }}>
+          <MessagesList memberId={memberId} />
+        </Flex>
         <ConversationFooter>
           <ConversationTextArea
             onFocus={() => setInputFocused(true)}

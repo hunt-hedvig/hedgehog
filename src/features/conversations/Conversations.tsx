@@ -52,7 +52,7 @@ export const Conversations: React.FC = () => {
           direction="column"
           style={{ width: '40%', margin: '0em 2em', padding: '1em' }}
         >
-          <ConversationChat />
+          <ConversationChat memberId={'210227659'} />
         </Flex>
         <Flex direction="column" style={{ width: '30%', paddingTop: '1em' }}>
           <Flex fullWidth justify={'flex-end'}>
