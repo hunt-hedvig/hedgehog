@@ -29,9 +29,11 @@ const NotificationDismissButton = styled(Button)`
   }
 `
 
-const CONVERSATIONS_STATUS_KEY = 'hedvig:conversations:status'
+export const CONVERSATIONS_STATUS_KEY = 'hedvig:conversations:status'
 
-export const EnableConversationsNotification: React.FC<{}> = () => {
+export const EnableConversationsNotification: React.FC<{
+  onEnable: () => void
+}> = ({ onEnable }) => {
   const [show, setShow] = useState<null | string>(null)
   const { data } = useGetMeQuery()
 
@@ -46,10 +48,17 @@ export const EnableConversationsNotification: React.FC<{}> = () => {
     return null
   }
 
+  if (show === 'enabled') {
+    return null
+  }
+
   if (show === 'disabled') {
     return (
       <FadeIn delay={'1000ms'} duration={500}>
-        <Notification onClick={() => setShow('enabled')}>
+        <Notification
+          onClick={() => setShow(null)}
+          style={{ cursor: 'pointer' }}
+        >
           Changed your mind?
         </Notification>
       </FadeIn>
@@ -76,6 +85,7 @@ export const EnableConversationsNotification: React.FC<{}> = () => {
             onClick={() => {
               localStorage.setItem(CONVERSATIONS_STATUS_KEY, 'enabled')
               setShow('enabled')
+              onEnable()
             }}
           >
             Yes please!

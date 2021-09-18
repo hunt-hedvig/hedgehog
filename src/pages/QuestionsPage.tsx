@@ -6,12 +6,16 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { EnableConversationsNotification } from 'features/conversations/EnableConversationsNotification'
+import { Conversations } from 'features/conversations/Conversations'
+import {
+  CONVERSATIONS_STATUS_KEY,
+  EnableConversationsNotification,
+} from 'features/conversations/EnableConversationsNotification'
 import { FilterState, QuestionsFilter } from 'features/questions/filter'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useInsecurePersistentState } from 'utils/state'
 
 const ListPage = styled.div`
@@ -23,6 +27,13 @@ const ListPage = styled.div`
 `
 
 export const QuestionsPage: React.FC = () => {
+  const [conversationsEnabled, setConversationsEnabled] = useState(false)
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem(CONVERSATIONS_STATUS_KEY)
+    setConversationsEnabled(storedValue === 'enabled')
+  }, [])
+
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
   >('questions:filters', [
@@ -36,6 +47,10 @@ export const QuestionsPage: React.FC = () => {
   ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
+
+  if (conversationsEnabled) {
+    return <Conversations />
+  }
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -51,7 +66,9 @@ export const QuestionsPage: React.FC = () => {
 
   return (
     <ListPage>
-      <EnableConversationsNotification />
+      <EnableConversationsNotification
+        onEnable={() => setConversationsEnabled(true)}
+      />
       <Spacing bottom="large">
         <FadeIn>
           <Spacing bottom>

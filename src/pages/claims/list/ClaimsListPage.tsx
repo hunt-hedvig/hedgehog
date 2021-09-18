@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
-import { FadeIn } from '@hedvig-ui'
+import { FadeIn, MainHeadline } from '@hedvig-ui'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
-import { Header } from 'semantic-ui-react'
 
 const ListPage = styled.div`
   display: flex;
@@ -25,7 +24,7 @@ export const ClaimsListPage: React.FC<RouteComponentProps<{
   return (
     <ListPage>
       <FadeIn>
-        <Header size="huge">Claims</Header>
+        <MainHeadline>Claims</MainHeadline>
       </FadeIn>
 
       <LargeClaimsList page={selectedPage} />
