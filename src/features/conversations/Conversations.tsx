@@ -19,6 +19,7 @@ export const Conversations: React.FC = () => {
   return (
     <FilterSelect
       filters={filters}
+      onSubmit={() => void 0}
       onToggle={(filter) => {
         if (filters.includes(filter)) {
           setFilters(filters.filter((prevFilter) => filter !== prevFilter))

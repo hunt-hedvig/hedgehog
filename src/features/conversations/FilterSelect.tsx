@@ -8,9 +8,10 @@ import {
   Paragraph,
 } from '@hedvig-ui'
 import { FilterState, getFilterColor } from 'features/questions/filter'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { range } from 'utils/array'
+import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 const FilterButton = styled.div<{ selected: boolean }>`
@@ -43,8 +44,17 @@ const GroupIcon = styled.div<{ filter: FilterState }>`
 export const FilterSelect: React.FC<{
   filters: ReadonlyArray<FilterState>
   onToggle: (filter: FilterState) => void
-}> = ({ filters, onToggle }) => {
+  onSubmit: () => void
+}> = ({ filters, onToggle, onSubmit }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
+
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+
+  useEffect(() => {
+    if (!!filters.length) {
+      onSubmit()
+    }
+  }, [isEnterPressed])
 
   return (
     <Flex direction={'row'} justify={'space-between'}>
@@ -140,6 +150,7 @@ export const FilterSelect: React.FC<{
               align={'center'}
             >
               <Button
+                onClick={() => onSubmit()}
                 variation={'primary'}
                 halfWidth
                 style={{ marginBottom: '0.5em' }}
