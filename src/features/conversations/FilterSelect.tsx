@@ -8,7 +8,7 @@ import {
   Paragraph,
 } from '@hedvig-ui'
 import { FilterState, getFilterColor } from 'features/questions/filter'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { range } from 'utils/array'
 import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
@@ -46,7 +46,9 @@ export const FilterSelect: React.FC<{
   onToggle: (filter: FilterState) => void
   onSubmit: () => void
 }> = ({ filters, onToggle, onSubmit }) => {
+  const [delayButtonAnimation, setDelayButtonAnimation] = useState(false)
   const { numberMemberGroups } = useNumberMemberGroups()
+  const buttonAnimationDelay = 700 + 70 * (numberMemberGroups + 7)
 
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
 
@@ -55,6 +57,16 @@ export const FilterSelect: React.FC<{
       onSubmit()
     }
   }, [isEnterPressed])
+
+  useEffect(() => {
+    if (!!filters.length) {
+      setDelayButtonAnimation(true)
+      setInterval(
+        () => setDelayButtonAnimation(false),
+        buttonAnimationDelay + 700,
+      )
+    }
+  }, [])
 
   return (
     <Flex direction={'row'} justify={'space-between'}>
@@ -141,7 +153,10 @@ export const FilterSelect: React.FC<{
           </FadeIn>
         </ButtonsGroup>
         {!!filters.length && (
-          <FadeIn style={{ width: '100%' }}>
+          <FadeIn
+            delay={`${delayButtonAnimation ? buttonAnimationDelay : 200}ms`}
+            style={{ width: '100%' }}
+          >
             <Flex
               direction="column"
               justify={'center'}
