@@ -2,14 +2,6 @@ import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
 import React, { useState } from 'react'
 
-const ConversationHeader = styled.div`
-  border-radius: 8px;
-  text-align: left;
-  padding: 0.7em 1em;
-  width: 100%;
-  color: ${({ theme }) => theme.semiStrongForeground};
-`
-
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
   height: 500px;
@@ -32,6 +24,7 @@ const ConversationTextArea = styled(TextArea)`
     border: none;
     border-radius: 8px;
     min-height: 100px;
+    overflow-y: scroll;
   }
 `
 
@@ -46,7 +39,6 @@ export const ConversationChat: React.FC<{}> = () => {
 
   return (
     <>
-      <ConversationHeader>Rasmus Guterstam</ConversationHeader>
       <ConversationContent>
         <Flex></Flex>
         <ConversationFooter>
