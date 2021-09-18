@@ -53,7 +53,7 @@ export const FilterSelect: React.FC<{
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
 
   useEffect(() => {
-    if (!!filters.length) {
+    if (!!filters.length && isEnterPressed) {
       onSubmit()
     }
   }, [isEnterPressed])
@@ -93,7 +93,7 @@ export const FilterSelect: React.FC<{
         <ButtonsGroup style={{ justifyContent: 'center' }}>
           {range(numberMemberGroups).map((memberGroup) => {
             return (
-              <FadeIn delay={`${700 + 70 * memberGroup}ms`}>
+              <FadeIn delay={`${700 + 70 * memberGroup}ms`} key={memberGroup}>
                 <FilterButton
                   onClick={() => onToggle(memberGroup)}
                   selected={filters.includes(memberGroup)}
