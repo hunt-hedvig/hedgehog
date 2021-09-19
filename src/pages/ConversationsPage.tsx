@@ -20,6 +20,12 @@ const fadeOutKeyframes = () =>
     to: { opacity: 0, transform: 'translateY(-5%)' },
   })
 
+const fadeInKeyframes = () =>
+  keyframes({
+    from: { opacity: 0, transform: 'translateY(5%)' },
+    to: { opacity: 1, transform: 'translateY(0)' },
+  })
+
 const FadeOutWrapper = styled.div<{
   duration?: number
   delay?: number
@@ -28,6 +34,12 @@ const FadeOutWrapper = styled.div<{
   .fadeout {
     animation: ${fadeOutKeyframes()} ${({ duration = 400 }) => duration}ms
       ease-out forwards;
+    animation-delay: ${({ delay = 0 }) => delay}ms;
+  }
+
+  .fadein {
+    animation: ${fadeInKeyframes()} ${({ duration = 400 }) => duration}ms
+      ease-in forwards;
     animation-delay: ${({ delay = 0 }) => delay}ms;
   }
 `
@@ -49,7 +61,7 @@ const FadeOut: React.FC<{
 
   return (
     <FadeOutWrapper duration={animationDuration}>
-      <div className={animate ? 'fadeout' : ''}>{children}</div>
+      <div className={animate ? 'fadeout' : 'fadein'}>{children}</div>
     </FadeOutWrapper>
   )
 }
@@ -120,7 +132,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
             animate={animate}
             onCompleted={() => {
               setAnimate(false)
-              history.push('/conversations')
+              history.push(`/conversations/${questionGroups[0].memberId}`)
             }}
           >
             <Flex direction={'row'} fullWidth>
