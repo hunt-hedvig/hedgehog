@@ -5,9 +5,15 @@ import { differenceInYears, parseISO } from 'date-fns'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
+import {
+  getMemberFlag,
+  getMemberGroupName,
+  getMemberIdColor,
+} from 'utils/member'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { splitOnUpperCase } from 'utils/text'
 
-const MemberCard = styled(FadeIn)`
+const MemberCard = styled.div`
   padding: 1em;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.foreground};
@@ -47,6 +53,17 @@ const MemberId = styled.span`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
+const Tag = styled.span`
+  font-size: 0.8em;
+  background-color: ${({ theme }) => theme.backgroundTransparentContrast};
+  border-radius: 8px;
+  padding: 0.3em 0.6em;
+`
+
+const MemberGroupTag = styled(Tag)<{ color: string }>`
+  background-color: ${({ color }) => color};
+`
+
 export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   const history = useHistory()
   const { data } = useGetMemberInfoQuery({
@@ -66,26 +83,42 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   const { birthDate, claims } = member
   const age = differenceInYears(new Date(), parseISO(birthDate))
 
+  const today = new Date()
+  const isBirthday =
+    new Date(birthDate).getDate() === today.getDate() &&
+    new Date(birthDate).getMonth() === today.getMonth()
+
+  const { numberMemberGroups } = useNumberMemberGroups()
+  const memberGroup = getMemberGroupName(memberId, numberMemberGroups)
+  const memberGroupColor = getMemberIdColor(memberId, numberMemberGroups)
+
+  const openClaims = member.claims.filter(
+    (claim) => claim.state === ClaimState.Open || ClaimState.Reopened,
+  )
+
   return (
     <>
       <MemberCard onClick={() => history.push(`/members/${memberId}`)}>
-        <Flex direction="column">
-          <Flex align={'center'} justify={'space-between'}>
-            <span style={{ fontSize: '1.8em' }}>
-              {member?.firstName ?? ''} {member?.lastName ?? ''}
-            </span>
-            <span
-              style={{
-                fontSize: '0.8em',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                borderRadius: '8px',
-                padding: '0.3em 0.6em',
-              }}
-            >
-              {age} years
-            </span>
-          </Flex>
-          <MemberId>{memberId}</MemberId>
+        <Flex align={'center'} justify={'space-between'}>
+          <span style={{ fontSize: '1.8em' }}>
+            {member?.firstName ?? ''} {member?.lastName ?? ''}
+          </span>
+          <Tag>{age} years</Tag>
+        </Flex>
+        <MemberId>{memberId}</MemberId>
+        <Flex direction="row" style={{ marginTop: '3.5em' }}>
+          <MemberGroupTag color={memberGroupColor}>
+            {memberGroup}
+          </MemberGroupTag>
+          <Tag style={{ marginLeft: '1em' }}>
+            {getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}
+          </Tag>
+          {!openClaims.length && (
+            <Tag style={{ marginLeft: '1em' }}>No open claims</Tag>
+          )}
+          {isBirthday && (
+            <Tag style={{ marginLeft: '1em' }}>Birthday today 🎉</Tag>
+          )}
         </Flex>
       </MemberCard>
       {!!claims.length && (

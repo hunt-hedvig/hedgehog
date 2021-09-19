@@ -5,13 +5,13 @@ import React, { useState } from 'react'
 const fadeOutUpKeyframes = () =>
   keyframes({
     from: { opacity: 1, transform: 'translateY(0)' },
-    to: { opacity: 0, transform: 'translateY(-3%)' },
+    to: { opacity: 0, transform: 'translateY(-5%)' },
   })
 
 const fadeOutDownKeyframes = () =>
   keyframes({
     from: { opacity: 1, transform: 'translateY(0)' },
-    to: { opacity: 0, transform: 'translateY(3%)' },
+    to: { opacity: 0, transform: 'translateY(5%)' },
   })
 
 const fadeInUpKeyframes = () =>
@@ -35,26 +35,24 @@ const FadeOutWrapper = styled.div<{
   .out.up {
     animation: ${fadeOutUpKeyframes()} ${({ duration = 400 }) => duration}ms
       ease-out forwards;
-    animation-delay: ${({ delay = 0 }) => delay}ms;
   }
 
   .out.down {
     animation: ${fadeOutDownKeyframes()} ${({ duration = 400 }) => duration}ms
       ease-out forwards;
-    animation-delay: ${({ delay = 0 }) => delay}ms;
   }
 
   .in.up {
     animation: ${fadeInUpKeyframes()} ${({ duration = 400 }) => duration}ms
       ease-in forwards;
-    animation-delay: ${({ delay = 0 }) => delay}ms;
   }
 
   .in.down {
     animation: ${fadeInDownKeyframes()} ${({ duration = 400 }) => duration}ms
       ease-in forwards;
-    animation-delay: ${({ delay = 0 }) => delay}ms;
   }
+
+  animation-delay: ${({ delay = 0 }) => delay}ms;
 `
 
 interface UseFadeAnimationVariables {
