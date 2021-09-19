@@ -110,10 +110,22 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     setAnimationDirection,
   ] = useState<FadeDirection | null>(null)
   const [animationType, setAnimationType] = useState<FadeType | null>(null)
+
+  const [enabled, setEnabled] = useInsecurePersistentState<boolean>(
+    'conversations:enabled',
+    false,
+  )
   const [onboarded, setOnboarded] = useInsecurePersistentState<boolean>(
     'conversations:onboarded',
     false,
   )
+
+  useEffect(() => {
+    if (!enabled) {
+      setEnabled(true)
+      history.go(0)
+    }
+  }, [enabled])
 
   const [filters, setFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
@@ -231,6 +243,10 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     history.push(`/conversations/${filteredGroups[0].memberId}`)
   }, [filteredGroups])
 
+  if (!enabled) {
+    return null
+  }
+
   if (!onboarded) {
     return (
       <>
@@ -324,7 +340,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
             </>
           ) : (
             <StandaloneMessage paddingTop={'25vh'}>
-              No more conversations
+              Nice, that's it for now!
             </StandaloneMessage>
           )}
         </Flex>
