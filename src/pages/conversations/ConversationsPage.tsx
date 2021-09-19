@@ -130,10 +130,14 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 
-  const filteredGroups = questionGroups
-    .filter(doMemberGroupFilter(numberMemberGroups)(filters))
-    .filter(doMarketFilter(filters))
-    .filter(doClaimFilter(filters))
+  const filteredGroups = useMemo(
+    () =>
+      questionGroups
+        .filter(doMemberGroupFilter(numberMemberGroups)(filters))
+        .filter(doMarketFilter(filters))
+        .filter(doClaimFilter(filters)),
+    [questionGroups, filters, numberMemberGroups],
+  )
 
   const currentQuestionOrder = useMemo(
     () => filteredGroups.findIndex((group) => group.memberId === memberId),

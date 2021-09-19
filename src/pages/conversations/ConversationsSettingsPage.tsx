@@ -1,4 +1,4 @@
-import { Button, FadeIn, Flex, MainHeadline, Paragraph } from '@hedvig-ui'
+import { Button, FadeIn, Flex } from '@hedvig-ui'
 import { FilterSelect } from 'features/conversations/onboarding/FilterSelect'
 import { FilterState } from 'features/questions/filter'
 import React from 'react'
