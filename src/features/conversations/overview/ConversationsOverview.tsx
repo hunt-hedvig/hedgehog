@@ -10,11 +10,11 @@ export const ConversationsOverview: React.FC<{
 }> = ({ conversationsRemaining }) => {
   const history = useHistory()
   const { confirm } = useConfirmDialog()
-  const [enabled, setEnabled] = useInsecurePersistentState<boolean>(
+  const [, setEnabled] = useInsecurePersistentState<boolean>(
     'conversations:enabled',
     false,
   )
-  const [onboarded, setOnboarded] = useInsecurePersistentState<boolean>(
+  const [, setOnboarded] = useInsecurePersistentState<boolean>(
     'conversations:onboarded',
     false,
   )

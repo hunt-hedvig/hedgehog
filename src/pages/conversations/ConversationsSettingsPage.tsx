@@ -1,5 +1,5 @@
 import { Button, FadeIn, Flex } from '@hedvig-ui'
-import { FilterSelect } from 'features/conversations/onboarding/FilterSelect'
+import { FilterSelect } from 'features/conversations/FilterSelect'
 import { FilterState } from 'features/questions/filter'
 import React from 'react'
 import { useHistory } from 'react-router'

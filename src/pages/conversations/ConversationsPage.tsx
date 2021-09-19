@@ -1,17 +1,9 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import {
-  Button,
-  FadeIn,
-  Flex,
-  MainHeadline,
-  Paragraph,
-  StandaloneMessage,
-} from '@hedvig-ui'
+import { Flex, MainHeadline, StandaloneMessage } from '@hedvig-ui'
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { useResolveConversation } from 'features/conversations/hooks/use-resolve-conversation'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
-import { FilterSelect } from 'features/conversations/onboarding/FilterSelect'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
 import { FilterState } from 'features/questions/filter'
 import { useQuestionGroups } from 'graphql/use-question-groups'
@@ -111,33 +103,10 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
   ] = useState<FadeDirection | null>(null)
   const [animationType, setAnimationType] = useState<FadeType | null>(null)
 
-  const [enabled, setEnabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
+  const [filters] = useInsecurePersistentState<ReadonlyArray<FilterState>>(
+    'questions:filters',
+    [],
   )
-  const [onboarded, setOnboarded] = useInsecurePersistentState<boolean>(
-    'conversations:onboarded',
-    false,
-  )
-
-  useEffect(() => {
-    if (!enabled) {
-      setEnabled(true)
-      history.go(0)
-    }
-  }, [enabled])
-
-  const [filters, setFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterState>
-  >('questions:filters', [
-    FilterState.First,
-    FilterState.Second,
-    FilterState.Third,
-    FilterState.Sweden,
-    FilterState.Norway,
-    FilterState.HasOpenClaim,
-    FilterState.NoOpenClaim,
-  ])
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
@@ -167,19 +136,12 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     })
 
   useEffect(() => {
-    if (!isUpKeyPressed && !isDownKeyPressed) {
-      return
-    }
-
-    if (!memberId) {
-      return
-    }
-
-    if (filteredGroups.length <= 1) {
-      return
-    }
-
-    if (currentQuestionOrder === filteredGroups.length) {
+    if (
+      (!isUpKeyPressed && !isDownKeyPressed) ||
+      !memberId ||
+      filteredGroups.length <= 1 ||
+      currentQuestionOrder === filteredGroups.length
+    ) {
       return
     }
 
@@ -242,75 +204,6 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
 
     history.push(`/conversations/${filteredGroups[0].memberId}`)
   }, [filteredGroups])
-
-  if (!enabled) {
-    return null
-  }
-
-  if (!onboarded) {
-    return (
-      <>
-        <Flex
-          direction="column"
-          align="center"
-          fullWidth
-          style={{
-            marginBottom: '4.0em',
-            marginTop: '15vh',
-            textAlign: 'center',
-          }}
-        >
-          <FadeIn delay={'300ms'}>
-            <MainHeadline>Let's get you setup</MainHeadline>
-          </FadeIn>
-          <FadeIn delay={'700ms'}>
-            <Paragraph
-              secondary
-              style={{ fontSize: '0.95em', marginTop: '0.3em' }}
-            >
-              What kind of conversations do you want?
-            </Paragraph>
-          </FadeIn>
-        </Flex>
-        <FilterSelect
-          filters={filters}
-          onToggle={(filter) => {
-            if (filters.includes(filter)) {
-              setFilters(filters.filter((prevFilter) => filter !== prevFilter))
-            } else {
-              setFilters([...filters, filter])
-            }
-          }}
-        />
-        {!!filters.length && (
-          <FadeIn style={{ width: '100%' }}>
-            <Flex
-              direction="column"
-              justify={'center'}
-              align={'center'}
-              style={{ marginTop: '4.0em' }}
-            >
-              <Button
-                onClick={() => setOnboarded(true)}
-                variation={'primary'}
-                style={{ marginBottom: '0.5em', width: '300px' }}
-              >
-                Continue
-              </Button>
-              <span
-                style={{
-                  fontSize: '0.80em',
-                  color: '#aaaaaa',
-                }}
-              >
-                Don't worry, you can change these later
-              </span>
-            </Flex>
-          </FadeIn>
-        )}
-      </>
-    )
-  }
 
   return (
     <>

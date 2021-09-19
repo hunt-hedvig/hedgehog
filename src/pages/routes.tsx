@@ -1,4 +1,5 @@
 import { StandaloneMessage } from '@hedvig-ui'
+import { ConversationsOnboardingPage } from 'pages/conversations/ConversationsOnboardingPage'
 import { ConversationsPage } from 'pages/conversations/ConversationsPage'
 import { ConversationsSettingsPage } from 'pages/conversations/ConversationsSettingsPage'
 import React from 'react'
@@ -24,6 +25,10 @@ export const Routes: React.FC = () => {
       <Route path="/" exact component={DashboardPage} />
       <Route path="/dashborad" component={DashboardPage} />
       <Route path="/questions" component={QuestionsPage} />
+      <Route
+        path="/conversations/onboarding"
+        component={ConversationsOnboardingPage}
+      />
       <Route
         path="/conversations/settings"
         component={ConversationsSettingsPage}
