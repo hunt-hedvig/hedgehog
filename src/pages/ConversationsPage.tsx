@@ -12,6 +12,7 @@ import { FilterState } from 'features/questions/filter'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React, { useEffect, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
+import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { useInsecurePersistentState } from 'utils/state'
 
 const fadeOutKeyframes = () =>
@@ -46,21 +47,11 @@ const FadeOutWrapper = styled.div<{
 
 const FadeOut: React.FC<{
   animate: boolean
-  onCompleted: () => void
   children: React.ReactNode
-}> = ({ animate, onCompleted, children }) => {
-  const animationDuration = 400
-
-  useEffect(() => {
-    if (animate) {
-      setTimeout(() => {
-        onCompleted()
-      }, animationDuration)
-    }
-  }, [animate])
-
+  duration: number
+}> = ({ animate, duration, children }) => {
   return (
-    <FadeOutWrapper duration={animationDuration}>
+    <FadeOutWrapper duration={duration}>
       <div className={animate ? 'fadeout' : 'fadein'}>{children}</div>
     </FadeOutWrapper>
   )
@@ -69,6 +60,7 @@ const FadeOut: React.FC<{
 export const ConversationsPage: React.FC<RouteComponentProps<{
   memberId?: string
 }>> = ({ match }) => {
+  const animationDuration = 400
   const { memberId } = match.params
   const history = useHistory()
   const [questionGroups] = useQuestionGroups()
@@ -78,9 +70,67 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     false,
   )
 
-  useResolveConversation(() => {
-    setAnimate(true)
-  }, memberId)
+  const isUpKeyPressed = useKeyIsPressed(Keys.Up)
+  const isDownKeyPressed = useKeyIsPressed(Keys.Down)
+
+  const fadeOut = () =>
+    new Promise((resolve) => {
+      setAnimate(true)
+      setTimeout(() => {
+        resolve()
+        setAnimate(false)
+      }, animationDuration)
+    })
+
+  useEffect(() => {
+    if (!isUpKeyPressed && !isDownKeyPressed) {
+      return
+    }
+
+    if (!memberId) {
+      return
+    }
+
+    if (questionGroups.length <= 1) {
+      return
+    }
+
+    const currentQuestionOrder = questionGroups.findIndex(
+      (group) => group.memberId === memberId,
+    )
+
+    if (currentQuestionOrder === questionGroups.length) {
+      return
+    }
+
+    if (isDownKeyPressed && currentQuestionOrder < questionGroups.length - 1) {
+      fadeOut().then(() => {
+        history.push(
+          `/conversations/${
+            questionGroups[currentQuestionOrder + 1]?.memberId
+          }`,
+        )
+      })
+    }
+
+    if (isUpKeyPressed && currentQuestionOrder > 0) {
+      fadeOut().then(() => {
+        history.push(
+          `/conversations/${
+            questionGroups[currentQuestionOrder - 1]?.memberId
+          }`,
+        )
+      })
+    }
+  }, [isDownKeyPressed, isUpKeyPressed])
+
+  useResolveConversation(
+    () =>
+      fadeOut().then(() =>
+        history.push(`/conversations/${questionGroups[0]?.memberId}`),
+      ),
+    memberId,
+  )
 
   const [filters, setFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
@@ -128,13 +178,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
       <MainHeadline>Conversations</MainHeadline>
       <Flex direction={'row'} justify={'space-between'}>
         {memberId ? (
-          <FadeOut
-            animate={animate}
-            onCompleted={() => {
-              setAnimate(false)
-              history.push(`/conversations/${questionGroups[0].memberId}`)
-            }}
-          >
+          <FadeOut duration={animationDuration} animate={animate}>
             <Flex direction={'row'} fullWidth>
               <Flex
                 style={{ paddingTop: '1em', width: '40%' }}
