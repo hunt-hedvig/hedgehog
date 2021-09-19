@@ -1,4 +1,5 @@
 import { StandaloneMessage } from '@hedvig-ui'
+import { ConversationsPage } from 'pages/ConversationsPage'
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router'
 import { ClaimDetailsPage } from './claims/ClaimDetailsPage'
@@ -22,6 +23,7 @@ export const Routes: React.FC = () => {
       <Route path="/" exact component={DashboardPage} />
       <Route path="/dashborad" component={DashboardPage} />
       <Route path="/questions" component={QuestionsPage} />
+      <Route path="/conversations/:memberId?" component={ConversationsPage} />
       <Route path="/claims/list/:page?" exact component={ClaimsListPage} />
       <Route path="/claims/:claimId" exact component={ClaimDetailsPage} />
       <Redirect

@@ -32,7 +32,7 @@ const ConversationTextArea = styled(TextArea)`
   }
 `
 
-const NoteTip = styled(Paragraph)`
+const Tip = styled(Paragraph)`
   font-size: 0.7em;
   color: ${({ theme }) => theme.semiStrongForeground};
 `
@@ -45,7 +45,7 @@ export const ConversationChat: React.FC<{ memberId: string }> = ({
   const [sendMessage, { loading }] = useSendMessageMutation()
 
   return (
-    <>
+    <FadeIn style={{ width: '100%' }}>
       <ConversationContent>
         <Flex style={{ overflowY: 'hidden' }}>
           <MessagesList memberId={memberId} />
@@ -88,15 +88,21 @@ export const ConversationChat: React.FC<{ memberId: string }> = ({
           />
         </ConversationFooter>
       </ConversationContent>
-      <Flex fullWidth justify={'flex-end'} style={{ marginTop: '1.0em' }}>
+      <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>
+        <FadeIn duration={200}>
+          <Tip>
+            <Shadowed>Option</Shadowed> + <Shadowed>Shift</Shadowed> to mark as
+            resolved
+          </Tip>
+        </FadeIn>
         {inputFocused && (
           <FadeIn duration={200}>
-            <NoteTip>
-              <Shadowed>Command</Shadowed> + <Shadowed>Return</Shadowed> to send
-            </NoteTip>
+            <Tip>
+              <Shadowed>Option</Shadowed> + <Shadowed>Return</Shadowed> to send
+            </Tip>
           </FadeIn>
         )}
       </Flex>
-    </>
+    </FadeIn>
   )
 }

@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import { Flex, Label, Placeholder } from '@hedvig-ui'
+import { FadeIn, Flex, Label, Placeholder } from '@hedvig-ui'
 import { differenceInYears, parseISO } from 'date-fns'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
 import { splitOnUpperCase } from 'utils/text'
 
-const MemberCard = styled.div`
+const MemberCard = styled(FadeIn)`
   padding: 1em;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.foreground};
@@ -83,10 +83,8 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
         </Flex>
       </MemberCard>
       {!!claims.length && (
-        <>
-          <Label style={{ fontSize: '0.9em', marginTop: '2.0em' }}>
-            Open claims
-          </Label>
+        <FadeIn style={{ marginTop: '2.0em', width: '100%' }}>
+          <Label style={{ fontSize: '0.9em' }}>Open claims</Label>
           <Flex direction={'column'}>
             {claims
               .filter(
@@ -115,7 +113,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
                 </ClaimItem>
               ))}
           </Flex>
-        </>
+        </FadeIn>
       )}
     </>
   )
