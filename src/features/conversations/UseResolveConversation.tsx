@@ -13,7 +13,7 @@ export const ConversationsOverview: React.FC<{
 }> = ({ conversationsRemaining }) => {
   return (
     <>
-      <Flex fullWidth justify={'flex-end'}>
+      <Flex justify={'flex-end'}>
         <Button
           size={'small'}
           variation="ghost"
@@ -29,7 +29,7 @@ export const ConversationsOverview: React.FC<{
           Give feedback
         </Button>
       </Flex>
-      <Flex direction={'column'} align={'center'} fullWidth>
+      <Flex direction={'column'} align={'center'}>
         <ConversationsRemaining count={conversationsRemaining} />
         <Button size={'small'} style={{ marginTop: '2.0em' }}>
           Change filters

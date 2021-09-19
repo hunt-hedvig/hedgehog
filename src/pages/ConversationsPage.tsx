@@ -44,6 +44,7 @@ const FadeOutWrapper = styled.div<{
   delay?: number
 }>`
   width: 100%;
+
   .out.up {
     animation: ${fadeOutUpKeyframes()} ${({ duration = 400 }) => duration}ms
       ease-out forwards;
@@ -91,7 +92,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
   const animationDuration = 300
   const { memberId } = match.params
   const history = useHistory()
-  const [questionGroups] = useQuestionGroups()
+  const [questionGroups] = useQuestionGroups(3000)
   const [
     animationDirection,
     setAnimationDirection,
@@ -230,34 +231,34 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
       <MainHeadline>Conversations</MainHeadline>
       <Flex direction={'row'} justify={'space-between'}>
         {memberId ? (
-          <Fade
-            duration={animationDuration}
-            type={animationType}
-            direction={animationDirection}
-          >
-            <Flex direction={'row'} fullWidth>
-              <Flex
-                style={{ paddingTop: '1em', width: '40%' }}
-                direction={'column'}
+          <Flex direction={'row'} span={3}>
+            <Flex span={2}>
+              <Fade
+                duration={animationDuration}
+                type={animationType}
+                direction={animationDirection}
               >
                 <MemberSummary memberId={memberId} />
-              </Flex>
-              <Flex
-                direction="column"
-                style={{ margin: '0em 2em', padding: '1em', width: '60%' }}
+              </Fade>
+            </Flex>
+            <Flex span={3} style={{ padding: '0 2em' }}>
+              <Fade
+                duration={animationDuration}
+                type={animationType}
+                direction={animationDirection}
               >
                 <ConversationChat memberId={memberId} />
-              </Flex>
+              </Fade>
             </Flex>
-          </Fade>
+          </Flex>
         ) : (
-          <Flex style={{ paddingTop: '1em' }} direction={'column'}>
+          <Flex style={{ marginTop: '1em' }} direction={'column'}>
             <StandaloneMessage paddingTop={'25vh'}>
               No more conversations
             </StandaloneMessage>
           </Flex>
         )}
-        <Flex direction="column" style={{ paddingTop: '1em', width: '30%' }}>
+        <Flex direction="column" style={{ marginTop: '1em' }} span={1}>
           <ConversationsOverview
             conversationsRemaining={questionGroups.length}
           />
