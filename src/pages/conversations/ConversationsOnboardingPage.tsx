@@ -85,7 +85,7 @@ export const ConversationsOnboardingPage: React.FC = () => {
   }
 
   return (
-    <>
+    <Fade {...fadeProps}>
       <Flex
         direction="column"
         align="center"
@@ -128,8 +128,10 @@ export const ConversationsOnboardingPage: React.FC = () => {
           >
             <Button
               onClick={() => {
-                setOnboarded(true)
-                history.push('/conversations')
+                fade('up', 'out').then(() => {
+                  setOnboarded(true)
+                  history.push('/conversations')
+                })
               }}
               variation={'primary'}
               style={{ marginBottom: '0.5em', width: '300px' }}
@@ -140,6 +142,6 @@ export const ConversationsOnboardingPage: React.FC = () => {
           </Flex>
         </FadeIn>
       )}
-    </>
+    </Fade>
   )
 }

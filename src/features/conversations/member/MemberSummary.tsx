@@ -66,6 +66,7 @@ const MemberGroupTag = styled(Tag)<{ color: string }>`
 
 export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   const history = useHistory()
+  const { numberMemberGroups } = useNumberMemberGroups()
   const { data } = useGetMemberInfoQuery({
     variables: { memberId },
   })
@@ -88,7 +89,6 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
     new Date(birthDate).getDate() === today.getDate() &&
     new Date(birthDate).getMonth() === today.getMonth()
 
-  const { numberMemberGroups } = useNumberMemberGroups()
   const memberGroup = getMemberGroupName(memberId, numberMemberGroups)
   const memberGroupColor = getMemberIdColor(memberId, numberMemberGroups)
 
