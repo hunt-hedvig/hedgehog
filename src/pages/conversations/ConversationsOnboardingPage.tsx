@@ -1,8 +1,16 @@
 import styled from '@emotion/styled'
-import { Button, FadeIn, Flex, MainHeadline, Paragraph } from '@hedvig-ui'
+import {
+  Button,
+  Fade,
+  FadeIn,
+  Flex,
+  MainHeadline,
+  Paragraph,
+  useFadeAnimation,
+} from '@hedvig-ui'
 import { FilterSelect } from 'features/conversations/FilterSelect'
 import { FilterState } from 'features/questions/filter'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useInsecurePersistentState } from 'utils/state'
 
@@ -12,6 +20,9 @@ const Subtext = styled.span`
 `
 
 export const ConversationsOnboardingPage: React.FC = () => {
+  const { fade, props: fadeProps } = useFadeAnimation({})
+  const [onboardingStep, setOnboardingStep] = useState(0)
+
   const history = useHistory()
   const [enabled] = useInsecurePersistentState<boolean>(
     'conversations:enabled',
@@ -32,8 +43,45 @@ export const ConversationsOnboardingPage: React.FC = () => {
     }
   }, [enabled])
 
+  useEffect(() => {
+    fade('up', 'in').then(() => {
+      setTimeout(() => fade('up', 'out').then(() => setOnboardingStep(1)), 2000)
+    })
+  }, [])
+
   if (!enabled) {
     return null
+  }
+
+  if (onboardingStep === 0) {
+    return (
+      <Fade {...fadeProps}>
+        {onboardingStep === 0 && (
+          <Flex
+            direction="column"
+            align="center"
+            fullWidth
+            style={{
+              marginBottom: '4.0em',
+              marginTop: '24vh',
+              textAlign: 'center',
+            }}
+          >
+            <FadeIn delay={'300ms'}>
+              <MainHeadline>Conversations</MainHeadline>
+            </FadeIn>
+            <FadeIn delay={'700ms'}>
+              <Paragraph
+                secondary
+                style={{ fontSize: '0.95em', marginTop: '0.3em' }}
+              >
+                Introducing context to questions
+              </Paragraph>
+            </FadeIn>
+          </Flex>
+        )}
+      </Fade>
+    )
   }
 
   return (

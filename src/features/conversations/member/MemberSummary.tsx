@@ -13,7 +13,7 @@ import {
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { splitOnUpperCase } from 'utils/text'
 
-const MemberCard = styled.div`
+const MemberCard = styled(FadeIn)`
   padding: 1em;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.foreground};
