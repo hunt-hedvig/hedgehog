@@ -15,15 +15,27 @@ import { RouteComponentProps, useHistory } from 'react-router'
 import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { useInsecurePersistentState } from 'utils/state'
 
-const fadeOutKeyframes = () =>
+const fadeOutUpKeyframes = () =>
   keyframes({
     from: { opacity: 1, transform: 'translateY(0)' },
     to: { opacity: 0, transform: 'translateY(-5%)' },
   })
 
-const fadeInKeyframes = () =>
+const fadeOutDownKeyframes = () =>
+  keyframes({
+    from: { opacity: 1, transform: 'translateY(0)' },
+    to: { opacity: 0, transform: 'translateY(5%)' },
+  })
+
+const fadeInUpKeyframes = () =>
   keyframes({
     from: { opacity: 0, transform: 'translateY(5%)' },
+    to: { opacity: 1, transform: 'translateY(0)' },
+  })
+
+const fadeInDownKeyframes = () =>
+  keyframes({
+    from: { opacity: 0, transform: 'translateY(-5%)' },
     to: { opacity: 1, transform: 'translateY(0)' },
   })
 
@@ -32,30 +44,46 @@ const FadeOutWrapper = styled.div<{
   delay?: number
 }>`
   width: 100%;
-  .fadeout {
-    animation: ${fadeOutKeyframes()} ${({ duration = 400 }) => duration}ms
+  .out.up {
+    animation: ${fadeOutUpKeyframes()} ${({ duration = 400 }) => duration}ms
       ease-out forwards;
     animation-delay: ${({ delay = 0 }) => delay}ms;
   }
 
-  .fadein {
-    animation: ${fadeInKeyframes()} ${({ duration = 400 }) => duration}ms
+  .out.down {
+    animation: ${fadeOutDownKeyframes()} ${({ duration = 400 }) => duration}ms
+      ease-out forwards;
+    animation-delay: ${({ delay = 0 }) => delay}ms;
+  }
+
+  .in.up {
+    animation: ${fadeInUpKeyframes()} ${({ duration = 400 }) => duration}ms
+      ease-in forwards;
+    animation-delay: ${({ delay = 0 }) => delay}ms;
+  }
+
+  .in.down {
+    animation: ${fadeInDownKeyframes()} ${({ duration = 400 }) => duration}ms
       ease-in forwards;
     animation-delay: ${({ delay = 0 }) => delay}ms;
   }
 `
 
-const FadeOut: React.FC<{
-  animate: boolean
+const Fade: React.FC<{
   children: React.ReactNode
   duration: number
-}> = ({ animate, duration, children }) => {
+  type: FadeType | null
+  direction: FadeDirection | null
+}> = ({ duration, type, direction, children }) => {
   return (
     <FadeOutWrapper duration={duration}>
-      <div className={animate ? 'fadeout' : 'fadein'}>{children}</div>
+      <div className={(type ?? '') + ' ' + (direction ?? '')}>{children}</div>
     </FadeOutWrapper>
   )
 }
+
+type FadeDirection = 'up' | 'down'
+type FadeType = 'in' | 'out'
 
 export const ConversationsPage: React.FC<RouteComponentProps<{
   memberId?: string
@@ -64,7 +92,11 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
   const { memberId } = match.params
   const history = useHistory()
   const [questionGroups] = useQuestionGroups()
-  const [animate, setAnimate] = useState(false)
+  const [
+    animationDirection,
+    setAnimationDirection,
+  ] = useState<FadeDirection | null>(null)
+  const [animationType, setAnimationType] = useState<FadeType | null>(null)
   const [onboarded, setOnboarded] = useInsecurePersistentState<boolean>(
     'conversations:onboarded',
     false,
@@ -73,12 +105,13 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 
-  const fadeOut = () =>
+  const fade = (direction: FadeDirection, type: FadeType) =>
     new Promise((resolve) => {
-      setAnimate(true)
+      setAnimationDirection(direction)
+      setAnimationType(type)
       setTimeout(() => {
         resolve()
-        setAnimate(false)
+        setAnimationType('in')
       }, animationDuration)
     })
 
@@ -104,7 +137,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     }
 
     if (isDownKeyPressed && currentQuestionOrder < questionGroups.length - 1) {
-      fadeOut().then(() => {
+      fade('up', 'out').then(() => {
         history.push(
           `/conversations/${
             questionGroups[currentQuestionOrder + 1]?.memberId
@@ -114,7 +147,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     }
 
     if (isUpKeyPressed && currentQuestionOrder > 0) {
-      fadeOut().then(() => {
+      fade('down', 'out').then(() => {
         history.push(
           `/conversations/${
             questionGroups[currentQuestionOrder - 1]?.memberId
@@ -126,7 +159,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
 
   useResolveConversation(
     () =>
-      fadeOut().then(() =>
+      fade('up', 'out').then(() =>
         history.push(`/conversations/${questionGroups[0]?.memberId}`),
       ),
     memberId,
@@ -178,7 +211,11 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
       <MainHeadline>Conversations</MainHeadline>
       <Flex direction={'row'} justify={'space-between'}>
         {memberId ? (
-          <FadeOut duration={animationDuration} animate={animate}>
+          <Fade
+            duration={animationDuration}
+            type={animationType}
+            direction={animationDirection}
+          >
             <Flex direction={'row'} fullWidth>
               <Flex
                 style={{ paddingTop: '1em', width: '40%' }}
@@ -193,7 +230,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
                 <ConversationChat memberId={memberId} />
               </Flex>
             </Flex>
-          </FadeOut>
+          </Fade>
         ) : (
           <Flex style={{ paddingTop: '1em' }} direction={'column'}>
             <StandaloneMessage paddingTop={'25vh'}>
