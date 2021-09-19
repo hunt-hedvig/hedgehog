@@ -71,7 +71,7 @@ export const DashboardPage: React.FC = () => {
           <MainHeadline>
             Hi there{' '}
             <Capitalized>
-              {data?.me && getLowercaseNameFromEmail(data?.me.email)}
+              {getLowercaseNameFromEmail(data?.me.email)}
             </Capitalized>
             !
           </MainHeadline>
@@ -143,5 +143,5 @@ export const DashboardPage: React.FC = () => {
   )
 }
 
-const getLowercaseNameFromEmail = (email: string) =>
+export const getLowercaseNameFromEmail = (email: string) =>
   email.split(/[^\w]/)[0].toLowerCase()

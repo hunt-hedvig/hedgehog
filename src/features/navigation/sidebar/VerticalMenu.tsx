@@ -433,7 +433,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 >
                   {conversationsEnabled ? <Chat /> : <Inbox />}
                   <Hotkey hotkey="Q" hinting={isHintingOption}>
-                    {conversationsEnabled ? 'Conversations' : 'Questions'}
+                    {conversationsEnabled ? 'Conversations' : 'Questions'}{' '}
                   </Hotkey>
                 </MenuItem>
                 <MenuItem

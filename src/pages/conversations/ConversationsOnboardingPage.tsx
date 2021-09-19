@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { Button, FadeIn, Flex, MainHeadline, Paragraph } from '@hedvig-ui'
 import { FilterSelect } from 'features/conversations/FilterSelect'
 import { FilterState } from 'features/questions/filter'
@@ -5,9 +6,14 @@ import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useInsecurePersistentState } from 'utils/state'
 
+const Subtext = styled.span`
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.placeholderColor};
+`
+
 export const ConversationsOnboardingPage: React.FC = () => {
   const history = useHistory()
-  const [enabled, setEnabled] = useInsecurePersistentState<boolean>(
+  const [enabled] = useInsecurePersistentState<boolean>(
     'conversations:enabled',
     false,
   )
@@ -21,7 +27,7 @@ export const ConversationsOnboardingPage: React.FC = () => {
 
   useEffect(() => {
     if (!enabled) {
-      setEnabled(true)
+      localStorage.setItem(`hvg:conversations:enabled`, JSON.stringify(true))
       history.go(0)
     }
   }, [enabled])
@@ -82,14 +88,7 @@ export const ConversationsOnboardingPage: React.FC = () => {
             >
               Continue
             </Button>
-            <span
-              style={{
-                fontSize: '0.80em',
-                color: '#aaaaaa',
-              }}
-            >
-              Don't worry, you can change these later
-            </span>
+            <Subtext>Don't worry, you can change these later</Subtext>
           </Flex>
         </FadeIn>
       )}

@@ -36,9 +36,6 @@ export const ConversationsOverview: React.FC<{
         >
           Turn this feature off
         </Button>
-        <Button size={'small'} variation="ghost">
-          Give feedback
-        </Button>
       </Flex>
       <Flex direction={'column'} align={'center'}>
         <ConversationsRemaining count={conversationsRemaining} />
