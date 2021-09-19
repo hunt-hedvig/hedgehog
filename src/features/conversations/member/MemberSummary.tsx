@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Label, Placeholder } from '@hedvig-ui'
+import { colorsV3 } from '@hedviginsurance/brand'
 import { differenceInYears, parseISO } from 'date-fns'
 import React from 'react'
 import { useHistory } from 'react-router'
@@ -17,7 +18,8 @@ const MemberCard = styled(FadeIn)`
   transition: all 200ms;
 
   :hover {
-    background-color: ${({ theme }) => theme.semiStrongForeground};
+    background-color: ${({ theme }) =>
+      theme.type === 'dark' ? colorsV3.gray300 : colorsV3.gray800};
   }
 `
 
@@ -39,6 +41,10 @@ const ClaimItem = styled.div`
   :hover {
     background-color: ${({ theme }) => theme.accentLight};
   }
+`
+
+const MemberId = styled.span`
+  color: ${({ theme }) => theme.semiStrongForeground};
 `
 
 export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
@@ -79,7 +85,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
               {age} years
             </span>
           </Flex>
-          <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{memberId}</span>
+          <MemberId>{memberId}</MemberId>
         </Flex>
       </MemberCard>
       {!!claims.length && (
