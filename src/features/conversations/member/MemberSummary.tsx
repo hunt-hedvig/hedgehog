@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Label, Placeholder } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { differenceInYears, parseISO } from 'date-fns'
+import { differenceInYears, format, parseISO } from 'date-fns'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
@@ -126,31 +126,40 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
           <Label style={{ fontSize: '0.9em' }}>Open claims</Label>
           <Flex direction={'column'}>
             {claims
+              .slice(0)
+              .reverse()
               .filter(
                 (claim) =>
                   claim.state === (ClaimState.Open || ClaimState.Reopened),
               )
-              .map((claim) => (
-                <ClaimItem
-                  onClick={() => history.push(`/claims/${claim.id}`)}
-                  key={claim.id}
-                >
-                  <Flex justify={'space-between'} align={'center'}>
-                    <div>
-                      25 September, 2021
-                      <br />
-                      <span style={{ fontSize: '0.8em' }}>16:03</span>
-                    </div>
-                    <span style={{ paddingRight: '0.5em' }}>
-                      {claim.type?.__typename ? (
-                        splitOnUpperCase(claim.type.__typename.toString())
-                      ) : (
-                        <Placeholder>No claim type</Placeholder>
-                      )}
-                    </span>
-                  </Flex>
-                </ClaimItem>
-              ))}
+              .map((claim) => {
+                const registrationDate = parseISO(claim.registrationDate)
+                return (
+                  <ClaimItem
+                    onClick={() => history.push(`/claims/${claim.id}`)}
+                    key={claim.id}
+                  >
+                    <Flex justify={'space-between'} align={'center'}>
+                      <div>
+                        {claim.registrationDate &&
+                          format(registrationDate, 'dd MMMM, yyyy')}
+                        <br />
+                        <span style={{ fontSize: '0.8em' }}>
+                          {claim.registrationDate &&
+                            format(registrationDate, 'HH:mm')}
+                        </span>
+                      </div>
+                      <span style={{ paddingRight: '0.5em' }}>
+                        {claim.type?.__typename ? (
+                          splitOnUpperCase(claim.type.__typename.toString())
+                        ) : (
+                          <Placeholder>No claim type</Placeholder>
+                        )}
+                      </span>
+                    </Flex>
+                  </ClaimItem>
+                )
+              })}
           </Flex>
         </FadeIn>
       )}
