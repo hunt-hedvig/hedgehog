@@ -1,6 +1,10 @@
-import { keyframes } from '@emotion/react'
-import styled from '@emotion/styled'
-import { Flex, MainHeadline, StandaloneMessage } from '@hedvig-ui'
+import {
+  Fade,
+  Flex,
+  MainHeadline,
+  StandaloneMessage,
+  useFadeAnimation,
+} from '@hedvig-ui'
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { useResolveConversation } from 'features/conversations/hooks/use-resolve-conversation'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
@@ -18,91 +22,15 @@ import {
 } from 'utils/questionGroup'
 import { useInsecurePersistentState } from 'utils/state'
 
-const fadeOutUpKeyframes = () =>
-  keyframes({
-    from: { opacity: 1, transform: 'translateY(0)' },
-    to: { opacity: 0, transform: 'translateY(-3%)' },
-  })
-
-const fadeOutDownKeyframes = () =>
-  keyframes({
-    from: { opacity: 1, transform: 'translateY(0)' },
-    to: { opacity: 0, transform: 'translateY(3%)' },
-  })
-
-const fadeInUpKeyframes = () =>
-  keyframes({
-    from: { opacity: 0, transform: 'translateY(5%)' },
-    to: { opacity: 1, transform: 'translateY(0)' },
-  })
-
-const fadeInDownKeyframes = () =>
-  keyframes({
-    from: { opacity: 0, transform: 'translateY(-5%)' },
-    to: { opacity: 1, transform: 'translateY(0)' },
-  })
-
-const FadeOutWrapper = styled.div<{
-  duration?: number
-  delay?: number
-}>`
-  width: 100%;
-
-  .out.up {
-    animation: ${fadeOutUpKeyframes()} ${({ duration = 400 }) => duration}ms
-      ease-out forwards;
-    animation-delay: ${({ delay = 0 }) => delay}ms;
-  }
-
-  .out.down {
-    animation: ${fadeOutDownKeyframes()} ${({ duration = 400 }) => duration}ms
-      ease-out forwards;
-    animation-delay: ${({ delay = 0 }) => delay}ms;
-  }
-
-  .in.up {
-    animation: ${fadeInUpKeyframes()} ${({ duration = 400 }) => duration}ms
-      ease-in forwards;
-    animation-delay: ${({ delay = 0 }) => delay}ms;
-  }
-
-  .in.down {
-    animation: ${fadeInDownKeyframes()} ${({ duration = 400 }) => duration}ms
-      ease-in forwards;
-    animation-delay: ${({ delay = 0 }) => delay}ms;
-  }
-`
-
-const Fade: React.FC<{
-  children: React.ReactNode
-  duration: number
-  type: FadeType | null
-  direction: FadeDirection | null
-}> = ({ duration, type, direction, children }) => {
-  return (
-    <FadeOutWrapper duration={duration}>
-      <div className={(type ?? '') + ' ' + (direction ?? '')}>{children}</div>
-    </FadeOutWrapper>
-  )
-}
-
-type FadeDirection = 'up' | 'down'
-type FadeType = 'in' | 'out'
-
 export const ConversationsPage: React.FC<RouteComponentProps<{
   memberId?: string
 }>> = ({ match }) => {
-  const animationDuration = 300
   const { memberId } = match.params
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups] = useQuestionGroups(3000)
-  const [
-    animationDirection,
-    setAnimationDirection,
-  ] = useState<FadeDirection | null>(null)
-  const [animationType, setAnimationType] = useState<FadeType | null>(null)
   const [chatFocused, setChatFocused] = useState(false)
+  const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
 
   const [filters] = useInsecurePersistentState<ReadonlyArray<FilterState>>(
     'questions:filters',
@@ -125,16 +53,6 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     () => filteredGroups.findIndex((group) => group.memberId === memberId),
     [filteredGroups, memberId],
   )
-
-  const fade = (direction: FadeDirection, type: FadeType) =>
-    new Promise((resolve) => {
-      setAnimationDirection(direction)
-      setAnimationType(type)
-      setTimeout(() => {
-        resolve()
-        setAnimationType('in')
-      }, animationDuration)
-    })
 
   useEffect(() => {
     if (
@@ -215,20 +133,12 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
           {memberId ? (
             <>
               <Flex span={2}>
-                <Fade
-                  duration={animationDuration}
-                  type={animationType}
-                  direction={animationDirection}
-                >
+                <Fade {...fadeProps}>
                   <MemberSummary memberId={memberId} />
                 </Fade>
               </Flex>
               <Flex span={3} style={{ padding: '0 2em' }}>
-                <Fade
-                  duration={animationDuration}
-                  type={animationType}
-                  direction={animationDirection}
-                >
+                <Fade {...fadeProps}>
                   <ConversationChat
                     memberId={memberId}
                     onFocus={() => setChatFocused(true)}
