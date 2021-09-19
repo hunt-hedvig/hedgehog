@@ -1,18 +1,29 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Flex, MainHeadline, StandaloneMessage } from '@hedvig-ui'
-import { ConversationChat } from 'features/conversations/chat/ConversationChat'
-import { FilterSelect } from 'features/conversations/FilterSelect'
-import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import {
-  ConversationsOverview,
-  useResolveConversation,
-} from 'features/conversations/UseResolveConversation'
+  Button,
+  FadeIn,
+  Flex,
+  MainHeadline,
+  Paragraph,
+  StandaloneMessage,
+} from '@hedvig-ui'
+import { ConversationChat } from 'features/conversations/chat/ConversationChat'
+import { useResolveConversation } from 'features/conversations/hooks/use-resolve-conversation'
+import { MemberSummary } from 'features/conversations/member/MemberSummary'
+import { FilterSelect } from 'features/conversations/onboarding/FilterSelect'
+import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
 import { FilterState } from 'features/questions/filter'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import {
+  doClaimFilter,
+  doMarketFilter,
+  doMemberGroupFilter,
+} from 'utils/questionGroup'
 import { useInsecurePersistentState } from 'utils/state'
 
 const fadeOutUpKeyframes = () =>
@@ -92,6 +103,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
   const animationDuration = 300
   const { memberId } = match.params
   const history = useHistory()
+  const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups] = useQuestionGroups(3000)
   const [
     animationDirection,
@@ -103,12 +115,29 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     false,
   )
 
+  const [filters, setFilters] = useInsecurePersistentState<
+    ReadonlyArray<FilterState>
+  >('questions:filters', [
+    FilterState.First,
+    FilterState.Second,
+    FilterState.Third,
+    FilterState.Sweden,
+    FilterState.Norway,
+    FilterState.HasOpenClaim,
+    FilterState.NoOpenClaim,
+  ])
+
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 
+  const filteredGroups = questionGroups
+    .filter(doMemberGroupFilter(numberMemberGroups)(filters))
+    .filter(doMarketFilter(filters))
+    .filter(doClaimFilter(filters))
+
   const currentQuestionOrder = useMemo(
-    () => questionGroups.findIndex((group) => group.memberId === memberId),
-    [questionGroups, memberId],
+    () => filteredGroups.findIndex((group) => group.memberId === memberId),
+    [filteredGroups, memberId],
   )
 
   const fade = (direction: FadeDirection, type: FadeType) =>
@@ -130,19 +159,19 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
       return
     }
 
-    if (questionGroups.length <= 1) {
+    if (filteredGroups.length <= 1) {
       return
     }
 
-    if (currentQuestionOrder === questionGroups.length) {
+    if (currentQuestionOrder === filteredGroups.length) {
       return
     }
 
-    if (isDownKeyPressed && currentQuestionOrder < questionGroups.length - 1) {
+    if (isDownKeyPressed && currentQuestionOrder < filteredGroups.length - 1) {
       fade('up', 'out').then(() => {
         history.push(
           `/conversations/${
-            questionGroups[currentQuestionOrder + 1]?.memberId
+            filteredGroups[currentQuestionOrder + 1]?.memberId
           }`,
         )
       })
@@ -152,7 +181,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
       fade('down', 'out').then(() => {
         history.push(
           `/conversations/${
-            questionGroups[currentQuestionOrder - 1]?.memberId
+            filteredGroups[currentQuestionOrder - 1]?.memberId
           }`,
         )
       })
@@ -166,18 +195,18 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
           history.push('/conversations')
         }
 
-        if (currentQuestionOrder < questionGroups.length - 1) {
+        if (currentQuestionOrder < filteredGroups.length - 1) {
           history.push(
             `/conversations/${
-              questionGroups[currentQuestionOrder + 1].memberId
+              filteredGroups[currentQuestionOrder + 1].memberId
             }`,
           )
         }
 
-        if (currentQuestionOrder === questionGroups.length - 1) {
+        if (currentQuestionOrder === filteredGroups.length - 1) {
           history.push(
             `/conversations/${
-              questionGroups[currentQuestionOrder - 1].memberId
+              filteredGroups[currentQuestionOrder - 1].memberId
             }`,
           )
         }
@@ -185,44 +214,81 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     memberId,
   )
 
-  const [filters, setFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterState>
-  >('questions:filters', [
-    FilterState.First,
-    FilterState.Second,
-    FilterState.Third,
-    FilterState.Sweden,
-    FilterState.Norway,
-    FilterState.HasOpenClaim,
-    FilterState.NoOpenClaim,
-  ])
-
   useEffect(() => {
-    if (!questionGroups.length) {
+    if (!filteredGroups.length) {
       return
     }
 
-    if (questionGroups.find((group) => group.memberId === memberId)) {
+    if (filteredGroups.find((group) => group.memberId === memberId)) {
       history.push(`/conversations/${memberId}`)
       return
     }
 
-    history.push(`/conversations/${questionGroups[0].memberId}`)
-  }, [questionGroups])
+    history.push(`/conversations/${filteredGroups[0].memberId}`)
+  }, [filteredGroups])
 
   if (!onboarded) {
     return (
-      <FilterSelect
-        filters={filters}
-        onSubmit={() => setOnboarded(true)}
-        onToggle={(filter) => {
-          if (filters.includes(filter)) {
-            setFilters(filters.filter((prevFilter) => filter !== prevFilter))
-          } else {
-            setFilters([...filters, filter])
-          }
-        }}
-      />
+      <>
+        <Flex
+          direction="column"
+          align="center"
+          fullWidth
+          style={{
+            marginBottom: '4.0em',
+            marginTop: '15vh',
+            textAlign: 'center',
+          }}
+        >
+          <FadeIn delay={'300ms'}>
+            <MainHeadline>Let's get you setup</MainHeadline>
+          </FadeIn>
+          <FadeIn delay={'700ms'}>
+            <Paragraph
+              secondary
+              style={{ fontSize: '0.95em', marginTop: '0.3em' }}
+            >
+              What kind of conversations do you want?
+            </Paragraph>
+          </FadeIn>
+        </Flex>
+        <FilterSelect
+          filters={filters}
+          onToggle={(filter) => {
+            if (filters.includes(filter)) {
+              setFilters(filters.filter((prevFilter) => filter !== prevFilter))
+            } else {
+              setFilters([...filters, filter])
+            }
+          }}
+        />
+        {!!filters.length && (
+          <FadeIn style={{ width: '100%' }}>
+            <Flex
+              direction="column"
+              justify={'center'}
+              align={'center'}
+              style={{ marginTop: '4.0em' }}
+            >
+              <Button
+                onClick={() => setOnboarded(true)}
+                variation={'primary'}
+                style={{ marginBottom: '0.5em', width: '300px' }}
+              >
+                Continue
+              </Button>
+              <span
+                style={{
+                  fontSize: '0.80em',
+                  color: '#aaaaaa',
+                }}
+              >
+                Don't worry, you can change these later
+              </span>
+            </Flex>
+          </FadeIn>
+        )}
+      </>
     )
   }
 
@@ -230,37 +296,37 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     <>
       <MainHeadline>Conversations</MainHeadline>
       <Flex direction={'row'} justify={'space-between'}>
-        {memberId ? (
-          <Flex direction={'row'} span={3}>
-            <Flex span={2}>
-              <Fade
-                duration={animationDuration}
-                type={animationType}
-                direction={animationDirection}
-              >
-                <MemberSummary memberId={memberId} />
-              </Fade>
-            </Flex>
-            <Flex span={3} style={{ padding: '0 2em' }}>
-              <Fade
-                duration={animationDuration}
-                type={animationType}
-                direction={animationDirection}
-              >
-                <ConversationChat memberId={memberId} />
-              </Fade>
-            </Flex>
-          </Flex>
-        ) : (
-          <Flex style={{ marginTop: '1em' }} direction={'column'}>
+        <Flex direction={'row'} span={3}>
+          {memberId ? (
+            <>
+              <Flex span={2}>
+                <Fade
+                  duration={animationDuration}
+                  type={animationType}
+                  direction={animationDirection}
+                >
+                  <MemberSummary memberId={memberId} />
+                </Fade>
+              </Flex>
+              <Flex span={3} style={{ padding: '0 2em' }}>
+                <Fade
+                  duration={animationDuration}
+                  type={animationType}
+                  direction={animationDirection}
+                >
+                  <ConversationChat memberId={memberId} />
+                </Fade>
+              </Flex>
+            </>
+          ) : (
             <StandaloneMessage paddingTop={'25vh'}>
               No more conversations
             </StandaloneMessage>
-          </Flex>
-        )}
+          )}
+        </Flex>
         <Flex direction="column" style={{ marginTop: '1em' }} span={1}>
           <ConversationsOverview
-            conversationsRemaining={questionGroups.length}
+            conversationsRemaining={filteredGroups.length}
           />
         </Flex>
       </Flex>
