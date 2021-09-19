@@ -37,9 +37,11 @@ const Tip = styled(Paragraph)`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-export const ConversationChat: React.FC<{ memberId: string }> = ({
-  memberId,
-}) => {
+export const ConversationChat: React.FC<{
+  memberId: string
+  onFocus: () => void
+  onBlur: () => void
+}> = ({ memberId, onFocus, onBlur }) => {
   const [message, setMessage] = useState('')
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage, { loading }] = useSendMessageMutation()
@@ -52,8 +54,14 @@ export const ConversationChat: React.FC<{ memberId: string }> = ({
         </Flex>
         <ConversationFooter>
           <ConversationTextArea
-            onFocus={() => setInputFocused(true)}
-            onBlur={() => setInputFocused(false)}
+            onFocus={() => {
+              setInputFocused(true)
+              onFocus()
+            }}
+            onBlur={() => {
+              setInputFocused(false)
+              onBlur()
+            }}
             placeholder={'Your message goes here...'}
             value={message}
             onChange={(value) => setMessage(value)}
@@ -99,6 +107,14 @@ export const ConversationChat: React.FC<{ memberId: string }> = ({
           <FadeIn duration={200}>
             <Tip>
               <Shadowed>Option</Shadowed> + <Shadowed>Return</Shadowed> to send
+            </Tip>
+          </FadeIn>
+        )}
+        {!inputFocused && (
+          <FadeIn duration={200}>
+            <Tip>
+              <Shadowed>Up</Shadowed> or <Shadowed>Down</Shadowed> key to change
+              conversation
             </Tip>
           </FadeIn>
         )}

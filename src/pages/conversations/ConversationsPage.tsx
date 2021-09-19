@@ -102,6 +102,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     setAnimationDirection,
   ] = useState<FadeDirection | null>(null)
   const [animationType, setAnimationType] = useState<FadeType | null>(null)
+  const [chatFocused, setChatFocused] = useState(false)
 
   const [filters] = useInsecurePersistentState<ReadonlyArray<FilterState>>(
     'questions:filters',
@@ -137,6 +138,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
 
   useEffect(() => {
     if (
+      chatFocused ||
       (!isUpKeyPressed && !isDownKeyPressed) ||
       !memberId ||
       filteredGroups.length <= 1 ||
@@ -227,7 +229,11 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
                   type={animationType}
                   direction={animationDirection}
                 >
-                  <ConversationChat memberId={memberId} />
+                  <ConversationChat
+                    memberId={memberId}
+                    onFocus={() => setChatFocused(true)}
+                    onBlur={() => setChatFocused(false)}
+                  />
                 </Fade>
               </Flex>
             </>
