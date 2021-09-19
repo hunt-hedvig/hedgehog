@@ -56,14 +56,22 @@ export const useResolveConversation = (
 
   useEffect(() => {
     if (isShiftPressed && isOptionPressed && !loading && memberId) {
-      toast.promise(markAsResolved({ variables: { memberId } }), {
-        loading: 'Marking as resolved',
-        success: () => {
-          onResolve()
-          return 'Marked as resolved'
+      toast.promise(
+        markAsResolved({
+          variables: { memberId },
+          optimisticResponse: {
+            markQuestionAsResolved: true,
+          },
+        }),
+        {
+          loading: 'Marking as resolved',
+          success: () => {
+            onResolve()
+            return 'Marked as resolved'
+          },
+          error: 'Could not mark as resolved',
         },
-        error: 'Could not mark as resolved',
-      })
+      )
     }
   }, [isShiftPressed, isOptionPressed])
 

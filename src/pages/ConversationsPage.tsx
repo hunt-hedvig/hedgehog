@@ -10,7 +10,7 @@ import {
 } from 'features/conversations/UseResolveConversation'
 import { FilterState } from 'features/questions/filter'
 import { useQuestionGroups } from 'graphql/use-question-groups'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { useInsecurePersistentState } from 'utils/state'
@@ -105,6 +105,11 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 
+  const currentQuestionOrder = useMemo(
+    () => questionGroups.findIndex((group) => group.memberId === memberId),
+    [questionGroups, memberId],
+  )
+
   const fade = (direction: FadeDirection, type: FadeType) =>
     new Promise((resolve) => {
       setAnimationDirection(direction)
@@ -127,10 +132,6 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     if (questionGroups.length <= 1) {
       return
     }
-
-    const currentQuestionOrder = questionGroups.findIndex(
-      (group) => group.memberId === memberId,
-    )
 
     if (currentQuestionOrder === questionGroups.length) {
       return
@@ -159,9 +160,27 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
 
   useResolveConversation(
     () =>
-      fade('up', 'out').then(() =>
-        history.push(`/conversations/${questionGroups[0]?.memberId}`),
-      ),
+      fade('up', 'out').then(() => {
+        if (currentQuestionOrder === 0) {
+          history.push('/conversations')
+        }
+
+        if (currentQuestionOrder < questionGroups.length - 1) {
+          history.push(
+            `/conversations/${
+              questionGroups[currentQuestionOrder + 1].memberId
+            }`,
+          )
+        }
+
+        if (currentQuestionOrder === questionGroups.length - 1) {
+          history.push(
+            `/conversations/${
+              questionGroups[currentQuestionOrder - 1].memberId
+            }`,
+          )
+        }
+      }),
     memberId,
   )
 
