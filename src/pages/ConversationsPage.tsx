@@ -18,13 +18,13 @@ import { useInsecurePersistentState } from 'utils/state'
 const fadeOutUpKeyframes = () =>
   keyframes({
     from: { opacity: 1, transform: 'translateY(0)' },
-    to: { opacity: 0, transform: 'translateY(-5%)' },
+    to: { opacity: 0, transform: 'translateY(-3%)' },
   })
 
 const fadeOutDownKeyframes = () =>
   keyframes({
     from: { opacity: 1, transform: 'translateY(0)' },
-    to: { opacity: 0, transform: 'translateY(5%)' },
+    to: { opacity: 0, transform: 'translateY(3%)' },
   })
 
 const fadeInUpKeyframes = () =>
@@ -88,7 +88,7 @@ type FadeType = 'in' | 'out'
 export const ConversationsPage: React.FC<RouteComponentProps<{
   memberId?: string
 }>> = ({ match }) => {
-  const animationDuration = 400
+  const animationDuration = 300
   const { memberId } = match.params
   const history = useHistory()
   const [questionGroups] = useQuestionGroups()
