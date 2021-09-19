@@ -3,7 +3,6 @@ import { FadeIn, Flex, Label, Placeholder } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { differenceInYears, format, parseISO } from 'date-fns'
 import React from 'react'
-import { useHistory } from 'react-router'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
 import {
   getMemberFlag,
@@ -65,7 +64,6 @@ const MemberGroupTag = styled(Tag)<{ color: string }>`
 `
 
 export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
-  const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const { data } = useGetMemberInfoQuery({
     variables: { memberId },
@@ -98,7 +96,11 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
 
   return (
     <>
-      <MemberCard onClick={() => history.push(`/members/${memberId}`)}>
+      <MemberCard
+        onClick={() => {
+          window.open(`/members/${memberId}`)
+        }}
+      >
         <Flex align={'center'} justify={'space-between'}>
           <span style={{ fontSize: '1.8em' }}>
             {member?.firstName ?? ''} {member?.lastName ?? ''}
@@ -136,7 +138,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
                 const registrationDate = parseISO(claim.registrationDate)
                 return (
                   <ClaimItem
-                    onClick={() => history.push(`/claims/${claim.id}`)}
+                    onClick={() => window.open(`/claims/${claim.id}`)}
                     key={claim.id}
                   >
                     <Flex justify={'space-between'} align={'center'}>
