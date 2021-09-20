@@ -128,8 +128,8 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
   return (
     <>
       <MainHeadline>Conversations</MainHeadline>
-      <Flex direction={'row'} justify={'space-between'}>
-        <Flex direction={'row'} span={3}>
+      <Flex direction="row" justify={'space-between'}>
+        <Flex direction="row" span={3}>
           {memberId ? (
             <>
               <Flex span={2}>
@@ -148,7 +148,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
               </Flex>
             </>
           ) : (
-            <StandaloneMessage paddingTop={'25vh'}>
+            <StandaloneMessage paddingTop="25vh">
               Nice, that's it for now!
             </StandaloneMessage>
           )}

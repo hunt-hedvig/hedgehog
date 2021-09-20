@@ -38,13 +38,13 @@ export const ConversationsSettingsPage: React.FC<{}> = () => {
         <FadeIn style={{ width: '100%' }}>
           <Flex
             direction="column"
-            justify={'center'}
-            align={'center'}
+            justify="center"
+            align="center"
             style={{ marginTop: '4.0em' }}
           >
             <Button
               onClick={() => history.push('/conversations')}
-              variation={'primary'}
+              variation="primary"
               style={{ marginBottom: '0.5em', width: '300px' }}
             >
               Done

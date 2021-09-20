@@ -101,7 +101,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
           window.open(`/members/${memberId}`)
         }}
       >
-        <Flex align={'center'} justify={'space-between'}>
+        <Flex align="center" justify={'space-between'}>
           <span style={{ fontSize: '2rem' }}>
             {member?.firstName ?? ''} {member?.lastName ?? ''}
           </span>
@@ -126,7 +126,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
       {!!claims.length && (
         <FadeIn style={{ marginTop: '2.0em', width: '100%' }}>
           <Label style={{ fontSize: '0.9em' }}>Open claims</Label>
-          <Flex direction={'column'}>
+          <Flex direction="column">
             {claims
               .slice(0)
               .reverse()
@@ -141,7 +141,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
                     onClick={() => window.open(`/claims/${claim.id}`)}
                     key={claim.id}
                   >
-                    <Flex justify={'space-between'} align={'center'}>
+                    <Flex justify={'space-between'} align="center">
                       <div>
                         {claim.registrationDate &&
                           format(registrationDate, 'dd MMMM, yyyy')}

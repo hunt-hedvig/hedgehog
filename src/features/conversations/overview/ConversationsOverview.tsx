@@ -58,18 +58,14 @@ export const ConversationsOverview: React.FC<{
 
   return (
     <>
-      <Flex direction={'column'} align={'center'} style={{ marginTop: '1em' }}>
+      <Flex direction="column" align="center" style={{ marginTop: '1em' }}>
         <ConversationsRemaining count={filteredGroups.length} />
       </Flex>
-      <Flex
-        direction="column"
-        justify={'center'}
-        style={{ marginTop: '0.5em' }}
-      >
-        <Flex span={1} direction={'row'} justify={'center'}>
+      <Flex direction="column" justify="center" style={{ marginTop: '0.5em' }}>
+        <Flex span={1} direction="row" justify="center">
           <Button
             style={{ marginLeft: '-0.5em' }}
-            size={'small'}
+            size="small"
             onClick={() =>
               confirm('Do you want to go back to the questions tab?').then(
                 () => {
@@ -84,7 +80,7 @@ export const ConversationsOverview: React.FC<{
             Back to questions
           </Button>
           <Button
-            size={'small'}
+            size="small"
             onClick={() => history.push('/conversations/settings')}
             style={{ marginLeft: '1em' }}
           >

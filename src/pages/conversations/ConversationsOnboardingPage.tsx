@@ -67,10 +67,10 @@ export const ConversationsOnboardingPage: React.FC = () => {
               textAlign: 'center',
             }}
           >
-            <FadeIn delay={'300ms'}>
+            <FadeIn delay="300ms">
               <MainHeadline>Conversations</MainHeadline>
             </FadeIn>
-            <FadeIn delay={'700ms'}>
+            <FadeIn delay="700ms">
               <Paragraph
                 secondary
                 style={{ fontSize: '0.95em', marginTop: '0.3em' }}
@@ -96,10 +96,10 @@ export const ConversationsOnboardingPage: React.FC = () => {
           textAlign: 'center',
         }}
       >
-        <FadeIn delay={'300ms'}>
+        <FadeIn delay="300ms">
           <MainHeadline>Let's get you setup</MainHeadline>
         </FadeIn>
-        <FadeIn delay={'700ms'}>
+        <FadeIn delay="700ms">
           <Paragraph
             secondary
             style={{ fontSize: '0.95em', marginTop: '0.3em' }}
@@ -122,8 +122,8 @@ export const ConversationsOnboardingPage: React.FC = () => {
         <FadeIn style={{ width: '100%' }}>
           <Flex
             direction="column"
-            justify={'center'}
-            align={'center'}
+            justify="center"
+            align="center"
             style={{ marginTop: '4.0em' }}
           >
             <Button
@@ -133,7 +133,7 @@ export const ConversationsOnboardingPage: React.FC = () => {
                   history.push('/conversations')
                 })
               }}
-              variation={'primary'}
+              variation="primary"
               style={{ marginBottom: '0.5em', width: '300px' }}
             >
               Continue
