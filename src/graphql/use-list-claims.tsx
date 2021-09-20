@@ -26,7 +26,7 @@ export const useListClaims = (): ListClaimsReturnTuple => {
           pageSize: options?.pageSize ?? 20,
           sortBy: options?.sortBy ?? 'DATE',
           sortDirection,
-          filterClaimStates: options?.filterClaimStates || [],
+          filterClaimStates: options?.filterClaimStates || null,
           filterCreatedBeforeOrOnDate:
             options?.filterCreatedBeforeOrOnDate || null,
         },

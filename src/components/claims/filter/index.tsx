@@ -31,7 +31,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
 
   const resetFiltersHandler = () => {
     setFilters({
-      filterClaimStates: [],
+      filterClaimStates: null,
       filterCreatedBeforeOrOnDate: null,
     })
   }
@@ -39,7 +39,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
   return (
     <FilterWrapper>
       <Dropdown
-        value={filters.filterClaimStates[0] || ''}
+        value={filters.filterClaimStates ? filters.filterClaimStates[0] : ''}
         onChange={changeClaimStateHandler}
         options={[
           { key: 0, value: ClaimState.Open, text: 'Open' },
@@ -56,8 +56,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
         setDate={setDateHandler}
       />
 
-      {(filters.filterClaimStates.length ||
-        filters.filterCreatedBeforeOrOnDate) && (
+      {(filters.filterClaimStates || filters.filterCreatedBeforeOrOnDate) && (
         <CloseIcon onClick={resetFiltersHandler} />
       )}
     </FilterWrapper>
