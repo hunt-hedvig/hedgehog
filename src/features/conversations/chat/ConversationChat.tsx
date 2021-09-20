@@ -46,6 +46,30 @@ export const ConversationChat: React.FC<{
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage, { loading }] = useSendMessageMutation()
 
+  const handleOnKeyPress = (e) => {
+    if (e.altKey && e.charCode === Keys.Enter.code && !loading && message) {
+      toast.promise(
+        sendMessage({
+          variables: {
+            input: {
+              memberId,
+              message,
+              forceSendMessage: false,
+            },
+          },
+        }),
+        {
+          loading: 'Sending message',
+          success: () => {
+            setMessage('')
+            return 'Message sent'
+          },
+          error: 'Could not send message',
+        },
+      )
+    }
+  }
+
   return (
     <FadeIn style={{ width: '100%' }}>
       <ConversationContent>
@@ -65,34 +89,7 @@ export const ConversationChat: React.FC<{
             placeholder={'Your message goes here...'}
             value={message}
             onChange={(value) => setMessage(value)}
-            onKeyPress={(e) => {
-              if (
-                e.altKey &&
-                e.charCode === Keys.Enter.code &&
-                !loading &&
-                message
-              ) {
-                toast.promise(
-                  sendMessage({
-                    variables: {
-                      input: {
-                        memberId,
-                        message,
-                        forceSendMessage: false,
-                      },
-                    },
-                  }),
-                  {
-                    loading: 'Sending message',
-                    success: () => {
-                      setMessage('')
-                      return 'Message sent'
-                    },
-                    error: 'Could not send message',
-                  },
-                )
-              }
-            }}
+            onKeyPress={handleOnKeyPress}
           />
         </ConversationFooter>
       </ConversationContent>
@@ -107,14 +104,6 @@ export const ConversationChat: React.FC<{
           <FadeIn duration={200}>
             <Tip>
               <Shadowed>Option</Shadowed> + <Shadowed>Return</Shadowed> to send
-            </Tip>
-          </FadeIn>
-        )}
-        {!inputFocused && (
-          <FadeIn duration={200}>
-            <Tip>
-              <Shadowed>Up</Shadowed> or <Shadowed>Down</Shadowed> key to change
-              conversation
             </Tip>
           </FadeIn>
         )}

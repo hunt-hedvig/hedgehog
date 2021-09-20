@@ -102,7 +102,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
         }}
       >
         <Flex align={'center'} justify={'space-between'}>
-          <span style={{ fontSize: '1.8em' }}>
+          <span style={{ fontSize: '2rem' }}>
             {member?.firstName ?? ''} {member?.lastName ?? ''}
           </span>
           <Tag>{age} years</Tag>

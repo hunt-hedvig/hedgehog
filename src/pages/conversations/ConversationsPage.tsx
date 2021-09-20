@@ -155,7 +155,8 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
         </Flex>
         <Flex direction="column" style={{ marginTop: '1em' }} span={1}>
           <ConversationsOverview
-            conversationsRemaining={filteredGroups.length}
+            filteredGroups={filteredGroups}
+            currentMemberId={memberId}
           />
         </Flex>
       </Flex>

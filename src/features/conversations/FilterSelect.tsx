@@ -13,11 +13,12 @@ import { QuestionGroup } from 'types/generated/graphql'
 import { range } from 'utils/array'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
-const FilterButton = styled.div<{ selected: boolean }>`
+const FilterButton = styled.button<{ selected: boolean }>`
+  border: none;
   display: inline-flex;
   background-color: ${({ theme, selected }) =>
     selected ? theme.accent : theme.backgroundTransparent};
-  padding: 0.3em 0.6em;
+  padding: 0.4em 0.7em;
   border-radius: 6px;
   transition: all 200ms;
   cursor: pointer;
@@ -41,6 +42,9 @@ const GroupIcon = styled.div<{ filter: FilterState }>`
 `
 
 const CountBadge = styled.div<{ selected: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 1em;
   height: 1em;
   background-color: ${({ theme }) => theme.backgroundTransparent};

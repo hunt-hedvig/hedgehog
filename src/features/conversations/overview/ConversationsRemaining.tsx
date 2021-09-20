@@ -11,13 +11,8 @@ export const ConversationsRemaining: React.FC<{ count: number }> = ({
   count,
 }) => {
   return (
-    <Flex
-      direction="column"
-      justify={'flex-end'}
-      align={'center'}
-      style={{ marginTop: '10em' }}
-    >
-      <span style={{ fontSize: '4em' }}>{count}</span>
+    <Flex direction="column" justify={'flex-end'} align={'center'}>
+      <span style={{ fontSize: '3em' }}>{count}</span>
       <Subtext>Conversation{count !== 1 && 's'} remaining</Subtext>
     </Flex>
   )
