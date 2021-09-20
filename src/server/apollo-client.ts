@@ -38,16 +38,12 @@ const getItemWithExpiry = (key) => {
 }
 
 const addTimezoneOffsetHeader = setContext((_operation, previousContext) => {
-  const { headers, clientTzOffset } = previousContext
-  if (!clientTzOffset) {
-    return previousContext
-  }
-
+  const { headers } = previousContext
   return {
     ...previousContext,
     headers: {
       ...headers,
-      clientTzOffset: new Date().getTimezoneOffset(),
+      clientTimezoneOffset: new Date().getTimezoneOffset(),
     },
   }
 })
