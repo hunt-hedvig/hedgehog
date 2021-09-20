@@ -726,6 +726,8 @@ export type ListClaimsOptions = {
   pageSize?: Maybe<Scalars['Int']>
   sortBy?: Maybe<Scalars['String']>
   sortDirection?: Maybe<Scalars['String']>
+  filterClaimStates?: Maybe<Array<ClaimState>>
+  filterCreatedBeforeOrOnDate?: Maybe<Scalars['LocalDate']>
 }
 
 export type ListClaimsResult = {
@@ -998,7 +1000,7 @@ export type MutationTypeCreateClaimSwishPaymentArgs = {
 
 export type MutationTypeSetClaimTypeArgs = {
   id: Scalars['ID']
-  type: ClaimTypes
+  type?: Maybe<ClaimTypes>
 }
 
 export type MutationTypeSetClaimInformationArgs = {

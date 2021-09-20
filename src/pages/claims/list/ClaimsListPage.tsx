@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
+import { Filters } from 'components/claims/filter'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
-import React from 'react'
+import React, { useState } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Header } from 'semantic-ui-react'
+import { ClaimState } from 'types/generated/graphql'
 
 const ListPage = styled.div`
   display: flex;
@@ -13,6 +15,11 @@ const ListPage = styled.div`
   margin: 0;
 `
 
+export interface ClaimsFiltersType {
+  filterClaimStates: ClaimState[] | []
+  filterCreatedBeforeOrOnDate: string | null
+}
+
 export const ClaimsListPage: React.FC<RouteComponentProps<{
   page?: string
 }>> = ({
@@ -20,6 +27,11 @@ export const ClaimsListPage: React.FC<RouteComponentProps<{
     params: { page = '1' },
   },
 }) => {
+  const [filters, setFilters] = useState({
+    filterClaimStates: [],
+    filterCreatedBeforeOrOnDate: null,
+  })
+
   const selectedPage = parseInt(page, 10)
 
   return (
@@ -28,7 +40,9 @@ export const ClaimsListPage: React.FC<RouteComponentProps<{
         <Header size="huge">Claims</Header>
       </FadeIn>
 
-      <LargeClaimsList page={selectedPage} />
+      <Filters filters={filters} setFilters={setFilters} />
+
+      <LargeClaimsList page={selectedPage} filters={filters} />
     </ListPage>
   )
 }
