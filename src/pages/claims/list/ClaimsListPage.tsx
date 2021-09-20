@@ -2,10 +2,11 @@ import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
 import { Filters } from 'components/claims/filter'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
-import React, { useState } from 'react'
+import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Header } from 'semantic-ui-react'
 import { ClaimState } from 'types/generated/graphql'
+import { useInsecurePersistentState } from 'utils/state'
 
 const ListPage = styled.div`
   display: flex;
@@ -27,10 +28,13 @@ export const ClaimsListPage: React.FC<RouteComponentProps<{
     params: { page = '1' },
   },
 }) => {
-  const [filters, setFilters] = useState({
-    filterClaimStates: [],
-    filterCreatedBeforeOrOnDate: null,
-  })
+  const [filters, setFilters] = useInsecurePersistentState<ClaimsFiltersType>(
+    'claims:filters',
+    {
+      filterClaimStates: [],
+      filterCreatedBeforeOrOnDate: null,
+    },
+  )
 
   const selectedPage = parseInt(page, 10)
 
