@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { QuestionGroupInfo } from 'features/questions/questions-list/QuestionGroupInfo'
-import React from 'react'
+import React, { useRef } from 'react'
 import { QuestionGroup } from 'types/generated/graphql'
 import { AnswerForm } from './AnswerForm'
 
@@ -18,28 +18,53 @@ const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`
   min-width: 350px;
   background: ${({ theme }) => theme.accentLighter};
   border: 1px solid ${({ theme }) => theme.border};
+  outline: none;
+  position: relative;
+
+  &:focus {
+    box-shadow: 0px 7px 8px 6px rgba(34, 60, 80, 0.2);
+  }
 `
 
 export interface QuestionGroupItemProps {
   questionGroup: QuestionGroup
+  isGroupFocused: boolean
+  isFocusedInside: boolean
 }
 
 export const QuestionGroupItem: React.FC<QuestionGroupItemProps> = ({
   questionGroup,
+  isGroupFocused,
+  isFocusedInside,
 }) => {
   const [isVisible, setVisible] = React.useState(false)
+
+  const groupRef = useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     setVisible(true)
   }, [])
 
+  React.useEffect(() => {
+    if (isGroupFocused && groupRef.current) {
+      groupRef.current.focus()
+    }
+  }, [isGroupFocused, groupRef])
+
   return (
-    <QuestionGroupWrapper key={questionGroup.id} isVisible={isVisible}>
+    <QuestionGroupWrapper
+      key={questionGroup.id}
+      isVisible={isVisible}
+      ref={groupRef}
+      tabIndex={0}
+    >
       <QuestionGroupInfo questionGroup={questionGroup} />
       <AnswerForm
         memberId={questionGroup.memberId}
         onDone={() => setVisible(false)}
         onError={() => setVisible(true)}
+        isFocused={isFocusedInside}
+        isGroupFocused={isGroupFocused}
       />
     </QuestionGroupWrapper>
   )
