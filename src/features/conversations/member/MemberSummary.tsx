@@ -99,90 +99,9 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   const memberGroup = getMemberGroupName(memberId, numberMemberGroups)
   const memberGroupColor = getMemberIdColor(memberId, numberMemberGroups)
 
-  const openClaims =
-    [
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-      {
-        id: '1',
-        state: ClaimState.Open,
-        registrationDate: '2020-01-01',
-        type: { __typename: 'Hello' },
-      },
-    ] ??
-    member.claims.filter(
-      (claim) => claim.state === ClaimState.Open || ClaimState.Reopened,
-    )
+  const openClaims = member.claims.filter(
+    (claim) => claim.state === ClaimState.Open || ClaimState.Reopened,
+  )
 
   return (
     <>
@@ -220,16 +139,12 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
             {openClaims
               .slice(0)
               .reverse()
-              .filter(
-                (claim) =>
-                  claim.state === (ClaimState.Open || ClaimState.Reopened),
-              )
-              .map((claim, index) => {
+              .map((claim) => {
                 const registrationDate = parseISO(claim.registrationDate)
                 return (
                   <ClaimItem
                     onClick={() => window.open(`/claims/${claim.id}`)}
-                    key={index}
+                    key={claim.id}
                   >
                     <Flex justify={'space-between'} align="center">
                       <div>
