@@ -102,6 +102,7 @@ export {
   ThirdLevelHeadline,
   Monetary,
   Hotkey,
+  HotkeyStyled,
 } from './Typography/typography'
 
 export { Modal } from './Modal'

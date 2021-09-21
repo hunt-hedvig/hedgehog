@@ -4,6 +4,7 @@ import {
   Card,
   CardsWrapper,
   FadeIn,
+  HotkeyStyled,
   LoadingMessage,
   MainHeadline,
 } from '@hedvig-ui'
@@ -35,11 +36,10 @@ const ShowEventButtonWrapper = styled.div`
   margin-top: 1em;
 `
 
-const ClaimTip = styled.div`
-  position: absolute;
-  right: 0.7rem;
-  top: 0.5rem;
-`
+const hotkeyStyles = {
+  top: '0.5rem',
+  right: '0.7rem',
+}
 
 const DEFAULT_FOCUSES = {
   memberInfo: false,
@@ -103,7 +103,11 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
         <ChatPaneAdjustedContainer>
           <CardsWrapper contentWrap="noWrap">
             <Card span={3}>
-              {isHintingOption && <ClaimTip>(1)</ClaimTip>}
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  1
+                </HotkeyStyled>
+              )}
               <MemberInformation
                 focus={focus.memberInfo}
                 claimId={claimId}
@@ -111,7 +115,11 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
               />
             </Card>
             <Card span={3}>
-              {isHintingOption && <ClaimTip>(2)</ClaimTip>}
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  2
+                </HotkeyStyled>
+              )}
               <ClaimInformation
                 focus={focus.claimInfo}
                 claimId={claimId}
@@ -119,7 +127,11 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
               />
             </Card>
             <Card span={3}>
-              {isHintingOption && <ClaimTip>(3)</ClaimTip>}
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  3
+                </HotkeyStyled>
+              )}
               <ClaimTypeForm focus={focus.type} claimId={claimId} />
             </Card>
           </CardsWrapper>
@@ -128,7 +140,11 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              {isHintingOption && <ClaimTip>(4)</ClaimTip>}
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  4
+                </HotkeyStyled>
+              )}
               <ClaimNotes focus={focus.notes} claimId={claimId} />
             </Card>
           </CardsWrapper>
@@ -151,7 +167,11 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
 
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              {isHintingOption && <ClaimTip>(5)</ClaimTip>}
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  5
+                </HotkeyStyled>
+              )}
               <ClaimFileTable
                 focus={focus.files}
                 claimId={claimId}
