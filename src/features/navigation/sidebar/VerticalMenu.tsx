@@ -5,6 +5,7 @@ import React, { useContext, useRef, useState } from 'react'
 import {
   ArrowUpRight,
   BoxArrowLeft,
+  Chat,
   ChevronLeft,
   CreditCard,
   CreditCard2Front,
@@ -23,6 +24,7 @@ import { forceLogOut } from 'utils/auth'
 import { DarkmodeContext } from 'utils/darkmode-context'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
+import { useInsecurePersistentState } from 'utils/state'
 import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
@@ -226,6 +228,7 @@ const routes = {
   dashborad: '/dashborad',
   claims: '/claims/list/1',
   questions: '/questions',
+  conversations: '/conversations',
   search: '/members',
   tools: '/tools',
   trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
@@ -250,6 +253,10 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   const [locations, setLocations] = useState<string[]>([])
   const latestClaim = useRef<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
+  const [conversationsEnabled] = useInsecurePersistentState<boolean>(
+    'conversations:enabled',
+    false,
+  )
 
   const { registerActions, isHintingOption } = useCommandLine()
 
@@ -394,7 +401,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 >
                   <House />
                   <Hotkey hotkey="D" hinting={isHintingOption}>
-                    Dashborad
+                    {!isCollapsed && 'Dashborad'}
                   </Hotkey>
                 </MenuItem>
               </MenuGroup>
@@ -407,20 +414,27 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 >
                   <Search />
                   <Hotkey hotkey="S" hinting={isHintingOption}>
-                    Member Search
+                    {!isCollapsed && 'Member Search'}
                   </Hotkey>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
                 <MenuItem
-                  to={routes.questions}
+                  to={
+                    conversationsEnabled
+                      ? routes.conversations
+                      : routes.questions
+                  }
                   isActive={(_match, location) =>
-                    location.pathname.startsWith('/questions')
+                    location.pathname.startsWith(
+                      conversationsEnabled ? '/conversations' : '/questions',
+                    )
                   }
                 >
-                  <Inbox />
+                  {conversationsEnabled ? <Chat /> : <Inbox />}
                   <Hotkey hotkey="Q" hinting={isHintingOption}>
-                    Questions
+                    {!isCollapsed &&
+                      (conversationsEnabled ? 'Conversations' : 'Questions')}
                   </Hotkey>
                 </MenuItem>
                 <MenuItem
@@ -432,7 +446,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   <ShieldShaded />
                   {!isCollapsed && (
                     <Hotkey hotkey="C" hinting={isHintingOption}>
-                      Claims
+                      {!isCollapsed && 'Claims'}
                     </Hotkey>
                   )}
                 </MenuItem>
@@ -441,7 +455,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 <MenuItem to={routes.tools}>
                   <Tools />
                   <Hotkey hotkey="T" hinting={isHintingOption}>
-                    Tools
+                    {!isCollapsed && 'Tools'}
                   </Hotkey>
                 </MenuItem>
               </MenuGroup>
@@ -451,28 +465,28 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   <ArrowUpRight />
                   <CreditCard />
                   <Hotkey hotkey="R" hinting={isHintingOption}>
-                    Trustly
+                    {!isCollapsed && 'Trustly'}
                   </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
                   <ArrowUpRight />
                   <CreditCard2Front />
                   <Hotkey hotkey="A" hinting={isHintingOption}>
-                    Adyen
+                    {!isCollapsed && 'Adyen'}
                   </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.gsr} target="_blank">
                   <ArrowUpRight />
                   <PersonBoundingBox />
                   <Hotkey hotkey="G" hinting={isHintingOption}>
-                    GSR
+                    {!isCollapsed && 'GSR'}
                   </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.foss} target="_blank">
                   <ArrowUpRight />
                   <PersonSquare />
                   <Hotkey hotkey="F" hinting={isHintingOption}>
-                    FOSS
+                    {!isCollapsed && 'FOSS'}
                   </Hotkey>
                 </MenuItemExternalLink>
               </MenuGroup>
@@ -496,7 +510,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
               >
                 <BoxArrowLeft />
                 <Hotkey hotkey="L" hinting={isHintingOption}>
-                  Logout
+                  {!isCollapsed && 'Logout'}
                 </Hotkey>
               </MenuItem>
             </BottomSection>

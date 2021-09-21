@@ -12,6 +12,17 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-09-21',
+    change:
+      'Added ability to open claims and members in new tab. Just use Command + Click/Enter',
+    authorGithubHandle: 'maxplt',
+  },
+  {
+    date: '2021-09-20',
+    change: 'First version of Conversations 💬, try it out under Questions',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-09-13',
     change: 'Added “lucky search” to Member Search',
     authorGithubHandle: 'maxplt',
