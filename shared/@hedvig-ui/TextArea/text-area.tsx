@@ -5,7 +5,6 @@ import {
   TextArea as SemanticTextArea,
   TextAreaProps,
 } from 'semantic-ui-react'
-import { sleep } from 'utils/sleep'
 
 const TextAreaWrapper = styled.div`
   width: 100%;

@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import React, { useEffect, useRef } from 'react'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import { sleep } from 'utils/sleep'
 
 const styles = `.searchable-type-select__control {
   border-radius: 7px;
