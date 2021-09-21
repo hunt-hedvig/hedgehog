@@ -9,9 +9,11 @@ type UseQuestionGroupsReturnTuple = [
   GetQuestionsGroupsQueryHookResult,
 ]
 
-export const useQuestionGroups = (): UseQuestionGroupsReturnTuple => {
+export const useQuestionGroups = (
+  pollInterval?: number,
+): UseQuestionGroupsReturnTuple => {
   const queryResult = useGetQuestionsGroupsQuery({
-    pollInterval: 10000,
+    pollInterval: pollInterval ?? 10000,
   })
   const questionGroups = (queryResult.data?.questionGroups ??
     []) as ReadonlyArray<QuestionGroup>

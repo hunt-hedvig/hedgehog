@@ -16,5 +16,13 @@ query GetMemberInfo($memberId: ID!) {
       market
     }
     pickedLocale
+    claims {
+      id
+      registrationDate
+      state
+      type {
+        __typename
+      }
+    }
   }
 }
