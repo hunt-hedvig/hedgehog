@@ -5,6 +5,7 @@ import React, { useContext, useRef, useState } from 'react'
 import {
   ArrowUpRight,
   BoxArrowLeft,
+  Chat,
   ChevronLeft,
   CreditCard,
   CreditCard2Front,
@@ -23,6 +24,7 @@ import { forceLogOut } from 'utils/auth'
 import { DarkmodeContext } from 'utils/darkmode-context'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
+import { useInsecurePersistentState } from 'utils/state'
 import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
@@ -226,6 +228,7 @@ const routes = {
   dashborad: '/dashborad',
   claims: '/claims/list/1',
   questions: '/questions',
+  conversations: '/conversations',
   search: '/members',
   tools: '/tools',
   trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
@@ -250,6 +253,10 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   const [locations, setLocations] = useState<string[]>([])
   const latestClaim = useRef<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
+  const [conversationsEnabled] = useInsecurePersistentState<boolean>(
+    'conversations:enabled',
+    false,
+  )
 
   const { registerActions, isHintingOption } = useCommandLine()
 
@@ -413,14 +420,20 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
               </MenuGroup>
               <MenuGroup>
                 <MenuItem
-                  to={routes.questions}
+                  to={
+                    conversationsEnabled
+                      ? routes.conversations
+                      : routes.questions
+                  }
                   isActive={(_match, location) =>
-                    location.pathname.startsWith('/questions')
+                    location.pathname.startsWith(
+                      conversationsEnabled ? '/conversations' : '/questions',
+                    )
                   }
                 >
-                  <Inbox />
+                  {conversationsEnabled ? <Chat /> : <Inbox />}
                   <Hotkey hotkey="Q" hinting={isHintingOption}>
-                    Questions
+                    {conversationsEnabled ? 'Conversations' : 'Questions'}{' '}
                   </Hotkey>
                 </MenuItem>
                 <MenuItem
