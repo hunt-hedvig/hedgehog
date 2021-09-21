@@ -136,7 +136,11 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
         <FadeIn style={{ marginTop: '2.0em', width: '100%' }}>
           <Label style={{ fontSize: '0.9em' }}>Open claims</Label>
           <ClaimWrapper direction="column">
-            {openClaims
+            {claims
+              .filter(
+                (claim) =>
+                  claim.state === (ClaimState.Open || ClaimState.Reopened),
+              )
               .slice(0)
               .reverse()
               .map((claim) => {
