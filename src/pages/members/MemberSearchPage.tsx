@@ -84,11 +84,6 @@ export const MemberSearchPage: React.FC = () => {
 
   const pageSelectHandler = (nextPage: number) => {
     memberSearch(query || '%', { page: nextPage - 1 ?? 0 })
-
-    /**
-     * Maybe don't needed?
-     * history.push(`/members/list/${nextPage}`)
-     */
   }
 
   return (
