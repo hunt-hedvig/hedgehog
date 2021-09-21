@@ -49,7 +49,7 @@ export const AnswerForm: React.FC<{
 }> = ({ memberId, onDone, onError, isGroupFocused, isFocused }) => {
   const form = useForm()
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
-  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
 
   const [
     answerQuestion,
@@ -97,13 +97,13 @@ export const AnswerForm: React.FC<{
   }
 
   useEffect(() => {
-    if (isEnterPressed && isOptionPressed && isGroupFocused && !isFocused) {
+    if (isEnterPressed && isCommandPressed && isGroupFocused && !isFocused) {
       handleMarkAsResolved()
     }
-    if (isEnterPressed && isOptionPressed && isFocused) {
+    if (isEnterPressed && isCommandPressed && isFocused) {
       onSubmit(form.getValues())
     }
-  }, [isEnterPressed, isOptionPressed])
+  }, [isEnterPressed, isCommandPressed])
 
   return (
     <>
@@ -138,7 +138,7 @@ export const AnswerForm: React.FC<{
       {isGroupFocused && !isFocused && (
         <FadeIn duration={200}>
           <CheckTip>
-            Press <Shadowed>Option</Shadowed> + <Shadowed>Enter</Shadowed> to
+            Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
             mark as resolved
           </CheckTip>
         </FadeIn>
@@ -146,7 +146,7 @@ export const AnswerForm: React.FC<{
       {isFocused && (
         <FadeIn duration={200}>
           <CheckTip>
-            Press <Shadowed>Option</Shadowed> + <Shadowed>Enter</Shadowed> to
+            Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
             send
           </CheckTip>
         </FadeIn>

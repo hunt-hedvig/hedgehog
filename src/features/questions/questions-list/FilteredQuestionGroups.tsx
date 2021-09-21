@@ -28,7 +28,7 @@ export const FilteredQuestionGroups: React.FC<{
   const isUpPressed = useKeyIsPressed(Keys.Up)
   const isDownPressed = useKeyIsPressed(Keys.Down)
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
-  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export const FilteredQuestionGroups: React.FC<{
   }, [isUpPressed, isDownPressed])
 
   useEffect(() => {
-    if (isEnterPressed && !isOptionPressed && !focusedInsideItem) {
+    if (isEnterPressed && !isCommandPressed && !focusedInsideItem) {
       setFocusedInsideItem(focusedItem)
     }
   }, [isEnterPressed])
