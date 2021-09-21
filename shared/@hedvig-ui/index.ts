@@ -78,6 +78,7 @@ export { Spinner } from './Spinner/spinner'
 export { TextArea } from './TextArea/text-area'
 
 export { FadeIn, withFadeIn } from './animations/fade-in'
+export { Fade, useFadeAnimation } from './animations/fade'
 export {
   LoadingMessage,
   StandaloneMessage,

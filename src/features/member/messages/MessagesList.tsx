@@ -9,12 +9,13 @@ import { Message } from './Message'
 const MessagesListContainer = styled.div`
   overflow-y: auto;
   padding: 0 20px;
-  background: ${({ theme }) => theme.background};
+  background: transparent;
   border-top: 0;
   border-bottom: 0;
   height: 100%;
   display: flex;
   flex-direction: column-reverse;
+  width: 100%;
 `
 
 const EmptyList = styled.h3`
