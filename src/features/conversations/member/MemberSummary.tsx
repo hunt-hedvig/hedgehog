@@ -63,6 +63,15 @@ const MemberGroupTag = styled(Tag)<{ color: string }>`
   background-color: ${({ color }) => color};
 `
 
+const ClaimWrapper = styled(Flex)`
+  height: 262px;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+`
+
 export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
   const { data } = useGetMemberInfoQuery({
@@ -90,9 +99,90 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   const memberGroup = getMemberGroupName(memberId, numberMemberGroups)
   const memberGroupColor = getMemberIdColor(memberId, numberMemberGroups)
 
-  const openClaims = member.claims.filter(
-    (claim) => claim.state === ClaimState.Open || ClaimState.Reopened,
-  )
+  const openClaims =
+    [
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+      {
+        id: '1',
+        state: ClaimState.Open,
+        registrationDate: '2020-01-01',
+        type: { __typename: 'Hello' },
+      },
+    ] ??
+    member.claims.filter(
+      (claim) => claim.state === ClaimState.Open || ClaimState.Reopened,
+    )
 
   return (
     <>
@@ -126,20 +216,20 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
       {!!claims.length && (
         <FadeIn style={{ marginTop: '2.0em', width: '100%' }}>
           <Label style={{ fontSize: '0.9em' }}>Open claims</Label>
-          <Flex direction="column">
-            {claims
+          <ClaimWrapper direction="column">
+            {openClaims
               .slice(0)
               .reverse()
               .filter(
                 (claim) =>
                   claim.state === (ClaimState.Open || ClaimState.Reopened),
               )
-              .map((claim) => {
+              .map((claim, index) => {
                 const registrationDate = parseISO(claim.registrationDate)
                 return (
                   <ClaimItem
                     onClick={() => window.open(`/claims/${claim.id}`)}
-                    key={claim.id}
+                    key={index}
                   >
                     <Flex justify={'space-between'} align="center">
                       <div>
@@ -162,7 +252,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
                   </ClaimItem>
                 )
               })}
-          </Flex>
+          </ClaimWrapper>
         </FadeIn>
       )}
     </>
