@@ -15,7 +15,7 @@ import {
   FadeIn,
   Input,
   Label,
-  SearchableDropdown,
+  SearchableDropdownWithRef,
   Spacing,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
@@ -104,9 +104,10 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
 
   return (
     <>
-      <DataField style={{ marginTop: '1.0em' }}>
+      <DataField style={{ marginTop: '1.0em' }} tabIndex={-1}>
         <Label>Date of Occurrence</Label>
         <DateTimePicker
+          tabIndex={-1}
           fullWidth={true}
           date={formData.date}
           setDate={(newDate) => setFormData({ ...formData, date: newDate })}
@@ -202,7 +203,8 @@ const ClaimTypeDataForm: React.FC<{ type: any; claimId: string }> = ({
 
 export const ClaimTypeForm: React.FC<{
   claimId: string
-}> = ({ claimId }) => {
+  focus: boolean
+}> = ({ claimId, focus }) => {
   const {
     data: claimInformationData,
     loading: loadingClaimInformation,
@@ -241,7 +243,8 @@ export const ClaimTypeForm: React.FC<{
   return (
     <CardContent>
       <CardTitle title="Claim Type" badge={titleBadge()} />
-      <SearchableDropdown
+      <SearchableDropdownWithRef
+        focus={focus}
         value={
           type?.__typename &&
           createClaimTypeOption(type?.__typename?.toString())
@@ -269,6 +272,7 @@ export const ClaimTypeForm: React.FC<{
           createClaimTypeOption(claimType),
         )}
       />
+
       {!(setClaimTypeLoading || loadingClaimInformation) && type && (
         <FadeIn>
           <ClaimTypeDataForm type={type} claimId={claimId} />

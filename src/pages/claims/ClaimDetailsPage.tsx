@@ -4,6 +4,7 @@ import {
   Card,
   CardsWrapper,
   FadeIn,
+  HotkeyStyled,
   LoadingMessage,
   MainHeadline,
 } from '@hedvig-ui'
@@ -19,6 +20,8 @@ import { ChatPane } from 'features/member/tabs/ChatPane'
 import React, { useContext, useEffect, useState } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
 import { ClaimState, useClaimPageQuery } from 'types/generated/graphql'
+import { useCommandLine } from 'utils/hooks/command-line-hook'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { MemberHistoryContext } from 'utils/member-history'
 import { getCarrierText } from 'utils/text'
 
@@ -33,12 +36,40 @@ const ShowEventButtonWrapper = styled.div`
   margin-top: 1em;
 `
 
+const hotkeyStyles = {
+  top: '0.3rem',
+  right: '0.3rem',
+  padding: '2px 8px',
+}
+
+const DEFAULT_FOCUSES = {
+  memberInfo: false,
+  claimInfo: false,
+  type: false,
+  notes: false,
+  files: false,
+}
+
+const DEFAULT_KEYS = ['One', 'Two', 'Three', 'Four', 'Five']
+
 export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
 }>> = ({ match }) => {
   const { claimId } = match.params
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
   const [showEvents, setShowEvents] = useState(false)
+  const { registerActions, isHintingOption } = useCommandLine()
+  const [focus, setFocus] = useState(DEFAULT_FOCUSES)
+
+  registerActions(
+    Object.keys(DEFAULT_FOCUSES).map((section, index) => ({
+      label: `Focus on ${section}`,
+      keys: [Keys.Option, Keys[DEFAULT_KEYS[index]]],
+      onResolve: () => {
+        setFocus({ ...DEFAULT_FOCUSES, [section]: true })
+      },
+    })),
+  )
 
   const { data: claimPageData } = useClaimPageQuery({
     variables: { claimId },
@@ -73,13 +104,36 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
         <ChatPaneAdjustedContainer>
           <CardsWrapper contentWrap="noWrap">
             <Card span={3}>
-              <MemberInformation claimId={claimId} memberId={memberId} />
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  1
+                </HotkeyStyled>
+              )}
+              <MemberInformation
+                focus={focus.memberInfo}
+                claimId={claimId}
+                memberId={memberId}
+              />
             </Card>
             <Card span={3}>
-              <ClaimInformation claimId={claimId} memberId={memberId} />
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  2
+                </HotkeyStyled>
+              )}
+              <ClaimInformation
+                focus={focus.claimInfo}
+                claimId={claimId}
+                memberId={memberId}
+              />
             </Card>
             <Card span={3}>
-              <ClaimTypeForm claimId={claimId} />
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  3
+                </HotkeyStyled>
+              )}
+              <ClaimTypeForm focus={focus.type} claimId={claimId} />
             </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">
@@ -87,7 +141,12 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              <ClaimNotes claimId={claimId} />
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  4
+                </HotkeyStyled>
+              )}
+              <ClaimNotes focus={focus.notes} claimId={claimId} />
             </Card>
           </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier && (
@@ -109,7 +168,16 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
 
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              <ClaimFileTable claimId={claimId} memberId={memberId} />
+              {isHintingOption && (
+                <HotkeyStyled dark style={hotkeyStyles}>
+                  5
+                </HotkeyStyled>
+              )}
+              <ClaimFileTable
+                focus={focus.files}
+                claimId={claimId}
+                memberId={memberId}
+              />
             </Card>
           </CardsWrapper>
 

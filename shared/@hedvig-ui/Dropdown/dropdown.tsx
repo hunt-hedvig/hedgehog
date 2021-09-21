@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import {
   Dropdown as SemanticDropdown,
   DropdownItemProps,
   DropdownProps,
+  Ref,
 } from 'semantic-ui-react'
 
 export const Dropdown: React.FC<{
@@ -45,7 +46,15 @@ export const EnumDropdown: React.FC<{
   placeholder?: string
   onChange: (value: any) => void
   loading?: boolean
-}> = ({ enumToSelectFrom, placeholder = '', onChange, value, loading }) => {
+  focus?: boolean
+}> = ({
+  enumToSelectFrom,
+  placeholder = '',
+  onChange,
+  value,
+  loading,
+  focus,
+}) => {
   const dropdownOptions = useMemo(
     () =>
       Object.values(enumToSelectFrom).map((selection, index) => {
@@ -65,16 +74,26 @@ export const EnumDropdown: React.FC<{
     [enumToSelectFrom],
   )
 
+  const dropdownRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (dropdownRef.current && focus) {
+      dropdownRef.current.focus()
+    }
+  }, [focus])
+
   return (
-    <SemanticDropdown
-      value={value}
-      placeholder={placeholder}
-      options={dropdownOptions}
-      loading={loading}
-      selection
-      fluid
-      onChange={(_, { value: selection }) => onChange(selection)}
-    />
+    <Ref innerRef={dropdownRef}>
+      <SemanticDropdown
+        value={value}
+        placeholder={placeholder}
+        options={dropdownOptions}
+        loading={loading}
+        selection
+        fluid
+        onChange={(_, { value: selection }) => onChange(selection)}
+      />
+    </Ref>
   )
 }
 

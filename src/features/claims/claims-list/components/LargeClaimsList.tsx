@@ -118,6 +118,13 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
           return (
             <TableRow
               key={claim.id}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.keyCode === Keys.Enter.code) {
+                  e.preventDefault()
+                  history.push(`/claims/${claim.id}`)
+                }
+              }}
               onClick={() => redirectClaimHandler(claim.id)}
             >
               <div>
