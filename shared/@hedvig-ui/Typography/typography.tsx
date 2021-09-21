@@ -72,6 +72,7 @@ export const ErrorText = styled.p`
 interface HotkeyProps {
   hotkey: string
   hinting: boolean
+  dark?: boolean
   children: any
 }
 
@@ -79,19 +80,22 @@ const HotkeyWrapper = styled.div`
   position: relative;
 `
 
-const HotkeyStyled = styled(Shadowed)`
+export const HotkeyStyled = styled(Shadowed)<{ dark?: boolean }>`
   position: absolute;
   right: -2rem;
   top: 0;
   font-size: 13px;
-  background-color: ${({ theme }) => theme.backgroundTransparentContrast};
+  background-color: ${({ dark, theme }) =>
+    !dark ? theme.backgroundTransparentContrast : theme.backgroundTransparent};
 `
 
 export const Hotkey = (props: HotkeyProps) => {
   return (
     <HotkeyWrapper>
       {props.children}
-      {props.hinting && <HotkeyStyled>{props.hotkey}</HotkeyStyled>}
+      {props.hinting && (
+        <HotkeyStyled dark={props.dark}>{props.hotkey}</HotkeyStyled>
+      )}
     </HotkeyWrapper>
   )
 }

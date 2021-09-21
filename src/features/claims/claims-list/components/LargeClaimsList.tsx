@@ -17,6 +17,7 @@ import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
+import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'
@@ -61,6 +62,7 @@ export const LargeClaimsList: React.FC<{
 }> = ({ page, filters }) => {
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
 
   const [
     { claims, page: currentPage, totalPages },
@@ -79,6 +81,17 @@ export const LargeClaimsList: React.FC<{
     return <LoadingMessage paddingTop="25vh" />
   }
 
+  const redirectClaimHandler = (id: string) => {
+    const link = `/claims/${id}`
+
+    if (isCommandPressed) {
+      window.open(link, '_blank')
+      return
+    }
+
+    history.push(link)
+  }
+
   return (
     <>
       <Table
@@ -89,7 +102,7 @@ export const LargeClaimsList: React.FC<{
             return
           }
 
-          history.push(`/claims/${claimId}`)
+          redirectClaimHandler(claimId)
         }}
       >
         <TableHeader>
@@ -112,7 +125,14 @@ export const LargeClaimsList: React.FC<{
           return (
             <TableRow
               key={claim.id}
-              onClick={() => history.push(`/claims/${claim.id}`)}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.keyCode === Keys.Enter.code) {
+                  e.preventDefault()
+                  history.push(`/claims/${claim.id}`)
+                }
+              }}
+              onClick={() => redirectClaimHandler(claim.id)}
             >
               <div>
                 <MemberIdCell

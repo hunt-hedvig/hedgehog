@@ -69,7 +69,10 @@ const SubNoteWrapper = styled.div`
   flex-direction: row;
 `
 
-const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
+const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
+  claimId,
+  focus,
+}) => {
   const {
     data: claimNotesData,
     loading: loadingClaimNotes,
@@ -163,6 +166,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         placeholder="Your note goes here..."
         value={submitting ? '' : note}
         onChange={setNote}
+        focus={focus}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
         onKeyPress={(e) => {

@@ -14,7 +14,7 @@ import {
 } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -79,7 +79,8 @@ const ClickableText = styled.span`
 export const MemberInformation: React.FC<{
   claimId: string
   memberId: string
-}> = ({ claimId, memberId }) => {
+  focus: boolean
+}> = ({ claimId, memberId, focus }) => {
   const {
     data: contractData,
     error: claimContractQueryError,
@@ -113,6 +114,14 @@ export const MemberInformation: React.FC<{
     },
   ])
 
+  const memberIdRef = useRef<HTMLAnchorElement>(null)
+
+  useEffect(() => {
+    if (memberIdRef.current && focus) {
+      memberIdRef.current.focus()
+    }
+  }, [focus])
+
   return (
     <CardContent>
       <CardTitle
@@ -144,7 +153,9 @@ export const MemberInformation: React.FC<{
                   copy(`${window.location.origin}/members/${memberId}`)
                 }}
               >
-                <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
+                <Link ref={memberIdRef} to={`/members/${memberId}`}>
+                  {memberId}
+                </Link>{' '}
                 {isHintingOption && '(M)'}
               </Copyable>
             </InfoText>
