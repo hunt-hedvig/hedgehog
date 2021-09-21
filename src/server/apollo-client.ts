@@ -5,6 +5,7 @@ import {
   InMemoryCache,
   ServerError,
 } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
@@ -35,6 +36,17 @@ const getItemWithExpiry = (key) => {
 
   return item.value
 }
+
+const addTimezoneOffsetHeader = setContext((_operation, previousContext) => {
+  const { headers } = previousContext
+  return {
+    ...previousContext,
+    headers: {
+      ...headers,
+      clientTimezoneOffset: new Date().getTimezoneOffset(),
+    },
+  }
+})
 
 const refreshAccessToken = async () => {
   if (getItemWithExpiry('hvg:refreshingAccessToken') === 'true') {
@@ -77,6 +89,7 @@ export const apolloClient = (() => {
           forceLogOut()
         })
       }),
+      addTimezoneOffsetHeader,
       new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
     ]),
     connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
@@ -106,6 +119,9 @@ export const apolloClient = (() => {
         Query: {
           fields: {
             employees: {
+              merge: false,
+            },
+            questionGroups: {
               merge: false,
             },
           },
