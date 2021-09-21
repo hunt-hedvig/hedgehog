@@ -33,14 +33,11 @@ export const TextArea: React.FC<{
   const textAreaRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const setFocus = async () => {
-      await sleep(1)
+    setTimeout(() => {
       if (textAreaRef.current && focus) {
         textAreaRef.current.focus()
       }
-    }
-
-    setFocus()
+    }, 1)
   }, [focus])
 
   return (
