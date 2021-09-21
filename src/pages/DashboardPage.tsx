@@ -17,6 +17,7 @@ import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useGetMeQuery } from 'types/generated/graphql'
+import { useInsecurePersistentState } from 'utils/state'
 
 const Wrapper = styled.div`
   display: flex;
@@ -63,6 +64,10 @@ const MutedText = styled.div`
 export const DashboardPage: React.FC = () => {
   const { data } = useGetMeQuery()
   const [dashboardNumbers] = useDashboardNumbers()
+  const [conversationsEnabled] = useInsecurePersistentState<boolean>(
+    'conversations:enabled',
+    false,
+  )
 
   return (
     <Wrapper>
@@ -71,7 +76,7 @@ export const DashboardPage: React.FC = () => {
           <MainHeadline>
             Hi there{' '}
             <Capitalized>
-              {data?.me && getLowercaseNameFromEmail(data?.me.email)}
+              {getLowercaseNameFromEmail(data?.me.email)}
             </Capitalized>
             !
           </MainHeadline>
@@ -86,12 +91,21 @@ export const DashboardPage: React.FC = () => {
               </MetricNumber>
               <MetricName>claims</MetricName>
             </Metric>
-            <Metric to="/questions">
-              <MetricNumber>
-                {dashboardNumbers?.numberOfQuestions || 0}
-              </MetricNumber>
-              <MetricName>questions</MetricName>
-            </Metric>
+            {conversationsEnabled ? (
+              <Metric to="/conversations">
+                <MetricNumber>
+                  {dashboardNumbers?.numberOfQuestions || 0}
+                </MetricNumber>
+                <MetricName>conversations</MetricName>
+              </Metric>
+            ) : (
+              <Metric to="/questions">
+                <MetricNumber>
+                  {dashboardNumbers?.numberOfQuestions || 0}
+                </MetricNumber>
+                <MetricName>questions</MetricName>
+              </Metric>
+            )}
           </MetricsWrapper>
         </FadeIn>
       )}
@@ -143,5 +157,5 @@ export const DashboardPage: React.FC = () => {
   )
 }
 
-const getLowercaseNameFromEmail = (email: string) =>
+export const getLowercaseNameFromEmail = (email: string) =>
   email.split(/[^\w]/)[0].toLowerCase()
