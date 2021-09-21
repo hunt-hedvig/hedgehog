@@ -51,14 +51,11 @@ export const SearchableDropdownWithRef = styled((props) => {
   const selectRef = useRef<any>()
 
   useEffect(() => {
-    const focus = async () => {
+    setTimeout(() => {
       if (props.focus && selectRef.current) {
-        await sleep(1)
         selectRef.current.focus()
       }
-    }
-
-    focus()
+    }, 1)
   }, [props.focus])
 
   if (props.creatable) {
