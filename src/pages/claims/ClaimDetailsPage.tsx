@@ -37,8 +37,9 @@ const ShowEventButtonWrapper = styled.div`
 `
 
 const hotkeyStyles = {
-  top: '0.5rem',
-  right: '0.7rem',
+  top: '0.3rem',
+  right: '0.3rem',
+  padding: '2px 8px',
 }
 
 const DEFAULT_FOCUSES = {
