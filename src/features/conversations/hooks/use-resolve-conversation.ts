@@ -20,9 +20,16 @@ export const useResolveConversation = (
 
   const isShiftPressed = useKeyIsPressed(Keys.Shift)
   const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
 
   useEffect(() => {
-    if (isShiftPressed && isOptionPressed && !loading && memberId) {
+    if (
+      isShiftPressed &&
+      isOptionPressed &&
+      isEnterPressed &&
+      !loading &&
+      memberId
+    ) {
       toast.promise(
         markAsResolved({
           variables: { memberId },
@@ -40,5 +47,5 @@ export const useResolveConversation = (
         },
       )
     }
-  }, [isShiftPressed, isOptionPressed])
+  }, [isShiftPressed, isOptionPressed, isEnterPressed])
 }

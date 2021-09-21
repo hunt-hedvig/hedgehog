@@ -96,8 +96,8 @@ export const ConversationChat: React.FC<{
       <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>
         <FadeIn duration={200}>
           <Tip>
-            <Shadowed>Option</Shadowed> + <Shadowed>Shift</Shadowed> to mark as
-            resolved
+            <Shadowed>Option</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
+            <Shadowed>Enter</Shadowed> to mark as resolved
           </Tip>
         </FadeIn>
         {inputFocused && (
