@@ -3132,6 +3132,39 @@ export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
             'market'
           >
         >
+        claims: Array<
+          { __typename?: 'Claim' } & Pick<
+            Claim,
+            'id' | 'registrationDate' | 'state'
+          > & {
+              type?: Maybe<
+                | { __typename: 'TheftClaim' }
+                | { __typename: 'AccidentalDamageClaim' }
+                | { __typename: 'AssaultClaim' }
+                | { __typename: 'WaterDamageClaim' }
+                | { __typename: 'TravelAccidentClaim' }
+                | { __typename: 'LuggageDelayClaim' }
+                | { __typename: 'NotCoveredClaim' }
+                | { __typename: 'FireDamageClaim' }
+                | { __typename: 'ConfirmedFraudClaim' }
+                | { __typename: 'LiabilityClaim' }
+                | { __typename: 'ApplianceClaim' }
+                | { __typename: 'LegalProtectionClaim' }
+                | { __typename: 'WaterDamageBathroomClaim' }
+                | { __typename: 'WaterDamageKitchenClaim' }
+                | { __typename: 'BurglaryClaim' }
+                | { __typename: 'FloodingClaim' }
+                | { __typename: 'EarthquakeClaim' }
+                | { __typename: 'InstallationsClaim' }
+                | { __typename: 'SnowPressureClaim' }
+                | { __typename: 'StormDamageClaim' }
+                | { __typename: 'VerminAndPestsClaim' }
+                | { __typename: 'OtherClaim' }
+                | { __typename: 'DuplicateClaim' }
+                | { __typename: 'TestClaim' }
+              >
+            }
+        >
       }
   >
 }
@@ -7447,6 +7480,14 @@ export const GetMemberInfoDocument = gql`
         market
       }
       pickedLocale
+      claims {
+        id
+        registrationDate
+        state
+        type {
+          __typename
+        }
+      }
     }
   }
 `
