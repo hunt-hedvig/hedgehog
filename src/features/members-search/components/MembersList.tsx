@@ -10,7 +10,6 @@ import {
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'
-import { useHistory } from 'react-router'
 import { Contract, ContractStatus, Member } from 'types/generated/graphql'
 import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
 import { getMemberFlag, getMemberIdColor, MemberAge } from 'utils/member'
@@ -103,8 +102,8 @@ const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
 export const MembersList: React.FC<{
   members: Member[]
   navigationStep?: number
-}> = ({ members, navigationStep }) => {
-  const history = useHistory()
+  redirectMemberHandler: (id: string) => void
+}> = ({ members, navigationStep, redirectMemberHandler }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
@@ -129,7 +128,7 @@ export const MembersList: React.FC<{
             <TableRow
               key={member.memberId}
               active={navigationStep === index}
-              onClick={() => history.push(`/members/${member.memberId}`)}
+              onClick={() => redirectMemberHandler(member.memberId)}
             >
               <div>
                 <MemberIdCell
