@@ -129,15 +129,15 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     <>
       <MainHeadline>Conversations</MainHeadline>
       <Flex direction="row" justify={'space-between'}>
-        <Flex direction="row" span={3}>
+        <Flex direction="row" flex="3">
           {memberId ? (
             <>
-              <Flex span={2}>
+              <Flex flex="3">
                 <Fade {...fadeProps}>
                   <MemberSummary memberId={memberId} />
                 </Fade>
               </Flex>
-              <Flex span={3} style={{ padding: '0 2em' }}>
+              <Flex flex="3" style={{ padding: '0 2em' }}>
                 <Fade {...fadeProps}>
                   <ConversationChat
                     memberId={memberId}
@@ -153,7 +153,7 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
             </StandaloneMessage>
           )}
         </Flex>
-        <Flex direction="column" style={{ marginTop: '1em' }} span={1}>
+        <Flex direction="column" style={{ marginTop: '1em' }} flex="1">
           <ConversationsOverview
             filteredGroups={filteredGroups}
             currentMemberId={memberId}

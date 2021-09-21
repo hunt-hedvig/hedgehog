@@ -62,7 +62,7 @@ export const ConversationsOverview: React.FC<{
         <ConversationsRemaining count={filteredGroups.length} />
       </Flex>
       <Flex direction="column" justify="center" style={{ marginTop: '0.5em' }}>
-        <Flex span={1} direction="row" justify="center">
+        <Flex direction="row" justify="center">
           <Button
             style={{ marginLeft: '-0.5em' }}
             size="small"
