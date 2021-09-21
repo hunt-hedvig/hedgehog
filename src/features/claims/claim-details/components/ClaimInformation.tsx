@@ -103,7 +103,8 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
 export const ClaimInformation: React.FC<{
   claimId: string
   memberId: string
-}> = ({ claimId, memberId }) => {
+  focus: boolean
+}> = ({ claimId, memberId, focus }) => {
   const {
     data,
     error: queryError,
@@ -159,6 +160,7 @@ export const ClaimInformation: React.FC<{
         <SelectWrapper>
           <Label>Status</Label>
           <EnumDropdown
+            focus={focus}
             value={state || ''}
             enumToSelectFrom={ClaimState}
             placeholder=""
