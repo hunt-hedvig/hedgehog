@@ -121,6 +121,9 @@ export const apolloClient = (() => {
             employees: {
               merge: false,
             },
+            questionGroups: {
+              merge: false,
+            },
           },
         },
       },
