@@ -82,6 +82,10 @@ export const MemberSearchPage: React.FC = () => {
     }
   }, [members])
 
+  const pageSelectHandler = (nextPage: number) => {
+    memberSearch(query || '%', { page: nextPage - 1 ?? 0 })
+  }
+
   return (
     <>
       <SearchForm
@@ -110,7 +114,7 @@ export const MemberSearchPage: React.FC = () => {
             <TablePageSelect
               currentPage={page}
               totalPages={totalPages}
-              onSelect={(nextPage) => history.push(`/members/list/${nextPage}`)}
+              onSelect={pageSelectHandler}
             />
           </FadeIn>
         </ListWrapper>
