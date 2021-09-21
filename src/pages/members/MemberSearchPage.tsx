@@ -13,6 +13,7 @@ import { useMemberSearch } from 'graphql/use-member-search'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'
+import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 
 /**
@@ -38,11 +39,24 @@ export const MemberSearchPage: React.FC = () => {
   const history = useHistory()
   const searchField = useRef<React.ReactElement>()
 
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
+
   const [
     { members, totalPages, page },
     memberSearch,
     { loading },
   ] = useMemberSearch()
+
+  const redirectMemberHandler = (id: string) => {
+    const link = `/members/${id}`
+
+    if (isCommandPressed) {
+      window.open(link, '_blank')
+      return
+    }
+
+    history.push(link)
+  }
 
   const [
     currentKeyboardNavigationStep,
@@ -58,7 +72,7 @@ export const MemberSearchPage: React.FC = () => {
       }
     },
     onPerformNavigation: (index) => {
-      history.push(`/members/${members[index].memberId}`)
+      redirectMemberHandler(members[index].memberId)
     },
     onExit: () => {
       const input =
@@ -81,6 +95,10 @@ export const MemberSearchPage: React.FC = () => {
       history.push(`/members/${members[0].memberId}`)
     }
   }, [members])
+
+  const pageSelectHandler = (nextPage: number) => {
+    memberSearch(query || '%', { page: nextPage - 1 ?? 0 })
+  }
 
   return (
     <>
@@ -106,11 +124,12 @@ export const MemberSearchPage: React.FC = () => {
             <MembersList
               navigationStep={currentKeyboardNavigationStep}
               members={members}
+              redirectMemberHandler={redirectMemberHandler}
             />
             <TablePageSelect
               currentPage={page}
               totalPages={totalPages}
-              onSelect={(nextPage) => history.push(`/members/list/${nextPage}`)}
+              onSelect={pageSelectHandler}
             />
           </FadeIn>
         </ListWrapper>
