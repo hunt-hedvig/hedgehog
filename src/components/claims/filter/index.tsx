@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { DateTimePicker, Dropdown } from '@hedvig-ui'
+import { DateTimePicker, Dropdown, Label as StyledLabel } from '@hedvig-ui'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
@@ -15,8 +15,18 @@ const FilterWrapper = styled.div`
 
   display: grid;
   grid-template-columns: 230px 230px 20px;
-  align-items: center;
+  align-items: flex-end;
   column-gap: 1em;
+`
+
+const Label = styled(StyledLabel)`
+  padding-left: 1em;
+`
+
+const CloseWrapper = styled.div`
+  height: 42px;
+  display: flex;
+  align-items: center;
 `
 
 export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
@@ -38,26 +48,35 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
 
   return (
     <FilterWrapper>
-      <Dropdown
-        value={filters.filterClaimStates ? filters.filterClaimStates[0] : ''}
-        onChange={changeClaimStateHandler}
-        options={[
-          { key: 0, value: ClaimState.Open, text: 'Open' },
-          { key: 1, value: ClaimState.Closed, text: 'Closed' },
-          { key: 2, value: ClaimState.Reopened, text: 'Reopened' },
-        ]}
-      />
-      <DateTimePicker
-        date={
-          filters.filterCreatedBeforeOrOnDate
-            ? new Date(filters.filterCreatedBeforeOrOnDate)
-            : new Date()
-        }
-        setDate={setDateHandler}
-      />
+      <div>
+        <Label>Claim state</Label>
+        <Dropdown
+          value={filters.filterClaimStates ? filters.filterClaimStates[0] : ''}
+          onChange={changeClaimStateHandler}
+          options={[
+            { key: 0, value: ClaimState.Open, text: 'Open' },
+            { key: 1, value: ClaimState.Closed, text: 'Closed' },
+            { key: 2, value: ClaimState.Reopened, text: 'Reopened' },
+          ]}
+        />
+      </div>
+
+      <div>
+        <Label>Created date</Label>
+        <DateTimePicker
+          date={
+            filters.filterCreatedBeforeOrOnDate
+              ? new Date(filters.filterCreatedBeforeOrOnDate)
+              : new Date()
+          }
+          setDate={setDateHandler}
+        />
+      </div>
 
       {(filters.filterClaimStates || filters.filterCreatedBeforeOrOnDate) && (
-        <CloseIcon onClick={resetFiltersHandler} />
+        <CloseWrapper>
+          <CloseIcon onClick={resetFiltersHandler} />
+        </CloseWrapper>
       )}
     </FilterWrapper>
   )
