@@ -106,7 +106,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
       keys: [Keys.Option, Keys.M],
       onResolve: () => {
         copy(
-          `${window.location.protocol}//${window.location.host}/members/${memberId}`,
+          `${window.location.protocol}//${window.location.host}${history.location.pathname}`,
           {
             format: 'text/plain',
           },
@@ -245,11 +245,11 @@ export const MemberTabs: React.FC<RouteComponentProps<{
           )}
           <Popover contents="Click to copy">
             <MemberDetailLink
-              href={`${window.location.protocol}//${window.location.host}/members/${memberId}`}
+              href={`${window.location.protocol}//${window.location.host}${history.location.pathname}`}
               onClick={(e) => {
                 e.preventDefault()
                 copy(
-                  `${window.location.protocol}//${window.location.host}/members/${memberId}`,
+                  `${window.location.protocol}//${window.location.host}${history.location.pathname}`,
                   {
                     format: 'text/plain',
                   },
