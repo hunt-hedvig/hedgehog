@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { DateTimePicker, Dropdown, Label as StyledLabel } from '@hedvig-ui'
+import { DateTimePicker, Dropdown, Label } from '@hedvig-ui'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
@@ -17,10 +17,6 @@ const FilterWrapper = styled.div`
   grid-template-columns: 230px 230px 20px;
   align-items: flex-end;
   column-gap: 1em;
-`
-
-const Label = styled(StyledLabel)`
-  padding-left: 1em;
 `
 
 const CloseWrapper = styled.div`
