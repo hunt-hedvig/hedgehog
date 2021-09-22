@@ -8,11 +8,11 @@ import { Keys } from 'utils/hooks/key-press-hook'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
-  height: 500px;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  max-height: 70vh;
   border-radius: 8px;
 `
 
