@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import animateScrollTo from 'animated-scroll-to'
 import { parseISO } from 'date-fns'
 import { useMessageHistory } from 'graphql/use-message-history'
-import PropTypes from 'prop-types'
 import React, { HTMLAttributes, useEffect, useRef } from 'react'
 import { Message } from './Message'
 
@@ -69,8 +68,4 @@ export const MessagesList: React.FC<{ memberId: string } & HTMLAttributes<
       )}
     </MessagesListContainer>
   )
-}
-
-MessagesList.propTypes = {
-  memberId: PropTypes.string.isRequired,
 }
