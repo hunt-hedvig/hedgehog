@@ -169,10 +169,10 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         focus={focus}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
-        onKeyPress={(e) => {
+        onKeyDown={(e) => {
           if (
-            e.altKey &&
-            e.charCode === Keys.Enter.code &&
+            e.metaKey &&
+            e.keyCode === Keys.Enter.code &&
             !submitting &&
             note
           ) {
@@ -192,7 +192,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         {textFieldFocused && (
           <FadeIn duration={200}>
             <NoteTip>
-              Press <Shadowed>Option</Shadowed> + <Shadowed>Return</Shadowed> to
+              Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
               add note
             </NoteTip>
           </FadeIn>
