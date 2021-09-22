@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
 import { MessagesList } from 'features/member/messages/MessagesList'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useSendMessageMutation } from 'types/generated/graphql'
 import { Keys } from 'utils/hooks/key-press-hook'
@@ -45,6 +45,10 @@ export const ConversationChat: React.FC<{
   const [message, setMessage] = useState('')
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage, { loading }] = useSendMessageMutation()
+
+  useEffect(() => {
+    setMessage('')
+  }, [memberId])
 
   const handleOnKeyPress = (e) => {
     if (e.altKey && e.charCode === Keys.Enter.code && !loading && message) {

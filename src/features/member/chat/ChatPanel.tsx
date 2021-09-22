@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import { Button, Checkbox, Flex, TextArea } from '@hedvig-ui'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
+import { useInsecurePersistentState } from 'utils/state'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -52,6 +53,18 @@ export const ChatPanel = ({ memberId }) => {
   const [currentMessage, setCurrentMessage] = useState('')
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [sendMessage, { loading }] = useSendMessage()
+  const [messageDrafts, setMessageDrafts] = useInsecurePersistentState(
+    'hvg:drafts',
+    {},
+  )
+
+  useEffect(() => {
+    const draft = messageDrafts[memberId]
+
+    if (draft) {
+      setCurrentMessage(draft)
+    }
+  }, [])
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLDivElement>) => {
     return e.metaKey && e.keyCode === Keys.Enter.code
@@ -65,6 +78,15 @@ export const ChatPanel = ({ memberId }) => {
       return
     }
     setCurrentMessage(value)
+    setMessageDrafts((drafts) => {
+      if (value) {
+        return { ...messageDrafts, [memberId]: value }
+      }
+
+      const draftsCopy = { ...drafts }
+      delete draftsCopy[memberId]
+      return draftsCopy
+    })
     setError(false)
   }
 
@@ -87,6 +109,11 @@ export const ChatPanel = ({ memberId }) => {
     }
 
     setCurrentMessage('')
+    setMessageDrafts((drafts) => {
+      delete drafts[memberId]
+      return drafts
+    })
+
     setForceSendMessage(false)
     setError(false)
 
