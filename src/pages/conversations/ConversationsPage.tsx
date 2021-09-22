@@ -140,10 +140,10 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
         {memberId ? (
           <FadeFlex {...fadeProps}>
             <Flex direction="row">
-              <Flex>
+              <Flex direction="row" flex="2">
                 <MemberSummary memberId={memberId} />
               </Flex>
-              <Flex style={{ padding: '0 2em' }}>
+              <Flex direction="row" flex="3" style={{ padding: '0 2em' }}>
                 <ConversationChat
                   memberId={memberId}
                   onFocus={() => setChatFocused(true)}
