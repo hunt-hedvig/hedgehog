@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Checkbox, Flex, TextArea } from '@hedvig-ui'
+import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import React, { useState } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
@@ -48,8 +49,9 @@ const ChatTextArea = styled(TextArea)<{ error?: boolean }>`
 `
 
 export const ChatPanel = ({ memberId }) => {
+  const [draft, setDraft] = useDraftMessage({ memberId })
   const [error, setError] = useState(false)
-  const [currentMessage, setCurrentMessage] = useState('')
+  const [currentMessage, setCurrentMessage] = useState(draft)
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [sendMessage, { loading }] = useSendMessage()
 
@@ -65,6 +67,7 @@ export const ChatPanel = ({ memberId }) => {
       return
     }
     setCurrentMessage(value)
+    setDraft(value)
     setError(false)
   }
 
@@ -87,6 +90,8 @@ export const ChatPanel = ({ memberId }) => {
     }
 
     setCurrentMessage('')
+    setDraft('')
+
     setForceSendMessage(false)
     setError(false)
 

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   Fade,
   Flex,
@@ -21,6 +22,13 @@ import {
   doMemberGroupFilter,
 } from 'utils/questionGroup'
 import { useInsecurePersistentState } from 'utils/state'
+
+const FadeFlex = styled(Fade)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 3;
+`
 
 export const ConversationsPage: React.FC<RouteComponentProps<{
   memberId?: string
@@ -129,30 +137,26 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     <>
       <MainHeadline>Conversations</MainHeadline>
       <Flex direction="row" justify={'space-between'}>
-        <Flex direction="row" flex="3">
-          {memberId ? (
-            <>
-              <Flex flex="3">
-                <Fade {...fadeProps}>
-                  <MemberSummary memberId={memberId} />
-                </Fade>
+        {memberId ? (
+          <FadeFlex {...fadeProps}>
+            <Flex direction="row">
+              <Flex direction="row" flex="2">
+                <MemberSummary memberId={memberId} />
               </Flex>
-              <Flex flex="3" style={{ padding: '0 2em' }}>
-                <Fade {...fadeProps}>
-                  <ConversationChat
-                    memberId={memberId}
-                    onFocus={() => setChatFocused(true)}
-                    onBlur={() => setChatFocused(false)}
-                  />
-                </Fade>
+              <Flex direction="row" flex="3" style={{ padding: '0 2em' }}>
+                <ConversationChat
+                  memberId={memberId}
+                  onFocus={() => setChatFocused(true)}
+                  onBlur={() => setChatFocused(false)}
+                />
               </Flex>
-            </>
-          ) : (
-            <StandaloneMessage paddingTop="25vh">
-              Nice, that's it for now!
-            </StandaloneMessage>
-          )}
-        </Flex>
+            </Flex>
+          </FadeFlex>
+        ) : (
+          <StandaloneMessage paddingTop="25vh">
+            Nice, that's it for now!
+          </StandaloneMessage>
+        )}
         <Flex direction="column" style={{ marginTop: '1em' }} flex="1">
           <ConversationsOverview
             filteredGroups={filteredGroups}
