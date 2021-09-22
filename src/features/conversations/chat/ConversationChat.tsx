@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
+import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -28,7 +29,6 @@ const ConversationTextArea = styled(TextArea)`
     border: none;
     border-radius: 8px;
     min-height: 100px;
-    overflow-y: scroll;
   }
 `
 
@@ -42,12 +42,13 @@ export const ConversationChat: React.FC<{
   onFocus: () => void
   onBlur: () => void
 }> = ({ memberId, onFocus, onBlur }) => {
-  const [message, setMessage] = useState('')
+  const [draft, setDraft] = useDraftMessage({ memberId })
+  const [message, setMessage] = useState(draft)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage, { loading }] = useSendMessageMutation()
 
   useEffect(() => {
-    setMessage('')
+    setMessage(draft)
   }, [memberId])
 
   const handleOnKeyPress = (e) => {
@@ -66,6 +67,7 @@ export const ConversationChat: React.FC<{
           loading: 'Sending message',
           success: () => {
             setMessage('')
+            setDraft('')
             return 'Message sent'
           },
           error: 'Could not send message',
@@ -77,7 +79,7 @@ export const ConversationChat: React.FC<{
   return (
     <FadeIn style={{ width: '100%' }}>
       <ConversationContent>
-        <Flex style={{ overflowY: 'hidden' }}>
+        <Flex style={{ overflowY: 'scroll' }}>
           <MessagesList memberId={memberId} />
         </Flex>
         <ConversationFooter>
@@ -92,7 +94,10 @@ export const ConversationChat: React.FC<{
             }}
             placeholder={'Your message goes here...'}
             value={message}
-            onChange={(value) => setMessage(value)}
+            onChange={(value) => {
+              setDraft(value)
+              setMessage(value)
+            }}
             onKeyPress={handleOnKeyPress}
           />
         </ConversationFooter>
