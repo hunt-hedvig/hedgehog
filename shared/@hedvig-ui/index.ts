@@ -52,6 +52,7 @@ export {
   FormDropdown,
   FormInput,
   FormTextArea,
+  FormTextAreaWithRef,
   SubmitButton,
 } from './Form/form'
 export {
