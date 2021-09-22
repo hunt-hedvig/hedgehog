@@ -52,7 +52,7 @@ export const ConversationChat: React.FC<{
   }, [memberId])
 
   const handleOnKeyPress = (e) => {
-    if (e.altKey && e.charCode === Keys.Enter.code && !loading && message) {
+    if (e.metaKey && e.charCode === Keys.Enter.code && !loading && message) {
       toast.promise(
         sendMessage({
           variables: {
@@ -105,14 +105,14 @@ export const ConversationChat: React.FC<{
       <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>
         <FadeIn duration={200}>
           <Tip>
-            <Shadowed>Option</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
+            <Shadowed>Command</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
             <Shadowed>Enter</Shadowed> to mark as resolved
           </Tip>
         </FadeIn>
         {inputFocused && (
           <FadeIn duration={200}>
             <Tip>
-              <Shadowed>Option</Shadowed> + <Shadowed>Return</Shadowed> to send
+              <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to send
             </Tip>
           </FadeIn>
         )}
