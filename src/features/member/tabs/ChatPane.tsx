@@ -42,6 +42,10 @@ const ChatHeaderStyle = styled.div<{ visible: boolean }>`
   cursor: pointer;
 `
 
+const MessageListWithBackground = styled(MessagesList)`
+  background-color: ${({ theme }) => theme.backgroundLight};
+`
+
 export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
   const manualChange = useRef(false)
   const [isVisible, setIsVisible] = useState(window.innerWidth > 1000)
@@ -86,7 +90,7 @@ export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
         onResizeClick={onResizeClick}
         isHinting={isHintingOption}
       />
-      <MessagesList memberId={memberId} />
+      <MessageListWithBackground memberId={memberId} />
       <ChatPanel memberId={memberId} />
     </OpenChatContainer>
   ) : (

@@ -3,13 +3,12 @@ import animateScrollTo from 'animated-scroll-to'
 import { parseISO } from 'date-fns'
 import { useMessageHistory } from 'graphql/use-message-history'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef } from 'react'
+import React, { HTMLAttributes, useEffect, useRef } from 'react'
 import { Message } from './Message'
 
 const MessagesListContainer = styled.div`
   overflow-y: auto;
   padding: 0 20px;
-  background: transparent;
   border-top: 0;
   border-bottom: 0;
   height: 100%;
@@ -26,7 +25,9 @@ const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
-export const MessagesList: React.FC<{ memberId: string }> = ({ memberId }) => {
+export const MessagesList: React.FC<{ memberId: string } & HTMLAttributes<
+  HTMLDivElement
+>> = ({ memberId, ...props }) => {
   const [messages, { loading }] = useMessageHistory(memberId)
   const messagesList = useRef<HTMLDivElement>(null)
   const latestMessage = useRef<HTMLDivElement>(null)
@@ -49,7 +50,7 @@ export const MessagesList: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   return (
-    <MessagesListContainer ref={messagesList}>
+    <MessagesListContainer ref={messagesList} {...props}>
       {messages ? (
         messages.map((item, index) => {
           return (
