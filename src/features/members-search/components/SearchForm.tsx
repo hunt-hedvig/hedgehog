@@ -41,6 +41,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
     <form
       onSubmit={(e) => {
         e.preventDefault()
+
         onSubmit(query, includeAll)
       }}
       autoComplete="off"
@@ -69,8 +70,8 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
               onFocus()
             }}
             onBlur={() => setTextFieldFocused(false)}
-            onKeyPress={(e) => {
-              if (e.altKey && e.charCode === Keys.Enter.code && query) {
+            onKeyDown={(e) => {
+              if (e.metaKey && e.keyCode === Keys.Enter.code && query) {
                 setLuckySearch(true)
                 onSubmit(query, includeAll)
               } else {
@@ -101,7 +102,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
         {textFieldFocused && (
           <FadeIn duration={200}>
             <SearchTip>
-              Press <Shadowed>Option</Shadowed> + <Shadowed>Enter</Shadowed> to
+              Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
               use lucky search
             </SearchTip>
           </FadeIn>

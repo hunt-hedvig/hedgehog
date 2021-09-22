@@ -46,8 +46,8 @@ export const ConversationChat: React.FC<{
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage, { loading }] = useSendMessageMutation()
 
-  const handleOnKeyPress = (e) => {
-    if (e.altKey && e.charCode === Keys.Enter.code && !loading && message) {
+  const handleOnKeyDown = (e) => {
+    if (e.metaKey && e.keyCode === Keys.Enter.code && !loading && message) {
       toast.promise(
         sendMessage({
           variables: {
@@ -89,21 +89,21 @@ export const ConversationChat: React.FC<{
             placeholder={'Your message goes here...'}
             value={message}
             onChange={(value) => setMessage(value)}
-            onKeyPress={handleOnKeyPress}
+            onKeyDown={handleOnKeyDown}
           />
         </ConversationFooter>
       </ConversationContent>
       <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>
         <FadeIn duration={200}>
           <Tip>
-            <Shadowed>Option</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
+            <Shadowed>Command</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
             <Shadowed>Enter</Shadowed> to mark as resolved
           </Tip>
         </FadeIn>
         {inputFocused && (
           <FadeIn duration={200}>
             <Tip>
-              <Shadowed>Option</Shadowed> + <Shadowed>Return</Shadowed> to send
+              <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to send
             </Tip>
           </FadeIn>
         )}
