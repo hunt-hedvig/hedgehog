@@ -19,13 +19,13 @@ export const useResolveConversation = (
   })
 
   const isShiftPressed = useKeyIsPressed(Keys.Shift)
-  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
 
   useEffect(() => {
     if (
       isShiftPressed &&
-      isOptionPressed &&
+      isCommandPressed &&
       isEnterPressed &&
       !loading &&
       memberId
@@ -47,5 +47,5 @@ export const useResolveConversation = (
         },
       )
     }
-  }, [isShiftPressed, isOptionPressed, isEnterPressed])
+  }, [isShiftPressed, isCommandPressed, isEnterPressed])
 }
