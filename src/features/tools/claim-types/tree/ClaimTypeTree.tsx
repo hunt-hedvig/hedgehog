@@ -14,14 +14,14 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
 
   const onDragMove = (currDrag) => {
     setPosition(() => ({
-      x: currDrag.x - currDrag.dx,
-      y: currDrag.y - currDrag.dy,
+      x: -currDrag.dx,
+      y: -currDrag.dy,
     }))
   }
 
   const { isDragging, dragStart, dragEnd, dragMove } = useDrag({
     onDragMove,
-    resetOnStart: true,
+    resetOnStart: false,
   })
 
   return (
