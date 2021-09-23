@@ -63,12 +63,22 @@ const MemberGroupTag = styled(Tag)<{ color: string }>`
   background-color: ${({ color }) => color};
 `
 
-const ClaimWrapper = styled(Flex)`
-  height: 262px;
+const MemberSummaryWrapper = styled.div`
+  max-height: 100%;
   overflow-y: scroll;
 
   ::-webkit-scrollbar-track {
     background: transparent;
+  }
+`
+
+const AdditionalInfo = styled.div`
+  overflow-y: scroll;
+  width: 100%;
+
+  ::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: ${({ theme }) => theme.backgroundTransparent};
   }
 `
 
@@ -104,7 +114,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   )
 
   return (
-    <>
+    <Flex direction="column" style={{ maxHeight: '70vh' }}>
       <MemberCard
         onClick={() => {
           window.open(`/members/${memberId}`)
@@ -132,48 +142,53 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
           )}
         </Flex>
       </MemberCard>
-      {!!claims.length && (
-        <FadeIn style={{ marginTop: '2.0em', width: '100%' }}>
-          <Label style={{ fontSize: '0.9em' }}>Open claims</Label>
-          <ClaimWrapper direction="column">
-            {claims
-              .filter(
-                (claim) =>
-                  claim.state === (ClaimState.Open || ClaimState.Reopened),
-              )
-              .slice(0)
-              .reverse()
-              .map((claim) => {
-                const registrationDate = parseISO(claim.registrationDate)
-                return (
-                  <ClaimItem
-                    onClick={() => window.open(`/claims/${claim.id}`)}
-                    key={claim.id}
-                  >
-                    <Flex justify={'space-between'} align="center">
-                      <div>
-                        {claim.registrationDate &&
-                          format(registrationDate, 'dd MMMM, yyyy')}
-                        <br />
-                        <span style={{ fontSize: '0.8em' }}>
-                          {claim.registrationDate &&
-                            format(registrationDate, 'HH:mm')}
-                        </span>
-                      </div>
-                      <span style={{ paddingRight: '0.5em' }}>
-                        {claim.type?.__typename ? (
-                          splitOnUpperCase(claim.type.__typename.toString())
-                        ) : (
-                          <Placeholder>No claim type</Placeholder>
-                        )}
-                      </span>
-                    </Flex>
-                  </ClaimItem>
+
+      {!!openClaims.length && (
+        <>
+          <Label style={{ fontSize: '0.9em', marginTop: '2em' }}>
+            Open claims
+          </Label>
+          <AdditionalInfo>
+            <MemberSummaryWrapper>
+              {claims
+                .filter(
+                  (claim) =>
+                    claim.state === (ClaimState.Open || ClaimState.Reopened),
                 )
-              })}
-          </ClaimWrapper>
-        </FadeIn>
+                .slice(0)
+                .reverse()
+                .map((claim) => {
+                  const registrationDate = parseISO(claim.registrationDate)
+                  return (
+                    <ClaimItem
+                      onClick={() => window.open(`/claims/${claim.id}`)}
+                      key={claim.id}
+                    >
+                      <Flex justify={'space-between'} align="center">
+                        <div>
+                          {claim.registrationDate &&
+                            format(registrationDate, 'dd MMMM, yyyy')}
+                          <br />
+                          <span style={{ fontSize: '0.8em' }}>
+                            {claim.registrationDate &&
+                              format(registrationDate, 'HH:mm')}
+                          </span>
+                        </div>
+                        <span style={{ paddingRight: '0.5em' }}>
+                          {claim.type?.__typename ? (
+                            splitOnUpperCase(claim.type.__typename.toString())
+                          ) : (
+                            <Placeholder>No claim type</Placeholder>
+                          )}
+                        </span>
+                      </Flex>
+                    </ClaimItem>
+                  )
+                })}
+            </MemberSummaryWrapper>
+          </AdditionalInfo>
+        </>
       )}
-    </>
+    </Flex>
   )
 }

@@ -8,7 +8,7 @@ const BreadcrumbsContainer = styled.div`
   display: flex;
   margin: 20px 0;
   text-transform: capitalize;
-  padding-bottom: 6rem;
+  padding-bottom: 3rem;
 
   &,
   a {

@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-09-22',
+    change:
+      'Chat messages not sent are saved as drafts, even if you change page 🎉',
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-09-21',
     change:
       'Added ability to open claims and members in new tab. Just use Command + Click/Enter',
