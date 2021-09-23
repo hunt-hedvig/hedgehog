@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import { ChatPanel } from 'features/member/chat/ChatPanel'
 import { MessagesList } from 'features/member/messages/MessagesList'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Icon } from 'semantic-ui-react'
 import { useCommandLine } from 'utils/hooks/command-line-hook'
 import { Keys } from 'utils/hooks/key-press-hook'
+import { useInsecurePersistentState } from 'utils/state'
 
 const ChatContainer = styled.div`
   display: flex;
@@ -48,7 +49,10 @@ const MessageListWithBackground = styled(MessagesList)`
 
 export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
   const manualChange = useRef(false)
-  const [isVisible, setIsVisible] = useState(window.innerWidth > 1000)
+  const [isVisible, setIsVisible] = useInsecurePersistentState<boolean>(
+    'chat:visible',
+    window.innerWidth > 1000,
+  )
   const visible = useRef(isVisible)
 
   const { registerActions, isHintingOption } = useCommandLine()
