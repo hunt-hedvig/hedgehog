@@ -35,12 +35,13 @@ const areSwishPayoutsEnabled = () => {
 }
 
 export const ClaimPayment: React.FC<{
+  focus: boolean
   sanctionStatus?: SanctionStatus | null
   claimId: string
   identified: boolean
   market: string
   carrier: string
-}> = ({ sanctionStatus, carrier, claimId, identified, market }) => {
+}> = ({ focus, sanctionStatus, carrier, claimId, identified, market }) => {
   const [createPayment] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
@@ -136,6 +137,7 @@ export const ClaimPayment: React.FC<{
     <FormProvider {...form}>
       <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
+          focus={focus}
           placeholder="Payout amount"
           name="amount"
           defaultValue=""
@@ -195,7 +197,7 @@ export const ClaimPayment: React.FC<{
         {isPotentiallySanctioned && (
           <Checkbox
             label="Override sanction list result (I promise that I have manually checked the list)"
-            name="overriden"
+            name="overridden"
             className="field"
             checked={isOverridden}
             onChange={() => setIsOverridden((prev) => !prev)}
