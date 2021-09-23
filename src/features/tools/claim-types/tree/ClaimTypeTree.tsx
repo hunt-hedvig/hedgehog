@@ -1,15 +1,34 @@
+import styled from '@emotion/styled'
 import { useDrag } from '@visx/drag'
-import { DefaultLink, DefaultNode, Graph } from '@visx/network'
+import { DefaultLink, Graph } from '@visx/network'
 import React, { useState } from 'react'
 
 const data = [
   {
-    claimType: 'AccidentalDamage',
+    claimType: 'Accident',
     properties: [
       {
         id: 'p1',
-        name: 'Property One',
-        options: [{ id: 'o1', name: 'Option 1' }],
+        name: 'Item',
+        options: [
+          { id: 'o1', name: 'Phone' },
+          { id: 'o2', name: 'Computer' },
+          { id: 'o5', name: 'Other electronics' },
+        ],
+      },
+    ],
+  },
+  {
+    claimType: 'Accidental Damage',
+    properties: [
+      {
+        id: 'p1',
+        name: 'Item',
+        options: [
+          { id: 'o1', name: 'Phone' },
+          { id: 'o2', name: 'Computer' },
+          { id: 'o5', name: 'Other electronics' },
+        ],
       },
     ],
   },
@@ -18,13 +37,21 @@ const data = [
     properties: [
       {
         id: 'p1',
-        name: 'Property One',
-        options: [{ id: 'o1', name: 'Option 1' }],
+        name: 'Item',
+        options: [
+          { id: 'o1', name: 'Phone' },
+          { id: 'o2', name: 'Computer' },
+          { id: 'o3', name: 'Bag' },
+          { id: 'o4', name: 'Valuables' },
+        ],
       },
       {
         id: 'p2',
-        name: 'Property One',
-        options: [{ id: 'o1', name: 'Option 1' }],
+        name: 'Location',
+        options: [
+          { id: 'o6', name: 'Office' },
+          { id: 'o7', name: 'Not office' },
+        ],
       },
     ],
   },
@@ -38,43 +65,76 @@ interface NodeLinkMapEntry {
 interface Node {
   x: number
   y: number
+  label: string
+  variant: Variant
 }
 
-const nodeSpacing = 100
+type Variant = 'type' | 'property' | 'option'
+
+const nodeSpacing = 140
+const circleRadius = 10
 
 const idLinks: NodeLinkMapEntry[] = []
 const nodeMap: Record<string, Node> = {}
 
-data.forEach((type, typeIndex) => {
-  const typeNode = {
-    x: typeIndex * nodeSpacing,
-    y: nodeSpacing,
-  }
+const countedMap: Record<string, true> = {}
 
-  type.properties.forEach((property, propertyIndex) => {
-    property.options.forEach((option, optionIndex) => {
+const typeCount = data.length
+let optionCount = 0
+let propertyCount = 0
+
+data.forEach((type) => {
+  type.properties.forEach((property) => {
+    property.options.forEach((option) => {
+      if (!countedMap[option.id]) {
+        countedMap[option.id] = true
+        optionCount += 1
+      }
+    })
+
+    if (!countedMap[property.id]) {
+      countedMap[property.id] = true
+      propertyCount += 1
+    }
+  })
+})
+
+let optionIndex = 0
+let propertyIndex = 0
+
+data.forEach((type, typeIndex) => {
+  type.properties.forEach((property) => {
+    property.options.forEach((option) => {
       if (!nodeMap[option.id]) {
         nodeMap[option.id] = {
-          x:
-            typeIndex * nodeSpacing +
-            propertyIndex * nodeSpacing +
-            optionIndex * nodeSpacing,
+          x: (optionIndex - optionCount / 2) * nodeSpacing,
           y: 3 * nodeSpacing,
+          label: option.name,
+          variant: 'option',
         }
+        optionIndex += 1
       }
       idLinks.push({ source: option.id, target: property.id })
     })
 
     if (!nodeMap[property.id]) {
       nodeMap[property.id] = {
-        x: nodeSpacing * typeIndex + propertyIndex * nodeSpacing,
+        x: (propertyIndex - propertyCount / 2) * nodeSpacing,
         y: 2 * nodeSpacing,
+        label: property.name,
+        variant: 'property',
       }
+      propertyIndex += 1
     }
     idLinks.push({ source: property.id, target: type.claimType })
   })
 
-  nodeMap[type.claimType] = typeNode
+  nodeMap[type.claimType] = {
+    x: (typeIndex - typeCount / 2) * nodeSpacing,
+    y: nodeSpacing,
+    label: type.claimType,
+    variant: 'type',
+  }
 })
 
 export const ClaimTypeTree: React.FC<{}> = ({}) => {
@@ -100,7 +160,11 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
         target: nodeMap[target],
       })),
   )
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+
+  const [position, setPosition] = useState({
+    x: 0,
+    y: 0,
+  })
 
   const onDragMove = (currDrag) => {
     setPosition(() => ({
@@ -133,8 +197,35 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
           links,
         }}
         linkComponent={DefaultLink}
-        nodeComponent={DefaultNode}
+        nodeComponent={({ node: { label, variant } }) => (
+          <>
+            <text x={-label.length * 4} y={-20} style={{ userSelect: 'none' }}>
+              {label}
+            </text>
+            <NodeCircle
+              cx={0}
+              cy={0}
+              r={
+                variant === 'type'
+                  ? circleRadius * 1.3
+                  : variant === 'property'
+                  ? circleRadius
+                  : circleRadius / 1.3
+              }
+              variant={variant}
+            />
+          </>
+        )}
       />
     </svg>
   )
 }
+
+const NodeCircle = styled.circle<{ variant: Variant }>`
+  fill: ${({ theme, variant }) =>
+    variant === 'type'
+      ? theme.foreground
+      : variant === 'property'
+      ? theme.highlight
+      : theme.accent};
+`
