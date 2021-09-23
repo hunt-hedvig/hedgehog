@@ -2999,6 +2999,35 @@
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.2.tgz#808c9fa7e4517274ed555fa158f2de4b4f468e71"
   integrity sha512-HrCIVMLjE1MOozVoD86622S7aunluLb2PJdPfb3nYiEtohm8mIB/vyv0Fd37AdeMFrTUQXEunw78YloMA3Qilg==
 
+"@use-gesture/core@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.0.0.tgz#00caa83f8a5a4292f487862cc5186facb988fc3d"
+  integrity sha512-Xr8qusq1UeHy+UcEpw4yinwLLOhvyX9DOaNbiYruSYppdef2fEHC8JtA32jc1QEUU5C7DBEO1onvBQdZNXtlLg==
+
+"@use-gesture/react@^10.0.0-beta.22":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@use-gesture/react/-/react-10.0.0.tgz#31f1145bf9467c22acc4f1884dbdf3fbd41d6da3"
+  integrity sha512-ltJ+uvrqqHyeJhA4bpSj4hi7K59ijTMcjxKoHOEQdrIw5N8RVoByEw9P5EJPGA0TSHFe01lDIA+NIOiG6oG81w==
+  dependencies:
+    "@use-gesture/core" "^10.0.0"
+
+"@visx/drag@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@visx/drag/-/drag-2.1.0.tgz#e66e3195a71c724a6f012520e97607be98ea4a1c"
+  integrity sha512-oHt7U7fgyaKr+1jLIS2GXuVFCjtA+WXPPWHhaTMpCzzM9e2tw5v2h9ylBS+2Z7eBI//8/NWvsp2M+HRTRr0JnA==
+  dependencies:
+    "@types/react" "*"
+    "@visx/event" "2.1.0"
+    prop-types "^15.5.10"
+
+"@visx/event@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@visx/event/-/event-2.1.0.tgz#e1918e37dbcd86b983fe2c8fe885f94f04faec56"
+  integrity sha512-F8P/NqT5miEIkh6TH1R87jVSu1bfldLPzy4Wc0TPBZrHVUjHAPw2Njm4IdXd0TIStk+h9WKNWrLjjCKGf5JNKg==
+  dependencies:
+    "@types/react" "*"
+    "@visx/point" "2.1.0"
+
 "@visx/group@2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@visx/group/-/group-2.1.0.tgz#65d4a72feb20dd09443f73cdc12ad5fb339792ef"
@@ -3016,6 +3045,21 @@
     "@types/react" "*"
     "@visx/group" "2.1.0"
     classnames "^2.3.1"
+    prop-types "^15.6.2"
+
+"@visx/point@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@visx/point/-/point-2.1.0.tgz#b3e263826f28b3a170d6604dea8ffa27a4b9ac3b"
+  integrity sha512-vVnfI7oqjjttkn05Xi/ooR0UqQRoGf68lyT3SOl0WPHvIQBGNh3XoVUBHDr15/NUkfErgK6TNlfXY763YncPWg==
+
+"@visx/zoom@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@visx/zoom/-/zoom-2.1.0.tgz#8fb812417b0b5689946ba51f96378c4cb2b7038c"
+  integrity sha512-T8LE64cuxtGpG/ubcdCXqbJOlvioCg/QN9KdpZ8LgyumeirQylEUL6/ZIYw/kyz3BqZXynws2X5i+ITPJ1cg+Q==
+  dependencies:
+    "@types/react" "*"
+    "@use-gesture/react" "^10.0.0-beta.22"
+    "@visx/event" "2.1.0"
     prop-types "^15.6.2"
 
 "@webassemblyjs/ast@1.9.0":
