@@ -2,14 +2,104 @@ import { useDrag } from '@visx/drag'
 import { DefaultLink, DefaultNode, Graph } from '@visx/network'
 import React, { useState } from 'react'
 
-export const ClaimTypeTree: React.FC<{}> = ({}) => {
-  const [nodes] = useState([
-    { x: 0, y: 0 },
-    { x: 50, y: 20 },
-    { x: 200, y: 300 },
-    { x: 300, y: 40 },
-  ])
+const data = [
+  {
+    claimType: 'AccidentalDamage',
+    properties: [
+      {
+        id: 'p1',
+        name: 'Property One',
+        options: [{ id: 'o1', name: 'Option 1' }],
+      },
+    ],
+  },
+  {
+    claimType: 'Theft',
+    properties: [
+      {
+        id: 'p1',
+        name: 'Property One',
+        options: [{ id: 'o1', name: 'Option 1' }],
+      },
+      {
+        id: 'p2',
+        name: 'Property One',
+        options: [{ id: 'o1', name: 'Option 1' }],
+      },
+    ],
+  },
+]
 
+interface NodeLinkMapEntry {
+  source: string
+  target: string
+}
+
+interface Node {
+  x: number
+  y: number
+}
+
+const nodeSpacing = 100
+
+const idLinks: NodeLinkMapEntry[] = []
+const nodeMap: Record<string, Node> = {}
+
+data.forEach((type, typeIndex) => {
+  const typeNode = {
+    x: typeIndex * nodeSpacing,
+    y: nodeSpacing,
+  }
+
+  type.properties.forEach((property, propertyIndex) => {
+    property.options.forEach((option, optionIndex) => {
+      if (!nodeMap[option.id]) {
+        nodeMap[option.id] = {
+          x:
+            typeIndex * nodeSpacing +
+            propertyIndex * nodeSpacing +
+            optionIndex * nodeSpacing,
+          y: 3 * nodeSpacing,
+        }
+      }
+      idLinks.push({ source: option.id, target: property.id })
+    })
+
+    if (!nodeMap[property.id]) {
+      nodeMap[property.id] = {
+        x: nodeSpacing * typeIndex + propertyIndex * nodeSpacing,
+        y: 2 * nodeSpacing,
+      }
+    }
+    idLinks.push({ source: property.id, target: type.claimType })
+  })
+
+  nodeMap[type.claimType] = typeNode
+})
+
+export const ClaimTypeTree: React.FC<{}> = ({}) => {
+  const [nodes] = useState(Object.keys(nodeMap).map((id) => nodeMap[id]))
+  const [links] = useState(
+    idLinks
+      .reduce((acc, { source, target }) => {
+        if (
+          !acc.find(({ source: existingSource, target: existingTarget }) => {
+            return (
+              (source === existingSource && target === existingTarget) ||
+              (source === existingTarget && target === existingSource)
+            )
+          })
+        ) {
+          acc.push({ source, target })
+        }
+
+        return acc
+      }, [] as NodeLinkMapEntry[])
+      .map(({ source, target }) => ({
+        source: nodeMap[source],
+        target: nodeMap[target],
+      })),
+  )
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
   const onDragMove = (currDrag) => {
@@ -40,11 +130,7 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
       <Graph
         graph={{
           nodes,
-          links: [
-            { source: nodes[0], target: nodes[1] },
-            { source: nodes[1], target: nodes[2] },
-            { source: nodes[2], target: nodes[0] },
-          ],
+          links,
         }}
         linkComponent={DefaultLink}
         nodeComponent={DefaultNode}
