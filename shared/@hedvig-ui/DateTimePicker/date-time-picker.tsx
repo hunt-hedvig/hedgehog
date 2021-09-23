@@ -17,6 +17,7 @@ interface DatePickerProps {
   placeholder?: string
   disabled?: boolean
   name?: string
+  tabIndex?: number
 }
 
 const StyledInput = styled(Input)<{ fullWidth?: boolean }>`
@@ -42,10 +43,12 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
   placeholder,
   disabled = false,
   name,
+  tabIndex = 0,
 }) => {
   return (
     <Wrapper>
       <DatePicker
+        tabIndex={tabIndex}
         wrapperClassName={fullWidth ? 'datePicker' : null}
         autoComplete="off"
         locale="enGB"

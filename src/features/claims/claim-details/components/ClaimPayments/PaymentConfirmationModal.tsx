@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Button, ButtonsGroup, Input, Modal, Paragraph } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { Market } from 'types/enums'
+import { Keys } from 'utils/hooks/key-press-hook'
 
 const Explanation = styled(Paragraph)`
   margin-top: 2em;
@@ -26,6 +27,12 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
 }) => {
   const [confirmAmount, setConfirmAmount] = useState('')
 
+  const confirmHandler = () => {
+    onSubmit()
+    setConfirmAmount('')
+    onClose()
+  }
+
   return (
     <Modal onClose={onClose} title="Confirm payout" width="500px">
       {!identified && market === Market.Norway && (
@@ -42,17 +49,19 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
         placeholder="Amount"
         value={confirmAmount}
         onChange={(e) => setConfirmAmount(e.currentTarget.value)}
+        onKeyDown={(e) => {
+          if (e.keyCode === Keys.Enter.code) {
+            e.preventDefault()
+            confirmHandler()
+          }
+        }}
       />
       <ButtonsGroup style={{ marginTop: '1em' }}>
         <Button
           type="submit"
           variation="primary"
           disabled={confirmAmount !== amount}
-          onClick={() => {
-            onSubmit()
-            setConfirmAmount('')
-            onClose()
-          }}
+          onClick={confirmHandler}
         >
           Confirm
         </Button>

@@ -52,6 +52,7 @@ export {
   FormDropdown,
   FormInput,
   FormTextArea,
+  FormTextAreaWithRef,
   SubmitButton,
 } from './Form/form'
 export {
@@ -70,11 +71,15 @@ export { Loadable } from './Loadable/loadable'
 export { FlagOrbIndicator, OrbIndicator } from './OrbIndicator/orb-indicator'
 export { Popover } from './Popover/popover'
 export { RadioGroup } from './Radio/radio'
-export { SearchableDropdown } from './SearchableDropdown/searchable-dropdown'
+export {
+  SearchableDropdown,
+  SearchableDropdownWithRef,
+} from './SearchableDropdown/searchable-dropdown'
 export { Spinner } from './Spinner/spinner'
 export { TextArea } from './TextArea/text-area'
 
 export { FadeIn, withFadeIn } from './animations/fade-in'
+export { Fade, useFadeAnimation } from './animations/fade'
 export {
   LoadingMessage,
   StandaloneMessage,
@@ -98,6 +103,8 @@ export {
   Shadowed,
   ThirdLevelHeadline,
   Monetary,
+  Hotkey,
+  HotkeyStyled,
 } from './Typography/typography'
 
 export { Modal } from './Modal'

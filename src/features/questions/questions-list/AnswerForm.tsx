@@ -1,5 +1,13 @@
 import styled from '@emotion/styled'
-import { Checkbox, Form, FormTextArea, Spacing, SubmitButton } from '@hedvig-ui'
+import {
+  Checkbox,
+  FadeIn,
+  Form,
+  FormTextAreaWithRef,
+  Shadowed,
+  Spacing,
+  SubmitButton,
+} from '@hedvig-ui'
 import {
   getAnswerQuestionOptions,
   useAnswerQuestion,
@@ -8,23 +16,40 @@ import {
   getMarkQuestionAsResolvedOptions,
   useMarkQuestionAsResolved,
 } from 'graphql/use-mark-question-as-resolved'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
-const AnswerControls = styled.div`
+const MarkAsResolvedWrapper = styled.div`
+  padding-left: 1rem;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+`
+
+const SubmitButtonWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+`
+
+const CheckTip = styled.div`
+  width: fit-content;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+
+  position: absolute;
+  right: 0;
 `
 
 export const AnswerForm: React.FC<{
   memberId: string
   onDone: () => void
   onError: () => void
-}> = ({ memberId, onDone, onError }) => {
+  isFocused: boolean
+  isGroupFocused: boolean
+}> = ({ memberId, onDone, onError, isGroupFocused, isFocused }) => {
   const form = useForm()
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
 
   const [
     answerQuestion,
@@ -71,12 +96,22 @@ export const AnswerForm: React.FC<{
     )
   }
 
+  useEffect(() => {
+    if (isEnterPressed && isCommandPressed && isGroupFocused && !isFocused) {
+      handleMarkAsResolved()
+    }
+    if (isEnterPressed && isCommandPressed && isFocused) {
+      onSubmit(form.getValues())
+    }
+  }, [isEnterPressed, isCommandPressed])
+
   return (
     <>
       <Spacing top="small" bottom="small">
         <FormProvider {...form}>
           <Form onSubmit={onSubmit}>
-            <FormTextArea
+            <FormTextAreaWithRef
+              focus={isFocused}
               name="answer"
               defaultValue=""
               rules={{
@@ -87,17 +122,35 @@ export const AnswerForm: React.FC<{
                 },
               }}
             />
-            <AnswerControls>
-              <Checkbox
-                label="Mark as resolved"
-                onClick={() => handleMarkAsResolved()}
-                disabled={loading}
-              />
+            <SubmitButtonWrapper>
               <SubmitButton variation="primary">Send</SubmitButton>
-            </AnswerControls>
+            </SubmitButtonWrapper>
           </Form>
         </FormProvider>
       </Spacing>
+      <MarkAsResolvedWrapper>
+        <Checkbox
+          label="Mark as resolved"
+          onClick={() => handleMarkAsResolved()}
+          disabled={loading}
+        />
+      </MarkAsResolvedWrapper>
+      {isGroupFocused && !isFocused && (
+        <FadeIn duration={200}>
+          <CheckTip>
+            Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
+            mark as resolved
+          </CheckTip>
+        </FadeIn>
+      )}
+      {isFocused && (
+        <FadeIn duration={200}>
+          <CheckTip>
+            Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
+            send
+          </CheckTip>
+        </FadeIn>
+      )}
     </>
   )
 }

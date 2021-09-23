@@ -9,7 +9,9 @@ export const FourthLevelHeadline = styled('h4')`
   margin-block-start: 0;
   margin-block-end: 0;
 `
-export const Paragraph = styled.p``
+export const Paragraph = styled.p<{ secondary?: boolean }>`
+  color: ${({ secondary, theme }) => secondary && theme.semiStrongForeground};
+`
 
 export const Label = styled.label`
   font-size: 0.95rem;
@@ -66,3 +68,34 @@ export const ErrorText = styled.p`
   color: ${({ theme }) => theme.danger};
   font-weight: bold;
 `
+
+interface HotkeyProps {
+  hotkey: string
+  hinting: boolean
+  dark?: boolean
+  children: any
+}
+
+const HotkeyWrapper = styled.div`
+  position: relative;
+`
+
+export const HotkeyStyled = styled(Shadowed)<{ dark?: boolean }>`
+  position: absolute;
+  right: -2rem;
+  top: 0;
+  font-size: 13px;
+  background-color: ${({ dark, theme }) =>
+    !dark ? theme.backgroundTransparentContrast : theme.backgroundTransparent};
+`
+
+export const Hotkey = (props: HotkeyProps) => {
+  return (
+    <HotkeyWrapper>
+      {props.children}
+      {props.hinting && (
+        <HotkeyStyled dark={props.dark}>{props.hotkey}</HotkeyStyled>
+      )}
+    </HotkeyWrapper>
+  )
+}

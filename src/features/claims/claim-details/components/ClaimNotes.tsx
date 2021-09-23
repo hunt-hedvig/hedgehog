@@ -69,7 +69,10 @@ const SubNoteWrapper = styled.div`
   flex-direction: row;
 `
 
-const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
+const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
+  claimId,
+  focus,
+}) => {
   const {
     data: claimNotesData,
     loading: loadingClaimNotes,
@@ -163,12 +166,13 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         placeholder="Your note goes here..."
         value={submitting ? '' : note}
         onChange={setNote}
+        focus={focus}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
-        onKeyPress={(e) => {
+        onKeyDown={(e) => {
           if (
-            e.altKey &&
-            e.charCode === Keys.Enter.code &&
+            e.metaKey &&
+            e.keyCode === Keys.Enter.code &&
             !submitting &&
             note
           ) {
@@ -188,7 +192,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         {textFieldFocused && (
           <FadeIn duration={200}>
             <NoteTip>
-              Press <Shadowed>Option</Shadowed> + <Shadowed>Return</Shadowed> to
+              Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
               add note
             </NoteTip>
           </FadeIn>
