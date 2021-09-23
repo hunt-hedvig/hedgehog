@@ -89,17 +89,15 @@ export const ConversationsOverview: React.FC<{
         </Flex>
 
         <ConversationWrapper>
-          {filteredGroups.map((group) => {
-            return (
-              <ConversationItem
-                key={group.memberId}
-                onClick={() => history.push(`/conversations/${group.memberId}`)}
-                selected={group.memberId === currentMemberId}
-              >
-                {group.member?.firstName ?? ''} {group.member?.lastName ?? ''}
-              </ConversationItem>
-            )
-          })}
+          {filteredGroups.map((group) => (
+            <ConversationItem
+              key={group.memberId}
+              onClick={() => history.push(`/conversations/${group.memberId}`)}
+              selected={group.memberId === currentMemberId}
+            >
+              {group.member?.firstName ?? ''} {group.member?.lastName ?? ''}
+            </ConversationItem>
+          ))}
         </ConversationWrapper>
       </Flex>
     </>

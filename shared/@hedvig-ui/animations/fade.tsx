@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React, { HTMLAttributes, useState } from 'react'
 
 const fadeOutUpKeyframes = () =>
   keyframes({
@@ -99,9 +99,15 @@ export const Fade: React.FC<{
   duration: number
   type: FadeType | null
   direction: FadeDirection | null
-}> = ({ duration, type, direction, children }) => {
+} & Omit<HTMLAttributes<HTMLDivElement>, 'children'>> = ({
+  duration,
+  type,
+  direction,
+  children,
+  ...props
+}) => {
   return (
-    <FadeOutWrapper duration={duration}>
+    <FadeOutWrapper duration={duration} {...props}>
       <div className={(type ?? '') + ' ' + (direction ?? '')}>{children}</div>
     </FadeOutWrapper>
   )
