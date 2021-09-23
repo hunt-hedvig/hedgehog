@@ -53,7 +53,7 @@ export const ToolsPage: React.FC = () => (
         </CardLink>
       </Row>
 
-      <Row columns={2}>
+      <Row columns={3}>
         <CardLink to="/tools/campaign-codes" span={4}>
           <Icon>💵</Icon>
           Campaign Codes
@@ -61,6 +61,10 @@ export const ToolsPage: React.FC = () => (
         <CardLink to="/tools/employees" span={4}>
           <Icon>👩🏼‍🦰</Icon>
           Employees
+        </CardLink>
+        <CardLink to="/tools/claim-types" span={4}>
+          <Icon>🧠</Icon>
+          Claim Types
         </CardLink>
       </Row>
     </CardsWrapper>
