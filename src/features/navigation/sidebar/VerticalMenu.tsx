@@ -279,7 +279,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
       label: 'Questions',
       keys: [Keys.Option, Keys.Q],
       onResolve: () => {
-        history.push(routes.questions)
+        history.push(
+          conversationsEnabled ? routes.conversations : routes.questions,
+        )
       },
     },
     {
