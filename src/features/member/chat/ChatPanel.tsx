@@ -42,11 +42,9 @@ const Tip = styled.span`
 const ChatTextArea = styled(TextareaAutosize)<{ error?: boolean }>`
   margin: 0;
   padding: 0.78571429em 1em;
-  outline: 0;
   border-radius: 0.28571429rem;
   font-size: 14px;
   line-height: 1.2857;
-  resize: none;
 
   width: 100% !important;
   max-height: 500px;
