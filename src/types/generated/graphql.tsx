@@ -325,6 +325,19 @@ export enum ClaimPaymentType {
   Expense = 'Expense',
 }
 
+export type ClaimProperty = {
+  __typename?: 'ClaimProperty'
+  id: Scalars['ID']
+  name: Scalars['String']
+  options: Array<ClaimPropertyOption>
+}
+
+export type ClaimPropertyOption = {
+  __typename?: 'ClaimPropertyOption'
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
 export enum ClaimSource {
   App = 'APP',
   Email = 'EMAIL',
@@ -459,6 +472,12 @@ export enum ContractStatus {
 export type CostDeduction = {
   __typename?: 'CostDeduction'
   amount?: Maybe<Scalars['MonetaryAmount']>
+}
+
+export type CreateClaimTypeRelationInput = {
+  claimType: Scalars['String']
+  propertyId: Scalars['ID']
+  propertyOptionId: Scalars['ID']
 }
 
 export type CreateNorwegianGripenInput = {
@@ -726,6 +745,8 @@ export type ListClaimsOptions = {
   pageSize?: Maybe<Scalars['Int']>
   sortBy?: Maybe<Scalars['String']>
   sortDirection?: Maybe<Scalars['String']>
+  filterClaimStates?: Maybe<Array<ClaimState>>
+  filterCreatedBeforeOrOnDate?: Maybe<Scalars['LocalDate']>
 }
 
 export type ListClaimsResult = {
@@ -941,6 +962,14 @@ export type MutationType = {
   updateEmployeeRole: Employee
   removeEmployee: Scalars['Boolean']
   payoutMember?: Maybe<Transaction>
+  createClaimTypeRelation: Scalars['ID']
+  deleteClaimTypeRelation: Scalars['Boolean']
+  updateClaimProperty: Scalars['ID']
+  deprecateClaimProperty: Scalars['ID']
+  createClaimProperty: Scalars['ID']
+  updateClaimPropertyOption: Scalars['ID']
+  deprecateClaimPropertyOption: Scalars['ID']
+  createClaimPropertyOption: Scalars['ID']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -998,7 +1027,7 @@ export type MutationTypeCreateClaimSwishPaymentArgs = {
 
 export type MutationTypeSetClaimTypeArgs = {
   id: Scalars['ID']
-  type: ClaimTypes
+  type?: Maybe<ClaimTypes>
 }
 
 export type MutationTypeSetClaimInformationArgs = {
@@ -1247,6 +1276,40 @@ export type MutationTypePayoutMemberArgs = {
   request: PayoutMemberInput
 }
 
+export type MutationTypeCreateClaimTypeRelationArgs = {
+  request?: Maybe<CreateClaimTypeRelationInput>
+}
+
+export type MutationTypeDeleteClaimTypeRelationArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationTypeUpdateClaimPropertyArgs = {
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export type MutationTypeDeprecateClaimPropertyArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationTypeCreateClaimPropertyArgs = {
+  name: Scalars['String']
+}
+
+export type MutationTypeUpdateClaimPropertyOptionArgs = {
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export type MutationTypeDeprecateClaimPropertyOptionArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationTypeCreateClaimPropertyOptionArgs = {
+  name?: Maybe<Scalars['String']>
+}
+
 export type NationalIdentification = {
   __typename?: 'NationalIdentification'
   identification: Scalars['String']
@@ -1383,6 +1446,8 @@ export type QueryType = {
   listClaims: ListClaimsResult
   employees: Array<Employee>
   availableEmployeeRoles: Array<Scalars['String']>
+  getClaimTypes: Array<Scalars['String']>
+  getClaimTypeTemplate: Array<ClaimProperty>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1435,6 +1500,10 @@ export type QueryTypeMemberSearchArgs = {
 
 export type QueryTypeListClaimsArgs = {
   options: ListClaimsOptions
+}
+
+export type QueryTypeGetClaimTypeTemplateArgs = {
+  claimType: Scalars['String']
 }
 
 export type Question = {

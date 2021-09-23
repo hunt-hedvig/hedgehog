@@ -1,0 +1,3 @@
+mutation CreateClaimTypeRelation($request: CreateClaimTypeRelationInput) {
+  createClaimTypeRelation(request: $request)
+}

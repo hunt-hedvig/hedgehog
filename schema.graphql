@@ -31,6 +31,9 @@ type QueryType {
   listClaims(options: ListClaimsOptions!): ListClaimsResult!
   employees: [Employee!]!
   availableEmployeeRoles: [String!]!
+
+  getClaimTypes: [String!]!
+  getClaimTypeTemplate(claimType: String!): [ClaimProperty!]!
 }
 
 type Me {
@@ -57,18 +60,14 @@ type MutationType {
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
   createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
-  setClaimType(id: ID!, type: ClaimTypes!): Claim
+  setClaimType(id: ID!, type: ClaimTypes): Claim
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
   whitelistMember(memberId: ID!): Member!
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
-  setClaimFileCategory(
-    claimId: ID!
-    claimFileId: ID!
-    category: String
-  ): ClaimFileUpload
+  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): ClaimFileUpload
   activateQuote(
     id: ID!
     activationDate: LocalDate!
@@ -159,6 +158,32 @@ type MutationType {
   updateEmployeeRole(id: ID!, role: String!): Employee!
   removeEmployee(id: ID!): Boolean!
   payoutMember(memberId: ID!, request: PayoutMemberInput!): Transaction
+
+  createClaimTypeRelation(request: CreateClaimTypeRelationInput): ID!
+  deleteClaimTypeRelation(id: ID!): Boolean!
+  updateClaimProperty(id: ID!, name: String!): ID!
+  deprecateClaimProperty(id: ID!): ID!
+  createClaimProperty(name: String!): ID!
+  updateClaimPropertyOption(id: ID!, name: String!): ID!
+  deprecateClaimPropertyOption(id: ID!): ID!
+  createClaimPropertyOption(name: String): ID!
+}
+
+type ClaimProperty {
+  id: ID!
+  name: String!,
+  options: [ClaimPropertyOption!]!
+}
+
+type ClaimPropertyOption {
+  id: ID!
+  name: String!
+}
+
+input CreateClaimTypeRelationInput {
+  claimType: String!
+  propertyId: ID!
+  propertyOptionId: ID!
 }
 
 enum PayoutCategory {
@@ -196,6 +221,8 @@ input ListClaimsOptions {
   pageSize: Int
   sortBy: String
   sortDirection: String
+  filterClaimStates: [ClaimState!]
+  filterCreatedBeforeOrOnDate: LocalDate
 }
 
 type MemberSearchResult {
@@ -552,7 +579,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1010,7 +1037,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
