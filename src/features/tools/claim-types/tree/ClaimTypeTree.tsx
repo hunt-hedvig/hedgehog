@@ -198,7 +198,7 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
         }}
         linkComponent={DefaultLink}
         nodeComponent={({ node: { label, variant } }) => (
-          <>
+          <g>
             <text x={-label.length * 4} y={-20} style={{ userSelect: 'none' }}>
               {label}
             </text>
@@ -214,7 +214,7 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
               }
               variant={variant}
             />
-          </>
+          </g>
         )}
       />
     </svg>
@@ -222,6 +222,7 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
 }
 
 const NodeCircle = styled.circle<{ variant: Variant }>`
+  pointer-events: none;
   fill: ${({ theme, variant }) =>
     variant === 'type'
       ? theme.foreground

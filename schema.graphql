@@ -32,8 +32,13 @@ type QueryType {
   employees: [Employee!]!
   availableEmployeeRoles: [String!]!
 
-  getClaimTypes: [String!]!
-  getClaimTypeTemplate(claimType: String!): [ClaimProperty!]!
+  claimTypes: [String!]!
+  claimTypeTemplate(claimType: String!): ClaimTypeTemplate
+  claimTypeRelations: [ClaimTypeRelation!]!
+  claimProperties: [ClaimProperty!]!
+  claimProperty(id: ID!): ClaimProperty!
+  claimPropertyOptions: [ClaimPropertyOption!]!
+  claimPropertyOption(id: ID!): ClaimPropertyOption!
 }
 
 type Me {
@@ -67,11 +72,7 @@ type MutationType {
   whitelistMember(memberId: ID!): Member!
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
-  setClaimFileCategory(
-    claimId: ID!
-    claimFileId: ID!
-    category: String
-  ): ClaimFileUpload
+  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): ClaimFileUpload
   activateQuote(
     id: ID!
     activationDate: LocalDate!
@@ -173,10 +174,27 @@ type MutationType {
   createClaimPropertyOption(name: String): ID!
 }
 
-type ClaimProperty {
-  id: ID!
+type ClaimTypeTemplate {
+  claimType: String!
+  properties: [ClaimPropertyTemplate!]!
+}
+
+type ClaimPropertyTemplate {
+  propertyId: ID!
   name: String!
   options: [ClaimPropertyOption!]!
+}
+
+type ClaimTypeRelation {
+  id: ID!
+  claimType: String!
+  property: ClaimProperty!
+  propertyOption: ClaimPropertyOption!
+}
+
+type ClaimProperty {
+  id: ID!
+  name: String!,
 }
 
 type ClaimPropertyOption {
@@ -583,7 +601,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1041,7 +1059,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim

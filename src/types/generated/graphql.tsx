@@ -329,13 +329,19 @@ export type ClaimProperty = {
   __typename?: 'ClaimProperty'
   id: Scalars['ID']
   name: Scalars['String']
-  options: Array<ClaimPropertyOption>
 }
 
 export type ClaimPropertyOption = {
   __typename?: 'ClaimPropertyOption'
   id: Scalars['ID']
   name: Scalars['String']
+}
+
+export type ClaimPropertyTemplate = {
+  __typename?: 'ClaimPropertyTemplate'
+  propertyId: Scalars['ID']
+  name: Scalars['String']
+  options: Array<ClaimPropertyOption>
 }
 
 export enum ClaimSource {
@@ -396,6 +402,14 @@ export type ClaimType =
   | DuplicateClaim
   | TestClaim
 
+export type ClaimTypeRelation = {
+  __typename?: 'ClaimTypeRelation'
+  id: Scalars['ID']
+  claimType: Scalars['String']
+  property: ClaimProperty
+  propertyOption: ClaimPropertyOption
+}
+
 export enum ClaimTypes {
   TheftClaim = 'TheftClaim',
   AccidentalDamageClaim = 'AccidentalDamageClaim',
@@ -421,6 +435,12 @@ export enum ClaimTypes {
   DuplicateClaim = 'DuplicateClaim',
   OtherClaim = 'OtherClaim',
   TestClaim = 'TestClaim',
+}
+
+export type ClaimTypeTemplate = {
+  __typename?: 'ClaimTypeTemplate'
+  claimType: Scalars['String']
+  properties: Array<ClaimPropertyTemplate>
 }
 
 export type ConfirmedFraudClaim = {
@@ -1446,8 +1466,13 @@ export type QueryType = {
   listClaims: ListClaimsResult
   employees: Array<Employee>
   availableEmployeeRoles: Array<Scalars['String']>
-  getClaimTypes: Array<Scalars['String']>
-  getClaimTypeTemplate: Array<ClaimProperty>
+  claimTypes: Array<Scalars['String']>
+  claimTypeTemplate?: Maybe<ClaimTypeTemplate>
+  claimTypeRelations: Array<ClaimTypeRelation>
+  claimProperties: Array<ClaimProperty>
+  claimProperty: ClaimProperty
+  claimPropertyOptions: Array<ClaimPropertyOption>
+  claimPropertyOption: ClaimPropertyOption
 }
 
 export type QueryTypeMemberArgs = {
@@ -1502,8 +1527,16 @@ export type QueryTypeListClaimsArgs = {
   options: ListClaimsOptions
 }
 
-export type QueryTypeGetClaimTypeTemplateArgs = {
+export type QueryTypeClaimTypeTemplateArgs = {
   claimType: Scalars['String']
+}
+
+export type QueryTypeClaimPropertyArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryTypeClaimPropertyOptionArgs = {
+  id: Scalars['ID']
 }
 
 export type Question = {
@@ -2511,6 +2544,105 @@ export type UpdateClaimPropertyMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'updateClaimProperty'>
 
+export type GetClaimPropertiesQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetClaimPropertiesQuery = { __typename?: 'QueryType' } & {
+  claimProperties: Array<
+    { __typename?: 'ClaimProperty' } & Pick<ClaimProperty, 'id' | 'name'>
+  >
+}
+
+export type GetClaimPropertyOptionQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetClaimPropertyOptionQuery = { __typename?: 'QueryType' } & {
+  claimPropertyOption: { __typename?: 'ClaimPropertyOption' } & Pick<
+    ClaimPropertyOption,
+    'id' | 'name'
+  >
+}
+
+export type GetClaimPropertyOptionsQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type GetClaimPropertyOptionsQuery = { __typename?: 'QueryType' } & {
+  claimPropertyOptions: Array<
+    { __typename?: 'ClaimPropertyOption' } & Pick<
+      ClaimPropertyOption,
+      'id' | 'name'
+    >
+  >
+}
+
+export type GetClaimPropertyQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetClaimPropertyQuery = { __typename?: 'QueryType' } & {
+  claimProperty: { __typename?: 'ClaimProperty' } & Pick<
+    ClaimProperty,
+    'id' | 'name'
+  >
+}
+
+export type GetClaimTypeRelationsQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type GetClaimTypeRelationsQuery = { __typename?: 'QueryType' } & {
+  claimTypeRelations: Array<
+    { __typename?: 'ClaimTypeRelation' } & Pick<
+      ClaimTypeRelation,
+      'id' | 'claimType'
+    > & {
+        property: { __typename?: 'ClaimProperty' } & Pick<
+          ClaimProperty,
+          'id' | 'name'
+        >
+        propertyOption: { __typename?: 'ClaimPropertyOption' } & Pick<
+          ClaimPropertyOption,
+          'id' | 'name'
+        >
+      }
+  >
+}
+
+export type GetClaimTypeTemplateQueryVariables = Exact<{
+  claimType: Scalars['String']
+}>
+
+export type GetClaimTypeTemplateQuery = { __typename?: 'QueryType' } & {
+  claimTypeTemplate?: Maybe<
+    { __typename?: 'ClaimTypeTemplate' } & Pick<
+      ClaimTypeTemplate,
+      'claimType'
+    > & {
+        properties: Array<
+          { __typename?: 'ClaimPropertyTemplate' } & Pick<
+            ClaimPropertyTemplate,
+            'propertyId' | 'name'
+          > & {
+              options: Array<
+                { __typename?: 'ClaimPropertyOption' } & Pick<
+                  ClaimPropertyOption,
+                  'id' | 'name'
+                >
+              >
+            }
+        >
+      }
+  >
+}
+
+export type GetClaimTypesQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetClaimTypesQuery = { __typename?: 'QueryType' } & Pick<
+  QueryType,
+  'claimTypes'
+>
+
 export type AddNorwegainPostalCodesMutationVariables = Exact<{
   postalCodesString?: Maybe<Scalars['String']>
 }>
@@ -3040,30 +3172,6 @@ export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
       }
   >
 }
-
-export type GetClaimTypeTemplateQueryVariables = Exact<{
-  claimType: Scalars['String']
-}>
-
-export type GetClaimTypeTemplateQuery = { __typename?: 'QueryType' } & {
-  getClaimTypeTemplate: Array<
-    { __typename?: 'ClaimProperty' } & Pick<ClaimProperty, 'name'> & {
-        options: Array<
-          { __typename?: 'ClaimPropertyOption' } & Pick<
-            ClaimPropertyOption,
-            'name'
-          >
-        >
-      }
-  >
-}
-
-export type GetClaimTypesQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetClaimTypesQuery = { __typename?: 'QueryType' } & Pick<
-  QueryType,
-  'getClaimTypes'
->
 
 export type GetContractMarketInfoQueryVariables = Exact<{
   memberId: Scalars['ID']
@@ -5842,6 +5950,427 @@ export type UpdateClaimPropertyMutationOptions = ApolloReactCommon.BaseMutationO
   UpdateClaimPropertyMutation,
   UpdateClaimPropertyMutationVariables
 >
+export const GetClaimPropertiesDocument = gql`
+  query GetClaimProperties {
+    claimProperties {
+      id
+      name
+    }
+  }
+`
+
+/**
+ * __useGetClaimPropertiesQuery__
+ *
+ * To run a query within a React component, call `useGetClaimPropertiesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimPropertiesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimPropertiesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetClaimPropertiesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimPropertiesQuery,
+    GetClaimPropertiesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetClaimPropertiesQuery,
+    GetClaimPropertiesQueryVariables
+  >(GetClaimPropertiesDocument, options)
+}
+export function useGetClaimPropertiesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimPropertiesQuery,
+    GetClaimPropertiesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimPropertiesQuery,
+    GetClaimPropertiesQueryVariables
+  >(GetClaimPropertiesDocument, options)
+}
+export type GetClaimPropertiesQueryHookResult = ReturnType<
+  typeof useGetClaimPropertiesQuery
+>
+export type GetClaimPropertiesLazyQueryHookResult = ReturnType<
+  typeof useGetClaimPropertiesLazyQuery
+>
+export type GetClaimPropertiesQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimPropertiesQuery,
+  GetClaimPropertiesQueryVariables
+>
+export const GetClaimPropertyOptionDocument = gql`
+  query GetClaimPropertyOption($id: ID!) {
+    claimPropertyOption(id: $id) {
+      id
+      name
+    }
+  }
+`
+
+/**
+ * __useGetClaimPropertyOptionQuery__
+ *
+ * To run a query within a React component, call `useGetClaimPropertyOptionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimPropertyOptionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimPropertyOptionQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetClaimPropertyOptionQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetClaimPropertyOptionQuery,
+    GetClaimPropertyOptionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetClaimPropertyOptionQuery,
+    GetClaimPropertyOptionQueryVariables
+  >(GetClaimPropertyOptionDocument, options)
+}
+export function useGetClaimPropertyOptionLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimPropertyOptionQuery,
+    GetClaimPropertyOptionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimPropertyOptionQuery,
+    GetClaimPropertyOptionQueryVariables
+  >(GetClaimPropertyOptionDocument, options)
+}
+export type GetClaimPropertyOptionQueryHookResult = ReturnType<
+  typeof useGetClaimPropertyOptionQuery
+>
+export type GetClaimPropertyOptionLazyQueryHookResult = ReturnType<
+  typeof useGetClaimPropertyOptionLazyQuery
+>
+export type GetClaimPropertyOptionQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimPropertyOptionQuery,
+  GetClaimPropertyOptionQueryVariables
+>
+export const GetClaimPropertyOptionsDocument = gql`
+  query GetClaimPropertyOptions {
+    claimPropertyOptions {
+      id
+      name
+    }
+  }
+`
+
+/**
+ * __useGetClaimPropertyOptionsQuery__
+ *
+ * To run a query within a React component, call `useGetClaimPropertyOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimPropertyOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimPropertyOptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetClaimPropertyOptionsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimPropertyOptionsQuery,
+    GetClaimPropertyOptionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetClaimPropertyOptionsQuery,
+    GetClaimPropertyOptionsQueryVariables
+  >(GetClaimPropertyOptionsDocument, options)
+}
+export function useGetClaimPropertyOptionsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimPropertyOptionsQuery,
+    GetClaimPropertyOptionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimPropertyOptionsQuery,
+    GetClaimPropertyOptionsQueryVariables
+  >(GetClaimPropertyOptionsDocument, options)
+}
+export type GetClaimPropertyOptionsQueryHookResult = ReturnType<
+  typeof useGetClaimPropertyOptionsQuery
+>
+export type GetClaimPropertyOptionsLazyQueryHookResult = ReturnType<
+  typeof useGetClaimPropertyOptionsLazyQuery
+>
+export type GetClaimPropertyOptionsQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimPropertyOptionsQuery,
+  GetClaimPropertyOptionsQueryVariables
+>
+export const GetClaimPropertyDocument = gql`
+  query GetClaimProperty($id: ID!) {
+    claimProperty(id: $id) {
+      id
+      name
+    }
+  }
+`
+
+/**
+ * __useGetClaimPropertyQuery__
+ *
+ * To run a query within a React component, call `useGetClaimPropertyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimPropertyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimPropertyQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetClaimPropertyQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetClaimPropertyQuery,
+    GetClaimPropertyQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetClaimPropertyQuery,
+    GetClaimPropertyQueryVariables
+  >(GetClaimPropertyDocument, options)
+}
+export function useGetClaimPropertyLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimPropertyQuery,
+    GetClaimPropertyQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimPropertyQuery,
+    GetClaimPropertyQueryVariables
+  >(GetClaimPropertyDocument, options)
+}
+export type GetClaimPropertyQueryHookResult = ReturnType<
+  typeof useGetClaimPropertyQuery
+>
+export type GetClaimPropertyLazyQueryHookResult = ReturnType<
+  typeof useGetClaimPropertyLazyQuery
+>
+export type GetClaimPropertyQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimPropertyQuery,
+  GetClaimPropertyQueryVariables
+>
+export const GetClaimTypeRelationsDocument = gql`
+  query GetClaimTypeRelations {
+    claimTypeRelations {
+      id
+      claimType
+      property {
+        id
+        name
+      }
+      propertyOption {
+        id
+        name
+      }
+    }
+  }
+`
+
+/**
+ * __useGetClaimTypeRelationsQuery__
+ *
+ * To run a query within a React component, call `useGetClaimTypeRelationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimTypeRelationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimTypeRelationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetClaimTypeRelationsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimTypeRelationsQuery,
+    GetClaimTypeRelationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetClaimTypeRelationsQuery,
+    GetClaimTypeRelationsQueryVariables
+  >(GetClaimTypeRelationsDocument, options)
+}
+export function useGetClaimTypeRelationsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimTypeRelationsQuery,
+    GetClaimTypeRelationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimTypeRelationsQuery,
+    GetClaimTypeRelationsQueryVariables
+  >(GetClaimTypeRelationsDocument, options)
+}
+export type GetClaimTypeRelationsQueryHookResult = ReturnType<
+  typeof useGetClaimTypeRelationsQuery
+>
+export type GetClaimTypeRelationsLazyQueryHookResult = ReturnType<
+  typeof useGetClaimTypeRelationsLazyQuery
+>
+export type GetClaimTypeRelationsQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimTypeRelationsQuery,
+  GetClaimTypeRelationsQueryVariables
+>
+export const GetClaimTypeTemplateDocument = gql`
+  query GetClaimTypeTemplate($claimType: String!) {
+    claimTypeTemplate(claimType: $claimType) {
+      claimType
+      properties {
+        propertyId
+        name
+        options {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetClaimTypeTemplateQuery__
+ *
+ * To run a query within a React component, call `useGetClaimTypeTemplateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimTypeTemplateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimTypeTemplateQuery({
+ *   variables: {
+ *      claimType: // value for 'claimType'
+ *   },
+ * });
+ */
+export function useGetClaimTypeTemplateQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetClaimTypeTemplateQuery,
+    GetClaimTypeTemplateQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetClaimTypeTemplateQuery,
+    GetClaimTypeTemplateQueryVariables
+  >(GetClaimTypeTemplateDocument, options)
+}
+export function useGetClaimTypeTemplateLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimTypeTemplateQuery,
+    GetClaimTypeTemplateQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimTypeTemplateQuery,
+    GetClaimTypeTemplateQueryVariables
+  >(GetClaimTypeTemplateDocument, options)
+}
+export type GetClaimTypeTemplateQueryHookResult = ReturnType<
+  typeof useGetClaimTypeTemplateQuery
+>
+export type GetClaimTypeTemplateLazyQueryHookResult = ReturnType<
+  typeof useGetClaimTypeTemplateLazyQuery
+>
+export type GetClaimTypeTemplateQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimTypeTemplateQuery,
+  GetClaimTypeTemplateQueryVariables
+>
+export const GetClaimTypesDocument = gql`
+  query GetClaimTypes {
+    claimTypes
+  }
+`
+
+/**
+ * __useGetClaimTypesQuery__
+ *
+ * To run a query within a React component, call `useGetClaimTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimTypesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetClaimTypesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimTypesQuery,
+    GetClaimTypesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetClaimTypesQuery,
+    GetClaimTypesQueryVariables
+  >(GetClaimTypesDocument, options)
+}
+export function useGetClaimTypesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimTypesQuery,
+    GetClaimTypesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimTypesQuery,
+    GetClaimTypesQueryVariables
+  >(GetClaimTypesDocument, options)
+}
+export type GetClaimTypesQueryHookResult = ReturnType<
+  typeof useGetClaimTypesQuery
+>
+export type GetClaimTypesLazyQueryHookResult = ReturnType<
+  typeof useGetClaimTypesLazyQuery
+>
+export type GetClaimTypesQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimTypesQuery,
+  GetClaimTypesQueryVariables
+>
 export const AddNorwegainPostalCodesDocument = gql`
   mutation AddNorwegainPostalCodes($postalCodesString: String) {
     addNorwegianPostalCodes(postalCodesString: $postalCodesString)
@@ -7560,122 +8089,6 @@ export type GetClaimItemsLazyQueryHookResult = ReturnType<
 export type GetClaimItemsQueryResult = ApolloReactCommon.QueryResult<
   GetClaimItemsQuery,
   GetClaimItemsQueryVariables
->
-export const GetClaimTypeTemplateDocument = gql`
-  query GetClaimTypeTemplate($claimType: String!) {
-    getClaimTypeTemplate(claimType: $claimType) {
-      name
-      options {
-        name
-      }
-    }
-  }
-`
-
-/**
- * __useGetClaimTypeTemplateQuery__
- *
- * To run a query within a React component, call `useGetClaimTypeTemplateQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetClaimTypeTemplateQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetClaimTypeTemplateQuery({
- *   variables: {
- *      claimType: // value for 'claimType'
- *   },
- * });
- */
-export function useGetClaimTypeTemplateQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    GetClaimTypeTemplateQuery,
-    GetClaimTypeTemplateQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetClaimTypeTemplateQuery,
-    GetClaimTypeTemplateQueryVariables
-  >(GetClaimTypeTemplateDocument, options)
-}
-export function useGetClaimTypeTemplateLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetClaimTypeTemplateQuery,
-    GetClaimTypeTemplateQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetClaimTypeTemplateQuery,
-    GetClaimTypeTemplateQueryVariables
-  >(GetClaimTypeTemplateDocument, options)
-}
-export type GetClaimTypeTemplateQueryHookResult = ReturnType<
-  typeof useGetClaimTypeTemplateQuery
->
-export type GetClaimTypeTemplateLazyQueryHookResult = ReturnType<
-  typeof useGetClaimTypeTemplateLazyQuery
->
-export type GetClaimTypeTemplateQueryResult = ApolloReactCommon.QueryResult<
-  GetClaimTypeTemplateQuery,
-  GetClaimTypeTemplateQueryVariables
->
-export const GetClaimTypesDocument = gql`
-  query GetClaimTypes {
-    getClaimTypes
-  }
-`
-
-/**
- * __useGetClaimTypesQuery__
- *
- * To run a query within a React component, call `useGetClaimTypesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetClaimTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetClaimTypesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetClaimTypesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetClaimTypesQuery,
-    GetClaimTypesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetClaimTypesQuery,
-    GetClaimTypesQueryVariables
-  >(GetClaimTypesDocument, options)
-}
-export function useGetClaimTypesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetClaimTypesQuery,
-    GetClaimTypesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetClaimTypesQuery,
-    GetClaimTypesQueryVariables
-  >(GetClaimTypesDocument, options)
-}
-export type GetClaimTypesQueryHookResult = ReturnType<
-  typeof useGetClaimTypesQuery
->
-export type GetClaimTypesLazyQueryHookResult = ReturnType<
-  typeof useGetClaimTypesLazyQuery
->
-export type GetClaimTypesQueryResult = ApolloReactCommon.QueryResult<
-  GetClaimTypesQuery,
-  GetClaimTypesQueryVariables
 >
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
