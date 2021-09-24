@@ -642,6 +642,30 @@
             "deprecationReason": null
           },
           {
+            "name": "claimTypeTemplates",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ClaimTypeTemplate",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "claimTypeTemplate",
             "description": null,
             "args": [
@@ -11703,8 +11727,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
+                "kind": "OBJECT",
+                "name": "ClaimTypeRelation",
                 "ofType": null
               }
             },
@@ -11779,8 +11803,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
+                "kind": "OBJECT",
+                "name": "ClaimProperty",
                 "ofType": null
               }
             },
@@ -11810,8 +11834,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
+                "kind": "OBJECT",
+                "name": "ClaimProperty",
                 "ofType": null
               }
             },
@@ -11841,8 +11865,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
+                "kind": "OBJECT",
+                "name": "ClaimProperty",
                 "ofType": null
               }
             },
@@ -11886,8 +11910,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
+                "kind": "OBJECT",
+                "name": "ClaimPropertyOption",
                 "ofType": null
               }
             },
@@ -11917,8 +11941,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
+                "kind": "OBJECT",
+                "name": "ClaimPropertyOption",
                 "ofType": null
               }
             },
@@ -11944,8 +11968,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
+                "kind": "OBJECT",
+                "name": "ClaimPropertyOption",
                 "ofType": null
               }
             },

@@ -1,3 +1,6 @@
 mutation CreateClaimPropertyOption($name: String!) {
-  createClaimPropertyOption(name: $name)
+  createClaimPropertyOption(name: $name) {
+    id
+    name
+  }
 }

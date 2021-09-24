@@ -982,14 +982,14 @@ export type MutationType = {
   updateEmployeeRole: Employee
   removeEmployee: Scalars['Boolean']
   payoutMember?: Maybe<Transaction>
-  createClaimTypeRelation: Scalars['ID']
+  createClaimTypeRelation: ClaimTypeRelation
   deleteClaimTypeRelation: Scalars['Boolean']
-  updateClaimProperty: Scalars['ID']
-  deprecateClaimProperty: Scalars['ID']
-  createClaimProperty: Scalars['ID']
-  updateClaimPropertyOption: Scalars['ID']
-  deprecateClaimPropertyOption: Scalars['ID']
-  createClaimPropertyOption: Scalars['ID']
+  updateClaimProperty: ClaimProperty
+  deprecateClaimProperty: ClaimProperty
+  createClaimProperty: ClaimProperty
+  updateClaimPropertyOption: ClaimPropertyOption
+  deprecateClaimPropertyOption: ClaimPropertyOption
+  createClaimPropertyOption: ClaimPropertyOption
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1467,6 +1467,7 @@ export type QueryType = {
   employees: Array<Employee>
   availableEmployeeRoles: Array<Scalars['String']>
   claimTypes: Array<Scalars['String']>
+  claimTypeTemplates: Array<ClaimTypeTemplate>
   claimTypeTemplate?: Maybe<ClaimTypeTemplate>
   claimTypeRelations: Array<ClaimTypeRelation>
   claimProperties: Array<ClaimProperty>
@@ -2484,15 +2485,23 @@ export type CreateClaimPropertyOptionMutationVariables = Exact<{
 
 export type CreateClaimPropertyOptionMutation = {
   __typename?: 'MutationType'
-} & Pick<MutationType, 'createClaimPropertyOption'>
+} & {
+  createClaimPropertyOption: { __typename?: 'ClaimPropertyOption' } & Pick<
+    ClaimPropertyOption,
+    'id' | 'name'
+  >
+}
 
 export type CreateClaimPropertyMutationVariables = Exact<{
   name: Scalars['String']
 }>
 
-export type CreateClaimPropertyMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'createClaimProperty'>
+export type CreateClaimPropertyMutation = { __typename?: 'MutationType' } & {
+  createClaimProperty: { __typename?: 'ClaimProperty' } & Pick<
+    ClaimProperty,
+    'id' | 'name'
+  >
+}
 
 export type CreateClaimTypeRelationMutationVariables = Exact<{
   request?: Maybe<CreateClaimTypeRelationInput>
@@ -2500,7 +2509,21 @@ export type CreateClaimTypeRelationMutationVariables = Exact<{
 
 export type CreateClaimTypeRelationMutation = {
   __typename?: 'MutationType'
-} & Pick<MutationType, 'createClaimTypeRelation'>
+} & {
+  createClaimTypeRelation: { __typename?: 'ClaimTypeRelation' } & Pick<
+    ClaimTypeRelation,
+    'id' | 'claimType'
+  > & {
+      property: { __typename?: 'ClaimProperty' } & Pick<
+        ClaimProperty,
+        'id' | 'name'
+      >
+      propertyOption: { __typename?: 'ClaimPropertyOption' } & Pick<
+        ClaimPropertyOption,
+        'id' | 'name'
+      >
+    }
+}
 
 export type DeleteClaimTypeRelationMutationVariables = Exact<{
   id: Scalars['ID']
@@ -2516,15 +2539,23 @@ export type DeprecateClaimPropertyOptionMutationVariables = Exact<{
 
 export type DeprecateClaimPropertyOptionMutation = {
   __typename?: 'MutationType'
-} & Pick<MutationType, 'deprecateClaimPropertyOption'>
+} & {
+  deprecateClaimPropertyOption: { __typename?: 'ClaimPropertyOption' } & Pick<
+    ClaimPropertyOption,
+    'id' | 'name'
+  >
+}
 
 export type DeprecateClaimPropertyMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeprecateClaimPropertyMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'deprecateClaimProperty'>
+export type DeprecateClaimPropertyMutation = { __typename?: 'MutationType' } & {
+  deprecateClaimProperty: { __typename?: 'ClaimProperty' } & Pick<
+    ClaimProperty,
+    'id' | 'name'
+  >
+}
 
 export type UpdateClaimPropertyOptionMutationVariables = Exact<{
   id: Scalars['ID']
@@ -2533,16 +2564,24 @@ export type UpdateClaimPropertyOptionMutationVariables = Exact<{
 
 export type UpdateClaimPropertyOptionMutation = {
   __typename?: 'MutationType'
-} & Pick<MutationType, 'updateClaimPropertyOption'>
+} & {
+  updateClaimPropertyOption: { __typename?: 'ClaimPropertyOption' } & Pick<
+    ClaimPropertyOption,
+    'id' | 'name'
+  >
+}
 
 export type UpdateClaimPropertyMutationVariables = Exact<{
   id: Scalars['ID']
   name: Scalars['String']
 }>
 
-export type UpdateClaimPropertyMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'updateClaimProperty'>
+export type UpdateClaimPropertyMutation = { __typename?: 'MutationType' } & {
+  updateClaimProperty: { __typename?: 'ClaimProperty' } & Pick<
+    ClaimProperty,
+    'id' | 'name'
+  >
+}
 
 export type GetClaimPropertiesQueryVariables = Exact<{ [key: string]: never }>
 
@@ -2615,6 +2654,33 @@ export type GetClaimTypeTemplateQueryVariables = Exact<{
 
 export type GetClaimTypeTemplateQuery = { __typename?: 'QueryType' } & {
   claimTypeTemplate?: Maybe<
+    { __typename?: 'ClaimTypeTemplate' } & Pick<
+      ClaimTypeTemplate,
+      'claimType'
+    > & {
+        properties: Array<
+          { __typename?: 'ClaimPropertyTemplate' } & Pick<
+            ClaimPropertyTemplate,
+            'propertyId' | 'name'
+          > & {
+              options: Array<
+                { __typename?: 'ClaimPropertyOption' } & Pick<
+                  ClaimPropertyOption,
+                  'id' | 'name'
+                >
+              >
+            }
+        >
+      }
+  >
+}
+
+export type GetClaimTypeTemplatesQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type GetClaimTypeTemplatesQuery = { __typename?: 'QueryType' } & {
+  claimTypeTemplates: Array<
     { __typename?: 'ClaimTypeTemplate' } & Pick<
       ClaimTypeTemplate,
       'claimType'
@@ -5558,7 +5624,10 @@ export type PaymentScheduleQueryQueryResult = ApolloReactCommon.QueryResult<
 >
 export const CreateClaimPropertyOptionDocument = gql`
   mutation CreateClaimPropertyOption($name: String!) {
-    createClaimPropertyOption(name: $name)
+    createClaimPropertyOption(name: $name) {
+      id
+      name
+    }
   }
 `
 export type CreateClaimPropertyOptionMutationFn = ApolloReactCommon.MutationFunction<
@@ -5607,7 +5676,10 @@ export type CreateClaimPropertyOptionMutationOptions = ApolloReactCommon.BaseMut
 >
 export const CreateClaimPropertyDocument = gql`
   mutation CreateClaimProperty($name: String!) {
-    createClaimProperty(name: $name)
+    createClaimProperty(name: $name) {
+      id
+      name
+    }
   }
 `
 export type CreateClaimPropertyMutationFn = ApolloReactCommon.MutationFunction<
@@ -5656,7 +5728,18 @@ export type CreateClaimPropertyMutationOptions = ApolloReactCommon.BaseMutationO
 >
 export const CreateClaimTypeRelationDocument = gql`
   mutation CreateClaimTypeRelation($request: CreateClaimTypeRelationInput) {
-    createClaimTypeRelation(request: $request)
+    createClaimTypeRelation(request: $request) {
+      id
+      claimType
+      property {
+        id
+        name
+      }
+      propertyOption {
+        id
+        name
+      }
+    }
   }
 `
 export type CreateClaimTypeRelationMutationFn = ApolloReactCommon.MutationFunction<
@@ -5754,7 +5837,10 @@ export type DeleteClaimTypeRelationMutationOptions = ApolloReactCommon.BaseMutat
 >
 export const DeprecateClaimPropertyOptionDocument = gql`
   mutation DeprecateClaimPropertyOption($id: ID!) {
-    deprecateClaimPropertyOption(id: $id)
+    deprecateClaimPropertyOption(id: $id) {
+      id
+      name
+    }
   }
 `
 export type DeprecateClaimPropertyOptionMutationFn = ApolloReactCommon.MutationFunction<
@@ -5803,7 +5889,10 @@ export type DeprecateClaimPropertyOptionMutationOptions = ApolloReactCommon.Base
 >
 export const DeprecateClaimPropertyDocument = gql`
   mutation DeprecateClaimProperty($id: ID!) {
-    deprecateClaimProperty(id: $id)
+    deprecateClaimProperty(id: $id) {
+      id
+      name
+    }
   }
 `
 export type DeprecateClaimPropertyMutationFn = ApolloReactCommon.MutationFunction<
@@ -5852,7 +5941,10 @@ export type DeprecateClaimPropertyMutationOptions = ApolloReactCommon.BaseMutati
 >
 export const UpdateClaimPropertyOptionDocument = gql`
   mutation UpdateClaimPropertyOption($id: ID!, $name: String!) {
-    updateClaimPropertyOption(id: $id, name: $name)
+    updateClaimPropertyOption(id: $id, name: $name) {
+      id
+      name
+    }
   }
 `
 export type UpdateClaimPropertyOptionMutationFn = ApolloReactCommon.MutationFunction<
@@ -5902,7 +5994,10 @@ export type UpdateClaimPropertyOptionMutationOptions = ApolloReactCommon.BaseMut
 >
 export const UpdateClaimPropertyDocument = gql`
   mutation UpdateClaimProperty($id: ID!, $name: String!) {
-    updateClaimProperty(id: $id, name: $name)
+    updateClaimProperty(id: $id, name: $name) {
+      id
+      name
+    }
   }
 `
 export type UpdateClaimPropertyMutationFn = ApolloReactCommon.MutationFunction<
@@ -6315,6 +6410,71 @@ export type GetClaimTypeTemplateLazyQueryHookResult = ReturnType<
 export type GetClaimTypeTemplateQueryResult = ApolloReactCommon.QueryResult<
   GetClaimTypeTemplateQuery,
   GetClaimTypeTemplateQueryVariables
+>
+export const GetClaimTypeTemplatesDocument = gql`
+  query GetClaimTypeTemplates {
+    claimTypeTemplates {
+      claimType
+      properties {
+        propertyId
+        name
+        options {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetClaimTypeTemplatesQuery__
+ *
+ * To run a query within a React component, call `useGetClaimTypeTemplatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimTypeTemplatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimTypeTemplatesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetClaimTypeTemplatesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetClaimTypeTemplatesQuery,
+    GetClaimTypeTemplatesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetClaimTypeTemplatesQuery,
+    GetClaimTypeTemplatesQueryVariables
+  >(GetClaimTypeTemplatesDocument, options)
+}
+export function useGetClaimTypeTemplatesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetClaimTypeTemplatesQuery,
+    GetClaimTypeTemplatesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetClaimTypeTemplatesQuery,
+    GetClaimTypeTemplatesQueryVariables
+  >(GetClaimTypeTemplatesDocument, options)
+}
+export type GetClaimTypeTemplatesQueryHookResult = ReturnType<
+  typeof useGetClaimTypeTemplatesQuery
+>
+export type GetClaimTypeTemplatesLazyQueryHookResult = ReturnType<
+  typeof useGetClaimTypeTemplatesLazyQuery
+>
+export type GetClaimTypeTemplatesQueryResult = ApolloReactCommon.QueryResult<
+  GetClaimTypeTemplatesQuery,
+  GetClaimTypeTemplatesQueryVariables
 >
 export const GetClaimTypesDocument = gql`
   query GetClaimTypes {

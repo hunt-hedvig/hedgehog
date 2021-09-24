@@ -1,3 +1,0 @@
-mutation UpdateClaimPropertyOption($id: ID!, $name: String!) {
-  updateClaimPropertyOption(id: $id, name: $name)
-}
