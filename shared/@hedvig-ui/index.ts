@@ -109,3 +109,6 @@ export {
 
 export { Modal } from './Modal'
 export type ModalProps = _ModalProps
+
+export { Tabs, Tab } from './Tabs'
+// export type TabsProps = _TabsProps
