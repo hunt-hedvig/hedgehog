@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
+import React from 'react'
 
 const color = ({
   theme,
@@ -191,12 +192,30 @@ const cursor = ({ disabled = false }) => {
   `
 }
 
-export const Button = styled.button<{
+const ButtonIcon = styled.span<{ size?: 'small' | 'medium' | 'large' }>`
+  width: 1em;
+  height: 1em;
+  margin-right: ${({ size = 'medium' }) =>
+    size === 'small' ? '0.5rem' : size === 'medium' ? '0.75rem' : '1rem'};
+`
+
+interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'tertiary'
   status?: 'success' | 'warning' | 'danger'
   size?: 'small' | 'medium' | 'large'
   disabled?: boolean
-}>`
+  icon?: React.ReactNode
+  children: React.ReactNode
+}
+
+export const Button = styled(({ icon, children, ...props }: ButtonProps) => (
+  <button {...props}>
+    {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
+    {children}
+  </button>
+))`
+  display: inline-flex;
+  align-items: center;
   font-family: inherit;
   transition: all 200ms;
 
