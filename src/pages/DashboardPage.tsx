@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import {
   Badge,
   Capitalized,
+  Card,
   CasualList,
   CasualListItem,
   FadeIn,
@@ -13,6 +14,7 @@ import {
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
+import { Button } from 'features/tools/employees/button'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import React from 'react'
 import { Link } from 'react-router-dom'
@@ -71,7 +73,23 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <Wrapper>
-      <Spacing bottom>
+      <div>
+        <Button variant={'primary'} status={'success'}>
+          Hello primary
+        </Button>
+        <Button variant={'secondary'} status={'warning'}>
+          Hello secondary
+        </Button>
+        <Button variant={'tertiary'} status={'danger'}>
+          Hello tertiary
+        </Button>
+      </div>
+      <Card>
+        <Button variant={'primary'}>Hello primary</Button>
+        <Button variant={'secondary'}>Hello secondary</Button>
+        <Button variant={'tertiary'}>Hello tertiary</Button>
+      </Card>
+      <Spacing bottom top>
         {data?.me && (
           <MainHeadline>
             Hi there{' '}
