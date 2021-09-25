@@ -1,64 +1,9 @@
 import styled from '@emotion/styled'
+import { getTextFromEnumValue } from '@hedvig-ui'
 import { useDrag } from '@visx/drag'
 import { DefaultLink, Graph } from '@visx/network'
 import React, { useEffect, useState } from 'react'
-import { useGetClaimTypeTemplateQuery } from 'types/generated/graphql'
-
-/*
-const data = [
-  {
-    claimType: 'Accident',
-    properties: [
-      {
-        id: 'p1',
-        name: 'Item',
-        options: [
-          { id: 'o1', name: 'Phone' },
-          { id: 'o2', name: 'Computer' },
-          { id: 'o5', name: 'Other electronics' },
-        ],
-      },
-    ],
-  },
-  {
-    claimType: 'Accidental Damage',
-    properties: [
-      {
-        id: 'p1',
-        name: 'Item',
-        options: [
-          { id: 'o1', name: 'Phone' },
-          { id: 'o2', name: 'Computer' },
-          { id: 'o5', name: 'Other electronics' },
-        ],
-      },
-    ],
-  },
-  {
-    claimType: 'Theft',
-    properties: [
-      {
-        id: 'p1',
-        name: 'Item',
-        options: [
-          { id: 'o1', name: 'Phone' },
-          { id: 'o2', name: 'Computer' },
-          { id: 'o3', name: 'Bag' },
-          { id: 'o4', name: 'Valuables' },
-        ],
-      },
-      {
-        id: 'p2',
-        name: 'Location',
-        options: [
-          { id: 'o6', name: 'Office' },
-          { id: 'o7', name: 'Not office' },
-        ],
-      },
-    ],
-  },
-]
-*/
+import { useGetClaimTypeTemplatesQuery } from 'types/generated/graphql'
 
 interface NodeLink {
   source: Node
@@ -81,15 +26,9 @@ type Variant = 'type' | 'property' | 'option'
 
 export const ClaimTypeTree: React.FC<{}> = ({}) => {
   const circleRadius = 10
-  const { data: claimTypeTemplateData } = useGetClaimTypeTemplateQuery({
-    variables: {
-      claimType: 'ACCIDENTAL_DAMAGE',
-    },
-  })
+  const { data: claimTypeTemplateData } = useGetClaimTypeTemplatesQuery()
 
-  const tree = claimTypeTemplateData?.claimTypeTemplate
-    ? [claimTypeTemplateData.claimTypeTemplate]
-    : []
+  const tree = claimTypeTemplateData?.claimTypeTemplates ?? []
 
   const [nodes, setNodes] = useState<Node[]>([])
   const [links, setLinks] = useState<NodeLink[]>([])
@@ -99,7 +38,7 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
       return
     }
 
-    const nodeSpacing = 140
+    const nodeSpacing = 200
 
     const idLinks: NodeLinkMapEntry[] = []
     const nodeMap: Record<string, Node> = {}
@@ -135,7 +74,10 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
           if (!nodeMap[option.id]) {
             nodeMap[option.id] = {
               x: (optionIndex - optionCount / 2) * nodeSpacing,
-              y: 3 * nodeSpacing,
+              y:
+                3 * nodeSpacing +
+                (typeCount * nodeSpacing) / 10 +
+                (propertyCount * nodeSpacing) / 10,
               label: option.name,
               variant: 'option',
             }
@@ -147,7 +89,7 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
         if (!nodeMap[property.propertyId]) {
           nodeMap[property.propertyId] = {
             x: (propertyIndex - propertyCount / 2) * nodeSpacing,
-            y: 2 * nodeSpacing,
+            y: 2 * nodeSpacing + (typeCount * nodeSpacing) / 10,
             label: property.name,
             variant: 'property',
           }
@@ -227,9 +169,29 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
         linkComponent={DefaultLink}
         nodeComponent={({ node: { label, variant } }) => (
           <g>
-            <text x={-label.length * 4} y={-20} style={{ userSelect: 'none' }}>
-              {label}
-            </text>
+            {getTextFromEnumValue(label)
+              .split(' ')
+              .reduce((acc, word, index) => {
+                const chunkIndex = Math.floor(index / 2)
+
+                if (!acc[chunkIndex]) {
+                  acc[chunkIndex] = [] // start a new chunk
+                }
+
+                acc[chunkIndex].push(word)
+                return acc
+              }, [] as string[][])
+              .slice(0)
+              .reverse()
+              .map((rowLabel, index) => (
+                <text
+                  x={-rowLabel.join(' ').length * 4}
+                  y={-25 - index * 20}
+                  style={{ userSelect: 'none' }}
+                >
+                  {rowLabel.join(' ')}
+                </text>
+              ))}
             <NodeCircle
               cx={0}
               cy={0}
