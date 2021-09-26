@@ -86,7 +86,7 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
             <ItemTitleWrapper>
               <strong>{index + 1}.</strong>
               <Button
-                variation="icon"
+                variant="tertiary"
                 style={{ paddingRight: '0.5em' }}
                 onClick={element.onDropIndexClick(index)}
               >
@@ -100,7 +100,6 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
         )
       })}
       <Button
-        fullWidth
         onClick={(e) => {
           e.preventDefault()
           onAddClick()
@@ -220,9 +219,7 @@ export const JsonSchemaForm: React.FC<{
       widgets={{ SelectWidget: CustomSelectWidget }}
     >
       <ButtonsGroup>
-        <Button halfWidth variation="primary" type="submit">
-          {submitText ?? 'Submit'}
-        </Button>
+        <Button type="submit">{submitText ?? 'Submit'}</Button>
         {children}
       </ButtonsGroup>
     </Form>

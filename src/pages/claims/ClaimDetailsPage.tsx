@@ -189,7 +189,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
             </CardsWrapper>
           ) : (
             <ShowEventButtonWrapper>
-              <Button variation="ghost" onClick={() => setShowEvents(true)}>
+              <Button variant="tertiary" onClick={() => setShowEvents(true)}>
                 Show events
               </Button>
             </ShowEventButtonWrapper>

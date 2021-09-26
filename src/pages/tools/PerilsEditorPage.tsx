@@ -182,7 +182,7 @@ export const PerilsEditorPage: React.FC = () => {
                           }}
                         />
                         <Button
-                          variation="danger"
+                          status="danger"
                           onClick={() => {
                             updateField('covered')(
                               peril.covered.filter(
@@ -196,7 +196,7 @@ export const PerilsEditorPage: React.FC = () => {
                       </CoverageItemWrapper>
                     ))}
                     <Button
-                      variation="success"
+                      status="success"
                       type="button"
                       onClick={() => {
                         updateField('covered')(peril.covered.concat(['']))
@@ -223,7 +223,7 @@ export const PerilsEditorPage: React.FC = () => {
                           }}
                         />
                         <Button
-                          variation="danger"
+                          status="danger"
                           onClick={() => {
                             updateField('exceptions')(
                               peril.exceptions.filter(
@@ -238,7 +238,7 @@ export const PerilsEditorPage: React.FC = () => {
                       </CoverageItemWrapper>
                     ))}
                     <Button
-                      variation="success"
+                      status="success"
                       type="button"
                       onClick={() => {
                         updateField('exceptions')(peril.exceptions.concat(['']))
@@ -270,7 +270,7 @@ export const PerilsEditorPage: React.FC = () => {
                 />
 
                 <Button
-                  variation="danger"
+                  status="danger"
                   type="button"
                   onClick={() => {
                     if (
@@ -292,7 +292,7 @@ export const PerilsEditorPage: React.FC = () => {
 
         <Button
           type="button"
-          variation="success"
+          status="success"
           onClick={() => {
             setParsedPerils(
               parsedPerils?.concat([

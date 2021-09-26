@@ -14,8 +14,6 @@ export const WhitelistMemberButton: React.FC<{
 
   return (
     <Button
-      variation="primary"
-      fullWidth
       onClick={() => {
         confirm(
           `Are you sure you want to whitelist ${memberName?.firstName} ${memberName?.lastName}?`,

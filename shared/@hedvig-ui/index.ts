@@ -13,12 +13,14 @@ export { Flex } from './Flex/flex'
 export type CardTitleBadgeProps = _CardTitleBadgeProps
 export type BadgeProps = _BadgeProps
 export {
-  Button,
+  ButtonOld,
   buttonColorMap,
   ButtonLink,
   ButtonsGroup,
   buttonSizeMap,
-} from './Button/button'
+} from './Button/button-old'
+
+export { Button } from './Button/button'
 
 export {
   Table,
@@ -30,6 +32,7 @@ export {
 } from './Table/table'
 
 export type ButtonProps = _ButtonProps
+
 export {
   Card,
   CardContent,

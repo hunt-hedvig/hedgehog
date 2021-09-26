@@ -151,8 +151,6 @@ export const FreeMonthsForm: React.FC = () => {
       <Spacing top="small" />
       <div>
         <Button
-          variation="primary"
-          loading={loading}
           disabled={loading || !formLooksGood(formData)}
           onClick={() => {
             confirm(`Create new campaign code "${formData.code}"?`).then(() => {

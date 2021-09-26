@@ -50,8 +50,6 @@ export const CampaignsRedeemedTable: React.FC<{
                 </Table.Cell>
                 <Table.Cell width={6}>
                   <Button
-                    variation="primary"
-                    fullWidth
                     disabled={loading}
                     onClick={() => {
                       confirm(

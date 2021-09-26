@@ -18,10 +18,11 @@ export const UnsignMemberPage: React.FC = () => {
           setSsn(value)
         }}
         placeholder="Social Security Number"
+        style={{ width: '300px' }}
       />
       <Spacing top="small" />
       <Button
-        variation="primary"
+        variant="primary"
         disabled={loading || ssn === ''}
         onClick={() => {
           confirm(

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { Button, Flex } from '@hedvig-ui'
+import { Flex } from '@hedvig-ui'
+import { Button } from '@hedvig-ui/Button/button'
 import { ConversationsRemaining } from 'features/conversations/overview/ConversationsRemaining'
 import React from 'react'
 import { useHistory } from 'react-router'
@@ -65,6 +66,7 @@ export const ConversationsOverview: React.FC<{
         <Flex direction="row" justify="center">
           <Button
             style={{ marginLeft: '-0.5em' }}
+            variant="secondary"
             size="small"
             onClick={() =>
               confirm('Do you want to go back to the questions tab?').then(
@@ -80,6 +82,7 @@ export const ConversationsOverview: React.FC<{
             Back to questions
           </Button>
           <Button
+            variant="secondary"
             size="small"
             onClick={() => history.push('/conversations/settings')}
             style={{ marginLeft: '1em' }}

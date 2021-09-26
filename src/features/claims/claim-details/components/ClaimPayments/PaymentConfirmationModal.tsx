@@ -59,14 +59,13 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
       <ButtonsGroup style={{ marginTop: '1em' }}>
         <Button
           type="submit"
-          variation="primary"
           disabled={confirmAmount !== amount}
           onClick={confirmHandler}
         >
           Confirm
         </Button>
         <Button
-          variation="ghost"
+          variant="tertiary"
           style={{ marginLeft: '1.0em' }}
           onClick={() => {
             onClose()

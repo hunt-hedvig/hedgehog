@@ -15,8 +15,8 @@ export const BackfillSubscriptionsButton: React.FC<{
 
   return (
     <Button
-      variation="third"
-      loading={loading}
+      variant="secondary"
+      disabled={loading}
       onClick={() => {
         confirm('Are you sure? (Have you talked to Elvin?)').then(() => {
           toast.promise(

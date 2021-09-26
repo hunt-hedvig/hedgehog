@@ -214,14 +214,13 @@ export const SwitcherEmailRow: React.FC<Pick<
             <ButtonsGroup>
               <Button
                 size="small"
-                variation="primary"
                 onClick={() => setEditNote((current) => !current)}
               >
                 Toggle note edit
               </Button>
               <Button
                 size="small"
-                variation="secondary"
+                variant="secondary"
                 disabled={!!remindedAtDate || markAsRemindedOptions.loading}
                 onClick={async () => {
                   if (
@@ -252,13 +251,13 @@ export const SwitcherEmailRow: React.FC<Pick<
           <>
             <ButtonsGroup>
               <Button
-                variation="success"
+                status="success"
                 onClick={() => setActivateContractView(true)}
               >
                 Activate
               </Button>
               <Button
-                variation="danger"
+                status="danger"
                 onClick={() => setTerminateContractView(true)}
               >
                 Terminate
@@ -274,7 +273,7 @@ export const SwitcherEmailRow: React.FC<Pick<
                   <Label>&nbsp;</Label>
                   <ButtonsGroup>
                     <Button
-                      variation="success"
+                      status="success"
                       disabled={loading}
                       onClick={() => {
                         const confirmMessage = `Are you sure you want to activate this contract with master inception of ${format(
@@ -290,7 +289,10 @@ export const SwitcherEmailRow: React.FC<Pick<
                     >
                       Confirm
                     </Button>
-                    <Button onClick={() => setActivateContractView(false)}>
+                    <Button
+                      variant="tertiary"
+                      onClick={() => setActivateContractView(false)}
+                    >
                       Cancel
                     </Button>
                   </ButtonsGroup>
@@ -326,7 +328,7 @@ export const SwitcherEmailRow: React.FC<Pick<
                   <Label>&nbsp;</Label>
                   <ButtonsGroup>
                     <Button
-                      variation="danger"
+                      status="danger"
                       disabled={terminationReason === null || loading}
                       onClick={() => {
                         const confirmMessage = `Are you sure you want to terminate this contract with the termination date ${format(
@@ -349,7 +351,10 @@ export const SwitcherEmailRow: React.FC<Pick<
                     >
                       Confirm
                     </Button>
-                    <Button onClick={() => setTerminateContractView(false)}>
+                    <Button
+                      variant="tertiary"
+                      onClick={() => setTerminateContractView(false)}
+                    >
                       Cancel
                     </Button>
                   </ButtonsGroup>

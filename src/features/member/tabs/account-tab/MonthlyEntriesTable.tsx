@@ -95,7 +95,6 @@ export const MonthlyEntriesTable: React.FC<{
               </Table.Cell>
               <Table.Cell>
                 <Button
-                  variation="icon"
                   onClick={() => {
                     confirm(
                       `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,

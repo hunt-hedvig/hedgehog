@@ -160,7 +160,6 @@ export const AccountTab: React.FC<{
             <div>
               <BackfillSubscriptionsButton memberId={memberId} />
               <Button
-                variation="primary"
                 onClick={() => setShowAccountEntryForm(true)}
                 disabled={showAccountEntryForm}
                 style={{ marginLeft: '1.0em' }}
@@ -212,7 +211,6 @@ export const AccountTab: React.FC<{
               </Spacing>
             </Flex>
             <Button
-              variation="primary"
               onClick={() => setShowMonthlyEntryForm(true)}
               disabled={showMonthlyEntryForm}
             >

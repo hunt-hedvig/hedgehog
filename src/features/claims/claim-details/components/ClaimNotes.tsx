@@ -182,11 +182,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
       />
       <Spacing top="small" />
       <SubNoteWrapper>
-        <Button
-          disabled={!note}
-          variation="primary"
-          onClick={() => handleSubmitNote()}
-        >
+        <Button disabled={!note} onClick={() => handleSubmitNote()}>
           Add note
         </Button>
         {textFieldFocused && (

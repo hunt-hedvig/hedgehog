@@ -126,8 +126,6 @@ export const VisibleNoDiscountForm: React.FC = () => {
       <Spacing top="small" />
       <div>
         <Button
-          variation="primary"
-          loading={loading}
           disabled={loading || !formIsValid(formData)}
           onClick={() => {
             confirm(`Create new campaign code "${formData.code}"?`).then(() => {

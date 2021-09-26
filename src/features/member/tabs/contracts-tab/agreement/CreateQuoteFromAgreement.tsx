@@ -63,11 +63,7 @@ export const CreateQuoteFromAgreement: React.FC<{
         {quoteAlreadyExists ? (
           <QuoteMessage>Agreement already has an existing quote</QuoteMessage>
         ) : (
-          <Button
-            disabled={contract.isLocked}
-            variation="primary"
-            onClick={createQuoteHandler}
-          >
+          <Button disabled={contract.isLocked} onClick={createQuoteHandler}>
             Create a new quote
           </Button>
         )}

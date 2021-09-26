@@ -51,9 +51,7 @@ export const ToDate: React.FC<{
         </Spacing>
       )}
       {!datePickerEnabled && agreement.toDate && !contract.terminationDate && (
-        <Button variation="primary" onClick={() => setDatePickerEnabled(true)}>
-          Edit
-        </Button>
+        <Button onClick={() => setDatePickerEnabled(true)}>Edit</Button>
       )}
       {!datePickerEnabled && contract.terminationDate && (
         <Paragraph>Terminated</Paragraph>
@@ -65,7 +63,6 @@ export const ToDate: React.FC<{
           </Spacing>
           <ButtonsGroup>
             <Button
-              variation="secondary"
               onClick={() => {
                 const formattedToDate = format(toDate, 'yyyy-MM-dd')
                 confirm(`Change the to date to ${formattedToDate}?`).then(
@@ -87,7 +84,9 @@ export const ToDate: React.FC<{
             >
               Confirm
             </Button>
-            <Button onClick={() => reset()}>Cancel</Button>
+            <Button variant="tertiary" onClick={() => reset()}>
+              Cancel
+            </Button>
           </ButtonsGroup>
         </>
       )}

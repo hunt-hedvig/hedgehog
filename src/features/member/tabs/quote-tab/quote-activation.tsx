@@ -134,17 +134,14 @@ export const QuoteActivation: React.FC<{
 
       {!addAgreementMutation.data?.addAgreementFromQuote ? (
         <Button
-          variation="success"
+          status="success"
           type="submit"
-          fullWidth
           disabled={addAgreementMutation.loading}
         >
           {contract.hasPendingAgreement ? 'Replace' : 'Activate'}
         </Button>
       ) : (
         <Button
-          variation="primary"
-          fullWidth
           onClick={(e) => {
             e.preventDefault()
             window.location.reload()

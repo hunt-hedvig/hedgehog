@@ -30,7 +30,7 @@ export const CampaignCodeInput: React.FC<{
               setDate={setActivationDate}
             />
             <Button
-              variation="primary"
+              variant="secondary"
               style={{ width: '15%' }}
               onClick={() => setActivationDate(null)}
             >
@@ -41,7 +41,6 @@ export const CampaignCodeInput: React.FC<{
       </Group>
       <Group style={{ marginTop: '1.0rem' }}>
         <Button
-          variation="primary"
           disabled={campaignCode === '' || loading}
           onClick={() => {
             confirm(
@@ -72,7 +71,7 @@ export const CampaignCodeInput: React.FC<{
         </Button>
         {!activationDate && (
           <Button
-            variation="secondary"
+            variant="tertiary"
             onClick={() => setActivationDate(new Date())}
           >
             Add activation date

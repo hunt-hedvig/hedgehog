@@ -1,5 +1,12 @@
 import styled from '@emotion/styled'
-import { Button, Checkbox, FadeIn, Flex, Shadowed, Spinner } from '@hedvig-ui'
+import {
+  ButtonOld,
+  Checkbox,
+  FadeIn,
+  Flex,
+  Shadowed,
+  Spinner,
+} from '@hedvig-ui'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import React, { useState } from 'react'
@@ -68,7 +75,7 @@ const ChatTextArea = styled(TextareaAutosize)<{ error?: boolean }>`
   }
 `
 
-const SubmitButton = styled(Button)`
+const SubmitButton = styled(ButtonOld)`
   display: none;
 
   @media (max-width: 768px) {

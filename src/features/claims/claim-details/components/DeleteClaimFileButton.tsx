@@ -20,7 +20,7 @@ export const DeleteButton: React.FC<{
     <>
       <Button
         disabled={loading}
-        variation="danger"
+        status="danger"
         onClick={() => {
           confirm('Are you sure you want to delete this file?').then(() => {
             toast.promise(

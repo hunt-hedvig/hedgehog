@@ -60,8 +60,7 @@ export const InsuranceCertificate: React.FC<{
         )}
         <Button
           disabled={loading}
-          variation="third"
-          fullWidth
+          variant="secondary"
           onClick={() => {
             confirm(
               'Are you sure you want to regenerate the certificate?',
@@ -83,12 +82,7 @@ export const InsuranceCertificate: React.FC<{
         </Button>
         <Dropzone onDrop={(files) => onUpload(files, agreement.id)}>
           {({ getRootProps, getInputProps }) => (
-            <Button
-              fullWidth={!!agreement.certificateUrl}
-              halfWidth={!agreement.certificateUrl}
-              variation="third"
-              {...(getRootProps() as any)}
-            >
+            <Button variant="secondary" {...(getRootProps() as any)}>
               <input {...getInputProps()} />
               Upload New
             </Button>

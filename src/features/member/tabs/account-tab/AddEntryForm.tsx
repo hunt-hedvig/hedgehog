@@ -230,9 +230,9 @@ export const AddEntryForm: React.FC<{
             }}
           />
         </Spacing>
-        <SubmitButton variation="primary">Add entry</SubmitButton>
+        <SubmitButton>Add entry</SubmitButton>
         <Button
-          variation="ghost"
+          variant="tertiary"
           onClick={onCancel}
           style={{ marginLeft: '1.0em' }}
         >

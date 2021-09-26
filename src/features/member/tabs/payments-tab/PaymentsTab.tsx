@@ -215,7 +215,6 @@ export const PaymentsTab: React.FC<{
         <Card span={2}>
           <ThirdLevelHeadline>Payments Link</ThirdLevelHeadline>
           <Button
-            variation="primary"
             onClick={(e) => {
               e.preventDefault()
               toast.promise(createPaymentCompletionLink(), {
@@ -246,10 +245,7 @@ export const PaymentsTab: React.FC<{
               <Mutation mutation={CHARGE_MEMBER_MUTATION}>
                 {(chargeMember) => (
                   <>
-                    <Button
-                      variation="primary"
-                      onClick={() => handleChargeSubmit(chargeMember)}
-                    >
+                    <Button onClick={() => handleChargeSubmit(chargeMember)}>
                       Charge {formatMoney(account.currentBalance!)}
                     </Button>
                   </>
