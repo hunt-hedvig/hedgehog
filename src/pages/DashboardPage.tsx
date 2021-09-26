@@ -17,7 +17,7 @@ import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member
 import { Button } from 'features/tools/employees/button'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import React from 'react'
-import { Shield } from 'react-bootstrap-icons'
+import { Shield, StarFill } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 import { useGetMeQuery } from 'types/generated/graphql'
 import { useInsecurePersistentState } from 'utils/state'
@@ -78,10 +78,23 @@ export const DashboardPage: React.FC = () => {
         <Button icon={<Shield />} variant={'primary'} status={'success'}>
           Hello primary
         </Button>
-        <Button variant={'secondary'} status={'warning'}>
+        <Button variant={'primary'} status={'success'}>
+          Hello primary
+        </Button>
+        <Button
+          icon={<StarFill />}
+          size="small"
+          variant={'secondary'}
+          status={'warning'}
+        >
           Hello secondary
         </Button>
-        <Button variant={'tertiary'} status={'danger'}>
+        <Button
+          icon={<StarFill />}
+          size="large"
+          variant={'tertiary'}
+          status={'danger'}
+        >
           Hello tertiary
         </Button>
       </div>

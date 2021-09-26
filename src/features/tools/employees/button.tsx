@@ -192,13 +192,6 @@ const cursor = ({ disabled = false }) => {
   `
 }
 
-const ButtonIcon = styled.span<{ size?: 'small' | 'medium' | 'large' }>`
-  width: 1em;
-  height: 1em;
-  margin-right: ${({ size = 'medium' }) =>
-    size === 'small' ? '0.5rem' : size === 'medium' ? '0.75rem' : '1rem'};
-`
-
 interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'tertiary'
   status?: 'success' | 'warning' | 'danger'
@@ -208,14 +201,31 @@ interface ButtonProps {
   children: React.ReactNode
 }
 
-export const Button = styled(({ icon, children, ...props }: ButtonProps) => (
-  <button {...props}>
-    {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
-    {children}
-  </button>
-))`
+const ButtonIcon = styled.div<{ size?: 'small' | 'medium' | 'large' }>`
+  margin-right: ${({ size = 'medium' }) =>
+    size === 'small' ? '0.5rem' : size === 'medium' ? '0.75rem' : '1rem'};
+
+  svg {
+    margin-bottom: -12%;
+  }
+`
+
+const ButtonIconWrapper = styled.div`
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+`
+
+export const Button = styled(({ icon, children, ...props }: ButtonProps) => {
+  return (
+    <button {...props}>
+      <ButtonIconWrapper>
+        {!!icon && <ButtonIcon>{icon}</ButtonIcon>}
+        <div>{children}</div>
+      </ButtonIconWrapper>
+    </button>
+  )
+})`
   font-family: inherit;
   transition: all 200ms;
 
