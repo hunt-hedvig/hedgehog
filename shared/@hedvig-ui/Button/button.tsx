@@ -235,6 +235,10 @@ export const Button = styled(
   font-family: inherit;
   transition: all 200ms;
 
+  * {
+    transition: all 200ms;
+  }
+
   ${cursor};
   ${color};
   ${backgroundColor};
