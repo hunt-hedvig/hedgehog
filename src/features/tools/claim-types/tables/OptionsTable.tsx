@@ -1,13 +1,13 @@
 import {
   Button,
   Flex,
-  Input,
   Table,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { UpdateNameInput } from 'features/tools/claim-types/tables/UpdateNameInput'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -20,37 +20,6 @@ import {
 } from 'types/generated/graphql'
 import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { convertCamelcaseToTitle } from 'utils/text'
-
-const UpdateNameInput: React.FC<{
-  initial: string
-  onSubmit: (value: string) => void
-  disabled: boolean
-}> = ({ initial, onSubmit, disabled }) => {
-  const [value, setValue] = useState(initial)
-
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit(value)
-      }}
-      style={{ width: '100%' }}
-    >
-      <Flex align="center">
-        <Input
-          autoFocus
-          size="small"
-          disabled={disabled}
-          value={value}
-          onChange={(e) => setValue(e.currentTarget.value)}
-        />
-        <Button type="submit" variation="primary" style={{ marginLeft: '1em' }}>
-          Update
-        </Button>
-      </Flex>
-    </form>
-  )
-}
 
 export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
   const [
@@ -65,10 +34,6 @@ export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
   const { data } = useGetClaimPropertyOptionsQuery()
   const claimPropertyOptions = data?.claimPropertyOptions
 
-  if (!claimPropertyOptions) {
-    return null
-  }
-
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
@@ -76,6 +41,10 @@ export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
       setEditing(null)
     }
   }, [isEscapePressed])
+
+  if (!claimPropertyOptions) {
+    return null
+  }
 
   const handleUpdateOption = (value: string, option: ClaimPropertyOption) => {
     toast.promise(
@@ -157,7 +126,7 @@ export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
               {editing === option.id ? (
                 <Flex align="center">
                   <UpdateNameInput
-                    initial={option.name}
+                    initial={convertCamelcaseToTitle(option.name)}
                     disabled={updateLoading || deprecateLoading}
                     onSubmit={(value) => handleUpdateOption(value, option)}
                   />

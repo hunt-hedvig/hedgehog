@@ -7,7 +7,8 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
-import { CreateRelationForm } from 'features/tools/claim-types/CreateRelationForm'
+import { CreateOptionForm } from 'features/tools/claim-types/forms/CreateOptionForm'
+import { CreateRelationForm } from 'features/tools/claim-types/forms/CreateRelationForm'
 import { OptionsTable } from 'features/tools/claim-types/tables/OptionsTable'
 import { PropertiesTable } from 'features/tools/claim-types/tables/PropertiesTable'
 import { RelationsTable } from 'features/tools/claim-types/tables/RelationsTable'
@@ -114,8 +115,18 @@ export const ClaimTypesPage: React.FC = () => {
             marginLeft: '1em',
           }}
         >
-          <SecondLevelHeadline>Create relation</SecondLevelHeadline>
-          <CreateRelationForm />
+          {tab === 'options' && (
+            <div style={{ marginTop: '5rem', width: '100%' }}>
+              <SecondLevelHeadline>Create option</SecondLevelHeadline>
+              <CreateOptionForm />
+            </div>
+          )}
+          {tab === 'relations' && (
+            <div style={{ marginTop: '5rem', width: '100%' }}>
+              <SecondLevelHeadline>Create relation</SecondLevelHeadline>
+              <CreateRelationForm />
+            </div>
+          )}
         </Container>
       </Flex>
     </>
