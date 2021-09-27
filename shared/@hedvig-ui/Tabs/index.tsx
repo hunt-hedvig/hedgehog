@@ -1,10 +1,13 @@
 import styled from '@emotion/styled'
-import React from 'react'
-import { Keys } from '../../../src/utils/hooks/key-press-hook'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router'
+import { Key, Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 /** Tab: */
 
 const TabStyled = styled.li<{ active?: boolean }>`
+  transition: all 0.3s;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,26 +40,51 @@ const TabStyled = styled.li<{ active?: boolean }>`
 
 export interface TabProps {
   active?: boolean
+  action: () => void
   title: string
-  collapsed?: boolean
-  collapsedTitle?: string
+  name?: string
+  hotkey: {
+    name: string
+    key: Key
+  }
 }
 
-export const Tab: React.FC<TabProps> = ({ active, title }) => {
-  const [isActive, setIsActive] = React.useState(active || false)
+export const Tab: React.FC<TabProps> = ({
+  active,
+  title,
+  name,
+  action,
+  hotkey,
+}) => {
+  const history = useHistory()
+  const path = history.location.pathname.split('/')
 
-  const clickHandler = () => {
-    setIsActive((prev) => !prev)
-  }
+  const [isActive, setIsActive] = React.useState(active || false)
+  const isKeyPressed = useKeyIsPressed(hotkey.key)
+  const isControlPressed = useKeyIsPressed(Keys.Control)
+
+  useEffect(() => {
+    if (isKeyPressed && isControlPressed) {
+      action()
+    }
+  }, [isKeyPressed, isControlPressed])
+
+  useEffect(() => {
+    if (name === path[path.length - 1]) {
+      setIsActive(true)
+    } else {
+      setIsActive(false)
+    }
+  }, [path])
 
   return (
     <TabStyled
       active={isActive}
       tabIndex={0}
-      onClick={clickHandler}
-      onKeyDown={(e) => e.keyCode === Keys.Enter.code && clickHandler()}
+      onClick={action}
+      onKeyDown={(e) => e.keyCode === Keys.Enter.code && action()}
     >
-      {title}
+      {title} {isControlPressed && hotkey.name}
     </TabStyled>
   )
 }
@@ -83,7 +111,7 @@ export const Tabs: React.FC<TabsProps> = ({ list }) => {
   return (
     <TabsWrapper tabCount={list.length}>
       {list.map((tab) => (
-        <Tab {...tab} />
+        <Tab key={tab.name} {...tab} />
       ))}
     </TabsWrapper>
   )

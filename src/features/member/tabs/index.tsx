@@ -4,96 +4,102 @@ import { MemberFile } from 'features/member/tabs/files-tab/FileTab'
 import { PaymentsTab } from 'features/member/tabs/payments-tab/PaymentsTab'
 import { Quotes } from 'features/member/tabs/quote-tab'
 
-import styled from '@emotion/styled'
 import { ClaimsTab } from 'features/member/tabs/claims-tab/ClaimsTab'
 import React from 'react'
-import { Tab } from 'semantic-ui-react'
+import { Keys } from 'utils/hooks/key-press-hook'
 import { AccountTab } from './account-tab'
 import { CampaignsTab } from './campaigns-tab'
 import { DebtTab } from './debt-tab'
 
-const TabContainer = styled(Tab.Pane)`
-  &&& {
-    display: flex;
-    flex-direction: column;
-    min-width: 700px;
-    margin-bottom: 50px !important;
-  }
-`
-
-const TabItem: React.FC<{ props: any; TabContent: any }> = ({
-  props,
-  TabContent,
-}) => {
-  return (
-    <TabContainer>
-      <TabContent {...props} />
-    </TabContainer>
-  )
-}
-
-export const memberPagePanes = (props, memberId, member, isHinting) => [
+export const memberPagePanes = (memberId, member) => [
   {
+    tabTitle: 'Claims',
     tabName: 'claims',
-    menuItem: `Claims ${isHinting ? '(1)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={ClaimsTab} />
-    ),
+    hotkey: {
+      name: '(1)',
+      key: Keys.One,
+    },
+    path: `members/${memberId}/claims`,
+    component: () => <ClaimsTab memberId={memberId} />,
   },
   {
+    tabTitle: 'Files',
     tabName: 'files',
-    menuItem: `Files ${isHinting ? '(2)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={MemberFile} />
-    ),
+    hotkey: {
+      name: '(2)',
+      key: Keys.Two,
+    },
+    path: `members/${memberId}/files`,
+    component: () => <MemberFile memberId={memberId} />,
   },
   {
+    tabTitle: 'Contracts',
     tabName: 'contracts',
-    menuItem: `Contracts ${isHinting ? '(3)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={ContractTab} />
-    ),
+    hotkey: {
+      name: '(3)',
+      key: Keys.Three,
+    },
+    path: `members/${memberId}/contracts`,
+    component: () => <ContractTab memberId={memberId} />,
   },
   {
+    tabTitle: 'Quotes',
     tabName: 'quotes',
-    menuItem: `Quotes ${isHinting ? '(4)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={Quotes} />
-    ),
+    hotkey: {
+      name: '(4)',
+      key: Keys.Four,
+    },
+    path: `members/${memberId}/quotes`,
+    component: () => <Quotes memberId={memberId} />,
   },
   {
+    tabTitle: 'Payments',
     tabName: 'payments',
-    menuItem: `Payments ${isHinting ? '(5)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={PaymentsTab} />
-    ),
+    hotkey: {
+      name: '(5)',
+      key: Keys.Five,
+    },
+    path: `members/${memberId}/payments`,
+    component: () => <PaymentsTab memberId={memberId} />,
   },
   {
+    tabTitle: 'Account',
     tabName: 'account',
-    menuItem: `Account ${isHinting ? '(6)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={AccountTab} />
-    ),
+    hotkey: {
+      name: '(6)',
+      key: Keys.Six,
+    },
+    path: `members/${memberId}/account`,
+    component: () => <AccountTab memberId={memberId} />,
   },
   {
+    tabTitle: 'Member',
     tabName: 'member',
-    menuItem: `Member ${isHinting ? '(7)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, member }} TabContent={DetailsTab} />
-    ),
+    hotkey: {
+      name: '(7)',
+      key: Keys.Seven,
+    },
+    path: `members/${memberId}/member`,
+    component: () => <DetailsTab member={member} />,
   },
   {
+    tabTitle: 'Debt',
     tabName: 'debt',
-    menuItem: `Debt ${isHinting ? '(8)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={DebtTab} />
-    ),
+    hotkey: {
+      name: '(8)',
+      key: Keys.Eight,
+    },
+    path: `members/${memberId}/debt`,
+    component: () => <DebtTab memberId={memberId} />,
   },
   {
+    tabTitle: 'Campaigns',
     tabName: 'campaigns',
-    menuItem: `Campaigns ${isHinting ? '(9)' : ''}`,
-    render: () => (
-      <TabItem props={{ ...props, memberId }} TabContent={CampaignsTab} />
-    ),
+    hotkey: {
+      name: '(9)',
+      key: Keys.Nine,
+    },
+    path: `members/${memberId}/campaigns`,
+    component: () => <CampaignsTab memberId={memberId} />,
   },
 ]
