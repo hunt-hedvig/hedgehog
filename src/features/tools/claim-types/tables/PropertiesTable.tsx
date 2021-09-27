@@ -87,7 +87,7 @@ export const PropertiesTable: React.FC<{ filter: string }> = ({ filter }) => {
           cache.writeQuery({
             query: GetClaimPropertiesDocument,
             data: {
-              claimPropertyOptions: cachedClaimProperties.filter(
+              claimProperties: cachedClaimProperties.filter(
                 (claimProperty) => claimProperty.id !== property.id,
               ),
             },

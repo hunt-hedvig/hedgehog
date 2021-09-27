@@ -8,6 +8,7 @@ import {
   Spacing,
 } from '@hedvig-ui'
 import { CreateOptionForm } from 'features/tools/claim-types/forms/CreateOptionForm'
+import { CreatePropertyForm } from 'features/tools/claim-types/forms/CreatePropertyForm'
 import { CreateRelationForm } from 'features/tools/claim-types/forms/CreateRelationForm'
 import { OptionsTable } from 'features/tools/claim-types/tables/OptionsTable'
 import { PropertiesTable } from 'features/tools/claim-types/tables/PropertiesTable'
@@ -115,6 +116,12 @@ export const ClaimTypesPage: React.FC = () => {
             marginLeft: '1em',
           }}
         >
+          {tab === 'properties' && (
+            <div style={{ marginTop: '5rem', width: '100%' }}>
+              <SecondLevelHeadline>Create property</SecondLevelHeadline>
+              <CreatePropertyForm />
+            </div>
+          )}
           {tab === 'options' && (
             <div style={{ marginTop: '5rem', width: '100%' }}>
               <SecondLevelHeadline>Create option</SecondLevelHeadline>
