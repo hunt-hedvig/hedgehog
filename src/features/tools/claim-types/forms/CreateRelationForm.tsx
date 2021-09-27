@@ -10,14 +10,13 @@ import {
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
-  useCreateClaimPropertyMutation,
-  useCreateClaimPropertyOptionMutation,
+  GetClaimTypeRelationsDocument,
+  GetClaimTypeRelationsQuery,
   useCreateClaimTypeRelationMutation,
   useGetClaimPropertiesQuery,
   useGetClaimPropertyOptionsQuery,
   useGetClaimTypesQuery,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const ClaimTypeDropdown: React.FC<{
   value: string
@@ -46,8 +45,6 @@ const ClaimPropertyDropdown: React.FC<{
   value: string
   onChange: (value: string) => void
 }> = ({ value, onChange }) => {
-  const { confirm } = useConfirmDialog()
-  const [createClaimProperty, { loading }] = useCreateClaimPropertyMutation()
   const { data } = useGetClaimPropertiesQuery()
   const claimProperties = data?.claimProperties
 
@@ -63,34 +60,8 @@ const ClaimPropertyDropdown: React.FC<{
   return (
     <div style={{ width: '100%' }}>
       <SearchableDropdown
-        creatable={true}
-        formatCreateLabel={(proposedValue) => (
-          <span>
-            Create property "<b>{proposedValue}</b>"?
-          </span>
-        )}
-        onCreateOption={(property) => {
-          if (!property) {
-            return
-          }
-
-          confirm(
-            `Are you sure you want to create the property ${property}`,
-          ).then(() => {
-            toast.promise(
-              createClaimProperty({ variables: { name: property } }),
-              {
-                loading: 'Creating property',
-                success: 'Property created',
-                error: 'Could not create property',
-              },
-            )
-          })
-        }}
         value={value ? options.find((option) => option.value === value) : null}
         placeholder="Select property"
-        isLoading={loading}
-        isCreatable={true}
         onChange={({ value: newValue }) => onChange(newValue)}
         noOptionsMessage={() => 'No properties found'}
         options={options}
@@ -103,11 +74,6 @@ const ClaimPropertyOptionDropdown: React.FC<{
   value: string
   onChange: (value: string) => void
 }> = ({ value, onChange }) => {
-  const { confirm } = useConfirmDialog()
-  const [
-    createClaimPropertyOption,
-    { loading },
-  ] = useCreateClaimPropertyOptionMutation()
   const { data } = useGetClaimPropertyOptionsQuery()
   const claimPropertyOptions = data?.claimPropertyOptions
 
@@ -123,34 +89,8 @@ const ClaimPropertyOptionDropdown: React.FC<{
   return (
     <div style={{ width: '100%' }}>
       <SearchableDropdown
-        creatable={true}
-        formatCreateLabel={(proposedValue) => (
-          <span>
-            Create property "<b>{proposedValue}</b>"?
-          </span>
-        )}
-        onCreateOption={(option) => {
-          if (!option) {
-            return
-          }
-
-          confirm(
-            `Are you sure you want to create the property ${option}`,
-          ).then(() => {
-            toast.promise(
-              createClaimPropertyOption({ variables: { name: option } }),
-              {
-                loading: 'Creating option',
-                success: 'Option created',
-                error: 'Could not create option',
-              },
-            )
-          })
-        }}
         value={value ? options.find((option) => option.value === value) : null}
         placeholder="Select option"
-        isLoading={loading}
-        isCreatable={true}
         onChange={({ value: newValue }) => onChange(newValue)}
         noOptionsMessage={() => 'No options found'}
         options={options}
@@ -204,6 +144,27 @@ export const CreateRelationForm: React.FC<{}> = () => {
                   propertyId: claimPropertyId,
                   propertyOptionId: claimPropertyOptionId,
                 },
+              },
+              update: (cache, { data: response }) => {
+                if (!response) {
+                  return
+                }
+                const cachedData = cache.readQuery({
+                  query: GetClaimTypeRelationsDocument,
+                })
+
+                const cachedRelations = (cachedData as GetClaimTypeRelationsQuery)
+                  .claimTypeRelations
+
+                cache.writeQuery({
+                  query: GetClaimTypeRelationsDocument,
+                  data: {
+                    claimTypeRelations: [
+                      ...cachedRelations,
+                      response.createClaimTypeRelation,
+                    ],
+                  },
+                })
               },
             }),
             {
