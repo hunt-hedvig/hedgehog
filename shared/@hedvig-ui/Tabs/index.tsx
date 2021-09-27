@@ -4,12 +4,10 @@ import { Keys } from '../../../src/utils/hooks/key-press-hook'
 
 /** Tab: */
 
-const TabStyled = styled.li<{ active?: boolean; collapsed?: boolean }>`
-  transition: all 0.3s;
+const TabStyled = styled.li<{ active?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-
 
   ${({ active, theme }) => `
     border: 1px solid ${!active ? theme.border : theme.accentLighter};
@@ -17,8 +15,6 @@ const TabStyled = styled.li<{ active?: boolean; collapsed?: boolean }>`
     color: ${!active ? theme.foreground : theme.accentContrast};
   `}
 
-  width: ${({ collapsed, active }) =>
-    collapsed && !active ? '30px' : '150px'};
   height: 30px;
 
   margin: 0;
@@ -34,7 +30,6 @@ const TabStyled = styled.li<{ active?: boolean; collapsed?: boolean }>`
   border-radius: 15px 15px 0 0;
 
   &:focus {
-    width: 150px;
     padding: 4px 14px;
     border: 2px solid ${({ theme }) => theme.borderStrong};
   }
@@ -47,14 +42,8 @@ export interface TabProps {
   collapsedTitle?: string
 }
 
-export const Tab: React.FC<TabProps> = ({
-  active,
-  title,
-  collapsed,
-  collapsedTitle,
-}) => {
+export const Tab: React.FC<TabProps> = ({ active, title }) => {
   const [isActive, setIsActive] = React.useState(active || false)
-  const [isFocus, setIsFocus] = React.useState(false)
 
   const clickHandler = () => {
     setIsActive((prev) => !prev)
@@ -64,13 +53,10 @@ export const Tab: React.FC<TabProps> = ({
     <TabStyled
       active={isActive}
       tabIndex={0}
-      collapsed={collapsed}
-      onFocus={() => setIsFocus(true)}
-      onBlur={() => setIsFocus(false)}
       onClick={clickHandler}
       onKeyDown={(e) => e.keyCode === Keys.Enter.code && clickHandler()}
     >
-      {!collapsed || active || isFocus ? title : collapsedTitle}
+      {title}
     </TabStyled>
   )
 }
@@ -84,21 +70,20 @@ const TabsWrapper = styled.ul<{ tabCount: number }>`
   list-style: none;
   padding: 0;
 
-  display: flex;
-  // grid-template-columns: repeat(${({ tabCount }) => tabCount}, fit-content);
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(${({ tabCount }) => tabCount}, 1fr);
+  column-gap: 10px;
 `
 
 export interface TabsProps {
-  withCollapse?: boolean
   list: TabProps[]
 }
 
-export const Tabs: React.FC<TabsProps> = ({ withCollapse, list }) => {
+export const Tabs: React.FC<TabsProps> = ({ list }) => {
   return (
     <TabsWrapper tabCount={list.length}>
       {list.map((tab) => (
-        <Tab collapsed={withCollapse} {...tab} />
+        <Tab {...tab} />
       ))}
     </TabsWrapper>
   )
