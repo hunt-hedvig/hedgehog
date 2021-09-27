@@ -33,7 +33,6 @@ export const Table: React.FC<{
 }
 
 const StyledTable = styled.table<{ activeRow: number }>`
-  margin-top: 2em;
   font-weight: normal;
   text-align: left;
   width: 100%;
