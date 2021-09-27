@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { TableHTMLAttributes } from 'react'
-import { range } from '../../../src/utils/helpers'
-import { useVerticalKeyboardNavigation } from '../../../src/utils/keyboard-actions'
+import { range } from '../utils/helpers'
+import { useVerticalKeyboardNavigation } from '../utils/keyboard-actions'
 
 export const Table: React.FC<{
   onPerformNavigation?: (index) => void

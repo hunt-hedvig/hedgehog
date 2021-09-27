@@ -12,7 +12,7 @@ import {
   Ref,
   TextArea,
 } from 'semantic-ui-react'
-import { sleep } from '../../../src/utils/sleep'
+import { sleep } from '../utils/sleep'
 
 const StyledForm = styled(SemanticForm)`
   width: 100%;
