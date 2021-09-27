@@ -1,8 +1,6 @@
 import styled from '@emotion/styled'
 import {
   Badge,
-  Button,
-  ButtonsGroup,
   Capitalized,
   CasualList,
   CasualListItem,
@@ -17,7 +15,6 @@ import { differenceInCalendarDays, format } from 'date-fns'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import React from 'react'
-import { ShieldFill } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 import { useGetMeQuery } from 'types/generated/graphql'
 import { useInsecurePersistentState } from 'utils/state'
@@ -74,23 +71,7 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <Wrapper>
-      <div>
-        <ButtonsGroup>
-          <Button variant="primary">Primary</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="tertiary">Tertiary</Button>
-        </ButtonsGroup>
-        <Spacing top />
-        <ButtonsGroup>
-          <Button icon={<ShieldFill />} size="medium">
-            Icon
-          </Button>
-          <Button status="success">Success</Button>
-          <Button status="warning">Warning</Button>
-          <Button status="danger">Danger</Button>
-        </ButtonsGroup>
-      </div>
-      <Spacing bottom top>
+      <Spacing bottom>
         {data?.me && (
           <MainHeadline>
             Hi there{' '}
