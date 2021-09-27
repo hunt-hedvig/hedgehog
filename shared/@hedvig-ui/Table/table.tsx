@@ -63,11 +63,11 @@ export const TableHeaderColumn = styled.th`
   padding: 0.5em 1em 0.5em 1.2em;
   background-color: ${({ theme }) => theme.accentLight};
 
-  :first-child {
+  :first-of-type {
     border-radius: 8px 0 0 0;
   }
 
-  :last-child {
+  :last-of-type {
     border-radius: 0 8px 0 0;
   }
 `
