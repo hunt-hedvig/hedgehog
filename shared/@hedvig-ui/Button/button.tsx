@@ -202,9 +202,6 @@ export interface ButtonProps {
 }
 
 const ButtonIcon = styled.div<{ size?: 'small' | 'medium' | 'large' }>`
-  margin-right: ${({ size = 'medium' }) =>
-    size === 'small' ? '0.5rem' : size === 'medium' ? '0.75rem' : '1rem'};
-
   svg {
     margin-bottom: -12%;
   }
@@ -225,7 +222,7 @@ export const Button = styled(
     return (
       <button {...props}>
         <ButtonIconWrapper>
-          {!!icon && <ButtonIcon>{icon}</ButtonIcon>}
+          {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
           <div>{children}</div>
         </ButtonIconWrapper>
       </button>
