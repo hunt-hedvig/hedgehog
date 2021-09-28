@@ -78,6 +78,11 @@ export const TableRow = styled.tr<{ active?: boolean }>`
   transition: all 150ms;
 
   :hover {
+    cursor: pointer;
+    background-color: ${({ theme }) => theme.accentSaturated};
+  }
+
+  :focus {
     background-color: ${({ theme }) => theme.accentLight};
   }
 
