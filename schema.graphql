@@ -73,7 +73,11 @@ type MutationType {
   whitelistMember(memberId: ID!): Member!
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
-  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): ClaimFileUpload
+  setClaimFileCategory(
+    claimId: ID!
+    claimFileId: ID!
+    category: String
+  ): ClaimFileUpload
   activateQuote(
     id: ID!
     activationDate: LocalDate!
@@ -165,7 +169,9 @@ type MutationType {
   removeEmployee(id: ID!): Boolean!
   payoutMember(memberId: ID!, request: PayoutMemberInput!): Transaction
 
-  createClaimTypeRelation(request: CreateClaimTypeRelationInput): ClaimTypeRelation!
+  createClaimTypeRelation(
+    request: CreateClaimTypeRelationInput
+  ): ClaimTypeRelation!
   deleteClaimTypeRelation(id: ID!): Boolean!
   updateClaimProperty(id: ID!, name: String!): ClaimProperty!
   deprecateClaimProperty(id: ID!): Boolean!
@@ -195,7 +201,7 @@ type ClaimTypeRelation {
 
 type ClaimProperty {
   id: ID!
-  name: String!,
+  name: String!
 }
 
 type ClaimPropertyOption {
@@ -605,7 +611,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1063,7 +1069,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-  TheftClaim
+    TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
