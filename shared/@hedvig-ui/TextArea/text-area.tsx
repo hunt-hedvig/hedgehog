@@ -5,6 +5,7 @@ import {
   TextArea as SemanticTextArea,
   TextAreaProps,
 } from 'semantic-ui-react'
+import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 const TextAreaWrapper = styled.div`
   width: 100%;
@@ -47,6 +48,22 @@ export const TextArea: React.FC<{
           value={inputValue}
           onChange={(_, { value }) => onChange(value as string)}
           {...props}
+          onKeyDown={(e) => {
+            if (shouldIgnoreInput(e.key)) {
+              e.preventDefault()
+              return
+            }
+
+            if (e.keyCode === Keys.Escape.code) {
+              e.preventDefault()
+              e.target.blur()
+              return
+            }
+
+            if (props.onKeyDown) {
+              props.onKeyDown(e)
+            }
+          }}
         />
       </Ref>
     </TextAreaWrapper>
