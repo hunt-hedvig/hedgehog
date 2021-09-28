@@ -40,7 +40,11 @@ const Tip = styled.span`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-const ChatTextArea = styled(TextareaAutosize)<{ error?: boolean }>`
+const ChatTextArea = styled(({ error, ...props }) => (
+  <TextareaAutosize {...props} />
+))<{
+  error?: boolean
+}>`
   margin: 0;
   padding: 0.78571429em 1em;
   border-radius: 0.28571429rem;
