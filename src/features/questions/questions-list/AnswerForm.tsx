@@ -123,7 +123,7 @@ export const AnswerForm: React.FC<{
               }}
             />
             <SubmitButtonWrapper>
-              <SubmitButton variation="primary">Send</SubmitButton>
+              <SubmitButton>Send</SubmitButton>
             </SubmitButtonWrapper>
           </Form>
         </FormProvider>

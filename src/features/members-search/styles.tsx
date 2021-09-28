@@ -1,6 +1,6 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { ButtonOld, Input, Paragraph } from '@hedvig-ui'
+import { Button, Input, Paragraph } from '@hedvig-ui'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 
@@ -88,14 +88,7 @@ export const SearchInput = styled(Input)({
   },
 })
 
-export const SearchButton = styled(ButtonOld)<{ visible: boolean }>(
-  ({ visible }) => ({
-    opacity: visible ? 1 : 0,
-    transition: 'opacity 400ms',
-  }),
-)
-
-export const EscapeButton = styled(ButtonOld)<{ visible: boolean }>(
+export const EscapeButton = styled(Button)<{ visible: boolean }>(
   ({ visible }) => ({
     opacity: visible ? 1 : 0,
     transition: 'opacity 300ms',

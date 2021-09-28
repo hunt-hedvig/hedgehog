@@ -1,9 +1,4 @@
-import {
-  Button,
-  ButtonLink,
-  ButtonsGroup,
-  ThirdLevelHeadline,
-} from '@hedvig-ui'
+import { Button, ButtonsGroup, ThirdLevelHeadline } from '@hedvig-ui'
 import {
   regenerateCertificateOptions,
   useRegenerateCertificate,
@@ -49,14 +44,11 @@ export const InsuranceCertificate: React.FC<{
       <ThirdLevelHeadline>Insurance Certificate</ThirdLevelHeadline>
       <ButtonsGroup>
         {agreement.certificateUrl && (
-          <ButtonLink
-            variation="primary"
-            fullWidth
-            target="_blank"
-            href={agreement.certificateUrl!!}
+          <Button
+            onClick={() => window.open(agreement.certificateUrl!!, '_blank')}
           >
             View
-          </ButtonLink>
+          </Button>
         )}
         <Button
           disabled={loading}

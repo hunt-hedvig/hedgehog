@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {
-  ButtonLink,
+  Button,
   Card,
   CardsWrapper,
   InfoContainer,
@@ -88,9 +88,11 @@ export const TrialComponent: React.FC<{
         <Card span={2}>
           <ThirdLevelHeadline>Trial Insurance Certificate</ThirdLevelHeadline>
           {trial.certificateUrl ? (
-            <ButtonLink href={trial.certificateUrl} variation="primary">
+            <Button
+              onClick={() => window.open(trial.certificateUrl!!, '_link')}
+            >
               View
-            </ButtonLink>
+            </Button>
           ) : (
             <Paragraph>No insurance certificate available</Paragraph>
           )}

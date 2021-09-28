@@ -1,16 +1,8 @@
 import styled from '@emotion/styled'
-import {
-  ButtonOld,
-  Checkbox,
-  FadeIn,
-  Flex,
-  Shadowed,
-  Spinner,
-} from '@hedvig-ui'
+import { Button, Checkbox, FadeIn, Flex, Shadowed, Spinner } from '@hedvig-ui'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import React, { useState } from 'react'
-import { ChevronRight } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import TextareaAutosize from 'react-textarea-autosize'
 import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
@@ -79,7 +71,7 @@ const ChatTextArea = styled(({ error, ...props }) => (
   }
 `
 
-const SubmitButton = styled(ButtonOld)`
+const SubmitButton = styled(Button)`
   display: none;
 
   @media (max-width: 768px) {
@@ -199,10 +191,7 @@ export const ChatPanel = ({ memberId }) => {
         )}
 
         <SubmitButton
-          disabled={currentMessage === ''}
-          loading={loading}
-          icon={<ChevronRight />}
-          variation="primary"
+          disabled={currentMessage === '' || loading}
           onClick={(event) => {
             event.preventDefault()
             handleSubmit()

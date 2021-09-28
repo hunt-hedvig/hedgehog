@@ -243,3 +243,11 @@ export const Button = styled(
   ${padding};
   ${fontSize};
 `
+
+export const ButtonsGroup = styled.div`
+  width: 100%;
+  display: flex;
+  * + * {
+    margin-left: 1rem;
+  }
+`

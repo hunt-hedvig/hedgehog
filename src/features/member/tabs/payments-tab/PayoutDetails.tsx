@@ -146,7 +146,7 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
         />
         <FormInput label="Note" name="note" defaultValue="" />
 
-        <SubmitButton variation="primary">Create payout</SubmitButton>
+        <SubmitButton>Create payout</SubmitButton>
       </Form>
     </FormProvider>
   )
