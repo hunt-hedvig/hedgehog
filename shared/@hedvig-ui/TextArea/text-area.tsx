@@ -52,10 +52,15 @@ export const TextArea: React.FC<{
             if (shouldIgnoreInput(e.key)) {
               e.preventDefault()
               return
-            } else if (e.keyCode === Keys.Escape.code) {
+            }
+
+            if (e.keyCode === Keys.Escape.code) {
               e.preventDefault()
               e.target.blur()
-            } else if (props.onKeyDown) {
+              return
+            }
+
+            if (props.onKeyDown) {
               props.onKeyDown(e)
             }
           }}
