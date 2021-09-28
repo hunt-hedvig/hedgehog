@@ -7,6 +7,7 @@ import {
   InputProps,
   LabelProps,
 } from 'semantic-ui-react'
+import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 export interface CustomInputProps extends InputProps {
   muted?: boolean
@@ -42,6 +43,19 @@ const StyledSemanticInput = styled(SemanticInput)<CustomInputProps>`
   }
 `
 
-export const Input: React.FC<CustomInputProps> = (props) => {
-  return <StyledSemanticInput {...props} />
-}
+export const Input: React.FC<CustomInputProps> = (props) => (
+  <StyledSemanticInput
+    {...props}
+    onKeyDown={(e) => {
+      if (shouldIgnoreInput(e.key)) {
+        e.preventDefault()
+        return
+      } else if (e.keyCode === Keys.Escape.code) {
+        e.preventDefault()
+        e.target.blur()
+      } else if (props.onKeyDown) {
+        props.onKeyDown(e)
+      }
+    }}
+  />
+)
