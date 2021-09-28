@@ -7,6 +7,7 @@ import {
   Spacing,
   TextArea,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -17,7 +18,6 @@ import {
   useRevertTerminationMutation,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialTerminationDate = (contract: Contract): Date =>
   contract.terminationDate ? new Date(contract.terminationDate) : new Date()

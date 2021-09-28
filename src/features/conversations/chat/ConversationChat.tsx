@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useSendMessageMutation } from 'types/generated/graphql'
-import { Keys } from 'utils/hooks/key-press-hook'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};

@@ -1,4 +1,5 @@
 import { Checkbox, FadeIn, Shadowed } from '@hedvig-ui'
+import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import {
   EscapeButton,
   Group,
@@ -8,7 +9,6 @@ import {
   SearchTip,
 } from 'features/members-search/styles'
 import React, { useState } from 'react'
-import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void

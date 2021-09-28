@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { Button, Checkbox, FadeIn, Flex, Shadowed, Spinner } from '@hedvig-ui'
+import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import TextareaAutosize from 'react-textarea-autosize'
-import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 const MessagesPanelContainer = styled.div`
   display: flex;

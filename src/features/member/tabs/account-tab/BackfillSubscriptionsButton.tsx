@@ -1,8 +1,8 @@
 import { Button } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useBackfillSubscriptionsMutation } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const BackfillSubscriptionsButton: React.FC<{
   memberId: string

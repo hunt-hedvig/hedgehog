@@ -6,6 +6,7 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
@@ -18,7 +19,6 @@ import {
   useUpdateEmployeeRoleMutation,
 } from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const EmployeeTable: React.FC<{
   scopes: readonly string[]

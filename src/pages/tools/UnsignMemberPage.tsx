@@ -1,8 +1,8 @@
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useUnsignMemberMutation } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const UnsignMemberPage: React.FC = () => {
   const [ssn, setSsn] = React.useState('')

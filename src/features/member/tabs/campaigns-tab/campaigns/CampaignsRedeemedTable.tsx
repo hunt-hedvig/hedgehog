@@ -1,4 +1,5 @@
 import { Button, Capitalized } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
@@ -6,7 +7,6 @@ import {
   RedeemedCampaign,
   useManualUnRedeemCampaignMutation,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const CampaignsRedeemedTable: React.FC<{
   memberId: string

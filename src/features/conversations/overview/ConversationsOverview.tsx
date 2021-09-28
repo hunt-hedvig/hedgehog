@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { Button } from '@hedvig-ui/Button/button'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { ConversationsRemaining } from 'features/conversations/overview/ConversationsRemaining'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { useInsecurePersistentState } from 'utils/state'
 
 const ConversationItem = styled(Flex)<{ selected: boolean }>`

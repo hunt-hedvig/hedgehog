@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { ChatPanel } from 'features/member/chat/ChatPanel'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useRef } from 'react'
 import { Icon } from 'semantic-ui-react'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys } from 'utils/hooks/key-press-hook'
 import { useInsecurePersistentState } from 'utils/state'
 
 const ChatContainer = styled.div`

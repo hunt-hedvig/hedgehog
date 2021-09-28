@@ -1,9 +1,9 @@
 import { Button, DateTimePicker, Input } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { Group } from 'features/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useManualRedeemCampaignMutation } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const CampaignCodeInput: React.FC<{
   memberId: string

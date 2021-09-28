@@ -7,6 +7,7 @@ import {
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
 import {
   changeFromDateOptions,
@@ -15,7 +16,6 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialFromDate = (agreement: GenericAgreement): Date =>
   agreement.fromDate ? new Date(agreement.fromDate) : new Date()

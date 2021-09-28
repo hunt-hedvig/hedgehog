@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Modal } from '@hedvig-ui'
+import { Key, Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import React, {
   createContext,
   useContext,
@@ -7,7 +8,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Key, Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const ConfirmButtons = styled.div`
   display: grid;

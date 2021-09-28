@@ -1,4 +1,5 @@
 import { Button, ButtonsGroup, ThirdLevelHeadline } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import {
   regenerateCertificateOptions,
   useRegenerateCertificate,
@@ -7,7 +8,6 @@ import React from 'react'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const InsuranceCertificate: React.FC<{
   contract: Contract

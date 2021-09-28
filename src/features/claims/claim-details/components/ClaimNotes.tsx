@@ -21,9 +21,9 @@ import {
   Spinner,
   TextArea,
 } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { Keys } from 'utils/hooks/key-press-hook'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {

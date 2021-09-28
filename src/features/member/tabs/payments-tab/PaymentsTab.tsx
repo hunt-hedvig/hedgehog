@@ -13,6 +13,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import gql from 'graphql-tag'
@@ -26,7 +27,6 @@ import {
   useCreatePaymentCompletionLinkMutation,
   useGetMemberTransactionsQuery,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { formatMoney } from 'utils/money'
 import { PayoutDetails } from './PayoutDetails'
 

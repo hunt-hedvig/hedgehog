@@ -5,6 +5,7 @@ import {
   FourthLevelHeadline,
   Paragraph,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
 import {
   activateContractOptions,
@@ -13,7 +14,6 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const MasterInception: React.FC<{
   contract: Contract

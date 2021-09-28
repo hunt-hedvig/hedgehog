@@ -10,6 +10,8 @@ import {
   Input,
   Label,
 } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -22,8 +24,6 @@ import {
   SwitchableSwitcherEmail,
   useMarkSwitcherEmailAsRemindedMutation,
 } from 'types/generated/graphql'
-import { Keys } from 'utils/hooks/key-press-hook'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { convertEnumToTitle } from 'utils/text'
 
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'

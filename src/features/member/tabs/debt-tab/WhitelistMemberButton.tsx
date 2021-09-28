@@ -1,9 +1,9 @@
 import { Button } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { useGetMemberName } from 'graphql/use-get-member-name'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useWhitelistMemberMutation } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const WhitelistMemberButton: React.FC<{
   memberId: string
