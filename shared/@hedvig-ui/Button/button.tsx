@@ -1,7 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import chroma from 'chroma-js'
+import _chroma from 'chroma-js'
 import React, { ButtonHTMLAttributes } from 'react'
+
+// Necessary for tests to run - if not, theme colors used might be undefined at test-time
+const chroma = (c: string) => _chroma(c ?? 'white')
 
 const color = ({
   theme,
