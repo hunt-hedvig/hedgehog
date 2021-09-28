@@ -17,7 +17,7 @@ import { JSONSchema7 } from 'json-schema'
 import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
 import { Dropdown, FormField } from 'semantic-ui-react'
-import { convertCamelcaseToTitle, convertEnumToTitle } from 'utils/text'
+import { convertCamelcaseToTitle, convertEnumToTitle } from '../utils/text'
 
 const ContentWrapper = styled('div')<{ pushTop: boolean }>`
   margin-top: ${({ pushTop }) => (pushTop ? '2.75rem' : 0)};
