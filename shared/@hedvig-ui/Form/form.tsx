@@ -79,7 +79,7 @@ const FormField: React.FC<FormFieldProps> = ({
   return (
     <SemanticForm.Field
       required={Boolean(rules?.required)}
-      error={errors && Boolean(errors[name.split('.')[0]])}
+      error={errors ? Boolean(errors[name.split('.')[0]]) : undefined}
     >
       {label && <FormLabel name={name}>{label}</FormLabel>}
       {children}
