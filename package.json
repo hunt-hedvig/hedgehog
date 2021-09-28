@@ -17,7 +17,6 @@
     "@rjsf/semantic-ui": "^2.4.0",
     "@types/json-schema": "^7.0.6",
     "@types/koa-helmet": "^6.0.2",
-    "animated-scroll-to": "^2.0.5",
     "axios": "^0.21.1",
     "copy-to-clipboard": "^3.3.1",
     "core-js": "2",
