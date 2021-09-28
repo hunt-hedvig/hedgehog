@@ -73,11 +73,7 @@ type MutationType {
   whitelistMember(memberId: ID!): Member!
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
-  setClaimFileCategory(
-    claimId: ID!
-    claimFileId: ID!
-    category: String
-  ): ClaimFileUpload
+  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): ClaimFileUpload
   activateQuote(
     id: ID!
     activationDate: LocalDate!
@@ -169,15 +165,13 @@ type MutationType {
   removeEmployee(id: ID!): Boolean!
   payoutMember(memberId: ID!, request: PayoutMemberInput!): Transaction
 
-  createClaimTypeRelation(
-    request: CreateClaimTypeRelationInput
-  ): ClaimTypeRelation!
+  createClaimTypeRelation(request: CreateClaimTypeRelationInput): ClaimTypeRelation!
   deleteClaimTypeRelation(id: ID!): Boolean!
   updateClaimProperty(id: ID!, name: String!): ClaimProperty!
-  deprecateClaimProperty(id: ID!): ClaimProperty!
+  deprecateClaimProperty(id: ID!): Boolean!
   createClaimProperty(name: String!): ClaimProperty!
   updateClaimPropertyOption(id: ID!, name: String!): ClaimPropertyOption!
-  deprecateClaimPropertyOption(id: ID!): ClaimPropertyOption!
+  deprecateClaimPropertyOption(id: ID!): Boolean!
   createClaimPropertyOption(name: String): ClaimPropertyOption!
 }
 
@@ -201,7 +195,7 @@ type ClaimTypeRelation {
 
 type ClaimProperty {
   id: ID!
-  name: String!
+  name: String!,
 }
 
 type ClaimPropertyOption {
@@ -252,6 +246,9 @@ input ListClaimsOptions {
   sortDirection: String
   filterClaimStates: [ClaimState!]
   filterCreatedBeforeOrOnDate: LocalDate
+  filterComplexities: [ClaimComplexity!]
+  filterNumberOfMemberGroups: Int
+  filterSelectedMemberGroups: [Int!]
 }
 
 type MemberSearchResult {
@@ -608,7 +605,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1066,7 +1063,7 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType =
-    TheftClaim
+  TheftClaim
   | AccidentalDamageClaim
   | AssaultClaim
   | WaterDamageClaim
@@ -1394,6 +1391,11 @@ type TrialAddress {
 type MonetaryAmountV2 {
   amount: String!
   currency: String!
+}
+
+enum ClaimComplexity {
+  SIMPLE
+  COMPLEX
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`

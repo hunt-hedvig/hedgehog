@@ -226,6 +226,11 @@ export type Claim = {
   itemSet: ClaimItemSet
 }
 
+export enum ClaimComplexity {
+  Simple = 'SIMPLE',
+  Complex = 'COMPLEX',
+}
+
 export type ClaimEvent = {
   __typename?: 'ClaimEvent'
   text?: Maybe<Scalars['String']>
@@ -767,6 +772,9 @@ export type ListClaimsOptions = {
   sortDirection?: Maybe<Scalars['String']>
   filterClaimStates?: Maybe<Array<ClaimState>>
   filterCreatedBeforeOrOnDate?: Maybe<Scalars['LocalDate']>
+  filterComplexities?: Maybe<Array<ClaimComplexity>>
+  filterNumberOfMemberGroups?: Maybe<Scalars['Int']>
+  filterSelectedMemberGroups?: Maybe<Array<Scalars['Int']>>
 }
 
 export type ListClaimsResult = {
@@ -985,10 +993,10 @@ export type MutationType = {
   createClaimTypeRelation: ClaimTypeRelation
   deleteClaimTypeRelation: Scalars['Boolean']
   updateClaimProperty: ClaimProperty
-  deprecateClaimProperty: ClaimProperty
+  deprecateClaimProperty: Scalars['Boolean']
   createClaimProperty: ClaimProperty
   updateClaimPropertyOption: ClaimPropertyOption
-  deprecateClaimPropertyOption: ClaimPropertyOption
+  deprecateClaimPropertyOption: Scalars['Boolean']
   createClaimPropertyOption: ClaimPropertyOption
 }
 
@@ -2539,23 +2547,15 @@ export type DeprecateClaimPropertyOptionMutationVariables = Exact<{
 
 export type DeprecateClaimPropertyOptionMutation = {
   __typename?: 'MutationType'
-} & {
-  deprecateClaimPropertyOption: { __typename?: 'ClaimPropertyOption' } & Pick<
-    ClaimPropertyOption,
-    'id' | 'name'
-  >
-}
+} & Pick<MutationType, 'deprecateClaimPropertyOption'>
 
 export type DeprecateClaimPropertyMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeprecateClaimPropertyMutation = { __typename?: 'MutationType' } & {
-  deprecateClaimProperty: { __typename?: 'ClaimProperty' } & Pick<
-    ClaimProperty,
-    'id' | 'name'
-  >
-}
+export type DeprecateClaimPropertyMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'deprecateClaimProperty'>
 
 export type UpdateClaimPropertyOptionMutationVariables = Exact<{
   id: Scalars['ID']
@@ -5837,10 +5837,7 @@ export type DeleteClaimTypeRelationMutationOptions = ApolloReactCommon.BaseMutat
 >
 export const DeprecateClaimPropertyOptionDocument = gql`
   mutation DeprecateClaimPropertyOption($id: ID!) {
-    deprecateClaimPropertyOption(id: $id) {
-      id
-      name
-    }
+    deprecateClaimPropertyOption(id: $id)
   }
 `
 export type DeprecateClaimPropertyOptionMutationFn = ApolloReactCommon.MutationFunction<
@@ -5889,10 +5886,7 @@ export type DeprecateClaimPropertyOptionMutationOptions = ApolloReactCommon.Base
 >
 export const DeprecateClaimPropertyDocument = gql`
   mutation DeprecateClaimProperty($id: ID!) {
-    deprecateClaimProperty(id: $id) {
-      id
-      name
-    }
+    deprecateClaimProperty(id: $id)
   }
 `
 export type DeprecateClaimPropertyMutationFn = ApolloReactCommon.MutationFunction<
