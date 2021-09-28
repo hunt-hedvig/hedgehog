@@ -43,7 +43,7 @@ export interface TabProps {
   action: () => void
   title: string
   name?: string
-  hotkey: {
+  hotkey?: {
     name: string
     key: Key
   }
@@ -60,7 +60,7 @@ export const Tab: React.FC<TabProps> = ({
   const path = history.location.pathname.split('/')
 
   const [isActive, setIsActive] = React.useState(active || false)
-  const isKeyPressed = useKeyIsPressed(hotkey.key)
+  const isKeyPressed = hotkey ? useKeyIsPressed(hotkey.key) : false
   const isControlPressed = useKeyIsPressed(Keys.Control)
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export const Tab: React.FC<TabProps> = ({
       onClick={action}
       onKeyDown={(e) => e.keyCode === Keys.Enter.code && action()}
     >
-      {title} {isControlPressed && hotkey.name}
+      {title} {isControlPressed && hotkey ? hotkey.name : null}
     </TabStyled>
   )
 }
