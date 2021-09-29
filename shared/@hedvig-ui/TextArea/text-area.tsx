@@ -49,7 +49,10 @@ export const TextArea: React.FC<{
           onChange={(_, { value }) => onChange(value as string)}
           {...props}
           onKeyDown={(e) => {
-            if (shouldIgnoreInput(e.key)) {
+            if (
+              shouldIgnoreInput(e.key) ||
+              (!inputValue && e.keyCode === Keys.Enter.code)
+            ) {
               e.preventDefault()
               return
             }

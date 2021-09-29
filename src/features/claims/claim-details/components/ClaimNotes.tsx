@@ -1,3 +1,4 @@
+import { usePlatform } from '@hedvig-ui/utils/platform'
 import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import {
@@ -80,6 +81,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
   } = useClaimPageQuery({
     variables: { claimId },
   })
+  const { isMetaKey, metaKey } = usePlatform()
   const notes = claimNotesData?.claim?.notes ?? []
   const events = claimNotesData?.claim?.events ?? []
 
@@ -171,7 +173,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {
           if (
-            e.metaKey &&
+            isMetaKey(e) &&
             e.keyCode === Keys.Enter.code &&
             !submitting &&
             note
@@ -188,8 +190,8 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         {textFieldFocused && (
           <FadeIn duration={200}>
             <NoteTip>
-              Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
-              add note
+              Press <Shadowed>{metaKey.hint}</Shadowed> +{' '}
+              <Shadowed>Enter</Shadowed> to add note
             </NoteTip>
           </FadeIn>
         )}

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { usePlatform } from '@hedvig-ui/utils/platform'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useState } from 'react'
@@ -46,13 +47,14 @@ export const ConversationChat: React.FC<{
   const [message, setMessage] = useState(draft)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage, { loading }] = useSendMessageMutation()
+  const { isMetaKey, metaKey } = usePlatform()
 
   useEffect(() => {
     setMessage(draft)
   }, [memberId])
 
-  const handleOnKeyPress = (e) => {
-    if (e.metaKey && e.charCode === Keys.Enter.code && !loading && message) {
+  const handleOnKeyDown = (e) => {
+    if (isMetaKey(e) && e.keyCode === Keys.Enter.code && !loading && message) {
       toast.promise(
         sendMessage({
           variables: {
@@ -98,21 +100,22 @@ export const ConversationChat: React.FC<{
               setDraft(value)
               setMessage(value)
             }}
-            onKeyPress={handleOnKeyPress}
+            onKeyDown={handleOnKeyDown}
           />
         </ConversationFooter>
       </ConversationContent>
       <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>
         <FadeIn duration={200}>
           <Tip>
-            <Shadowed>Command</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
+            <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
             <Shadowed>Enter</Shadowed> to mark as resolved
           </Tip>
         </FadeIn>
         {inputFocused && (
           <FadeIn duration={200}>
             <Tip>
-              <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to send
+              <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Enter</Shadowed>{' '}
+              to send
             </Tip>
           </FadeIn>
         )}
