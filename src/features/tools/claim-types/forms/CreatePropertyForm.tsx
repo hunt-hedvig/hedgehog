@@ -82,7 +82,6 @@ export const CreatePropertyForm: React.FC<{}> = () => {
             !newPropertyName ||
             loading
           }
-          variation="primary"
           type="submit"
         >
           Create

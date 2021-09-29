@@ -198,9 +198,9 @@ export const CreateRelationForm: React.FC<{}> = () => {
         />
         <Spacing top={'small'} />
         <Button
-          variation="primary"
-          disabled={!claimType || !claimPropertyId || !claimPropertyOptionId}
-          loading={loading}
+          disabled={
+            !claimType || !claimPropertyId || !claimPropertyOptionId || loading
+          }
           type="submit"
         >
           Create
