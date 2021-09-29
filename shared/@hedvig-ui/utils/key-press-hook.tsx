@@ -8,59 +8,59 @@ export interface Key {
 export const Keys: { [name: string]: Key } = {
   Escape: {
     code: 27,
-    hint: 'esc',
+    hint: 'Esc',
   },
   Backspace: {
     code: 8,
-    hint: '⌫',
+    hint: 'Backspace ⌫',
   },
   Tab: {
     code: 9,
-    hint: '⇥',
+    hint: 'Tab ⇥',
   },
   Enter: {
     code: 13,
-    hint: '↩',
+    hint: 'Enter ↩',
   },
   Shift: {
     code: 16,
-    hint: '⇧',
+    hint: 'Shift ⇧',
   },
   Control: {
     code: 17,
-    hint: 'control ⌃',
+    hint: 'Control ⌃',
   },
   Option: {
     code: 18,
-    hint: 'option ⌥',
+    hint: 'Option ⌥',
   },
   CapsLock: {
     code: 20,
-    hint: '⇪',
+    hint: 'Caps ⇪',
   },
   Command: {
     code: 91,
-    hint: '⌘',
+    hint: 'Command ⌘',
   },
   Space: {
     code: 32,
-    hint: '␣',
+    hint: 'Space ␣',
   },
   Left: {
     code: 37,
-    hint: '←',
+    hint: 'Left ←',
   },
   Up: {
     code: 38,
-    hint: '↑',
+    hint: 'Up ↑',
   },
   Right: {
     code: 39,
-    hint: '→',
+    hint: 'Right →',
   },
   Down: {
     code: 40,
-    hint: '↓',
+    hint: 'Down ↓',
   },
   Zero: {
     code: 48,
