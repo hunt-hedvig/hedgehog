@@ -36,7 +36,7 @@ export const Breadcrumbs: React.FC = () => {
       key: i,
       content: (
         <Link to={`${arr.slice(0, i + 1).join('/')}`}>
-          {path.toLowerCase()}
+          {path.toLowerCase().replace('-', ' ')}
         </Link>
       ),
       active: true,

@@ -1,15 +1,17 @@
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import { usePlatform } from '@hedvig-ui/utils/platform'
 import { useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   GetQuestionsGroupsDocument,
   useMarkQuestionAsResolvedMutation,
 } from 'types/generated/graphql'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 export const useResolveConversation = (
   onResolve: () => void,
   memberId?: string,
 ) => {
+  const { metaKey } = usePlatform()
   const [markAsResolved, { loading }] = useMarkQuestionAsResolvedMutation({
     refetchQueries: [
       {
@@ -19,13 +21,13 @@ export const useResolveConversation = (
   })
 
   const isShiftPressed = useKeyIsPressed(Keys.Shift)
-  const isCommandPressed = useKeyIsPressed(Keys.Command)
+  const isMetaPressed = useKeyIsPressed(metaKey)
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
 
   useEffect(() => {
     if (
       isShiftPressed &&
-      isCommandPressed &&
+      isMetaPressed &&
       isEnterPressed &&
       !loading &&
       memberId
@@ -47,5 +49,5 @@ export const useResolveConversation = (
         },
       )
     }
-  }, [isShiftPressed, isCommandPressed, isEnterPressed])
+  }, [isShiftPressed, isMetaPressed, isEnterPressed])
 }

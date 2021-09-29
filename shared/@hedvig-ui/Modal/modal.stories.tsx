@@ -25,14 +25,12 @@ const sides: ReadonlyArray<NonNullable<ModalProps['side']>> = [
   'right',
 ]
 
-export const StandartModal = () => {
+export const StandardModal = () => {
   const [isModal, setIsModal] = React.useState(false)
 
   return (
     <>
-      <Button variation="primary" onClick={() => setIsModal(true)}>
-        Open Modal
-      </Button>
+      <Button onClick={() => setIsModal(true)}>Open Modal</Button>
       {isModal && (
         <Modal
           withoutHeader={!boolean('With header', true)}
@@ -56,7 +54,7 @@ export const ConfirmModal = () => {
 
   return (
     <>
-      <Button variation="danger" onClick={() => setIsModal(true)}>
+      <Button status="danger" onClick={() => setIsModal(true)}>
         Delete
       </Button>
       {isModal && (
@@ -72,18 +70,10 @@ export const ConfirmModal = () => {
           <div>
             <h3>Are you sure?</h3>
             <ConfirmButtons>
-              <Button
-                fullWidth
-                variation="success"
-                onClick={() => setIsModal(false)}
-              >
+              <Button status="success" onClick={() => setIsModal(false)}>
                 Confirm
               </Button>
-              <Button
-                fullWidth
-                variation="secondary"
-                onClick={() => setIsModal(false)}
-              >
+              <Button variant="tertiary" onClick={() => setIsModal(false)}>
                 Cancel
               </Button>
             </ConfirmButtons>

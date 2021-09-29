@@ -1,8 +1,8 @@
 import { Button } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useMarkClaimFileAsDeletedMutation } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const DeleteButton: React.FC<{
   claimId: string
@@ -20,7 +20,7 @@ export const DeleteButton: React.FC<{
     <>
       <Button
         disabled={loading}
-        variation="danger"
+        status="danger"
         onClick={() => {
           confirm('Are you sure you want to delete this file?').then(() => {
             toast.promise(

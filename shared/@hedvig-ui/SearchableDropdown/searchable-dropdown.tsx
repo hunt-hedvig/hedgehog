@@ -3,7 +3,8 @@ import React, { useEffect, useRef } from 'react'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 
-const styles = `.searchable-type-select__control {
+const styles = `
+.searchable-type-select__control {
   border-radius: 7px;
   height: 44px;
   box-shadow: none;

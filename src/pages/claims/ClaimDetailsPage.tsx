@@ -13,6 +13,8 @@ import {
   Shadowed,
   StandaloneMessage,
 } from '@hedvig-ui'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Key, Keys } from '@hedvig-ui/utils/key-press-hook'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation'
@@ -26,8 +28,6 @@ import { ChatPane } from 'features/member/tabs/ChatPane'
 import React, { useContext, useEffect, useState } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
 import { ClaimState, useClaimPageQuery } from 'types/generated/graphql'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Key, Keys } from 'utils/hooks/key-press-hook'
 import { MemberHistoryContext } from 'utils/member-history'
 import { getCarrierText } from 'utils/text'
 
@@ -261,7 +261,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
             </CardsWrapper>
           ) : (
             <ShowEventButtonWrapper>
-              <Button variation="ghost" onClick={() => setShowEvents(true)}>
+              <Button variant="tertiary" onClick={() => setShowEvents(true)}>
                 Show events
               </Button>
             </ShowEventButtonWrapper>

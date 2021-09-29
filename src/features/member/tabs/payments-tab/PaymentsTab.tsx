@@ -13,6 +13,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import gql from 'graphql-tag'
@@ -26,7 +27,6 @@ import {
   useCreatePaymentCompletionLinkMutation,
   useGetMemberTransactionsQuery,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { formatMoney } from 'utils/money'
 import { PayoutDetails } from './PayoutDetails'
 
@@ -215,7 +215,6 @@ export const PaymentsTab: React.FC<{
         <Card span={2}>
           <ThirdLevelHeadline>Payments Link</ThirdLevelHeadline>
           <Button
-            variation="primary"
             onClick={(e) => {
               e.preventDefault()
               toast.promise(createPaymentCompletionLink(), {
@@ -246,10 +245,7 @@ export const PaymentsTab: React.FC<{
               <Mutation mutation={CHARGE_MEMBER_MUTATION}>
                 {(chargeMember) => (
                   <>
-                    <Button
-                      variation="primary"
-                      onClick={() => handleChargeSubmit(chargeMember)}
-                    >
+                    <Button onClick={() => handleChargeSubmit(chargeMember)}>
                       Charge {formatMoney(account.currentBalance!)}
                     </Button>
                   </>

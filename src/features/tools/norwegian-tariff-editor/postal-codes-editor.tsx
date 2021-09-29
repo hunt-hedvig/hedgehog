@@ -1,8 +1,8 @@
 import { Button, Spacing, TextArea, ThirdLevelHeadline } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useAddNorwegainPostalCodesMutation } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const PostalCodesEditor: React.FC = () => {
   const [postalCodesString, setPostalCodesString] = React.useState<string>('')
@@ -24,8 +24,7 @@ export const PostalCodesEditor: React.FC = () => {
       />
       <Spacing top>
         <Button
-          fullWidth
-          variation="secondary"
+          variant="secondary"
           disabled={loading}
           onClick={() => {
             confirm('Are you sure you want to add the postal codes?').then(

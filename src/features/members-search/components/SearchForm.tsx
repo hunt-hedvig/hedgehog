@@ -1,4 +1,6 @@
 import { Checkbox, FadeIn, Shadowed } from '@hedvig-ui'
+import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
+import { usePlatform } from '@hedvig-ui/utils/platform'
 import {
   EscapeButton,
   Group,
@@ -8,7 +10,6 @@ import {
   SearchTip,
 } from 'features/members-search/styles'
 import React, { useState } from 'react'
-import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
@@ -36,6 +37,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
   setLuckySearch,
 }) => {
   const [textFieldFocused, setTextFieldFocused] = useState(false)
+  const { isMetaKey, metaKey } = usePlatform()
 
   return (
     <form
@@ -71,7 +73,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             }}
             onBlur={() => setTextFieldFocused(false)}
             onKeyDown={(e) => {
-              if (e.metaKey && e.keyCode === Keys.Enter.code && query) {
+              if (isMetaKey(e) && e.keyCode === Keys.Enter.code && query) {
                 setLuckySearch(true)
                 onSubmit(query, includeAll)
               } else {
@@ -102,8 +104,8 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
         {textFieldFocused && (
           <FadeIn duration={200}>
             <SearchTip>
-              Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
-              use lucky search
+              Press <Shadowed>{metaKey.hint}</Shadowed> +{' '}
+              <Shadowed>Enter</Shadowed> to use lucky search
             </SearchTip>
           </FadeIn>
         )}

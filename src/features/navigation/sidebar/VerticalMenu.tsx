@@ -1,5 +1,7 @@
 import styled, { StyledComponent } from '@emotion/styled'
 import { Hotkey } from '@hedvig-ui'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { colorsV3 } from '@hedviginsurance/brand'
 import React, { useContext, useRef, useState } from 'react'
 import {
@@ -22,8 +24,6 @@ import { matchPath, useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { forceLogOut } from 'utils/auth'
 import { DarkmodeContext } from 'utils/darkmode-context'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys } from 'utils/hooks/key-press-hook'
 import { useInsecurePersistentState } from 'utils/state'
 import { Logo, LogoIcon } from './elements'
 

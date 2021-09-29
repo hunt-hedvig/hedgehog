@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
 import { Popover } from '@hedvig-ui'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import copy from 'copy-to-clipboard'
 import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
@@ -9,8 +11,6 @@ import { RouteComponentProps, useHistory } from 'react-router'
 import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
 import { Member } from 'types/generated/graphql'
 import { FraudulentStatus } from 'utils/fraudulentStatus'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys } from 'utils/hooks/key-press-hook'
 import {
   formatSsn,
   getLanguageFlagFromPickedLocale,

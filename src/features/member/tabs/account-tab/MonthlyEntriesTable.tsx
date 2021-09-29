@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Bold, Button, Capitalized, Popover } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format, parseISO } from 'date-fns'
 import {
   getRemoveMonthlyEntryOptions,
@@ -10,7 +11,6 @@ import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Grid, Table } from 'semantic-ui-react'
 import { MonthlyEntry } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { formatMoney } from 'utils/money'
 
 const StyledTable = styled(Table)`
@@ -95,7 +95,6 @@ export const MonthlyEntriesTable: React.FC<{
               </Table.Cell>
               <Table.Cell>
                 <Button
-                  variation="icon"
                   onClick={() => {
                     confirm(
                       `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,

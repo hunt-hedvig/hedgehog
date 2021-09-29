@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { CardContent, CardTitle } from '@hedvig-ui'
+import { CardContent, CardTitle, Spinner } from '@hedvig-ui'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { Dropdown, Image, Table } from 'semantic-ui-react'
@@ -23,6 +23,10 @@ const sortClaimFileDate = (a: ClaimFileUpload, b: ClaimFileUpload) => {
 
   return ((bDate as any) as number) - ((aDate as any) as number)
 }
+
+const NoClaimFiles = styled('div')({
+  padding: '1rem',
+})
 
 const fileUploadOptions = [
   {
@@ -65,6 +69,7 @@ export const ClaimFileTable: React.FC<{
   const {
     data: claimFilesData,
     refetch,
+    loading,
     error: queryError,
   } = useClaimPageQuery({
     variables: { claimId },
@@ -107,60 +112,78 @@ export const ClaimFileTable: React.FC<{
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {claimFiles.sort(sortClaimFileDate).map((claimFile) => {
-              return (
-                <Table.Row key={claimFile.claimFileId}>
-                  <Table.Cell>
-                    {claimFile.contentType === 'application/pdf' ? (
-                      <embed
-                        src={claimFile.fileUploadUrl}
-                        width="800px"
-                        height="300px"
+            {loading && (
+              <Table.Row>
+                <Table.Cell>
+                  <Spinner />
+                </Table.Cell>
+              </Table.Row>
+            )}
+
+            {!claimFiles && !loading ? (
+              <Table.Row>
+                <Table.Cell>
+                  <NoClaimFiles>
+                    No claim documents have been uploaded for this claim
+                  </NoClaimFiles>
+                </Table.Cell>
+              </Table.Row>
+            ) : (
+              [...claimFiles].sort(sortClaimFileDate).map((claimFile) => {
+                return (
+                  <Table.Row key={claimFile.claimFileId}>
+                    <Table.Cell>
+                      {claimFile.contentType === 'application/pdf' ? (
+                        <embed
+                          src={claimFile.fileUploadUrl}
+                          width="800px"
+                          height="300px"
+                        />
+                      ) : (
+                        <Image src={claimFile.fileUploadUrl} size="large" />
+                      )}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Dropdown
+                        placeholder={
+                          claimFile.category !== null
+                            ? claimFile.category
+                            : 'File Type'
+                        }
+                        fluid
+                        selection
+                        options={fileUploadOptions}
+                        onChange={(event) =>
+                          setClaimFileCategory({
+                            variables: {
+                              claimId,
+                              claimFileId: claimFile.claimFileId!,
+                              category: event.currentTarget.textContent,
+                            },
+                          })
+                        }
                       />
-                    ) : (
-                      <Image src={claimFile.fileUploadUrl} size="large" />
-                    )}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Dropdown
-                      placeholder={
-                        claimFile.category !== null
-                          ? claimFile.category
-                          : 'File Type'
-                      }
-                      fluid
-                      selection
-                      options={fileUploadOptions}
-                      onChange={(event) =>
-                        setClaimFileCategory({
-                          variables: {
-                            claimId,
-                            claimFileId: claimFile.claimFileId!,
-                            category: event.currentTarget.textContent,
-                          },
-                        })
-                      }
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    {dateTimeFormatter(
-                      claimFile.uploadedAt,
-                      'yyyy-MM-dd HH:mm:ss',
-                    )}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <DeleteButton
-                      claimId={claimId}
-                      claimFileId={claimFile.claimFileId!}
-                      onDeleted={async () => {
-                        await sleep(500)
-                        await refetch()
-                      }}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              )
-            })}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {dateTimeFormatter(
+                        claimFile.uploadedAt,
+                        'yyyy-MM-dd HH:mm:ss',
+                      )}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <DeleteButton
+                        claimId={claimId}
+                        claimFileId={claimFile.claimFileId!}
+                        onDeleted={async () => {
+                          await sleep(500)
+                          await refetch()
+                        }}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              })
+            )}
           </Table.Body>
         </TableWithOverflow>
       )}

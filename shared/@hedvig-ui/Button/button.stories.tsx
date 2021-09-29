@@ -1,17 +1,25 @@
-import { Button, buttonColorMap, ButtonProps, lightTheme } from '@hedvig-ui'
+import { Button, ButtonProps } from '@hedvig-ui'
 import { action } from '@storybook/addon-actions'
 import { boolean, select } from '@storybook/addon-knobs'
 import React from 'react'
-import { WithStory } from '../story-utils'
 
 export default {
   title: 'Button',
   component: Button,
 }
 
-const colors: ReadonlyArray<NonNullable<
-  ButtonProps['variation']
->> = Object.keys(buttonColorMap(lightTheme)) as any
+const variants: ReadonlyArray<NonNullable<ButtonProps['variant']>> = [
+  'primary',
+  'secondary',
+  'tertiary',
+]
+
+const statuses: ReadonlyArray<NonNullable<ButtonProps['status']>> = [
+  'success',
+  'warning',
+  'danger',
+]
+
 const sizes: ReadonlyArray<NonNullable<ButtonProps['size']>> = [
   'small',
   'medium',
@@ -21,30 +29,13 @@ const sizes: ReadonlyArray<NonNullable<ButtonProps['size']>> = [
 export const Text = () => {
   return (
     <Button
-      onClick={action('clicked')}
-      variation={select('variation', colors, 'primary')}
+      onClick={action('Clicked')}
+      variant={select('Variant', variants, 'primary')}
+      status={select('Status', statuses, undefined)}
       size={select('Size', sizes, 'medium')}
-      basic={boolean('Basic', false)}
-      loading={boolean('Loading', false)}
+      disabled={boolean('Disabled', false)}
     >
       Hello Button
     </Button>
   )
-}
-
-export const Emoji: React.FC & WithStory = () => (
-  <Button
-    onClick={action('clicked')}
-    variation={select('variation', colors, 'primary')}
-    size={select('Size', sizes, 'medium')}
-    basic={boolean('Basic', false)}
-  >
-    <span role="img" aria-label="so cool">
-      😀 😎 👍 💯
-    </span>
-  </Button>
-)
-
-Emoji.story = {
-  name: 'with emoji',
 }

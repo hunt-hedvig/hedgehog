@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { Button, ButtonsGroup, SearchableDropdown } from '@hedvig-ui'
+import { ButtonsGroup, SearchableDropdown } from '@hedvig-ui'
+import { Button } from '@hedvig-ui/Button/button'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Input } from 'semantic-ui-react'
@@ -58,7 +59,7 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
     return (
       <Button
         disabled={!scopes.includes('employees:manage')}
-        variation="primary"
+        variant="primary"
         onClick={() => setCreatePressed(true)}
       >
         Create employee
@@ -91,7 +92,7 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
       </Row>
       <ButtonsGroup>
         <Button
-          variation="primary"
+          variant="primary"
           disabled={
             loading || !email.endsWith('@hedvig.com') || !selectedRole.role
           }
@@ -109,7 +110,9 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
         >
           Create
         </Button>
-        <Button onClick={() => setCreatePressed(false)}>Cancel</Button>
+        <Button variant="tertiary" onClick={() => setCreatePressed(false)}>
+          Cancel
+        </Button>
       </ButtonsGroup>
     </Wrapper>
   )

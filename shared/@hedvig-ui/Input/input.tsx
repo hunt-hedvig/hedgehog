@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import { colorsV3, fonts } from '@hedviginsurance/brand'
 import React, { useEffect, useRef } from 'react'
 import {
@@ -55,7 +56,25 @@ export const Input: React.FC<CustomInputProps> = ({ focus, ...props }) => {
 
   return (
     <Ref innerRef={inputRef}>
-      <StyledSemanticInput {...props} />
+      <StyledSemanticInput
+        {...props}
+        onKeyDown={(e) => {
+          if (shouldIgnoreInput(e.key)) {
+            e.preventDefault()
+            return
+          }
+
+          if (e.keyCode === Keys.Escape.code) {
+            e.preventDefault()
+            e.target.blur()
+            return
+          }
+
+          if (props.onKeyDown) {
+            props.onKeyDown(e)
+          }
+        }}
+      />
     </Ref>
   )
 }

@@ -12,6 +12,8 @@ import {
   Loadable,
   Popover,
 } from '@hedvig-ui'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
 import React from 'react'
@@ -30,8 +32,6 @@ import {
   getFirstMasterInception,
   getLastTerminationDate,
 } from 'utils/contract'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys } from 'utils/hooks/key-press-hook'
 import { formatSsn, getMemberFlag } from 'utils/member'
 import { formatMoney } from 'utils/money'
 import {

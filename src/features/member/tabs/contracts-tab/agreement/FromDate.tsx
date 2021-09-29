@@ -7,6 +7,7 @@ import {
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
 import {
   changeFromDateOptions,
@@ -15,7 +16,6 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialFromDate = (agreement: GenericAgreement): Date =>
   agreement.fromDate ? new Date(agreement.fromDate) : new Date()
@@ -51,12 +51,7 @@ export const FromDate: React.FC<{
             </FourthLevelHeadline>
           </Spacing>
           {agreement.fromDate && !contract.terminationDate && (
-            <Button
-              variation="primary"
-              onClick={() => setDatePickerEnabled(true)}
-            >
-              Edit
-            </Button>
+            <Button onClick={() => setDatePickerEnabled(true)}>Edit</Button>
           )}
           {contract.terminationDate && <Paragraph>Terminated</Paragraph>}
         </>
@@ -68,7 +63,6 @@ export const FromDate: React.FC<{
           </Spacing>
           <ButtonsGroup>
             <Button
-              variation="secondary"
               onClick={() => {
                 const formattedFromDate = format(fromDate, 'yyyy-MM-dd')
                 confirm(`Change from date to ${formattedFromDate}?`).then(
@@ -92,7 +86,9 @@ export const FromDate: React.FC<{
             >
               Confirm
             </Button>
-            <Button onClick={() => reset()}>Cancel</Button>
+            <Button variant="tertiary" onClick={() => reset()}>
+              Cancel
+            </Button>
           </ButtonsGroup>
         </>
       )}

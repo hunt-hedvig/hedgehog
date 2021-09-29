@@ -10,13 +10,13 @@ import {
   TablePageSelect,
   TableRow,
 } from '@hedvig-ui'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'graphql/use-list-claims'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'

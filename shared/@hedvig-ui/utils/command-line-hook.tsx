@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn, FourthLevelHeadline, Input, Paragraph } from '@hedvig-ui'
+import { Key, Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import React, {
   createContext,
   useContext,
@@ -8,7 +9,6 @@ import React, {
   useState,
 } from 'react'
 import { Icon } from 'semantic-ui-react'
-import { Key, Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const CommandLineWindow = styled.div`
   position: absolute;

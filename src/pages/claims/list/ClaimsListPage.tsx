@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FadeIn, MainHeadline } from '@hedvig-ui'
+import { FadeIn, MainHeadline, Spacing } from '@hedvig-ui'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
@@ -27,6 +27,7 @@ export const ClaimsListPage: React.FC<RouteComponentProps<{
         <MainHeadline>Claims</MainHeadline>
       </FadeIn>
 
+      <Spacing top />
       <LargeClaimsList page={selectedPage} />
     </ListPage>
   )

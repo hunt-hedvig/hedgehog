@@ -12,7 +12,7 @@ import {
   Ref,
   TextArea,
 } from 'semantic-ui-react'
-import { sleep } from 'utils/sleep'
+import { sleep } from '../utils/sleep'
 
 const StyledForm = styled(SemanticForm)`
   width: 100%;
@@ -79,7 +79,7 @@ const FormField: React.FC<FormFieldProps> = ({
   return (
     <SemanticForm.Field
       required={Boolean(rules?.required)}
-      error={errors && Boolean(errors[name.split('.')[0]])}
+      error={errors ? Boolean(errors[name.split('.')[0]]) : undefined}
     >
       {label && <FormLabel name={name}>{label}</FormLabel>}
       {children}

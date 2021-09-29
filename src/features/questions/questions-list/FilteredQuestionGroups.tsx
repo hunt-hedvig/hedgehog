@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { StandaloneMessage, withFadeIn } from '@hedvig-ui'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import React, { useEffect, useState } from 'react'
 import { Segment } from 'semantic-ui-react'
 import { QuestionGroup } from 'types/generated/graphql'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'
 
 const List = styled(Segment)`

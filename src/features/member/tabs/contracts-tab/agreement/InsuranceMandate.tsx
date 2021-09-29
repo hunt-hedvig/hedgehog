@@ -1,4 +1,4 @@
-import { ButtonLink, ThirdLevelHeadline } from '@hedvig-ui'
+import { Button, ThirdLevelHeadline } from '@hedvig-ui'
 import React from 'react'
 import { Contract } from 'types/generated/graphql'
 
@@ -8,14 +8,16 @@ export const InsuranceMandate: React.FC<{
   return (
     <>
       <ThirdLevelHeadline>Insurance Mandate</ThirdLevelHeadline>
-      <ButtonLink
-        variation="primary"
-        halfWidth
-        target="_blank"
-        href={`/api/member/mandate/${contract.holderMemberId}`}
+      <Button
+        onClick={() =>
+          window.open(
+            `/api/member/mandate/${contract.holderMemberId}`,
+            '_blank',
+          )
+        }
       >
         Download
-      </ButtonLink>
+      </Button>
     </>
   )
 }

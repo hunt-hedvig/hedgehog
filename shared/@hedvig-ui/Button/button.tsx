@@ -1,8 +1,239 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Spacing, Spinner } from '@hedvig-ui'
-import { colorsV3 } from '@hedviginsurance/brand'
-import React from 'react'
-import { lightTheme } from '../themes'
+import _chroma from 'chroma-js'
+import React, { ButtonHTMLAttributes } from 'react'
+
+// Necessary for tests to run - if not, theme colors used might be undefined at test-time
+const chroma = (c: string) => _chroma(c ?? 'white')
+
+const color = ({
+  theme,
+  variant = 'primary',
+  status = '',
+  disabled = false,
+}) => {
+  if (disabled) {
+    return css`
+      color: ${chroma(theme.semiStrongForeground)
+        .brighten(0.5)
+        .hex()};
+    `
+  }
+
+  if (status === 'success') {
+    return css`
+      color: ${theme.accentContrast};
+    `
+  }
+  if (status === 'warning') {
+    return css`
+      color: ${theme.accentContrast};
+    `
+  }
+  if (status === 'danger') {
+    return css`
+      color: ${theme.accentContrast};
+    `
+  }
+
+  if (variant === 'primary') {
+    return css`
+      color: ${theme.accentContrast};
+    `
+  }
+
+  if (variant === 'secondary') {
+    return css`
+      color: ${theme.accent};
+    `
+  }
+
+  if (variant === 'tertiary') {
+    return css`
+      color: ${theme.accent};
+    `
+  }
+}
+
+const backgroundColor = ({
+  theme,
+  variant = 'primary',
+  status = '',
+  disabled = false,
+}) => {
+  if (disabled) {
+    return css`
+      background-color: ${chroma(theme.mutedBackground)
+        .darken(0.4)
+        .hex()};
+    `
+  }
+
+  if (status === 'success') {
+    return css`
+      background-color: ${theme.success};
+      :hover {
+        background-color: ${chroma(theme.success)
+          .brighten(0.5)
+          .hex()};
+      }
+    `
+  }
+
+  if (status === 'warning') {
+    return css`
+      background-color: ${theme.warning};
+      :hover {
+        background-color: ${chroma(theme.warning)
+          .brighten(0.5)
+          .hex()};
+      }
+    `
+  }
+
+  if (status === 'danger') {
+    return css`
+      background-color: ${theme.danger};
+      :hover {
+        background-color: ${chroma(theme.danger)
+          .brighten(0.5)
+          .hex()};
+      }
+    `
+  }
+
+  if (variant === 'primary') {
+    return css`
+      background-color: ${theme.accent};
+      :hover {
+        background-color: ${chroma(theme.accent)
+          .brighten(0.5)
+          .hex()};
+      }
+    `
+  }
+
+  if (variant === 'secondary') {
+    return css`
+      background-color: ${theme.accentLight};
+      :hover {
+        background-color: ${chroma(theme.accentLight)
+          .brighten(0.2)
+          .hex()};
+      }
+    `
+  }
+
+  if (variant === 'tertiary') {
+    return css`
+      background-color: transparent;
+      :hover {
+        background-color: ${chroma(theme.accentLight)
+          .brighten(0.2)
+          .hex()};
+      }
+    `
+  }
+}
+
+const border = () => {
+  return css`
+    border: none;
+    border-radius: 6px;
+  `
+}
+
+const paddingSize: Record<'small' | 'medium' | 'large', string> = {
+  small: 'padding: 0.5rem 0.75rem',
+  medium: 'padding: 0.75rem 1rem',
+  large: 'padding: 1rem 1.5rem;',
+}
+
+const padding = ({ size = 'medium' }) => paddingSize[size]
+
+const fontSize = ({ size = 'medium' }) => {
+  if (size === 'small') {
+    return css`
+      font-size: 0.75rem;
+    `
+  }
+
+  if (size === 'medium') {
+    return css`
+      font-size: 1rem;
+    `
+  }
+
+  if (size === 'large') {
+    return css`
+      font-size: 1.5rem;
+    `
+  }
+}
+
+const cursor = ({ disabled = false }) => {
+  if (!disabled) {
+    return css`
+      cursor: pointer;
+    `
+  }
+
+  return css`
+    cursor: default;
+  `
+}
+
+export interface ButtonProps {
+  variant?: 'primary' | 'secondary' | 'tertiary'
+  status?: 'success' | 'warning' | 'danger'
+  size?: 'small' | 'medium' | 'large'
+  disabled?: boolean
+  icon?: React.ReactNode
+  children: React.ReactNode
+}
+
+const ButtonIcon = styled.div<{ size?: 'small' | 'medium' | 'large' }>`
+  svg {
+    margin-bottom: -12%;
+  }
+`
+
+const ButtonIconWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const Button = styled(
+  ({
+    icon,
+    children,
+    ...props
+  }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
+    return (
+      <button {...props}>
+        <ButtonIconWrapper>
+          {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
+          <div>{children}</div>
+        </ButtonIconWrapper>
+      </button>
+    )
+  },
+)`
+  font-family: inherit;
+  transition: all 200ms;
+
+  * {
+    transition: all 200ms;
+  }
+
+  ${cursor};
+  ${color};
+  ${backgroundColor};
+  ${border};
+  ${padding};
+  ${fontSize};
+`
 
 export const ButtonsGroup = styled.div`
   width: 100%;
@@ -11,175 +242,3 @@ export const ButtonsGroup = styled.div`
     margin-left: 1rem;
   }
 `
-
-export interface ButtonProps {
-  variation?:
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'third'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'ghost'
-    | 'icon'
-  fullWidth?: boolean
-  halfWidth?: boolean
-  basic?: boolean
-  size?: 'small' | 'medium' | 'large'
-  icon?: React.ReactNode
-  loading?: boolean
-  disabled?: boolean
-}
-
-export const buttonColorMap: (
-  theme: typeof lightTheme,
-) => Record<
-  NonNullable<ButtonProps['variation']>,
-  { foreground: string; background: string; highlighted: string }
-> = (theme = lightTheme) => ({
-  default: {
-    foreground: theme.foreground,
-    background: theme.accentBackground,
-    highlighted: theme.accentBackgroundHighlight,
-  },
-  primary: {
-    foreground: theme.accentContrast,
-    background: theme.accent,
-    highlighted: theme.accentLight,
-  },
-  secondary: {
-    foreground: theme.accentSecondaryContrast,
-    background: theme.accentSecondary,
-    highlighted: theme.accentSecondaryLight,
-  },
-  third: {
-    foreground: theme.accentThirdContrast,
-    background: theme.accentThird,
-    highlighted: theme.accentThirdLight,
-  },
-  success: {
-    foreground: colorsV3.white,
-    background: theme.success,
-    highlighted: theme.success,
-  },
-  danger: {
-    foreground: colorsV3.white,
-    background: theme.danger,
-    highlighted: theme.danger,
-  },
-  warning: {
-    foreground: '#000',
-    background: theme.warning,
-    highlighted: theme.warning,
-  },
-  ghost: {
-    foreground: theme.semiStrongForeground,
-    background: 'transparent',
-    highlighted: theme.backgroundTransparent,
-  },
-  icon: {
-    foreground: theme.semiStrongForeground,
-    background: 'transparent',
-    highlighted: 'transparent',
-  },
-})
-
-export const buttonSizeMap: Record<
-  NonNullable<ButtonProps['size']>,
-  { fontSize: string; padding: string }
-> = {
-  small: {
-    fontSize: '0.75rem',
-    padding: '0.5rem 0.75rem',
-  },
-  medium: {
-    fontSize: '1rem',
-    padding: '0.75rem 1rem',
-  },
-  large: {
-    fontSize: '1.25rem',
-    padding: '1rem 1.5rem',
-  },
-}
-
-export const ButtonComponent = styled.button<ButtonProps>(
-  ({
-    variation = 'default',
-    fullWidth,
-    halfWidth,
-    basic,
-    size = 'medium',
-    theme,
-  }) => {
-    const colors = buttonColorMap(theme)[variation]
-    return {
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      whiteSpace: 'nowrap',
-      fontSize: buttonSizeMap[size].fontSize,
-      fontFamily: 'inherit',
-      padding: buttonSizeMap[size].padding,
-      width: fullWidth ? '100%' : 'auto',
-      minWidth: halfWidth ? '50%' : 'auto',
-      background: basic ? 'transparent' : colors.background,
-      color:
-        variation === 'icon'
-          ? theme.accent
-          : (basic ? colors.background : colors.foreground) + ' !important',
-      border: `1px solid ${colors.background}`,
-      boxShadow: 'none !important',
-      borderRadius: 8,
-      cursor: 'pointer',
-      transition: 'background 200ms, border 200ms, color 200ms, opacity 200ms',
-      '&:hover, &:focus': {
-        outline: 'none',
-        color: colors.foreground,
-        background: colors.highlighted,
-        borderColor: colors.highlighted,
-      },
-      '&:disabled': {
-        backgroundColor:
-          variation === 'icon' ? 'transparent' : theme.accentLight,
-        borderColor: variation === 'icon' ? 'transparent' : theme.accentLight,
-        opacity: variation === 'icon' ? 0.7 : 1,
-        cursor: 'default',
-      },
-    }
-  },
-)
-
-const withLoader = <TElementAttributes extends object>(
-  Component: React.ComponentType<ButtonProps | TElementAttributes>,
-): React.FC<ButtonProps & TElementAttributes> => ({
-  loading,
-  children,
-  ...props
-}) => {
-  return (
-    <Component {...props} disabled={props.disabled || loading}>
-      <>
-        {children}
-        {loading && (
-          <Spacing inline left="small">
-            <Spinner />
-          </Spacing>
-        )}
-        {!loading && props.icon && (
-          <Spacing inline left="small">
-            {props.icon}
-          </Spacing>
-        )}
-      </>
-    </Component>
-  )
-}
-
-export const Button = withLoader<React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  ButtonComponent,
-)
-
-export const ButtonLink = withLoader<
-  React.AnchorHTMLAttributes<HTMLAnchorElement>
->(ButtonComponent.withComponent('a'))

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import React, { useEffect, useRef } from 'react'
 import {
   Ref,
@@ -47,6 +48,25 @@ export const TextArea: React.FC<{
           value={inputValue}
           onChange={(_, { value }) => onChange(value as string)}
           {...props}
+          onKeyDown={(e) => {
+            if (
+              shouldIgnoreInput(e.key) ||
+              (!inputValue && e.keyCode === Keys.Enter.code)
+            ) {
+              e.preventDefault()
+              return
+            }
+
+            if (e.keyCode === Keys.Escape.code) {
+              e.preventDefault()
+              e.target.blur()
+              return
+            }
+
+            if (props.onKeyDown) {
+              props.onKeyDown(e)
+            }
+          }}
         />
       </Ref>
     </TextAreaWrapper>

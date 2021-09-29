@@ -1,5 +1,6 @@
 import { ApolloCache } from '@apollo/client'
 import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -10,7 +11,6 @@ import {
   useGetContractMarketInfoQuery,
   usePayoutMemberMutation,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const entryTypeOptions = [
   {
@@ -146,7 +146,7 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
         />
         <FormInput label="Note" name="note" defaultValue="" />
 
-        <SubmitButton variation="primary">Create payout</SubmitButton>
+        <SubmitButton>Create payout</SubmitButton>
       </Form>
     </FormProvider>
   )
