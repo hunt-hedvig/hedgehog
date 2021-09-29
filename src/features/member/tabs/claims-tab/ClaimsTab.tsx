@@ -5,6 +5,7 @@ import {
   EnumDropdown,
   FadeIn,
   MainHeadline,
+  Spacing,
 } from '@hedvig-ui'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'features/member/tabs/claims-tab/components/MemberClaimsList'
@@ -119,6 +120,7 @@ export const ClaimsTab: React.FC<{
           </div>
         )}
       </HeaderWrapper>
+      <Spacing top />
       <MemberClaimsList memberId={memberId} />
     </FadeIn>
   )

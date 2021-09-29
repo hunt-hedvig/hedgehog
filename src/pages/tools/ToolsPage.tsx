@@ -97,6 +97,13 @@ export const ToolsPage: React.FC = () => {
         history.push('/tools/employees')
       },
     },
+    {
+      label: 'Go to Claim Types',
+      keys: [Keys.Control, Keys.Seven],
+      onResolve: () => {
+        history.push('/tools/claim-types')
+      },
+    },
   ])
 
   return (
@@ -126,16 +133,21 @@ export const ToolsPage: React.FC = () => {
         </Row>
 
         <Row columns={2}>
-          <Card to="/tools/campaign-codes" span={4}>
+          <CardLink to="/tools/campaign-codes" span={4}>
             <Icon>💵</Icon>
             {isControlPressed && <Hotkey dark>5</Hotkey>}
             Campaign Codes
-          </Card>
-          <Card to="/tools/employees" span={4}>
+          </CardLink>
+          <CardLink to="/tools/employees" span={4}>
             <Icon>👩🏼‍🦰</Icon>
             {isControlPressed && <Hotkey dark>6</Hotkey>}
             Employees
-          </Card>
+          </CardLink>
+          <CardLink to="/tools/claim-types" span={4}>
+            <Icon>🧠</Icon>
+            {isControlPressed && <Hotkey dark>5</Hotkey>}
+            Claim Types
+          </CardLink>
         </Row>
       </CardsWrapper>
 
