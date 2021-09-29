@@ -143,25 +143,13 @@ const border = () => {
   `
 }
 
-const padding = ({ size = 'medium' }) => {
-  if (size === 'small') {
-    return css`
-      padding: 0.5rem 0.75rem;
-    `
-  }
-
-  if (size === 'medium') {
-    return css`
-      padding: 0.75rem 1rem;
-    `
-  }
-
-  if (size === 'large') {
-    return css`
-      padding: 1rem 1.5rem;
-    `
-  }
+const paddingSize: Record<'small' | 'medium' | 'large', string> = {
+  small: 'padding: 0.5rem 0.75rem',
+  medium: 'padding: 0.75rem 1rem',
+  large: 'padding: 1rem 1.5rem;',
 }
+
+const padding = ({ size = 'medium' }) => paddingSize[size]
 
 const fontSize = ({ size = 'medium' }) => {
   if (size === 'small') {
