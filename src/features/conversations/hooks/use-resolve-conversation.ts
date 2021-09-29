@@ -1,10 +1,10 @@
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   GetQuestionsGroupsDocument,
   useMarkQuestionAsResolvedMutation,
 } from 'types/generated/graphql'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 export const useResolveConversation = (
   onResolve: () => void,

@@ -6,6 +6,7 @@ import {
   LoadingMessage,
   StandaloneMessage,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Table } from 'semantic-ui-react'
@@ -18,7 +19,6 @@ import {
   useUpdateEmployeeRoleMutation,
 } from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const EmployeeTable: React.FC<{
   scopes: readonly string[]
@@ -95,7 +95,7 @@ export const EmployeeTable: React.FC<{
 
               return (
                 <Table.Row key={id}>
-                  <Table.Cell width={5}>{email}</Table.Cell>
+                  <Table.Cell width={3}>{email}</Table.Cell>
                   <Table.Cell width={3}>
                     {scopes.includes('employees:manage') ? (
                       <Dropdown
@@ -116,10 +116,9 @@ export const EmployeeTable: React.FC<{
                   <Table.Cell width={3}>
                     {dateTimeFormatter(firstGrantedAt, 'yyyy-MM-dd HH:mm')}
                   </Table.Cell>
-                  <Table.Cell width={1}>
+                  <Table.Cell width={2}>
                     <ButtonsGroup>
                       <Button
-                        variation="primary"
                         disabled={
                           !selectedRoles[id] ||
                           selectedRoles[id] === currentRoles[id] ||
@@ -141,10 +140,10 @@ export const EmployeeTable: React.FC<{
                           )
                         }
                       >
-                        Update Role
+                        Update role
                       </Button>
                       <Button
-                        variation="danger"
+                        variant="tertiary"
                         disabled={
                           removeEmployeeLoading ||
                           !scopes.includes('employees:manage')

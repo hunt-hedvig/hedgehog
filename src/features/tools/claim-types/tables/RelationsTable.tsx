@@ -76,7 +76,7 @@ export const RelationsTable: React.FC<{ filter: string }> = ({ filter }) => {
             </NonClickableColumn>
             <NonClickableColumn style={{ textAlign: 'right' }}>
               <Button
-                variation="danger"
+                status="danger"
                 disabled={loading}
                 onClick={() =>
                   toast.promise(

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
+import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import React, { useEffect, useRef } from 'react'
 import {
   Ref,
   TextArea as SemanticTextArea,
   TextAreaProps,
 } from 'semantic-ui-react'
-import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 const TextAreaWrapper = styled.div`
   width: 100%;

@@ -6,6 +6,7 @@ import {
   StandaloneMessage,
   useFadeAnimation,
 } from '@hedvig-ui'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { useResolveConversation } from 'features/conversations/hooks/use-resolve-conversation'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
@@ -14,7 +15,6 @@ import { FilterState } from 'features/questions/filter'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {
   doClaimFilter,

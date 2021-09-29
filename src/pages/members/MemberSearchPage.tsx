@@ -1,4 +1,5 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
 import { SearchForm } from 'features/members-search/components/SearchForm'
@@ -13,7 +14,6 @@ import { useMemberSearch } from 'graphql/use-member-search'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 
 /**

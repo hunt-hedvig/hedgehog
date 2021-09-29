@@ -85,7 +85,6 @@ export const CreateOptionForm: React.FC<{}> = () => {
             !newOptionName ||
             loading
           }
-          variation="primary"
           type="submit"
         >
           Create

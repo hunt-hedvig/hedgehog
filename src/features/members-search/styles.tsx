@@ -88,13 +88,6 @@ export const SearchInput = styled(Input)({
   },
 })
 
-export const SearchButton = styled(Button)<{ visible: boolean }>(
-  ({ visible }) => ({
-    opacity: visible ? 1 : 0,
-    transition: 'opacity 400ms',
-  }),
-)
-
 export const EscapeButton = styled(Button)<{ visible: boolean }>(
   ({ visible }) => ({
     opacity: visible ? 1 : 0,

@@ -223,7 +223,9 @@ export const ClaimPayment: React.FC<{
           </>
         )}
 
-        <SubmitButton variation="primary">Create payment</SubmitButton>
+        <div>
+          <SubmitButton>Create payment</SubmitButton>
+        </div>
 
         {isConfirming && (
           <PaymentConfirmationModal

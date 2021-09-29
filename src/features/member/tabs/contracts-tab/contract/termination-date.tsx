@@ -7,6 +7,7 @@ import {
   Spacing,
   TextArea,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -17,7 +18,6 @@ import {
   useRevertTerminationMutation,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialTerminationDate = (contract: Contract): Date =>
   contract.terminationDate ? new Date(contract.terminationDate) : new Date()
@@ -66,15 +66,13 @@ export const TerminationDate: React.FC<{
             </Spacing>
             <ButtonsGroup>
               <Button
-                fullWidth
-                variation="secondary"
+                variant="secondary"
                 onClick={() => setDatePickerEnabled(true)}
               >
                 Change
               </Button>
               <Button
-                fullWidth
-                variation="success"
+                status="success"
                 disabled={revertTerminationLoading}
                 onClick={() => {
                   confirm('Are you want to revert the termination?').then(
@@ -120,8 +118,6 @@ export const TerminationDate: React.FC<{
             </Spacing>
             <ButtonsGroup>
               <Button
-                fullWidth
-                variation="primary"
                 disabled={changeTerminationDateLoading}
                 onClick={() => {
                   const confirmMessage = `Are you sure you want to change the termination date from ${
@@ -157,7 +153,7 @@ export const TerminationDate: React.FC<{
               >
                 Confirm
               </Button>
-              <Button fullWidth onClick={() => reset()}>
+              <Button variant="tertiary" onClick={() => reset()}>
                 Cancel
               </Button>
             </ButtonsGroup>
@@ -169,11 +165,7 @@ export const TerminationDate: React.FC<{
   return (
     <>
       {!datePickerEnabled && (
-        <Button
-          halfWidth
-          variation="danger"
-          onClick={() => setDatePickerEnabled(true)}
-        >
+        <Button status="danger" onClick={() => setDatePickerEnabled(true)}>
           Terminate contract
         </Button>
       )}
@@ -194,8 +186,7 @@ export const TerminationDate: React.FC<{
           </Spacing>
           <ButtonsGroup>
             <Button
-              fullWidth
-              variation="danger"
+              status="danger"
               disabled={terminationReason === null || terminateContractLoading}
               onClick={() => {
                 const confirmedMsg = `Are you sure you want to terminate this contract with the termination date ${format(
@@ -240,7 +231,7 @@ export const TerminationDate: React.FC<{
             >
               Terminate
             </Button>
-            <Button fullWidth onClick={() => reset()}>
+            <Button variant="tertiary" onClick={() => reset()}>
               Cancel
             </Button>
           </ButtonsGroup>

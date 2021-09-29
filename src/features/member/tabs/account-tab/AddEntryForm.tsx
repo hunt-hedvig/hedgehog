@@ -7,6 +7,7 @@ import {
   StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
 import { AddEntryInformation } from 'features/member/tabs/account-tab/AddEntryInformation'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
@@ -17,7 +18,6 @@ import {
   AccountEntryInput,
   useAddAccountEntryToMemberMutation,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const entryTypeOptions = [
   {
@@ -230,9 +230,9 @@ export const AddEntryForm: React.FC<{
             }}
           />
         </Spacing>
-        <SubmitButton variation="primary">Add entry</SubmitButton>
+        <SubmitButton>Add entry</SubmitButton>
         <Button
-          variation="ghost"
+          variant="tertiary"
           onClick={onCancel}
           style={{ marginLeft: '1.0em' }}
         >

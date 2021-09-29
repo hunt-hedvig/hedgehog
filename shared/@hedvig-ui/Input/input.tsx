@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import { colorsV3, fonts } from '@hedviginsurance/brand'
 import React from 'react'
 import {
@@ -7,7 +8,6 @@ import {
   InputProps,
   LabelProps,
 } from 'semantic-ui-react'
-import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 export interface CustomInputProps extends InputProps {
   muted?: boolean

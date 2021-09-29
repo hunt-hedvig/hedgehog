@@ -6,10 +6,10 @@ import {
   HotkeyStyled,
   MainHeadline,
 } from '@hedvig-ui'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import React from 'react'
 import { useHistory } from 'react-router'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const Row = styled.div<{ columns?: number }>`
   display: grid;

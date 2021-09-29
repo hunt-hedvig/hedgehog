@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, StandaloneMessage, ThirdLevelHeadline } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import {
   createQuoteFromAgreementOptions,
   useCreateQuoteFromAgreement,
@@ -8,7 +9,6 @@ import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { isExpired } from 'utils/quote'
 
 const QuoteMessage = styled(StandaloneMessage)`
@@ -63,11 +63,7 @@ export const CreateQuoteFromAgreement: React.FC<{
         {quoteAlreadyExists ? (
           <QuoteMessage>Agreement already has an existing quote</QuoteMessage>
         ) : (
-          <Button
-            disabled={contract.isLocked}
-            variation="primary"
-            onClick={createQuoteHandler}
-          >
+          <Button disabled={contract.isLocked} onClick={createQuoteHandler}>
             Create a new quote
           </Button>
         )}

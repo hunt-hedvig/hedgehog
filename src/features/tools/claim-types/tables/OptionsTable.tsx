@@ -7,6 +7,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { UpdateNameInput } from 'features/tools/claim-types/tables/UpdateNameInput'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -18,7 +19,6 @@ import {
   useGetClaimPropertyOptionsQuery,
   useUpdateClaimPropertyOptionMutation,
 } from 'types/generated/graphql'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 import { convertCamelcaseToTitle } from 'utils/text'
 
 export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
@@ -132,7 +132,7 @@ export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
                   />
                   <Button
                     onClick={() => handleDeprecateOption(option)}
-                    variation="danger"
+                    status="danger"
                     style={{ marginLeft: '1em' }}
                     disabled={deprecateLoading}
                   >
@@ -140,7 +140,7 @@ export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
                   </Button>
                   <Button
                     onClick={() => setEditing(null)}
-                    variation="ghost"
+                    variant="tertiary"
                     style={{ marginLeft: '1em' }}
                   >
                     Cancel

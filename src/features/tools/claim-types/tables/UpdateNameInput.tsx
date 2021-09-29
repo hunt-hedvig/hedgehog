@@ -24,7 +24,7 @@ export const UpdateNameInput: React.FC<{
           value={value}
           onChange={(e) => setValue(e.currentTarget.value)}
         />
-        <Button type="submit" variation="primary" style={{ marginLeft: '1em' }}>
+        <Button type="submit" style={{ marginLeft: '1em' }}>
           Update
         </Button>
       </Flex>

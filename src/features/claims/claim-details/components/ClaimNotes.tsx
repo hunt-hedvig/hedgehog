@@ -21,9 +21,9 @@ import {
   Spinner,
   TextArea,
 } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { Keys } from 'utils/hooks/key-press-hook'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
@@ -182,11 +182,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
       />
       <Spacing top="small" />
       <SubNoteWrapper>
-        <Button
-          disabled={!note}
-          variation="primary"
-          onClick={() => handleSubmitNote()}
-        >
+        <Button disabled={!note} onClick={() => handleSubmitNote()}>
           Add note
         </Button>
         {textFieldFocused && (

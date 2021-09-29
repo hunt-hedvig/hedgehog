@@ -1,9 +1,9 @@
 import { Button, DateTimePicker, Input } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { Group } from 'features/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useManualRedeemCampaignMutation } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const CampaignCodeInput: React.FC<{
   memberId: string
@@ -30,7 +30,7 @@ export const CampaignCodeInput: React.FC<{
               setDate={setActivationDate}
             />
             <Button
-              variation="primary"
+              variant="secondary"
               style={{ width: '15%' }}
               onClick={() => setActivationDate(null)}
             >
@@ -41,7 +41,6 @@ export const CampaignCodeInput: React.FC<{
       </Group>
       <Group style={{ marginTop: '1.0rem' }}>
         <Button
-          variation="primary"
           disabled={campaignCode === '' || loading}
           onClick={() => {
             confirm(
@@ -72,7 +71,7 @@ export const CampaignCodeInput: React.FC<{
         </Button>
         {!activationDate && (
           <Button
-            variation="secondary"
+            variant="tertiary"
             onClick={() => setActivationDate(new Date())}
           >
             Add activation date
