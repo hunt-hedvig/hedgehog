@@ -103,13 +103,18 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   const { claimId } = match.params
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
   const [showEvents, setShowEvents] = useState(false)
-  const { registerActions, isHintingOption } = useCommandLine()
+  const { registerActions, isHintingControl } = useCommandLine()
   const [focus, setFocus] = useState<string | null>(null)
+  useEffect(() => {
+    if (focus) {
+      setFocus(null)
+    }
+  }, [focus])
 
   registerActions(
     Object.keys(FOCUSES).map((section) => ({
       label: `Focus on ${FOCUSES[section].title}`,
-      keys: [Keys.Option, FOCUSES[section].key],
+      keys: [Keys.Control, FOCUSES[section].key],
       onResolve: () => {
         setFocus(section)
       },
@@ -152,7 +157,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
               <MemberInformation claimId={claimId} memberId={memberId} />
             </Card>
             <Card span={3}>
-              {isHintingOption && (
+              {isHintingControl && (
                 <HotkeyStyled dark style={hotkeyStyles}>
                   1
                 </HotkeyStyled>
@@ -164,7 +169,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
               />
             </Card>
             <Card span={3}>
-              {isHintingOption && (
+              {isHintingControl && (
                 <HotkeyStyled dark style={hotkeyStyles}>
                   2
                 </HotkeyStyled>
@@ -177,7 +182,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              {isHintingOption && (
+              {isHintingControl && (
                 <HotkeyStyled dark style={hotkeyStyles}>
                   3
                 </HotkeyStyled>
@@ -211,7 +216,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
             <>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
-                  {isHintingOption && (
+                  {isHintingControl && (
                     <HotkeyStyled dark style={hotkeyStyles}>
                       4
                     </HotkeyStyled>
@@ -224,7 +229,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
               </CardsWrapper>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
-                  {isHintingOption && (
+                  {isHintingControl && (
                     <HotkeyStyled dark style={hotkeyStyles}>
                       5
                     </HotkeyStyled>
@@ -240,7 +245,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
 
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              {isHintingOption && (
+              {isHintingControl && (
                 <HotkeyStyled dark style={hotkeyStyles}>
                   6
                 </HotkeyStyled>
