@@ -16,7 +16,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Claims',
     tabName: 'claims',
     hotkey: {
-      name: '(1)',
+      name: '1',
       key: Keys.One,
     },
     path: `members/${memberId}/claims`,
@@ -26,7 +26,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Files',
     tabName: 'files',
     hotkey: {
-      name: '(2)',
+      name: '2',
       key: Keys.Two,
     },
     path: `members/${memberId}/files`,
@@ -36,7 +36,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Contracts',
     tabName: 'contracts',
     hotkey: {
-      name: '(3)',
+      name: '3',
       key: Keys.Three,
     },
     path: `members/${memberId}/contracts`,
@@ -46,7 +46,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Quotes',
     tabName: 'quotes',
     hotkey: {
-      name: '(4)',
+      name: '4',
       key: Keys.Four,
     },
     path: `members/${memberId}/quotes`,
@@ -56,7 +56,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Payments',
     tabName: 'payments',
     hotkey: {
-      name: '(5)',
+      name: '5',
       key: Keys.Five,
     },
     path: `members/${memberId}/payments`,
@@ -66,7 +66,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Account',
     tabName: 'account',
     hotkey: {
-      name: '(6)',
+      name: '6',
       key: Keys.Six,
     },
     path: `members/${memberId}/account`,
@@ -76,7 +76,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Member',
     tabName: 'member',
     hotkey: {
-      name: '(7)',
+      name: '7',
       key: Keys.Seven,
     },
     path: `members/${memberId}/member`,
@@ -86,7 +86,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Debt',
     tabName: 'debt',
     hotkey: {
-      name: '(8)',
+      name: '8',
       key: Keys.Eight,
     },
     path: `members/${memberId}/debt`,
@@ -96,7 +96,7 @@ export const memberPagePanes = (memberId, member) => [
     tabTitle: 'Campaigns',
     tabName: 'campaigns',
     hotkey: {
-      name: '(9)',
+      name: '9',
       key: Keys.Nine,
     },
     path: `members/${memberId}/campaigns`,

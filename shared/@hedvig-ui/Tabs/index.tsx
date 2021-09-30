@@ -1,41 +1,63 @@
 import styled from '@emotion/styled'
+import { HotkeyStyled } from '@hedvig-ui'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { Key, Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
-/** Tab: */
-
 const TabStyled = styled.li<{ active?: boolean }>`
   transition: all 0.3s;
+  position: relative;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  ${({ active, theme }) => `
-    border: 1px solid ${!active ? theme.border : theme.accentLighter};
-    background: ${!active ? theme.background : theme.accent};
-    color: ${!active ? theme.foreground : theme.accentContrast};
-  `}
-
-  height: 30px;
-
-  margin: 0;
+  width: 100%;
 
   font-size: 14px;
   list-style: none;
   outline: none;
   cursor: pointer;
+  text-align: center;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 
-  border-radius: 15px 15px 0 0;
+  padding: 5px 0;
+  margin: 0;
 
+  ${({ active, theme }) => `
+    border-bottom: 1px solid ${!active ? theme.accentLighter : theme.accent};
+    color: ${!active ? theme.semiStrongForeground : theme.foreground};
+  `}
+
+  &:hover,
   &:focus {
-    padding: 4px 14px;
-    border: 2px solid ${({ theme }) => theme.borderStrong};
+    border-bottom: 1px solid ${({ theme }) => theme.accent};
+    color: ${({ theme }) => theme.foreground};
   }
+`
+
+const HotkeyWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+  left: 0;
+  top: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const Hotkey = styled(HotkeyStyled)`
+  font-size: 11px;
+
+  width: 18px;
+  height: 18px;
+
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: static;
 `
 
 export interface TabProps {
@@ -84,12 +106,15 @@ export const Tab: React.FC<TabProps> = ({
       onClick={action}
       onKeyDown={(e) => e.keyCode === Keys.Enter.code && action()}
     >
-      {title} {isControlPressed && hotkey ? hotkey.name : null}
+      {title}{' '}
+      {isControlPressed && hotkey ? (
+        <HotkeyWrapper>
+          <Hotkey dark>{hotkey.name}</Hotkey>
+        </HotkeyWrapper>
+      ) : null}
     </TabStyled>
   )
 }
-
-/** Tabs list: */
 
 const TabsWrapper = styled.ul<{ tabCount: number }>`
   width: 100%;
@@ -100,7 +125,6 @@ const TabsWrapper = styled.ul<{ tabCount: number }>`
 
   display: grid;
   grid-template-columns: repeat(${({ tabCount }) => tabCount}, 1fr);
-  column-gap: 10px;
 `
 
 export interface TabsProps {
