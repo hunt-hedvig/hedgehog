@@ -7,6 +7,7 @@ import {
   TextArea,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { FactorEditor } from 'features/tools/norwegian-tariff-editor/factor-editor'
 import { PostalCodesEditor } from 'features/tools/norwegian-tariff-editor/postal-codes-editor'
 import React from 'react'
@@ -16,7 +17,6 @@ import {
   NorwegianGripenFactorType,
   useCreateNorwegianGripenPriceEngineMutation,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 const initialFactorState: NorwegianGripenFactorInput[] = Object.keys(
   NorwegianGripenFactorType,
@@ -73,8 +73,6 @@ export const NorwegianTariffCreatorPage: React.FC = () => {
       ))}
       <Spacing top>
         <Button
-          fullWidth
-          variation="primary"
           disabled={loading}
           onClick={() => {
             confirm('Are you sure you want to create the price engine?').then(

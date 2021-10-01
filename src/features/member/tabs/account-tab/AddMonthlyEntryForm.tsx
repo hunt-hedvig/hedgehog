@@ -147,9 +147,9 @@ export const AddMonthlyEntryForm: React.FC<{
             required: 'Type is required',
           }}
         />
-        <SubmitButton variation="primary">Add Monthly Entry</SubmitButton>
+        <SubmitButton>Add Monthly Entry</SubmitButton>
         <Spacing left="small">
-          <Button variation="ghost" onClick={onCancel}>
+          <Button variant="tertiary" onClick={onCancel}>
             Cancel
           </Button>
         </Spacing>

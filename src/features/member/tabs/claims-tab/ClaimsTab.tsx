@@ -5,6 +5,7 @@ import {
   EnumDropdown,
   FadeIn,
   MainHeadline,
+  Spacing,
 } from '@hedvig-ui'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'features/member/tabs/claims-tab/components/MemberClaimsList'
@@ -65,8 +66,7 @@ export const ClaimsTab: React.FC<{
             />
             <Button
               disabled={createClaimLoading}
-              variation="danger"
-              color="danger"
+              variant="secondary"
               onClick={() => {
                 setShowForm(false)
                 setClaimDate(new Date())
@@ -79,8 +79,6 @@ export const ClaimsTab: React.FC<{
               disabled={
                 claimSource === null || claimDate === null || createClaimLoading
               }
-              variation="success"
-              color="success"
               onClick={async () => {
                 if (claimSource === null || claimDate === null) {
                   return
@@ -113,20 +111,16 @@ export const ClaimsTab: React.FC<{
                 )
               }}
             >
-              Add
+              Create
             </Button>
           </FormWrapper>
         ) : (
-          <Button
-            variation="primary"
-            color="primary"
-            onClick={() => setShowForm(true)}
-            style={{ height: 39 }}
-          >
-            Add new claim
-          </Button>
+          <div>
+            <Button onClick={() => setShowForm(true)}>Create new claim</Button>
+          </div>
         )}
       </HeaderWrapper>
+      <Spacing top />
       <MemberClaimsList memberId={memberId} />
     </FadeIn>
   )

@@ -6,6 +6,7 @@ import {
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
 import {
@@ -22,7 +23,6 @@ import {
   numberOfMonthsOptions,
   percentageDiscountOptions,
 } from 'utils/campaignCodes'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { DateRangeWrapper } from './FreeMonthsForm'
 
 const initialFormData: MonthlyPercentageFormData = {
@@ -175,8 +175,6 @@ export const MonthlyPercentageForm: React.FC = () => {
       <Spacing top="small" />
       <div>
         <Button
-          variation="primary"
-          loading={loading}
           disabled={loading || !formLooksGood(formData)}
           onClick={() => {
             confirm(`Create new campaign code "${formData.code}"?`).then(() => {

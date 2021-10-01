@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {
   Placeholder,
+  Spacing,
   Table,
   TableColumn,
   TableHeader,
@@ -108,6 +109,7 @@ export const MembersList: React.FC<{
 
   return (
     <>
+      <Spacing top />
       <Table>
         <TableHeader>
           <TableHeaderColumn>Member</TableHeaderColumn>

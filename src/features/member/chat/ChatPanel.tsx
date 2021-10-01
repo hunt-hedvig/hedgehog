@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Button, Checkbox, FadeIn, Flex, Shadowed, Spinner } from '@hedvig-ui'
+import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
+import { usePlatform } from '@hedvig-ui/utils/platform'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import React, { useState } from 'react'
-import { ChevronRight } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import TextareaAutosize from 'react-textarea-autosize'
-import { Keys, shouldIgnoreInput } from 'utils/hooks/key-press-hook'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -96,6 +96,7 @@ export const ChatPanel = ({ memberId }) => {
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [sendMessage, { loading }] = useSendMessage()
   const [textFieldFocused, setTextFieldFocused] = useState(false)
+  const { isMetaKey, metaKey } = usePlatform()
 
   const handleInputChange = (e: any) => {
     const value = e.target.value
@@ -166,7 +167,11 @@ export const ChatPanel = ({ memberId }) => {
           onFocus={() => setTextFieldFocused(true)}
           onBlur={() => setTextFieldFocused(false)}
           onKeyDown={(e) => {
-            if (e.metaKey && e.keyCode === Keys.Enter.code && currentMessage) {
+            if (
+              isMetaKey(e) &&
+              e.keyCode === Keys.Enter.code &&
+              currentMessage
+            ) {
               handleSubmit()
             }
           }}
@@ -185,17 +190,14 @@ export const ChatPanel = ({ memberId }) => {
         {textFieldFocused && !loading && (
           <FadeIn duration={200}>
             <ChatTip>
-              Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
-              send
+              Press <Shadowed>{metaKey.hint}</Shadowed> +{' '}
+              <Shadowed>Enter</Shadowed> to send
             </ChatTip>
           </FadeIn>
         )}
 
         <SubmitButton
-          disabled={currentMessage === ''}
-          loading={loading}
-          icon={<ChevronRight />}
-          variation="primary"
+          disabled={currentMessage === '' || loading}
           onClick={(event) => {
             event.preventDefault()
             handleSubmit()

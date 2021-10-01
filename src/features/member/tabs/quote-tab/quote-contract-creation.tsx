@@ -68,17 +68,14 @@ export const QuoteContractCreation: React.FC<{
 
       {!setSignQuoteMutation.data?.signQuoteForNewContract ? (
         <Button
-          variation="success"
+          status="success"
           type="submit"
-          fullWidth
           disabled={setSignQuoteMutation.loading}
         >
           Create contract
         </Button>
       ) : (
         <Button
-          variation="primary"
-          fullWidth
           onClick={(e) => {
             e.preventDefault()
             window.location.reload()

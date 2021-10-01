@@ -131,34 +131,16 @@ export const QuoteListItem: React.FC<{
         {!!inactionable || (
           <ActionsButtonsWrapper>
             <BottomSpacerWrapper>
-              <Button
-                fullWidth
-                variation="primary"
-                onClick={toggleState(Action.MODIFY)}
-              >
-                Modify
-              </Button>
+              <Button onClick={toggleState(Action.MODIFY)}>Modify</Button>
             </BottomSpacerWrapper>
             {!quote.isReadyToSign && (
               <BottomSpacerWrapper>
-                <Button
-                  fullWidth
-                  variation="success"
-                  onClick={toggleState(Action.ACTIVATE)}
-                >
-                  Activate
-                </Button>
+                <Button onClick={toggleState(Action.ACTIVATE)}>Activate</Button>
               </BottomSpacerWrapper>
             )}
             {quote.isReadyToSign && contracts.length > 0 && (
               <BottomSpacerWrapper>
-                <Button
-                  fullWidth
-                  variation="success"
-                  onClick={toggleState(Action.SIGN)}
-                >
-                  Sign
-                </Button>
+                <Button onClick={toggleState(Action.SIGN)}>Sign</Button>
               </BottomSpacerWrapper>
             )}
             {quote.isReadyToSign && contracts.length === 0 && (

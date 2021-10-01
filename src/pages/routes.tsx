@@ -2,6 +2,7 @@ import { StandaloneMessage } from '@hedvig-ui'
 import { ConversationsOnboardingPage } from 'pages/conversations/ConversationsOnboardingPage'
 import { ConversationsPage } from 'pages/conversations/ConversationsPage'
 import { ConversationsSettingsPage } from 'pages/conversations/ConversationsSettingsPage'
+import { ClaimTypesPage } from 'pages/tools/ClaimTypesPage'
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router'
 import { ClaimDetailsPage } from './claims/ClaimDetailsPage'
@@ -45,6 +46,7 @@ export const Routes: React.FC = () => {
 
       <Route path="/tools" exact component={ToolsPage} />
       <Route path="/tools/charges" component={ChargesPage} />
+      <Route path="/tools/claim-types" component={ClaimTypesPage} />
       <Route
         path="/tools/switcher-automation"
         component={SwitcherAutomationPage}

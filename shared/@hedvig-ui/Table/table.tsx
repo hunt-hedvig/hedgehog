@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { TableHTMLAttributes } from 'react'
-import { range } from '../../../src/utils/helpers'
-import { useVerticalKeyboardNavigation } from '../../../src/utils/keyboard-actions'
+import { range } from '../utils/helpers'
+import { useVerticalKeyboardNavigation } from '../utils/keyboard-actions'
 
 export const Table: React.FC<{
   onPerformNavigation?: (index) => void
@@ -33,7 +33,6 @@ export const Table: React.FC<{
 }
 
 const StyledTable = styled.table<{ activeRow: number }>`
-  margin-top: 2em;
   font-weight: normal;
   text-align: left;
   width: 100%;
@@ -64,11 +63,11 @@ export const TableHeaderColumn = styled.th`
   padding: 0.5em 1em 0.5em 1.2em;
   background-color: ${({ theme }) => theme.accentLight};
 
-  :first-child {
+  :first-of-type {
     border-radius: 8px 0 0 0;
   }
 
-  :last-child {
+  :last-of-type {
     border-radius: 0 8px 0 0;
   }
 `

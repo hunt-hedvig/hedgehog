@@ -20,7 +20,6 @@ const ClaimReserveForm: React.FC<{ claimId: string }> = ({ claimId }) => {
       />
       <Spacing top="small" />
       <Button
-        variation="primary"
         disabled={!isStringNumber(value) || value === '' || loading}
         onClick={async () => {
           await updateReserve({

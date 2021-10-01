@@ -44,7 +44,6 @@ export const ConversationsSettingsPage: React.FC<{}> = () => {
           >
             <Button
               onClick={() => history.push('/conversations')}
-              variation="primary"
               style={{ marginBottom: '0.5em', width: '300px' }}
             >
               Done

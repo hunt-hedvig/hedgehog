@@ -6,10 +6,10 @@ import {
   HotkeyStyled,
   MainHeadline,
 } from '@hedvig-ui'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import React from 'react'
 import { useHistory } from 'react-router'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const Row = styled.div<{ columns?: number }>`
   display: grid;
@@ -97,6 +97,13 @@ export const ToolsPage: React.FC = () => {
         history.push('/tools/employees')
       },
     },
+    {
+      label: 'Go to Claim Types',
+      keys: [Keys.Control, Keys.Seven],
+      onResolve: () => {
+        history.push('/tools/claim-types')
+      },
+    },
   ])
 
   return (
@@ -126,16 +133,21 @@ export const ToolsPage: React.FC = () => {
         </Row>
 
         <Row columns={2}>
-          <Card to="/tools/campaign-codes" span={4}>
+          <CardLink to="/tools/campaign-codes" span={4}>
             <Icon>💵</Icon>
             {isControlPressed && <Hotkey dark>5</Hotkey>}
             Campaign Codes
-          </Card>
-          <Card to="/tools/employees" span={4}>
+          </CardLink>
+          <CardLink to="/tools/employees" span={4}>
             <Icon>👩🏼‍🦰</Icon>
             {isControlPressed && <Hotkey dark>6</Hotkey>}
             Employees
-          </Card>
+          </CardLink>
+          <CardLink to="/tools/claim-types" span={4}>
+            <Icon>🧠</Icon>
+            {isControlPressed && <Hotkey dark>5</Hotkey>}
+            Claim Types
+          </CardLink>
         </Row>
       </CardsWrapper>
 
