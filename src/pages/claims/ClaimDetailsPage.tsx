@@ -2,9 +2,7 @@ import styled from '@emotion/styled'
 import {
   Button,
   Card,
-  CardContent,
   CardsWrapper,
-  CardTitle,
   FadeIn,
   HotkeyStyled,
   LoadingMessage,
