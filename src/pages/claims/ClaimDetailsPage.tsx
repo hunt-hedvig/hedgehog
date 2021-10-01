@@ -197,7 +197,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
             <NoCarrierMessage opacity={0.6}>
               Cannot make a payment or set a reserve without a carrier.
               <NoCarrierSubtitle>
-                Select a <Shadowed>Contract</Shadowed> and{' '}
+                Select a <Shadowed>Contract for Claim</Shadowed> and{' '}
                 <Shadowed>Date of Occurrence</Shadowed> such that the claim is
                 covered on the date.
               </NoCarrierSubtitle>
