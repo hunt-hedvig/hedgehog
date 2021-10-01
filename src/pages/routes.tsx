@@ -42,7 +42,7 @@ export const Routes: React.FC = () => {
         to="/claims/:claimId"
       />
       <Route exact path="/members" component={MemberSearchPage} />
-      <Route path="/members/:memberId" component={MemberPage} />
+      <Route path="/members/:memberId/:tab?" component={MemberPage} />
 
       <Route path="/tools" exact component={ToolsPage} />
       <Route path="/tools/charges" component={ChargesPage} />
