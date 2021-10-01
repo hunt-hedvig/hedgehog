@@ -105,11 +105,6 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   const [showEvents, setShowEvents] = useState(false)
   const { registerActions, isHintingControl } = useCommandLine()
   const [focus, setFocus] = useState<string | null>(null)
-  useEffect(() => {
-    if (focus) {
-      setFocus(null)
-    }
-  }, [focus])
 
   registerActions(
     Object.keys(FOCUSES).map((section) => ({
@@ -199,19 +194,14 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
           )}
 
           {!claimPageData?.claim?.agreement?.carrier ? (
-            <CardsWrapper contentWrap="noWrap">
-              <CardContent>
-                <CardTitle title="Payments" />
-                <NoCarrierMessage opacity={0.6}>
-                  Cannot make a payment or set a reserve without a carrier.
-                  <NoCarrierSubtitle>
-                    Select a <Shadowed>Contract</Shadowed> and{' '}
-                    <Shadowed>Date of Occurrence</Shadowed> such that the claim
-                    is covered on the date.
-                  </NoCarrierSubtitle>
-                </NoCarrierMessage>
-              </CardContent>
-            </CardsWrapper>
+            <NoCarrierMessage opacity={0.6}>
+              Cannot make a payment or set a reserve without a carrier.
+              <NoCarrierSubtitle>
+                Select a <Shadowed>Contract</Shadowed> and{' '}
+                <Shadowed>Date of Occurrence</Shadowed> such that the claim is
+                covered on the date.
+              </NoCarrierSubtitle>
+            </NoCarrierMessage>
           ) : (
             <>
               <CardsWrapper contentWrap="noWrap">
