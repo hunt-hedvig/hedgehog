@@ -16,7 +16,7 @@ import { ClaimInformation } from 'features/claims/claim-details/components/Claim
 import { ClaimNotes } from 'features/claims/claim-details/components/ClaimNotes'
 import { ClaimPayments } from 'features/claims/claim-details/components/ClaimPayments/ClaimPayments'
 import { ClaimTranscriptions } from 'features/claims/claim-details/components/ClaimTranscriptions'
-import { ClaimTypeForm } from 'features/claims/claim-details/components/ClaimType'
+import { ClaimType } from 'features/claims/claim-details/components/ClaimType/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import React, { useContext, useEffect, useState } from 'react'
@@ -133,7 +133,8 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
                   3
                 </HotkeyStyled>
               )}
-              <ClaimTypeForm focus={focus.type} claimId={claimId} />
+              <ClaimType claimId={claimId} />
+              {/*<ClaimTypeForm focus={focus.type} claimId={claimId}/>*/}
             </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">

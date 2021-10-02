@@ -213,6 +213,7 @@ export type Claim = {
   recordingUrl?: Maybe<Scalars['String']>
   state: ClaimState
   type?: Maybe<ClaimType>
+  claimType?: Maybe<Scalars['String']>
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate: Scalars['Instant']
   notes: Array<ClaimNote>
@@ -224,6 +225,7 @@ export type Claim = {
   contract?: Maybe<Contract>
   agreement?: Maybe<GenericAgreement>
   itemSet: ClaimItemSet
+  propertySelections: Array<ClaimPropertySelection>
 }
 
 export enum ClaimComplexity {
@@ -340,6 +342,12 @@ export type ClaimPropertyOption = {
   __typename?: 'ClaimPropertyOption'
   id: Scalars['ID']
   name: Scalars['String']
+}
+
+export type ClaimPropertySelection = {
+  __typename?: 'ClaimPropertySelection'
+  property: ClaimProperty
+  option: ClaimPropertyOption
 }
 
 export type ClaimPropertyTemplate = {
@@ -775,6 +783,8 @@ export type ListClaimsOptions = {
   filterComplexities?: Maybe<Array<ClaimComplexity>>
   filterNumberOfMemberGroups?: Maybe<Scalars['Int']>
   filterSelectedMemberGroups?: Maybe<Array<Scalars['Int']>>
+  filterMarkets?: Maybe<Array<Scalars['String']>>
+  filterTypesOfContract?: Maybe<Array<Scalars['String']>>
 }
 
 export type ListClaimsResult = {
@@ -937,6 +947,10 @@ export type MutationType = {
   createClaimPayment?: Maybe<Claim>
   createClaimSwishPayment?: Maybe<Claim>
   setClaimType?: Maybe<Claim>
+  setClaimFlag?: Maybe<Claim>
+  resetClaimFlags?: Maybe<Claim>
+  setClaimPropertySelection?: Maybe<Claim>
+  unsetClaimPropertySelection?: Maybe<Claim>
   setClaimInformation?: Maybe<Claim>
   updateReserve?: Maybe<Claim>
   setCoveringEmployee?: Maybe<Claim>
@@ -1055,7 +1069,28 @@ export type MutationTypeCreateClaimSwishPaymentArgs = {
 
 export type MutationTypeSetClaimTypeArgs = {
   id: Scalars['ID']
-  type?: Maybe<ClaimTypes>
+  type?: Maybe<Scalars['String']>
+}
+
+export type MutationTypeSetClaimFlagArgs = {
+  id: Scalars['ID']
+  flag: Scalars['String']
+  flagValue: Scalars['Boolean']
+}
+
+export type MutationTypeResetClaimFlagsArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationTypeSetClaimPropertySelectionArgs = {
+  id: Scalars['ID']
+  propertyId: Scalars['ID']
+  optionId: Scalars['ID']
+}
+
+export type MutationTypeUnsetClaimPropertySelectionArgs = {
+  id: Scalars['ID']
+  propertyId: Scalars['ID']
 }
 
 export type MutationTypeSetClaimInformationArgs = {
@@ -1883,6 +1918,33 @@ export type Whitelisted = {
   whitelistedBy?: Maybe<Scalars['String']>
 }
 
+export type SetClaimPropertySelectionMutationVariables = Exact<{
+  id: Scalars['ID']
+  propertyId: Scalars['ID']
+  optionId: Scalars['ID']
+}>
+
+export type SetClaimPropertySelectionMutation = {
+  __typename?: 'MutationType'
+} & {
+  setClaimPropertySelection?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+        propertySelections: Array<
+          { __typename?: 'ClaimPropertySelection' } & {
+            property: { __typename?: 'ClaimProperty' } & Pick<
+              ClaimProperty,
+              'id' | 'name'
+            >
+            option: { __typename?: 'ClaimPropertyOption' } & Pick<
+              ClaimPropertyOption,
+              'id' | 'name'
+            >
+          }
+        >
+      }
+  >
+}
+
 export type ClaimAddClaimNoteMutationVariables = Exact<{
   claimId: Scalars['ID']
   note: ClaimNoteInput
@@ -2014,8 +2076,21 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'registrationDate'
       | 'state'
       | 'coveringEmployee'
+      | 'claimType'
       | 'reserves'
     > & {
+        propertySelections: Array<
+          { __typename?: 'ClaimPropertySelection' } & {
+            property: { __typename?: 'ClaimProperty' } & Pick<
+              ClaimProperty,
+              'id' | 'name'
+            >
+            option: { __typename?: 'ClaimPropertyOption' } & Pick<
+              ClaimPropertyOption,
+              'id' | 'name'
+            >
+          }
+        >
         member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
         contract?: Maybe<
           { __typename?: 'Contract' } & Pick<
@@ -2301,16 +2376,16 @@ export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
 
 export type SetClaimTypeMutationVariables = Exact<{
   id: Scalars['ID']
-  type: ClaimTypes
+  type?: Maybe<Scalars['String']>
 }>
 
 export type SetClaimTypeMutation = { __typename?: 'MutationType' } & {
   setClaimType?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'claimType'> & {
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
         >
-      } & ClaimTypeFragment
+      }
   >
 }
 
@@ -4316,6 +4391,77 @@ export const ClaimTypeFragmentDoc = gql`
     }
   }
 `
+export const SetClaimPropertySelectionDocument = gql`
+  mutation SetClaimPropertySelection(
+    $id: ID!
+    $propertyId: ID!
+    $optionId: ID!
+  ) {
+    setClaimPropertySelection(
+      id: $id
+      propertyId: $propertyId
+      optionId: $optionId
+    ) {
+      id
+      propertySelections {
+        property {
+          id
+          name
+        }
+        option {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+export type SetClaimPropertySelectionMutationFn = ApolloReactCommon.MutationFunction<
+  SetClaimPropertySelectionMutation,
+  SetClaimPropertySelectionMutationVariables
+>
+
+/**
+ * __useSetClaimPropertySelectionMutation__
+ *
+ * To run a mutation, you first call `useSetClaimPropertySelectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetClaimPropertySelectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setClaimPropertySelectionMutation, { data, loading, error }] = useSetClaimPropertySelectionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      propertyId: // value for 'propertyId'
+ *      optionId: // value for 'optionId'
+ *   },
+ * });
+ */
+export function useSetClaimPropertySelectionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetClaimPropertySelectionMutation,
+    SetClaimPropertySelectionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SetClaimPropertySelectionMutation,
+    SetClaimPropertySelectionMutationVariables
+  >(SetClaimPropertySelectionDocument, options)
+}
+export type SetClaimPropertySelectionMutationHookResult = ReturnType<
+  typeof useSetClaimPropertySelectionMutation
+>
+export type SetClaimPropertySelectionMutationResult = ApolloReactCommon.MutationResult<
+  SetClaimPropertySelectionMutation
+>
+export type SetClaimPropertySelectionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetClaimPropertySelectionMutation,
+  SetClaimPropertySelectionMutationVariables
+>
 export const ClaimAddClaimNoteDocument = gql`
   mutation ClaimAddClaimNote($claimId: ID!, $note: ClaimNoteInput!) {
     addClaimNote(id: $claimId, note: $note) {
@@ -4510,6 +4656,17 @@ export const ClaimPageDocument = gql`
       state
       coveringEmployee
       ...claimType
+      claimType
+      propertySelections {
+        property {
+          id
+          name
+        }
+        option {
+          id
+          name
+        }
+      }
       member {
         memberId
       }
@@ -5112,17 +5269,16 @@ export type SetClaimInformationMutationOptions = ApolloReactCommon.BaseMutationO
   SetClaimInformationMutationVariables
 >
 export const SetClaimTypeDocument = gql`
-  mutation SetClaimType($id: ID!, $type: ClaimTypes!) {
+  mutation SetClaimType($id: ID!, $type: String) {
     setClaimType(id: $id, type: $type) {
       id
-      ...claimType
+      claimType
       events {
         text
         date
       }
     }
   }
-  ${ClaimTypeFragmentDoc}
 `
 export type SetClaimTypeMutationFn = ApolloReactCommon.MutationFunction<
   SetClaimTypeMutation,

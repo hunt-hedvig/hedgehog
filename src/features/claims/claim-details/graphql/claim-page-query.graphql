@@ -6,6 +6,18 @@ query ClaimPage($claimId: ID!) {
     state
     coveringEmployee
     ...claimType
+    claimType # This looks a bit awkward for now, but ...claimType is the legacy fragment of union types
+
+    propertySelections {
+      property {
+        id
+        name
+      }
+      option {
+        id
+        name
+      }
+    }
 
     member {
       memberId
