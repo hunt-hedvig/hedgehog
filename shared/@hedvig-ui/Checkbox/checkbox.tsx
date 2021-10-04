@@ -51,21 +51,19 @@ const CheckIconStyled = styled(CheckIcon)`
   height: 100%;
 `
 
-interface CheckboxProps {
+interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   label: any
-  onChange: (e: boolean) => void
   checked?: boolean
   disabled?: boolean
 }
 
-export const Checkbox: React.FC<CheckboxProps &
-  InputHTMLAttributes<HTMLInputElement>> = ({
+export const Checkbox: React.FC<CheckboxProps> = ({
   label,
   checked,
   disabled,
-  onChange,
   className,
   style,
+  onChange,
   ...props
 }) => (
   <Check style={style} className={className}>
@@ -76,13 +74,13 @@ export const Checkbox: React.FC<CheckboxProps &
         if (e.keyCode === Keys.Enter.code) {
           e.preventDefault()
           // @ts-ignore
-          onChange(!e.target.checked)
+          onChange(e)
         }
       }}
       type="checkbox"
       checked={checked}
       disabled={disabled}
-      onChange={(e) => onChange(e.target.checked)}
+      onChange={onChange}
       {...props}
     />
     <CheckboxStyled disabled={disabled} checked={checked} className="checkbox">
