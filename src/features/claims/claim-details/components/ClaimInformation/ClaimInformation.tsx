@@ -226,6 +226,8 @@ export const ClaimInformation: React.FC<{
                 return
               }
 
+              // TODO: Implement proper optimistic response with new date field
+
               setClaimDate({
                 variables: {
                   id: claimId,
@@ -235,9 +237,6 @@ export const ClaimInformation: React.FC<{
                   setClaimInformation: {
                     __typename: 'Claim',
                     id: claimId,
-                    type: {
-                      date,
-                    },
                   },
                 },
                 update: (cache, { data: response }) => {
@@ -261,10 +260,6 @@ export const ClaimInformation: React.FC<{
                     data: {
                       claim: {
                         ...cachedClaim,
-                        type: {
-                          ...cachedClaim?.type,
-                          date: format(date, 'yyyy-MM-dd'),
-                        },
                       },
                     },
                   })

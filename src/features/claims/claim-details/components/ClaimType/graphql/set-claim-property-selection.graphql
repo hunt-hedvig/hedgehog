@@ -1,7 +1,12 @@
-mutation SetClaimPropertySelection($id: ID!, $claimType: String!, $propertyId: ID!, $optionId: ID!) {
+mutation SetClaimPropertySelection(
+  $id: ID!
+  $claimType: String!
+  $propertyId: ID!
+  $optionId: ID!
+) {
   setClaimPropertySelection(
     id: $id
-    claimType: $claimType,
+    claimType: $claimType
     propertyId: $propertyId
     optionId: $optionId
   ) {

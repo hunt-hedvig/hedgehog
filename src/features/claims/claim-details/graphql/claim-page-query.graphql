@@ -5,8 +5,7 @@ query ClaimPage($claimId: ID!) {
     registrationDate
     state
     coveringEmployee
-    ...claimType
-    claimType # This looks a bit awkward for now, but ...claimType is the legacy fragment of union types
+    claimType
     propertySelections {
       claimType
       property {

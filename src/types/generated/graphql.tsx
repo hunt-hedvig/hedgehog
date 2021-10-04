@@ -29,15 +29,6 @@ export type Scalars = {
   LocalTime: any
 }
 
-export type AccidentalDamageClaim = {
-  __typename?: 'AccidentalDamageClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  item?: Maybe<Scalars['String']>
-  policeReport?: Maybe<Scalars['String']>
-  receipt?: Maybe<Scalars['String']>
-}
-
 export type Account = {
   __typename?: 'Account'
   id: Scalars['ID']
@@ -100,20 +91,6 @@ export enum AgreementStatus {
   Terminated = 'TERMINATED',
 }
 
-export type ApplianceClaim = {
-  __typename?: 'ApplianceClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  item?: Maybe<Scalars['String']>
-}
-
-export type AssaultClaim = {
-  __typename?: 'AssaultClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  policeReport?: Maybe<Scalars['String']>
-}
-
 export type AssignVoucherFreeMonths = {
   partnerId: Scalars['String']
   numberOfFreeMonths: Scalars['Int']
@@ -139,15 +116,6 @@ export type AssignVoucherVisibleNoDiscount = {
   validFrom?: Maybe<Scalars['Instant']>
   validUntil?: Maybe<Scalars['Instant']>
   codeType?: Maybe<Scalars['String']>
-}
-
-export type BurglaryClaim = {
-  __typename?: 'BurglaryClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  item?: Maybe<Scalars['String']>
-  policeReport?: Maybe<Scalars['String']>
-  receipt?: Maybe<Scalars['String']>
 }
 
 export type CampaignFilter = {
@@ -212,7 +180,6 @@ export type Claim = {
   member: Member
   recordingUrl?: Maybe<Scalars['String']>
   state: ClaimState
-  type?: Maybe<ClaimType>
   claimType?: Maybe<Scalars['String']>
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate: Scalars['Instant']
@@ -390,32 +357,6 @@ export type ClaimTranscription = {
   languageCode: Scalars['String']
 }
 
-export type ClaimType =
-  | TheftClaim
-  | AccidentalDamageClaim
-  | AssaultClaim
-  | WaterDamageClaim
-  | TravelAccidentClaim
-  | LuggageDelayClaim
-  | NotCoveredClaim
-  | FireDamageClaim
-  | ConfirmedFraudClaim
-  | LiabilityClaim
-  | ApplianceClaim
-  | LegalProtectionClaim
-  | WaterDamageBathroomClaim
-  | WaterDamageKitchenClaim
-  | BurglaryClaim
-  | FloodingClaim
-  | EarthquakeClaim
-  | InstallationsClaim
-  | SnowPressureClaim
-  | StormDamageClaim
-  | VerminAndPestsClaim
-  | OtherClaim
-  | DuplicateClaim
-  | TestClaim
-
 export type ClaimTypeRelation = {
   __typename?: 'ClaimTypeRelation'
   id: Scalars['ID']
@@ -424,42 +365,10 @@ export type ClaimTypeRelation = {
   propertyOption: ClaimPropertyOption
 }
 
-export enum ClaimTypes {
-  TheftClaim = 'TheftClaim',
-  AccidentalDamageClaim = 'AccidentalDamageClaim',
-  AssaultClaim = 'AssaultClaim',
-  WaterDamageClaim = 'WaterDamageClaim',
-  TravelAccidentClaim = 'TravelAccidentClaim',
-  LuggageDelayClaim = 'LuggageDelayClaim',
-  NotCoveredClaim = 'NotCoveredClaim',
-  FireDamageClaim = 'FireDamageClaim',
-  ApplianceClaim = 'ApplianceClaim',
-  ConfirmedFraudClaim = 'ConfirmedFraudClaim',
-  LiabilityClaim = 'LiabilityClaim',
-  LegalProtectionClaim = 'LegalProtectionClaim',
-  WaterDamageBathroomClaim = 'WaterDamageBathroomClaim',
-  WaterDamageKitchenClaim = 'WaterDamageKitchenClaim',
-  BurglaryClaim = 'BurglaryClaim',
-  FloodingClaim = 'FloodingClaim',
-  EarthquakeClaim = 'EarthquakeClaim',
-  InstallationsClaim = 'InstallationsClaim',
-  SnowPressureClaim = 'SnowPressureClaim',
-  StormDamageClaim = 'StormDamageClaim',
-  VerminAndPestsClaim = 'VerminAndPestsClaim',
-  DuplicateClaim = 'DuplicateClaim',
-  OtherClaim = 'OtherClaim',
-  TestClaim = 'TestClaim',
-}
-
 export type ClaimTypeTemplate = {
   __typename?: 'ClaimTypeTemplate'
   claimType: Scalars['String']
   properties: Array<ClaimPropertyTemplate>
-}
-
-export type ConfirmedFraudClaim = {
-  __typename?: 'ConfirmedFraudClaim'
-  date?: Maybe<Scalars['LocalDate']>
 }
 
 export type Contract = {
@@ -543,16 +452,6 @@ export type DirectDebitStatus = {
   activated?: Maybe<Scalars['Boolean']>
 }
 
-export type DuplicateClaim = {
-  __typename?: 'DuplicateClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
-export type EarthquakeClaim = {
-  __typename?: 'EarthquakeClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
 export type EditMemberInfoInput = {
   memberId: Scalars['String']
   firstName?: Maybe<Scalars['String']>
@@ -603,21 +502,10 @@ export type FileUpload = {
   memberId?: Maybe<Scalars['ID']>
 }
 
-export type FireDamageClaim = {
-  __typename?: 'FireDamageClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-}
-
 export enum Flag {
   Green = 'GREEN',
   Amber = 'AMBER',
   Red = 'RED',
-}
-
-export type FloodingClaim = {
-  __typename?: 'FloodingClaim'
-  date?: Maybe<Scalars['LocalDate']>
 }
 
 export type FreeMonths = {
@@ -692,13 +580,6 @@ export type InsertValuationRulesInput = {
   valuationRulesString: Scalars['String']
 }
 
-export type InstallationsClaim = {
-  __typename?: 'InstallationsClaim'
-  date?: Maybe<Scalars['LocalDate']>
-  item?: Maybe<Scalars['String']>
-  location?: Maybe<Scalars['String']>
-}
-
 export type ItemBrand = ItemCategoryCore & {
   __typename?: 'ItemBrand'
   id: Scalars['ID']
@@ -762,17 +643,6 @@ export type ItemType = ItemCategoryCore & {
   searchTerms: Scalars['String']
 }
 
-export type LegalProtectionClaim = {
-  __typename?: 'LegalProtectionClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
-export type LiabilityClaim = {
-  __typename?: 'LiabilityClaim'
-  date?: Maybe<Scalars['LocalDate']>
-  location?: Maybe<Scalars['String']>
-}
-
 export type ListClaimsOptions = {
   includeAll?: Maybe<Scalars['Boolean']>
   page?: Maybe<Scalars['Int']>
@@ -793,13 +663,6 @@ export type ListClaimsResult = {
   claims: Array<Claim>
   totalPages: Scalars['Int']
   page: Scalars['Int']
-}
-
-export type LuggageDelayClaim = {
-  __typename?: 'LuggageDelayClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  ticket?: Maybe<Scalars['String']>
 }
 
 export type ManualRedeemCampaignInput = {
@@ -1413,24 +1276,10 @@ export enum NorwegianTravelLineOfBusiness {
   Youth = 'YOUTH',
 }
 
-export type NotCoveredClaim = {
-  __typename?: 'NotCoveredClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
 export type NumberFailedCharges = {
   __typename?: 'NumberFailedCharges'
   numberFailedCharges: Scalars['Int']
   lastFailedChargeAt?: Maybe<Scalars['Instant']>
-}
-
-export type OtherClaim = {
-  __typename?: 'OtherClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  item?: Maybe<Scalars['String']>
-  policeReport?: Maybe<Scalars['String']>
-  receipt?: Maybe<Scalars['String']>
 }
 
 export type OverrideQuotePriceInput = {
@@ -1717,16 +1566,6 @@ export type SetContractForClaim = {
   contractId: Scalars['String']
 }
 
-export type SnowPressureClaim = {
-  __typename?: 'SnowPressureClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
-export type StormDamageClaim = {
-  __typename?: 'StormDamageClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
 export enum SwedishApartmentLineOfBusiness {
   Rent = 'RENT',
   Brf = 'BRF',
@@ -1754,20 +1593,6 @@ export type TerminateContractInput = {
   comment?: Maybe<Scalars['String']>
 }
 
-export type TestClaim = {
-  __typename?: 'TestClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
-export type TheftClaim = {
-  __typename?: 'TheftClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  item?: Maybe<Scalars['String']>
-  policeReport?: Maybe<Scalars['String']>
-  receipt?: Maybe<Scalars['String']>
-}
-
 export type Transaction = {
   __typename?: 'Transaction'
   id?: Maybe<Scalars['ID']>
@@ -1775,14 +1600,6 @@ export type Transaction = {
   timestamp?: Maybe<Scalars['Instant']>
   type?: Maybe<Scalars['String']>
   status?: Maybe<Scalars['String']>
-}
-
-export type TravelAccidentClaim = {
-  __typename?: 'TravelAccidentClaim'
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  policeReport?: Maybe<Scalars['String']>
-  receipt?: Maybe<Scalars['String']>
 }
 
 export type Trial = {
@@ -1877,11 +1694,6 @@ export type ValuationRule = {
   depreciation?: Maybe<Scalars['Int']>
 }
 
-export type VerminAndPestsClaim = {
-  __typename?: 'VerminAndPestsClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
 export type VisibleNoDiscount = {
   __typename?: 'VisibleNoDiscount'
   _?: Maybe<Scalars['Boolean']>
@@ -1899,21 +1711,6 @@ export type VoucherCampaign = {
   codeType?: Maybe<Scalars['String']>
 }
 
-export type WaterDamageBathroomClaim = {
-  __typename?: 'WaterDamageBathroomClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
-export type WaterDamageClaim = {
-  __typename?: 'WaterDamageClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
-export type WaterDamageKitchenClaim = {
-  __typename?: 'WaterDamageKitchenClaim'
-  date?: Maybe<Scalars['LocalDate']>
-}
-
 export type Whitelisted = {
   __typename?: 'Whitelisted'
   whitelistedAt?: Maybe<Scalars['Instant']>
@@ -1927,7 +1724,7 @@ export type SetClaimDateMutationVariables = Exact<{
 
 export type SetClaimDateMutation = { __typename?: 'MutationType' } & {
   setClaimInformation?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id'> & ClaimTypeFragment
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'claimType'>
   >
 }
 
@@ -2200,7 +1997,7 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
         events: Array<
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'date' | 'text'>
         >
-      } & ClaimTypeFragment
+      }
   >
 }
 
@@ -2343,68 +2140,6 @@ export type SetClaimFileCategoryMutation = { __typename?: 'MutationType' } & {
       ClaimFileUpload,
       'claimId' | 'claimFileId'
     >
-  >
-}
-
-export type SetClaimInformationMutationVariables = Exact<{
-  id: Scalars['ID']
-  claimInformation: ClaimInformationInput
-}>
-
-export type SetClaimInformationMutation = { __typename?: 'MutationType' } & {
-  setClaimInformation?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves'> & {
-        agreement?: Maybe<
-          { __typename?: 'GenericAgreement' } & Pick<
-            GenericAgreement,
-            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
-          > & {
-              address?: Maybe<
-                { __typename?: 'Address' } & Pick<
-                  Address,
-                  'street' | 'postalCode' | 'city'
-                >
-              >
-            }
-        >
-        events: Array<
-          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
-        >
-        contract?: Maybe<
-          { __typename?: 'Contract' } & Pick<Contract, 'id' | 'market'>
-        >
-        member: { __typename?: 'Member' } & Pick<
-          Member,
-          'memberId' | 'sanctionStatus'
-        > & {
-            identity?: Maybe<
-              { __typename?: 'Identity' } & Pick<
-                Identity,
-                'firstName' | 'lastName'
-              > & {
-                  nationalIdentification: {
-                    __typename?: 'NationalIdentification'
-                  } & Pick<
-                    NationalIdentification,
-                    'identification' | 'nationality'
-                  >
-                }
-            >
-          }
-        payments: Array<
-          { __typename?: 'ClaimPayment' } & Pick<
-            ClaimPayment,
-            | 'id'
-            | 'deductible'
-            | 'amount'
-            | 'exGratia'
-            | 'status'
-            | 'note'
-            | 'type'
-            | 'timestamp'
-          >
-        >
-      } & ClaimTypeFragment
   >
 }
 
@@ -3026,80 +2761,6 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & {
     }
 }
 
-export type ClaimTypeFragment = { __typename?: 'Claim' } & {
-  type?: Maybe<
-    | ({ __typename?: 'TheftClaim' } & Pick<
-        TheftClaim,
-        'location' | 'date' | 'item' | 'policeReport' | 'receipt'
-      >)
-    | ({ __typename?: 'AccidentalDamageClaim' } & Pick<
-        AccidentalDamageClaim,
-        'location' | 'date' | 'item' | 'policeReport' | 'receipt'
-      >)
-    | ({ __typename?: 'AssaultClaim' } & Pick<
-        AssaultClaim,
-        'location' | 'date' | 'policeReport'
-      >)
-    | ({ __typename?: 'WaterDamageClaim' } & Pick<WaterDamageClaim, 'date'>)
-    | ({ __typename?: 'TravelAccidentClaim' } & Pick<
-        TravelAccidentClaim,
-        'location' | 'date' | 'policeReport' | 'receipt'
-      >)
-    | ({ __typename?: 'LuggageDelayClaim' } & Pick<
-        LuggageDelayClaim,
-        'location' | 'date' | 'ticket'
-      >)
-    | ({ __typename?: 'NotCoveredClaim' } & Pick<NotCoveredClaim, 'date'>)
-    | ({ __typename?: 'FireDamageClaim' } & Pick<
-        FireDamageClaim,
-        'date' | 'location'
-      >)
-    | ({ __typename?: 'ConfirmedFraudClaim' } & Pick<
-        ConfirmedFraudClaim,
-        'date'
-      >)
-    | ({ __typename?: 'LiabilityClaim' } & Pick<
-        LiabilityClaim,
-        'date' | 'location'
-      >)
-    | ({ __typename?: 'ApplianceClaim' } & Pick<
-        ApplianceClaim,
-        'date' | 'location' | 'item'
-      >)
-    | ({ __typename?: 'LegalProtectionClaim' } & Pick<
-        LegalProtectionClaim,
-        'date'
-      >)
-    | ({ __typename?: 'WaterDamageBathroomClaim' } & Pick<
-        WaterDamageBathroomClaim,
-        'date'
-      >)
-    | { __typename?: 'WaterDamageKitchenClaim' }
-    | ({ __typename?: 'BurglaryClaim' } & Pick<
-        BurglaryClaim,
-        'location' | 'date' | 'item' | 'policeReport' | 'receipt'
-      >)
-    | ({ __typename?: 'FloodingClaim' } & Pick<FloodingClaim, 'date'>)
-    | ({ __typename?: 'EarthquakeClaim' } & Pick<EarthquakeClaim, 'date'>)
-    | ({ __typename?: 'InstallationsClaim' } & Pick<
-        InstallationsClaim,
-        'date' | 'location' | 'item'
-      >)
-    | ({ __typename?: 'SnowPressureClaim' } & Pick<SnowPressureClaim, 'date'>)
-    | ({ __typename?: 'StormDamageClaim' } & Pick<StormDamageClaim, 'date'>)
-    | ({ __typename?: 'VerminAndPestsClaim' } & Pick<
-        VerminAndPestsClaim,
-        'date'
-      >)
-    | ({ __typename?: 'OtherClaim' } & Pick<
-        OtherClaim,
-        'location' | 'date' | 'item' | 'policeReport' | 'receipt'
-      >)
-    | ({ __typename?: 'DuplicateClaim' } & Pick<DuplicateClaim, 'date'>)
-    | ({ __typename?: 'TestClaim' } & Pick<TestClaim, 'date'>)
-  >
-}
-
 export type CreateCampaignPartnerMutationVariables = Exact<{
   partnerId: Scalars['ID']
   partnerName: Scalars['String']
@@ -3508,37 +3169,11 @@ export type GetMemberClaimsQuery = { __typename?: 'QueryType' } & {
         claims: Array<
           { __typename?: 'Claim' } & Pick<
             Claim,
-            'id' | 'registrationDate' | 'state' | 'reserves'
+            'id' | 'registrationDate' | 'claimType' | 'state' | 'reserves'
           > & {
               member: { __typename?: 'Member' } & Pick<
                 Member,
                 'memberId' | 'firstName' | 'lastName'
-              >
-              type?: Maybe<
-                | { __typename: 'TheftClaim' }
-                | { __typename: 'AccidentalDamageClaim' }
-                | { __typename: 'AssaultClaim' }
-                | { __typename: 'WaterDamageClaim' }
-                | { __typename: 'TravelAccidentClaim' }
-                | { __typename: 'LuggageDelayClaim' }
-                | { __typename: 'NotCoveredClaim' }
-                | { __typename: 'FireDamageClaim' }
-                | { __typename: 'ConfirmedFraudClaim' }
-                | { __typename: 'LiabilityClaim' }
-                | { __typename: 'ApplianceClaim' }
-                | { __typename: 'LegalProtectionClaim' }
-                | { __typename: 'WaterDamageBathroomClaim' }
-                | { __typename: 'WaterDamageKitchenClaim' }
-                | { __typename: 'BurglaryClaim' }
-                | { __typename: 'FloodingClaim' }
-                | { __typename: 'EarthquakeClaim' }
-                | { __typename: 'InstallationsClaim' }
-                | { __typename: 'SnowPressureClaim' }
-                | { __typename: 'StormDamageClaim' }
-                | { __typename: 'VerminAndPestsClaim' }
-                | { __typename: 'OtherClaim' }
-                | { __typename: 'DuplicateClaim' }
-                | { __typename: 'TestClaim' }
               >
             }
         >
@@ -3577,35 +3212,8 @@ export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
         claims: Array<
           { __typename?: 'Claim' } & Pick<
             Claim,
-            'id' | 'registrationDate' | 'state'
-          > & {
-              type?: Maybe<
-                | { __typename: 'TheftClaim' }
-                | { __typename: 'AccidentalDamageClaim' }
-                | { __typename: 'AssaultClaim' }
-                | { __typename: 'WaterDamageClaim' }
-                | { __typename: 'TravelAccidentClaim' }
-                | { __typename: 'LuggageDelayClaim' }
-                | { __typename: 'NotCoveredClaim' }
-                | { __typename: 'FireDamageClaim' }
-                | { __typename: 'ConfirmedFraudClaim' }
-                | { __typename: 'LiabilityClaim' }
-                | { __typename: 'ApplianceClaim' }
-                | { __typename: 'LegalProtectionClaim' }
-                | { __typename: 'WaterDamageBathroomClaim' }
-                | { __typename: 'WaterDamageKitchenClaim' }
-                | { __typename: 'BurglaryClaim' }
-                | { __typename: 'FloodingClaim' }
-                | { __typename: 'EarthquakeClaim' }
-                | { __typename: 'InstallationsClaim' }
-                | { __typename: 'SnowPressureClaim' }
-                | { __typename: 'StormDamageClaim' }
-                | { __typename: 'VerminAndPestsClaim' }
-                | { __typename: 'OtherClaim' }
-                | { __typename: 'DuplicateClaim' }
-                | { __typename: 'TestClaim' }
-              >
-            }
+            'id' | 'registrationDate' | 'state' | 'claimType'
+          >
         >
       }
   >
@@ -3922,37 +3530,11 @@ export type ListClaimsQuery = { __typename?: 'QueryType' } & {
       claims: Array<
         { __typename?: 'Claim' } & Pick<
           Claim,
-          'id' | 'registrationDate' | 'state' | 'reserves'
+          'id' | 'registrationDate' | 'claimType' | 'state' | 'reserves'
         > & {
             member: { __typename?: 'Member' } & Pick<
               Member,
               'memberId' | 'firstName' | 'lastName'
-            >
-            type?: Maybe<
-              | { __typename: 'TheftClaim' }
-              | { __typename: 'AccidentalDamageClaim' }
-              | { __typename: 'AssaultClaim' }
-              | { __typename: 'WaterDamageClaim' }
-              | { __typename: 'TravelAccidentClaim' }
-              | { __typename: 'LuggageDelayClaim' }
-              | { __typename: 'NotCoveredClaim' }
-              | { __typename: 'FireDamageClaim' }
-              | { __typename: 'ConfirmedFraudClaim' }
-              | { __typename: 'LiabilityClaim' }
-              | { __typename: 'ApplianceClaim' }
-              | { __typename: 'LegalProtectionClaim' }
-              | { __typename: 'WaterDamageBathroomClaim' }
-              | { __typename: 'WaterDamageKitchenClaim' }
-              | { __typename: 'BurglaryClaim' }
-              | { __typename: 'FloodingClaim' }
-              | { __typename: 'EarthquakeClaim' }
-              | { __typename: 'InstallationsClaim' }
-              | { __typename: 'SnowPressureClaim' }
-              | { __typename: 'StormDamageClaim' }
-              | { __typename: 'VerminAndPestsClaim' }
-              | { __typename: 'OtherClaim' }
-              | { __typename: 'DuplicateClaim' }
-              | { __typename: 'TestClaim' }
             >
           }
       >
@@ -4318,121 +3900,13 @@ export type WhitelistMemberMutation = { __typename?: 'MutationType' } & {
   whitelistMember: { __typename?: 'Member' } & Pick<Member, 'memberId'>
 }
 
-export const ClaimTypeFragmentDoc = gql`
-  fragment claimType on Claim {
-    type {
-      ... on TheftClaim {
-        location
-        date
-        item
-        policeReport
-        receipt
-      }
-      ... on AccidentalDamageClaim {
-        location
-        date
-        item
-        policeReport
-        receipt
-      }
-      ... on AssaultClaim {
-        location
-        date
-        policeReport
-      }
-      ... on WaterDamageClaim {
-        date
-      }
-      ... on TravelAccidentClaim {
-        location
-        date
-        policeReport
-        receipt
-      }
-      ... on LuggageDelayClaim {
-        location
-        date
-        ticket
-      }
-      ... on NotCoveredClaim {
-        date
-      }
-      ... on ConfirmedFraudClaim {
-        date
-      }
-      ... on TestClaim {
-        date
-      }
-      ... on LiabilityClaim {
-        date
-        location
-      }
-      ... on FireDamageClaim {
-        date
-        location
-      }
-      ... on ApplianceClaim {
-        date
-        location
-        item
-      }
-      ... on LegalProtectionClaim {
-        date
-      }
-      ... on WaterDamageBathroomClaim {
-        date
-      }
-      ... on WaterDamageBathroomClaim {
-        date
-      }
-      ... on BurglaryClaim {
-        location
-        date
-        item
-        policeReport
-        receipt
-      }
-      ... on FloodingClaim {
-        date
-      }
-      ... on EarthquakeClaim {
-        date
-      }
-      ... on InstallationsClaim {
-        date
-        location
-        item
-      }
-      ... on SnowPressureClaim {
-        date
-      }
-      ... on StormDamageClaim {
-        date
-      }
-      ... on VerminAndPestsClaim {
-        date
-      }
-      ... on DuplicateClaim {
-        date
-      }
-      ... on OtherClaim {
-        location
-        date
-        item
-        policeReport
-        receipt
-      }
-    }
-  }
-`
 export const SetClaimDateDocument = gql`
   mutation SetClaimDate($id: ID!, $date: LocalDate!) {
     setClaimInformation(id: $id, information: { date: $date }) {
       id
-      ...claimType
+      claimType
     }
   }
-  ${ClaimTypeFragmentDoc}
 `
 export type SetClaimDateMutationFn = ApolloReactCommon.MutationFunction<
   SetClaimDateMutation,
@@ -4747,7 +4221,6 @@ export const ClaimPageDocument = gql`
       registrationDate
       state
       coveringEmployee
-      ...claimType
       claimType
       propertySelections {
         claimType
@@ -4837,7 +4310,6 @@ export const ClaimPageDocument = gql`
       }
     }
   }
-  ${ClaimTypeFragmentDoc}
 `
 
 /**
@@ -5272,105 +4744,6 @@ export type SetClaimFileCategoryMutationResult = ApolloReactCommon.MutationResul
 export type SetClaimFileCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetClaimFileCategoryMutation,
   SetClaimFileCategoryMutationVariables
->
-export const SetClaimInformationDocument = gql`
-  mutation SetClaimInformation(
-    $id: ID!
-    $claimInformation: ClaimInformationInput!
-  ) {
-    setClaimInformation(id: $id, information: $claimInformation) {
-      id
-      ...claimType
-      agreement {
-        id
-        address {
-          street
-          postalCode
-          city
-        }
-        typeOfContract
-        lineOfBusinessName
-        carrier
-      }
-      events {
-        text
-        date
-      }
-      contract {
-        id
-        market
-      }
-      member {
-        memberId
-        sanctionStatus
-        identity {
-          firstName
-          lastName
-          nationalIdentification {
-            identification
-            nationality
-          }
-        }
-      }
-      reserves
-      payments {
-        id
-        deductible
-        amount
-        exGratia
-        status
-        note
-        type
-        timestamp
-      }
-    }
-  }
-  ${ClaimTypeFragmentDoc}
-`
-export type SetClaimInformationMutationFn = ApolloReactCommon.MutationFunction<
-  SetClaimInformationMutation,
-  SetClaimInformationMutationVariables
->
-
-/**
- * __useSetClaimInformationMutation__
- *
- * To run a mutation, you first call `useSetClaimInformationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetClaimInformationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [setClaimInformationMutation, { data, loading, error }] = useSetClaimInformationMutation({
- *   variables: {
- *      id: // value for 'id'
- *      claimInformation: // value for 'claimInformation'
- *   },
- * });
- */
-export function useSetClaimInformationMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    SetClaimInformationMutation,
-    SetClaimInformationMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    SetClaimInformationMutation,
-    SetClaimInformationMutationVariables
-  >(SetClaimInformationDocument, options)
-}
-export type SetClaimInformationMutationHookResult = ReturnType<
-  typeof useSetClaimInformationMutation
->
-export type SetClaimInformationMutationResult = ApolloReactCommon.MutationResult<
-  SetClaimInformationMutation
->
-export type SetClaimInformationMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetClaimInformationMutation,
-  SetClaimInformationMutationVariables
 >
 export const SetClaimTypeDocument = gql`
   mutation SetClaimType($id: ID!, $type: String) {
@@ -8897,9 +8270,7 @@ export const GetMemberClaimsDocument = gql`
           lastName
         }
         registrationDate
-        type {
-          __typename
-        }
+        claimType
         state
         reserves
       }
@@ -8980,9 +8351,7 @@ export const GetMemberInfoDocument = gql`
         id
         registrationDate
         state
-        type {
-          __typename
-        }
+        claimType
       }
     }
   }
@@ -9772,9 +9141,7 @@ export const ListClaimsDocument = gql`
           lastName
         }
         registrationDate
-        type {
-          __typename
-        }
+        claimType
         state
         reserves
       }
@@ -11337,32 +10704,6 @@ export interface PossibleTypesResultData {
 }
 const result: PossibleTypesResultData = {
   possibleTypes: {
-    ClaimType: [
-      'TheftClaim',
-      'AccidentalDamageClaim',
-      'AssaultClaim',
-      'WaterDamageClaim',
-      'TravelAccidentClaim',
-      'LuggageDelayClaim',
-      'NotCoveredClaim',
-      'FireDamageClaim',
-      'ConfirmedFraudClaim',
-      'LiabilityClaim',
-      'ApplianceClaim',
-      'LegalProtectionClaim',
-      'WaterDamageBathroomClaim',
-      'WaterDamageKitchenClaim',
-      'BurglaryClaim',
-      'FloodingClaim',
-      'EarthquakeClaim',
-      'InstallationsClaim',
-      'SnowPressureClaim',
-      'StormDamageClaim',
-      'VerminAndPestsClaim',
-      'OtherClaim',
-      'DuplicateClaim',
-      'TestClaim',
-    ],
     ItemCategoryCore: [
       'ItemFamily',
       'ItemType',
