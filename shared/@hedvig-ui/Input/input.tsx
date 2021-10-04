@@ -209,7 +209,7 @@ export const Input: React.FC<InputProps> = ({
   style,
   ...props
 }) => {
-  const isAffix = affix && affix.content
+  const isAffix = Boolean(affix)
   const isSuccess = success && !error && !loading
   const isError = error && !success && !loading
 
@@ -228,14 +228,12 @@ export const Input: React.FC<InputProps> = ({
         placeholder={props.placeholder}
         {...props}
       />
-      {isAffix && <Affix inputSize={inputSize}>{affix.content}</Affix>}
-      {loading && (
-        <LoadingIcon affix={Boolean(isAffix)} inputSize={inputSize} />
+      {affix && affix.content && (
+        <Affix inputSize={inputSize}>{affix.content}</Affix>
       )}
-      {isSuccess && (
-        <SuccessIcon affix={Boolean(isAffix)} inputSize={inputSize} />
-      )}
-      {isError && <ErrorIcon affix={Boolean(isAffix)} inputSize={inputSize} />}
+      {loading && <LoadingIcon affix={isAffix} inputSize={inputSize} />}
+      {isSuccess && <SuccessIcon affix={isAffix} inputSize={inputSize} />}
+      {isError && <ErrorIcon affix={isAffix} inputSize={inputSize} />}
     </InputWrapper>
   )
 }
