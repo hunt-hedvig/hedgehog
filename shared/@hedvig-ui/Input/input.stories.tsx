@@ -1,5 +1,5 @@
 import { Input } from '@hedvig-ui'
-import { boolean } from '@storybook/addon-knobs'
+import { boolean, select } from '@storybook/addon-knobs'
 import React from 'react'
 
 export default {
@@ -8,14 +8,18 @@ export default {
 }
 
 export const StandardInput: React.FC = () => {
-  const [text, setText] = React.useState('')
+  const [text, setText] = React.useState<string>('')
+
   return (
     <>
       <Input
+        size={select('Size', ['small', 'medium', 'big'], 'medium')}
+        disabled={boolean('Disabled', false)}
+        loading={boolean('Loading', false)}
+        success={boolean('Successs', false)}
+        onChange={({ target: { value } }) => setText(value)}
+        error={boolean('Error', false)}
         placeholder="Write your life story here..."
-        value={text}
-        onChange={(_e, { value }) => setText(value)}
-        muted={boolean('Muted', false)}
       />
       <p>
         <strong>Written text:</strong> {text}

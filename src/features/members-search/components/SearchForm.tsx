@@ -20,7 +20,7 @@ interface SearchFieldProps {
   setQuery: (query: string) => void
   setIncludeAll: (includeAll: boolean) => void
   currentResultSize: number
-  searchFieldRef: React.Ref<any>
+  searchFieldRef: React.RefObject<HTMLInputElement>
   setLuckySearch: (luckySearch: boolean) => void
 }
 
@@ -52,12 +52,14 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
         <SearchInputGroup>
           <SearchIcon muted={!query} />
           <SearchInput
-            onChange={(_, { value }) => {
+            style={{ borderRadius: '0.5rem' }}
+            onChange={({ target: { value } }) => {
               if (shouldIgnoreInput(value)) {
                 return
               }
               setQuery(value)
             }}
+            icon={<SearchIcon muted={!query} />}
             placeholder="Looking for someone...?"
             id="query"
             value={query}
