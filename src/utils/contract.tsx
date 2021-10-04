@@ -1,3 +1,4 @@
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
 
 export const getSignSource = (signSource: string): string => {
@@ -18,8 +19,10 @@ export const getSignSource = (signSource: string): string => {
       return 'Web On-boarding'
     case 'SELF_CHANGE':
       return 'Self-service'
+    case 'CROSS_SELL':
+      return 'Cross-Sell'
     default:
-      return signSource
+      return convertEnumToTitle(signSource)
   }
 }
 
