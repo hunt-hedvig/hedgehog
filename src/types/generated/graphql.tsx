@@ -1920,6 +1920,17 @@ export type Whitelisted = {
   whitelistedBy?: Maybe<Scalars['String']>
 }
 
+export type SetClaimDateMutationVariables = Exact<{
+  id: Scalars['ID']
+  date: Scalars['LocalDate']
+}>
+
+export type SetClaimDateMutation = { __typename?: 'MutationType' } & {
+  setClaimInformation?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id'> & ClaimTypeFragment
+  >
+}
+
 export type SetClaimPropertySelectionMutationVariables = Exact<{
   id: Scalars['ID']
   claimType: Scalars['String']
@@ -2105,6 +2116,7 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
           { __typename?: 'Contract' } & Pick<
             Contract,
             | 'id'
+            | 'market'
             | 'currentAgreementId'
             | 'contractTypeName'
             | 'preferredCurrency'
@@ -2170,6 +2182,19 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
             | 'contentType'
             | 'fileUploadUrl'
             | 'uploadedAt'
+          >
+        >
+        payments: Array<
+          { __typename?: 'ClaimPayment' } & Pick<
+            ClaimPayment,
+            | 'id'
+            | 'deductible'
+            | 'amount'
+            | 'exGratia'
+            | 'status'
+            | 'note'
+            | 'type'
+            | 'timestamp'
           >
         >
         events: Array<
@@ -4400,6 +4425,60 @@ export const ClaimTypeFragmentDoc = gql`
     }
   }
 `
+export const SetClaimDateDocument = gql`
+  mutation SetClaimDate($id: ID!, $date: LocalDate!) {
+    setClaimInformation(id: $id, information: { date: $date }) {
+      id
+      ...claimType
+    }
+  }
+  ${ClaimTypeFragmentDoc}
+`
+export type SetClaimDateMutationFn = ApolloReactCommon.MutationFunction<
+  SetClaimDateMutation,
+  SetClaimDateMutationVariables
+>
+
+/**
+ * __useSetClaimDateMutation__
+ *
+ * To run a mutation, you first call `useSetClaimDateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetClaimDateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setClaimDateMutation, { data, loading, error }] = useSetClaimDateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useSetClaimDateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetClaimDateMutation,
+    SetClaimDateMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SetClaimDateMutation,
+    SetClaimDateMutationVariables
+  >(SetClaimDateDocument, options)
+}
+export type SetClaimDateMutationHookResult = ReturnType<
+  typeof useSetClaimDateMutation
+>
+export type SetClaimDateMutationResult = ApolloReactCommon.MutationResult<
+  SetClaimDateMutation
+>
+export type SetClaimDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetClaimDateMutation,
+  SetClaimDateMutationVariables
+>
 export const SetClaimPropertySelectionDocument = gql`
   mutation SetClaimPropertySelection(
     $id: ID!
@@ -4688,6 +4767,7 @@ export const ClaimPageDocument = gql`
       state
       contract {
         id
+        market
         currentAgreementId
         genericAgreements {
           id
@@ -4740,6 +4820,16 @@ export const ClaimPageDocument = gql`
         contentType
         fileUploadUrl
         uploadedAt
+      }
+      payments {
+        id
+        deductible
+        amount
+        exGratia
+        status
+        note
+        type
+        timestamp
       }
       events {
         date

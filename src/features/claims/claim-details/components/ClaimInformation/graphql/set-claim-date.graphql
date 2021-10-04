@@ -1,0 +1,7 @@
+mutation SetClaimDate($id: ID!, $date: LocalDate!) {
+  setClaimInformation(id: $id, information: { date: $date }) {
+    id
+    ...claimType
+
+  }
+}

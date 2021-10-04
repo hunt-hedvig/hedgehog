@@ -28,6 +28,7 @@ query ClaimPage($claimId: ID!) {
 
     contract {
       id
+      market
       currentAgreementId
       genericAgreements {
         id
@@ -84,6 +85,17 @@ query ClaimPage($claimId: ID!) {
       contentType
       fileUploadUrl
       uploadedAt
+    }
+
+    payments {
+      id
+      deductible
+      amount
+      exGratia
+      status
+      note
+      type
+      timestamp
     }
 
     events {

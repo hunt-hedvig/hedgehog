@@ -1,10 +1,13 @@
 import styled from '@emotion/styled'
 import {
+  ClaimPageDocument,
+  ClaimPageQuery,
   ClaimState,
   Contract,
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
+  useSetClaimDateMutation,
 } from 'types/generated/graphql'
 
 import {
@@ -12,6 +15,7 @@ import {
   CardsWrapper,
   CardTitle,
   DangerCard,
+  DateTimePicker,
   Dropdown,
   EnumDropdown,
   InfoRow,
@@ -30,6 +34,7 @@ import { useSetCoveringEmployee } from 'graphql/use-set-covering-employee'
 import { useUpdateClaimState } from 'graphql/use-update-claim-state'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
 
 const validateSelectOption = (value: any): ClaimState => {
   if (!Object.values(ClaimState).includes(value as any)) {
@@ -133,6 +138,7 @@ export const ClaimInformation: React.FC<{
   const [setContractForClaim] = useSetContractForClaim()
   const [setCoveringEmployee] = useSetCoveringEmployee()
   const [updateClaimState] = useUpdateClaimState()
+  const [setClaimDate] = useSetClaimDateMutation()
 
   return (
     <CardContent>
@@ -203,6 +209,69 @@ export const ClaimInformation: React.FC<{
               { key: 0, value: 'True', text: 'True' },
               { key: 1, value: 'False', text: 'False' },
             ]}
+          />
+        </SelectWrapper>
+        <SelectWrapper>
+          <Label>Date of Occurrence</Label>
+          <DateTimePicker
+            tabIndex={-1}
+            fullWidth={true}
+            date={
+              // @ts-ignore
+              (data?.claim?.type?.date && parseISO(data.claim.type.date)) ??
+              null
+            }
+            setDate={(date) => {
+              if (!data?.claim) {
+                return
+              }
+
+              setClaimDate({
+                variables: {
+                  id: claimId,
+                  date: date && format(date, 'yyyy-MM-dd'),
+                },
+                optimisticResponse: {
+                  setClaimInformation: {
+                    __typename: 'Claim',
+                    id: claimId,
+                    type: {
+                      date,
+                    },
+                  },
+                },
+                update: (cache, { data: response }) => {
+                  const setClaimInformation = response?.setClaimInformation
+
+                  if (!setClaimInformation) {
+                    return
+                  }
+
+                  const cachedData = cache.readQuery({
+                    query: ClaimPageDocument,
+                    variables: {
+                      claimId,
+                    },
+                  })
+
+                  const cachedClaim = (cachedData as ClaimPageQuery).claim
+
+                  cache.writeQuery({
+                    query: ClaimPageDocument,
+                    data: {
+                      claim: {
+                        ...cachedClaim,
+                        type: {
+                          ...cachedClaim?.type,
+                          date: format(date, 'yyyy-MM-dd'),
+                        },
+                      },
+                    },
+                  })
+                },
+              }).catch(() => toast.error('Could not set date'))
+            }}
+            placeholder="When did it happen?"
           />
         </SelectWrapper>
         {contracts && (
