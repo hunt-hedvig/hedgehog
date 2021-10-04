@@ -72,8 +72,6 @@ export const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
   }),
 )
 
-export const SearchInput = styled(Input)({})
-
 export const EscapeButton = styled(Button)<{ visible: boolean }>(
   ({ visible }) => ({
     opacity: visible ? 1 : 0,

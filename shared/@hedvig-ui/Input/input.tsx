@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { InputHTMLAttributes } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 
 const rotate = keyframes`
@@ -13,10 +13,22 @@ const rotate = keyframes`
   }
 `
 
-export type InputSize = 'small' | 'medium' | 'big'
-const paddingSize = { small: '5px 10px', medium: '10px 15px', big: '15px 20px' }
-const fontSize = { small: '11px', medium: '14px', big: '18px' }
-const iconWidth = { small: '15px', medium: '20px', big: '30px' }
+export type InputSize = 'small' | 'medium' | 'large'
+const paddingSize: Record<InputSize, string> = {
+  small: '5px 10px',
+  medium: '10px 15px',
+  large: '15px 20px',
+}
+const fontSize: Record<InputSize, string> = {
+  small: '11px',
+  medium: '14px',
+  large: '18px',
+}
+const iconWidth: Record<InputSize, string> = {
+  small: '15px',
+  medium: '20px',
+  large: '30px',
+}
 
 const InputWrapper = styled.div`
   width: 100%;
@@ -175,36 +187,27 @@ interface AffixType {
 }
 
 export interface InputProps {
-  autoFocus?: boolean
   disabled?: boolean
   error?: boolean
   success?: boolean
   muted?: boolean
-  placeholder?: string
-  value?: string | number
-  id?: string
-  type?: string
-  name?: string
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
   ref?: React.RefObject<HTMLInputElement>
-  onFocus?: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void
   style?: React.CSSProperties
-  size?: InputSize
+  inputSize?: InputSize
   loading?: boolean
   icon?: React.ReactNode
   affix?: AffixType
 }
 
-export const Input: React.FC<InputProps> = ({
+export const Input: React.FC<InputProps &
+  InputHTMLAttributes<HTMLInputElement>> = ({
   success,
   error,
   disabled,
   loading,
   muted,
   icon,
-  size: inputSize,
+  inputSize,
   affix,
   style,
   ...props

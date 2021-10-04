@@ -1,11 +1,10 @@
-import { Checkbox, FadeIn, Shadowed } from '@hedvig-ui'
+import { Checkbox, FadeIn, Input, Shadowed } from '@hedvig-ui'
 import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import { usePlatform } from '@hedvig-ui/utils/platform'
 import {
   EscapeButton,
   Group,
   SearchIcon,
-  SearchInput,
   SearchInputGroup,
   SearchTip,
 } from 'features/members-search/styles'
@@ -50,7 +49,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
     >
       <Group>
         <SearchInputGroup>
-          <SearchInput
+          <Input
             style={{ borderRadius: '0.5rem' }}
             onChange={({ target: { value } }) => {
               if (shouldIgnoreInput(value)) {
@@ -63,7 +62,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             id="query"
             value={query}
             loading={loading}
-            size="big"
+            inputSize="large"
             type="search"
             autoFocus
             muted={!query}
