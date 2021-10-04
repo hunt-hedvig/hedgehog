@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { InputHTMLAttributes } from 'react'
 import { Check as CheckIcon } from 'react-bootstrap-icons'
 import { Keys } from '../utils/key-press-hook'
 
@@ -54,14 +54,12 @@ const CheckIconStyled = styled(CheckIcon)`
 interface CheckboxProps {
   label: any
   onChange: (e: boolean) => void
-  name?: string
-  className?: string
   checked?: boolean
   disabled?: boolean
-  style?: React.CSSProperties
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({
+export const Checkbox: React.FC<CheckboxProps &
+  InputHTMLAttributes<HTMLInputElement>> = ({
   label,
   checked,
   disabled,
