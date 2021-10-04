@@ -1,11 +1,7 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React from 'react'
-import {
-  ArrowRepeat,
-  CheckCircleFill,
-  ExclamationCircleFill,
-} from 'react-bootstrap-icons'
+import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 
 const rotate = keyframes`
   from {
@@ -20,6 +16,7 @@ const rotate = keyframes`
 export type InputSize = 'small' | 'medium' | 'big'
 const paddingSize = { small: '5px 10px', medium: '10px 15px', big: '15px 20px' }
 const fontSize = { small: '11px', medium: '14px', big: '18px' }
+const iconWidth = { small: '15px', medium: '20px', big: '30px' }
 
 const InputWrapper = styled.div`
   width: 100%;
@@ -88,24 +85,48 @@ const InputStyled = styled.input<{
   }
 `
 
-const iconStyles = `
+const iconStyles = (size?: InputSize, affix?: boolean) => `
+  height: 65%;
+  width: ${iconWidth[size || 'medium']};
   position: absolute;
-  right: 15px;
+  right: ${!affix ? '15px' : '75px'};
 `
 
-const SuccessIcon = styled(CheckCircleFill)`
-  ${iconStyles}
+const SuccessIcon = styled(CheckCircleFill)<{
+  inputSize?: InputSize
+  affix?: boolean
+}>`
+  ${({ inputSize, affix }) => iconStyles(inputSize, affix)}
   color: ${({ theme }) => theme.success};
 `
 
-const ErrorIcon = styled(ExclamationCircleFill)`
-  ${iconStyles}
+const ErrorIcon = styled(ExclamationCircleFill)<{
+  inputSize?: InputSize
+  affix?: boolean
+}>`
+  ${({ inputSize, affix }) => iconStyles(inputSize, affix)}
   color: ${({ theme }) => theme.danger};
 `
 
-const LoadingIcon = styled(ArrowRepeat)`
-  ${iconStyles}
-  animation: ${rotate} 2s linear infinite;
+const LoadingIcon = styled.div<{
+  inputSize?: InputSize
+  affix?: boolean
+}>`
+  ${({ inputSize, affix }) => iconStyles(inputSize, affix)}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:after {
+    content: ' ';
+    display: block;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    border: 3px solid #000;
+    border-color: #000 transparent #000 transparent;
+    animation: ${rotate} 1s linear infinite;
+  }
 `
 
 const CustomIcon = styled.div`
@@ -124,6 +145,34 @@ const CustomIcon = styled.div`
     height: 100%;
   }
 `
+
+const Affix = styled.div<{ inputSize?: InputSize }>`
+  font-size: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  right: ${({ inputSize }) => (inputSize === 'small' ? '3px' : '5px')};
+
+  border-radius: 0.25rem;
+  background-color: ${({ theme }) => theme.accentBackground};
+  border: 1px solid ${({ theme }) => theme.border};
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  height: calc(
+    100% - ${({ inputSize }) => (inputSize === 'small' ? '6px' : '10px')}
+  );
+  width: 50px;
+`
+
+interface AffixType {
+  content: string
+}
 
 export interface InputProps {
   autoFocus?: boolean
@@ -145,8 +194,7 @@ export interface InputProps {
   size?: InputSize
   loading?: boolean
   icon?: React.ReactNode
-
-  // Add affix and ?rules?
+  affix?: AffixType
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -157,10 +205,16 @@ export const Input: React.FC<InputProps> = ({
   muted,
   icon,
   size: inputSize,
+  affix,
+  style,
   ...props
 }) => {
+  const isAffix = affix && affix.content
+  const isSuccess = success && !error && !loading
+  const isError = error && !success && !loading
+
   return (
-    <InputWrapper>
+    <InputWrapper style={style}>
       {icon ? <CustomIcon>{icon}</CustomIcon> : null}
       <InputStyled
         className="input"
@@ -174,9 +228,14 @@ export const Input: React.FC<InputProps> = ({
         placeholder={props.placeholder}
         {...props}
       />
-      {loading && <LoadingIcon />}
-      {success && !error && !loading && <SuccessIcon />}
-      {error && !success && !loading && <ErrorIcon />}
+      {isAffix && <Affix inputSize={inputSize}>{affix.content}</Affix>}
+      {loading && (
+        <LoadingIcon affix={Boolean(isAffix)} inputSize={inputSize} />
+      )}
+      {isSuccess && (
+        <SuccessIcon affix={Boolean(isAffix)} inputSize={inputSize} />
+      )}
+      {isError && <ErrorIcon affix={Boolean(isAffix)} inputSize={inputSize} />}
     </InputWrapper>
   )
 }

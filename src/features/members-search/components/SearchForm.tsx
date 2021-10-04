@@ -50,7 +50,6 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
     >
       <Group>
         <SearchInputGroup>
-          <SearchIcon muted={!query} />
           <SearchInput
             style={{ borderRadius: '0.5rem' }}
             onChange={({ target: { value } }) => {
