@@ -2,17 +2,19 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import { colorsV3, fonts } from '@hedviginsurance/brand'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   Input as SemanticInput,
   InputProps,
   LabelProps,
+  Ref,
 } from 'semantic-ui-react'
 
 export interface CustomInputProps extends InputProps {
   muted?: boolean
   affix?: LabelProps
   affixPosition?: 'left' | 'right'
+  focus?: boolean
 }
 
 const StyledSemanticInput = styled(SemanticInput)<CustomInputProps>`
@@ -43,24 +45,36 @@ const StyledSemanticInput = styled(SemanticInput)<CustomInputProps>`
   }
 `
 
-export const Input: React.FC<CustomInputProps> = (props) => (
-  <StyledSemanticInput
-    {...props}
-    onKeyDown={(e) => {
-      if (shouldIgnoreInput(e.key)) {
-        e.preventDefault()
-        return
-      }
+export const Input: React.FC<CustomInputProps> = ({ focus, ...props }) => {
+  const inputRef = useRef<HTMLElement>(null)
 
-      if (e.keyCode === Keys.Escape.code) {
-        e.preventDefault()
-        e.target.blur()
-        return
-      }
+  useEffect(() => {
+    if (inputRef.current && focus) {
+      inputRef.current.focus()
+    }
+  }, [focus])
 
-      if (props.onKeyDown) {
-        props.onKeyDown(e)
-      }
-    }}
-  />
-)
+  return (
+    <Ref innerRef={inputRef}>
+      <StyledSemanticInput
+        {...props}
+        onKeyDown={(e) => {
+          if (shouldIgnoreInput(e.key)) {
+            e.preventDefault()
+            return
+          }
+
+          if (e.keyCode === Keys.Escape.code) {
+            e.preventDefault()
+            e.target.blur()
+            return
+          }
+
+          if (props.onKeyDown) {
+            props.onKeyDown(e)
+          }
+        }}
+      />
+    </Ref>
+  )
+}
