@@ -162,7 +162,8 @@ interface AffixType {
   content: string
 }
 
-export interface InputProps {
+export interface InputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   disabled?: boolean
   error?: boolean
   success?: boolean
@@ -175,8 +176,7 @@ export interface InputProps {
   affix?: AffixType
 }
 
-export const Input: React.FC<InputProps &
-  Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>> = ({
+export const Input: React.FC<InputProps> = ({
   success,
   error,
   disabled,

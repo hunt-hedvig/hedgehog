@@ -19,7 +19,7 @@ export const StandardInput: React.FC = () => {
   return (
     <>
       <Input
-        size={select('Size', ['small', 'medium', 'big'], 'medium')}
+        size={select('Size', ['small', 'medium', 'large'], 'medium')}
         disabled={boolean('Disabled', false)}
         loading={boolean('Loading', false)}
         success={boolean('Successs', false)}
