@@ -1,4 +1,5 @@
 import { Checkbox } from '@hedvig-ui'
+import { boolean } from '@storybook/addon-knobs'
 import React from 'react'
 
 export default {
@@ -9,13 +10,20 @@ export default {
 
 export const StandardCheckbox: React.FC = () => {
   const [isChecked, setIsChecked] = React.useState(false)
+
+  const checkHandler = (checked: boolean) => {
+    setIsChecked(checked)
+  }
+
   return (
-    <>
+    <div style={{ padding: 150 }}>
       <Checkbox
         label="Check me"
-        onChange={(_e, { checked }) => setIsChecked(checked ?? false)}
+        onChange={checkHandler}
+        checked={isChecked}
+        disabled={boolean('Disabled', false)}
       />
       <div>{isChecked ? 'Checked' : 'Unchecked'}</div>
-    </>
+    </div>
   )
 }

@@ -29,6 +29,10 @@ export enum FilterState {
 }
 
 const FilterRow = styled('div')`
+  display: grid;
+  align-items: flex-start;
+  grid-template-columns: 100px 200px 200px 200px;
+  column-gap: 20px;
   margin-bottom: 1rem;
 `
 
@@ -38,35 +42,11 @@ const FilterLabel = styled(ThirdLevelHeadline)`
   font-weight: bold;
 `
 
-const FilterCheckbox = styled(StandardCheckbox)`
-  width: 200px;
-  &.ui.checkbox {
-    label {
-      display: inline-flex;
-      align-items: center;
+const FilterCheckbox = styled(StandardCheckbox)``
 
-      &:before,
-      &:after {
-        top: 50%;
-        transform: translateY(-50%);
-      }
-    }
-  }
-`
-
-const FilterName = styled.label`
-  padding: 0.5rem 1rem 0.5rem 3rem !important;
-  border-radius: 100px;
-  transition: background 300ms;
-  &:hover {
-    background: ${({ theme }) => theme.accentBackground};
-  }
-
-  &:before,
-  &:after {
-    left: 1rem !important;
-  }
-  vertical-align: middle;
+const FilterName = styled.span`
+  display: flex;
+  align-items: center;
 `
 
 const ColorBadge = styled.div<{ filter: FilterState }>`

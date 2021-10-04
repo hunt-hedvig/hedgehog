@@ -85,7 +85,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
       </Group>
       <Group pushLeft style={{ display: 'flex', alignItems: 'center' }}>
         <Checkbox
-          onChange={(_, { checked }) => {
+          onChange={(checked) => {
             setIncludeAll(checked!)
             onSubmit(query, checked!)
           }}
