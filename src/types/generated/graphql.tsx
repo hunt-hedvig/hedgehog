@@ -181,6 +181,7 @@ export type Claim = {
   recordingUrl?: Maybe<Scalars['String']>
   state: ClaimState
   claimType?: Maybe<Scalars['String']>
+  dateOfOccurrence?: Maybe<Scalars['LocalDate']>
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate: Scalars['Instant']
   notes: Array<ClaimNote>
@@ -815,7 +816,7 @@ export type MutationType = {
   resetClaimFlags?: Maybe<Claim>
   setClaimPropertySelection?: Maybe<Claim>
   unsetClaimPropertySelection?: Maybe<Claim>
-  setClaimInformation?: Maybe<Claim>
+  setDateOfOccurrence?: Maybe<Claim>
   updateReserve?: Maybe<Claim>
   setCoveringEmployee?: Maybe<Claim>
   whitelistMember: Member
@@ -958,9 +959,9 @@ export type MutationTypeUnsetClaimPropertySelectionArgs = {
   propertyId: Scalars['ID']
 }
 
-export type MutationTypeSetClaimInformationArgs = {
+export type MutationTypeSetDateOfOccurrenceArgs = {
   id: Scalars['ID']
-  information: ClaimInformationInput
+  date: Scalars['LocalDate']
 }
 
 export type MutationTypeUpdateReserveArgs = {
@@ -1723,8 +1724,58 @@ export type SetClaimDateMutationVariables = Exact<{
 }>
 
 export type SetClaimDateMutation = { __typename?: 'MutationType' } & {
-  setClaimInformation?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'claimType'>
+  setDateOfOccurrence?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'dateOfOccurrence'> & {
+        contract?: Maybe<
+          { __typename?: 'Contract' } & Pick<
+            Contract,
+            | 'id'
+            | 'market'
+            | 'currentAgreementId'
+            | 'contractTypeName'
+            | 'preferredCurrency'
+            | 'typeOfContract'
+            | 'masterInception'
+            | 'terminationDate'
+          > & {
+              genericAgreements: Array<
+                { __typename?: 'GenericAgreement' } & Pick<
+                  GenericAgreement,
+                  | 'id'
+                  | 'lineOfBusinessName'
+                  | 'status'
+                  | 'carrier'
+                  | 'typeOfContract'
+                  | 'createdAt'
+                > & {
+                    address?: Maybe<
+                      { __typename?: 'Address' } & Pick<
+                        Address,
+                        'street' | 'postalCode' | 'city'
+                      >
+                    >
+                    premium: { __typename?: 'MonetaryAmountV2' } & Pick<
+                      MonetaryAmountV2,
+                      'amount' | 'currency'
+                    >
+                  }
+              >
+            }
+        >
+        agreement?: Maybe<
+          { __typename?: 'GenericAgreement' } & Pick<
+            GenericAgreement,
+            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
+          > & {
+              address?: Maybe<
+                { __typename?: 'Address' } & Pick<
+                  Address,
+                  'street' | 'postalCode' | 'city'
+                >
+              >
+            }
+        >
+      }
   >
 }
 
@@ -1891,6 +1942,7 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'state'
       | 'coveringEmployee'
       | 'claimType'
+      | 'dateOfOccurrence'
       | 'reserves'
     > & {
         propertySelections: Array<
@@ -3902,9 +3954,47 @@ export type WhitelistMemberMutation = { __typename?: 'MutationType' } & {
 
 export const SetClaimDateDocument = gql`
   mutation SetClaimDate($id: ID!, $date: LocalDate!) {
-    setClaimInformation(id: $id, information: { date: $date }) {
+    setDateOfOccurrence(id: $id, date: $date) {
       id
-      claimType
+      dateOfOccurrence
+      contract {
+        id
+        market
+        currentAgreementId
+        genericAgreements {
+          id
+          address {
+            street
+            postalCode
+            city
+          }
+          lineOfBusinessName
+          premium {
+            amount
+            currency
+          }
+          status
+          carrier
+          typeOfContract
+          createdAt
+        }
+        contractTypeName
+        preferredCurrency
+        typeOfContract
+        masterInception
+        terminationDate
+      }
+      agreement {
+        id
+        address {
+          street
+          postalCode
+          city
+        }
+        typeOfContract
+        lineOfBusinessName
+        carrier
+      }
     }
   }
 `
@@ -4222,6 +4312,7 @@ export const ClaimPageDocument = gql`
       state
       coveringEmployee
       claimType
+      dateOfOccurrence
       propertySelections {
         claimType
         property {

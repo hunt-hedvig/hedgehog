@@ -6,6 +6,7 @@ query ClaimPage($claimId: ID!) {
     state
     coveringEmployee
     claimType
+    dateOfOccurrence
     propertySelections {
       claimType
       property {

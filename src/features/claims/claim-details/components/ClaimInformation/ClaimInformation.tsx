@@ -1,7 +1,5 @@
 import styled from '@emotion/styled'
 import {
-  ClaimPageDocument,
-  ClaimPageQuery,
   ClaimState,
   Contract,
   GenericAgreement,
@@ -217,8 +215,8 @@ export const ClaimInformation: React.FC<{
             tabIndex={-1}
             fullWidth={true}
             date={
-              // @ts-ignore
-              (data?.claim?.type?.date && parseISO(data.claim.type.date)) ??
+              (data?.claim?.dateOfOccurrence &&
+                parseISO(data.claim.dateOfOccurrence)) ??
               null
             }
             setDate={(date) => {
@@ -226,45 +224,27 @@ export const ClaimInformation: React.FC<{
                 return
               }
 
-              // TODO: Implement proper optimistic response with new date field
-
-              setClaimDate({
-                variables: {
-                  id: claimId,
-                  date: date && format(date, 'yyyy-MM-dd'),
-                },
-                optimisticResponse: {
-                  setClaimInformation: {
-                    __typename: 'Claim',
+              toast.promise(
+                setClaimDate({
+                  variables: {
                     id: claimId,
+                    date: date && format(date, 'yyyy-MM-dd'),
                   },
-                },
-                update: (cache, { data: response }) => {
-                  const setClaimInformation = response?.setClaimInformation
-
-                  if (!setClaimInformation) {
-                    return
-                  }
-
-                  const cachedData = cache.readQuery({
-                    query: ClaimPageDocument,
-                    variables: {
-                      claimId,
+                  optimisticResponse: {
+                    setDateOfOccurrence: {
+                      __typename: 'Claim',
+                      id: claimId,
+                      dateOfOccurrence: format(date, 'yyyy-MM-dd'),
+                      contract: data?.claim?.contract,
                     },
-                  })
-
-                  const cachedClaim = (cachedData as ClaimPageQuery).claim
-
-                  cache.writeQuery({
-                    query: ClaimPageDocument,
-                    data: {
-                      claim: {
-                        ...cachedClaim,
-                      },
-                    },
-                  })
+                  },
+                }),
+                {
+                  loading: 'Setting date of occurrence',
+                  success: 'Date of occurrence set',
+                  error: 'Could not set date of occurrence',
                 },
-              }).catch(() => toast.error('Could not set date'))
+              )
             }}
             placeholder="When did it happen?"
           />
