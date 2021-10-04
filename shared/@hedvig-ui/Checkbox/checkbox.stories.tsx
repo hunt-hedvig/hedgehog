@@ -18,6 +18,7 @@ export const StandardCheckbox: React.FC = () => {
   return (
     <div style={{ padding: 150 }}>
       <Checkbox
+        style={{ marginBottom: 25 }}
         label="Check me"
         onChange={checkHandler}
         checked={isChecked}

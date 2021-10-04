@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   Checkbox,
   Form,
@@ -33,6 +34,12 @@ export interface PaymentFormData {
 const areSwishPayoutsEnabled = () => {
   return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
 }
+
+const FormCheckbox = styled(Checkbox)`
+  .checkbox__input {
+    border: none !important;
+  }
+`
 
 export const ClaimPayment: React.FC<{
   sanctionStatus?: SanctionStatus | null
@@ -167,10 +174,10 @@ export const ClaimPayment: React.FC<{
             required: 'Note is required',
           }}
         />
-        <Checkbox
+        <FormCheckbox
           label="Ex Gratia?"
           name="exGratia"
-          className="field"
+          style={{ marginBottom: 15 }}
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />
@@ -193,10 +200,9 @@ export const ClaimPayment: React.FC<{
         />
 
         {isPotentiallySanctioned && (
-          <Checkbox
+          <FormCheckbox
             label="Override sanction list result (I promise that I have manually checked the list)"
             name="overriden"
-            className="field"
             checked={isOverridden}
             onChange={() => setIsOverridden((prev) => !prev)}
           />
