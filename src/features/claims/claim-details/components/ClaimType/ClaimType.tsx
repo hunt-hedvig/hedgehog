@@ -46,7 +46,12 @@ const ClaimPropertyForm: React.FC<{
     }
 
     setClaimPropertySelection({
-      variables: { id: claimId, propertyId: property.id, optionId: option.id },
+      variables: {
+        id: claimId,
+        claimType,
+        propertyId: property.id,
+        optionId: option.id,
+      },
       optimisticResponse: {
         setClaimPropertySelection: {
           id: claimId,
@@ -57,6 +62,7 @@ const ClaimPropertyForm: React.FC<{
             ),
             {
               __typename: 'ClaimPropertySelection',
+              claimType,
               property,
               option,
             },
@@ -74,7 +80,7 @@ const ClaimPropertyForm: React.FC<{
         )
 
         return (
-          <Spacing top="small">
+          <Spacing key={propertyId} top="small">
             <Label key={propertyId}>{name}</Label>
             <Dropdown
               value={selectedOption?.option.id ?? ''}

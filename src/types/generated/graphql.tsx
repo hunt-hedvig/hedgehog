@@ -346,6 +346,7 @@ export type ClaimPropertyOption = {
 
 export type ClaimPropertySelection = {
   __typename?: 'ClaimPropertySelection'
+  claimType: Scalars['String']
   property: ClaimProperty
   option: ClaimPropertyOption
 }
@@ -1084,6 +1085,7 @@ export type MutationTypeResetClaimFlagsArgs = {
 
 export type MutationTypeSetClaimPropertySelectionArgs = {
   id: Scalars['ID']
+  claimType: Scalars['String']
   propertyId: Scalars['ID']
   optionId: Scalars['ID']
 }
@@ -1920,6 +1922,7 @@ export type Whitelisted = {
 
 export type SetClaimPropertySelectionMutationVariables = Exact<{
   id: Scalars['ID']
+  claimType: Scalars['String']
   propertyId: Scalars['ID']
   optionId: Scalars['ID']
 }>
@@ -1930,16 +1933,19 @@ export type SetClaimPropertySelectionMutation = {
   setClaimPropertySelection?: Maybe<
     { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
         propertySelections: Array<
-          { __typename?: 'ClaimPropertySelection' } & {
-            property: { __typename?: 'ClaimProperty' } & Pick<
-              ClaimProperty,
-              'id' | 'name'
-            >
-            option: { __typename?: 'ClaimPropertyOption' } & Pick<
-              ClaimPropertyOption,
-              'id' | 'name'
-            >
-          }
+          { __typename?: 'ClaimPropertySelection' } & Pick<
+            ClaimPropertySelection,
+            'claimType'
+          > & {
+              property: { __typename?: 'ClaimProperty' } & Pick<
+                ClaimProperty,
+                'id' | 'name'
+              >
+              option: { __typename?: 'ClaimPropertyOption' } & Pick<
+                ClaimPropertyOption,
+                'id' | 'name'
+              >
+            }
         >
       }
   >
@@ -2080,16 +2086,19 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'reserves'
     > & {
         propertySelections: Array<
-          { __typename?: 'ClaimPropertySelection' } & {
-            property: { __typename?: 'ClaimProperty' } & Pick<
-              ClaimProperty,
-              'id' | 'name'
-            >
-            option: { __typename?: 'ClaimPropertyOption' } & Pick<
-              ClaimPropertyOption,
-              'id' | 'name'
-            >
-          }
+          { __typename?: 'ClaimPropertySelection' } & Pick<
+            ClaimPropertySelection,
+            'claimType'
+          > & {
+              property: { __typename?: 'ClaimProperty' } & Pick<
+                ClaimProperty,
+                'id' | 'name'
+              >
+              option: { __typename?: 'ClaimPropertyOption' } & Pick<
+                ClaimPropertyOption,
+                'id' | 'name'
+              >
+            }
         >
         member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
         contract?: Maybe<
@@ -4394,16 +4403,19 @@ export const ClaimTypeFragmentDoc = gql`
 export const SetClaimPropertySelectionDocument = gql`
   mutation SetClaimPropertySelection(
     $id: ID!
+    $claimType: String!
     $propertyId: ID!
     $optionId: ID!
   ) {
     setClaimPropertySelection(
       id: $id
+      claimType: $claimType
       propertyId: $propertyId
       optionId: $optionId
     ) {
       id
       propertySelections {
+        claimType
         property {
           id
           name
@@ -4435,6 +4447,7 @@ export type SetClaimPropertySelectionMutationFn = ApolloReactCommon.MutationFunc
  * const [setClaimPropertySelectionMutation, { data, loading, error }] = useSetClaimPropertySelectionMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      claimType: // value for 'claimType'
  *      propertyId: // value for 'propertyId'
  *      optionId: // value for 'optionId'
  *   },
@@ -4658,6 +4671,7 @@ export const ClaimPageDocument = gql`
       ...claimType
       claimType
       propertySelections {
+        claimType
         property {
           id
           name
