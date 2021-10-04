@@ -11,8 +11,8 @@ export default {
 export const StandardCheckbox: React.FC = () => {
   const [isChecked, setIsChecked] = React.useState(false)
 
-  const checkHandler = (checked: boolean) => {
-    setIsChecked(checked)
+  const checkHandler = (e) => {
+    setIsChecked(e.currentTarget.checked)
   }
 
   return (
