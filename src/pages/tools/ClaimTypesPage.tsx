@@ -79,7 +79,7 @@ export const ClaimTypesPage: React.FC = () => {
             </div>
             <div>
               <Input
-                inputSize="small"
+                size="small"
                 value={filter}
                 placeholder="Your filter goes here"
                 onChange={(e) => setFilter(e.currentTarget.value)}

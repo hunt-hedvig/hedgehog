@@ -19,7 +19,7 @@ export const UpdateNameInput: React.FC<{
       <Flex align="center">
         <Input
           autoFocus
-          inputSize="small"
+          size="small"
           disabled={disabled}
           value={value}
           onChange={(e) => setValue(e.currentTarget.value)}

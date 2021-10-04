@@ -62,7 +62,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             id="query"
             value={query}
             loading={loading}
-            inputSize="large"
+            size="large"
             type="search"
             autoFocus
             muted={!query}
