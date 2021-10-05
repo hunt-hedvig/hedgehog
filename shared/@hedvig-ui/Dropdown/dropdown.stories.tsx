@@ -51,7 +51,7 @@ export const DropdownWithoutSemantic = () => {
   ]
 
   return (
-    <div style={{ padding: 50 }}>
+    <div style={{ padding: '50px 600px' }}>
       <DropdownNoSemantic title="Dropdown">
         {OPTIONS.map((opt, index) => (
           <Option
@@ -89,7 +89,7 @@ export const DropdownMulti = () => {
   }
 
   return (
-    <div style={{ padding: 50 }}>
+    <div style={{ padding: '50px 600px' }}>
       <MultiDropdown
         title="Dropdown"
         options={OPTIONS}

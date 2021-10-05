@@ -94,7 +94,7 @@ interface DropdownProps {
 export const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const [selectedIdx, setSelectedIdx] = React.useState()
+  const [selectedIdx, setSelectedIdx] = React.useState(0)
   const [active, setActive] = React.useState(false)
   const [closing, setClosing] = React.useState(false)
 
