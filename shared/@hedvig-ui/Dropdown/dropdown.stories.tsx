@@ -1,6 +1,10 @@
 import { EnumDropdown } from '@hedvig-ui'
 import React from 'react'
-import { Dropdown as DropdownNoSemantic, Option } from './dropdown2'
+import {
+  Dropdown as DropdownNoSemantic,
+  MultiDropdown,
+  Option,
+} from './dropdown'
 
 export default {
   title: 'EnumDropdown',
@@ -49,7 +53,7 @@ export const DropdownWithoutSemantic = () => {
       <DropdownNoSemantic title="Dropdown">
         {OPTIONS.map((opt, index) => (
           <Option
-            key={opt}
+            key={index}
             selected={selected === index}
             onClick={() => setSelected(index)}
           >
@@ -57,6 +61,39 @@ export const DropdownWithoutSemantic = () => {
           </Option>
         ))}
       </DropdownNoSemantic>
+    </div>
+  )
+}
+
+export const DropdownMulti = () => {
+  const [selected, setSelected] = React.useState<string[]>([])
+
+  const OPTIONS = [
+    'Option №1',
+    'Option №2',
+    'Option №3',
+    'Option №4',
+    'Option №5',
+    'Option №6',
+    'Option №7',
+  ]
+
+  const selectHandler = (opt: string) => {
+    if (selected?.includes(opt)) {
+      setSelected((prev) => prev?.filter((el) => el !== opt))
+    } else {
+      setSelected((prev) => [...prev, opt])
+    }
+  }
+
+  return (
+    <div style={{ padding: 50 }}>
+      <MultiDropdown
+        title="Dropdown"
+        options={OPTIONS}
+        selected={selected}
+        selectHandler={selectHandler}
+      />
     </div>
   )
 }

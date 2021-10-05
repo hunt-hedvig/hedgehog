@@ -42,7 +42,7 @@ export {
   Dropdown,
   EnumDropdown,
   getTextFromEnumValue,
-} from './Dropdown/dropdown'
+} from './Dropdown/semantic-dropdown'
 export {
   Form,
   FormDropdown,
