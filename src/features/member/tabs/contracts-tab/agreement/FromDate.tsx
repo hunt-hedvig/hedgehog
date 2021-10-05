@@ -9,8 +9,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { format, subDays } from 'date-fns'
-import differenceInDays from 'date-fns/differenceInDays'
+import { differenceInDays, format, subDays } from 'date-fns'
 import {
   changeFromDateOptions,
   useChangeFromDate,
