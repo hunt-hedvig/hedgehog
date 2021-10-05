@@ -35,7 +35,10 @@ const DropdownStyled = styled.div<{ active: boolean }>`
     list-style: none;
   }
 
-  & > li:first-child {
+  & > li:first-of-type {
+    border-radius: 0.3rem;
+    border: 1px solid ${({ theme }) => theme.border};
+
     ${({ active }) =>
       active &&
       `
@@ -47,19 +50,20 @@ const DropdownStyled = styled.div<{ active: boolean }>`
 
 const OptionsList = styled.ul<{ closing: boolean }>`
   margin: 0;
+  padding-left: 0;
+
   position: absolute;
   width: 100%;
 
   animation: ${({ closing }) => (!closing ? show : close)} 0.1s linear;
-  padding: 15px;
   background-color: ${({ theme }) => theme.backgroundLight};
   border-radius: 0 0 0.3rem 0.3rem;
   border: 1px solid ${({ theme }) => theme.border};
   border-top: none;
   box-shadow: 0 5px 40px ${({ theme }) => theme.backgroundTransparent};
 
-  & li:not(:first-child) {
-    margin-top: 1rem;
+  & li:last-of-type {
+    border-radius: 0 0 0.3rem 0.3rem;
   }
 `
 
@@ -67,8 +71,6 @@ const OptionStyled = styled.li`
   outline: none;
   cursor: pointer;
   padding: 10px 25px;
-  border-radius: 0.3rem;
-  border: 1px solid ${({ theme }) => theme.border};
   background-color: ${({ theme }) => theme.backgroundLight};
 
   &:hover,
@@ -105,8 +107,6 @@ export const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
         setSelectedIdx(index + 1)
       }
     })
-
-    console.log(children)
   }, [children])
 
   return (
@@ -147,20 +147,16 @@ export const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
 
       {active && (
         <OptionsList closing={closing}>
-          {children.map((el) => {
-            const newEl = {
-              ...el,
-              props: {
-                ...el.props,
-                onClick: () => {
-                  el.props.onClick()
-                  toggleDropdown()
-                },
+          {children.map((el) => ({
+            ...el,
+            props: {
+              ...el.props,
+              onClick: () => {
+                el.props.onClick()
+                toggleDropdown()
               },
-            }
-
-            return newEl
-          })}
+            },
+          }))}
         </OptionsList>
       )}
     </DropdownStyled>

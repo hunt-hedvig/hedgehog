@@ -1,13 +1,4 @@
-import {
-  Button,
-  EnumDropdown,
-  Spinner,
-  Table,
-  TableColumn,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-} from '@hedvig-ui'
+import { EnumDropdown } from '@hedvig-ui'
 import React from 'react'
 import { Dropdown as DropdownNoSemantic, Option } from './dropdown2'
 
@@ -44,9 +35,9 @@ export const DropdownWithoutSemantic = () => {
   const [selected, setSelected] = React.useState<number>()
 
   const OPTIONS = [
-    'Option #1',
-    'Option #2',
-    'Option #3',
+    'Option №1',
+    <button tabIndex={-1}>Option №2</button>,
+    'Option №3',
     'Option №4',
     'Option №5',
     'Option №6',
@@ -58,6 +49,7 @@ export const DropdownWithoutSemantic = () => {
       <DropdownNoSemantic title="Dropdown">
         {OPTIONS.map((opt, index) => (
           <Option
+            key={opt}
             selected={selected === index}
             onClick={() => setSelected(index)}
           >
