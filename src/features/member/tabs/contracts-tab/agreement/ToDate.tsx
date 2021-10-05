@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import {
   Button,
   ButtonsGroup,
@@ -17,6 +16,13 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
+import {
+  checkGapBetweenAgreements,
+  DateSpan,
+  DialogWarning,
+  formatDate,
+  getDaysBetweenAgreements,
+} from './helpers'
 
 const initialToDate = (agreement: GenericAgreement): Date =>
   agreement.toDate ? new Date(agreement.toDate) : new Date()
@@ -32,16 +38,6 @@ const getNextAgreement = (agreements, selectedAgreement) =>
     return nextAgreement
   }, null)
 
-const DialogWarning = styled.span`
-  margin-top: 1rem;
-  display: block;
-  color: ${({ theme }) => theme.danger};
-`
-
-const DateSpan = styled.span`
-  font-weight: bold;
-  white-space: nowrap;
-`
 export const ToDate: React.FC<{
   agreement: GenericAgreement
   contract: Contract
@@ -61,7 +57,7 @@ export const ToDate: React.FC<{
   }, [agreement])
 
   const onConfirm = () => {
-    const formattedToDate = format(toDate, 'yyyy-MM-dd')
+    const formattedToDate = formatDate(toDate)
     let confirmText = (
       <>
         Do you wish to change the to date to{' '}
@@ -73,12 +69,8 @@ export const ToDate: React.FC<{
       agreement,
     )
     if (nextAgreement) {
-      const daysBetweenAgreements = differenceInDays(
-        new Date(nextAgreement.fromDate),
-        new Date(agreement.toDate),
-      )
-      if (daysBetweenAgreements <= 1) {
-        const formattedNextFromDate = format(addDays(toDate, 1), 'yyyy-MM-dd')
+      if (checkGapBetweenAgreements(agreement, nextAgreement)) {
+        const formattedNextFromDate = formatDate(addDays(toDate, 1))
         confirmText = (
           <>
             {confirmText}

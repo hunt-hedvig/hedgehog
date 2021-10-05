@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import {
   Button,
   ButtonsGroup,
@@ -9,7 +8,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { differenceInDays, format, subDays } from 'date-fns'
+import { format, subDays } from 'date-fns'
 import {
   changeFromDateOptions,
   useChangeFromDate,
@@ -17,6 +16,13 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
+import {
+  checkGapBetweenAgreements,
+  DateSpan,
+  DialogWarning,
+  formatDate,
+  getDaysBetweenAgreements,
+} from './helpers'
 
 const initialFromDate = (agreement: GenericAgreement): Date =>
   agreement.fromDate ? new Date(agreement.fromDate) : new Date()
@@ -31,17 +37,6 @@ const getPreviousAgreement = (agreements, selectedAgreement) =>
     }
     return previousAgreement
   }, null)
-
-const DialogWarning = styled.span`
-  margin-top: 1rem;
-  display: block;
-  color: ${({ theme }) => theme.danger};
-`
-
-const DateSpan = styled.span`
-  font-weight: bold;
-  white-space: nowrap;
-`
 
 export const FromDate: React.FC<{
   agreement: GenericAgreement
@@ -58,7 +53,7 @@ export const FromDate: React.FC<{
   }
 
   const onConfirm = () => {
-    const formattedFromDate = format(fromDate, 'yyyy-MM-dd')
+    const formattedFromDate = formatDate(fromDate)
     let confirmText = (
       <>
         Do you wish to change from date to{' '}
@@ -70,15 +65,8 @@ export const FromDate: React.FC<{
       agreement,
     )
     if (previousAgreement) {
-      const daysBetweenAgreements = differenceInDays(
-        new Date(agreement.fromDate),
-        new Date(previousAgreement.toDate),
-      )
-      if (daysBetweenAgreements <= 1) {
-        const formattedPreviousToDate = format(
-          subDays(fromDate, 1),
-          'yyyy-MM-dd',
-        )
+      if (checkGapBetweenAgreements(previousAgreement, agreement)) {
+        const formattedPreviousToDate = formatDate(subDays(fromDate, 1))
         confirmText = (
           <>
             {confirmText}
