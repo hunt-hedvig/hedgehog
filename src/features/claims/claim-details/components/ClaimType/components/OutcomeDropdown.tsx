@@ -1,4 +1,4 @@
-import { Dropdown } from '@hedvig-ui'
+import { Dropdown, Placeholder } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -81,6 +81,13 @@ export const OutcomeDropdown: React.FC<{
       ]}
       onChange={handleSelectOutcome}
       value={flags.length ? flags[0] : 'not_specified'}
+      onRender={() =>
+        !!flags.length ? (
+          <>{convertEnumToTitle(flags[0])}</>
+        ) : (
+          <Placeholder>Not specified</Placeholder>
+        )
+      }
     />
   )
 }

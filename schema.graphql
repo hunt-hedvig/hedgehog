@@ -75,7 +75,11 @@ type MutationType {
     propertyId: ID!
     optionId: ID!
   ): Claim
-  unsetClaimPropertySelection(id: ID!, claimType: String!, propertyId: ID!): Claim
+  unsetClaimPropertySelection(
+    id: ID!
+    claimType: String!
+    propertyId: ID!
+  ): Claim
   setDateOfOccurrence(id: ID!, date: LocalDate!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
@@ -622,7 +626,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
