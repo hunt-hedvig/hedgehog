@@ -8,7 +8,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { addDays, differenceInDays, format } from 'date-fns'
+import { addDays } from 'date-fns'
 import {
   changeToDateOptions,
   useChangeToDate,
@@ -21,7 +21,6 @@ import {
   DateSpan,
   DialogWarning,
   formatDate,
-  getDaysBetweenAgreements,
 } from './helpers'
 
 const initialToDate = (agreement: GenericAgreement): Date =>
@@ -101,7 +100,7 @@ export const ToDate: React.FC<{
         <Spacing bottom width="auto">
           <FourthLevelHeadline>
             {agreement.toDate !== null
-              ? format(new Date(agreement.toDate), 'yyyy-MM-dd')
+              ? formatDate(new Date(agreement.toDate))
               : 'Active'}
           </FourthLevelHeadline>
         </Spacing>
