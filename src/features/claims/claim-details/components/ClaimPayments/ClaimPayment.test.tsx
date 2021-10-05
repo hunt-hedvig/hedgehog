@@ -17,6 +17,7 @@ it("doesn't submit empty form", async () => {
   const wrapper = mount(
     <MockedProvider>
       <ClaimPayment
+        focus={false}
         sanctionStatus={SanctionStatus.NoHit}
         claimId="abc123"
         identified={true}
@@ -78,6 +79,7 @@ it('submits valid form with confirmation', async () => {
       ]}
     >
       <ClaimPayment
+        focus={false}
         sanctionStatus={SanctionStatus.NoHit}
         claimId="abc123"
         identified={true}

@@ -2112,7 +2112,7 @@ export type ClaimPaymentsQueryVariables = Exact<{
 
 export type ClaimPaymentsQuery = { __typename?: 'QueryType' } & {
   claim?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves'> & {
+    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
         contract?: Maybe<
           { __typename?: 'Contract' } & Pick<Contract, 'id' | 'market'>
         >
@@ -2155,6 +2155,14 @@ export type ClaimPaymentsQuery = { __typename?: 'QueryType' } & {
         >
       }
   >
+}
+
+export type ClaimReserveQueryVariables = Exact<{
+  claimId: Scalars['ID']
+}>
+
+export type ClaimReserveQuery = { __typename?: 'QueryType' } & {
+  claim?: Maybe<{ __typename?: 'Claim' } & Pick<Claim, 'id' | 'reserves'>>
 }
 
 export type UpdateReserveMutationVariables = Exact<{
@@ -4707,7 +4715,6 @@ export const ClaimPaymentsDocument = gql`
           }
         }
       }
-      reserves
       payments {
         id
         deductible
@@ -4771,6 +4778,65 @@ export type ClaimPaymentsLazyQueryHookResult = ReturnType<
 export type ClaimPaymentsQueryResult = ApolloReactCommon.QueryResult<
   ClaimPaymentsQuery,
   ClaimPaymentsQueryVariables
+>
+export const ClaimReserveDocument = gql`
+  query ClaimReserve($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      reserves
+    }
+  }
+`
+
+/**
+ * __useClaimReserveQuery__
+ *
+ * To run a query within a React component, call `useClaimReserveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClaimReserveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClaimReserveQuery({
+ *   variables: {
+ *      claimId: // value for 'claimId'
+ *   },
+ * });
+ */
+export function useClaimReserveQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    ClaimReserveQuery,
+    ClaimReserveQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    ClaimReserveQuery,
+    ClaimReserveQueryVariables
+  >(ClaimReserveDocument, options)
+}
+export function useClaimReserveLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ClaimReserveQuery,
+    ClaimReserveQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    ClaimReserveQuery,
+    ClaimReserveQueryVariables
+  >(ClaimReserveDocument, options)
+}
+export type ClaimReserveQueryHookResult = ReturnType<
+  typeof useClaimReserveQuery
+>
+export type ClaimReserveLazyQueryHookResult = ReturnType<
+  typeof useClaimReserveLazyQuery
+>
+export type ClaimReserveQueryResult = ApolloReactCommon.QueryResult<
+  ClaimReserveQuery,
+  ClaimReserveQueryVariables
 >
 export const UpdateReserveDocument = gql`
   mutation UpdateReserve($claimId: ID!, $amount: MonetaryAmount!) {

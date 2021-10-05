@@ -7,14 +7,18 @@ import {
   HotkeyStyled,
   LoadingMessage,
   MainHeadline,
+  Paragraph,
+  Shadowed,
+  StandaloneMessage,
 } from '@hedvig-ui'
 import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Key, Keys } from '@hedvig-ui/utils/key-press-hook'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation/ClaimInformation'
 import { ClaimNotes } from 'features/claims/claim-details/components/ClaimNotes'
 import { ClaimPayments } from 'features/claims/claim-details/components/ClaimPayments/ClaimPayments'
+import { ClaimReserve } from 'features/claims/claim-details/components/ClaimReserve'
 import { ClaimTranscriptions } from 'features/claims/claim-details/components/ClaimTranscriptions'
 import { ClaimType } from 'features/claims/claim-details/components/ClaimType/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
@@ -36,21 +40,60 @@ const ShowEventButtonWrapper = styled.div`
   margin-top: 1em;
 `
 
+const NoCarrierMessage = styled(StandaloneMessage)`
+  padding: 3em 0;
+  text-align: center;
+`
+
+const NoCarrierSubtitle = styled(Paragraph)`
+  font-size: 0.8em;
+  padding-top: 1em;
+`
+
 const hotkeyStyles = {
   top: '0.3rem',
   right: '0.3rem',
   padding: '2px 8px',
 }
 
-const DEFAULT_FOCUSES = {
-  memberInfo: false,
-  claimInfo: false,
-  type: false,
-  notes: false,
-  files: false,
+interface Focus {
+  key: Key
+  focused: boolean
+  title: string
 }
 
-const DEFAULT_KEYS = ['One', 'Two', 'Three', 'Four', 'Five']
+const FOCUSES: { [section: string]: Focus } = {
+  claimInfo: {
+    key: Keys.One,
+    focused: false,
+    title: 'Claim Info',
+  },
+  type: {
+    key: Keys.Two,
+    focused: false,
+    title: 'Claim Type',
+  },
+  notes: {
+    key: Keys.Three,
+    focused: false,
+    title: 'Claim Notes',
+  },
+  reserves: {
+    key: Keys.Four,
+    focused: false,
+    title: 'Claim Reserves',
+  },
+  payments: {
+    key: Keys.Five,
+    focused: false,
+    title: 'Claim Payments',
+  },
+  files: {
+    key: Keys.Six,
+    focused: false,
+    title: 'Claim Files',
+  },
+}
 
 export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
@@ -58,15 +101,15 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
   const { claimId } = match.params
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
   const [showEvents, setShowEvents] = useState(false)
-  const { registerActions, isHintingOption } = useCommandLine()
-  const [focus, setFocus] = useState(DEFAULT_FOCUSES)
+  const { registerActions, isHintingControl } = useCommandLine()
+  const [focus, setFocus] = useState<string | null>(null)
 
   registerActions(
-    Object.keys(DEFAULT_FOCUSES).map((section, index) => ({
-      label: `Focus on ${section}`,
-      keys: [Keys.Option, Keys[DEFAULT_KEYS[index]]],
+    Object.keys(FOCUSES).map((section) => ({
+      label: `Focus on ${FOCUSES[section].title}`,
+      keys: [Keys.Control, FOCUSES[section].key],
       onResolve: () => {
-        setFocus({ ...DEFAULT_FOCUSES, [section]: true })
+        setFocus(section)
       },
     })),
   )
@@ -83,7 +126,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
     }
 
     pushToMemberHistory(memberId)
-  }, [claimPageData])
+  }, [memberId])
 
   if (!memberId) {
     return <LoadingMessage paddingTop="25vh" />
@@ -104,37 +147,27 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
         <ChatPaneAdjustedContainer>
           <CardsWrapper contentWrap="noWrap">
             <Card span={3}>
-              {isHintingOption && (
+              <MemberInformation claimId={claimId} memberId={memberId} />
+            </Card>
+            <Card span={3}>
+              {isHintingControl && (
                 <HotkeyStyled dark style={hotkeyStyles}>
                   1
                 </HotkeyStyled>
               )}
-              <MemberInformation
-                focus={focus.memberInfo}
+              <ClaimInformation
+                focus={focus === 'claimInfo'}
                 claimId={claimId}
                 memberId={memberId}
               />
             </Card>
             <Card span={3}>
-              {isHintingOption && (
+              {isHintingControl && (
                 <HotkeyStyled dark style={hotkeyStyles}>
                   2
                 </HotkeyStyled>
               )}
-              <ClaimInformation
-                focus={focus.claimInfo}
-                claimId={claimId}
-                memberId={memberId}
-              />
-            </Card>
-            <Card span={3}>
-              {isHintingOption && (
-                <HotkeyStyled dark style={hotkeyStyles}>
-                  3
-                </HotkeyStyled>
-              )}
               <ClaimType claimId={claimId} />
-              {/*<ClaimTypeForm focus={focus.type} claimId={claimId}/>*/}
             </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">
@@ -142,12 +175,12 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              {isHintingOption && (
+              {isHintingControl && (
                 <HotkeyStyled dark style={hotkeyStyles}>
-                  4
+                  3
                 </HotkeyStyled>
               )}
-              <ClaimNotes focus={focus.notes} claimId={claimId} />
+              <ClaimNotes focus={focus === 'notes'} claimId={claimId} />
             </Card>
           </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier && (
@@ -158,24 +191,55 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
             </>
           )}
 
-          <CardsWrapper contentWrap="noWrap">
-            <Card>
-              <ClaimPayments
-                claimId={claimId}
-                carrier={claimPageData?.claim?.agreement?.carrier}
-              />
-            </Card>
-          </CardsWrapper>
+          {!claimPageData?.claim?.agreement?.carrier ? (
+            <NoCarrierMessage opacity={0.6}>
+              Cannot make a payment or set a reserve without a carrier.
+              <NoCarrierSubtitle>
+                Select a <Shadowed>Contract for Claim</Shadowed> and{' '}
+                <Shadowed>Date of Occurrence</Shadowed> such that the claim is
+                covered on the date.
+              </NoCarrierSubtitle>
+            </NoCarrierMessage>
+          ) : (
+            <>
+              <CardsWrapper contentWrap="noWrap">
+                <Card>
+                  {isHintingControl && (
+                    <HotkeyStyled dark style={hotkeyStyles}>
+                      4
+                    </HotkeyStyled>
+                  )}
+                  <ClaimReserve
+                    focus={focus === 'reserves'}
+                    claimId={claimId}
+                  />
+                </Card>
+              </CardsWrapper>
+              <CardsWrapper contentWrap="noWrap">
+                <Card>
+                  {isHintingControl && (
+                    <HotkeyStyled dark style={hotkeyStyles}>
+                      5
+                    </HotkeyStyled>
+                  )}
+                  <ClaimPayments
+                    focus={focus === 'payments'}
+                    claimId={claimId}
+                  />
+                </Card>
+              </CardsWrapper>
+            </>
+          )}
 
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              {isHintingOption && (
+              {isHintingControl && (
                 <HotkeyStyled dark style={hotkeyStyles}>
-                  5
+                  6
                 </HotkeyStyled>
               )}
               <ClaimFileTable
-                focus={focus.files}
+                focus={focus === 'files'}
                 claimId={claimId}
                 memberId={memberId}
               />

@@ -23,8 +23,6 @@ query ClaimPayments($claimId: ID!) {
       }
     }
 
-    reserves
-
     payments {
       id
       deductible
