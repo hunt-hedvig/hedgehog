@@ -31,6 +31,15 @@ type QueryType {
   listClaims(options: ListClaimsOptions!): ListClaimsResult!
   employees: [Employee!]!
   availableEmployeeRoles: [String!]!
+
+  claimTypes: [String!]!
+  claimTypeTemplates: [ClaimTypeTemplate!]!
+  claimTypeTemplate(claimType: String!): ClaimTypeTemplate
+  claimTypeRelations: [ClaimTypeRelation!]!
+  claimProperties: [ClaimProperty!]!
+  claimProperty(id: ID!): ClaimProperty!
+  claimPropertyOptions: [ClaimPropertyOption!]!
+  claimPropertyOption(id: ID!): ClaimPropertyOption!
 }
 
 type Me {
@@ -159,6 +168,51 @@ type MutationType {
   updateEmployeeRole(id: ID!, role: String!): Employee!
   removeEmployee(id: ID!): Boolean!
   payoutMember(memberId: ID!, request: PayoutMemberInput!): Transaction
+
+  createClaimTypeRelation(
+    request: CreateClaimTypeRelationInput
+  ): ClaimTypeRelation!
+  deleteClaimTypeRelation(id: ID!): Boolean!
+  updateClaimProperty(id: ID!, name: String!): ClaimProperty!
+  deprecateClaimProperty(id: ID!): Boolean!
+  createClaimProperty(name: String!): ClaimProperty!
+  updateClaimPropertyOption(id: ID!, name: String!): ClaimPropertyOption!
+  deprecateClaimPropertyOption(id: ID!): Boolean!
+  createClaimPropertyOption(name: String): ClaimPropertyOption!
+}
+
+type ClaimTypeTemplate {
+  claimType: String!
+  properties: [ClaimPropertyTemplate!]!
+}
+
+type ClaimPropertyTemplate {
+  propertyId: ID!
+  name: String!
+  options: [ClaimPropertyOption!]!
+}
+
+type ClaimTypeRelation {
+  id: ID!
+  claimType: String!
+  property: ClaimProperty!
+  propertyOption: ClaimPropertyOption!
+}
+
+type ClaimProperty {
+  id: ID!
+  name: String!
+}
+
+type ClaimPropertyOption {
+  id: ID!
+  name: String!
+}
+
+input CreateClaimTypeRelationInput {
+  claimType: String!
+  propertyId: ID!
+  propertyOptionId: ID!
 }
 
 enum PayoutCategory {
@@ -198,6 +252,11 @@ input ListClaimsOptions {
   sortDirection: String
   filterClaimStates: [ClaimState!]
   filterCreatedBeforeOrOnDate: LocalDate
+  filterComplexities: [ClaimComplexity!]
+  filterNumberOfMemberGroups: Int
+  filterSelectedMemberGroups: [Int!]
+  filterMarkets: [String!]
+  filterTypesOfContract: [String!]
 }
 
 type MemberSearchResult {
@@ -1340,6 +1399,11 @@ type TrialAddress {
 type MonetaryAmountV2 {
   amount: String!
   currency: String!
+}
+
+enum ClaimComplexity {
+  SIMPLE
+  COMPLEX
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`

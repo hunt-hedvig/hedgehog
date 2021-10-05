@@ -4,7 +4,7 @@ import { Filters } from 'components/claims/filter'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
-import { ClaimState } from 'types/generated/graphql'
+import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { useInsecurePersistentState } from 'utils/state'
 
 const ListPage = styled.div`
@@ -16,8 +16,13 @@ const ListPage = styled.div`
 `
 
 export interface ClaimsFiltersType {
-  filterClaimStates: ClaimState[] | []
+  filterClaimStates: ClaimState[] | null
   filterCreatedBeforeOrOnDate: string | null
+  filterComplexities: ClaimComplexity[] | null
+  filterNumberOfMemberGroups: number | null
+  filterSelectedMemberGroups: number[] | null
+  filterMarkets: string[] | null
+  filterTypesOfContract: string[] | null
 }
 
 export const ClaimsListPage: React.FC<RouteComponentProps<{
@@ -30,8 +35,13 @@ export const ClaimsListPage: React.FC<RouteComponentProps<{
   const [filters, setFilters] = useInsecurePersistentState<ClaimsFiltersType>(
     'claims:filters',
     {
-      filterClaimStates: [],
+      filterClaimStates: null,
       filterCreatedBeforeOrOnDate: null,
+      filterComplexities: null,
+      filterNumberOfMemberGroups: null,
+      filterSelectedMemberGroups: null,
+      filterMarkets: null,
+      filterTypesOfContract: null,
     },
   )
 

@@ -27,6 +27,7 @@ const CloseWrapper = styled.div`
 
 export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
   const isExist = (state) =>
+    filters.filterClaimStates &&
     !!filters.filterClaimStates.filter((st) => st === state).length
 
   const setFilterClaimState = (state: ClaimState) => {
@@ -57,10 +58,6 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
     })
   }
 
-  React.useEffect(() => {
-    console.log(filters.filterClaimStates)
-  }, [filters.filterClaimStates])
-
   return (
     <FilterWrapper>
       <div
@@ -72,17 +69,17 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       >
         <Checkbox
           label="Opened"
-          checked={isExist(ClaimState.Open)}
+          checked={isExist(ClaimState.Open) || false}
           onChange={() => setFilterClaimState(ClaimState.Open)}
         />
         <Checkbox
           label="Closed"
-          checked={isExist(ClaimState.Closed)}
+          checked={isExist(ClaimState.Closed) || false}
           onChange={() => setFilterClaimState(ClaimState.Closed)}
         />
         <Checkbox
           label="Reopened"
-          checked={isExist(ClaimState.Reopened)}
+          checked={isExist(ClaimState.Reopened) || false}
           onChange={() => setFilterClaimState(ClaimState.Reopened)}
         />
       </div>
@@ -99,8 +96,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
         />
       </div>
 
-      {(filters.filterClaimStates.length ||
-        filters.filterCreatedBeforeOrOnDate) && (
+      {(filters.filterClaimStates || filters.filterCreatedBeforeOrOnDate) && (
         <CloseWrapper>
           <CloseIcon onClick={resetFiltersHandler} />
         </CloseWrapper>

@@ -226,6 +226,11 @@ export type Claim = {
   itemSet: ClaimItemSet
 }
 
+export enum ClaimComplexity {
+  Simple = 'SIMPLE',
+  Complex = 'COMPLEX',
+}
+
 export type ClaimEvent = {
   __typename?: 'ClaimEvent'
   text?: Maybe<Scalars['String']>
@@ -325,6 +330,25 @@ export enum ClaimPaymentType {
   Expense = 'Expense',
 }
 
+export type ClaimProperty = {
+  __typename?: 'ClaimProperty'
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export type ClaimPropertyOption = {
+  __typename?: 'ClaimPropertyOption'
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export type ClaimPropertyTemplate = {
+  __typename?: 'ClaimPropertyTemplate'
+  propertyId: Scalars['ID']
+  name: Scalars['String']
+  options: Array<ClaimPropertyOption>
+}
+
 export enum ClaimSource {
   App = 'APP',
   Email = 'EMAIL',
@@ -383,6 +407,14 @@ export type ClaimType =
   | DuplicateClaim
   | TestClaim
 
+export type ClaimTypeRelation = {
+  __typename?: 'ClaimTypeRelation'
+  id: Scalars['ID']
+  claimType: Scalars['String']
+  property: ClaimProperty
+  propertyOption: ClaimPropertyOption
+}
+
 export enum ClaimTypes {
   TheftClaim = 'TheftClaim',
   AccidentalDamageClaim = 'AccidentalDamageClaim',
@@ -408,6 +440,12 @@ export enum ClaimTypes {
   DuplicateClaim = 'DuplicateClaim',
   OtherClaim = 'OtherClaim',
   TestClaim = 'TestClaim',
+}
+
+export type ClaimTypeTemplate = {
+  __typename?: 'ClaimTypeTemplate'
+  claimType: Scalars['String']
+  properties: Array<ClaimPropertyTemplate>
 }
 
 export type ConfirmedFraudClaim = {
@@ -459,6 +497,12 @@ export enum ContractStatus {
 export type CostDeduction = {
   __typename?: 'CostDeduction'
   amount?: Maybe<Scalars['MonetaryAmount']>
+}
+
+export type CreateClaimTypeRelationInput = {
+  claimType: Scalars['String']
+  propertyId: Scalars['ID']
+  propertyOptionId: Scalars['ID']
 }
 
 export type CreateNorwegianGripenInput = {
@@ -728,6 +772,11 @@ export type ListClaimsOptions = {
   sortDirection?: Maybe<Scalars['String']>
   filterClaimStates?: Maybe<Array<ClaimState>>
   filterCreatedBeforeOrOnDate?: Maybe<Scalars['LocalDate']>
+  filterComplexities?: Maybe<Array<ClaimComplexity>>
+  filterNumberOfMemberGroups?: Maybe<Scalars['Int']>
+  filterSelectedMemberGroups?: Maybe<Array<Scalars['Int']>>
+  filterMarkets?: Maybe<Array<Scalars['String']>>
+  filterTypesOfContract?: Maybe<Array<Scalars['String']>>
 }
 
 export type ListClaimsResult = {
@@ -943,6 +992,14 @@ export type MutationType = {
   updateEmployeeRole: Employee
   removeEmployee: Scalars['Boolean']
   payoutMember?: Maybe<Transaction>
+  createClaimTypeRelation: ClaimTypeRelation
+  deleteClaimTypeRelation: Scalars['Boolean']
+  updateClaimProperty: ClaimProperty
+  deprecateClaimProperty: Scalars['Boolean']
+  createClaimProperty: ClaimProperty
+  updateClaimPropertyOption: ClaimPropertyOption
+  deprecateClaimPropertyOption: Scalars['Boolean']
+  createClaimPropertyOption: ClaimPropertyOption
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1249,6 +1306,40 @@ export type MutationTypePayoutMemberArgs = {
   request: PayoutMemberInput
 }
 
+export type MutationTypeCreateClaimTypeRelationArgs = {
+  request?: Maybe<CreateClaimTypeRelationInput>
+}
+
+export type MutationTypeDeleteClaimTypeRelationArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationTypeUpdateClaimPropertyArgs = {
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export type MutationTypeDeprecateClaimPropertyArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationTypeCreateClaimPropertyArgs = {
+  name: Scalars['String']
+}
+
+export type MutationTypeUpdateClaimPropertyOptionArgs = {
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export type MutationTypeDeprecateClaimPropertyOptionArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationTypeCreateClaimPropertyOptionArgs = {
+  name?: Maybe<Scalars['String']>
+}
+
 export type NationalIdentification = {
   __typename?: 'NationalIdentification'
   identification: Scalars['String']
@@ -1385,6 +1476,14 @@ export type QueryType = {
   listClaims: ListClaimsResult
   employees: Array<Employee>
   availableEmployeeRoles: Array<Scalars['String']>
+  claimTypes: Array<Scalars['String']>
+  claimTypeTemplates: Array<ClaimTypeTemplate>
+  claimTypeTemplate?: Maybe<ClaimTypeTemplate>
+  claimTypeRelations: Array<ClaimTypeRelation>
+  claimProperties: Array<ClaimProperty>
+  claimProperty: ClaimProperty
+  claimPropertyOptions: Array<ClaimPropertyOption>
+  claimPropertyOption: ClaimPropertyOption
 }
 
 export type QueryTypeMemberArgs = {
@@ -1437,6 +1536,18 @@ export type QueryTypeMemberSearchArgs = {
 
 export type QueryTypeListClaimsArgs = {
   options: ListClaimsOptions
+}
+
+export type QueryTypeClaimTypeTemplateArgs = {
+  claimType: Scalars['String']
+}
+
+export type QueryTypeClaimPropertyArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryTypeClaimPropertyOptionArgs = {
+  id: Scalars['ID']
 }
 
 export type Question = {
