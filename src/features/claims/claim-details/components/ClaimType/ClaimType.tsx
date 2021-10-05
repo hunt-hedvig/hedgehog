@@ -7,6 +7,7 @@ import {
   SearchableDropdownWithRef,
   Spacing,
 } from '@hedvig-ui'
+import { OutcomeDropdown } from 'features/claims/claim-details/components/ClaimType/components/OutcomeDropdown'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
@@ -141,47 +142,62 @@ export const ClaimType: React.FC<{
 
   return (
     <Flex direction="column">
-      <CardContent>
-        <CardTitle
-          title="Claim Type"
-          badge={
-            error
-              ? {
-                  icon: BugFill,
-                  status: 'danger',
-                  label: 'Internal Error',
+      <CardContent style={{ height: '100%' }}>
+        <Flex
+          direction="column"
+          justify="space-between"
+          style={{ height: '100%' }}
+        >
+          <div style={{ width: '100%' }}>
+            <CardTitle
+              title="Claim Type"
+              badge={
+                error
+                  ? {
+                      icon: BugFill,
+                      status: 'danger',
+                      label: 'Internal Error',
+                    }
+                  : null
+              }
+            />
+            <SearchableDropdownWithRef
+              focus={focus}
+              value={
+                selectedClaimType && {
+                  value: selectedClaimType,
+                  label: convertEnumToTitle(selectedClaimType),
+                  searchTerms: selectedClaimType,
                 }
-              : null
-          }
-        />
-        <SearchableDropdownWithRef
-          focus={focus}
-          value={
-            selectedClaimType && {
-              value: selectedClaimType,
-              label: convertEnumToTitle(selectedClaimType),
-              searchTerms: selectedClaimType,
-            }
-          }
-          placeholder="What type of claim is this?"
-          isClearable={false}
-          onChange={(selection) => handleSetClaimType(selection.value)}
-          noOptionsMessage={() => 'No types found'}
-          options={claimTypes.map((claimType) => ({
-            value: claimType,
-            label: convertEnumToTitle(claimType),
-            searchTerms: claimType,
-          }))}
-        />
-        {!!selectedClaimType && (
-          <ClaimPropertyForm
-            claimId={claimId}
-            claimType={selectedClaimType}
-            propertySelections={
-              claimInformationData?.claim?.propertySelections ?? []
-            }
-          />
-        )}
+              }
+              placeholder="What type of claim is this?"
+              isClearable={false}
+              onChange={(selection) => handleSetClaimType(selection.value)}
+              noOptionsMessage={() => 'No types found'}
+              options={claimTypes.map((claimType) => ({
+                value: claimType,
+                label: convertEnumToTitle(claimType),
+                searchTerms: claimType,
+              }))}
+            />
+            {!!selectedClaimType && (
+              <ClaimPropertyForm
+                claimId={claimId}
+                claimType={selectedClaimType}
+                propertySelections={
+                  claimInformationData?.claim?.propertySelections ?? []
+                }
+              />
+            )}
+          </div>
+          <div style={{ width: '100%' }}>
+            <Label>Claim outcome</Label>
+            <OutcomeDropdown
+              flags={claimInformationData?.claim?.flags ?? []}
+              claimId={claimId}
+            />
+          </div>
+        </Flex>
       </CardContent>
     </Flex>
   )

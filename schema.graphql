@@ -622,7 +622,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1025,6 +1025,7 @@ type Claim {
   state: ClaimState!
   claimType: String
   dateOfOccurrence: LocalDate
+  flags: [String!]!
   reserves: MonetaryAmount
   registrationDate: Instant!
   notes: [ClaimNote!]!

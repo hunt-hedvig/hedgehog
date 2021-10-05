@@ -1,0 +1,6 @@
+mutation SetClaimFlag($id: ID!, $flag: String!, $flagValue: Boolean!) {
+  setClaimFlag(id: $id, flag: $flag, flagValue: $flagValue) {
+    id
+    flags
+  }
+}

@@ -182,6 +182,7 @@ export type Claim = {
   state: ClaimState
   claimType?: Maybe<Scalars['String']>
   dateOfOccurrence?: Maybe<Scalars['LocalDate']>
+  flags: Array<Scalars['String']>
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate: Scalars['Instant']
   notes: Array<ClaimNote>
@@ -1718,6 +1719,16 @@ export type Whitelisted = {
   whitelistedBy?: Maybe<Scalars['String']>
 }
 
+export type ResetClaimFlagsMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type ResetClaimFlagsMutation = { __typename?: 'MutationType' } & {
+  resetClaimFlags?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'flags'>
+  >
+}
+
 export type SetClaimDateMutationVariables = Exact<{
   id: Scalars['ID']
   date: Scalars['LocalDate']
@@ -1777,6 +1788,16 @@ export type SetClaimDateMutation = { __typename?: 'MutationType' } & {
         >
       }
   >
+}
+
+export type SetClaimFlagMutationVariables = Exact<{
+  id: Scalars['ID']
+  flag: Scalars['String']
+  flagValue: Scalars['Boolean']
+}>
+
+export type SetClaimFlagMutation = { __typename?: 'MutationType' } & {
+  setClaimFlag?: Maybe<{ __typename?: 'Claim' } & Pick<Claim, 'id' | 'flags'>>
 }
 
 export type SetClaimPropertySelectionMutationVariables = Exact<{
@@ -1943,6 +1964,7 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'coveringEmployee'
       | 'claimType'
       | 'dateOfOccurrence'
+      | 'flags'
       | 'reserves'
     > & {
         propertySelections: Array<
@@ -3952,6 +3974,58 @@ export type WhitelistMemberMutation = { __typename?: 'MutationType' } & {
   whitelistMember: { __typename?: 'Member' } & Pick<Member, 'memberId'>
 }
 
+export const ResetClaimFlagsDocument = gql`
+  mutation ResetClaimFlags($id: ID!) {
+    resetClaimFlags(id: $id) {
+      id
+      flags
+    }
+  }
+`
+export type ResetClaimFlagsMutationFn = ApolloReactCommon.MutationFunction<
+  ResetClaimFlagsMutation,
+  ResetClaimFlagsMutationVariables
+>
+
+/**
+ * __useResetClaimFlagsMutation__
+ *
+ * To run a mutation, you first call `useResetClaimFlagsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetClaimFlagsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetClaimFlagsMutation, { data, loading, error }] = useResetClaimFlagsMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useResetClaimFlagsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ResetClaimFlagsMutation,
+    ResetClaimFlagsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    ResetClaimFlagsMutation,
+    ResetClaimFlagsMutationVariables
+  >(ResetClaimFlagsDocument, options)
+}
+export type ResetClaimFlagsMutationHookResult = ReturnType<
+  typeof useResetClaimFlagsMutation
+>
+export type ResetClaimFlagsMutationResult = ApolloReactCommon.MutationResult<
+  ResetClaimFlagsMutation
+>
+export type ResetClaimFlagsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ResetClaimFlagsMutation,
+  ResetClaimFlagsMutationVariables
+>
 export const SetClaimDateDocument = gql`
   mutation SetClaimDate($id: ID!, $date: LocalDate!) {
     setDateOfOccurrence(id: $id, date: $date) {
@@ -4042,6 +4116,60 @@ export type SetClaimDateMutationResult = ApolloReactCommon.MutationResult<
 export type SetClaimDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetClaimDateMutation,
   SetClaimDateMutationVariables
+>
+export const SetClaimFlagDocument = gql`
+  mutation SetClaimFlag($id: ID!, $flag: String!, $flagValue: Boolean!) {
+    setClaimFlag(id: $id, flag: $flag, flagValue: $flagValue) {
+      id
+      flags
+    }
+  }
+`
+export type SetClaimFlagMutationFn = ApolloReactCommon.MutationFunction<
+  SetClaimFlagMutation,
+  SetClaimFlagMutationVariables
+>
+
+/**
+ * __useSetClaimFlagMutation__
+ *
+ * To run a mutation, you first call `useSetClaimFlagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetClaimFlagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setClaimFlagMutation, { data, loading, error }] = useSetClaimFlagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      flag: // value for 'flag'
+ *      flagValue: // value for 'flagValue'
+ *   },
+ * });
+ */
+export function useSetClaimFlagMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetClaimFlagMutation,
+    SetClaimFlagMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SetClaimFlagMutation,
+    SetClaimFlagMutationVariables
+  >(SetClaimFlagDocument, options)
+}
+export type SetClaimFlagMutationHookResult = ReturnType<
+  typeof useSetClaimFlagMutation
+>
+export type SetClaimFlagMutationResult = ApolloReactCommon.MutationResult<
+  SetClaimFlagMutation
+>
+export type SetClaimFlagMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetClaimFlagMutation,
+  SetClaimFlagMutationVariables
 >
 export const SetClaimPropertySelectionDocument = gql`
   mutation SetClaimPropertySelection(
@@ -4313,6 +4441,7 @@ export const ClaimPageDocument = gql`
       coveringEmployee
       claimType
       dateOfOccurrence
+      flags
       propertySelections {
         claimType
         property {

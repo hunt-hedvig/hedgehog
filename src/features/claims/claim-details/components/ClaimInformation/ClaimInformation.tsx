@@ -23,7 +23,7 @@ import {
   Paragraph,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
-import { ContractDropdown } from 'features/claims/claim-details/components/ContractDropdown'
+import { ContractDropdown } from 'features/claims/claim-details/components/ClaimInformation/components/ContractDropdown'
 import {
   setContractForClaimOptions,
   useSetContractForClaim,

@@ -1,5 +1,5 @@
 mutation SetClaimDate($id: ID!, $date: LocalDate!) {
-  setDateOfOccurrence(id: $id, date: $date ) {
+  setDateOfOccurrence(id: $id, date: $date) {
     id
     dateOfOccurrence
     contract {

@@ -1,0 +1,6 @@
+mutation ResetClaimFlags($id: ID!) {
+  resetClaimFlags(id: $id) {
+    id
+    flags
+  }
+}
