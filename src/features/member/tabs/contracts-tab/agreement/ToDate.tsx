@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   Button,
   ButtonsGroup,
@@ -8,7 +9,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { format } from 'date-fns'
+import { addDays, differenceInDays, format } from 'date-fns'
 import {
   changeToDateOptions,
   useChangeToDate,
@@ -20,6 +21,27 @@ import { Contract, GenericAgreement } from 'types/generated/graphql'
 const initialToDate = (agreement: GenericAgreement): Date =>
   agreement.toDate ? new Date(agreement.toDate) : new Date()
 
+const getNextAgreement = (agreements, selectedAgreement) =>
+  agreements.reduce((nextAgreement, current) => {
+    if (
+      selectedAgreement.toDate < current.fromDate &&
+      (!nextAgreement || current.fromDate < nextAgreement.fromDate)
+    ) {
+      return current
+    }
+    return nextAgreement
+  }, null)
+
+const DialogWarning = styled.span`
+  margin-top: 1rem;
+  display: block;
+  color: ${({ theme }) => theme.danger};
+`
+
+const DateSpan = styled.span`
+  font-weight: bold;
+  white-space: nowrap;
+`
 export const ToDate: React.FC<{
   agreement: GenericAgreement
   contract: Contract
@@ -37,6 +59,48 @@ export const ToDate: React.FC<{
   React.useEffect(() => {
     reset()
   }, [agreement])
+
+  const onConfirm = () => {
+    const formattedToDate = format(toDate, 'yyyy-MM-dd')
+    let confirmText = (
+      <>
+        Do you wish to change the to date to{' '}
+        <DateSpan>{formattedToDate}</DateSpan>?
+      </>
+    )
+    const nextAgreement = getNextAgreement(
+      contract.genericAgreements,
+      agreement,
+    )
+    if (nextAgreement) {
+      const daysBetweenAgreements = differenceInDays(
+        new Date(nextAgreement.fromDate),
+        new Date(agreement.toDate),
+      )
+      if (daysBetweenAgreements <= 1) {
+        const formattedNextFromDate = format(addDays(toDate, 1), 'yyyy-MM-dd')
+        confirmText = (
+          <>
+            {confirmText}
+            <DialogWarning>
+              This will also change the from date of next agreement to{' '}
+              <DateSpan>{formattedNextFromDate}</DateSpan>
+            </DialogWarning>
+          </>
+        )
+      }
+    }
+    confirm(confirmText).then(() => {
+      toast.promise(changeToDate(changeToDateOptions(agreement, toDate)), {
+        loading: 'Changing date',
+        success: () => {
+          reset()
+          return 'Date changed'
+        },
+        error: 'Could not change date',
+      })
+    })
+  }
 
   return (
     <>
@@ -62,28 +126,7 @@ export const ToDate: React.FC<{
             <DateTimePicker date={toDate} setDate={setToDate} />
           </Spacing>
           <ButtonsGroup>
-            <Button
-              onClick={() => {
-                const formattedToDate = format(toDate, 'yyyy-MM-dd')
-                confirm(`Change the to date to ${formattedToDate}?`).then(
-                  () => {
-                    toast.promise(
-                      changeToDate(changeToDateOptions(agreement, toDate)),
-                      {
-                        loading: 'Changing date',
-                        success: () => {
-                          reset()
-                          return 'Date changed'
-                        },
-                        error: 'Could not change date',
-                      },
-                    )
-                  },
-                )
-              }}
-            >
-              Confirm
-            </Button>
+            <Button onClick={onConfirm}>Confirm</Button>
             <Button variant="tertiary" onClick={() => reset()}>
               Cancel
             </Button>
