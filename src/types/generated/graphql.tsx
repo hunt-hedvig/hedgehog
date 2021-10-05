@@ -957,6 +957,7 @@ export type MutationTypeSetClaimPropertySelectionArgs = {
 
 export type MutationTypeUnsetClaimPropertySelectionArgs = {
   id: Scalars['ID']
+  claimType: Scalars['String']
   propertyId: Scalars['ID']
 }
 
@@ -1811,6 +1812,36 @@ export type SetClaimPropertySelectionMutation = {
   __typename?: 'MutationType'
 } & {
   setClaimPropertySelection?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+        propertySelections: Array<
+          { __typename?: 'ClaimPropertySelection' } & Pick<
+            ClaimPropertySelection,
+            'claimType'
+          > & {
+              property: { __typename?: 'ClaimProperty' } & Pick<
+                ClaimProperty,
+                'id' | 'name'
+              >
+              option: { __typename?: 'ClaimPropertyOption' } & Pick<
+                ClaimPropertyOption,
+                'id' | 'name'
+              >
+            }
+        >
+      }
+  >
+}
+
+export type UnsetClaimPropertySelectionMutationVariables = Exact<{
+  id: Scalars['ID']
+  claimType: Scalars['String']
+  propertyId: Scalars['ID']
+}>
+
+export type UnsetClaimPropertySelectionMutation = {
+  __typename?: 'MutationType'
+} & {
+  unsetClaimPropertySelection?: Maybe<
     { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
         propertySelections: Array<
           { __typename?: 'ClaimPropertySelection' } & Pick<
@@ -4245,6 +4276,78 @@ export type SetClaimPropertySelectionMutationResult = ApolloReactCommon.Mutation
 export type SetClaimPropertySelectionMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetClaimPropertySelectionMutation,
   SetClaimPropertySelectionMutationVariables
+>
+export const UnsetClaimPropertySelectionDocument = gql`
+  mutation UnsetClaimPropertySelection(
+    $id: ID!
+    $claimType: String!
+    $propertyId: ID!
+  ) {
+    unsetClaimPropertySelection(
+      id: $id
+      claimType: $claimType
+      propertyId: $propertyId
+    ) {
+      id
+      propertySelections {
+        claimType
+        property {
+          id
+          name
+        }
+        option {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+export type UnsetClaimPropertySelectionMutationFn = ApolloReactCommon.MutationFunction<
+  UnsetClaimPropertySelectionMutation,
+  UnsetClaimPropertySelectionMutationVariables
+>
+
+/**
+ * __useUnsetClaimPropertySelectionMutation__
+ *
+ * To run a mutation, you first call `useUnsetClaimPropertySelectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsetClaimPropertySelectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsetClaimPropertySelectionMutation, { data, loading, error }] = useUnsetClaimPropertySelectionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      claimType: // value for 'claimType'
+ *      propertyId: // value for 'propertyId'
+ *   },
+ * });
+ */
+export function useUnsetClaimPropertySelectionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnsetClaimPropertySelectionMutation,
+    UnsetClaimPropertySelectionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UnsetClaimPropertySelectionMutation,
+    UnsetClaimPropertySelectionMutationVariables
+  >(UnsetClaimPropertySelectionDocument, options)
+}
+export type UnsetClaimPropertySelectionMutationHookResult = ReturnType<
+  typeof useUnsetClaimPropertySelectionMutation
+>
+export type UnsetClaimPropertySelectionMutationResult = ApolloReactCommon.MutationResult<
+  UnsetClaimPropertySelectionMutation
+>
+export type UnsetClaimPropertySelectionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnsetClaimPropertySelectionMutation,
+  UnsetClaimPropertySelectionMutationVariables
 >
 export const ClaimAddClaimNoteDocument = gql`
   mutation ClaimAddClaimNote($claimId: ID!, $note: ClaimNoteInput!) {

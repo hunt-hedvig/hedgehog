@@ -1,117 +1,21 @@
 import {
   CardContent,
   CardTitle,
-  Dropdown,
   Flex,
   Label,
   SearchableDropdownWithRef,
-  Spacing,
 } from '@hedvig-ui'
+import { ClaimPropertyForm } from 'features/claims/claim-details/components/ClaimType/components/ClaimPropertyForm'
 import { OutcomeDropdown } from 'features/claims/claim-details/components/ClaimType/components/OutcomeDropdown'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import {
-  ClaimProperty,
-  ClaimPropertyOption,
-  ClaimPropertySelection,
   useClaimPageQuery,
   useGetClaimTypesQuery,
-  useGetClaimTypeTemplateQuery,
-  useSetClaimPropertySelectionMutation,
   useSetClaimTypeMutation,
 } from 'types/generated/graphql'
 import { convertEnumToTitle } from 'utils/text'
-
-const ClaimPropertyForm: React.FC<{
-  claimId: string
-  claimType: string
-  propertySelections: ClaimPropertySelection[]
-}> = ({ claimType, claimId, propertySelections }) => {
-  const [setClaimPropertySelection] = useSetClaimPropertySelectionMutation()
-  const { data } = useGetClaimTypeTemplateQuery({ variables: { claimType } })
-  const properties = data?.claimTypeTemplate?.properties ?? []
-
-  const handlePropertySelect = (
-    property: ClaimProperty,
-    option: ClaimPropertyOption,
-  ) => {
-    if (
-      propertySelections.find(
-        (selection) =>
-          selection.property.id === property.id &&
-          selection.option.id === option.id,
-      )
-    ) {
-      return
-    }
-
-    setClaimPropertySelection({
-      variables: {
-        id: claimId,
-        claimType,
-        propertyId: property.id,
-        optionId: option.id,
-      },
-      optimisticResponse: {
-        setClaimPropertySelection: {
-          id: claimId,
-          __typename: 'Claim',
-          propertySelections: [
-            ...propertySelections.filter(
-              (selection) => selection.property.id !== property.id,
-            ),
-            {
-              __typename: 'ClaimPropertySelection',
-              claimType,
-              property,
-              option,
-            },
-          ],
-        },
-      },
-    }).catch(() => toast.error('Could not set property'))
-  }
-
-  return (
-    <Flex direction="column">
-      {properties.map(({ propertyId, name, options }) => {
-        const selectedOption = propertySelections.find(
-          (selection) => selection.property.id === propertyId,
-        )
-
-        return (
-          <Spacing key={propertyId} top="small">
-            <Label key={propertyId}>{name}</Label>
-            <Dropdown
-              value={selectedOption?.option.id ?? ''}
-              onChange={(optionId) => {
-                const option = options.find((o) => o.id === optionId)
-
-                if (!option) {
-                  return
-                }
-
-                handlePropertySelect(
-                  {
-                    id: propertyId,
-                    name,
-                  },
-                  option,
-                )
-              }}
-              options={options.map((option) => ({
-                key: option.id,
-                value: option.id,
-                text: option.name,
-              }))}
-            />
-          </Spacing>
-        )
-      })}
-    </Flex>
-  )
-}
 
 export const ClaimType: React.FC<{
   claimId: string

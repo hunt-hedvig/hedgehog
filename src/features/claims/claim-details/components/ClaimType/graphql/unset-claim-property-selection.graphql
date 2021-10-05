@@ -1,0 +1,24 @@
+mutation UnsetClaimPropertySelection(
+  $id: ID!
+  $claimType: String!
+  $propertyId: ID!
+) {
+  unsetClaimPropertySelection(
+    id: $id
+    claimType: $claimType
+    propertyId: $propertyId
+  ) {
+    id
+    propertySelections {
+      claimType
+      property {
+        id
+        name
+      }
+      option {
+        id
+        name
+      }
+    }
+  }
+}
