@@ -68,11 +68,12 @@ const OptionsList = styled.ul<{ closing: boolean }>`
   }
 `
 
-const OptionStyled = styled.li`
+const OptionStyled = styled.li<{ selected: boolean }>`
   outline: none;
   cursor: pointer;
   padding: 10px 25px;
-  background-color: ${({ theme }) => theme.backgroundLight};
+  background-color: ${({ theme, selected }) =>
+    !selected ? theme.backgroundLight : theme.accentBackground};
 
   text-overflow: ellipsis;
   overflow: hidden;
@@ -80,7 +81,8 @@ const OptionStyled = styled.li`
 
   &:hover,
   &:focus {
-    background-color: ${({ theme }) => theme.accentBackground};
+    background-color: ${({ theme, selected }) =>
+      !selected ? theme.accentBackground : theme.background};
   }
 `
 
@@ -135,6 +137,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
     >
       {!selectedIdx ? (
         <OptionStyled
+          selected={false}
           tabIndex={0}
           onClick={toggleDropdown}
           onKeyDown={(e) => {
@@ -151,6 +154,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
           ...children[selectedIdx - 1],
           props: {
             ...children[selectedIdx - 1].props,
+            selected: false,
             onClick: () => {
               children[selectedIdx - 1].props.onClick()
               toggleDropdown()
@@ -259,6 +263,7 @@ export const MultiDropdown: React.FC<MultiDropdownProps> = ({
             return
           }
         }}
+        selected={false}
       >
         {title && !selected?.length
           ? title

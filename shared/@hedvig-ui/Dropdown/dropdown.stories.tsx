@@ -1,4 +1,4 @@
-import { EnumDropdown } from '@hedvig-ui'
+import { Button, Card, EnumDropdown } from '@hedvig-ui'
 import React from 'react'
 import {
   Dropdown as DropdownNoSemantic,
@@ -43,7 +43,9 @@ export const DropdownWithoutSemantic = () => {
     <button tabIndex={-1}>Option №2</button>,
     'Option №3',
     'Option №4',
-    'Option №5',
+    <Card>
+      <Button>Option №5</Button>
+    </Card>,
     'Option №6',
     'Option №7',
   ]
