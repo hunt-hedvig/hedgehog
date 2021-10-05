@@ -56,6 +56,7 @@ const OptionsList = styled.ul<{ closing: boolean }>`
   border-radius: 0 0 0.3rem 0.3rem;
   border: 1px solid ${({ theme }) => theme.border};
   border-top: none;
+  box-shadow: 0 5px 40px ${({ theme }) => theme.backgroundTransparent};
 
   & li:not(:first-child) {
     margin-top: 1rem;

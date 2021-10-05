@@ -44,32 +44,9 @@ export const DropdownWithoutSemantic = () => {
   const [selected, setSelected] = React.useState<number>()
 
   const OPTIONS = [
-    <div style={{ display: 'flex', gap: 15 }}>
-      <Button tabIndex={-1}>Option #1</Button>
-      <Button tabIndex={-1}>Option #1</Button>
-      <Button tabIndex={-1}>Option #1</Button>
-      <Button tabIndex={-1}>Option #1</Button>
-    </div>,
-    <Table>
-      <TableHeader>
-        <TableHeaderColumn>Option #2</TableHeaderColumn>
-      </TableHeader>
-
-      <TableRow>
-        <TableColumn>{21}</TableColumn>
-        <TableColumn>{23}</TableColumn>
-        <TableColumn>{24}</TableColumn>
-        <TableColumn>{25}</TableColumn>
-      </TableRow>
-    </Table>,
-    <div style={{ display: 'flex', gap: 15 }}>
-      <Spinner />
-      <Spinner />
-      <Spinner />
-      <Spinner />
-      <Spinner />
-      <Spinner />
-    </div>,
+    'Option #1',
+    'Option #2',
+    'Option #3',
     'Option №4',
     'Option №5',
     'Option №6',
