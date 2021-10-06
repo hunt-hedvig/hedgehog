@@ -7,6 +7,7 @@ import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 import { CustomInputProps as _CustomInputProps } from './Input/input'
 import { ModalProps as _ModalProps } from './Modal'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
+import { TabsProps as _TabsProps } from './Tabs'
 
 export { Flex } from './Flex/flex'
 
@@ -105,3 +106,6 @@ export {
 
 export { Modal } from './Modal'
 export type ModalProps = _ModalProps
+
+export { Tabs, Tab } from './Tabs'
+export type TabsProps = _TabsProps

@@ -5,7 +5,6 @@ import { RouteComponentProps } from 'react-router'
 
 export const MemberPage: React.FC<RouteComponentProps<{
   memberId: string
-  tab: string
 }>> = (props) => {
   const memberId = props.match.params.memberId
   const [member] = useGetMemberInfo(memberId)
