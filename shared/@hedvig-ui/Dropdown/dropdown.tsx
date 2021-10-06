@@ -210,7 +210,7 @@ export const Option: React.FC<OptionProps> = ({
 interface MultiDropdownProps {
   title?: string
   options: string[]
-  selected: string[]
+  selected: any
   selectHandler: (opt: string) => void
 }
 
