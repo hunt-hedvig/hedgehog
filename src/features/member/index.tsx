@@ -74,6 +74,8 @@ export const MemberTabs: React.FC<RouteComponentProps<{
   member: Member
 }> = ({ match, member }) => {
   const history = useHistory()
+  const pathname = history.location.pathname.split('/')
+  const path = pathname[pathname.length - 1]
   const memberId = match.params.memberId
 
   const panes = memberPagePanes(memberId, member)
@@ -156,7 +158,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
         <Tabs
           list={panes.map((pane) => ({
             title: pane.tabTitle,
-            name: pane.tabName,
+            active: path === pane.tabName,
             action: () => navigateToTab(pane.tabName),
             hotkey: pane.hotkey,
           }))}

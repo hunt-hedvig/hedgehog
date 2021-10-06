@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router'
 import { Key, Keys, useKeyIsPressed } from '../utils/key-press-hook'
 
 const TabStyled = styled.li<{ active?: boolean }>`
@@ -64,24 +63,13 @@ export interface TabProps {
   active?: boolean
   action: () => void
   title: string
-  name?: string
   hotkey?: {
     name: string
     key: Key
   }
 }
 
-export const Tab: React.FC<TabProps> = ({
-  active,
-  title,
-  name,
-  action,
-  hotkey,
-}) => {
-  const history = useHistory()
-  const path = history.location.pathname.split('/')
-
-  const [isActive, setIsActive] = React.useState(active || false)
+export const Tab: React.FC<TabProps> = ({ active, title, action, hotkey }) => {
   const isKeyPressed = hotkey ? useKeyIsPressed(hotkey.key) : false
   const isControlPressed = useKeyIsPressed(Keys.Control)
 
@@ -91,17 +79,9 @@ export const Tab: React.FC<TabProps> = ({
     }
   }, [isKeyPressed, isControlPressed])
 
-  useEffect(() => {
-    if (name === path[path.length - 1]) {
-      setIsActive(true)
-    } else {
-      setIsActive(false)
-    }
-  }, [path])
-
   return (
     <TabStyled
-      active={isActive}
+      active={active}
       tabIndex={0}
       onClick={action}
       onKeyDown={(e) => e.keyCode === Keys.Enter.code && action()}
@@ -135,7 +115,7 @@ export const Tabs: React.FC<TabsProps> = ({ list }) => {
   return (
     <TabsWrapper tabCount={list.length}>
       {list.map((tab) => (
-        <Tab key={tab.name} {...tab} />
+        <Tab key={tab.title} {...tab} />
       ))}
     </TabsWrapper>
   )
