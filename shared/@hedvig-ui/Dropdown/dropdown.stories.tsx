@@ -52,7 +52,7 @@ export const DropdownWithoutSemantic = () => {
 
   return (
     <div style={{ padding: '50px 600px' }}>
-      <DropdownNoSemantic title="Dropdown">
+      <DropdownNoSemantic placeholder="Dropdown">
         {OPTIONS.map((opt, index) => (
           <Option
             key={index}
@@ -92,7 +92,7 @@ export const DropdownMulti = () => {
     <div style={{ padding: '50px 600px' }}>
       <MultiDropdown
         clearHandler={() => setSelected([])}
-        title="Dropdown"
+        placeholder="Dropdown"
         options={OPTIONS}
         selected={selected}
         selectHandler={selectHandler}

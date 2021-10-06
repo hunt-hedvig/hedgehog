@@ -114,11 +114,14 @@ const ClearIcon = styled(X)`
 `
 
 interface DropdownProps {
-  title?: string
+  placeholder?: string
   children: any
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
+export const Dropdown: React.FC<DropdownProps> = ({
+  placeholder,
+  children,
+}) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const [selectedIdx, setSelectedIdx] = React.useState(0)
@@ -174,7 +177,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ title, children }) => {
             }
           }}
         >
-          {title || 'Dropdown'}
+          {placeholder || 'Dropdown'}
         </OptionStyled>
       ) : (
         {
@@ -235,7 +238,7 @@ export const Option: React.FC<OptionProps> = ({
 )
 
 interface MultiDropdownProps {
-  title?: string
+  placeholder?: string
   options: string[]
   selected: any
   selectHandler: (opt: string) => void
@@ -243,7 +246,7 @@ interface MultiDropdownProps {
 }
 
 export const MultiDropdown: React.FC<MultiDropdownProps> = ({
-  title,
+  placeholder,
   options,
   selected,
   selectHandler,
@@ -294,10 +297,10 @@ export const MultiDropdown: React.FC<MultiDropdownProps> = ({
         }}
         selected={false}
       >
-        {title && !selected?.length
-          ? title
+        {placeholder && !selected?.length
+          ? placeholder
           : selected?.length
-          ? selected.map((opt, idx) => <Tag>{opt}</Tag>)
+          ? selected.map((opt) => <Tag>{opt}</Tag>)
           : 'Dropdown'}
       </OptionStyled>
 
