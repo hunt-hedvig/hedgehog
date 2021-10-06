@@ -8,7 +8,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { format } from 'date-fns'
+import { addDays } from 'date-fns'
 import {
   changeToDateOptions,
   useChangeToDate,
@@ -16,9 +16,26 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
+import {
+  checkGapBetweenAgreements,
+  DateSpan,
+  DialogWarning,
+  formatDate,
+} from './helpers'
 
 const initialToDate = (agreement: GenericAgreement): Date =>
   agreement.toDate ? new Date(agreement.toDate) : new Date()
+
+const getNextAgreement = (agreements, selectedAgreement) =>
+  agreements.reduce((nextAgreement, current) => {
+    if (
+      selectedAgreement.toDate < current.fromDate &&
+      (!nextAgreement || current.fromDate < nextAgreement.fromDate)
+    ) {
+      return current
+    }
+    return nextAgreement
+  }, null)
 
 export const ToDate: React.FC<{
   agreement: GenericAgreement
@@ -38,6 +55,44 @@ export const ToDate: React.FC<{
     reset()
   }, [agreement])
 
+  const onConfirm = () => {
+    const formattedToDate = formatDate(toDate)
+    let confirmText = (
+      <>
+        Do you wish to change the to date to{' '}
+        <DateSpan>{formattedToDate}</DateSpan>?
+      </>
+    )
+    const nextAgreement = getNextAgreement(
+      contract.genericAgreements,
+      agreement,
+    )
+    if (nextAgreement) {
+      if (checkGapBetweenAgreements(agreement, nextAgreement)) {
+        const formattedNextFromDate = formatDate(addDays(toDate, 1))
+        confirmText = (
+          <>
+            {confirmText}
+            <DialogWarning>
+              This will also change the from date of next agreement to{' '}
+              <DateSpan>{formattedNextFromDate}</DateSpan>
+            </DialogWarning>
+          </>
+        )
+      }
+    }
+    confirm(confirmText).then(() => {
+      toast.promise(changeToDate(changeToDateOptions(agreement, toDate)), {
+        loading: 'Changing date',
+        success: () => {
+          reset()
+          return 'Date changed'
+        },
+        error: 'Could not change date',
+      })
+    })
+  }
+
   return (
     <>
       <ThirdLevelHeadline>To Date</ThirdLevelHeadline>
@@ -45,7 +100,7 @@ export const ToDate: React.FC<{
         <Spacing bottom width="auto">
           <FourthLevelHeadline>
             {agreement.toDate !== null
-              ? format(new Date(agreement.toDate), 'yyyy-MM-dd')
+              ? formatDate(new Date(agreement.toDate))
               : 'Active'}
           </FourthLevelHeadline>
         </Spacing>
@@ -62,28 +117,7 @@ export const ToDate: React.FC<{
             <DateTimePicker date={toDate} setDate={setToDate} />
           </Spacing>
           <ButtonsGroup>
-            <Button
-              onClick={() => {
-                const formattedToDate = format(toDate, 'yyyy-MM-dd')
-                confirm(`Change the to date to ${formattedToDate}?`).then(
-                  () => {
-                    toast.promise(
-                      changeToDate(changeToDateOptions(agreement, toDate)),
-                      {
-                        loading: 'Changing date',
-                        success: () => {
-                          reset()
-                          return 'Date changed'
-                        },
-                        error: 'Could not change date',
-                      },
-                    )
-                  },
-                )
-              }}
-            >
-              Confirm
-            </Button>
+            <Button onClick={onConfirm}>Confirm</Button>
             <Button variant="tertiary" onClick={() => reset()}>
               Cancel
             </Button>
