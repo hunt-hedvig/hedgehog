@@ -1,6 +1,7 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { LiHTMLAttributes, useEffect, useRef } from 'react'
+import { X } from 'react-bootstrap-icons'
 import { useClickOutside } from '../utils/click-outside'
 import { Keys } from '../utils/key-press-hook'
 import { sleep } from '../utils/sleep'
@@ -69,21 +70,47 @@ const OptionsList = styled.ul<{ closing: boolean }>`
 `
 
 const OptionStyled = styled.li<{ selected: boolean }>`
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+
   outline: none;
   cursor: pointer;
   padding: 10px 25px;
   background-color: ${({ theme, selected }) =>
     !selected ? theme.backgroundLight : theme.accentBackground};
 
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-
   &:hover,
   &:focus {
     background-color: ${({ theme, selected }) =>
       !selected ? theme.accentBackground : theme.background};
   }
+`
+
+const Tag = styled.div`
+  white-space: nowrap;
+
+  font-size: 14px;
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 10px;
+  border-radius: 0.25rem;
+  background-color: ${({ theme }) => theme.accentBackground};
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
+`
+
+const ClearIcon = styled(X)`
+  position: absolute;
+  right: 0.2rem;
+  top: 0.2rem;
+  cursor: pointer;
 `
 
 interface DropdownProps {
@@ -212,6 +239,7 @@ interface MultiDropdownProps {
   options: string[]
   selected: any
   selectHandler: (opt: string) => void
+  clearHandler?: () => void
 }
 
 export const MultiDropdown: React.FC<MultiDropdownProps> = ({
@@ -219,6 +247,7 @@ export const MultiDropdown: React.FC<MultiDropdownProps> = ({
   options,
   selected,
   selectHandler,
+  clearHandler,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -268,12 +297,7 @@ export const MultiDropdown: React.FC<MultiDropdownProps> = ({
         {title && !selected?.length
           ? title
           : selected?.length
-          ? selected.map((opt, idx) => (
-              <span>
-                {opt}
-                {idx !== selected.length - 1 && ', '}
-              </span>
-            ))
+          ? selected.map((opt, idx) => <Tag>{opt}</Tag>)
           : 'Dropdown'}
       </OptionStyled>
 
@@ -292,6 +316,9 @@ export const MultiDropdown: React.FC<MultiDropdownProps> = ({
           ))}
         </OptionsList>
       )}
+      {!!selected?.length && clearHandler ? (
+        <ClearIcon onClick={clearHandler} />
+      ) : null}
     </DropdownStyled>
   )
 }

@@ -91,6 +91,7 @@ export const DropdownMulti = () => {
   return (
     <div style={{ padding: '50px 600px' }}>
       <MultiDropdown
+        clearHandler={() => setSelected([])}
         title="Dropdown"
         options={OPTIONS}
         selected={selected}
