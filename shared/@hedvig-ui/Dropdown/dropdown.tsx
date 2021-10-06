@@ -106,10 +106,22 @@ const Tag = styled.div`
   }
 `
 
+const Placeholder = styled.span`
+  color: ${({ theme }) => theme.placeholderColor};
+`
+
 const ClearIcon = styled(X)`
+  width: 45px;
+  height: calc(100% - 2px);
+
   position: absolute;
-  right: 0.2rem;
-  top: 0.2rem;
+  right: 1px;
+  top: 1px;
+
+  padding: 0.2rem;
+  background-color: ${({ theme }) => theme.backgroundLight};
+  border-radius: 0.2rem;
+
   cursor: pointer;
 `
 
@@ -177,7 +189,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             }
           }}
         >
-          {placeholder || 'Dropdown'}
+          <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
         </OptionStyled>
       ) : (
         {
@@ -297,11 +309,13 @@ export const MultiDropdown: React.FC<MultiDropdownProps> = ({
         }}
         selected={false}
       >
-        {placeholder && !selected?.length
-          ? placeholder
-          : selected?.length
-          ? selected.map((opt) => <Tag>{opt}</Tag>)
-          : 'Dropdown'}
+        {placeholder && !selected?.length ? (
+          <Placeholder>{placeholder}</Placeholder>
+        ) : selected?.length ? (
+          selected.map((opt) => <Tag>{opt}</Tag>)
+        ) : (
+          <Placeholder>Dropdown</Placeholder>
+        )}
       </OptionStyled>
 
       {active && (
