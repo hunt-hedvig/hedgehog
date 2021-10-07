@@ -45,6 +45,10 @@ export {
   getTextFromEnumValue,
 } from './Dropdown/semantic-dropdown'
 export {
+  Dropdown as StandardDropdown,
+  MultiDropdown,
+} from './Dropdown/dropdown'
+export {
   Form,
   FormDropdown,
   FormInput,
