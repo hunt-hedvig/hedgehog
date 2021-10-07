@@ -1,10 +1,10 @@
 import {
   Button,
   Card,
+  Dropdown,
+  DropdownOption,
   EnumDropdown,
   MultiDropdown,
-  Option,
-  StandardDropdown,
 } from '@hedvig-ui'
 import React from 'react'
 import {} from './dropdown'
@@ -55,17 +55,17 @@ export const DropdownWithoutSemantic = () => {
 
   return (
     <div style={{ padding: '50px 600px' }}>
-      <StandardDropdown placeholder="Dropdown">
+      <Dropdown placeholder="Dropdown">
         {OPTIONS.map((opt, index) => (
-          <Option
+          <DropdownOption
             key={index}
             selected={selected === index}
             onClick={() => setSelected(index)}
           >
             {opt}
-          </Option>
+          </DropdownOption>
         ))}
-      </StandardDropdown>
+      </Dropdown>
     </div>
   )
 }
