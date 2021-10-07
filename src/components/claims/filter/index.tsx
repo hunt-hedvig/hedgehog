@@ -50,53 +50,31 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
   return (
     <FilterWrapper>
       <FilterElement>
-        <Checkbox
-          label="Opened"
-          checked={isFilterExist(ClaimState.Open, 'filterClaimStates') || false}
-          onChange={() =>
-            setFilterHandler(ClaimState.Open, 'filterClaimStates')
-          }
-        />
-        <Checkbox
-          label="Closed"
-          checked={
-            isFilterExist(ClaimState.Closed, 'filterClaimStates') || false
-          }
-          onChange={() =>
-            setFilterHandler(ClaimState.Closed, 'filterClaimStates')
-          }
-        />
-        <Checkbox
-          label="Reopened"
-          checked={
-            isFilterExist(ClaimState.Reopened, 'filterClaimStates') || false
-          }
-          onChange={() =>
-            setFilterHandler(ClaimState.Reopened, 'filterClaimStates')
-          }
-        />
+        {Object.keys(ClaimState).map((key) => (
+          <Checkbox
+            label={key}
+            checked={
+              isFilterExist(ClaimState[key], 'filterClaimStates') || false
+            }
+            onChange={() =>
+              setFilterHandler(ClaimState[key], 'filterClaimStates')
+            }
+          />
+        ))}
       </FilterElement>
 
       <FilterElement>
-        <Checkbox
-          label="Complex"
-          checked={
-            isFilterExist(ClaimComplexity.Complex, 'filterComplexities') ||
-            false
-          }
-          onChange={() =>
-            setFilterHandler(ClaimComplexity.Complex, 'filterComplexities')
-          }
-        />
-        <Checkbox
-          label="Simple"
-          checked={
-            isFilterExist(ClaimComplexity.Simple, 'filterComplexities') || false
-          }
-          onChange={() =>
-            setFilterHandler(ClaimComplexity.Simple, 'filterComplexities')
-          }
-        />
+        {Object.keys(ClaimComplexity).map((key) => (
+          <Checkbox
+            label={key}
+            checked={
+              isFilterExist(ClaimComplexity[key], 'filterComplexities') || false
+            }
+            onChange={() =>
+              setFilterHandler(ClaimComplexity[key], 'filterComplexities')
+            }
+          />
+        ))}
       </FilterElement>
 
       <div>
