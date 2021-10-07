@@ -7,18 +7,14 @@ import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 import { CustomInputProps as _CustomInputProps } from './Input/input'
 import { ModalProps as _ModalProps } from './Modal'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
+import { TabsProps as _TabsProps } from './Tabs'
 
 export { Flex } from './Flex/flex'
 
 export type CardTitleBadgeProps = _CardTitleBadgeProps
 export type BadgeProps = _BadgeProps
-export {
-  Button,
-  buttonColorMap,
-  ButtonLink,
-  ButtonsGroup,
-  buttonSizeMap,
-} from './Button/button'
+
+export { Button, ButtonsGroup } from './Button/button'
 
 export {
   Table,
@@ -30,6 +26,7 @@ export {
 } from './Table/table'
 
 export type ButtonProps = _ButtonProps
+
 export {
   Card,
   CardContent,
@@ -43,10 +40,12 @@ export { Checkbox } from './Checkbox/checkbox'
 export { Copyable } from './Copyable/copyable'
 export { DateTimePicker } from './DateTimePicker/date-time-picker'
 export {
-  Dropdown,
+  Dropdown as SemanticDropdown,
   EnumDropdown,
   getTextFromEnumValue,
-} from './Dropdown/dropdown'
+} from './Dropdown/semantic-dropdown'
+export { Dropdown, Option as DropdownOption } from './Dropdown/dropdown'
+export { MultiDropdown } from './Dropdown/multi-dropdown'
 export {
   Form,
   FormDropdown,
@@ -109,3 +108,6 @@ export {
 
 export { Modal } from './Modal'
 export type ModalProps = _ModalProps
+
+export { Tabs, Tab } from './Tabs'
+export type TabsProps = _TabsProps

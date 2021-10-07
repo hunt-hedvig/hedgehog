@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import animateScrollTo from 'animated-scroll-to'
 import { parseISO } from 'date-fns'
 import { useMessageHistory } from 'graphql/use-message-history'
 import React, { HTMLAttributes, useEffect, useRef } from 'react'
@@ -24,23 +23,15 @@ const getAuthor = (author) => {
   return author ? author : 'bot'
 }
 
-export const MessagesList: React.FC<{ memberId: string } & HTMLAttributes<
-  HTMLDivElement
->> = ({ memberId, ...props }) => {
+export const MessagesList: React.FC<{
+  memberId: string
+} & HTMLAttributes<HTMLDivElement>> = ({ memberId, ...props }) => {
   const [messages, { loading }] = useMessageHistory(memberId)
-  const messagesList = useRef<HTMLDivElement>(null)
   const latestMessage = useRef<HTMLDivElement>(null)
 
-  const scrollToBottom = async () => {
-    await animateScrollTo(latestMessage.current!, {
-      elementToScroll: messagesList.current!,
-      maxDuration: 1000,
-    })
-  }
-
   useEffect(() => {
-    if (messages && messagesList.current && latestMessage.current) {
-      scrollToBottom()
+    if (messages && latestMessage.current) {
+      latestMessage.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [messages?.length])
 
@@ -49,7 +40,7 @@ export const MessagesList: React.FC<{ memberId: string } & HTMLAttributes<
   }
 
   return (
-    <MessagesListContainer ref={messagesList} {...props}>
+    <MessagesListContainer {...props}>
       {messages ? (
         messages.map((item, index) => {
           return (

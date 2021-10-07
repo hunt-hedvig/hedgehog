@@ -1,5 +1,7 @@
 import styled, { StyledComponent } from '@emotion/styled'
 import { Hotkey } from '@hedvig-ui'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { colorsV3 } from '@hedviginsurance/brand'
 import React, { useContext, useRef, useState } from 'react'
 import {
@@ -22,8 +24,6 @@ import { matchPath, useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { forceLogOut } from 'utils/auth'
 import { DarkmodeContext } from 'utils/darkmode-context'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys } from 'utils/hooks/key-press-hook'
 import { useInsecurePersistentState } from 'utils/state'
 import { Logo, LogoIcon } from './elements'
 
@@ -47,7 +47,7 @@ const Wrapper = styled('div')<{ collapsed: boolean }>(
       alignItems: collapsed ? 'center' : 'flex-start',
     },
     a: {
-      padding: collapsed ? '1rem' : undefined,
+      padding: collapsed ? '0.75rem 1rem' : undefined,
       width: collapsed ? undefined : '100%',
       justifyContent: collapsed ? 'center' : 'flex-start',
 
@@ -403,7 +403,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 >
                   <House />
                   <Hotkey hotkey="D" hinting={isHintingOption}>
-                    {!isCollapsed && 'Dashborad'}
+                    {!(shouldAlwaysCollapse || isCollapsed) && 'Dashborad'}
                   </Hotkey>
                 </MenuItem>
               </MenuGroup>
@@ -416,7 +416,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 >
                   <Search />
                   <Hotkey hotkey="S" hinting={isHintingOption}>
-                    {!isCollapsed && 'Member Search'}
+                    {!(shouldAlwaysCollapse || isCollapsed) && 'Member Search'}
                   </Hotkey>
                 </MenuItem>
               </MenuGroup>
@@ -435,7 +435,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 >
                   {conversationsEnabled ? <Chat /> : <Inbox />}
                   <Hotkey hotkey="Q" hinting={isHintingOption}>
-                    {!isCollapsed &&
+                    {!(shouldAlwaysCollapse || isCollapsed) &&
                       (conversationsEnabled ? 'Conversations' : 'Questions')}
                   </Hotkey>
                 </MenuItem>
@@ -446,49 +446,47 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   }
                 >
                   <ShieldShaded />
-                  {!isCollapsed && (
-                    <Hotkey hotkey="C" hinting={isHintingOption}>
-                      {!isCollapsed && 'Claims'}
-                    </Hotkey>
-                  )}
+                  <Hotkey hotkey="C" hinting={isHintingOption}>
+                    {!(shouldAlwaysCollapse || isCollapsed) && 'Claims'}
+                  </Hotkey>
                 </MenuItem>
               </MenuGroup>
               <MenuGroup>
                 <MenuItem to={routes.tools}>
                   <Tools />
                   <Hotkey hotkey="T" hinting={isHintingOption}>
-                    {!isCollapsed && 'Tools'}
+                    {!(shouldAlwaysCollapse || isCollapsed) && 'Tools'}
                   </Hotkey>
                 </MenuItem>
               </MenuGroup>
 
               <MenuGroup>
                 <MenuItemExternalLink href={routes.trustly} target="_blank">
-                  <ArrowUpRight />
+                  {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
                   <CreditCard />
                   <Hotkey hotkey="R" hinting={isHintingOption}>
-                    {!isCollapsed && 'Trustly'}
+                    {!(shouldAlwaysCollapse || isCollapsed) && 'Trustly'}
                   </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.adyen} target="_blank">
-                  <ArrowUpRight />
+                  {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
                   <CreditCard2Front />
                   <Hotkey hotkey="A" hinting={isHintingOption}>
-                    {!isCollapsed && 'Adyen'}
+                    {!(shouldAlwaysCollapse || isCollapsed) && 'Adyen'}
                   </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.gsr} target="_blank">
-                  <ArrowUpRight />
+                  {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
                   <PersonBoundingBox />
                   <Hotkey hotkey="G" hinting={isHintingOption}>
-                    {!isCollapsed && 'GSR'}
+                    {!(shouldAlwaysCollapse || isCollapsed) && 'GSR'}
                   </Hotkey>
                 </MenuItemExternalLink>
                 <MenuItemExternalLink href={routes.foss} target="_blank">
-                  <ArrowUpRight />
+                  {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
                   <PersonSquare />
                   <Hotkey hotkey="F" hinting={isHintingOption}>
-                    {!isCollapsed && 'FOSS'}
+                    {!(shouldAlwaysCollapse || isCollapsed) && 'FOSS'}
                   </Hotkey>
                 </MenuItemExternalLink>
               </MenuGroup>

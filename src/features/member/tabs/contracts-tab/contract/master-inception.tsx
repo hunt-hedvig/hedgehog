@@ -5,6 +5,7 @@ import {
   FourthLevelHeadline,
   Paragraph,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
 import {
   activateContractOptions,
@@ -13,7 +14,6 @@ import {
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const MasterInception: React.FC<{
   contract: Contract
@@ -37,11 +37,7 @@ export const MasterInception: React.FC<{
   return (
     <>
       {!datePickerEnabled && !contract.terminationDate && (
-        <Button
-          halfWidth
-          variation="success"
-          onClick={() => setDatePickerEnabled(true)}
-        >
+        <Button status="success" onClick={() => setDatePickerEnabled(true)}>
           Activate
         </Button>
       )}
@@ -53,7 +49,6 @@ export const MasterInception: React.FC<{
           <DateTimePicker date={activeFrom} setDate={setActiveFrom} />
           <ButtonsGroup>
             <Button
-              fullWidth
               disabled={activateContractLoading}
               onClick={() => {
                 const confirmMessage = `Are you sure you want to activate this contract with master inception of ${format(
@@ -77,11 +72,10 @@ export const MasterInception: React.FC<{
                   )
                 })
               }}
-              variation="success"
             >
               Confirm
             </Button>
-            <Button fullWidth onClick={() => reset()}>
+            <Button variant="tertiary" onClick={() => reset()}>
               Cancel
             </Button>
           </ButtonsGroup>

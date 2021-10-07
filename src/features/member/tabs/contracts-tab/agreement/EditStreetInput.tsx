@@ -1,4 +1,6 @@
 import { Input } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import {
   safelyEditAgreementOptions,
   useSafelyEditAgreement,
@@ -6,8 +8,6 @@ import {
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Contract } from 'types/generated/graphql'
-import { Keys } from 'utils/hooks/key-press-hook'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 
 export const EditStreetInput: React.FC<{
   agreementId: string

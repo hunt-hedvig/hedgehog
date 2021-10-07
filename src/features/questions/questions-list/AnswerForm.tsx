@@ -8,6 +8,7 @@ import {
   Spacing,
   SubmitButton,
 } from '@hedvig-ui'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import {
   getAnswerQuestionOptions,
   useAnswerQuestion,
@@ -19,7 +20,6 @@ import {
 import React, { useEffect } from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { Keys, useKeyIsPressed } from 'utils/hooks/key-press-hook'
 
 const MarkAsResolvedWrapper = styled.div`
   padding-left: 1rem;
@@ -123,7 +123,7 @@ export const AnswerForm: React.FC<{
               }}
             />
             <SubmitButtonWrapper>
-              <SubmitButton variation="primary">Send</SubmitButton>
+              <SubmitButton>Send</SubmitButton>
             </SubmitButtonWrapper>
           </Form>
         </FormProvider>

@@ -12,6 +12,17 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-10-01',
+    change:
+      'Added keyboard navigation between Claim sections using Control+Number',
+    authorGithubHandle: 'maxplt & vonElfvin',
+  },
+  {
+    date: '2021-09-29',
+    change: 'Allows Windows user to send messages through Command + Enter',
+    authorGithubHandle: 'vonElfvin',
+  },
+  {
     date: '2021-09-22',
     change:
       'Chat messages not sent are saved as drafts, even if you change page 🎉',

@@ -133,7 +133,6 @@ export const ConversationsOnboardingPage: React.FC = () => {
                   history.push('/conversations')
                 })
               }}
-              variation="primary"
               style={{ marginBottom: '0.5em', width: '300px' }}
             >
               Continue

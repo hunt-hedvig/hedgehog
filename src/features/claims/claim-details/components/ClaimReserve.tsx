@@ -1,23 +1,9 @@
 import styled from '@emotion/styled'
-import { InfoTag, Paragraph, Spinner, ThirdLevelHeadline } from '@hedvig-ui'
+import { CardTitle, InfoTag, Paragraph, Spinner } from '@hedvig-ui'
 import React from 'react'
-import { MonetaryAmount } from '../../../../utils/helpers'
+import { BugFill } from 'react-bootstrap-icons'
+import { useClaimReserveQuery } from 'types/generated/graphql'
 import { ClaimReserveForm } from './ClaimReserveForm'
-
-interface Props {
-  reserves: MonetaryAmount
-  claimId: string
-  loading?: boolean
-  refetch: () => Promise<any>
-}
-
-const ReservesCard = styled.div`
-  width: 100%;
-  padding: 2rem;
-  border-radius: 7px;
-  border: none;
-  background-color: rgba(0, 0, 0, 0.05);
-`
 
 const ReservesTag = styled(InfoTag)`
   font-weight: bold;
@@ -30,27 +16,47 @@ const ReservesText = styled(Paragraph)`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-export const ClaimReserves: React.FC<Props> = ({
+export const ClaimReserve: React.FC<{ claimId: string; focus: boolean }> = ({
   claimId,
-  reserves,
-  loading,
+  focus,
 }) => {
+  const {
+    data: reserveData,
+    error: queryError,
+    loading: loadingReserve,
+  } = useClaimReserveQuery({
+    variables: { claimId },
+  })
+
+  const reserves = reserveData?.claim?.reserves
+
   const reserveAmount = reserves && reserves.amount ? reserves.amount : '0.00'
   const reserveCurrency =
     reserves && reserves.currency ? reserves.currency : 'SEK'
   const reserveAmountInteger = Math.round(Number(reserveAmount))
 
   return (
-    <ReservesCard>
-      <ThirdLevelHeadline>Reserves</ThirdLevelHeadline>
+    <>
+      <CardTitle
+        title="Reserves"
+        badge={
+          queryError
+            ? {
+                icon: BugFill,
+                status: 'danger',
+                label: 'Internal Error',
+              }
+            : null
+        }
+      />
       <div style={{ display: 'flex', marginBottom: '1.0em' }}>
-        {loading && <Spinner />}
+        {loadingReserve && <Spinner />}
         <ReservesTag status="highlight">
           {reserveAmountInteger} {reserveCurrency}
         </ReservesTag>{' '}
         <ReservesText>reserved</ReservesText>
       </div>
-      <ClaimReserveForm claimId={claimId} />
-    </ReservesCard>
+      <ClaimReserveForm claimId={claimId} focus={focus} />
+    </>
   )
 }

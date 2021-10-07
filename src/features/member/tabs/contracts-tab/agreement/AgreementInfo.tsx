@@ -33,7 +33,7 @@ export const AgreementInfo: React.FC<{
           {!editStreet && (
             <>
               {agreement.address.street}{' '}
-              <Button variation="icon" onClick={() => setEditStreet(true)}>
+              <Button variant="tertiary" onClick={() => setEditStreet(true)}>
                 <EditIconWrapper>
                   <PencilFill />
                 </EditIconWrapper>

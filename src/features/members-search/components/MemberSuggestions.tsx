@@ -1,3 +1,5 @@
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys, NumberKeys } from '@hedvig-ui/utils/key-press-hook'
 import {
   EmptyState,
   MemberHistoryCardWrapper,
@@ -8,8 +10,6 @@ import {
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
-import { useCommandLine } from 'utils/hooks/command-line-hook'
-import { Keys, NumberKeys } from 'utils/hooks/key-press-hook'
 import { getMemberFlag } from 'utils/member'
 import { MemberHistoryContext } from 'utils/member-history'
 

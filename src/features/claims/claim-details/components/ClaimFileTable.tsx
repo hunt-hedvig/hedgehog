@@ -129,7 +129,7 @@ export const ClaimFileTable: React.FC<{
                 </Table.Cell>
               </Table.Row>
             ) : (
-              claimFiles.sort(sortClaimFileDate).map((claimFile) => {
+              [...claimFiles].sort(sortClaimFileDate).map((claimFile) => {
                 return (
                   <Table.Row key={claimFile.claimFileId}>
                     <Table.Cell>

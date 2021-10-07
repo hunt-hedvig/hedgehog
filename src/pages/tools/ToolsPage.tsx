@@ -1,7 +1,15 @@
 import styled from '@emotion/styled'
-import { CardLink, CardsWrapper, FadeIn, MainHeadline } from '@hedvig-ui'
-
+import {
+  CardLink,
+  CardsWrapper,
+  FadeIn,
+  HotkeyStyled,
+  MainHeadline,
+} from '@hedvig-ui'
+import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import React from 'react'
+import { useHistory } from 'react-router'
 
 const Row = styled.div<{ columns?: number }>`
   display: grid;
@@ -11,6 +19,16 @@ const Row = styled.div<{ columns?: number }>`
 const Icon = styled('div')`
   font-size: 2rem;
   padding-bottom: 1rem;
+`
+
+const Card = styled(CardLink)`
+  position: relative;
+`
+
+const Hotkey = styled(HotkeyStyled)`
+  right: 1em;
+  top: 1em;
+  padding: 2px 10px;
 `
 
 const stagingToolsAvailable = () => {
@@ -31,40 +49,109 @@ const StagingTools: React.FC = () => {
   )
 }
 
-export const ToolsPage: React.FC = () => (
-  <FadeIn>
-    <CardsWrapper style={{ flexDirection: 'column' }}>
-      <Row columns={4}>
-        <CardLink to="/tools/charges" span={4}>
-          <Icon>💰</Icon>
-          Approve Charges
-        </CardLink>
-        <CardLink to="/tools/switcher-automation" span={4}>
-          <Icon>🏡</Icon>
-          Switcher Automation
-        </CardLink>
-        <CardLink to="/tools/perils-editor" span={4}>
-          <Icon>📝</Icon>
-          Perils Editor
-        </CardLink>
-        <CardLink to="/tools/norwegian-tariff-creator" span={4}>
-          <Icon>🛩</Icon>
-          Norwegian Price Engine "Gripen"
-        </CardLink>
-      </Row>
+export const ToolsPage: React.FC = () => {
+  const history = useHistory()
+  const isControlPressed = useKeyIsPressed(Keys.Control)
+  const { registerActions } = useCommandLine()
 
-      <Row columns={2}>
-        <CardLink to="/tools/campaign-codes" span={4}>
-          <Icon>💵</Icon>
-          Campaign Codes
-        </CardLink>
-        <CardLink to="/tools/employees" span={4}>
-          <Icon>👩🏼‍🦰</Icon>
-          Employees
-        </CardLink>
-      </Row>
-    </CardsWrapper>
+  registerActions([
+    {
+      label: 'Go to Approve Charges',
+      keys: [Keys.Control, Keys.One],
+      onResolve: () => {
+        history.push('/tools/charges')
+      },
+    },
+    {
+      label: 'Go to Switcher Automation',
+      keys: [Keys.Control, Keys.Two],
+      onResolve: () => {
+        history.push('/tools/switcher-automation')
+      },
+    },
+    {
+      label: 'Go to Perils Editor',
+      keys: [Keys.Control, Keys.Three],
+      onResolve: () => {
+        history.push('/tools/perils-editor')
+      },
+    },
+    {
+      label: 'Go to Norwegian Price Engine "Gripen"',
+      keys: [Keys.Control, Keys.Four],
+      onResolve: () => {
+        history.push('/tools/norwegian-tariff-creator')
+      },
+    },
+    {
+      label: 'Go to Campaign Codes',
+      keys: [Keys.Control, Keys.Five],
+      onResolve: () => {
+        history.push('/tools/campaign-codes')
+      },
+    },
+    {
+      label: 'Go to Employees',
+      keys: [Keys.Control, Keys.Six],
+      onResolve: () => {
+        history.push('/tools/employees')
+      },
+    },
+    {
+      label: 'Go to Claim Types',
+      keys: [Keys.Control, Keys.Seven],
+      onResolve: () => {
+        history.push('/tools/claim-types')
+      },
+    },
+  ])
 
-    {stagingToolsAvailable() && <StagingTools />}
-  </FadeIn>
-)
+  return (
+    <FadeIn>
+      <CardsWrapper style={{ flexDirection: 'column' }}>
+        <Row columns={4}>
+          <Card to="/tools/charges" span={4}>
+            <Icon>💰</Icon>
+            Approve Charges
+            {isControlPressed && <Hotkey dark>1</Hotkey>}
+          </Card>
+          <Card to="/tools/switcher-automation" span={4}>
+            <Icon>🏡</Icon>
+            {isControlPressed && <Hotkey dark>2</Hotkey>}
+            Switcher Automation
+          </Card>
+          <Card to="/tools/perils-editor" span={4}>
+            <Icon>📝</Icon>
+            {isControlPressed && <Hotkey dark>3</Hotkey>}
+            Perils Editor
+          </Card>
+          <Card to="/tools/norwegian-tariff-creator" span={4}>
+            <Icon>🛩</Icon>
+            {isControlPressed && <Hotkey dark>4</Hotkey>}
+            Norwegian Price Engine "Gripen"
+          </Card>
+        </Row>
+
+        <Row columns={2}>
+          <CardLink to="/tools/campaign-codes" span={4}>
+            <Icon>💵</Icon>
+            {isControlPressed && <Hotkey dark>5</Hotkey>}
+            Campaign Codes
+          </CardLink>
+          <CardLink to="/tools/employees" span={4}>
+            <Icon>👩🏼‍🦰</Icon>
+            {isControlPressed && <Hotkey dark>6</Hotkey>}
+            Employees
+          </CardLink>
+          <CardLink to="/tools/claim-types" span={4}>
+            <Icon>🧠</Icon>
+            {isControlPressed && <Hotkey dark>5</Hotkey>}
+            Claim Types
+          </CardLink>
+        </Row>
+      </CardsWrapper>
+
+      {stagingToolsAvailable() && <StagingTools />}
+    </FadeIn>
+  )
+}

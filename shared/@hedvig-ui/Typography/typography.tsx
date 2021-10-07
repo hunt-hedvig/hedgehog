@@ -82,9 +82,9 @@ const HotkeyWrapper = styled.div`
 
 export const HotkeyStyled = styled(Shadowed)<{ dark?: boolean }>`
   position: absolute;
-  right: -2rem;
+  right: -1.75rem;
   top: 0;
-  font-size: 13px;
+  font-size: 1rem;
   background-color: ${({ dark, theme }) =>
     !dark ? theme.backgroundTransparentContrast : theme.backgroundTransparent};
 `

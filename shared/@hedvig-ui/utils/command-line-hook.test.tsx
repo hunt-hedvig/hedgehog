@@ -1,7 +1,7 @@
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { mount } from 'enzyme'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { Keys } from 'utils/hooks/key-press-hook'
 import { CommandLineProvider, useCommandLine } from './command-line-hook'
 
 describe('CommandLineProvider', () => {

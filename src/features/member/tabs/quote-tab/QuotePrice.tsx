@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Input } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
@@ -8,7 +9,6 @@ import {
   Quote,
   useOverrideQuotePriceMutation,
 } from 'types/generated/graphql'
-import { useConfirmDialog } from 'utils/hooks/modal-hook'
 import { formatMoney } from 'utils/money'
 
 const PriceWrapper = styled.div`
@@ -113,10 +113,10 @@ export const QuotePrice = ({ quote }: Props) => {
                 onChange={onPriceChange}
               />
             </PriceInput>
-            <Button variation="icon" type="submit">
+            <Button variant="tertiary" type="submit">
               <SubmitButton size="1.6em" />
             </Button>
-            <Button variation="icon" onClick={onCancel}>
+            <Button variant="tertiary" onClick={onCancel}>
               <CancelButton size="1.6em" />
             </Button>
           </AlignCenter>
@@ -124,7 +124,7 @@ export const QuotePrice = ({ quote }: Props) => {
       ) : (
         <AlignCenter>
           <DisplayPrice>{formattedPrice}</DisplayPrice>
-          <Button variation="icon" onClick={() => setEditPrice(true)}>
+          <Button variant="tertiary" onClick={() => setEditPrice(true)}>
             <PencilFill />
           </Button>
         </AlignCenter>

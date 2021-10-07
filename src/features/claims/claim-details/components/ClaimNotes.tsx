@@ -1,3 +1,4 @@
+import { usePlatform } from '@hedvig-ui/utils/platform'
 import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import {
@@ -21,9 +22,9 @@ import {
   Spinner,
   TextArea,
 } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { Keys } from 'utils/hooks/key-press-hook'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
@@ -80,6 +81,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
   } = useClaimPageQuery({
     variables: { claimId },
   })
+  const { isMetaKey, metaKey } = usePlatform()
   const notes = claimNotesData?.claim?.notes ?? []
   const events = claimNotesData?.claim?.events ?? []
 
@@ -171,7 +173,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {
           if (
-            e.metaKey &&
+            isMetaKey(e) &&
             e.keyCode === Keys.Enter.code &&
             !submitting &&
             note
@@ -182,18 +184,14 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
       />
       <Spacing top="small" />
       <SubNoteWrapper>
-        <Button
-          disabled={!note}
-          variation="primary"
-          onClick={() => handleSubmitNote()}
-        >
+        <Button disabled={!note} onClick={() => handleSubmitNote()}>
           Add note
         </Button>
         {textFieldFocused && (
           <FadeIn duration={200}>
             <NoteTip>
-              Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
-              add note
+              Press <Shadowed>{metaKey.hint}</Shadowed> +{' '}
+              <Shadowed>Enter</Shadowed> to add note
             </NoteTip>
           </FadeIn>
         )}

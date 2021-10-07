@@ -12,13 +12,13 @@ import {
   CardsWrapper,
   CardTitle,
   DangerCard,
-  Dropdown,
   EnumDropdown,
   InfoRow,
   InfoText,
   Label,
   Loadable,
   Paragraph,
+  SemanticDropdown,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
 import { ContractDropdown } from 'features/claims/claim-details/components/ContractDropdown'
@@ -179,32 +179,6 @@ export const ClaimInformation: React.FC<{
             }}
           />
         </SelectWrapper>
-        <SelectWrapper>
-          <Label>Employee Claim</Label>
-          <Dropdown
-            value={coveringEmployee ? 'True' : 'False'}
-            onChange={async (value) => {
-              await setCoveringEmployee({
-                variables: {
-                  id: claimId,
-                  coveringEmployee: validateSelectEmployeeClaimOption(value),
-                },
-                optimisticResponse: {
-                  setCoveringEmployee: {
-                    id: claimId,
-                    __typename: 'Claim',
-                    coveringEmployee: validateSelectEmployeeClaimOption(value),
-                    events: data?.claim?.events ?? [],
-                  },
-                },
-              })
-            }}
-            options={[
-              { key: 0, value: 'True', text: 'True' },
-              { key: 1, value: 'False', text: 'False' },
-            ]}
-          />
-        </SelectWrapper>
         {contracts && (
           <SelectWrapper>
             <Label>Contract for Claim</Label>
@@ -232,6 +206,32 @@ export const ClaimInformation: React.FC<{
             ⚠️ No agreement covers the claim on the date of loss
           </NoAgreementWarning>
         )}
+        <SelectWrapper>
+          <Label>Employee Claim</Label>
+          <SemanticDropdown
+            value={coveringEmployee ? 'True' : 'False'}
+            onChange={async (value) => {
+              await setCoveringEmployee({
+                variables: {
+                  id: claimId,
+                  coveringEmployee: validateSelectEmployeeClaimOption(value),
+                },
+                optimisticResponse: {
+                  setCoveringEmployee: {
+                    id: claimId,
+                    __typename: 'Claim',
+                    coveringEmployee: validateSelectEmployeeClaimOption(value),
+                    events: data?.claim?.events ?? [],
+                  },
+                },
+              })
+            }}
+            options={[
+              { key: 0, value: 'True', text: 'True' },
+              { key: 1, value: 'False', text: 'False' },
+            ]}
+          />
+        </SelectWrapper>
         {contracts.length === 0 && trials.length > 0 && (
           <CardsWrapper>
             <DangerCard>
