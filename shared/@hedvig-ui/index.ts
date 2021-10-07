@@ -44,10 +44,8 @@ export {
   EnumDropdown,
   getTextFromEnumValue,
 } from './Dropdown/semantic-dropdown'
-export {
-  Dropdown as StandardDropdown,
-  MultiDropdown,
-} from './Dropdown/dropdown'
+export { Dropdown as StandardDropdown, Option } from './Dropdown/dropdown'
+export { MultiDropdown } from './Dropdown/multi-dropdown'
 export {
   Form,
   FormDropdown,

@@ -1,10 +1,13 @@
-import { Button, Card, EnumDropdown } from '@hedvig-ui'
-import React from 'react'
 import {
-  Dropdown as DropdownNoSemantic,
+  Button,
+  Card,
+  EnumDropdown,
   MultiDropdown,
   Option,
-} from './dropdown'
+  StandardDropdown,
+} from '@hedvig-ui'
+import React from 'react'
+import {} from './dropdown'
 
 export default {
   title: 'EnumDropdown',
@@ -52,7 +55,7 @@ export const DropdownWithoutSemantic = () => {
 
   return (
     <div style={{ padding: '50px 600px' }}>
-      <DropdownNoSemantic placeholder="Dropdown">
+      <StandardDropdown placeholder="Dropdown">
         {OPTIONS.map((opt, index) => (
           <Option
             key={index}
@@ -62,7 +65,7 @@ export const DropdownWithoutSemantic = () => {
             {opt}
           </Option>
         ))}
-      </DropdownNoSemantic>
+      </StandardDropdown>
     </div>
   )
 }
@@ -72,11 +75,11 @@ export const DropdownMulti = () => {
 
   const OPTIONS = [
     'Option №1',
-    'Option №2',
-    'Option №3',
+    'Opt №2',
+    'Opti №3',
     'Option №4',
     'Option №5',
-    'Option №6',
+    'Optn №6',
     'Option №7',
   ]
 
@@ -91,12 +94,13 @@ export const DropdownMulti = () => {
   return (
     <div style={{ padding: '50px 600px' }}>
       <MultiDropdown
-        clearHandler={() => setSelected([])}
-        placeholder="Dropdown"
+        value={selected}
         options={OPTIONS}
-        selected={selected}
-        selectHandler={selectHandler}
+        placeholder="Dropdown"
+        onChange={selectHandler}
+        clearHandler={() => setSelected([])}
       />
+      <div style={{ marginTop: 25 }}>{selected.join(', ')}</div>
     </div>
   )
 }
