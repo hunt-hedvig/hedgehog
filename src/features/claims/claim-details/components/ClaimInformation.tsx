@@ -12,13 +12,13 @@ import {
   CardsWrapper,
   CardTitle,
   DangerCard,
-  Dropdown,
   EnumDropdown,
   InfoRow,
   InfoText,
   Label,
   Loadable,
   Paragraph,
+  SemanticDropdown,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
 import { ContractDropdown } from 'features/claims/claim-details/components/ContractDropdown'
@@ -208,7 +208,7 @@ export const ClaimInformation: React.FC<{
         )}
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <Dropdown
+          <SemanticDropdown
             value={coveringEmployee ? 'True' : 'False'}
             onChange={async (value) => {
               await setCoveringEmployee({

@@ -1,14 +1,11 @@
 import styled from '@emotion/styled'
-import { Popover } from '@hedvig-ui'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Popover, Tabs } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
-import React, { useContext, useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
-import { RouteComponentProps, useHistory } from 'react-router'
-import { Header as SemanticHeader, Tab } from 'semantic-ui-react'
+import React, { useContext, useEffect } from 'react'
+import { Route, RouteComponentProps, useHistory } from 'react-router'
+import { Header as SemanticHeader } from 'semantic-ui-react'
 import { Member } from 'types/generated/graphql'
 import { FraudulentStatus } from 'utils/fraudulentStatus'
 import {
@@ -71,134 +68,27 @@ const MemberDetail = styled.span`
 `
 const MemberDetailLink = MemberDetail.withComponent('a')
 
-const getIndex = (tab, panes) => panes.map((pane) => pane.tabName).indexOf(tab)
-
 export const MemberTabs: React.FC<RouteComponentProps<{
   memberId: string
-  tab: string
 }> & {
   member: Member
-}> = ({ match, member, ...props }) => {
+}> = ({ match, member }) => {
   const history = useHistory()
+  const pathname = history.location.pathname.split('/')
+  const path = pathname[pathname.length - 1]
   const memberId = match.params.memberId
-  const tab = match.params.tab ?? 'contracts'
 
-  const { registerActions, isHintingControl } = useCommandLine()
-
-  const panes = memberPagePanes(props, memberId, member, isHintingControl)
+  const panes = memberPagePanes(memberId, member)
 
   const navigateToTab = (tabName) =>
     history.replace(`/members/${memberId}/${tabName}`)
-
-  const formattedFirstName = Boolean(member.firstName)
-    ? member.firstName + (member.firstName!.slice(-1) === 's' ? "'" : "'s")
-    : "Member's"
 
   const { pushToMemberHistory } = useContext(MemberHistoryContext)
 
   useEffect(() => {
     pushToMemberHistory(memberId)
+    navigateToTab('contracts')
   }, [])
-
-  registerActions([
-    {
-      label: `Copy ${formattedFirstName} member page link to clipboard`,
-      keys: [Keys.Option, Keys.M],
-      onResolve: () => {
-        copy(
-          `${window.location.protocol}//${window.location.host}${history.location.pathname}`,
-          {
-            format: 'text/plain',
-          },
-        )
-        toast.success('Member link copied')
-      },
-    },
-    {
-      label: `${formattedFirstName} claims`,
-      keys: [Keys.Control, Keys.One],
-      onResolve: () => {
-        navigateToTab(panes[0].tabName)
-      },
-    },
-    {
-      label: `${formattedFirstName} files`,
-      keys: [Keys.Control, Keys.Two],
-      onResolve: () => {
-        navigateToTab(panes[1].tabName)
-      },
-    },
-    {
-      label: `${formattedFirstName} contracts`,
-      keys: [Keys.Control, Keys.Three],
-      onResolve: () => {
-        navigateToTab(panes[2].tabName)
-      },
-    },
-    {
-      label: `${formattedFirstName} quotes`,
-      keys: [Keys.Control, Keys.Four],
-      onResolve: () => {
-        navigateToTab(panes[3].tabName)
-      },
-    },
-    {
-      label: `${formattedFirstName} payments`,
-      keys: [Keys.Control, Keys.Five],
-      onResolve: () => {
-        navigateToTab(panes[4].tabName)
-      },
-    },
-    {
-      label: `${formattedFirstName} account`,
-      keys: [Keys.Control, Keys.Six],
-      onResolve: () => {
-        navigateToTab(panes[5].tabName)
-      },
-    },
-    {
-      label: `Member information`,
-      keys: [Keys.Control, Keys.Seven],
-      onResolve: () => {
-        navigateToTab(panes[6].tabName)
-      },
-    },
-    {
-      label: `${formattedFirstName} debt`,
-      keys: [Keys.Control, Keys.Eight],
-      onResolve: () => {
-        navigateToTab(panes[7].tabName)
-      },
-    },
-    {
-      label: `${formattedFirstName} campaigns`,
-      keys: [Keys.Control, Keys.Nine],
-      onResolve: () => {
-        navigateToTab(panes[8].tabName)
-      },
-    },
-  ])
-
-  if (Boolean(member.email)) {
-    registerActions([
-      {
-        label: `Copy ${formattedFirstName} email to clipboard`,
-        keys: [Keys.Option, Keys.E],
-        onResolve: () => {
-          copy(member.email!, {
-            format: 'text/plain',
-          })
-          toast.success('Email copied')
-        },
-      },
-    ])
-  }
-
-  const [currentIndex, setCurrentIndex] = useState(getIndex(tab, panes))
-
-  useEffect(() => {
-    setCurrentIndex(getIndex(tab, panes))
-  }, [tab])
 
   const { numberMemberGroups } = useNumberMemberGroups()
 
@@ -265,14 +155,22 @@ export const MemberTabs: React.FC<RouteComponentProps<{
             </MemberDetail>
           )}
         </MemberDetails>
-        <Tab
-          panes={panes}
-          onTabChange={(_, { activeIndex }) =>
-            navigateToTab(panes[activeIndex!].tabName)
-          }
-          renderActiveOnly={true}
-          activeIndex={currentIndex}
+        <Tabs
+          list={panes.map((pane) => ({
+            title: pane.tabTitle,
+            active: path === pane.tabName,
+            action: () => navigateToTab(pane.tabName),
+            hotkey: pane.hotkey,
+          }))}
         />
+        <div style={{ marginTop: '4rem' }}>
+          {panes.map((pane) => (
+            <Route
+              path={`${match.path}/${pane.tabName}`}
+              component={pane.component}
+            />
+          ))}
+        </div>
       </MemberPageContainer>
       <ChatPane memberId={memberId} />
     </MemberPageWrapper>
