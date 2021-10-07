@@ -1,8 +1,21 @@
+import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import { X } from 'react-bootstrap-icons'
 import { useClickOutside } from '../utils/click-outside'
 import { Keys } from '../utils/key-press-hook'
+
+const show = keyframes`
+  from {
+    opacity: 0;
+    top: 0;
+  }
+
+  to {
+    opacity: 1;
+    top: calc(100% + 1px);
+  }
+`
 
 const StyledDropdown = styled.div<{ active?: boolean }>`
   position: relative;
@@ -16,9 +29,14 @@ const StyledDropdown = styled.div<{ active?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundLight};
   border: 1px solid ${({ theme }) => theme.border};
   cursor: pointer;
+  outline: none;
 
   .placeholder {
     color: ${({ theme }) => theme.placeholderColor};
+  }
+
+  &:focus {
+    border: 1px solid ${({ theme }) => theme.accent};
   }
 `
 
@@ -42,6 +60,7 @@ const OptionsList = styled.ul`
   background-color: ${({ theme }) => theme.backgroundLight};
   box-shadow: 0px 9px 8px 0px ${({ theme }) => theme.backgroundTransparent};
   width: calc(100% + 2px);
+  animation: ${show} 0.1s linear;
 
   position: absolute;
   top: calc(100% + 1px);
