@@ -40,10 +40,12 @@ export { Checkbox } from './Checkbox/checkbox'
 export { Copyable } from './Copyable/copyable'
 export { DateTimePicker } from './DateTimePicker/date-time-picker'
 export {
-  Dropdown,
+  Dropdown as SemanticDropdown,
   EnumDropdown,
   getTextFromEnumValue,
-} from './Dropdown/dropdown'
+} from './Dropdown/semantic-dropdown'
+export { Dropdown, Option as DropdownOption } from './Dropdown/dropdown'
+export { MultiDropdown } from './Dropdown/multi-dropdown'
 export {
   Form,
   FormDropdown,

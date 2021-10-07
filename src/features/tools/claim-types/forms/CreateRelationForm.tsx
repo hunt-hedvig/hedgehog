@@ -1,10 +1,10 @@
 import {
   Button,
-  Dropdown,
   Flex,
   getTextFromEnumValue,
   Label,
   SearchableDropdown,
+  SemanticDropdown,
   Spacing,
 } from '@hedvig-ui'
 import React, { useState } from 'react'
@@ -32,7 +32,7 @@ const ClaimTypeDropdown: React.FC<{
   }
 
   return (
-    <Dropdown
+    <SemanticDropdown
       value={value}
       onChange={onChange}
       options={claimTypes.map((type) => ({

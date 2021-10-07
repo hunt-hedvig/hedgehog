@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Dropdown, Placeholder, Shadowed } from '@hedvig-ui'
+import { Placeholder, SemanticDropdown, Shadowed } from '@hedvig-ui'
 import React from 'react'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
 import { currentAgreementForContract } from 'utils/contract'
@@ -42,7 +42,7 @@ const ContractItemTopTitle = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.backgroundTransparent};
 `
 
-const StyledContractDropdown = styled(Dropdown)`
+const StyledContractDropdown = styled(SemanticDropdown)`
   .visible.menu.transition {
     max-height: 500px;
   }

@@ -1,114 +1,199 @@
-import React, { useEffect, useMemo, useRef } from 'react'
-import {
-  Dropdown as SemanticDropdown,
-  DropdownItemProps,
-  DropdownProps,
-  Ref,
-} from 'semantic-ui-react'
+import { keyframes } from '@emotion/react'
+import styled from '@emotion/styled'
+import React, { LiHTMLAttributes, useEffect, useRef } from 'react'
+import { useClickOutside } from '../utils/click-outside'
+import { Keys } from '../utils/key-press-hook'
 
-export const Dropdown: React.FC<{
-  options: DropdownItemProps[]
-  onChange: (value: string) => void
-  value: string
-  loading?: boolean
-  onRender?: () => React.ReactNode | null
-  emptyLabel?: string
-  className?: string
-} & Omit<DropdownProps, 'onChange' | 'selection'>> = ({
-  options,
-  onChange,
-  value,
-  loading,
-  onRender,
-  emptyLabel,
-  className,
-  ...props
-}) => {
-  return (
-    <SemanticDropdown
-      value={value}
-      loading={loading}
-      onChange={(_, { value: selection }) => onChange(selection as string)}
-      fluid
-      options={options}
-      selectOnBlur={false}
-      selectOnNavigation={false}
-      className={'selection ' + (className ?? '')}
-      trigger={onRender ? onRender() : undefined}
-      {...props}
-    />
-  )
+const show = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(0, -50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+`
+
+const DropdownStyled = styled.div<{ active: boolean }>`
+  position: relative;
+  & ul,
+  & li {
+    list-style: none;
+  }
+
+  & > li:first-of-type {
+    border-radius: 0.3rem;
+    border: 1px solid ${({ theme }) => theme.border};
+
+    ${({ active }) =>
+      active &&
+      `
+    border-bottom: none;
+    border-radius: 0.3rem 0.3rem 0 0;
+  `}
+  }
+`
+
+const OptionsList = styled.ul`
+  margin: 0;
+  padding-left: 0;
+
+  position: absolute;
+  width: 100%;
+
+  animation: ${show} 0.1s linear;
+  background-color: ${({ theme }) => theme.backgroundLight};
+  border-radius: 0 0 0.3rem 0.3rem;
+  border: 1px solid ${({ theme }) => theme.border};
+  border-top: none;
+  box-shadow: 0 5px 40px ${({ theme }) => theme.backgroundTransparent};
+
+  & li:last-of-type {
+    border-radius: 0 0 0.3rem 0.3rem;
+  }
+`
+
+const OptionStyled = styled.li<{ selected: boolean }>`
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+
+  outline: none;
+  cursor: pointer;
+  padding: 10px 25px;
+  background-color: ${({ theme, selected }) =>
+    !selected ? theme.backgroundLight : theme.accentBackground};
+
+  &:hover,
+  &:focus {
+    background-color: ${({ theme, selected }) =>
+      !selected ? theme.accentBackground : theme.background};
+  }
+`
+
+const Placeholder = styled.span`
+  color: ${({ theme }) => theme.placeholderColor};
+`
+
+interface DropdownProps {
+  placeholder?: string
+  children: any
 }
 
-export const EnumDropdown: React.FC<{
-  value?: any
-  enumToSelectFrom: any
-  placeholder?: string
-  onChange: (value: any) => void
-  loading?: boolean
-  focus?: boolean
-}> = ({
-  enumToSelectFrom,
-  placeholder = '',
-  onChange,
-  value,
-  loading,
-  focus,
+export const Dropdown: React.FC<DropdownProps> = ({
+  placeholder,
+  children,
 }) => {
-  const dropdownOptions = useMemo(
-    () =>
-      Object.values(enumToSelectFrom).map((selection, index) => {
-        if (typeof value === 'number') {
-          throw new Error(
-            `EnumDropdown does not support enums with ordinal values (yet), enumToSelectFrom: ${JSON.stringify(
-              enumToSelectFrom,
-            )}`,
-          )
-        }
-        return {
-          key: index + 1,
-          value: selection as string,
-          text: getTextFromEnumValue(selection as string),
-        }
-      }),
-    [enumToSelectFrom],
-  )
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const dropdownRef = useRef<HTMLElement>(null)
+  const [selectedIdx, setSelectedIdx] = React.useState(0)
+  const [active, setActive] = React.useState(false)
+
+  const closeDropdown = async () => {
+    setActive(false)
+  }
+
+  const toggleDropdown = async () => {
+    if (active) {
+      await closeDropdown()
+      return
+    }
+
+    setActive(true)
+  }
+
+  useClickOutside(dropdownRef, closeDropdown)
 
   useEffect(() => {
-    if (dropdownRef.current && focus) {
-      dropdownRef.current.focus()
-    }
-  }, [focus])
+    children.forEach((el, index) => {
+      if (el.props.selected) {
+        setSelectedIdx(index + 1)
+      }
+    })
+  }, [children])
 
   return (
-    <Ref innerRef={dropdownRef}>
-      <SemanticDropdown
-        value={value}
-        placeholder={placeholder}
-        options={dropdownOptions}
-        loading={loading}
-        selection
-        fluid
-        onChange={(_, { value: selection }) => onChange(selection)}
-      />
-    </Ref>
+    <DropdownStyled
+      ref={dropdownRef}
+      active={active}
+      onKeyDown={(e) => {
+        if (e.keyCode === Keys.Escape.code) {
+          toggleDropdown()
+          return
+        }
+      }}
+    >
+      {!selectedIdx ? (
+        <OptionStyled
+          selected={false}
+          tabIndex={0}
+          onClick={toggleDropdown}
+          onKeyDown={(e) => {
+            if (e.keyCode === Keys.Enter.code) {
+              toggleDropdown()
+              return
+            }
+          }}
+        >
+          <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
+        </OptionStyled>
+      ) : (
+        {
+          ...children[selectedIdx - 1],
+          props: {
+            ...children[selectedIdx - 1].props,
+            selected: false,
+            onClick: () => {
+              children[selectedIdx - 1].props.onClick()
+              toggleDropdown()
+            },
+          },
+        }
+      )}
+
+      {active && (
+        <OptionsList>
+          {children.map((el) => ({
+            ...el,
+            props: {
+              ...el.props,
+              onClick: () => {
+                el.props.onClick()
+                toggleDropdown()
+              },
+            },
+          }))}
+        </OptionsList>
+      )}
+    </DropdownStyled>
   )
 }
 
-export const getTextFromEnumValue = (
-  sentence: string,
-  capitalized: boolean = false,
-) => {
-  return sentence
-    .toLowerCase()
-    .split('_')
-    .map((word, index) => {
-      if (capitalized || index === 0 || word === 'hedvig') {
-        return word.charAt(0).toUpperCase() + word.slice(1)
-      }
-      return word
-    })
-    .join(' ')
+export interface OptionProps
+  extends Omit<LiHTMLAttributes<HTMLLIElement>, 'onClick'> {
+  onClick: () => void
+  selected: boolean
 }
+
+export const Option: React.FC<OptionProps> = ({
+  children,
+  onClick,
+  ...props
+}) => (
+  <OptionStyled
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.keyCode === Keys.Enter.code) {
+        onClick()
+        return
+      }
+    }}
+    onClick={onClick}
+    {...props}
+  >
+    {children}
+  </OptionStyled>
+)
