@@ -2,8 +2,7 @@ import styled from '@emotion/styled'
 import { Checkbox, DateTimePicker, Label } from '@hedvig-ui'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
-import { X as CloseIcon } from 'react-bootstrap-icons'
-import { ClaimState } from 'types/generated/graphql'
+import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
 interface FiltersProps {
   filters: ClaimsFiltersType
@@ -11,30 +10,27 @@ interface FiltersProps {
 }
 
 const FilterWrapper = styled.div`
-  margin-top: 2em;
-
-  display: grid;
-  grid-template-columns: 400px 230px 20px;
+  display: flex;
   align-items: flex-end;
-  column-gap: 1em;
+  gap: 3rem;
+  margin: 2rem 0;
 `
 
-const CloseWrapper = styled.div`
-  height: 42px;
+const FilterElement = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
 `
 
 export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
-  const isExist = (state) =>
-    filters.filterClaimStates &&
-    !!filters.filterClaimStates.filter((st) => st === state).length
+  const isFilterExist = (state, field) =>
+    filters[field] && !!filters[field].filter((st) => st === state).length
 
-  const setFilterClaimState = (state: ClaimState) => {
-    if (isExist(state)) {
+  const setFilterHandler = (state: string, field) => {
+    if (isFilterExist(state, field)) {
       setFilters((prev) => ({
         ...prev,
-        filterClaimStates: prev.filterClaimStates.filter((st) => st !== state),
+        [field]: prev[field].filter((st) => st !== state),
       }))
 
       return
@@ -42,7 +38,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
 
     setFilters((prev) => ({
       ...prev,
-      filterClaimStates: [...prev.filterClaimStates, state],
+      [field]: prev[field] ? [...prev[field], state] : [state],
     }))
   }
 
@@ -51,38 +47,57 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
     setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: date }))
   }
 
-  const resetFiltersHandler = () => {
-    setFilters({
-      filterClaimStates: [],
-      filterCreatedBeforeOrOnDate: null,
-    })
-  }
-
   return (
     <FilterWrapper>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
-          marginBottom: 10,
-        }}
-      >
+      <FilterElement>
         <Checkbox
           label="Opened"
-          checked={isExist(ClaimState.Open) || false}
-          onChange={() => setFilterClaimState(ClaimState.Open)}
+          checked={isFilterExist(ClaimState.Open, 'filterClaimStates') || false}
+          onChange={() =>
+            setFilterHandler(ClaimState.Open, 'filterClaimStates')
+          }
         />
         <Checkbox
           label="Closed"
-          checked={isExist(ClaimState.Closed) || false}
-          onChange={() => setFilterClaimState(ClaimState.Closed)}
+          checked={
+            isFilterExist(ClaimState.Closed, 'filterClaimStates') || false
+          }
+          onChange={() =>
+            setFilterHandler(ClaimState.Closed, 'filterClaimStates')
+          }
         />
         <Checkbox
           label="Reopened"
-          checked={isExist(ClaimState.Reopened) || false}
-          onChange={() => setFilterClaimState(ClaimState.Reopened)}
+          checked={
+            isFilterExist(ClaimState.Reopened, 'filterClaimStates') || false
+          }
+          onChange={() =>
+            setFilterHandler(ClaimState.Reopened, 'filterClaimStates')
+          }
         />
-      </div>
+      </FilterElement>
+
+      <FilterElement>
+        <Checkbox
+          label="Complex"
+          checked={
+            isFilterExist(ClaimComplexity.Complex, 'filterComplexities') ||
+            false
+          }
+          onChange={() =>
+            setFilterHandler(ClaimComplexity.Complex, 'filterComplexities')
+          }
+        />
+        <Checkbox
+          label="Simple"
+          checked={
+            isFilterExist(ClaimComplexity.Simple, 'filterComplexities') || false
+          }
+          onChange={() =>
+            setFilterHandler(ClaimComplexity.Simple, 'filterComplexities')
+          }
+        />
+      </FilterElement>
 
       <div>
         <Label>Created date</Label>
@@ -95,12 +110,6 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
           setDate={setDateHandler}
         />
       </div>
-
-      {(filters.filterClaimStates || filters.filterCreatedBeforeOrOnDate) && (
-        <CloseWrapper>
-          <CloseIcon onClick={resetFiltersHandler} />
-        </CloseWrapper>
-      )}
     </FilterWrapper>
   )
 }

@@ -71,6 +71,7 @@ export const LargeClaimsList: React.FC<{
   ] = useListClaims()
 
   useEffect(() => {
+    console.log(filters)
     listClaims({
       page: page - 1 ?? 0,
       ...filters,
