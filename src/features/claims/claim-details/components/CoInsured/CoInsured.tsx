@@ -115,19 +115,31 @@ export const CoInsured: React.FC<{}> = ({}) => {
         {editing && (
           <>
             <Spacing top="small" />
-            <Flex direction="row">
-              <Button variant="secondary" type="submit">
-                Save
-              </Button>
+            <Flex direction="row" justify="space-between">
+              <div>
+                <Button variant="secondary" type="submit">
+                  Save
+                </Button>
+                <Button
+                  variant="primary"
+                  style={{ marginLeft: '1em' }}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    reset()
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
               <Button
-                variant="primary"
+                status="danger"
                 style={{ marginLeft: '1em' }}
                 onClick={(e) => {
                   e.stopPropagation()
                   reset()
                 }}
               >
-                Cancel
+                Remove
               </Button>
             </Flex>
           </>
