@@ -112,7 +112,6 @@ export const ClaimInformation: React.FC<{
   memberId: string
   focus: boolean
 }> = ({ claimId, memberId, focus }) => {
-  const [coinsured, setCoinsured] = useState(false)
   const {
     data,
     error: queryError,
@@ -133,6 +132,7 @@ export const ClaimInformation: React.FC<{
     state,
     contract: selectedContract,
     agreement: selectedAgreement,
+    coInsured,
   } = data?.claim ?? {}
 
   const contracts = memberData?.member?.contracts ?? []
@@ -243,16 +243,13 @@ export const ClaimInformation: React.FC<{
         <SelectWrapper>
           <Label>Co-Insured</Label>
           <div style={{ marginTop: '0.2em' }} />
-          {
-            // TODO: Add query data here
-          }
-          {coinsured ? (
+          {coInsured ? (
             <CoInsured />
           ) : (
             <PlaceholderCard direction="column" align="center" justify="center">
               <Button
                 variant="secondary"
-                onClick={() => setCoinsured(true)}
+                onClick={() => void 0}
                 icon={
                   <div style={{ marginTop: '0.05em', marginRight: '0.5em' }}>
                     <PersonPlusFill />

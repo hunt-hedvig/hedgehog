@@ -1,0 +1,3 @@
+mutation DeleteCoInsured($claimId: ID!) {
+  deleteCoInsured(claimId: $claimId)
+}
