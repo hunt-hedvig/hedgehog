@@ -21,6 +21,7 @@ import {
   SemanticDropdown,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
+import { CoInsured } from 'features/claims/claim-details/components/CoInsured/CoInsured'
 import { ContractDropdown } from 'features/claims/claim-details/components/ContractDropdown'
 import {
   setContractForClaimOptions,
@@ -231,6 +232,11 @@ export const ClaimInformation: React.FC<{
               { key: 1, value: 'False', text: 'False' },
             ]}
           />
+        </SelectWrapper>
+        <SelectWrapper>
+          <Label>Co-Insured</Label>
+          <div style={{ marginTop: '0.2em' }} />
+          <CoInsured />
         </SelectWrapper>
         {contracts.length === 0 && trials.length > 0 && (
           <CardsWrapper>
