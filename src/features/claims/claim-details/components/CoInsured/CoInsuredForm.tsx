@@ -13,6 +13,8 @@ import {
 } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import {
+  ClaimPageDocument,
+  ClaimPageQuery,
   CoInsured,
   useDeleteCoInsuredMutation,
   useUpsertCoInsuredMutation,
@@ -80,6 +82,19 @@ export const CoInsuredForm: React.FC<{
             phoneNumber,
           },
         },
+        optimisticResponse: {
+          upsertCoInsured: {
+            __typename: 'Claim',
+            id: claimId,
+            coInsured: {
+              id: 'temp-id',
+              fullName: name,
+              personalNumber,
+              email,
+              phoneNumber,
+            },
+          },
+        },
       }),
       {
         loading: 'Updating co-insured',
@@ -99,6 +114,25 @@ export const CoInsuredForm: React.FC<{
     setPhoneNumber(coInsured?.phoneNumber ?? '')
     setEditing(false)
     setCreating(false)
+  }
+
+  const updateCache = (cache) => {
+    const cachedData = cache.readQuery({
+      query: ClaimPageDocument,
+      variables: { claimId },
+    })
+
+    const cachedClaimPage = (cachedData as ClaimPageQuery)?.claim
+
+    cache.writeQuery({
+      query: ClaimPageDocument,
+      data: {
+        claim: {
+          ...cachedClaimPage,
+          coInsured: null,
+        },
+      },
+    })
   }
 
   if (!creating && !coInsured) {
@@ -210,6 +244,15 @@ export const CoInsuredForm: React.FC<{
                     deleteCoInsured({
                       variables: {
                         claimId,
+                      },
+                      optimisticResponse: {
+                        deleteCoInsured: true,
+                      },
+                      update: (cache, { data: response }) => {
+                        if (!response) {
+                          return
+                        }
+                        updateCache(cache)
                       },
                     }),
                     {
