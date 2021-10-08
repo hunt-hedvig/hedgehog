@@ -12,7 +12,11 @@ import {
   PhoneFill,
 } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { CoInsured, useUpsertCoInsuredMutation } from 'types/generated/graphql'
+import {
+  CoInsured,
+  useDeleteCoInsuredMutation,
+  useUpsertCoInsuredMutation,
+} from 'types/generated/graphql'
 
 const CoInsuredCard = styled.div`
   background-color: ${({ theme }) => theme.accent};
@@ -45,6 +49,7 @@ export const CoInsuredForm: React.FC<{
   const [phoneNumber, setPhoneNumber] = useState(coInsured?.phoneNumber ?? '')
 
   const [upsertCoInsured] = useUpsertCoInsuredMutation()
+  const [deleteCoInsured] = useDeleteCoInsuredMutation()
 
   useClickOutside(cardRef, () => {
     setCreating(false)
@@ -201,6 +206,18 @@ export const CoInsuredForm: React.FC<{
                 style={{ marginLeft: '1em' }}
                 onClick={(e) => {
                   e.stopPropagation()
+                  toast.promise(
+                    deleteCoInsured({
+                      variables: {
+                        claimId,
+                      },
+                    }),
+                    {
+                      loading: 'Deleting co-insured',
+                      success: 'Co-insured deleted',
+                      error: 'Could not delete co-insured',
+                    },
+                  )
                   reset()
                 }}
               >
