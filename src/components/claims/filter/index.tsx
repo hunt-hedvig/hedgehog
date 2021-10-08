@@ -1,8 +1,12 @@
 import styled from '@emotion/styled'
 import { Checkbox, DateTimePicker, Label } from '@hedvig-ui'
+import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
+import { Market } from 'types/enums'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
+import { range } from 'utils/array'
+import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 interface FiltersProps {
   filters: ClaimsFiltersType
@@ -12,21 +16,33 @@ interface FiltersProps {
 const FilterWrapper = styled.div`
   display: flex;
   align-items: flex-end;
-  gap: 3rem;
+  gap: 5rem;
   margin: 2rem 0;
 `
 
 const FilterElement = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.7rem;
+
+  & label {
+    margin: 0;
+  }
 `
 
+export enum FilterGroupState {
+  First,
+  Second,
+  Third,
+}
+
 export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
+  const { numberMemberGroups } = useNumberMemberGroups()
+
   const isFilterExist = (state, field) =>
     filters[field] && !!filters[field].filter((st) => st === state).length
 
-  const setFilterHandler = (state: string, field) => {
+  const setFilterHandler = (state: string | number, field) => {
     if (isFilterExist(state, field)) {
       setFilters((prev) => ({
         ...prev,
@@ -42,6 +58,13 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
     }))
   }
 
+  React.useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      filterNumberOfMemberGroups: numberMemberGroups,
+    }))
+  }, [numberMemberGroups])
+
   const setDateHandler = (e: Date) => {
     const date = e.toISOString().split('T')[0]
     setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: date }))
@@ -50,6 +73,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
   return (
     <FilterWrapper>
       <FilterElement>
+        <Label>Claim States</Label>
         {Object.keys(ClaimState).map((key) => (
           <Checkbox
             label={key}
@@ -64,6 +88,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       </FilterElement>
 
       <FilterElement>
+        <Label>Claim Complexities</Label>
         {Object.keys(ClaimComplexity).map((key) => (
           <Checkbox
             label={key}
@@ -77,7 +102,40 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
         ))}
       </FilterElement>
 
-      <div>
+      <FilterElement>
+        <Label>Number of member groups</Label>
+        <div style={{ display: 'flex' }}>
+          <NumberMemberGroupsRadioButtons />
+        </div>
+      </FilterElement>
+
+      <FilterElement>
+        <Label>Groups</Label>
+        {range(numberMemberGroups).map((filterNumber) => (
+          <Checkbox
+            label={FilterGroupState[filterNumber]}
+            checked={
+              isFilterExist(filterNumber, 'filterSelectedMemberGroups') || false
+            }
+            onChange={() =>
+              setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
+            }
+          />
+        ))}
+      </FilterElement>
+
+      <FilterElement>
+        <Label>Markets</Label>
+        {Object.keys(Market).map((key) => (
+          <Checkbox
+            label={key}
+            checked={isFilterExist(Market[key], 'filterMarkets') || false}
+            onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
+          />
+        ))}
+      </FilterElement>
+
+      <FilterElement>
         <Label>Created date</Label>
         <DateTimePicker
           date={
@@ -87,7 +145,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
           }
           setDate={setDateHandler}
         />
-      </div>
+      </FilterElement>
     </FilterWrapper>
   )
 }
