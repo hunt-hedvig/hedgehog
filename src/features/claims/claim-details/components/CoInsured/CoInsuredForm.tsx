@@ -39,13 +39,67 @@ const CoInsuredCard = styled.div`
 const ExplanatoryText = styled.span`
   color: ${({ theme }) => theme.accent};
   font-size: 0.8em;
-  max-width: 80%;
 `
+
+interface UseDeleteCoInsuredVariables {
+  claimId: string
+}
+export const useDeleteCoInsured = ({
+  claimId,
+}: UseDeleteCoInsuredVariables) => {
+  const [deleteCoInsured] = useDeleteCoInsuredMutation()
+
+  const updateCache = (cache) => {
+    const cachedData = cache.readQuery({
+      query: ClaimPageDocument,
+      variables: { claimId },
+    })
+
+    const cachedClaimPage = (cachedData as ClaimPageQuery)?.claim
+
+    cache.writeQuery({
+      query: ClaimPageDocument,
+      data: {
+        claim: {
+          ...cachedClaimPage,
+          coInsured: null,
+        },
+      },
+    })
+  }
+
+  return (onSuccess?: () => void) =>
+    toast.promise(
+      deleteCoInsured({
+        variables: {
+          claimId,
+        },
+        optimisticResponse: {
+          deleteCoInsured: true,
+        },
+        update: (cache, { data: response }) => {
+          if (!response) {
+            return
+          }
+          updateCache(cache)
+        },
+      }),
+      {
+        loading: 'Deleting co-insured',
+        success: () => {
+          onSuccess?.()
+          return 'Co-insured deleted'
+        },
+        error: 'Could not delete co-insured',
+      },
+    )
+}
 
 export const CoInsuredForm: React.FC<{
   coInsured: CoInsured | null
   claimId: string
 }> = ({ coInsured, claimId }) => {
+  const deleteCoInsured = useDeleteCoInsured({ claimId })
   const cardRef = useRef<HTMLDivElement>(null)
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -57,7 +111,6 @@ export const CoInsuredForm: React.FC<{
   const [phoneNumber, setPhoneNumber] = useState(coInsured?.phoneNumber ?? '')
 
   const [upsertCoInsured] = useUpsertCoInsuredMutation()
-  const [deleteCoInsured] = useDeleteCoInsuredMutation()
 
   useClickOutside(cardRef, () => {
     setCreating(false)
@@ -122,31 +175,10 @@ export const CoInsuredForm: React.FC<{
     setCreating(false)
   }
 
-  const updateCache = (cache) => {
-    const cachedData = cache.readQuery({
-      query: ClaimPageDocument,
-      variables: { claimId },
-    })
-
-    const cachedClaimPage = (cachedData as ClaimPageQuery)?.claim
-
-    cache.writeQuery({
-      query: ClaimPageDocument,
-      data: {
-        claim: {
-          ...cachedClaimPage,
-          coInsured: null,
-        },
-      },
-    })
-  }
-
   if (!creating && !coInsured) {
     return (
       <PlaceholderCard direction="column">
-        <ExplanatoryText>
-          Does the claim cover another person not being the member?
-        </ExplanatoryText>
+        <ExplanatoryText>Does the claim cover a co-insured?</ExplanatoryText>
         <Spacing top="small" />
         <Button
           variant="primary"
@@ -160,7 +192,7 @@ export const CoInsuredForm: React.FC<{
             </div>
           }
         >
-          Select person
+          Add information
         </Button>
       </PlaceholderCard>
     )
@@ -250,30 +282,7 @@ export const CoInsuredForm: React.FC<{
                 style={{ marginLeft: '1em' }}
                 onClick={(e) => {
                   e.stopPropagation()
-                  toast.promise(
-                    deleteCoInsured({
-                      variables: {
-                        claimId,
-                      },
-                      optimisticResponse: {
-                        deleteCoInsured: true,
-                      },
-                      update: (cache, { data: response }) => {
-                        if (!response) {
-                          return
-                        }
-                        updateCache(cache)
-                      },
-                    }),
-                    {
-                      loading: 'Deleting co-insured',
-                      success: () => {
-                        reset()
-                        return 'Co-insured deleted'
-                      },
-                      error: 'Could not delete co-insured',
-                    },
-                  )
+                  deleteCoInsured(() => reset())
                 }}
               >
                 Remove
