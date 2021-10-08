@@ -235,7 +235,7 @@ export const ClaimInformation: React.FC<{
           />
         </SelectWrapper>
         <SelectWrapper>
-          <Label>Co-Insured</Label>
+          <Label>Co-insured Claim</Label>
           <div style={{ marginTop: '0.2em' }} />
           <CoInsuredForm coInsured={coInsured ?? null} claimId={claimId} />
         </SelectWrapper>

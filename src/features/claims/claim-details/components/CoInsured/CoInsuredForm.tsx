@@ -36,6 +36,12 @@ const CoInsuredCard = styled.div`
   }
 `
 
+const ExplanatoryText = styled.span`
+  color: ${({ theme }) => theme.accent};
+  font-size: 0.8em;
+  max-width: 80%;
+`
+
 export const CoInsuredForm: React.FC<{
   coInsured: CoInsured | null
   claimId: string
@@ -137,9 +143,13 @@ export const CoInsuredForm: React.FC<{
 
   if (!creating && !coInsured) {
     return (
-      <PlaceholderCard direction="column" align="center" justify="center">
+      <PlaceholderCard direction="column">
+        <ExplanatoryText>
+          Does the claim cover another person not being the member?
+        </ExplanatoryText>
+        <Spacing top="small" />
         <Button
-          variant="secondary"
+          variant="primary"
           onClick={() => {
             setEditing(true)
             setCreating(true)
@@ -150,7 +160,7 @@ export const CoInsuredForm: React.FC<{
             </div>
           }
         >
-          Add Co-insured
+          Select person
         </Button>
       </PlaceholderCard>
     )
@@ -257,11 +267,13 @@ export const CoInsuredForm: React.FC<{
                     }),
                     {
                       loading: 'Deleting co-insured',
-                      success: 'Co-insured deleted',
+                      success: () => {
+                        reset()
+                        return 'Co-insured deleted'
+                      },
                       error: 'Could not delete co-insured',
                     },
                   )
-                  reset()
                 }}
               >
                 Remove
