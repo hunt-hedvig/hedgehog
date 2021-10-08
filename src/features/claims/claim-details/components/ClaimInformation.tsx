@@ -8,7 +8,6 @@ import {
 } from 'types/generated/graphql'
 
 import {
-  Button,
   CardContent,
   CardsWrapper,
   CardTitle,
@@ -22,8 +21,7 @@ import {
   SemanticDropdown,
 } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
-import { CoInsured } from 'features/claims/claim-details/components/CoInsured/CoInsured'
-import { PlaceholderCard } from 'features/claims/claim-details/components/CoInsured/PlaceholderCard'
+import { CoInsuredForm } from 'features/claims/claim-details/components/CoInsured/CoInsuredForm'
 import { ContractDropdown } from 'features/claims/claim-details/components/ContractDropdown'
 import {
   setContractForClaimOptions,
@@ -32,11 +30,7 @@ import {
 import { useSetCoveringEmployee } from 'graphql/use-set-covering-employee'
 import { useUpdateClaimState } from 'graphql/use-update-claim-state'
 import React, { useState } from 'react'
-import {
-  BugFill,
-  CloudArrowDownFill,
-  PersonPlusFill,
-} from 'react-bootstrap-icons'
+import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 
 const validateSelectOption = (value: any): ClaimState => {
   if (!Object.values(ClaimState).includes(value as any)) {
@@ -243,23 +237,7 @@ export const ClaimInformation: React.FC<{
         <SelectWrapper>
           <Label>Co-Insured</Label>
           <div style={{ marginTop: '0.2em' }} />
-          {coInsured ? (
-            <CoInsured />
-          ) : (
-            <PlaceholderCard direction="column" align="center" justify="center">
-              <Button
-                variant="secondary"
-                onClick={() => void 0}
-                icon={
-                  <div style={{ marginTop: '0.05em', marginRight: '0.5em' }}>
-                    <PersonPlusFill />
-                  </div>
-                }
-              >
-                Add Co-insured
-              </Button>
-            </PlaceholderCard>
-          )}
+          <CoInsuredForm coInsured={coInsured ?? null} claimId={claimId} />
         </SelectWrapper>
         {contracts.length === 0 && trials.length > 0 && (
           <CardsWrapper>

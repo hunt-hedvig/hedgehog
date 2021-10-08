@@ -3,9 +3,16 @@ import { Button, Flex, Spacing } from '@hedvig-ui'
 import { useClickOutside } from '@hedvig-ui/utils/click-outside'
 import chroma from 'chroma-js'
 import { EditableField } from 'features/claims/claim-details/components/CoInsured/EditableField'
+import { PlaceholderCard } from 'features/claims/claim-details/components/CoInsured/PlaceholderCard'
 import React, { useRef, useState } from 'react'
-import { EnvelopeFill, PersonFill, PhoneFill } from 'react-bootstrap-icons'
+import {
+  EnvelopeFill,
+  PersonFill,
+  PersonPlusFill,
+  PhoneFill,
+} from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
+import { CoInsured, useUpsertCoInsuredMutation } from 'types/generated/graphql'
 
 const CoInsuredCard = styled.div`
   background-color: ${({ theme }) => theme.accent};
@@ -23,20 +30,91 @@ const CoInsuredCard = styled.div`
   }
 `
 
-export const CoInsured: React.FC<{}> = ({}) => {
+export const CoInsuredForm: React.FC<{
+  coInsured: CoInsured | null
+  claimId: string
+}> = ({ coInsured, claimId }) => {
   const cardRef = useRef<HTMLDivElement>(null)
+  const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState(false)
-  const [name, setName] = useState('Rasmus Guterstam')
-  const [personalNumber, setPersonalNumber] = useState('19970210-1234')
-  const [email, setEmail] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const [name, setName] = useState(coInsured?.fullName ?? '')
+  const [personalNumber, setPersonalNumber] = useState(
+    coInsured?.personalNumber ?? '',
+  )
+  const [email, setEmail] = useState(coInsured?.email ?? '')
+  const [phoneNumber, setPhoneNumber] = useState(coInsured?.phoneNumber ?? '')
 
-  useClickOutside(cardRef, () => setEditing(false))
+  const [upsertCoInsured] = useUpsertCoInsuredMutation()
+
+  useClickOutside(cardRef, () => {
+    setCreating(false)
+    setEditing(false)
+  })
+
+  const submit = () => {
+    if (!name) {
+      toast.error("Name can't be empty")
+      reset()
+      return
+    }
+
+    if (!personalNumber) {
+      toast.error("Personal number can't be empty")
+      reset()
+      return
+    }
+
+    toast.promise(
+      upsertCoInsured({
+        variables: {
+          claimId,
+          request: {
+            fullName: name,
+            personalNumber,
+            email,
+            phoneNumber,
+          },
+        },
+      }),
+      {
+        loading: 'Updating co-insured',
+        success: 'Co-insured updated',
+        error: 'Could not update co-insured',
+      },
+    )
+
+    setEditing(false)
+    setCreating(false)
+  }
 
   const reset = () => {
-    setName('Rasmus Guterstam')
-    setPersonalNumber('19970210-1234')
+    setName(coInsured?.fullName ?? '')
+    setPersonalNumber(coInsured?.personalNumber ?? '')
+    setEmail(coInsured?.email ?? '')
+    setPhoneNumber(coInsured?.phoneNumber ?? '')
     setEditing(false)
+    setCreating(false)
+  }
+
+  if (!creating && !coInsured) {
+    return (
+      <PlaceholderCard direction="column" align="center" justify="center">
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setEditing(true)
+            setCreating(true)
+          }}
+          icon={
+            <div style={{ marginTop: '0.05em', marginRight: '0.5em' }}>
+              <PersonPlusFill />
+            </div>
+          }
+        >
+          Add Co-insured
+        </Button>
+      </PlaceholderCard>
+    )
   }
 
   return (
@@ -44,20 +122,7 @@ export const CoInsured: React.FC<{}> = ({}) => {
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          if (!name) {
-            toast.error("Name can't be empty")
-            reset()
-            return
-          }
-
-          if (!personalNumber) {
-            toast.error("Personal number can't be empty")
-            reset()
-            return
-          }
-
-          setEditing(false)
-          toast.success('Changes applied')
+          submit()
         }}
       >
         <EditableField
