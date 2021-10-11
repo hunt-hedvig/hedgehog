@@ -26,7 +26,7 @@ export const OutcomeDropdown: React.FC<{
           setClaimFlag: {
             id: claimId,
             __typename: 'Claim',
-            flags: [],
+            flags: value === 'not_specified' ? [] : [value],
           },
         },
       })
