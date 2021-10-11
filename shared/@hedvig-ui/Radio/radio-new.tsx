@@ -6,6 +6,7 @@ const RadioLabel = styled.div<{ checked?: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
+  outline: none;
 
   & label {
     display: flex;
@@ -17,15 +18,36 @@ const RadioLabel = styled.div<{ checked?: boolean }>`
 
     &::before {
       content: '';
+      transition: all 0.2s;
       width: 15px;
       height: 15px;
       position: absolute;
       left: 0;
       border-radius: 50%;
-      background-color: ${({ checked }) => (checked ? 'black' : 'transparent')};
-      border: 1px solid black;
-      box-shadow: ${({ checked }) =>
-        checked ? '0px 0px 0px 2px rgba(255, 255, 255, 1) inset' : 'none'};
+      background-color: ${({ theme, checked }) =>
+        checked ? theme.accent : 'transparent'};
+      border: 1px solid
+        ${({ theme, checked }) => (checked ? theme.accent : theme.border)};
+    }
+
+    &::after {
+      content: '';
+      transition: all 0.2s;
+      width: 13px;
+      height: 13px;
+      position: absolute;
+      left: 1px;
+      border: ${({ checked, theme }) =>
+        checked ? `2px solid ${theme.backgroundLight}` : 'none'};
+      border-radius: 50%;
+      background-color: ${({ theme, checked }) =>
+        checked ? theme.accent : 'transparent'};
+    }
+  }
+
+  &:focus {
+    & label::before {
+      box-shadow: 0px 0px 5px 1px rgba(34, 60, 80, 0.4);
     }
   }
 
