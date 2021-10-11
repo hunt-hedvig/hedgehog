@@ -70,7 +70,6 @@ export const CreatePropertyForm: React.FC<{}> = () => {
           onChange={(e) => {
             setNewPropertyName(e.currentTarget.value)
           }}
-          style={{ width: '100%' }}
         />
         <Spacing top={'small'} />
         <Button

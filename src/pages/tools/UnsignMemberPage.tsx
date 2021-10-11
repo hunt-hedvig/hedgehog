@@ -14,7 +14,7 @@ export const UnsignMemberPage: React.FC = () => {
       <MainHeadline>Unsign member</MainHeadline>
       <Input
         value={ssn}
-        onChange={(_e, { value }) => {
+        onChange={({ target: { value } }) => {
           setSsn(value)
         }}
         placeholder="Social Security Number"

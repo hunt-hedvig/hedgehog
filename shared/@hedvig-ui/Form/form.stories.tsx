@@ -88,9 +88,7 @@ export const StandardForm: React.FC = () => {
           label="Amount input with suffix"
           affix={{
             content: 'SEK',
-            basic: true,
           }}
-          affixPosition="right"
           name="amountInput"
           defaultValue=""
           type="number"
