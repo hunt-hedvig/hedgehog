@@ -1,4 +1,5 @@
-import { TextArea } from '@hedvig-ui'
+import { NewTextArea, TextArea } from '@hedvig-ui'
+import { boolean } from '@storybook/addon-knobs'
 import React from 'react'
 
 export default {
@@ -20,5 +21,17 @@ export const TextAreaThatGrows: React.FC = () => {
         <strong>Written text:</strong> {text}
       </p>
     </>
+  )
+}
+
+export const TextAreaNoSemantic: React.FC = () => {
+  return (
+    <div style={{ padding: '20px 40px' }}>
+      <NewTextArea
+        placeholder="Write your life story here..."
+        resize={boolean('Resize', false)}
+        autoresize={boolean('Auto resize', false)}
+      />
+    </div>
   )
 }
