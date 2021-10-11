@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
+import { Spinner } from '@hedvig-ui'
 import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
-import { Spinner } from '../Spinner/spinner'
 
 export type InputSize = 'small' | 'medium' | 'large'
 const paddingSize: Record<InputSize, string> = {
@@ -58,8 +58,8 @@ const InputStyled = styled.input<{
 
   ${({ muted }) => muted && 'border: none;'}
 
+  font-family: inherit;
   font-size: ${({ inputSize }) => fontSize[inputSize || 'medium']};
-  font-weight: bold;
   color: ${({ disabled, theme }) =>
     !disabled ? theme.foreground : theme.placeholderColor};
   background-color: ${({ muted, theme }) =>
@@ -80,10 +80,6 @@ const InputStyled = styled.input<{
 
   &:focus {
     border-color: ${({ theme }) => theme.borderStrong};
-
-    &::placeholder {
-      color: ${({ theme, muted }) => !muted && theme.semiStrongForeground};
-    }
   }
 `
 
