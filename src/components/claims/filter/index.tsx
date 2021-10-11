@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { Checkbox, DateTimePicker, Label } from '@hedvig-ui'
+import { Checkbox, DateTimePicker, Label, lightTheme } from '@hedvig-ui'
+import { ColorBadge } from 'features/questions/filter'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
@@ -70,35 +71,65 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
     setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: date }))
   }
 
+  const marketIcons = {
+    Sweden: '🇸🇪',
+    Norway: '🇳🇴',
+    Denmark: '🇩🇰',
+  }
+
+  const complexityIcons = {
+    Simple: '📱',
+    Complex: '🌊',
+  }
+
+  const stateColors = {
+    Open: lightTheme.activeInsuranceBackground,
+    Closed: lightTheme.accent,
+    Reopened: lightTheme.accentLight,
+  }
+
   return (
     <FilterWrapper>
       <FilterElement>
         <Label>Claim States</Label>
         {Object.keys(ClaimState).map((key) => (
-          <Checkbox
-            label={key}
-            checked={
-              isFilterExist(ClaimState[key], 'filterClaimStates') || false
-            }
-            onChange={() =>
-              setFilterHandler(ClaimState[key], 'filterClaimStates')
-            }
-          />
+          <div>
+            <Checkbox
+              label={key}
+              checked={
+                isFilterExist(ClaimState[key], 'filterClaimStates') || false
+              }
+              onChange={() =>
+                setFilterHandler(ClaimState[key], 'filterClaimStates')
+              }
+            />
+            <ColorBadge
+              style={{
+                height: '0.7em',
+                width: '0.7em',
+                backgroundColor: stateColors[key],
+              }}
+            />
+          </div>
         ))}
       </FilterElement>
 
       <FilterElement>
         <Label>Claim Complexities</Label>
         {Object.keys(ClaimComplexity).map((key) => (
-          <Checkbox
-            label={key}
-            checked={
-              isFilterExist(ClaimComplexity[key], 'filterComplexities') || false
-            }
-            onChange={() =>
-              setFilterHandler(ClaimComplexity[key], 'filterComplexities')
-            }
-          />
+          <div>
+            <Checkbox
+              label={key}
+              checked={
+                isFilterExist(ClaimComplexity[key], 'filterComplexities') ||
+                false
+              }
+              onChange={() =>
+                setFilterHandler(ClaimComplexity[key], 'filterComplexities')
+              }
+            />
+            <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
+          </div>
         ))}
       </FilterElement>
 
@@ -112,26 +143,36 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       <FilterElement>
         <Label>Groups</Label>
         {range(numberMemberGroups).map((filterNumber) => (
-          <Checkbox
-            label={FilterGroupState[filterNumber]}
-            checked={
-              isFilterExist(filterNumber, 'filterSelectedMemberGroups') || false
-            }
-            onChange={() =>
-              setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
-            }
-          />
+          <div>
+            <Checkbox
+              label={FilterGroupState[filterNumber]}
+              checked={
+                isFilterExist(filterNumber, 'filterSelectedMemberGroups') ||
+                false
+              }
+              onChange={() =>
+                setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
+              }
+            />
+            <ColorBadge
+              filter={filterNumber}
+              style={{ height: '0.7em', width: '0.7em' }}
+            />
+          </div>
         ))}
       </FilterElement>
 
       <FilterElement>
         <Label>Markets</Label>
         {Object.keys(Market).map((key) => (
-          <Checkbox
-            label={key}
-            checked={isFilterExist(Market[key], 'filterMarkets') || false}
-            onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
-          />
+          <div>
+            <Checkbox
+              label={key}
+              checked={isFilterExist(Market[key], 'filterMarkets') || false}
+              onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
+            />
+            <span style={{ marginLeft: '0.5rem' }}>{marketIcons[key]}</span>
+          </div>
         ))}
       </FilterElement>
 
