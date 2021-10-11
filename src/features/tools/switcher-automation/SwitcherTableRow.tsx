@@ -115,7 +115,7 @@ export const SwitcherEmailRow: React.FC<Pick<
   })
 
   const [editNote, setEditNote] = useState(false)
-  const [newNote, setNewNote] = useState(note)
+  const [newNote, setNewNote] = useState<string>(note || '')
 
   const [activeFrom, setActiveFrom] = useState(new Date())
   const [activateContractView, setActivateContractView] = useState(false)
@@ -168,13 +168,15 @@ export const SwitcherEmailRow: React.FC<Pick<
         {editNote ? (
           <>
             <Input
-              autofocus
+              autoFocus
               value={newNote}
               onChange={(e) => setNewNote(e.target.value)}
               onKeyDown={(e) => {
                 if (e.keyCode === Keys.Escape.code) {
-                  setEditNote(false)
-                  setNewNote(note)
+                  if (note) {
+                    setEditNote(false)
+                    setNewNote(note || '')
+                  }
                   return
                 }
                 if (e.keyCode !== Keys.Enter.code) {

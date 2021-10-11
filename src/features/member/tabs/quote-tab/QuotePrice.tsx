@@ -41,12 +41,12 @@ interface Props {
 
 export const QuotePrice = ({ quote }: Props) => {
   const [editPrice, setEditPrice] = useState(false)
-  const [newPrice, setNewPrice] = useState(quote.price)
+  const [newPrice, setNewPrice] = useState<number>(quote.price || 0)
   const [overrideQuotePrice] = useOverrideQuotePriceMutation()
   const { confirm } = useConfirmDialog()
 
   const onPriceChange = (e) => setNewPrice(e.target.value)
-  const restorePrice = () => setNewPrice(quote.price)
+  const restorePrice = () => setNewPrice(quote.price || 0)
 
   const onCancel = () => {
     restorePrice()

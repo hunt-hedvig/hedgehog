@@ -4,7 +4,7 @@ import { BadgeProps as _BadgeProps } from './Badge/badge'
 import { ButtonProps as _ButtonProps } from './Button/button'
 import { CardTitleBadgeProps as _CardTitleBadgeProps } from './Card/card'
 import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
-import { CustomInputProps as _CustomInputProps } from './Input/input'
+import { InputProps as _InputProps } from './Input/input'
 import { ModalProps as _ModalProps } from './Modal'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 import { TabsProps as _TabsProps } from './Tabs'
@@ -63,7 +63,7 @@ export {
 } from './InfoRow/info-row'
 export type InfoTagStatus = _InfoTagStatus
 export { Input } from './Input/input'
-export type CustomInputProps = _CustomInputProps
+export type InputProps = _InputProps
 export { JsonSchemaForm } from './JsonSchemaForm/json-schema-form'
 export { List, ListItem } from './List/list'
 export { Loadable } from './Loadable/loadable'

@@ -79,9 +79,7 @@ export const AddMonthlyEntryForm: React.FC<{
           type="number"
           affix={{
             content: preferredCurrency,
-            basic: true,
           }}
-          affixPosition="right"
           label="Amount"
           name="amount.amount"
           defaultValue=""
