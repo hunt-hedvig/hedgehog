@@ -5,7 +5,6 @@ import { Keys } from '../utils/key-press-hook'
 const RadioLabel = styled.div<{ checked?: boolean }>`
   display: flex;
   align-items: center;
-  gap: 8px;
   outline: none;
 
   & label {
@@ -57,9 +56,9 @@ const RadioLabel = styled.div<{ checked?: boolean }>`
 `
 
 interface RadioGroupProps {
-  value: string
+  value: string | number
   setValue: any
-  options: Array<{ value: string; label: string }>
+  options: Array<{ value: string | number; label: string }>
 }
 
 interface RadioProps
@@ -99,7 +98,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     {options.map((opt, idx) => (
       <Radio
         key={opt.value}
-        id={opt.value + idx}
+        id={`${opt.value}` + idx}
         value={opt.value}
         label={opt.label}
         onChange={() => setValue(opt.value)}
