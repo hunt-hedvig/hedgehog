@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, ButtonProps, CustomInputProps, Input, Label } from '@hedvig-ui'
+import { Button, ButtonProps, Input, InputProps, Label } from '@hedvig-ui'
 import { ErrorMessage } from '@hookform/error-message'
 import React, { useEffect, useRef } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
@@ -99,12 +99,10 @@ export const SubmitButton: React.FC<ButtonProps> = ({ children, ...props }) => {
   )
 }
 
-const FormInputComponent: React.FC<CustomInputProps & FormFieldProps> = ({
+const FormInputComponent: React.FC<InputProps & FormFieldProps> = ({
   name,
   rules,
   defaultValue,
-  affix,
-  affixPosition,
   ...props
 }) => {
   return (
@@ -112,19 +110,12 @@ const FormInputComponent: React.FC<CustomInputProps & FormFieldProps> = ({
       name={name}
       rules={rules}
       defaultValue={defaultValue}
-      as={
-        <Input
-          {...props}
-          label={affix}
-          labelPosition={affixPosition}
-          autoComplete="off"
-        />
-      }
+      as={<Input {...props} />}
     />
   )
 }
 
-export const FormInput: React.FC<CustomInputProps & FormFieldProps> = ({
+export const FormInput: React.FC<InputProps & FormFieldProps> = ({
   ...props
 }) => {
   return (

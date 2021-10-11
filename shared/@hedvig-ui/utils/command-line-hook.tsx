@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Icon } from 'semantic-ui-react'
+import { Search as SearchIcon } from 'react-bootstrap-icons'
 
 const CommandLineWindow = styled.div`
   position: absolute;
@@ -192,11 +192,8 @@ export const CommandLineComponent: React.FC<{
 
             setSearchValue(inputValue)
           }}
-          icon={<Icon name="search" style={{ marginLeft: '1em' }} />}
-          iconPosition="left"
+          icon={<SearchIcon name="search" />}
           placeholder="What can I help you with?"
-          transparent
-          size="large"
         />
       </SearchWrapper>
       <SearchResultWrapper>

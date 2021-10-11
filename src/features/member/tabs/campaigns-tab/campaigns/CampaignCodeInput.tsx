@@ -19,7 +19,7 @@ export const CampaignCodeInput: React.FC<{
         <Input
           placeholder="Campaign code"
           value={campaignCode}
-          onChange={(_e, { value }) => {
+          onChange={({ target: { value } }) => {
             setCampaignCode(value)
           }}
         />
