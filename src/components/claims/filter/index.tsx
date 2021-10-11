@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Checkbox, DateTimePicker, Label, lightTheme } from '@hedvig-ui'
+import { Checkbox, DateTimePicker, Flex, Label, lightTheme } from '@hedvig-ui'
 import { ColorBadge } from 'features/questions/filter'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
@@ -93,7 +93,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       <FilterElement>
         <Label>States</Label>
         {Object.keys(ClaimState).map((key) => (
-          <div>
+          <Flex direction="row" align="center">
             <Checkbox
               label={key}
               checked={
@@ -110,14 +110,14 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
                 backgroundColor: stateColors[key],
               }}
             />
-          </div>
+          </Flex>
         ))}
       </FilterElement>
 
       <FilterElement>
         <Label>Complexities</Label>
         {Object.keys(ClaimComplexity).map((key) => (
-          <div>
+          <Flex direction="row" align="center">
             <Checkbox
               label={key}
               checked={
@@ -129,7 +129,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
               }
             />
             <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
-          </div>
+          </Flex>
         ))}
       </FilterElement>
 
@@ -143,7 +143,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       <FilterElement>
         <Label>Groups</Label>
         {range(numberMemberGroups).map((filterNumber) => (
-          <div>
+          <Flex direction="row" align="center">
             <Checkbox
               label={FilterGroupState[filterNumber]}
               checked={
@@ -158,21 +158,21 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
               filter={filterNumber}
               style={{ height: '0.7em', width: '0.7em' }}
             />
-          </div>
+          </Flex>
         ))}
       </FilterElement>
 
       <FilterElement>
         <Label>Markets</Label>
         {Object.keys(Market).map((key) => (
-          <div>
+          <Flex direction="row" align="center">
             <Checkbox
               label={key}
               checked={isFilterExist(Market[key], 'filterMarkets') || false}
               onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
             />
             <span style={{ marginLeft: '0.5rem' }}>{marketIcons[key]}</span>
-          </div>
+          </Flex>
         ))}
       </FilterElement>
 
