@@ -73,7 +73,6 @@ export const CreateOptionForm: React.FC<{}> = () => {
           onChange={(e) => {
             setNewOptionName(e.currentTarget.value)
           }}
-          style={{ width: '100%' }}
         />
         <Spacing top={'small'} />
         <Button

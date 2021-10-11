@@ -1,11 +1,10 @@
-import { Checkbox, FadeIn, Shadowed } from '@hedvig-ui'
+import { Checkbox, FadeIn, Input, Shadowed } from '@hedvig-ui'
 import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import { usePlatform } from '@hedvig-ui/utils/platform'
 import {
   EscapeButton,
   Group,
   SearchIcon,
-  SearchInput,
   SearchInputGroup,
   SearchTip,
 } from 'features/members-search/styles'
@@ -20,7 +19,7 @@ interface SearchFieldProps {
   setQuery: (query: string) => void
   setIncludeAll: (includeAll: boolean) => void
   currentResultSize: number
-  searchFieldRef: React.Ref<any>
+  searchFieldRef: React.RefObject<HTMLInputElement>
   setLuckySearch: (luckySearch: boolean) => void
 }
 
@@ -50,19 +49,20 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
     >
       <Group>
         <SearchInputGroup>
-          <SearchIcon muted={!query} />
-          <SearchInput
-            onChange={(_, { value }) => {
+          <Input
+            style={{ borderRadius: '0.5rem' }}
+            onChange={({ target: { value } }) => {
               if (shouldIgnoreInput(value)) {
                 return
               }
               setQuery(value)
             }}
+            icon={<SearchIcon muted={!query} />}
             placeholder="Looking for someone...?"
             id="query"
             value={query}
             loading={loading}
-            size="big"
+            size="large"
             type="search"
             autoFocus
             muted={!query}

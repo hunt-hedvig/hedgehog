@@ -149,11 +149,7 @@ export const ClaimPayment: React.FC<{
           name="amount"
           defaultValue=""
           type="number"
-          affix={{
-            content: 'SEK',
-            basic: true,
-          }}
-          affixPosition="right"
+          affix={{ content: 'SEK' }}
           rules={{
             required: 'Amount is required',
             pattern: {
