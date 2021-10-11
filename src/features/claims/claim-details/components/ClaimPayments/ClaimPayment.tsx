@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   Checkbox,
   Form,
@@ -34,13 +35,20 @@ const areSwishPayoutsEnabled = () => {
   return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
 }
 
+const FormCheckbox = styled(Checkbox)`
+  .checkbox__input {
+    border: none !important;
+  }
+`
+
 export const ClaimPayment: React.FC<{
+  focus: boolean
   sanctionStatus?: SanctionStatus | null
   claimId: string
   identified: boolean
   market: string
   carrier: string
-}> = ({ sanctionStatus, carrier, claimId, identified, market }) => {
+}> = ({ focus, sanctionStatus, carrier, claimId, identified, market }) => {
   const [createPayment] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
@@ -136,6 +144,7 @@ export const ClaimPayment: React.FC<{
     <FormProvider {...form}>
       <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
+          focus={focus}
           placeholder="Payout amount"
           name="amount"
           defaultValue=""
@@ -163,10 +172,10 @@ export const ClaimPayment: React.FC<{
             required: 'Note is required',
           }}
         />
-        <Checkbox
+        <FormCheckbox
           label="Ex Gratia?"
           name="exGratia"
-          className="field"
+          style={{ marginBottom: 15 }}
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />
@@ -189,10 +198,9 @@ export const ClaimPayment: React.FC<{
         />
 
         {isPotentiallySanctioned && (
-          <Checkbox
+          <FormCheckbox
             label="Override sanction list result (I promise that I have manually checked the list)"
             name="overriden"
-            className="field"
             checked={isOverridden}
             onChange={() => setIsOverridden((prev) => !prev)}
           />

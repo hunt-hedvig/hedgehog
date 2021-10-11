@@ -13,7 +13,6 @@ import {
   Label,
   Monetary,
   Paragraph,
-  Shadowed,
   Spacing,
   StandaloneMessage,
   Table,
@@ -28,7 +27,6 @@ import React, { useState } from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { Market } from 'types/enums'
-import { ClaimReserves } from '../ClaimReserves'
 import { ClaimPayment } from './ClaimPayment'
 
 const ScrollX = styled.div`
@@ -48,16 +46,6 @@ const MemberIdentityCard = styled.div`
 
 const NoPaymentsMessage = styled(StandaloneMessage)`
   padding: 3em 0;
-`
-
-const NoCarrierMessage = styled(StandaloneMessage)`
-  padding: 3em 0;
-  text-align: center;
-`
-
-const NoCarrierSubtitle = styled(Paragraph)`
-  font-size: 0.8em;
-  padding-top: 1em;
 `
 
 const ExGratiaTag = styled(InfoTag)`
@@ -105,15 +93,14 @@ const TotalDeductible = styled.div`
   margin-left: 2em;
 `
 
-export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
-  claimId,
-  carrier,
-}) => {
+export const ClaimPayments: React.FC<{
+  claimId: string
+  focus: boolean
+}> = ({ focus, claimId }) => {
   const [tableHovered, setTableHovered] = useState(false)
 
   const {
     data: paymentsData,
-    refetch: refetchPayments,
     error: queryError,
     loading: loadingPayments,
   } = useClaimPaymentsQuery({
@@ -131,22 +118,6 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
   const totalDeductible = payments
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
-
-  if (!carrier) {
-    return (
-      <CardContent>
-        <CardTitle title="Payments" />
-        <NoCarrierMessage opacity={0.6}>
-          Cannot make a payment or set a reserve without a carrier.
-          <NoCarrierSubtitle>
-            Select a <Shadowed>Contract</Shadowed> and{' '}
-            <Shadowed>Date of Occurrence</Shadowed> such that the claim is
-            covered on the date.
-          </NoCarrierSubtitle>
-        </NoCarrierMessage>
-      </CardContent>
-    )
-  }
 
   return (
     <CardContent>
@@ -197,12 +168,6 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
             )}
           </MemberIdentityCard>
         )}
-        <ClaimReserves
-          claimId={claimId}
-          reserves={paymentsData?.claim?.reserves}
-          refetch={refetchPayments}
-          loading={loadingPayments}
-        />
       </div>
 
       {payments.length ? (
@@ -303,6 +268,7 @@ export const ClaimPayments: React.FC<{ claimId: string; carrier?: string }> = ({
         paymentsData?.claim?.contract &&
         paymentsData?.claim?.agreement?.carrier && (
           <ClaimPayment
+            focus={focus}
             sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
             claimId={claimId}
             identified={Boolean(identity)}
