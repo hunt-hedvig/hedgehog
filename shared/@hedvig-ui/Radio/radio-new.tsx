@@ -2,10 +2,11 @@ import styled from '@emotion/styled'
 import React, { InputHTMLAttributes } from 'react'
 import { Keys } from '../utils/key-press-hook'
 
-const RadioLabel = styled.div<{ checked?: boolean }>`
+const RadioLabel = styled.div<{ checked?: boolean; disabled?: boolean }>`
   display: flex;
   align-items: center;
   outline: none;
+  pointer-events: ${({ disabled }) => (!disabled ? 'auto' : 'none')};
 
   & label {
     display: flex;
@@ -23,10 +24,19 @@ const RadioLabel = styled.div<{ checked?: boolean }>`
       position: absolute;
       left: 0;
       border-radius: 50%;
-      background-color: ${({ theme, checked }) =>
-        checked ? theme.accent : 'transparent'};
+      background-color: ${({ theme, checked, disabled }) =>
+        checked && !disabled
+          ? theme.accent
+          : disabled
+          ? theme.accentBackground
+          : 'transparent'};
       border: 1px solid
-        ${({ theme, checked }) => (checked ? theme.accent : theme.border)};
+        ${({ theme, checked, disabled }) =>
+          checked && !disabled
+            ? theme.accent
+            : disabled
+            ? theme.accentBackground
+            : theme.border};
     }
 
     &::after {
@@ -39,8 +49,12 @@ const RadioLabel = styled.div<{ checked?: boolean }>`
       border: ${({ checked, theme }) =>
         checked ? `2px solid ${theme.backgroundLight}` : 'none'};
       border-radius: 50%;
-      background-color: ${({ theme, checked }) =>
-        checked ? theme.accent : 'transparent'};
+      background-color: ${({ theme, checked, disabled }) =>
+        checked && !disabled
+          ? theme.accent
+          : disabled
+          ? theme.accentBackground
+          : 'transparent'};
     }
   }
 
@@ -58,7 +72,7 @@ const RadioLabel = styled.div<{ checked?: boolean }>`
 interface RadioGroupProps {
   value: string | number
   setValue: any
-  options: Array<{ value: string | number; label: string }>
+  options: Array<{ value: string | number; label: string; disabled?: boolean }>
 }
 
 interface RadioProps
@@ -73,9 +87,15 @@ const Radio: React.FC<RadioProps> = ({
   id,
   onKeyDown,
   checked,
+  disabled,
   ...props
 }) => (
-  <RadioLabel tabIndex={0} onKeyDown={onKeyDown} checked={checked}>
+  <RadioLabel
+    tabIndex={!disabled ? 0 : -1}
+    onKeyDown={onKeyDown}
+    checked={checked}
+    disabled={disabled}
+  >
     <input
       tabIndex={-1}
       type="radio"
@@ -83,6 +103,7 @@ const Radio: React.FC<RadioProps> = ({
       name="group"
       value={value}
       checked={checked}
+      disabled={disabled}
       {...props}
     />
     <label htmlFor={id}>{label}</label>
@@ -101,6 +122,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
         id={`${opt.value}` + idx}
         value={opt.value}
         label={opt.label}
+        disabled={opt.disabled || false}
         onChange={() => setValue(opt.value)}
         onKeyDown={(e) => {
           if (e.keyCode === Keys.Enter.code) {

@@ -4,6 +4,7 @@ import {
   RadioNew,
   SecondLevelHeadline,
 } from '@hedvig-ui'
+import { boolean } from '@storybook/addon-knobs'
 import React, { useState } from 'react'
 
 export default {
@@ -52,17 +53,24 @@ export const StandardRadioGroup: React.FC = () => {
 }
 
 export const NoSemanticRadio = () => {
-  const [value, setValue] = useState('orange')
+  const [value, setValue] = useState('banana')
 
   return (
-    <>
+    <div style={{ padding: 20 }}>
       <SecondLevelHeadline>Select your favorite fruit</SecondLevelHeadline>
       <div style={{ display: 'flex', gap: 15, marginBottom: 15 }}>
-        <RadioNew value={value} setValue={setValue} options={OPTIONS_LIST} />
+        <RadioNew
+          value={value}
+          setValue={setValue}
+          options={OPTIONS_LIST.map((opt) => ({
+            ...opt,
+            disabled: boolean('Disabled', false),
+          }))}
+        />
       </div>
       <Paragraph>
         <strong>Selected fruit value: </strong> {value}
       </Paragraph>
-    </>
+    </div>
   )
 }
