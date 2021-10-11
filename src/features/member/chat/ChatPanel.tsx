@@ -180,7 +180,6 @@ export const ChatPanel = ({ memberId }) => {
       <OptionsContainer>
         <Checkbox
           label="Force message"
-          color="primary"
           checked={forceSendMessage}
           onChange={() =>
             setForceSendMessage((prevForceSendMessage) => !prevForceSendMessage)

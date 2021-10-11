@@ -121,9 +121,7 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
           type="number"
           affix={{
             content: preferredCurrency,
-            basic: true,
           }}
-          affixPosition="right"
           rules={{
             required: 'Amount is required',
             pattern: {

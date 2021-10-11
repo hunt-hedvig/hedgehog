@@ -1,6 +1,6 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Button, Input, Paragraph } from '@hedvig-ui'
+import { Button, Paragraph } from '@hedvig-ui'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 
@@ -65,28 +65,12 @@ export const SearchInputGroup = styled('div')({
 })
 export const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
   ({ muted, theme }) => ({
-    position: 'absolute',
-    top: '50%',
-    left: '1rem',
-    transform: 'translateY(-50%)',
+    transform: 'translateY(-1.5px)',
     zIndex: 1,
     fill: muted ? theme.mutedText : undefined,
     transition: 'fill 300ms',
   }),
 )
-
-export const SearchInput = styled(Input)({
-  marginRight: '1rem',
-
-  '&&': {
-    width: '100%',
-  },
-
-  '&& input': {
-    borderRadius: '0.5rem',
-    paddingLeft: '3rem',
-  },
-})
 
 export const EscapeButton = styled(Button)<{ visible: boolean }>(
   ({ visible }) => ({

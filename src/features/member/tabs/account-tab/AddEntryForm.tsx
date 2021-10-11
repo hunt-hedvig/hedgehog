@@ -166,9 +166,7 @@ export const AddEntryForm: React.FC<{
           type="number"
           affix={{
             content: preferredCurrency,
-            basic: true,
           }}
-          affixPosition="right"
           rules={{
             required: 'Amount is required',
             pattern: {

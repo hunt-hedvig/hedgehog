@@ -131,7 +131,7 @@ export const AnswerForm: React.FC<{
       <MarkAsResolvedWrapper>
         <Checkbox
           label="Mark as resolved"
-          onClick={() => handleMarkAsResolved()}
+          onChange={() => handleMarkAsResolved()}
           disabled={loading}
         />
       </MarkAsResolvedWrapper>

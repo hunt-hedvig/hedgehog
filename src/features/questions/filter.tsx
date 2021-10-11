@@ -1,9 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  Checkbox as StandardCheckbox,
-  lightTheme,
-  ThirdLevelHeadline,
-} from '@hedvig-ui'
+import { Checkbox, lightTheme, ThirdLevelHeadline } from '@hedvig-ui'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { QuestionGroup } from 'types/generated/graphql'
@@ -29,6 +25,10 @@ export enum FilterState {
 }
 
 const FilterRow = styled('div')`
+  display: grid;
+  align-items: flex-start;
+  grid-template-columns: 100px 200px 200px 200px;
+  column-gap: 20px;
   margin-bottom: 1rem;
 `
 
@@ -38,35 +38,9 @@ const FilterLabel = styled(ThirdLevelHeadline)`
   font-weight: bold;
 `
 
-const FilterCheckbox = styled(StandardCheckbox)`
-  width: 200px;
-  &.ui.checkbox {
-    label {
-      display: inline-flex;
-      align-items: center;
-
-      &:before,
-      &:after {
-        top: 50%;
-        transform: translateY(-50%);
-      }
-    }
-  }
-`
-
-const FilterName = styled.label`
-  padding: 0.5rem 1rem 0.5rem 3rem !important;
-  border-radius: 100px;
-  transition: background 300ms;
-  &:hover {
-    background: ${({ theme }) => theme.accentBackground};
-  }
-
-  &:before,
-  &:after {
-    left: 1rem !important;
-  }
-  vertical-align: middle;
+const FilterName = styled.span`
+  display: flex;
+  align-items: center;
 `
 
 const ColorBadge = styled.div<{ filter: FilterState }>`
@@ -114,7 +88,7 @@ export const QuestionsFilter: React.FC<{
         <FilterLabel>Group: </FilterLabel>
         {range(numberMemberGroups).map((filterNumber) => {
           return (
-            <FilterCheckbox
+            <Checkbox
               key={filterNumber}
               label={
                 <FilterName>
@@ -135,7 +109,7 @@ export const QuestionsFilter: React.FC<{
       </FilterRow>
       <FilterRow>
         <FilterLabel>Market: </FilterLabel>
-        <FilterCheckbox
+        <Checkbox
           label={
             <FilterName>
               Sweden ({getCountByFilter(FilterState.Sweden, doMarketFilter)}) 🇸🇪
@@ -144,7 +118,7 @@ export const QuestionsFilter: React.FC<{
           checked={selected.includes(FilterState.Sweden)}
           onChange={() => onToggle(FilterState.Sweden)}
         />
-        <FilterCheckbox
+        <Checkbox
           label={
             <FilterName>
               Norway ({getCountByFilter(FilterState.Norway, doMarketFilter)}) 🇳🇴
@@ -153,7 +127,7 @@ export const QuestionsFilter: React.FC<{
           checked={selected.includes(FilterState.Norway)}
           onChange={() => onToggle(FilterState.Norway)}
         />
-        <FilterCheckbox
+        <Checkbox
           label={
             <FilterName>
               Denmark ({getCountByFilter(FilterState.Denmark, doMarketFilter)})
@@ -166,7 +140,7 @@ export const QuestionsFilter: React.FC<{
       </FilterRow>
       <FilterRow>
         <FilterLabel>Claim: </FilterLabel>
-        <FilterCheckbox
+        <Checkbox
           label={
             <FilterName>
               Has open claim️ (
@@ -178,7 +152,7 @@ export const QuestionsFilter: React.FC<{
           checked={selected.includes(FilterState.HasOpenClaim)}
           onChange={() => onToggle(FilterState.HasOpenClaim)}
         />
-        <FilterCheckbox
+        <Checkbox
           label={
             <FilterName>
               No open claim (
