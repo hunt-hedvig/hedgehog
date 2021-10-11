@@ -14,6 +14,7 @@ import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'graphql/use-list-claims'
+import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
@@ -55,7 +56,10 @@ const MemberIdCell = styled(TableColumn)<{
   height: 100%;
 `
 
-export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
+export const LargeClaimsList: React.FC<{
+  page: number
+  filters: ClaimsFiltersType
+}> = ({ page, filters }) => {
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
@@ -67,8 +71,11 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
   ] = useListClaims()
 
   useEffect(() => {
-    listClaims({ page: page - 1 ?? 0 })
-  }, [page])
+    listClaims({
+      page: page - 1 ?? 0,
+      ...filters,
+    })
+  }, [page, filters])
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
