@@ -153,14 +153,14 @@ export const MonthlyPercentageForm: React.FC = () => {
         options={numberOfMonthsOptions}
       />
       <Spacing top="small" />
-      <Label>Marketing Channel</Label>
+      <Label>Code Type</Label>
       <SearchableDropdown
         value={
           formData.codeType
             ? codeTypeOptions.find((c) => c.value === formData.codeType)
             : null
         }
-        placeholder="Marketing Channel"
+        placeholder="Code Type"
         isLoading={loading}
         isClearable={true}
         onChange={(data) =>
