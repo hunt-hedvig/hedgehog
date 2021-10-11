@@ -70,6 +70,7 @@ export { Loadable } from './Loadable/loadable'
 export { FlagOrbIndicator, OrbIndicator } from './OrbIndicator/orb-indicator'
 export { Popover } from './Popover/popover'
 export { RadioGroup } from './Radio/radio'
+export { RadioGroup as RadioNew } from './Radio/radio-new'
 export {
   SearchableDropdown,
   SearchableDropdownWithRef,
