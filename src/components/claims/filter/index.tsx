@@ -91,7 +91,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
   return (
     <FilterWrapper>
       <FilterElement>
-        <Label>Claim States</Label>
+        <Label>States</Label>
         {Object.keys(ClaimState).map((key) => (
           <div>
             <Checkbox
@@ -115,7 +115,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       </FilterElement>
 
       <FilterElement>
-        <Label>Claim Complexities</Label>
+        <Label>Complexities</Label>
         {Object.keys(ClaimComplexity).map((key) => (
           <div>
             <Checkbox
@@ -177,7 +177,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       </FilterElement>
 
       <FilterElement>
-        <Label>Created date</Label>
+        <Label>Registration dates</Label>
         <DateTimePicker
           date={
             filters.filterCreatedBeforeOrOnDate
