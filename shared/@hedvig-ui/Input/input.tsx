@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { InputHTMLAttributes } from 'react'
+import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { Spinner } from '../Spinner/spinner'
 
@@ -173,6 +173,7 @@ export interface InputProps
   size?: InputSize
   loading?: boolean
   icon?: React.ReactNode
+  focus?: boolean
   affix?: AffixType
 }
 
@@ -186,16 +187,25 @@ export const Input: React.FC<InputProps> = ({
   size,
   affix,
   style,
+  focus,
   ...props
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null)
   const isAffix = Boolean(affix)
   const isSuccess = success && !error && !loading
   const isError = error && !success && !loading
+
+  useEffect(() => {
+    if (focus && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [focus])
 
   return (
     <InputWrapper style={style}>
       {icon ? <CustomIcon>{icon}</CustomIcon> : null}
       <InputStyled
+        ref={inputRef}
         className="input"
         withIcon={Boolean(icon)}
         inputSize={size}
