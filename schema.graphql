@@ -192,6 +192,16 @@ type MutationType {
   updateClaimPropertyOption(id: ID!, name: String!): ClaimPropertyOption!
   deprecateClaimPropertyOption(id: ID!): Boolean!
   createClaimPropertyOption(name: String): ClaimPropertyOption!
+
+  upsertCoInsured(claimId: ID!, request: UpsertCoInsuredInput!): Claim!
+  deleteCoInsured(claimId: ID!): Boolean!
+}
+
+input UpsertCoInsuredInput {
+  fullName: String!
+  personalNumber: String!
+  email: String
+  phoneNumber: String
 }
 
 type ClaimTypeTemplate {
@@ -1041,6 +1051,7 @@ type Claim {
   contract: Contract
   agreement: GenericAgreement
   itemSet: ClaimItemSet!
+  coInsured: CoInsured
   propertySelections: [ClaimPropertySelection!]!
 }
 
@@ -1048,6 +1059,15 @@ type ClaimPropertySelection {
   claimType: String!
   property: ClaimProperty!
   option: ClaimPropertyOption!
+  coInsured: CoInsured
+}
+
+type CoInsured {
+  id: ID!
+  fullName: String!
+  personalNumber: String!
+  email: String
+  phoneNumber: String
 }
 
 type ClaimItemSet {

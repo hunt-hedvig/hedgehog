@@ -20,6 +20,14 @@ query ClaimPage($claimId: ID!) {
       }
     }
 
+    coInsured {
+      id
+      fullName
+      personalNumber
+      email
+      phoneNumber
+    }
+
     member {
       memberId
     }

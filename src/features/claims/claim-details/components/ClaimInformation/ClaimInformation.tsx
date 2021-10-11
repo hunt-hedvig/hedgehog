@@ -21,9 +21,15 @@ import {
   Label,
   Loadable,
   Paragraph,
+  SemanticDropdown,
 } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format, parseISO } from 'date-fns'
 import { ContractDropdown } from 'features/claims/claim-details/components/ClaimInformation/components/ContractDropdown'
+import {
+  CoInsuredForm,
+  useDeleteCoInsured,
+} from 'features/claims/claim-details/components/CoInsured/CoInsuredForm'
 import {
   setContractForClaimOptions,
   useSetContractForClaim,
@@ -108,6 +114,9 @@ export const ClaimInformation: React.FC<{
   memberId: string
   focus: boolean
 }> = ({ claimId, memberId, focus }) => {
+  const [creatingCoInsured, setCreatingCoInsured] = useState(false)
+  const { confirm } = useConfirmDialog()
+  const deleteCoInsured = useDeleteCoInsured({ claimId })
   const {
     data,
     error: queryError,
@@ -128,6 +137,7 @@ export const ClaimInformation: React.FC<{
     state,
     contract: selectedContract,
     agreement: selectedAgreement,
+    coInsured,
   } = data?.claim ?? {}
 
   const contracts = memberData?.member?.contracts ?? []
@@ -278,7 +288,7 @@ export const ClaimInformation: React.FC<{
         )}
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <Dropdown
+          <SemanticDropdown
             value={coveringEmployee ? 'True' : 'False'}
             onChange={async (value) => {
               await setCoveringEmployee({
@@ -301,6 +311,30 @@ export const ClaimInformation: React.FC<{
               { key: 1, value: 'False', text: 'False' },
             ]}
           />
+        </SelectWrapper>
+        <SelectWrapper>
+          <Label>Co-insured Claim</Label>
+          <SemanticDropdown
+            value={creatingCoInsured || coInsured ? 'True' : 'False'}
+            onChange={(value) => {
+              setCreatingCoInsured(value === 'True')
+              if (coInsured && value === 'False') {
+                confirm(
+                  'This will delete the co-insured, are you sure?',
+                ).then(() => deleteCoInsured())
+              }
+            }}
+            options={[
+              { key: 0, value: 'True', text: 'True' },
+              { key: 1, value: 'False', text: 'False' },
+            ]}
+          />
+          {(creatingCoInsured || coInsured) && (
+            <>
+              <div style={{ marginTop: '0.5em' }} />
+              <CoInsuredForm coInsured={coInsured ?? null} claimId={claimId} />
+            </>
+          )}
         </SelectWrapper>
         {contracts.length === 0 && trials.length > 0 && (
           <CardsWrapper>
