@@ -224,6 +224,7 @@ export type Claim = {
   contract?: Maybe<Contract>
   agreement?: Maybe<GenericAgreement>
   itemSet: ClaimItemSet
+  coInsured?: Maybe<CoInsured>
 }
 
 export enum ClaimComplexity {
@@ -446,6 +447,15 @@ export type ClaimTypeTemplate = {
   __typename?: 'ClaimTypeTemplate'
   claimType: Scalars['String']
   properties: Array<ClaimPropertyTemplate>
+}
+
+export type CoInsured = {
+  __typename?: 'CoInsured'
+  id: Scalars['ID']
+  fullName: Scalars['String']
+  personalNumber: Scalars['String']
+  email?: Maybe<Scalars['String']>
+  phoneNumber?: Maybe<Scalars['String']>
 }
 
 export type ConfirmedFraudClaim = {
@@ -775,6 +785,8 @@ export type ListClaimsOptions = {
   filterComplexities?: Maybe<Array<ClaimComplexity>>
   filterNumberOfMemberGroups?: Maybe<Scalars['Int']>
   filterSelectedMemberGroups?: Maybe<Array<Scalars['Int']>>
+  filterMarkets?: Maybe<Array<Scalars['String']>>
+  filterTypesOfContract?: Maybe<Array<Scalars['String']>>
 }
 
 export type ListClaimsResult = {
@@ -998,6 +1010,8 @@ export type MutationType = {
   updateClaimPropertyOption: ClaimPropertyOption
   deprecateClaimPropertyOption: Scalars['Boolean']
   createClaimPropertyOption: ClaimPropertyOption
+  upsertCoInsured: Claim
+  deleteCoInsured: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1336,6 +1350,15 @@ export type MutationTypeDeprecateClaimPropertyOptionArgs = {
 
 export type MutationTypeCreateClaimPropertyOptionArgs = {
   name?: Maybe<Scalars['String']>
+}
+
+export type MutationTypeUpsertCoInsuredArgs = {
+  claimId: Scalars['ID']
+  request: UpsertCoInsuredInput
+}
+
+export type MutationTypeDeleteCoInsuredArgs = {
+  claimId: Scalars['ID']
 }
 
 export type NationalIdentification = {
@@ -1794,6 +1817,13 @@ export type UpsertClaimItemInput = {
   note?: Maybe<Scalars['String']>
 }
 
+export type UpsertCoInsuredInput = {
+  fullName: Scalars['String']
+  personalNumber: Scalars['String']
+  email?: Maybe<Scalars['String']>
+  phoneNumber?: Maybe<Scalars['String']>
+}
+
 export type UpsertItemBrandInput = {
   id?: Maybe<Scalars['ID']>
   name: Scalars['String']
@@ -1881,6 +1911,31 @@ export type Whitelisted = {
   __typename?: 'Whitelisted'
   whitelistedAt?: Maybe<Scalars['Instant']>
   whitelistedBy?: Maybe<Scalars['String']>
+}
+
+export type DeleteCoInsuredMutationVariables = Exact<{
+  claimId: Scalars['ID']
+}>
+
+export type DeleteCoInsuredMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'deleteCoInsured'
+>
+
+export type UpsertCoInsuredMutationVariables = Exact<{
+  claimId: Scalars['ID']
+  request: UpsertCoInsuredInput
+}>
+
+export type UpsertCoInsuredMutation = { __typename?: 'MutationType' } & {
+  upsertCoInsured: { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+      coInsured?: Maybe<
+        { __typename?: 'CoInsured' } & Pick<
+          CoInsured,
+          'id' | 'fullName' | 'personalNumber' | 'email' | 'phoneNumber'
+        >
+      >
+    }
 }
 
 export type ClaimAddClaimNoteMutationVariables = Exact<{
@@ -2016,6 +2071,12 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'coveringEmployee'
       | 'reserves'
     > & {
+        coInsured?: Maybe<
+          { __typename?: 'CoInsured' } & Pick<
+            CoInsured,
+            'id' | 'fullName' | 'personalNumber' | 'email' | 'phoneNumber'
+          >
+        >
         member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
         contract?: Maybe<
           { __typename?: 'Contract' } & Pick<
@@ -4324,6 +4385,114 @@ export const ClaimTypeFragmentDoc = gql`
     }
   }
 `
+export const DeleteCoInsuredDocument = gql`
+  mutation DeleteCoInsured($claimId: ID!) {
+    deleteCoInsured(claimId: $claimId)
+  }
+`
+export type DeleteCoInsuredMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteCoInsuredMutation,
+  DeleteCoInsuredMutationVariables
+>
+
+/**
+ * __useDeleteCoInsuredMutation__
+ *
+ * To run a mutation, you first call `useDeleteCoInsuredMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCoInsuredMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCoInsuredMutation, { data, loading, error }] = useDeleteCoInsuredMutation({
+ *   variables: {
+ *      claimId: // value for 'claimId'
+ *   },
+ * });
+ */
+export function useDeleteCoInsuredMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteCoInsuredMutation,
+    DeleteCoInsuredMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    DeleteCoInsuredMutation,
+    DeleteCoInsuredMutationVariables
+  >(DeleteCoInsuredDocument, options)
+}
+export type DeleteCoInsuredMutationHookResult = ReturnType<
+  typeof useDeleteCoInsuredMutation
+>
+export type DeleteCoInsuredMutationResult = ApolloReactCommon.MutationResult<
+  DeleteCoInsuredMutation
+>
+export type DeleteCoInsuredMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteCoInsuredMutation,
+  DeleteCoInsuredMutationVariables
+>
+export const UpsertCoInsuredDocument = gql`
+  mutation UpsertCoInsured($claimId: ID!, $request: UpsertCoInsuredInput!) {
+    upsertCoInsured(claimId: $claimId, request: $request) {
+      id
+      coInsured {
+        id
+        fullName
+        personalNumber
+        email
+        phoneNumber
+      }
+    }
+  }
+`
+export type UpsertCoInsuredMutationFn = ApolloReactCommon.MutationFunction<
+  UpsertCoInsuredMutation,
+  UpsertCoInsuredMutationVariables
+>
+
+/**
+ * __useUpsertCoInsuredMutation__
+ *
+ * To run a mutation, you first call `useUpsertCoInsuredMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertCoInsuredMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertCoInsuredMutation, { data, loading, error }] = useUpsertCoInsuredMutation({
+ *   variables: {
+ *      claimId: // value for 'claimId'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUpsertCoInsuredMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpsertCoInsuredMutation,
+    UpsertCoInsuredMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UpsertCoInsuredMutation,
+    UpsertCoInsuredMutationVariables
+  >(UpsertCoInsuredDocument, options)
+}
+export type UpsertCoInsuredMutationHookResult = ReturnType<
+  typeof useUpsertCoInsuredMutation
+>
+export type UpsertCoInsuredMutationResult = ApolloReactCommon.MutationResult<
+  UpsertCoInsuredMutation
+>
+export type UpsertCoInsuredMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpsertCoInsuredMutation,
+  UpsertCoInsuredMutationVariables
+>
 export const ClaimAddClaimNoteDocument = gql`
   mutation ClaimAddClaimNote($claimId: ID!, $note: ClaimNoteInput!) {
     addClaimNote(id: $claimId, note: $note) {
@@ -4518,6 +4687,13 @@ export const ClaimPageDocument = gql`
       state
       coveringEmployee
       ...claimType
+      coInsured {
+        id
+        fullName
+        personalNumber
+        email
+        phoneNumber
+      }
       member {
         memberId
       }
