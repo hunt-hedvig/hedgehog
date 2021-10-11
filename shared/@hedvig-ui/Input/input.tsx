@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import { Spinner } from '@hedvig-ui'
 import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
+import { Spinner } from '../Spinner/spinner'
 
 export type InputSize = 'small' | 'medium' | 'large'
 const paddingSize: Record<InputSize, string> = {
