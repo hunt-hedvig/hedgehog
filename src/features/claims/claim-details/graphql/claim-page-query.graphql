@@ -7,6 +7,14 @@ query ClaimPage($claimId: ID!) {
     coveringEmployee
     ...claimType
 
+    coInsured {
+      id
+      fullName
+      personalNumber
+      email
+      phoneNumber
+    }
+
     member {
       memberId
     }
