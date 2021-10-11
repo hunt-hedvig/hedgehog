@@ -1,4 +1,4 @@
-import { Dropdown, Flex, Label, Placeholder, Spacing } from '@hedvig-ui'
+import { Flex, Label, Placeholder, SemanticDropdown, Spacing } from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -7,7 +7,6 @@ import {
   ClaimPropertySelection,
   useGetClaimTypeTemplateQuery,
   useSetClaimPropertySelectionMutation,
-  useUnsetClaimPropertySelectionMutation,
 } from 'types/generated/graphql'
 
 export const ClaimPropertyForm: React.FC<{
@@ -16,36 +15,15 @@ export const ClaimPropertyForm: React.FC<{
   propertySelections: ClaimPropertySelection[]
 }> = ({ claimType, claimId, propertySelections }) => {
   const [setClaimPropertySelection] = useSetClaimPropertySelectionMutation()
-  const [unsetClaimPropertySelection] = useUnsetClaimPropertySelectionMutation()
   const { data } = useGetClaimTypeTemplateQuery({ variables: { claimType } })
   const properties = data?.claimTypeTemplate?.properties ?? []
 
-  const handlePropertyReset = (propertyId: string) => {
-    unsetClaimPropertySelection({
-      variables: {
-        id: claimId,
-        claimType,
-        propertyId,
-      },
-      optimisticResponse: {
-        unsetClaimPropertySelection: {
-          id: claimId,
-          __typename: 'Claim',
-          propertySelections: [
-            ...propertySelections.filter(
-              (selection) => selection.property.id !== propertyId,
-            ),
-          ],
-        },
-      },
-    })
-  }
-
   const handlePropertySelect = (
     property: ClaimProperty,
-    option: ClaimPropertyOption,
+    option: ClaimPropertyOption | null,
   ) => {
     if (
+      option &&
       propertySelections.find(
         (selection) =>
           selection.property.id === property.id &&
@@ -60,7 +38,7 @@ export const ClaimPropertyForm: React.FC<{
         id: claimId,
         claimType,
         propertyId: property.id,
-        optionId: option.id,
+        optionId: option?.id,
       },
       optimisticResponse: {
         setClaimPropertySelection: {
@@ -70,12 +48,15 @@ export const ClaimPropertyForm: React.FC<{
             ...propertySelections.filter(
               (selection) => selection.property.id !== property.id,
             ),
-            {
-              __typename: 'ClaimPropertySelection',
-              claimType,
-              property,
-              option,
-            },
+            ...(option
+              ? [
+                  {
+                    claimType,
+                    property,
+                    option,
+                  },
+                ]
+              : []),
           ],
         },
       },
@@ -95,7 +76,7 @@ export const ClaimPropertyForm: React.FC<{
           return (
             <Spacing key={propertyId} top="small">
               <Label>{name}</Label>
-              <Dropdown
+              <SemanticDropdown
                 value={selectedOption?.option.id ?? 'not_specified'}
                 onRender={() =>
                   !selectedOption?.option.id ? (
@@ -104,9 +85,14 @@ export const ClaimPropertyForm: React.FC<{
                     <>{selectedOption?.option.name}</>
                   )
                 }
-                onChange={(optionId) => {
+                onChange={async (optionId) => {
+                  const property = {
+                    id: propertyId,
+                    name,
+                  }
+
                   if (optionId === 'not_specified') {
-                    handlePropertyReset(propertyId)
+                    handlePropertySelect(property, null)
                   }
 
                   const option = options.find((o) => o.id === optionId)
@@ -115,13 +101,7 @@ export const ClaimPropertyForm: React.FC<{
                     return
                   }
 
-                  handlePropertySelect(
-                    {
-                      id: propertyId,
-                      name,
-                    },
-                    option,
-                  )
+                  handlePropertySelect(property, option)
                 }}
                 options={[
                   ...options.map((option) => ({

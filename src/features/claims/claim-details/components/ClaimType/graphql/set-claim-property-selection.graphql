@@ -2,7 +2,7 @@ mutation SetClaimPropertySelection(
   $id: ID!
   $claimType: String!
   $propertyId: ID!
-  $optionId: ID!
+  $optionId: ID
 ) {
   setClaimPropertySelection(
     id: $id

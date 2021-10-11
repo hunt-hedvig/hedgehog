@@ -14,7 +14,6 @@ import {
   CardTitle,
   DangerCard,
   DateTimePicker,
-  Dropdown,
   EnumDropdown,
   InfoRow,
   InfoText,
@@ -195,7 +194,7 @@ export const ClaimInformation: React.FC<{
         </SelectWrapper>
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <Dropdown
+          <SemanticDropdown
             value={coveringEmployee ? 'True' : 'False'}
             onChange={async (value) => {
               await setCoveringEmployee({

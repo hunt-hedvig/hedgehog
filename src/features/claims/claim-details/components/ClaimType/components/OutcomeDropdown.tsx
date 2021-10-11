@@ -1,11 +1,7 @@
-import { Dropdown, Placeholder } from '@hedvig-ui'
+import { Placeholder, SemanticDropdown } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
-import { toast } from 'react-hot-toast'
-import {
-  useResetClaimFlagsMutation,
-  useSetClaimFlagMutation,
-} from 'types/generated/graphql'
+import { useSetClaimFlagMutation } from 'types/generated/graphql'
 
 enum ClaimFlags {
   CONFIRMED_FRAUD = 'CONFIRMED_FRAUD',
@@ -19,59 +15,45 @@ export const OutcomeDropdown: React.FC<{
   flags: string[]
 }> = ({ claimId, flags }) => {
   const [setClaimFlag] = useSetClaimFlagMutation()
-  const [resetClaimFlags] = useResetClaimFlagsMutation()
 
-  const handleSelectOutcome = (value: string) => {
-    if (value === 'not_specified') {
-      resetClaimFlags({
-        variables: { id: claimId },
+  const handleSelectOutcome = async (value: string) => {
+    const previousFlag = flags.length ? flags[0] : null
+
+    if (previousFlag) {
+      await setClaimFlag({
+        variables: { id: claimId, flag: previousFlag, flagValue: false },
         optimisticResponse: {
-          resetClaimFlags: {
+          setClaimFlag: {
             id: claimId,
             __typename: 'Claim',
             flags: [],
           },
         },
       })
+    }
+
+    if (value === 'not_specified') {
       return
     }
 
-    toast.promise(
-      resetClaimFlags({
-        variables: { id: claimId },
-        optimisticResponse: {
-          resetClaimFlags: {
-            id: claimId,
-            __typename: 'Claim',
-            flags: [value],
-          },
-        },
-      }).then(() =>
-        setClaimFlag({
-          variables: {
-            id: claimId,
-            flag: value,
-            flagValue: true,
-          },
-          optimisticResponse: {
-            setClaimFlag: {
-              id: claimId,
-              __typename: 'Claim',
-              flags: [value],
-            },
-          },
-        }),
-      ),
-      {
-        loading: 'Updating outcome',
-        success: 'Outcome updated',
-        error: 'Could not update outcome',
+    await setClaimFlag({
+      variables: {
+        id: claimId,
+        flag: value,
+        flagValue: true,
       },
-    )
+      optimisticResponse: {
+        setClaimFlag: {
+          id: claimId,
+          __typename: 'Claim',
+          flags: [value],
+        },
+      },
+    })
   }
 
   return (
-    <Dropdown
+    <SemanticDropdown
       options={[
         ...Object.keys(ClaimFlags).map((flag) => ({
           value: flag,

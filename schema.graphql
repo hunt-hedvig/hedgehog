@@ -68,17 +68,11 @@ type MutationType {
   createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
   setClaimType(id: ID!, type: String): Claim
   setClaimFlag(id: ID!, flag: String!, flagValue: Boolean!): Claim
-  resetClaimFlags(id: ID!): Claim
   setClaimPropertySelection(
     id: ID!
     claimType: String!
     propertyId: ID!
-    optionId: ID!
-  ): Claim
-  unsetClaimPropertySelection(
-    id: ID!
-    claimType: String!
-    propertyId: ID!
+    optionId: ID
   ): Claim
   setDateOfOccurrence(id: ID!, date: LocalDate!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
@@ -636,7 +630,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1051,14 +1045,7 @@ type Claim {
   contract: Contract
   agreement: GenericAgreement
   itemSet: ClaimItemSet!
-  coInsured: CoInsured
   propertySelections: [ClaimPropertySelection!]!
-}
-
-type ClaimPropertySelection {
-  claimType: String!
-  property: ClaimProperty!
-  option: ClaimPropertyOption!
   coInsured: CoInsured
 }
 
@@ -1068,6 +1055,12 @@ type CoInsured {
   personalNumber: String!
   email: String
   phoneNumber: String
+}
+
+type ClaimPropertySelection {
+  claimType: String!
+  property: ClaimProperty!
+  option: ClaimPropertyOption!
 }
 
 type ClaimItemSet {
