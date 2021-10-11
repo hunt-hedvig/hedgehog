@@ -69,9 +69,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
             <Table.HeaderCell textAlign="center" width={3}>
               Discount
             </Table.HeaderCell>
-            <Table.HeaderCell textAlign="center">
-              Marketing Channel
-            </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">Code Type</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
