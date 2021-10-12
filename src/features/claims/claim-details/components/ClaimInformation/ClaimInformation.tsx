@@ -25,6 +25,7 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format, parseISO } from 'date-fns'
 import { ContractDropdown } from 'features/claims/claim-details/components/ClaimInformation/components/ContractDropdown'
+import { OutcomeDropdown } from 'features/claims/claim-details/components/ClaimType/components/OutcomeDropdown'
 import {
   CoInsuredForm,
   useDeleteCoInsured,
@@ -178,6 +179,10 @@ export const ClaimInformation: React.FC<{
             enumToSelectFrom={ClaimState}
             placeholder=""
             onChange={async (value) => {
+              if (value === ClaimState.Closed && !data?.claim?.outcome) {
+                toast.error('Select a claim outcome')
+                return
+              }
               await updateClaimState({
                 variables: { id: claimId, state: validateSelectOption(value) },
                 optimisticResponse: {
@@ -191,6 +196,16 @@ export const ClaimInformation: React.FC<{
               })
             }}
           />
+        </SelectWrapper>
+        <SelectWrapper>
+          <Label>Claim outcome</Label>
+          {!!data?.claim?.state && (
+            <OutcomeDropdown
+              claimState={data.claim.state}
+              outcome={data?.claim?.outcome ?? null}
+              claimId={claimId}
+            />
+          )}
         </SelectWrapper>
         <SelectWrapper>
           <Label>Date of Occurrence</Label>

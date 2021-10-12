@@ -1,22 +1,32 @@
 import { Placeholder, SemanticDropdown } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
-import { useSetClaimOutcomeMutation } from 'types/generated/graphql'
+import { toast } from 'react-hot-toast'
+import { ClaimState, useSetClaimOutcomeMutation } from 'types/generated/graphql'
 
 enum ClaimOutcomes {
   CONFIRMED_FRAUD = 'CONFIRMED_FRAUD',
+  COMPENSATION_BELOW_DEDUCTIBLE = 'COMPENSATION_BELOW_DEDUCTIBLE',
+  NOT_COVERED_BY_TERMS = 'NOT_COVERED_BY_TERMS',
+  PAID_OUT = 'PAID_OUT',
   DUPLICATE = 'DUPLICATE',
   NOT_COVERED = 'NOT_COVERED',
   TEST = 'TEST',
 }
 
 export const OutcomeDropdown: React.FC<{
+  claimState: string
   claimId: string
   outcome: string | null
-}> = ({ claimId, outcome }) => {
+}> = ({ claimState, claimId, outcome }) => {
   const [setClaimOutcome] = useSetClaimOutcomeMutation()
 
   const handleSelectOutcome = async (newOutcome: string | null) => {
+    if (claimState === ClaimState.Closed) {
+      toast.error('This claim is closed')
+      return
+    }
+
     await setClaimOutcome({
       variables: { id: claimId, outcome: newOutcome },
       optimisticResponse: {
