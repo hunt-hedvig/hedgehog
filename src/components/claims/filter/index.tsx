@@ -60,10 +60,22 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
   }
 
   React.useEffect(() => {
-    setFilters((prev) => ({
-      ...prev,
-      filterNumberOfMemberGroups: numberMemberGroups,
-    }))
+    if (
+      numberMemberGroups === 2 &&
+      filters.filterSelectedMemberGroups &&
+      filters.filterSelectedMemberGroups.length > 2
+    ) {
+      setFilters((prev) => ({
+        ...prev,
+        filterNumberOfMemberGroups: numberMemberGroups,
+        filterSelectedMemberGroups: [0, 1],
+      }))
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        filterNumberOfMemberGroups: numberMemberGroups,
+      }))
+    }
   }, [numberMemberGroups])
 
   const setDateHandler = (e: Date) => {
