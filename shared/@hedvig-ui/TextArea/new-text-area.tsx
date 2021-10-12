@@ -1,9 +1,11 @@
 import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 
-const styles = (theme: Theme, resize?: boolean) => css`
+const styles = (theme: Theme, resize?: boolean, maxHeight?: string) => css`
+  min-height: 75px;
+  max-height: ${maxHeight || 'none'};
   width: 100%;
   border: 1px solid ${theme.accentBackground};
   outline: none;
@@ -25,22 +27,61 @@ const styles = (theme: Theme, resize?: boolean) => css`
   }
 `
 
-const TextAreaStyled = styled.textarea<{ resize?: boolean }>`
-  ${({ theme, resize }) => styles(theme, resize)}
-`
-
-const TextareaAutosizeStyled = styled(TextareaAutosize)<{ resize?: boolean }>`
-  ${({ theme, resize }) => styles(theme, resize)}
-`
-
-interface TextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {
+const TextAreaStyled = styled.textarea<{
   resize?: boolean
+  maxHeight?: string
+}>`
+  ${({ theme, resize, maxHeight }) => styles(theme, resize, maxHeight)}
+`
+
+const TextareaAutosizeStyled = styled(TextareaAutosize)<{
+  resize?: boolean
+  maxHeight?: string
+}>`
+  ${({ theme, resize, maxHeight }) => styles(theme, resize, maxHeight)}
+`
+
+interface TextAreaProps
+  extends Omit<React.HTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
+  value: string | undefined
+  maxHeight?: string
+  resize?: boolean
+  onChange: (value: string) => void
+  focus?: boolean
   autoresize?: boolean
 }
 
-export const TextArea: React.FC<TextAreaProps> = ({ autoresize, ...props }) =>
-  autoresize ? (
-    <TextareaAutosizeStyled resize={props.resize} />
+export const TextArea: React.FC<TextAreaProps> = ({
+  autoresize,
+  value,
+  focus,
+  onChange,
+  ...props
+}) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (focus && textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [focus])
+
+  return autoresize ? (
+    <TextareaAutosizeStyled
+      ref={textareaRef}
+      value={value || ''}
+      maxHeight={props.maxHeight}
+      onKeyDown={props.onKeyDown}
+      onChange={(e) => onChange(e.currentTarget.value as string)}
+      placeholder={props.placeholder}
+      resize={props.resize}
+    />
   ) : (
-    <TextAreaStyled {...props} />
+    <TextAreaStyled
+      ref={textareaRef}
+      onChange={(e) => onChange(e.currentTarget.value as string)}
+      value={value || ''}
+      {...props}
+    />
   )
+}

@@ -75,8 +75,7 @@ export {
   SearchableDropdownWithRef,
 } from './SearchableDropdown/searchable-dropdown'
 export { Spinner } from './Spinner/spinner'
-export { TextArea } from './TextArea/text-area'
-export { TextArea as NewTextArea } from './TextArea/new-text-area'
+export { TextArea } from './TextArea/new-text-area'
 
 export { FadeIn, withFadeIn } from './animations/fade-in'
 export { Fade, useFadeAnimation } from './animations/fade'
