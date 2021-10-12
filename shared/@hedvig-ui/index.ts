@@ -44,7 +44,11 @@ export {
   EnumDropdown,
   getTextFromEnumValue,
 } from './Dropdown/semantic-dropdown'
-export { Dropdown, Option as DropdownOption } from './Dropdown/dropdown'
+export {
+  Dropdown,
+  Option as DropdownOption,
+  DropdownProps,
+} from './Dropdown/dropdown'
 export { MultiDropdown } from './Dropdown/multi-dropdown'
 export {
   Form,
@@ -54,6 +58,11 @@ export {
   FormTextAreaWithRef,
   SubmitButton,
 } from './Form/form'
+export {
+  Form as NewForm,
+  FormInput as NewFormInput,
+  SubmitButton as NewSubmitButton,
+} from './Form/new-form'
 export {
   InfoContainer,
   InfoRow,

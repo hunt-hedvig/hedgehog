@@ -1,4 +1,12 @@
-import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
+import {
+  Form,
+  FormDropdown,
+  FormInput,
+  NewForm,
+  NewFormInput,
+  NewSubmitButton,
+  SubmitButton,
+} from '@hedvig-ui'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
@@ -111,6 +119,72 @@ export const StandardForm: React.FC = () => {
         />
         <SubmitButton>Submit form</SubmitButton>
       </Form>
+    </FormProvider>
+  )
+}
+
+export const FormWithoutSemantic = () => {
+  const form = useForm()
+
+  const submitHandler = (e) => {
+    console.log(e)
+  }
+
+  return (
+    <FormProvider {...form}>
+      <NewForm onSubmit={submitHandler}>
+        <NewFormInput
+          label="Text input"
+          name="textInput"
+          defaultValue=""
+          rules={{
+            required: 'This text is reqired',
+            minLength: {
+              value: 6,
+              message: 'This text has to be at least 6 characters long',
+            },
+            maxLength: {
+              value: 6,
+              message: 'This text can be no longer than 6 characters long',
+            },
+            pattern: {
+              value: /^Hedvig$/,
+              message: 'This text has to be "Hedvig" for some reason',
+            },
+          }}
+        />
+        <NewFormInput
+          label="Number input"
+          name="numberInput"
+          defaultValue=""
+          type="number"
+          rules={{
+            required: 'This number is required',
+            min: {
+              value: 1000,
+              message: 'This number has to be at least 1000',
+            },
+            max: {
+              value: 5000,
+              message: 'This number has to be no larger than 5000',
+            },
+            pattern: {
+              value: /^1337$/,
+              message: 'Only 1337 is a valid number',
+            },
+          }}
+        />
+        <NewFormInput
+          label="Amount input with suffix"
+          affix={{
+            content: 'SEK',
+          }}
+          name="amountInput"
+          defaultValue=""
+          type="number"
+        />
+        <NewSubmitButton>Submit form</NewSubmitButton>
+      </NewForm>
     </FormProvider>
   )
 }

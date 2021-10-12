@@ -78,7 +78,7 @@ const Placeholder = styled.span`
   color: ${({ theme }) => theme.placeholderColor};
 `
 
-interface DropdownProps {
+export interface DropdownProps {
   placeholder?: string
   children: any
 }
