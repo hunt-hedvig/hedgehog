@@ -67,7 +67,7 @@ type MutationType {
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
   createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
   setClaimType(id: ID!, type: String): Claim
-  setClaimFlag(id: ID!, flag: String!, flagValue: Boolean!): Claim
+  setClaimOutcome(id: ID!, outcome: String): Claim
   setClaimPropertySelection(
     id: ID!
     claimType: String!
@@ -630,7 +630,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1033,7 +1033,7 @@ type Claim {
   state: ClaimState!
   claimType: String
   dateOfOccurrence: LocalDate
-  flags: [String!]!
+  outcome: String
   reserves: MonetaryAmount
   registrationDate: Instant!
   notes: [ClaimNote!]!

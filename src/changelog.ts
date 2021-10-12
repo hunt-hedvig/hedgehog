@@ -13,7 +13,7 @@ export interface Change {
 export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-10-11',
-    change: 'Add revisited and dynamic claim types',
+    change: 'New claim types 🎉',
     authorGithubHandle: 'rasmusguterstam',
   },
   {

@@ -1,9 +1,9 @@
 import { Placeholder, SemanticDropdown } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
-import { useSetClaimFlagMutation } from 'types/generated/graphql'
+import { useSetClaimOutcomeMutation } from 'types/generated/graphql'
 
-enum ClaimFlags {
+enum ClaimOutcomes {
   CONFIRMED_FRAUD = 'CONFIRMED_FRAUD',
   DUPLICATE = 'DUPLICATE',
   NOT_COVERED = 'NOT_COVERED',
@@ -12,41 +12,18 @@ enum ClaimFlags {
 
 export const OutcomeDropdown: React.FC<{
   claimId: string
-  flags: string[]
-}> = ({ claimId, flags }) => {
-  const [setClaimFlag] = useSetClaimFlagMutation()
+  outcome: string | null
+}> = ({ claimId, outcome }) => {
+  const [setClaimOutcome] = useSetClaimOutcomeMutation()
 
-  const handleSelectOutcome = async (value: string) => {
-    const previousFlag = flags.length ? flags[0] : null
-
-    if (previousFlag) {
-      await setClaimFlag({
-        variables: { id: claimId, flag: previousFlag, flagValue: false },
-        optimisticResponse: {
-          setClaimFlag: {
-            id: claimId,
-            __typename: 'Claim',
-            flags: value === 'not_specified' ? [] : [value],
-          },
-        },
-      })
-    }
-
-    if (value === 'not_specified') {
-      return
-    }
-
-    await setClaimFlag({
-      variables: {
-        id: claimId,
-        flag: value,
-        flagValue: true,
-      },
+  const handleSelectOutcome = async (newOutcome: string | null) => {
+    await setClaimOutcome({
+      variables: { id: claimId, outcome: newOutcome },
       optimisticResponse: {
-        setClaimFlag: {
+        setClaimOutcome: {
           id: claimId,
           __typename: 'Claim',
-          flags: [value],
+          outcome: newOutcome,
         },
       },
     })
@@ -55,17 +32,19 @@ export const OutcomeDropdown: React.FC<{
   return (
     <SemanticDropdown
       options={[
-        ...Object.keys(ClaimFlags).map((flag) => ({
-          value: flag,
-          text: convertEnumToTitle(flag),
+        ...Object.keys(ClaimOutcomes).map((value) => ({
+          value,
+          text: convertEnumToTitle(value),
         })),
         { value: 'not_specified', text: 'Not specified' },
       ]}
-      onChange={handleSelectOutcome}
-      value={flags.length ? flags[0] : 'not_specified'}
+      onChange={(value) =>
+        handleSelectOutcome(value === 'not_specified' ? null : value)
+      }
+      value={outcome ?? 'not_specified'}
       onRender={() =>
-        !!flags.length ? (
-          <>{convertEnumToTitle(flags[0])}</>
+        outcome ? (
+          <>{convertEnumToTitle(outcome)}</>
         ) : (
           <Placeholder>Not specified</Placeholder>
         )

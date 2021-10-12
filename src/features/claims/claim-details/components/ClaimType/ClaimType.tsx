@@ -20,25 +20,25 @@ import { convertEnumToTitle } from 'utils/text'
 export const ClaimType: React.FC<{
   claimId: string
 }> = ({ claimId }) => {
-  const { data: claimInformationData } = useClaimPageQuery({
+  const { data: claimTypeData } = useClaimPageQuery({
     variables: { claimId },
   })
 
   const { data, error } = useGetClaimTypesQuery()
   const [setClaimType] = useSetClaimTypeMutation()
   const claimTypes = data?.claimTypes ?? []
-  const selectedClaimType = claimInformationData?.claim?.claimType
+  const selectedClaimType = claimTypeData?.claim?.claimType
 
   const handleSetClaimType = (claimType: string) => {
     setClaimType({
       variables: { id: claimId, type: claimType },
       optimisticResponse: {
         setClaimType: {
-          ...claimInformationData,
+          ...claimTypeData,
           __typename: 'Claim',
           id: claimId,
           claimType,
-          events: claimInformationData?.claim?.events ?? [],
+          events: claimTypeData?.claim?.events ?? [],
         },
       },
     }).catch(() => toast.error('Could not set type'))
@@ -89,7 +89,7 @@ export const ClaimType: React.FC<{
                 claimId={claimId}
                 claimType={selectedClaimType}
                 propertySelections={
-                  claimInformationData?.claim?.propertySelections ?? []
+                  claimTypeData?.claim?.propertySelections ?? []
                 }
               />
             )}
@@ -97,7 +97,7 @@ export const ClaimType: React.FC<{
           <div style={{ width: '100%' }}>
             <Label>Claim outcome</Label>
             <OutcomeDropdown
-              flags={claimInformationData?.claim?.flags ?? []}
+              outcome={claimTypeData?.claim?.outcome ?? null}
               claimId={claimId}
             />
           </div>

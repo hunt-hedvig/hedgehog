@@ -1,6 +1,6 @@
-mutation SetClaimFlag($id: ID!, $flag: String!, $flagValue: Boolean!) {
-  setClaimFlag(id: $id, flag: $flag, flagValue: $flagValue) {
+mutation SetClaimOutcome($id: ID!, $outcome: String) {
+  setClaimOutcome(id: $id, outcome: $outcome) {
     id
-    flags
+    outcome
   }
 }

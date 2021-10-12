@@ -7,7 +7,7 @@ query ClaimPage($claimId: ID!) {
     coveringEmployee
     claimType
     dateOfOccurrence
-    flags
+    outcome
     propertySelections {
       claimType
       property {

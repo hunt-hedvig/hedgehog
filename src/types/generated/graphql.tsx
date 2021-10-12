@@ -182,7 +182,7 @@ export type Claim = {
   state: ClaimState
   claimType?: Maybe<Scalars['String']>
   dateOfOccurrence?: Maybe<Scalars['LocalDate']>
-  flags: Array<Scalars['String']>
+  outcome?: Maybe<Scalars['String']>
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate: Scalars['Instant']
   notes: Array<ClaimNote>
@@ -823,7 +823,7 @@ export type MutationType = {
   createClaimPayment?: Maybe<Claim>
   createClaimSwishPayment?: Maybe<Claim>
   setClaimType?: Maybe<Claim>
-  setClaimFlag?: Maybe<Claim>
+  setClaimOutcome?: Maybe<Claim>
   setClaimPropertySelection?: Maybe<Claim>
   setDateOfOccurrence?: Maybe<Claim>
   updateReserve?: Maybe<Claim>
@@ -948,10 +948,9 @@ export type MutationTypeSetClaimTypeArgs = {
   type?: Maybe<Scalars['String']>
 }
 
-export type MutationTypeSetClaimFlagArgs = {
+export type MutationTypeSetClaimOutcomeArgs = {
   id: Scalars['ID']
-  flag: Scalars['String']
-  flagValue: Scalars['Boolean']
+  outcome?: Maybe<Scalars['String']>
 }
 
 export type MutationTypeSetClaimPropertySelectionArgs = {
@@ -1797,14 +1796,15 @@ export type SetClaimDateMutation = { __typename?: 'MutationType' } & {
   >
 }
 
-export type SetClaimFlagMutationVariables = Exact<{
+export type SetClaimOutcomeMutationVariables = Exact<{
   id: Scalars['ID']
-  flag: Scalars['String']
-  flagValue: Scalars['Boolean']
+  outcome?: Maybe<Scalars['String']>
 }>
 
-export type SetClaimFlagMutation = { __typename?: 'MutationType' } & {
-  setClaimFlag?: Maybe<{ __typename?: 'Claim' } & Pick<Claim, 'id' | 'flags'>>
+export type SetClaimOutcomeMutation = { __typename?: 'MutationType' } & {
+  setClaimOutcome?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'outcome'>
+  >
 }
 
 export type SetClaimPropertySelectionMutationVariables = Exact<{
@@ -1996,7 +1996,7 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'coveringEmployee'
       | 'claimType'
       | 'dateOfOccurrence'
-      | 'flags'
+      | 'outcome'
       | 'reserves'
     > & {
         propertySelections: Array<
@@ -4111,59 +4111,58 @@ export type SetClaimDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetClaimDateMutation,
   SetClaimDateMutationVariables
 >
-export const SetClaimFlagDocument = gql`
-  mutation SetClaimFlag($id: ID!, $flag: String!, $flagValue: Boolean!) {
-    setClaimFlag(id: $id, flag: $flag, flagValue: $flagValue) {
+export const SetClaimOutcomeDocument = gql`
+  mutation SetClaimOutcome($id: ID!, $outcome: String) {
+    setClaimOutcome(id: $id, outcome: $outcome) {
       id
-      flags
+      outcome
     }
   }
 `
-export type SetClaimFlagMutationFn = ApolloReactCommon.MutationFunction<
-  SetClaimFlagMutation,
-  SetClaimFlagMutationVariables
+export type SetClaimOutcomeMutationFn = ApolloReactCommon.MutationFunction<
+  SetClaimOutcomeMutation,
+  SetClaimOutcomeMutationVariables
 >
 
 /**
- * __useSetClaimFlagMutation__
+ * __useSetClaimOutcomeMutation__
  *
- * To run a mutation, you first call `useSetClaimFlagMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetClaimFlagMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSetClaimOutcomeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetClaimOutcomeMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [setClaimFlagMutation, { data, loading, error }] = useSetClaimFlagMutation({
+ * const [setClaimOutcomeMutation, { data, loading, error }] = useSetClaimOutcomeMutation({
  *   variables: {
  *      id: // value for 'id'
- *      flag: // value for 'flag'
- *      flagValue: // value for 'flagValue'
+ *      outcome: // value for 'outcome'
  *   },
  * });
  */
-export function useSetClaimFlagMutation(
+export function useSetClaimOutcomeMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    SetClaimFlagMutation,
-    SetClaimFlagMutationVariables
+    SetClaimOutcomeMutation,
+    SetClaimOutcomeMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
-    SetClaimFlagMutation,
-    SetClaimFlagMutationVariables
-  >(SetClaimFlagDocument, options)
+    SetClaimOutcomeMutation,
+    SetClaimOutcomeMutationVariables
+  >(SetClaimOutcomeDocument, options)
 }
-export type SetClaimFlagMutationHookResult = ReturnType<
-  typeof useSetClaimFlagMutation
+export type SetClaimOutcomeMutationHookResult = ReturnType<
+  typeof useSetClaimOutcomeMutation
 >
-export type SetClaimFlagMutationResult = ApolloReactCommon.MutationResult<
-  SetClaimFlagMutation
+export type SetClaimOutcomeMutationResult = ApolloReactCommon.MutationResult<
+  SetClaimOutcomeMutation
 >
-export type SetClaimFlagMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetClaimFlagMutation,
-  SetClaimFlagMutationVariables
+export type SetClaimOutcomeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetClaimOutcomeMutation,
+  SetClaimOutcomeMutationVariables
 >
 export const SetClaimPropertySelectionDocument = gql`
   mutation SetClaimPropertySelection(
@@ -4543,7 +4542,7 @@ export const ClaimPageDocument = gql`
       coveringEmployee
       claimType
       dateOfOccurrence
-      flags
+      outcome
       propertySelections {
         claimType
         property {

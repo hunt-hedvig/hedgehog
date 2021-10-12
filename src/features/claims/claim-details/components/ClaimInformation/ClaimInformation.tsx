@@ -193,32 +193,6 @@ export const ClaimInformation: React.FC<{
           />
         </SelectWrapper>
         <SelectWrapper>
-          <Label>Employee Claim</Label>
-          <SemanticDropdown
-            value={coveringEmployee ? 'True' : 'False'}
-            onChange={async (value) => {
-              await setCoveringEmployee({
-                variables: {
-                  id: claimId,
-                  coveringEmployee: validateSelectEmployeeClaimOption(value),
-                },
-                optimisticResponse: {
-                  setCoveringEmployee: {
-                    id: claimId,
-                    __typename: 'Claim',
-                    coveringEmployee: validateSelectEmployeeClaimOption(value),
-                    events: data?.claim?.events ?? [],
-                  },
-                },
-              })
-            }}
-            options={[
-              { key: 0, value: 'True', text: 'True' },
-              { key: 1, value: 'False', text: 'False' },
-            ]}
-          />
-        </SelectWrapper>
-        <SelectWrapper>
           <Label>Date of Occurrence</Label>
           <DateTimePicker
             tabIndex={-1}
