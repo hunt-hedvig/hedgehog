@@ -18,6 +18,8 @@ const show = keyframes`
 
 const DropdownStyled = styled.div<{ active: boolean }>`
   position: relative;
+  outline: none;
+
   & ul,
   & li {
     list-style: none;
@@ -34,6 +36,12 @@ const DropdownStyled = styled.div<{ active: boolean }>`
     border-radius: 0.3rem 0.3rem 0 0;
   `}
   }
+
+  &:focus {
+    & > li:first-of-type {
+      background-color: ${({ theme }) => theme.accentBackground};
+    }
+  }
 `
 
 const OptionsList = styled.ul`
@@ -41,6 +49,7 @@ const OptionsList = styled.ul`
   padding-left: 0;
 
   position: absolute;
+  z-index: 1000;
   width: 100%;
 
   animation: ${show} 0.1s linear;
@@ -63,7 +72,7 @@ const OptionStyled = styled.li<{ selected: boolean }>`
 
   outline: none;
   cursor: pointer;
-  padding: 10px 25px;
+  padding: 10px 15px;
   background-color: ${({ theme, selected }) =>
     !selected ? theme.backgroundLight : theme.accentBackground};
 
@@ -79,11 +88,13 @@ const Placeholder = styled.span`
 `
 
 interface DropdownProps {
+  focus?: boolean
   placeholder?: string
   children: any
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
+  focus,
   placeholder,
   children,
 }) => {
@@ -108,6 +119,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
   useClickOutside(dropdownRef, closeDropdown)
 
   useEffect(() => {
+    if (focus && dropdownRef.current) {
+      dropdownRef.current.focus()
+    }
+  }, [focus])
+
+  useEffect(() => {
     children.forEach((el, index) => {
       if (el.props.selected) {
         setSelectedIdx(index + 1)
@@ -117,27 +134,18 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <DropdownStyled
+      tabIndex={0}
       ref={dropdownRef}
       active={active}
       onKeyDown={(e) => {
-        if (e.keyCode === Keys.Escape.code) {
+        if (e.keyCode === Keys.Escape.code || e.keyCode === Keys.Enter.code) {
           toggleDropdown()
           return
         }
       }}
     >
       {!selectedIdx ? (
-        <OptionStyled
-          selected={false}
-          tabIndex={0}
-          onClick={toggleDropdown}
-          onKeyDown={(e) => {
-            if (e.keyCode === Keys.Enter.code) {
-              toggleDropdown()
-              return
-            }
-          }}
-        >
+        <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
           <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
         </OptionStyled>
       ) : (
