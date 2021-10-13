@@ -1,0 +1,45 @@
+mutation SetClaimDate($id: ID!, $date: LocalDate!) {
+  setDateOfOccurrence(id: $id, date: $date) {
+    id
+    dateOfOccurrence
+    contract {
+      id
+      market
+      currentAgreementId
+      genericAgreements {
+        id
+        address {
+          street
+          postalCode
+          city
+        }
+        lineOfBusinessName
+        premium {
+          amount
+          currency
+        }
+        status
+        carrier
+        typeOfContract
+        createdAt
+      }
+      contractTypeName
+      preferredCurrency
+      typeOfContract
+      masterInception
+      terminationDate
+    }
+
+    agreement {
+      id
+      address {
+        street
+        postalCode
+        city
+      }
+      typeOfContract
+      lineOfBusinessName
+      carrier
+    }
+  }
+}

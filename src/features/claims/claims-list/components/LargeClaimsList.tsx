@@ -20,7 +20,7 @@ import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 import { getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
-import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'
+import { convertEnumToTitle } from 'utils/text'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
@@ -158,8 +158,8 @@ export const LargeClaimsList: React.FC<{
               </TableColumn>
 
               <TableColumn>
-                {claim.type?.__typename ? (
-                  splitOnUpperCase(claim.type.__typename.toString())
+                {claim.claimType ? (
+                  convertEnumToTitle(claim.claimType)
                 ) : (
                   <Placeholder>Not specified</Placeholder>
                 )}

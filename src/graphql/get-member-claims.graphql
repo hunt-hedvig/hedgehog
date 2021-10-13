@@ -9,9 +9,7 @@ query GetMemberClaims($memberId: ID!) {
         lastName
       }
       registrationDate
-      type {
-        __typename
-      }
+      claimType
       state
       reserves
     }

@@ -20,9 +20,7 @@ query GetMemberInfo($memberId: ID!) {
       id
       registrationDate
       state
-      type {
-        __typename
-      }
+      claimType
     }
   }
 }
