@@ -1,6 +1,11 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { LiHTMLAttributes, useEffect, useRef } from 'react'
+import React, {
+  HTMLAttributes,
+  LiHTMLAttributes,
+  useEffect,
+  useRef,
+} from 'react'
 import { useClickOutside } from '../utils/click-outside'
 import { Keys } from '../utils/key-press-hook'
 
@@ -17,6 +22,7 @@ const show = keyframes`
 `
 
 const DropdownStyled = styled.div<{ active: boolean }>`
+  width: 100%;
   position: relative;
   outline: none;
 
@@ -51,6 +57,8 @@ const OptionsList = styled.ul`
   position: absolute;
   z-index: 1000;
   width: 100%;
+  max-height: 500px;
+  overflow-y: scroll;
 
   animation: ${show} 0.1s linear;
   background-color: ${({ theme }) => theme.backgroundLight};
@@ -87,7 +95,7 @@ const Placeholder = styled.span`
   color: ${({ theme }) => theme.placeholderColor};
 `
 
-interface DropdownProps {
+interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   focus?: boolean
   placeholder?: string
   children: any
@@ -97,6 +105,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   focus,
   placeholder,
   children,
+  ...props
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -143,6 +152,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
           return
         }
       }}
+      {...props}
     >
       {!selectedIdx ? (
         <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
@@ -205,3 +215,19 @@ export const Option: React.FC<OptionProps> = ({
     {children}
   </OptionStyled>
 )
+
+export const getTextFromEnumValue = (
+  sentence: string,
+  capitalized: boolean = false,
+) => {
+  return sentence
+    .toLowerCase()
+    .split('_')
+    .map((word, index) => {
+      if (capitalized || index === 0 || word === 'hedvig') {
+        return word.charAt(0).toUpperCase() + word.slice(1)
+      }
+      return word
+    })
+    .join(' ')
+}

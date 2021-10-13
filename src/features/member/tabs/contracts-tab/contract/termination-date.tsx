@@ -2,8 +2,10 @@ import {
   Button,
   ButtonsGroup,
   DateTimePicker,
-  EnumDropdown,
+  Dropdown,
+  DropdownOption,
   FourthLevelHeadline,
+  getTextFromEnumValue,
   Spacing,
   TextArea,
 } from '@hedvig-ui'
@@ -172,11 +174,16 @@ export const TerminationDate: React.FC<{
       {datePickerEnabled && (
         <>
           <DateTimePicker date={terminationDate} setDate={setTerminationDate} />
-          <EnumDropdown
-            enumToSelectFrom={TerminationReason}
-            placeholder="Termination reason"
-            onChange={setTerminationReason}
-          />
+          <Dropdown>
+            {Object.keys(TerminationReason).map((key) => (
+              <DropdownOption
+                selected={terminationReason === TerminationReason[key]}
+                onClick={() => setTerminationReason(TerminationReason[key])}
+              >
+                {getTextFromEnumValue(TerminationReason[key])}
+              </DropdownOption>
+            ))}
+          </Dropdown>
           <Spacing top bottom>
             <TextArea
               placeholder="Comment on the reason of termination..."
