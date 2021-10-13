@@ -174,7 +174,7 @@ export const TerminationDate: React.FC<{
       {datePickerEnabled && (
         <>
           <DateTimePicker date={terminationDate} setDate={setTerminationDate} />
-          <Dropdown>
+          <Dropdown placeholder="Reasons">
             {Object.keys(TerminationReason).map((key) => (
               <DropdownOption
                 selected={terminationReason === TerminationReason[key]}

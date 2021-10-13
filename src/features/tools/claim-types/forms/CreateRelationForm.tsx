@@ -33,7 +33,7 @@ const ClaimTypeDropdown: React.FC<{
   }
 
   return (
-    <Dropdown>
+    <Dropdown placeholder="Types">
       {claimTypes.map((type) => (
         <DropdownOption
           selected={value === type}
