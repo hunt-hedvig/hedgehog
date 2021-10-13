@@ -957,7 +957,7 @@ export type MutationTypeSetClaimPropertySelectionArgs = {
   id: Scalars['ID']
   claimType: Scalars['String']
   propertyId: Scalars['ID']
-  optionId?: Maybe<Scalars['ID']>
+  optionIds: Array<Scalars['ID']>
 }
 
 export type MutationTypeSetDateOfOccurrenceArgs = {
@@ -1811,7 +1811,7 @@ export type SetClaimPropertySelectionMutationVariables = Exact<{
   id: Scalars['ID']
   claimType: Scalars['String']
   propertyId: Scalars['ID']
-  optionId?: Maybe<Scalars['ID']>
+  optionIds: Array<Scalars['ID']> | Scalars['ID']
 }>
 
 export type SetClaimPropertySelectionMutation = {
@@ -4169,13 +4169,13 @@ export const SetClaimPropertySelectionDocument = gql`
     $id: ID!
     $claimType: String!
     $propertyId: ID!
-    $optionId: ID
+    $optionIds: [ID!]!
   ) {
     setClaimPropertySelection(
       id: $id
       claimType: $claimType
       propertyId: $propertyId
-      optionId: $optionId
+      optionIds: $optionIds
     ) {
       id
       propertySelections {
@@ -4213,7 +4213,7 @@ export type SetClaimPropertySelectionMutationFn = ApolloReactCommon.MutationFunc
  *      id: // value for 'id'
  *      claimType: // value for 'claimType'
  *      propertyId: // value for 'propertyId'
- *      optionId: // value for 'optionId'
+ *      optionIds: // value for 'optionIds'
  *   },
  * });
  */

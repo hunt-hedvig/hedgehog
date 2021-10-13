@@ -72,7 +72,7 @@ type MutationType {
     id: ID!
     claimType: String!
     propertyId: ID!
-    optionId: ID
+    optionIds: [ID!]!
   ): Claim
   setDateOfOccurrence(id: ID!, date: LocalDate!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
@@ -630,7 +630,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

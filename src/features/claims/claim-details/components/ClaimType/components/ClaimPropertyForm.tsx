@@ -38,7 +38,7 @@ export const ClaimPropertyForm: React.FC<{
         id: claimId,
         claimType,
         propertyId: property.id,
-        optionId: option?.id,
+        optionIds: option?.id ? [option.id] : [],
       },
       optimisticResponse: {
         setClaimPropertySelection: {
