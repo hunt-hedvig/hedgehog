@@ -1,5 +1,13 @@
 import styled from '@emotion/styled'
-import { Button, ButtonProps, Input, InputProps, Label } from '@hedvig-ui'
+import {
+  Button,
+  ButtonProps,
+  Dropdown,
+  DropdownOption,
+  Input,
+  InputProps,
+  Label,
+} from '@hedvig-ui'
 import { ErrorMessage } from '@hookform/error-message'
 import React, { HTMLAttributes } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
@@ -157,3 +165,46 @@ export const SubmitButton: React.FC<ButtonProps> = ({ children, ...props }) => {
 //     </FormField>
 //   )
 // }
+
+interface FormDropdownProps {
+  options: Array<{ key: number; value: string | number; text: string | number }>
+}
+
+const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
+  name,
+  rules,
+  defaultValue,
+  options,
+}) => {
+  return (
+    <Controller
+      name={name}
+      rules={rules}
+      defaultValue={defaultValue}
+      render={({ onChange, value, onBlur }) => (
+        <Dropdown onBlur={onBlur}>
+          {options.map((opt) => (
+            <DropdownOption
+              key={opt.key}
+              selected={value === opt.value}
+              onClick={() => onChange(opt.value)}
+            >
+              {opt.text}
+            </DropdownOption>
+          ))}
+        </Dropdown>
+      )}
+    />
+  )
+}
+
+export const FormDropdown: React.FC<FormDropdownProps & FormFieldProps> = ({
+  options,
+  ...props
+}) => {
+  return (
+    <FormField {...props}>
+      <FormDropdownComponent options={options} {...props} />
+    </FormField>
+  )
+}

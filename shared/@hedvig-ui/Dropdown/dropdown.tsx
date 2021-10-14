@@ -1,6 +1,11 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { LiHTMLAttributes, useEffect, useRef } from 'react'
+import React, {
+  HTMLAttributes,
+  LiHTMLAttributes,
+  useEffect,
+  useRef,
+} from 'react'
 import { useClickOutside } from '../utils/click-outside'
 import { Keys } from '../utils/key-press-hook'
 
@@ -78,7 +83,7 @@ const Placeholder = styled.span`
   color: ${({ theme }) => theme.placeholderColor};
 `
 
-export interface DropdownProps {
+export interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   placeholder?: string
   children: any
 }
@@ -86,6 +91,7 @@ export interface DropdownProps {
 export const Dropdown: React.FC<DropdownProps> = ({
   placeholder,
   children,
+  ...props
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -125,6 +131,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
           return
         }
       }}
+      {...props}
     >
       {!selectedIdx ? (
         <OptionStyled

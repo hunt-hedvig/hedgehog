@@ -62,6 +62,7 @@ export {
   Form as NewForm,
   FormInput as NewFormInput,
   SubmitButton as NewSubmitButton,
+  FormDropdown as NewFormDropdown,
 } from './Form/new-form'
 export {
   InfoContainer,

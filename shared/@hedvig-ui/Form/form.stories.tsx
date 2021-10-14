@@ -3,6 +3,7 @@ import {
   FormDropdown,
   FormInput,
   NewForm,
+  NewFormDropdown,
   NewFormInput,
   NewSubmitButton,
   SubmitButton,
@@ -10,14 +11,13 @@ import {
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
-import { DropdownItemProps } from 'semantic-ui-react'
 
 export default {
   title: 'Form',
   component: Form,
 }
 
-const formOptions: DropdownItemProps[] = [
+const formOptions = [
   {
     key: 1,
     value: 1,
@@ -182,6 +182,22 @@ export const FormWithoutSemantic = () => {
           name="amountInput"
           defaultValue=""
           type="number"
+        />
+        <NewFormDropdown
+          options={formOptions}
+          label="Dropdown"
+          name="dropdown"
+          defaultValue={1}
+          rules={{
+            min: {
+              value: 2,
+              message: 'You have to select at least 2',
+            },
+            max: {
+              value: 2,
+              message: 'Actually only 2 or less is allowed',
+            },
+          }}
         />
         <NewSubmitButton>Submit form</NewSubmitButton>
       </NewForm>
