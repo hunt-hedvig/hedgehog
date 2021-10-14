@@ -43,14 +43,15 @@ const FilterName = styled.span`
   align-items: center;
 `
 
-const ColorBadge = styled.div<{ filter: FilterState }>`
+export const ColorBadge = styled.div<{ filter?: FilterState }>`
   display: inline-block;
   width: 1.5em;
   height: 1.5em;
   border-radius: 2px;
   vertical-align: center;
   margin-left: 0.5rem;
-  background-color: ${({ filter }) => getFilterColor(filter)};
+  background-color: ${({ filter }) =>
+    filter !== undefined ? getFilterColor(filter) : '#fff'};
 `
 
 export const getFilterColor = (filter: FilterState): string => {

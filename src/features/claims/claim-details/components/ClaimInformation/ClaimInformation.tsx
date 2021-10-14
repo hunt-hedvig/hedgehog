@@ -5,6 +5,7 @@ import {
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
+  useSetClaimDateMutation,
 } from 'types/generated/graphql'
 
 import {
@@ -12,6 +13,7 @@ import {
   CardsWrapper,
   CardTitle,
   DangerCard,
+  DateTimePicker,
   EnumDropdown,
   InfoRow,
   InfoText,
@@ -22,11 +24,12 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format, parseISO } from 'date-fns'
+import { ContractDropdown } from 'features/claims/claim-details/components/ClaimInformation/components/ContractDropdown'
+import { OutcomeDropdown } from 'features/claims/claim-details/components/ClaimType/components/OutcomeDropdown'
 import {
   CoInsuredForm,
   useDeleteCoInsured,
 } from 'features/claims/claim-details/components/CoInsured/CoInsuredForm'
-import { ContractDropdown } from 'features/claims/claim-details/components/ContractDropdown'
 import {
   setContractForClaimOptions,
   useSetContractForClaim,
@@ -35,6 +38,7 @@ import { useSetCoveringEmployee } from 'graphql/use-set-covering-employee'
 import { useUpdateClaimState } from 'graphql/use-update-claim-state'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
 
 const validateSelectOption = (value: any): ClaimState => {
   if (!Object.values(ClaimState).includes(value as any)) {
@@ -142,6 +146,7 @@ export const ClaimInformation: React.FC<{
   const [setContractForClaim] = useSetContractForClaim()
   const [setCoveringEmployee] = useSetCoveringEmployee()
   const [updateClaimState] = useUpdateClaimState()
+  const [setClaimDate] = useSetClaimDateMutation()
 
   return (
     <CardContent>
@@ -174,6 +179,10 @@ export const ClaimInformation: React.FC<{
             enumToSelectFrom={ClaimState}
             placeholder=""
             onChange={async (value) => {
+              if (value === ClaimState.Closed && !data?.claim?.outcome) {
+                toast.error('Select a claim outcome')
+                return
+              }
               await updateClaimState({
                 variables: { id: claimId, state: validateSelectOption(value) },
                 optimisticResponse: {
@@ -186,6 +195,56 @@ export const ClaimInformation: React.FC<{
                 },
               })
             }}
+          />
+        </SelectWrapper>
+        <SelectWrapper>
+          <Label>Claim outcome</Label>
+          {!!data?.claim?.state && (
+            <OutcomeDropdown
+              claimState={data.claim.state}
+              outcome={data?.claim?.outcome ?? null}
+              claimId={claimId}
+            />
+          )}
+        </SelectWrapper>
+        <SelectWrapper>
+          <Label>Date of Occurrence</Label>
+          <DateTimePicker
+            tabIndex={-1}
+            fullWidth={true}
+            date={
+              (data?.claim?.dateOfOccurrence &&
+                parseISO(data.claim.dateOfOccurrence)) ??
+              null
+            }
+            setDate={(date) => {
+              if (!data?.claim) {
+                return
+              }
+
+              toast.promise(
+                setClaimDate({
+                  variables: {
+                    id: claimId,
+                    date: date && format(date, 'yyyy-MM-dd'),
+                  },
+                  optimisticResponse: {
+                    setDateOfOccurrence: {
+                      __typename: 'Claim',
+                      id: claimId,
+                      dateOfOccurrence: format(date, 'yyyy-MM-dd'),
+                      contract: data?.claim?.contract,
+                    },
+                  },
+                }),
+                {
+                  loading: 'Setting date of occurrence',
+                  success: 'Date of occurrence set',
+                  error: 'Could not set date of occurrence',
+                },
+              )
+            }}
+            placeholder="When did it happen?"
           />
         </SelectWrapper>
         {contracts && (
