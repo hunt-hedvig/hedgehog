@@ -15,12 +15,12 @@ import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
 import { Key, Keys } from '@hedvig-ui/utils/key-press-hook'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
-import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation'
+import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation/ClaimInformation'
 import { ClaimNotes } from 'features/claims/claim-details/components/ClaimNotes'
 import { ClaimPayments } from 'features/claims/claim-details/components/ClaimPayments/ClaimPayments'
 import { ClaimReserve } from 'features/claims/claim-details/components/ClaimReserve'
 import { ClaimTranscriptions } from 'features/claims/claim-details/components/ClaimTranscriptions'
-import { ClaimTypeForm } from 'features/claims/claim-details/components/ClaimType'
+import { ClaimType } from 'features/claims/claim-details/components/ClaimType/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import React, { useContext, useEffect, useState } from 'react'
@@ -167,7 +167,7 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
                   2
                 </HotkeyStyled>
               )}
-              <ClaimTypeForm focus={focus === 'type'} claimId={claimId} />
+              <ClaimType claimId={claimId} />
             </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">

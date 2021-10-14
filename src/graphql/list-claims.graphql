@@ -8,9 +8,7 @@ query ListClaims($options: ListClaimsOptions!) {
         lastName
       }
       registrationDate
-      type {
-        __typename
-      }
+      claimType
       state
       reserves
     }

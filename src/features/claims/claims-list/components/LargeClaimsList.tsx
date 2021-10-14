@@ -14,12 +14,13 @@ import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'graphql/use-list-claims'
+import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 import { getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
-import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'
+import { convertEnumToTitle } from 'utils/text'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
@@ -55,7 +56,10 @@ const MemberIdCell = styled(TableColumn)<{
   height: 100%;
 `
 
-export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
+export const LargeClaimsList: React.FC<{
+  page: number
+  filters: ClaimsFiltersType
+}> = ({ page, filters }) => {
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
@@ -67,8 +71,11 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
   ] = useListClaims()
 
   useEffect(() => {
-    listClaims({ page: page - 1 ?? 0 })
-  }, [page])
+    listClaims({
+      page: page - 1 ?? 0,
+      ...filters,
+    })
+  }, [page, filters])
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -151,8 +158,8 @@ export const LargeClaimsList: React.FC<{ page: number }> = ({ page }) => {
               </TableColumn>
 
               <TableColumn>
-                {claim.type?.__typename ? (
-                  splitOnUpperCase(claim.type.__typename.toString())
+                {claim.claimType ? (
+                  convertEnumToTitle(claim.claimType)
                 ) : (
                   <Placeholder>Not specified</Placeholder>
                 )}

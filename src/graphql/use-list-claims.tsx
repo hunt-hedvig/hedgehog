@@ -26,6 +26,16 @@ export const useListClaims = (): ListClaimsReturnTuple => {
           pageSize: options?.pageSize ?? 20,
           sortBy: options?.sortBy ?? 'DATE',
           sortDirection,
+          filterClaimStates: options?.filterClaimStates || null,
+          filterCreatedBeforeOrOnDate:
+            options?.filterCreatedBeforeOrOnDate || null,
+          filterComplexities: options?.filterComplexities || null,
+          filterNumberOfMemberGroups:
+            options?.filterNumberOfMemberGroups || null,
+          filterSelectedMemberGroups:
+            options?.filterSelectedMemberGroups || null,
+          filterMarkets: options?.filterMarkets || null,
+          filterTypesOfContract: options?.filterTypesOfContract || null,
         },
       },
     })

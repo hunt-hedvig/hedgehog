@@ -1,0 +1,26 @@
+mutation SetClaimPropertySelection(
+  $id: ID!
+  $claimType: String!
+  $propertyId: ID!
+  $optionIds: [ID!]!
+) {
+  setClaimPropertySelection(
+    id: $id
+    claimType: $claimType
+    propertyId: $propertyId
+    optionIds: $optionIds
+  ) {
+    id
+    propertySelections {
+      claimType
+      property {
+        id
+        name
+      }
+      option {
+        id
+        name
+      }
+    }
+  }
+}
