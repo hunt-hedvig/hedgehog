@@ -5,7 +5,20 @@ query ClaimPage($claimId: ID!) {
     registrationDate
     state
     coveringEmployee
-    ...claimType
+    claimType
+    dateOfOccurrence
+    outcome
+    propertySelections {
+      claimType
+      property {
+        id
+        name
+      }
+      option {
+        id
+        name
+      }
+    }
 
     coInsured {
       id
@@ -24,6 +37,7 @@ query ClaimPage($claimId: ID!) {
 
     contract {
       id
+      market
       currentAgreementId
       genericAgreements {
         id
@@ -80,6 +94,17 @@ query ClaimPage($claimId: ID!) {
       contentType
       fileUploadUrl
       uploadedAt
+    }
+
+    payments {
+      id
+      deductible
+      amount
+      exGratia
+      status
+      note
+      type
+      timestamp
     }
 
     events {

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Label, Placeholder } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { differenceInYears, format, parseISO } from 'date-fns'
 import React from 'react'
@@ -10,7 +11,6 @@ import {
   getMemberIdColor,
 } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
-import { splitOnUpperCase } from 'utils/text'
 
 const MemberCard = styled(FadeIn)`
   padding: 1em;
@@ -175,8 +175,8 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
                           </span>
                         </div>
                         <span style={{ paddingRight: '0.5em' }}>
-                          {claim.type?.__typename ? (
-                            splitOnUpperCase(claim.type.__typename.toString())
+                          {claim.claimType ? (
+                            convertEnumToTitle(claim.claimType)
                           ) : (
                             <Placeholder>No claim type</Placeholder>
                           )}
