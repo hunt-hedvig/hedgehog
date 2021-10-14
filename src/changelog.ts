@@ -12,9 +12,8 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
-    date: '2021-10-08',
-    change:
-      'Added keyboard navigation between Claim sections using Control+Number',
+    date: '2021-10-11',
+    change: 'New claim types 🎉',
     authorGithubHandle: 'rasmusguterstam',
   },
   {

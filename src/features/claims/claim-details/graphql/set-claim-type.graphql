@@ -1,9 +1,7 @@
-mutation SetClaimType($id: ID!, $type: ClaimTypes!) {
+mutation SetClaimType($id: ID!, $type: String) {
   setClaimType(id: $id, type: $type) {
     id
-
-    ...claimType
-
+    claimType
     events {
       text
       date

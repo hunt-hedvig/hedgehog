@@ -16,7 +16,7 @@ import { useGetMemberClaims } from 'graphql/use-get-member-claims'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
-import { convertEnumToTitle, splitOnUpperCase } from 'utils/text'
+import { convertEnumToTitle } from 'utils/text'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
@@ -104,8 +104,8 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
               </TableColumn>
 
               <TableColumn>
-                {claim.type?.__typename ? (
-                  splitOnUpperCase(claim.type.__typename.toString())
+                {claim.claimType ? (
+                  convertEnumToTitle(claim.claimType)
                 ) : (
                   <Placeholder>Not specified</Placeholder>
                 )}
