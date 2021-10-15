@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { RadioNew as RadioGroup } from '@hedvig-ui'
+import { RadioGroup } from '@hedvig-ui'
 import { totalNumberMemberGroups } from 'features/questions/filter'
 import React from 'react'
 import { range } from 'utils/array'
@@ -30,7 +30,7 @@ export const NumberMemberGroupsRadioButtons: React.FC = () => {
     <Group>
       <RadioGroup
         value={numberMemberGroups}
-        setValue={setNumberMemberGroups}
+        onChange={setNumberMemberGroups}
         options={numberMemberGroupsOptions}
       />
     </Group>
