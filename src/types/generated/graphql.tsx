@@ -470,6 +470,7 @@ export type EditMemberInfoInput = {
   lastName?: Maybe<Scalars['String']>
   email?: Maybe<Scalars['String']>
   phoneNumber?: Maybe<Scalars['String']>
+  birthDate?: Maybe<Scalars['LocalDate']>
 }
 
 export type Employee = {
