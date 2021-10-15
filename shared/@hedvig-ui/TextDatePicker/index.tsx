@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import { FadeIn, Input } from '@hedvig-ui'
+import { FadeIn, Input, InputProps } from '@hedvig-ui'
 import nlp from 'compromise'
 import dates from 'compromise-dates'
 import numbers from 'compromise-numbers'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
-import React, { HTMLAttributes } from 'react'
+import React from 'react'
 import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
 import { useClickOutside } from '../utils/click-outside'
@@ -74,11 +74,9 @@ const InlineDatePicker = ({ value, setValue, setTextValue, setView }) => {
   )
 }
 
-interface TextDatePickerProps
-  extends Omit<HTMLAttributes<HTMLInputElement>, 'value'> {
+interface TextDatePickerProps extends Omit<InputProps, 'value'> {
   value?: Date | null
   setValue: (date: Date | null) => void
-  error?: boolean
   errorMsg?: string
 }
 
