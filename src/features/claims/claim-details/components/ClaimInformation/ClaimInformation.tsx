@@ -14,13 +14,13 @@ import {
   CardTitle,
   DangerCard,
   DateTimePicker,
-  EnumDropdown,
+  Dropdown,
+  DropdownOption,
   InfoRow,
   InfoText,
   Label,
   Loadable,
   Paragraph,
-  SemanticDropdown,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format, parseISO } from 'date-fns'
@@ -148,6 +148,71 @@ export const ClaimInformation: React.FC<{
   const [updateClaimState] = useUpdateClaimState()
   const [setClaimDate] = useSetClaimDateMutation()
 
+  const coverEmployeeHandler = async (value: string) => {
+    await setCoveringEmployee({
+      variables: {
+        id: claimId,
+        coveringEmployee: validateSelectEmployeeClaimOption(value),
+      },
+      optimisticResponse: {
+        setCoveringEmployee: {
+          id: claimId,
+          __typename: 'Claim',
+          coveringEmployee: validateSelectEmployeeClaimOption(value),
+          events: data?.claim?.events ?? [],
+        },
+      },
+    })
+  }
+
+  const coInsureHandler = async (value: string) => {
+    setCreatingCoInsured(value === 'True')
+    if (coInsured && value === 'False') {
+      confirm('This will delete the co-insured, are you sure?').then(() =>
+        deleteCoInsured(),
+      )
+    }
+  }
+
+  const setClaimStateHandler = async (value: string) => {
+    await updateClaimState({
+      variables: { id: claimId, state: validateSelectOption(value) },
+      optimisticResponse: {
+        updateClaimState: {
+          id: claimId,
+          __typename: 'Claim',
+          state: validateSelectOption(value),
+          events: data?.claim?.events ?? [],
+        },
+      },
+    })
+  }
+
+  const coverEmployeeOptions = [
+    {
+      key: 0,
+      value: 'True',
+      text: 'True',
+      selected: coveringEmployee || false,
+    },
+    { key: 1, value: 'False', text: 'False', selected: !coveringEmployee },
+  ]
+
+  const coInsuredClaimOptions = [
+    {
+      key: 0,
+      value: 'True',
+      text: 'True',
+      selected: Boolean(creatingCoInsured || coInsured),
+    },
+    {
+      key: 1,
+      value: 'False',
+      text: 'False',
+      selected: Boolean(!creatingCoInsured && !coInsured),
+    },
+  ]
+
   return (
     <CardContent>
       <Loadable loading={claimInformationLoading}>
@@ -173,29 +238,17 @@ export const ClaimInformation: React.FC<{
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
-          <EnumDropdown
-            focus={focus}
-            value={state || ''}
-            enumToSelectFrom={ClaimState}
-            placeholder=""
-            onChange={async (value) => {
-              if (value === ClaimState.Closed && !data?.claim?.outcome) {
-                toast.error('Select a claim outcome')
-                return
-              }
-              await updateClaimState({
-                variables: { id: claimId, state: validateSelectOption(value) },
-                optimisticResponse: {
-                  updateClaimState: {
-                    id: claimId,
-                    __typename: 'Claim',
-                    state: validateSelectOption(value),
-                    events: data?.claim?.events ?? [],
-                  },
-                },
-              })
-            }}
-          />
+          <Dropdown focus={focus} placeholder="State">
+            {Object.keys(ClaimState).map((key) => (
+              <DropdownOption
+                key={key}
+                onClick={() => setClaimStateHandler(ClaimState[key])}
+                selected={state === ClaimState[key]}
+              >
+                {key}
+              </DropdownOption>
+            ))}
+          </Dropdown>
         </SelectWrapper>
         <SelectWrapper>
           <Label>Claim outcome</Label>
@@ -276,47 +329,31 @@ export const ClaimInformation: React.FC<{
         )}
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <SemanticDropdown
-            value={coveringEmployee ? 'True' : 'False'}
-            onChange={async (value) => {
-              await setCoveringEmployee({
-                variables: {
-                  id: claimId,
-                  coveringEmployee: validateSelectEmployeeClaimOption(value),
-                },
-                optimisticResponse: {
-                  setCoveringEmployee: {
-                    id: claimId,
-                    __typename: 'Claim',
-                    coveringEmployee: validateSelectEmployeeClaimOption(value),
-                    events: data?.claim?.events ?? [],
-                  },
-                },
-              })
-            }}
-            options={[
-              { key: 0, value: 'True', text: 'True' },
-              { key: 1, value: 'False', text: 'False' },
-            ]}
-          />
+          <Dropdown>
+            {coverEmployeeOptions.map((opt) => (
+              <DropdownOption
+                key={opt.key}
+                selected={opt.selected}
+                onClick={() => coverEmployeeHandler(opt.value)}
+              >
+                {opt.text}
+              </DropdownOption>
+            ))}
+          </Dropdown>
         </SelectWrapper>
         <SelectWrapper>
           <Label>Co-insured Claim</Label>
-          <SemanticDropdown
-            value={creatingCoInsured || coInsured ? 'True' : 'False'}
-            onChange={(value) => {
-              setCreatingCoInsured(value === 'True')
-              if (coInsured && value === 'False') {
-                confirm(
-                  'This will delete the co-insured, are you sure?',
-                ).then(() => deleteCoInsured())
-              }
-            }}
-            options={[
-              { key: 0, value: 'True', text: 'True' },
-              { key: 1, value: 'False', text: 'False' },
-            ]}
-          />
+          <Dropdown>
+            {coInsuredClaimOptions.map((opt) => (
+              <DropdownOption
+                key={opt.key}
+                selected={opt.selected}
+                onClick={() => coInsureHandler(opt.value)}
+              >
+                {opt.text}
+              </DropdownOption>
+            ))}
+          </Dropdown>
           {(creatingCoInsured || coInsured) && (
             <>
               <div style={{ marginTop: '0.5em' }} />

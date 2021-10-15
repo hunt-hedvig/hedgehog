@@ -1,11 +1,11 @@
 import {
-  getTextFromEnumValue,
   Table,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { useGetClaimTypesQuery } from 'types/generated/graphql'
 

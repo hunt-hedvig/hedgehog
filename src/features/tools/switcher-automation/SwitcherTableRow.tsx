@@ -5,13 +5,15 @@ import {
   Button,
   ButtonsGroup,
   DateTimePicker,
-  EnumDropdown,
+  Dropdown,
+  DropdownOption,
   FourthLevelHeadline,
   Input,
   Label,
 } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -312,11 +314,20 @@ export const SwitcherEmailRow: React.FC<Pick<
                 </OverlayItem>
                 <OverlayItem>
                   <Label>Termination Reason</Label>
-                  <EnumDropdown
-                    enumToSelectFrom={TerminationReason}
-                    placeholder=""
-                    onChange={setTerminationReason}
-                  />
+                  <Dropdown placeholder="Reasons" style={{ width: 300 }}>
+                    {Object.keys(TerminationReason).map((reason) => (
+                      <DropdownOption
+                        selected={
+                          terminationReason === TerminationReason[reason]
+                        }
+                        onClick={() =>
+                          setTerminationReason(TerminationReason[reason])
+                        }
+                      >
+                        {getTextFromEnumValue(TerminationReason[reason])}
+                      </DropdownOption>
+                    ))}
+                  </Dropdown>
                 </OverlayItem>
                 <OverlayItem>
                   <Label>Termination Reason</Label>
