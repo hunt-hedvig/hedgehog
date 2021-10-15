@@ -3,11 +3,11 @@ import {
   Dropdown,
   DropdownOption,
   Flex,
-  getTextFromEnumValue,
   Label,
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {

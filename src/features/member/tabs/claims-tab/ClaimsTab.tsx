@@ -5,10 +5,10 @@ import {
   Dropdown,
   DropdownOption,
   FadeIn,
-  getTextFromEnumValue,
   MainHeadline,
   Spacing,
 } from '@hedvig-ui'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'features/member/tabs/claims-tab/components/MemberClaimsList'
 import React from 'react'

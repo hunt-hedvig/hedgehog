@@ -5,11 +5,11 @@ import {
   Dropdown,
   DropdownOption,
   FourthLevelHeadline,
-  getTextFromEnumValue,
   Spacing,
   TextArea,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'

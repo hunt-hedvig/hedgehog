@@ -1,9 +1,5 @@
-import {
-  FadeIn,
-  getTextFromEnumValue,
-  LoadingMessage,
-  StandaloneMessage,
-} from '@hedvig-ui'
+import { FadeIn, LoadingMessage, StandaloneMessage } from '@hedvig-ui'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
 import { Tab } from 'semantic-ui-react'

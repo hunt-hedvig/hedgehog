@@ -39,11 +39,7 @@ export { CasualList, CasualListItem } from './CasualList/casual-list'
 export { Checkbox } from './Checkbox/checkbox'
 export { Copyable } from './Copyable/copyable'
 export { DateTimePicker } from './DateTimePicker/date-time-picker'
-export {
-  Dropdown,
-  Option as DropdownOption,
-  getTextFromEnumValue,
-} from './Dropdown/dropdown'
+export { Dropdown, Option as DropdownOption } from './Dropdown/dropdown'
 export { MultiDropdown } from './Dropdown/multi-dropdown'
 export {
   Form,

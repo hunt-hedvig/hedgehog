@@ -8,12 +8,12 @@ import {
   Dropdown,
   DropdownOption,
   FourthLevelHeadline,
-  getTextFromEnumValue,
   Input,
   Label,
 } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'

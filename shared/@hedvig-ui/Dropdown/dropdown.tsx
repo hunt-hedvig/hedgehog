@@ -215,19 +215,3 @@ export const Option: React.FC<OptionProps> = ({
     {children}
   </OptionStyled>
 )
-
-export const getTextFromEnumValue = (
-  sentence: string,
-  capitalized: boolean = false,
-) => {
-  return sentence
-    .toLowerCase()
-    .split('_')
-    .map((word, index) => {
-      if (capitalized || index === 0 || word === 'hedvig') {
-        return word.charAt(0).toUpperCase() + word.slice(1)
-      }
-      return word
-    })
-    .join(' ')
-}
