@@ -1,74 +1,85 @@
+import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import React, { useEffect, useRef } from 'react'
-import {
-  Ref,
-  TextArea as SemanticTextArea,
-  TextAreaProps,
-} from 'semantic-ui-react'
+import TextareaAutosize from 'react-textarea-autosize'
 
-const TextAreaWrapper = styled.div`
+const styles = (theme: Theme, resize?: boolean, maxHeight?: string) => css`
+  min-height: 75px;
+  max-height: ${maxHeight || 'none'};
   width: 100%;
+  border: 1px solid ${theme.accentBackground};
+  outline: none;
+  border-radius: 0.2rem;
+  resize: ${resize ? 'vertical' : 'none'};
+  padding: 11px 14px;
+  font-size: 14px;
+
+  &::placeholder {
+    color: ${theme.placeholderColor};
+  }
+
+  &:focus {
+    border: 1px solid ${theme.border};
+  }
 `
 
-const StyledSemanticTextArea = styled(SemanticTextArea)`
-  min-height: 3em;
-  overflow: hidden;
-  resize: none;
-  height: 100%;
+const TextAreaStyled = styled.textarea<{
+  resize?: boolean
+  maxHeight?: string
+}>`
+  ${({ theme, resize, maxHeight }) => styles(theme, resize, maxHeight)}
 `
 
-export const TextArea: React.FC<{
-  placeholder: string
+const TextareaAutosizeStyled = styled(TextareaAutosize)<{
+  resize?: boolean
+  maxHeight?: string
+}>`
+  ${({ theme, resize, maxHeight }) => styles(theme, resize, maxHeight)}
+`
+
+interface TextAreaProps
+  extends Omit<React.HTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
   value: string | undefined
+  maxHeight?: string
+  resize?: boolean
   onChange: (value: string) => void
   focus?: boolean
-} & Omit<TextAreaProps, 'onChange'>> = ({
-  placeholder,
-  value: inputValue,
-  onChange,
+  autoResize?: boolean
+}
+
+export const TextArea: React.FC<TextAreaProps> = ({
+  autoResize,
+  value,
   focus,
+  onChange,
   ...props
 }) => {
-  const textAreaRef = useRef<HTMLElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
-    setTimeout(() => {
-      if (textAreaRef.current && focus) {
-        textAreaRef.current.focus()
-      }
-    }, 1)
+    if (focus && textareaRef.current) {
+      textareaRef.current.focus()
+    }
   }, [focus])
 
-  return (
-    <TextAreaWrapper className="ui form">
-      <Ref innerRef={textAreaRef}>
-        <StyledSemanticTextArea
-          placeholder={placeholder}
-          value={inputValue}
-          onChange={(_, { value }) => onChange(value as string)}
-          {...props}
-          onKeyDown={(e) => {
-            if (
-              shouldIgnoreInput(e.key) ||
-              (!inputValue && e.keyCode === Keys.Enter.code)
-            ) {
-              e.preventDefault()
-              return
-            }
-
-            if (e.keyCode === Keys.Escape.code) {
-              e.preventDefault()
-              e.target.blur()
-              return
-            }
-
-            if (props.onKeyDown) {
-              props.onKeyDown(e)
-            }
-          }}
-        />
-      </Ref>
-    </TextAreaWrapper>
+  return autoResize ? (
+    <TextareaAutosizeStyled
+      ref={textareaRef}
+      value={value || ''}
+      maxHeight={props.maxHeight}
+      onKeyDown={props.onKeyDown}
+      onChange={(e) => onChange(e.currentTarget.value as string)}
+      placeholder={props.placeholder}
+      resize={props.resize}
+      onFocus={props.onFocus}
+      onBlur={props.onBlur}
+    />
+  ) : (
+    <TextAreaStyled
+      ref={textareaRef}
+      onChange={(e) => onChange(e.currentTarget.value as string)}
+      value={value || ''}
+      {...props}
+    />
   )
 }
