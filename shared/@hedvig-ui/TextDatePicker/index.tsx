@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 
 const DatePickerWrapper = styled.div`
   position: absolute;
-  top: 60px;
+  top: 45px;
 `
 
 const ErrorMessage = styled.span`
