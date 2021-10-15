@@ -30,7 +30,7 @@ export const DropdownWithoutSemantic = () => {
   ]
 
   return (
-    <div style={{ padding: '50px 600px' }}>
+    <div style={{ padding: 50 }}>
       <Dropdown placeholder="Dropdown">
         {OPTIONS.map((opt, index) => (
           <DropdownOption

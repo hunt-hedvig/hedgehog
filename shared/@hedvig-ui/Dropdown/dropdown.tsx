@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react'
+import { TriangleFill } from 'react-bootstrap-icons'
 import { useClickOutside } from '../utils/click-outside'
 import { Keys } from '../utils/key-press-hook'
 
@@ -34,13 +35,14 @@ const DropdownStyled = styled.div<{ active: boolean }>`
   & > li:first-of-type {
     border-radius: 0.3rem;
     border: 1px solid ${({ theme }) => theme.border};
+    padding-right: 30px;
 
     ${({ active }) =>
       active &&
       `
-    border-bottom: none;
-    border-radius: 0.3rem 0.3rem 0 0;
-  `}
+        border-radius: 0.3rem 0.3rem 0 0;
+        border-bottom: 1px solid transparent;
+      `}
   }
 
   &:focus {
@@ -93,6 +95,18 @@ const OptionStyled = styled.li<{ selected: boolean }>`
 
 const Placeholder = styled.span`
   color: ${({ theme }) => theme.placeholderColor};
+`
+
+const TriangleIcon = styled(TriangleFill)<{ active }>`
+  transition: all 0.2s;
+  position: absolute;
+  right: 15px;
+  top: 40%;
+  width: 10px;
+  height: 10px;
+  transform: ${({ active }) => (!active ? 'scaleY(-1)' : 'scaleY(1)')};
+  color: ${({ active, theme }) =>
+    !active ? theme.placeholderColor : theme.accent};
 `
 
 interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
@@ -186,6 +200,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
           }))}
         </OptionsList>
       )}
+
+      <TriangleIcon active={active} />
     </DropdownStyled>
   )
 }
