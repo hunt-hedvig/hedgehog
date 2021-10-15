@@ -24,9 +24,9 @@ export const StandardTextDatePicker: React.FC = () => {
     <div style={{ padding: 30 }}>
       <TextDatePicker
         error={error}
-        errorMsg="Invalid Date"
+        errorMessage="Invalid Date"
         value={value}
-        setValue={setDateHandler}
+        onChange={setDateHandler}
         placeholder="Enter date string"
       />
       <div style={{ marginTop: 20 }}>

@@ -74,17 +74,17 @@ const InlineDatePicker = ({ value, setValue, setTextValue, setView }) => {
   )
 }
 
-interface TextDatePickerProps extends Omit<InputProps, 'value'> {
+interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
   value?: Date | null
-  setValue: (date: Date | null) => void
-  errorMsg?: string
+  onChange: (date: Date | null) => void
+  errorMessage?: string
 }
 
 export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   value,
-  setValue,
+  onChange,
   error,
-  errorMsg,
+  errorMessage,
   ...props
 }) => {
   const [isOldDatepicker, setIsOldDatepicker] = React.useState(false)
@@ -109,7 +109,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       const isoDate = parseISO(newDate)
       const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
 
-      setValue(new Date(newDate))
+      onChange(new Date(newDate))
       setTextValue(formattedDate)
     }
   }
@@ -137,11 +137,11 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
         }}
         {...props}
       />
-      {error && <ErrorMessage>{errorMsg || 'Invalid Date'}</ErrorMessage>}
+      {error && <ErrorMessage>{errorMessage || 'Invalid Date'}</ErrorMessage>}
       {isOldDatepicker && (
         <InlineDatePicker
           value={value}
-          setValue={setValue}
+          setValue={onChange}
           setTextValue={setTextValue}
           setView={setIsOldDatepicker}
         />
