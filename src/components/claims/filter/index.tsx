@@ -15,9 +15,10 @@ interface FiltersProps {
 }
 
 const FilterWrapper = styled.div`
+  width: 100%;
   display: flex;
-  align-items: flex-end;
-  gap: 5rem;
+  align-items: flex-start;
+  justify-content: space-between;
   margin: 2rem 0;
 `
 
@@ -95,8 +96,8 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
   }
 
   const stateColors = {
-    Open: lightTheme.activeInsuranceBackground,
-    Closed: lightTheme.accent,
+    Open: lightTheme.accent,
+    Closed: lightTheme.activeInsuranceBackground,
     Reopened: lightTheme.accentLight,
   }
 
