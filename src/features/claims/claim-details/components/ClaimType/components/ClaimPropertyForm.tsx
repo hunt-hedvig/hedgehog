@@ -109,7 +109,11 @@ export const ClaimPropertyForm: React.FC<{
 
                       handlePropertySelect(property, option)
                     }}
-                    selected={opt.value === selectedOption?.option.id || false}
+                    selected={
+                      opt.value === selectedOption?.option.id ||
+                      (selectedOption === undefined &&
+                        opt.value === 'not_specified')
+                    }
                   >
                     {opt.text}
                   </DropdownOption>
