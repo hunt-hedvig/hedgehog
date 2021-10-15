@@ -7,15 +7,27 @@ export default {
 }
 
 export const StandardTextDatePicker: React.FC = () => {
+  const [error, setError] = React.useState(false)
   const [value, setValue] = React.useState<Date | null>()
+
+  const setDateHandler = (date: Date | null) => {
+    if (date) {
+      setError(false)
+      setValue(date)
+    } else {
+      setError(true)
+      setValue(null)
+    }
+  }
 
   return (
     <div style={{ padding: 30 }}>
       <TextDatePicker
+        error={error}
+        errorMsg="Invalid Date"
         value={value}
-        setValue={(date: Date | null) => setValue(date)}
+        setValue={setDateHandler}
         placeholder="Enter date string"
-        style={{ width: 300 }}
       />
       <div style={{ marginTop: 20 }}>
         <span>Date:</span> {value?.toDateString()}

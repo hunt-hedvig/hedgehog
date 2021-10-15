@@ -1,23 +1,24 @@
 import styled from '@emotion/styled'
-import { Input } from '@hedvig-ui'
+import { FadeIn, Input } from '@hedvig-ui'
 import nlp from 'compromise'
 import dates from 'compromise-dates'
 import numbers from 'compromise-numbers'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React, { HTMLAttributes } from 'react'
-import { CalendarDate } from 'react-bootstrap-icons'
+import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
+import { useClickOutside } from '../utils/click-outside'
 import { Keys } from '../utils/key-press-hook'
 
 const Wrapper = styled.div`
-  width: fit-content;
+  width: 100%;
   position: relative;
+`
 
-  & .react-datepicker {
-    position: absolute;
-    top: 60px;
-  }
+const DatePickerWrapper = styled.div`
+  position: absolute;
+  top: 60px;
 `
 
 const ErrorMessage = styled.span`
@@ -28,6 +29,12 @@ const ErrorMessage = styled.span`
 
   bottom: -25px;
   right: 10px;
+`
+
+const CalendarIcon = styled(Calendar)<{ focus?: boolean }>`
+  transition: all 0.1s;
+  color: ${({ theme, focus }) =>
+    focus ? theme.accent : theme.placeholderColor};
 `
 
 export const getDate = (value: string) => {
@@ -42,28 +49,56 @@ export const getDate = (value: string) => {
   return date
 }
 
+const InlineDatePicker = ({ value, setValue, setTextValue, setView }) => {
+  const pickerRef = React.useRef<HTMLDivElement>(null)
+
+  useClickOutside(pickerRef, () => setView(false))
+
+  return (
+    <DatePickerWrapper ref={pickerRef}>
+      <FadeIn duration={250}>
+        <DatePicker
+          inline
+          date={value || null}
+          onChange={(date) => {
+            const newDate = parseISO(date.toISOString())
+            const formattedDate = formatDate(newDate, 'yyyy-MM-dd')
+            setValue(date)
+            setTextValue(formattedDate)
+            setView(false)
+          }}
+        />
+      </FadeIn>
+    </DatePickerWrapper>
+  )
+}
+
 interface TextDatePickerProps
   extends Omit<HTMLAttributes<HTMLInputElement>, 'value'> {
   value?: Date | null
   setValue: (date: Date | null) => void
+  error?: boolean
+  errorMsg?: string
 }
 
 export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   value,
   setValue,
+  error,
+  errorMsg,
   ...props
 }) => {
   const [isOldDatepicker, setIsOldDatepicker] = React.useState(false)
-  const [error, setError] = React.useState(false)
-  const [textValue, setTextValue] = React.useState(
-    value?.toISOString()?.split('T')[0] ?? null,
-  )
+  const [textValue, setTextValue] = React.useState<string | null>()
+
+  React.useEffect(() => {
+    setTextValue(value?.toISOString()?.split('T')[0] ?? null)
+  }, [value])
 
   const setDateHandler = () => {
     const date = getDate(textValue || '')
 
     if (date) {
-      setError(false)
       const newDate = date.start
 
       const isoDate = parseISO(newDate)
@@ -73,7 +108,6 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       setTextValue(formattedDate)
     } else {
       setValue(null)
-      setError(true)
     }
   }
 
@@ -82,12 +116,12 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       <Input
         error={error}
         icon={
-          <CalendarDate
+          <CalendarIcon
+            focus={isOldDatepicker}
             onClick={() => setIsOldDatepicker((prev) => !prev)}
             style={{ cursor: 'pointer' }}
           />
         }
-        size="large"
         onBlur={() => {
           setDateHandler()
         }}
@@ -100,19 +134,13 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
         }}
         {...props}
       />
-      {error && <ErrorMessage>Invalid date</ErrorMessage>}
+      {error && <ErrorMessage>{errorMsg || 'Invalid Date'}</ErrorMessage>}
       {isOldDatepicker && (
-        <DatePicker
-          inline
-          date={value || null}
-          onChange={(date) => {
-            setError(false)
-            const newDate = parseISO(date.toISOString())
-            const formattedDate = formatDate(newDate, 'yyyy-MM-dd')
-            setValue(date)
-            setTextValue(formattedDate)
-            setIsOldDatepicker(false)
-          }}
+        <InlineDatePicker
+          value={value}
+          setValue={setValue}
+          setTextValue={setTextValue}
+          setView={setIsOldDatepicker}
         />
       )}
     </Wrapper>
