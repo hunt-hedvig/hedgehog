@@ -13464,6 +13464,16 @@
               "ofType": null
             },
             "defaultValue": null
+          },
+          {
+            "name": "birthDate",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "LocalDate",
+              "ofType": null
+            },
+            "defaultValue": null
           }
         ],
         "interfaces": null,
