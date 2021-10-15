@@ -327,6 +327,7 @@ input EditMemberInfoInput {
   lastName: String
   email: String
   phoneNumber: String
+  birthDate: LocalDate
 }
 
 input GetValuationInput {
