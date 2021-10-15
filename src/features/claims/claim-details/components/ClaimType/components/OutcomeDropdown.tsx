@@ -1,4 +1,4 @@
-import { Placeholder, SemanticDropdown } from '@hedvig-ui'
+import { Dropdown, DropdownOption } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -39,25 +39,26 @@ export const OutcomeDropdown: React.FC<{
   }
 
   return (
-    <SemanticDropdown
-      options={[
+    <Dropdown placeholder="Not specified">
+      {[
         ...Object.keys(ClaimOutcomes).map((value) => ({
           value,
           text: convertEnumToTitle(value),
         })),
         { value: 'not_specified', text: 'Not specified' },
-      ]}
-      onChange={(value) =>
-        handleSelectOutcome(value === 'not_specified' ? null : value)
-      }
-      value={outcome ?? 'not_specified'}
-      onRender={() =>
-        outcome ? (
-          <>{convertEnumToTitle(outcome)}</>
-        ) : (
-          <Placeholder>Not specified</Placeholder>
-        )
-      }
-    />
+      ].map((opt) => (
+        <DropdownOption
+          key={opt.value}
+          onClick={() => {
+            handleSelectOutcome(
+              opt.value === 'not_specified' ? null : opt.value,
+            )
+          }}
+          selected={outcome === opt.value}
+        >
+          {opt.text}
+        </DropdownOption>
+      ))}
+    </Dropdown>
   )
 }

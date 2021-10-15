@@ -2,11 +2,13 @@ import styled from '@emotion/styled'
 import {
   Button,
   DateTimePicker,
-  EnumDropdown,
+  Dropdown,
+  DropdownOption,
   FadeIn,
   MainHeadline,
   Spacing,
 } from '@hedvig-ui'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'features/member/tabs/claims-tab/components/MemberClaimsList'
 import React from 'react'
@@ -50,11 +52,16 @@ export const ClaimsTab: React.FC<{
 
         {showForm ? (
           <FormWrapper>
-            <EnumDropdown
-              enumToSelectFrom={ClaimSource}
-              placeholder="Claim Source"
-              onChange={(source) => setClaimSource(source)}
-            />
+            <Dropdown placeholder="Source">
+              {Object.keys(ClaimSource).map((source) => (
+                <DropdownOption
+                  selected={claimSource === ClaimSource[source] || false}
+                  onClick={() => setClaimSource(ClaimSource[source])}
+                >
+                  {getTextFromEnumValue(source)}
+                </DropdownOption>
+              ))}
+            </Dropdown>
             <DateTimePicker
               disabled={createClaimLoading}
               date={claimDate}

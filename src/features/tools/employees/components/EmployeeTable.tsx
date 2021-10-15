@@ -2,8 +2,9 @@ import {
   Button,
   ButtonsGroup,
   Card,
+  Dropdown,
+  DropdownOption,
   LoadingMessage,
-  SemanticDropdown,
   StandaloneMessage,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
@@ -77,6 +78,7 @@ export const EmployeeTable: React.FC<{
       </StandaloneMessage>
     )
   }
+
   return (
     <Card span={1}>
       <Table celled style={{ fontSize: '1.0rem', overflow: 'visible' }}>
@@ -98,17 +100,23 @@ export const EmployeeTable: React.FC<{
                   <Table.Cell width={3}>{email}</Table.Cell>
                   <Table.Cell width={3}>
                     {scopes.includes('employees:manage') ? (
-                      <SemanticDropdown
-                        options={options}
-                        onChange={(value) =>
-                          setSelectedRoles({
-                            ...selectedRoles,
-                            [id]: value,
-                          })
-                        }
-                        selection
-                        value={selectedRoles[id] ?? role}
-                      />
+                      <Dropdown placeholder={role}>
+                        {options.map((opt) => {
+                          return (
+                            <DropdownOption
+                              onClick={() => {
+                                setSelectedRoles({
+                                  ...selectedRoles,
+                                  [id]: opt.value,
+                                })
+                              }}
+                              selected={selectedRoles[id] === opt.value}
+                            >
+                              {opt.text || role}
+                            </DropdownOption>
+                          )
+                        })}
+                      </Dropdown>
                     ) : (
                       role
                     )}

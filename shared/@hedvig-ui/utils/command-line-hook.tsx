@@ -54,7 +54,9 @@ const CommandLineInput = styled(Input)`
   &&&& {
     width: 40vw;
     min-width: 500px;
-    padding: 1em 1em;
+    border: none;
+    padding-top: 1em;
+    padding-bottom: 1em;
   }
 `
 
@@ -177,6 +179,7 @@ export const CommandLineComponent: React.FC<{
         <CommandLineInput
           autoFocus
           value={searchValue}
+          size="large"
           onKeyDown={(e) => {
             if (e.keyCode === Keys.Down.code || e.keyCode === Keys.Up.code) {
               e.preventDefault()

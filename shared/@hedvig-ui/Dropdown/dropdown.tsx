@@ -1,6 +1,11 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { LiHTMLAttributes, useEffect, useRef } from 'react'
+import React, {
+  HTMLAttributes,
+  LiHTMLAttributes,
+  useEffect,
+  useRef,
+} from 'react'
 import { useClickOutside } from '../utils/click-outside'
 import { Keys } from '../utils/key-press-hook'
 
@@ -17,7 +22,10 @@ const show = keyframes`
 `
 
 const DropdownStyled = styled.div<{ active: boolean }>`
+  width: 100%;
   position: relative;
+  outline: none;
+
   & ul,
   & li {
     list-style: none;
@@ -34,6 +42,12 @@ const DropdownStyled = styled.div<{ active: boolean }>`
     border-radius: 0.3rem 0.3rem 0 0;
   `}
   }
+
+  &:focus {
+    & > li:first-of-type {
+      background-color: ${({ theme }) => theme.accentBackground};
+    }
+  }
 `
 
 const OptionsList = styled.ul`
@@ -41,7 +55,10 @@ const OptionsList = styled.ul`
   padding-left: 0;
 
   position: absolute;
+  z-index: 1000;
   width: 100%;
+  max-height: 500px;
+  overflow-y: scroll;
 
   animation: ${show} 0.1s linear;
   background-color: ${({ theme }) => theme.backgroundLight};
@@ -63,7 +80,7 @@ const OptionStyled = styled.li<{ selected: boolean }>`
 
   outline: none;
   cursor: pointer;
-  padding: 10px 25px;
+  padding: 10px 15px;
   background-color: ${({ theme, selected }) =>
     !selected ? theme.backgroundLight : theme.accentBackground};
 
@@ -78,14 +95,17 @@ const Placeholder = styled.span`
   color: ${({ theme }) => theme.placeholderColor};
 `
 
-interface DropdownProps {
+interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
+  focus?: boolean
   placeholder?: string
   children: any
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
+  focus,
   placeholder,
   children,
+  ...props
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -108,6 +128,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
   useClickOutside(dropdownRef, closeDropdown)
 
   useEffect(() => {
+    if (focus && dropdownRef.current) {
+      dropdownRef.current.focus()
+    }
+  }, [focus])
+
+  useEffect(() => {
     children.forEach((el, index) => {
       if (el.props.selected) {
         setSelectedIdx(index + 1)
@@ -117,27 +143,19 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <DropdownStyled
+      tabIndex={0}
       ref={dropdownRef}
       active={active}
       onKeyDown={(e) => {
-        if (e.keyCode === Keys.Escape.code) {
+        if (e.keyCode === Keys.Escape.code || e.keyCode === Keys.Enter.code) {
           toggleDropdown()
           return
         }
       }}
+      {...props}
     >
       {!selectedIdx ? (
-        <OptionStyled
-          selected={false}
-          tabIndex={0}
-          onClick={toggleDropdown}
-          onKeyDown={(e) => {
-            if (e.keyCode === Keys.Enter.code) {
-              toggleDropdown()
-              return
-            }
-          }}
-        >
+        <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
           <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
         </OptionStyled>
       ) : (

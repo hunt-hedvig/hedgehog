@@ -1,12 +1,13 @@
 import {
   Button,
+  Dropdown,
+  DropdownOption,
   Flex,
-  getTextFromEnumValue,
   Label,
   SearchableDropdown,
-  SemanticDropdown,
   Spacing,
 } from '@hedvig-ui'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -32,14 +33,16 @@ const ClaimTypeDropdown: React.FC<{
   }
 
   return (
-    <SemanticDropdown
-      value={value}
-      onChange={onChange}
-      options={claimTypes.map((type) => ({
-        value: type,
-        text: getTextFromEnumValue(type),
-      }))}
-    />
+    <Dropdown placeholder="Types">
+      {claimTypes.map((type) => (
+        <DropdownOption
+          selected={value === type}
+          onClick={() => onChange(type)}
+        >
+          {getTextFromEnumValue(type)}
+        </DropdownOption>
+      ))}
+    </Dropdown>
   )
 }
 

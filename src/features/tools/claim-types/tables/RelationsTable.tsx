@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import {
   Button,
-  getTextFromEnumValue,
   Table,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
