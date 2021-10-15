@@ -8,22 +8,6 @@ export default {
   decorators: [],
 }
 
-// export const TextAreaThatGrows: React.FC = () => {
-//   const [text, setText] = React.useState('')
-//   return (
-//     <>
-//       <TextArea
-//         placeholder="Write your life story here..."
-//         value={text}
-//         onChange={setText}
-//       />
-//       <p>
-//         <strong>Written text:</strong> {text}
-//       </p>
-//     </>
-//   )
-// }
-
 export const TextAreaStandard: React.FC = () => {
   const [value, setValue] = React.useState('')
 
@@ -32,7 +16,7 @@ export const TextAreaStandard: React.FC = () => {
       <TextArea
         placeholder="Write your life story here..."
         resize={boolean('Resize', false)}
-        autoresize={boolean('Auto resize', false)}
+        autoResize={boolean('Auto resize', false)}
         maxHeight={text('Max Height', '300px')}
         value={value}
         onChange={setValue}
