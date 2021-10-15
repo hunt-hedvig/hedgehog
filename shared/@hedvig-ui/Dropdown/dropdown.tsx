@@ -58,7 +58,7 @@ const OptionsList = styled.ul`
   z-index: 1000;
   width: 100%;
   max-height: 500px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   animation: ${show} 0.1s linear;
   background-color: ${({ theme }) => theme.backgroundLight};
