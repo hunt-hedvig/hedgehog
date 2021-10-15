@@ -1,4 +1,4 @@
-import { Flex, Label, Placeholder, SemanticDropdown, Spacing } from '@hedvig-ui'
+import { Dropdown, DropdownOption, Flex, Label, Spacing } from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -76,34 +76,8 @@ export const ClaimPropertyForm: React.FC<{
           return (
             <Spacing key={propertyId} top="small">
               <Label>{name}</Label>
-              <SemanticDropdown
-                value={selectedOption?.option.id ?? 'not_specified'}
-                onRender={() =>
-                  !selectedOption?.option.id ? (
-                    <Placeholder>Not specified</Placeholder>
-                  ) : (
-                    <>{selectedOption?.option.name}</>
-                  )
-                }
-                onChange={async (optionId) => {
-                  const property = {
-                    id: propertyId,
-                    name,
-                  }
-
-                  if (optionId === 'not_specified') {
-                    handlePropertySelect(property, null)
-                  }
-
-                  const option = options.find((o) => o.id === optionId)
-
-                  if (!option) {
-                    return
-                  }
-
-                  handlePropertySelect(property, option)
-                }}
-                options={[
+              <Dropdown placeholder="Not specified">
+                {[
                   ...options.map((option) => ({
                     key: option.id,
                     value: option.id,
@@ -114,8 +88,33 @@ export const ClaimPropertyForm: React.FC<{
                     value: 'not_specified',
                     text: 'Not specified',
                   },
-                ]}
-              />
+                ].map((opt) => (
+                  <DropdownOption
+                    key={opt.key}
+                    onClick={async () => {
+                      const property = {
+                        id: propertyId,
+                        name,
+                      }
+
+                      if (opt.value === 'not_specified') {
+                        handlePropertySelect(property, null)
+                      }
+
+                      const option = options.find((o) => o.id === opt.value)
+
+                      if (!option) {
+                        return
+                      }
+
+                      handlePropertySelect(property, option)
+                    }}
+                    selected={opt.value === selectedOption?.option.id || false}
+                  >
+                    {opt.text}
+                  </DropdownOption>
+                ))}
+              </Dropdown>
             </Spacing>
           )
         })}

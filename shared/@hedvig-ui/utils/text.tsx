@@ -58,3 +58,19 @@ export const splitOnUpperCase = (s: string) => {
   const splitResult = s.match(/[A-Z][a-z]+|[0-9]+/g)
   return splitResult?.join(' ') ?? null
 }
+
+export const getTextFromEnumValue = (
+  sentence: string,
+  capitalized: boolean = false,
+) => {
+  return sentence
+    .toLowerCase()
+    .split('_')
+    .map((word, index) => {
+      if (capitalized || index === 0 || word === 'hedvig') {
+        return word.charAt(0).toUpperCase() + word.slice(1)
+      }
+      return word
+    })
+    .join(' ')
+}
