@@ -19,6 +19,7 @@ const Wrapper = styled.div`
 const DatePickerWrapper = styled.div`
   position: absolute;
   top: 45px;
+  z-index: 1000;
 `
 
 const ErrorMessage = styled.span`
@@ -92,7 +93,13 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   const [textValue, setTextValue] = React.useState<string | null>()
 
   React.useEffect(() => {
-    setTextValue(value?.toISOString()?.split('T')[0] ?? null)
+    if (value) {
+      const isoDate = parseISO(value.toISOString())
+      const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
+      setTextValue(formattedDate)
+    } else {
+      setTextValue(null)
+    }
   }, [value])
 
   const setDateHandler = () => {
@@ -106,8 +113,6 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
 
       setValue(new Date(newDate))
       setTextValue(formattedDate)
-    } else {
-      setValue(null)
     }
   }
 
