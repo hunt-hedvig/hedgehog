@@ -20,7 +20,7 @@ export const PostalCodesEditor: React.FC = () => {
           'Add postal codes columns from excel (Columns: "Postnummer", "Poststed", "Municipality name", "Disposable income" and "Centrality group")'
         }
         value={postalCodesString}
-        onChange={setPostalCodesString}
+        onChange={(e) => setPostalCodesString(e.currentTarget.value)}
       />
       <Spacing top>
         <Button
