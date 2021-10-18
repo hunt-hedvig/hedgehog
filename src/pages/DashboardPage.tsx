@@ -76,7 +76,7 @@ export const DashboardPage: React.FC = () => {
           <MainHeadline>
             Hi there{' '}
             <Capitalized>
-              {getLowercaseNameFromEmail(data?.me.email)}
+              {getLowercaseNameFromEmail(data?.me.user.email)}
             </Capitalized>
             !
           </MainHeadline>

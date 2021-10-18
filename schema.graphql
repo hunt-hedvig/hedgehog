@@ -11,18 +11,10 @@ type QueryType {
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
-  itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
-  claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   availableCampaignCodeTypes: [String!]!
   dashboardNumbers: DashboardNumbers
-  getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
-  canValuateClaimItem(
-    typeOfContract: String!
-    itemFamilyId: String!
-    itemTypeId: ID
-  ): CanValuateClaimItem
   quoteSchemaForContractType(contractType: String!): JSON
   memberSearch(
     query: String!
@@ -40,12 +32,21 @@ type QueryType {
   claimProperty(id: ID!): ClaimProperty!
   claimPropertyOptions: [ClaimPropertyOption!]!
   claimPropertyOption(id: ID!): ClaimPropertyOption!
+
+  user(email: String!): User
 }
 
 type Me {
-  email: String!
   scopes: [String!]!
   role: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  email: String!
+  fullName: String
+  phoneNumber: String
 }
 
 type MutationType {
@@ -138,15 +139,6 @@ type MutationType {
   ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
   overrideQuotePrice(input: OverrideQuotePriceInput!): Quote!
-  upsertItemCompany(request: UpsertItemCompanyInput): ID!
-  upsertItemType(request: UpsertItemTypeInput): ID!
-  upsertItemBrand(request: UpsertItemBrandInput): ID!
-  upsertItemModel(request: UpsertItemModelInput): ID!
-  upsertClaimItem(request: UpsertClaimItemInput): ID!
-  deleteClaimItem(claimItemId: ID!): Boolean!
-  insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
-  insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
-  upsertValuationRule(request: UpsertValuationRuleInput): ID!
   createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
@@ -189,12 +181,19 @@ type MutationType {
 
   upsertCoInsured(claimId: ID!, request: UpsertCoInsuredInput!): Claim!
   deleteCoInsured(claimId: ID!): Boolean!
+
+  updateUser(id: ID!, input: UpdateUserInput!): User!
 }
 
 input UpsertCoInsuredInput {
   fullName: String!
   personalNumber: String!
   email: String
+  phoneNumber: String
+}
+
+input UpdateUserInput {
+  fullName: String
   phoneNumber: String
 }
 
@@ -300,27 +299,6 @@ input MemberFraudulentStatusInput {
   fraudulentStatusDescription: String
 }
 
-type ClaimItem {
-  id: ID!
-  itemFamily: ItemFamily!
-  itemType: ItemType!
-  itemBrand: ItemBrand
-  itemModel: ItemModel
-  itemCompany: ItemCompany
-  dateOfPurchase: LocalDate
-  purchasePrice: MonetaryAmountV2
-  valuation: MonetaryAmountV2
-  note: String
-}
-
-input InsertItemCategoriesInput {
-  itemCategoriesString: String!
-}
-
-input InsertValuationRulesInput {
-  valuationRulesString: String!
-}
-
 input EditMemberInfoInput {
   memberId: String!
   firstName: String
@@ -328,86 +306,6 @@ input EditMemberInfoInput {
   email: String
   phoneNumber: String
   birthDate: LocalDate
-}
-
-input GetValuationInput {
-  purchasePrice: MonetaryAmount!
-  itemFamilyId: String!
-  itemTypeId: ID
-  typeOfContract: String!
-  purchaseDate: LocalDate!
-  baseDate: LocalDate
-}
-
-type ClaimItemValuation {
-  depreciatedValue: MonetaryAmountV2
-  valuationRule: ValuationRule
-}
-
-type ValuationRule {
-  valuationName: String!
-  itemFamily: String!
-  itemTypeId: ID
-  ageLimit: Float!
-  valuationTable: String!
-  valuationType: String!
-  depreciation: Int
-}
-
-type CanValuateClaimItem {
-  canValuate: Boolean!
-  typeOfContract: String
-  itemFamily: String
-  itemTypeId: ID
-}
-
-input UpsertClaimItemInput {
-  id: ID
-  claimId: ID!
-  itemFamilyId: ID!
-  itemTypeId: ID!
-  itemBrandId: ID
-  itemModelId: ID
-  dateOfPurchase: LocalDate
-  purchasePrice: MonetaryAmount
-  automaticValuation: MonetaryAmount
-  customValuation: MonetaryAmount
-  note: String
-}
-
-input UpsertItemCompanyInput {
-  id: ID
-  name: String!
-}
-
-input UpsertItemTypeInput {
-  id: ID
-  name: String!
-  itemFamilyId: ID!
-}
-
-input UpsertItemBrandInput {
-  id: ID
-  name: String!
-  itemTypeId: ID!
-  itemCompanyId: ID!
-}
-
-input UpsertItemModelInput {
-  id: ID
-  name: String!
-  itemBrandId: ID!
-}
-
-input UpsertValuationRuleInput {
-  id: ID
-  name: String!
-  ageLimit: Float!
-  typeOfContract: String!
-  itemFamilyId: String!
-  itemTypeId: String
-  valuationType: String!
-  depreciation: Float
 }
 
 input OverrideQuotePriceInput {
@@ -478,25 +376,6 @@ type GenericAgreement {
   createdAt: Instant!
 }
 
-enum SwedishApartmentLineOfBusiness {
-  RENT
-  BRF
-  STUDENT_RENT
-  STUDENT_BRF
-}
-
-enum NorwegianHomeContentLineOfBusiness {
-  RENT
-  OWN
-  YOUTH_RENT
-  YOUTH_OWN
-}
-
-enum NorwegianTravelLineOfBusiness {
-  REGULAR
-  YOUTH
-}
-
 enum AgreementStatus {
   PENDING
   ACTIVE_IN_FUTURE
@@ -550,14 +429,6 @@ input SafelyEditAgreementInput {
   newStreet: String
 }
 
-union ItemCategory = ItemFamily | ItemType | ItemBrand | ItemModel | ItemCompany
-
-interface ItemCategoryCore {
-  id: ID!
-  nextKind: ItemCategoryKind
-  displayName: String!
-  searchTerms: String!
-}
 
 input AssignVoucherPercentageDiscount {
   partnerId: String!
@@ -639,50 +510,6 @@ union Incentive =
   | VisibleNoDiscount
   | UnknownIncentive
 
-type ItemFamily implements ItemCategoryCore {
-  id: ID!
-  nextKind: ItemCategoryKind
-  displayName: String!
-  searchTerms: String!
-}
-
-type ItemType implements ItemCategoryCore {
-  id: ID!
-  nextKind: ItemCategoryKind
-  displayName: String!
-  searchTerms: String!
-}
-
-type ItemBrand implements ItemCategoryCore {
-  id: ID!
-  nextKind: ItemCategoryKind
-  displayName: String!
-  searchTerms: String!
-  companyName: String!
-}
-
-type ItemModel implements ItemCategoryCore {
-  id: ID!
-  nextKind: ItemCategoryKind
-  displayName: String!
-  searchTerms: String!
-}
-
-type ItemCompany implements ItemCategoryCore {
-  id: ID!
-  nextKind: ItemCategoryKind
-  displayName: String!
-  searchTerms: String!
-}
-
-enum ItemCategoryKind {
-  FAMILY
-  TYPE
-  BRAND
-  MODEL
-  COMPANY
-}
-
 type FileUpload {
   fileUploadUrl: URL
   timestamp: Instant
@@ -742,15 +569,6 @@ enum Flag {
   GREEN
   AMBER
   RED
-}
-
-input ClaimInformationInput {
-  location: String
-  date: LocalDate
-  item: String
-  policeReport: String
-  receipt: String
-  ticket: String
 }
 
 type MonthlySubscription {
@@ -1045,7 +863,6 @@ type Claim {
   claimFiles: [ClaimFileUpload!]!
   contract: Contract
   agreement: GenericAgreement
-  itemSet: ClaimItemSet!
   propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured
 }
@@ -1062,10 +879,6 @@ type ClaimPropertySelection {
   claimType: String!
   property: ClaimProperty!
   option: ClaimPropertyOption!
-}
-
-type ClaimItemSet {
-  items: [ClaimItem!]!
 }
 
 type ClaimNote {
