@@ -1,4 +1,4 @@
-import { Button, DateTimePicker } from '@hedvig-ui'
+import { Button, TextDatePicker } from '@hedvig-ui'
 import {
   addAgreementFromQuoteOptions,
   useAddAgreementFromQuote,
@@ -111,14 +111,18 @@ export const QuoteActivation: React.FC<{
             )}
             {!contract.terminationDate && (
               <div>
-                <DateTimePicker
-                  date={activeFrom || new Date()}
-                  setDate={(value) => {
+                <TextDatePicker
+                  onChange={(date) => {
+                    if (!date) {
+                      return
+                    }
+
                     if (onWipChange) {
                       onWipChange(true)
                     }
-                    setActiveFrom(value)
+                    setActiveFrom(date)
                   }}
+                  value={activeFrom || new Date()}
                 />
               </div>
             )}
