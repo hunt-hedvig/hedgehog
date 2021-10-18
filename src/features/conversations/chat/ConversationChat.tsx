@@ -134,9 +134,9 @@ export const ConversationChat: React.FC<{
             }}
             placeholder={'Your message goes here...'}
             value={message}
-            onChange={(value) => {
-              setDraft(value)
-              setMessage(value)
+            onChange={(e) => {
+              setDraft(e.currentTarget.value)
+              setMessage(e.currentTarget.value)
             }}
             onKeyDown={handleOnKeyDown}
           />

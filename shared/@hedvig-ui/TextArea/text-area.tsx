@@ -37,12 +37,10 @@ const TextareaAutosizeStyled = styled(TextareaAutosize)<{
   ${({ theme, resize, maxHeight }) => styles(theme, resize, maxHeight)}
 `
 
-export interface TextAreaProps
-  extends Omit<React.HTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
-  value: string | undefined
+interface TextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {
+  value?: string
   maxHeight?: string
   resize?: boolean
-  onChange: (value: string) => void
   focus?: boolean
   autoResize?: boolean
 }
@@ -68,7 +66,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
       value={value || ''}
       maxHeight={props.maxHeight}
       onKeyDown={props.onKeyDown}
-      onChange={(e) => onChange(e.currentTarget.value as string)}
+      onChange={onChange}
       placeholder={props.placeholder}
       resize={props.resize}
       onFocus={props.onFocus}
@@ -77,7 +75,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
   ) : (
     <TextAreaStyled
       ref={textareaRef}
-      onChange={(e) => onChange(e.currentTarget.value as string)}
+      onChange={onChange}
       value={value || ''}
       {...props}
     />

@@ -19,7 +19,7 @@ export const TextAreaStandard: React.FC = () => {
         autoResize={boolean('Auto resize', false)}
         maxHeight={text('Max Height', '300px')}
         value={value}
-        onChange={setValue}
+        onChange={(e) => setValue(e.currentTarget.value)}
       />
       <p>
         <strong>Written text:</strong> {value}
