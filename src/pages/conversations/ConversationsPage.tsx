@@ -8,7 +8,6 @@ import {
 } from '@hedvig-ui'
 import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
-import { useResolveConversation } from 'features/conversations/hooks/use-resolve-conversation'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
 import { FilterState } from 'features/questions/filter'
@@ -94,32 +93,6 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     }
   }, [isDownKeyPressed, isUpKeyPressed])
 
-  useResolveConversation(
-    () =>
-      fade('up', 'out').then(() => {
-        if (currentQuestionOrder === 0) {
-          history.push('/conversations')
-        }
-
-        if (currentQuestionOrder < filteredGroups.length - 1) {
-          history.push(
-            `/conversations/${
-              filteredGroups[currentQuestionOrder + 1].memberId
-            }`,
-          )
-        }
-
-        if (currentQuestionOrder === filteredGroups.length - 1) {
-          history.push(
-            `/conversations/${
-              filteredGroups[currentQuestionOrder - 1].memberId
-            }`,
-          )
-        }
-      }),
-    memberId,
-  )
-
   useEffect(() => {
     if (!filteredGroups.length) {
       return
@@ -148,6 +121,29 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
                   memberId={memberId}
                   onFocus={() => setChatFocused(true)}
                   onBlur={() => setChatFocused(false)}
+                  onResolve={() =>
+                    fade('up', 'out').then(() => {
+                      if (currentQuestionOrder === 0) {
+                        history.push('/conversations')
+                      }
+
+                      if (currentQuestionOrder < filteredGroups.length - 1) {
+                        history.push(
+                          `/conversations/${
+                            filteredGroups[currentQuestionOrder + 1].memberId
+                          }`,
+                        )
+                      }
+
+                      if (currentQuestionOrder === filteredGroups.length - 1) {
+                        history.push(
+                          `/conversations/${
+                            filteredGroups[currentQuestionOrder - 1].memberId
+                          }`,
+                        )
+                      }
+                    })
+                  }
                 />
               </Flex>
             </Flex>

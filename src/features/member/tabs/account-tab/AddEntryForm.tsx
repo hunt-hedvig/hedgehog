@@ -228,14 +228,22 @@ export const AddEntryForm: React.FC<{
             }}
           />
         </Spacing>
-        <SubmitButton>Add entry</SubmitButton>
-        <Button
-          variant="tertiary"
-          onClick={onCancel}
-          style={{ marginLeft: '1.0em' }}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            columnGap: 15,
+          }}
         >
-          Cancel
-        </Button>
+          <SubmitButton>Add entry</SubmitButton>
+          <Button
+            variant="tertiary"
+            onClick={onCancel}
+            style={{ marginLeft: '1.0em' }}
+          >
+            Cancel
+          </Button>
+        </div>
       </Form>
     </FormProvider>
   )

@@ -162,9 +162,10 @@ export const ChatPanel = ({ memberId }) => {
         <ChatTextArea
           focus={true}
           autoResize={true}
+          maxHeight="350px"
           error={error}
           value={currentMessage}
-          onChange={handleInputChange}
+          onChange={(e) => handleInputChange(e.currentTarget.value)}
           placeholder="Your message goes here..."
           onFocus={() => setTextFieldFocused(true)}
           onBlur={() => setTextFieldFocused(false)}

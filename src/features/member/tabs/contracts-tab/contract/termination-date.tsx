@@ -188,7 +188,7 @@ export const TerminationDate: React.FC<{
             <TextArea
               placeholder="Comment on the reason of termination..."
               value={comment}
-              onChange={setComment}
+              onChange={(e) => setComment(e.currentTarget.value)}
             />
           </Spacing>
           <ButtonsGroup>

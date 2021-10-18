@@ -8,6 +8,7 @@ import { InputProps as _InputProps } from './Input/input'
 import { ModalProps as _ModalProps } from './Modal'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 import { TabsProps as _TabsProps } from './Tabs'
+import { TextAreaProps as _TextAreaProps } from './TextArea/text-area'
 
 export { Flex } from './Flex/flex'
 
@@ -46,7 +47,6 @@ export {
   FormDropdown,
   FormInput,
   FormTextArea,
-  FormTextAreaWithRef,
   SubmitButton,
 } from './Form/form'
 export {
@@ -71,6 +71,7 @@ export {
 } from './SearchableDropdown/searchable-dropdown'
 export { Spinner } from './Spinner/spinner'
 export { TextArea } from './TextArea/text-area'
+export type TextAreaProps = _TextAreaProps
 
 export { FadeIn, withFadeIn } from './animations/fade-in'
 export { Fade, useFadeAnimation } from './animations/fade'

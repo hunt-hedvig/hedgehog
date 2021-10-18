@@ -6,7 +6,11 @@ import { useDraftMessage } from 'features/member/messages/hooks/use-draft-messag
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { useSendMessageMutation } from 'types/generated/graphql'
+import {
+  GetQuestionsGroupsDocument,
+  useMarkQuestionAsResolvedMutation,
+  useSendMessageMutation,
+} from 'types/generated/graphql'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -42,12 +46,20 @@ export const ConversationChat: React.FC<{
   memberId: string
   onFocus: () => void
   onBlur: () => void
-}> = ({ memberId, onFocus, onBlur }) => {
+  onResolve: () => void
+}> = ({ memberId, onFocus, onBlur, onResolve }) => {
   const [draft, setDraft] = useDraftMessage({ memberId })
   const [message, setMessage] = useState(draft)
   const [inputFocused, setInputFocused] = useState(false)
-  const [sendMessage, { loading }] = useSendMessageMutation()
+  const [sendMessage] = useSendMessageMutation()
   const { isMetaKey, metaKey } = usePlatform()
+  const [markAsResolved, { loading }] = useMarkQuestionAsResolvedMutation({
+    refetchQueries: [
+      {
+        query: GetQuestionsGroupsDocument,
+      },
+    ],
+  })
 
   useEffect(() => {
     setMessage(draft)
@@ -75,13 +87,39 @@ export const ConversationChat: React.FC<{
           error: 'Could not send message',
         },
       )
+      return
+    }
+
+    if (
+      isMetaKey(e) &&
+      e.keyCode === Keys.Enter.code &&
+      e.shiftKey &&
+      !loading &&
+      !message
+    ) {
+      toast.promise(
+        markAsResolved({
+          variables: { memberId },
+          optimisticResponse: {
+            markQuestionAsResolved: true,
+          },
+        }),
+        {
+          loading: 'Marking as resolved',
+          success: () => {
+            onResolve()
+            return 'Marked as resolved'
+          },
+          error: 'Could not mark as resolved',
+        },
+      )
     }
   }
 
   return (
     <FadeIn style={{ width: '100%' }}>
       <ConversationContent>
-        <Flex style={{ overflowY: 'scroll' }}>
+        <Flex style={{ overflowY: 'scroll', height: '100%' }}>
           <MessagesList memberId={memberId} />
         </Flex>
         <ConversationFooter>
@@ -96,9 +134,9 @@ export const ConversationChat: React.FC<{
             }}
             placeholder={'Your message goes here...'}
             value={message}
-            onChange={(value) => {
-              setDraft(value)
-              setMessage(value)
+            onChange={(e) => {
+              setDraft(e.currentTarget.value)
+              setMessage(e.currentTarget.value)
             }}
             onKeyDown={handleOnKeyDown}
           />

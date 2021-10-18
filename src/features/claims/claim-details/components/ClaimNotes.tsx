@@ -168,7 +168,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         resize
         placeholder="Your note goes here..."
         value={submitting ? '' : note}
-        onChange={setNote}
+        onChange={(e) => setNote(e.currentTarget.value)}
         focus={focus}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
