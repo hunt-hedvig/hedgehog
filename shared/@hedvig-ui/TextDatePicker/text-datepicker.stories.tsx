@@ -1,4 +1,4 @@
-import { TextDatePicker } from '@hedvig-ui'
+import { Spacing, TextDatePicker } from '@hedvig-ui'
 import React from 'react'
 
 export default {
@@ -21,7 +21,7 @@ export const StandardTextDatePicker: React.FC = () => {
   }
 
   return (
-    <div style={{ padding: 30 }}>
+    <Spacing top>
       <TextDatePicker
         error={error}
         errorMessage="Invalid Date"
@@ -29,9 +29,9 @@ export const StandardTextDatePicker: React.FC = () => {
         onChange={setDateHandler}
         placeholder="Enter date string"
       />
-      <div style={{ marginTop: 20 }}>
+      <Spacing top>
         <span>Date:</span> {value?.toDateString()}
-      </div>
-    </div>
+      </Spacing>
+    </Spacing>
   )
 }

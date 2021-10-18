@@ -87,7 +87,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   errorMessage,
   ...props
 }) => {
-  const [isOldDatepicker, setIsOldDatepicker] = React.useState(false)
+  const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
   const [textValue, setTextValue] = React.useState<string | null>()
 
   React.useEffect(() => {
@@ -120,8 +120,8 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
         error={error}
         icon={
           <CalendarIcon
-            focus={isOldDatepicker}
-            onClick={() => setIsOldDatepicker((prev) => !prev)}
+            focus={showOldDatepicker}
+            onClick={() => setShowOldDatepicker((prev) => !prev)}
             style={{ cursor: 'pointer' }}
           />
         }
@@ -138,12 +138,12 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
         {...props}
       />
       {error && <ErrorMessage>{errorMessage || 'Invalid Date'}</ErrorMessage>}
-      {isOldDatepicker && (
+      {showOldDatepicker && (
         <InlineDatePicker
           value={value}
           setValue={onChange}
           setTextValue={setTextValue}
-          setView={setIsOldDatepicker}
+          setView={setShowOldDatepicker}
         />
       )}
     </Wrapper>
