@@ -47,16 +47,8 @@ export {
   FormDropdown,
   FormInput,
   FormTextArea,
-  FormTextAreaWithRef,
   SubmitButton,
 } from './Form/form'
-export {
-  Form as NewForm,
-  FormInput as NewFormInput,
-  SubmitButton as NewSubmitButton,
-  FormDropdown as NewFormDropdown,
-  FormTextArea as NewFormTextArea,
-} from './Form/new-form'
 export {
   InfoContainer,
   InfoRow,

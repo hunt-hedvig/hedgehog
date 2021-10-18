@@ -3,7 +3,7 @@ import {
   Checkbox,
   FadeIn,
   Form,
-  FormTextAreaWithRef,
+  FormTextArea,
   Shadowed,
   Spacing,
   SubmitButton,
@@ -20,6 +20,12 @@ import {
 import React, { useEffect } from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+
+const SpacingStyled = styled(Spacing)`
+  & .form__field {
+    margin-bottom: 10px;
+  }
+`
 
 const MarkAsResolvedWrapper = styled.div`
   padding-left: 1rem;
@@ -107,10 +113,10 @@ export const AnswerForm: React.FC<{
 
   return (
     <>
-      <Spacing top="small" bottom="small">
+      <SpacingStyled top="small" bottom="small">
         <FormProvider {...form}>
           <Form onSubmit={onSubmit}>
-            <FormTextAreaWithRef
+            <FormTextArea
               focus={isFocused}
               name="answer"
               defaultValue=""
@@ -127,7 +133,7 @@ export const AnswerForm: React.FC<{
             </SubmitButtonWrapper>
           </Form>
         </FormProvider>
-      </Spacing>
+      </SpacingStyled>
       <MarkAsResolvedWrapper>
         <Checkbox
           label="Mark as resolved"

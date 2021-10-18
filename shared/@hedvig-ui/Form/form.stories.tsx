@@ -2,16 +2,11 @@ import {
   Form,
   FormDropdown,
   FormInput,
-  NewForm,
-  NewFormDropdown,
-  NewFormInput,
-  NewFormTextArea,
-  NewSubmitButton,
+  FormTextArea,
   SubmitButton,
 } from '@hedvig-ui'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { FieldValues } from 'react-hook-form/dist/types/fields'
 
 export default {
   title: 'Form',
@@ -36,16 +31,16 @@ const formOptions = [
   },
 ]
 
-export const StandardForm: React.FC = () => {
+export const StandardForm = () => {
   const form = useForm()
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data)
+  const submitHandler = (e) => {
+    console.log(e)
   }
 
   return (
     <FormProvider {...form}>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={submitHandler}>
         <FormInput
           label="Text input"
           name="textInput"
@@ -65,12 +60,6 @@ export const StandardForm: React.FC = () => {
               message: 'This text has to be "Hedvig" for some reason',
             },
           }}
-        />
-        <FormInput
-          label="Text input with icon"
-          icon="search"
-          name="searchInput"
-          defaultValue=""
         />
         <FormInput
           label="Number input"
@@ -118,89 +107,7 @@ export const StandardForm: React.FC = () => {
             },
           }}
         />
-        <SubmitButton>Submit form</SubmitButton>
-      </Form>
-    </FormProvider>
-  )
-}
-
-export const FormWithoutSemantic = () => {
-  const form = useForm()
-
-  const submitHandler = (e) => {
-    console.log(e)
-  }
-
-  return (
-    <FormProvider {...form}>
-      <NewForm onSubmit={submitHandler}>
-        <NewFormInput
-          label="Text input"
-          name="textInput"
-          defaultValue=""
-          rules={{
-            required: 'This text is reqired',
-            minLength: {
-              value: 6,
-              message: 'This text has to be at least 6 characters long',
-            },
-            maxLength: {
-              value: 6,
-              message: 'This text can be no longer than 6 characters long',
-            },
-            pattern: {
-              value: /^Hedvig$/,
-              message: 'This text has to be "Hedvig" for some reason',
-            },
-          }}
-        />
-        <NewFormInput
-          label="Number input"
-          name="numberInput"
-          defaultValue=""
-          type="number"
-          rules={{
-            required: 'This number is required',
-            min: {
-              value: 1000,
-              message: 'This number has to be at least 1000',
-            },
-            max: {
-              value: 5000,
-              message: 'This number has to be no larger than 5000',
-            },
-            pattern: {
-              value: /^1337$/,
-              message: 'Only 1337 is a valid number',
-            },
-          }}
-        />
-        <NewFormInput
-          label="Amount input with suffix"
-          affix={{
-            content: 'SEK',
-          }}
-          name="amountInput"
-          defaultValue=""
-          type="number"
-        />
-        <NewFormDropdown
-          options={formOptions}
-          label="Dropdown"
-          name="dropdown"
-          defaultValue={1}
-          rules={{
-            min: {
-              value: 2,
-              message: 'You have to select at least 2',
-            },
-            max: {
-              value: 2,
-              message: 'Actually only 2 or less is allowed',
-            },
-          }}
-        />
-        <NewFormTextArea
+        <FormTextArea
           label="Amount TextArea with suffix"
           name="amountTextArea"
           defaultValue=""
@@ -220,8 +127,8 @@ export const FormWithoutSemantic = () => {
             },
           }}
         />
-        <NewSubmitButton>Submit form</NewSubmitButton>
-      </NewForm>
+        <SubmitButton>Submit form</SubmitButton>
+      </Form>
     </FormProvider>
   )
 }
