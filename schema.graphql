@@ -182,7 +182,7 @@ type MutationType {
   upsertCoInsured(claimId: ID!, request: UpsertCoInsuredInput!): Claim!
   deleteCoInsured(claimId: ID!): Boolean!
 
-  updateUser(id: ID!, input: UpdateUserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
 }
 
 input UpsertCoInsuredInput {
