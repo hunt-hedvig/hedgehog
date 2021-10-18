@@ -5,7 +5,7 @@ import dates from 'compromise-dates'
 import numbers from 'compromise-numbers'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
-import React, { useRef } from 'react'
+import React from 'react'
 import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
 import { useClickOutside } from '../utils/click-outside'
@@ -36,6 +36,8 @@ const CalendarIcon = styled(Calendar)<{ focus?: boolean }>`
   transition: all 0.1s;
   color: ${({ theme, focus }) =>
     focus ? theme.accent : theme.placeholderColor};
+  cursor: pointer;
+  width: 1em;
 `
 
 export const getDate = (value: string) => {
@@ -87,7 +89,6 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   errorMessage,
   ...props
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null)
   const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
   const [textValue, setTextValue] = React.useState<string | null>()
 
@@ -96,36 +97,40 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       const isoDate = parseISO(value.toISOString())
       const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
       setTextValue(formattedDate)
-    } else {
-      setTextValue(null)
+      return
     }
+
+    setTextValue(null)
   }, [value])
 
   const setDateHandler = () => {
     const date = getDate(textValue || '')
 
-    if (date) {
-      const newDate = date.start
-
-      const isoDate = parseISO(newDate)
-      const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
-
-      onChange(new Date(newDate))
-      inputRef?.current?.blur()
-      setTextValue(formattedDate)
+    if (!date) {
+      return
     }
+
+    const newDate = date.start
+
+    const isoDate = parseISO(newDate)
+    const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
+
+    if (value && formattedDate === formatDate(value, 'yyyy-MM-dd')) {
+      return
+    }
+
+    onChange(new Date(newDate))
+    setTextValue(formattedDate)
   }
 
   return (
     <Wrapper>
       <Input
-        ref={inputRef}
         error={error}
         icon={
           <CalendarIcon
             focus={showOldDatepicker}
             onClick={() => setShowOldDatepicker((prev) => !prev)}
-            style={{ cursor: 'pointer' }}
           />
         }
         onBlur={() => {
