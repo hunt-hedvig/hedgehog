@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {
   Button,
+  Capitalized,
   Table,
   TableColumn,
   TableHeader,
@@ -72,7 +73,7 @@ export const RelationsTable: React.FC<{ filter: string }> = ({ filter }) => {
             </NonClickableColumn>
             <NonClickableColumn>{relation.property.name}</NonClickableColumn>
             <NonClickableColumn>
-              {relation.propertyOption.name}
+              <Capitalized>{relation.propertyOption.name}</Capitalized>
             </NonClickableColumn>
             <NonClickableColumn style={{ textAlign: 'right' }}>
               <Button
