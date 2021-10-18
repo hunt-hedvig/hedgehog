@@ -45,7 +45,7 @@ type Me {
 type User {
   id: ID!
   email: String!
-  fullName: String
+  fullName: String!
   phoneNumber: String
 }
 
