@@ -1,4 +1,11 @@
-import { Dropdown, DropdownOption, Flex, Label, Spacing } from '@hedvig-ui'
+import {
+  Capitalized,
+  Dropdown,
+  DropdownOption,
+  Flex,
+  Label,
+  Spacing,
+} from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -115,7 +122,7 @@ export const ClaimPropertyForm: React.FC<{
                         opt.value === 'not_specified')
                     }
                   >
-                    {opt.text}
+                    <Capitalized>{opt.text}</Capitalized>
                   </DropdownOption>
                 ))}
               </Dropdown>
