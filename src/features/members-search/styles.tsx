@@ -57,6 +57,7 @@ export const Group = styled('div')<{ pushLeft?: boolean }>(({ pushLeft }) => ({
   paddingBottom: '1rem',
   paddingLeft: pushLeft ? '1rem' : 0,
 }))
+
 export const SearchInputGroup = styled('div')({
   display: 'flex',
   position: 'relative',

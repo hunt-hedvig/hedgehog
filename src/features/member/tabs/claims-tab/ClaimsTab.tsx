@@ -84,7 +84,10 @@ export const ClaimsTab: React.FC<{
             </Button>
             <Button
               disabled={
-                claimSource === null || claimDate === null || createClaimLoading
+                claimSource === null ||
+                claimDate === null ||
+                claimDate < new Date() ||
+                createClaimLoading
               }
               onClick={async () => {
                 if (claimSource === null || claimDate === null) {
