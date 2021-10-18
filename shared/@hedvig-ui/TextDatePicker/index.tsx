@@ -5,7 +5,7 @@ import dates from 'compromise-dates'
 import numbers from 'compromise-numbers'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
-import React from 'react'
+import React, { useRef } from 'react'
 import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
 import { useClickOutside } from '../utils/click-outside'
@@ -87,6 +87,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   errorMessage,
   ...props
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null)
   const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
   const [textValue, setTextValue] = React.useState<string | null>()
 
@@ -110,6 +111,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
 
       onChange(new Date(newDate))
+      inputRef?.current?.blur()
       setTextValue(formattedDate)
     }
   }
@@ -117,6 +119,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   return (
     <Wrapper>
       <Input
+        ref={inputRef}
         error={error}
         icon={
           <CalendarIcon
