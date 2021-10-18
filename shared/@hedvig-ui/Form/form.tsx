@@ -1,26 +1,68 @@
 import styled from '@emotion/styled'
-import { Button, ButtonProps, Input, InputProps, Label } from '@hedvig-ui'
+import {
+  Button,
+  ButtonProps,
+  Dropdown,
+  DropdownOption,
+  Input,
+  InputProps,
+  Label,
+  TextArea,
+  TextAreaProps,
+} from '@hedvig-ui'
 import { ErrorMessage } from '@hookform/error-message'
-import React, { useEffect, useRef } from 'react'
+import React, { HTMLAttributes } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
-import {
-  Dropdown,
-  DropdownItemProps,
-  Form as SemanticForm,
-  FormProps,
-  Ref,
-  TextArea,
-} from 'semantic-ui-react'
-import { sleep } from '../utils/sleep'
 
-const StyledForm = styled(SemanticForm)`
+const StyledForm = styled.form`
   width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  & .form__field {
+    margin-bottom: 25px;
+  }
+
+  & .form__textarea {
+    & .form__error {
+      bottom: -15px;
+    }
+  }
 `
 
-export const Form: React.FC<{
+const FieldStyled = styled.div`
+  position: relative;
+`
+
+const ErrorMessageWrapper = styled('div')`
+  color: ${({ theme }) => theme.danger};
+  margin: 0;
+  position: absolute;
+  bottom: -20px;
+  font-size: 12px;
+`
+
+interface FormProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   onSubmit: (data: FieldValues) => void
-} & FormProps> = ({ onSubmit, children, ...props }) => {
+}
+
+interface FormFieldProps {
+  label?: React.ReactNode
+  name: string
+  defaultValue: unknown
+  rules?: RegisterOptions
+  className?: string
+}
+
+interface FieldProps {
+  required?: boolean
+  error?: boolean
+  className?: string
+}
+
+export const Form: React.FC<FormProps> = ({ onSubmit, children, ...props }) => {
   const { handleSubmit } = useFormContext()
 
   return (
@@ -29,11 +71,6 @@ export const Form: React.FC<{
     </StyledForm>
   )
 }
-
-const ErrorMessageWrapper = styled('div')`
-  color: ${({ theme }) => theme.danger};
-  margin: 0;
-`
 
 const FormLabel: React.FC<{ name: string } & React.HTMLProps<
   HTMLLabelElement
@@ -52,21 +89,22 @@ const FormError: React.FC<{
     <ErrorMessage
       name={name}
       render={({ message }) => {
-        return <ErrorMessageWrapper>{message}</ErrorMessageWrapper>
+        return (
+          <ErrorMessageWrapper className="form__error">
+            {message}
+          </ErrorMessageWrapper>
+        )
       }}
     />
   )
 }
 
-interface FormFieldProps {
-  label?: React.ReactNode
-  name: string
-  defaultValue: unknown
-  rules?: RegisterOptions
-}
-
-interface FormFieldWithRefProps extends FormFieldProps {
-  focus?: boolean
+const FieldComponent: React.FC<FieldProps> = ({ className, children }) => {
+  return (
+    <FieldStyled className={`form__field ${className ?? ''}`}>
+      {children}
+    </FieldStyled>
+  )
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -74,43 +112,35 @@ const FormField: React.FC<FormFieldProps> = ({
   name,
   rules,
   children,
+  className,
 }) => {
-  const { errors } = useFormContext()
   return (
-    <SemanticForm.Field
-      required={Boolean(rules?.required)}
-      error={errors ? Boolean(errors[name.split('.')[0]]) : undefined}
-    >
+    <FieldComponent className={className} required={Boolean(rules?.required)}>
       {label && <FormLabel name={name}>{label}</FormLabel>}
       {children}
       <FormError name={name} />
-    </SemanticForm.Field>
+    </FieldComponent>
   )
 }
 
-export const SubmitButton: React.FC<ButtonProps> = ({ children, ...props }) => {
-  const {
-    formState: { isSubmitting },
-  } = useFormContext()
-  return (
-    <Button disabled={isSubmitting} type="submit" {...props}>
-      {children}
-    </Button>
-  )
-}
-
-const FormInputComponent: React.FC<InputProps & FormFieldProps> = ({
+export const FormInputComponent: React.FC<InputProps & FormFieldProps> = ({
   name,
   rules,
   defaultValue,
   ...props
 }) => {
+  const { errors } = useFormContext()
   return (
     <Controller
       name={name}
       rules={rules}
       defaultValue={defaultValue}
-      as={<Input {...props} />}
+      as={
+        <Input
+          error={errors ? Boolean(errors[name.split('.')[0]]) : undefined}
+          {...props}
+        />
+      }
     />
   )
 }
@@ -125,7 +155,7 @@ export const FormInput: React.FC<InputProps & FormFieldProps> = ({
   )
 }
 
-const FormTextAreaComponent: React.FC<FormFieldProps> = ({
+const FormTextAreaComponent: React.FC<TextAreaProps & FormFieldProps> = ({
   name,
   rules,
   defaultValue,
@@ -141,59 +171,18 @@ const FormTextAreaComponent: React.FC<FormFieldProps> = ({
   )
 }
 
-const FormTextAreaWithRefComponent: React.FC<FormFieldWithRefProps> = ({
-  name,
-  rules,
-  defaultValue,
-  focus,
+export const FormTextArea: React.FC<TextAreaProps & FormFieldProps> = ({
   ...props
 }) => {
-  const ref = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const setFocus = async () => {
-      await sleep(1)
-      if (ref.current) {
-        focus ? ref.current.focus() : ref.current.blur()
-      }
-    }
-    setFocus()
-  }, [focus])
-
   return (
-    <Controller
-      name={name}
-      rules={rules}
-      defaultValue={defaultValue}
-      as={
-        <Ref innerRef={ref}>
-          <TextArea {...props} />
-        </Ref>
-      }
-    />
-  )
-}
-
-export const FormTextArea: React.FC<FormFieldProps> = ({ ...props }) => {
-  return (
-    <FormField {...props}>
+    <FormField className="form__textarea" {...props}>
       <FormTextAreaComponent {...props} />
     </FormField>
   )
 }
 
-export const FormTextAreaWithRef: React.FC<FormFieldWithRefProps> = ({
-  ...props
-}) => {
-  return (
-    <FormField {...props}>
-      <FormTextAreaWithRefComponent {...props} />
-    </FormField>
-  )
-}
-
 interface FormDropdownProps {
-  options: DropdownItemProps[]
+  options: Array<{ key: number; value: string | number; text: string | number }>
 }
 
 const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
@@ -207,18 +196,20 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
       name={name}
       rules={rules}
       defaultValue={defaultValue}
-      render={({ onChange, value, onBlur }) => {
-        return (
-          <Dropdown
-            options={options}
-            fluid
-            selection
-            value={value}
-            onChange={(_, e) => onChange(e.value)}
-            onBlur={onBlur}
-          />
-        )
-      }}
+      render={({ onChange, value, onBlur }) => (
+        <Dropdown onBlur={onBlur}>
+          {options.map((opt) => (
+            <DropdownOption
+              style={{ fontSize: 14 }}
+              key={opt.key}
+              selected={value === opt.value}
+              onClick={() => onChange(opt.value)}
+            >
+              {opt.text}
+            </DropdownOption>
+          ))}
+        </Dropdown>
+      )}
     />
   )
 }
@@ -231,5 +222,16 @@ export const FormDropdown: React.FC<FormDropdownProps & FormFieldProps> = ({
     <FormField {...props}>
       <FormDropdownComponent options={options} {...props} />
     </FormField>
+  )
+}
+
+export const SubmitButton: React.FC<ButtonProps> = ({ children, ...props }) => {
+  const {
+    formState: { isSubmitting },
+  } = useFormContext()
+  return (
+    <Button disabled={isSubmitting} type="submit" {...props}>
+      {children}
+    </Button>
   )
 }

@@ -63,7 +63,7 @@ const InputStyled = styled.input<{
   color: ${({ disabled, theme }) =>
     !disabled ? theme.foreground : theme.placeholderColor};
   background-color: ${({ muted, theme }) =>
-    !muted ? theme.background : theme.accentBackground};
+    !muted ? theme.backgroundLight : theme.accentBackground};
 
   ${({ disabled, loading }) =>
     (disabled || loading) &&

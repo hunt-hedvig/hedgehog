@@ -1,15 +1,19 @@
-import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
+import {
+  Form,
+  FormDropdown,
+  FormInput,
+  FormTextArea,
+  SubmitButton,
+} from '@hedvig-ui'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { FieldValues } from 'react-hook-form/dist/types/fields'
-import { DropdownItemProps } from 'semantic-ui-react'
 
 export default {
   title: 'Form',
   component: Form,
 }
 
-const formOptions: DropdownItemProps[] = [
+const formOptions = [
   {
     key: 1,
     value: 1,
@@ -27,16 +31,16 @@ const formOptions: DropdownItemProps[] = [
   },
 ]
 
-export const StandardForm: React.FC = () => {
+export const StandardForm = () => {
   const form = useForm()
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data)
+  const submitHandler = (e) => {
+    console.log(e)
   }
 
   return (
     <FormProvider {...form}>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={submitHandler}>
         <FormInput
           label="Text input"
           name="textInput"
@@ -56,12 +60,6 @@ export const StandardForm: React.FC = () => {
               message: 'This text has to be "Hedvig" for some reason',
             },
           }}
-        />
-        <FormInput
-          label="Text input with icon"
-          icon="search"
-          name="searchInput"
-          defaultValue=""
         />
         <FormInput
           label="Number input"
@@ -106,6 +104,26 @@ export const StandardForm: React.FC = () => {
             max: {
               value: 2,
               message: 'Actually only 2 or less is allowed',
+            },
+          }}
+        />
+        <FormTextArea
+          label="Amount TextArea with suffix"
+          name="amountTextArea"
+          defaultValue=""
+          rules={{
+            required: 'This text is reqired',
+            minLength: {
+              value: 6,
+              message: 'This text has to be at least 6 characters long',
+            },
+            maxLength: {
+              value: 6,
+              message: 'This text can be no longer than 6 characters long',
+            },
+            pattern: {
+              value: /^Hedvig$/,
+              message: 'This text has to be "Hedvig" for some reason',
             },
           }}
         />
