@@ -1,3 +1,0 @@
-mutation UpsertClaimItem($request: UpsertClaimItemInput) {
-  upsertClaimItem(request: $request)
-}

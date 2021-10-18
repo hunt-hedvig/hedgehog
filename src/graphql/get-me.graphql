@@ -1,7 +1,12 @@
 query GetMe {
   me {
-    email
     scopes
     role
+    user {
+      id
+      email
+      fullName
+      phoneNumber
+    }
   }
 }

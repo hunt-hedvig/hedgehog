@@ -105,7 +105,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
           notes: [
             {
               text: note,
-              handlerReference: data?.me?.email ?? '',
+              handlerReference: data?.me.user.email ?? '',
               date: today,
             },
             ...notes,
