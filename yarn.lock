@@ -5151,6 +5151,26 @@ compression@^1.7.4:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
+compromise-dates@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/compromise-dates/-/compromise-dates-2.2.1.tgz#c04d22f1f95850e5ce8b0ab225b1671639207369"
+  integrity sha512-mtdK67DR4EvowLLh0YJ3aMxMtKXDViQBJTNNdHI5ck+DVhCCd7rYnNcwC2eSES+3tup1JB9+InOzmvyEuFyjLQ==
+  dependencies:
+    spacetime "6.16.0"
+    spacetime-holiday "0.1.0"
+
+compromise-numbers@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/compromise-numbers/-/compromise-numbers-1.4.0.tgz#22e545923243333bc1e8a2e82da2e922afb50400"
+  integrity sha512-3ceRpwZIWduVSMYn54ET1ELdI7bvXQk42uDwxffxiJBxgKCwcCfVbiLuTG62cI+qTHchwLDh4vp9i3WARXROFQ==
+
+compromise@^13.11.4:
+  version "13.11.4"
+  resolved "https://registry.yarnpkg.com/compromise/-/compromise-13.11.4.tgz#3136e6d2c2cca822ba7cebd140c9f27f405b67f1"
+  integrity sha512-nBITcNdqIHSVDDluaG6guyFFCSNXN+Hu87fU8VlhkE5Z0PwTZN1nro2O7a8JcUH88nB5EOzrxd9zKfXLSNFqcg==
+  dependencies:
+    efrt-unpack "2.2.0"
+
 compute-gcd@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/compute-gcd/-/compute-gcd-1.2.1.tgz#34d639f3825625e1357ce81f0e456a6249d8c77f"
@@ -6116,6 +6136,11 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
+
+efrt-unpack@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/efrt-unpack/-/efrt-unpack-2.2.0.tgz#b05dbec0fb8cb346a27840e00c969df9c72fee52"
+  integrity sha512-9xUSSj7qcUxz+0r4X3+bwUNttEfGfK5AH+LVa1aTpqdAfrN5VhROYCfcF+up4hp5OL7IUKcZJJrzAGipQRDoiQ==
 
 ejs@^2.6.1, ejs@^2.7.4:
   version "2.7.4"
@@ -13197,6 +13222,16 @@ space-separated-tokens@^1.0.0:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/space-separated-tokens/-/space-separated-tokens-1.1.5.tgz#85f32c3d10d9682007e917414ddc5c26d1aa6899"
   integrity sha512-q/JSVd1Lptzhf5bkYm4ob4iWPjx0KiRe3sRFBNrVqbJkFaBm5vbbowy1mymoPNLRa52+oadOhJ+K49wsSeSjTA==
+
+spacetime-holiday@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/spacetime-holiday/-/spacetime-holiday-0.1.0.tgz#e680d17e0ac26e36b2101ee4ac40eb642b6d31d4"
+  integrity sha512-rYIpSDbHnznZRstUrmYYFAaruW8e96t+1JfS0b6qMiAAQ2DrkLKc8oMotAAkB9qMTUwXXf5bIkdTHfP434uitQ==
+
+spacetime@6.16.0:
+  version "6.16.0"
+  resolved "https://registry.yarnpkg.com/spacetime/-/spacetime-6.16.0.tgz#f213963392eafc380716c3857b23251de87db97f"
+  integrity sha512-mkuniNOp6ssfPyJidj81tb54zKxK4vEKPTmcUsC/NEGIF8S07ppoSotdg6numT1/26rthQYmdxMY/M5a9WeJVQ==
 
 spawn-command@^0.0.2-1:
   version "0.0.2-1"
