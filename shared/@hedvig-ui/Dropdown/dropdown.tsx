@@ -80,6 +80,8 @@ const OptionStyled = styled.li<{ selected: boolean }>`
 
   overflow: hidden;
 
+  font-size: 14px;
+
   outline: none;
   cursor: pointer;
   padding: 10px 15px;
@@ -94,6 +96,7 @@ const OptionStyled = styled.li<{ selected: boolean }>`
 `
 
 const Placeholder = styled.span`
+  font-size: 14px;
   color: ${({ theme }) => theme.placeholderColor};
 `
 
