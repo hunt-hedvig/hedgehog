@@ -165,7 +165,7 @@ export const ChatPanel = ({ memberId }) => {
           maxHeight="350px"
           error={error}
           value={currentMessage}
-          onChange={handleInputChange}
+          onChange={(e) => handleInputChange(e.currentTarget.value)}
           placeholder="Your message goes here..."
           onFocus={() => setTextFieldFocused(true)}
           onBlur={() => setTextFieldFocused(false)}

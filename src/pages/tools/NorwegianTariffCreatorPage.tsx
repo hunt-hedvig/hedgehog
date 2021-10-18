@@ -50,7 +50,7 @@ export const NorwegianTariffCreatorPage: React.FC = () => {
               'Add Base Factors from excel including "Product" (Columns: Fire, Leakage, Other, All risk and Travel), include "Base factor" and "Index per year"...'
             }
             value={baseFactors}
-            onChange={setBaseFactors}
+            onChange={(e) => setBaseFactors(e.currentTarget.value)}
           />
         </Card>
       </CardsWrapper>
