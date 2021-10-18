@@ -2,12 +2,14 @@ import {
   Button,
   ButtonsGroup,
   DateTimePicker,
-  EnumDropdown,
+  Dropdown,
+  DropdownOption,
   FourthLevelHeadline,
   Spacing,
   TextArea,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -172,11 +174,16 @@ export const TerminationDate: React.FC<{
       {datePickerEnabled && (
         <>
           <DateTimePicker date={terminationDate} setDate={setTerminationDate} />
-          <EnumDropdown
-            enumToSelectFrom={TerminationReason}
-            placeholder="Termination reason"
-            onChange={setTerminationReason}
-          />
+          <Dropdown placeholder="Reasons">
+            {Object.keys(TerminationReason).map((key) => (
+              <DropdownOption
+                selected={terminationReason === TerminationReason[key]}
+                onClick={() => setTerminationReason(TerminationReason[key])}
+              >
+                {getTextFromEnumValue(TerminationReason[key])}
+              </DropdownOption>
+            ))}
+          </Dropdown>
           <Spacing top bottom>
             <TextArea
               placeholder="Comment on the reason of termination..."

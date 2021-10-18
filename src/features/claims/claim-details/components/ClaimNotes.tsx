@@ -165,6 +165,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         ))}
       </List>
       <TextArea
+        resize
         placeholder="Your note goes here..."
         value={submitting ? '' : note}
         onChange={setNote}

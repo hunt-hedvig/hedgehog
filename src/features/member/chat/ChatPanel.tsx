@@ -1,12 +1,19 @@
 import styled from '@emotion/styled'
-import { Button, Checkbox, FadeIn, Flex, Shadowed, Spinner } from '@hedvig-ui'
+import {
+  Button,
+  Checkbox,
+  FadeIn,
+  Flex,
+  Shadowed,
+  Spinner,
+  TextArea,
+} from '@hedvig-ui'
 import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import { usePlatform } from '@hedvig-ui/utils/platform'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import TextareaAutosize from 'react-textarea-autosize'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -40,11 +47,7 @@ const Tip = styled.span`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-const ChatTextArea = styled(({ error, ...props }) => (
-  <TextareaAutosize {...props} />
-))<{
-  error?: boolean
-}>`
+const ChatTextArea = styled(TextArea)<{ error?: boolean }>`
   margin: 0;
   padding: 0.78571429em 1em;
   border-radius: 0.28571429rem;
@@ -98,9 +101,7 @@ export const ChatPanel = ({ memberId }) => {
   const [textFieldFocused, setTextFieldFocused] = useState(false)
   const { isMetaKey, metaKey } = usePlatform()
 
-  const handleInputChange = (e: any) => {
-    const value = e.target.value
-
+  const handleInputChange = (value: string) => {
     if (shouldIgnoreInput(value)) {
       return
     }
@@ -159,7 +160,9 @@ export const ChatPanel = ({ memberId }) => {
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>
         <ChatTextArea
-          autoFocus
+          focus={true}
+          autoResize={true}
+          maxHeight="350px"
           error={error}
           value={currentMessage}
           onChange={handleInputChange}

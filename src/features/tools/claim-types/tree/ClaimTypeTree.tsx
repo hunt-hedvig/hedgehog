@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { getTextFromEnumValue } from '@hedvig-ui'
+import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { useDrag } from '@visx/drag'
 import { DefaultLink, Graph } from '@visx/network'
 import React, { useEffect, useState } from 'react'

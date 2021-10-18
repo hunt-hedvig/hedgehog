@@ -66,8 +66,15 @@ type MutationType {
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
   createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
-  setClaimType(id: ID!, type: ClaimTypes): Claim
-  setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
+  setClaimType(id: ID!, type: String): Claim
+  setClaimOutcome(id: ID!, outcome: String): Claim
+  setClaimPropertySelection(
+    id: ID!
+    claimType: String!
+    propertyId: ID!
+    optionIds: [ID!]!
+  ): Claim
+  setDateOfOccurrence(id: ID!, date: LocalDate!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
   whitelistMember(memberId: ID!): Member!
@@ -320,6 +327,7 @@ input EditMemberInfoInput {
   lastName: String
   email: String
   phoneNumber: String
+  birthDate: LocalDate
 }
 
 input GetValuationInput {
@@ -623,7 +631,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1024,7 +1032,9 @@ type Claim {
   member: Member!
   recordingUrl: String
   state: ClaimState!
-  type: ClaimType
+  claimType: String
+  dateOfOccurrence: LocalDate
+  outcome: String
   reserves: MonetaryAmount
   registrationDate: Instant!
   notes: [ClaimNote!]!
@@ -1036,6 +1046,7 @@ type Claim {
   contract: Contract
   agreement: GenericAgreement
   itemSet: ClaimItemSet!
+  propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured
 }
 
@@ -1045,6 +1056,12 @@ type CoInsured {
   personalNumber: String!
   email: String
   phoneNumber: String
+}
+
+type ClaimPropertySelection {
+  claimType: String!
+  property: ClaimProperty!
+  option: ClaimPropertyOption!
 }
 
 type ClaimItemSet {
@@ -1061,183 +1078,6 @@ type ClaimTranscription {
   text: String!
   confidenceScore: Float!
   languageCode: String!
-}
-
-enum ClaimTypes {
-  TheftClaim
-  AccidentalDamageClaim
-  AssaultClaim
-  WaterDamageClaim
-  TravelAccidentClaim
-  LuggageDelayClaim
-  NotCoveredClaim
-  FireDamageClaim
-  ApplianceClaim
-  ConfirmedFraudClaim
-  LiabilityClaim
-  LegalProtectionClaim
-  WaterDamageBathroomClaim
-  WaterDamageKitchenClaim
-  BurglaryClaim
-  FloodingClaim
-  EarthquakeClaim
-  InstallationsClaim
-  SnowPressureClaim
-  StormDamageClaim
-  VerminAndPestsClaim
-  DuplicateClaim
-  OtherClaim
-  TestClaim
-}
-union ClaimType =
-    TheftClaim
-  | AccidentalDamageClaim
-  | AssaultClaim
-  | WaterDamageClaim
-  | TravelAccidentClaim
-  | LuggageDelayClaim
-  | NotCoveredClaim
-  | FireDamageClaim
-  | ConfirmedFraudClaim
-  | LiabilityClaim
-  | ApplianceClaim
-  | LegalProtectionClaim
-  | WaterDamageBathroomClaim
-  | WaterDamageKitchenClaim
-  | BurglaryClaim
-  | FloodingClaim
-  | EarthquakeClaim
-  | InstallationsClaim
-  | SnowPressureClaim
-  | StormDamageClaim
-  | VerminAndPestsClaim
-  | OtherClaim
-  | DuplicateClaim
-  | TestClaim
-
-type TheftClaim {
-  location: String
-  date: LocalDate
-  item: String
-  policeReport: String
-  receipt: String
-}
-
-type AccidentalDamageClaim {
-  location: String
-  date: LocalDate
-  item: String
-  policeReport: String
-  receipt: String
-}
-
-type AssaultClaim {
-  location: String
-  date: LocalDate
-  policeReport: String
-}
-
-type WaterDamageClaim {
-  date: LocalDate
-}
-
-type TravelAccidentClaim {
-  location: String
-  date: LocalDate
-  policeReport: String
-  receipt: String
-}
-
-type LuggageDelayClaim {
-  location: String
-  date: LocalDate
-  ticket: String
-}
-
-type ConfirmedFraudClaim {
-  date: LocalDate
-}
-
-type LiabilityClaim {
-  date: LocalDate
-  location: String
-}
-
-type FireDamageClaim {
-  location: String
-  date: LocalDate
-}
-
-type ApplianceClaim {
-  location: String
-  date: LocalDate
-  item: String
-}
-
-type LegalProtectionClaim {
-  date: LocalDate
-}
-
-type WaterDamageBathroomClaim {
-  date: LocalDate
-}
-
-type WaterDamageKitchenClaim {
-  date: LocalDate
-}
-
-type BurglaryClaim {
-  location: String
-  date: LocalDate
-  item: String
-  policeReport: String
-  receipt: String
-}
-
-type FloodingClaim {
-  date: LocalDate
-}
-
-type EarthquakeClaim {
-  date: LocalDate
-}
-
-type InstallationsClaim {
-  date: LocalDate
-  item: String
-  location: String
-}
-
-type SnowPressureClaim {
-  date: LocalDate
-}
-
-type StormDamageClaim {
-  date: LocalDate
-}
-
-type VerminAndPestsClaim {
-  date: LocalDate
-}
-
-type OtherClaim {
-  location: String
-  date: LocalDate
-  item: String
-  policeReport: String
-  receipt: String
-}
-
-type NotCoveredClaim {
-  date: LocalDate
-}
-
-type DuplicateClaim {
-  date: LocalDate
-}
-
-type TestClaim {
-  date: LocalDate
 }
 
 type ClaimPayment {

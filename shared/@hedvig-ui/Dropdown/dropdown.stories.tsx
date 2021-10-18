@@ -3,39 +3,15 @@ import {
   Card,
   Dropdown,
   DropdownOption,
-  EnumDropdown,
   MultiDropdown,
 } from '@hedvig-ui'
 import React from 'react'
 import {} from './dropdown'
 
 export default {
-  title: 'EnumDropdown',
-  component: EnumDropdown,
+  title: 'Dropdown',
+  component: Dropdown,
   decorators: [],
-}
-
-enum Taste {
-  Sweet = 'SWEET',
-  Sour = 'SOUR',
-  TheHedvigFavorite = 'THE_HEDVIG_FAVORITE',
-}
-
-export const DropdownWithEnum: React.FC = () => {
-  const [taste, setTaste] = React.useState<Taste | null>(null)
-  return (
-    <>
-      <EnumDropdown
-        enumToSelectFrom={Taste}
-        placeholder="Select a taste"
-        onChange={setTaste}
-      />
-      <h3>
-        <strong>Selected taste:</strong>
-        {taste}
-      </h3>
-    </>
-  )
 }
 
 export const DropdownWithoutSemantic = () => {
@@ -54,7 +30,7 @@ export const DropdownWithoutSemantic = () => {
   ]
 
   return (
-    <div style={{ padding: '50px 600px' }}>
+    <div style={{ padding: 50 }}>
       <Dropdown placeholder="Dropdown">
         {OPTIONS.map((opt, index) => (
           <DropdownOption
