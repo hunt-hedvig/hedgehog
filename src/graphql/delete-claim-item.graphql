@@ -1,3 +1,0 @@
-mutation DeleteClaimItem($claimItemId: ID!) {
-  deleteClaimItem(claimItemId: $claimItemId)
-}

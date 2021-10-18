@@ -130,14 +130,6 @@ export type CampaignOwnerPartner = {
   partnerId: Scalars['String']
 }
 
-export type CanValuateClaimItem = {
-  __typename?: 'CanValuateClaimItem'
-  canValuate: Scalars['Boolean']
-  typeOfContract?: Maybe<Scalars['String']>
-  itemFamily?: Maybe<Scalars['String']>
-  itemTypeId?: Maybe<Scalars['ID']>
-}
-
 export type ChangeFromDateInput = {
   newFromDate: Scalars['LocalDate']
 }
@@ -193,7 +185,6 @@ export type Claim = {
   claimFiles: Array<ClaimFileUpload>
   contract?: Maybe<Contract>
   agreement?: Maybe<GenericAgreement>
-  itemSet: ClaimItemSet
   propertySelections: Array<ClaimPropertySelection>
   coInsured?: Maybe<CoInsured>
 }
@@ -217,40 +208,6 @@ export type ClaimFileUpload = {
   claimId?: Maybe<Scalars['ID']>
   category?: Maybe<Scalars['String']>
   contentType?: Maybe<Scalars['String']>
-}
-
-export type ClaimInformationInput = {
-  location?: Maybe<Scalars['String']>
-  date?: Maybe<Scalars['LocalDate']>
-  item?: Maybe<Scalars['String']>
-  policeReport?: Maybe<Scalars['String']>
-  receipt?: Maybe<Scalars['String']>
-  ticket?: Maybe<Scalars['String']>
-}
-
-export type ClaimItem = {
-  __typename?: 'ClaimItem'
-  id: Scalars['ID']
-  itemFamily: ItemFamily
-  itemType: ItemType
-  itemBrand?: Maybe<ItemBrand>
-  itemModel?: Maybe<ItemModel>
-  itemCompany?: Maybe<ItemCompany>
-  dateOfPurchase?: Maybe<Scalars['LocalDate']>
-  purchasePrice?: Maybe<MonetaryAmountV2>
-  valuation?: Maybe<MonetaryAmountV2>
-  note?: Maybe<Scalars['String']>
-}
-
-export type ClaimItemSet = {
-  __typename?: 'ClaimItemSet'
-  items: Array<ClaimItem>
-}
-
-export type ClaimItemValuation = {
-  __typename?: 'ClaimItemValuation'
-  depreciatedValue?: Maybe<MonetaryAmountV2>
-  valuationRule?: Maybe<ValuationRule>
 }
 
 export type ClaimNote = {
@@ -555,15 +512,6 @@ export type GenericAgreement = {
   createdAt: Scalars['Instant']
 }
 
-export type GetValuationInput = {
-  purchasePrice: Scalars['MonetaryAmount']
-  itemFamilyId: Scalars['String']
-  itemTypeId?: Maybe<Scalars['ID']>
-  typeOfContract: Scalars['String']
-  purchaseDate: Scalars['LocalDate']
-  baseDate?: Maybe<Scalars['LocalDate']>
-}
-
 export type Identity = {
   __typename?: 'Identity'
   nationalIdentification: NationalIdentification
@@ -583,77 +531,6 @@ export type Incentive =
 export type IndefinitePercentageDiscount = {
   __typename?: 'IndefinitePercentageDiscount'
   percentageDiscount?: Maybe<Scalars['Float']>
-}
-
-export type InsertItemCategoriesInput = {
-  itemCategoriesString: Scalars['String']
-}
-
-export type InsertValuationRulesInput = {
-  valuationRulesString: Scalars['String']
-}
-
-export type ItemBrand = ItemCategoryCore & {
-  __typename?: 'ItemBrand'
-  id: Scalars['ID']
-  nextKind?: Maybe<ItemCategoryKind>
-  displayName: Scalars['String']
-  searchTerms: Scalars['String']
-  companyName: Scalars['String']
-}
-
-export type ItemCategory =
-  | ItemFamily
-  | ItemType
-  | ItemBrand
-  | ItemModel
-  | ItemCompany
-
-export type ItemCategoryCore = {
-  id: Scalars['ID']
-  nextKind?: Maybe<ItemCategoryKind>
-  displayName: Scalars['String']
-  searchTerms: Scalars['String']
-}
-
-export enum ItemCategoryKind {
-  Family = 'FAMILY',
-  Type = 'TYPE',
-  Brand = 'BRAND',
-  Model = 'MODEL',
-  Company = 'COMPANY',
-}
-
-export type ItemCompany = ItemCategoryCore & {
-  __typename?: 'ItemCompany'
-  id: Scalars['ID']
-  nextKind?: Maybe<ItemCategoryKind>
-  displayName: Scalars['String']
-  searchTerms: Scalars['String']
-}
-
-export type ItemFamily = ItemCategoryCore & {
-  __typename?: 'ItemFamily'
-  id: Scalars['ID']
-  nextKind?: Maybe<ItemCategoryKind>
-  displayName: Scalars['String']
-  searchTerms: Scalars['String']
-}
-
-export type ItemModel = ItemCategoryCore & {
-  __typename?: 'ItemModel'
-  id: Scalars['ID']
-  nextKind?: Maybe<ItemCategoryKind>
-  displayName: Scalars['String']
-  searchTerms: Scalars['String']
-}
-
-export type ItemType = ItemCategoryCore & {
-  __typename?: 'ItemType'
-  id: Scalars['ID']
-  nextKind?: Maybe<ItemCategoryKind>
-  displayName: Scalars['String']
-  searchTerms: Scalars['String']
 }
 
 export type ListClaimsOptions = {
@@ -689,9 +566,9 @@ export type ManualUnRedeemCampaignInput = {
 
 export type Me = {
   __typename?: 'Me'
-  email: Scalars['String']
   scopes: Array<Scalars['String']>
   role: Scalars['String']
+  user: User
 }
 
 export type Member = {
@@ -855,15 +732,6 @@ export type MutationType = {
   createQuoteForMemberBySchema: Quote
   signQuoteForNewContract: Quote
   overrideQuotePrice: Quote
-  upsertItemCompany: Scalars['ID']
-  upsertItemType: Scalars['ID']
-  upsertItemBrand: Scalars['ID']
-  upsertItemModel: Scalars['ID']
-  upsertClaimItem: Scalars['ID']
-  deleteClaimItem: Scalars['Boolean']
-  insertItemCategories: Array<Scalars['Boolean']>
-  insertValuationRules: Array<Scalars['Boolean']>
-  upsertValuationRule: Scalars['ID']
   createCampaignPartner: Scalars['Boolean']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   assignCampaignToPartnerFreeMonths: Scalars['Boolean']
@@ -889,6 +757,7 @@ export type MutationType = {
   createClaimPropertyOption: ClaimPropertyOption
   upsertCoInsured: Claim
   deleteCoInsured: Scalars['Boolean']
+  updateUser: User
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1103,42 +972,6 @@ export type MutationTypeOverrideQuotePriceArgs = {
   input: OverrideQuotePriceInput
 }
 
-export type MutationTypeUpsertItemCompanyArgs = {
-  request?: Maybe<UpsertItemCompanyInput>
-}
-
-export type MutationTypeUpsertItemTypeArgs = {
-  request?: Maybe<UpsertItemTypeInput>
-}
-
-export type MutationTypeUpsertItemBrandArgs = {
-  request?: Maybe<UpsertItemBrandInput>
-}
-
-export type MutationTypeUpsertItemModelArgs = {
-  request?: Maybe<UpsertItemModelInput>
-}
-
-export type MutationTypeUpsertClaimItemArgs = {
-  request?: Maybe<UpsertClaimItemInput>
-}
-
-export type MutationTypeDeleteClaimItemArgs = {
-  claimItemId: Scalars['ID']
-}
-
-export type MutationTypeInsertItemCategoriesArgs = {
-  request?: Maybe<InsertItemCategoriesInput>
-}
-
-export type MutationTypeInsertValuationRulesArgs = {
-  request?: Maybe<InsertValuationRulesInput>
-}
-
-export type MutationTypeUpsertValuationRuleArgs = {
-  request?: Maybe<UpsertValuationRuleInput>
-}
-
 export type MutationTypeCreateCampaignPartnerArgs = {
   partnerId: Scalars['ID']
   partnerName: Scalars['String']
@@ -1250,6 +1083,11 @@ export type MutationTypeDeleteCoInsuredArgs = {
   claimId: Scalars['ID']
 }
 
+export type MutationTypeUpdateUserArgs = {
+  id: Scalars['ID']
+  input: UpdateUserInput
+}
+
 export type NationalIdentification = {
   __typename?: 'NationalIdentification'
   identification: Scalars['String']
@@ -1274,18 +1112,6 @@ export enum NorwegianGripenFactorType {
   SquareMeters = 'SQUARE_METERS',
   HouseholdType = 'HOUSEHOLD_TYPE',
   Deductible = 'DEDUCTIBLE',
-}
-
-export enum NorwegianHomeContentLineOfBusiness {
-  Rent = 'RENT',
-  Own = 'OWN',
-  YouthRent = 'YOUTH_RENT',
-  YouthOwn = 'YOUTH_OWN',
-}
-
-export enum NorwegianTravelLineOfBusiness {
-  Regular = 'REGULAR',
-  Youth = 'YOUTH',
 }
 
 export type NumberFailedCharges = {
@@ -1359,14 +1185,10 @@ export type QueryType = {
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
-  itemCategories: Array<ItemCategory>
-  claimItems: Array<ClaimItem>
   findPartnerCampaigns: Array<VoucherCampaign>
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
   availableCampaignCodeTypes: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
-  getClaimItemValuation: ClaimItemValuation
-  canValuateClaimItem?: Maybe<CanValuateClaimItem>
   quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
@@ -1380,6 +1202,7 @@ export type QueryType = {
   claimProperty: ClaimProperty
   claimPropertyOptions: Array<ClaimPropertyOption>
   claimPropertyOption: ClaimPropertyOption
+  user?: Maybe<User>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1398,27 +1221,8 @@ export type QueryTypeMessageHistoryArgs = {
   memberId: Scalars['ID']
 }
 
-export type QueryTypeItemCategoriesArgs = {
-  kind: ItemCategoryKind
-  parentId?: Maybe<Scalars['ID']>
-}
-
-export type QueryTypeClaimItemsArgs = {
-  claimId: Scalars['ID']
-}
-
 export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
-}
-
-export type QueryTypeGetClaimItemValuationArgs = {
-  request?: Maybe<GetValuationInput>
-}
-
-export type QueryTypeCanValuateClaimItemArgs = {
-  typeOfContract: Scalars['String']
-  itemFamilyId: Scalars['String']
-  itemTypeId?: Maybe<Scalars['ID']>
 }
 
 export type QueryTypeQuoteSchemaForContractTypeArgs = {
@@ -1444,6 +1248,10 @@ export type QueryTypeClaimPropertyArgs = {
 
 export type QueryTypeClaimPropertyOptionArgs = {
   id: Scalars['ID']
+}
+
+export type QueryTypeUserArgs = {
+  email: Scalars['String']
 }
 
 export type Question = {
@@ -1578,13 +1386,6 @@ export type SetContractForClaim = {
   contractId: Scalars['String']
 }
 
-export enum SwedishApartmentLineOfBusiness {
-  Rent = 'RENT',
-  Brf = 'BRF',
-  StudentRent = 'STUDENT_RENT',
-  StudentBrf = 'STUDENT_BRF',
-}
-
 export type SwitchableSwitcherEmail = {
   __typename?: 'SwitchableSwitcherEmail'
   id: Scalars['ID']
@@ -1646,18 +1447,9 @@ export type UpdateSwitcherEmailInfoInput = {
   note?: Maybe<Scalars['String']>
 }
 
-export type UpsertClaimItemInput = {
-  id?: Maybe<Scalars['ID']>
-  claimId: Scalars['ID']
-  itemFamilyId: Scalars['ID']
-  itemTypeId: Scalars['ID']
-  itemBrandId?: Maybe<Scalars['ID']>
-  itemModelId?: Maybe<Scalars['ID']>
-  dateOfPurchase?: Maybe<Scalars['LocalDate']>
-  purchasePrice?: Maybe<Scalars['MonetaryAmount']>
-  automaticValuation?: Maybe<Scalars['MonetaryAmount']>
-  customValuation?: Maybe<Scalars['MonetaryAmount']>
-  note?: Maybe<Scalars['String']>
+export type UpdateUserInput = {
+  fullName?: Maybe<Scalars['String']>
+  phoneNumber?: Maybe<Scalars['String']>
 }
 
 export type UpsertCoInsuredInput = {
@@ -1667,50 +1459,12 @@ export type UpsertCoInsuredInput = {
   phoneNumber?: Maybe<Scalars['String']>
 }
 
-export type UpsertItemBrandInput = {
-  id?: Maybe<Scalars['ID']>
-  name: Scalars['String']
-  itemTypeId: Scalars['ID']
-  itemCompanyId: Scalars['ID']
-}
-
-export type UpsertItemCompanyInput = {
-  id?: Maybe<Scalars['ID']>
-  name: Scalars['String']
-}
-
-export type UpsertItemModelInput = {
-  id?: Maybe<Scalars['ID']>
-  name: Scalars['String']
-  itemBrandId: Scalars['ID']
-}
-
-export type UpsertItemTypeInput = {
-  id?: Maybe<Scalars['ID']>
-  name: Scalars['String']
-  itemFamilyId: Scalars['ID']
-}
-
-export type UpsertValuationRuleInput = {
-  id?: Maybe<Scalars['ID']>
-  name: Scalars['String']
-  ageLimit: Scalars['Float']
-  typeOfContract: Scalars['String']
-  itemFamilyId: Scalars['String']
-  itemTypeId?: Maybe<Scalars['String']>
-  valuationType: Scalars['String']
-  depreciation?: Maybe<Scalars['Float']>
-}
-
-export type ValuationRule = {
-  __typename?: 'ValuationRule'
-  valuationName: Scalars['String']
-  itemFamily: Scalars['String']
-  itemTypeId?: Maybe<Scalars['ID']>
-  ageLimit: Scalars['Float']
-  valuationTable: Scalars['String']
-  valuationType: Scalars['String']
-  depreciation?: Maybe<Scalars['Int']>
+export type User = {
+  __typename?: 'User'
+  id: Scalars['ID']
+  email: Scalars['String']
+  fullName: Scalars['String']
+  phoneNumber?: Maybe<Scalars['String']>
 }
 
 export type VisibleNoDiscount = {
@@ -2823,21 +2577,6 @@ export type AvailableCampaignCodeTypesQuery = {
   __typename?: 'QueryType'
 } & Pick<QueryType, 'availableCampaignCodeTypes'>
 
-export type CanValuateClaimItemQueryVariables = Exact<{
-  typeOfContract: Scalars['String']
-  itemFamilyId: Scalars['String']
-  itemTypeId?: Maybe<Scalars['ID']>
-}>
-
-export type CanValuateClaimItemQuery = { __typename?: 'QueryType' } & {
-  canValuateClaimItem?: Maybe<
-    { __typename?: 'CanValuateClaimItem' } & Pick<
-      CanValuateClaimItem,
-      'canValuate' | 'typeOfContract' | 'itemFamily' | 'itemTypeId'
-    >
-  >
-}
-
 export type ChangeFromDateMutationVariables = Exact<{
   agreementId: Scalars['ID']
   request?: Maybe<ChangeFromDateInput>
@@ -2956,15 +2695,6 @@ export type CreateQuoteFromAgreementMutation = {
   __typename?: 'MutationType'
 } & { createQuoteFromAgreement: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
 
-export type DeleteClaimItemMutationVariables = Exact<{
-  claimItemId: Scalars['ID']
-}>
-
-export type DeleteClaimItemMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'deleteClaimItem'
->
-
 export type EditMemberInfoMutationVariables = Exact<{
   request: EditMemberInfoInput
 }>
@@ -3058,73 +2788,6 @@ export type GetAccountQuery = { __typename?: 'QueryType' } & {
                   }
               >
             }
-        >
-      }
-  >
-}
-
-export type GetClaimItemValuationQueryVariables = Exact<{
-  request?: Maybe<GetValuationInput>
-}>
-
-export type GetClaimItemValuationQuery = { __typename?: 'QueryType' } & {
-  getClaimItemValuation: { __typename?: 'ClaimItemValuation' } & {
-    depreciatedValue?: Maybe<
-      { __typename?: 'MonetaryAmountV2' } & Pick<
-        MonetaryAmountV2,
-        'amount' | 'currency'
-      >
-    >
-    valuationRule?: Maybe<
-      { __typename?: 'ValuationRule' } & Pick<
-        ValuationRule,
-        | 'valuationName'
-        | 'itemFamily'
-        | 'itemTypeId'
-        | 'ageLimit'
-        | 'valuationTable'
-        | 'valuationType'
-        | 'depreciation'
-      >
-    >
-  }
-}
-
-export type GetClaimItemsQueryVariables = Exact<{
-  claimId: Scalars['ID']
-}>
-
-export type GetClaimItemsQuery = { __typename?: 'QueryType' } & {
-  claimItems: Array<
-    { __typename?: 'ClaimItem' } & Pick<
-      ClaimItem,
-      'id' | 'dateOfPurchase' | 'note'
-    > & {
-        itemFamily: { __typename?: 'ItemFamily' } & Pick<
-          ItemFamily,
-          'id' | 'displayName'
-        >
-        itemType: { __typename?: 'ItemType' } & Pick<
-          ItemType,
-          'id' | 'displayName'
-        >
-        itemBrand?: Maybe<
-          { __typename?: 'ItemBrand' } & Pick<ItemBrand, 'id' | 'displayName'>
-        >
-        itemModel?: Maybe<
-          { __typename?: 'ItemModel' } & Pick<ItemModel, 'id' | 'displayName'>
-        >
-        purchasePrice?: Maybe<
-          { __typename?: 'MonetaryAmountV2' } & Pick<
-            MonetaryAmountV2,
-            'amount' | 'currency'
-          >
-        >
-        valuation?: Maybe<
-          { __typename?: 'MonetaryAmountV2' } & Pick<
-            MonetaryAmountV2,
-            'amount' | 'currency'
-          >
         >
       }
   >
@@ -3244,40 +2907,15 @@ export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetItemCategoriesQueryVariables = Exact<{
-  kind: ItemCategoryKind
-  parentId?: Maybe<Scalars['ID']>
-}>
-
-export type GetItemCategoriesQuery = { __typename?: 'QueryType' } & {
-  itemCategories: Array<
-    | ({ __typename?: 'ItemFamily' } & Pick<
-        ItemFamily,
-        'id' | 'displayName' | 'searchTerms' | 'nextKind'
-      >)
-    | ({ __typename?: 'ItemType' } & Pick<
-        ItemType,
-        'id' | 'displayName' | 'searchTerms' | 'nextKind'
-      >)
-    | ({ __typename?: 'ItemBrand' } & Pick<
-        ItemBrand,
-        'id' | 'displayName' | 'searchTerms' | 'nextKind'
-      >)
-    | ({ __typename?: 'ItemModel' } & Pick<
-        ItemModel,
-        'id' | 'displayName' | 'searchTerms' | 'nextKind'
-      >)
-    | ({ __typename?: 'ItemCompany' } & Pick<
-        ItemCompany,
-        'id' | 'displayName' | 'searchTerms' | 'nextKind'
-      >)
-  >
-}
-
 export type GetMeQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetMeQuery = { __typename?: 'QueryType' } & {
-  me: { __typename?: 'Me' } & Pick<Me, 'email' | 'scopes' | 'role'>
+  me: { __typename?: 'Me' } & Pick<Me, 'scopes' | 'role'> & {
+      user: { __typename?: 'User' } & Pick<
+        User,
+        'id' | 'email' | 'fullName' | 'phoneNumber'
+      >
+    }
 }
 
 export type GetMemberClaimsQueryVariables = Exact<{
@@ -3967,51 +3605,6 @@ export type UpdateQuoteBySchemaMutationVariables = Exact<{
 export type UpdateQuoteBySchemaMutation = { __typename?: 'MutationType' } & {
   updateQuoteBySchema: { __typename?: 'Quote' } & Pick<Quote, 'id'>
 }
-
-export type UpsertClaimItemMutationVariables = Exact<{
-  request?: Maybe<UpsertClaimItemInput>
-}>
-
-export type UpsertClaimItemMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'upsertClaimItem'
->
-
-export type UpsertItemTypeMutationVariables = Exact<{
-  request?: Maybe<UpsertItemTypeInput>
-}>
-
-export type UpsertItemTypeMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'upsertItemType'
->
-
-export type UpsertItemBrandMutationVariables = Exact<{
-  request?: Maybe<UpsertItemBrandInput>
-}>
-
-export type UpsertItemBrandMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'upsertItemBrand'
->
-
-export type UpsertItemModelMutationVariables = Exact<{
-  request?: Maybe<UpsertItemModelInput>
-}>
-
-export type UpsertItemModelMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'upsertItemModel'
->
-
-export type UpsertItemCompanyMutationVariables = Exact<{
-  request?: Maybe<UpsertItemCompanyInput>
-}>
-
-export type UpsertItemCompanyMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'upsertItemCompany'
->
 
 export type WhitelistMemberMutationVariables = Exact<{
   memberId: Scalars['ID']
@@ -7264,77 +6857,6 @@ export type AvailableCampaignCodeTypesQueryResult = ApolloReactCommon.QueryResul
   AvailableCampaignCodeTypesQuery,
   AvailableCampaignCodeTypesQueryVariables
 >
-export const CanValuateClaimItemDocument = gql`
-  query CanValuateClaimItem(
-    $typeOfContract: String!
-    $itemFamilyId: String!
-    $itemTypeId: ID
-  ) {
-    canValuateClaimItem(
-      typeOfContract: $typeOfContract
-      itemFamilyId: $itemFamilyId
-      itemTypeId: $itemTypeId
-    ) {
-      canValuate
-      typeOfContract
-      itemFamily
-      itemTypeId
-    }
-  }
-`
-
-/**
- * __useCanValuateClaimItemQuery__
- *
- * To run a query within a React component, call `useCanValuateClaimItemQuery` and pass it any options that fit your needs.
- * When your component renders, `useCanValuateClaimItemQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCanValuateClaimItemQuery({
- *   variables: {
- *      typeOfContract: // value for 'typeOfContract'
- *      itemFamilyId: // value for 'itemFamilyId'
- *      itemTypeId: // value for 'itemTypeId'
- *   },
- * });
- */
-export function useCanValuateClaimItemQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    CanValuateClaimItemQuery,
-    CanValuateClaimItemQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    CanValuateClaimItemQuery,
-    CanValuateClaimItemQueryVariables
-  >(CanValuateClaimItemDocument, options)
-}
-export function useCanValuateClaimItemLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    CanValuateClaimItemQuery,
-    CanValuateClaimItemQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    CanValuateClaimItemQuery,
-    CanValuateClaimItemQueryVariables
-  >(CanValuateClaimItemDocument, options)
-}
-export type CanValuateClaimItemQueryHookResult = ReturnType<
-  typeof useCanValuateClaimItemQuery
->
-export type CanValuateClaimItemLazyQueryHookResult = ReturnType<
-  typeof useCanValuateClaimItemLazyQuery
->
-export type CanValuateClaimItemQueryResult = ApolloReactCommon.QueryResult<
-  CanValuateClaimItemQuery,
-  CanValuateClaimItemQueryVariables
->
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
     changeFromDate(agreementId: $agreementId, request: $request) {
@@ -7837,55 +7359,6 @@ export type CreateQuoteFromAgreementMutationOptions = ApolloReactCommon.BaseMuta
   CreateQuoteFromAgreementMutation,
   CreateQuoteFromAgreementMutationVariables
 >
-export const DeleteClaimItemDocument = gql`
-  mutation DeleteClaimItem($claimItemId: ID!) {
-    deleteClaimItem(claimItemId: $claimItemId)
-  }
-`
-export type DeleteClaimItemMutationFn = ApolloReactCommon.MutationFunction<
-  DeleteClaimItemMutation,
-  DeleteClaimItemMutationVariables
->
-
-/**
- * __useDeleteClaimItemMutation__
- *
- * To run a mutation, you first call `useDeleteClaimItemMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteClaimItemMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteClaimItemMutation, { data, loading, error }] = useDeleteClaimItemMutation({
- *   variables: {
- *      claimItemId: // value for 'claimItemId'
- *   },
- * });
- */
-export function useDeleteClaimItemMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    DeleteClaimItemMutation,
-    DeleteClaimItemMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    DeleteClaimItemMutation,
-    DeleteClaimItemMutationVariables
-  >(DeleteClaimItemDocument, options)
-}
-export type DeleteClaimItemMutationHookResult = ReturnType<
-  typeof useDeleteClaimItemMutation
->
-export type DeleteClaimItemMutationResult = ApolloReactCommon.MutationResult<
-  DeleteClaimItemMutation
->
-export type DeleteClaimItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  DeleteClaimItemMutation,
-  DeleteClaimItemMutationVariables
->
 export const EditMemberInfoDocument = gql`
   mutation EditMemberInfo($request: EditMemberInfoInput!) {
     editMemberInfo(request: $request) {
@@ -8109,160 +7582,6 @@ export type GetAccountLazyQueryHookResult = ReturnType<
 export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
   GetAccountQuery,
   GetAccountQueryVariables
->
-export const GetClaimItemValuationDocument = gql`
-  query GetClaimItemValuation($request: GetValuationInput) {
-    getClaimItemValuation(request: $request) {
-      depreciatedValue {
-        amount
-        currency
-      }
-      valuationRule {
-        valuationName
-        itemFamily
-        itemTypeId
-        ageLimit
-        valuationTable
-        valuationType
-        depreciation
-      }
-    }
-  }
-`
-
-/**
- * __useGetClaimItemValuationQuery__
- *
- * To run a query within a React component, call `useGetClaimItemValuationQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetClaimItemValuationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetClaimItemValuationQuery({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useGetClaimItemValuationQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetClaimItemValuationQuery,
-    GetClaimItemValuationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetClaimItemValuationQuery,
-    GetClaimItemValuationQueryVariables
-  >(GetClaimItemValuationDocument, options)
-}
-export function useGetClaimItemValuationLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetClaimItemValuationQuery,
-    GetClaimItemValuationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetClaimItemValuationQuery,
-    GetClaimItemValuationQueryVariables
-  >(GetClaimItemValuationDocument, options)
-}
-export type GetClaimItemValuationQueryHookResult = ReturnType<
-  typeof useGetClaimItemValuationQuery
->
-export type GetClaimItemValuationLazyQueryHookResult = ReturnType<
-  typeof useGetClaimItemValuationLazyQuery
->
-export type GetClaimItemValuationQueryResult = ApolloReactCommon.QueryResult<
-  GetClaimItemValuationQuery,
-  GetClaimItemValuationQueryVariables
->
-export const GetClaimItemsDocument = gql`
-  query GetClaimItems($claimId: ID!) {
-    claimItems(claimId: $claimId) {
-      id
-      itemFamily {
-        id
-        displayName
-      }
-      itemType {
-        id
-        displayName
-      }
-      itemBrand {
-        id
-        displayName
-      }
-      itemModel {
-        id
-        displayName
-      }
-      dateOfPurchase
-      purchasePrice {
-        amount
-        currency
-      }
-      valuation {
-        amount
-        currency
-      }
-      note
-    }
-  }
-`
-
-/**
- * __useGetClaimItemsQuery__
- *
- * To run a query within a React component, call `useGetClaimItemsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetClaimItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetClaimItemsQuery({
- *   variables: {
- *      claimId: // value for 'claimId'
- *   },
- * });
- */
-export function useGetClaimItemsQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    GetClaimItemsQuery,
-    GetClaimItemsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetClaimItemsQuery,
-    GetClaimItemsQueryVariables
-  >(GetClaimItemsDocument, options)
-}
-export function useGetClaimItemsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetClaimItemsQuery,
-    GetClaimItemsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetClaimItemsQuery,
-    GetClaimItemsQueryVariables
-  >(GetClaimItemsDocument, options)
-}
-export type GetClaimItemsQueryHookResult = ReturnType<
-  typeof useGetClaimItemsQuery
->
-export type GetClaimItemsLazyQueryHookResult = ReturnType<
-  typeof useGetClaimItemsLazyQuery
->
-export type GetClaimItemsQueryResult = ApolloReactCommon.QueryResult<
-  GetClaimItemsQuery,
-  GetClaimItemsQueryVariables
 >
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
@@ -8502,100 +7821,17 @@ export type GetDashboardNumbersQueryResult = ApolloReactCommon.QueryResult<
   GetDashboardNumbersQuery,
   GetDashboardNumbersQueryVariables
 >
-export const GetItemCategoriesDocument = gql`
-  query GetItemCategories($kind: ItemCategoryKind!, $parentId: ID) {
-    itemCategories(kind: $kind, parentId: $parentId) {
-      ... on ItemFamily {
-        id
-        displayName
-        searchTerms
-        nextKind
-      }
-      ... on ItemType {
-        id
-        displayName
-        searchTerms
-        nextKind
-      }
-      ... on ItemBrand {
-        id
-        displayName
-        searchTerms
-        nextKind
-      }
-      ... on ItemModel {
-        id
-        displayName
-        searchTerms
-        nextKind
-      }
-      ... on ItemCompany {
-        id
-        displayName
-        searchTerms
-        nextKind
-      }
-    }
-  }
-`
-
-/**
- * __useGetItemCategoriesQuery__
- *
- * To run a query within a React component, call `useGetItemCategoriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetItemCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetItemCategoriesQuery({
- *   variables: {
- *      kind: // value for 'kind'
- *      parentId: // value for 'parentId'
- *   },
- * });
- */
-export function useGetItemCategoriesQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    GetItemCategoriesQuery,
-    GetItemCategoriesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetItemCategoriesQuery,
-    GetItemCategoriesQueryVariables
-  >(GetItemCategoriesDocument, options)
-}
-export function useGetItemCategoriesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetItemCategoriesQuery,
-    GetItemCategoriesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetItemCategoriesQuery,
-    GetItemCategoriesQueryVariables
-  >(GetItemCategoriesDocument, options)
-}
-export type GetItemCategoriesQueryHookResult = ReturnType<
-  typeof useGetItemCategoriesQuery
->
-export type GetItemCategoriesLazyQueryHookResult = ReturnType<
-  typeof useGetItemCategoriesLazyQuery
->
-export type GetItemCategoriesQueryResult = ApolloReactCommon.QueryResult<
-  GetItemCategoriesQuery,
-  GetItemCategoriesQueryVariables
->
 export const GetMeDocument = gql`
   query GetMe {
     me {
-      email
       scopes
       role
+      user {
+        id
+        email
+        fullName
+        phoneNumber
+      }
     }
   }
 `
@@ -10787,251 +10023,6 @@ export type UpdateQuoteBySchemaMutationOptions = ApolloReactCommon.BaseMutationO
   UpdateQuoteBySchemaMutation,
   UpdateQuoteBySchemaMutationVariables
 >
-export const UpsertClaimItemDocument = gql`
-  mutation UpsertClaimItem($request: UpsertClaimItemInput) {
-    upsertClaimItem(request: $request)
-  }
-`
-export type UpsertClaimItemMutationFn = ApolloReactCommon.MutationFunction<
-  UpsertClaimItemMutation,
-  UpsertClaimItemMutationVariables
->
-
-/**
- * __useUpsertClaimItemMutation__
- *
- * To run a mutation, you first call `useUpsertClaimItemMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpsertClaimItemMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [upsertClaimItemMutation, { data, loading, error }] = useUpsertClaimItemMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useUpsertClaimItemMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpsertClaimItemMutation,
-    UpsertClaimItemMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UpsertClaimItemMutation,
-    UpsertClaimItemMutationVariables
-  >(UpsertClaimItemDocument, options)
-}
-export type UpsertClaimItemMutationHookResult = ReturnType<
-  typeof useUpsertClaimItemMutation
->
-export type UpsertClaimItemMutationResult = ApolloReactCommon.MutationResult<
-  UpsertClaimItemMutation
->
-export type UpsertClaimItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpsertClaimItemMutation,
-  UpsertClaimItemMutationVariables
->
-export const UpsertItemTypeDocument = gql`
-  mutation UpsertItemType($request: UpsertItemTypeInput) {
-    upsertItemType(request: $request)
-  }
-`
-export type UpsertItemTypeMutationFn = ApolloReactCommon.MutationFunction<
-  UpsertItemTypeMutation,
-  UpsertItemTypeMutationVariables
->
-
-/**
- * __useUpsertItemTypeMutation__
- *
- * To run a mutation, you first call `useUpsertItemTypeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpsertItemTypeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [upsertItemTypeMutation, { data, loading, error }] = useUpsertItemTypeMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useUpsertItemTypeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpsertItemTypeMutation,
-    UpsertItemTypeMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UpsertItemTypeMutation,
-    UpsertItemTypeMutationVariables
-  >(UpsertItemTypeDocument, options)
-}
-export type UpsertItemTypeMutationHookResult = ReturnType<
-  typeof useUpsertItemTypeMutation
->
-export type UpsertItemTypeMutationResult = ApolloReactCommon.MutationResult<
-  UpsertItemTypeMutation
->
-export type UpsertItemTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpsertItemTypeMutation,
-  UpsertItemTypeMutationVariables
->
-export const UpsertItemBrandDocument = gql`
-  mutation UpsertItemBrand($request: UpsertItemBrandInput) {
-    upsertItemBrand(request: $request)
-  }
-`
-export type UpsertItemBrandMutationFn = ApolloReactCommon.MutationFunction<
-  UpsertItemBrandMutation,
-  UpsertItemBrandMutationVariables
->
-
-/**
- * __useUpsertItemBrandMutation__
- *
- * To run a mutation, you first call `useUpsertItemBrandMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpsertItemBrandMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [upsertItemBrandMutation, { data, loading, error }] = useUpsertItemBrandMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useUpsertItemBrandMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpsertItemBrandMutation,
-    UpsertItemBrandMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UpsertItemBrandMutation,
-    UpsertItemBrandMutationVariables
-  >(UpsertItemBrandDocument, options)
-}
-export type UpsertItemBrandMutationHookResult = ReturnType<
-  typeof useUpsertItemBrandMutation
->
-export type UpsertItemBrandMutationResult = ApolloReactCommon.MutationResult<
-  UpsertItemBrandMutation
->
-export type UpsertItemBrandMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpsertItemBrandMutation,
-  UpsertItemBrandMutationVariables
->
-export const UpsertItemModelDocument = gql`
-  mutation UpsertItemModel($request: UpsertItemModelInput) {
-    upsertItemModel(request: $request)
-  }
-`
-export type UpsertItemModelMutationFn = ApolloReactCommon.MutationFunction<
-  UpsertItemModelMutation,
-  UpsertItemModelMutationVariables
->
-
-/**
- * __useUpsertItemModelMutation__
- *
- * To run a mutation, you first call `useUpsertItemModelMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpsertItemModelMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [upsertItemModelMutation, { data, loading, error }] = useUpsertItemModelMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useUpsertItemModelMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpsertItemModelMutation,
-    UpsertItemModelMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UpsertItemModelMutation,
-    UpsertItemModelMutationVariables
-  >(UpsertItemModelDocument, options)
-}
-export type UpsertItemModelMutationHookResult = ReturnType<
-  typeof useUpsertItemModelMutation
->
-export type UpsertItemModelMutationResult = ApolloReactCommon.MutationResult<
-  UpsertItemModelMutation
->
-export type UpsertItemModelMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpsertItemModelMutation,
-  UpsertItemModelMutationVariables
->
-export const UpsertItemCompanyDocument = gql`
-  mutation UpsertItemCompany($request: UpsertItemCompanyInput) {
-    upsertItemCompany(request: $request)
-  }
-`
-export type UpsertItemCompanyMutationFn = ApolloReactCommon.MutationFunction<
-  UpsertItemCompanyMutation,
-  UpsertItemCompanyMutationVariables
->
-
-/**
- * __useUpsertItemCompanyMutation__
- *
- * To run a mutation, you first call `useUpsertItemCompanyMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpsertItemCompanyMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [upsertItemCompanyMutation, { data, loading, error }] = useUpsertItemCompanyMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useUpsertItemCompanyMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpsertItemCompanyMutation,
-    UpsertItemCompanyMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UpsertItemCompanyMutation,
-    UpsertItemCompanyMutationVariables
-  >(UpsertItemCompanyDocument, options)
-}
-export type UpsertItemCompanyMutationHookResult = ReturnType<
-  typeof useUpsertItemCompanyMutation
->
-export type UpsertItemCompanyMutationResult = ApolloReactCommon.MutationResult<
-  UpsertItemCompanyMutation
->
-export type UpsertItemCompanyMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpsertItemCompanyMutation,
-  UpsertItemCompanyMutationVariables
->
 export const WhitelistMemberDocument = gql`
   mutation whitelistMember($memberId: ID!) {
     whitelistMember(memberId: $memberId) {
@@ -11091,13 +10082,6 @@ export interface PossibleTypesResultData {
 }
 const result: PossibleTypesResultData = {
   possibleTypes: {
-    ItemCategoryCore: [
-      'ItemFamily',
-      'ItemType',
-      'ItemBrand',
-      'ItemModel',
-      'ItemCompany',
-    ],
     Incentive: [
       'MonthlyPercentageDiscountFixedPeriod',
       'FreeMonths',
@@ -11106,13 +10090,6 @@ const result: PossibleTypesResultData = {
       'IndefinitePercentageDiscount',
       'VisibleNoDiscount',
       'UnknownIncentive',
-    ],
-    ItemCategory: [
-      'ItemFamily',
-      'ItemType',
-      'ItemBrand',
-      'ItemModel',
-      'ItemCompany',
     ],
     SendMessageResponse: ['SendMessageSuccessful', 'SendMessageFailed'],
   },

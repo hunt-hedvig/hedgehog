@@ -78,7 +78,9 @@ export const QuestionsPage: React.FC = () => {
           }}
         >
           Hey there{' '}
-          <Capitalized>{getLowercaseNameFromEmail(data?.me.email)}</Capitalized>
+          <Capitalized>
+            {getLowercaseNameFromEmail(data?.me.user.email)}
+          </Capitalized>
           !
           <br />
           <span style={{ fontSize: '0.9em' }}>
