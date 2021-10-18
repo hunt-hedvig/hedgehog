@@ -37,7 +37,7 @@ const TextareaAutosizeStyled = styled(TextareaAutosize)<{
   ${({ theme, resize, maxHeight }) => styles(theme, resize, maxHeight)}
 `
 
-interface TextAreaProps
+export interface TextAreaProps
   extends Omit<React.HTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
   value: string | undefined
   maxHeight?: string

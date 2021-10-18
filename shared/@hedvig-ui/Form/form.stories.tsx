@@ -5,6 +5,7 @@ import {
   NewForm,
   NewFormDropdown,
   NewFormInput,
+  NewFormTextArea,
   NewSubmitButton,
   SubmitButton,
 } from '@hedvig-ui'
@@ -198,6 +199,11 @@ export const FormWithoutSemantic = () => {
               message: 'Actually only 2 or less is allowed',
             },
           }}
+        />
+        <NewFormTextArea
+          label="Amount TextArea with suffix"
+          name="amountTextArea"
+          defaultValue=""
         />
         <NewSubmitButton>Submit form</NewSubmitButton>
       </NewForm>

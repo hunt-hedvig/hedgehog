@@ -7,6 +7,8 @@ import {
   Input,
   InputProps,
   Label,
+  TextArea,
+  TextAreaProps,
 } from '@hedvig-ui'
 import { ErrorMessage } from '@hookform/error-message'
 import React, { HTMLAttributes } from 'react'
@@ -131,40 +133,29 @@ export const FormInput: React.FC<InputProps & FormFieldProps> = ({
   )
 }
 
-export const SubmitButton: React.FC<ButtonProps> = ({ children, ...props }) => {
-  const {
-    formState: { isSubmitting },
-  } = useFormContext()
+const FormTextAreaComponent: React.FC<React.HTMLAttributes<
+  HTMLTextAreaElement
+> &
+  FormFieldProps> = ({ name, rules, defaultValue, ...props }) => {
   return (
-    <Button disabled={isSubmitting} type="submit" {...props}>
-      {children}
-    </Button>
+    <Controller
+      name={name}
+      rules={rules}
+      defaultValue={defaultValue}
+      // as={<TextArea {...props} />}
+      as={<textarea {...props} />}
+    />
   )
 }
 
-// const FormTextAreaComponent: React.FC<TextAreaProps & FormFieldProps> = ({
-//   name,
-//   rules,
-//   defaultValue,
-//   ...props
-// }) => {
-//   return (
-//     <Controller
-//       name={name}
-//       rules={rules}
-//       defaultValue={defaultValue}
-//       as={<TextArea {...props} />}
-//     />
-//   )
-// }
-
-// export const FormTextArea: React.FC<FormFieldProps> = ({ ...props }) => {
-//   return (
-//     <FormField {...props}>
-//       <FormTextAreaComponent {...props} />
-//     </FormField>
-//   )
-// }
+export const FormTextArea: React.FC<React.HTMLAttributes<HTMLTextAreaElement> &
+  FormFieldProps> = ({ ...props }) => {
+  return (
+    <FormField {...props}>
+      <FormTextAreaComponent {...props} />
+    </FormField>
+  )
+}
 
 interface FormDropdownProps {
   options: Array<{ key: number; value: string | number; text: string | number }>
@@ -206,5 +197,16 @@ export const FormDropdown: React.FC<FormDropdownProps & FormFieldProps> = ({
     <FormField {...props}>
       <FormDropdownComponent options={options} {...props} />
     </FormField>
+  )
+}
+
+export const SubmitButton: React.FC<ButtonProps> = ({ children, ...props }) => {
+  const {
+    formState: { isSubmitting },
+  } = useFormContext()
+  return (
+    <Button disabled={isSubmitting} type="submit" {...props}>
+      {children}
+    </Button>
   )
 }
