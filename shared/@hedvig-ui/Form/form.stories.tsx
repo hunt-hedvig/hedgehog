@@ -204,6 +204,21 @@ export const FormWithoutSemantic = () => {
           label="Amount TextArea with suffix"
           name="amountTextArea"
           defaultValue=""
+          rules={{
+            required: 'This text is reqired',
+            minLength: {
+              value: 6,
+              message: 'This text has to be at least 6 characters long',
+            },
+            maxLength: {
+              value: 6,
+              message: 'This text can be no longer than 6 characters long',
+            },
+            pattern: {
+              value: /^Hedvig$/,
+              message: 'This text has to be "Hedvig" for some reason',
+            },
+          }}
         />
         <NewSubmitButton>Submit form</NewSubmitButton>
       </NewForm>
