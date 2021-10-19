@@ -109,7 +109,7 @@ const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
     height: 'calc(0.75rem + 1.5rem)',
     width: '1.5rem',
     position: 'absolute',
-    top: '4rem',
+    top: '1rem',
     transform: 'translateX(100%)',
     right: 0,
     color: '#fff',
