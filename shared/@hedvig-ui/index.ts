@@ -64,10 +64,6 @@ export { List, ListItem } from './List/list'
 export { Loadable } from './Loadable/loadable'
 export {
   OrbIndicator,
-  OrbColors,
-  OrbSizes,
-  ColorProp as OrbColorsType,
-  SizeProp as OrbSizesType,
   FlagProp as OrbFlagsType,
 } from './OrbIndicator/orb-indicator'
 export { Popover } from './Popover/popover'

@@ -91,7 +91,7 @@ export const DebtTab: React.FC<{
                 {person?.status?.flag && (
                   <OrbIndicator
                     flag={person.status.flag.toLowerCase() as OrbFlagsType}
-                    size="tiny"
+                    size="14px"
                   />
                 )}
               </InfoText>
