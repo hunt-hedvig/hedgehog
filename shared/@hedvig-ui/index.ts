@@ -62,7 +62,10 @@ export type InputProps = _InputProps
 export { JsonSchemaForm } from './JsonSchemaForm/json-schema-form'
 export { List, ListItem } from './List/list'
 export { Loadable } from './Loadable/loadable'
-export { FlagOrbIndicator, OrbIndicator } from './OrbIndicator/orb-indicator'
+export {
+  OrbIndicator,
+  FlagProp as OrbFlagsType,
+} from './OrbIndicator/orb-indicator'
 export { Popover } from './Popover/popover'
 export { RadioGroup } from './Radio/radio'
 export {

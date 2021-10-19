@@ -1,4 +1,5 @@
 import { OrbIndicator } from '@hedvig-ui'
+import { text } from '@storybook/addon-knobs'
 import React from 'react'
 
 export default {
@@ -7,28 +8,10 @@ export default {
   decorators: [],
 }
 
-export const OrbStatusIndicator: React.FC = () => {
+export const OrbIndicatorStandard = () => {
   return (
     <>
-      <h2>Options:</h2>
-      <p>
-        Color: <br /> 'red' | 'orange' | 'yellow' | 'olive' | 'green' | 'teal' |
-        'blue' | 'violet' | 'purple' | 'pink' | 'brown' | 'grey' | 'black'
-      </p>
-      <p>
-        Size: <br /> 'mini' | 'tiny' | 'small' | 'large' | 'big' | 'huge' |
-        'massive'{' '}
-      </p>
-      <h2>Examples:</h2>
-      <p>
-        Grey & Tiny (Default): <OrbIndicator />
-      </p>
-      <p>
-        Green & Large: <OrbIndicator color="green" size="large" />
-      </p>
-      <p>
-        Purple & Small: <OrbIndicator color="purple" size="small" />
-      </p>
+      <OrbIndicator color={text('Color: ', '')} size={text('Size: ', '14px')} />
     </>
   )
 }
