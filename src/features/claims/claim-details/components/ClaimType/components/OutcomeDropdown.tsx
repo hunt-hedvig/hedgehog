@@ -56,7 +56,7 @@ export const OutcomeDropdown: React.FC<{
           }}
           selected={
             outcome === opt.value ||
-            (outcome === null && opt.value === 'not_specified')
+            (outcome === null && opt.value === 'not_specified' && false)
           }
         >
           {opt.text}
