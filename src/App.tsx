@@ -7,6 +7,7 @@ import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
 import { Breadcrumbs } from 'features/navigation/breadcrumbs/Breadcrumbs'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
+import { TopBar } from 'features/navigation/topbar/TopBar'
 import { Routes } from 'pages/routes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
@@ -27,7 +28,11 @@ const Main = styled.div<{ dark: boolean }>`
     dark ? colorsV3.gray900 : theme.background};
   color: ${({ theme }) => theme.foreground};
   flex: 1;
-  padding: 3rem 4rem;
+`
+
+const MainContent = styled.div`
+  flex: 1;
+  padding: 2rem 4rem;
 `
 
 const globalCss = css`
@@ -96,26 +101,29 @@ const App: React.FC = () => {
                       <VerticalMenu history={history} />
                     )}
                     <Main dark={history.location.pathname.startsWith('/login')}>
-                      <Breadcrumbs />
-                      <Switch>
-                        <Route
-                          path="/login"
-                          exact
-                          component={() => {
-                            redirectToLogin()
-                            return null
+                      <TopBar />
+                      <MainContent>
+                        <Breadcrumbs />
+                        <Switch>
+                          <Route
+                            path="/login"
+                            exact
+                            component={() => {
+                              redirectToLogin()
+                              return null
+                            }}
+                          />
+                          {me && <Routes />}
+                        </Switch>
+                        <Toaster
+                          position="top-center"
+                          toastOptions={{
+                            style: {
+                              padding: '20px 25px',
+                            },
                           }}
                         />
-                        {me && <Routes />}
-                      </Switch>
-                      <Toaster
-                        position="top-center"
-                        toastOptions={{
-                          style: {
-                            padding: '20px 25px',
-                          },
-                        }}
-                      />
+                      </MainContent>
                     </Main>
                   </Layout>
                 </ConfirmDialogProvider>

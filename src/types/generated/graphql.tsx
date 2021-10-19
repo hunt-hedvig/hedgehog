@@ -1084,7 +1084,6 @@ export type MutationTypeDeleteCoInsuredArgs = {
 }
 
 export type MutationTypeUpdateUserArgs = {
-  id: Scalars['ID']
   input: UpdateUserInput
 }
 
@@ -2489,6 +2488,17 @@ export type MarkSwitcherEmailAsRemindedMutation = {
   markSwitchableSwitcherEmailAsReminded: {
     __typename?: 'SwitchableSwitcherEmail'
   } & Pick<SwitchableSwitcherEmail, 'id'>
+}
+
+export type UpdateUserMutationVariables = Exact<{
+  input: UpdateUserInput
+}>
+
+export type UpdateUserMutation = { __typename?: 'MutationType' } & {
+  updateUser: { __typename?: 'User' } & Pick<
+    User,
+    'id' | 'fullName' | 'email' | 'phoneNumber'
+  >
 }
 
 export type ActivatePendingAgreementMutationVariables = Exact<{
@@ -6368,6 +6378,60 @@ export type MarkSwitcherEmailAsRemindedMutationResult = ApolloReactCommon.Mutati
 export type MarkSwitcherEmailAsRemindedMutationOptions = ApolloReactCommon.BaseMutationOptions<
   MarkSwitcherEmailAsRemindedMutation,
   MarkSwitcherEmailAsRemindedMutationVariables
+>
+export const UpdateUserDocument = gql`
+  mutation UpdateUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      id
+      fullName
+      email
+      phoneNumber
+    }
+  }
+`
+export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
+>
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateUserMutation,
+    UpdateUserMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UpdateUserMutation,
+    UpdateUserMutationVariables
+  >(UpdateUserDocument, options)
+}
+export type UpdateUserMutationHookResult = ReturnType<
+  typeof useUpdateUserMutation
+>
+export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<
+  UpdateUserMutation
+>
+export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
 >
 export const ActivatePendingAgreementDocument = gql`
   mutation ActivatePendingAgreement(
