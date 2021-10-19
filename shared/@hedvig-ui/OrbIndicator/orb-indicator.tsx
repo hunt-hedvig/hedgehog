@@ -1,59 +1,44 @@
 import styled from '@emotion/styled'
 import React from 'react'
-import { Icon, SemanticCOLORS } from 'semantic-ui-react'
-import { IconSizeProp } from 'semantic-ui-react/dist/commonjs/elements/Icon/Icon'
+import { lightTheme } from '..'
 
-const IconStyled = styled(Icon)(() => ({
-  verticalAlign: 'middle',
-  paddingLeft: '4px',
-}))
+export type FlagProp = 'GREEN' | 'AMBER' | 'RED'
 
-const Container = styled('span')(() => ({
-  marginTop: '-7px',
-  display: 'inline',
-}))
-
-type Flag = 'GREEN' | 'AMBER' | 'RED'
-
-interface FlagOrbProps {
-  flag?: Flag | null
-  size?: IconSizeProp
+interface OrbIndicatorProps {
+  color?: string
+  size?: string
+  flag?: FlagProp
 }
 
-interface OrbProps {
-  color?: SemanticCOLORS | null
-  size?: IconSizeProp
+const OrbIndicatorStyled = styled.div<{ color: string; size: string }>`
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  background-color: ${({ color }) => color};
+  border-radius: 50%;
+`
+
+export const OrbIndicator: React.FC<OrbIndicatorProps> = ({
+  color,
+  size,
+  flag,
+}) => {
+  const currentColor =
+    !flag && color
+      ? color
+      : flag
+      ? getFlagColor(flag)
+      : lightTheme.placeholderColor
+
+  return <OrbIndicatorStyled color={currentColor} size={size || 'tiny'} />
 }
 
-export const FlagOrbIndicator: React.FC<FlagOrbProps> = ({ flag, size }) => (
-  <OrbIndicator color={getFlagColor(flag)} size={size} />
-)
-
-export const OrbIndicator: React.FC<OrbProps> = ({ color, size }) => {
-  return (
-    <Container>
-      <span style={{ fontSize: '32px' }}>
-        <IconStyled
-          name="circle"
-          color={(color?.toLowerCase() || 'grey') as SemanticCOLORS}
-          size={size || 'tiny'}
-        />
-      </span>
-    </Container>
-  )
-}
-
-const getFlagColor = (
-  flag?: Flag | null,
-): SemanticCOLORS | undefined | null => {
-  if (flag === 'GREEN') {
-    return 'green'
-  }
+const getFlagColor = (flag?: FlagProp | null) => {
   if (flag === 'AMBER') {
-    return 'orange'
+    return '#f2711c'
   }
   if (flag === 'RED') {
-    return 'red'
+    return lightTheme.danger
   }
-  return flag
+
+  return '#21ba45'
 }
