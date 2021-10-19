@@ -96,7 +96,7 @@ const App: React.FC = () => {
             <Router history={history}>
               <CommandLineProvider>
                 <ConfirmDialogProvider>
-                  <Layout style={{ backgroundColor: 'green' }}>
+                  <Layout>
                     {!history.location.pathname.startsWith('/login') && (
                       <VerticalMenu history={history} />
                     )}

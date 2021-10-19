@@ -2,7 +2,7 @@ import { StandaloneMessage } from '@hedvig-ui'
 import { ConversationsOnboardingPage } from 'pages/conversations/ConversationsOnboardingPage'
 import { ConversationsPage } from 'pages/conversations/ConversationsPage'
 import { ConversationsSettingsPage } from 'pages/conversations/ConversationsSettingsPage'
-import { SettingsPage } from 'pages/settings/SettingsPage'
+import { ProfilePage } from 'pages/settings/ProfilePage'
 import { ClaimTypesPage } from 'pages/tools/ClaimTypesPage'
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router'
@@ -25,7 +25,7 @@ export const Routes: React.FC = () => {
   return (
     <Switch>
       <Route path="/" exact component={DashboardPage} />
-      <Route path="/settings" component={SettingsPage} />
+      <Route path="/profile" component={ProfilePage} />
       <Route path="/dashborad" component={DashboardPage} />
       <Route path="/questions" component={QuestionsPage} />
       <Route

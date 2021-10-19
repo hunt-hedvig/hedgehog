@@ -58,7 +58,7 @@ export const TopBar: React.FC<{}> = () => {
           direction="row"
           justify="flex-end"
           align="center"
-          onClick={() => history.push('/settings')}
+          onClick={() => history.push('/profile')}
         >
           <span>{data.me.user.fullName}</span>
           <CircleButton style={{ marginLeft: '1em' }}>

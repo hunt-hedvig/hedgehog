@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
 
-export const SettingsPage: React.FC<{}> = ({}) => {
+export const ProfilePage: React.FC = () => {
   const { data } = useGetMeQuery()
   const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState<null | string>('')
@@ -44,7 +44,7 @@ export const SettingsPage: React.FC<{}> = ({}) => {
     setPhoneNumber(data?.me.user.phoneNumber ?? null)
   }
 
-  useEffect(reset, [])
+  useEffect(reset, [data])
 
   const changes =
     fullName !== data?.me.user.fullName ||
@@ -56,11 +56,11 @@ export const SettingsPage: React.FC<{}> = ({}) => {
 
   return (
     <>
-      <MainHeadline>Settings</MainHeadline>
+      <MainHeadline>Profile</MainHeadline>
       <Spacing top />
       <Flex direction="column">
         <form
-          style={{ width: '100%' }}
+          style={{ width: '100%', maxWidth: '350px' }}
           onSubmit={(e) => {
             e.preventDefault()
             handleSaveChanges()
@@ -71,7 +71,6 @@ export const SettingsPage: React.FC<{}> = ({}) => {
             placeholder="Your full name"
             value={fullName}
             onChange={(e) => setFullName(e.currentTarget.value)}
-            style={{ maxWidth: '350px' }}
           />
           <Spacing top="small" />
           <Label>Phone</Label>
@@ -79,7 +78,6 @@ export const SettingsPage: React.FC<{}> = ({}) => {
             placeholder="+46701234567"
             value={phoneNumber ?? ''}
             onChange={(e) => setPhoneNumber(e.currentTarget.value)}
-            style={{ maxWidth: '350px' }}
           />
           <Spacing top="small" />
           <Label>E-mail</Label>
@@ -88,7 +86,6 @@ export const SettingsPage: React.FC<{}> = ({}) => {
             muted={true}
             value={data.me.user.email}
             placeholder="example@hedvig.com"
-            style={{ maxWidth: '350px' }}
           />
           <Spacing top="medium" />
           <Flex direction="row">
