@@ -151,11 +151,17 @@ export const Dropdown: React.FC<DropdownProps> = ({
   }, [focus])
 
   useEffect(() => {
-    children.forEach((el, index) => {
-      if (el.props.selected) {
-        setSelectedIdx(index + 1)
-      }
-    })
+    const hasSelected = !!children.filter((el) => el.props.selected).length
+
+    if (hasSelected) {
+      children.forEach((el, index) => {
+        if (el.props.selected) {
+          setSelectedIdx(index + 1)
+        }
+      })
+    } else {
+      setSelectedIdx(0)
+    }
   }, [children])
 
   return (

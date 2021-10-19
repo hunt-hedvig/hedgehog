@@ -119,7 +119,8 @@ export const ClaimPropertyForm: React.FC<{
                     selected={
                       opt.value === selectedOption?.option.id ||
                       (selectedOption === undefined &&
-                        opt.value === 'not_specified')
+                        opt.value === 'not_specified' &&
+                        false)
                     }
                   >
                     <Capitalized>{opt.text}</Capitalized>
