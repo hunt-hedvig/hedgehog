@@ -2,12 +2,13 @@ import {
   Card,
   CardsWrapper,
   FadeIn,
-  FlagOrbIndicator,
   InfoContainer,
   InfoRow,
   InfoText,
   LoadingMessage,
   MainHeadline,
+  OrbFlagsType,
+  OrbIndicator,
   Spacing,
   StandaloneMessage,
 } from '@hedvig-ui'
@@ -88,7 +89,10 @@ export const DebtTab: React.FC<{
               Member flag
               <InfoText>
                 {person?.status?.flag && (
-                  <FlagOrbIndicator flag={person.status.flag} size="tiny" />
+                  <OrbIndicator
+                    flag={person.status.flag.toLowerCase() as OrbFlagsType}
+                    size="tiny"
+                  />
                 )}
               </InfoText>
             </InfoRow>

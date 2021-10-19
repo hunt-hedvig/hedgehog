@@ -1,59 +1,96 @@
 import styled from '@emotion/styled'
 import React from 'react'
-import { Icon, SemanticCOLORS } from 'semantic-ui-react'
-import { IconSizeProp } from 'semantic-ui-react/dist/commonjs/elements/Icon/Icon'
 
-const IconStyled = styled(Icon)(() => ({
-  verticalAlign: 'middle',
-  paddingLeft: '4px',
-}))
+export const OrbSizes = [
+  'mini',
+  'tiny',
+  'small',
+  'large',
+  'big',
+  'huge',
+  'massive',
+] as const
 
-const Container = styled('span')(() => ({
-  marginTop: '-7px',
-  display: 'inline',
-}))
+export const OrbColors = [
+  'red',
+  'orange',
+  'yellow',
+  'olive',
+  'green',
+  'teal',
+  'blue',
+  'violet',
+  'purple',
+  'pink',
+  'brown',
+  'grey',
+  'black',
+] as const
 
-type Flag = 'GREEN' | 'AMBER' | 'RED'
+export type SizeProp = typeof OrbSizes[number]
 
-interface FlagOrbProps {
-  flag?: Flag | null
-  size?: IconSizeProp
+export type ColorProp = typeof OrbColors[number]
+
+export type FlagProp = 'GREEN' | 'AMBER' | 'RED'
+
+const colors = {
+  red: '#db2828',
+  orange: '#f2711c',
+  yellow: '#fbbd08',
+  olive: '#b5cc18',
+  green: '#21ba45',
+  teal: '#00b5ad',
+  blue: '#2185d0',
+  violet: '#6435c9',
+  purple: '#a333c8',
+  pink: '#e03997',
+  brown: '#a5673f',
+  grey: '#767676',
+  black: '#1b1c1d',
 }
 
-interface OrbProps {
-  color?: SemanticCOLORS | null
-  size?: IconSizeProp
+const sizes = {
+  mini: '11px',
+  tiny: '14px',
+  small: '21px',
+  large: '41px',
+  big: '55px',
+  huge: '110px',
+  massive: '220px',
 }
 
-export const FlagOrbIndicator: React.FC<FlagOrbProps> = ({ flag, size }) => (
-  <OrbIndicator color={getFlagColor(flag)} size={size} />
-)
+interface OrbIndicatorProps {
+  color?: ColorProp
+  size?: SizeProp
+  flag?: FlagProp
+}
 
-export const OrbIndicator: React.FC<OrbProps> = ({ color, size }) => {
+const OrbIndicatorStyled = styled.div<{ color: ColorProp; size: SizeProp }>`
+  width: ${({ size }) => sizes[size]};
+  height: ${({ size }) => sizes[size]};
+  background-color: ${({ color }) => colors[color]};
+  border-radius: 50%;
+`
+
+export const OrbIndicator: React.FC<OrbIndicatorProps> = ({
+  color,
+  size,
+  flag,
+}) => {
+  const currentColor =
+    !flag && color ? color : flag ? getFlagColor(flag) : 'grey'
+
   return (
-    <Container>
-      <span style={{ fontSize: '32px' }}>
-        <IconStyled
-          name="circle"
-          color={(color?.toLowerCase() || 'grey') as SemanticCOLORS}
-          size={size || 'tiny'}
-        />
-      </span>
-    </Container>
+    <OrbIndicatorStyled
+      color={currentColor as ColorProp}
+      size={size || 'tiny'}
+    />
   )
 }
 
-const getFlagColor = (
-  flag?: Flag | null,
-): SemanticCOLORS | undefined | null => {
-  if (flag === 'GREEN') {
-    return 'green'
-  }
+const getFlagColor = (flag?: FlagProp | null) => {
   if (flag === 'AMBER') {
     return 'orange'
   }
-  if (flag === 'RED') {
-    return 'red'
-  }
-  return flag
+  return flag?.toLowerCase()
 }
