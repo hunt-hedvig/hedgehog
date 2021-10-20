@@ -2,21 +2,20 @@ import styled from '@emotion/styled'
 import {
   Button,
   ButtonsGroup,
+  Dropdown,
+  DropdownOption,
   FourthLevelHeadline,
-  Label,
   Spacing,
 } from '@hedvig-ui'
-import {
+import Form, {
   AjvError,
   ArrayFieldTemplateProps,
   ObjectFieldTemplateProps,
   WidgetProps,
 } from '@rjsf/core'
-import Form from '@rjsf/semantic-ui'
 import { JSONSchema7 } from 'json-schema'
 import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
-import { Dropdown, FormField } from 'semantic-ui-react'
 import { convertCamelcaseToTitle, convertEnumToTitle } from '../utils/text'
 
 const ContentWrapper = styled('div')<{ pushTop: boolean }>`
@@ -48,6 +47,47 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
   )
 }
 
+const FormWrapper = styled.div`
+  & .field-object,
+  & fieldset {
+    border: none;
+  }
+
+  & .field {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+
+    input {
+      padding: 10px 15px;
+      border-radius: 4px;
+      border: none;
+      border: 1px solid ${({ theme }) => theme.border};
+    }
+  }
+
+  & .form-group {
+    .checkbox {
+      & > label {
+        display: flex;
+        align-items: center;
+
+        input {
+          width: 17px;
+          height: 17px;
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  & .panel-title,
+  & .text-danger,
+  & .required {
+    color: ${({ theme }) => theme.danger};
+  }
+`
+
 const ItemWrapper = styled('div')`
   margin: 1rem 0 1rem 0;
   &:not(:last-of-type) {
@@ -61,9 +101,10 @@ const ItemTitleWrapper = styled('div')`
   justify-content: space-between;
 `
 
-const TrashIconWrapper = styled.span`
+const TrashIcon = styled(Trash)`
   color: ${({ theme }) => theme.danger};
-  font-size: 0.9rem;
+  width: 15px;
+  height: 15px;
 `
 
 const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
@@ -87,12 +128,9 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
               <strong>{index + 1}.</strong>
               <Button
                 variant="tertiary"
-                style={{ paddingRight: '0.5em' }}
                 onClick={element.onDropIndexClick(index)}
               >
-                <TrashIconWrapper>
-                  <Trash />
-                </TrashIconWrapper>
+                <TrashIcon />
               </Button>
             </ItemTitleWrapper>
             {element.children}
@@ -112,30 +150,28 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
 }
 
 const CustomSelectWidget: React.FC<WidgetProps> = ({
-  id,
-  label,
   value,
   onChange,
   schema,
 }) => {
+  const options = schema.enum!.map((enumValue, idx) => ({
+    key: idx,
+    text: convertEnumToTitle(enumValue as string),
+    value: enumValue as string,
+  }))
+
   return (
-    <FormField>
-      <Label htmlFor={id}>{label}</Label>
-      <Dropdown
-        id={id}
-        style={{ borderRadius: '0.5rem' }}
-        fluid
-        selection
-        value={value}
-        onChange={(_, e) => onChange(e.value)}
-        options={schema.enum!.map((enumValue) => {
-          return {
-            text: convertEnumToTitle(enumValue as string),
-            value: enumValue as string,
-          }
-        })}
-      />
-    </FormField>
+    <Dropdown>
+      {options.map((opt) => (
+        <DropdownOption
+          selected={value === opt.value}
+          key={opt.key}
+          onClick={() => onChange(opt.value)}
+        >
+          {opt.text}
+        </DropdownOption>
+      ))}
+    </Dropdown>
   )
 }
 
@@ -203,25 +239,27 @@ export const JsonSchemaForm: React.FC<{
   const [formData, setFormData] = useState(
     formatInitialFormData(initialFormData ?? {}, schema),
   )
+
   return (
-    <Form
-      style={{ width: '100%' }}
-      schema={schema}
-      uiSchema={uiSchema}
-      formData={formData}
-      onChange={(e) => setFormData(e.formData)}
-      onSubmit={(e) => {
-        setFormData(e.formData)
-        onSubmit(formData!)
-      }}
-      transformErrors={transformErrors}
-      ArrayFieldTemplate={ArrayFieldTemplate}
-      widgets={{ SelectWidget: CustomSelectWidget }}
-    >
-      <ButtonsGroup>
-        <Button type="submit">{submitText ?? 'Submit'}</Button>
-        {children}
-      </ButtonsGroup>
-    </Form>
+    <FormWrapper>
+      <Form
+        schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        onChange={(e) => setFormData(e.formData)}
+        onSubmit={(e) => {
+          setFormData(e.formData)
+          onSubmit(formData!)
+        }}
+        transformErrors={transformErrors}
+        ArrayFieldTemplate={ArrayFieldTemplate}
+        widgets={{ SelectWidget: CustomSelectWidget }}
+      >
+        <ButtonsGroup>
+          <Button type="submit">{submitText ?? 'Submit'}</Button>
+          {children}
+        </ButtonsGroup>
+      </Form>
+    </FormWrapper>
   )
 }
