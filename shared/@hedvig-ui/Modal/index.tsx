@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
-import React, { useRef } from 'react'
+import React, { CSSProperties, useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
 import { useClickOutside } from '../utils/click-outside'
@@ -38,7 +38,7 @@ const ModalContent = styled.div<{
   width: ${({ width }) => width || 'auto'};
   max-width: 900px;
   height: ${({ height }) => height || 'auto'};
-  max-height: 600px;
+  max-height: 950px;
 
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.background};
@@ -90,6 +90,7 @@ export interface ModalProps {
   withoutHeader?: boolean
   disableClickOutside?: boolean
   onClose: () => void
+  style?: CSSProperties
   children: any
 }
 
@@ -111,19 +112,21 @@ export const Modal = (props: ModalProps) => {
       <ModalWrapperStyled position={props.position} side={props.side}>
         <FadeIn duration={250}>
           <ModalContent
+            className="modal"
             ref={modalRef}
             height={props.height}
             width={props.width}
+            style={props.style}
           >
             {!props.withoutHeader && (
-              <ModalHeader>
+              <ModalHeader className="modal__header">
                 <span className="modal-title" title={props.title}>
                   {props.title}
                 </span>
                 <CloseIcon className="modal-close" onClick={props.onClose} />
               </ModalHeader>
             )}
-            <ModalBody>{props.children}</ModalBody>
+            <ModalBody className="modal__body">{props.children}</ModalBody>
           </ModalContent>
         </FadeIn>
       </ModalWrapperStyled>

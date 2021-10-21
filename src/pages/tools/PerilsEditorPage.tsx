@@ -1,13 +1,19 @@
 import styled from '@emotion/styled'
-import { Button, MainHeadline, SecondLevelHeadline } from '@hedvig-ui'
+import {
+  Button,
+  Dropdown,
+  DropdownOption,
+  MainHeadline,
+  SecondLevelHeadline,
+  TextArea,
+} from '@hedvig-ui'
 import { OnBlurChangeInput } from 'features/tools/perils-editor/inputs'
 import { PerilIconOptions } from 'features/tools/perils-editor/peril-icons'
 import React from 'react'
 import ReactDropZone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
-import { Dropdown, Form, TextArea } from 'semantic-ui-react'
 
-const Wrapper = styled(Form)``
+const Wrapper = styled.div``
 
 const PerilEditWrapper = styled.div`
   display: flex;
@@ -146,20 +152,19 @@ export const PerilsEditorPage: React.FC = () => {
                   onUpdate={(newTitle) => {
                     updateField('title')(newTitle)
                   }}
-                  size="big"
                 />
                 <TitleWrapper>Short Description</TitleWrapper>
                 <TextArea
                   value={peril.shortDescription}
-                  onChange={(_, data) => {
-                    updateField('shortDescription')(data.value)
+                  onChange={({ currentTarget: { value } }) => {
+                    updateField('shortDescription')(value)
                   }}
                 />
                 <TitleWrapper>Full Description</TitleWrapper>
                 <TextArea
                   value={peril.description}
-                  onChange={(_, data) => {
-                    updateField('description')(data.value)
+                  onChange={({ currentTarget: { value } }) => {
+                    updateField('description')(value)
                   }}
                 />
 
@@ -250,7 +255,22 @@ export const PerilsEditorPage: React.FC = () => {
                 </CoverageWrapper>
 
                 <span>Add Icon</span>
-                <Dropdown
+                <Dropdown>
+                  {PerilIconOptions.map((opt) => {
+                    return (
+                      <DropdownOption
+                        selected={peril.iconName === opt.value}
+                        onClick={() => {
+                          updateField('iconName')(opt.value)
+                        }}
+                      >
+                        <img src={opt.image.src} />
+                        {opt.text}
+                      </DropdownOption>
+                    )
+                  })}
+                </Dropdown>
+                {/* <Dropdown
                   placeholder="Icon Name"
                   value={peril.iconName}
                   fluid
@@ -259,13 +279,13 @@ export const PerilsEditorPage: React.FC = () => {
                   onChange={(event) =>
                     updateField('iconName')(event.currentTarget.textContent)
                   }
-                />
+                /> */}
 
                 <TitleWrapper>Info</TitleWrapper>
                 <TextArea
                   value={peril.info}
-                  onChange={(_, data) => {
-                    updateField('info')(data.value)
+                  onChange={({ currentTarget: { value } }) => {
+                    updateField('info')(value)
                   }}
                 />
 

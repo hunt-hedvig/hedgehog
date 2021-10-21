@@ -1,4 +1,4 @@
-import { JsonSchemaForm } from '@hedvig-ui'
+import { Checkbox, JsonSchemaForm } from '@hedvig-ui'
 import {
   getCreateQuoteForMemberBySchemaOptions,
   useCreateQuoteForMemberBySchema,
@@ -6,7 +6,6 @@ import {
 import { useSchemaForContractType } from 'graphql/use-get-schema-for-contract-type'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Checkbox } from 'semantic-ui-react'
 import { ContractType } from 'types/enums'
 
 export const CreateQuoteForm: React.FC<{
@@ -50,7 +49,9 @@ export const CreateQuoteForm: React.FC<{
       <Checkbox
         style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}
-        onChange={(_, { checked }) => setBypassUwgl(Boolean(checked))}
+        onChange={({ currentTarget: { checked } }) =>
+          setBypassUwgl(Boolean(checked))
+        }
         label="Bypass underwriting guidelines"
       />
     </JsonSchemaForm>
