@@ -1212,6 +1212,7 @@ export type QueryType = {
   claimPropertyOptions: Array<ClaimPropertyOption>
   claimPropertyOption: ClaimPropertyOption
   user?: Maybe<User>
+  users: Array<User>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1469,7 +1470,7 @@ export type UpsertCoInsuredInput = {
 }
 
 export type UpsertUserSettingInput = {
-  key: UserSettingKey
+  key: Scalars['String']
   value?: Maybe<Scalars['JSON']>
 }
 
