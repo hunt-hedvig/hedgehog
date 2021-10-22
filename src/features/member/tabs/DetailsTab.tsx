@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   Button,
   ButtonsGroup,
@@ -7,6 +8,9 @@ import {
   Label,
   Modal,
   SubmitButton,
+  Table,
+  TableColumn,
+  TableRow,
 } from '@hedvig-ui'
 import {
   getEditMemberInfoOptions,
@@ -16,10 +20,16 @@ import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { Table } from 'semantic-ui-react'
 import { Member, useSetFraudulentStatusMutation } from 'types/generated/graphql'
 import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
 import { dateTimeFormatter, getFieldName, getFieldValue } from 'utils/helpers'
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  margin-top: 1em;
+  display: flex;
+  justify-content: flex-end;
+`
 
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
@@ -91,68 +101,59 @@ export const DetailsTab: React.FC<{
 
   return memberInfoWithoutSsn ? (
     <FadeIn>
-      <Table selectable>
-        <Table.Body>
-          {Object.keys(memberInfoWithoutSsn).map((field, id) => {
-            const formatter = memberFieldFormatters[field]
-            return (
-              <Table.Row key={id}>
-                <Table.Cell>{getFieldName(field)}</Table.Cell>
-                <Table.Cell>
-                  {formatter
-                    ? formatter(memberInfoWithoutSsn[field])
-                    : getFieldValue(memberInfoWithoutSsn[field])}
-                </Table.Cell>
-              </Table.Row>
-            )
+      <Table>
+        {Object.keys(memberInfoWithoutSsn).map((field, id) => {
+          const formatter = memberFieldFormatters[field]
+          return (
+            <TableRow key={id} border>
+              <TableColumn>{getFieldName(field)}</TableColumn>
+              <TableColumn>
+                {formatter
+                  ? formatter(memberInfoWithoutSsn[field])
+                  : getFieldValue(memberInfoWithoutSsn[field])}
+              </TableColumn>
+            </TableRow>
+          )
+        })}
+        <FraudulentStatusEdit
+          getFraudStatusInfo={() => ({
+            status: fraudStatus || fraudulentStatus,
+            description: fraudDescription || fraudulentStatusDescription,
           })}
-          <FraudulentStatusEdit
-            getFraudStatusInfo={() => ({
-              status: fraudStatus || fraudulentStatus,
-              description: fraudDescription || fraudulentStatusDescription,
-            })}
-            setState={(val, fs, desc) => {
-              setEditFraud(val)
-              setFraudStatus(fs)
-              setFraudDescription(desc)
-            }}
-            getState={() => editingFraud}
-            action={(newFraudulentStatus, newFraudulentStatusDescription) => {
-              toast.promise(
-                setFraudulentStatus({
-                  variables: {
-                    memberId: memberInfo.memberId,
-                    request: {
-                      fraudulentStatus: newFraudulentStatus,
-                      fraudulentStatusDescription: newFraudulentStatusDescription,
-                    },
+          setState={(val, fs, desc) => {
+            setEditFraud(val)
+            setFraudStatus(fs)
+            setFraudDescription(desc)
+          }}
+          getState={() => editingFraud}
+          action={(newFraudulentStatus, newFraudulentStatusDescription) => {
+            toast.promise(
+              setFraudulentStatus({
+                variables: {
+                  memberId: memberInfo.memberId,
+                  request: {
+                    fraudulentStatus: newFraudulentStatus,
+                    fraudulentStatusDescription: newFraudulentStatusDescription,
                   },
-                }),
-                {
-                  loading: 'Updating fraudulent status',
-                  success: 'Fraudulent status updated',
-                  error: 'Could not update fraudulent status',
                 },
-              )
-            }}
-          />
-        </Table.Body>
-        <Table.Footer fullWidth>
-          <Table.Row>
-            <Table.HeaderCell />
-            <Table.HeaderCell colSpan="2">
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="primary" size="medium" onClick={handleOpen}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <PencilSquare />{' '}
-                    <span style={{ marginLeft: 10 }}>Edit Member</span>
-                  </div>
-                </Button>
-              </div>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
+              }),
+              {
+                loading: 'Updating fraudulent status',
+                success: 'Fraudulent status updated',
+                error: 'Could not update fraudulent status',
+              },
+            )
+          }}
+        />
       </Table>
+
+      <ButtonWrapper style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button variant="primary" size="medium" onClick={handleOpen}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <PencilSquare /> <span style={{ marginLeft: 10 }}>Edit Member</span>
+          </div>
+        </Button>
+      </ButtonWrapper>
       {modalOpen ? (
         <Modal
           onClose={handleClose}

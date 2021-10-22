@@ -1,12 +1,15 @@
-import { Checkbox, MainHeadline, SecondLevelHeadline } from '@hedvig-ui'
-import { format } from 'date-fns'
 import {
-  StatusTableRow,
-  SwitcherEmailRow,
-} from 'features/tools/switcher-automation/SwitcherTableRow'
+  Checkbox,
+  MainHeadline,
+  SecondLevelHeadline,
+  Table,
+  TableHeader,
+  TableHeaderColumn,
+} from '@hedvig-ui'
+import { format } from 'date-fns'
+import { SwitcherEmailRow } from 'features/tools/switcher-automation/SwitcherTableRow'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Table } from 'semantic-ui-react'
 import { Market, SwitcherEmailStatus, SwitcherTypeMarket } from 'types/enums'
 import {
   Contract,
@@ -79,98 +82,92 @@ export const SwitcherAutomationPage: React.FC = () => {
               </div>
             )
           })}
-          <Table style={{ overflow: 'visible' }}>
-            <Table.Header>
-              <StatusTableRow>
-                <Table.HeaderCell>Member</Table.HeaderCell>
-                <Table.HeaderCell>Insurance</Table.HeaderCell>
-                <Table.HeaderCell>Sign date</Table.HeaderCell>
-                <Table.HeaderCell>Sent date</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Contract</Table.HeaderCell>
-              </StatusTableRow>
-            </Table.Header>
-            <Table.Body>
-              {switchers.data?.switchableSwitcherEmails
-                ?.filter((email) => {
-                  if (!email.switcherType) {
-                    return true
-                  }
-                  if (!SwitcherTypeMarket[email.switcherType]) {
-                    return true
-                  }
-                  const status = getSwitcherEmailStatus(email)
-                  return (
-                    (!selectedMarket ||
-                      SwitcherTypeMarket[email.switcherType] ===
-                        selectedMarket) &&
-                    (!selectedStatus || selectedStatus === status)
-                  )
-                })
-                .map((email) => (
-                  <SwitcherEmailRow
-                    key={email.id}
-                    {...email}
-                    status={getSwitcherEmailStatus(email)}
-                    member={email.member as Member}
-                    contract={email.contract as Contract}
-                    loading={
-                      activateContractLoading || terminateContractLoading
-                    }
-                    onActivate={async (contract, activeFrom) => {
-                      await toast.promise(
-                        activateContract({
-                          variables: {
-                            contractId: contract.id,
-                            request: {
-                              pendingAgreementId: contract.currentAgreementId,
-                              fromDate: format(activeFrom, 'yyyy-MM-dd'),
-                            },
+          <Table style={{ overflow: 'visible', marginTop: '1em' }}>
+            <TableHeader>
+              <TableHeaderColumn>Member</TableHeaderColumn>
+              <TableHeaderColumn>Insurance</TableHeaderColumn>
+              <TableHeaderColumn>Sign date</TableHeaderColumn>
+              <TableHeaderColumn>Sent date</TableHeaderColumn>
+              <TableHeaderColumn>Status</TableHeaderColumn>
+              <TableHeaderColumn>Contract</TableHeaderColumn>
+            </TableHeader>
+            {switchers.data?.switchableSwitcherEmails
+              ?.filter((email) => {
+                if (!email.switcherType) {
+                  return true
+                }
+                if (!SwitcherTypeMarket[email.switcherType]) {
+                  return true
+                }
+                const status = getSwitcherEmailStatus(email)
+                return (
+                  (!selectedMarket ||
+                    SwitcherTypeMarket[email.switcherType] ===
+                      selectedMarket) &&
+                  (!selectedStatus || selectedStatus === status)
+                )
+              })
+              .map((email) => (
+                <SwitcherEmailRow
+                  key={email.id}
+                  {...email}
+                  status={getSwitcherEmailStatus(email)}
+                  member={email.member as Member}
+                  contract={email.contract as Contract}
+                  loading={activateContractLoading || terminateContractLoading}
+                  onActivate={async (contract, activeFrom) => {
+                    await toast.promise(
+                      activateContract({
+                        variables: {
+                          contractId: contract.id,
+                          request: {
+                            pendingAgreementId: contract.currentAgreementId,
+                            fromDate: format(activeFrom, 'yyyy-MM-dd'),
                           },
-                        }),
-                        {
-                          loading: 'Activating contract',
-                          success: 'Contract activated',
-                          error: 'Could not activate contract',
                         },
-                      )
+                      }),
+                      {
+                        loading: 'Activating contract',
+                        success: 'Contract activated',
+                        error: 'Could not activate contract',
+                      },
+                    )
 
-                      await sleep(1000)
-                      await switchers.refetch()
-                    }}
-                    onTerminate={async (
-                      contract,
-                      terminationDate,
-                      terminationReason,
-                      comment,
-                    ) => {
-                      await toast.promise(
-                        terminateContract({
-                          variables: {
-                            contractId: contract.id,
-                            request: {
-                              terminationDate: format(
-                                terminationDate,
-                                'yyyy-MM-dd',
-                              ),
-                              terminationReason: terminationReason!,
-                              comment,
-                            },
+                    await sleep(1000)
+                    await switchers.refetch()
+                  }}
+                  onTerminate={async (
+                    contract,
+                    terminationDate,
+                    terminationReason,
+                    comment,
+                  ) => {
+                    await toast.promise(
+                      terminateContract({
+                        variables: {
+                          contractId: contract.id,
+                          request: {
+                            terminationDate: format(
+                              terminationDate,
+                              'yyyy-MM-dd',
+                            ),
+                            terminationReason: terminationReason!,
+                            comment,
                           },
-                        }),
-                        {
-                          loading: 'Terminating contract',
-                          success: 'Contract terminated',
-                          error: 'Could not terminate contract',
                         },
-                      )
+                      }),
+                      {
+                        loading: 'Terminating contract',
+                        success: 'Contract terminated',
+                        error: 'Could not terminate contract',
+                      },
+                    )
 
-                      await sleep(1000)
-                      await switchers.refetch()
-                    }}
-                  />
-                )) ?? null}
-            </Table.Body>
+                    await sleep(1000)
+                    await switchers.refetch()
+                  }}
+                />
+              )) ?? null}
           </Table>
         </>
       )}

@@ -1,7 +1,14 @@
 import styled from '@emotion/styled'
-import { LoadingMessage, StandaloneMessage } from '@hedvig-ui'
+import {
+  LoadingMessage,
+  StandaloneMessage,
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+} from '@hedvig-ui'
 import React from 'react'
-import { Table } from 'semantic-ui-react'
 import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
 
@@ -19,27 +26,23 @@ const Image = styled.img`
 const MemberFileTable: React.FC<{
   memberFiles: FileUpload[]
 }> = ({ memberFiles }) => (
-  <Table celled>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Member File</Table.HeaderCell>
-        <Table.HeaderCell>Time Stamp</Table.HeaderCell>
-        <Table.HeaderCell>File Type</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {[...memberFiles].sort(sortFileDate).map((memberFile) => (
-        <Table.Row key={memberFile.fileUploadUrl}>
-          <Table.Cell>
-            <Image src={memberFile.fileUploadUrl} />
-          </Table.Cell>
-          <Table.Cell>
-            {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
-          </Table.Cell>
-          <Table.Cell>{memberFile.mimeType}</Table.Cell>
-        </Table.Row>
-      ))}
-    </Table.Body>
+  <Table>
+    <TableHeader>
+      <TableHeaderColumn>Member File</TableHeaderColumn>
+      <TableHeaderColumn>Time Stamp</TableHeaderColumn>
+      <TableHeaderColumn>File Type</TableHeaderColumn>
+    </TableHeader>
+    {[...memberFiles].sort(sortFileDate).map((memberFile) => (
+      <TableRow border key={memberFile.fileUploadUrl}>
+        <TableColumn>
+          <Image src={memberFile.fileUploadUrl} />
+        </TableColumn>
+        <TableColumn>
+          {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
+        </TableColumn>
+        <TableColumn>{memberFile.mimeType}</TableColumn>
+      </TableRow>
+    ))}
   </Table>
 )
 

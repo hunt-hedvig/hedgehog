@@ -6,11 +6,15 @@ import {
   DropdownOption,
   LoadingMessage,
   StandaloneMessage,
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Table } from 'semantic-ui-react'
 import {
   Employee,
   EmployeesDocument,
@@ -81,107 +85,103 @@ export const EmployeeTable: React.FC<{
 
   return (
     <Card span={1}>
-      <Table celled style={{ fontSize: '1.0rem', overflow: 'visible' }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Email</Table.HeaderCell>
-            <Table.HeaderCell>Role</Table.HeaderCell>
-            <Table.HeaderCell>First granted at</Table.HeaderCell>
-            <Table.HeaderCell>Actions</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <>
-            {employees.filter(filterEmployee).map((employee) => {
-              const { id, email, role, firstGrantedAt } = employee
+      <Table style={{ fontSize: '1.0rem', overflow: 'visible' }}>
+        <TableHeader>
+          <TableHeaderColumn>Email</TableHeaderColumn>
+          <TableHeaderColumn>Role</TableHeaderColumn>
+          <TableHeaderColumn>First granted at</TableHeaderColumn>
+          <TableHeaderColumn>Actions</TableHeaderColumn>
+        </TableHeader>
+        <>
+          {employees.filter(filterEmployee).map((employee) => {
+            const { id, email, role, firstGrantedAt } = employee
 
-              return (
-                <Table.Row key={id}>
-                  <Table.Cell width={3}>{email}</Table.Cell>
-                  <Table.Cell width={3}>
-                    {scopes.includes('employees:manage') ? (
-                      <Dropdown placeholder={role}>
-                        {options.map((opt) => {
-                          return (
-                            <DropdownOption
-                              onClick={() => {
-                                setSelectedRoles({
-                                  ...selectedRoles,
-                                  [id]: opt.value,
-                                })
-                              }}
-                              selected={selectedRoles[id] === opt.value}
-                            >
-                              {opt.text || role}
-                            </DropdownOption>
-                          )
-                        })}
-                      </Dropdown>
-                    ) : (
-                      role
-                    )}
-                  </Table.Cell>
-                  <Table.Cell width={3}>
-                    {dateTimeFormatter(firstGrantedAt, 'yyyy-MM-dd HH:mm')}
-                  </Table.Cell>
-                  <Table.Cell width={2}>
-                    <ButtonsGroup>
-                      <Button
-                        disabled={
-                          !selectedRoles[id] ||
-                          selectedRoles[id] === currentRoles[id] ||
-                          updateRoleLoading
-                        }
-                        onClick={() =>
+            return (
+              <TableRow key={id}>
+                <TableColumn>{email}</TableColumn>
+                <TableColumn>
+                  {scopes.includes('employees:manage') ? (
+                    <Dropdown placeholder={role}>
+                      {options.map((opt) => {
+                        return (
+                          <DropdownOption
+                            onClick={() => {
+                              setSelectedRoles({
+                                ...selectedRoles,
+                                [id]: opt.value,
+                              })
+                            }}
+                            selected={selectedRoles[id] === opt.value}
+                          >
+                            {opt.text || role}
+                          </DropdownOption>
+                        )
+                      })}
+                    </Dropdown>
+                  ) : (
+                    role
+                  )}
+                </TableColumn>
+                <TableColumn>
+                  {dateTimeFormatter(firstGrantedAt, 'yyyy-MM-dd HH:mm')}
+                </TableColumn>
+                <TableColumn>
+                  <ButtonsGroup>
+                    <Button
+                      disabled={
+                        !selectedRoles[id] ||
+                        selectedRoles[id] === currentRoles[id] ||
+                        updateRoleLoading
+                      }
+                      onClick={() =>
+                        toast.promise(
+                          updateRole({
+                            variables: {
+                              id,
+                              role: selectedRoles[id],
+                            },
+                          }),
+                          {
+                            loading: 'Updating role',
+                            success: 'Role updated',
+                            error: 'Could not update role',
+                          },
+                        )
+                      }
+                    >
+                      Update role
+                    </Button>
+                    <Button
+                      variant="tertiary"
+                      disabled={
+                        removeEmployeeLoading ||
+                        !scopes.includes('employees:manage')
+                      }
+                      onClick={() => {
+                        confirm(
+                          `Are you sure you want to remove employee ${email}?`,
+                        ).then(() => {
                           toast.promise(
-                            updateRole({
-                              variables: {
-                                id,
-                                role: selectedRoles[id],
-                              },
+                            removeEmployee({
+                              variables: { id },
                             }),
                             {
-                              loading: 'Updating role',
-                              success: 'Role updated',
-                              error: 'Could not update role',
+                              loading: 'Removing employee',
+                              success: 'Employee removed',
+                              error: 'Could not remove employee',
                             },
                           )
-                        }
-                      >
-                        Update role
-                      </Button>
-                      <Button
-                        variant="tertiary"
-                        disabled={
-                          removeEmployeeLoading ||
-                          !scopes.includes('employees:manage')
-                        }
-                        onClick={() => {
-                          confirm(
-                            `Are you sure you want to remove employee ${email}?`,
-                          ).then(() => {
-                            toast.promise(
-                              removeEmployee({
-                                variables: { id },
-                              }),
-                              {
-                                loading: 'Removing employee',
-                                success: 'Employee removed',
-                                error: 'Could not remove employee',
-                              },
-                            )
-                          })
-                        }}
-                      >
-                        Remove
-                      </Button>
-                    </ButtonsGroup>
-                  </Table.Cell>
-                </Table.Row>
-              )
-            })}
-          </>
-        </Table.Body>
+                        })
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </ButtonsGroup>
+                </TableColumn>
+              </TableRow>
+            )
+          })}
+        </>
       </Table>
     </Card>
   )

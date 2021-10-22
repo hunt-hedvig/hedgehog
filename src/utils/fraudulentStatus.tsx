@@ -6,9 +6,10 @@ import {
   DropdownOption,
   Input,
   OrbIndicator,
+  TableColumn,
+  TableRow,
 } from '@hedvig-ui'
 import React from 'react'
-import { Table } from 'semantic-ui-react'
 import { Member } from 'types/generated/graphql'
 
 const ButtonsBlock = styled('div')((_) => ({
@@ -47,9 +48,9 @@ const FraudulentStatusEdit = (props) => {
     string
   >(props.getFraudStatusInfo().status)
   return (
-    <Table.Row>
-      <Table.Cell>Fraudulent Status</Table.Cell>
-      <Table.Cell>
+    <TableRow>
+      <TableColumn>Fraudulent Status</TableColumn>
+      <TableColumn>
         {!props.getState() ? (
           <>
             Status: {props.getFraudStatusInfo().status} <br />
@@ -111,8 +112,8 @@ const FraudulentStatusEdit = (props) => {
             </ButtonsGroup>
           )}
         </ButtonsBlock>
-      </Table.Cell>
-    </Table.Row>
+      </TableColumn>
+    </TableRow>
   )
 }
 

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
-import { Dropdown, DropdownOption } from '@hedvig-ui'
+import { Dropdown, DropdownOption, TableColumn, TableRow } from '@hedvig-ui'
 import React from 'react'
-import { Table } from 'semantic-ui-react'
 import { useSetClaimFileCategoryMutation } from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
 import { sleep } from 'utils/sleep'
@@ -52,15 +51,15 @@ export const FileRow = ({ claimId, claimFile, refetch }) => {
   const [setClaimFileCategory] = useSetClaimFileCategoryMutation()
 
   return (
-    <Table.Row key={claimFile.claimFileId}>
-      <Table.Cell>
+    <TableRow>
+      <TableColumn>
         {claimFile.contentType === 'application/pdf' ? (
           <embed src={claimFile.fileUploadUrl} width="800px" height="300px" />
         ) : (
           <Image src={claimFile.fileUploadUrl} />
         )}
-      </Table.Cell>
-      <Table.Cell>
+      </TableColumn>
+      <TableColumn>
         <Dropdown
           style={{ width: 200 }}
           placeholder={
@@ -86,11 +85,11 @@ export const FileRow = ({ claimId, claimFile, refetch }) => {
             </DropdownOption>
           ))}
         </Dropdown>
-      </Table.Cell>
-      <Table.Cell>
+      </TableColumn>
+      <TableColumn>
         {dateTimeFormatter(claimFile.uploadedAt, 'yyyy-MM-dd HH:mm:ss')}
-      </Table.Cell>
-      <Table.Cell>
+      </TableColumn>
+      <TableColumn>
         <DeleteButton
           claimId={claimId}
           claimFileId={claimFile.claimFileId!}
@@ -99,7 +98,59 @@ export const FileRow = ({ claimId, claimFile, refetch }) => {
             await refetch()
           }}
         />
-      </Table.Cell>
-    </Table.Row>
+      </TableColumn>
+    </TableRow>
   )
+
+  // return (
+  //   <Table.Row key={claimFile.claimFileId}>
+  //     <Table.Cell>
+  //       {claimFile.contentType === 'application/pdf' ? (
+  //         <embed src={claimFile.fileUploadUrl} width="800px" height="300px" />
+  //       ) : (
+  //         <Image src={claimFile.fileUploadUrl} />
+  //       )}
+  //     </Table.Cell>
+  //     <Table.Cell>
+  // <Dropdown
+  //   style={{ width: 200 }}
+  //   placeholder={
+  //     claimFile.category !== null ? claimFile.category : 'File Type'
+  //   }
+  // >
+  //   {fileUploadOptions.map((file) => (
+  //     <DropdownOption
+  //       key={file.key}
+  //       selected={file.value === selectedCategory}
+  //       onClick={() => {
+  //         setSelectedCategory(file.value)
+  //         setClaimFileCategory({
+  //           variables: {
+  //             claimId,
+  //             claimFileId: claimFile.claimFileId!,
+  //             category: file.value,
+  //           },
+  //         })
+  //       }}
+  //     >
+  //       {file.text}
+  //     </DropdownOption>
+  //   ))}
+  // </Dropdown>
+  //     </Table.Cell>
+  //     <Table.Cell>
+  //       {dateTimeFormatter(claimFile.uploadedAt, 'yyyy-MM-dd HH:mm:ss')}
+  //     </Table.Cell>
+  //     <Table.Cell>
+  //       <DeleteButton
+  //         claimId={claimId}
+  //         claimFileId={claimFile.claimFileId!}
+  //         onDeleted={async () => {
+  //           await sleep(500)
+  //           await refetch()
+  //         }}
+  //       />
+  //     </Table.Cell>
+  //   </Table.Row>
+  // )
 }

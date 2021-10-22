@@ -11,6 +11,11 @@ import {
   MainHeadline,
   Shadowed,
   StandaloneMessage,
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
@@ -20,7 +25,6 @@ import gql from 'graphql-tag'
 import { useGetAccount } from 'graphql/use-get-account'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { Table } from 'semantic-ui-react'
 import { Market } from 'types/enums'
 import {
   Transaction,
@@ -61,25 +65,23 @@ const CHARGE_MEMBER_MUTATION = gql`
   }
 `
 
-const TableRowColored = styled(Table.Row)<{
+const TableRowColored = styled(TableRow)<{
   status: Transaction['status']
   type: Transaction['type']
 }>`
-  td {
-    background-color: ${({ theme, status, type }) => {
-      if (type === 'PAYOUT') {
-        return theme.accentLighter
-      }
-      switch (status) {
-        case 'INITIATED':
-          return theme.lightWarning
-        case 'COMPLETED':
-          return theme.lightSuccess
-        case 'FAILED':
-          return theme.lightDanger
-      }
-    }} !important;
-  }
+  background-color: ${({ theme, status, type }) => {
+    if (type === 'PAYOUT') {
+      return theme.accentLighter
+    }
+    switch (status) {
+      case 'INITIATED':
+        return theme.lightWarning
+      case 'COMPLETED':
+        return theme.lightSuccess
+      case 'FAILED':
+        return theme.lightDanger
+    }
+  }} !important;
 `
 
 const ChargeNotAvailableMessage = styled(StandaloneMessage)`
@@ -90,35 +92,32 @@ const ChargeNotAvailableMessage = styled(StandaloneMessage)`
 const MemberTransactionsTable: React.FC<{
   transactions: Transaction[]
 }> = ({ transactions }) => (
-  <Table celled compact>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>ID</Table.HeaderCell>
-        <Table.HeaderCell>Amount</Table.HeaderCell>
-        <Table.HeaderCell>Timestamp</Table.HeaderCell>
-        <Table.HeaderCell>Type</Table.HeaderCell>
-        <Table.HeaderCell>Status</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {transactions.map((transaction) => (
-        <TableRowColored
-          key={transaction.id}
-          status={transaction.status!}
-          type={transaction.type!}
-        >
-          <Table.Cell>{transaction.id}</Table.Cell>
-          <Table.Cell>
-            <strong>{formatMoney(transaction.amount!)}</strong>
-          </Table.Cell>
-          <Table.Cell>
-            {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-          </Table.Cell>
-          <Table.Cell>{transaction.type}</Table.Cell>
-          <Table.Cell>{transaction.status}</Table.Cell>
-        </TableRowColored>
-      ))}
-    </Table.Body>
+  <Table>
+    <TableHeader>
+      <TableHeaderColumn>ID</TableHeaderColumn>
+      <TableHeaderColumn>Amount</TableHeaderColumn>
+      <TableHeaderColumn>Timestamp</TableHeaderColumn>
+      <TableHeaderColumn>Type</TableHeaderColumn>
+      <TableHeaderColumn>Status</TableHeaderColumn>
+    </TableHeader>
+    {transactions.map((transaction) => (
+      <TableRowColored
+        border
+        key={transaction.id}
+        status={transaction.status!}
+        type={transaction.type!}
+      >
+        <TableColumn>{transaction.id}</TableColumn>
+        <TableColumn>
+          <strong>{formatMoney(transaction.amount!)}</strong>
+        </TableColumn>
+        <TableColumn>
+          {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
+        </TableColumn>
+        <TableColumn>{transaction.type}</TableColumn>
+        <TableColumn>{transaction.status}</TableColumn>
+      </TableRowColored>
+    ))}
   </Table>
 )
 
