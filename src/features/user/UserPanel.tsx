@@ -3,7 +3,7 @@ import { Flex } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
 import chroma from 'chroma-js'
 import { differenceInMinutes, parseISO } from 'date-fns'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useUsersQuery } from 'types/generated/graphql'
 
 const Container = styled.div<{ visible: boolean }>`
@@ -89,57 +89,80 @@ const LatestSeenLabel = styled.span`
 `
 
 export const UserPanel: React.FC<{ visible: boolean }> = ({ visible }) => {
-  const { data } = useUsersQuery()
+  const { data, startPolling, stopPolling } = useUsersQuery()
+
+  useEffect(() => {
+    if (visible) {
+      startPolling(1000)
+    } else {
+      stopPolling()
+    }
+  }, [visible])
 
   const users = data?.users ?? []
   const now = new Date()
+
+  const usersOnline = users
+    .filter((user) =>
+      user.latestPresence
+        ? differenceInMinutes(now, parseISO(user.latestPresence)) <= 30
+        : false,
+    )
+    .sort((u1, u2) =>
+      differenceInMinutes(now, parseISO(u1.latestPresence)) >
+      differenceInMinutes(now, parseISO(u2.latestPresence))
+        ? 1
+        : -1,
+    )
+
+  const usersOffline = users.filter((user) =>
+    user.latestPresence
+      ? differenceInMinutes(now, parseISO(user.latestPresence)) > 30
+      : true,
+  )
 
   return (
     <Container visible={visible}>
       <Label>Users online</Label>
       <UserItemContainer>
-        {users
-          .filter((user) =>
-            user.latestPresence
-              ? differenceInMinutes(now, parseISO(user.latestPresence)) <= 30
-              : false,
+        {usersOnline.map((user) => {
+          const differenceLatestPresence = differenceInMinutes(
+            now,
+            parseISO(user.latestPresence),
           )
-          .map((user) => (
+
+          return (
             <UserItem key={user.id}>
               <Flex direction="column">
                 <UserName>{user.fullName}</UserName>
                 <LatestSeenLabel>
-                  {user.latestPresence &&
-                    differenceInMinutes(
-                      now,
-                      parseISO(user.latestPresence),
-                    )}{' '}
-                  min ago
+                  {user.latestPresence && differenceLatestPresence > 0
+                    ? `${differenceLatestPresence} min ago`
+                    : 'Just now'}
                 </LatestSeenLabel>
               </Flex>
               <div>
                 <UserStatusOrb status="online" />
               </div>
             </UserItem>
-          ))}
-      </UserItemContainer>
-      <Label>Users offline</Label>
-      <UserItemContainer>
-        {users
-          .filter((user) =>
-            user.latestPresence
-              ? differenceInMinutes(now, parseISO(user.latestPresence)) > 30
-              : true,
           )
-          .map((user) => (
-            <UserItem key={user.id}>
-              <UserName>{user.fullName}</UserName>
-              <div>
-                <UserStatusOrb status="offline" />
-              </div>
-            </UserItem>
-          ))}
+        })}
       </UserItemContainer>
+      {!!usersOffline.length && (
+        <>
+          <Label>Users offline</Label>
+          <UserItemContainer>
+            {usersOffline.map((user) => (
+              <UserItem key={user.id}>
+                <UserName>{user.fullName}</UserName>
+                <div>
+                  <UserStatusOrb status="offline" />
+                </div>
+              </UserItem>
+            ))}
+          </UserItemContainer>
+        </>
+      )}
     </Container>
   )
 }
