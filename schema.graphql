@@ -57,7 +57,7 @@ type User {
   email: String!
   fullName: String!
   phoneNumber: String
-  latestPresence: LocalDateTime
+  latestPresence: Instant
 }
 
 type UserSetting {
