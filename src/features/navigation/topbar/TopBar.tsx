@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
-import React from 'react'
-import { GearFill } from 'react-bootstrap-icons'
+import { useMe } from 'features/user/hooks/use-me'
+import React, { useState } from 'react'
+import { GearFill, PeopleFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
-import { useGetMeQuery } from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,11 +22,6 @@ const Username = styled(Flex)`
   border-radius: 8px;
   padding: 0.4em 0.8em;
   cursor: pointer;
-  transition: all 200ms;
-
-  :hover {
-    background-color: ${({ theme }) => theme.backgroundTransparent};
-  }
 `
 
 const CircleButton = styled.button`
@@ -41,31 +36,67 @@ const CircleButton = styled.button`
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
+
+  transition: all 200ms;
+
+  :hover {
+    background-color: ${({ theme }) => theme.accentLighter};
+  }
 `
 
-export const TopBar: React.FC<{}> = () => {
-  const history = useHistory()
-  const { data } = useGetMeQuery()
+const UserPanel = styled.div<{ visible: boolean }>`
+  transition: right 400ms;
 
-  if (!data) {
-    return null
-  }
+  position: absolute;
+  top: 0;
+  right: ${({ visible }) => (visible ? '0' : '-300px')};
+
+  height: 100vh;
+  width: 300px;
+
+  background-color: ${({ theme }) => theme.foreground};
+  z-index: 1000;
+`
+
+const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
+  transition: margin-right 400ms;
+  margin-right: ${({ pushLeft }) => (pushLeft ? '300px' : '0')};
+`
+
+export const TopBar: React.FC = () => {
+  const history = useHistory()
+  const { me } = useMe()
+  const [showUsers, setShowUsers] = useState(false)
 
   return (
     <Wrapper>
-      <div>
-        <Username
-          direction="row"
-          justify="flex-end"
-          align="center"
-          onClick={() => history.push('/profile')}
+      <UserPanel visible={showUsers} />
+      <TopBarContainer
+        pushLeft={showUsers}
+        direction="row"
+        justify="flex-end"
+        align="center"
+      >
+        <div>
+          <Username
+            direction="row"
+            justify="flex-end"
+            align="center"
+            onClick={() => history.push('/profile')}
+          >
+            <span>{me.fullName}</span>
+            <CircleButton style={{ marginLeft: '2em' }}>
+              <GearFill />
+            </CircleButton>
+          </Username>
+        </div>
+        <CircleButton
+          style={{ marginLeft: '0.25em' }}
+          onClick={() => setShowUsers(!showUsers)}
         >
-          <span>{data.me.user.fullName}</span>
-          <CircleButton style={{ marginLeft: '1em' }}>
-            <GearFill />
-          </CircleButton>
-        </Username>
-      </div>
+          <PeopleFill />
+        </CircleButton>
+      </TopBarContainer>
     </Wrapper>
   )
 }
