@@ -1,0 +1,145 @@
+import styled from '@emotion/styled'
+import { Flex } from '@hedvig-ui'
+import { colorsV3 } from '@hedviginsurance/brand'
+import chroma from 'chroma-js'
+import { differenceInMinutes, parseISO } from 'date-fns'
+import React from 'react'
+import { useUsersQuery } from 'types/generated/graphql'
+
+const Container = styled.div<{ visible: boolean }>`
+  transition: right 400ms;
+
+  position: fixed;
+  top: 0;
+  right: ${({ visible }) => (visible ? '0' : '-300px')};
+
+  width: 300px;
+  height: 100%;
+
+  background-color: ${({ theme }) =>
+    theme.type === 'dark' ? colorsV3.gray800 : colorsV3.gray900};
+  z-index: 1000;
+
+  padding: 0 1.5em 2em;
+  overflow-y: scroll;
+`
+
+const Label = styled.div`
+  margin-top: 2em;
+  color: ${({ theme }) => theme.placeholderColor};
+  width: 100%;
+  padding-bottom: 0.5rem;
+  font-size: 0.85em;
+  border-bottom: 1px solid
+    ${({ theme }) =>
+      chroma(theme.semiStrongForeground)
+        .darken(1)
+        .hex()};
+`
+
+const UserItemContainer = styled.div`
+  > div {
+    margin-bottom: 0.5em;
+    :first-of-type {
+      margin-top: 1em;
+    }
+  }
+`
+
+const UserItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  background-color: ${({ theme }) =>
+    theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray800};
+  border-radius: 8px;
+  max-width: 100%;
+  background-color: ${({ theme }) =>
+    theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray800};
+  padding: 0.7rem 1rem;
+`
+
+const UserName = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: white;
+`
+
+type UserStatus = 'online' | 'away' | 'offline'
+
+const UserStatusOrb = styled.div<{ status: UserStatus }>`
+  width: 14px;
+  height: 14px;
+  background-color: ${({ theme, status }) =>
+    status === 'online'
+      ? theme.success
+      : status === 'away'
+      ? theme.accent
+      : theme.placeholderColor};
+  border-radius: 50%;
+  margin-left: 1rem;
+`
+
+const LatestSeenLabel = styled.span`
+  color: ${({ theme }) => theme.placeholderColor};
+  font-size: 0.8rem;
+`
+
+export const UserPanel: React.FC<{ visible: boolean }> = ({ visible }) => {
+  const { data } = useUsersQuery()
+
+  const users = data?.users ?? []
+  const now = new Date()
+
+  return (
+    <Container visible={visible}>
+      <Label>Users online</Label>
+      <UserItemContainer>
+        {users
+          .filter((user) =>
+            user.latestPresence
+              ? differenceInMinutes(now, parseISO(user.latestPresence)) <= 30
+              : false,
+          )
+          .map((user) => (
+            <UserItem key={user.id}>
+              <Flex direction="column">
+                <UserName>{user.fullName}</UserName>
+                <LatestSeenLabel>
+                  {user.latestPresence &&
+                    differenceInMinutes(
+                      now,
+                      parseISO(user.latestPresence),
+                    )}{' '}
+                  min ago
+                </LatestSeenLabel>
+              </Flex>
+              <div>
+                <UserStatusOrb status="online" />
+              </div>
+            </UserItem>
+          ))}
+      </UserItemContainer>
+      <Label>Users offline</Label>
+      <UserItemContainer>
+        {users
+          .filter((user) =>
+            user.latestPresence
+              ? differenceInMinutes(now, parseISO(user.latestPresence)) > 30
+              : true,
+          )
+          .map((user) => (
+            <UserItem key={user.id}>
+              <UserName>{user.fullName}</UserName>
+              <div>
+                <UserStatusOrb status="offline" />
+              </div>
+            </UserItem>
+          ))}
+      </UserItemContainer>
+    </Container>
+  )
+}

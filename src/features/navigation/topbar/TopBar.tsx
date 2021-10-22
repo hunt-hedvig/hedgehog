@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useState } from 'react'
+import { UserPanel } from 'features/user/UserPanel'
+import React, { useEffect, useState } from 'react'
 import { GearFill, PeopleFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 
@@ -44,20 +46,6 @@ const CircleButton = styled.button`
   }
 `
 
-const UserPanel = styled.div<{ visible: boolean }>`
-  transition: right 400ms;
-
-  position: absolute;
-  top: 0;
-  right: ${({ visible }) => (visible ? '0' : '-300px')};
-
-  height: 100vh;
-  width: 300px;
-
-  background-color: ${({ theme }) => theme.foreground};
-  z-index: 1000;
-`
-
 const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
   transition: margin-right 400ms;
   margin-right: ${({ pushLeft }) => (pushLeft ? '300px' : '0')};
@@ -67,6 +55,14 @@ export const TopBar: React.FC = () => {
   const history = useHistory()
   const { me } = useMe()
   const [showUsers, setShowUsers] = useState(false)
+
+  const isEscapePressed = useKeyIsPressed(Keys.Escape)
+
+  useEffect(() => {
+    if (isEscapePressed) {
+      setShowUsers(false)
+    }
+  }, [isEscapePressed])
 
   return (
     <Wrapper>
