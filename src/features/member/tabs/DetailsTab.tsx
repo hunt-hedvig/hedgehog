@@ -69,10 +69,20 @@ export const DetailsTab: React.FC<{
     }
   }
 
-  const handleChange = (e) => {
+  const setFieldValue = (field, value) => {
     const editedMemberDetails = { ...editMemberInfoRequest }
-    editedMemberDetails[e.target.name] = e.target.value
+    editedMemberDetails[field] = value
     setEditMemberInfoRequest(editedMemberDetails)
+  }
+
+  const handleChange = (field) => (e) => {
+    if (field === 'firstName' || field === 'lastName') {
+      const value =
+        e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+      setFieldValue(field, value)
+    } else {
+      setFieldValue(field, e.target.value)
+    }
   }
 
   const handleCancel = () => {
