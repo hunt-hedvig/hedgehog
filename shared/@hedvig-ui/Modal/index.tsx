@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
-import React, { CSSProperties, useRef } from 'react'
+import React, { useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
 import { useClickOutside } from '../utils/click-outside'
@@ -81,7 +81,7 @@ const ModalBody = styled.div`
   color: ${({ theme }) => theme.foreground};
 `
 
-export interface ModalProps {
+export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
   height?: string
@@ -90,8 +90,6 @@ export interface ModalProps {
   withoutHeader?: boolean
   disableClickOutside?: boolean
   onClose: () => void
-  style?: CSSProperties
-  children: any
 }
 
 export const Modal = (props: ModalProps) => {
