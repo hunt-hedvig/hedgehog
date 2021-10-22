@@ -14,7 +14,7 @@ import Form, {
   WidgetProps,
 } from '@rjsf/core'
 import { JSONSchema7 } from 'json-schema'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
 import { convertCamelcaseToTitle, convertEnumToTitle } from '../utils/text'
 
@@ -51,6 +51,12 @@ const FormWrapper = styled.div`
   & .field-object,
   & fieldset {
     border: none;
+  }
+
+  & .field-object > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1em;
   }
 
   & .field {
@@ -239,6 +245,10 @@ export const JsonSchemaForm: React.FC<{
   const [formData, setFormData] = useState(
     formatInitialFormData(initialFormData ?? {}, schema),
   )
+
+  useEffect(() => {
+    console.log(formData)
+  }, [formData])
 
   return (
     <FormWrapper>
