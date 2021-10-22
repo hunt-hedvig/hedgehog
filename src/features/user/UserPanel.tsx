@@ -138,7 +138,7 @@ export const UserPanel: React.FC<{ visible: boolean }> = ({ visible }) => {
                 <LatestSeenLabel>
                   {user.latestPresence && differenceLatestPresence > 0
                     ? `${differenceLatestPresence} min ago`
-                    : 'Just now'}
+                    : 'Active now'}
                 </LatestSeenLabel>
               </Flex>
               <div>
