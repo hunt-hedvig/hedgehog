@@ -1,8 +1,7 @@
-import { FadeIn, LoadingMessage, StandaloneMessage } from '@hedvig-ui'
+import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
 import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
-import { Tab } from 'semantic-ui-react'
 import { ContractType, Market, QuoteProductType } from 'types/enums'
 import { Quote } from 'types/generated/graphql'
 import { getMarketFromPickedLocale } from 'utils/member'
@@ -96,20 +95,28 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
     )
   }
 
-  const getTabs = () =>
-    getUniqueContractTypes().map((contractType) => ({
-      menuItem: getTextFromEnumValue(contractType, true),
-      render: () => (
-        <Tab.Pane>
-          <FadeIn>
-            <QuotesSubSection
-              memberId={memberId}
-              contractType={contractType}
-              quotes={getCategorisedQuotesBasedOnContractType(contractType)}
-            />
-          </FadeIn>
-        </Tab.Pane>
-      ),
-    }))
-  return <Tab panes={getTabs()} />
+  const [activeTab, setActiveTab] = React.useState(
+    ContractType.SwedishApartment,
+  )
+
+  return (
+    <>
+      <Tabs
+        style={{ marginBottom: '2em' }}
+        list={getUniqueContractTypes().map((type, index) => ({
+          active: type === activeTab,
+          title: getTextFromEnumValue(type, true),
+          action: () => setActiveTab(type),
+          key: index,
+        }))}
+      />
+      {!!quotes.length && (
+        <QuotesSubSection
+          memberId={memberId}
+          contractType={activeTab}
+          quotes={getCategorisedQuotesBasedOnContractType(activeTab)}
+        />
+      )}
+    </>
+  )
 }
