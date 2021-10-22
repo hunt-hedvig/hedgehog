@@ -1,16 +1,29 @@
 import React, { createContext, useContext } from 'react'
-import { Me } from 'types/generated/graphql'
+import { Me as _Me } from 'types/generated/graphql'
+
+interface PartialMe {
+  email: string
+  fullName: string
+}
 
 interface MeContextProps {
-  me: Me | null
+  me: PartialMe
   settings: object
+}
+
+interface MeProviderProps {
+  me: _Me | null
 }
 
 const MeContext = createContext<MeContextProps>({ me: null, settings: {} })
 
 export const useMe = () => useContext(MeContext)
 
-export const MeProvider: React.FC<{ me: Me | null }> = ({ me, children }) => {
+export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
+  if (!me) {
+    return null
+  }
+
   const settings =
     me?.settings?.reduce((acc, setting) => {
       try {
@@ -22,7 +35,14 @@ export const MeProvider: React.FC<{ me: Me | null }> = ({ me, children }) => {
       return acc
     }, {}) ?? {}
 
+  const partialMe = {
+    email: me.user.email,
+    fullName: me.user.fullName,
+  }
+
   return (
-    <MeContext.Provider value={{ me, settings }}>{children}</MeContext.Provider>
+    <MeContext.Provider value={{ me: partialMe, settings }}>
+      {children}
+    </MeContext.Provider>
   )
 }
