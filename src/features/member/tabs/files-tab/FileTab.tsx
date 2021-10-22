@@ -1,6 +1,7 @@
+import styled from '@emotion/styled'
 import { LoadingMessage, StandaloneMessage } from '@hedvig-ui'
 import React from 'react'
-import { Image, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
 import { dateTimeFormatter } from 'utils/helpers'
 
@@ -10,6 +11,10 @@ const sortFileDate = (a, b) => {
 
   return ((bDate as any) as number) - ((aDate as any) as number)
 }
+
+const Image = styled.img`
+  width: 300px;
+`
 
 const MemberFileTable: React.FC<{
   memberFiles: FileUpload[]
@@ -26,7 +31,7 @@ const MemberFileTable: React.FC<{
       {[...memberFiles].sort(sortFileDate).map((memberFile) => (
         <Table.Row key={memberFile.fileUploadUrl}>
           <Table.Cell>
-            <Image src={memberFile.fileUploadUrl} size="medium" />
+            <Image src={memberFile.fileUploadUrl} />
           </Table.Cell>
           <Table.Cell>
             {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
