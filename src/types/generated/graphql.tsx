@@ -2519,6 +2519,16 @@ export type MarkSwitcherEmailAsRemindedMutation = {
   } & Pick<SwitchableSwitcherEmail, 'id'>
 }
 
+export type UpdateUserSettingsMutationVariables = Exact<{
+  settings: Array<UpsertUserSettingInput> | UpsertUserSettingInput
+}>
+
+export type UpdateUserSettingsMutation = { __typename?: 'MutationType' } & {
+  upsertUserSettings: Array<
+    { __typename?: 'UserSetting' } & Pick<UserSetting, 'key' | 'value'>
+  >
+}
+
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput
 }>
@@ -6410,6 +6420,58 @@ export type MarkSwitcherEmailAsRemindedMutationResult = ApolloReactCommon.Mutati
 export type MarkSwitcherEmailAsRemindedMutationOptions = ApolloReactCommon.BaseMutationOptions<
   MarkSwitcherEmailAsRemindedMutation,
   MarkSwitcherEmailAsRemindedMutationVariables
+>
+export const UpdateUserSettingsDocument = gql`
+  mutation UpdateUserSettings($settings: [UpsertUserSettingInput!]!) {
+    upsertUserSettings(settings: $settings) {
+      key
+      value
+    }
+  }
+`
+export type UpdateUserSettingsMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateUserSettingsMutation,
+  UpdateUserSettingsMutationVariables
+>
+
+/**
+ * __useUpdateUserSettingsMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserSettingsMutation, { data, loading, error }] = useUpdateUserSettingsMutation({
+ *   variables: {
+ *      settings: // value for 'settings'
+ *   },
+ * });
+ */
+export function useUpdateUserSettingsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateUserSettingsMutation,
+    UpdateUserSettingsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UpdateUserSettingsMutation,
+    UpdateUserSettingsMutationVariables
+  >(UpdateUserSettingsDocument, options)
+}
+export type UpdateUserSettingsMutationHookResult = ReturnType<
+  typeof useUpdateUserSettingsMutation
+>
+export type UpdateUserSettingsMutationResult = ApolloReactCommon.MutationResult<
+  UpdateUserSettingsMutation
+>
+export type UpdateUserSettingsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateUserSettingsMutation,
+  UpdateUserSettingsMutationVariables
 >
 export const UpdateUserDocument = gql`
   mutation UpdateUser($input: UpdateUserInput!) {

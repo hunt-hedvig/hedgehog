@@ -1,0 +1,6 @@
+mutation UpdateUserSettings($settings: [UpsertUserSettingInput!]!) {
+  upsertUserSettings(settings: $settings) {
+    key
+    value
+  }
+}

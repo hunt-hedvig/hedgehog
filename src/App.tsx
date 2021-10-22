@@ -8,12 +8,13 @@ import { history } from 'clientEntry'
 import { Breadcrumbs } from 'features/navigation/breadcrumbs/Breadcrumbs'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
+import { useAuthenticate } from 'features/user/hooks/use-authenticate'
+import { MeProvider } from 'features/user/hooks/use-me'
 import { Routes } from 'pages/routes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
-import { useAuthenticate } from 'utils/auth'
 import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
 import { MemberHistoryProvider } from 'utils/member-history'
 import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
@@ -96,36 +97,40 @@ const App: React.FC = () => {
             <Router history={history}>
               <CommandLineProvider>
                 <ConfirmDialogProvider>
-                  <Layout>
-                    {!history.location.pathname.startsWith('/login') && (
-                      <VerticalMenu history={history} />
-                    )}
-                    <Main dark={history.location.pathname.startsWith('/login')}>
-                      <TopBar />
-                      <MainContent>
-                        <Breadcrumbs />
-                        <Switch>
-                          <Route
-                            path="/login"
-                            exact
-                            component={() => {
-                              redirectToLogin()
-                              return null
+                  <MeProvider me={me ?? null}>
+                    <Layout>
+                      {!history.location.pathname.startsWith('/login') && (
+                        <VerticalMenu history={history} />
+                      )}
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
+                        <TopBar />
+                        <MainContent>
+                          <Breadcrumbs />
+                          <Switch>
+                            <Route
+                              path="/login"
+                              exact
+                              component={() => {
+                                redirectToLogin()
+                                return null
+                              }}
+                            />
+                            {me && <Routes />}
+                          </Switch>
+                          <Toaster
+                            position="top-center"
+                            toastOptions={{
+                              style: {
+                                padding: '20px 25px',
+                              },
                             }}
                           />
-                          {me && <Routes />}
-                        </Switch>
-                        <Toaster
-                          position="top-center"
-                          toastOptions={{
-                            style: {
-                              padding: '20px 25px',
-                            },
-                          }}
-                        />
-                      </MainContent>
-                    </Main>
-                  </Layout>
+                        </MainContent>
+                      </Main>
+                    </Layout>
+                  </MeProvider>
                 </ConfirmDialogProvider>
               </CommandLineProvider>
             </Router>
