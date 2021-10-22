@@ -70,14 +70,18 @@ const RadioLabel = styled.div<{ checked?: boolean; disabled?: boolean }>`
 `
 
 interface RadioGroupProps {
-  value: string | number
-  onChange: any
-  options: Array<{ value: string | number; label: string; disabled?: boolean }>
+  value?: string | number
+  onChange?: any
+  options: Array<{
+    value: string | number
+    label: string | React.ReactNode
+    disabled?: boolean
+  }>
 }
 
 interface RadioProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onKeyDown'> {
-  label: string
+  label: string | React.ReactNode
   onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }
 
@@ -123,14 +127,14 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
         value={opt.value}
         label={opt.label}
         disabled={opt.disabled || false}
-        onChange={() => onChange(opt.value)}
+        onChange={() => onChange && onChange(opt.value)}
         onKeyDown={(e) => {
           if (e.keyCode === Keys.Enter.code) {
             onChange(opt.value)
             return
           }
         }}
-        checked={opt.value === value}
+        checked={opt.value === value || false}
       />
     ))}
   </>
