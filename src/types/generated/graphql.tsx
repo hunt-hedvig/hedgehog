@@ -569,6 +569,11 @@ export type Me = {
   scopes: Array<Scalars['String']>
   role: Scalars['String']
   user: User
+  settings: Array<UserSetting>
+}
+
+export type MeSettingsArgs = {
+  filters?: Maybe<UserSettingsFilter>
 }
 
 export type Member = {
@@ -758,6 +763,7 @@ export type MutationType = {
   upsertCoInsured: Claim
   deleteCoInsured: Scalars['Boolean']
   updateUser: User
+  upsertUserSettings: Array<UserSetting>
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1085,6 +1091,10 @@ export type MutationTypeDeleteCoInsuredArgs = {
 
 export type MutationTypeUpdateUserArgs = {
   input: UpdateUserInput
+}
+
+export type MutationTypeUpsertUserSettingsArgs = {
+  settings: Array<UpsertUserSettingInput>
 }
 
 export type NationalIdentification = {
@@ -1458,12 +1468,31 @@ export type UpsertCoInsuredInput = {
   phoneNumber?: Maybe<Scalars['String']>
 }
 
+export type UpsertUserSettingInput = {
+  key: UserSettingKey
+  value?: Maybe<Scalars['JSON']>
+}
+
 export type User = {
   __typename?: 'User'
   id: Scalars['ID']
   email: Scalars['String']
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
+}
+
+export type UserSetting = {
+  __typename?: 'UserSetting'
+  key: UserSettingKey
+  value: Scalars['JSON']
+}
+
+export enum UserSettingKey {
+  FeatureFlags = 'FEATURE_FLAGS',
+}
+
+export type UserSettingsFilter = {
+  keys: Array<UserSettingKey>
 }
 
 export type VisibleNoDiscount = {
@@ -2924,6 +2953,9 @@ export type GetMeQuery = { __typename?: 'QueryType' } & {
       user: { __typename?: 'User' } & Pick<
         User,
         'id' | 'email' | 'fullName' | 'phoneNumber'
+      >
+      settings: Array<
+        { __typename?: 'UserSetting' } & Pick<UserSetting, 'key' | 'value'>
       >
     }
 }
@@ -7895,6 +7927,10 @@ export const GetMeDocument = gql`
         email
         fullName
         phoneNumber
+      }
+      settings {
+        key
+        value
       }
     }
   }

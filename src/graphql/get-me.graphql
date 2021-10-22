@@ -8,5 +8,9 @@ query GetMe {
       fullName
       phoneNumber
     }
+    settings {
+      key
+      value
+    }
   }
 }
