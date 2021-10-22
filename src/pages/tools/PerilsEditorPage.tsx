@@ -270,16 +270,6 @@ export const PerilsEditorPage: React.FC = () => {
                     )
                   })}
                 </Dropdown>
-                {/* <Dropdown
-                  placeholder="Icon Name"
-                  value={peril.iconName}
-                  fluid
-                  selection
-                  options={PerilIconOptions}
-                  onChange={(event) =>
-                    updateField('iconName')(event.currentTarget.textContent)
-                  }
-                /> */}
 
                 <TitleWrapper>Info</TitleWrapper>
                 <TextArea
