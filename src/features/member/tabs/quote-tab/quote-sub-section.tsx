@@ -34,7 +34,9 @@ export const QuotesSubSection: React.FC<{
   return (
     <Wrapper>
       {!hasActiveContracts && (
-        <Button onClick={() => setIsWip(!isWip)}>Create</Button>
+        <Button style={{ marginBottom: 15 }} onClick={() => setIsWip(!isWip)}>
+          Create
+        </Button>
       )}
       {isWip && (
         <ActionsWrapper>
