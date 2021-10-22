@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
+import { Breadcrumb } from '@hedvig-ui'
 import React from 'react'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Breadcrumb } from 'semantic-ui-react'
 
-const BreadcrumbsContainer = styled.div`
+const NavigationContainer = styled.div`
   display: flex;
   margin: 20px 0;
   text-transform: capitalize;
@@ -16,7 +16,7 @@ const BreadcrumbsContainer = styled.div`
   }
 `
 
-export const Breadcrumbs: React.FC = () => {
+export const BreadcrumbsNavigation: React.FC = () => {
   const { pathname } = useLocation()
 
   if (pathname.startsWith('/login')) {
@@ -43,8 +43,8 @@ export const Breadcrumbs: React.FC = () => {
     }
   })
   return (
-    <BreadcrumbsContainer>
+    <NavigationContainer>
       <Breadcrumb sections={paths} />
-    </BreadcrumbsContainer>
+    </NavigationContainer>
   )
 }
