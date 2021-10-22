@@ -40,6 +40,15 @@ type Me {
   scopes: [String!]!
   role: String!
   user: User!
+  settings(filters: UserSettingsFilter): [UserSetting!]!
+}
+
+enum UserSettingKey {
+  FEATURE_FLAGS
+}
+
+input UserSettingsFilter {
+  keys: [UserSettingKey!]!
 }
 
 type User {
@@ -47,6 +56,11 @@ type User {
   email: String!
   fullName: String!
   phoneNumber: String
+}
+
+type UserSetting {
+  key: UserSettingKey!,
+  value: JSON!
 }
 
 type MutationType {
@@ -183,6 +197,7 @@ type MutationType {
   deleteCoInsured(claimId: ID!): Boolean!
 
   updateUser(input: UpdateUserInput!): User!
+  upsertUserSettings(settings: [UpsertUserSettingInput!]!): [UserSetting!]!
 }
 
 input UpsertCoInsuredInput {
@@ -195,6 +210,11 @@ input UpsertCoInsuredInput {
 input UpdateUserInput {
   fullName: String
   phoneNumber: String
+}
+
+input UpsertUserSettingInput {
+  key: UserSettingKey!
+  value: JSON
 }
 
 type ClaimTypeTemplate {
@@ -429,6 +449,7 @@ input SafelyEditAgreementInput {
   newStreet: String
 }
 
+
 input AssignVoucherPercentageDiscount {
   partnerId: String!
   numberOfMonths: Int!
@@ -501,7 +522,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
