@@ -2,9 +2,10 @@ import styled from '@emotion/styled'
 import { Bold, Capitalized, Popover } from '@hedvig-ui'
 import React from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
-import { Grid, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { AccountEntry } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
+import { PopoverItem } from './MonthlyEntriesTable'
 
 const getAccountEntryColor = (theme, entry: AccountEntry) => {
   if (entry.failedAt) {
@@ -74,38 +75,26 @@ export const AccountEntryTable: React.FC<{
           <Table.Cell textAlign="center">
             <Popover
               contents={
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Bold>Entry ID</Bold>
-                      <br />
-                      {entry.id}
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Bold>Reference</Bold>
-                      <br />
-                      {entry.reference}
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Bold>Source</Bold>
-                      <br />
-                      {entry.source}
-                    </Grid.Column>
-                  </Grid.Row>
+                <>
+                  <PopoverItem>
+                    <Bold>Entry ID</Bold>
+                    {entry.id}
+                  </PopoverItem>
+                  <PopoverItem>
+                    <Bold>Reference</Bold>
+                    {entry.reference}
+                  </PopoverItem>
+                  <PopoverItem>
+                    <Bold>Source</Bold>
+                    {entry.source}
+                  </PopoverItem>
                   {entry.comment && (
-                    <Grid.Row>
-                      <Grid.Column>
-                        <Bold>Comment</Bold>
-                        <br />
-                        {entry.comment}
-                      </Grid.Column>
-                    </Grid.Row>
+                    <PopoverItem>
+                      <Bold>Comment</Bold>
+                      {entry.comment}
+                    </PopoverItem>
                   )}
-                </Grid>
+                </>
               }
             >
               <InfoCircleFill />

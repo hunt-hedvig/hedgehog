@@ -9,12 +9,24 @@ import {
 import React from 'react'
 import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { Grid, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { MonthlyEntry } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 
 const StyledTable = styled(Table)`
   overflow: visible !important;
+`
+
+const TrashIcon = styled(Trash)`
+  height: 15px;
+  width: 15px;
+  color: ${({ theme }) => theme.danger};
+`
+
+export const PopoverItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px;
 `
 
 export const MonthlyEntriesTable: React.FC<{
@@ -55,39 +67,30 @@ export const MonthlyEntriesTable: React.FC<{
               <Table.Cell textAlign="center">
                 <Popover
                   contents={
-                    <Grid>
-                      <Grid.Row>
-                        <Grid.Column>
-                          <Bold>ID</Bold>
-                          <br />
-                          {monthlyEntry.id}
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row>
-                        <Grid.Column>
-                          <Bold>Added At</Bold>
-                          <br />
-                          {format(
-                            parseISO(monthlyEntry.addedAt),
-                            'yyyy-MM-dd HH:mm:ss',
-                          )}
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row>
-                        <Grid.Column>
-                          <Bold>Added By</Bold>
-                          <br />
-                          {monthlyEntry.addedBy}
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row>
-                        <Grid.Column>
-                          <Bold>Comment</Bold>
-                          <br />
-                          {monthlyEntry.comment}
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
+                    <>
+                      <PopoverItem>
+                        <Bold>ID:</Bold>
+                        {monthlyEntry.id}
+                      </PopoverItem>
+
+                      <PopoverItem>
+                        <Bold>Added At:</Bold>
+                        {format(
+                          parseISO(monthlyEntry.addedAt),
+                          'yyyy-MM-dd HH:mm:ss',
+                        )}
+                      </PopoverItem>
+
+                      <PopoverItem>
+                        <Bold>Added By:</Bold>
+                        {monthlyEntry.addedBy}
+                      </PopoverItem>
+
+                      <PopoverItem>
+                        <Bold>Comment:</Bold>
+                        {monthlyEntry.comment}
+                      </PopoverItem>
+                    </>
                   }
                 >
                   <InfoCircleFill />
@@ -95,6 +98,7 @@ export const MonthlyEntriesTable: React.FC<{
               </Table.Cell>
               <Table.Cell>
                 <Button
+                  variant="secondary"
                   onClick={() => {
                     confirm(
                       `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,
@@ -115,7 +119,7 @@ export const MonthlyEntriesTable: React.FC<{
                     })
                   }}
                 >
-                  <Trash color="red" />
+                  <TrashIcon />
                 </Button>
               </Table.Cell>
             </Table.Row>
