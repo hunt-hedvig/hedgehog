@@ -35,7 +35,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
   }
 
   const settings =
-    me?.settings?.reduce((acc, setting) => {
+    me.settings.reduce((acc, setting) => {
       try {
         acc[setting.key] = JSON.parse(setting.value)
       } catch (e) {
