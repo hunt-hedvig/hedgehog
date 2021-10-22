@@ -49,7 +49,6 @@ export const DetailsTab: React.FC<{
     switch (field.toLowerCase()) {
       case 'memberid':
       case 'personalnumber':
-      case 'birthdate':
       case 'signedon':
       case 'status':
       case 'pickedlocale':
