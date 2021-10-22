@@ -1,4 +1,5 @@
 import { Button, Flex, Input, Label, MainHeadline, Spacing } from '@hedvig-ui'
+import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
@@ -8,6 +9,12 @@ export const ProfilePage: React.FC = () => {
   const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState<null | string>('')
   const [updateUser] = useUpdateUserMutation()
+  const { me, settings } = useMe()
+
+  useEffect(() => {
+    console.log(me)
+    console.log(settings)
+  }, [])
 
   const handleSaveChanges = () => {
     if (!data) {
