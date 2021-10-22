@@ -6,6 +6,7 @@ import { CardTitleBadgeProps as _CardTitleBadgeProps } from './Card/card'
 import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 import { InputProps as _InputProps } from './Input/input'
 import { ModalProps as _ModalProps } from './Modal'
+import { FlagProp as _FlagProp } from './OrbIndicator/orb-indicator'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 import { TabsProps as _TabsProps } from './Tabs'
 import { TextAreaProps as _TextAreaProps } from './TextArea/text-area'
@@ -62,10 +63,10 @@ export type InputProps = _InputProps
 export { JsonSchemaForm } from './JsonSchemaForm/json-schema-form'
 export { List, ListItem } from './List/list'
 export { Loadable } from './Loadable/loadable'
-export {
-  OrbIndicator,
-  FlagProp as OrbFlagsType,
-} from './OrbIndicator/orb-indicator'
+
+export { OrbIndicator } from './OrbIndicator/orb-indicator'
+export type OrbFlagsType = _FlagProp
+
 export { Popover } from './Popover/popover'
 export { RadioGroup } from './Radio/radio'
 export {
