@@ -34,6 +34,7 @@ type QueryType {
   claimPropertyOption(id: ID!): ClaimPropertyOption!
 
   user(email: String!): User
+  users: [User!]!
 }
 
 type Me {
@@ -213,7 +214,7 @@ input UpdateUserInput {
 }
 
 input UpsertUserSettingInput {
-  key: UserSettingKey!
+  key: String!
   value: JSON
 }
 
