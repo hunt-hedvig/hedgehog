@@ -1,5 +1,12 @@
+import { FetchResult } from '@apollo/client'
 import React, { createContext, useContext } from 'react'
-import { Me as _Me } from 'types/generated/graphql'
+import {
+  GetMeDocument,
+  GetMeQuery,
+  Me as _Me,
+  UserSettingKey,
+  useUpdateUserSettingsMutation,
+} from 'types/generated/graphql'
 
 interface PartialMe {
   email: string
@@ -9,6 +16,7 @@ interface PartialMe {
 interface MeContextProps {
   me: PartialMe
   settings: object
+  updateSetting: (key: UserSettingKey, value: object) => Promise<FetchResult>
 }
 
 interface MeProviderProps {
@@ -20,6 +28,8 @@ const MeContext = createContext<MeContextProps>({} as any)
 export const useMe = () => useContext(MeContext)
 
 export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
+  const [upsertUserSettings] = useUpdateUserSettingsMutation()
+
   if (!me) {
     return null
   }
@@ -40,8 +50,38 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
     fullName: me.user.fullName,
   }
 
+  const updateSetting = (
+    key: UserSettingKey,
+    value: object,
+  ): Promise<FetchResult> => {
+    const payload = JSON.stringify(value)
+
+    return upsertUserSettings({
+      variables: { settings: [{ key, value: payload }] },
+      update: (cache, { data: response }) => {
+        if (!response?.upsertUserSettings) {
+          return
+        }
+
+        const cachedData = cache.readQuery({
+          query: GetMeDocument,
+        }) as GetMeQuery
+
+        cache.writeQuery({
+          query: GetMeDocument,
+          data: {
+            me: {
+              ...cachedData.me,
+              settings: response.upsertUserSettings,
+            },
+          },
+        })
+      },
+    })
+  }
+
   return (
-    <MeContext.Provider value={{ me: partialMe, settings }}>
+    <MeContext.Provider value={{ me: partialMe, settings, updateSetting }}>
       {children}
     </MeContext.Provider>
   )
