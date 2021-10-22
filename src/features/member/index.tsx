@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Popover, Tabs } from '@hedvig-ui'
+import { Capitalized, Popover, Tabs } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
@@ -102,9 +102,13 @@ export const MemberTabs: React.FC<RouteComponentProps<{
               description: member.fraudulentStatusDescription,
             }}
           />
-          {`${member.firstName || ''} ${member.lastName || ''}`}
-          {' ('}
-          <MemberAge birthDateString={member?.birthDate} />)
+          <Capitalized style={{ marginRight: 8 }}>
+            {member.firstName || ''}
+          </Capitalized>
+          <Capitalized style={{ marginRight: 8 }}>
+            {member.lastName || ''}
+          </Capitalized>
+          (<MemberAge birthDateString={member?.birthDate} />)
           {member && (
             <>
               <Flag>
