@@ -1,7 +1,14 @@
-// @ts-nocheck
 import styled from '@emotion/styled'
+import {
+  Button,
+  ButtonsGroup,
+  Dropdown,
+  DropdownOption,
+  Input,
+  OrbIndicator,
+} from '@hedvig-ui'
 import React from 'react'
-import { Button, Dropdown, Icon, Input, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { Member } from 'types/generated/graphql'
 
 const ButtonsBlock = styled('div')((_) => ({
@@ -9,31 +16,10 @@ const ButtonsBlock = styled('div')((_) => ({
   marginTop: '10px',
 }))
 
-const StatusBallBlock = ({ stateInfo, children }) => (
-  <span
-    style={{ verticalAlign: 'middle' }}
-    title={
-      stateInfo && stateInfo.description
-        ? stateInfo.description
-        : 'Fraudulent Status is not defined'
-    }
-  >
-    {children}
-  </span>
-)
-
-const IconStyled = styled(Icon)(() => ({
-  verticalAlign: 'middle',
-}))
-
-const InputStyled = styled(Input)(() => ({
-  marginTop: '5px',
-}))
-
 const fraudulentStatuses = {
-  NOT_FRAUD: 'green',
-  SUSPECTED_FRAUD: 'orange',
-  CONFIRMED_FRAUD: 'red',
+  NOT_FRAUD: '#21ba45',
+  SUSPECTED_FRAUD: '#f2711c',
+  CONFIRMED_FRAUD: '#db2828',
 }
 
 const FraudulentStatus: React.FC<{
@@ -42,22 +28,24 @@ const FraudulentStatus: React.FC<{
     description?: Member['fraudulentStatusDescription']
   }
 }> = (props) => (
-  <StatusBallBlock stateInfo={props.stateInfo}>
-    <IconStyled
-      name="circle"
-      color={
-        props.stateInfo && fraudulentStatuses[props.stateInfo.state]
-          ? fraudulentStatuses[props.stateInfo.state]
-          : 'green'
-      }
-      size="tiny"
-    />
-  </StatusBallBlock>
+  <OrbIndicator
+    style={{ marginRight: 15 }}
+    size="14px"
+    color={
+      props.stateInfo && fraudulentStatuses[props.stateInfo.state || 0]
+        ? fraudulentStatuses[props.stateInfo.state || 0]
+        : 'green'
+    }
+  />
 )
 
 const FraudulentStatusEdit = (props) => {
-  let descriptionValue: string = props.getFraudStatusInfo().description
-  let fraudulentStatusValue: string = props.getFraudStatusInfo().status
+  const [descriptionValue, setDescriptionValue] = React.useState<string>(
+    props.getFraudStatusInfo().description,
+  )
+  const [fraudulentStatusValue, setFraudulentStatusValue] = React.useState<
+    string
+  >(props.getFraudStatusInfo().status)
   return (
     <Table.Row>
       <Table.Cell>Fraudulent Status</Table.Cell>
@@ -69,25 +57,30 @@ const FraudulentStatusEdit = (props) => {
           </>
         ) : (
           <>
-            <Dropdown
-              fluid
-              selection
-              options={Object.keys(fraudulentStatuses).map((item) => {
-                return {
+            <Dropdown placeholder={fraudulentStatusValue}>
+              {Object.keys(fraudulentStatuses)
+                .map((item) => ({
                   key: item,
                   text: item,
                   value: item,
                   selected: item === fraudulentStatusValue,
                   active: item === fraudulentStatusValue,
-                }
-              })}
-              // @ts-ignore
-              onChange={(e, d) => (fraudulentStatusValue = d.value)}
-              placeholder={fraudulentStatusValue}
-            />
-            <InputStyled
-              fluid
-              onChange={(e, d) => (descriptionValue = d.value)}
+                }))
+                .map((opt) => (
+                  <DropdownOption
+                    key={opt.key}
+                    onClick={() => setFraudulentStatusValue(opt.value)}
+                    selected={opt.value === fraudulentStatusValue}
+                  >
+                    {opt.text}
+                  </DropdownOption>
+                ))}
+            </Dropdown>
+            <Input
+              style={{ marginTop: 15 }}
+              onChange={({ currentTarget: { value } }) =>
+                setDescriptionValue(value)
+              }
               defaultValue={descriptionValue}
             />
           </>
@@ -102,18 +95,20 @@ const FraudulentStatusEdit = (props) => {
               Edit
             </Button>
           ) : (
-            <>
+            <ButtonsGroup>
               <Button
                 onClick={() => {
                   props.action(fraudulentStatusValue, descriptionValue)
                   props.setState(false, fraudulentStatusValue, descriptionValue)
                 }}
-                primary
+                variant="primary"
               >
                 Save
               </Button>
-              <Button onClick={() => props.setState(false)}>Cancel</Button>
-            </>
+              <Button variant="secondary" onClick={() => props.setState(false)}>
+                Cancel
+              </Button>
+            </ButtonsGroup>
           )}
         </ButtonsBlock>
       </Table.Cell>
