@@ -32,8 +32,8 @@ const template = () => `
   <title>Hope</title>
   <link rel="icon" type="image/png" href="/static/favicon.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-  <script src="https://cdn.ravenjs.com/3.22.3/raven.min.js"
-          crossorigin="anonymous"/>
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css" />
   <style>
   body {
     overflow-x: visible;
@@ -50,7 +50,7 @@ const template = () => `
       "swishPayoutsEnabled": ${JSON.stringify(config.swishPayoutsEnabled)},
     };
   </script>
-  <script src="${scriptLocation}"/>
+  <script src="${scriptLocation}"></script>
 </body>
 </html>
 `
