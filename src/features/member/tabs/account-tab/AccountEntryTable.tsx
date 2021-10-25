@@ -1,10 +1,19 @@
 import styled from '@emotion/styled'
-import { Bold, Capitalized, Popover } from '@hedvig-ui'
+import {
+  Bold,
+  Capitalized,
+  Popover,
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+} from '@hedvig-ui'
 import React from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
-import { Grid, Table } from 'semantic-ui-react'
 import { AccountEntry } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
+import { PopoverItem } from './MonthlyEntriesTable'
 
 const getAccountEntryColor = (theme, entry: AccountEntry) => {
   if (entry.failedAt) {
@@ -22,7 +31,7 @@ const getAccountEntryColor = (theme, entry: AccountEntry) => {
   return theme.backgroundTransparent
 }
 
-const TableRowColored = styled(Table.Row)<{
+const TableRowColored = styled(TableRow)<{
   entry: AccountEntry
 }>`
   td {
@@ -35,7 +44,7 @@ const StyledTable = styled(Table)`
   overflow: visible !important;
 `
 
-const AmountCell = styled(Table.Cell)<{
+const AmountCell = styled(TableColumn)<{
   entry: AccountEntry
 }>`
   text-decoration: ${({ entry }) => (entry.failedAt ? 'line-through' : '')};
@@ -45,74 +54,60 @@ export const AccountEntryTable: React.FC<{
   accountEntries: AccountEntry[]
 }> = ({ accountEntries }) => (
   <StyledTable>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Date</Table.HeaderCell>
-        <Table.HeaderCell>Type</Table.HeaderCell>
-        <Table.HeaderCell>Title</Table.HeaderCell>
-        <Table.HeaderCell>Amount</Table.HeaderCell>
-        <Table.HeaderCell width={1}>Details</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
+    <TableHeader>
+      <TableHeaderColumn>Date</TableHeaderColumn>
+      <TableHeaderColumn>Type</TableHeaderColumn>
+      <TableHeaderColumn>Title</TableHeaderColumn>
+      <TableHeaderColumn>Amount</TableHeaderColumn>
+      <TableHeaderColumn style={{ width: 90, textAlign: 'center' }}>
+        Details
+      </TableHeaderColumn>
+    </TableHeader>
 
-    <Table.Body>
-      {accountEntries.map((entry) => (
-        <TableRowColored entry={entry} key={entry.id}>
-          <Table.Cell entry={entry}>{entry.fromDate}</Table.Cell>
-          <Table.Cell>
-            <Capitalized>{entry.type}</Capitalized>
-          </Table.Cell>
-          <Table.Cell>
-            {entry.title && entry.title !== '' ? entry.title : 'Not specified'}
-          </Table.Cell>
-          <AmountCell entry={entry}>
-            {formatMoney(entry.amount, {
-              useGrouping: true,
-              minimumFractionDigits: 2,
-            })}
-          </AmountCell>
-          <Table.Cell textAlign="center">
-            <Popover
-              contents={
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Bold>Entry ID</Bold>
-                      <br />
-                      {entry.id}
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Bold>Reference</Bold>
-                      <br />
-                      {entry.reference}
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Bold>Source</Bold>
-                      <br />
-                      {entry.source}
-                    </Grid.Column>
-                  </Grid.Row>
-                  {entry.comment && (
-                    <Grid.Row>
-                      <Grid.Column>
-                        <Bold>Comment</Bold>
-                        <br />
-                        {entry.comment}
-                      </Grid.Column>
-                    </Grid.Row>
-                  )}
-                </Grid>
-              }
-            >
-              <InfoCircleFill />
-            </Popover>
-          </Table.Cell>
-        </TableRowColored>
-      ))}
-    </Table.Body>
+    {accountEntries.map((entry) => (
+      <TableRowColored entry={entry} key={entry.id}>
+        <AmountCell entry={entry}>{entry.fromDate}</AmountCell>
+        <TableColumn>
+          <Capitalized>{entry.type}</Capitalized>
+        </TableColumn>
+        <TableColumn>
+          {entry.title && entry.title !== '' ? entry.title : 'Not specified'}
+        </TableColumn>
+        <AmountCell entry={entry}>
+          {formatMoney(entry.amount, {
+            useGrouping: true,
+            minimumFractionDigits: 2,
+          })}
+        </AmountCell>
+        <TableColumn style={{ textAlign: 'center', width: 90 }}>
+          <Popover
+            contents={
+              <>
+                <PopoverItem>
+                  <Bold>Entry ID</Bold>
+                  {entry.id}
+                </PopoverItem>
+                <PopoverItem>
+                  <Bold>Reference</Bold>
+                  {entry.reference}
+                </PopoverItem>
+                <PopoverItem>
+                  <Bold>Source</Bold>
+                  {entry.source}
+                </PopoverItem>
+                {entry.comment && (
+                  <PopoverItem>
+                    <Bold>Comment</Bold>
+                    {entry.comment}
+                  </PopoverItem>
+                )}
+              </>
+            }
+          >
+            <InfoCircleFill />
+          </Popover>
+        </TableColumn>
+      </TableRowColored>
+    ))}
   </StyledTable>
 )

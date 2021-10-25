@@ -38,7 +38,7 @@ const ModalContent = styled.div<{
   width: ${({ width }) => width || 'auto'};
   max-width: 900px;
   height: ${({ height }) => height || 'auto'};
-  max-height: 600px;
+  max-height: 950px;
 
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.background};
@@ -81,7 +81,7 @@ const ModalBody = styled.div`
   color: ${({ theme }) => theme.foreground};
 `
 
-export interface ModalProps {
+export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
   height?: string
@@ -90,7 +90,6 @@ export interface ModalProps {
   withoutHeader?: boolean
   disableClickOutside?: boolean
   onClose: () => void
-  children: any
 }
 
 export const Modal = (props: ModalProps) => {
@@ -111,19 +110,21 @@ export const Modal = (props: ModalProps) => {
       <ModalWrapperStyled position={props.position} side={props.side}>
         <FadeIn duration={250}>
           <ModalContent
+            className="modal"
             ref={modalRef}
             height={props.height}
             width={props.width}
+            style={props.style}
           >
             {!props.withoutHeader && (
-              <ModalHeader>
+              <ModalHeader className="modal__header">
                 <span className="modal-title" title={props.title}>
                   {props.title}
                 </span>
                 <CloseIcon className="modal-close" onClick={props.onClose} />
               </ModalHeader>
             )}
-            <ModalBody>{props.children}</ModalBody>
+            <ModalBody className="modal__body">{props.children}</ModalBody>
           </ModalContent>
         </FadeIn>
       </ModalWrapperStyled>

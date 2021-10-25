@@ -1,14 +1,11 @@
-import styled from '@emotion/styled'
-import { SearchableDropdown } from '@hedvig-ui'
 import React from 'react'
-import { Input } from 'semantic-ui-react'
 import { useAvailableEmployeeRolesQuery } from 'types/generated/graphql'
-import { CreateEmployee, Row } from './CreateEmployee'
-
-const StyledDropdown = styled(SearchableDropdown)`
-  width: 12em;
-  padding: 0 1em;
-`
+import {
+  CreateEmployee,
+  Row,
+  StyledDropdown,
+  StyledInput,
+} from './CreateEmployee'
 
 export const EmployeeFilter: React.FC<{
   scopes: string[]
@@ -29,8 +26,9 @@ export const EmployeeFilter: React.FC<{
 
   return (
     <Row style={{ width: '100%' }}>
-      <Row style={{ justifyContent: 'flex-start' }}>
-        <Input
+      <Row style={{ width: '50%' }}>
+        <StyledInput
+          style={{ flex: 1 }}
           value={filter.email ?? ''}
           onChange={({ currentTarget: { value } }) => {
             setFilter({

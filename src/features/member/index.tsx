@@ -5,7 +5,6 @@ import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import React, { useContext, useEffect } from 'react'
 import { Route, RouteComponentProps, useHistory } from 'react-router'
-import { Header as SemanticHeader } from 'semantic-ui-react'
 import { Member } from 'types/generated/graphql'
 import { FraudulentStatus } from 'utils/fraudulentStatus'
 import {
@@ -34,9 +33,10 @@ const MemberPageContainer = styled('div')`
   white-space: nowrap;
 `
 
-const Header = styled(SemanticHeader)`
+const Header = styled.div`
   display: flex;
   align-items: center;
+  font-size: 32px;
 `
 
 const Badge = styled('div')<{ memberId: string; numberMemberGroups: number }>`
@@ -95,7 +95,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
   return (
     <MemberPageWrapper>
       <MemberPageContainer>
-        <Header size="huge">
+        <Header>
           <FraudulentStatus
             stateInfo={{
               state: member.fraudulentStatus,

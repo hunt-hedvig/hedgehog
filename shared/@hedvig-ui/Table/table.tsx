@@ -72,10 +72,14 @@ export const TableHeaderColumn = styled.th`
   }
 `
 
-export const TableRow = styled.tr<{ active?: boolean }>`
+export const TableRow = styled.tr<{ active?: boolean; border?: boolean }>`
   width: 100%;
   transition: all 150ms;
 
+  &:not(:last-of-type) {
+    border-bottom: ${({ border, theme }) =>
+      border ? `1px solid ${theme.border}` : 'none'};
+  }
   :hover {
     cursor: pointer;
     background-color: ${({ theme }) => theme.accentSaturated};
@@ -87,6 +91,18 @@ export const TableRow = styled.tr<{ active?: boolean }>`
 
   background-color: ${({ theme, active }) =>
     active ? theme.accentLight : theme.accentLighter};
+
+  :last-of-type {
+    border-radius: 0 0 8px 8px;
+
+    td:first-of-type {
+      border-radius: 0 0 0 8px;
+    }
+
+    td:last-of-type {
+      border-radius: 0 0 8px 0;
+    }
+  }
 `
 
 export const TableHeader = styled.tr`

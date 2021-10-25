@@ -1,17 +1,19 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import {
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+} from '@hedvig-ui'
 import React from 'react'
-import { Table } from 'semantic-ui-react'
 import { AgreementStatus, GenericAgreement } from 'types/generated/graphql'
 import { InsuranceStatusBadge } from 'utils/agreement'
 import { formatMoney } from 'utils/money'
 import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
-const SelectableTableRow = styled(Table.Row)({
-  cursor: 'pointer',
-})
-
-const SelectableTableCell = styled(Table.Cell)<{
+const SelectableTableCell = styled(TableColumn)<{
   selected: boolean
   status: AgreementStatus
 }>`
@@ -31,72 +33,69 @@ export const AgreementsTable: React.FC<{
   setSelectedAgreement: (agreementId: string | undefined) => void
 }> = ({ agreements, selectedAgreement, setSelectedAgreement }) => {
   return (
-    <Table celled unstackable>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Line of Business</Table.HeaderCell>
-          <Table.HeaderCell>Carrier</Table.HeaderCell>
-          <Table.HeaderCell>From Date</Table.HeaderCell>
-          <Table.HeaderCell>To Date</Table.HeaderCell>
-          <Table.HeaderCell>Premium</Table.HeaderCell>
-          <Table.HeaderCell>Status</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {agreements.map((agreement) => {
-          const isSelected = agreement.id === selectedAgreement
-          return (
-            <SelectableTableRow
-              key={agreement.id}
-              onClick={() =>
-                selectedAgreement === agreement.id
-                  ? setSelectedAgreement(undefined)
-                  : setSelectedAgreement(agreement.id)
-              }
-              active={isSelected}
+    <Table style={{ margin: '1em 0' }}>
+      <TableHeader>
+        <TableHeaderColumn>Line of Business</TableHeaderColumn>
+        <TableHeaderColumn>Carrier</TableHeaderColumn>
+        <TableHeaderColumn>From Date</TableHeaderColumn>
+        <TableHeaderColumn>To Date</TableHeaderColumn>
+        <TableHeaderColumn>Premium</TableHeaderColumn>
+        <TableHeaderColumn>Status</TableHeaderColumn>
+      </TableHeader>
+      {agreements.map((agreement) => {
+        const isSelected = agreement.id === selectedAgreement
+        return (
+          <TableRow
+            key={agreement.id}
+            onClick={() =>
+              selectedAgreement === agreement.id
+                ? setSelectedAgreement(undefined)
+                : setSelectedAgreement(agreement.id)
+            }
+            active={isSelected}
+            border
+          >
+            <SelectableTableCell
+              selected={isSelected}
+              status={agreement.status}
             >
-              <SelectableTableCell
-                selected={isSelected}
-                status={agreement.status}
-              >
-                {convertEnumToTitle(agreement.lineOfBusinessName)}
-              </SelectableTableCell>
-              <SelectableTableCell
-                selected={isSelected}
-                status={agreement.status}
-              >
-                {getCarrierText(agreement.carrier)}
-              </SelectableTableCell>
-              <SelectableTableCell
-                selected={isSelected}
-                status={agreement.status}
-              >
-                {agreement.fromDate}
-              </SelectableTableCell>
-              <SelectableTableCell
-                selected={isSelected}
-                status={agreement.status}
-              >
-                {agreement.toDate}
-              </SelectableTableCell>
-              <SelectableTableCell
-                selected={isSelected}
-                status={agreement.status}
-              >
-                {formatMoney(agreement.premium, { minimumFractionDigits: 0 })}
-              </SelectableTableCell>
-              <SelectableTableCell
-                selected={isSelected}
-                status={agreement.status}
-              >
-                <InsuranceStatusBadge status={agreement.status}>
-                  {convertEnumToTitle(agreement.status)}
-                </InsuranceStatusBadge>
-              </SelectableTableCell>
-            </SelectableTableRow>
-          )
-        })}
-      </Table.Body>
+              {convertEnumToTitle(agreement.lineOfBusinessName)}
+            </SelectableTableCell>
+            <SelectableTableCell
+              selected={isSelected}
+              status={agreement.status}
+            >
+              {getCarrierText(agreement.carrier)}
+            </SelectableTableCell>
+            <SelectableTableCell
+              selected={isSelected}
+              status={agreement.status}
+            >
+              {agreement.fromDate}
+            </SelectableTableCell>
+            <SelectableTableCell
+              selected={isSelected}
+              status={agreement.status}
+            >
+              {agreement.toDate}
+            </SelectableTableCell>
+            <SelectableTableCell
+              selected={isSelected}
+              status={agreement.status}
+            >
+              {formatMoney(agreement.premium, { minimumFractionDigits: 0 })}
+            </SelectableTableCell>
+            <SelectableTableCell
+              selected={isSelected}
+              status={agreement.status}
+            >
+              <InsuranceStatusBadge status={agreement.status}>
+                {convertEnumToTitle(agreement.status)}
+              </InsuranceStatusBadge>
+            </SelectableTableCell>
+          </TableRow>
+        )
+      })}
     </Table>
   )
 }

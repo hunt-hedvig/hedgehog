@@ -1,5 +1,5 @@
+import { Input, InputProps } from '@hedvig-ui'
 import React from 'react'
-import { Input, InputProps } from 'semantic-ui-react'
 
 export const OnBlurChangeInput: React.FC<{
   originalValue: string
@@ -10,7 +10,7 @@ export const OnBlurChangeInput: React.FC<{
   return (
     <Input
       value={value}
-      onChange={(_, data) => setValue(data.value)}
+      onChange={(e) => setValue(e.currentTarget.value)}
       onBlur={() => onUpdate(value)}
       {...props}
     />

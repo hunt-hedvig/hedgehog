@@ -5,7 +5,7 @@ import { CommandLineProvider } from '@hedvig-ui/utils/command-line-hook'
 import { ConfirmDialogProvider } from '@hedvig-ui/utils/modal-hook'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
-import { Breadcrumbs } from 'features/navigation/breadcrumbs/Breadcrumbs'
+import { BreadcrumbsNavigation } from 'features/navigation/breadcrumbs'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
 import { useAuthenticate } from 'features/user/hooks/use-authenticate'
@@ -102,9 +102,9 @@ const App: React.FC = () => {
                       <VerticalMenu history={history} />
                     )}
                     <Main dark={history.location.pathname.startsWith('/login')}>
-                      <TopBar />
+                      <TopBar me={me} />
                       <MainContent>
-                        <Breadcrumbs />
+                        <BreadcrumbsNavigation />
                         <Switch>
                           <Route
                             path="/login"
@@ -115,7 +115,7 @@ const App: React.FC = () => {
                             }}
                           />
                           {me && (
-                            <MeProvider me={me ?? null}>
+                            <MeProvider me={me}>
                               <Routes />
                             </MeProvider>
                           )}
