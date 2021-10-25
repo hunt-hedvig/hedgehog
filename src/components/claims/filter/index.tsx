@@ -80,16 +80,16 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
     }
   }, [numberMemberGroups])
 
-  const setDateHandler = (e: Date | null) => {
-    if (!e) {
+  const setDateHandler = (date: Date | null) => {
+    if (!date) {
       return
     }
 
-    const date = new Date(e.setHours(e.getHours() + 2))
+    const dateString = new Date(date.setHours(date.getHours() + 2))
       .toISOString()
       .split('T')[0]
 
-    setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: date }))
+    setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: dateString }))
   }
 
   const marketIcons = {
