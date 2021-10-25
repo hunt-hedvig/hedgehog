@@ -1,10 +1,10 @@
 import {
   Button,
   ButtonsGroup,
-  DateTimePicker,
   FourthLevelHeadline,
   Paragraph,
   Spacing,
+  TextDatePicker,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
@@ -117,7 +117,10 @@ export const FromDate: React.FC<{
       {datePickerEnabled && (
         <>
           <Spacing bottom width="auto">
-            <DateTimePicker date={fromDate} setDate={setFromDate} />
+            <TextDatePicker
+              onChange={(date) => date && setFromDate(date)}
+              value={fromDate}
+            />
           </Spacing>
           <ButtonsGroup>
             <Button onClick={onConfirm}>Confirm</Button>

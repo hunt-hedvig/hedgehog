@@ -1,12 +1,12 @@
 import {
   Button,
   ButtonsGroup,
-  DateTimePicker,
   Dropdown,
   DropdownOption,
   FourthLevelHeadline,
   Spacing,
   TextArea,
+  TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
@@ -113,9 +113,9 @@ export const TerminationDate: React.FC<{
         {datePickerEnabled && (
           <>
             <Spacing bottom width="auto">
-              <DateTimePicker
-                date={terminationDate}
-                setDate={setTerminationDate}
+              <TextDatePicker
+                onChange={(date) => date && setTerminationDate(date)}
+                value={terminationDate}
               />
             </Spacing>
             <ButtonsGroup>
@@ -173,7 +173,11 @@ export const TerminationDate: React.FC<{
       )}
       {datePickerEnabled && (
         <>
-          <DateTimePicker date={terminationDate} setDate={setTerminationDate} />
+          <TextDatePicker
+            onChange={(date) => date && setTerminationDate(date)}
+            value={terminationDate}
+          />
+          <Spacing top="small" />
           <Dropdown placeholder="Reasons">
             {Object.keys(TerminationReason).map((key) => (
               <DropdownOption
@@ -184,13 +188,13 @@ export const TerminationDate: React.FC<{
               </DropdownOption>
             ))}
           </Dropdown>
-          <Spacing top bottom>
-            <TextArea
-              placeholder="Comment on the reason of termination..."
-              value={comment}
-              onChange={(e) => setComment(e.currentTarget.value)}
-            />
-          </Spacing>
+          <Spacing top="small" />
+          <TextArea
+            placeholder="Comment on the reason of termination..."
+            value={comment}
+            onChange={(e) => setComment(e.currentTarget.value)}
+          />
+          <Spacing top="small" />
           <ButtonsGroup>
             <Button
               status="danger"
