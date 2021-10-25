@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
+import { useClickOutside } from '@hedvig-ui/utils/click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import chroma from 'chroma-js'
 import { differenceInMinutes, parseISO } from 'date-fns'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useUsersQuery } from 'types/generated/graphql'
 
 const Container = styled.div<{ visible: boolean }>`
@@ -88,8 +89,14 @@ const LatestSeenLabel = styled.span`
   font-size: 0.8rem;
 `
 
-export const UserPanel: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const UserPanel: React.FC<{
+  visible: boolean
+  onClickOutside: () => void
+}> = ({ visible, onClickOutside }) => {
+  const panelRef = useRef<HTMLDivElement>(null)
   const { data, startPolling, stopPolling } = useUsersQuery()
+
+  useClickOutside(panelRef, onClickOutside)
 
   useEffect(() => {
     if (visible) {
@@ -122,7 +129,7 @@ export const UserPanel: React.FC<{ visible: boolean }> = ({ visible }) => {
   )
 
   return (
-    <Container visible={visible}>
+    <Container visible={visible} ref={panelRef}>
       <Label>Users online</Label>
       <UserItemContainer>
         {usersOnline.map((user) => {

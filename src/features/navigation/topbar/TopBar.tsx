@@ -65,7 +65,10 @@ export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
 
   return (
     <Wrapper>
-      <UserPanel visible={showUsers} />
+      <UserPanel
+        visible={showUsers}
+        onClickOutside={() => setShowUsers(false)}
+      />
       <TopBarContainer
         pushLeft={showUsers}
         direction="row"
