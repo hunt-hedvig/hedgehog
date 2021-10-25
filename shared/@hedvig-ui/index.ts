@@ -87,7 +87,7 @@ export { fadeIn } from './animations/utils'
 
 export type SpacingSize = _SpacingSize
 
-export { darkTheme, lightTheme, SemanticOverrides } from './themes'
+export { darkTheme, lightTheme, BaseStyle } from './themes'
 
 export {
   Bold,

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { colorsV3, fonts } from '@hedviginsurance/brand'
+import { colorsV3 } from '@hedviginsurance/brand'
 
 export const lightTheme = {
   type: 'light',
@@ -92,7 +92,7 @@ export const darkTheme: typeof lightTheme = {
   terminatedInsuranceForeground: '#fff',
 }
 
-export const SemanticOverrides = styled.div`
+export const BaseStyle = styled.div`
   ${({ theme }) => css`
     a {
       color: ${theme.accent};
@@ -106,129 +106,6 @@ export const SemanticOverrides = styled.div`
     strong {
       color: ${theme.foreground};
     }
-
-    .ui.label {
-      background: ${theme.accentBackground};
-      color: ${theme.foreground};
-    }
-
-    .ui.input {
-      input {
-        font-family: ${fonts.FAVORIT}, sans-serif;
-        background: ${theme.background};
-        color: ${theme.foreground};
-        border-color: ${theme.border};
-        &::placeholder {
-          color: ${theme.placeholderColor};
-        }
-      }
-    }
-
-    .ui.dropdown {
-      background: ${theme.background};
-      border-color: ${theme.border};
-      color: ${theme.foreground};
-
-      &.visible .text,
-      .text {
-        color: ${theme.foreground} !important;
-      }
-      &.selection .menu .item {
-        background: ${theme.background};
-        color: ${theme.foreground};
-        border-color: ${theme.border};
-      }
-    }
-
-    .ui.checkbox {
-      input + label:before,
-      input:focus + label:before,
-      input:checked + label:before {
-        background: ${theme.background};
-        border-color: ${theme.borderStrong};
-      }
-
-      label,
-      input:focus + label,
-      input:checked + label {
-        color: ${theme.foreground};
-      }
-
-      input:checked + label:after {
-        color: ${theme.foreground};
-      }
-    }
-
-    .ui.form {
-      textarea,
-      input {
-        border-color: ${theme.border};
-        background: ${theme.background};
-        color: ${theme.foreground};
-        border: 1px solid ${theme.border};
-      }
-      label {
-        font-size: 0.95rem;
-        margin-bottom: 0.4em;
-        color: ${theme.semiStrongForeground};
-        font-weight: normal;
-      }
-    }
-
-    .ui.button {
-      font-weight: normal;
-      font-family: ${fonts.FAVORIT}, sans-serif;
-      background: ${theme.foreground};
-      color: ${theme.background};
-      border-radius: 0.5rem;
-
-      &:hover,
-      &:focus {
-        background: ${theme.foreground};
-        color: ${theme.background};
-      }
-
-      &.primary {
-        background: ${theme.accent};
-        color: ${theme.accentContrast};
-
-        &:hover,
-        &:focus {
-          background: ${theme.accentLight};
-          color: ${theme.accentContrast};
-        }
-      }
-
-      .buttons &:not(:last-of-type),
-      .buttons &:not(:first-of-type) {
-        border-radius: 0;
-      }
-    }
-
-    .ui.table {
-      border: 0;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      background: ${theme.accentLighter};
-      color: ${theme.foreground};
-
-      thead th {
-        &,
-        &.sorted,
-        &.sorted:hover,
-        &.sorted:focus,
-        &:hover,
-        &:focus {
-          background: ${theme.accentLight};
-          color: ${theme.foreground};
-          border: 0;
-          color: ${theme.semiStrongForeground};
-          font-weight: normal;
-          padding: 1rem 2rem 0.5rem 2rem;
-          text-transform: uppercase;
-          font-size: 0.75rem;
-        }
-      }
 
       tbody td {
         color: ${theme.foreground};
@@ -263,44 +140,6 @@ export const SemanticOverrides = styled.div`
           transform: translateY(-50%);
         }
       }
-    }
-
-    .ui.segment {
-      background: ${theme.background};
-      padding: 0;
-      border: 0;
-      box-shadow: none;
-    }
-
-    .ui.tabular.menu {
-      margin-bottom: 4rem;
-      padding-bottom: 0;
-      border-bottom: 2px solid ${theme.border};
-
-      .item {
-        padding: 0;
-        margin-bottom: -2px;
-        border: 0;
-        border-bottom: 2px solid transparent;
-        margin-right: 3rem;
-        line-height: 1.5;
-
-        background: transparent;
-        color: ${theme.semiStrongForeground};
-
-        &.active,
-        &:hover,
-        &:focus {
-          font-weight: normal;
-          border-bottom-color: ${theme.semiStrongForeground};
-          background: transparent;
-          color: ${theme.foreground};
-        }
-      }
-    }
-
-    .ui.header {
-      color: ${theme.foreground};
     }
   `};
 `
