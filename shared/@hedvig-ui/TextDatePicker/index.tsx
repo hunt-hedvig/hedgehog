@@ -44,15 +44,22 @@ export const getDate = (value: string) => {
   nlp.extend(numbers)
   nlp.extend(dates)
 
-  const date = nlp(value)
-    // @ts-ignore
-    .dates()
-    .get(0)
-
-  return date
+  return (
+    nlp(value)
+      // @ts-ignore
+      .dates()
+      .get(0)
+  )
 }
 
-const InlineDatePicker = ({ value, setValue, setTextValue, setView }) => {
+const InlineDatePicker = ({
+  value,
+  setValue,
+  setTextValue,
+  setView,
+  maxDate,
+  showTimePicker,
+}) => {
   const pickerRef = React.useRef<HTMLDivElement>(null)
 
   useClickOutside(pickerRef, () => setView(false))
@@ -70,6 +77,9 @@ const InlineDatePicker = ({ value, setValue, setTextValue, setView }) => {
             setTextValue(formattedDate)
             setView(false)
           }}
+          showTimeSelect={showTimePicker}
+          maxDate={maxDate}
+          fullWidth={true}
         />
       </FadeIn>
     </DatePickerWrapper>
@@ -152,6 +162,8 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
           setValue={onChange}
           setTextValue={setTextValue}
           setView={setShowOldDatepicker}
+          maxDate={new Date()}
+          showTimePicker
         />
       )}
     </Wrapper>
