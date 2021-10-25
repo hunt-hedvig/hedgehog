@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
 import { Filters } from 'components/claims/filter'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { useInsecurePersistentState } from 'utils/state'
@@ -44,6 +44,13 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
       filterTypesOfContract: null,
     },
   )
+
+  useEffect(() => {
+    setFilters((currentFilters) => ({
+      ...currentFilters,
+      filterCreatedBeforeOrOnDate: new Date().toISOString().split('T')[0],
+    }))
+  }, [])
 
   const selectedPage = parseInt(page, 10)
 
