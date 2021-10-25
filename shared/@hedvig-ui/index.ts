@@ -87,7 +87,7 @@ export { fadeIn } from './animations/utils'
 
 export type SpacingSize = _SpacingSize
 
-export { darkTheme, lightTheme, SemanticOverrides } from './themes'
+export { darkTheme, lightTheme, BaseStyle } from './themes'
 
 export {
   Bold,
@@ -113,5 +113,3 @@ export { Tabs, Tab } from './Tabs'
 export type TabsProps = _TabsProps
 
 export { TextDatePicker } from './TextDatePicker'
-
-export { Breadcrumb } from './Breadcrumb/breadcrumb'

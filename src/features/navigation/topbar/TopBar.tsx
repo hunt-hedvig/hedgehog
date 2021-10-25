@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 4.5rem;
   padding: 1rem 2rem;
+  margin-bottom: 2rem;
 `
 
 const Username = styled(Flex)`
