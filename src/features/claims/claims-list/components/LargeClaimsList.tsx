@@ -158,13 +158,20 @@ export const LargeClaimsList: React.FC<{
               </TableColumn>
 
               <TableColumn>
-                {claim.claimType ? (
-                  convertEnumToTitle(claim.claimType)
-                ) : claim.outcome ? (
-                  convertEnumToTitle(claim.outcome)
-                ) : (
-                  <Placeholder>Not specified</Placeholder>
-                )}
+                <FlexVertically>
+                  {claim.claimType ? (
+                    convertEnumToTitle(claim.claimType)
+                  ) : (
+                    <Placeholder>Not specified</Placeholder>
+                  )}
+                  <TableColumnSubtext>
+                    {claim.outcome ? (
+                      convertEnumToTitle(claim.outcome)
+                    ) : (
+                      <Placeholder>Not specified</Placeholder>
+                    )}
+                  </TableColumnSubtext>
+                </FlexVertically>
               </TableColumn>
 
               <TableColumn>
