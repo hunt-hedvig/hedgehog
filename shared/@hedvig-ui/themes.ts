@@ -107,22 +107,6 @@ export const SemanticOverrides = styled.div`
       color: ${theme.foreground};
     }
 
-    .ui.breadcrumb {
-      a {
-        color: ${theme.mutedText};
-        &:hover,
-        &:focus {
-          text-decoration: underline;
-        }
-      }
-      .divider {
-        color: ${theme.mutedText};
-      }
-      .active.section {
-        font-weight: normal;
-      }
-    }
-
     .ui.label {
       background: ${theme.accentBackground};
       color: ${theme.foreground};
