@@ -50,12 +50,7 @@ module.exports = ({
   },
   target,
   context,
-  stats: {
-    colors: true,
-    chunks: false,
-    chunkModules: false,
-    children: false,
-  },
+  stats: 'errors-only',
   output,
   plugins: [
     new webpack.IgnorePlugin({ resourceRegExp: /^moment($|\/)/ }),

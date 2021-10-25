@@ -60,9 +60,9 @@ const getPage: Koa.Middleware = async (ctx) => {
 }
 const getPort = () => (process.env.PORT ? Number(process.env.PORT) : 9000)
 
-console.log(`Booting server on ${getPort()} 👢`) // tslint:disable-line no-console
-
 const logger = loggerFactory.getLogger('app')
+
+logger.info(`Booting server on ${getPort()} 👢`)
 const app = new Koa()
 const router = new Router()
 
@@ -112,6 +112,7 @@ router.get(/^\/(?!api|chat|graphiql|vendor).*/, getPage)
 app.use(
   proxy({
     target: process.env.API_URL,
+    logLevel: 'silent',
     changeOrigin: false,
     ssl: {
       checkServerIdentity(_host, cert) {
