@@ -123,7 +123,7 @@
     "typescript": "^3.8.0",
     "webpack": "4.46.0",
     "webpack-bundle-analyzer": "^3.6.0",
-    "webpack-cli": "^3.3.12",
+    "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^3.11.0",
     "webpack-node-externals": "^1.7.2",
     "webpack-stats-plugin": "^0.3.0"
@@ -133,7 +133,7 @@
     "build": "NODE_ENV=production webpack -p --config webpack/webpack.config.client.production.js",
     "heroku-postbuild": "yarn build",
     "watch": "concurrently -n wds,srv 'npm:watch-client' 'npm:watch-server'",
-    "watch-client": "NODE_ENV=development webpack-dev-server --config webpack/webpack.config.client.development.js",
+    "watch-client": "NODE_ENV=development webpack serve --config webpack/webpack.config.client.development.js",
     "watch-server": "NODE_ENV=development BROWSER=false nodemon -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/serverEntry.ts",
     "test": "NODE_ENV=test jest",
     "typecheck": "tsc",
