@@ -57,10 +57,11 @@ type User {
   email: String!
   fullName: String!
   phoneNumber: String
+  latestPresence: Instant
 }
 
 type UserSetting {
-  key: UserSettingKey!,
+  key: UserSettingKey!
   value: JSON!
 }
 
@@ -450,7 +451,6 @@ input SafelyEditAgreementInput {
   newStreet: String
 }
 
-
 input AssignVoucherPercentageDiscount {
   partnerId: String!
   numberOfMonths: Int!
@@ -523,7 +523,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

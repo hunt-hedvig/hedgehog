@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-10-21',
+    change:
+      "Who's online in hope right now? Press the top right button to find out!",
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-10-18',
     change: 'Add a user profile',
     authorGithubHandle: 'rasmusguterstam',
