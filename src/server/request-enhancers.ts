@@ -26,16 +26,14 @@ export const setRequestUuidMiddleware: Middleware = async (ctx, next) => {
 }
 
 export const setLoggerMiddleware: Middleware = async (ctx, next) => {
-  ctx.state.getLogger = (name) =>
-    loggerFactory.getLogger(
-      `requestUuid="${ctx.state.requestUuid}"${name ? `:${name}` : ''}`,
-    )
+  ctx.state.getLogger = () => loggerFactory.getLogger('test')
 
   await next()
 }
 
 export const logRequestMiddleware: Middleware = async (ctx, next) => {
   const log = (e?: { status: any }) =>
+    (e?.status ? e.status !== 200 : ctx.status !== 200) &&
     ctx.state
       .getLogger('request')
       .info(
