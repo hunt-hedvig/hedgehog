@@ -4,8 +4,14 @@ import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { ChatPanel } from 'features/member/chat/ChatPanel'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useRef } from 'react'
-import { Icon } from 'semantic-ui-react'
+import { ChevronDoubleDown } from 'react-bootstrap-icons'
 import { useInsecurePersistentState } from 'utils/state'
+
+const ChevronDoubleIcon = styled(ChevronDoubleDown)<{ visible: boolean }>`
+  height: 100%;
+  width: 20px;
+  transform: ${({ visible }) => (visible ? 'scaleY(-1)' : 'scaleY(1)')};
+`
 
 const ChatContainer = styled.div`
   display: flex;
@@ -115,14 +121,6 @@ const ChatHeader: React.FC<{
 }> = ({ visible, isHinting, onResizeClick }) => (
   <ChatHeaderStyle onClick={onResizeClick} visible={visible}>
     <h4>Chat</h4>
-    {isHinting ? (
-      '(W)'
-    ) : (
-      <Icon
-        name={visible ? 'angle double up' : 'angle double down'}
-        size="large"
-        link
-      />
-    )}
+    {isHinting ? '(W)' : <ChevronDoubleIcon visible={visible} />}
   </ChatHeaderStyle>
 )

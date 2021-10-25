@@ -1,19 +1,8 @@
-import styled from '@emotion/styled'
 import { StandaloneMessage, withFadeIn } from '@hedvig-ui'
 import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import React, { useEffect, useState } from 'react'
-import { Segment } from 'semantic-ui-react'
 import { QuestionGroup } from 'types/generated/graphql'
 import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'
-
-const List = styled(Segment)`
-  width: 100%;
-  &&& {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
-  }
-`
 
 const FadeInQuestionGroup = withFadeIn<QuestionGroupItemProps>(
   QuestionGroupItem,
@@ -58,7 +47,7 @@ export const FilteredQuestionGroups: React.FC<{
   }, [isEscapePressed])
 
   return (
-    <List>
+    <div>
       {filterQuestionGroups.length ? (
         <>
           {filterQuestionGroups.map((questionGroup, index) => (
@@ -74,6 +63,6 @@ export const FilteredQuestionGroups: React.FC<{
       ) : (
         <StandaloneMessage paddingTop="25vh">List is empty</StandaloneMessage>
       )}
-    </List>
+    </div>
   )
 }

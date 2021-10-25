@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 import { lightTheme } from '..'
 
 export type FlagProp = 'GREEN' | 'AMBER' | 'RED'
 
-interface OrbIndicatorProps {
+interface OrbIndicatorProps extends HTMLAttributes<HTMLDivElement> {
   color?: string
   size?: string
   flag?: FlagProp
@@ -21,6 +21,7 @@ export const OrbIndicator: React.FC<OrbIndicatorProps> = ({
   color,
   size,
   flag,
+  ...props
 }) => {
   const currentColor =
     !flag && color
@@ -29,7 +30,9 @@ export const OrbIndicator: React.FC<OrbIndicatorProps> = ({
       ? getFlagColor(flag)
       : lightTheme.placeholderColor
 
-  return <OrbIndicatorStyled color={currentColor} size={size || 'tiny'} />
+  return (
+    <OrbIndicatorStyled color={currentColor} size={size || 'tiny'} {...props} />
+  )
 }
 
 const getFlagColor = (flag?: FlagProp | null) => {

@@ -59,7 +59,7 @@ const Hotkey = styled(HotkeyStyled)`
   position: static;
 `
 
-export interface TabProps {
+export interface TabProps extends React.HTMLAttributes<HTMLLIElement> {
   active?: boolean
   action: () => void
   title: string
@@ -69,7 +69,13 @@ export interface TabProps {
   }
 }
 
-export const Tab: React.FC<TabProps> = ({ active, title, action, hotkey }) => {
+export const Tab: React.FC<TabProps> = ({
+  active,
+  title,
+  action,
+  hotkey,
+  ...props
+}) => {
   const isKeyPressed = hotkey ? useKeyIsPressed(hotkey.key) : false
   const isControlPressed = useKeyIsPressed(Keys.Control)
 
@@ -85,6 +91,7 @@ export const Tab: React.FC<TabProps> = ({ active, title, action, hotkey }) => {
       tabIndex={0}
       onClick={action}
       onKeyDown={(e) => e.keyCode === Keys.Enter.code && action()}
+      {...props}
     >
       {title}{' '}
       {isControlPressed && hotkey ? (
@@ -107,13 +114,13 @@ const TabsWrapper = styled.ul<{ tabCount: number }>`
   grid-template-columns: repeat(${({ tabCount }) => tabCount}, 1fr);
 `
 
-export interface TabsProps {
+export interface TabsProps extends React.HTMLAttributes<HTMLUListElement> {
   list: TabProps[]
 }
 
-export const Tabs: React.FC<TabsProps> = ({ list }) => {
+export const Tabs: React.FC<TabsProps> = ({ list, ...props }) => {
   return (
-    <TabsWrapper tabCount={list.length}>
+    <TabsWrapper tabCount={list.length} {...props}>
       {list.map((tab) => (
         <Tab key={tab.title} {...tab} />
       ))}
