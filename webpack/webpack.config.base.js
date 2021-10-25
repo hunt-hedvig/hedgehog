@@ -40,6 +40,12 @@ module.exports = ({
           },
         ],
       },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
+      },
     ],
   },
   target,
@@ -52,10 +58,12 @@ module.exports = ({
   },
   output,
   plugins: [
-    new webpack.NamedModulesPlugin(),
-    new webpack.IgnorePlugin(/^moment($|\/)/),
+    new webpack.IgnorePlugin({ resourceRegExp: /^moment($|\/)/ }),
     ...(plugins || []),
   ],
+  optimization: {
+    moduleIds: 'named',
+  },
   bail: true,
   ...rest,
 })
