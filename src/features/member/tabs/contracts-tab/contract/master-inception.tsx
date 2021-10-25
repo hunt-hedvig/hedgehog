@@ -1,9 +1,9 @@
 import {
   Button,
   ButtonsGroup,
-  DateTimePicker,
   FourthLevelHeadline,
   Paragraph,
+  TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
@@ -46,7 +46,10 @@ export const MasterInception: React.FC<{
       )}
       {datePickerEnabled && (
         <>
-          <DateTimePicker date={activeFrom} setDate={setActiveFrom} />
+          <TextDatePicker
+            onChange={(date) => date && setActiveFrom(date)}
+            value={activeFrom}
+          />
           <ButtonsGroup>
             <Button
               disabled={activateContractLoading}

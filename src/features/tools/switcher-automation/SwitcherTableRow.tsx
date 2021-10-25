@@ -4,7 +4,6 @@ import styled from '@emotion/styled'
 import {
   Button,
   ButtonsGroup,
-  DateTimePicker,
   Dropdown,
   DropdownOption,
   FourthLevelHeadline,
@@ -12,6 +11,7 @@ import {
   Label,
   TableColumn,
   TableRow,
+  TextDatePicker,
 } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
@@ -274,7 +274,10 @@ export const SwitcherEmailRow: React.FC<Pick<
               <Overlay>
                 <OverlayItem>
                   <Label>Master Inception</Label>
-                  <DateTimePicker date={activeFrom} setDate={setActiveFrom} />
+                  <TextDatePicker
+                    onChange={(date) => date && setActiveFrom(date)}
+                    value={activeFrom}
+                  />
                 </OverlayItem>
                 <OverlayItem>
                   <Label>&nbsp;</Label>
@@ -310,9 +313,9 @@ export const SwitcherEmailRow: React.FC<Pick<
               <Overlay>
                 <OverlayItem>
                   <Label>Termination Date</Label>
-                  <DateTimePicker
-                    date={terminationDate}
-                    setDate={setTerminationDate}
+                  <TextDatePicker
+                    value={terminationDate}
+                    onChange={(date) => date && setTerminationDate(date)}
                   />
                 </OverlayItem>
                 <OverlayItem>

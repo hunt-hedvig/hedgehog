@@ -13,7 +13,6 @@ import {
   CardsWrapper,
   CardTitle,
   DangerCard,
-  DateTimePicker,
   Dropdown,
   DropdownOption,
   InfoRow,
@@ -21,6 +20,7 @@ import {
   Label,
   Loadable,
   Paragraph,
+  TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format, parseISO } from 'date-fns'
@@ -262,16 +262,15 @@ export const ClaimInformation: React.FC<{
         </SelectWrapper>
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
-          <DateTimePicker
+          <TextDatePicker
             tabIndex={-1}
-            fullWidth={true}
-            date={
+            value={
               (data?.claim?.dateOfOccurrence &&
                 parseISO(data.claim.dateOfOccurrence)) ??
               null
             }
-            setDate={(date) => {
-              if (!data?.claim) {
+            onChange={(date) => {
+              if (!data?.claim || !date) {
                 return
               }
 

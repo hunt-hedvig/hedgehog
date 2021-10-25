@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
@@ -42,7 +43,11 @@ const InputStyled = styled.input<{
   width: 100%;
 
   padding: ${({ inputSize }) => paddingSize[inputSize || 'medium']};
-  ${({ withIcon }) => withIcon && 'padding-left: 55px;'}
+  ${({ withIcon }) =>
+    withIcon &&
+    css`
+      padding-left: 40px;
+    `}
 
   border-radius: 0.25rem;
   outline: none;
@@ -117,7 +122,7 @@ const Loading = styled(Spinner)<{
 
 const CustomIcon = styled.div`
   position: absolute;
-  left: 20px;
+  left: 12px;
 
   width: 20px;
   height: 20px;

@@ -1,6 +1,5 @@
-import { Button, DateTimePicker, Input } from '@hedvig-ui'
+import { Button, Flex, Input, Spacing, TextDatePicker } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { Group } from 'features/member/tabs/campaigns-tab/styles'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useManualRedeemCampaignMutation } from 'types/generated/graphql'
@@ -15,7 +14,7 @@ export const CampaignCodeInput: React.FC<{
 
   return (
     <>
-      <Group>
+      <Flex direction="row" justify="space-between">
         <Input
           placeholder="Campaign code"
           value={campaignCode}
@@ -25,21 +24,22 @@ export const CampaignCodeInput: React.FC<{
         />
         {activationDate && (
           <>
-            <DateTimePicker
-              date={activationDate ?? new Date()}
-              setDate={setActivationDate}
-            />
-            <Button
-              variant="secondary"
-              style={{ width: '15%' }}
-              onClick={() => setActivationDate(null)}
-            >
+            <div>
+              <Spacing left="small" right="small">
+                <TextDatePicker
+                  onChange={setActivationDate}
+                  value={activationDate ?? new Date()}
+                />
+              </Spacing>
+            </div>
+            <Button variant="secondary" onClick={() => setActivationDate(null)}>
               Remove
             </Button>
           </>
         )}
-      </Group>
-      <Group style={{ marginTop: '1.0rem' }}>
+      </Flex>
+      <Spacing top />
+      <Flex>
         <Button
           disabled={campaignCode === '' || loading}
           onClick={() => {
@@ -69,7 +69,7 @@ export const CampaignCodeInput: React.FC<{
         >
           Redeem
         </Button>
-        {!activationDate && (
+        {!activationDate && campaignCode && (
           <Button
             variant="tertiary"
             onClick={() => setActivationDate(new Date())}
@@ -77,7 +77,7 @@ export const CampaignCodeInput: React.FC<{
             Add activation date
           </Button>
         )}
-      </Group>
+      </Flex>
     </>
   )
 }
