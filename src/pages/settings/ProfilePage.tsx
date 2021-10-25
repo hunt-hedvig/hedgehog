@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
 
-export const ProfilePage: React.FC = () => {
+const ProfilePage: React.FC = () => {
   const { data } = useGetMeQuery()
   const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState<null | string>('')
@@ -107,3 +107,5 @@ export const ProfilePage: React.FC = () => {
     </>
   )
 }
+
+export default ProfilePage

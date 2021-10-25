@@ -3,7 +3,7 @@ import { useGetMemberInfo } from 'graphql/use-get-member-info'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 
-export const MemberPage: React.FC<RouteComponentProps<{
+const MemberPage: React.FC<RouteComponentProps<{
   memberId: string
 }>> = (props) => {
   const memberId = props.match.params.memberId
@@ -15,3 +15,5 @@ export const MemberPage: React.FC<RouteComponentProps<{
 
   return <MemberTabs {...props} member={member} />
 }
+
+export default MemberPage

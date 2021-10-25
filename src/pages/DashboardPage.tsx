@@ -61,7 +61,7 @@ const MutedText = styled.div`
   font-size: 0.9rem;
 `
 
-export const DashboardPage: React.FC = () => {
+const DashboardPage: React.FC = () => {
   const { data } = useGetMeQuery()
   const [dashboardNumbers] = useDashboardNumbers()
   const [conversationsEnabled] = useInsecurePersistentState<boolean>(
@@ -159,3 +159,5 @@ export const DashboardPage: React.FC = () => {
 
 export const getLowercaseNameFromEmail = (email: string) =>
   email.split(/[^\w]/)[0].toLowerCase()
+
+export default DashboardPage
