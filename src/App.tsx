@@ -115,7 +115,7 @@ const App: React.FC = () => {
                             }}
                           />
                           {me && (
-                            <MeProvider me={me ?? null}>
+                            <MeProvider me={me}>
                               <Routes />
                             </MeProvider>
                           )}

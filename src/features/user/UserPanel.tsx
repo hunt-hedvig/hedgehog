@@ -116,10 +116,7 @@ export const UserPanel: React.FC<{
         : false,
     )
     .sort((u1, u2) =>
-      differenceInMinutes(now, parseISO(u1.latestPresence)) >
-      differenceInMinutes(now, parseISO(u2.latestPresence))
-        ? 1
-        : -1,
+      u1.fullName.toLowerCase() > u2.fullName.toLowerCase() ? 1 : -1,
     )
 
   const usersOffline = users.filter((user) =>
