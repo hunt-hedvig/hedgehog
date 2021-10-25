@@ -130,7 +130,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production ts-node -P tsconfig-server.json src/server/serverEntry.ts",
-    "build": "NODE_ENV=production webpack -p --config webpack/webpack.config.client.production.js",
+    "build": "NODE_ENV=production webpack --mode production --config webpack/webpack.config.client.production.js",
     "heroku-postbuild": "yarn build",
     "watch": "concurrently -n wds,srv 'npm:watch-client' 'npm:watch-server'",
     "watch-client": "NODE_ENV=development webpack serve --config webpack/webpack.config.client.development.js",
