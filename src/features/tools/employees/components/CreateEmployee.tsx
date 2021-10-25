@@ -1,9 +1,7 @@
 import styled from '@emotion/styled'
-import { ButtonsGroup, SearchableDropdown } from '@hedvig-ui'
-import { Button } from '@hedvig-ui/Button/button'
+import { Button, ButtonsGroup, Input, SearchableDropdown } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Input } from 'semantic-ui-react'
 import {
   EmployeesDocument,
   useAvailableEmployeeRolesQuery,
@@ -19,13 +17,19 @@ export const Row = styled.div`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  width: fit-content;
+  width: 40%;
+  justify-content: flex-end;
   align-items: center;
 `
 
-const StyledDropdown = styled(SearchableDropdown)`
-  width: 13em;
+export const StyledDropdown = styled(SearchableDropdown)`
+  flex: 1;
   padding: 0 1em;
+`
+
+export const StyledInput = styled(Input)`
+  padding-top: 12px;
+  padding-bottom: 12px;
 `
 
 export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
@@ -69,8 +73,9 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
 
   return (
     <Wrapper>
-      <Row style={{ justifyContent: 'flex-start' }}>
-        <Input
+      <Row style={{ width: '100%' }}>
+        <StyledInput
+          style={{ flex: 1 }}
           value={email}
           placeholder="Email"
           disabled={loading}
@@ -90,7 +95,7 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
           placeholder="Select role"
         />
       </Row>
-      <ButtonsGroup>
+      <ButtonsGroup style={{ width: 'fit-content' }}>
         <Button
           variant="primary"
           disabled={

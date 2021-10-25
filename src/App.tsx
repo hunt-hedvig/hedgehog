@@ -5,15 +5,16 @@ import { CommandLineProvider } from '@hedvig-ui/utils/command-line-hook'
 import { ConfirmDialogProvider } from '@hedvig-ui/utils/modal-hook'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
-import { Breadcrumbs } from 'features/navigation/breadcrumbs/Breadcrumbs'
+import { BreadcrumbsNavigation } from 'features/navigation/breadcrumbs'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
+import { useAuthenticate } from 'features/user/hooks/use-authenticate'
+import { MeProvider } from 'features/user/hooks/use-me'
 import { Routes } from 'pages/routes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
-import { useAuthenticate } from 'utils/auth'
 import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
 import { MemberHistoryProvider } from 'utils/member-history'
 import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
@@ -101,9 +102,9 @@ const App: React.FC = () => {
                       <VerticalMenu history={history} />
                     )}
                     <Main dark={history.location.pathname.startsWith('/login')}>
-                      <TopBar />
+                      <TopBar me={me} />
                       <MainContent>
-                        <Breadcrumbs />
+                        <BreadcrumbsNavigation />
                         <Switch>
                           <Route
                             path="/login"
@@ -113,7 +114,11 @@ const App: React.FC = () => {
                               return null
                             }}
                           />
-                          {me && <Routes />}
+                          {me && (
+                            <MeProvider me={me}>
+                              <Routes />
+                            </MeProvider>
+                          )}
                         </Switch>
                         <Toaster
                           position="top-center"

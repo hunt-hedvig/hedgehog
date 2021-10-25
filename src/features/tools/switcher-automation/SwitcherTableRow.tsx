@@ -9,6 +9,8 @@ import {
   FourthLevelHeadline,
   Input,
   Label,
+  TableColumn,
+  TableRow,
   TextDatePicker,
 } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
@@ -18,7 +20,6 @@ import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
 import { SwitcherEmailStatus, TerminationReason } from 'types/enums'
 import {
   Contract,
@@ -30,7 +31,8 @@ import { convertEnumToTitle } from 'utils/text'
 
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
 
-export const StatusTableRow = styled(Table.Row)`
+const StatusTableRow = styled(TableRow)`
+  height: 115px;
   position: relative;
 `
 
@@ -55,12 +57,13 @@ const Overlay = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background: inherit;
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
+  z-index: 2;
+  background-color: ${({ theme }) => theme.accentLighter};
 `
 
 const OverlayItem = styled.div`
@@ -139,33 +142,33 @@ export const SwitcherEmailRow: React.FC<Pick<
   const { confirm } = useConfirmDialog()
 
   return (
-    <StatusTableRow>
-      <Table.Cell>
+    <StatusTableRow border>
+      <TableColumn>
         <Link to={`/members/${member.memberId}`}>{member.memberId}</Link>
         <>
           {' '}
           ({member.firstName} {member.lastName})
           <SubText>{member.email}</SubText>
         </>
-      </Table.Cell>
-      <Table.Cell>
+      </TableColumn>
+      <TableColumn>
         {convertEnumToTitle(switcherCompany)}
         <SubText>
           {switcherType ? convertEnumToTitle(switcherType) : 'Unknown'}
         </SubText>
-      </Table.Cell>
-      <Table.Cell>
+      </TableColumn>
+      <TableColumn>
         {'📝 '}
         {signedDate ? format(signedDate, FORMAT_DATE_TIME) : '-'}
-      </Table.Cell>
-      <Table.Cell>
+      </TableColumn>
+      <TableColumn>
         {'💌 '}
         {sentAtDate ? format(sentAtDate, FORMAT_DATE_TIME) : '-'}
         {cancellationDate && (
           <SubText>with cancellation date {cancellationDate}</SubText>
         )}
-      </Table.Cell>
-      <Table.Cell width={5}>
+      </TableColumn>
+      <TableColumn>
         <FourthLevelHeadline>{status}</FourthLevelHeadline>
         {editNote ? (
           <>
@@ -249,8 +252,8 @@ export const SwitcherEmailRow: React.FC<Pick<
             </ButtonsGroup>
           </>
         )}
-      </Table.Cell>
-      <Table.Cell>
+      </TableColumn>
+      <TableColumn>
         {contract && (
           <>
             <ButtonsGroup>
@@ -379,7 +382,7 @@ export const SwitcherEmailRow: React.FC<Pick<
             )}
           </>
         )}
-      </Table.Cell>
+      </TableColumn>
     </StatusTableRow>
   )
 }

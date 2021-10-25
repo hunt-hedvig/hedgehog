@@ -1,62 +1,56 @@
+import styled from '@emotion/styled'
+import { Checkbox, RadioGroup } from '@hedvig-ui'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Checkbox, List } from 'semantic-ui-react'
 import * as types from 'utils/messageTypes'
 
-const SelectList = ({ content }) => {
-  const list = content.choices.map((item, id) => {
-    if (item.type === 'link') {
-      const link = item.appUrl || item.webUrl || item.view
-      return (
-        <List.Item key={id}>
-          <List.Content>
-            {content.type === types.MULTIPLE_SELECT ? (
-              <Checkbox
-                readOnly
-                checked={item.selected}
-                label={
-                  <label>
-                    <a href={link}>{item.text}</a>
-                  </label>
-                }
-              />
-            ) : (
-              <Checkbox
-                radio
-                readOnly
-                checked={item.selected}
-                label={
-                  <label>
-                    <a href={link}>{item.text}</a>
-                  </label>
-                }
-              />
-            )}
-          </List.Content>
-        </List.Item>
-      )
-    } else {
-      return (
-        <List.Item key={id} selected={item.selected}>
-          <List.Content>
-            {content.type === types.MULTIPLE_SELECT ? (
-              <Checkbox readOnly checked={item.selected} label={item.text} />
-            ) : (
-              <Checkbox
-                radio
-                readOnly
-                checked={item.selected}
-                label={item.text}
-              />
-            )}
-          </List.Content>
-        </List.Item>
-      )
-    }
-  })
+const List = styled.div`
+  margin-top: 0.5em;
+`
 
-  return <List>{list}</List>
-}
+const SelectList = ({ content }) => (
+  <List>
+    {content.type === types.MULTIPLE_SELECT ? (
+      content.choices.map((item, id) =>
+        item.type === 'link' ? (
+          <Checkbox
+            key={id}
+            readOnly
+            checked={item.selected}
+            label={
+              <label>
+                <a href={item.appUrl || item.webUrl || item.view}>
+                  {item.text}
+                </a>
+              </label>
+            }
+          />
+        ) : (
+          <Checkbox
+            key={id}
+            readOnly
+            checked={item.selected}
+            label={item.text}
+          />
+        ),
+      )
+    ) : (
+      <RadioGroup
+        value={content.choices.filter((item) => item.selected)[0]?.text}
+        options={content.choices.map((item) => ({
+          value: item.text,
+          label:
+            item.type === 'link' ? (
+              <a href={item.appUrl || item.webUrl || item.view}>{item.text}</a>
+            ) : (
+              item.text
+            ),
+          disabled: false,
+        }))}
+      />
+    )}
+  </List>
+)
 
 export default SelectList
 

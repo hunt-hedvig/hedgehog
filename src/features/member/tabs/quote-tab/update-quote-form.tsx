@@ -1,11 +1,10 @@
-import { JsonSchemaForm } from '@hedvig-ui'
+import { Checkbox, JsonSchemaForm } from '@hedvig-ui'
 import {
   getUpdateQuoteSchemaOptions,
   useUpdateQuoteBySchema,
 } from 'graphql/use-update-quote-by-schema'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Checkbox } from 'semantic-ui-react'
 import { Quote } from 'types/generated/graphql'
 
 export const UpdateQuoteForm: React.FC<{
@@ -43,7 +42,9 @@ export const UpdateQuoteForm: React.FC<{
       <Checkbox
         style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}
-        onChange={(_, { checked }) => setBypassUwgl(Boolean(checked))}
+        onChange={({ currentTarget: { checked } }) =>
+          setBypassUwgl(Boolean(checked))
+        }
         label="Bypass underwriting guidelines"
       />
     </JsonSchemaForm>

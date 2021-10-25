@@ -1212,6 +1212,7 @@ export type QueryType = {
   claimPropertyOptions: Array<ClaimPropertyOption>
   claimPropertyOption: ClaimPropertyOption
   user?: Maybe<User>
+  users: Array<User>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1469,7 +1470,7 @@ export type UpsertCoInsuredInput = {
 }
 
 export type UpsertUserSettingInput = {
-  key: UserSettingKey
+  key: Scalars['String']
   value?: Maybe<Scalars['JSON']>
 }
 
@@ -1479,6 +1480,7 @@ export type User = {
   email: Scalars['String']
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
+  latestPresence?: Maybe<Scalars['LocalDateTime']>
 }
 
 export type UserSetting = {
@@ -2519,6 +2521,16 @@ export type MarkSwitcherEmailAsRemindedMutation = {
   } & Pick<SwitchableSwitcherEmail, 'id'>
 }
 
+export type UpdateUserSettingsMutationVariables = Exact<{
+  settings: Array<UpsertUserSettingInput> | UpsertUserSettingInput
+}>
+
+export type UpdateUserSettingsMutation = { __typename?: 'MutationType' } & {
+  upsertUserSettings: Array<
+    { __typename?: 'UserSetting' } & Pick<UserSetting, 'key' | 'value'>
+  >
+}
+
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput
 }>
@@ -2527,6 +2539,17 @@ export type UpdateUserMutation = { __typename?: 'MutationType' } & {
   updateUser: { __typename?: 'User' } & Pick<
     User,
     'id' | 'fullName' | 'email' | 'phoneNumber'
+  >
+}
+
+export type UsersQueryVariables = Exact<{ [key: string]: never }>
+
+export type UsersQuery = { __typename?: 'QueryType' } & {
+  users: Array<
+    { __typename?: 'User' } & Pick<
+      User,
+      'id' | 'fullName' | 'email' | 'latestPresence'
+    >
   >
 }
 
@@ -6411,6 +6434,58 @@ export type MarkSwitcherEmailAsRemindedMutationOptions = ApolloReactCommon.BaseM
   MarkSwitcherEmailAsRemindedMutation,
   MarkSwitcherEmailAsRemindedMutationVariables
 >
+export const UpdateUserSettingsDocument = gql`
+  mutation UpdateUserSettings($settings: [UpsertUserSettingInput!]!) {
+    upsertUserSettings(settings: $settings) {
+      key
+      value
+    }
+  }
+`
+export type UpdateUserSettingsMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateUserSettingsMutation,
+  UpdateUserSettingsMutationVariables
+>
+
+/**
+ * __useUpdateUserSettingsMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserSettingsMutation, { data, loading, error }] = useUpdateUserSettingsMutation({
+ *   variables: {
+ *      settings: // value for 'settings'
+ *   },
+ * });
+ */
+export function useUpdateUserSettingsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateUserSettingsMutation,
+    UpdateUserSettingsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UpdateUserSettingsMutation,
+    UpdateUserSettingsMutationVariables
+  >(UpdateUserSettingsDocument, options)
+}
+export type UpdateUserSettingsMutationHookResult = ReturnType<
+  typeof useUpdateUserSettingsMutation
+>
+export type UpdateUserSettingsMutationResult = ApolloReactCommon.MutationResult<
+  UpdateUserSettingsMutation
+>
+export type UpdateUserSettingsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateUserSettingsMutation,
+  UpdateUserSettingsMutationVariables
+>
 export const UpdateUserDocument = gql`
   mutation UpdateUser($input: UpdateUserInput!) {
     updateUser(input: $input) {
@@ -6464,6 +6539,62 @@ export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<
 export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
+>
+export const UsersDocument = gql`
+  query Users {
+    users {
+      id
+      fullName
+      email
+      latestPresence
+    }
+  }
+`
+
+/**
+ * __useUsersQuery__
+ *
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    UsersQuery,
+    UsersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(
+    UsersDocument,
+    options,
+  )
+}
+export function useUsersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    UsersQuery,
+    UsersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(
+    UsersDocument,
+    options,
+  )
+}
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>
+export type UsersQueryResult = ApolloReactCommon.QueryResult<
+  UsersQuery,
+  UsersQueryVariables
 >
 export const ActivatePendingAgreementDocument = gql`
   mutation ActivatePendingAgreement(

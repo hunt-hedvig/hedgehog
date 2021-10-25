@@ -1,26 +1,40 @@
 import styled from '@emotion/styled'
-import { FadeIn } from '@hedvig-ui'
+import {
+  Button,
+  ButtonsGroup,
+  FadeIn,
+  Form,
+  FormInput,
+  Label,
+  Modal,
+  SubmitButton,
+  Table,
+  TableColumn,
+  TableRow,
+} from '@hedvig-ui'
 import {
   getEditMemberInfoOptions,
   useEditMemberInfo,
 } from 'graphql/use-edit-member-info'
 import React, { useState } from 'react'
+import { PencilSquare } from 'react-bootstrap-icons'
+import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import { Member, useSetFraudulentStatusMutation } from 'types/generated/graphql'
 import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
 import { dateTimeFormatter, getFieldName, getFieldValue } from 'utils/helpers'
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  margin-top: 1em;
+  display: flex;
+  justify-content: flex-end;
+`
 
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
   createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
-
-const isClient = typeof window !== 'undefined'
-
-const WideModal = styled(Modal)`
-  height: ${isClient ? window.innerHeight + 100 : '120%'};
-`
 
 export const DetailsTab: React.FC<{
   member: Member
@@ -34,6 +48,8 @@ export const DetailsTab: React.FC<{
   const [fraudDescription, setFraudDescription] = useState(null)
   const [editMemberInfo] = useEditMemberInfo()
   const [setFraudulentStatus] = useSetFraudulentStatusMutation()
+
+  const form = useForm()
 
   const handleOpen = () => setModalOpen(true)
 
@@ -76,7 +92,7 @@ export const DetailsTab: React.FC<{
     handleClose()
   }
 
-  const handleSubmissionButton = () => {
+  const handleSubmit = () => {
     editMemberInfo(getEditMemberInfoOptions(editMemberInfoRequest)).then(() =>
       handleClose(),
     )
@@ -95,112 +111,98 @@ export const DetailsTab: React.FC<{
 
   return memberInfoWithoutSsn ? (
     <FadeIn>
-      <Table selectable>
-        <Table.Body>
-          {Object.keys(memberInfoWithoutSsn).map((field, id) => {
-            const formatter = memberFieldFormatters[field]
-            return (
-              <Table.Row key={id}>
-                <Table.Cell>{getFieldName(field)}</Table.Cell>
-                <Table.Cell>
-                  {formatter
-                    ? formatter(memberInfoWithoutSsn[field])
-                    : getFieldValue(memberInfoWithoutSsn[field])}
-                </Table.Cell>
-              </Table.Row>
-            )
+      <Table>
+        {Object.keys(memberInfoWithoutSsn).map((field, id) => {
+          const formatter = memberFieldFormatters[field]
+          return (
+            <TableRow key={id} border>
+              <TableColumn>{getFieldName(field)}</TableColumn>
+              <TableColumn>
+                {formatter
+                  ? formatter(memberInfoWithoutSsn[field])
+                  : getFieldValue(memberInfoWithoutSsn[field])}
+              </TableColumn>
+            </TableRow>
+          )
+        })}
+        <FraudulentStatusEdit
+          getFraudStatusInfo={() => ({
+            status: fraudStatus || fraudulentStatus,
+            description: fraudDescription || fraudulentStatusDescription,
           })}
-          <FraudulentStatusEdit
-            getFraudStatusInfo={() => ({
-              status: fraudStatus || fraudulentStatus,
-              description: fraudDescription || fraudulentStatusDescription,
-            })}
-            setState={(val, fs, desc) => {
-              setEditFraud(val)
-              setFraudStatus(fs)
-              setFraudDescription(desc)
-            }}
-            getState={() => editingFraud}
-            action={(newFraudulentStatus, newFraudulentStatusDescription) => {
-              toast.promise(
-                setFraudulentStatus({
-                  variables: {
-                    memberId: memberInfo.memberId,
-                    request: {
-                      fraudulentStatus: newFraudulentStatus,
-                      fraudulentStatusDescription: newFraudulentStatusDescription,
-                    },
+          setState={(val, fs, desc) => {
+            setEditFraud(val)
+            setFraudStatus(fs)
+            setFraudDescription(desc)
+          }}
+          getState={() => editingFraud}
+          action={(newFraudulentStatus, newFraudulentStatusDescription) => {
+            toast.promise(
+              setFraudulentStatus({
+                variables: {
+                  memberId: memberInfo.memberId,
+                  request: {
+                    fraudulentStatus: newFraudulentStatus,
+                    fraudulentStatusDescription: newFraudulentStatusDescription,
                   },
-                }),
-                {
-                  loading: 'Updating fraudulent status',
-                  success: 'Fraudulent status updated',
-                  error: 'Could not update fraudulent status',
                 },
-              )
-            }}
-          />
-        </Table.Body>
-        <Table.Footer fullWidth>
-          <Table.Row>
-            <Table.HeaderCell />
-            <Table.HeaderCell colSpan="2">
-              <WideModal
-                className="scrolling"
-                trigger={
-                  <Button
-                    floated="right"
-                    icon
-                    labelposition="left"
-                    primary
-                    size="medium"
-                    onClick={() => handleOpen()}
-                  >
-                    <Icon name="edit" /> Edit Member
-                  </Button>
-                }
-                open={modalOpen}
-                onClose={() => handleClose()}
-                basic
-                size="small"
-                dimmer="blurring"
-              >
-                <Header icon="edit" content="Edit Member" />
-                <Modal.Content>
-                  <Form inverted size="small">
-                    <>
-                      {Object.keys(memberInfoWithoutSsn).map((field) => (
-                        <Form.Input
-                          key={field}
-                          label={getFieldName(field)}
-                          disabled={isDisabled(field)}
-                          defaultValue={getFieldValue(member[field])}
-                          onChange={handleChange(field)}
-                        />
-                      ))}
-                    </>
-                    <Button.Group floated="right" labelposition="left">
-                      <Button type="button" onClick={() => handleCancel()}>
-                        Cancel
-                      </Button>
-                      <Button.Or />
-                      <Button
-                        type="button"
-                        onClick={() => handleSubmissionButton()}
-                        positive
-                      >
-                        Submit
-                      </Button>
-                    </Button.Group>
-                  </Form>
-                </Modal.Content>
-              </WideModal>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
+              }),
+              {
+                loading: 'Updating fraudulent status',
+                success: 'Fraudulent status updated',
+                error: 'Could not update fraudulent status',
+              },
+            )
+          }}
+        />
       </Table>
+
+      <ButtonWrapper style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button variant="primary" size="medium" onClick={handleOpen}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <PencilSquare /> <span style={{ marginLeft: 10 }}>Edit Member</span>
+          </div>
+        </Button>
+      </ButtonWrapper>
+      {modalOpen ? (
+        <Modal
+          onClose={handleClose}
+          title="Edit Member"
+          width="800px"
+          height="950px"
+          style={{ overflowY: 'auto' }}
+        >
+          <FormProvider {...form}>
+            <Form onSubmit={handleSubmit} onChange={handleChange}>
+              <>
+                {Object.keys(memberInfoWithoutSsn).map((field) => (
+                  <>
+                    <Label>{getFieldName(field)}</Label>
+                    <FormInput
+                      name={field}
+                      key={field}
+                      disabled={isDisabled(field)}
+                      defaultValue={getFieldValue(member[field])}
+                    />
+                  </>
+                ))}
+              </>
+              <ButtonsGroup style={{ justifyContent: 'flex-end' }}>
+                <Button
+                  variant="secondary"
+                  type="button"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </Button>
+                <SubmitButton>Submit</SubmitButton>
+              </ButtonsGroup>
+            </Form>
+          </FormProvider>
+        </Modal>
+      ) : null}
     </FadeIn>
   ) : (
-    <Header>No member info</Header>
+    <h1>No member info</h1>
   )
 }

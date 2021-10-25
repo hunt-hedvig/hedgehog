@@ -1,13 +1,21 @@
 import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
-import { FadeIn, LoadingMessage, MainHeadline } from '@hedvig-ui'
+import {
+  FadeIn,
+  LoadingMessage,
+  MainHeadline,
+  Table,
+  TableColumn,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+} from '@hedvig-ui'
 import { colors } from '@hedviginsurance/brand'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
 import {
   PaymentScheduleQueryDocument,
   usePaymentScheduleQueryQuery,
@@ -21,13 +29,14 @@ const approveMemberCharge = gql`
   }
 `
 
-const TableRow = styled(Table.Row)((props: { warning: boolean }) => ({
-  backgroundColor: props.warning ? 'yellow' : undefined,
-}))
+const TableRowStyled = styled(TableRow)<{ warning: boolean }>`
+  background-color: ${({ warning }) => warning && 'yellow'};
+`
 
 const ButtonWrapper = styled('div')({
   display: 'flex',
   justifyContent: 'flex-end',
+  marginTop: '1em',
 })
 
 const Button = styled('button')({
@@ -75,7 +84,8 @@ const Row: React.FC<{
 }> = ({ paymentSchedule }) => (
   <>
     {paymentSchedule.map((payment) => (
-      <TableRow
+      <TableRowStyled
+        border
         key={payment.id}
         warning={Boolean(
           payment.member?.account &&
@@ -86,28 +96,28 @@ const Row: React.FC<{
               payment.member.monthlySubscription.amount.amount,
         )}
       >
-        <Table.Cell>
+        <TableColumn>
           {payment.member?.firstName + ' ' + payment.member?.lastName}
-        </Table.Cell>
-        <Table.Cell>
+        </TableColumn>
+        <TableColumn>
           <Link to={`/members/${payment.member?.memberId}`}>
             {payment.member?.memberId}
           </Link>
-        </Table.Cell>
-        <Table.Cell>
+        </TableColumn>
+        <TableColumn>
           {payment.member?.monthlySubscription?.amount
             ? formatMoney(payment.member.monthlySubscription.amount)
             : 'Unable to get monthly premium'}
-        </Table.Cell>
-        <Table.Cell>
+        </TableColumn>
+        <TableColumn>
           {payment.member?.account?.currentBalance
             ? formatMoney(payment.member.account.currentBalance)
             : '⚠️ No current balance'}
           {payment.member?.account?.currentBalance &&
             parseFloat(payment.member.account.currentBalance.amount) <= 0 &&
             " (Won't be charged)"}
-        </Table.Cell>
-      </TableRow>
+        </TableColumn>
+      </TableRowStyled>
     ))}
   </>
 )
@@ -121,9 +131,9 @@ export const ChargesPage: React.FC = () => {
   })
   if (error) {
     return (
-      <Table.Row>
+      <TableRow>
         Error in GraphQl query: <pre>{JSON.stringify(error, null, 2)}</pre>
-      </Table.Row>
+      </TableRow>
     )
   }
   if (loading || !data?.paymentSchedule) {
@@ -132,42 +142,38 @@ export const ChargesPage: React.FC = () => {
   return (
     <FadeIn>
       <MainHeadline>💰 Approve charges</MainHeadline>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Member Name</Table.HeaderCell>
-            <Table.HeaderCell>Member Id</Table.HeaderCell>
-            <Table.HeaderCell>Member Premium</Table.HeaderCell>
-            <Table.HeaderCell>Charge Amount</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <Row
-            paymentSchedule={data.paymentSchedule!.map((schedule) => {
-              if (!schedule) {
-                throw Error('Schedule not present when it should')
-              }
-              return {
-                id: schedule!.id!,
-                member: {
-                  memberId: schedule.member?.memberId!,
-                  firstName: schedule.member?.firstName!,
-                  lastName: schedule.member?.lastName!,
-                  monthlySubscription: {
-                    amount: schedule.member?.monthlySubscription
-                      ?.amount! as MonetaryAmount,
-                  },
-                  account: {
-                    currentBalance: schedule.member?.account!
-                      ?.currentBalance! as MonetaryAmount,
-                  },
+      <Table>
+        <TableHeader>
+          <TableHeaderColumn>Member Name</TableHeaderColumn>
+          <TableHeaderColumn>Member Id</TableHeaderColumn>
+          <TableHeaderColumn>Member Premium</TableHeaderColumn>
+          <TableHeaderColumn>Charge Amount</TableHeaderColumn>
+        </TableHeader>
+        <Row
+          paymentSchedule={data.paymentSchedule!.map((schedule) => {
+            if (!schedule) {
+              throw Error('Schedule not present when it should')
+            }
+            return {
+              id: schedule!.id!,
+              member: {
+                memberId: schedule.member?.memberId!,
+                firstName: schedule.member?.firstName!,
+                lastName: schedule.member?.lastName!,
+                monthlySubscription: {
+                  amount: schedule.member?.monthlySubscription
+                    ?.amount! as MonetaryAmount,
                 },
-                status: schedule.status,
-                amount: schedule.amount! as MonetaryAmount,
-              }
-            })}
-          />
-        </Table.Body>
+                account: {
+                  currentBalance: schedule.member?.account!
+                    ?.currentBalance! as MonetaryAmount,
+                },
+              },
+              status: schedule.status,
+              amount: schedule.amount! as MonetaryAmount,
+            }
+          })}
+        />
       </Table>
       <ButtonWrapper>
         <Mutation
