@@ -108,9 +108,9 @@ export const LargeClaimsList: React.FC<{
         <TableHeader>
           <TableHeaderColumn>Member</TableHeaderColumn>
           <TableHeaderColumn>Date Registered</TableHeaderColumn>
-          <TableHeaderColumn>Claim Type/Outcome</TableHeaderColumn>
-          <TableHeaderColumn>Claim State</TableHeaderColumn>
-          <TableHeaderColumn>Claim Reserves</TableHeaderColumn>
+          <TableHeaderColumn>Type/Outcome</TableHeaderColumn>
+          <TableHeaderColumn>State</TableHeaderColumn>
+          <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
         {claims.map((claim) => {
           const registrationDateString = formatDate(
