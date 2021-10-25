@@ -102,7 +102,7 @@ const App: React.FC = () => {
                       <VerticalMenu history={history} />
                     )}
                     <Main dark={history.location.pathname.startsWith('/login')}>
-                      <TopBar />
+                      <TopBar me={me} />
                       <MainContent>
                         <Breadcrumbs />
                         <Switch>

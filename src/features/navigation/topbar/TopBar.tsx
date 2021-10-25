@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
-import { useMe } from 'features/user/hooks/use-me'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
 import { GearFill, PeopleFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
+import { Me } from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   display: flex;
@@ -51,9 +51,8 @@ const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
   margin-right: ${({ pushLeft }) => (pushLeft ? '300px' : '0')};
 `
 
-export const TopBar: React.FC = () => {
+export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
   const history = useHistory()
-  const { me } = useMe()
   const [showUsers, setShowUsers] = useState(false)
 
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
@@ -80,7 +79,7 @@ export const TopBar: React.FC = () => {
             align="center"
             onClick={() => history.push('/profile')}
           >
-            <span>{me.fullName}</span>
+            <span>{me?.user?.fullName}</span>
             <CircleButton style={{ marginLeft: '2em' }}>
               <GearFill />
             </CircleButton>
