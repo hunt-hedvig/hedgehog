@@ -7,34 +7,27 @@ const root = path.resolve(__dirname, '..')
 
 module.exports = webpackConfig({
   entry: {
-    app: [
-      'webpack-dev-server/client?http://0.0.0.0:9001/',
-      'webpack/hot/dev-server',
-      'react-hot-loader/patch',
-      path.resolve(root, 'src/clientEntry.tsx'),
-    ],
+    app: path.resolve(root, 'src/clientEntry.tsx'),
+    hot: 'webpack/hot/dev-server.js',
+    client: 'webpack-dev-server/client/index.js?hot=true&live-reload=true',
   },
   target: 'web',
   mode: 'development',
   devServer: {
+    static: 'static',
     compress: true,
-    hot: true,
-    inline: true,
     host: '0.0.0.0',
-    disableHostCheck: true,
     port: 9001,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-    transportMode: 'ws',
+    hot: true,
   },
   devtool: 'eval-source-map',
   output: {
-    filename: '[name].js',
     publicPath: '/static/',
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('development'),

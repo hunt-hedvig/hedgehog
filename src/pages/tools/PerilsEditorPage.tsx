@@ -59,7 +59,7 @@ interface Peril {
   iconName: string
 }
 
-export const PerilsEditorPage: React.FC = () => {
+const PerilsEditorPage: React.FC = () => {
   const [fileName, setFileName] = React.useState(() =>
     localStorage.getItem(PERIL_FILE_KEY),
   )
@@ -335,3 +335,5 @@ const isValidJson = (thing: string): boolean => {
     return false
   }
 }
+
+export default PerilsEditorPage

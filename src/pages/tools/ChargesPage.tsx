@@ -122,7 +122,7 @@ const Row: React.FC<{
   </>
 )
 
-export const ChargesPage: React.FC = () => {
+const ChargesPage: React.FC = () => {
   const [confirming, setConfirming] = useState(false)
   const { data, loading, error } = usePaymentScheduleQueryQuery({
     variables: {
@@ -228,3 +228,5 @@ export const ChargesPage: React.FC = () => {
     </FadeIn>
   )
 }
+
+export default ChargesPage

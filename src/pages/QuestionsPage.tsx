@@ -40,7 +40,7 @@ const ConversationsMessage = styled.div`
   }
 `
 
-export const QuestionsPage: React.FC = () => {
+const QuestionsPage: React.FC = () => {
   const history = useHistory()
   const { data } = useGetMeQuery()
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
@@ -119,3 +119,5 @@ export const QuestionsPage: React.FC = () => {
     </ListPage>
   )
 }
+
+export default QuestionsPage

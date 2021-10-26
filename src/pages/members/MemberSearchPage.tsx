@@ -32,7 +32,7 @@ const findInputFieldDomElementHackishly = (
   return wrapper.querySelector('input') ?? null
 }
 
-export const MemberSearchPage: React.FC = () => {
+const MemberSearchPage: React.FC = () => {
   const [query, setQuery] = React.useState('')
   const [includeAll, setIncludeAll] = React.useState(false)
   const [luckySearch, setLuckySearch] = React.useState(false)
@@ -171,3 +171,5 @@ export const MemberSearchPage: React.FC = () => {
     </>
   )
 }
+
+export default MemberSearchPage

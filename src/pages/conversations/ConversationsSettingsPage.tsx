@@ -5,7 +5,7 @@ import React from 'react'
 import { useHistory } from 'react-router'
 import { useInsecurePersistentState } from 'utils/state'
 
-export const ConversationsSettingsPage: React.FC<{}> = () => {
+const ConversationsSettingsPage: React.FC<{}> = () => {
   const history = useHistory()
   const [filters, setFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
@@ -54,3 +54,5 @@ export const ConversationsSettingsPage: React.FC<{}> = () => {
     </>
   )
 }
+
+export default ConversationsSettingsPage

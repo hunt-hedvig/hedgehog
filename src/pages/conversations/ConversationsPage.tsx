@@ -29,7 +29,7 @@ const FadeFlex = styled(Fade)`
   flex: 3;
 `
 
-export const ConversationsPage: React.FC<RouteComponentProps<{
+const ConversationsPage: React.FC<RouteComponentProps<{
   memberId?: string
 }>> = ({ match }) => {
   const { memberId } = match.params
@@ -163,3 +163,5 @@ export const ConversationsPage: React.FC<RouteComponentProps<{
     </>
   )
 }
+
+export default ConversationsPage
