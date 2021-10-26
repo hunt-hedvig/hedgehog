@@ -14,7 +14,7 @@ module.exports = webpackConfig({
   mode: 'production',
   context: root,
   output: {
-    filename: '[name]-[hash].js',
+    filename: '[name]-[contenthash].js',
     publicPath: '/static/',
     path: path.resolve(root, 'build'),
   },
