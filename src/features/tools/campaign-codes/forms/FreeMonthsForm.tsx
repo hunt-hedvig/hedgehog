@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import {
   Button,
-  DateTimePicker,
   Input,
   Label,
   SearchableDropdown,
   Spacing,
+  TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
@@ -88,20 +88,18 @@ export const FreeMonthsForm: React.FC = () => {
       <DateRangeWrapper>
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
-          <DateTimePicker
-            fullWidth={true}
-            date={formData.validFrom}
+          <TextDatePicker
+            onChange={(validFrom) => setFormData({ ...formData, validFrom })}
+            value={formData.validFrom}
             placeholder="Beginning of time"
-            setDate={(validFrom) => setFormData({ ...formData, validFrom })}
           />
         </div>
         <div style={{ width: '100%', paddingLeft: '1.0em' }}>
           <Label>Valid to</Label>
-          <DateTimePicker
-            fullWidth={true}
-            date={formData.validUntil}
+          <TextDatePicker
+            onChange={(validUntil) => setFormData({ ...formData, validUntil })}
+            value={formData.validUntil}
             placeholder="End of time"
-            setDate={(validUntil) => setFormData({ ...formData, validUntil })}
           />
         </div>
       </DateRangeWrapper>

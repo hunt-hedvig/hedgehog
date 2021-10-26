@@ -36,21 +36,30 @@ const CalendarIcon = styled(Calendar)<{ focus?: boolean }>`
   transition: all 0.1s;
   color: ${({ theme, focus }) =>
     focus ? theme.accent : theme.placeholderColor};
+  cursor: pointer;
+  width: 1em;
 `
 
 export const getDate = (value: string) => {
   nlp.extend(numbers)
   nlp.extend(dates)
 
-  const date = nlp(value)
-    // @ts-ignore
-    .dates()
-    .get(0)
-
-  return date
+  return (
+    nlp(value)
+      // @ts-ignore
+      .dates()
+      .get(0)
+  )
 }
 
-const InlineDatePicker = ({ value, setValue, setTextValue, setView }) => {
+const InlineDatePicker = ({
+  value,
+  setValue,
+  setTextValue,
+  setView,
+  maxDate,
+  showTimePicker,
+}) => {
   const pickerRef = React.useRef<HTMLDivElement>(null)
 
   useClickOutside(pickerRef, () => setView(false))
@@ -68,6 +77,9 @@ const InlineDatePicker = ({ value, setValue, setTextValue, setView }) => {
             setTextValue(formattedDate)
             setView(false)
           }}
+          showTimeSelect={showTimePicker}
+          maxDate={maxDate}
+          fullWidth={true}
         />
       </FadeIn>
     </DatePickerWrapper>
@@ -95,23 +107,30 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       const isoDate = parseISO(value.toISOString())
       const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
       setTextValue(formattedDate)
-    } else {
-      setTextValue(null)
+      return
     }
+
+    setTextValue(null)
   }, [value])
 
   const setDateHandler = () => {
     const date = getDate(textValue || '')
 
-    if (date) {
-      const newDate = date.start
-
-      const isoDate = parseISO(newDate)
-      const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
-
-      onChange(new Date(newDate))
-      setTextValue(formattedDate)
+    if (!date) {
+      return
     }
+
+    const newDate = date.start
+
+    const isoDate = parseISO(newDate)
+    const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
+
+    if (value && formattedDate === formatDate(value, 'yyyy-MM-dd')) {
+      return
+    }
+
+    onChange(new Date(newDate))
+    setTextValue(formattedDate)
   }
 
   return (
@@ -122,7 +141,6 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
           <CalendarIcon
             focus={showOldDatepicker}
             onClick={() => setShowOldDatepicker((prev) => !prev)}
-            style={{ cursor: 'pointer' }}
           />
         }
         onBlur={() => {
@@ -144,6 +162,8 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
           setValue={onChange}
           setTextValue={setTextValue}
           setView={setShowOldDatepicker}
+          maxDate={new Date()}
+          showTimePicker
         />
       )}
     </Wrapper>

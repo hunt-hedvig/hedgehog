@@ -1,11 +1,10 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
 import styled from '@emotion/styled'
-import { darkTheme, lightTheme, SemanticOverrides } from '@hedvig-ui'
+import { BaseStyle, darkTheme, lightTheme } from '@hedvig-ui'
 import { CommandLineProvider } from '@hedvig-ui/utils/command-line-hook'
 import { ConfirmDialogProvider } from '@hedvig-ui/utils/modal-hook'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
-import { BreadcrumbsNavigation } from 'features/navigation/breadcrumbs'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
 import { useAuthenticate } from 'features/user/hooks/use-authenticate'
@@ -19,7 +18,7 @@ import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
 import { MemberHistoryProvider } from 'utils/member-history'
 import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
 
-const Layout = styled(SemanticOverrides)`
+const Layout = styled(BaseStyle)`
   display: flex;
   min-height: 100vh;
 `
@@ -59,8 +58,7 @@ const globalCss = css`
   h3,
   h4,
   h5,
-  h6,
-  .ui.header {
+  h6 {
     font-family: ${fonts.FAVORIT}, sans-serif;
     font-kerning: none;
     font-weight: 400;
@@ -104,7 +102,6 @@ const App: React.FC = () => {
                     <Main dark={history.location.pathname.startsWith('/login')}>
                       <TopBar me={me} />
                       <MainContent>
-                        <BreadcrumbsNavigation />
                         <Switch>
                           <Route
                             path="/login"

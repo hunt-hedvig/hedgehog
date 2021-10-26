@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Checkbox, DateTimePicker, Flex, Label, lightTheme } from '@hedvig-ui'
+import { Checkbox, Flex, Label, lightTheme, TextDatePicker } from '@hedvig-ui'
 import { ColorBadge } from 'features/questions/filter'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
@@ -80,9 +80,16 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
     }
   }, [numberMemberGroups])
 
-  const setDateHandler = (e: Date) => {
-    const date = e.toISOString().split('T')[0]
-    setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: date }))
+  const setDateHandler = (date: Date | null) => {
+    if (!date) {
+      return
+    }
+
+    const dateString = new Date(date.setHours(date.getHours() + 2))
+      .toISOString()
+      .split('T')[0]
+
+    setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: dateString }))
   }
 
   const marketIcons = {
@@ -192,13 +199,13 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
 
       <FilterElement>
         <Label>Registration dates</Label>
-        <DateTimePicker
-          date={
+        <TextDatePicker
+          value={
             filters.filterCreatedBeforeOrOnDate
               ? new Date(filters.filterCreatedBeforeOrOnDate)
               : new Date()
           }
-          setDate={setDateHandler}
+          onChange={setDateHandler}
         />
       </FilterElement>
     </FilterWrapper>

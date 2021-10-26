@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
+import { Input } from '@hedvig-ui'
 import enGB from 'date-fns/locale/en-GB'
 import React from 'react'
+import { Calendar } from 'react-bootstrap-icons'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Input } from 'semantic-ui-react'
 
 registerLocale('enGB', enGB)
 
@@ -20,17 +21,18 @@ interface DatePickerProps {
   tabIndex?: number
 }
 
-const StyledInput = styled(Input)<{ fullWidth?: boolean }>`
-  && input {
-    cursor: pointer;
-    caret-color: transparent;
-  }
-`
-
 const Wrapper = styled.div`
   .datePicker {
     width: 100%;
   }
+`
+
+const CalendarIcon = styled(Calendar)<{ focus?: boolean }>`
+  transition: all 0.1s;
+  color: ${({ theme, focus }) =>
+    focus ? theme.accent : theme.placeholderColor};
+  cursor: pointer;
+  width: 1em;
 `
 
 export const DateTimePicker: React.FC<DatePickerProps> = ({
@@ -62,17 +64,7 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
         maxDate={maxDate}
         minDate={minDate}
         name={name}
-        customInput={
-          <StyledInput
-            type="text"
-            fluid={fullWidth}
-            icon={
-              showTimePicker ? 'clock outline' : 'calendar alternate outline'
-            }
-            iconPosition="left"
-            maxLength={10}
-          />
-        }
+        customInput={<Input icon={<CalendarIcon />} />}
         dateFormat={showTimePicker ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'}
         timeIntervals={1}
       />
