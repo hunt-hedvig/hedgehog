@@ -49,7 +49,7 @@ const StagingTools: React.FC = () => {
   )
 }
 
-export const ToolsPage: React.FC = () => {
+const ToolsPage: React.FC = () => {
   const history = useHistory()
   const isControlPressed = useKeyIsPressed(Keys.Control)
   const { registerActions } = useCommandLine()
@@ -155,3 +155,5 @@ export const ToolsPage: React.FC = () => {
     </FadeIn>
   )
 }
+
+export default ToolsPage

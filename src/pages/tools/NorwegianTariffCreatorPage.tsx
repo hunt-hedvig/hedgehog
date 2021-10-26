@@ -27,7 +27,7 @@ const initialFactorState: NorwegianGripenFactorInput[] = Object.keys(
   }
 })
 
-export const NorwegianTariffCreatorPage: React.FC = () => {
+const NorwegianTariffCreatorPage: React.FC = () => {
   const [baseFactors, setBaseFactors] = React.useState<string>('')
   const [factors, setFactors] = React.useState<NorwegianGripenFactorInput[]>(
     initialFactorState,
@@ -124,3 +124,5 @@ const getSetFactorStringFunction = (
     )
   }
 }
+
+export default NorwegianTariffCreatorPage

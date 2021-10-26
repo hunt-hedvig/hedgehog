@@ -19,7 +19,7 @@ const Subtext = styled.span`
   color: ${({ theme }) => theme.placeholderColor};
 `
 
-export const ConversationsOnboardingPage: React.FC = () => {
+const ConversationsOnboardingPage: React.FC = () => {
   const { fade, props: fadeProps } = useFadeAnimation({})
   const [onboardingStep, setOnboardingStep] = useState(0)
 
@@ -144,3 +144,5 @@ export const ConversationsOnboardingPage: React.FC = () => {
     </Fade>
   )
 }
+
+export default ConversationsOnboardingPage

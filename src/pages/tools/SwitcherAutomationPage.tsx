@@ -22,7 +22,7 @@ import { sleep } from 'utils/sleep'
 import { getSwitcherEmailStatus } from 'utils/switcher-emails'
 import { convertEnumToTitle, getFlagFromMarket } from 'utils/text'
 
-export const SwitcherAutomationPage: React.FC = () => {
+const SwitcherAutomationPage: React.FC = () => {
   const switchers = useGetSwitcherEmailsQuery()
 
   const [selectedMarket, setSelectedMarket] = useState<Market | null>(null)
@@ -174,3 +174,5 @@ export const SwitcherAutomationPage: React.FC = () => {
     </>
   )
 }
+
+export default SwitcherAutomationPage
