@@ -1,27 +1,36 @@
 import { Checkbox, JsonSchemaForm } from '@hedvig-ui'
-import {
-  getUpdateQuoteSchemaOptions,
-  useUpdateQuoteBySchema,
-} from 'graphql/use-update-quote-by-schema'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Quote } from 'types/generated/graphql'
+import {
+  GetQuotesDocument,
+  Quote,
+  useUpdateQuoteBySchemaMutation,
+} from 'types/generated/graphql'
 
 export const UpdateQuoteForm: React.FC<{
   quote: Quote
   onSubmitted: () => void
 }> = ({ quote, onSubmitted }) => {
   const [bypassUwgl, setBypassUwgl] = useState(false)
-  const [updateQuote] = useUpdateQuoteBySchema()
+  const [updateQuote] = useUpdateQuoteBySchemaMutation()
 
   const performQuoteUpdate = (formData: Record<string, unknown>) => {
-    const options = getUpdateQuoteSchemaOptions({
-      memberId: quote.memberId!,
-      quoteId: quote.id,
-      schema: quote.schema,
-      formData,
-      bypassUnderwritingGuidelines: bypassUwgl,
-    })
+    const options = {
+      variables: {
+        quoteId: quote.id,
+        schemaData: {
+          ...formData,
+          id: quote.schema.$id,
+        },
+        bypassUnderwritingGuidelines: bypassUwgl,
+      },
+      refetchQueries: () => [
+        {
+          query: GetQuotesDocument,
+          variables: { memberId: quote.memberId },
+        },
+      ],
+    }
     updateQuote(options)
       .then(() => {
         onSubmitted()

@@ -1,12 +1,12 @@
 import { Checkbox, JsonSchemaForm } from '@hedvig-ui'
-import {
-  getCreateQuoteForMemberBySchemaOptions,
-  useCreateQuoteForMemberBySchema,
-} from 'graphql/use-create-quote-for-member-by-schema'
 import { useSchemaForContractType } from 'graphql/use-get-schema-for-contract-type'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { ContractType } from 'types/enums'
+import {
+  GetQuotesDocument,
+  useCreateQuoteForMemberBySchemaMutation,
+} from 'types/generated/graphql'
 
 export const CreateQuoteForm: React.FC<{
   memberId: string
@@ -17,18 +17,26 @@ export const CreateQuoteForm: React.FC<{
 
   const [schema, { loading }] = useSchemaForContractType(contractType)
 
-  const [createQuoteForMember] = useCreateQuoteForMemberBySchema()
+  const [createQuoteForMember] = useCreateQuoteForMemberBySchemaMutation()
 
   const createQuote = (formData: Record<string, unknown>) => {
     toast.promise(
-      createQuoteForMember(
-        getCreateQuoteForMemberBySchemaOptions({
+      createQuoteForMember({
+        variables: {
           memberId,
-          schema,
-          formData,
+          schemaData: {
+            ...formData,
+            id: schema.$id,
+          },
           bypassUnderwritingGuidelines: bypassUwgl,
-        }),
-      ),
+        },
+        refetchQueries: () => [
+          {
+            query: GetQuotesDocument,
+            variables: { memberId },
+          },
+        ],
+      }),
       {
         loading: 'Saving quote',
         success: () => {

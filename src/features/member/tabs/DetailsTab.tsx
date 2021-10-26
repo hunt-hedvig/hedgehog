@@ -12,15 +12,16 @@ import {
   TableColumn,
   TableRow,
 } from '@hedvig-ui'
-import {
-  getEditMemberInfoOptions,
-  useEditMemberInfo,
-} from 'graphql/use-edit-member-info'
 import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { Member, useSetFraudulentStatusMutation } from 'types/generated/graphql'
+import {
+  GetMemberInfoDocument,
+  Member,
+  useEditMemberInfoMutation,
+  useSetFraudulentStatusMutation,
+} from 'types/generated/graphql'
 import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
 import { dateTimeFormatter, getFieldName, getFieldValue } from 'utils/helpers'
 
@@ -46,7 +47,7 @@ export const DetailsTab: React.FC<{
   const [editingFraud, setEditFraud] = useState(false)
   const [fraudStatus, setFraudStatus] = useState(null)
   const [fraudDescription, setFraudDescription] = useState(null)
-  const [editMemberInfo] = useEditMemberInfo()
+  const [editMemberInfo] = useEditMemberInfoMutation()
   const [setFraudulentStatus] = useSetFraudulentStatusMutation()
 
   const form = useForm()
@@ -93,9 +94,19 @@ export const DetailsTab: React.FC<{
   }
 
   const handleSubmit = () => {
-    editMemberInfo(getEditMemberInfoOptions(editMemberInfoRequest)).then(() =>
-      handleClose(),
-    )
+    editMemberInfo({
+      variables: {
+        request: editMemberInfoRequest,
+      },
+      refetchQueries: [
+        {
+          query: GetMemberInfoDocument,
+          variables: {
+            memberId: editMemberInfoRequest.memberId,
+          },
+        },
+      ],
+    }).then(() => handleClose())
   }
 
   const { fraudulentStatusDescription, fraudulentStatus, ...memberInfo } =

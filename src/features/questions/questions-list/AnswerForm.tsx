@@ -9,17 +9,14 @@ import {
   SubmitButton,
 } from '@hedvig-ui'
 import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
-import {
-  getAnswerQuestionOptions,
-  useAnswerQuestion,
-} from 'graphql/use-answer-question'
-import {
-  getMarkQuestionAsResolvedOptions,
-  useMarkQuestionAsResolved,
-} from 'graphql/use-mark-question-as-resolved'
 import React, { useEffect } from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import {
+  GetQuestionsGroupsDocument,
+  useAnswerQuestionMutation,
+  useMarkQuestionAsResolvedMutation,
+} from 'types/generated/graphql'
 
 const SpacingStyled = styled(Spacing)`
   & .form__field {
@@ -60,12 +57,12 @@ export const AnswerForm: React.FC<{
   const [
     answerQuestion,
     { loading: loadingAnswerQuestion },
-  ] = useAnswerQuestion()
+  ] = useAnswerQuestionMutation()
 
   const [
     markQuestionAsResolved,
     { loading: loadingMarkQuestionAsResolved },
-  ] = useMarkQuestionAsResolved()
+  ] = useMarkQuestionAsResolvedMutation()
 
   const loading =
     loadingAnswerQuestion ||
@@ -75,7 +72,17 @@ export const AnswerForm: React.FC<{
   const onSubmit = (data: FieldValues) => {
     onDone()
     toast.promise(
-      answerQuestion(getAnswerQuestionOptions(memberId, data.answer.trim())),
+      answerQuestion({
+        variables: {
+          memberId,
+          answer: data.answer.trim(),
+        },
+        refetchQueries: [
+          {
+            query: GetQuestionsGroupsDocument,
+          },
+        ],
+      }),
       {
         loading: 'Sending answer',
         success: 'Answer sent',
@@ -90,7 +97,16 @@ export const AnswerForm: React.FC<{
   const handleMarkAsResolved = () => {
     onDone()
     toast.promise(
-      markQuestionAsResolved(getMarkQuestionAsResolvedOptions(memberId)),
+      markQuestionAsResolved({
+        variables: {
+          memberId,
+        },
+        refetchQueries: [
+          {
+            query: GetQuestionsGroupsDocument,
+          },
+        ],
+      }),
       {
         loading: 'Resolving',
         success: 'Marked as resolved',

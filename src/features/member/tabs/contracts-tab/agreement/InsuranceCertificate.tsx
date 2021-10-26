@@ -1,22 +1,21 @@
 import { Button, ButtonsGroup, ThirdLevelHeadline } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import {
-  regenerateCertificateOptions,
-  useRegenerateCertificate,
-} from 'graphql/use-regenerate-certificate'
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
-import { Contract, GenericAgreement } from 'types/generated/graphql'
+import {
+  GenericAgreement,
+  useRegenerateCertificateMutation,
+} from 'types/generated/graphql'
 
 export const InsuranceCertificate: React.FC<{
-  contract: Contract
   agreement: GenericAgreement
   refetch: () => Promise<void>
-}> = ({ contract, agreement, refetch }) => {
-  const [regenerateCertificate, { loading }] = useRegenerateCertificate(
-    contract,
-  )
+}> = ({ agreement, refetch }) => {
+  const [
+    regenerateCertificate,
+    { loading },
+  ] = useRegenerateCertificateMutation()
 
   const { confirm } = useConfirmDialog()
 
@@ -58,9 +57,11 @@ export const InsuranceCertificate: React.FC<{
               'Are you sure you want to regenerate the certificate?',
             ).then(() => {
               toast.promise(
-                regenerateCertificate(
-                  regenerateCertificateOptions(agreement.id),
-                ),
+                regenerateCertificate({
+                  variables: {
+                    agreementId: agreement.id,
+                  },
+                }),
                 {
                   loading: 'Regenerating certificate',
                   success: 'Certificate generated',

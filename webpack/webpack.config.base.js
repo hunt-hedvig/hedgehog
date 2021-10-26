@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const threadLoader = require('thread-loader')
 const path = require('path')
 const babelrc = require('../.babelrc')

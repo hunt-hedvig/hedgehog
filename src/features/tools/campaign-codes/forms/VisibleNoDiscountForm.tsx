@@ -10,15 +10,12 @@ import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { DateRangeWrapper } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
-import {
-  addPartnerVisibleNoDiscountCodeOptions,
-  useAddPartnerVisibleNoDiscountCode,
-} from 'graphql/use-add-partner-visible-no-discount-code'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
   AssignVoucherVisibleNoDiscount,
   Scalars,
+  useAssignCampaignToPartnerVisibleNoDiscountMutation,
 } from 'types/generated/graphql'
 
 interface VisibleNoDiscountFormData {
@@ -51,7 +48,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
   const [
     setPartnerVisibleNoDiscount,
     { loading },
-  ] = useAddPartnerVisibleNoDiscountCode()
+  ] = useAssignCampaignToPartnerVisibleNoDiscountMutation()
 
   const codeTypeOptions = getCodeTypeOptions()
 
@@ -128,11 +125,12 @@ export const VisibleNoDiscountForm: React.FC = () => {
           onClick={() => {
             confirm(`Create new campaign code "${formData.code}"?`).then(() => {
               toast.promise(
-                setPartnerVisibleNoDiscount(
-                  addPartnerVisibleNoDiscountCodeOptions(
-                    formData as AssignVoucherVisibleNoDiscount,
-                  ),
-                ),
+                setPartnerVisibleNoDiscount({
+                  variables: {
+                    request: formData as AssignVoucherVisibleNoDiscount,
+                  },
+                  refetchQueries: () => ['FindPartnerCampaigns'],
+                }),
                 {
                   loading: 'Creating campaign',
                   success: () => {

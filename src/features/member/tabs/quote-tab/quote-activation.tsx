@@ -1,12 +1,14 @@
 import { Button, TextDatePicker } from '@hedvig-ui'
-import {
-  addAgreementFromQuoteOptions,
-  useAddAgreementFromQuote,
-} from 'graphql/use-add-agreement-from-quote'
+import { format } from 'date-fns'
 import { useContracts } from 'graphql/use-contracts'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Contract, Quote } from 'types/generated/graphql'
+import {
+  Contract,
+  GetQuotesDocument,
+  Quote,
+  useAddAgreementFromQuoteMutation,
+} from 'types/generated/graphql'
 import { noopFunction } from 'utils'
 import { getContractByAgreementId } from 'utils/contract'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
@@ -47,7 +49,10 @@ export const QuoteActivation: React.FC<{
     setActiveFrom(getInitialActiveFrom(originatingContract))
   }, [contracts?.length])
 
-  const [addAgreement, addAgreementMutation] = useAddAgreementFromQuote()
+  const [
+    addAgreement,
+    addAgreementMutation,
+  ] = useAddAgreementFromQuoteMutation()
 
   if (loading) {
     return null
@@ -76,15 +81,23 @@ export const QuoteActivation: React.FC<{
           return
         }
         await toast.promise(
-          addAgreement(
-            addAgreementFromQuoteOptions(
-              contract,
-              activeFrom,
-              null,
-              previousAgreementActiveTo,
-              quote,
-            ),
-          ),
+          addAgreement({
+            variables: {
+              id: quote.id,
+              activeFrom: activeFrom ? format(activeFrom, 'yyyy-MM-dd') : null,
+              activeTo: null,
+              contractId: contract.id,
+              previousAgreementActiveTo: previousAgreementActiveTo
+                ? format(previousAgreementActiveTo, 'yyy-MM-dd')
+                : null,
+            },
+            refetchQueries: () => [
+              {
+                query: GetQuotesDocument,
+                variables: { memberId: contract.holderMemberId },
+              },
+            ],
+          }),
           {
             loading: 'Activating quote',
             success: 'Quote activated',
