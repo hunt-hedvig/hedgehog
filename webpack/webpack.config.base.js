@@ -21,6 +21,7 @@ module.exports = ({
       path.resolve(context, 'src'),
       path.resolve(context, 'shared'),
     ],
+    symlinks: false,
   },
   entry,
   module: {
@@ -30,7 +31,7 @@ module.exports = ({
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(tsx?|js)$/,
+        test: /\.(tsx?|ts)$/,
         include: [
           path.resolve(__dirname, '../src'),
           path.resolve(__dirname, '../shared'),
