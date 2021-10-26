@@ -23,7 +23,7 @@ module.exports = webpackConfig({
     },
     hot: true,
   },
-  devtool: 'eval-source-map',
+  devtool: 'eval-cheap-module-source-map',
   output: {
     publicPath: '/static/',
   },
