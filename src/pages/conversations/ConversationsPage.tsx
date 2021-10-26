@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import {
   Fade,
-  Flex,
   MainHeadline,
   StandaloneMessage,
   useFadeAnimation,
@@ -22,11 +21,15 @@ import {
 } from 'utils/questionGroup'
 import { useInsecurePersistentState } from 'utils/state'
 
-const FadeFlex = styled(Fade)`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 3;
+const FadeGrid = styled(Fade)`
+  height: 100%;
+
+  & > div {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 0.9fr;
+    column-gap: 32px;
+  }
 `
 
 const ConversationsPage: React.FC<RouteComponentProps<{
@@ -109,57 +112,45 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   return (
     <>
       <MainHeadline>Conversations</MainHeadline>
-      <Flex direction="row" justify={'space-between'}>
-        {memberId ? (
-          <FadeFlex {...fadeProps}>
-            <Flex direction="row">
-              <Flex direction="row" flex="2">
-                <MemberSummary memberId={memberId} />
-              </Flex>
-              <Flex direction="row" flex="3" style={{ padding: '0 2em' }}>
-                <ConversationChat
-                  memberId={memberId}
-                  onFocus={() => setChatFocused(true)}
-                  onBlur={() => setChatFocused(false)}
-                  onResolve={() =>
-                    fade('up', 'out').then(() => {
-                      if (currentQuestionOrder === 0) {
-                        history.push('/conversations')
-                      }
+      {memberId ? (
+        <FadeGrid {...fadeProps}>
+          <MemberSummary memberId={memberId} />
+          <ConversationChat
+            memberId={memberId}
+            onFocus={() => setChatFocused(true)}
+            onBlur={() => setChatFocused(false)}
+            onResolve={() =>
+              fade('up', 'out').then(() => {
+                if (currentQuestionOrder === 0) {
+                  history.push('/conversations')
+                }
 
-                      if (currentQuestionOrder < filteredGroups.length - 1) {
-                        history.push(
-                          `/conversations/${
-                            filteredGroups[currentQuestionOrder + 1].memberId
-                          }`,
-                        )
-                      }
+                if (currentQuestionOrder < filteredGroups.length - 1) {
+                  history.push(
+                    `/conversations/${
+                      filteredGroups[currentQuestionOrder + 1].memberId
+                    }`,
+                  )
+                }
 
-                      if (currentQuestionOrder === filteredGroups.length - 1) {
-                        history.push(
-                          `/conversations/${
-                            filteredGroups[currentQuestionOrder - 1].memberId
-                          }`,
-                        )
-                      }
-                    })
-                  }
-                />
-              </Flex>
-            </Flex>
-          </FadeFlex>
-        ) : (
-          <StandaloneMessage paddingTop="25vh">
-            Nice, that's it for now!
-          </StandaloneMessage>
-        )}
-        <Flex direction="column" style={{ marginTop: '1em' }} flex="1">
+                if (currentQuestionOrder === filteredGroups.length - 1) {
+                  history.push(
+                    `/conversations/${
+                      filteredGroups[currentQuestionOrder - 1].memberId
+                    }`,
+                  )
+                }
+              })
+            }
+          />
           <ConversationsOverview
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
           />
-        </Flex>
-      </Flex>
+        </FadeGrid>
+      ) : (
+        <StandaloneMessage>Nice, that's it for now!</StandaloneMessage>
+      )}
     </>
   )
 }

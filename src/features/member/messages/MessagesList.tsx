@@ -6,16 +6,18 @@ import React, { HTMLAttributes } from 'react'
 import { Message } from './Message'
 
 const MessagesListContainer = styled.div`
-  height: 35em;
+  height: 100%;
   padding: 20px;
   overflow: auto;
   display: flex;
+  flex: 1;
   flex-direction: column-reverse;
 `
 
 const MessagesListPlaceholder = styled.div`
-  height: 35em;
+  height: 100%;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
 `
