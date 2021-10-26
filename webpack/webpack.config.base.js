@@ -32,6 +32,10 @@ module.exports = ({
       },
       {
         test: /\.(tsx?|js)$/,
+        include: [
+          path.resolve(__dirname, '../src'),
+          path.resolve(__dirname, '../shared'),
+        ],
         use: [
           'thread-loader',
           {
@@ -52,10 +56,7 @@ module.exports = ({
   context,
   stats: 'errors-only',
   output,
-  plugins: [
-    new webpack.IgnorePlugin({ resourceRegExp: /^moment($|\/)/ }),
-    ...(plugins || []),
-  ],
+  plugins: plugins || [],
   optimization: {
     moduleIds: 'named',
   },
