@@ -40,22 +40,25 @@ module.exports = ({
           },
         ],
       },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
     ],
   },
   target,
   context,
-  stats: {
-    colors: true,
-    chunks: false,
-    chunkModules: false,
-    children: false,
-  },
+  stats: 'errors-only',
   output,
   plugins: [
-    new webpack.NamedModulesPlugin(),
-    new webpack.IgnorePlugin(/^moment($|\/)/),
+    new webpack.IgnorePlugin({ resourceRegExp: /^moment($|\/)/ }),
     ...(plugins || []),
   ],
+  optimization: {
+    moduleIds: 'named',
+  },
   bail: true,
   ...rest,
 })
