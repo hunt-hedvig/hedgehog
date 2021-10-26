@@ -3,7 +3,8 @@ import { Hotkey } from '@hedvig-ui'
 import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { colorsV3 } from '@hedviginsurance/brand'
-import React, { useContext, useRef, useState } from 'react'
+import { useMe } from 'features/user/hooks/use-me'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
   ArrowUpRight,
   BoxArrowLeft,
@@ -22,9 +23,9 @@ import {
 import MediaQuery from 'react-media'
 import { matchPath, useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
+import { UserSettingKey } from 'types/generated/graphql'
 import { forceLogOut } from 'utils/auth'
 import { DarkmodeContext } from 'utils/darkmode-context'
-import { useInsecurePersistentState } from 'utils/state'
 import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
@@ -253,12 +254,18 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   const [locations, setLocations] = useState<string[]>([])
   const latestClaim = useRef<LatestClaim | null>(null)
   const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
-  const [conversationsEnabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
+  const { settings } = useMe()
+  const [conversationsEnabled, setConversationsEnabled] = useState(
+    settings[UserSettingKey.FeatureFlags].conversations,
   )
 
   const { registerActions, isHintingOption } = useCommandLine()
+
+  useEffect(() => {
+    setConversationsEnabled(
+      settings[UserSettingKey.FeatureFlags].conversations || false,
+    )
+  }, [settings])
 
   registerActions([
     {

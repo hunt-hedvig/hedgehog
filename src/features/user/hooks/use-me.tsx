@@ -34,7 +34,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
     return null
   }
 
-  const settings =
+  const [settings, setSettings] = React.useState(
     me.settings.reduce((acc, setting) => {
       try {
         acc[setting.key] = JSON.parse(setting.value)
@@ -43,7 +43,8 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
         console.error(e)
       }
       return acc
-    }, {}) ?? {}
+    }, {}) ?? {},
+  )
 
   const partialMe = {
     email: me.user.email,
@@ -55,6 +56,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
     value: object,
   ): Promise<FetchResult> => {
     const payload = JSON.stringify(value)
+    setSettings((prev) => ({ ...prev, [key]: value }))
 
     return upsertUserSettings({
       variables: { settings: [{ key, value: payload }] },
