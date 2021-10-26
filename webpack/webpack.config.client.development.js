@@ -25,7 +25,6 @@ module.exports = webpackConfig({
   },
   devtool: 'eval-source-map',
   output: {
-    filename: '[name].js',
     publicPath: '/static/',
   },
   plugins: [
