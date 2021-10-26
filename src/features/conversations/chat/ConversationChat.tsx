@@ -119,9 +119,7 @@ export const ConversationChat: React.FC<{
   return (
     <FadeIn style={{ width: '100%' }}>
       <ConversationContent>
-        <Flex style={{ overflowY: 'scroll', height: '100%' }}>
-          <MessagesList memberId={memberId} />
-        </Flex>
+        <MessagesList memberId={memberId} />
         <ConversationFooter>
           <ConversationTextArea
             onFocus={() => {
