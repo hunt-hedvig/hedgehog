@@ -50,7 +50,7 @@ const MemberIdCell = styled(TableColumn)<{
 }>`
   border-left: 7px solid
     ${({ memberId, numberMemberGroups }) =>
-      getMemberIdColor(memberId, numberMemberGroups)};
+      getMemberIdColor(memberId, numberMemberGroups)} !important;
 
   padding-left: 1em;
   height: 100%;

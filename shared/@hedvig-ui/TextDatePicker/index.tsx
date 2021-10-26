@@ -90,6 +90,8 @@ interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
   value?: Date | null
   onChange: (date: Date | null) => void
   errorMessage?: string
+  maxDate?: Date
+  showTimePicker?: boolean
 }
 
 export const TextDatePicker: React.FC<TextDatePickerProps> = ({
@@ -97,6 +99,8 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   onChange,
   error,
   errorMessage,
+  maxDate,
+  showTimePicker,
   ...props
 }) => {
   const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
@@ -162,8 +166,8 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
           setValue={onChange}
           setTextValue={setTextValue}
           setView={setShowOldDatepicker}
-          maxDate={new Date()}
-          showTimePicker
+          maxDate={maxDate}
+          showTimePicker={showTimePicker}
         />
       )}
     </Wrapper>
