@@ -9,6 +9,9 @@ import { getMarketFromPickedLocale } from 'utils/member'
 import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
+  const [activeTab, setActiveTab] = React.useState(
+    ContractType.SwedishApartment,
+  )
   const [{ quotes, contractMarket, pickedLocale }, { loading }] = useQuotes(
     memberId,
   )
@@ -146,10 +149,6 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
       shouldShowInContractTypeSubSection(quote, contractType),
     )
   }
-
-  const [activeTab, setActiveTab] = React.useState(
-    ContractType.SwedishApartment,
-  )
 
   return (
     <>
