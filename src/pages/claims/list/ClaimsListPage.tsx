@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
-import { Filters } from 'components/claims/filter'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
+import { Filters } from 'features/claims/claims-list/filter'
 import React, { useEffect } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
