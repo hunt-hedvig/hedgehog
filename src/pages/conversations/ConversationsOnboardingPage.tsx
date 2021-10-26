@@ -28,7 +28,7 @@ const ConversationsOnboardingPage: React.FC = () => {
 
   const history = useHistory()
   const [enabled, setEnabled] = useState(
-    settings[UserSettingKey.FeatureFlags].conversations || false,
+    settings[UserSettingKey.FeatureFlags]?.conversations || false,
   )
 
   const [filters, setFilters] = useInsecurePersistentState<

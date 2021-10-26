@@ -52,7 +52,7 @@ export const ConversationsOverview: React.FC<{
   const { confirm } = useConfirmDialog()
 
   useEffect(() => {
-    if (!settings[UserSettingKey.FeatureFlags].conversations) {
+    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
       updateSetting(UserSettingKey.FeatureFlags, {
         conversations: true,
       })
