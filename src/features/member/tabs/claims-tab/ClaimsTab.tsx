@@ -86,7 +86,7 @@ export const ClaimsTab: React.FC<{
               disabled={
                 claimSource === null ||
                 claimDate === null ||
-                claimDate < new Date() ||
+                claimDate > new Date() ||
                 createClaimLoading
               }
               onClick={async () => {

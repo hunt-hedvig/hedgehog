@@ -95,7 +95,7 @@ const FOCUSES: { [section: string]: Focus } = {
   },
 }
 
-export const ClaimDetailsPage: React.FC<RouteComponentProps<{
+const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
 }>> = ({ match }) => {
   const { claimId } = match.params
@@ -264,3 +264,5 @@ export const ClaimDetailsPage: React.FC<RouteComponentProps<{
     </>
   )
 }
+
+export default ClaimDetailsPage

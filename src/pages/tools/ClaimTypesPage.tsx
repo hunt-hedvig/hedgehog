@@ -36,7 +36,7 @@ const TitleOption = styled.button<{ selected?: boolean }>`
   }
 `
 
-export const ClaimTypesPage: React.FC = () => {
+const ClaimTypesPage: React.FC = () => {
   const [tab, setTab] = useState<
     'types' | 'properties' | 'options' | 'relations'
   >('types')
@@ -139,3 +139,5 @@ export const ClaimTypesPage: React.FC = () => {
     </>
   )
 }
+
+export default ClaimTypesPage

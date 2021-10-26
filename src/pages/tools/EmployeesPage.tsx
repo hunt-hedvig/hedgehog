@@ -5,7 +5,7 @@ import { EmployeeTable } from 'features/tools/employees/components/EmployeeTable
 import React, { useState } from 'react'
 import { useGetMeQuery } from 'types/generated/graphql'
 
-export const EmployeesPage: React.FC = () => {
+const EmployeesPage: React.FC = () => {
   const { data } = useGetMeQuery()
   const scopes = data?.me?.scopes ?? []
 
@@ -33,3 +33,5 @@ export const EmployeesPage: React.FC = () => {
     </>
   )
 }
+
+export default EmployeesPage
