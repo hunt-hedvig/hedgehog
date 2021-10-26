@@ -4,7 +4,7 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useUnsignMemberMutation } from 'types/generated/graphql'
 
-export const UnsignMemberPage: React.FC = () => {
+const UnsignMemberPage: React.FC = () => {
   const [ssn, setSsn] = React.useState('')
   const [useUnsignMember, { loading }] = useUnsignMemberMutation()
   const { confirm } = useConfirmDialog()
@@ -48,3 +48,5 @@ export const UnsignMemberPage: React.FC = () => {
     </>
   )
 }
+
+export default UnsignMemberPage

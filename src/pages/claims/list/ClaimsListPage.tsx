@@ -25,7 +25,7 @@ export interface ClaimsFiltersType {
   filterTypesOfContract: string[] | null
 }
 
-export const ClaimsListPage: React.FC<RouteComponentProps<{
+const ClaimsListPage: React.FC<RouteComponentProps<{
   page?: string
 }>> = ({
   match: {
@@ -66,3 +66,5 @@ export const ClaimsListPage: React.FC<RouteComponentProps<{
     </ListPage>
   )
 }
+
+export default ClaimsListPage
