@@ -13,10 +13,6 @@ steps:
     revision: '${{CF_BRANCH}}'
     git: 'github'
     stage: 'clone'
-    when:
-      branch:
-        ignore:
-          - master
 
   build_dependency_container:
     title: 'Building Docker image'

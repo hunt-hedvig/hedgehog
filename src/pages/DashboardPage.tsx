@@ -74,7 +74,7 @@ const DashboardPage: React.FC = () => {
       <Spacing bottom>
         {data?.me && (
           <MainHeadline>
-            Hi there{' '}
+            Hi there,{' '}
             <Capitalized>
               {getLowercaseNameFromEmail(data?.me.user.email)}
             </Capitalized>
