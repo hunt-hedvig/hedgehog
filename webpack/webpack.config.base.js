@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const threadLoader = require('thread-loader')
 const path = require('path')
 const babelrc = require('../.babelrc')
@@ -29,7 +28,7 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
         },
         {
           test: /\.(tsx?|js)$/,
-          exclude: /(node_modules)/,
+          include: /(src|shared)/,
           use: [
             'thread-loader',
             {
@@ -42,6 +41,7 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
           test: /\.m?js/,
           resolve: {
             fullySpecified: false,
+            unsafeCache: true,
           },
         },
       ],
@@ -51,7 +51,12 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
     stats: 'errors-only',
     output,
     plugins: [
-      new webpack.IgnorePlugin({ resourceRegExp: /^moment($|\/)/ }),
+      /*
+      new webpack.DllReferencePlugin({
+        context: __dirname,
+        manifest: path.join(__dirname, '../build', 'vendor-manifest.json'),
+      }),
+      */
       ...(plugins || []),
     ],
     optimization: {
