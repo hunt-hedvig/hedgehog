@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FadeIn, Flex, Label, Placeholder } from '@hedvig-ui'
+import { FadeIn, Flex, Label, Loadable, Placeholder } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { differenceInYears, format, parseISO } from 'date-fns'
@@ -11,6 +11,12 @@ import {
   getMemberIdColor,
 } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+
+const MemberPlaceholder = styled.div`
+  border-radius: 8px;
+  width: 100%;
+  height: 180px;
+`
 
 const MemberCard = styled(FadeIn)`
   padding: 1em;
@@ -89,13 +95,21 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   })
 
   if (!data) {
-    return null
+    return (
+      <Loadable loading>
+        <MemberPlaceholder />
+      </Loadable>
+    )
   }
 
   const { member } = data
 
   if (!member) {
-    return null
+    return (
+      <Loadable loading>
+        <MemberPlaceholder />
+      </Loadable>
+    )
   }
 
   const { birthDate, claims } = member

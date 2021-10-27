@@ -65,7 +65,7 @@ export const ConversationsOverview: React.FC<{
   }, [])
 
   return (
-    <>
+    <div>
       <Flex direction="column" align="center" style={{ marginTop: '1em' }}>
         <ConversationsRemaining count={filteredGroups.length} />
       </Flex>
@@ -112,6 +112,6 @@ export const ConversationsOverview: React.FC<{
           ))}
         </ConversationWrapper>
       </Flex>
-    </>
+    </div>
   )
 }
