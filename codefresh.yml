@@ -3,6 +3,7 @@ stages:
   - 'clone'
   - 'install'
   - 'checks'
+  - 'deploy'
 
 steps:
   clone:
@@ -12,6 +13,10 @@ steps:
     revision: '${{CF_BRANCH}}'
     git: 'github'
     stage: 'clone'
+    when:
+      branch:
+        ignore:
+          - master
 
   build_dependency_container:
     title: 'Building Docker image'
@@ -21,6 +26,10 @@ steps:
     working_directory: '${{clone}}'
     dockerfile: .ci/Dockerfile
     stage: 'install'
+    when:
+      branch:
+        ignore:
+          - master
 
   install_deps:
     title: 'Installing dependencies'
@@ -30,6 +39,10 @@ steps:
     commands:
       - yarn
     stage: 'install'
+    when:
+      branch:
+        ignore:
+          - master
 
   checks:
     title: 'Running checks'
@@ -54,6 +67,10 @@ steps:
         commands:
           - yarn typecheck
     stage: 'checks'
+    when:
+      branch:
+        ignore:
+          - master
 
   build_client:
     title: 'Building client'
@@ -63,6 +80,10 @@ steps:
     commands:
       - yarn build
     stage: 'checks'
+    when:
+      branch:
+        ignore:
+          - master
 
   deploy_to_heroku:
     title: "Deploying to Heroku"
