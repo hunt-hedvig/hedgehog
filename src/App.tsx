@@ -79,7 +79,22 @@ const App: React.FC = () => {
     }//${window.location.host}/login/callback`
   }
 
-  return me ? (
+  if (!me) {
+    return (
+      <Switch>
+        <Route
+          path="/login"
+          exact
+          component={() => {
+            redirectToLogin()
+            return null
+          }}
+        />
+      </Switch>
+    )
+  }
+
+  return (
     <DarkmodeContext.Provider
       value={{
         isDarkmode,
@@ -131,79 +146,7 @@ const App: React.FC = () => {
         </MemberHistoryProvider>
       </ThemeProvider>
     </DarkmodeContext.Provider>
-  ) : (
-    <Switch>
-      <Route
-        path="/login"
-        exact
-        component={() => {
-          redirectToLogin()
-          return null
-        }}
-      />
-    </Switch>
   )
-
-  // return (
-  // <DarkmodeContext.Provider
-  //   value={{
-  //     isDarkmode,
-  //     setIsDarkmode: (newIsDarkmode) => {
-  //       setIsDarkmode(newIsDarkmode)
-  //       localStorage.setItem(
-  //         'hedvig:theming:darkmode',
-  //         JSON.stringify(newIsDarkmode),
-  //       )
-  //     },
-  //   }}
-  // >
-  //   <Global styles={globalCss} />
-  //   <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
-  //     <MemberHistoryProvider>
-  //       <NumberMemberGroupsProvider>
-  //         <Router history={history}>
-  //           <CommandLineProvider>
-  //             <ConfirmDialogProvider>
-  //               <Layout>
-  //                 {!history.location.pathname.startsWith('/login') && (
-  //                   <VerticalMenu history={history} />
-  //                 )}
-  //                 <Main dark={history.location.pathname.startsWith('/login')}>
-  //                   <TopBar me={me} />
-  //                   <MainContent>
-  //                     <Switch>
-  //                       <Route
-  //                         path="/login"
-  //                         exact
-  //                         component={() => {
-  //                           redirectToLogin()
-  //                           return null
-  //                         }}
-  //                       />
-  //                       {me && (
-  //                         <MeProvider me={me}>
-  //                           <Routes />
-  //                         </MeProvider>
-  //                       )}
-  //                     </Switch>
-  //                     <Toaster
-  //                       position="top-center"
-  //                       toastOptions={{
-  //                         style: {
-  //                           padding: '20px 25px',
-  //                         },
-  //                       }}
-  //                     />
-  //                   </MainContent>
-  //                 </Main>
-  //               </Layout>
-  //             </ConfirmDialogProvider>
-  //           </CommandLineProvider>
-  //         </Router>
-  //       </NumberMemberGroupsProvider>
-  //     </MemberHistoryProvider>
-  //   </ThemeProvider>
-  // </DarkmodeContext.Provider>
 }
 
 export const HotApp = hot(App)

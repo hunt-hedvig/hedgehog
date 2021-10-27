@@ -77,13 +77,6 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
           },
         })
       },
-      optimisticResponse: {
-        upsertUserSettings: {
-          // @ts-ignore
-          __typename: 'UserSetting',
-          settings: [{ key, value: payload }],
-        },
-      },
     })
   }
 
