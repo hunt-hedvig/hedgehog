@@ -63,3 +63,16 @@ steps:
     commands:
       - yarn build
     stage: 'checks'
+
+  deploy_to_heroku:
+    title: "Deploying to Heroku"
+    stage: "deploy"
+    type: "heroku-deployer"
+    arguments:
+      APP_NAME: $APP_NAME
+      EMAIL: $EMAIL
+      API_TOKEN: $API_TOKEN
+    when:
+      branch:
+        only:
+          - master
