@@ -26,7 +26,7 @@ export const setRequestUuidMiddleware: Middleware = async (ctx, next) => {
 }
 
 export const setLoggerMiddleware: Middleware = async (ctx, next) => {
-  ctx.state.getLogger = () => loggerFactory.getLogger('test')
+  ctx.state.getLogger = () => loggerFactory.getLogger('app')
 
   await next()
 }
@@ -49,7 +49,6 @@ export const logRequestMiddleware: Middleware = async (ctx, next) => {
     log()
   } catch (e) {
     ctx.state.getLogger('request').error('Uncaught error in request', e)
-    log(e)
     throw e
   }
 }

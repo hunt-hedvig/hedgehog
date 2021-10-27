@@ -1,14 +1,16 @@
 import styled from '@emotion/styled'
 import { Button, StandaloneMessage, ThirdLevelHeadline } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import {
-  createQuoteFromAgreementOptions,
-  useCreateQuoteFromAgreement,
-} from 'graphql/use-create-quote'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { Contract, GenericAgreement } from 'types/generated/graphql'
+import {
+  Contract,
+  GenericAgreement,
+  GetContractsDocument,
+  GetQuotesDocument,
+  useCreateQuoteFromAgreementMutation,
+} from 'types/generated/graphql'
 import { isExpired } from 'utils/quote'
 
 const QuoteMessage = styled(StandaloneMessage)`
@@ -19,7 +21,7 @@ export const CreateQuoteFromAgreement: React.FC<{
   agreement: GenericAgreement
   contract: Contract
 }> = ({ agreement, contract }) => {
-  const [createQuote] = useCreateQuoteFromAgreement()
+  const [createQuote] = useCreateQuoteFromAgreementMutation()
   const [{ quotes }, { loading: loadingQuotes }] = useQuotes(
     contract.holderMemberId,
   )
@@ -46,7 +48,22 @@ export const CreateQuoteFromAgreement: React.FC<{
   const createQuoteHandler = () => {
     confirm(`Create new quote?`).then(() => {
       toast.promise(
-        createQuote(createQuoteFromAgreementOptions(agreement, contract)),
+        createQuote({
+          variables: {
+            agreementId: agreement.id,
+            memberId: contract.holderMemberId,
+          },
+          refetchQueries: () => [
+            {
+              query: GetQuotesDocument,
+              variables: { memberId: contract.holderMemberId },
+            },
+            {
+              query: GetContractsDocument,
+              variables: { memberId: contract.holderMemberId },
+            },
+          ],
+        }),
         {
           loading: 'Creating quote',
           success: 'Quote created, find it under the quotes tab',

@@ -7,3 +7,4 @@ yarn-error.log
 .env
 /tsconfig-diff-master.json
 *.iml
+tsconfig.tsbuildinfo

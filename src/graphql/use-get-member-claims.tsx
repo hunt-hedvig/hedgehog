@@ -18,6 +18,7 @@ export const useGetMemberClaims = (
       memberId,
     },
   })
+
   let claims = queryResult?.data?.member?.claims as Claim[] | undefined
   if (Array.isArray(claims)) {
     claims = [...claims].sort(

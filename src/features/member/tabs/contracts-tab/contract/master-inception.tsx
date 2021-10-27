@@ -7,13 +7,12 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format } from 'date-fns'
-import {
-  activateContractOptions,
-  useActivateContract,
-} from 'graphql/use-activate-contract'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { Contract } from 'types/generated/graphql'
+import {
+  Contract,
+  useActivatePendingAgreementMutation,
+} from 'types/generated/graphql'
 
 export const MasterInception: React.FC<{
   contract: Contract
@@ -31,7 +30,8 @@ export const MasterInception: React.FC<{
   const [
     activateContract,
     { loading: activateContractLoading },
-  ] = useActivateContract(contract)
+  ] = useActivatePendingAgreementMutation()
+
   const { confirm } = useConfirmDialog()
 
   return (
@@ -61,9 +61,15 @@ export const MasterInception: React.FC<{
 
                 confirm(confirmMessage).then(() => {
                   toast.promise(
-                    activateContract(
-                      activateContractOptions(contract, activeFrom),
-                    ),
+                    activateContract({
+                      variables: {
+                        contractId: contract.id,
+                        request: {
+                          pendingAgreementId: contract.currentAgreementId,
+                          fromDate: format(activeFrom, 'yyyy-MM-dd'),
+                        },
+                      },
+                    }),
                     {
                       loading: 'Activating contract',
                       success: () => {

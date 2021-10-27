@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const threadLoader = require('thread-loader')
 const path = require('path')
 const babelrc = require('../.babelrc')
@@ -22,6 +21,7 @@ module.exports = ({
       path.resolve(context, 'src'),
       path.resolve(context, 'shared'),
     ],
+    symlinks: false,
   },
   entry,
   module: {
@@ -31,7 +31,11 @@ module.exports = ({
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(tsx?|js)$/,
+        test: /\.(tsx?|ts)$/,
+        include: [
+          path.resolve(__dirname, '../src'),
+          path.resolve(__dirname, '../shared'),
+        ],
         use: [
           'thread-loader',
           {
@@ -52,10 +56,7 @@ module.exports = ({
   context,
   stats: 'errors-only',
   output,
-  plugins: [
-    new webpack.IgnorePlugin({ resourceRegExp: /^moment($|\/)/ }),
-    ...(plugins || []),
-  ],
+  plugins: plugins || [],
   optimization: {
     moduleIds: 'named',
   },
