@@ -3354,7 +3354,12 @@ export type ListClaimsQuery = { __typename?: 'QueryType' } & {
       claims: Array<
         { __typename?: 'Claim' } & Pick<
           Claim,
-          'id' | 'registrationDate' | 'claimType' | 'state' | 'reserves'
+          | 'id'
+          | 'registrationDate'
+          | 'claimType'
+          | 'outcome'
+          | 'state'
+          | 'reserves'
         > & {
             member: { __typename?: 'Member' } & Pick<
               Member,
@@ -8996,6 +9001,7 @@ export const ListClaimsDocument = gql`
         }
         registrationDate
         claimType
+        outcome
         state
         reserves
       }
