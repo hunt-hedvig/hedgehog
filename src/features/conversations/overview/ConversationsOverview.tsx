@@ -7,7 +7,6 @@ import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
-import { useInsecurePersistentState } from 'utils/state'
 
 const ConversationItem = styled(Flex)<{ selected: boolean }>`
   background-color: ${({ theme, selected }) =>
@@ -51,16 +50,13 @@ export const ConversationsOverview: React.FC<{
 
   const history = useHistory()
   const { confirm } = useConfirmDialog()
-  const [, setEnabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
-  )
 
   useEffect(() => {
     if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
       updateSetting(UserSettingKey.FeatureFlags, {
         conversations: true,
       })
+      history.go(0)
     }
   }, [])
 
@@ -81,7 +77,6 @@ export const ConversationsOverview: React.FC<{
                   updateSetting(UserSettingKey.FeatureFlags, {
                     conversations: false,
                   })
-                  setEnabled(false)
                   history.replace('/questions')
                   history.go(0)
                 },

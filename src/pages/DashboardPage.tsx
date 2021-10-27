@@ -17,8 +17,7 @@ import { useMe } from 'features/user/hooks/use-me'
 import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useGetMeQuery } from 'types/generated/graphql'
-import { useInsecurePersistentState } from 'utils/state'
+import { useGetMeQuery, UserSettingKey } from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,14 +65,6 @@ const DashboardPage: React.FC = () => {
   const { data } = useGetMeQuery()
   const { settings } = useMe()
   const [dashboardNumbers] = useDashboardNumbers()
-  const [conversationsEnabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
-  )
-
-  React.useEffect(() => {
-    console.log(settings)
-  }, [settings])
 
   return (
     <Wrapper>
@@ -97,7 +88,7 @@ const DashboardPage: React.FC = () => {
               </MetricNumber>
               <MetricName>claims</MetricName>
             </Metric>
-            {conversationsEnabled ? (
+            {settings[UserSettingKey.FeatureFlags]?.conversations ? (
               <Metric to="/conversations">
                 <MetricNumber>
                   {dashboardNumbers?.numberOfQuestions || 0}

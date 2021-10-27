@@ -27,29 +27,19 @@ const ConversationsOnboardingPage: React.FC = () => {
   const { settings, updateSetting } = useMe()
 
   const history = useHistory()
-  const [enabledStorage, setEnabledStorage] = useInsecurePersistentState<
-    boolean
-  >('conversations:enabled', false)
-  const [enabled, setEnabled] = useState(
-    settings[UserSettingKey.FeatureFlags]?.conversations || false,
-  )
 
   const [filters, setFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
   >('questions:filters', [])
 
   useEffect(() => {
-    if (!enabled) {
+    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
       updateSetting(UserSettingKey.FeatureFlags, {
         conversations: true,
       })
-      setEnabled(true)
-    }
-    if (!enabledStorage) {
-      setEnabledStorage(true)
       history.go(0)
     }
-  }, [enabled])
+  }, [])
 
   useEffect(() => {
     fade('up', 'in').then(() => {
@@ -57,7 +47,7 @@ const ConversationsOnboardingPage: React.FC = () => {
     })
   }, [])
 
-  if (!enabled) {
+  if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
     return null
   }
 
