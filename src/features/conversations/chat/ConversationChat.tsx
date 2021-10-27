@@ -15,6 +15,7 @@ import {
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
   width: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -117,11 +118,9 @@ export const ConversationChat: React.FC<{
   }
 
   return (
-    <FadeIn style={{ width: '100%' }}>
+    <FadeIn style={{ width: '100%', height: '100%' }}>
       <ConversationContent>
-        <Flex style={{ overflowY: 'scroll', height: '100%' }}>
-          <MessagesList memberId={memberId} />
-        </Flex>
+        <MessagesList memberId={memberId} />
         <ConversationFooter>
           <ConversationTextArea
             onFocus={() => {
