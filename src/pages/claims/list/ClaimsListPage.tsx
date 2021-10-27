@@ -58,7 +58,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     }
 
     window.history.replaceState({}, document.title)
-  }, [location])
+  }, [])
 
   const selectedPage = parseInt(page, 10)
 
