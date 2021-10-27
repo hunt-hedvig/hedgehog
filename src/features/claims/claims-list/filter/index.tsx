@@ -198,7 +198,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       </FilterElement>
 
       <FilterElement>
-        <Label>Registration dates</Label>
+        <Label>Date up until</Label>
         <TextDatePicker
           value={
             filters.filterCreatedBeforeOrOnDate
