@@ -114,7 +114,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       <FilterElement>
         <Label>States</Label>
         {Object.keys(ClaimState).map((key) => (
-          <Flex direction="row" align="center">
+          <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
               checked={
@@ -138,7 +138,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       <FilterElement>
         <Label>Complexities</Label>
         {Object.keys(ClaimComplexity).map((key) => (
-          <Flex direction="row" align="center">
+          <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
               checked={
@@ -164,7 +164,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       <FilterElement>
         <Label>Groups</Label>
         {range(numberMemberGroups).map((filterNumber) => (
-          <Flex direction="row" align="center">
+          <Flex key={filterNumber} direction="row" align="center">
             <Checkbox
               label={FilterGroupState[filterNumber]}
               checked={
@@ -186,7 +186,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       <FilterElement>
         <Label>Markets</Label>
         {Object.keys(Market).map((key) => (
-          <Flex direction="row" align="center">
+          <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
               checked={isFilterExist(Market[key], 'filterMarkets') || false}
