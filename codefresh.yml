@@ -75,7 +75,6 @@ steps:
     working_directory: '${{clone}}'
     commands:
       - yarn build
-      - yarn cache
     stage: 'checks'
     when:
       branch:
