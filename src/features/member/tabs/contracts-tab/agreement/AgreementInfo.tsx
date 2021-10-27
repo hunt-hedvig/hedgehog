@@ -3,7 +3,7 @@ import { Button, InfoContainer, InfoRow, InfoText, Paragraph } from '@hedvig-ui'
 import { EditStreetInput } from 'features/member/tabs/contracts-tab/agreement/EditStreetInput'
 import React, { useState } from 'react'
 import { PencilFill } from 'react-bootstrap-icons'
-import { Contract, GenericAgreement } from 'types/generated/graphql'
+import { GenericAgreement } from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 import {
   convertEnumToTitle,
@@ -22,9 +22,8 @@ const EditIconWrapper = styled('span')`
 `
 
 export const AgreementInfo: React.FC<{
-  contract: Contract
   agreement: GenericAgreement
-}> = ({ contract, agreement }) => {
+}> = ({ agreement }) => {
   const [editStreet, setEditStreet] = useState(false)
   return (
     <InfoContainer>
@@ -43,7 +42,6 @@ export const AgreementInfo: React.FC<{
           {editStreet && (
             <EditStreetInput
               agreementId={agreement.id}
-              contract={contract}
               street={agreement.address.street}
               closeEdit={() => setEditStreet(false)}
             />

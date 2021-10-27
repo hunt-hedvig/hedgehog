@@ -13,10 +13,13 @@ import {
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
-import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useGetMeQuery } from 'types/generated/graphql'
+import {
+  DashboardNumbers,
+  useGetDashboardNumbersQuery,
+  useGetMeQuery,
+} from 'types/generated/graphql'
 import { useInsecurePersistentState } from 'utils/state'
 
 const Wrapper = styled.div`
@@ -63,7 +66,15 @@ const MutedText = styled.div`
 
 const DashboardPage: React.FC = () => {
   const { data } = useGetMeQuery()
-  const [dashboardNumbers] = useDashboardNumbers()
+
+  const { data: dashboardData } = useGetDashboardNumbersQuery({
+    pollInterval: 1000 * 5,
+  })
+
+  const dashboardNumbers = dashboardData?.dashboardNumbers as
+    | DashboardNumbers
+    | undefined
+
   const [conversationsEnabled] = useInsecurePersistentState<boolean>(
     'conversations:enabled',
     false,

@@ -8,14 +8,14 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { subDays } from 'date-fns'
-import {
-  changeFromDateOptions,
-  useChangeFromDate,
-} from 'graphql/use-change-from-date-for-agreement'
+import { format, subDays } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { Contract, GenericAgreement } from 'types/generated/graphql'
+import {
+  Contract,
+  GenericAgreement,
+  useChangeFromDateMutation,
+} from 'types/generated/graphql'
 import {
   checkGapBetweenAgreements,
   DateSpan,
@@ -43,7 +43,7 @@ export const FromDate: React.FC<{
 }> = ({ agreement, contract }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
   const [fromDate, setFromDate] = React.useState(initialFromDate(agreement))
-  const [changeFromDate] = useChangeFromDate(contract)
+  const [changeFromDate] = useChangeFromDateMutation()
   const { confirm } = useConfirmDialog()
 
   const reset = () => {
@@ -79,7 +79,14 @@ export const FromDate: React.FC<{
     }
     confirm(confirmText).then(() => {
       toast.promise(
-        changeFromDate(changeFromDateOptions(agreement, fromDate)),
+        changeFromDate({
+          variables: {
+            agreementId: agreement.id,
+            request: {
+              newFromDate: format(fromDate, 'yyyy-MM-dd'),
+            },
+          },
+        }),
         {
           loading: 'Changing date',
           success: () => {

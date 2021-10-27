@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "esnext",
     "esModuleInterop": true,
     "lib": ["dom", "es6", "es7", "es2017.object"],
@@ -12,16 +12,24 @@
     "moduleResolution": "node",
     "typeRoots": ["./src/types", "./node_modules/@types"],
     "types": ["jest", "node"],
-    "allowJs": true,
-    "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "skipLibCheck": true,
     "sourceMap": true,
+    "incremental": true,
+    "noEmit": true,
     "paths": {
       "*": ["*", "node_modules/*", "src/*", "shared/*"]
-    }
+    },
+    "removeComments": true
   },
-  "include": ["./shared", "./src"],
+  "include": [
+    "./shared/**/*.ts",
+    "./shared/**/*.js",
+    "./shared/**/*.tsx",
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.js"
+  ],
   "exclude": ["node_modules"]
 }

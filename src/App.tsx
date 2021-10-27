@@ -28,9 +28,13 @@ const Main = styled.div<{ dark: boolean }>`
     dark ? colorsV3.gray900 : theme.background};
   color: ${({ theme }) => theme.foreground};
   flex: 1;
+  display: flex;
+  flex-direction: column;
 `
 
 const MainContent = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
   padding: 2rem 4rem;
 `

@@ -116,7 +116,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-plugin-prettier": "^2.0.0",
-    "typescript": "^3.8.0",
+    "typescript": "^4.4.4",
     "webpack": "^5.59.1",
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^4.9.1",
@@ -127,6 +127,7 @@
   "scripts": {
     "start": "NODE_ENV=production ts-node -P tsconfig-server.json src/server/serverEntry.ts",
     "build": "NODE_ENV=production webpack --mode production --config webpack/webpack.config.client.production.js",
+    "clean": "rm -rf ./build && rm -rf tsconfig.tsbuildinfo",
     "build:vendor": "NODE_ENV=development webpack --config webpack/webpack.config.vendor.js",
     "heroku-postbuild": "yarn build",
     "watch": "concurrently -n wds,srv 'npm:watch-client' 'npm:watch-server'",

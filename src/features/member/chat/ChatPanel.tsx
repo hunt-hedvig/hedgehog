@@ -11,9 +11,12 @@ import {
 import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
 import { usePlatform } from '@hedvig-ui/utils/platform'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
-import { getSendMessageOptions, useSendMessage } from 'graphql/use-send-message'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
+import {
+  GetMessageHistoryDocument,
+  useSendMessageMutation,
+} from 'types/generated/graphql'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -97,7 +100,7 @@ export const ChatPanel = ({ memberId }) => {
   const [error, setError] = useState(false)
   const [currentMessage, setCurrentMessage] = useState(draft)
   const [forceSendMessage, setForceSendMessage] = useState(false)
-  const [sendMessage, { loading }] = useSendMessage()
+  const [sendMessage, { loading }] = useSendMessageMutation()
   const [textFieldFocused, setTextFieldFocused] = useState(false)
   const { isMetaKey, metaKey } = usePlatform()
 
@@ -118,9 +121,24 @@ export const ChatPanel = ({ memberId }) => {
       return
     }
 
-    const { data } = await sendMessage(
-      getSendMessageOptions(memberId, currentMessage, forceSendMessage),
-    )
+    const { data } = await sendMessage({
+      variables: {
+        input: {
+          memberId,
+          message: currentMessage,
+          forceSendMessage,
+        },
+      },
+      refetchQueries: () => [
+        {
+          query: GetMessageHistoryDocument,
+          variables: {
+            memberId,
+          },
+        },
+      ],
+      awaitRefetchQueries: true,
+    })
 
     if (
       data?.sendMessage.__typename === 'SendMessageFailed' &&

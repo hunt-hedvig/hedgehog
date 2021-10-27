@@ -1,6 +1,6 @@
+import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
 import React from 'react'
-import styled from '@emotion/styled'
 
 const Image = styled.img`
   margin-top: 5px;

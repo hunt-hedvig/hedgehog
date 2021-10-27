@@ -9,15 +9,12 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
-import {
-  addPartnerPercentageDiscountCodeOptions,
-  useAddPartnerPercentageDiscountCode,
-} from 'graphql/use-add-partner-percentage-discount-code'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
   AssignVoucherPercentageDiscount,
   Scalars,
+  useAssignCampaignToPartnerPercentageDiscountMutation,
 } from 'types/generated/graphql'
 import {
   numberOfMonthsOptions,
@@ -59,7 +56,7 @@ export const MonthlyPercentageForm: React.FC = () => {
   const [
     setPartnerPercentageDiscount,
     { loading },
-  ] = useAddPartnerPercentageDiscountCode()
+  ] = useAssignCampaignToPartnerPercentageDiscountMutation()
 
   const codeTypeOptions = getCodeTypeOptions()
 
@@ -177,11 +174,12 @@ export const MonthlyPercentageForm: React.FC = () => {
           onClick={() => {
             confirm(`Create new campaign code "${formData.code}"?`).then(() => {
               toast.promise(
-                setPartnerPercentageDiscount(
-                  addPartnerPercentageDiscountCodeOptions(
-                    formData as AssignVoucherPercentageDiscount,
-                  ),
-                ),
+                setPartnerPercentageDiscount({
+                  variables: {
+                    request: formData as AssignVoucherPercentageDiscount,
+                  },
+                  refetchQueries: () => ['FindPartnerCampaigns'],
+                }),
                 {
                   loading: 'Creating campaign',
                   success: 'Campaign created',
