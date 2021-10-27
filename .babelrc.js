@@ -22,6 +22,7 @@ module.exports = (api) => {
       test: {
         plugins: [
           '@emotion',
+          '@babel/plugin-syntax-dynamic-import',
           '@babel/transform-modules-commonjs',
           '@babel/plugin-transform-runtime',
           'babel-plugin-dynamic-import-node',
