@@ -33,6 +33,7 @@ steps:
     image: '${{build_dependency_container}}'
     working_directory: '${{clone}}'
     commands:
+      - yarn cache
       - yarn
     stage: 'install'
     when:
@@ -75,6 +76,7 @@ steps:
     working_directory: '${{clone}}'
     commands:
       - yarn build
+      - yarn cache
     stage: 'checks'
     when:
       branch:
