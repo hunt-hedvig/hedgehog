@@ -169,7 +169,6 @@ export interface InputProps
   error?: boolean
   success?: boolean
   muted?: boolean
-  ref?: React.RefObject<HTMLInputElement>
   style?: React.CSSProperties
   size?: InputSize
   loading?: boolean
@@ -178,50 +177,55 @@ export interface InputProps
   affix?: AffixType
 }
 
-export const Input: React.FC<InputProps> = ({
-  success,
-  error,
-  disabled,
-  loading,
-  muted,
-  icon,
-  size,
-  affix,
-  style,
-  focus,
-  ...props
-}) => {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const isAffix = Boolean(affix)
-  const isSuccess = success && !error && !loading
-  const isError = error && !success && !loading
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      success,
+      error,
+      disabled,
+      loading,
+      muted,
+      icon,
+      size,
+      affix,
+      style,
+      focus,
+      ...props
+    },
+    _,
+  ) => {
+    const inputRef = useRef<HTMLInputElement>(null)
+    const isAffix = Boolean(affix)
+    const isSuccess = success && !error && !loading
+    const isError = error && !success && !loading
 
-  useEffect(() => {
-    if (focus && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [focus])
+    useEffect(() => {
+      if (focus && inputRef.current) {
+        inputRef.current.focus()
+      }
+    }, [focus])
 
-  return (
-    <InputWrapper style={style}>
-      {icon ? <CustomIcon>{icon}</CustomIcon> : null}
-      <InputStyled
-        ref={inputRef}
-        className="input"
-        withIcon={Boolean(icon)}
-        inputSize={size}
-        success={success}
-        error={error}
-        loading={loading}
-        muted={muted}
-        disabled={disabled}
-        placeholder={props.placeholder}
-        {...props}
-      />
-      {affix && affix.content && <Affix size={size}>{affix.content}</Affix>}
-      {loading && <Loading affix={isAffix} size={size} />}
-      {isSuccess && <SuccessIcon affix={isAffix} size={size} />}
-      {isError && <ErrorIcon affix={isAffix} size={size} />}
-    </InputWrapper>
-  )
-}
+    return (
+      <InputWrapper style={style}>
+        {icon ? <CustomIcon>{icon}</CustomIcon> : null}
+        <InputStyled
+          ref={inputRef}
+          className="input"
+          withIcon={Boolean(icon)}
+          inputSize={size}
+          success={success}
+          error={error}
+          loading={loading}
+          muted={muted}
+          disabled={disabled}
+          placeholder={props.placeholder}
+          {...props}
+        />
+        {affix && affix.content && <Affix size={size}>{affix.content}</Affix>}
+        {loading && <Loading affix={isAffix} size={size} />}
+        {isSuccess && <SuccessIcon affix={isAffix} size={size} />}
+        {isError && <ErrorIcon affix={isAffix} size={size} />}
+      </InputWrapper>
+    )
+  },
+)
