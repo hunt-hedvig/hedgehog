@@ -62,12 +62,19 @@ steps:
         working_directory: '${{clone}}'
         commands:
           - yarn typecheck
-      - title: 'Building client'
-        type: 'freestyle'
-        image: '${{build_dependency_container}}'
-        working_directory: '${{clone}}'
-        commands:
-          - yarn build
+    stage: 'checks'
+    when:
+      branch:
+        ignore:
+          - master
+
+  build_client:
+    title: 'Building client'
+    type: 'freestyle'
+    image: '${{build_dependency_container}}'
+    working_directory: '${{clone}}'
+    commands:
+      - yarn build
     stage: 'checks'
     when:
       branch:
