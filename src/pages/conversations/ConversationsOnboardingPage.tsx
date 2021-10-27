@@ -27,6 +27,9 @@ const ConversationsOnboardingPage: React.FC = () => {
   const { settings, updateSetting } = useMe()
 
   const history = useHistory()
+  const [enabledStorage, setEnabledStorage] = useInsecurePersistentState<
+    boolean
+  >('conversations:enabled', false)
   const [enabled, setEnabled] = useState(
     settings[UserSettingKey.FeatureFlags]?.conversations || false,
   )
@@ -41,6 +44,10 @@ const ConversationsOnboardingPage: React.FC = () => {
         conversations: true,
       })
       setEnabled(true)
+    }
+    if (!enabledStorage) {
+      setEnabledStorage(true)
+      history.go(0)
     }
   }, [enabled])
 
