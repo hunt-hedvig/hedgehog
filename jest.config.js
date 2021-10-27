@@ -10,4 +10,9 @@ module.exports = {
   },
   setupFiles: ['<rootDir>/test-setup-enzyme.js'],
   testEnvironment: 'jsdom',
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
+    },
+  },
 }

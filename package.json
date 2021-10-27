@@ -133,7 +133,7 @@
     "watch": "concurrently -n wds,srv 'npm:watch-client' 'npm:watch-server'",
     "watch-client": "NODE_ENV=development webpack serve --config webpack/webpack.config.client.development.js",
     "watch-server": "NODE_ENV=development BROWSER=false nodemon -q -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/serverEntry.ts",
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test jest --maxWorkers=1",
     "typecheck": "tsc",
     "lint": "tslint src/**/*.ts* shared/**/*.ts*",
     "fix": "tslint src/**/*.ts* shared/**/*.ts* --fix && pretty-quick",
