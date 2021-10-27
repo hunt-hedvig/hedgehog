@@ -6,7 +6,7 @@ import {
   FormInput,
   SubmitButton,
 } from '@hedvig-ui'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { Market } from 'types/enums'
@@ -75,6 +75,15 @@ export const ClaimPayment: React.FC<{
   const isPotentiallySanctioned =
     sanctionStatus === SanctionStatus.Undetermined ||
     sanctionStatus === SanctionStatus.PartialHit
+
+  useEffect(() => {
+    if (isExGratia && form.getValues().type === ClaimPaymentType.Automatic) {
+      form.setValue('type', undefined)
+    }
+    if (!isExGratia && form.getValues().type === undefined) {
+      form.setValue('type', ClaimPaymentType.Automatic)
+    }
+  }, [isExGratia])
 
   const createPaymentHandler = async () => {
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
@@ -180,6 +189,7 @@ export const ClaimPayment: React.FC<{
           onChange={() => setIsExGratia((prev) => !prev)}
         />
         <FormDropdown
+          placeholder="Type"
           options={categoryOptions.filter((opt) => {
             if (opt.value === 'AutomaticSwish') {
               return (
