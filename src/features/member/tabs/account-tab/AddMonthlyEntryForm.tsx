@@ -7,16 +7,16 @@ import {
   StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
-import {
-  getAddMonthlyEntryOptions,
-  useAddMonthlyEntry,
-} from 'graphql/use-add-monthly-entry'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
 import { toast } from 'react-hot-toast'
-import { MonthlyEntryInput } from 'types/generated/graphql'
+import {
+  GetAccountDocument,
+  MonthlyEntryInput,
+  useAddMonthlyEntryMutation,
+} from 'types/generated/graphql'
 
 export const AddMonthlyEntryForm: React.FC<{
   memberId: string
@@ -24,7 +24,7 @@ export const AddMonthlyEntryForm: React.FC<{
   onSuccess: () => void
 }> = ({ memberId, onCancel, onSuccess }) => {
   const [contractMarketInfo] = useContractMarketInfo(memberId)
-  const [addMonthlyEntry] = useAddMonthlyEntry()
+  const [addMonthlyEntry] = useAddMonthlyEntryMutation()
   const form = useForm()
 
   if (!Boolean(contractMarketInfo?.preferredCurrency)) {
@@ -47,9 +47,18 @@ export const AddMonthlyEntryForm: React.FC<{
     }
 
     toast.promise(
-      addMonthlyEntry(
-        getAddMonthlyEntryOptions(memberId, dataCopy as MonthlyEntryInput),
-      ),
+      addMonthlyEntry({
+        variables: {
+          memberId,
+          input: dataCopy as MonthlyEntryInput,
+        },
+        refetchQueries: [
+          {
+            query: GetAccountDocument,
+            variables: { memberId },
+          },
+        ],
+      }),
       {
         loading: 'Adding monthly entry',
         success: () => {

@@ -1,11 +1,13 @@
 import { Button, TextDatePicker } from '@hedvig-ui'
-import {
-  getSignQuoteForNewContractOptions,
-  useSignQuoteForNewContract,
-} from 'graphql/use-sign-quote-for-new-contract'
+import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { Quote } from 'types/generated/graphql'
+import {
+  GetContractsDocument,
+  GetQuotesDocument,
+  Quote,
+  useSignQuoteForNewContractMutation,
+} from 'types/generated/graphql'
 import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
 
@@ -21,7 +23,7 @@ export const QuoteContractCreation: React.FC<{
   onWipChange = noopFunction,
 }) => {
   const [activeFrom, setActiveFrom] = React.useState(() => new Date())
-  const [signQuote, setSignQuoteMutation] = useSignQuoteForNewContract()
+  const [signQuote, setSignQuoteMutation] = useSignQuoteForNewContractMutation()
 
   return (
     <form
@@ -35,9 +37,22 @@ export const QuoteContractCreation: React.FC<{
           return
         }
         await toast.promise(
-          signQuote(
-            getSignQuoteForNewContractOptions(quote.id, activeFrom, memberId),
-          ),
+          signQuote({
+            variables: {
+              quoteId: quote.id,
+              activationDate: format(activeFrom, 'yyyy-MM-dd'),
+            },
+            refetchQueries: () => [
+              {
+                query: GetQuotesDocument,
+                variables: { memberId },
+              },
+              {
+                query: GetContractsDocument,
+                variables: { memberId },
+              },
+            ],
+          }),
           {
             loading: 'Creating contract',
             success: 'Contract created',

@@ -38,7 +38,7 @@ export const Agreement: React.FC<{
     <>
       <CardsWrapper>
         <Card span={2}>
-          <AgreementInfo contract={contract} agreement={agreement} />
+          <AgreementInfo agreement={agreement} />
         </Card>
         {agreement.status !== AgreementStatus.Pending && (
           <>
@@ -50,11 +50,7 @@ export const Agreement: React.FC<{
               </div>
             </Card>
             <Card span={2}>
-              <InsuranceCertificate
-                contract={contract}
-                agreement={agreement}
-                refetch={refetch}
-              />
+              <InsuranceCertificate agreement={agreement} refetch={refetch} />
             </Card>
           </>
         )}
