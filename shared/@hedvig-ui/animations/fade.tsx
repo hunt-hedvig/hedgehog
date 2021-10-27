@@ -75,7 +75,7 @@ export const useFadeAnimation = ({
   const [fadeType, setFadeType] = useState<FadeType | null>(null)
 
   const fade = (direction: FadeDirection, type: FadeType) =>
-    new Promise((resolve) => {
+    new Promise<void>((resolve) => {
       setFadeDirection(direction)
       setFadeType(type)
       setTimeout(() => {
