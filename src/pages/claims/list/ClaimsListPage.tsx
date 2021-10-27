@@ -3,7 +3,7 @@ import { FadeIn, MainHeadline } from '@hedvig-ui'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
 import { Filters } from 'features/claims/claims-list/filter'
 import React, { useEffect } from 'react'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { useInsecurePersistentState } from 'utils/state'
 
@@ -32,6 +32,8 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     params: { page = '1' },
   },
 }) => {
+  const location = useLocation()
+
   const [filters, setFilters] = useInsecurePersistentState<ClaimsFiltersType>(
     'claims:filters',
     {
@@ -46,10 +48,16 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   )
 
   useEffect(() => {
-    setFilters((currentFilters) => ({
-      ...currentFilters,
-      filterCreatedBeforeOrOnDate: new Date().toISOString().split('T')[0],
-    }))
+    const from = (location?.state as { from?: string })?.from
+
+    if (from === 'menu') {
+      setFilters((currentFilters) => ({
+        ...currentFilters,
+        filterCreatedBeforeOrOnDate: new Date().toISOString().split('T')[0],
+      }))
+    }
+
+    window.history.replaceState({}, document.title)
   }, [])
 
   const selectedPage = parseInt(page, 10)
