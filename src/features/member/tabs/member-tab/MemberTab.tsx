@@ -13,6 +13,7 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
+import { FraudulentStatusEdit } from 'features/member/tabs/member-tab/FraudulentStatus'
 import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -23,7 +24,6 @@ import {
   useEditMemberInfoMutation,
   useSetFraudulentStatusMutation,
 } from 'types/generated/graphql'
-import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
 
 const ButtonWrapper = styled.div`
   width: 100%;
@@ -62,7 +62,7 @@ const getFieldValue = (value) => {
   return value.toString()
 }
 
-export const DetailsTab: React.FC<{
+export const MemberTab: React.FC<{
   member: Member
 }> = ({ member }) => {
   const [modalOpen, setModalOpen] = useState(false)

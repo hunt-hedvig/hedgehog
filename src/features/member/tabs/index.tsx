@@ -1,6 +1,6 @@
 import { ContractTab } from 'features/member/tabs/contracts-tab'
-import { DetailsTab } from 'features/member/tabs/DetailsTab'
 import { MemberFile } from 'features/member/tabs/files-tab/FileTab'
+import { MemberTab } from 'features/member/tabs/member-tab/MemberTab'
 import { PaymentsTab } from 'features/member/tabs/payments-tab/PaymentsTab'
 import { Quotes } from 'features/member/tabs/quote-tab'
 
@@ -80,7 +80,7 @@ export const memberPagePanes = (memberId, member) => [
       key: Keys.Seven,
     },
     path: `members/${memberId}/member`,
-    component: () => <DetailsTab member={member} />,
+    component: () => <MemberTab member={member} />,
   },
   {
     tabTitle: 'Debt',

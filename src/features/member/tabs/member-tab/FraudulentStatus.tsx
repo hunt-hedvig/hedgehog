@@ -13,7 +13,7 @@ import React from 'react'
 import { Member } from 'types/generated/graphql'
 
 const ButtonsBlock = styled('div')((_) => ({
-  floar: 'right',
+  float: 'right',
   marginTop: '10px',
 }))
 

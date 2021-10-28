@@ -3,6 +3,7 @@ import { Capitalized, Popover, Tabs } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
+import { FraudulentStatus } from 'features/member/tabs/member-tab/FraudulentStatus'
 import {
   formatSsn,
   getLanguageFlagFromPickedLocale,
@@ -14,7 +15,6 @@ import {
 import React, { useEffect } from 'react'
 import { Route, RouteComponentProps, useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
-import { FraudulentStatus } from 'utils/fraudulentStatus'
 import { useMemberHistory } from 'utils/use-member-history'
 import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
