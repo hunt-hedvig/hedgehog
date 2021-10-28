@@ -392,11 +392,6 @@ export type CreateClaimTypeRelationInput = {
   propertyOptionId: Scalars['ID']
 }
 
-export type CreateNorwegianGripenInput = {
-  baseFactorString?: Maybe<Scalars['String']>
-  factors: Array<NorwegianGripenFactorInput>
-}
-
 export type DashboardNumbers = {
   __typename?: 'DashboardNumbers'
   numberOfClaims: Scalars['Int']
@@ -724,8 +719,6 @@ export type MutationType = {
   activatePendingAgreement: Contract
   changeTerminationDate: Contract
   revertTermination: Contract
-  createNorwegianGripenPriceEngine: Scalars['Boolean']
-  addNorwegianPostalCodes: Scalars['Boolean']
   changeToDate: Contract
   changeFromDate: Contract
   safelyEdit: Contract
@@ -917,14 +910,6 @@ export type MutationTypeRevertTerminationArgs = {
   contractId: Scalars['ID']
 }
 
-export type MutationTypeCreateNorwegianGripenPriceEngineArgs = {
-  request?: Maybe<CreateNorwegianGripenInput>
-}
-
-export type MutationTypeAddNorwegianPostalCodesArgs = {
-  postalCodesString?: Maybe<Scalars['String']>
-}
-
 export type MutationTypeChangeToDateArgs = {
   agreementId: Scalars['ID']
   request?: Maybe<ChangeToDateInput>
@@ -1106,21 +1091,6 @@ export type NationalIdentification = {
 export type NoDiscount = {
   __typename?: 'NoDiscount'
   _?: Maybe<Scalars['Boolean']>
-}
-
-export type NorwegianGripenFactorInput = {
-  factorType: NorwegianGripenFactorType
-  factorString: Scalars['String']
-}
-
-export enum NorwegianGripenFactorType {
-  Age = 'AGE',
-  CentralityGroup = 'CENTRALITY_GROUP',
-  EconomyOfMunicipality = 'ECONOMY_OF_MUNICIPALITY',
-  NumberOfPeople = 'NUMBER_OF_PEOPLE',
-  SquareMeters = 'SQUARE_METERS',
-  HouseholdType = 'HOUSEHOLD_TYPE',
-  Deductible = 'DEDUCTIBLE',
 }
 
 export type NumberFailedCharges = {
@@ -1480,7 +1450,7 @@ export type User = {
   email: Scalars['String']
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
-  latestPresence?: Maybe<Scalars['LocalDateTime']>
+  latestPresence?: Maybe<Scalars['Instant']>
 }
 
 export type UserSetting = {
@@ -2457,22 +2427,6 @@ export type GetClaimTypesQuery = { __typename?: 'QueryType' } & Pick<
   QueryType,
   'claimTypes'
 >
-
-export type AddNorwegainPostalCodesMutationVariables = Exact<{
-  postalCodesString?: Maybe<Scalars['String']>
-}>
-
-export type AddNorwegainPostalCodesMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'addNorwegianPostalCodes'>
-
-export type CreateNorwegianGripenPriceEngineMutationVariables = Exact<{
-  request?: Maybe<CreateNorwegianGripenInput>
-}>
-
-export type CreateNorwegianGripenPriceEngineMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'createNorwegianGripenPriceEngine'>
 
 export type GetSwitcherEmailsQueryVariables = Exact<{ [key: string]: never }>
 
@@ -6207,106 +6161,6 @@ export type GetClaimTypesLazyQueryHookResult = ReturnType<
 export type GetClaimTypesQueryResult = ApolloReactCommon.QueryResult<
   GetClaimTypesQuery,
   GetClaimTypesQueryVariables
->
-export const AddNorwegainPostalCodesDocument = gql`
-  mutation AddNorwegainPostalCodes($postalCodesString: String) {
-    addNorwegianPostalCodes(postalCodesString: $postalCodesString)
-  }
-`
-export type AddNorwegainPostalCodesMutationFn = ApolloReactCommon.MutationFunction<
-  AddNorwegainPostalCodesMutation,
-  AddNorwegainPostalCodesMutationVariables
->
-
-/**
- * __useAddNorwegainPostalCodesMutation__
- *
- * To run a mutation, you first call `useAddNorwegainPostalCodesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddNorwegainPostalCodesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addNorwegainPostalCodesMutation, { data, loading, error }] = useAddNorwegainPostalCodesMutation({
- *   variables: {
- *      postalCodesString: // value for 'postalCodesString'
- *   },
- * });
- */
-export function useAddNorwegainPostalCodesMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AddNorwegainPostalCodesMutation,
-    AddNorwegainPostalCodesMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    AddNorwegainPostalCodesMutation,
-    AddNorwegainPostalCodesMutationVariables
-  >(AddNorwegainPostalCodesDocument, options)
-}
-export type AddNorwegainPostalCodesMutationHookResult = ReturnType<
-  typeof useAddNorwegainPostalCodesMutation
->
-export type AddNorwegainPostalCodesMutationResult = ApolloReactCommon.MutationResult<
-  AddNorwegainPostalCodesMutation
->
-export type AddNorwegainPostalCodesMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AddNorwegainPostalCodesMutation,
-  AddNorwegainPostalCodesMutationVariables
->
-export const CreateNorwegianGripenPriceEngineDocument = gql`
-  mutation CreateNorwegianGripenPriceEngine(
-    $request: CreateNorwegianGripenInput
-  ) {
-    createNorwegianGripenPriceEngine(request: $request)
-  }
-`
-export type CreateNorwegianGripenPriceEngineMutationFn = ApolloReactCommon.MutationFunction<
-  CreateNorwegianGripenPriceEngineMutation,
-  CreateNorwegianGripenPriceEngineMutationVariables
->
-
-/**
- * __useCreateNorwegianGripenPriceEngineMutation__
- *
- * To run a mutation, you first call `useCreateNorwegianGripenPriceEngineMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateNorwegianGripenPriceEngineMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createNorwegianGripenPriceEngineMutation, { data, loading, error }] = useCreateNorwegianGripenPriceEngineMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useCreateNorwegianGripenPriceEngineMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateNorwegianGripenPriceEngineMutation,
-    CreateNorwegianGripenPriceEngineMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    CreateNorwegianGripenPriceEngineMutation,
-    CreateNorwegianGripenPriceEngineMutationVariables
-  >(CreateNorwegianGripenPriceEngineDocument, options)
-}
-export type CreateNorwegianGripenPriceEngineMutationHookResult = ReturnType<
-  typeof useCreateNorwegianGripenPriceEngineMutation
->
-export type CreateNorwegianGripenPriceEngineMutationResult = ApolloReactCommon.MutationResult<
-  CreateNorwegianGripenPriceEngineMutation
->
-export type CreateNorwegianGripenPriceEngineMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateNorwegianGripenPriceEngineMutation,
-  CreateNorwegianGripenPriceEngineMutationVariables
 >
 export const GetSwitcherEmailsDocument = gql`
   query GetSwitcherEmails {
