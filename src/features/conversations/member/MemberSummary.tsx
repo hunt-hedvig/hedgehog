@@ -8,9 +8,9 @@ import {
   getMemberGroupName,
   getMemberIdColor,
 } from 'features/member/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;

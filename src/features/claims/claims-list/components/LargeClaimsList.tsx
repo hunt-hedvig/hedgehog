@@ -18,12 +18,12 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { getMemberIdColor } from 'features/member/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { useListClaims } from 'graphql/use-list-claims'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;

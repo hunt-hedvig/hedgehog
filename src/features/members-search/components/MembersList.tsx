@@ -19,9 +19,9 @@ import {
   getMemberIdColor,
   MemberAge,
 } from 'features/member/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { Contract, ContractStatus, Member } from 'types/generated/graphql'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 type CircleVariation =
   | 'success'

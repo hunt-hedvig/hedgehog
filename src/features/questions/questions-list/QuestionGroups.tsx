@@ -4,8 +4,8 @@ import {
   doMarketFilter,
   doMemberGroupFilter,
 } from 'features/questions/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 import { FilteredQuestionGroups } from './FilteredQuestionGroups'
 
 const ListContainer = styled.div`

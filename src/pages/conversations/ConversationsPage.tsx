@@ -19,10 +19,10 @@ import {
   doMarketFilter,
   doMemberGroupFilter,
 } from 'features/questions/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 const FadeGrid = styled(Fade)`
   height: 100%;

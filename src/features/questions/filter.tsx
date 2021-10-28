@@ -6,10 +6,10 @@ import {
   doMarketFilter,
   doMemberGroupFilter,
 } from 'features/questions/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { QuestionGroup } from 'types/generated/graphql'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 export const totalNumberMemberGroups = 3
 

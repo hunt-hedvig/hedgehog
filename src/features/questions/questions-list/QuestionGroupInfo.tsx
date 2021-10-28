@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Button, Popover } from '@hedvig-ui'
 import { getMemberFlag, getMemberIdColor } from 'features/member/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { ShieldShaded } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Claim, ClaimState } from 'types/generated/graphql'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 import { QuestionInfo } from './QuestionInfo'
 
 const QuestionGroupInfoWrapper = styled.div<{

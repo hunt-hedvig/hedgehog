@@ -1,6 +1,10 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
 import styled from '@emotion/styled'
 import { BaseStyle, darkTheme, lightTheme } from '@hedvig-ui'
+import {
+  getDefaultIsDarkmode,
+  UseDarkmode,
+} from '@hedvig-ui/hooks/use-darkmode'
 import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
@@ -9,14 +13,13 @@ import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
 import { useAuthenticate } from 'features/user/hooks/use-authenticate'
 import { MeProvider } from 'features/user/hooks/use-me'
+import { MemberHistoryProvider } from 'features/user/hooks/use-member-history'
+import { NumberMemberGroupsProvider } from 'features/user/hooks/use-number-member-groups'
 import { Routes } from 'pages/routes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
-import { getDefaultIsDarkmode, UseDarkmode } from 'utils/use-darkmode'
-import { MemberHistoryProvider } from 'utils/use-member-history'
-import { NumberMemberGroupsProvider } from 'utils/use-number-member-groups'
 
 const Layout = styled(BaseStyle)`
   display: flex;

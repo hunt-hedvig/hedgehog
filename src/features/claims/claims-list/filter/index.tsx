@@ -4,10 +4,10 @@ import { range } from '@hedvig-ui/utils/range'
 import { Market } from 'features/config/constants'
 import { ColorBadge } from 'features/questions/filter'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 interface FiltersProps {
   filters: ClaimsFiltersType

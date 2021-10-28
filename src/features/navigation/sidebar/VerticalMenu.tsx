@@ -1,6 +1,7 @@
 import styled, { StyledComponent } from '@emotion/styled'
 import { Hotkey } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useCommandLine } from 'features/commands/command-line-hook'
 import { useMe } from 'features/user/hooks/use-me'
@@ -24,7 +25,6 @@ import MediaQuery from 'react-media'
 import { matchPath, useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { UserSettingKey } from 'types/generated/graphql'
-import { useDarkmode } from 'utils/use-darkmode'
 import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(

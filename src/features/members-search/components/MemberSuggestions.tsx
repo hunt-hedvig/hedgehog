@@ -8,10 +8,10 @@ import {
   MemberId,
   MemberName,
 } from 'features/members-search/styles'
+import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
-import { useMemberHistory } from 'utils/use-member-history'
 
 export const MemberSuggestions: React.FC = () => {
   const { memberHistory } = useMemberHistory()

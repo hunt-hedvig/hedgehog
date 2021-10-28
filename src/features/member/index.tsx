@@ -12,11 +12,11 @@ import {
   getMemberIdColor,
   MemberAge,
 } from 'features/member/utils'
+import { useMemberHistory } from 'features/user/hooks/use-member-history'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useEffect } from 'react'
 import { Route, RouteComponentProps, useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
-import { useMemberHistory } from 'utils/use-member-history'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',

@@ -7,11 +7,11 @@ import {
   doMemberGroupFilter,
 } from 'features/conversations/utils/filters'
 import { FilterState, getFilterColor } from 'features/questions/filter'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { QuestionGroup } from 'types/generated/graphql'
-import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 const FilterButton = styled.button<{ selected: boolean }>`
   border: none;
