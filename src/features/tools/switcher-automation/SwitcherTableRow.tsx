@@ -17,10 +17,13 @@ import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
+import {
+  SwitcherEmailStatus,
+  TerminationReason,
+} from 'features/config/constants'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
-import { SwitcherEmailStatus, TerminationReason } from 'types/enums'
 import {
   Contract,
   GetSwitcherEmailsDocument,

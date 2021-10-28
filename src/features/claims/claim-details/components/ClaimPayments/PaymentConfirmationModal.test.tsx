@@ -1,7 +1,7 @@
 import { mount } from 'enzyme'
+import { Market } from 'features/config/constants'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { Market } from 'types/enums'
 import { tickAsync } from 'utils/sleep'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 

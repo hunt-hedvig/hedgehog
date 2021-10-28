@@ -1,5 +1,5 @@
 import { isPast, parseISO } from 'date-fns'
-import { SwitcherEmailStatus } from 'types/enums'
+import { SwitcherEmailStatus } from 'features/config/constants'
 import { SwitchableSwitcherEmail } from 'types/generated/graphql'
 
 export const getSwitcherEmailStatus = (

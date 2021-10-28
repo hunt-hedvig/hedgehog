@@ -1,4 +1,4 @@
-import { Market } from 'types/enums'
+import { Market } from 'features/config/constants'
 
 export const convertEnumToTitle = (enumText: string) => {
   return enumText

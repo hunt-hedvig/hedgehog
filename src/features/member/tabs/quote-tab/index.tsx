@@ -1,9 +1,13 @@
 import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import {
+  ContractType,
+  Market,
+  QuoteProductType,
+} from 'features/config/constants'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
-import { ContractType, Market, QuoteProductType } from 'types/enums'
 import { Quote } from 'types/generated/graphql'
 import { getMarketFromPickedLocale } from 'utils/member'
 import { QuotesSubSection } from './quote-sub-section'

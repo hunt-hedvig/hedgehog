@@ -11,9 +11,9 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
+import { TerminationReason } from 'features/config/constants'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { TerminationReason } from 'types/enums'
 import {
   Contract,
   useChangeTerminationDateMutation,

@@ -12,12 +12,12 @@ import {
   Spacing,
   StandaloneMessage,
 } from '@hedvig-ui'
+import { Market } from 'features/config/constants'
 import { WhitelistMemberButton } from 'features/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import { Market } from 'types/enums'
 import { getMarketFromPickedLocale } from 'utils/member'
 
 export const DebtTab: React.FC<{

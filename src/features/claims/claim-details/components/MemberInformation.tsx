@@ -16,11 +16,11 @@ import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
+import { Market } from 'features/config/constants'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Market } from 'types/enums'
 import {
   Flag,
   SanctionStatus,

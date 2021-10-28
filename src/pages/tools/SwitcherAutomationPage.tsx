@@ -7,10 +7,14 @@ import {
   TableHeaderColumn,
 } from '@hedvig-ui'
 import { format } from 'date-fns'
+import {
+  Market,
+  SwitcherEmailStatus,
+  SwitcherTypeMarket,
+} from 'features/config/constants'
 import { SwitcherEmailRow } from 'features/tools/switcher-automation/SwitcherTableRow'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Market, SwitcherEmailStatus, SwitcherTypeMarket } from 'types/enums'
 import {
   Contract,
   Member,
@@ -18,9 +22,10 @@ import {
   useGetSwitcherEmailsQuery,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
+import { getFlagFromMarket } from 'utils/member'
 import { sleep } from 'utils/sleep'
 import { getSwitcherEmailStatus } from 'utils/switcher-emails'
-import { convertEnumToTitle, getFlagFromMarket } from 'utils/text'
+import { convertEnumToTitle } from 'utils/text'
 
 const SwitcherAutomationPage: React.FC = () => {
   const switchers = useGetSwitcherEmailsQuery()

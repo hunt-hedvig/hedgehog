@@ -1,5 +1,5 @@
+import { Market } from 'features/config/constants'
 import { FilterState } from 'features/questions/filter'
-import { Market } from 'types/enums'
 import { QuestionGroup } from 'types/generated/graphql'
 import { range } from 'utils/array'
 import { hasOpenClaim } from 'utils/claim'
