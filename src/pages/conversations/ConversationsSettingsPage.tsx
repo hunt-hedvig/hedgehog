@@ -12,13 +12,7 @@ const ConversationsSettingsPage: React.FC<{}> = () => {
   const history = useHistory()
   const [filters, setFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterStateType>
-  >('questions:filters', [
-    FilterState.First,
-    FilterState.Second,
-    FilterState.Third,
-    FilterState.HasOpenClaim,
-    FilterState.NoOpenClaim,
-  ])
+  >('questions:filters', [FilterState.HasOpenClaim, FilterState.NoOpenClaim])
 
   return (
     <>

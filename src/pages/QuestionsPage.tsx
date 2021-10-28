@@ -49,13 +49,7 @@ const QuestionsPage: React.FC = () => {
   const { data } = useGetMeQuery()
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterStateType>
-  >('questions:filters', [
-    FilterState.First,
-    FilterState.Second,
-    FilterState.Third,
-    FilterState.HasOpenClaim,
-    FilterState.NoOpenClaim,
-  ])
+  >('questions:filters', [FilterState.HasOpenClaim, FilterState.NoOpenClaim])
 
   const [questionGroups, { loading }] = useQuestionGroups()
 
