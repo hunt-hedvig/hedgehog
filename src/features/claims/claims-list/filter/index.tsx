@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Checkbox, Flex, Label, lightTheme, TextDatePicker } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
-import { Market } from 'features/config/constants'
+import { Flags, Market } from 'features/config/constants'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
@@ -90,12 +90,6 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
       .split('T')[0]
 
     setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: dateString }))
-  }
-
-  const marketIcons = {
-    Sweden: '🇸🇪',
-    Norway: '🇳🇴',
-    Denmark: '🇩🇰',
   }
 
   const complexityIcons = {
@@ -192,7 +186,9 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
               checked={isFilterExist(Market[key], 'filterMarkets') || false}
               onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
             />
-            <span style={{ marginLeft: '0.5rem' }}>{marketIcons[key]}</span>
+            <span style={{ marginLeft: '0.5rem' }}>
+              {Flags[key.toUpperCase()]}
+            </span>
           </Flex>
         ))}
       </FilterElement>
