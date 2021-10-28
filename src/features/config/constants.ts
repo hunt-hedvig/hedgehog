@@ -2,7 +2,6 @@ export enum Market {
   Sweden = 'SWEDEN',
   Norway = 'NORWAY',
   Denmark = 'DENMARK',
-  France = 'FRANCE',
 }
 
 export const MemberGroups: Record<string, number> = {
@@ -15,7 +14,6 @@ export const Flags: Record<Market, string> = {
   NORWAY: '🇳🇴',
   DENMARK: '🇩🇰',
   SWEDEN: '🇸🇪',
-  FRANCE: '🇫🇷',
 }
 
 export enum ContractType {
@@ -71,7 +69,6 @@ export const ContractMarketTypes: Record<Market, ContractType[]> = {
     ContractType.DanishTravel,
     ContractType.DanishAccident,
   ],
-  FRANCE: [],
 }
 
 export enum PickedLocale {
