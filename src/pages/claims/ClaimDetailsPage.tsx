@@ -11,8 +11,7 @@ import {
   Shadowed,
   StandaloneMessage,
 } from '@hedvig-ui'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Key, Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Key, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation/ClaimInformation'
@@ -22,6 +21,7 @@ import { ClaimReserve } from 'features/claims/claim-details/components/ClaimRese
 import { ClaimTranscriptions } from 'features/claims/claim-details/components/ClaimTranscriptions'
 import { ClaimType } from 'features/claims/claim-details/components/ClaimType/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
+import { useCommandLine } from 'features/commands/command-line-hook'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import React, { useContext, useEffect, useState } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'

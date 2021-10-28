@@ -12,10 +12,10 @@ import {
   Loadable,
   Popover,
 } from '@hedvig-ui'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
+import { useCommandLine } from 'features/commands/command-line-hook'
 import { Market } from 'features/config/constants'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'

@@ -1,5 +1,5 @@
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys, NumberKeys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys, NumberKeys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useCommandLine } from 'features/commands/command-line-hook'
 import {
   EmptyState,
   MemberHistoryCardWrapper,

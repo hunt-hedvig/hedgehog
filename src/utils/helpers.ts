@@ -2,7 +2,7 @@
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 
-export const capitalize = (str: string) => {
+const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }
 

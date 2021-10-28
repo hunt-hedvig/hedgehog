@@ -7,7 +7,10 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { UpdateNameInput } from 'features/tools/claim-types/tables/UpdateNameInput'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'

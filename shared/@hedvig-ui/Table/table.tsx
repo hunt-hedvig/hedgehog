@@ -1,8 +1,12 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
 import React, { TableHTMLAttributes } from 'react'
-import { range } from '../utils/helpers'
-import { useVerticalKeyboardNavigation } from '../utils/keyboard-actions'
+
+const range = (start, end) =>
+  start >= 0 && end >= start
+    ? Array.from({ length: end - start }, (_v, k) => k + start)
+    : []
 
 export const Table: React.FC<{
   onPerformNavigation?: (index) => void

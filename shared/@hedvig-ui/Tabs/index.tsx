@@ -1,7 +1,11 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
 import React, { useEffect } from 'react'
-import { Key, Keys, useKeyIsPressed } from '../utils/key-press-hook'
+import {
+  Key,
+  Keys,
+  useKeyIsPressed,
+} from '../hooks/keyboard/use-key-is-pressed'
 
 const TabStyled = styled.li<{ active?: boolean }>`
   transition: all 0.3s;

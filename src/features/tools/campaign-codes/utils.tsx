@@ -14,8 +14,10 @@ import {
   VisibleNoDiscount,
   VoucherCampaign,
 } from 'types/generated/graphql'
-import { capitalize } from 'utils/helpers'
 import { formatMoney } from 'utils/money'
+
+export const capitalize = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 
 type IncentiveDataMaybe = Incentive | null | undefined
 

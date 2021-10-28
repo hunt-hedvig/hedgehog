@@ -1,4 +1,4 @@
-import { usePlatform } from '@hedvig-ui/utils/platform'
+import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import {
@@ -22,7 +22,7 @@ import {
   Spinner,
   TextArea,
 } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 

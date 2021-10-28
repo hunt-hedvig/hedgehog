@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useCommandLine } from 'features/commands/command-line-hook'
 import { ChatPanel } from 'features/member/chat/ChatPanel'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useRef } from 'react'

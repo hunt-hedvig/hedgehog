@@ -5,7 +5,10 @@ import {
   StandaloneMessage,
   useFadeAnimation,
 } from '@hedvig-ui'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'

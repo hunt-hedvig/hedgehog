@@ -1,5 +1,5 @@
 import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import {
   ContractType,

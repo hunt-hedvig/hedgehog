@@ -1,8 +1,8 @@
 import styled, { StyledComponent } from '@emotion/styled'
 import { Hotkey } from '@hedvig-ui'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { colorsV3 } from '@hedviginsurance/brand'
+import { useCommandLine } from 'features/commands/command-line-hook'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useContext, useRef, useState } from 'react'
 import {

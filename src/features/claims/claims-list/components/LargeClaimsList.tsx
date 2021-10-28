@@ -10,7 +10,10 @@ import {
   TablePageSelect,
   TableRow,
 } from '@hedvig-ui'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'graphql/use-list-claims'

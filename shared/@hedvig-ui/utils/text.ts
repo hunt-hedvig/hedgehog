@@ -11,18 +11,6 @@ export const convertEnumToTitle = (enumText: string) => {
 export const convertCamelcaseToTitle = (text) =>
   text.charAt(0).toUpperCase() + text.substring(1).replace(/(\B[A-Z])/g, ' $1')
 
-export const getCarrierText = (carrier: string) => {
-  switch (carrier) {
-    case 'EIR':
-      return '⚠️ EIR'
-    case 'HEDVIG':
-      return 'Ⓗ Hedvig'
-    case 'HDI':
-      return '🗄 HDI'
-  }
-  return carrier
-}
-
 export const getTextFromEnumValue = (
   sentence: string,
   capitalized: boolean = false,

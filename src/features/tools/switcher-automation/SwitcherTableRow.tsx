@@ -13,8 +13,8 @@ import {
   TableRow,
   TextDatePicker,
 } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
 import {

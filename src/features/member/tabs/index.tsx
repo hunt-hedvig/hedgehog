@@ -4,7 +4,7 @@ import { MemberFile } from 'features/member/tabs/files-tab/FileTab'
 import { PaymentsTab } from 'features/member/tabs/payments-tab/PaymentsTab'
 import { Quotes } from 'features/member/tabs/quote-tab'
 
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimsTab } from 'features/member/tabs/claims-tab/ClaimsTab'
 import React from 'react'
 import { AccountTab } from './account-tab'
