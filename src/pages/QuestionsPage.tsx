@@ -101,6 +101,8 @@ const QuestionsPage: React.FC = () => {
           <FilterSelect
             filters={selectedFilters}
             pushLeft
+            animationDelay={0}
+            animationItemDelay={20}
             onToggle={(filter) => {
               if (selectedFilters.includes(filter)) {
                 setSelectedFilters(

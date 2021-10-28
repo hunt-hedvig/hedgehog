@@ -1,4 +1,4 @@
-import { totalNumberMemberGroups } from 'features/questions/FilterSelect'
+import { MemberGroups } from 'features/config/constants'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 const NUMBER_MEMBER_GROUPS_KEY = 'hedvig:member:groups:number'
@@ -8,7 +8,7 @@ export const getDefaultNumberMemberGroups = (): number => {
     const numberOfMemberGroups = Number(
       window.localStorage.getItem(NUMBER_MEMBER_GROUPS_KEY) ?? 2,
     )
-    return Math.min(numberOfMemberGroups, totalNumberMemberGroups)
+    return Math.min(numberOfMemberGroups, Object.keys(MemberGroups).length)
   } catch (e) {
     console.error(e)
     return 2

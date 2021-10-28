@@ -14,8 +14,6 @@ import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { QuestionGroup } from 'types/generated/graphql'
 
-export const totalNumberMemberGroups = 3
-
 export const FilterState = {
   First: 0,
   Second: 1,

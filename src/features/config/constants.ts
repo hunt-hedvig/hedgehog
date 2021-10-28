@@ -5,6 +5,12 @@ export enum Market {
   France = 'FRANCE',
 }
 
+export const MemberGroups: Record<string, number> = {
+  First: 1,
+  Second: 2,
+  Third: 3,
+}
+
 export const Flags: Record<Market, string> = {
   NORWAY: '🇳🇴',
   DENMARK: '🇩🇰',
