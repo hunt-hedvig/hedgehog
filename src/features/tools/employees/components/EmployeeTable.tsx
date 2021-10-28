@@ -13,6 +13,7 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -23,7 +24,6 @@ import {
   useRemoveEmployeeMutation,
   useUpdateEmployeeRoleMutation,
 } from 'types/generated/graphql'
-import { dateTimeFormatter } from 'utils/helpers'
 
 export const EmployeeTable: React.FC<{
   scopes: readonly string[]

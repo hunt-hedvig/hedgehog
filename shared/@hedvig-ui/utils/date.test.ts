@@ -1,4 +1,4 @@
-import { BirthDayInfo, getBirthdayInfo } from 'utils/date'
+import { BirthDayInfo, getBirthdayInfo } from '@hedvig-ui/utils/date'
 
 it('Returns null if invalid birth date string', () => {
   const today = new Date('2021-04-29')

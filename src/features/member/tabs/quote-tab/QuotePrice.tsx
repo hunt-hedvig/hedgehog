@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Button, Input } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { formatMoney } from '@hedvig-ui/utils/money'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
@@ -9,7 +10,6 @@ import {
   Quote,
   useOverrideQuotePriceMutation,
 } from 'types/generated/graphql'
-import { formatMoney } from 'utils/money'
 
 const PriceWrapper = styled.div`
   padding-bottom: 1rem;

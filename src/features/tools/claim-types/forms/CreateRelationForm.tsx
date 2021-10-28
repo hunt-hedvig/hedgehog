@@ -7,7 +7,7 @@ import {
   SearchableDropdown,
   Spacing,
 } from '@hedvig-ui'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -39,7 +39,7 @@ const ClaimTypeDropdown: React.FC<{
           selected={value === type}
           onClick={() => onChange(type)}
         >
-          {getTextFromEnumValue(type)}
+          {convertEnumToTitle(type)}
         </DropdownOption>
       ))}
     </Dropdown>

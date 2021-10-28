@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { useDrag } from '@visx/drag'
 import { DefaultLink, Graph } from '@visx/network'
 import React, { useEffect, useState } from 'react'
@@ -169,7 +169,7 @@ export const ClaimTypeTree: React.FC<{}> = ({}) => {
         linkComponent={DefaultLink}
         nodeComponent={({ node: { label, variant } }) => (
           <g>
-            {getTextFromEnumValue(label)
+            {convertEnumToTitle(label)
               .split(' ')
               .reduce((acc, word, index) => {
                 const chunkIndex = Math.floor(index / 2)

@@ -1,6 +1,6 @@
 import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
   ContractType,
   Market,
@@ -160,7 +160,7 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
         style={{ marginBottom: '2em' }}
         list={getUniqueContractTypes().map((type, index) => ({
           active: type.value === activeTab,
-          title: getTextFromEnumValue(type.value, true),
+          title: convertEnumToTitle(type.value),
           action: () => setActiveTab(type.value),
           key: index,
           hotkey: type.hotkey,

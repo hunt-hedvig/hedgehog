@@ -12,6 +12,7 @@ import {
   TableColumn,
   TableRow,
 } from '@hedvig-ui'
+import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -23,7 +24,6 @@ import {
   useSetFraudulentStatusMutation,
 } from 'types/generated/graphql'
 import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
-import { dateTimeFormatter } from 'utils/helpers'
 
 const ButtonWrapper = styled.div`
   width: 100%;

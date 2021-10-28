@@ -1,15 +1,12 @@
 import styled from '@emotion/styled'
 import { Button, InfoContainer, InfoRow, InfoText, Paragraph } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui/utils/money'
+import { convertEnumToTitle, formatPostalCode } from '@hedvig-ui/utils/text'
 import { EditStreetInput } from 'features/member/tabs/contracts-tab/agreement/EditStreetInput'
+import { getCarrierText } from 'features/member/tabs/contracts-tab/utils'
 import React, { useState } from 'react'
 import { PencilFill } from 'react-bootstrap-icons'
 import { GenericAgreement } from 'types/generated/graphql'
-import { formatMoney } from 'utils/money'
-import {
-  convertEnumToTitle,
-  formatPostalCode,
-  getCarrierText,
-} from 'utils/text'
 
 const AddressInfoRow = styled(Paragraph)`
   margin-bottom: 1rem;

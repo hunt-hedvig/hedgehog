@@ -1,4 +1,11 @@
-import { differenceInCalendarDays, getYear, parse, setYear } from 'date-fns'
+import {
+  differenceInCalendarDays,
+  getYear,
+  parse,
+  parseISO,
+  setYear,
+} from 'date-fns'
+import formatDate from 'date-fns/format'
 
 export enum BirthDayInfo {
   Today = 'TODAY',
@@ -46,4 +53,16 @@ export const getBirthDayText = (birthDateString: string): string | null => {
       return 'Birthday yesterday 🎂'
   }
   return null
+}
+
+export const dateTimeFormatter = (date: string | number, format: string) => {
+  try {
+    return (
+      date &&
+      formatDate(typeof date === 'string' ? parseISO(date) : date, format)
+    )
+  } catch (e) {
+    console.error(e)
+    return undefined
+  }
 }

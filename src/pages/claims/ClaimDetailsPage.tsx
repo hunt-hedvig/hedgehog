@@ -23,10 +23,10 @@ import { ClaimType } from 'features/claims/claim-details/components/ClaimType/Cl
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
 import { useCommandLine } from 'features/commands/command-line-hook'
 import { ChatPane } from 'features/member/tabs/ChatPane'
+import { getCarrierText } from 'features/member/tabs/contracts-tab/utils'
 import React, { useEffect, useState } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
 import { ClaimState, useClaimPageQuery } from 'types/generated/graphql'
-import { getCarrierText } from 'utils/text'
 import { useMemberHistory } from 'utils/use-member-history'
 
 const ChatPaneAdjustedContainer = styled.div`

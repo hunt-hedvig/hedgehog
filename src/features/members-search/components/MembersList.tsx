@@ -13,7 +13,7 @@ import formatDate from 'date-fns/format'
 import {
   getFirstMasterInception,
   getLastTerminationDate,
-} from 'features/member/tabs/contracts-tab/contract'
+} from 'features/member/tabs/contracts-tab/utils'
 import {
   getMemberFlag,
   getMemberIdColor,

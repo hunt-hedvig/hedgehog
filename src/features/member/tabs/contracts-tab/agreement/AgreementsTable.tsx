@@ -7,11 +7,12 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui/utils/money'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { InsuranceStatusBadge } from 'features/member/tabs/contracts-tab/agreement/InsuranceStatusBadge'
+import { getCarrierText } from 'features/member/tabs/contracts-tab/utils'
 import React from 'react'
 import { AgreementStatus, GenericAgreement } from 'types/generated/graphql'
-import { formatMoney } from 'utils/money'
-import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
 const SelectableTableCell = styled(TableColumn)<{
   selected: boolean

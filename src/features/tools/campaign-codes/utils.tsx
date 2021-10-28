@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Badge } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui/utils/money'
 import formatDate from 'date-fns/format'
 import React from 'react'
 import {
@@ -14,7 +15,6 @@ import {
   VisibleNoDiscount,
   VoucherCampaign,
 } from 'types/generated/graphql'
-import { formatMoney } from 'utils/money'
 
 export const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()

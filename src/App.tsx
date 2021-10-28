@@ -14,7 +14,7 @@ import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
-import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
+import { getDefaultIsDarkmode, UseDarkmode } from 'utils/use-darkmode'
 import { MemberHistoryProvider } from 'utils/use-member-history'
 import { NumberMemberGroupsProvider } from 'utils/use-number-member-groups'
 
@@ -95,7 +95,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <DarkmodeContext.Provider
+    <UseDarkmode.Provider
       value={{
         isDarkmode,
         setIsDarkmode: (newIsDarkmode) => {
@@ -145,7 +145,7 @@ const App: React.FC = () => {
           </NumberMemberGroupsProvider>
         </MemberHistoryProvider>
       </ThemeProvider>
-    </DarkmodeContext.Provider>
+    </UseDarkmode.Provider>
   )
 }
 

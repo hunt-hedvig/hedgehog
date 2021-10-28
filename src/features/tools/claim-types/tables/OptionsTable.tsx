@@ -11,6 +11,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { convertCamelcaseToTitle } from '@hedvig-ui/utils/text'
 import { UpdateNameInput } from 'features/tools/claim-types/tables/UpdateNameInput'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -22,7 +23,6 @@ import {
   useGetClaimPropertyOptionsQuery,
   useUpdateClaimPropertyOptionMutation,
 } from 'types/generated/graphql'
-import { convertCamelcaseToTitle } from 'utils/text'
 
 export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
   const [

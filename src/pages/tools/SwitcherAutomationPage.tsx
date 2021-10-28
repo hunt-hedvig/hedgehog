@@ -7,6 +7,7 @@ import {
   TableHeaderColumn,
 } from '@hedvig-ui'
 import { sleep } from '@hedvig-ui/utils/sleep'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, isPast, parseISO } from 'date-fns'
 import {
   Flags,
@@ -25,7 +26,6 @@ import {
   useGetSwitcherEmailsQuery,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
-import { convertEnumToTitle } from 'utils/text'
 
 export const getSwitcherEmailStatus = (
   switcherEmail: Pick<

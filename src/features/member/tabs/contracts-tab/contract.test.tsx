@@ -1,7 +1,7 @@
 import {
   getFirstMasterInception,
   getLastTerminationDate,
-} from 'features/member/tabs/contracts-tab/contract'
+} from 'features/member/tabs/contracts-tab/utils'
 
 it('getFirstMasterInception returns first master inception if one contract is active', () => {
   const activeContracts = [

@@ -14,6 +14,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { getMemberIdColor } from 'features/member/utils'
@@ -22,7 +23,6 @@ import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
-import { convertEnumToTitle } from 'utils/text'
 import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
