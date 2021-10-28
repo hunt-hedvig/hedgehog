@@ -3,10 +3,7 @@ import { Capitalized, Popover, Tabs } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
-import React, { useContext, useEffect } from 'react'
-import { Route, RouteComponentProps, useHistory } from 'react-router'
-import { Member } from 'types/generated/graphql'
-import { FraudulentStatus } from 'utils/fraudulentStatus'
+import { FraudulentStatus } from 'features/member/tabs/member-tab/FraudulentStatus'
 import {
   formatSsn,
   getLanguageFlagFromPickedLocale,
@@ -14,9 +11,12 @@ import {
   getMemberGroupName,
   getMemberIdColor,
   MemberAge,
-} from 'utils/member'
-import { MemberHistoryContext } from 'utils/member-history'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+} from 'features/member/utils'
+import { useMemberHistory } from 'features/user/hooks/use-member-history'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
+import React, { useEffect } from 'react'
+import { Route, RouteComponentProps, useHistory } from 'react-router'
+import { Member } from 'types/generated/graphql'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -83,7 +83,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
   const navigateToTab = (tabName) =>
     history.replace(`/members/${memberId}/${tabName}`)
 
-  const { pushToMemberHistory } = useContext(MemberHistoryContext)
+  const { pushToMemberHistory } = useMemberHistory()
 
   useEffect(() => {
     pushToMemberHistory(memberId)

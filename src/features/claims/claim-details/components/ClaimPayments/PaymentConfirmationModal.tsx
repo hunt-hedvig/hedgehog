@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Button, ButtonsGroup, Input, Modal, Paragraph } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Market } from 'features/config/constants'
 import React, { useState } from 'react'
-import { Market } from 'types/enums'
 
 const Explanation = styled(Paragraph)`
   margin-top: 2em;

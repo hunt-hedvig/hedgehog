@@ -1,12 +1,11 @@
+import { getBirthdayInfo, getBirthDayText } from '@hedvig-ui/utils/date'
 import { differenceInYears, parse } from 'date-fns'
+import { Flags, Market, PickedLocale } from 'features/config/constants'
 import { FilterState, getFilterColor } from 'features/questions/filter'
 import React from 'react'
-import { Market, PickedLocale } from 'types/enums'
 import { ContractMarketInfo } from 'types/generated/graphql'
-import { getBirthdayInfo, getBirthDayText } from 'utils/date'
-import { getFlagFromMarket } from 'utils/text'
 
-export const getGroupNumberForMember = (
+const getGroupNumberForMember = (
   memberId: string,
   numberMemberGroups: number,
 ) => {
@@ -61,7 +60,7 @@ export const getMemberFlag = (
   pickedLocale: string | null = null,
 ): string => {
   if (contractMarketInfo?.market) {
-    return getFlagFromMarket(contractMarketInfo.market as Market)
+    return Flags[contractMarketInfo.market as Market]
   }
 
   if (!pickedLocale) {
@@ -72,7 +71,7 @@ export const getMemberFlag = (
     return '🏳'
   }
 
-  return `${getFlagFromMarket(market)} & 🏳`
+  return `${Flags[market]} & 🏳`
 }
 
 export const getMarketFromPickedLocale = (

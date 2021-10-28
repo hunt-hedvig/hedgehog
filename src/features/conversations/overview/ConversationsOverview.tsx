@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { Button } from '@hedvig-ui/Button/button'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { ConversationsRemaining } from 'features/conversations/overview/ConversationsRemaining'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect } from 'react'

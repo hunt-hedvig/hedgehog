@@ -7,7 +7,7 @@ import {
   StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format } from 'date-fns'
 import { AddEntryInformation } from 'features/member/tabs/account-tab/AddEntryInformation'
 import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'

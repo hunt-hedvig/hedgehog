@@ -10,6 +10,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui/utils/money'
 import { colors } from '@hedviginsurance/brand'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
@@ -17,11 +18,10 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import {
+  MonetaryAmountV2,
   PaymentScheduleQueryDocument,
   usePaymentScheduleQueryQuery,
 } from 'types/generated/graphql'
-import { MonetaryAmount } from 'utils/helpers'
-import { formatMoney } from 'utils/money'
 
 const approveMemberCharge = gql`
   mutation approveMemberCharge($approvals: [MemberChargeApproval!]!) {
@@ -69,14 +69,14 @@ interface PaymentSchedule {
     firstName?: string
     lastName?: string
     monthlySubscription?: {
-      amount: MonetaryAmount
+      amount: MonetaryAmountV2
     }
     account?: {
-      currentBalance: MonetaryAmount
+      currentBalance: MonetaryAmountV2
     }
   }
   status: string
-  amount: MonetaryAmount
+  amount: MonetaryAmountV2
 }
 
 const Row: React.FC<{
@@ -162,15 +162,15 @@ const ChargesPage: React.FC = () => {
                 lastName: schedule.member?.lastName!,
                 monthlySubscription: {
                   amount: schedule.member?.monthlySubscription
-                    ?.amount! as MonetaryAmount,
+                    ?.amount! as MonetaryAmountV2,
                 },
                 account: {
                   currentBalance: schedule.member?.account!
-                    ?.currentBalance! as MonetaryAmount,
+                    ?.currentBalance! as MonetaryAmountV2,
                 },
               },
               status: schedule.status,
-              amount: schedule.amount! as MonetaryAmount,
+              amount: schedule.amount! as MonetaryAmountV2,
             }
           })}
         />

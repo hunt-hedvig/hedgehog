@@ -3,7 +3,7 @@ import { FadeIn } from '@hedvig-ui'
 import React, { useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
-import { useClickOutside } from '../utils/click-outside'
+import { useClickOutside } from '../hooks/use-click-outside'
 
 const ModalWrapperStyled = styled.div<{
   position?: 'top' | 'center' | 'bottom'

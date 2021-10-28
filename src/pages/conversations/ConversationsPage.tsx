@@ -5,21 +5,24 @@ import {
   StandaloneMessage,
   useFadeAnimation,
 } from '@hedvig-ui'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
 import { FilterState } from 'features/questions/filter'
-import { useQuestionGroups } from 'graphql/use-question-groups'
-import React, { useEffect, useMemo, useState } from 'react'
-import { RouteComponentProps, useHistory } from 'react-router'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
-} from 'utils/questionGroup'
-import { useInsecurePersistentState } from 'utils/state'
+} from 'features/questions/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
+import { useQuestionGroups } from 'graphql/use-question-groups'
+import React, { useEffect, useMemo, useState } from 'react'
+import { RouteComponentProps, useHistory } from 'react-router'
 
 const FadeGrid = styled(Fade)`
   height: 100%;

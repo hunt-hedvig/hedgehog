@@ -1,6 +1,7 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 const MEMBER_HISTORY_KEY = 'hedvig:members:history'
+
 export const getDefaultHistory = (): ReadonlyArray<string> => {
   try {
     return JSON.parse(window.sessionStorage.getItem(MEMBER_HISTORY_KEY)!) ?? []
@@ -15,6 +16,8 @@ export const MemberHistoryContext = createContext({
     /* noop */
   },
 })
+
+export const useMemberHistory = () => useContext(MemberHistoryContext)
 
 export const MemberHistoryProvider: React.FC = ({ children }) => {
   const [memberHistory, setMemberHistory] = useState(() => getDefaultHistory())

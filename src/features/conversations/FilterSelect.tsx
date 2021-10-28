@@ -1,17 +1,17 @@
 import styled from '@emotion/styled'
 import { ButtonsGroup, FadeIn } from '@hedvig-ui'
+import { range } from '@hedvig-ui/utils/range'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'features/conversations/utils/filters'
 import { FilterState, getFilterColor } from 'features/questions/filter'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { QuestionGroup } from 'types/generated/graphql'
-import { range } from 'utils/array'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 const FilterButton = styled.button<{ selected: boolean }>`
   border: none;

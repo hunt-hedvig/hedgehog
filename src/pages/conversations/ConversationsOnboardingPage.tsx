@@ -8,13 +8,13 @@ import {
   Paragraph,
   useFadeAnimation,
 } from '@hedvig-ui'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { FilterSelect } from 'features/conversations/FilterSelect'
 import { FilterState } from 'features/questions/filter'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
-import { useInsecurePersistentState } from 'utils/state'
 
 const Subtext = styled.span`
   font-size: 0.8em;

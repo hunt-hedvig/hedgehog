@@ -1,5 +1,5 @@
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { useEffect } from 'react'
-import { useInsecurePersistentState } from 'utils/state'
 
 interface UseDraftMessagesVariables {
   memberId: string

@@ -18,20 +18,20 @@ import {
   TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { formatMoney } from '@hedvig-ui/utils/money'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
+import { Market } from 'features/config/constants'
 import gql from 'graphql-tag'
 import { useGetAccount } from 'graphql/use-get-account'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { Market } from 'types/enums'
 import {
   Transaction,
   useCreatePaymentCompletionLinkMutation,
   useGetMemberTransactionsQuery,
 } from 'types/generated/graphql'
-import { formatMoney } from 'utils/money'
 import { PayoutDetails } from './PayoutDetails'
 
 const transactionDateSorter = (a, b) => {

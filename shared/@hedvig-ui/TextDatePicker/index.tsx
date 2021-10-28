@@ -8,8 +8,8 @@ import formatDate from 'date-fns/format'
 import React from 'react'
 import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
-import { useClickOutside } from '../utils/click-outside'
-import { Keys } from '../utils/key-press-hook'
+import { Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { useClickOutside } from '../hooks/use-click-outside'
 
 const Wrapper = styled.div`
   width: 100%;

@@ -12,33 +12,33 @@ import {
   Loadable,
   Popover,
 } from '@hedvig-ui'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { formatMoney } from '@hedvig-ui/utils/money'
+import {
+  convertCamelcaseToTitle,
+  convertEnumOrSentenceToTitle,
+  formatPostalCode,
+} from '@hedvig-ui/utils/text'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
+import { useCommandLine } from 'features/commands/command-line-hook'
+import { Market } from 'features/config/constants'
+import {
+  currentAgreementForContract,
+  getFirstMasterInception,
+  getLastTerminationDate,
+} from 'features/member/tabs/contracts-tab/utils'
+import { formatSsn, getMemberFlag } from 'features/member/utils'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Market } from 'types/enums'
 import {
   Flag,
   SanctionStatus,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
 } from 'types/generated/graphql'
-import {
-  currentAgreementForContract,
-  getFirstMasterInception,
-  getLastTerminationDate,
-} from 'utils/contract'
-import { formatSsn, getMemberFlag } from 'utils/member'
-import { formatMoney } from 'utils/money'
-import {
-  convertCamelcaseToTitle,
-  convertEnumOrSentenceToTitle,
-  formatPostalCode,
-} from 'utils/text'
 
 type FraudulentStatus = 'NOT_FRAUD' | 'SUSPECTED_FRAUD' | 'CONFIRMED_FRAUD'
 

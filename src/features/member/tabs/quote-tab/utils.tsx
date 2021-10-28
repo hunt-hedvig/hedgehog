@@ -1,9 +1,9 @@
-import React from 'react'
-import { Quote } from 'types/generated/graphql'
 import {
   convertCamelcaseToTitle,
   convertEnumOrSentenceToTitle,
-} from 'utils/text'
+} from '@hedvig-ui/utils/text'
+import React from 'react'
+import { Quote } from 'types/generated/graphql'
 
 export const isSignedOrExpired = (quote: Quote) =>
   isExpired(quote) || isSigned(quote)

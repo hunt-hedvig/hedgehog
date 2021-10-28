@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { useCommandLine } from 'features/commands/command-line-hook'
 import { ChatPanel } from 'features/member/chat/ChatPanel'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useRef } from 'react'
 import { ChevronDoubleDown } from 'react-bootstrap-icons'
-import { useInsecurePersistentState } from 'utils/state'
 
 const ChevronDoubleIcon = styled(ChevronDoubleDown)<{ visible: boolean }>`
   height: 100%;

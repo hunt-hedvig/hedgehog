@@ -6,8 +6,11 @@ import {
   HotkeyStyled,
   MainHeadline,
 } from '@hedvig-ui'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useCommandLine } from 'features/commands/command-line-hook'
 import React from 'react'
 import { useHistory } from 'react-router'
 

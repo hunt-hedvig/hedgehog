@@ -8,9 +8,9 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import React from 'react'
 import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
-import { dateTimeFormatter } from 'utils/helpers'
 
 const sortFileDate = (a, b) => {
   const aDate = new Date(a.timestamp)

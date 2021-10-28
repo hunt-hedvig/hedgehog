@@ -1,11 +1,15 @@
 import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import {
+  ContractType,
+  Market,
+  QuoteProductType,
+} from 'features/config/constants'
+import { getMarketFromPickedLocale } from 'features/member/utils'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
-import { ContractType, Market, QuoteProductType } from 'types/enums'
 import { Quote } from 'types/generated/graphql'
-import { getMarketFromPickedLocale } from 'utils/member'
 import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
@@ -156,7 +160,7 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
         style={{ marginBottom: '2em' }}
         list={getUniqueContractTypes().map((type, index) => ({
           active: type.value === activeTab,
-          title: getTextFromEnumValue(type.value, true),
+          title: convertEnumToTitle(type.value),
           action: () => setActiveTab(type.value),
           key: index,
           hotkey: type.hotkey,

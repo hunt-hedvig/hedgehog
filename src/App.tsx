@@ -1,22 +1,25 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
 import styled from '@emotion/styled'
 import { BaseStyle, darkTheme, lightTheme } from '@hedvig-ui'
-import { CommandLineProvider } from '@hedvig-ui/utils/command-line-hook'
-import { ConfirmDialogProvider } from '@hedvig-ui/utils/modal-hook'
+import {
+  getDefaultIsDarkmode,
+  UseDarkmode,
+} from '@hedvig-ui/hooks/use-darkmode'
+import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
+import { CommandLineProvider } from 'features/commands/command-line-hook'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
 import { useAuthenticate } from 'features/user/hooks/use-authenticate'
 import { MeProvider } from 'features/user/hooks/use-me'
+import { MemberHistoryProvider } from 'features/user/hooks/use-member-history'
+import { NumberMemberGroupsProvider } from 'features/user/hooks/use-number-member-groups'
 import { Routes } from 'pages/routes'
 import React, { useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
-import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
-import { MemberHistoryProvider } from 'utils/member-history'
-import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
 
 const Layout = styled(BaseStyle)`
   display: flex;
@@ -95,7 +98,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <DarkmodeContext.Provider
+    <UseDarkmode.Provider
       value={{
         isDarkmode,
         setIsDarkmode: (newIsDarkmode) => {
@@ -145,7 +148,7 @@ const App: React.FC = () => {
           </NumberMemberGroupsProvider>
         </MemberHistoryProvider>
       </ThemeProvider>
-    </DarkmodeContext.Provider>
+    </UseDarkmode.Provider>
   )
 }
 

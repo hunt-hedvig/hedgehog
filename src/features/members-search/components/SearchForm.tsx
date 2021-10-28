@@ -1,6 +1,9 @@
 import { Checkbox, FadeIn, Input, Shadowed } from '@hedvig-ui'
-import { Keys, shouldIgnoreInput } from '@hedvig-ui/utils/key-press-hook'
-import { usePlatform } from '@hedvig-ui/utils/platform'
+import {
+  Keys,
+  shouldIgnoreInput,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import {
   EscapeButton,
   Group,

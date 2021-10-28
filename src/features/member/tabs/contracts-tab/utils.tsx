@@ -1,6 +1,18 @@
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
 
+export const getCarrierText = (carrier: string) => {
+  switch (carrier) {
+    case 'EIR':
+      return '⚠️ EIR'
+    case 'HEDVIG':
+      return 'Ⓗ Hedvig'
+    case 'HDI':
+      return '🗄 HDI'
+  }
+  return carrier
+}
+
 export const getSignSource = (signSource: string): string => {
   switch (signSource) {
     case 'APP':

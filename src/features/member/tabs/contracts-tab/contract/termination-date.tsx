@@ -8,12 +8,12 @@ import {
   TextArea,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
+import { TerminationReason } from 'features/config/constants'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { TerminationReason } from 'types/enums'
 import {
   Contract,
   useChangeTerminationDateMutation,
@@ -184,7 +184,7 @@ export const TerminationDate: React.FC<{
                 selected={terminationReason === TerminationReason[key]}
                 onClick={() => setTerminationReason(TerminationReason[key])}
               >
-                {getTextFromEnumValue(TerminationReason[key])}
+                {convertEnumToTitle(TerminationReason[key])}
               </DropdownOption>
             ))}
           </Dropdown>

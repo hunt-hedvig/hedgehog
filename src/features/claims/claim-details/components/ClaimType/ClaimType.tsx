@@ -4,6 +4,7 @@ import {
   Flex,
   SearchableDropdownWithRef,
 } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { ClaimPropertyForm } from 'features/claims/claim-details/components/ClaimType/components/ClaimPropertyForm'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
@@ -13,7 +14,6 @@ import {
   useGetClaimTypesQuery,
   useSetClaimTypeMutation,
 } from 'types/generated/graphql'
-import { convertEnumToTitle } from 'utils/text'
 
 export const ClaimType: React.FC<{
   claimId: string

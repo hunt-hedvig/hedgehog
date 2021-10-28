@@ -4,6 +4,12 @@ export enum Market {
   Denmark = 'DENMARK',
 }
 
+export const Flags: Record<Market, string> = {
+  NORWAY: '🇳🇴',
+  DENMARK: '🇩🇰',
+  SWEDEN: '🇸🇪',
+}
+
 export enum PickedLocale {
   SvSe = 'sv_SE',
   EnSe = 'en_SE',

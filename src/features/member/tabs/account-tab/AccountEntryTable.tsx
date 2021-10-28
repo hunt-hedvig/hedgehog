@@ -9,10 +9,10 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui/utils/money'
 import React from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
 import { AccountEntry } from 'types/generated/graphql'
-import { formatMoney } from 'utils/money'
 import { PopoverItem } from './MonthlyEntriesTable'
 
 const getAccountEntryColor = (theme, entry: AccountEntry) => {

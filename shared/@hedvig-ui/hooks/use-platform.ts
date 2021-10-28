@@ -1,4 +1,4 @@
-import { Key, Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Key, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 
 interface UsePlatformResult {
   isMetaKey: (KeyBoardEvent) => boolean

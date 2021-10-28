@@ -3,14 +3,14 @@ import { FadeIn, Flex, Label, Loadable, Placeholder } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { differenceInYears, format, parseISO } from 'date-fns'
-import React from 'react'
-import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
 import {
   getMemberFlag,
   getMemberGroupName,
   getMemberIdColor,
-} from 'utils/member'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+} from 'features/member/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
+import React from 'react'
+import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;

@@ -1,5 +1,5 @@
+import { ContractType } from 'features/config/constants'
 import { JSONSchema7 } from 'json-schema'
-import { ContractType } from 'types/enums'
 import {
   GetSchemaForContractTypeQueryHookResult,
   useGetSchemaForContractTypeQuery,

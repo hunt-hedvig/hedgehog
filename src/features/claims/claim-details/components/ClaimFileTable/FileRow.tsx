@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Dropdown, DropdownOption, TableColumn, TableRow } from '@hedvig-ui'
+import { dateTimeFormatter } from '@hedvig-ui/utils/date'
+import { sleep } from '@hedvig-ui/utils/sleep'
 import React from 'react'
 import { useSetClaimFileCategoryMutation } from 'types/generated/graphql'
-import { dateTimeFormatter } from 'utils/helpers'
-import { sleep } from 'utils/sleep'
 import { DeleteButton } from '../DeleteClaimFileButton'
 
 const Image = styled.img`

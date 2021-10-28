@@ -1,16 +1,16 @@
 import { MockedProvider } from '@apollo/client/testing'
+import { sleep, tickAsync } from '@hedvig-ui/utils/sleep'
 import { mount } from 'enzyme'
 import { PaymentConfirmationModal } from 'features/claims/claim-details/components/ClaimPayments/PaymentConfirmationModal'
+import { Market } from 'features/config/constants'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { Market } from 'types/enums'
 import {
   ClaimPaymentInput,
   ClaimPaymentType,
   CreateClaimPaymentDocument,
   SanctionStatus,
 } from 'types/generated/graphql'
-import { sleep, tickAsync } from 'utils/sleep'
 import { ClaimPayment } from './ClaimPayment'
 
 it("doesn't submit empty form", async () => {

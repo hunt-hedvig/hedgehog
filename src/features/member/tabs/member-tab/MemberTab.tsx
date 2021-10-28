@@ -12,6 +12,8 @@ import {
   TableColumn,
   TableRow,
 } from '@hedvig-ui'
+import { dateTimeFormatter } from '@hedvig-ui/utils/date'
+import { FraudulentStatusEdit } from 'features/member/tabs/member-tab/FraudulentStatus'
 import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -22,8 +24,6 @@ import {
   useEditMemberInfoMutation,
   useSetFraudulentStatusMutation,
 } from 'types/generated/graphql'
-import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
-import { dateTimeFormatter, getFieldName, getFieldValue } from 'utils/helpers'
 
 const ButtonWrapper = styled.div`
   width: 100%;
@@ -37,7 +37,32 @@ const memberFieldFormatters = {
   createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
-export const DetailsTab: React.FC<{
+const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+}
+
+const getFieldName = (field) =>
+  capitalize(
+    field
+      .match(/([A-Z]?[^A-Z]*)/g)
+      .slice(0, -1)
+      .join(' '),
+  )
+
+const getFieldValue = (value) => {
+  if (!value) {
+    return ''
+  }
+  if (Array.isArray(value)) {
+    return value.join(', ')
+  }
+  if (value && typeof value === 'object' && value.constructor === Object) {
+    return Object.keys(value).map((key) => `${key}: ${value[key]}, `)
+  }
+  return value.toString()
+}
+
+export const MemberTab: React.FC<{
   member: Member
 }> = ({ member }) => {
   const [modalOpen, setModalOpen] = useState(false)

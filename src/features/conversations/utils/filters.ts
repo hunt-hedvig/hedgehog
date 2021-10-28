@@ -1,12 +1,16 @@
+import { range } from '@hedvig-ui/utils/range'
+import { Market } from 'features/config/constants'
+import { getMarketFromPickedLocale } from 'features/member/utils'
 import { FilterState } from 'features/questions/filter'
-import { Market } from 'types/enums'
-import { QuestionGroup } from 'types/generated/graphql'
-import { range } from 'utils/array'
-import { hasOpenClaim } from 'utils/claim'
-import {
-  getGroupNumberForMember,
-  getMarketFromPickedLocale,
-} from 'utils/member'
+import { ClaimState, QuestionGroup } from 'types/generated/graphql'
+
+const getGroupNumberForMember = (
+  memberId: string,
+  numberMemberGroups: number,
+) => {
+  const memberIdNumber = Number(memberId)
+  return memberIdNumber % numberMemberGroups
+}
 
 export const doMemberGroupFilter = (numberMemberGroups: number) => (
   selectedFilters: ReadonlyArray<FilterState>,
@@ -58,8 +62,16 @@ export const doClaimFilter = (selectedFilters: ReadonlyArray<FilterState>) => (
   }
   return (
     (selectedFilters.includes(FilterState.HasOpenClaim) &&
-      hasOpenClaim(questionGroup.member.claims)) ||
+      questionGroup.member.claims.some(
+        (claim) =>
+          claim.state === ClaimState.Open ||
+          claim.state === ClaimState.Reopened,
+      )) ||
     (selectedFilters.includes(FilterState.NoOpenClaim) &&
-      !hasOpenClaim(questionGroup.member.claims))
+      !questionGroup.member.claims.some(
+        (claim) =>
+          claim.state === ClaimState.Open ||
+          claim.state === ClaimState.Reopened,
+      ))
   )
 }

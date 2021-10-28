@@ -5,7 +5,7 @@ import {
   Paragraph,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'

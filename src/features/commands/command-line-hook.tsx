@@ -1,6 +1,10 @@
 import styled from '@emotion/styled'
 import { FadeIn, FourthLevelHeadline, Input, Paragraph } from '@hedvig-ui'
-import { Key, Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Key,
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import React, {
   createContext,
   useContext,
