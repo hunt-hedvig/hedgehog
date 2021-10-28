@@ -12,6 +12,32 @@ export const Flags: Record<Market, string> = {
   FRANCE: '🇫🇷',
 }
 
+export enum ContractType {
+  SwedishApartment = 'SWEDISH_APARTMENT',
+  SwedishHouse = 'SWEDISH_HOUSE',
+  SwedishAccident = 'SWEDISH_ACCIDENT',
+  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
+  NorwegianTravel = 'NORWEGIAN_TRAVEL',
+  DanishHomeContent = 'DANISH_HOME_CONTENT',
+  DanishTravel = 'DANISH_TRAVEL',
+  DanishAccident = 'DANISH_ACCIDENT',
+}
+
+export const ContractMarketTypes: Record<Market, ContractType[]> = {
+  SWEDEN: [
+    ContractType.SwedishHouse,
+    ContractType.SwedishApartment,
+    ContractType.SwedishAccident,
+  ],
+  NORWAY: [ContractType.NorwegianHomeContent, ContractType.NorwegianTravel],
+  DENMARK: [
+    ContractType.DanishHomeContent,
+    ContractType.DanishTravel,
+    ContractType.DanishAccident,
+  ],
+  FRANCE: [],
+}
+
 export enum PickedLocale {
   SvSe = 'sv_SE',
   EnSe = 'en_SE',
@@ -28,17 +54,6 @@ export enum QuoteProductType {
   HomeContent = 'HOME_CONTENT',
   Travel = 'TRAVEL',
   Accident = 'ACCIDENT',
-}
-
-export enum ContractType {
-  SwedishApartment = 'SWEDISH_APARTMENT',
-  SwedishHouse = 'SWEDISH_HOUSE',
-  SwedishAccident = 'SWEDISH_ACCIDENT',
-  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
-  NorwegianTravel = 'NORWEGIAN_TRAVEL',
-  DanishHomeContent = 'DANISH_HOME_CONTENT',
-  DanishTravel = 'DANISH_TRAVEL',
-  DanishAccident = 'DANISH_ACCIDENT',
 }
 
 export enum TypeOfContract {

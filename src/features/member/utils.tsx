@@ -48,9 +48,11 @@ export const getMemberGroupName = (
   memberId: string,
   numberMemberGroups: number,
 ) => {
-  return `${
-    FilterState[getGroupNumberForMember(memberId, numberMemberGroups)]
-  } group`
+  return `${Object.keys(FilterState).find(
+    (filter) =>
+      FilterState[filter] ===
+      getGroupNumberForMember(memberId, numberMemberGroups),
+  )} group`
 }
 
 export const getMemberFlag = (

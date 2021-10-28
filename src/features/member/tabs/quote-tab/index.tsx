@@ -1,9 +1,8 @@
 import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
+  ContractMarketTypes,
   ContractType,
-  Market,
   QuoteProductType,
 } from 'features/config/constants'
 import { getMarketFromPickedLocale } from 'features/member/utils'
@@ -38,81 +37,6 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
 
   const memberMarket =
     contractMarket?.market ?? getMarketFromPickedLocale(pickedLocale!)
-
-  const getUniqueContractTypes = () => {
-    if (memberMarket === Market.Sweden) {
-      return [
-        {
-          value: ContractType.SwedishApartment,
-          hotkey: {
-            name: 'A',
-            key: Keys.A,
-          },
-        },
-        {
-          value: ContractType.SwedishHouse,
-          hotkey: {
-            name: 'H',
-            key: Keys.H,
-          },
-        },
-        {
-          value: ContractType.SwedishAccident,
-          hotkey: {
-            name: 'C',
-            key: Keys.C,
-          },
-        },
-      ]
-    }
-
-    if (memberMarket === Market.Norway) {
-      return [
-        {
-          value: ContractType.NorwegianHomeContent,
-          hotkey: {
-            name: 'N',
-            key: Keys.N,
-          },
-        },
-        {
-          value: ContractType.NorwegianTravel,
-          hotkey: {
-            name: 'T',
-            key: Keys.T,
-          },
-        },
-      ]
-    }
-
-    if (memberMarket === Market.Denmark) {
-      return [
-        {
-          value: ContractType.DanishHomeContent,
-          hotkey: {
-            name: 'D',
-            key: Keys.D,
-          },
-        },
-        {
-          value: ContractType.DanishTravel,
-          hotkey: {
-            name: 'S',
-            key: Keys.S,
-          },
-        },
-        {
-          value: ContractType.DanishAccident,
-          hotkey: {
-            name: 'R',
-            key: Keys.R,
-          },
-        },
-      ]
-    }
-
-    return []
-  }
 
   const shouldShowInContractTypeSubSection = (
     quote: Quote,
@@ -158,13 +82,16 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
     <>
       <Tabs
         style={{ marginBottom: '2em' }}
-        list={getUniqueContractTypes().map((type, index) => ({
-          active: type.value === activeTab,
-          title: convertEnumToTitle(type.value),
-          action: () => setActiveTab(type.value),
-          key: index,
-          hotkey: type.hotkey,
-        }))}
+        list={
+          memberMarket
+            ? ContractMarketTypes[memberMarket].map((type, index) => ({
+                active: type.value === activeTab,
+                title: convertEnumToTitle(type.value),
+                action: () => setActiveTab(type.value),
+                key: index,
+              }))
+            : []
+        }
       />
       {!!quotes.length && (
         <QuotesSubSection
