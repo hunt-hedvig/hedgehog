@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { ButtonsGroup, FadeIn, lightTheme } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { Flags, Market } from 'features/config/constants'
+import { Flags, Market, MemberGroups } from 'features/config/constants'
 import {
   doClaimFilter,
   doMarketFilter,
@@ -15,13 +15,14 @@ import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { QuestionGroup } from 'types/generated/graphql'
 
 export const FilterState = {
-  First: 0,
-  Second: 1,
-  Third: 2,
-  HasOpenClaim: 3,
-  NoOpenClaim: 4,
+  ...Object.keys(MemberGroups).reduce((acc, group, index) => {
+    acc[group] = index
+    return acc
+  }, {}),
+  HasOpenClaim: Object.keys(MemberGroups).length,
+  NoOpenClaim: Object.keys(MemberGroups).length + 1,
   ...Object.keys(Market).reduce((acc, market, index) => {
-    acc[market] = 5 + index
+    acc[market] = Object.keys(MemberGroups).length + 2 + index
     return acc
   }, {}),
 }
@@ -29,12 +30,12 @@ export const FilterState = {
 export type FilterStateType = number
 
 export const getFilterColor = (filter: FilterStateType): string => {
-  switch (filter) {
-    case FilterState.First:
+  switch (filter + 1) {
+    case MemberGroups.First:
       return lightTheme.danger
-    case FilterState.Second:
+    case MemberGroups.Second:
       return lightTheme.success
-    case FilterState.Third:
+    case MemberGroups.Third:
       return lightTheme.highlight
     default:
       return lightTheme.accent
