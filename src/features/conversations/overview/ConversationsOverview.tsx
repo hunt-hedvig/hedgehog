@@ -3,10 +3,10 @@ import { Flex } from '@hedvig-ui'
 import { Button } from '@hedvig-ui/Button/button'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { ConversationsRemaining } from 'features/conversations/overview/ConversationsRemaining'
-import React from 'react'
+import { useMe } from 'features/user/hooks/use-me'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { QuestionGroup } from 'types/generated/graphql'
-import { useInsecurePersistentState } from 'utils/state'
+import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 
 const ConversationItem = styled(Flex)<{ selected: boolean }>`
   background-color: ${({ theme, selected }) =>
@@ -46,16 +46,19 @@ export const ConversationsOverview: React.FC<{
   filteredGroups: QuestionGroup[]
   currentMemberId?: string
 }> = ({ filteredGroups, currentMemberId }) => {
+  const { settings, updateSetting } = useMe()
+
   const history = useHistory()
   const { confirm } = useConfirmDialog()
-  const [, setEnabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
-  )
-  const [, setOnboarded] = useInsecurePersistentState<boolean>(
-    'conversations:onboarded',
-    false,
-  )
+
+  useEffect(() => {
+    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        conversations: true,
+      })
+      history.go(0)
+    }
+  }, [])
 
   return (
     <div>
@@ -71,8 +74,9 @@ export const ConversationsOverview: React.FC<{
             onClick={() =>
               confirm('Do you want to go back to the questions tab?').then(
                 () => {
-                  setEnabled(false)
-                  setOnboarded(false)
+                  updateSetting(UserSettingKey.FeatureFlags, {
+                    conversations: false,
+                  })
                   history.replace('/questions')
                   history.go(0)
                 },

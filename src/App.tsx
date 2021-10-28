@@ -79,6 +79,21 @@ const App: React.FC = () => {
     }//${window.location.host}/login/callback`
   }
 
+  if (!me) {
+    return (
+      <Switch>
+        <Route
+          path="/login"
+          exact
+          component={() => {
+            redirectToLogin()
+            return null
+          }}
+        />
+      </Switch>
+    )
+  }
+
   return (
     <DarkmodeContext.Provider
       value={{
@@ -100,37 +115,29 @@ const App: React.FC = () => {
               <CommandLineProvider>
                 <ConfirmDialogProvider>
                   <Layout>
-                    {!history.location.pathname.startsWith('/login') && (
-                      <VerticalMenu history={history} />
-                    )}
-                    <Main dark={history.location.pathname.startsWith('/login')}>
-                      <TopBar me={me} />
-                      <MainContent>
-                        <Switch>
-                          <Route
-                            path="/login"
-                            exact
-                            component={() => {
-                              redirectToLogin()
-                              return null
+                    <MeProvider me={me}>
+                      {!history.location.pathname.startsWith('/login') && (
+                        <VerticalMenu history={history} />
+                      )}
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
+                        <TopBar me={me} />
+                        <MainContent>
+                          <Switch>
+                            <Routes />
+                          </Switch>
+                          <Toaster
+                            position="top-center"
+                            toastOptions={{
+                              style: {
+                                padding: '20px 25px',
+                              },
                             }}
                           />
-                          {me && (
-                            <MeProvider me={me}>
-                              <Routes />
-                            </MeProvider>
-                          )}
-                        </Switch>
-                        <Toaster
-                          position="top-center"
-                          toastOptions={{
-                            style: {
-                              padding: '20px 25px',
-                            },
-                          }}
-                        />
-                      </MainContent>
-                    </Main>
+                        </MainContent>
+                      </Main>
+                    </MeProvider>
                   </Layout>
                 </ConfirmDialogProvider>
               </CommandLineProvider>

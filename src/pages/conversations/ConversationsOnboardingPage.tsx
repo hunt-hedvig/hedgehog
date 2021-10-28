@@ -10,8 +10,10 @@ import {
 } from '@hedvig-ui'
 import { FilterSelect } from 'features/conversations/FilterSelect'
 import { FilterState } from 'features/questions/filter'
+import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
+import { UserSettingKey } from 'types/generated/graphql'
 import { useInsecurePersistentState } from 'utils/state'
 
 const Subtext = styled.span`
@@ -22,26 +24,22 @@ const Subtext = styled.span`
 const ConversationsOnboardingPage: React.FC = () => {
   const { fade, props: fadeProps } = useFadeAnimation({})
   const [onboardingStep, setOnboardingStep] = useState(0)
+  const { settings, updateSetting } = useMe()
 
   const history = useHistory()
-  const [enabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
-  )
-  const [, setOnboarded] = useInsecurePersistentState<boolean>(
-    'conversations:onboarded',
-    false,
-  )
+
   const [filters, setFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterState>
   >('questions:filters', [])
 
   useEffect(() => {
-    if (!enabled) {
-      localStorage.setItem(`hvg:conversations:enabled`, JSON.stringify(true))
+    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        conversations: true,
+      })
       history.go(0)
     }
-  }, [enabled])
+  }, [])
 
   useEffect(() => {
     fade('up', 'in').then(() => {
@@ -49,7 +47,7 @@ const ConversationsOnboardingPage: React.FC = () => {
     })
   }, [])
 
-  if (!enabled) {
+  if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
     return null
   }
 
@@ -129,7 +127,6 @@ const ConversationsOnboardingPage: React.FC = () => {
             <Button
               onClick={() => {
                 fade('up', 'out').then(() => {
-                  setOnboarded(true)
                   history.push('/conversations')
                 })
               }}
