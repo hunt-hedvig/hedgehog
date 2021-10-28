@@ -1,4 +1,4 @@
-import { totalNumberMemberGroups } from 'features/questions/filter'
+import { totalNumberMemberGroups } from 'features/questions/FilterSelect'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 const NUMBER_MEMBER_GROUPS_KEY = 'hedvig:member:groups:number'

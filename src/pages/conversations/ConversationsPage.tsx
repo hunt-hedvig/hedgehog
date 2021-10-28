@@ -13,7 +13,7 @@ import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persis
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import { FilterStateType } from 'features/questions/filter'
+import { FilterStateType } from 'features/questions/FilterSelect'
 import {
   doClaimFilter,
   doMarketFilter,

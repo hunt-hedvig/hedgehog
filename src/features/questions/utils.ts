@@ -1,7 +1,7 @@
 import { range } from '@hedvig-ui/utils/range'
 import { Market } from 'features/config/constants'
 import { getMarketFromPickedLocale } from 'features/member/utils'
-import { FilterState, FilterStateType } from 'features/questions/filter'
+import { FilterState, FilterStateType } from 'features/questions/FilterSelect'
 import { Claim, ClaimState, QuestionGroup } from 'types/generated/graphql'
 
 const getGroupNumberForMember = (

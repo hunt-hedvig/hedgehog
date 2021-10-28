@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { RadioGroup } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
-import { totalNumberMemberGroups } from 'features/questions/filter'
+import { totalNumberMemberGroups } from 'features/questions/FilterSelect'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
 

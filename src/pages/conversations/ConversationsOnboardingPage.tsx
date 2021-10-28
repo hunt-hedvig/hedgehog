@@ -9,8 +9,7 @@ import {
   useFadeAnimation,
 } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { FilterStateType } from 'features/questions/filter'
-import { FilterSelect } from 'features/questions/FilterSelect'
+import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'

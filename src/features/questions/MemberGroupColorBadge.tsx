@@ -1,5 +1,8 @@
 import styled from '@emotion/styled'
-import { FilterStateType, getFilterColor } from 'features/questions/filter'
+import {
+  FilterStateType,
+  getFilterColor,
+} from 'features/questions/FilterSelect'
 
 export const MemberGroupColorBadge = styled.div<{ filter?: FilterStateType }>`
   display: inline-block;

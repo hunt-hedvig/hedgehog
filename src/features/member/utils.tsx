@@ -1,7 +1,7 @@
 import { getBirthdayInfo, getBirthDayText } from '@hedvig-ui/utils/date'
 import { differenceInYears, parse } from 'date-fns'
 import { Flags, Market, PickedLocale } from 'features/config/constants'
-import { FilterState, getFilterColor } from 'features/questions/filter'
+import { FilterState, getFilterColor } from 'features/questions/FilterSelect'
 import React from 'react'
 import { ContractMarketInfo } from 'types/generated/graphql'
 

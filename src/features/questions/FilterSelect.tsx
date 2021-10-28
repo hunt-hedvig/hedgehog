@@ -1,13 +1,8 @@
 import styled from '@emotion/styled'
-import { ButtonsGroup, FadeIn } from '@hedvig-ui'
+import { ButtonsGroup, FadeIn, lightTheme } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { Flags, Market } from 'features/config/constants'
-import {
-  FilterState,
-  FilterStateType,
-  getFilterColor,
-} from 'features/questions/filter'
 import {
   doClaimFilter,
   doMarketFilter,
@@ -18,6 +13,35 @@ import { useQuestionGroups } from 'graphql/use-question-groups'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { QuestionGroup } from 'types/generated/graphql'
+
+export const totalNumberMemberGroups = 3
+
+export const FilterState = {
+  First: 0,
+  Second: 1,
+  Third: 2,
+  HasOpenClaim: 3,
+  NoOpenClaim: 4,
+  ...Object.keys(Market).reduce((acc, market, index) => {
+    acc[market] = 5 + index
+    return acc
+  }, {}),
+}
+
+export type FilterStateType = number
+
+export const getFilterColor = (filter: FilterStateType): string => {
+  switch (filter) {
+    case FilterState.First:
+      return lightTheme.danger
+    case FilterState.Second:
+      return lightTheme.success
+    case FilterState.Third:
+      return lightTheme.highlight
+    default:
+      return lightTheme.accent
+  }
+}
 
 const FilterButton = styled.button<{ selected: boolean }>`
   border: none;

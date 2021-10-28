@@ -1,7 +1,10 @@
 import { Button, FadeIn, Flex } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { FilterState, FilterStateType } from 'features/questions/filter'
-import { FilterSelect } from 'features/questions/FilterSelect'
+import {
+  FilterSelect,
+  FilterState,
+  FilterStateType,
+} from 'features/questions/FilterSelect'
 import React from 'react'
 import { useHistory } from 'react-router'
 

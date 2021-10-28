@@ -8,8 +8,11 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { FilterState, FilterStateType } from 'features/questions/filter'
-import { FilterSelect } from 'features/questions/FilterSelect'
+import {
+  FilterSelect,
+  FilterState,
+  FilterStateType,
+} from 'features/questions/FilterSelect'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
