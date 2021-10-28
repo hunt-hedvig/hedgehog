@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Modal } from '@hedvig-ui'
-import { Key, Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
 import React, {
   createContext,
   useContext,
@@ -58,12 +58,6 @@ export const ConfirmDialogComponent: React.FC<{
       </div>
     </Modal>
   )
-}
-
-export interface ConfirmDialogAction {
-  label: string
-  keys: Key[]
-  onConfirm: () => void
 }
 
 export interface ConfirmDialogContextProps {

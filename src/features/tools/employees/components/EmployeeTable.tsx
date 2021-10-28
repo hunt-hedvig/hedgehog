@@ -12,7 +12,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {

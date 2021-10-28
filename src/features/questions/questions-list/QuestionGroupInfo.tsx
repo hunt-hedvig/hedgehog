@@ -4,7 +4,7 @@ import React from 'react'
 import { ShieldShaded } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
-import { hasOpenClaim } from 'utils/claim'
+import { Claim, ClaimState } from 'types/generated/graphql'
 import { getMemberFlag, getMemberIdColor } from 'utils/member'
 import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { QuestionInfo } from './QuestionInfo'
@@ -30,6 +30,13 @@ const MemberInfoWrapper = styled.div`
   font-size: 1.5rem;
   padding-bottom: 1rem;
 `
+
+const hasOpenClaim = (claims: ReadonlyArray<Claim>): boolean => {
+  return claims.some(
+    (claim) =>
+      claim.state === ClaimState.Open || claim.state === ClaimState.Reopened,
+  )
+}
 
 export const QuestionGroupInfo = ({ questionGroup }) => {
   const member = questionGroup?.member

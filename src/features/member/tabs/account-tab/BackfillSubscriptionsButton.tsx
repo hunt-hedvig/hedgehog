@@ -1,5 +1,5 @@
 import { Button } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useBackfillSubscriptionsMutation } from 'types/generated/graphql'

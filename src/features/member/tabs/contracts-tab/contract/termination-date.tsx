@@ -8,7 +8,7 @@ import {
   TextArea,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
 import { TerminationReason } from 'features/config/constants'

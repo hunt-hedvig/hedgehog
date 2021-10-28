@@ -1,5 +1,3 @@
-import { Market } from 'features/config/constants'
-
 export const convertEnumToTitle = (enumText: string) => {
   return enumText
     .toLowerCase()
@@ -39,22 +37,4 @@ export const getCarrierText = (carrier: string) => {
       return '🗄 HDI'
   }
   return carrier
-}
-
-export const getFlagFromMarket = (market: Market): string => {
-  switch (market) {
-    case Market.Norway:
-      return '🇳🇴'
-    case Market.Sweden:
-      return '🇸🇪'
-    case Market.Denmark:
-      return '🇩🇰'
-    default:
-      return '🏳'
-  }
-}
-
-export const splitOnUpperCase = (s: string) => {
-  const splitResult = s.match(/[A-Z][a-z]+|[0-9]+/g)
-  return splitResult?.join(' ') ?? null
 }

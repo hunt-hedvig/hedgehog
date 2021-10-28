@@ -1,12 +1,18 @@
 import { Market } from 'features/config/constants'
 import { FilterState } from 'features/questions/filter'
-import { QuestionGroup } from 'types/generated/graphql'
+import { Claim, ClaimState, QuestionGroup } from 'types/generated/graphql'
 import { range } from 'utils/array'
-import { hasOpenClaim } from 'utils/claim'
 import {
   getGroupNumberForMember,
   getMarketFromPickedLocale,
 } from 'utils/member'
+
+export const hasOpenClaim = (claims: ReadonlyArray<Claim>): boolean => {
+  return claims.some(
+    (claim) =>
+      claim.state === ClaimState.Open || claim.state === ClaimState.Reopened,
+  )
+}
 
 export const doMemberGroupFilter = (numberMemberGroups: number) => (
   selectedFilters: ReadonlyArray<FilterState>,

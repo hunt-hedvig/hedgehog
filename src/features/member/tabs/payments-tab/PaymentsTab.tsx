@@ -18,7 +18,7 @@ import {
   TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import { Market } from 'features/config/constants'

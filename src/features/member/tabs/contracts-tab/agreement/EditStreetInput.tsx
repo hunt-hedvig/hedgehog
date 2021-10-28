@@ -1,6 +1,6 @@
 import { Input } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useSafelyEditAgreementMutation } from 'types/generated/graphql'

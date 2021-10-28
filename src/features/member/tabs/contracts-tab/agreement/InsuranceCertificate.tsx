@@ -1,5 +1,5 @@
 import { Button, ButtonsGroup, ThirdLevelHeadline } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'

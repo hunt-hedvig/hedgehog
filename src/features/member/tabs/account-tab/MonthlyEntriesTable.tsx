@@ -10,7 +10,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
 import React from 'react'
 import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
