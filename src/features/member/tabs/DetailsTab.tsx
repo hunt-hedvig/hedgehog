@@ -76,7 +76,9 @@ export const DetailsTab: React.FC<{
     setEditMemberInfoRequest(editedMemberDetails)
   }
 
-  const handleChange = (field) => (e) => {
+  const handleChange = (e) => {
+    const field = e.target.name
+
     if (field === 'firstName' || field === 'lastName') {
       const value =
         e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
@@ -94,6 +96,7 @@ export const DetailsTab: React.FC<{
   }
 
   const handleSubmit = () => {
+    console.log(editMemberInfoRequest)
     editMemberInfo({
       variables: {
         request: editMemberInfoRequest,
@@ -187,7 +190,7 @@ export const DetailsTab: React.FC<{
             <Form onSubmit={handleSubmit} onChange={handleChange}>
               <>
                 {Object.keys(memberInfoWithoutSsn).map((field) => (
-                  <>
+                  <React.Fragment key={field}>
                     <Label>{getFieldName(field)}</Label>
                     <FormInput
                       name={field}
@@ -195,7 +198,7 @@ export const DetailsTab: React.FC<{
                       disabled={isDisabled(field)}
                       defaultValue={getFieldValue(member[field])}
                     />
-                  </>
+                  </React.Fragment>
                 ))}
               </>
               <ButtonsGroup style={{ justifyContent: 'flex-end' }}>
