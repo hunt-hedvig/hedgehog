@@ -3,7 +3,7 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
   ContractMarketTypes,
   ContractType,
-  QuoteProductType,
+  QuoteProductTypeContractMap,
 } from 'features/config/constants'
 import { getMarketFromPickedLocale } from 'features/member/utils'
 import { useQuotes } from 'graphql/use-get-quotes'
@@ -38,45 +38,16 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   const memberMarket =
     contractMarket?.market ?? getMarketFromPickedLocale(pickedLocale!)
 
-  const shouldShowInContractTypeSubSection = (
-    quote: Quote,
-    contractType,
-  ): boolean => {
-    if (quote.productType === QuoteProductType.Apartment) {
-      return contractType === ContractType.SwedishApartment
-    }
-    if (quote.productType === QuoteProductType.House) {
-      return contractType === ContractType.SwedishHouse
-    }
-    if (quote.productType === QuoteProductType.HomeContent) {
-      return (
-        contractType === ContractType.NorwegianHomeContent ||
-        contractType === ContractType.DanishHomeContent
-      )
-    }
-    if (quote.productType === QuoteProductType.Travel) {
-      return (
-        contractType === ContractType.NorwegianTravel ||
-        contractType === ContractType.DanishTravel
-      )
-    }
-    if (quote.productType === QuoteProductType.Accident) {
-      return (
-        contractType === ContractType.DanishAccident ||
-        contractType === ContractType.SwedishAccident
-      )
-    }
-
-    return false
-  }
+  const shouldShowInContractTypeSubSection = (quote: Quote, contractType) =>
+    !!quote.productType &&
+    contractType in QuoteProductTypeContractMap[quote.productType]
 
   const getCategorisedQuotesBasedOnContractType = (
     contractType: string,
-  ): Quote[] => {
-    return quotes.filter((quote) =>
+  ): Quote[] =>
+    quotes.filter((quote) =>
       shouldShowInContractTypeSubSection(quote, contractType),
     )
-  }
 
   return (
     <>

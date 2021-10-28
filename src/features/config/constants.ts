@@ -23,6 +23,36 @@ export enum ContractType {
   DanishAccident = 'DANISH_ACCIDENT',
 }
 
+export enum QuoteProductType {
+  Apartment = 'APARTMENT',
+  House = 'HOUSE',
+  Object = 'OBJECT',
+  HomeContent = 'HOME_CONTENT',
+  Travel = 'TRAVEL',
+  Accident = 'ACCIDENT',
+}
+
+export const QuoteProductTypeContractMap: Record<
+  QuoteProductType,
+  ContractType[]
+> = {
+  [QuoteProductType.HomeContent]: [
+    ContractType.NorwegianHomeContent,
+    ContractType.DanishHomeContent,
+  ],
+  [QuoteProductType.Apartment]: [ContractType.SwedishApartment],
+  [QuoteProductType.Accident]: [
+    ContractType.DanishAccident,
+    ContractType.SwedishAccident,
+  ],
+  [QuoteProductType.House]: [ContractType.SwedishHouse],
+  [QuoteProductType.Object]: [],
+  [QuoteProductType.Travel]: [
+    ContractType.NorwegianTravel,
+    ContractType.DanishTravel,
+  ],
+}
+
 export const ContractMarketTypes: Record<Market, ContractType[]> = {
   SWEDEN: [
     ContractType.SwedishHouse,
@@ -45,15 +75,6 @@ export enum PickedLocale {
   EnNo = 'en_NO',
   DaDk = 'da_DK',
   EnDk = 'en_DK',
-}
-
-export enum QuoteProductType {
-  Apartment = 'APARTMENT',
-  House = 'HOUSE',
-  Object = 'OBJECT',
-  HomeContent = 'HOME_CONTENT',
-  Travel = 'TRAVEL',
-  Accident = 'ACCIDENT',
 }
 
 export enum TypeOfContract {
