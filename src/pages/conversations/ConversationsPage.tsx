@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import {
   Fade,
   MainHeadline,
+  Spacing,
   StandaloneMessage,
   useFadeAnimation,
 } from '@hedvig-ui'
@@ -152,7 +153,16 @@ const ConversationsPage: React.FC<RouteComponentProps<{
           />
         </FadeGrid>
       ) : (
-        <StandaloneMessage>Nice, that's it for now!</StandaloneMessage>
+        <div>
+          <StandaloneMessage paddingTop="15vh">
+            Nice, that's it for now!
+          </StandaloneMessage>
+          <Spacing top="large" />
+          <ConversationsOverview
+            filteredGroups={filteredGroups}
+            currentMemberId={memberId}
+          />
+        </div>
       )}
     </>
   )
