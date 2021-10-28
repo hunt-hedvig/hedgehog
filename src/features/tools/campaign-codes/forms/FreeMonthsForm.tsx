@@ -9,7 +9,10 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
-import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
+import {
+  getCodeTypeOptions,
+  numberOfMonthsOptions,
+} from 'features/tools/campaign-codes/utils'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -17,7 +20,6 @@ import {
   Scalars,
   useAssignCampaignToPartnerFreeMonthsMutation,
 } from 'types/generated/graphql'
-import { numberOfMonthsOptions } from 'utils/campaignCodes'
 
 interface FreeMonthsFormData {
   partnerId: string | null

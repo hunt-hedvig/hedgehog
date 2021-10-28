@@ -7,9 +7,9 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { InsuranceStatusBadge } from 'features/member/tabs/contracts-tab/agreement/InsuranceStatusBadge'
 import React from 'react'
 import { AgreementStatus, GenericAgreement } from 'types/generated/graphql'
-import { InsuranceStatusBadge } from 'utils/agreement'
 import { formatMoney } from 'utils/money'
 import { convertEnumToTitle, getCarrierText } from 'utils/text'
 

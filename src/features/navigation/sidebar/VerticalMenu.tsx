@@ -24,7 +24,6 @@ import MediaQuery from 'react-media'
 import { matchPath, useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { UserSettingKey } from 'types/generated/graphql'
-import { forceLogOut } from 'utils/auth'
 import { DarkmodeContext } from 'utils/darkmode-context'
 import { Logo, LogoIcon } from './elements'
 
@@ -504,7 +503,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
               <MenuItem
                 onClick={(e) => {
                   e.preventDefault()
-                  forceLogOut()
+                  window.location.pathname = '/login/logout'
                 }}
                 to="#"
                 transparent
