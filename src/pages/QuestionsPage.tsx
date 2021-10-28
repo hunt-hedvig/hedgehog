@@ -8,7 +8,8 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { FilterState, QuestionsFilter } from 'features/questions/filter'
+import { FilterState, FilterStateType } from 'features/questions/filter'
+import { FilterSelect } from 'features/questions/FilterSelect'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
@@ -44,13 +45,11 @@ const QuestionsPage: React.FC = () => {
   const history = useHistory()
   const { data } = useGetMeQuery()
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterState>
+    ReadonlyArray<FilterStateType>
   >('questions:filters', [
     FilterState.First,
     FilterState.Second,
     FilterState.Third,
-    FilterState.Sweden,
-    FilterState.Norway,
     FilterState.HasOpenClaim,
     FilterState.NoOpenClaim,
   ])
@@ -96,16 +95,16 @@ const QuestionsPage: React.FC = () => {
             </ThirdLevelHeadline>
             <NumberMemberGroupsRadioButtons />
           </Spacing>
-          <QuestionsFilter
-            questionGroups={questionGroups}
-            selected={selectedFilters}
-            onToggle={(newFilter) => {
-              if (selectedFilters.includes(newFilter)) {
+          <FilterSelect
+            filters={selectedFilters}
+            pushLeft
+            onToggle={(filter) => {
+              if (selectedFilters.includes(filter)) {
                 setSelectedFilters(
-                  selectedFilters.filter((filter) => filter !== newFilter),
+                  selectedFilters.filter((prevFilter) => filter !== prevFilter),
                 )
               } else {
-                setSelectedFilters([...selectedFilters, newFilter])
+                setSelectedFilters([...selectedFilters, filter])
               }
             }}
           />

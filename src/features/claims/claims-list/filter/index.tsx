@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Checkbox, Flex, Label, lightTheme, TextDatePicker } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
 import { Market } from 'features/config/constants'
-import { ColorBadge } from 'features/questions/filter'
+import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
@@ -124,7 +124,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
                 setFilterHandler(ClaimState[key], 'filterClaimStates')
               }
             />
-            <ColorBadge
+            <MemberGroupColorBadge
               style={{
                 height: '0.7em',
                 width: '0.7em',
@@ -175,7 +175,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
                 setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
               }
             />
-            <ColorBadge
+            <MemberGroupColorBadge
               filter={filterNumber}
               style={{ height: '0.7em', width: '0.7em' }}
             />

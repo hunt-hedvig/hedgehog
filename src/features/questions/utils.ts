@@ -1,7 +1,7 @@
 import { range } from '@hedvig-ui/utils/range'
 import { Market } from 'features/config/constants'
 import { getMarketFromPickedLocale } from 'features/member/utils'
-import { FilterState } from 'features/questions/filter'
+import { FilterState, FilterStateType } from 'features/questions/filter'
 import { Claim, ClaimState, QuestionGroup } from 'types/generated/graphql'
 
 const getGroupNumberForMember = (
@@ -20,7 +20,7 @@ export const hasOpenClaim = (claims: ReadonlyArray<Claim>): boolean => {
 }
 
 export const doMemberGroupFilter = (numberMemberGroups: number) => (
-  selectedFilters: ReadonlyArray<FilterState>,
+  selectedFilters: ReadonlyArray<FilterStateType>,
 ) => (questionGroup: QuestionGroup): boolean => {
   return range(numberMemberGroups)
     .map(
@@ -32,38 +32,25 @@ export const doMemberGroupFilter = (numberMemberGroups: number) => (
     .includes(true)
 }
 
-export const doMarketFilter = (selectedFilters: ReadonlyArray<FilterState>) => (
-  questionGroup: QuestionGroup,
-): boolean => {
+export const doMarketFilter = (
+  selectedFilters: ReadonlyArray<FilterStateType>,
+) => (questionGroup: QuestionGroup): boolean => {
   const questionGroupMarket = questionGroup?.member?.contractMarketInfo?.market
     ? questionGroup.member.contractMarketInfo.market
     : questionGroup.member?.pickedLocale
     ? getMarketFromPickedLocale(questionGroup.member.pickedLocale)
     : Market.Sweden
-  if (
-    selectedFilters.includes(FilterState.Sweden) &&
-    questionGroupMarket === Market.Sweden
-  ) {
-    return true
-  }
-  if (
-    selectedFilters.includes(FilterState.Norway) &&
-    questionGroupMarket === Market.Norway
-  ) {
-    return true
-  }
-  if (
-    selectedFilters.includes(FilterState.Denmark) &&
-    questionGroupMarket === Market.Denmark
-  ) {
-    return true
-  }
-  return false
+
+  return Object.keys(Market).some(
+    (market) =>
+      selectedFilters.includes(FilterState[market]) &&
+      questionGroupMarket === market.toUpperCase(),
+  )
 }
 
-export const doClaimFilter = (selectedFilters: ReadonlyArray<FilterState>) => (
-  questionGroup: QuestionGroup,
-): boolean => {
+export const doClaimFilter = (
+  selectedFilters: ReadonlyArray<FilterStateType>,
+) => (questionGroup: QuestionGroup): boolean => {
   if (!questionGroup.member) {
     return true
   }

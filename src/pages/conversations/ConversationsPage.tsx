@@ -13,7 +13,7 @@ import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persis
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import { FilterState } from 'features/questions/filter'
+import { FilterStateType } from 'features/questions/filter'
 import {
   doClaimFilter,
   doMarketFilter,
@@ -45,7 +45,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const [chatFocused, setChatFocused] = useState(false)
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
 
-  const [filters] = useInsecurePersistentState<ReadonlyArray<FilterState>>(
+  const [filters] = useInsecurePersistentState<ReadonlyArray<FilterStateType>>(
     'questions:filters',
     [],
   )

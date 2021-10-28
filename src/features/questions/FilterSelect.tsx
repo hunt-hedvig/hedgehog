@@ -1,12 +1,18 @@
 import styled from '@emotion/styled'
 import { ButtonsGroup, FadeIn } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { Flags, Market } from 'features/config/constants'
+import {
+  FilterState,
+  FilterStateType,
+  getFilterColor,
+} from 'features/questions/filter'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
-} from 'features/conversations/utils/filters'
-import { FilterState, getFilterColor } from 'features/questions/filter'
+} from 'features/questions/utils'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { useQuestionGroups } from 'graphql/use-question-groups'
 import React from 'react'
@@ -25,6 +31,7 @@ const FilterButton = styled.button<{ selected: boolean }>`
   align-items: center;
   color: ${({ theme, selected }) =>
     selected ? theme.accentContrast : theme.semiStrongForeground};
+  font-family: inherit;
 
   :hover {
     background-color: ${({ theme, selected }) =>
@@ -34,7 +41,7 @@ const FilterButton = styled.button<{ selected: boolean }>`
   }
 `
 
-const GroupIcon = styled.div<{ filter: FilterState }>`
+const GroupIcon = styled.div<{ filter: FilterStateType }>`
   width: 1em;
   height: 1em;
   background-color: ${({ filter }) => getFilterColor(filter)};
@@ -60,17 +67,24 @@ const CountBadge = styled.div<{ selected: boolean }>`
 `
 
 export const FilterSelect: React.FC<{
-  filters: ReadonlyArray<FilterState>
-  onToggle: (filter: FilterState) => void
+  filters: ReadonlyArray<FilterStateType>
+  onToggle: (filter: FilterStateType) => void
   animationDelay?: number
   animationItemDelay?: number
-}> = ({ filters, onToggle, animationDelay = 700, animationItemDelay = 70 }) => {
+  pushLeft?: boolean
+}> = ({
+  filters,
+  onToggle,
+  animationDelay = 700,
+  animationItemDelay = 70,
+  pushLeft,
+}) => {
   const [questionGroups] = useQuestionGroups()
 
   const getCountByFilter = (
-    filter: FilterState,
+    filter: FilterStateType,
     filterer: (
-      selectedFilters: FilterState[],
+      selectedFilters: FilterStateType[],
     ) => (questionGroup: QuestionGroup) => boolean,
   ) => {
     return questionGroups.filter(filterer([filter])).length
@@ -80,7 +94,7 @@ export const FilterSelect: React.FC<{
 
   return (
     <>
-      <ButtonsGroup style={{ justifyContent: 'center' }}>
+      <ButtonsGroup style={{ justifyContent: pushLeft ? 'left' : 'center' }}>
         {range(numberMemberGroups).map((memberGroup) => {
           return (
             <FadeIn
@@ -91,9 +105,12 @@ export const FilterSelect: React.FC<{
                 onClick={() => onToggle(memberGroup)}
                 selected={filters.includes(memberGroup)}
               >
-                {FilterState[memberGroup]} group{' '}
+                {Object.keys(FilterState).find((filter) => {
+                  return FilterState[filter] === memberGroup
+                })}{' '}
+                group{' '}
                 <GroupIcon
-                  filter={memberGroup as FilterState}
+                  filter={memberGroup as FilterStateType}
                   style={{ marginLeft: '0.5em' }}
                 />
                 <CountBadge selected={filters.includes(memberGroup)}>
@@ -109,51 +126,43 @@ export const FilterSelect: React.FC<{
           )
         })}
       </ButtonsGroup>
-      <ButtonsGroup style={{ justifyContent: 'center', marginTop: '1.0em' }}>
-        <FadeIn
-          delay={`${animationDelay +
-            animationItemDelay * (numberMemberGroups + 1)}ms`}
-        >
-          <FilterButton
-            selected={filters.includes(FilterState.Sweden)}
-            onClick={() => onToggle(FilterState.Sweden)}
-          >
-            Sweden <span style={{ marginLeft: '0.5em' }}>🇸🇪</span>
-            <CountBadge selected={filters.includes(FilterState.Sweden)}>
-              <div>{getCountByFilter(FilterState.Sweden, doMarketFilter)}</div>
-            </CountBadge>
-          </FilterButton>
-        </FadeIn>
-        <FadeIn
-          delay={`${animationDelay +
-            animationItemDelay * (numberMemberGroups + 2)}ms`}
-        >
-          <FilterButton
-            selected={filters.includes(FilterState.Norway)}
-            onClick={() => onToggle(FilterState.Norway)}
-          >
-            Norway <span style={{ marginLeft: '0.5em' }}>🇳🇴</span>
-            <CountBadge selected={filters.includes(FilterState.Norway)}>
-              <div>{getCountByFilter(FilterState.Norway, doMarketFilter)}</div>
-            </CountBadge>
-          </FilterButton>
-        </FadeIn>
-        <FadeIn
-          delay={`${animationDelay +
-            animationItemDelay * (numberMemberGroups + 3)}ms`}
-        >
-          <FilterButton
-            selected={filters.includes(FilterState.Denmark)}
-            onClick={() => onToggle(FilterState.Denmark)}
-          >
-            Denmark <span style={{ marginLeft: '0.5em' }}>🇩🇰</span>
-            <CountBadge selected={filters.includes(FilterState.Denmark)}>
-              <div>{getCountByFilter(FilterState.Denmark, doMarketFilter)}</div>
-            </CountBadge>
-          </FilterButton>
-        </FadeIn>
+      <ButtonsGroup
+        style={{
+          justifyContent: pushLeft ? 'left' : 'center',
+          marginTop: '1.0em',
+        }}
+      >
+        {Object.keys(Market).map((market) => {
+          return (
+            <FadeIn
+              delay={`${animationDelay +
+                animationItemDelay * (numberMemberGroups + 1)}ms`}
+              key={market}
+            >
+              <FilterButton
+                selected={filters.includes(FilterState[market])}
+                onClick={() => onToggle(FilterState[market])}
+              >
+                {convertEnumToTitle(market)}{' '}
+                <span style={{ marginLeft: '0.5em' }}>
+                  {Flags[market.toUpperCase()]}
+                </span>
+                <CountBadge selected={filters.includes(FilterState[market])}>
+                  <div>
+                    {getCountByFilter(FilterState[market], doMarketFilter)}
+                  </div>
+                </CountBadge>
+              </FilterButton>
+            </FadeIn>
+          )
+        })}
       </ButtonsGroup>
-      <ButtonsGroup style={{ justifyContent: 'center', marginTop: '1.0em' }}>
+      <ButtonsGroup
+        style={{
+          justifyContent: pushLeft ? 'left' : 'center',
+          marginTop: '1.0em',
+        }}
+      >
         <FadeIn
           delay={`${animationDelay +
             animationItemDelay * (numberMemberGroups + 4)}ms`}
