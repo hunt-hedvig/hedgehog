@@ -25,9 +25,6 @@ const SwitcherAutomationPage = lazy(() =>
   import('./tools/SwitcherAutomationPage'),
 )
 const PerilsEditorPage = lazy(() => import('./tools/PerilsEditorPage'))
-const NorwegianTariffCreatorPage = lazy(() =>
-  import('./tools/NorwegianTariffCreatorPage'),
-)
 
 const EmployeesPage = lazy(() => import('./tools/EmployeesPage'))
 const CampaignCodesPage = lazy(() => import('./tools/CampaignCodesPage'))
@@ -67,10 +64,6 @@ export const Routes: React.FC = () => {
           component={SwitcherAutomationPage}
         />
         <Route path="/tools/perils-editor" component={PerilsEditorPage} />
-        <Route
-          path="/tools/norwegian-tariff-creator"
-          component={NorwegianTariffCreatorPage}
-        />
         <Route path="/tools/employees" component={EmployeesPage} />
         <Route path="/tools/campaign-codes" component={CampaignCodesPage} />
         <Route path="/tools/unsign-member" component={UnsignMemberPage} />

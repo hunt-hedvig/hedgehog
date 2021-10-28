@@ -1,3 +1,0 @@
-mutation AddNorwegainPostalCodes($postalCodesString: String) {
-  addNorwegianPostalCodes(postalCodesString: $postalCodesString)
-}
