@@ -38,15 +38,13 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   const memberMarket =
     contractMarket?.market ?? getMarketFromPickedLocale(pickedLocale!)
 
-  const shouldShowInContractTypeSubSection = (quote: Quote, contractType) =>
-    !!quote.productType &&
-    contractType in QuoteProductTypeContractMap[quote.productType]
-
   const getCategorisedQuotesBasedOnContractType = (
     contractType: string,
   ): Quote[] =>
-    quotes.filter((quote) =>
-      shouldShowInContractTypeSubSection(quote, contractType),
+    quotes.filter(
+      (quote) =>
+        !!quote.productType &&
+        QuoteProductTypeContractMap[quote.productType].includes(contractType),
     )
 
   return (
@@ -56,9 +54,9 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
         list={
           memberMarket
             ? ContractMarketTypes[memberMarket].map((type, index) => ({
-                active: type.value === activeTab,
-                title: convertEnumToTitle(type.value),
-                action: () => setActiveTab(type.value),
+                active: type === activeTab,
+                title: convertEnumToTitle(type),
+                action: () => setActiveTab(type),
                 key: index,
               }))
             : []
