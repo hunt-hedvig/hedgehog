@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { Checkbox, lightTheme, ThirdLevelHeadline } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { Flags, Market } from 'features/config/constants'
 import {
   doClaimFilter,
   doMarketFilter,
@@ -13,16 +15,19 @@ import { QuestionGroup } from 'types/generated/graphql'
 
 export const totalNumberMemberGroups = 3
 
-export enum FilterState {
-  First,
-  Second,
-  Third,
-  Sweden,
-  Norway,
-  Denmark,
-  HasOpenClaim,
-  NoOpenClaim,
+export const FilterState = {
+  First: 0,
+  Second: 1,
+  Third: 2,
+  HasOpenClaim: 3,
+  NoOpenClaim: 4,
+  ...Object.keys(Market).reduce((acc, market, index) => {
+    acc[market] = 5 + index
+    return acc
+  }, {}),
 }
+
+type FilterStateType = number
 
 const FilterRow = styled('div')`
   display: grid;
@@ -43,7 +48,7 @@ const FilterName = styled.span`
   align-items: center;
 `
 
-export const ColorBadge = styled.div<{ filter?: FilterState }>`
+export const ColorBadge = styled.div<{ filter?: FilterStateType }>`
   display: inline-block;
   width: 1.5em;
   height: 1.5em;
@@ -54,7 +59,7 @@ export const ColorBadge = styled.div<{ filter?: FilterState }>`
     filter !== undefined ? getFilterColor(filter) : '#fff'};
 `
 
-export const getFilterColor = (filter: FilterState): string => {
+export const getFilterColor = (filter: FilterStateType): string => {
   switch (filter) {
     case FilterState.First:
       return lightTheme.danger
@@ -69,13 +74,13 @@ export const getFilterColor = (filter: FilterState): string => {
 
 export const QuestionsFilter: React.FC<{
   questionGroups: ReadonlyArray<QuestionGroup>
-  selected: ReadonlyArray<FilterState>
-  onToggle: (filter: FilterState) => void
+  selected: ReadonlyArray<FilterStateType>
+  onToggle: (filter: FilterStateType) => void
 }> = ({ selected, onToggle, questionGroups }) => {
   const getCountByFilter = (
-    filter: FilterState,
+    filter: FilterStateType,
     filterer: (
-      selectedFilters: FilterState[],
+      selectedFilters: FilterStateType[],
     ) => (questionGroup: QuestionGroup) => boolean,
   ) => {
     return questionGroups.filter(filterer([filter])).length
@@ -110,34 +115,19 @@ export const QuestionsFilter: React.FC<{
       </FilterRow>
       <FilterRow>
         <FilterLabel>Market: </FilterLabel>
-        <Checkbox
-          label={
-            <FilterName>
-              Sweden ({getCountByFilter(FilterState.Sweden, doMarketFilter)}) 🇸🇪
-            </FilterName>
-          }
-          checked={selected.includes(FilterState.Sweden)}
-          onChange={() => onToggle(FilterState.Sweden)}
-        />
-        <Checkbox
-          label={
-            <FilterName>
-              Norway ({getCountByFilter(FilterState.Norway, doMarketFilter)}) 🇳🇴
-            </FilterName>
-          }
-          checked={selected.includes(FilterState.Norway)}
-          onChange={() => onToggle(FilterState.Norway)}
-        />
-        <Checkbox
-          label={
-            <FilterName>
-              Denmark ({getCountByFilter(FilterState.Denmark, doMarketFilter)})
-              🇩🇰
-            </FilterName>
-          }
-          checked={selected.includes(FilterState.Denmark)}
-          onChange={() => onToggle(FilterState.Denmark)}
-        />
+        {Object.keys(Market).map((market) => (
+          <Checkbox
+            label={
+              <FilterName>
+                {convertEnumToTitle(market)} (
+                {getCountByFilter(FilterState[market], doMarketFilter)}){' '}
+                {Flags[market.toUpperCase()]}
+              </FilterName>
+            }
+            checked={selected.includes(FilterState[market])}
+            onChange={() => onToggle(FilterState[market])}
+          />
+        ))}
       </FilterRow>
       <FilterRow>
         <FilterLabel>Claim: </FilterLabel>
