@@ -1,3 +1,0 @@
-mutation CreateNorwegianGripenPriceEngine($request: CreateNorwegianGripenInput) {
-  createNorwegianGripenPriceEngine(request: $request)
-}

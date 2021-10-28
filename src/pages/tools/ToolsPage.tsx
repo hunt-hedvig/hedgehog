@@ -77,13 +77,6 @@ const ToolsPage: React.FC = () => {
       },
     },
     {
-      label: 'Go to Norwegian Price Engine "Gripen"',
-      keys: [Keys.Control, Keys.Four],
-      onResolve: () => {
-        history.push('/tools/norwegian-tariff-creator')
-      },
-    },
-    {
       label: 'Go to Campaign Codes',
       keys: [Keys.Control, Keys.Five],
       onResolve: () => {
@@ -124,11 +117,6 @@ const ToolsPage: React.FC = () => {
             <Icon>📝</Icon>
             {isControlPressed && <Hotkey dark>3</Hotkey>}
             Perils Editor
-          </Card>
-          <Card to="/tools/norwegian-tariff-creator" span={4}>
-            <Icon>🛩</Icon>
-            {isControlPressed && <Hotkey dark>4</Hotkey>}
-            Norwegian Price Engine "Gripen"
           </Card>
         </Row>
 
