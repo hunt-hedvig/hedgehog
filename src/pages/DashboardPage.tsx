@@ -19,7 +19,6 @@ import { Link } from 'react-router-dom'
 import {
   DashboardNumbers,
   useGetDashboardNumbersQuery,
-  useGetMeQuery,
   UserSettingKey,
 } from 'types/generated/graphql'
 
@@ -66,12 +65,11 @@ const MutedText = styled.div`
 `
 
 const DashboardPage: React.FC = () => {
-  const { data } = useGetMeQuery()
-  const { settings } = useMe()
-
   const { data: dashboardData } = useGetDashboardNumbersQuery({
     pollInterval: 1000 * 5,
   })
+
+  const { settings, me } = useMe()
 
   const dashboardNumbers = dashboardData?.dashboardNumbers as
     | DashboardNumbers
@@ -80,13 +78,10 @@ const DashboardPage: React.FC = () => {
   return (
     <Wrapper>
       <Spacing bottom>
-        {data?.me && (
+        {me && (
           <MainHeadline>
             Hi there{' '}
-            <Capitalized>
-              {getLowercaseNameFromEmail(data?.me.user.email)}
-            </Capitalized>
-            !
+            <Capitalized>{getLowercaseNameFromEmail(me?.email)}</Capitalized>!
           </MainHeadline>
         )}
       </Spacing>
