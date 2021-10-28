@@ -77,6 +77,15 @@ export enum PickedLocale {
   EnDk = 'en_DK',
 }
 
+export const PickedLocaleFlag: Record<PickedLocale, string> = {
+  [PickedLocale.EnNo]: '🇬🇧',
+  [PickedLocale.EnSe]: '🇬🇧',
+  [PickedLocale.EnDk]: '🇬🇧',
+  [PickedLocale.DaDk]: '🇩🇰',
+  [PickedLocale.SvSe]: '🇸🇪',
+  [PickedLocale.NbNo]: '🇳🇴',
+}
+
 export enum TypeOfContract {
   SeHouse = 'SE_HOUSE',
   SeApartmentBrf = 'SE_APARTMENT_BRF',

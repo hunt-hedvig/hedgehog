@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Capitalized, Popover, Tabs } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
+import { PickedLocaleFlag } from 'features/config/constants'
 import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import { FraudulentStatus } from 'features/member/tabs/member-tab/FraudulentStatus'
 import {
   formatSsn,
-  getLanguageFlagFromPickedLocale,
   getMemberFlag,
   getMemberGroupName,
   getMemberIdColor,
@@ -155,7 +155,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
           </Popover>
           {member?.pickedLocale && (
             <MemberDetail>
-              Language: {getLanguageFlagFromPickedLocale(member.pickedLocale)}
+              Language: {PickedLocaleFlag[member.pickedLocale]}
             </MemberDetail>
           )}
         </MemberDetails>
