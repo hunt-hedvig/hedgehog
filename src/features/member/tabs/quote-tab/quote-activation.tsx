@@ -10,7 +10,6 @@ import {
   Quote,
   useAddAgreementFromQuoteMutation,
 } from 'types/generated/graphql'
-import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
 
 const getInitialActiveFrom = (contract: Contract): Date | null =>
@@ -24,8 +23,8 @@ export const QuoteActivation: React.FC<{
 }> = ({
   quote,
   memberId,
-  onSubmitted = noopFunction,
-  onWipChange = noopFunction,
+  onSubmitted = () => void 0,
+  onWipChange = () => void 0,
 }) => {
   if (!quote.originatingProductId) {
     toast.error('Cannot activate quote without Originating Product ID')
