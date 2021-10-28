@@ -15,7 +15,7 @@ export const getDefaultNumberMemberGroups = (): number => {
   }
 }
 
-const NumberMemberGroupsContext = createContext<{
+const UseNumberMemberGroups = createContext<{
   numberMemberGroups: number
   setNumberMemberGroups: (value: number) => void
 }>({
@@ -36,15 +36,15 @@ export const NumberMemberGroupsProvider: React.FC = ({ children }) => {
   }, [numberMemberGroups])
 
   return (
-    <NumberMemberGroupsContext.Provider
+    <UseNumberMemberGroups.Provider
       value={{
         numberMemberGroups,
         setNumberMemberGroups,
       }}
     >
       {children}
-    </NumberMemberGroupsContext.Provider>
+    </UseNumberMemberGroups.Provider>
   )
 }
 
-export const useNumberMemberGroups = () => useContext(NumberMemberGroupsContext)
+export const useNumberMemberGroups = () => useContext(UseNumberMemberGroups)

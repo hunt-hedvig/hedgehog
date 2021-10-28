@@ -16,14 +16,14 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
+import { getMemberIdColor } from 'features/member/utils'
 import { useListClaims } from 'graphql/use-list-claims'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
-import { getMemberIdColor } from 'utils/member'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import { convertEnumToTitle } from 'utils/text'
+import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;

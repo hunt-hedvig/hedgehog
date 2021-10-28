@@ -15,10 +15,10 @@ import {
 import { Market } from 'features/config/constants'
 import { WhitelistMemberButton } from 'features/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
+import { getMarketFromPickedLocale } from 'features/member/utils'
 import { useGetPerson } from 'graphql/use-get-person'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import { getMarketFromPickedLocale } from 'utils/member'
 
 export const DebtTab: React.FC<{
   memberId: string

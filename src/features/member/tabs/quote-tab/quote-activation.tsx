@@ -1,5 +1,6 @@
 import { Button, TextDatePicker } from '@hedvig-ui'
 import { format } from 'date-fns'
+import { getContractByAgreementId } from 'features/member/tabs/contracts-tab/contract'
 import { useContracts } from 'graphql/use-contracts'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -10,7 +11,6 @@ import {
   useAddAgreementFromQuoteMutation,
 } from 'types/generated/graphql'
 import { noopFunction } from 'utils'
-import { getContractByAgreementId } from 'utils/contract'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
 
 const getInitialActiveFrom = (contract: Contract): Date | null =>

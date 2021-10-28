@@ -9,11 +9,11 @@ import {
 } from '@hedvig-ui'
 import { Agreement } from 'features/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'features/member/tabs/contracts-tab/agreement/AgreementsTable'
+import { getSignSource } from 'features/member/tabs/contracts-tab/contract'
 import { MasterInception } from 'features/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/termination-date'
 import React from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
-import { getSignSource } from 'utils/contract'
 import { convertEnumToTitle } from 'utils/text'
 
 const ContractWrapper = styled('div')`

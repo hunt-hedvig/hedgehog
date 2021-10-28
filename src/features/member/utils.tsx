@@ -1,24 +1,11 @@
 import { differenceInYears, parse } from 'date-fns'
-import { Market, PickedLocale } from 'features/config/constants'
+import { Flags, Market, PickedLocale } from 'features/config/constants'
 import { FilterState, getFilterColor } from 'features/questions/filter'
 import React from 'react'
 import { ContractMarketInfo } from 'types/generated/graphql'
 import { getBirthdayInfo, getBirthDayText } from 'utils/date'
 
-export const getFlagFromMarket = (market: Market): string => {
-  switch (market) {
-    case Market.Norway:
-      return '🇳🇴'
-    case Market.Sweden:
-      return '🇸🇪'
-    case Market.Denmark:
-      return '🇩🇰'
-    default:
-      return '🏳'
-  }
-}
-
-export const getGroupNumberForMember = (
+const getGroupNumberForMember = (
   memberId: string,
   numberMemberGroups: number,
 ) => {
@@ -73,7 +60,7 @@ export const getMemberFlag = (
   pickedLocale: string | null = null,
 ): string => {
   if (contractMarketInfo?.market) {
-    return getFlagFromMarket(contractMarketInfo.market as Market)
+    return Flags[contractMarketInfo.market as Market]
   }
 
   if (!pickedLocale) {
@@ -84,7 +71,7 @@ export const getMemberFlag = (
     return '🏳'
   }
 
-  return `${getFlagFromMarket(market)} & 🏳`
+  return `${Flags[market]} & 🏳`
 }
 
 export const getMarketFromPickedLocale = (

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
 import { Filters } from 'features/claims/claims-list/filter'
 import React, { useEffect } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-import { useInsecurePersistentState } from 'utils/state'
 
 const ListPage = styled.div`
   display: flex;

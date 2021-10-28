@@ -10,11 +10,18 @@ import {
 } from '@hedvig-ui'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
+import {
+  getFirstMasterInception,
+  getLastTerminationDate,
+} from 'features/member/tabs/contracts-tab/contract'
+import {
+  getMemberFlag,
+  getMemberIdColor,
+  MemberAge,
+} from 'features/member/utils'
 import React from 'react'
 import { Contract, ContractStatus, Member } from 'types/generated/graphql'
-import { getFirstMasterInception, getLastTerminationDate } from 'utils/contract'
-import { getMemberFlag, getMemberIdColor, MemberAge } from 'utils/member'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 type CircleVariation =
   | 'success'

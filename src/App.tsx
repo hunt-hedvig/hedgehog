@@ -15,8 +15,8 @@ import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
 import { DarkmodeContext, getDefaultIsDarkmode } from 'utils/darkmode-context'
-import { MemberHistoryProvider } from 'utils/member-history'
-import { NumberMemberGroupsProvider } from 'utils/number-member-groups-context'
+import { MemberHistoryProvider } from 'utils/use-member-history'
+import { NumberMemberGroupsProvider } from 'utils/use-number-member-groups'
 
 const Layout = styled(BaseStyle)`
   display: flex;

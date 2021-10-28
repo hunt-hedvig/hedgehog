@@ -17,6 +17,12 @@ import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
 import { useCommandLine } from 'features/commands/command-line-hook'
 import { Market } from 'features/config/constants'
+import {
+  currentAgreementForContract,
+  getFirstMasterInception,
+  getLastTerminationDate,
+} from 'features/member/tabs/contracts-tab/contract'
+import { formatSsn, getMemberFlag } from 'features/member/utils'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
@@ -27,12 +33,6 @@ import {
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
 } from 'types/generated/graphql'
-import {
-  currentAgreementForContract,
-  getFirstMasterInception,
-  getLastTerminationDate,
-} from 'utils/contract'
-import { formatSsn, getMemberFlag } from 'utils/member'
 import { formatMoney } from 'utils/money'
 import {
   convertCamelcaseToTitle,

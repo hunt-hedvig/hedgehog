@@ -23,7 +23,7 @@ import {
   useSetFraudulentStatusMutation,
 } from 'types/generated/graphql'
 import { FraudulentStatusEdit } from 'utils/fraudulentStatus'
-import { dateTimeFormatter, getFieldName, getFieldValue } from 'utils/helpers'
+import { dateTimeFormatter } from 'utils/helpers'
 
 const ButtonWrapper = styled.div`
   width: 100%;
@@ -35,6 +35,31 @@ const ButtonWrapper = styled.div`
 const memberFieldFormatters = {
   signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
   createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
+}
+
+const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+}
+
+const getFieldName = (field) =>
+  capitalize(
+    field
+      .match(/([A-Z]?[^A-Z]*)/g)
+      .slice(0, -1)
+      .join(' '),
+  )
+
+const getFieldValue = (value) => {
+  if (!value) {
+    return ''
+  }
+  if (Array.isArray(value)) {
+    return value.join(', ')
+  }
+  if (value && typeof value === 'object' && value.constructor === Object) {
+    return Object.keys(value).map((key) => `${key}: ${value[key]}, `)
+  }
+  return value.toString()
 }
 
 export const DetailsTab: React.FC<{

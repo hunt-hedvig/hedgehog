@@ -1,15 +1,15 @@
 import styled from '@emotion/styled'
 import { Checkbox, lightTheme, ThirdLevelHeadline } from '@hedvig-ui'
-import React from 'react'
-import { Shield, ShieldShaded } from 'react-bootstrap-icons'
-import { QuestionGroup } from 'types/generated/graphql'
-import { range } from 'utils/array'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import { range } from '@hedvig-ui/utils/range'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
-} from 'utils/questionGroup'
+} from 'features/questions/utils'
+import React from 'react'
+import { Shield, ShieldShaded } from 'react-bootstrap-icons'
+import { QuestionGroup } from 'types/generated/graphql'
+import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 export const totalNumberMemberGroups = 3
 

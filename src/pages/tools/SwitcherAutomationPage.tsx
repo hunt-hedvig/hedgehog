@@ -6,8 +6,10 @@ import {
   TableHeader,
   TableHeaderColumn,
 } from '@hedvig-ui'
-import { format } from 'date-fns'
+import { sleep } from '@hedvig-ui/utils/sleep'
+import { format, isPast, parseISO } from 'date-fns'
 import {
+  Flags,
   Market,
   SwitcherEmailStatus,
   SwitcherTypeMarket,
@@ -18,14 +20,36 @@ import { toast } from 'react-hot-toast'
 import {
   Contract,
   Member,
+  SwitchableSwitcherEmail,
   useActivatePendingAgreementMutation,
   useGetSwitcherEmailsQuery,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
-import { getFlagFromMarket } from 'utils/member'
-import { sleep } from 'utils/sleep'
-import { getSwitcherEmailStatus } from 'utils/switcher-emails'
 import { convertEnumToTitle } from 'utils/text'
+
+export const getSwitcherEmailStatus = (
+  switcherEmail: Pick<
+    SwitchableSwitcherEmail,
+    'cancellationDate' | 'note' | 'sentAt' | 'remindedAt'
+  >,
+): SwitcherEmailStatus => {
+  if (
+    switcherEmail.cancellationDate &&
+    isPast(parseISO(switcherEmail.cancellationDate))
+  ) {
+    return SwitcherEmailStatus.PastCancellationDate
+  }
+  if (switcherEmail.note) {
+    return SwitcherEmailStatus.InProgress
+  }
+  if (switcherEmail.remindedAt) {
+    return SwitcherEmailStatus.Reminded
+  }
+  if (switcherEmail.sentAt) {
+    return SwitcherEmailStatus.Sent
+  }
+  return SwitcherEmailStatus.Prepared
+}
 
 const SwitcherAutomationPage: React.FC = () => {
   const switchers = useGetSwitcherEmailsQuery()
@@ -58,9 +82,7 @@ const SwitcherAutomationPage: React.FC = () => {
             return (
               <div key={market}>
                 <Checkbox
-                  label={`${convertEnumToTitle(market)} ${getFlagFromMarket(
-                    market,
-                  )}`}
+                  label={`${convertEnumToTitle(market)} ${Flags[market]}`}
                   checked={selectedMarket === market}
                   onChange={() =>
                     setSelectedMarket((current) =>

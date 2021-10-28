@@ -1,5 +1,6 @@
 import { Keys, NumberKeys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useCommandLine } from 'features/commands/command-line-hook'
+import { getMemberFlag } from 'features/member/utils'
 import {
   EmptyState,
   MemberHistoryCardWrapper,
@@ -7,14 +8,13 @@ import {
   MemberId,
   MemberName,
 } from 'features/members-search/styles'
-import React, { useContext } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router'
 import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
-import { getMemberFlag } from 'utils/member'
-import { MemberHistoryContext } from 'utils/member-history'
+import { useMemberHistory } from 'utils/use-member-history'
 
 export const MemberSuggestions: React.FC = () => {
-  const { memberHistory } = useContext(MemberHistoryContext)
+  const { memberHistory } = useMemberHistory()
 
   return (
     <MemberHistoryWrapper>

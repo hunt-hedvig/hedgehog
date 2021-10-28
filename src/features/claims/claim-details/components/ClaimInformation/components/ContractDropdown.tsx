@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Dropdown, DropdownOption, Shadowed } from '@hedvig-ui'
+import { currentAgreementForContract } from 'features/member/tabs/contracts-tab/contract'
 import React from 'react'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
-import { currentAgreementForContract } from 'utils/contract'
 import { convertEnumToTitle, getCarrierText } from 'utils/text'
 
 const ContractItemTypeName = styled.div`

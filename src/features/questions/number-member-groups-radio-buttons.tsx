@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { RadioGroup } from '@hedvig-ui'
+import { range } from '@hedvig-ui/utils/range'
 import { totalNumberMemberGroups } from 'features/questions/filter'
 import React from 'react'
-import { range } from 'utils/array'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
+import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 
 const Group = styled.div`
   display: flex;

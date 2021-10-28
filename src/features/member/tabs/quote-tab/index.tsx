@@ -6,10 +6,10 @@ import {
   Market,
   QuoteProductType,
 } from 'features/config/constants'
+import { getMarketFromPickedLocale } from 'features/member/utils'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
 import { Quote } from 'types/generated/graphql'
-import { getMarketFromPickedLocale } from 'utils/member'
 import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {

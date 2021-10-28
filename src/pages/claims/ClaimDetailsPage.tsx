@@ -23,11 +23,11 @@ import { ClaimType } from 'features/claims/claim-details/components/ClaimType/Cl
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
 import { useCommandLine } from 'features/commands/command-line-hook'
 import { ChatPane } from 'features/member/tabs/ChatPane'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Prompt, RouteComponentProps } from 'react-router'
 import { ClaimState, useClaimPageQuery } from 'types/generated/graphql'
-import { MemberHistoryContext } from 'utils/member-history'
 import { getCarrierText } from 'utils/text'
+import { useMemberHistory } from 'utils/use-member-history'
 
 const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
@@ -99,7 +99,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
 }>> = ({ match }) => {
   const { claimId } = match.params
-  const { pushToMemberHistory } = useContext(MemberHistoryContext)
+  const { pushToMemberHistory } = useMemberHistory()
   const [showEvents, setShowEvents] = useState(false)
   const { registerActions, isHintingControl } = useCommandLine()
   const [focus, setFocus] = useState<string | null>(null)

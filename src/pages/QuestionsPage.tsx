@@ -7,6 +7,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { FilterState, QuestionsFilter } from 'features/questions/filter'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
@@ -15,7 +16,6 @@ import { getLowercaseNameFromEmail } from 'pages/DashboardPage'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { useGetMeQuery } from 'types/generated/graphql'
-import { useInsecurePersistentState } from 'utils/state'
 
 const ListPage = styled.div`
   display: flex;

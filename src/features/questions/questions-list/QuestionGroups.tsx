@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import React from 'react'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
-} from 'utils/questionGroup'
+} from 'features/questions/utils'
+import React from 'react'
+import { useNumberMemberGroups } from 'utils/use-number-member-groups'
 import { FilteredQuestionGroups } from './FilteredQuestionGroups'
 
 const ListContainer = styled.div`

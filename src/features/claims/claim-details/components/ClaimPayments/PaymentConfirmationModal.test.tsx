@@ -1,8 +1,8 @@
+import { tickAsync } from '@hedvig-ui/utils/sleep'
 import { mount } from 'enzyme'
 import { Market } from 'features/config/constants'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { tickAsync } from 'utils/sleep'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 
 it("doesn't submit an empty form", async () => {

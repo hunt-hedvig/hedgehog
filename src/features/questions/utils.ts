@@ -1,11 +1,16 @@
+import { range } from '@hedvig-ui/utils/range'
 import { Market } from 'features/config/constants'
+import { getMarketFromPickedLocale } from 'features/member/utils'
 import { FilterState } from 'features/questions/filter'
 import { Claim, ClaimState, QuestionGroup } from 'types/generated/graphql'
-import { range } from 'utils/array'
-import {
-  getGroupNumberForMember,
-  getMarketFromPickedLocale,
-} from 'utils/member'
+
+const getGroupNumberForMember = (
+  memberId: string,
+  numberMemberGroups: number,
+) => {
+  const memberIdNumber = Number(memberId)
+  return memberIdNumber % numberMemberGroups
+}
 
 export const hasOpenClaim = (claims: ReadonlyArray<Claim>): boolean => {
   return claims.some(

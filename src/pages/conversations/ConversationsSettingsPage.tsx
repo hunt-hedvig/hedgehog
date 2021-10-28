@@ -1,9 +1,9 @@
 import { Button, FadeIn, Flex } from '@hedvig-ui'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { FilterSelect } from 'features/conversations/FilterSelect'
 import { FilterState } from 'features/questions/filter'
 import React from 'react'
 import { useHistory } from 'react-router'
-import { useInsecurePersistentState } from 'utils/state'
 
 const ConversationsSettingsPage: React.FC<{}> = () => {
   const history = useHistory()
