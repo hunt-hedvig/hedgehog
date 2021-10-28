@@ -1,20 +1,15 @@
 import { Input } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/utils/key-press-hook'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import {
-  safelyEditAgreementOptions,
-  useSafelyEditAgreement,
-} from 'graphql/use-safely-edit-agreement'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Contract } from 'types/generated/graphql'
+import { useSafelyEditAgreementMutation } from 'types/generated/graphql'
 
 export const EditStreetInput: React.FC<{
   agreementId: string
-  contract: Contract
   street: string
   closeEdit: () => void
-}> = ({ agreementId, contract, street, closeEdit }) => {
+}> = ({ agreementId, street, closeEdit }) => {
   const [newStreet, setNewStreet] = useState(street)
   const { confirm } = useConfirmDialog()
 
@@ -22,7 +17,7 @@ export const EditStreetInput: React.FC<{
     setNewStreet(street)
   }, [agreementId])
 
-  const [safelyEditAgreement] = useSafelyEditAgreement(contract)
+  const [safelyEditAgreement] = useSafelyEditAgreementMutation()
 
   return (
     <Input
@@ -43,9 +38,14 @@ export const EditStreetInput: React.FC<{
           `Are you sure you want to change the street from "${street}" to "${newStreet}"?`,
         ).then(() => {
           toast.promise(
-            safelyEditAgreement(
-              safelyEditAgreementOptions(agreementId, newStreet),
-            ),
+            safelyEditAgreement({
+              variables: {
+                agreementId,
+                request: {
+                  newStreet: newStreet.trim(),
+                },
+              },
+            }),
             {
               loading: 'Changing street',
               success: () => {

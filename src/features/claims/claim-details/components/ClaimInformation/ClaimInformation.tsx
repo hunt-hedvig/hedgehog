@@ -6,6 +6,9 @@ import {
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
   useSetClaimDateMutation,
+  useSetContractForClaimMutation,
+  useSetCoveringEmployeeMutation,
+  useUpdateClaimStateMutation,
 } from 'types/generated/graphql'
 
 import {
@@ -30,12 +33,6 @@ import {
   CoInsuredForm,
   useDeleteCoInsured,
 } from 'features/claims/claim-details/components/CoInsured/CoInsuredForm'
-import {
-  setContractForClaimOptions,
-  useSetContractForClaim,
-} from 'graphql/use-add-contract-id-to-claim'
-import { useSetCoveringEmployee } from 'graphql/use-set-covering-employee'
-import { useUpdateClaimState } from 'graphql/use-update-claim-state'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
@@ -143,9 +140,9 @@ export const ClaimInformation: React.FC<{
   const contracts = memberData?.member?.contracts ?? []
   const trials = memberData?.member?.trials ?? []
 
-  const [setContractForClaim] = useSetContractForClaim()
-  const [setCoveringEmployee] = useSetCoveringEmployee()
-  const [updateClaimState] = useUpdateClaimState()
+  const [setContractForClaim] = useSetContractForClaimMutation()
+  const [setCoveringEmployee] = useSetCoveringEmployeeMutation()
+  const [updateClaimState] = useUpdateClaimStateMutation()
   const [setClaimDate] = useSetClaimDateMutation()
 
   const coverEmployeeHandler = async (value: string) => {
@@ -309,13 +306,11 @@ export const ClaimInformation: React.FC<{
                 selectedAgreement as GenericAgreement | undefined
               }
               onChange={async (value) => {
-                await setContractForClaim(
-                  setContractForClaimOptions({
-                    claimId,
-                    memberId,
-                    contractId: value,
-                  }),
-                )
+                await setContractForClaim({
+                  variables: {
+                    request: { claimId, memberId, contractId: value },
+                  },
+                })
                 await refetch()
               }}
             />

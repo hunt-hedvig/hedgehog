@@ -10,13 +10,13 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
-import {
-  addPartnerFreeMonthsCodeOptions,
-  useAddPartnerFreeMonthsCode,
-} from 'graphql/use-add-partner-free-months-code'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { AssignVoucherFreeMonths, Scalars } from 'types/generated/graphql'
+import {
+  AssignVoucherFreeMonths,
+  Scalars,
+  useAssignCampaignToPartnerFreeMonthsMutation,
+} from 'types/generated/graphql'
 import { numberOfMonthsOptions } from 'utils/campaignCodes'
 
 interface FreeMonthsFormData {
@@ -53,7 +53,10 @@ export const FreeMonthsForm: React.FC = () => {
     initialFormData,
   )
 
-  const [setPartnerFreeMonths, { loading }] = useAddPartnerFreeMonthsCode()
+  const [
+    setPartnerFreeMonths,
+    { loading },
+  ] = useAssignCampaignToPartnerFreeMonthsMutation()
 
   const codeTypeOptions = getCodeTypeOptions()
 
@@ -153,11 +156,12 @@ export const FreeMonthsForm: React.FC = () => {
           onClick={() => {
             confirm(`Create new campaign code "${formData.code}"?`).then(() => {
               toast.promise(
-                setPartnerFreeMonths(
-                  addPartnerFreeMonthsCodeOptions(
-                    formData as AssignVoucherFreeMonths,
-                  ),
-                ),
+                setPartnerFreeMonths({
+                  variables: {
+                    request: formData as AssignVoucherFreeMonths,
+                  },
+                  refetchQueries: () => ['FindPartnerCampaigns'],
+                }),
                 {
                   loading: 'Creating campaign',
                   success: () => {

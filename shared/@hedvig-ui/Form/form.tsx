@@ -183,6 +183,7 @@ export const FormTextArea: React.FC<TextAreaProps & FormFieldProps> = ({
 
 interface FormDropdownProps {
   options: Array<{ key: number; value: string | number; text: string | number }>
+  placeholder?: string
 }
 
 const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
@@ -190,6 +191,7 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
   rules,
   defaultValue,
   options,
+  placeholder,
 }) => {
   return (
     <Controller
@@ -197,7 +199,7 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
       rules={rules}
       defaultValue={defaultValue}
       render={({ onChange, value, onBlur }) => (
-        <Dropdown onBlur={onBlur}>
+        <Dropdown onBlur={onBlur} placeholder={placeholder}>
           {options.map((opt) => (
             <DropdownOption
               style={{ fontSize: 14 }}

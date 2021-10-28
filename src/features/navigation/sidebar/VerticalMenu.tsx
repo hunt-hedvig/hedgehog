@@ -441,7 +441,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   </Hotkey>
                 </MenuItem>
                 <MenuItem
-                  to={routes.claims}
+                  to={{ pathname: routes.claims, state: { from: 'menu' } }}
                   isActive={(_match, location) =>
                     location.pathname.startsWith('/claims')
                   }

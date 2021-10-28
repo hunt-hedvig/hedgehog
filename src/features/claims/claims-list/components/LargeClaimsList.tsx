@@ -108,9 +108,9 @@ export const LargeClaimsList: React.FC<{
         <TableHeader>
           <TableHeaderColumn>Member</TableHeaderColumn>
           <TableHeaderColumn>Date Registered</TableHeaderColumn>
-          <TableHeaderColumn>Claim Type</TableHeaderColumn>
-          <TableHeaderColumn>Claim State</TableHeaderColumn>
-          <TableHeaderColumn>Claim Reserves</TableHeaderColumn>
+          <TableHeaderColumn>Type & Outcome</TableHeaderColumn>
+          <TableHeaderColumn>State</TableHeaderColumn>
+          <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
         {claims.map((claim) => {
           const registrationDateString = formatDate(
@@ -158,11 +158,20 @@ export const LargeClaimsList: React.FC<{
               </TableColumn>
 
               <TableColumn>
-                {claim.claimType ? (
-                  convertEnumToTitle(claim.claimType)
-                ) : (
-                  <Placeholder>Not specified</Placeholder>
-                )}
+                <FlexVertically>
+                  {claim.claimType ? (
+                    convertEnumToTitle(claim.claimType)
+                  ) : (
+                    <Placeholder>Type not specified</Placeholder>
+                  )}
+                  <TableColumnSubtext>
+                    {claim.outcome ? (
+                      convertEnumToTitle(claim.outcome)
+                    ) : (
+                      <Placeholder>Outcome not specified</Placeholder>
+                    )}
+                  </TableColumnSubtext>
+                </FlexVertically>
               </TableColumn>
 
               <TableColumn>

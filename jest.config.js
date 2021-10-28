@@ -9,4 +9,10 @@ module.exports = {
     '\\.(css)$': '<rootDir>/test/__mocks__/styleMock.ts',
   },
   setupFiles: ['<rootDir>/test-setup-enzyme.js'],
+  testEnvironment: 'jsdom',
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
+    },
+  },
 }

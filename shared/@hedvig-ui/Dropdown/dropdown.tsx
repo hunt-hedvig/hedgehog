@@ -22,7 +22,7 @@ const show = keyframes`
   }
 `
 
-const DropdownStyled = styled.div<{ active: boolean }>`
+const DropdownStyled = styled.div<{ isActive: boolean }>`
   width: 100%;
   position: relative;
   outline: none;
@@ -37,8 +37,8 @@ const DropdownStyled = styled.div<{ active: boolean }>`
     border: 1px solid ${({ theme }) => theme.border};
     padding-right: 30px;
 
-    ${({ active }) =>
-      active &&
+    ${({ isActive }) =>
+      isActive &&
       `
         border-radius: 0.3rem 0.3rem 0 0;
         border-bottom: 1px solid transparent;
@@ -168,7 +168,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     <DropdownStyled
       tabIndex={0}
       ref={dropdownRef}
-      active={active}
+      isActive={active}
       onKeyDown={(e) => {
         if (e.keyCode === Keys.Escape.code || e.keyCode === Keys.Enter.code) {
           toggleDropdown()

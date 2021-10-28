@@ -9,6 +9,7 @@ query ListClaims($options: ListClaimsOptions!) {
       }
       registrationDate
       claimType
+      outcome
       state
       reserves
     }

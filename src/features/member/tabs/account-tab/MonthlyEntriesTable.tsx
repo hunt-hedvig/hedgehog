@@ -12,14 +12,14 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
 import { format, parseISO } from 'date-fns'
-import {
-  getRemoveMonthlyEntryOptions,
-  useRemoveMonthlyEntry,
-} from 'graphql/use-remove-monthly-entry'
 import React from 'react'
 import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { MonthlyEntry } from 'types/generated/graphql'
+import {
+  GetAccountDocument,
+  MonthlyEntry,
+  useRemoveMonthlyEntryMutation,
+} from 'types/generated/graphql'
 import { formatMoney } from 'utils/money'
 
 const StyledTable = styled(Table)`
@@ -42,7 +42,7 @@ export const MonthlyEntriesTable: React.FC<{
   memberId: string
   monthlyEntries: ReadonlyArray<MonthlyEntry>
 }> = ({ memberId, monthlyEntries }) => {
-  const [removeMonthlyEntry] = useRemoveMonthlyEntry()
+  const [removeMonthlyEntry] = useRemoveMonthlyEntryMutation()
   const { confirm } = useConfirmDialog()
 
   return (
@@ -112,9 +112,17 @@ export const MonthlyEntriesTable: React.FC<{
                     `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,
                   ).then(() => {
                     toast.promise(
-                      removeMonthlyEntry(
-                        getRemoveMonthlyEntryOptions(memberId, monthlyEntry.id),
-                      ),
+                      removeMonthlyEntry({
+                        variables: {
+                          id: monthlyEntry.id,
+                        },
+                        refetchQueries: [
+                          {
+                            query: GetAccountDocument,
+                            variables: { memberId },
+                          },
+                        ],
+                      }),
                       {
                         loading: 'Removing monthly entry',
                         success: 'Monthly entry removed',

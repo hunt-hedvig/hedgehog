@@ -14,10 +14,14 @@ import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useMe } from 'features/user/hooks/use-me'
-import { useDashboardNumbers } from 'graphql/use-dashboard-numbers'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useGetMeQuery, UserSettingKey } from 'types/generated/graphql'
+import {
+  DashboardNumbers,
+  useGetDashboardNumbersQuery,
+  useGetMeQuery,
+  UserSettingKey,
+} from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,14 +68,21 @@ const MutedText = styled.div`
 const DashboardPage: React.FC = () => {
   const { data } = useGetMeQuery()
   const { settings } = useMe()
-  const [dashboardNumbers] = useDashboardNumbers()
+
+  const { data: dashboardData } = useGetDashboardNumbersQuery({
+    pollInterval: 1000 * 5,
+  })
+
+  const dashboardNumbers = dashboardData?.dashboardNumbers as
+    | DashboardNumbers
+    | undefined
 
   return (
     <Wrapper>
       <Spacing bottom>
         {data?.me && (
           <MainHeadline>
-            Hi there,{' '}
+            Hi there{' '}
             <Capitalized>
               {getLowercaseNameFromEmail(data?.me.user.email)}
             </Capitalized>
