@@ -201,21 +201,24 @@ export const ClaimPayments: React.FC<{
             >
               <TableHeader>
                 <TableHeaderColumn
-                  withSort={filter.field === 'amount'}
+                  withSort
+                  sorting={filter.field === 'amount'}
                   desc={filter.desc}
                   onClick={() => setFilterHandler('amount')}
                 >
                   Amount
                 </TableHeaderColumn>
                 <TableHeaderColumn
-                  withSort={filter.field === 'deductible'}
+                  withSort
+                  sorting={filter.field === 'deductible'}
                   desc={filter.desc}
                   onClick={() => setFilterHandler('deductible')}
                 >
                   Deductible
                 </TableHeaderColumn>
                 <TableHeaderColumn
-                  withSort={filter.field === 'timestamp'}
+                  withSort
+                  sorting={filter.field === 'timestamp'}
                   desc={filter.desc}
                   onClick={() => setFilterHandler('timestamp')}
                 >

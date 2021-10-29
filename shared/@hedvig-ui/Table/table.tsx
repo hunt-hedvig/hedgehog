@@ -57,14 +57,14 @@ export const TableColumn = styled.td`
   cursor: pointer;
 `
 
-export const TableHeaderColumnStyled = styled.th<{ withSort?: boolean }>`
+const TableHeaderColumnStyled = styled.th<{ withSort?: boolean }>`
   position: relative;
   font-weight: lighter;
   color: ${({ theme }) => theme.semiStrongForeground};
   font-size: 0.8em;
   padding: 0.5em 1em 0.5em 1.2em;
   background-color: ${({ theme }) => theme.accentLight};
-  cursor: pointer;
+  cursor: ${({ withSort }) => (withSort ? 'pointer' : 'unset')};
 
   :first-of-type {
     border-radius: 8px 0 0 0;
@@ -85,19 +85,21 @@ const SortIcon = styled(CaretUpFill)<{ desc?: boolean }>`
 interface TableHeaderColumnProps
   extends React.HTMLAttributes<HTMLTableHeaderCellElement> {
   withSort?: boolean
+  sorting?: boolean
   desc?: boolean
 }
 
 export const TableHeaderColumn: React.FC<TableHeaderColumnProps> = ({
+  sorting,
   withSort,
   desc,
   children,
   ...props
 }) => {
   return (
-    <TableHeaderColumnStyled {...props}>
+    <TableHeaderColumnStyled withSort={withSort} {...props}>
       {children}
-      {withSort && <SortIcon desc={desc} />}
+      {sorting && <SortIcon desc={desc} />}
     </TableHeaderColumnStyled>
   )
 }
