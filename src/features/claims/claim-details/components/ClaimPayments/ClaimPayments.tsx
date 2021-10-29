@@ -13,6 +13,7 @@ import {
   Label,
   Monetary,
   Paragraph,
+  sortTableData,
   Spacing,
   StandaloneMessage,
   Table,
@@ -107,9 +108,53 @@ export const ClaimPayments: React.FC<{
     variables: { claimId },
   })
 
-  const payments = [...(paymentsData?.claim?.payments ?? [])].sort(
-    (a, b) => b.timestamp - a.timestamp,
-  )
+  const payments = [...(paymentsData?.claim?.payments ?? [])]
+
+  const [currentPayments, setCurrentPayments] = useState<any>([])
+  const [filter, setFilter] = useState({ field: 'timestamp', desc: true })
+
+  const filterHandler = () => {
+    if (filter.field === 'timestamp') {
+      const sortedPayments = sortTableData(
+        payments.map((p) => ({
+          ...p,
+          timestamp: new Date(p.timestamp),
+        })),
+        filter.field,
+        filter.desc,
+      ).map((p) => ({ ...p, timestamp: p.timestamp.toISOString() }))
+
+      setCurrentPayments(sortedPayments)
+    } else if (filter.field === 'amount' || filter.field === 'deductible') {
+      const sortedPayments = sortTableData(
+        payments.map((p) => ({
+          ...p,
+          [filter.field]: +p[filter.field].amount,
+        })),
+        filter.field,
+        filter.desc,
+      )
+
+      setCurrentPayments(
+        sortedPayments.map((p) => ({
+          ...p,
+          [filter.field]: {
+            amount: `${p[filter.field]}.00`,
+            currency: 'SEK',
+          },
+        })),
+      )
+    } else {
+      setCurrentPayments(sortTableData(payments, filter.field, filter.desc))
+    }
+  }
+
+  React.useEffect(() => {
+    if (payments.length) {
+      filterHandler()
+    }
+  }, [payments.length, filter])
+
   const identity = paymentsData?.claim?.member?.identity
 
   const totalAmount = payments
@@ -118,6 +163,15 @@ export const ClaimPayments: React.FC<{
   const totalDeductible = payments
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
+
+  const setFilterHandler = (field) => {
+    setFilter((prev) => {
+      if (prev.field === field) {
+        return { ...prev, desc: !prev.desc }
+      }
+      return { field, desc: true }
+    })
+  }
 
   return (
     <CardContent>
@@ -179,15 +233,39 @@ export const ClaimPayments: React.FC<{
               onMouseLeave={() => setTableHovered(false)}
             >
               <TableHeader>
-                <TableHeaderColumn>Amount</TableHeaderColumn>
-                <TableHeaderColumn>Deductible</TableHeaderColumn>
-                <TableHeaderColumn>Date</TableHeaderColumn>
+                <TableHeaderColumn
+                  withSort={filter.field === 'amount'}
+                  desc={filter.desc}
+                  onClick={() => setFilterHandler('amount')}
+                >
+                  Amount
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  withSort={filter.field === 'deductible'}
+                  desc={filter.desc}
+                  onClick={() => setFilterHandler('deductible')}
+                >
+                  Deductible
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  withSort={filter.field === 'timestamp'}
+                  desc={filter.desc}
+                  onClick={() => setFilterHandler('timestamp')}
+                >
+                  Date
+                </TableHeaderColumn>
                 <TableHeaderColumn>Ex Gratia</TableHeaderColumn>
-                <TableHeaderColumn>Note</TableHeaderColumn>
+                <TableHeaderColumn
+                  withSort={filter.field === 'note'}
+                  desc={filter.desc}
+                  onClick={() => setFilterHandler('note')}
+                >
+                  Note
+                </TableHeaderColumn>
                 <TableHeaderColumn>Type</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableHeader>
-              {payments.map((payment) => (
+              {currentPayments.map((payment) => (
                 <TableRow
                   key={payment.id}
                   onClick={() => {

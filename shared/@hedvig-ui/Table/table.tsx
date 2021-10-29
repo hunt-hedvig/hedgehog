@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { TableHTMLAttributes } from 'react'
+import { CaretUpFill } from 'react-bootstrap-icons'
 import { range } from '../utils/helpers'
 import { useVerticalKeyboardNavigation } from '../utils/keyboard-actions'
 
@@ -56,12 +57,14 @@ export const TableColumn = styled.td`
   cursor: pointer;
 `
 
-export const TableHeaderColumn = styled.th`
+export const TableHeaderColumnStyled = styled.th<{ withSort?: boolean }>`
+  position: relative;
   font-weight: lighter;
   color: ${({ theme }) => theme.semiStrongForeground};
   font-size: 0.8em;
   padding: 0.5em 1em 0.5em 1.2em;
   background-color: ${({ theme }) => theme.accentLight};
+  cursor: pointer;
 
   :first-of-type {
     border-radius: 8px 0 0 0;
@@ -71,6 +74,33 @@ export const TableHeaderColumn = styled.th`
     border-radius: 0 8px 0 0;
   }
 `
+
+const SortIcon = styled(CaretUpFill)<{ desc?: boolean }>`
+  position: absolute;
+  right: 15px;
+  top: 8px;
+  transform: ${({ desc }) => (desc ? 'rotate(180deg)' : 'none')};
+`
+
+interface TableHeaderColumnProps
+  extends React.HTMLAttributes<HTMLTableHeaderCellElement> {
+  withSort?: boolean
+  desc?: boolean
+}
+
+export const TableHeaderColumn: React.FC<TableHeaderColumnProps> = ({
+  withSort,
+  desc,
+  children,
+  ...props
+}) => {
+  return (
+    <TableHeaderColumnStyled {...props}>
+      {children}
+      {withSort && <SortIcon desc={desc} />}
+    </TableHeaderColumnStyled>
+  )
+}
 
 export const TableRow = styled.tr<{ active?: boolean; border?: boolean }>`
   width: 100%;
@@ -198,3 +228,13 @@ const getPageLimits = (totalPages: number, currentPage: number): PageState => {
     endPage: end,
   }
 }
+
+export const sortTableData = (items: any[], field: string, desc: boolean) =>
+  items.sort((a, b) => {
+    if (typeof a[field] === 'string' && typeof b[field] === 'string') {
+      return desc
+        ? +(a[field] > b[field]) || -(a[field] < b[field])
+        : -(a[field] > b[field]) || +(a[field] < b[field])
+    }
+    return desc ? b[field] - a[field] : a[field] - b[field]
+  })
