@@ -25,7 +25,6 @@ export {
   TableHeaderColumn,
   TablePageSelect,
   TableRow,
-  sortTableData,
 } from './Table/table'
 
 export type ButtonProps = _ButtonProps

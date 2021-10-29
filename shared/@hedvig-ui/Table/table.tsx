@@ -228,13 +228,3 @@ const getPageLimits = (totalPages: number, currentPage: number): PageState => {
     endPage: end,
   }
 }
-
-export const sortTableData = (items: any[], field: string, desc: boolean) =>
-  items.sort((a, b) => {
-    if (typeof a[field] === 'string' && typeof b[field] === 'string') {
-      return desc
-        ? +(a[field] > b[field]) || -(a[field] < b[field])
-        : -(a[field] > b[field]) || +(a[field] < b[field])
-    }
-    return desc ? b[field] - a[field] : a[field] - b[field]
-  })

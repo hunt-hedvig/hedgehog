@@ -13,7 +13,6 @@ import {
   Label,
   Monetary,
   Paragraph,
-  sortTableData,
   Spacing,
   StandaloneMessage,
   Table,
@@ -23,6 +22,7 @@ import {
   TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { ArrayElement } from '@hedvig-ui/utils/array-element'
 import copy from 'copy-to-clipboard'
 import React, { useState } from 'react'
 import { BugFill } from 'react-bootstrap-icons'
@@ -110,50 +110,19 @@ export const ClaimPayments: React.FC<{
 
   const payments = [...(paymentsData?.claim?.payments ?? [])]
 
-  const [currentPayments, setCurrentPayments] = useState<any>([])
-  const [filter, setFilter] = useState({ field: 'timestamp', desc: true })
+  const [filter, setFilter] = useState<{
+    field: 'timestamp' | 'deductible' | 'amount'
+    desc: boolean
+  }>({ field: 'timestamp', desc: true })
 
-  const filterHandler = () => {
-    if (filter.field === 'timestamp') {
-      const sortedPayments = sortTableData(
-        payments.map((p) => ({
-          ...p,
-          timestamp: new Date(p.timestamp),
-        })),
-        filter.field,
-        filter.desc,
-      ).map((p) => ({ ...p, timestamp: p.timestamp.toISOString() }))
+  const sortHandler = (
+    p1: ArrayElement<typeof payments>,
+    p2: ArrayElement<typeof payments>,
+  ) => {
+    const direction = filter.desc ? 1 : -1
 
-      setCurrentPayments(sortedPayments)
-    } else if (filter.field === 'amount' || filter.field === 'deductible') {
-      const sortedPayments = sortTableData(
-        payments.map((p) => ({
-          ...p,
-          [filter.field]: +p[filter.field].amount,
-        })),
-        filter.field,
-        filter.desc,
-      )
-
-      setCurrentPayments(
-        sortedPayments.map((p) => ({
-          ...p,
-          [filter.field]: {
-            amount: `${p[filter.field]}.00`,
-            currency: 'SEK',
-          },
-        })),
-      )
-    } else {
-      setCurrentPayments(sortTableData(payments, filter.field, filter.desc))
-    }
+    return (p1[filter.field] < p2[filter.field] ? 1 : -1) * direction
   }
-
-  React.useEffect(() => {
-    if (payments.length) {
-      filterHandler()
-    }
-  }, [payments.length, filter])
 
   const identity = paymentsData?.claim?.member?.identity
 
@@ -165,12 +134,10 @@ export const ClaimPayments: React.FC<{
     .reduce((acc, amount) => acc + amount, 0)
 
   const setFilterHandler = (field) => {
-    setFilter((prev) => {
-      if (prev.field === field) {
-        return { ...prev, desc: !prev.desc }
-      }
-      return { field, desc: true }
-    })
+    setFilter((prev) => ({
+      field,
+      desc: prev.field === field ? !prev.desc : true,
+    }))
   }
 
   return (
@@ -255,17 +222,11 @@ export const ClaimPayments: React.FC<{
                   Date
                 </TableHeaderColumn>
                 <TableHeaderColumn>Ex Gratia</TableHeaderColumn>
-                <TableHeaderColumn
-                  withSort={filter.field === 'note'}
-                  desc={filter.desc}
-                  onClick={() => setFilterHandler('note')}
-                >
-                  Note
-                </TableHeaderColumn>
+                <TableHeaderColumn>Note</TableHeaderColumn>
                 <TableHeaderColumn>Type</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableHeader>
-              {currentPayments.map((payment) => (
+              {payments.sort(sortHandler).map((payment) => (
                 <TableRow
                   key={payment.id}
                   onClick={() => {
