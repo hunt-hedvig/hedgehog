@@ -6,6 +6,39 @@ export enum Market {
   Denmark = 'DENMARK',
 }
 
+export const MarketFlags: Record<Market, string> = {
+  NORWAY: '🇳🇴',
+  DENMARK: '🇩🇰',
+  SWEDEN: '🇸🇪',
+}
+
+export enum PickedLocale {
+  SvSe = 'sv_SE',
+  EnSe = 'en_SE',
+  NbNo = 'nb_NO',
+  EnNo = 'en_NO',
+  DaDk = 'da_DK',
+  EnDk = 'en_DK',
+}
+
+export const PickedLocaleFlag: Record<PickedLocale, string> = {
+  [PickedLocale.EnNo]: '🇬🇧',
+  [PickedLocale.EnSe]: '🇬🇧',
+  [PickedLocale.EnDk]: '🇬🇧',
+  [PickedLocale.DaDk]: '🇩🇰',
+  [PickedLocale.SvSe]: '🇸🇪',
+  [PickedLocale.NbNo]: '🇳🇴',
+}
+
+export const PickedLocaleMarket: Record<PickedLocale, Market> = {
+  [PickedLocale.EnNo]: Market.Norway,
+  [PickedLocale.NbNo]: Market.Norway,
+  [PickedLocale.EnDk]: Market.Denmark,
+  [PickedLocale.DaDk]: Market.Denmark,
+  [PickedLocale.EnSe]: Market.Sweden,
+  [PickedLocale.SvSe]: Market.Sweden,
+}
+
 export const MemberGroups: Record<string, number> = {
   First: 1,
   Second: 2,
@@ -16,12 +49,6 @@ export const MemberGroupColors: Record<string, string> = {
   [MemberGroups.First]: lightTheme.danger,
   [MemberGroups.Second]: lightTheme.success,
   [MemberGroups.Third]: lightTheme.highlight,
-}
-
-export const MarketFlags: Record<Market, string> = {
-  NORWAY: '🇳🇴',
-  DENMARK: '🇩🇰',
-  SWEDEN: '🇸🇪',
 }
 
 export enum ContractType {
@@ -77,33 +104,6 @@ export const ContractMarketTypes: Record<Market, ContractType[]> = {
     ContractType.DanishTravel,
     ContractType.DanishAccident,
   ],
-}
-
-export enum PickedLocale {
-  SvSe = 'sv_SE',
-  EnSe = 'en_SE',
-  NbNo = 'nb_NO',
-  EnNo = 'en_NO',
-  DaDk = 'da_DK',
-  EnDk = 'en_DK',
-}
-
-export const PickedLocaleFlag: Record<PickedLocale, string> = {
-  [PickedLocale.EnNo]: '🇬🇧',
-  [PickedLocale.EnSe]: '🇬🇧',
-  [PickedLocale.EnDk]: '🇬🇧',
-  [PickedLocale.DaDk]: '🇩🇰',
-  [PickedLocale.SvSe]: '🇸🇪',
-  [PickedLocale.NbNo]: '🇳🇴',
-}
-
-export const PickedLocaleMarket: Record<PickedLocale, Market> = {
-  [PickedLocale.EnNo]: Market.Norway,
-  [PickedLocale.NbNo]: Market.Norway,
-  [PickedLocale.EnDk]: Market.Denmark,
-  [PickedLocale.DaDk]: Market.Denmark,
-  [PickedLocale.EnSe]: Market.Sweden,
-  [PickedLocale.SvSe]: Market.Sweden,
 }
 
 export enum TypeOfContract {
