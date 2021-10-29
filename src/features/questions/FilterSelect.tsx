@@ -59,7 +59,7 @@ const FilterButton = styled.button<{ selected: boolean }>`
 const GroupIcon = styled.div<{ filter: FilterStateType }>`
   width: 1em;
   height: 1em;
-  background-color: ${({ filter }) => MemberGroupColors[filter]};
+  background-color: ${({ filter }) => MemberGroupColors[filter + 1]};
   border-radius: 3px;
 `
 
