@@ -1,8 +1,8 @@
 import { getBirthdayInfo, getBirthDayText } from '@hedvig-ui/utils/date'
 import { differenceInYears, parse } from 'date-fns'
 import {
-  Flags,
   Market,
+  MarketFlags,
   MemberGroupColors,
   PickedLocaleMarket,
 } from 'features/config/constants'
@@ -47,7 +47,7 @@ export const getMemberIdColor = (
   numberMemberGroups: number,
 ) => {
   return MemberGroupColors[
-    getGroupNumberForMember(memberId, numberMemberGroups)
+    getGroupNumberForMember(memberId, numberMemberGroups) + 1
   ]
 }
 
@@ -69,7 +69,7 @@ export const getMemberFlag = (
   pickedLocale: string | null = null,
 ): string => {
   if (contractMarketInfo?.market) {
-    return Flags[contractMarketInfo.market as Market]
+    return MarketFlags[contractMarketInfo.market as Market]
   }
 
   if (!pickedLocale) {
@@ -82,7 +82,7 @@ export const getMemberFlag = (
     return '🏳'
   }
 
-  return `${Flags[market]} & 🏳`
+  return `${MarketFlags[market]} & 🏳`
 }
 
 export const formatSsn = (ssn: string) => {

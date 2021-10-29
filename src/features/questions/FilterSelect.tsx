@@ -3,8 +3,8 @@ import { ButtonsGroup, FadeIn } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
-  Flags,
   Market,
+  MarketFlags,
   MemberGroupColors,
   MemberGroups,
 } from 'features/config/constants'
@@ -160,7 +160,7 @@ export const FilterSelect: React.FC<{
               >
                 {convertEnumToTitle(market)}{' '}
                 <span style={{ marginLeft: '0.5em' }}>
-                  {Flags[market.toUpperCase()]}
+                  {MarketFlags[market.toUpperCase()]}
                 </span>
                 <CountBadge selected={filters.includes(FilterState[market])}>
                   <div>

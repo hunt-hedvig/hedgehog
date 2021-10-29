@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Checkbox, Flex, Label, lightTheme, TextDatePicker } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
-import { Flags, Market } from 'features/config/constants'
+import { Market, MarketFlags } from 'features/config/constants'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
@@ -187,7 +187,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
               onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
             />
             <span style={{ marginLeft: '0.5rem' }}>
-              {Flags[key.toUpperCase()]}
+              {MarketFlags[key.toUpperCase()]}
             </span>
           </Flex>
         ))}

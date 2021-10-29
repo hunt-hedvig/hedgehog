@@ -17,10 +17,7 @@ import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
-import {
-  SwitcherEmailStatus,
-  TerminationReason,
-} from 'features/config/constants'
+import { TerminationReason } from 'features/member/tabs/contracts-tab/contract/termination-date'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
@@ -41,6 +38,14 @@ const StatusTableRow = styled(TableRow)`
 const SubText = styled.p`
   font-size: 0.9rem;
 `
+
+export enum SwitcherEmailStatus {
+  Prepared = '👩‍🍳 Prepared',
+  Sent = '💌 Sent',
+  Reminded = '👋 Reminded',
+  InProgress = '🤝 In Progress',
+  PastCancellationDate = '⌛️ Past Cancellation Date',
+}
 
 const UPDATE_INFO = gql`
   mutation UpdateSwitcherEmailInfo(

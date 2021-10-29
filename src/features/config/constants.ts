@@ -15,10 +15,10 @@ export const MemberGroups: Record<string, number> = {
 export const MemberGroupColors: Record<string, string> = {
   [MemberGroups.First]: lightTheme.danger,
   [MemberGroups.Second]: lightTheme.success,
-  [MemberGroups.Second]: lightTheme.highlight,
+  [MemberGroups.Third]: lightTheme.highlight,
 }
 
-export const Flags: Record<Market, string> = {
+export const MarketFlags: Record<Market, string> = {
   NORWAY: '🇳🇴',
   DENMARK: '🇩🇰',
   SWEDEN: '🇸🇪',
@@ -152,56 +152,4 @@ export const TypeOfContractType: Record<TypeOfContract, ContractType> = {
   [TypeOfContract.DkAccidentStudent]: ContractType.DanishAccident,
   [TypeOfContract.DkTravel]: ContractType.DanishTravel,
   [TypeOfContract.DkTravelStudent]: ContractType.DanishTravel,
-}
-
-export enum SwitcherTypes {
-  SwedishHouse = 'SWEDISH_HOUSE',
-  SwedishApartment = 'SWEDISH_APARTMENT',
-  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
-  NorwegianTravel = 'NORWEGIAN_TRAVEL',
-}
-
-export const SwitcherTypeMarket: Record<SwitcherTypes, Market> = {
-  [SwitcherTypes.SwedishHouse]: Market.Sweden,
-  [SwitcherTypes.SwedishApartment]: Market.Sweden,
-  [SwitcherTypes.NorwegianHomeContent]: Market.Norway,
-  [SwitcherTypes.NorwegianTravel]: Market.Norway,
-}
-
-export enum SwitcherEmailStatus {
-  Prepared = '👩‍🍳 Prepared',
-  Sent = '💌 Sent',
-  Reminded = '👋 Reminded',
-  InProgress = '🤝 In Progress',
-  PastCancellationDate = '⌛️ Past Cancellation Date',
-}
-
-export enum TerminationReason {
-  NoFeedback = 'NO_FEEDBACK',
-  DissatisfiedWithService = 'DISSATISFIED_WITH_SERVICE',
-  DissatisfiedWithApp = 'DISSATISFIED_WITH_APP',
-  DissatisfiedWithHedvig = 'DISSATISFIED_WITH_HEDVIG',
-  DissatisfiedWithOther = 'DISSATISFIED_WITH_OTHER',
-  AlreadyHaveInsurance = 'ALREADY_HAVE_INSURANCE',
-  CoveredByPartnersInsurance = 'COVERED_BY_PARTNERS_INSURANCE',
-  PartnerAlreadyHasHedvigInsurance = 'PARTNER_ALREADY_HAS_HEDVIG_INSURANCE',
-  GotOfferFromJobOrUnionOrSimilar = 'GOT_OFFER_FROM_JOB_OR_UNION_OR_SIMILAR',
-  WantToKeepOldInsurance = 'WANT_TO_KEEP_OLD_INSURANCE',
-  StuckWithOldInsurance = 'STUCK_WITH_OLD_INSURANCE',
-  DontNeedInsurance = 'DONT_NEED_INSURANCE',
-  WantedOtherTypeOfInsurance = 'WANTED_OTHER_TYPE_OF_INSURANCE',
-  RegretByRightToWithraw = 'REGRET_BY_RIGHT_TO_WITHRAW',
-  Moved = 'MOVED',
-  MovedAbroad = 'MOVED_ABROAD',
-  MovedInWithParents = 'MOVED_IN_WITH_PARENTS',
-  Price = 'PRICE',
-  MissedPayments = 'MISSED_PAYMENTS',
-  MissedPaymentsBadRisk = 'MISSED_PAYMENTS_BAD_RISK',
-  PaymentIssues = 'PAYMENT_ISSUES',
-  DiscountPeriodOver = 'DISCOUNT_PERIOD_OVER',
-  ConfirmedFraud = 'CONFIRMED_FRAUD',
-  SuspectedFraud = 'SUSPECTED_FRAUD',
-  SignedByMistake = 'SIGNED_BY_MISTAKE',
-  Other = 'OTHER',
-  Unknown = 'UNKNOWN',
 }

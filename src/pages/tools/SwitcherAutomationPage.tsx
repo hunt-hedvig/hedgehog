@@ -9,13 +9,11 @@ import {
 import { sleep } from '@hedvig-ui/utils/sleep'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, isPast, parseISO } from 'date-fns'
+import { Market, MarketFlags } from 'features/config/constants'
 import {
-  Flags,
-  Market,
+  SwitcherEmailRow,
   SwitcherEmailStatus,
-  SwitcherTypeMarket,
-} from 'features/config/constants'
-import { SwitcherEmailRow } from 'features/tools/switcher-automation/SwitcherTableRow'
+} from 'features/tools/switcher-automation/SwitcherTableRow'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -26,6 +24,20 @@ import {
   useGetSwitcherEmailsQuery,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
+
+export enum SwitcherTypes {
+  SwedishHouse = 'SWEDISH_HOUSE',
+  SwedishApartment = 'SWEDISH_APARTMENT',
+  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
+  NorwegianTravel = 'NORWEGIAN_TRAVEL',
+}
+
+export const SwitcherTypeMarket: Record<SwitcherTypes, Market> = {
+  [SwitcherTypes.SwedishHouse]: Market.Sweden,
+  [SwitcherTypes.SwedishApartment]: Market.Sweden,
+  [SwitcherTypes.NorwegianHomeContent]: Market.Norway,
+  [SwitcherTypes.NorwegianTravel]: Market.Norway,
+}
 
 export const getSwitcherEmailStatus = (
   switcherEmail: Pick<
@@ -82,7 +94,7 @@ const SwitcherAutomationPage: React.FC = () => {
             return (
               <div key={market}>
                 <Checkbox
-                  label={`${convertEnumToTitle(market)} ${Flags[market]}`}
+                  label={`${convertEnumToTitle(market)} ${MarketFlags[market]}`}
                   checked={selectedMarket === market}
                   onChange={() =>
                     setSelectedMarket((current) =>
