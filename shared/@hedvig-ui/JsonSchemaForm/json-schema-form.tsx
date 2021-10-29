@@ -14,7 +14,7 @@ import Form, {
   WidgetProps,
 } from '@rjsf/core'
 import { JSONSchema7 } from 'json-schema'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
 import { convertCamelcaseToTitle, convertEnumToTitle } from '../utils/text'
 
@@ -245,10 +245,6 @@ export const JsonSchemaForm: React.FC<{
   const [formData, setFormData] = useState(
     formatInitialFormData(initialFormData ?? {}, schema),
   )
-
-  useEffect(() => {
-    console.log(formData)
-  }, [formData])
 
   return (
     <FormWrapper>

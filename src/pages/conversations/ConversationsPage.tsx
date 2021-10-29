@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import {
   Fade,
   MainHeadline,
+  Spacing,
   StandaloneMessage,
   useFadeAnimation,
 } from '@hedvig-ui'
@@ -13,7 +14,7 @@ import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persis
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import { FilterState } from 'features/questions/filter'
+import { FilterStateType } from 'features/questions/FilterSelect'
 import {
   doClaimFilter,
   doMarketFilter,
@@ -45,7 +46,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const [chatFocused, setChatFocused] = useState(false)
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
 
-  const [filters] = useInsecurePersistentState<ReadonlyArray<FilterState>>(
+  const [filters] = useInsecurePersistentState<ReadonlyArray<FilterStateType>>(
     'questions:filters',
     [],
   )
@@ -152,7 +153,16 @@ const ConversationsPage: React.FC<RouteComponentProps<{
           />
         </FadeGrid>
       ) : (
-        <StandaloneMessage>Nice, that's it for now!</StandaloneMessage>
+        <div>
+          <StandaloneMessage paddingTop="15vh">
+            Nice, that's it for now!
+          </StandaloneMessage>
+          <Spacing top="large" />
+          <ConversationsOverview
+            filteredGroups={filteredGroups}
+            currentMemberId={memberId}
+          />
+        </div>
       )}
     </>
   )

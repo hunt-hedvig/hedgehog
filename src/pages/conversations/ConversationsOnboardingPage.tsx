@@ -9,8 +9,7 @@ import {
   useFadeAnimation,
 } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { FilterSelect } from 'features/conversations/FilterSelect'
-import { FilterState } from 'features/questions/filter'
+import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
@@ -29,7 +28,7 @@ const ConversationsOnboardingPage: React.FC = () => {
   const history = useHistory()
 
   const [filters, setFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterState>
+    ReadonlyArray<FilterStateType>
   >('questions:filters', [])
 
   useEffect(() => {
