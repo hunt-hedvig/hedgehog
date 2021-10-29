@@ -1,6 +1,5 @@
 import { range } from '@hedvig-ui/utils/range'
-import { Market } from 'features/config/constants'
-import { getMarketFromPickedLocale } from 'features/member/utils'
+import { Market, PickedLocaleMarket } from 'features/config/constants'
 import { FilterState, FilterStateType } from 'features/questions/FilterSelect'
 import { Claim, ClaimState, QuestionGroup } from 'types/generated/graphql'
 
@@ -38,7 +37,7 @@ export const doMarketFilter = (
   const questionGroupMarket = questionGroup?.member?.contractMarketInfo?.market
     ? questionGroup.member.contractMarketInfo.market
     : questionGroup.member?.pickedLocale
-    ? getMarketFromPickedLocale(questionGroup.member.pickedLocale)
+    ? PickedLocaleMarket[questionGroup.member.pickedLocale]
     : Market.Sweden
 
   return Object.keys(Market).some(

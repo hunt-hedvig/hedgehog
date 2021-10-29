@@ -1,8 +1,13 @@
 import styled from '@emotion/styled'
-import { ButtonsGroup, FadeIn, lightTheme } from '@hedvig-ui'
+import { ButtonsGroup, FadeIn } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { Flags, Market, MemberGroups } from 'features/config/constants'
+import {
+  Flags,
+  Market,
+  MemberGroupColors,
+  MemberGroups,
+} from 'features/config/constants'
 import {
   doClaimFilter,
   doMarketFilter,
@@ -29,19 +34,6 @@ export const FilterState = {
 
 export type FilterStateType = number
 
-export const getFilterColor = (filter: FilterStateType): string => {
-  switch (filter + 1) {
-    case MemberGroups.First:
-      return lightTheme.danger
-    case MemberGroups.Second:
-      return lightTheme.success
-    case MemberGroups.Third:
-      return lightTheme.highlight
-    default:
-      return lightTheme.accent
-  }
-}
-
 const FilterButton = styled.button<{ selected: boolean }>`
   border: none;
   display: inline-flex;
@@ -67,7 +59,7 @@ const FilterButton = styled.button<{ selected: boolean }>`
 const GroupIcon = styled.div<{ filter: FilterStateType }>`
   width: 1em;
   height: 1em;
-  background-color: ${({ filter }) => getFilterColor(filter)};
+  background-color: ${({ filter }) => MemberGroupColors[filter]};
   border-radius: 3px;
 `
 

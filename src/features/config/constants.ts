@@ -1,3 +1,5 @@
+import { lightTheme } from '@hedvig-ui'
+
 export enum Market {
   Sweden = 'SWEDEN',
   Norway = 'NORWAY',
@@ -8,6 +10,12 @@ export const MemberGroups: Record<string, number> = {
   First: 1,
   Second: 2,
   Third: 3,
+}
+
+export const MemberGroupColors: Record<string, string> = {
+  [MemberGroups.First]: lightTheme.danger,
+  [MemberGroups.Second]: lightTheme.success,
+  [MemberGroups.Second]: lightTheme.highlight,
 }
 
 export const Flags: Record<Market, string> = {
@@ -87,6 +95,15 @@ export const PickedLocaleFlag: Record<PickedLocale, string> = {
   [PickedLocale.DaDk]: '🇩🇰',
   [PickedLocale.SvSe]: '🇸🇪',
   [PickedLocale.NbNo]: '🇳🇴',
+}
+
+export const PickedLocaleMarket: Record<PickedLocale, Market> = {
+  [PickedLocale.EnNo]: Market.Norway,
+  [PickedLocale.NbNo]: Market.Norway,
+  [PickedLocale.EnDk]: Market.Denmark,
+  [PickedLocale.DaDk]: Market.Denmark,
+  [PickedLocale.EnSe]: Market.Sweden,
+  [PickedLocale.SvSe]: Market.Sweden,
 }
 
 export enum TypeOfContract {

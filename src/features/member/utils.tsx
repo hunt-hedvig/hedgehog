@@ -1,7 +1,12 @@
 import { getBirthdayInfo, getBirthDayText } from '@hedvig-ui/utils/date'
 import { differenceInYears, parse } from 'date-fns'
-import { Flags, Market, PickedLocale } from 'features/config/constants'
-import { FilterState, getFilterColor } from 'features/questions/FilterSelect'
+import {
+  Flags,
+  Market,
+  MemberGroupColors,
+  PickedLocaleMarket,
+} from 'features/config/constants'
+import { FilterState } from 'features/questions/FilterSelect'
 import React from 'react'
 import { ContractMarketInfo } from 'types/generated/graphql'
 
@@ -41,7 +46,9 @@ export const getMemberIdColor = (
   memberId: string,
   numberMemberGroups: number,
 ) => {
-  return getFilterColor(getGroupNumberForMember(memberId, numberMemberGroups))
+  return MemberGroupColors[
+    getGroupNumberForMember(memberId, numberMemberGroups)
+  ]
 }
 
 export const getMemberGroupName = (
@@ -68,7 +75,9 @@ export const getMemberFlag = (
   if (!pickedLocale) {
     return '🏳'
   }
-  const market = getMarketFromPickedLocale(pickedLocale)
+
+  const market = PickedLocaleMarket[pickedLocale]
+
   if (!market) {
     return '🏳'
   }
@@ -76,46 +85,10 @@ export const getMemberFlag = (
   return `${Flags[market]} & 🏳`
 }
 
-export const getMarketFromPickedLocale = (
-  pickedLocale: string,
-): Market | null => {
-  switch (pickedLocale) {
-    case PickedLocale.NbNo:
-    case PickedLocale.EnNo:
-      return Market.Norway
-    case PickedLocale.SvSe:
-    case PickedLocale.EnSe:
-      return Market.Sweden
-    case PickedLocale.DaDk:
-    case PickedLocale.EnDk:
-      return Market.Denmark
-    default:
-      return null
-  }
-}
-
-export const getLanguageFlagFromPickedLocale = (
-  pickedLocale: string,
-): string | null => {
-  switch (pickedLocale) {
-    case PickedLocale.NbNo:
-      return '🇳🇴'
-    case PickedLocale.SvSe:
-      return '🇸🇪'
-    case PickedLocale.DaDk:
-      return '🇩🇰'
-    case PickedLocale.EnNo:
-    case PickedLocale.EnSe:
-    case PickedLocale.EnDk:
-      return '🇬🇧'
-    default:
-      return '🏳'
-  }
-}
-
-const SWEDISH_SSN_LENGTH = 12
-const NORWEGIAN_SSN_LENGTH = 11
 export const formatSsn = (ssn: string) => {
+  const SWEDISH_SSN_LENGTH = 12
+  const NORWEGIAN_SSN_LENGTH = 11
+
   if (ssn.length === SWEDISH_SSN_LENGTH) {
     return ssn.slice(0, 8) + '-' + ssn.slice(8, 12)
   }

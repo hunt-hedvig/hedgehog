@@ -3,9 +3,9 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
   ContractMarketTypes,
   ContractType,
+  PickedLocaleMarket,
   QuoteProductTypeContractMap,
 } from 'features/config/constants'
-import { getMarketFromPickedLocale } from 'features/member/utils'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
 import { Quote } from 'types/generated/graphql'
@@ -36,7 +36,7 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const memberMarket =
-    contractMarket?.market ?? getMarketFromPickedLocale(pickedLocale!)
+    contractMarket?.market ?? PickedLocaleMarket[pickedLocale!]
 
   const getCategorisedQuotesBasedOnContractType = (
     contractType: string,
