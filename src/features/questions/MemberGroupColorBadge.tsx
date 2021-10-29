@@ -9,8 +9,6 @@ export const MemberGroupColorBadge = styled.div<{ filter?: FilterStateType }>`
   border-radius: 2px;
   vertical-align: center;
   margin-left: 0.5rem;
-  background-color: ${({ filter }) => {
-    console.log(filter)
-    return filter !== undefined ? MemberGroupColors[filter + 1] : '#fff'
-  }};
+  background-color: ${({ filter }) =>
+    filter !== undefined ? MemberGroupColors[filter + 1] : '#fff'};
 `

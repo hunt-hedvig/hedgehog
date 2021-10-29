@@ -121,7 +121,6 @@ export const MemberTab: React.FC<{
   }
 
   const handleSubmit = () => {
-    console.log(editMemberInfoRequest)
     editMemberInfo({
       variables: {
         request: editMemberInfoRequest,
