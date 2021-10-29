@@ -121,6 +121,13 @@ export const ClaimPayments: React.FC<{
   ) => {
     const direction = filter.desc ? 1 : -1
 
+    if (filter.field === 'amount' || filter.field === 'deductible') {
+      return (
+        (+p1[filter.field].amount < +p2[filter.field].amount ? 1 : -1) *
+        direction
+      )
+    }
+
     return (p1[filter.field] < p2[filter.field] ? 1 : -1) * direction
   }
 
