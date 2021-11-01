@@ -14,7 +14,7 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'features/members-search/styles'
-import { useMemberSearch } from 'graphql/use-member-search'
+import { useMemberSearch } from 'graphql/member/use-member-search'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'

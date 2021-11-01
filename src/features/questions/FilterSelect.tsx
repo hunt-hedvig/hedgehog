@@ -14,7 +14,7 @@ import {
   doMemberGroupFilter,
 } from 'features/questions/utils'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import { useQuestionGroups } from 'graphql/use-question-groups'
+import { useQuestionGroups } from 'graphql/questions/use-question-groups'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { QuestionGroup } from 'types/generated/graphql'

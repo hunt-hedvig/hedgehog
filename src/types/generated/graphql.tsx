@@ -2507,6 +2507,95 @@ export type UsersQuery = { __typename?: 'QueryType' } & {
   >
 }
 
+export type CreateClaimMutationVariables = Exact<{
+  memberId: Scalars['ID']
+  date: Scalars['LocalDateTime']
+  source: ClaimSource
+}>
+
+export type CreateClaimMutation = { __typename?: 'MutationType' } & {
+  createClaim?: Maybe<
+    { __typename?: 'Claim' } & Pick<
+      Claim,
+      'id' | 'state' | 'registrationDate'
+    > & {
+        member: { __typename?: 'Member' } & Pick<
+          Member,
+          'memberId' | 'firstName' | 'lastName'
+        >
+      }
+  >
+}
+
+export type ListClaimsQueryVariables = Exact<{
+  options: ListClaimsOptions
+}>
+
+export type ListClaimsQuery = { __typename?: 'QueryType' } & {
+  listClaims: { __typename?: 'ListClaimsResult' } & Pick<
+    ListClaimsResult,
+    'page' | 'totalPages'
+  > & {
+      claims: Array<
+        { __typename?: 'Claim' } & Pick<
+          Claim,
+          | 'id'
+          | 'registrationDate'
+          | 'claimType'
+          | 'outcome'
+          | 'state'
+          | 'reserves'
+        > & {
+            member: { __typename?: 'Member' } & Pick<
+              Member,
+              'memberId' | 'firstName' | 'lastName'
+            >
+          }
+      >
+    }
+}
+
+export type SetContractForClaimMutationVariables = Exact<{
+  request: SetContractForClaim
+}>
+
+export type SetContractForClaimMutation = { __typename?: 'MutationType' } & {
+  setContractForClaim: { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
+      member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+      contract?: Maybe<{ __typename?: 'Contract' } & Pick<Contract, 'id'>>
+    }
+}
+
+export type SetCoveringEmployeeMutationVariables = Exact<{
+  id: Scalars['ID']
+  coveringEmployee: Scalars['Boolean']
+}>
+
+export type SetCoveringEmployeeMutation = { __typename?: 'MutationType' } & {
+  setCoveringEmployee?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'coveringEmployee'> & {
+        events: Array<
+          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+        >
+      }
+  >
+}
+
+export type UpdateClaimStateMutationVariables = Exact<{
+  id: Scalars['ID']
+  state: ClaimState
+}>
+
+export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
+  updateClaimState?: Maybe<
+    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'state'> & {
+        events: Array<
+          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
+        >
+      }
+  >
+}
+
 export type ActivatePendingAgreementMutationVariables = Exact<{
   contractId: Scalars['ID']
   request?: Maybe<ActivatePendingAgreementInput>
@@ -2541,57 +2630,6 @@ export type AddMonthlyEntryMutationVariables = Exact<{
 export type AddMonthlyEntryMutation = { __typename?: 'MutationType' } & {
   addMonthlyEntryToMember: { __typename?: 'Member' } & Pick<Member, 'memberId'>
 }
-
-export type AssignCampaignToPartnerFreeMonthsMutationVariables = Exact<{
-  request?: Maybe<AssignVoucherFreeMonths>
-}>
-
-export type AssignCampaignToPartnerFreeMonthsMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'assignCampaignToPartnerFreeMonths'>
-
-export type AssignCampaignToPartnerPercentageDiscountMutationVariables = Exact<{
-  request?: Maybe<AssignVoucherPercentageDiscount>
-}>
-
-export type AssignCampaignToPartnerPercentageDiscountMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'assignCampaignToPartnerPercentageDiscount'>
-
-export type AssignCampaignToPartnerVisibleNoDiscountMutationVariables = Exact<{
-  request?: Maybe<AssignVoucherVisibleNoDiscount>
-}>
-
-export type AssignCampaignToPartnerVisibleNoDiscountMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'assignCampaignToPartnerVisibleNoDiscount'>
-
-export type AnswerQuestionMutationVariables = Exact<{
-  memberId: Scalars['ID']
-  answer: Scalars['String']
-}>
-
-export type AnswerQuestionMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'answerQuestion'
->
-
-export type AvailableEmployeeRolesQueryVariables = Exact<{
-  [key: string]: never
-}>
-
-export type AvailableEmployeeRolesQuery = { __typename?: 'QueryType' } & Pick<
-  QueryType,
-  'availableEmployeeRoles'
->
-
-export type AvailableCampaignCodeTypesQueryVariables = Exact<{
-  [key: string]: never
-}>
-
-export type AvailableCampaignCodeTypesQuery = {
-  __typename?: 'QueryType'
-} & Pick<QueryType, 'availableCampaignCodeTypes'>
 
 export type ChangeFromDateMutationVariables = Exact<{
   agreementId: Scalars['ID']
@@ -2637,47 +2675,6 @@ export type ChangeToDateMutation = { __typename?: 'MutationType' } & {
     }
 }
 
-export type CreateCampaignPartnerMutationVariables = Exact<{
-  partnerId: Scalars['ID']
-  partnerName: Scalars['String']
-}>
-
-export type CreateCampaignPartnerMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'createCampaignPartner'>
-
-export type CreateClaimMutationVariables = Exact<{
-  memberId: Scalars['ID']
-  date: Scalars['LocalDateTime']
-  source: ClaimSource
-}>
-
-export type CreateClaimMutation = { __typename?: 'MutationType' } & {
-  createClaim?: Maybe<
-    { __typename?: 'Claim' } & Pick<
-      Claim,
-      'id' | 'state' | 'registrationDate'
-    > & {
-        member: { __typename?: 'Member' } & Pick<
-          Member,
-          'memberId' | 'firstName' | 'lastName'
-        >
-      }
-  >
-}
-
-export type CreateEmployeeMutationVariables = Exact<{
-  email: Scalars['String']
-  role: Scalars['String']
-}>
-
-export type CreateEmployeeMutation = { __typename?: 'MutationType' } & {
-  createEmployee: { __typename?: 'Employee' } & Pick<
-    Employee,
-    'id' | 'email' | 'role' | 'firstGrantedAt'
-  >
-}
-
 export type CreatePaymentCompletionLinkMutationVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -2719,17 +2716,6 @@ export type EditMemberInfoMutation = { __typename?: 'MutationType' } & {
   editMemberInfo: { __typename?: 'Member' } & Pick<
     Member,
     'memberId' | 'firstName' | 'lastName' | 'email' | 'phoneNumber'
-  >
-}
-
-export type EmployeesQueryVariables = Exact<{ [key: string]: never }>
-
-export type EmployeesQuery = { __typename?: 'QueryType' } & {
-  employees: Array<
-    { __typename?: 'Employee' } & Pick<
-      Employee,
-      'id' | 'email' | 'role' | 'firstGrantedAt'
-    >
   >
 }
 
@@ -2912,17 +2898,6 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetDashboardNumbersQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
-  dashboardNumbers?: Maybe<
-    { __typename?: 'DashboardNumbers' } & Pick<
-      DashboardNumbers,
-      'numberOfClaims' | 'numberOfQuestions'
-    >
-  >
-}
-
 export type GetMeQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetMeQuery = { __typename?: 'QueryType' } & {
@@ -3023,54 +2998,6 @@ export type GetMessageHistoryQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetPartnerCampaignOwnersQueryVariables = Exact<{
-  [key: string]: never
-}>
-
-export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
-  getPartnerCampaignOwners: Array<
-    { __typename?: 'CampaignOwnerPartner' } & Pick<
-      CampaignOwnerPartner,
-      'partnerId'
-    >
-  >
-}
-
-export type FindPartnerCampaignsQueryVariables = Exact<{
-  input: CampaignFilter
-}>
-
-export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
-  findPartnerCampaigns: Array<
-    { __typename?: 'VoucherCampaign' } & Pick<
-      VoucherCampaign,
-      | 'id'
-      | 'campaignCode'
-      | 'partnerId'
-      | 'partnerName'
-      | 'validFrom'
-      | 'validTo'
-      | 'codeType'
-    > & {
-        incentive?: Maybe<
-          | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
-              MonthlyPercentageDiscountFixedPeriod,
-              'numberOfMonths' | 'percentage'
-            >)
-          | ({ __typename?: 'FreeMonths' } & Pick<FreeMonths, 'numberOfMonths'>)
-          | ({ __typename?: 'CostDeduction' } & Pick<CostDeduction, 'amount'>)
-          | { __typename: 'NoDiscount' }
-          | ({ __typename?: 'IndefinitePercentageDiscount' } & Pick<
-              IndefinitePercentageDiscount,
-              'percentageDiscount'
-            >)
-          | { __typename?: 'VisibleNoDiscount' }
-          | { __typename?: 'UnknownIncentive' }
-        >
-      }
-  >
-}
-
 export type GetPersonQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -3097,40 +3024,6 @@ export type GetPersonQuery = { __typename?: 'QueryType' } & {
                   Whitelisted,
                   'whitelistedAt' | 'whitelistedBy'
                 >
-              >
-            }
-        >
-      }
-  >
-}
-
-export type GetQuestionsGroupsQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
-  questionGroups: Array<
-    { __typename?: 'QuestionGroup' } & Pick<
-      QuestionGroup,
-      'id' | 'memberId'
-    > & {
-        questions: Array<
-          { __typename?: 'Question' } & Pick<
-            Question,
-            'id' | 'messageJsonString' | 'timestamp'
-          >
-        >
-        member?: Maybe<
-          { __typename?: 'Member' } & Pick<
-            Member,
-            'memberId' | 'firstName' | 'lastName' | 'pickedLocale'
-          > & {
-              contractMarketInfo?: Maybe<
-                { __typename?: 'ContractMarketInfo' } & Pick<
-                  ContractMarketInfo,
-                  'market'
-                >
-              >
-              claims: Array<
-                { __typename?: 'Claim' } & Pick<Claim, 'id' | 'state'>
               >
             }
         >
@@ -3253,15 +3146,6 @@ export type GetReferralInformationQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetSchemaForContractTypeQueryVariables = Exact<{
-  contractType: Scalars['String']
-}>
-
-export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
-  QueryType,
-  'quoteSchemaForContractType'
->
-
 export type GetTrialsQueryVariables = Exact<{
   memberId: Scalars['ID']
 }>
@@ -3294,34 +3178,6 @@ export type GetTrialsQuery = { __typename?: 'QueryType' } & {
         >
       }
   >
-}
-
-export type ListClaimsQueryVariables = Exact<{
-  options: ListClaimsOptions
-}>
-
-export type ListClaimsQuery = { __typename?: 'QueryType' } & {
-  listClaims: { __typename?: 'ListClaimsResult' } & Pick<
-    ListClaimsResult,
-    'page' | 'totalPages'
-  > & {
-      claims: Array<
-        { __typename?: 'Claim' } & Pick<
-          Claim,
-          | 'id'
-          | 'registrationDate'
-          | 'claimType'
-          | 'outcome'
-          | 'state'
-          | 'reserves'
-        > & {
-            member: { __typename?: 'Member' } & Pick<
-              Member,
-              'memberId' | 'firstName' | 'lastName'
-            >
-          }
-      >
-    }
 }
 
 export type ManualRedeemCampaignMutationVariables = Exact<{
@@ -3360,14 +3216,6 @@ export type ManualUnRedeemCampaignMutation = { __typename?: 'MutationType' } & {
       >
     }
 }
-
-export type MarkQuestionAsResolvedMutationVariables = Exact<{
-  memberId: Scalars['ID']
-}>
-
-export type MarkQuestionAsResolvedMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'markQuestionAsResolved'>
 
 export type MemberSearchQueryVariables = Exact<{
   query: Scalars['String']
@@ -3429,15 +3277,6 @@ export type RegenerateCertificateMutation = { __typename?: 'MutationType' } & {
     }
 }
 
-export type RemoveEmployeeMutationVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type RemoveEmployeeMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'removeEmployee'
->
-
 export type RemoveMonthlyEntryMutationVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -3473,6 +3312,142 @@ export type SafelyEditAgreementMutation = { __typename?: 'MutationType' } & {
   }
 }
 
+export type SetFraudulentStatusMutationVariables = Exact<{
+  memberId: Scalars['ID']
+  request: MemberFraudulentStatusInput
+}>
+
+export type SetFraudulentStatusMutation = { __typename?: 'MutationType' } & {
+  setFraudulentStatus: { __typename?: 'Member' } & Pick<
+    Member,
+    'memberId' | 'fraudulentStatus' | 'fraudulentStatusDescription'
+  >
+}
+
+export type SignQuoteForNewContractMutationVariables = Exact<{
+  quoteId: Scalars['ID']
+  activationDate?: Maybe<Scalars['LocalDate']>
+}>
+
+export type SignQuoteForNewContractMutation = {
+  __typename?: 'MutationType'
+} & { signQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
+
+export type TerminateContractMutationVariables = Exact<{
+  contractId: Scalars['ID']
+  request?: Maybe<TerminateContractInput>
+}>
+
+export type TerminateContractMutation = { __typename?: 'MutationType' } & {
+  terminateContract: { __typename?: 'Contract' } & Pick<
+    Contract,
+    'id' | 'holderMemberId' | 'terminationDate'
+  >
+}
+
+export type UpdateQuoteBySchemaMutationVariables = Exact<{
+  quoteId: Scalars['ID']
+  schemaData: Scalars['JSON']
+  bypassUnderwritingGuidelines: Scalars['Boolean']
+}>
+
+export type UpdateQuoteBySchemaMutation = { __typename?: 'MutationType' } & {
+  updateQuoteBySchema: { __typename?: 'Quote' } & Pick<Quote, 'id'>
+}
+
+export type WhitelistMemberMutationVariables = Exact<{
+  memberId: Scalars['ID']
+}>
+
+export type WhitelistMemberMutation = { __typename?: 'MutationType' } & {
+  whitelistMember: { __typename?: 'Member' } & Pick<Member, 'memberId'>
+}
+
+export type GetDashboardNumbersQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetDashboardNumbersQuery = { __typename?: 'QueryType' } & {
+  dashboardNumbers?: Maybe<
+    { __typename?: 'DashboardNumbers' } & Pick<
+      DashboardNumbers,
+      'numberOfClaims' | 'numberOfQuestions'
+    >
+  >
+}
+
+export type GetPartnerCampaignOwnersQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type GetPartnerCampaignOwnersQuery = { __typename?: 'QueryType' } & {
+  getPartnerCampaignOwners: Array<
+    { __typename?: 'CampaignOwnerPartner' } & Pick<
+      CampaignOwnerPartner,
+      'partnerId'
+    >
+  >
+}
+
+export type GetSchemaForContractTypeQueryVariables = Exact<{
+  contractType: Scalars['String']
+}>
+
+export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
+  QueryType,
+  'quoteSchemaForContractType'
+>
+
+export type AnswerQuestionMutationVariables = Exact<{
+  memberId: Scalars['ID']
+  answer: Scalars['String']
+}>
+
+export type AnswerQuestionMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'answerQuestion'
+>
+
+export type GetQuestionsGroupsQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetQuestionsGroupsQuery = { __typename?: 'QueryType' } & {
+  questionGroups: Array<
+    { __typename?: 'QuestionGroup' } & Pick<
+      QuestionGroup,
+      'id' | 'memberId'
+    > & {
+        questions: Array<
+          { __typename?: 'Question' } & Pick<
+            Question,
+            'id' | 'messageJsonString' | 'timestamp'
+          >
+        >
+        member?: Maybe<
+          { __typename?: 'Member' } & Pick<
+            Member,
+            'memberId' | 'firstName' | 'lastName' | 'pickedLocale'
+          > & {
+              contractMarketInfo?: Maybe<
+                { __typename?: 'ContractMarketInfo' } & Pick<
+                  ContractMarketInfo,
+                  'market'
+                >
+              >
+              claims: Array<
+                { __typename?: 'Claim' } & Pick<Claim, 'id' | 'state'>
+              >
+            }
+        >
+      }
+  >
+}
+
+export type MarkQuestionAsResolvedMutationVariables = Exact<{
+  memberId: Scalars['ID']
+}>
+
+export type MarkQuestionAsResolvedMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'markQuestionAsResolved'>
+
 export type SendMessageMutationVariables = Exact<{
   input: SendMessageInput
 }>
@@ -3488,6 +3463,123 @@ export type SendMessageMutation = { __typename?: 'MutationType' } & {
         'memberId' | 'errorCode' | 'errorMessage'
       >)
 }
+
+export type AssignCampaignToPartnerFreeMonthsMutationVariables = Exact<{
+  request?: Maybe<AssignVoucherFreeMonths>
+}>
+
+export type AssignCampaignToPartnerFreeMonthsMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerFreeMonths'>
+
+export type AssignCampaignToPartnerPercentageDiscountMutationVariables = Exact<{
+  request?: Maybe<AssignVoucherPercentageDiscount>
+}>
+
+export type AssignCampaignToPartnerPercentageDiscountMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerPercentageDiscount'>
+
+export type AssignCampaignToPartnerVisibleNoDiscountMutationVariables = Exact<{
+  request?: Maybe<AssignVoucherVisibleNoDiscount>
+}>
+
+export type AssignCampaignToPartnerVisibleNoDiscountMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerVisibleNoDiscount'>
+
+export type AvailableEmployeeRolesQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type AvailableEmployeeRolesQuery = { __typename?: 'QueryType' } & Pick<
+  QueryType,
+  'availableEmployeeRoles'
+>
+
+export type AvailableCampaignCodeTypesQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type AvailableCampaignCodeTypesQuery = {
+  __typename?: 'QueryType'
+} & Pick<QueryType, 'availableCampaignCodeTypes'>
+
+export type CreateCampaignPartnerMutationVariables = Exact<{
+  partnerId: Scalars['ID']
+  partnerName: Scalars['String']
+}>
+
+export type CreateCampaignPartnerMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'createCampaignPartner'>
+
+export type CreateEmployeeMutationVariables = Exact<{
+  email: Scalars['String']
+  role: Scalars['String']
+}>
+
+export type CreateEmployeeMutation = { __typename?: 'MutationType' } & {
+  createEmployee: { __typename?: 'Employee' } & Pick<
+    Employee,
+    'id' | 'email' | 'role' | 'firstGrantedAt'
+  >
+}
+
+export type EmployeesQueryVariables = Exact<{ [key: string]: never }>
+
+export type EmployeesQuery = { __typename?: 'QueryType' } & {
+  employees: Array<
+    { __typename?: 'Employee' } & Pick<
+      Employee,
+      'id' | 'email' | 'role' | 'firstGrantedAt'
+    >
+  >
+}
+
+export type FindPartnerCampaignsQueryVariables = Exact<{
+  input: CampaignFilter
+}>
+
+export type FindPartnerCampaignsQuery = { __typename?: 'QueryType' } & {
+  findPartnerCampaigns: Array<
+    { __typename?: 'VoucherCampaign' } & Pick<
+      VoucherCampaign,
+      | 'id'
+      | 'campaignCode'
+      | 'partnerId'
+      | 'partnerName'
+      | 'validFrom'
+      | 'validTo'
+      | 'codeType'
+    > & {
+        incentive?: Maybe<
+          | ({ __typename?: 'MonthlyPercentageDiscountFixedPeriod' } & Pick<
+              MonthlyPercentageDiscountFixedPeriod,
+              'numberOfMonths' | 'percentage'
+            >)
+          | ({ __typename?: 'FreeMonths' } & Pick<FreeMonths, 'numberOfMonths'>)
+          | ({ __typename?: 'CostDeduction' } & Pick<CostDeduction, 'amount'>)
+          | { __typename: 'NoDiscount' }
+          | ({ __typename?: 'IndefinitePercentageDiscount' } & Pick<
+              IndefinitePercentageDiscount,
+              'percentageDiscount'
+            >)
+          | { __typename?: 'VisibleNoDiscount' }
+          | { __typename?: 'UnknownIncentive' }
+        >
+      }
+  >
+}
+
+export type RemoveEmployeeMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type RemoveEmployeeMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'removeEmployee'
+>
 
 export type SetCampaignCodeTypeMutationVariables = Exact<{
   id: Scalars['ID']
@@ -3525,65 +3617,6 @@ export type SetCampaignCodeTypeMutation = { __typename?: 'MutationType' } & {
   >
 }
 
-export type SetContractForClaimMutationVariables = Exact<{
-  request: SetContractForClaim
-}>
-
-export type SetContractForClaimMutation = { __typename?: 'MutationType' } & {
-  setContractForClaim: { __typename?: 'Claim' } & Pick<Claim, 'id'> & {
-      member: { __typename?: 'Member' } & Pick<Member, 'memberId'>
-      contract?: Maybe<{ __typename?: 'Contract' } & Pick<Contract, 'id'>>
-    }
-}
-
-export type SetCoveringEmployeeMutationVariables = Exact<{
-  id: Scalars['ID']
-  coveringEmployee: Scalars['Boolean']
-}>
-
-export type SetCoveringEmployeeMutation = { __typename?: 'MutationType' } & {
-  setCoveringEmployee?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'coveringEmployee'> & {
-        events: Array<
-          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
-        >
-      }
-  >
-}
-
-export type SetFraudulentStatusMutationVariables = Exact<{
-  memberId: Scalars['ID']
-  request: MemberFraudulentStatusInput
-}>
-
-export type SetFraudulentStatusMutation = { __typename?: 'MutationType' } & {
-  setFraudulentStatus: { __typename?: 'Member' } & Pick<
-    Member,
-    'memberId' | 'fraudulentStatus' | 'fraudulentStatusDescription'
-  >
-}
-
-export type SignQuoteForNewContractMutationVariables = Exact<{
-  quoteId: Scalars['ID']
-  activationDate?: Maybe<Scalars['LocalDate']>
-}>
-
-export type SignQuoteForNewContractMutation = {
-  __typename?: 'MutationType'
-} & { signQuoteForNewContract: { __typename?: 'Quote' } & Pick<Quote, 'id'> }
-
-export type TerminateContractMutationVariables = Exact<{
-  contractId: Scalars['ID']
-  request?: Maybe<TerminateContractInput>
-}>
-
-export type TerminateContractMutation = { __typename?: 'MutationType' } & {
-  terminateContract: { __typename?: 'Contract' } & Pick<
-    Contract,
-    'id' | 'holderMemberId' | 'terminationDate'
-  >
-}
-
 export type UnsignMemberMutationVariables = Exact<{
   ssn: Scalars['String']
 }>
@@ -3592,21 +3625,6 @@ export type UnsignMemberMutation = { __typename?: 'MutationType' } & Pick<
   MutationType,
   'unsignMember'
 >
-
-export type UpdateClaimStateMutationVariables = Exact<{
-  id: Scalars['ID']
-  state: ClaimState
-}>
-
-export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
-  updateClaimState?: Maybe<
-    { __typename?: 'Claim' } & Pick<Claim, 'id' | 'state'> & {
-        events: Array<
-          { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
-        >
-      }
-  >
-}
 
 export type UpdateEmployeeRoleMutationVariables = Exact<{
   id: Scalars['ID']
@@ -3618,24 +3636,6 @@ export type UpdateEmployeeRoleMutation = { __typename?: 'MutationType' } & {
     Employee,
     'id' | 'email' | 'role' | 'firstGrantedAt'
   >
-}
-
-export type UpdateQuoteBySchemaMutationVariables = Exact<{
-  quoteId: Scalars['ID']
-  schemaData: Scalars['JSON']
-  bypassUnderwritingGuidelines: Scalars['Boolean']
-}>
-
-export type UpdateQuoteBySchemaMutation = { __typename?: 'MutationType' } & {
-  updateQuoteBySchema: { __typename?: 'Quote' } & Pick<Quote, 'id'>
-}
-
-export type WhitelistMemberMutationVariables = Exact<{
-  memberId: Scalars['ID']
-}>
-
-export type WhitelistMemberMutation = { __typename?: 'MutationType' } & {
-  whitelistMember: { __typename?: 'Member' } & Pick<Member, 'memberId'>
 }
 
 export const SetClaimDateDocument = gql`
@@ -6455,6 +6455,311 @@ export type UsersQueryResult = ApolloReactCommon.QueryResult<
   UsersQuery,
   UsersQueryVariables
 >
+export const CreateClaimDocument = gql`
+  mutation createClaim(
+    $memberId: ID!
+    $date: LocalDateTime!
+    $source: ClaimSource!
+  ) {
+    createClaim(memberId: $memberId, date: $date, source: $source) {
+      id
+      state
+      registrationDate
+      member {
+        memberId
+        firstName
+        lastName
+      }
+    }
+  }
+`
+export type CreateClaimMutationFn = ApolloReactCommon.MutationFunction<
+  CreateClaimMutation,
+  CreateClaimMutationVariables
+>
+
+/**
+ * __useCreateClaimMutation__
+ *
+ * To run a mutation, you first call `useCreateClaimMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClaimMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClaimMutation, { data, loading, error }] = useCreateClaimMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      date: // value for 'date'
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useCreateClaimMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateClaimMutation,
+    CreateClaimMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    CreateClaimMutation,
+    CreateClaimMutationVariables
+  >(CreateClaimDocument, options)
+}
+export type CreateClaimMutationHookResult = ReturnType<
+  typeof useCreateClaimMutation
+>
+export type CreateClaimMutationResult = ApolloReactCommon.MutationResult<
+  CreateClaimMutation
+>
+export type CreateClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateClaimMutation,
+  CreateClaimMutationVariables
+>
+export const ListClaimsDocument = gql`
+  query ListClaims($options: ListClaimsOptions!) {
+    listClaims(options: $options) {
+      claims {
+        id
+        member {
+          memberId
+          firstName
+          lastName
+        }
+        registrationDate
+        claimType
+        outcome
+        state
+        reserves
+      }
+      page
+      totalPages
+    }
+  }
+`
+
+/**
+ * __useListClaimsQuery__
+ *
+ * To run a query within a React component, call `useListClaimsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListClaimsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListClaimsQuery({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useListClaimsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<ListClaimsQuery, ListClaimsQueryVariables>(
+    ListClaimsDocument,
+    options,
+  )
+}
+export function useListClaimsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    ListClaimsQuery,
+    ListClaimsQueryVariables
+  >(ListClaimsDocument, options)
+}
+export type ListClaimsQueryHookResult = ReturnType<typeof useListClaimsQuery>
+export type ListClaimsLazyQueryHookResult = ReturnType<
+  typeof useListClaimsLazyQuery
+>
+export type ListClaimsQueryResult = ApolloReactCommon.QueryResult<
+  ListClaimsQuery,
+  ListClaimsQueryVariables
+>
+export const SetContractForClaimDocument = gql`
+  mutation SetContractForClaim($request: SetContractForClaim!) {
+    setContractForClaim(request: $request) {
+      id
+      member {
+        memberId
+      }
+      contract {
+        id
+      }
+    }
+  }
+`
+export type SetContractForClaimMutationFn = ApolloReactCommon.MutationFunction<
+  SetContractForClaimMutation,
+  SetContractForClaimMutationVariables
+>
+
+/**
+ * __useSetContractForClaimMutation__
+ *
+ * To run a mutation, you first call `useSetContractForClaimMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetContractForClaimMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setContractForClaimMutation, { data, loading, error }] = useSetContractForClaimMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSetContractForClaimMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetContractForClaimMutation,
+    SetContractForClaimMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SetContractForClaimMutation,
+    SetContractForClaimMutationVariables
+  >(SetContractForClaimDocument, options)
+}
+export type SetContractForClaimMutationHookResult = ReturnType<
+  typeof useSetContractForClaimMutation
+>
+export type SetContractForClaimMutationResult = ApolloReactCommon.MutationResult<
+  SetContractForClaimMutation
+>
+export type SetContractForClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetContractForClaimMutation,
+  SetContractForClaimMutationVariables
+>
+export const SetCoveringEmployeeDocument = gql`
+  mutation SetCoveringEmployee($id: ID!, $coveringEmployee: Boolean!) {
+    setCoveringEmployee(id: $id, coveringEmployee: $coveringEmployee) {
+      id
+      coveringEmployee
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+export type SetCoveringEmployeeMutationFn = ApolloReactCommon.MutationFunction<
+  SetCoveringEmployeeMutation,
+  SetCoveringEmployeeMutationVariables
+>
+
+/**
+ * __useSetCoveringEmployeeMutation__
+ *
+ * To run a mutation, you first call `useSetCoveringEmployeeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetCoveringEmployeeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setCoveringEmployeeMutation, { data, loading, error }] = useSetCoveringEmployeeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      coveringEmployee: // value for 'coveringEmployee'
+ *   },
+ * });
+ */
+export function useSetCoveringEmployeeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetCoveringEmployeeMutation,
+    SetCoveringEmployeeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SetCoveringEmployeeMutation,
+    SetCoveringEmployeeMutationVariables
+  >(SetCoveringEmployeeDocument, options)
+}
+export type SetCoveringEmployeeMutationHookResult = ReturnType<
+  typeof useSetCoveringEmployeeMutation
+>
+export type SetCoveringEmployeeMutationResult = ApolloReactCommon.MutationResult<
+  SetCoveringEmployeeMutation
+>
+export type SetCoveringEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetCoveringEmployeeMutation,
+  SetCoveringEmployeeMutationVariables
+>
+export const UpdateClaimStateDocument = gql`
+  mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
+    updateClaimState(id: $id, state: $state) {
+      id
+      state
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+export type UpdateClaimStateMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateClaimStateMutation,
+  UpdateClaimStateMutationVariables
+>
+
+/**
+ * __useUpdateClaimStateMutation__
+ *
+ * To run a mutation, you first call `useUpdateClaimStateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClaimStateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClaimStateMutation, { data, loading, error }] = useUpdateClaimStateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      state: // value for 'state'
+ *   },
+ * });
+ */
+export function useUpdateClaimStateMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateClaimStateMutation,
+    UpdateClaimStateMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UpdateClaimStateMutation,
+    UpdateClaimStateMutationVariables
+  >(UpdateClaimStateDocument, options)
+}
+export type UpdateClaimStateMutationHookResult = ReturnType<
+  typeof useUpdateClaimStateMutation
+>
+export type UpdateClaimStateMutationResult = ApolloReactCommon.MutationResult<
+  UpdateClaimStateMutation
+>
+export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateClaimStateMutation,
+  UpdateClaimStateMutationVariables
+>
 export const ActivatePendingAgreementDocument = gql`
   mutation ActivatePendingAgreement(
     $contractId: ID!
@@ -6630,319 +6935,6 @@ export type AddMonthlyEntryMutationOptions = ApolloReactCommon.BaseMutationOptio
   AddMonthlyEntryMutation,
   AddMonthlyEntryMutationVariables
 >
-export const AssignCampaignToPartnerFreeMonthsDocument = gql`
-  mutation AssignCampaignToPartnerFreeMonths(
-    $request: AssignVoucherFreeMonths
-  ) {
-    assignCampaignToPartnerFreeMonths(request: $request)
-  }
-`
-export type AssignCampaignToPartnerFreeMonthsMutationFn = ApolloReactCommon.MutationFunction<
-  AssignCampaignToPartnerFreeMonthsMutation,
-  AssignCampaignToPartnerFreeMonthsMutationVariables
->
-
-/**
- * __useAssignCampaignToPartnerFreeMonthsMutation__
- *
- * To run a mutation, you first call `useAssignCampaignToPartnerFreeMonthsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAssignCampaignToPartnerFreeMonthsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [assignCampaignToPartnerFreeMonthsMutation, { data, loading, error }] = useAssignCampaignToPartnerFreeMonthsMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useAssignCampaignToPartnerFreeMonthsMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AssignCampaignToPartnerFreeMonthsMutation,
-    AssignCampaignToPartnerFreeMonthsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    AssignCampaignToPartnerFreeMonthsMutation,
-    AssignCampaignToPartnerFreeMonthsMutationVariables
-  >(AssignCampaignToPartnerFreeMonthsDocument, options)
-}
-export type AssignCampaignToPartnerFreeMonthsMutationHookResult = ReturnType<
-  typeof useAssignCampaignToPartnerFreeMonthsMutation
->
-export type AssignCampaignToPartnerFreeMonthsMutationResult = ApolloReactCommon.MutationResult<
-  AssignCampaignToPartnerFreeMonthsMutation
->
-export type AssignCampaignToPartnerFreeMonthsMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AssignCampaignToPartnerFreeMonthsMutation,
-  AssignCampaignToPartnerFreeMonthsMutationVariables
->
-export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
-  mutation AssignCampaignToPartnerPercentageDiscount(
-    $request: AssignVoucherPercentageDiscount
-  ) {
-    assignCampaignToPartnerPercentageDiscount(request: $request)
-  }
-`
-export type AssignCampaignToPartnerPercentageDiscountMutationFn = ApolloReactCommon.MutationFunction<
-  AssignCampaignToPartnerPercentageDiscountMutation,
-  AssignCampaignToPartnerPercentageDiscountMutationVariables
->
-
-/**
- * __useAssignCampaignToPartnerPercentageDiscountMutation__
- *
- * To run a mutation, you first call `useAssignCampaignToPartnerPercentageDiscountMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAssignCampaignToPartnerPercentageDiscountMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [assignCampaignToPartnerPercentageDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerPercentageDiscountMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useAssignCampaignToPartnerPercentageDiscountMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AssignCampaignToPartnerPercentageDiscountMutation,
-    AssignCampaignToPartnerPercentageDiscountMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    AssignCampaignToPartnerPercentageDiscountMutation,
-    AssignCampaignToPartnerPercentageDiscountMutationVariables
-  >(AssignCampaignToPartnerPercentageDiscountDocument, options)
-}
-export type AssignCampaignToPartnerPercentageDiscountMutationHookResult = ReturnType<
-  typeof useAssignCampaignToPartnerPercentageDiscountMutation
->
-export type AssignCampaignToPartnerPercentageDiscountMutationResult = ApolloReactCommon.MutationResult<
-  AssignCampaignToPartnerPercentageDiscountMutation
->
-export type AssignCampaignToPartnerPercentageDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AssignCampaignToPartnerPercentageDiscountMutation,
-  AssignCampaignToPartnerPercentageDiscountMutationVariables
->
-export const AssignCampaignToPartnerVisibleNoDiscountDocument = gql`
-  mutation AssignCampaignToPartnerVisibleNoDiscount(
-    $request: AssignVoucherVisibleNoDiscount
-  ) {
-    assignCampaignToPartnerVisibleNoDiscount(request: $request)
-  }
-`
-export type AssignCampaignToPartnerVisibleNoDiscountMutationFn = ApolloReactCommon.MutationFunction<
-  AssignCampaignToPartnerVisibleNoDiscountMutation,
-  AssignCampaignToPartnerVisibleNoDiscountMutationVariables
->
-
-/**
- * __useAssignCampaignToPartnerVisibleNoDiscountMutation__
- *
- * To run a mutation, you first call `useAssignCampaignToPartnerVisibleNoDiscountMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAssignCampaignToPartnerVisibleNoDiscountMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [assignCampaignToPartnerVisibleNoDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerVisibleNoDiscountMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useAssignCampaignToPartnerVisibleNoDiscountMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AssignCampaignToPartnerVisibleNoDiscountMutation,
-    AssignCampaignToPartnerVisibleNoDiscountMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    AssignCampaignToPartnerVisibleNoDiscountMutation,
-    AssignCampaignToPartnerVisibleNoDiscountMutationVariables
-  >(AssignCampaignToPartnerVisibleNoDiscountDocument, options)
-}
-export type AssignCampaignToPartnerVisibleNoDiscountMutationHookResult = ReturnType<
-  typeof useAssignCampaignToPartnerVisibleNoDiscountMutation
->
-export type AssignCampaignToPartnerVisibleNoDiscountMutationResult = ApolloReactCommon.MutationResult<
-  AssignCampaignToPartnerVisibleNoDiscountMutation
->
-export type AssignCampaignToPartnerVisibleNoDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AssignCampaignToPartnerVisibleNoDiscountMutation,
-  AssignCampaignToPartnerVisibleNoDiscountMutationVariables
->
-export const AnswerQuestionDocument = gql`
-  mutation AnswerQuestion($memberId: ID!, $answer: String!) {
-    answerQuestion(memberId: $memberId, answer: $answer)
-  }
-`
-export type AnswerQuestionMutationFn = ApolloReactCommon.MutationFunction<
-  AnswerQuestionMutation,
-  AnswerQuestionMutationVariables
->
-
-/**
- * __useAnswerQuestionMutation__
- *
- * To run a mutation, you first call `useAnswerQuestionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAnswerQuestionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [answerQuestionMutation, { data, loading, error }] = useAnswerQuestionMutation({
- *   variables: {
- *      memberId: // value for 'memberId'
- *      answer: // value for 'answer'
- *   },
- * });
- */
-export function useAnswerQuestionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AnswerQuestionMutation,
-    AnswerQuestionMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    AnswerQuestionMutation,
-    AnswerQuestionMutationVariables
-  >(AnswerQuestionDocument, options)
-}
-export type AnswerQuestionMutationHookResult = ReturnType<
-  typeof useAnswerQuestionMutation
->
-export type AnswerQuestionMutationResult = ApolloReactCommon.MutationResult<
-  AnswerQuestionMutation
->
-export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AnswerQuestionMutation,
-  AnswerQuestionMutationVariables
->
-export const AvailableEmployeeRolesDocument = gql`
-  query AvailableEmployeeRoles {
-    availableEmployeeRoles
-  }
-`
-
-/**
- * __useAvailableEmployeeRolesQuery__
- *
- * To run a query within a React component, call `useAvailableEmployeeRolesQuery` and pass it any options that fit your needs.
- * When your component renders, `useAvailableEmployeeRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAvailableEmployeeRolesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useAvailableEmployeeRolesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    AvailableEmployeeRolesQuery,
-    AvailableEmployeeRolesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    AvailableEmployeeRolesQuery,
-    AvailableEmployeeRolesQueryVariables
-  >(AvailableEmployeeRolesDocument, options)
-}
-export function useAvailableEmployeeRolesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    AvailableEmployeeRolesQuery,
-    AvailableEmployeeRolesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    AvailableEmployeeRolesQuery,
-    AvailableEmployeeRolesQueryVariables
-  >(AvailableEmployeeRolesDocument, options)
-}
-export type AvailableEmployeeRolesQueryHookResult = ReturnType<
-  typeof useAvailableEmployeeRolesQuery
->
-export type AvailableEmployeeRolesLazyQueryHookResult = ReturnType<
-  typeof useAvailableEmployeeRolesLazyQuery
->
-export type AvailableEmployeeRolesQueryResult = ApolloReactCommon.QueryResult<
-  AvailableEmployeeRolesQuery,
-  AvailableEmployeeRolesQueryVariables
->
-export const AvailableCampaignCodeTypesDocument = gql`
-  query AvailableCampaignCodeTypes {
-    availableCampaignCodeTypes
-  }
-`
-
-/**
- * __useAvailableCampaignCodeTypesQuery__
- *
- * To run a query within a React component, call `useAvailableCampaignCodeTypesQuery` and pass it any options that fit your needs.
- * When your component renders, `useAvailableCampaignCodeTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAvailableCampaignCodeTypesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useAvailableCampaignCodeTypesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    AvailableCampaignCodeTypesQuery,
-    AvailableCampaignCodeTypesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    AvailableCampaignCodeTypesQuery,
-    AvailableCampaignCodeTypesQueryVariables
-  >(AvailableCampaignCodeTypesDocument, options)
-}
-export function useAvailableCampaignCodeTypesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    AvailableCampaignCodeTypesQuery,
-    AvailableCampaignCodeTypesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    AvailableCampaignCodeTypesQuery,
-    AvailableCampaignCodeTypesQueryVariables
-  >(AvailableCampaignCodeTypesDocument, options)
-}
-export type AvailableCampaignCodeTypesQueryHookResult = ReturnType<
-  typeof useAvailableCampaignCodeTypesQuery
->
-export type AvailableCampaignCodeTypesLazyQueryHookResult = ReturnType<
-  typeof useAvailableCampaignCodeTypesLazyQuery
->
-export type AvailableCampaignCodeTypesQueryResult = ApolloReactCommon.QueryResult<
-  AvailableCampaignCodeTypesQuery,
-  AvailableCampaignCodeTypesQueryVariables
->
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
     changeFromDate(agreementId: $agreementId, request: $request) {
@@ -7111,175 +7103,6 @@ export type ChangeToDateMutationResult = ApolloReactCommon.MutationResult<
 export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
->
-export const CreateCampaignPartnerDocument = gql`
-  mutation CreateCampaignPartner($partnerId: ID!, $partnerName: String!) {
-    createCampaignPartner(partnerId: $partnerId, partnerName: $partnerName)
-  }
-`
-export type CreateCampaignPartnerMutationFn = ApolloReactCommon.MutationFunction<
-  CreateCampaignPartnerMutation,
-  CreateCampaignPartnerMutationVariables
->
-
-/**
- * __useCreateCampaignPartnerMutation__
- *
- * To run a mutation, you first call `useCreateCampaignPartnerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCampaignPartnerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createCampaignPartnerMutation, { data, loading, error }] = useCreateCampaignPartnerMutation({
- *   variables: {
- *      partnerId: // value for 'partnerId'
- *      partnerName: // value for 'partnerName'
- *   },
- * });
- */
-export function useCreateCampaignPartnerMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateCampaignPartnerMutation,
-    CreateCampaignPartnerMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    CreateCampaignPartnerMutation,
-    CreateCampaignPartnerMutationVariables
-  >(CreateCampaignPartnerDocument, options)
-}
-export type CreateCampaignPartnerMutationHookResult = ReturnType<
-  typeof useCreateCampaignPartnerMutation
->
-export type CreateCampaignPartnerMutationResult = ApolloReactCommon.MutationResult<
-  CreateCampaignPartnerMutation
->
-export type CreateCampaignPartnerMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateCampaignPartnerMutation,
-  CreateCampaignPartnerMutationVariables
->
-export const CreateClaimDocument = gql`
-  mutation createClaim(
-    $memberId: ID!
-    $date: LocalDateTime!
-    $source: ClaimSource!
-  ) {
-    createClaim(memberId: $memberId, date: $date, source: $source) {
-      id
-      state
-      registrationDate
-      member {
-        memberId
-        firstName
-        lastName
-      }
-    }
-  }
-`
-export type CreateClaimMutationFn = ApolloReactCommon.MutationFunction<
-  CreateClaimMutation,
-  CreateClaimMutationVariables
->
-
-/**
- * __useCreateClaimMutation__
- *
- * To run a mutation, you first call `useCreateClaimMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateClaimMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createClaimMutation, { data, loading, error }] = useCreateClaimMutation({
- *   variables: {
- *      memberId: // value for 'memberId'
- *      date: // value for 'date'
- *      source: // value for 'source'
- *   },
- * });
- */
-export function useCreateClaimMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateClaimMutation,
-    CreateClaimMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    CreateClaimMutation,
-    CreateClaimMutationVariables
-  >(CreateClaimDocument, options)
-}
-export type CreateClaimMutationHookResult = ReturnType<
-  typeof useCreateClaimMutation
->
-export type CreateClaimMutationResult = ApolloReactCommon.MutationResult<
-  CreateClaimMutation
->
-export type CreateClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateClaimMutation,
-  CreateClaimMutationVariables
->
-export const CreateEmployeeDocument = gql`
-  mutation CreateEmployee($email: String!, $role: String!) {
-    createEmployee(email: $email, role: $role) {
-      id
-      email
-      role
-      firstGrantedAt
-    }
-  }
-`
-export type CreateEmployeeMutationFn = ApolloReactCommon.MutationFunction<
-  CreateEmployeeMutation,
-  CreateEmployeeMutationVariables
->
-
-/**
- * __useCreateEmployeeMutation__
- *
- * To run a mutation, you first call `useCreateEmployeeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateEmployeeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createEmployeeMutation, { data, loading, error }] = useCreateEmployeeMutation({
- *   variables: {
- *      email: // value for 'email'
- *      role: // value for 'role'
- *   },
- * });
- */
-export function useCreateEmployeeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateEmployeeMutation,
-    CreateEmployeeMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    CreateEmployeeMutation,
-    CreateEmployeeMutationVariables
-  >(CreateEmployeeDocument, options)
-}
-export type CreateEmployeeMutationHookResult = ReturnType<
-  typeof useCreateEmployeeMutation
->
-export type CreateEmployeeMutationResult = ApolloReactCommon.MutationResult<
-  CreateEmployeeMutation
->
-export type CreateEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateEmployeeMutation,
-  CreateEmployeeMutationVariables
 >
 export const CreatePaymentCompletionLinkDocument = gql`
   mutation CreatePaymentCompletionLink($memberId: ID!) {
@@ -7499,64 +7322,6 @@ export type EditMemberInfoMutationResult = ApolloReactCommon.MutationResult<
 export type EditMemberInfoMutationOptions = ApolloReactCommon.BaseMutationOptions<
   EditMemberInfoMutation,
   EditMemberInfoMutationVariables
->
-export const EmployeesDocument = gql`
-  query Employees {
-    employees {
-      id
-      email
-      role
-      firstGrantedAt
-    }
-  }
-`
-
-/**
- * __useEmployeesQuery__
- *
- * To run a query within a React component, call `useEmployeesQuery` and pass it any options that fit your needs.
- * When your component renders, `useEmployeesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useEmployeesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useEmployeesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    EmployeesQuery,
-    EmployeesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<EmployeesQuery, EmployeesQueryVariables>(
-    EmployeesDocument,
-    options,
-  )
-}
-export function useEmployeesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    EmployeesQuery,
-    EmployeesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<EmployeesQuery, EmployeesQueryVariables>(
-    EmployeesDocument,
-    options,
-  )
-}
-export type EmployeesQueryHookResult = ReturnType<typeof useEmployeesQuery>
-export type EmployeesLazyQueryHookResult = ReturnType<
-  typeof useEmployeesLazyQuery
->
-export type EmployeesQueryResult = ApolloReactCommon.QueryResult<
-  EmployeesQuery,
-  EmployeesQueryVariables
 >
 export const GetAccountDocument = gql`
   query GetAccount($memberId: ID!) {
@@ -7848,64 +7613,6 @@ export type GetContractsLazyQueryHookResult = ReturnType<
 export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
->
-export const GetDashboardNumbersDocument = gql`
-  query GetDashboardNumbers {
-    dashboardNumbers {
-      numberOfClaims
-      numberOfQuestions
-    }
-  }
-`
-
-/**
- * __useGetDashboardNumbersQuery__
- *
- * To run a query within a React component, call `useGetDashboardNumbersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDashboardNumbersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetDashboardNumbersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetDashboardNumbersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetDashboardNumbersQuery,
-    GetDashboardNumbersQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetDashboardNumbersQuery,
-    GetDashboardNumbersQueryVariables
-  >(GetDashboardNumbersDocument, options)
-}
-export function useGetDashboardNumbersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetDashboardNumbersQuery,
-    GetDashboardNumbersQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetDashboardNumbersQuery,
-    GetDashboardNumbersQueryVariables
-  >(GetDashboardNumbersDocument, options)
-}
-export type GetDashboardNumbersQueryHookResult = ReturnType<
-  typeof useGetDashboardNumbersQuery
->
-export type GetDashboardNumbersLazyQueryHookResult = ReturnType<
-  typeof useGetDashboardNumbersLazyQuery
->
-export type GetDashboardNumbersQueryResult = ApolloReactCommon.QueryResult<
-  GetDashboardNumbersQuery,
-  GetDashboardNumbersQueryVariables
 >
 export const GetMeDocument = gql`
   query GetMe {
@@ -8242,145 +7949,6 @@ export type GetMessageHistoryQueryResult = ApolloReactCommon.QueryResult<
   GetMessageHistoryQuery,
   GetMessageHistoryQueryVariables
 >
-export const GetPartnerCampaignOwnersDocument = gql`
-  query GetPartnerCampaignOwners {
-    getPartnerCampaignOwners {
-      partnerId
-    }
-  }
-`
-
-/**
- * __useGetPartnerCampaignOwnersQuery__
- *
- * To run a query within a React component, call `useGetPartnerCampaignOwnersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPartnerCampaignOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPartnerCampaignOwnersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetPartnerCampaignOwnersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetPartnerCampaignOwnersQuery,
-    GetPartnerCampaignOwnersQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetPartnerCampaignOwnersQuery,
-    GetPartnerCampaignOwnersQueryVariables
-  >(GetPartnerCampaignOwnersDocument, options)
-}
-export function useGetPartnerCampaignOwnersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetPartnerCampaignOwnersQuery,
-    GetPartnerCampaignOwnersQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetPartnerCampaignOwnersQuery,
-    GetPartnerCampaignOwnersQueryVariables
-  >(GetPartnerCampaignOwnersDocument, options)
-}
-export type GetPartnerCampaignOwnersQueryHookResult = ReturnType<
-  typeof useGetPartnerCampaignOwnersQuery
->
-export type GetPartnerCampaignOwnersLazyQueryHookResult = ReturnType<
-  typeof useGetPartnerCampaignOwnersLazyQuery
->
-export type GetPartnerCampaignOwnersQueryResult = ApolloReactCommon.QueryResult<
-  GetPartnerCampaignOwnersQuery,
-  GetPartnerCampaignOwnersQueryVariables
->
-export const FindPartnerCampaignsDocument = gql`
-  query FindPartnerCampaigns($input: CampaignFilter!) {
-    findPartnerCampaigns(input: $input) {
-      id
-      campaignCode
-      partnerId
-      partnerName
-      validFrom
-      validTo
-      incentive {
-        ... on MonthlyPercentageDiscountFixedPeriod {
-          numberOfMonths
-          percentage
-        }
-        ... on FreeMonths {
-          numberOfMonths
-        }
-        ... on CostDeduction {
-          amount
-        }
-        ... on NoDiscount {
-          __typename
-        }
-        ... on IndefinitePercentageDiscount {
-          percentageDiscount
-        }
-      }
-      codeType
-    }
-  }
-`
-
-/**
- * __useFindPartnerCampaignsQuery__
- *
- * To run a query within a React component, call `useFindPartnerCampaignsQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindPartnerCampaignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindPartnerCampaignsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useFindPartnerCampaignsQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    FindPartnerCampaignsQuery,
-    FindPartnerCampaignsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    FindPartnerCampaignsQuery,
-    FindPartnerCampaignsQueryVariables
-  >(FindPartnerCampaignsDocument, options)
-}
-export function useFindPartnerCampaignsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    FindPartnerCampaignsQuery,
-    FindPartnerCampaignsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    FindPartnerCampaignsQuery,
-    FindPartnerCampaignsQueryVariables
-  >(FindPartnerCampaignsDocument, options)
-}
-export type FindPartnerCampaignsQueryHookResult = ReturnType<
-  typeof useFindPartnerCampaignsQuery
->
-export type FindPartnerCampaignsLazyQueryHookResult = ReturnType<
-  typeof useFindPartnerCampaignsLazyQuery
->
-export type FindPartnerCampaignsQueryResult = ApolloReactCommon.QueryResult<
-  FindPartnerCampaignsQuery,
-  FindPartnerCampaignsQueryVariables
->
 export const GetPersonDocument = gql`
   query GetPerson($memberId: ID!) {
     member(id: $memberId) {
@@ -8451,82 +8019,6 @@ export type GetPersonLazyQueryHookResult = ReturnType<
 export type GetPersonQueryResult = ApolloReactCommon.QueryResult<
   GetPersonQuery,
   GetPersonQueryVariables
->
-export const GetQuestionsGroupsDocument = gql`
-  query GetQuestionsGroups {
-    questionGroups {
-      id
-      memberId
-      questions {
-        id
-        messageJsonString
-        timestamp
-      }
-      member {
-        memberId
-        firstName
-        lastName
-        contractMarketInfo {
-          market
-        }
-        pickedLocale
-        claims(filterByStates: [OPEN, REOPENED]) {
-          id
-          state
-        }
-      }
-    }
-  }
-`
-
-/**
- * __useGetQuestionsGroupsQuery__
- *
- * To run a query within a React component, call `useGetQuestionsGroupsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetQuestionsGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetQuestionsGroupsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetQuestionsGroupsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetQuestionsGroupsQuery,
-    GetQuestionsGroupsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetQuestionsGroupsQuery,
-    GetQuestionsGroupsQueryVariables
-  >(GetQuestionsGroupsDocument, options)
-}
-export function useGetQuestionsGroupsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetQuestionsGroupsQuery,
-    GetQuestionsGroupsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetQuestionsGroupsQuery,
-    GetQuestionsGroupsQueryVariables
-  >(GetQuestionsGroupsDocument, options)
-}
-export type GetQuestionsGroupsQueryHookResult = ReturnType<
-  typeof useGetQuestionsGroupsQuery
->
-export type GetQuestionsGroupsLazyQueryHookResult = ReturnType<
-  typeof useGetQuestionsGroupsLazyQuery
->
-export type GetQuestionsGroupsQueryResult = ApolloReactCommon.QueryResult<
-  GetQuestionsGroupsQuery,
-  GetQuestionsGroupsQueryVariables
 >
 export const GetQuotesDocument = gql`
   query GetQuotes($memberId: ID!) {
@@ -8713,62 +8205,6 @@ export type GetReferralInformationQueryResult = ApolloReactCommon.QueryResult<
   GetReferralInformationQuery,
   GetReferralInformationQueryVariables
 >
-export const GetSchemaForContractTypeDocument = gql`
-  query GetSchemaForContractType($contractType: String!) {
-    quoteSchemaForContractType(contractType: $contractType)
-  }
-`
-
-/**
- * __useGetSchemaForContractTypeQuery__
- *
- * To run a query within a React component, call `useGetSchemaForContractTypeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSchemaForContractTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetSchemaForContractTypeQuery({
- *   variables: {
- *      contractType: // value for 'contractType'
- *   },
- * });
- */
-export function useGetSchemaForContractTypeQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
-  >(GetSchemaForContractTypeDocument, options)
-}
-export function useGetSchemaForContractTypeLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
-  >(GetSchemaForContractTypeDocument, options)
-}
-export type GetSchemaForContractTypeQueryHookResult = ReturnType<
-  typeof useGetSchemaForContractTypeQuery
->
-export type GetSchemaForContractTypeLazyQueryHookResult = ReturnType<
-  typeof useGetSchemaForContractTypeLazyQuery
->
-export type GetSchemaForContractTypeQueryResult = ApolloReactCommon.QueryResult<
-  GetSchemaForContractTypeQuery,
-  GetSchemaForContractTypeQueryVariables
->
 export const GetTrialsDocument = gql`
   query GetTrials($memberId: ID!) {
     member(id: $memberId) {
@@ -8842,76 +8278,6 @@ export type GetTrialsLazyQueryHookResult = ReturnType<
 export type GetTrialsQueryResult = ApolloReactCommon.QueryResult<
   GetTrialsQuery,
   GetTrialsQueryVariables
->
-export const ListClaimsDocument = gql`
-  query ListClaims($options: ListClaimsOptions!) {
-    listClaims(options: $options) {
-      claims {
-        id
-        member {
-          memberId
-          firstName
-          lastName
-        }
-        registrationDate
-        claimType
-        outcome
-        state
-        reserves
-      }
-      page
-      totalPages
-    }
-  }
-`
-
-/**
- * __useListClaimsQuery__
- *
- * To run a query within a React component, call `useListClaimsQuery` and pass it any options that fit your needs.
- * When your component renders, `useListClaimsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useListClaimsQuery({
- *   variables: {
- *      options: // value for 'options'
- *   },
- * });
- */
-export function useListClaimsQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ListClaimsQuery,
-    ListClaimsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<ListClaimsQuery, ListClaimsQueryVariables>(
-    ListClaimsDocument,
-    options,
-  )
-}
-export function useListClaimsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ListClaimsQuery,
-    ListClaimsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ListClaimsQuery,
-    ListClaimsQueryVariables
-  >(ListClaimsDocument, options)
-}
-export type ListClaimsQueryHookResult = ReturnType<typeof useListClaimsQuery>
-export type ListClaimsLazyQueryHookResult = ReturnType<
-  typeof useListClaimsLazyQuery
->
-export type ListClaimsQueryResult = ApolloReactCommon.QueryResult<
-  ListClaimsQuery,
-  ListClaimsQueryVariables
 >
 export const ManualRedeemCampaignDocument = gql`
   mutation ManualRedeemCampaign(
@@ -9032,55 +8398,6 @@ export type ManualUnRedeemCampaignMutationResult = ApolloReactCommon.MutationRes
 export type ManualUnRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ManualUnRedeemCampaignMutation,
   ManualUnRedeemCampaignMutationVariables
->
-export const MarkQuestionAsResolvedDocument = gql`
-  mutation MarkQuestionAsResolved($memberId: ID!) {
-    markQuestionAsResolved(memberId: $memberId)
-  }
-`
-export type MarkQuestionAsResolvedMutationFn = ApolloReactCommon.MutationFunction<
-  MarkQuestionAsResolvedMutation,
-  MarkQuestionAsResolvedMutationVariables
->
-
-/**
- * __useMarkQuestionAsResolvedMutation__
- *
- * To run a mutation, you first call `useMarkQuestionAsResolvedMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useMarkQuestionAsResolvedMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [markQuestionAsResolvedMutation, { data, loading, error }] = useMarkQuestionAsResolvedMutation({
- *   variables: {
- *      memberId: // value for 'memberId'
- *   },
- * });
- */
-export function useMarkQuestionAsResolvedMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    MarkQuestionAsResolvedMutation,
-    MarkQuestionAsResolvedMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    MarkQuestionAsResolvedMutation,
-    MarkQuestionAsResolvedMutationVariables
-  >(MarkQuestionAsResolvedDocument, options)
-}
-export type MarkQuestionAsResolvedMutationHookResult = ReturnType<
-  typeof useMarkQuestionAsResolvedMutation
->
-export type MarkQuestionAsResolvedMutationResult = ApolloReactCommon.MutationResult<
-  MarkQuestionAsResolvedMutation
->
-export type MarkQuestionAsResolvedMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  MarkQuestionAsResolvedMutation,
-  MarkQuestionAsResolvedMutationVariables
 >
 export const MemberSearchDocument = gql`
   query MemberSearch($query: String!, $options: MemberSearchOptions!) {
@@ -9264,55 +8581,6 @@ export type RegenerateCertificateMutationOptions = ApolloReactCommon.BaseMutatio
   RegenerateCertificateMutation,
   RegenerateCertificateMutationVariables
 >
-export const RemoveEmployeeDocument = gql`
-  mutation RemoveEmployee($id: ID!) {
-    removeEmployee(id: $id)
-  }
-`
-export type RemoveEmployeeMutationFn = ApolloReactCommon.MutationFunction<
-  RemoveEmployeeMutation,
-  RemoveEmployeeMutationVariables
->
-
-/**
- * __useRemoveEmployeeMutation__
- *
- * To run a mutation, you first call `useRemoveEmployeeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemoveEmployeeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [removeEmployeeMutation, { data, loading, error }] = useRemoveEmployeeMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useRemoveEmployeeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    RemoveEmployeeMutation,
-    RemoveEmployeeMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    RemoveEmployeeMutation,
-    RemoveEmployeeMutationVariables
-  >(RemoveEmployeeDocument, options)
-}
-export type RemoveEmployeeMutationHookResult = ReturnType<
-  typeof useRemoveEmployeeMutation
->
-export type RemoveEmployeeMutationResult = ApolloReactCommon.MutationResult<
-  RemoveEmployeeMutation
->
-export type RemoveEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RemoveEmployeeMutation,
-  RemoveEmployeeMutationVariables
->
 export const RemoveMonthlyEntryDocument = gql`
   mutation RemoveMonthlyEntry($id: ID!) {
     removeMonthlyEntry(id: $id)
@@ -9474,254 +8742,6 @@ export type SafelyEditAgreementMutationResult = ApolloReactCommon.MutationResult
 export type SafelyEditAgreementMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SafelyEditAgreementMutation,
   SafelyEditAgreementMutationVariables
->
-export const SendMessageDocument = gql`
-  mutation SendMessage($input: SendMessageInput!) {
-    sendMessage(input: $input) {
-      ... on SendMessageFailed {
-        memberId
-        errorCode
-        errorMessage
-      }
-      ... on SendMessageSuccessful {
-        memberId
-      }
-    }
-  }
-`
-export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
-  SendMessageMutation,
-  SendMessageMutationVariables
->
-
-/**
- * __useSendMessageMutation__
- *
- * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSendMessageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSendMessageMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    SendMessageMutation,
-    SendMessageMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    SendMessageMutation,
-    SendMessageMutationVariables
-  >(SendMessageDocument, options)
-}
-export type SendMessageMutationHookResult = ReturnType<
-  typeof useSendMessageMutation
->
-export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
-  SendMessageMutation
->
-export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SendMessageMutation,
-  SendMessageMutationVariables
->
-export const SetCampaignCodeTypeDocument = gql`
-  mutation SetCampaignCodeType($id: ID!, $codeType: String!) {
-    setCampaignCodeType(id: $id, codeType: $codeType) {
-      id
-      campaignCode
-      partnerId
-      partnerName
-      validFrom
-      validTo
-      incentive {
-        ... on MonthlyPercentageDiscountFixedPeriod {
-          numberOfMonths
-          percentage
-        }
-        ... on FreeMonths {
-          numberOfMonths
-        }
-        ... on CostDeduction {
-          amount
-        }
-        ... on NoDiscount {
-          __typename
-        }
-        ... on IndefinitePercentageDiscount {
-          percentageDiscount
-        }
-      }
-      codeType
-    }
-  }
-`
-export type SetCampaignCodeTypeMutationFn = ApolloReactCommon.MutationFunction<
-  SetCampaignCodeTypeMutation,
-  SetCampaignCodeTypeMutationVariables
->
-
-/**
- * __useSetCampaignCodeTypeMutation__
- *
- * To run a mutation, you first call `useSetCampaignCodeTypeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetCampaignCodeTypeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [setCampaignCodeTypeMutation, { data, loading, error }] = useSetCampaignCodeTypeMutation({
- *   variables: {
- *      id: // value for 'id'
- *      codeType: // value for 'codeType'
- *   },
- * });
- */
-export function useSetCampaignCodeTypeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    SetCampaignCodeTypeMutation,
-    SetCampaignCodeTypeMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    SetCampaignCodeTypeMutation,
-    SetCampaignCodeTypeMutationVariables
-  >(SetCampaignCodeTypeDocument, options)
-}
-export type SetCampaignCodeTypeMutationHookResult = ReturnType<
-  typeof useSetCampaignCodeTypeMutation
->
-export type SetCampaignCodeTypeMutationResult = ApolloReactCommon.MutationResult<
-  SetCampaignCodeTypeMutation
->
-export type SetCampaignCodeTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetCampaignCodeTypeMutation,
-  SetCampaignCodeTypeMutationVariables
->
-export const SetContractForClaimDocument = gql`
-  mutation SetContractForClaim($request: SetContractForClaim!) {
-    setContractForClaim(request: $request) {
-      id
-      member {
-        memberId
-      }
-      contract {
-        id
-      }
-    }
-  }
-`
-export type SetContractForClaimMutationFn = ApolloReactCommon.MutationFunction<
-  SetContractForClaimMutation,
-  SetContractForClaimMutationVariables
->
-
-/**
- * __useSetContractForClaimMutation__
- *
- * To run a mutation, you first call `useSetContractForClaimMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetContractForClaimMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [setContractForClaimMutation, { data, loading, error }] = useSetContractForClaimMutation({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useSetContractForClaimMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    SetContractForClaimMutation,
-    SetContractForClaimMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    SetContractForClaimMutation,
-    SetContractForClaimMutationVariables
-  >(SetContractForClaimDocument, options)
-}
-export type SetContractForClaimMutationHookResult = ReturnType<
-  typeof useSetContractForClaimMutation
->
-export type SetContractForClaimMutationResult = ApolloReactCommon.MutationResult<
-  SetContractForClaimMutation
->
-export type SetContractForClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetContractForClaimMutation,
-  SetContractForClaimMutationVariables
->
-export const SetCoveringEmployeeDocument = gql`
-  mutation SetCoveringEmployee($id: ID!, $coveringEmployee: Boolean!) {
-    setCoveringEmployee(id: $id, coveringEmployee: $coveringEmployee) {
-      id
-      coveringEmployee
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-export type SetCoveringEmployeeMutationFn = ApolloReactCommon.MutationFunction<
-  SetCoveringEmployeeMutation,
-  SetCoveringEmployeeMutationVariables
->
-
-/**
- * __useSetCoveringEmployeeMutation__
- *
- * To run a mutation, you first call `useSetCoveringEmployeeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetCoveringEmployeeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [setCoveringEmployeeMutation, { data, loading, error }] = useSetCoveringEmployeeMutation({
- *   variables: {
- *      id: // value for 'id'
- *      coveringEmployee: // value for 'coveringEmployee'
- *   },
- * });
- */
-export function useSetCoveringEmployeeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    SetCoveringEmployeeMutation,
-    SetCoveringEmployeeMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    SetCoveringEmployeeMutation,
-    SetCoveringEmployeeMutationVariables
-  >(SetCoveringEmployeeDocument, options)
-}
-export type SetCoveringEmployeeMutationHookResult = ReturnType<
-  typeof useSetCoveringEmployeeMutation
->
-export type SetCoveringEmployeeMutationResult = ApolloReactCommon.MutationResult<
-  SetCoveringEmployeeMutation
->
-export type SetCoveringEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetCoveringEmployeeMutation,
-  SetCoveringEmployeeMutationVariables
 >
 export const SetFraudulentStatusDocument = gql`
   mutation SetFraudulentStatus(
@@ -9892,167 +8912,6 @@ export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOpt
   TerminateContractMutation,
   TerminateContractMutationVariables
 >
-export const UnsignMemberDocument = gql`
-  mutation UnsignMember($ssn: String!) {
-    unsignMember(ssn: $ssn)
-  }
-`
-export type UnsignMemberMutationFn = ApolloReactCommon.MutationFunction<
-  UnsignMemberMutation,
-  UnsignMemberMutationVariables
->
-
-/**
- * __useUnsignMemberMutation__
- *
- * To run a mutation, you first call `useUnsignMemberMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnsignMemberMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unsignMemberMutation, { data, loading, error }] = useUnsignMemberMutation({
- *   variables: {
- *      ssn: // value for 'ssn'
- *   },
- * });
- */
-export function useUnsignMemberMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UnsignMemberMutation,
-    UnsignMemberMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UnsignMemberMutation,
-    UnsignMemberMutationVariables
-  >(UnsignMemberDocument, options)
-}
-export type UnsignMemberMutationHookResult = ReturnType<
-  typeof useUnsignMemberMutation
->
-export type UnsignMemberMutationResult = ApolloReactCommon.MutationResult<
-  UnsignMemberMutation
->
-export type UnsignMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UnsignMemberMutation,
-  UnsignMemberMutationVariables
->
-export const UpdateClaimStateDocument = gql`
-  mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
-    updateClaimState(id: $id, state: $state) {
-      id
-      state
-      events {
-        text
-        date
-      }
-    }
-  }
-`
-export type UpdateClaimStateMutationFn = ApolloReactCommon.MutationFunction<
-  UpdateClaimStateMutation,
-  UpdateClaimStateMutationVariables
->
-
-/**
- * __useUpdateClaimStateMutation__
- *
- * To run a mutation, you first call `useUpdateClaimStateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateClaimStateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateClaimStateMutation, { data, loading, error }] = useUpdateClaimStateMutation({
- *   variables: {
- *      id: // value for 'id'
- *      state: // value for 'state'
- *   },
- * });
- */
-export function useUpdateClaimStateMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpdateClaimStateMutation,
-    UpdateClaimStateMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UpdateClaimStateMutation,
-    UpdateClaimStateMutationVariables
-  >(UpdateClaimStateDocument, options)
-}
-export type UpdateClaimStateMutationHookResult = ReturnType<
-  typeof useUpdateClaimStateMutation
->
-export type UpdateClaimStateMutationResult = ApolloReactCommon.MutationResult<
-  UpdateClaimStateMutation
->
-export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateClaimStateMutation,
-  UpdateClaimStateMutationVariables
->
-export const UpdateEmployeeRoleDocument = gql`
-  mutation UpdateEmployeeRole($id: ID!, $role: String!) {
-    updateEmployeeRole(id: $id, role: $role) {
-      id
-      email
-      role
-      firstGrantedAt
-    }
-  }
-`
-export type UpdateEmployeeRoleMutationFn = ApolloReactCommon.MutationFunction<
-  UpdateEmployeeRoleMutation,
-  UpdateEmployeeRoleMutationVariables
->
-
-/**
- * __useUpdateEmployeeRoleMutation__
- *
- * To run a mutation, you first call `useUpdateEmployeeRoleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateEmployeeRoleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateEmployeeRoleMutation, { data, loading, error }] = useUpdateEmployeeRoleMutation({
- *   variables: {
- *      id: // value for 'id'
- *      role: // value for 'role'
- *   },
- * });
- */
-export function useUpdateEmployeeRoleMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpdateEmployeeRoleMutation,
-    UpdateEmployeeRoleMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    UpdateEmployeeRoleMutation,
-    UpdateEmployeeRoleMutationVariables
-  >(UpdateEmployeeRoleDocument, options)
-}
-export type UpdateEmployeeRoleMutationHookResult = ReturnType<
-  typeof useUpdateEmployeeRoleMutation
->
-export type UpdateEmployeeRoleMutationResult = ApolloReactCommon.MutationResult<
-  UpdateEmployeeRoleMutation
->
-export type UpdateEmployeeRoleMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateEmployeeRoleMutation,
-  UpdateEmployeeRoleMutationVariables
->
 export const UpdateQuoteBySchemaDocument = gql`
   mutation UpdateQuoteBySchema(
     $quoteId: ID!
@@ -10164,6 +9023,1147 @@ export type WhitelistMemberMutationResult = ApolloReactCommon.MutationResult<
 export type WhitelistMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
   WhitelistMemberMutation,
   WhitelistMemberMutationVariables
+>
+export const GetDashboardNumbersDocument = gql`
+  query GetDashboardNumbers {
+    dashboardNumbers {
+      numberOfClaims
+      numberOfQuestions
+    }
+  }
+`
+
+/**
+ * __useGetDashboardNumbersQuery__
+ *
+ * To run a query within a React component, call `useGetDashboardNumbersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDashboardNumbersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDashboardNumbersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDashboardNumbersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >(GetDashboardNumbersDocument, options)
+}
+export function useGetDashboardNumbersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetDashboardNumbersQuery,
+    GetDashboardNumbersQueryVariables
+  >(GetDashboardNumbersDocument, options)
+}
+export type GetDashboardNumbersQueryHookResult = ReturnType<
+  typeof useGetDashboardNumbersQuery
+>
+export type GetDashboardNumbersLazyQueryHookResult = ReturnType<
+  typeof useGetDashboardNumbersLazyQuery
+>
+export type GetDashboardNumbersQueryResult = ApolloReactCommon.QueryResult<
+  GetDashboardNumbersQuery,
+  GetDashboardNumbersQueryVariables
+>
+export const GetPartnerCampaignOwnersDocument = gql`
+  query GetPartnerCampaignOwners {
+    getPartnerCampaignOwners {
+      partnerId
+    }
+  }
+`
+
+/**
+ * __useGetPartnerCampaignOwnersQuery__
+ *
+ * To run a query within a React component, call `useGetPartnerCampaignOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPartnerCampaignOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPartnerCampaignOwnersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPartnerCampaignOwnersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, options)
+}
+export function useGetPartnerCampaignOwnersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetPartnerCampaignOwnersQuery,
+    GetPartnerCampaignOwnersQueryVariables
+  >(GetPartnerCampaignOwnersDocument, options)
+}
+export type GetPartnerCampaignOwnersQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersQuery
+>
+export type GetPartnerCampaignOwnersLazyQueryHookResult = ReturnType<
+  typeof useGetPartnerCampaignOwnersLazyQuery
+>
+export type GetPartnerCampaignOwnersQueryResult = ApolloReactCommon.QueryResult<
+  GetPartnerCampaignOwnersQuery,
+  GetPartnerCampaignOwnersQueryVariables
+>
+export const GetSchemaForContractTypeDocument = gql`
+  query GetSchemaForContractType($contractType: String!) {
+    quoteSchemaForContractType(contractType: $contractType)
+  }
+`
+
+/**
+ * __useGetSchemaForContractTypeQuery__
+ *
+ * To run a query within a React component, call `useGetSchemaForContractTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchemaForContractTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSchemaForContractTypeQuery({
+ *   variables: {
+ *      contractType: // value for 'contractType'
+ *   },
+ * });
+ */
+export function useGetSchemaForContractTypeQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetSchemaForContractTypeQuery,
+    GetSchemaForContractTypeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetSchemaForContractTypeQuery,
+    GetSchemaForContractTypeQueryVariables
+  >(GetSchemaForContractTypeDocument, options)
+}
+export function useGetSchemaForContractTypeLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetSchemaForContractTypeQuery,
+    GetSchemaForContractTypeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetSchemaForContractTypeQuery,
+    GetSchemaForContractTypeQueryVariables
+  >(GetSchemaForContractTypeDocument, options)
+}
+export type GetSchemaForContractTypeQueryHookResult = ReturnType<
+  typeof useGetSchemaForContractTypeQuery
+>
+export type GetSchemaForContractTypeLazyQueryHookResult = ReturnType<
+  typeof useGetSchemaForContractTypeLazyQuery
+>
+export type GetSchemaForContractTypeQueryResult = ApolloReactCommon.QueryResult<
+  GetSchemaForContractTypeQuery,
+  GetSchemaForContractTypeQueryVariables
+>
+export const AnswerQuestionDocument = gql`
+  mutation AnswerQuestion($memberId: ID!, $answer: String!) {
+    answerQuestion(memberId: $memberId, answer: $answer)
+  }
+`
+export type AnswerQuestionMutationFn = ApolloReactCommon.MutationFunction<
+  AnswerQuestionMutation,
+  AnswerQuestionMutationVariables
+>
+
+/**
+ * __useAnswerQuestionMutation__
+ *
+ * To run a mutation, you first call `useAnswerQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAnswerQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [answerQuestionMutation, { data, loading, error }] = useAnswerQuestionMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      answer: // value for 'answer'
+ *   },
+ * });
+ */
+export function useAnswerQuestionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AnswerQuestionMutation,
+    AnswerQuestionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    AnswerQuestionMutation,
+    AnswerQuestionMutationVariables
+  >(AnswerQuestionDocument, options)
+}
+export type AnswerQuestionMutationHookResult = ReturnType<
+  typeof useAnswerQuestionMutation
+>
+export type AnswerQuestionMutationResult = ApolloReactCommon.MutationResult<
+  AnswerQuestionMutation
+>
+export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AnswerQuestionMutation,
+  AnswerQuestionMutationVariables
+>
+export const GetQuestionsGroupsDocument = gql`
+  query GetQuestionsGroups {
+    questionGroups {
+      id
+      memberId
+      questions {
+        id
+        messageJsonString
+        timestamp
+      }
+      member {
+        memberId
+        firstName
+        lastName
+        contractMarketInfo {
+          market
+        }
+        pickedLocale
+        claims(filterByStates: [OPEN, REOPENED]) {
+          id
+          state
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetQuestionsGroupsQuery__
+ *
+ * To run a query within a React component, call `useGetQuestionsGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetQuestionsGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetQuestionsGroupsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetQuestionsGroupsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetQuestionsGroupsQuery,
+    GetQuestionsGroupsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetQuestionsGroupsQuery,
+    GetQuestionsGroupsQueryVariables
+  >(GetQuestionsGroupsDocument, options)
+}
+export function useGetQuestionsGroupsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetQuestionsGroupsQuery,
+    GetQuestionsGroupsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetQuestionsGroupsQuery,
+    GetQuestionsGroupsQueryVariables
+  >(GetQuestionsGroupsDocument, options)
+}
+export type GetQuestionsGroupsQueryHookResult = ReturnType<
+  typeof useGetQuestionsGroupsQuery
+>
+export type GetQuestionsGroupsLazyQueryHookResult = ReturnType<
+  typeof useGetQuestionsGroupsLazyQuery
+>
+export type GetQuestionsGroupsQueryResult = ApolloReactCommon.QueryResult<
+  GetQuestionsGroupsQuery,
+  GetQuestionsGroupsQueryVariables
+>
+export const MarkQuestionAsResolvedDocument = gql`
+  mutation MarkQuestionAsResolved($memberId: ID!) {
+    markQuestionAsResolved(memberId: $memberId)
+  }
+`
+export type MarkQuestionAsResolvedMutationFn = ApolloReactCommon.MutationFunction<
+  MarkQuestionAsResolvedMutation,
+  MarkQuestionAsResolvedMutationVariables
+>
+
+/**
+ * __useMarkQuestionAsResolvedMutation__
+ *
+ * To run a mutation, you first call `useMarkQuestionAsResolvedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkQuestionAsResolvedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markQuestionAsResolvedMutation, { data, loading, error }] = useMarkQuestionAsResolvedMutation({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useMarkQuestionAsResolvedMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    MarkQuestionAsResolvedMutation,
+    MarkQuestionAsResolvedMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    MarkQuestionAsResolvedMutation,
+    MarkQuestionAsResolvedMutationVariables
+  >(MarkQuestionAsResolvedDocument, options)
+}
+export type MarkQuestionAsResolvedMutationHookResult = ReturnType<
+  typeof useMarkQuestionAsResolvedMutation
+>
+export type MarkQuestionAsResolvedMutationResult = ApolloReactCommon.MutationResult<
+  MarkQuestionAsResolvedMutation
+>
+export type MarkQuestionAsResolvedMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  MarkQuestionAsResolvedMutation,
+  MarkQuestionAsResolvedMutationVariables
+>
+export const SendMessageDocument = gql`
+  mutation SendMessage($input: SendMessageInput!) {
+    sendMessage(input: $input) {
+      ... on SendMessageFailed {
+        memberId
+        errorCode
+        errorMessage
+      }
+      ... on SendMessageSuccessful {
+        memberId
+      }
+    }
+  }
+`
+export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
+  SendMessageMutation,
+  SendMessageMutationVariables
+>
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >(SendMessageDocument, options)
+}
+export type SendMessageMutationHookResult = ReturnType<
+  typeof useSendMessageMutation
+>
+export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
+  SendMessageMutation
+>
+export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SendMessageMutation,
+  SendMessageMutationVariables
+>
+export const AssignCampaignToPartnerFreeMonthsDocument = gql`
+  mutation AssignCampaignToPartnerFreeMonths(
+    $request: AssignVoucherFreeMonths
+  ) {
+    assignCampaignToPartnerFreeMonths(request: $request)
+  }
+`
+export type AssignCampaignToPartnerFreeMonthsMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerFreeMonthsMutation,
+  AssignCampaignToPartnerFreeMonthsMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerFreeMonthsMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerFreeMonthsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerFreeMonthsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerFreeMonthsMutation, { data, loading, error }] = useAssignCampaignToPartnerFreeMonthsMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerFreeMonthsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerFreeMonthsMutation,
+    AssignCampaignToPartnerFreeMonthsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerFreeMonthsMutation,
+    AssignCampaignToPartnerFreeMonthsMutationVariables
+  >(AssignCampaignToPartnerFreeMonthsDocument, options)
+}
+export type AssignCampaignToPartnerFreeMonthsMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerFreeMonthsMutation
+>
+export type AssignCampaignToPartnerFreeMonthsMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerFreeMonthsMutation
+>
+export type AssignCampaignToPartnerFreeMonthsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerFreeMonthsMutation,
+  AssignCampaignToPartnerFreeMonthsMutationVariables
+>
+export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
+  mutation AssignCampaignToPartnerPercentageDiscount(
+    $request: AssignVoucherPercentageDiscount
+  ) {
+    assignCampaignToPartnerPercentageDiscount(request: $request)
+  }
+`
+export type AssignCampaignToPartnerPercentageDiscountMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerPercentageDiscountMutation,
+  AssignCampaignToPartnerPercentageDiscountMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerPercentageDiscountMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerPercentageDiscountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerPercentageDiscountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerPercentageDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerPercentageDiscountMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerPercentageDiscountMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >(AssignCampaignToPartnerPercentageDiscountDocument, options)
+}
+export type AssignCampaignToPartnerPercentageDiscountMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerPercentageDiscountMutation
+>
+export type AssignCampaignToPartnerPercentageDiscountMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerPercentageDiscountMutation
+>
+export type AssignCampaignToPartnerPercentageDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerPercentageDiscountMutation,
+  AssignCampaignToPartnerPercentageDiscountMutationVariables
+>
+export const AssignCampaignToPartnerVisibleNoDiscountDocument = gql`
+  mutation AssignCampaignToPartnerVisibleNoDiscount(
+    $request: AssignVoucherVisibleNoDiscount
+  ) {
+    assignCampaignToPartnerVisibleNoDiscount(request: $request)
+  }
+`
+export type AssignCampaignToPartnerVisibleNoDiscountMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerVisibleNoDiscountMutation,
+  AssignCampaignToPartnerVisibleNoDiscountMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerVisibleNoDiscountMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerVisibleNoDiscountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerVisibleNoDiscountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerVisibleNoDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerVisibleNoDiscountMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerVisibleNoDiscountMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerVisibleNoDiscountMutation,
+    AssignCampaignToPartnerVisibleNoDiscountMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerVisibleNoDiscountMutation,
+    AssignCampaignToPartnerVisibleNoDiscountMutationVariables
+  >(AssignCampaignToPartnerVisibleNoDiscountDocument, options)
+}
+export type AssignCampaignToPartnerVisibleNoDiscountMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerVisibleNoDiscountMutation
+>
+export type AssignCampaignToPartnerVisibleNoDiscountMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerVisibleNoDiscountMutation
+>
+export type AssignCampaignToPartnerVisibleNoDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerVisibleNoDiscountMutation,
+  AssignCampaignToPartnerVisibleNoDiscountMutationVariables
+>
+export const AvailableEmployeeRolesDocument = gql`
+  query AvailableEmployeeRoles {
+    availableEmployeeRoles
+  }
+`
+
+/**
+ * __useAvailableEmployeeRolesQuery__
+ *
+ * To run a query within a React component, call `useAvailableEmployeeRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAvailableEmployeeRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAvailableEmployeeRolesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAvailableEmployeeRolesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    AvailableEmployeeRolesQuery,
+    AvailableEmployeeRolesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    AvailableEmployeeRolesQuery,
+    AvailableEmployeeRolesQueryVariables
+  >(AvailableEmployeeRolesDocument, options)
+}
+export function useAvailableEmployeeRolesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    AvailableEmployeeRolesQuery,
+    AvailableEmployeeRolesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    AvailableEmployeeRolesQuery,
+    AvailableEmployeeRolesQueryVariables
+  >(AvailableEmployeeRolesDocument, options)
+}
+export type AvailableEmployeeRolesQueryHookResult = ReturnType<
+  typeof useAvailableEmployeeRolesQuery
+>
+export type AvailableEmployeeRolesLazyQueryHookResult = ReturnType<
+  typeof useAvailableEmployeeRolesLazyQuery
+>
+export type AvailableEmployeeRolesQueryResult = ApolloReactCommon.QueryResult<
+  AvailableEmployeeRolesQuery,
+  AvailableEmployeeRolesQueryVariables
+>
+export const AvailableCampaignCodeTypesDocument = gql`
+  query AvailableCampaignCodeTypes {
+    availableCampaignCodeTypes
+  }
+`
+
+/**
+ * __useAvailableCampaignCodeTypesQuery__
+ *
+ * To run a query within a React component, call `useAvailableCampaignCodeTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAvailableCampaignCodeTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAvailableCampaignCodeTypesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAvailableCampaignCodeTypesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
+  >(AvailableCampaignCodeTypesDocument, options)
+}
+export function useAvailableCampaignCodeTypesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
+  >(AvailableCampaignCodeTypesDocument, options)
+}
+export type AvailableCampaignCodeTypesQueryHookResult = ReturnType<
+  typeof useAvailableCampaignCodeTypesQuery
+>
+export type AvailableCampaignCodeTypesLazyQueryHookResult = ReturnType<
+  typeof useAvailableCampaignCodeTypesLazyQuery
+>
+export type AvailableCampaignCodeTypesQueryResult = ApolloReactCommon.QueryResult<
+  AvailableCampaignCodeTypesQuery,
+  AvailableCampaignCodeTypesQueryVariables
+>
+export const CreateCampaignPartnerDocument = gql`
+  mutation CreateCampaignPartner($partnerId: ID!, $partnerName: String!) {
+    createCampaignPartner(partnerId: $partnerId, partnerName: $partnerName)
+  }
+`
+export type CreateCampaignPartnerMutationFn = ApolloReactCommon.MutationFunction<
+  CreateCampaignPartnerMutation,
+  CreateCampaignPartnerMutationVariables
+>
+
+/**
+ * __useCreateCampaignPartnerMutation__
+ *
+ * To run a mutation, you first call `useCreateCampaignPartnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCampaignPartnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCampaignPartnerMutation, { data, loading, error }] = useCreateCampaignPartnerMutation({
+ *   variables: {
+ *      partnerId: // value for 'partnerId'
+ *      partnerName: // value for 'partnerName'
+ *   },
+ * });
+ */
+export function useCreateCampaignPartnerMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateCampaignPartnerMutation,
+    CreateCampaignPartnerMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    CreateCampaignPartnerMutation,
+    CreateCampaignPartnerMutationVariables
+  >(CreateCampaignPartnerDocument, options)
+}
+export type CreateCampaignPartnerMutationHookResult = ReturnType<
+  typeof useCreateCampaignPartnerMutation
+>
+export type CreateCampaignPartnerMutationResult = ApolloReactCommon.MutationResult<
+  CreateCampaignPartnerMutation
+>
+export type CreateCampaignPartnerMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateCampaignPartnerMutation,
+  CreateCampaignPartnerMutationVariables
+>
+export const CreateEmployeeDocument = gql`
+  mutation CreateEmployee($email: String!, $role: String!) {
+    createEmployee(email: $email, role: $role) {
+      id
+      email
+      role
+      firstGrantedAt
+    }
+  }
+`
+export type CreateEmployeeMutationFn = ApolloReactCommon.MutationFunction<
+  CreateEmployeeMutation,
+  CreateEmployeeMutationVariables
+>
+
+/**
+ * __useCreateEmployeeMutation__
+ *
+ * To run a mutation, you first call `useCreateEmployeeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEmployeeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEmployeeMutation, { data, loading, error }] = useCreateEmployeeMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      role: // value for 'role'
+ *   },
+ * });
+ */
+export function useCreateEmployeeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateEmployeeMutation,
+    CreateEmployeeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    CreateEmployeeMutation,
+    CreateEmployeeMutationVariables
+  >(CreateEmployeeDocument, options)
+}
+export type CreateEmployeeMutationHookResult = ReturnType<
+  typeof useCreateEmployeeMutation
+>
+export type CreateEmployeeMutationResult = ApolloReactCommon.MutationResult<
+  CreateEmployeeMutation
+>
+export type CreateEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateEmployeeMutation,
+  CreateEmployeeMutationVariables
+>
+export const EmployeesDocument = gql`
+  query Employees {
+    employees {
+      id
+      email
+      role
+      firstGrantedAt
+    }
+  }
+`
+
+/**
+ * __useEmployeesQuery__
+ *
+ * To run a query within a React component, call `useEmployeesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEmployeesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEmployeesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEmployeesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    EmployeesQuery,
+    EmployeesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<EmployeesQuery, EmployeesQueryVariables>(
+    EmployeesDocument,
+    options,
+  )
+}
+export function useEmployeesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    EmployeesQuery,
+    EmployeesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<EmployeesQuery, EmployeesQueryVariables>(
+    EmployeesDocument,
+    options,
+  )
+}
+export type EmployeesQueryHookResult = ReturnType<typeof useEmployeesQuery>
+export type EmployeesLazyQueryHookResult = ReturnType<
+  typeof useEmployeesLazyQuery
+>
+export type EmployeesQueryResult = ApolloReactCommon.QueryResult<
+  EmployeesQuery,
+  EmployeesQueryVariables
+>
+export const FindPartnerCampaignsDocument = gql`
+  query FindPartnerCampaigns($input: CampaignFilter!) {
+    findPartnerCampaigns(input: $input) {
+      id
+      campaignCode
+      partnerId
+      partnerName
+      validFrom
+      validTo
+      incentive {
+        ... on MonthlyPercentageDiscountFixedPeriod {
+          numberOfMonths
+          percentage
+        }
+        ... on FreeMonths {
+          numberOfMonths
+        }
+        ... on CostDeduction {
+          amount
+        }
+        ... on NoDiscount {
+          __typename
+        }
+        ... on IndefinitePercentageDiscount {
+          percentageDiscount
+        }
+      }
+      codeType
+    }
+  }
+`
+
+/**
+ * __useFindPartnerCampaignsQuery__
+ *
+ * To run a query within a React component, call `useFindPartnerCampaignsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindPartnerCampaignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindPartnerCampaignsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFindPartnerCampaignsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >(FindPartnerCampaignsDocument, options)
+}
+export function useFindPartnerCampaignsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    FindPartnerCampaignsQuery,
+    FindPartnerCampaignsQueryVariables
+  >(FindPartnerCampaignsDocument, options)
+}
+export type FindPartnerCampaignsQueryHookResult = ReturnType<
+  typeof useFindPartnerCampaignsQuery
+>
+export type FindPartnerCampaignsLazyQueryHookResult = ReturnType<
+  typeof useFindPartnerCampaignsLazyQuery
+>
+export type FindPartnerCampaignsQueryResult = ApolloReactCommon.QueryResult<
+  FindPartnerCampaignsQuery,
+  FindPartnerCampaignsQueryVariables
+>
+export const RemoveEmployeeDocument = gql`
+  mutation RemoveEmployee($id: ID!) {
+    removeEmployee(id: $id)
+  }
+`
+export type RemoveEmployeeMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveEmployeeMutation,
+  RemoveEmployeeMutationVariables
+>
+
+/**
+ * __useRemoveEmployeeMutation__
+ *
+ * To run a mutation, you first call `useRemoveEmployeeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveEmployeeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeEmployeeMutation, { data, loading, error }] = useRemoveEmployeeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveEmployeeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveEmployeeMutation,
+    RemoveEmployeeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    RemoveEmployeeMutation,
+    RemoveEmployeeMutationVariables
+  >(RemoveEmployeeDocument, options)
+}
+export type RemoveEmployeeMutationHookResult = ReturnType<
+  typeof useRemoveEmployeeMutation
+>
+export type RemoveEmployeeMutationResult = ApolloReactCommon.MutationResult<
+  RemoveEmployeeMutation
+>
+export type RemoveEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveEmployeeMutation,
+  RemoveEmployeeMutationVariables
+>
+export const SetCampaignCodeTypeDocument = gql`
+  mutation SetCampaignCodeType($id: ID!, $codeType: String!) {
+    setCampaignCodeType(id: $id, codeType: $codeType) {
+      id
+      campaignCode
+      partnerId
+      partnerName
+      validFrom
+      validTo
+      incentive {
+        ... on MonthlyPercentageDiscountFixedPeriod {
+          numberOfMonths
+          percentage
+        }
+        ... on FreeMonths {
+          numberOfMonths
+        }
+        ... on CostDeduction {
+          amount
+        }
+        ... on NoDiscount {
+          __typename
+        }
+        ... on IndefinitePercentageDiscount {
+          percentageDiscount
+        }
+      }
+      codeType
+    }
+  }
+`
+export type SetCampaignCodeTypeMutationFn = ApolloReactCommon.MutationFunction<
+  SetCampaignCodeTypeMutation,
+  SetCampaignCodeTypeMutationVariables
+>
+
+/**
+ * __useSetCampaignCodeTypeMutation__
+ *
+ * To run a mutation, you first call `useSetCampaignCodeTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetCampaignCodeTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setCampaignCodeTypeMutation, { data, loading, error }] = useSetCampaignCodeTypeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      codeType: // value for 'codeType'
+ *   },
+ * });
+ */
+export function useSetCampaignCodeTypeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SetCampaignCodeTypeMutation,
+    SetCampaignCodeTypeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SetCampaignCodeTypeMutation,
+    SetCampaignCodeTypeMutationVariables
+  >(SetCampaignCodeTypeDocument, options)
+}
+export type SetCampaignCodeTypeMutationHookResult = ReturnType<
+  typeof useSetCampaignCodeTypeMutation
+>
+export type SetCampaignCodeTypeMutationResult = ApolloReactCommon.MutationResult<
+  SetCampaignCodeTypeMutation
+>
+export type SetCampaignCodeTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SetCampaignCodeTypeMutation,
+  SetCampaignCodeTypeMutationVariables
+>
+export const UnsignMemberDocument = gql`
+  mutation UnsignMember($ssn: String!) {
+    unsignMember(ssn: $ssn)
+  }
+`
+export type UnsignMemberMutationFn = ApolloReactCommon.MutationFunction<
+  UnsignMemberMutation,
+  UnsignMemberMutationVariables
+>
+
+/**
+ * __useUnsignMemberMutation__
+ *
+ * To run a mutation, you first call `useUnsignMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsignMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsignMemberMutation, { data, loading, error }] = useUnsignMemberMutation({
+ *   variables: {
+ *      ssn: // value for 'ssn'
+ *   },
+ * });
+ */
+export function useUnsignMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnsignMemberMutation,
+    UnsignMemberMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UnsignMemberMutation,
+    UnsignMemberMutationVariables
+  >(UnsignMemberDocument, options)
+}
+export type UnsignMemberMutationHookResult = ReturnType<
+  typeof useUnsignMemberMutation
+>
+export type UnsignMemberMutationResult = ApolloReactCommon.MutationResult<
+  UnsignMemberMutation
+>
+export type UnsignMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnsignMemberMutation,
+  UnsignMemberMutationVariables
+>
+export const UpdateEmployeeRoleDocument = gql`
+  mutation UpdateEmployeeRole($id: ID!, $role: String!) {
+    updateEmployeeRole(id: $id, role: $role) {
+      id
+      email
+      role
+      firstGrantedAt
+    }
+  }
+`
+export type UpdateEmployeeRoleMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateEmployeeRoleMutation,
+  UpdateEmployeeRoleMutationVariables
+>
+
+/**
+ * __useUpdateEmployeeRoleMutation__
+ *
+ * To run a mutation, you first call `useUpdateEmployeeRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEmployeeRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEmployeeRoleMutation, { data, loading, error }] = useUpdateEmployeeRoleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      role: // value for 'role'
+ *   },
+ * });
+ */
+export function useUpdateEmployeeRoleMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateEmployeeRoleMutation,
+    UpdateEmployeeRoleMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    UpdateEmployeeRoleMutation,
+    UpdateEmployeeRoleMutationVariables
+  >(UpdateEmployeeRoleDocument, options)
+}
+export type UpdateEmployeeRoleMutationHookResult = ReturnType<
+  typeof useUpdateEmployeeRoleMutation
+>
+export type UpdateEmployeeRoleMutationResult = ApolloReactCommon.MutationResult<
+  UpdateEmployeeRoleMutation
+>
+export type UpdateEmployeeRoleMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateEmployeeRoleMutation,
+  UpdateEmployeeRoleMutationVariables
 >
 
 export interface PossibleTypesResultData {

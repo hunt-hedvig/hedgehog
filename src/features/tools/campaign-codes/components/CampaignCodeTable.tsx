@@ -17,7 +17,7 @@ import {
   getIncentiveText,
   getValidity,
 } from 'features/tools/campaign-codes/utils'
-import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
+import { usePartnerCampaigns } from 'graphql/tools/use-partner-campaigns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {

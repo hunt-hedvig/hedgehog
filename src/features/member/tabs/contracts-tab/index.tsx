@@ -7,7 +7,7 @@ import {
 import { Contract } from 'features/member/tabs/contracts-tab/contract'
 import { TrialComponent } from 'features/member/tabs/contracts-tab/trial'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
-import { useContracts } from 'graphql/use-contracts'
+import { useContracts } from 'graphql/member/use-contracts'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { Trial, useGetTrialsQuery } from 'types/generated/graphql'

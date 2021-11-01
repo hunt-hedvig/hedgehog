@@ -21,7 +21,7 @@ import {
   doMemberGroupFilter,
 } from 'features/questions/utils'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import { useQuestionGroups } from 'graphql/use-question-groups'
+import { useQuestionGroups } from 'graphql/questions/use-question-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 

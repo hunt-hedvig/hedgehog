@@ -15,7 +15,7 @@ import {
 import { Market, PickedLocaleMarket } from 'features/config/constants'
 import { WhitelistMemberButton } from 'features/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
-import { useGetPerson } from 'graphql/use-get-person'
+import { useGetPerson } from 'graphql/member/use-get-person'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 

@@ -24,7 +24,7 @@ import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import { Market } from 'features/config/constants'
 import gql from 'graphql-tag'
-import { useGetAccount } from 'graphql/use-get-account'
+import { useGetAccount } from 'graphql/member/use-get-account'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {

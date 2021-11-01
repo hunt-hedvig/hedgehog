@@ -15,7 +15,7 @@ import {
 } from 'features/questions/FilterSelect'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
-import { useQuestionGroups } from 'graphql/use-question-groups'
+import { useQuestionGroups } from 'graphql/questions/use-question-groups'
 import { getLowercaseNameFromEmail } from 'pages/DashboardPage'
 import React from 'react'
 import { useHistory } from 'react-router'
