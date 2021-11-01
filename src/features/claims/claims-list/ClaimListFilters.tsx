@@ -39,7 +39,10 @@ export enum FilterGroupState {
   Third,
 }
 
-export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
+export const ClaimListFilters: React.FC<FiltersProps> = ({
+  filters,
+  setFilters,
+}) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
   const isFilterExist = (state, field) =>

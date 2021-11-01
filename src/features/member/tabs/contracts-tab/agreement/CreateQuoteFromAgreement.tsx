@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Button, StandaloneMessage, ThirdLevelHeadline } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useQuotes } from 'features/member/tabs/quote-tab/hooks/use-get-quotes'
 import { isExpired } from 'features/member/tabs/quote-tab/utils'
-import { useQuotes } from 'graphql/member/use-get-quotes'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {

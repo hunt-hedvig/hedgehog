@@ -1,7 +1,7 @@
 import { Button, TextDatePicker } from '@hedvig-ui'
 import { format } from 'date-fns'
+import { useContracts } from 'features/member/tabs/contracts-tab/hooks/use-contracts'
 import { getContractByAgreementId } from 'features/member/tabs/contracts-tab/utils'
-import { useContracts } from 'graphql/member/use-contracts'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {

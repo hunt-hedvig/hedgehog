@@ -1,6 +1,6 @@
 import { Button } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { useGetMemberName } from 'graphql/member/use-get-member-name'
+import { useGetMemberName } from 'features/member/tabs/debt-tab/hooks/use-get-member-name'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useWhitelistMemberMutation } from 'types/generated/graphql'

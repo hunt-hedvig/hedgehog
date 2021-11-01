@@ -7,7 +7,7 @@ import {
   StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
-import { useContractMarketInfo } from 'graphql/member/use-get-member-contract-market-info'
+import { useContractMarketInfo } from 'features/member/tabs/account-tab/hooks/use-get-member-contract-market-info'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'

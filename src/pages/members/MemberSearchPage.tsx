@@ -7,6 +7,7 @@ import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-ver
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
 import { SearchForm } from 'features/members-search/components/SearchForm'
+import { useMemberSearch } from 'features/members-search/hooks/use-member-search'
 import {
   ExtraInstruction,
   Instructions,
@@ -14,7 +15,6 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'features/members-search/styles'
-import { useMemberSearch } from 'graphql/member/use-member-search'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'

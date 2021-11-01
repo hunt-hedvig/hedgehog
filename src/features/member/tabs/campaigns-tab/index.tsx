@@ -5,9 +5,9 @@ import {
   StandaloneMessage,
 } from '@hedvig-ui'
 import { CampaignsInfo } from 'features/member/tabs/campaigns-tab/campaigns/CampaignsInfo'
+import { useGetReferralInformation } from 'features/member/tabs/campaigns-tab/hooks/use-get-referral-information'
 import { ReferralsInfo } from 'features/member/tabs/campaigns-tab/referrals/ReferralsInfo'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
-import { useGetReferralInformation } from 'graphql/member/use-get-referral-information'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 

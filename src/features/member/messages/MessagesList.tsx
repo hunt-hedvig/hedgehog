@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Spinner } from '@hedvig-ui'
 import { parseISO } from 'date-fns'
-import { useMessageHistory } from 'graphql/member/use-message-history'
+import { useMessageHistory } from 'features/member/messages/hooks/use-message-history'
 import React, { HTMLAttributes } from 'react'
 import { Message } from './Message'
 

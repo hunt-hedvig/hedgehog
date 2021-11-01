@@ -1,5 +1,5 @@
 import { MemberTabs } from 'features/member'
-import { useGetMemberInfo } from 'graphql/member/use-get-member-info'
+import { useGetMemberInfo } from 'features/member/tabs/member-tab/hooks/use-get-member-info'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 
