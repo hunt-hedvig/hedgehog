@@ -22,6 +22,7 @@ import {
   TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { ArrayElement } from '@hedvig-ui/utils/array-element'
 import copy from 'copy-to-clipboard'
 import { Market } from 'features/config/constants'
 import React, { useState } from 'react'
@@ -107,9 +108,29 @@ export const ClaimPayments: React.FC<{
     variables: { claimId },
   })
 
-  const payments = [...(paymentsData?.claim?.payments ?? [])].sort(
-    (a, b) => b.timestamp - a.timestamp,
-  )
+  const payments = [...(paymentsData?.claim?.payments ?? [])]
+
+  const [filter, setFilter] = useState<{
+    field: 'timestamp' | 'deductible' | 'amount'
+    desc: boolean
+  }>({ field: 'timestamp', desc: true })
+
+  const sortHandler = (
+    p1: ArrayElement<typeof payments>,
+    p2: ArrayElement<typeof payments>,
+  ) => {
+    const direction = filter.desc ? 1 : -1
+
+    if (filter.field === 'amount' || filter.field === 'deductible') {
+      return (
+        (+p1[filter.field].amount < +p2[filter.field].amount ? 1 : -1) *
+        direction
+      )
+    }
+
+    return (p1[filter.field] < p2[filter.field] ? 1 : -1) * direction
+  }
+
   const identity = paymentsData?.claim?.member?.identity
 
   const totalAmount = payments
@@ -118,6 +139,13 @@ export const ClaimPayments: React.FC<{
   const totalDeductible = payments
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
+
+  const setFilterHandler = (field) => {
+    setFilter((prev) => ({
+      field,
+      desc: prev.field === field ? !prev.desc : true,
+    }))
+  }
 
   return (
     <CardContent>
@@ -179,15 +207,36 @@ export const ClaimPayments: React.FC<{
               onMouseLeave={() => setTableHovered(false)}
             >
               <TableHeader>
-                <TableHeaderColumn>Amount</TableHeaderColumn>
-                <TableHeaderColumn>Deductible</TableHeaderColumn>
-                <TableHeaderColumn>Date</TableHeaderColumn>
+                <TableHeaderColumn
+                  withSort
+                  sorting={filter.field === 'amount'}
+                  desc={filter.desc}
+                  onClick={() => setFilterHandler('amount')}
+                >
+                  Amount
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  withSort
+                  sorting={filter.field === 'deductible'}
+                  desc={filter.desc}
+                  onClick={() => setFilterHandler('deductible')}
+                >
+                  Deductible
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  withSort
+                  sorting={filter.field === 'timestamp'}
+                  desc={filter.desc}
+                  onClick={() => setFilterHandler('timestamp')}
+                >
+                  Date
+                </TableHeaderColumn>
                 <TableHeaderColumn>Ex Gratia</TableHeaderColumn>
                 <TableHeaderColumn>Note</TableHeaderColumn>
                 <TableHeaderColumn>Type</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableHeader>
-              {payments.map((payment) => (
+              {payments.sort(sortHandler).map((payment) => (
                 <TableRow
                   key={payment.id}
                   onClick={() => {
