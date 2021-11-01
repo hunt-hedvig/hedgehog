@@ -1,3 +1,0 @@
-mutation UnsignMember($ssn: String!) {
-  unsignMember(ssn: $ssn)
-}

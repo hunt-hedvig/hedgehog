@@ -15,13 +15,13 @@ import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
 import { FilterStateType } from 'features/questions/FilterSelect'
+import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'features/questions/utils'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import { useQuestionGroups } from 'graphql/use-question-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 

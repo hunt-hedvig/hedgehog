@@ -1,0 +1,5 @@
+mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {
+  signQuoteForNewContract(quoteId: $quoteId, activationDate: $activationDate) {
+    id
+  }
+}

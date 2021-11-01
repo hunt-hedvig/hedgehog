@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { LargeClaimsList } from 'features/claims/claims-list/components/LargeClaimsList'
-import { Filters } from 'features/claims/claims-list/filter'
+import { ClaimListFilters } from 'features/claims/claims-list/ClaimListFilters'
+import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
 import React, { useEffect } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
@@ -68,7 +68,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         <MainHeadline>Claims</MainHeadline>
       </FadeIn>
 
-      <Filters filters={filters} setFilters={setFilters} />
+      <ClaimListFilters filters={filters} setFilters={setFilters} />
 
       <LargeClaimsList page={selectedPage} filters={filters} />
     </ListPage>
