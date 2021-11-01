@@ -81,21 +81,21 @@ const ToolsPage: React.FC = () => {
     },
     {
       label: 'Go to Campaign Codes',
-      keys: [Keys.Control, Keys.Five],
+      keys: [Keys.Control, Keys.Four],
       onResolve: () => {
         history.push('/tools/campaign-codes')
       },
     },
     {
       label: 'Go to Employees',
-      keys: [Keys.Control, Keys.Six],
+      keys: [Keys.Control, Keys.Five],
       onResolve: () => {
         history.push('/tools/employees')
       },
     },
     {
       label: 'Go to Claim Types',
-      keys: [Keys.Control, Keys.Seven],
+      keys: [Keys.Control, Keys.Six],
       onResolve: () => {
         history.push('/tools/claim-types')
       },
@@ -105,7 +105,7 @@ const ToolsPage: React.FC = () => {
   return (
     <FadeIn>
       <CardsWrapper style={{ flexDirection: 'column' }}>
-        <Row columns={4}>
+        <Row columns={3}>
           <Card to="/tools/charges" span={4}>
             <Icon>💰</Icon>
             Approve Charges
@@ -123,20 +123,20 @@ const ToolsPage: React.FC = () => {
           </Card>
         </Row>
 
-        <Row columns={2}>
+        <Row columns={3}>
           <CardLink to="/tools/campaign-codes" span={4}>
             <Icon>💵</Icon>
-            {isControlPressed && <Hotkey dark>5</Hotkey>}
+            {isControlPressed && <Hotkey dark>4</Hotkey>}
             Campaign Codes
           </CardLink>
           <CardLink to="/tools/employees" span={4}>
             <Icon>👩🏼‍🦰</Icon>
-            {isControlPressed && <Hotkey dark>6</Hotkey>}
+            {isControlPressed && <Hotkey dark>5</Hotkey>}
             Employees
           </CardLink>
           <CardLink to="/tools/claim-types" span={4}>
             <Icon>🧠</Icon>
-            {isControlPressed && <Hotkey dark>5</Hotkey>}
+            {isControlPressed && <Hotkey dark>6</Hotkey>}
             Claim Types
           </CardLink>
         </Row>
