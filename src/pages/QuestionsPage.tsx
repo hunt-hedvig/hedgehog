@@ -13,10 +13,10 @@ import {
   FilterState,
   FilterStateType,
 } from 'features/questions/FilterSelect'
+import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useMe } from 'features/user/hooks/use-me'
-import { useQuestionGroups } from 'graphql/questions/use-question-groups'
 import { getLowercaseNameFromEmail } from 'pages/DashboardPage'
 import React from 'react'
 import { useHistory } from 'react-router'
