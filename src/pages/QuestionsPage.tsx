@@ -13,13 +13,13 @@ import {
   FilterState,
   FilterStateType,
 } from 'features/questions/FilterSelect'
+import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
-import { useQuestionGroups } from 'graphql/use-question-groups'
+import { useMe } from 'features/user/hooks/use-me'
 import { getLowercaseNameFromEmail } from 'pages/DashboardPage'
 import React from 'react'
 import { useHistory } from 'react-router'
-import { useGetMeQuery } from 'types/generated/graphql'
 
 const ListPage = styled.div`
   display: flex;
@@ -46,12 +46,12 @@ const ConversationsMessage = styled.div`
 
 const QuestionsPage: React.FC = () => {
   const history = useHistory()
-  const { data } = useGetMeQuery()
   const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
     ReadonlyArray<FilterStateType>
   >('questions:filters', [FilterState.HasOpenClaim, FilterState.NoOpenClaim])
 
   const [questionGroups, { loading }] = useQuestionGroups()
+  const { me } = useMe()
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -67,16 +67,14 @@ const QuestionsPage: React.FC = () => {
 
   return (
     <ListPage>
-      {data?.me && (
+      {me && (
         <ConversationsMessage
           onClick={() => {
             history.push('/conversations/onboarding')
           }}
         >
           Hey there{' '}
-          <Capitalized>
-            {getLowercaseNameFromEmail(data?.me.user.email)}
-          </Capitalized>
+          <Capitalized>{getLowercaseNameFromEmail(me.email)}</Capitalized>
           !
           <br />
           <span style={{ fontSize: '0.9em' }}>

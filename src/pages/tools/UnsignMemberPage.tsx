@@ -1,12 +1,18 @@
+import { gql, useMutation } from '@apollo/client'
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { useUnsignMemberMutation } from 'types/generated/graphql'
+
+const UNSIGN_MEMBER = gql`
+  mutation UnsignMember($ssn: String!) {
+    unsignMember(ssn: $ssn)
+  }
+`
 
 const UnsignMemberPage: React.FC = () => {
   const [ssn, setSsn] = React.useState('')
-  const [useUnsignMember, { loading }] = useUnsignMemberMutation()
+  const [useUnsignMember, { loading }] = useMutation(UNSIGN_MEMBER)
   const { confirm } = useConfirmDialog()
 
   return (

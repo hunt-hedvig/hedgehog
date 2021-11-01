@@ -6,7 +6,7 @@ import {
   PickedLocaleMarket,
   QuoteProductTypeContractMap,
 } from 'features/config/constants'
-import { useQuotes } from 'graphql/use-get-quotes'
+import { useQuotes } from 'features/member/tabs/quote-tab/hooks/use-get-quotes'
 import React from 'react'
 import { Quote } from 'types/generated/graphql'
 import { QuotesSubSection } from './quote-sub-section'

@@ -5,9 +5,9 @@ import {
   StandaloneMessage,
 } from '@hedvig-ui'
 import { Contract } from 'features/member/tabs/contracts-tab/contract'
+import { useContracts } from 'features/member/tabs/contracts-tab/hooks/use-contracts'
 import { TrialComponent } from 'features/member/tabs/contracts-tab/trial'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
-import { useContracts } from 'graphql/use-contracts'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { Trial, useGetTrialsQuery } from 'types/generated/graphql'

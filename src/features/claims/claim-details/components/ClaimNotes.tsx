@@ -5,7 +5,6 @@ import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
   useClaimPageQuery,
-  useGetMeQuery,
 } from 'types/generated/graphql'
 
 import styled from '@emotion/styled'
@@ -23,6 +22,7 @@ import {
   TextArea,
 } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useMe } from 'features/user/hooks/use-me'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 
@@ -90,7 +90,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
   const [submitting, setSubmitting] = useState(false)
   const [textFieldFocused, setTextFieldFocused] = useState(false)
 
-  const { data } = useGetMeQuery()
+  const { me } = useMe()
 
   const handleSubmitNote = () => {
     const today = getTodayInUTC()
@@ -105,7 +105,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
           notes: [
             {
               text: note,
-              handlerReference: data?.me.user.email ?? '',
+              handlerReference: me.email ?? '',
               date: today,
             },
             ...notes,

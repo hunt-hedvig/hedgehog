@@ -11,13 +11,13 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { usePartnerCampaigns } from 'features/tools/campaign-codes/hooks/use-partner-campaigns'
 import {
   getCodeTypeOptions,
   getDiscountDetails,
   getIncentiveText,
   getValidity,
 } from 'features/tools/campaign-codes/utils'
-import { usePartnerCampaigns } from 'graphql/use-partner-campaigns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {

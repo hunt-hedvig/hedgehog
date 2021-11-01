@@ -1,6 +1,0 @@
-query GetDashboardNumbers {
-  dashboardNumbers {
-    numberOfClaims
-    numberOfQuestions
-  }
-}

@@ -1,7 +1,4 @@
-mutation CreateQuoteFromAgreement(
-  $agreementId: ID!
-  $memberId: ID!
-) {
+mutation CreateQuoteFromAgreement($agreementId: ID!, $memberId: ID!) {
   createQuoteFromAgreement(agreementId: $agreementId, memberId: $memberId) {
     id
   }

@@ -10,7 +10,7 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format } from 'date-fns'
 import { AddEntryInformation } from 'features/member/tabs/account-tab/AddEntryInformation'
-import { useContractMarketInfo } from 'graphql/use-get-member-contract-market-info'
+import { useContractMarketInfo } from 'features/member/tabs/account-tab/hooks/use-get-member-contract-market-info'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'

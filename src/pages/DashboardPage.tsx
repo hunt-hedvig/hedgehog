@@ -1,3 +1,5 @@
+import { useQuery } from '@apollo/client'
+import { gql } from '@apollo/client/core'
 import styled from '@emotion/styled'
 import {
   Badge,
@@ -16,11 +18,7 @@ import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member
 import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {
-  DashboardNumbers,
-  useGetDashboardNumbersQuery,
-  UserSettingKey,
-} from 'types/generated/graphql'
+import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,8 +62,17 @@ const MutedText = styled.div`
   font-size: 0.9rem;
 `
 
+const GET_DASHBOARD_NUMBERS = gql`
+  query GetDashboardNumbers {
+    dashboardNumbers {
+      numberOfClaims
+      numberOfQuestions
+    }
+  }
+`
+
 const DashboardPage: React.FC = () => {
-  const { data: dashboardData } = useGetDashboardNumbersQuery({
+  const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
     pollInterval: 1000 * 5,
   })
 
