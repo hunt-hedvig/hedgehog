@@ -6,9 +6,8 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
-import { GearFill, PeopleFill } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
 import { Me } from 'types/generated/graphql'
+import SettingsList from './SettingsList'
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,40 +22,38 @@ const Wrapper = styled.div`
   margin-bottom: 2rem;
 `
 
-const Username = styled(Flex)`
-  background-color: transparent;
-  border-radius: 8px;
-  padding: 0.4em 0.8em;
-  cursor: pointer;
-`
-
-const CircleButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  border: none;
-  outline: none;
-
-  border-radius: 50%;
+export const CircleButton = styled.div`
   width: 2.5rem;
   height: 2.5rem;
 
-  transition: all 200ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  :hover {
-    background-color: ${({ theme }) => theme.accentLighter};
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.accentLighter};
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.accentLight};
+  }
+
+  & svg {
+    height: 16px;
+    width: 16px;
   }
 `
 
 const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
+  display: flex;
+  align-items: center;
+
   transition: margin-right 400ms;
   margin-right: ${({ pushLeft }) => (pushLeft ? '300px' : '0')};
 `
 
 export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
-  const history = useHistory()
   const [showUsers, setShowUsers] = useState(false)
 
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
@@ -79,25 +76,7 @@ export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
         justify="flex-end"
         align="center"
       >
-        <div>
-          <Username
-            direction="row"
-            justify="flex-end"
-            align="center"
-            onClick={() => history.push('/profile')}
-          >
-            <span>{me?.user?.fullName}</span>
-            <CircleButton style={{ marginLeft: '2em' }}>
-              <GearFill />
-            </CircleButton>
-          </Username>
-        </div>
-        <CircleButton
-          style={{ marginLeft: '0.25em' }}
-          onClick={() => setShowUsers(!showUsers)}
-        >
-          <PeopleFill />
-        </CircleButton>
+        <SettingsList me={me} setShowUsers={setShowUsers} />
       </TopBarContainer>
     </Wrapper>
   )
