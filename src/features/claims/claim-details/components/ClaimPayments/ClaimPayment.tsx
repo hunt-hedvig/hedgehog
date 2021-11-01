@@ -6,10 +6,10 @@ import {
   FormInput,
   SubmitButton,
 } from '@hedvig-ui'
+import { Market } from 'features/config/constants'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { Market } from 'types/enums'
 import {
   ClaimPaymentInput,
   ClaimPaymentType,

@@ -5,7 +5,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { useGetClaimTypesQuery } from 'types/generated/graphql'
 
@@ -29,7 +29,7 @@ export const TypesTable: React.FC<{ filter: string }> = ({ filter }) => {
         )
         .map((type) => (
           <TableRow key={type}>
-            <TableColumn>{getTextFromEnumValue(type)}</TableColumn>
+            <TableColumn>{convertEnumToTitle(type)}</TableColumn>
           </TableRow>
         ))}
     </Table>

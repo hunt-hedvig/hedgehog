@@ -8,11 +8,12 @@ import {
   Paragraph,
   useFadeAnimation,
 } from '@hedvig-ui'
-import { FilterSelect } from 'features/conversations/FilterSelect'
-import { FilterState } from 'features/questions/filter'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
+import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import { useInsecurePersistentState } from 'utils/state'
+import { UserSettingKey } from 'types/generated/graphql'
 
 const Subtext = styled.span`
   font-size: 0.8em;
@@ -22,26 +23,22 @@ const Subtext = styled.span`
 const ConversationsOnboardingPage: React.FC = () => {
   const { fade, props: fadeProps } = useFadeAnimation({})
   const [onboardingStep, setOnboardingStep] = useState(0)
+  const { settings, updateSetting } = useMe()
 
   const history = useHistory()
-  const [enabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
-  )
-  const [, setOnboarded] = useInsecurePersistentState<boolean>(
-    'conversations:onboarded',
-    false,
-  )
+
   const [filters, setFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterState>
+    ReadonlyArray<FilterStateType>
   >('questions:filters', [])
 
   useEffect(() => {
-    if (!enabled) {
-      localStorage.setItem(`hvg:conversations:enabled`, JSON.stringify(true))
+    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        conversations: true,
+      })
       history.go(0)
     }
-  }, [enabled])
+  }, [])
 
   useEffect(() => {
     fade('up', 'in').then(() => {
@@ -49,7 +46,7 @@ const ConversationsOnboardingPage: React.FC = () => {
     })
   }, [])
 
-  if (!enabled) {
+  if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
     return null
   }
 
@@ -129,7 +126,6 @@ const ConversationsOnboardingPage: React.FC = () => {
             <Button
               onClick={() => {
                 fade('up', 'out').then(() => {
-                  setOnboarded(true)
                   history.push('/conversations')
                 })
               }}

@@ -17,7 +17,11 @@ module.exports = (api) => {
       '@babel/preset-react',
       ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
     ],
-    plugins: ['@emotion', 'react-hot-loader/babel'],
+    plugins: [
+      '@emotion',
+      'react-hot-loader/babel',
+      '@babel/plugin-syntax-dynamic-import',
+    ],
     env: {
       test: {
         plugins: [

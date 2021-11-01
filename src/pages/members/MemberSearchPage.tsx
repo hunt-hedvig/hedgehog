@@ -1,5 +1,9 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
 import { SearchForm } from 'features/members-search/components/SearchForm'
@@ -14,7 +18,6 @@ import { useMemberSearch } from 'graphql/use-member-search'
 import React, { useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'
-import { useVerticalKeyboardNavigation } from 'utils/keyboard-actions'
 
 /**
  * Semantic UI haven't implemented refs corretly or they collide with react-emotion or something.

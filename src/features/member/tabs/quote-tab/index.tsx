@@ -1,11 +1,14 @@
 import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import {
+  ContractMarketTypes,
+  ContractType,
+  PickedLocaleMarket,
+  QuoteProductTypeContractMap,
+} from 'features/config/constants'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
-import { ContractType, Market, QuoteProductType } from 'types/enums'
 import { Quote } from 'types/generated/graphql'
-import { getMarketFromPickedLocale } from 'utils/member'
 import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
@@ -33,134 +36,31 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const memberMarket =
-    contractMarket?.market ?? getMarketFromPickedLocale(pickedLocale!)
-
-  const getUniqueContractTypes = () => {
-    if (memberMarket === Market.Sweden) {
-      return [
-        {
-          value: ContractType.SwedishApartment,
-          hotkey: {
-            name: 'A',
-            key: Keys.A,
-          },
-        },
-        {
-          value: ContractType.SwedishHouse,
-          hotkey: {
-            name: 'H',
-            key: Keys.H,
-          },
-        },
-        {
-          value: ContractType.SwedishAccident,
-          hotkey: {
-            name: 'C',
-            key: Keys.C,
-          },
-        },
-      ]
-    }
-
-    if (memberMarket === Market.Norway) {
-      return [
-        {
-          value: ContractType.NorwegianHomeContent,
-          hotkey: {
-            name: 'N',
-            key: Keys.N,
-          },
-        },
-        {
-          value: ContractType.NorwegianTravel,
-          hotkey: {
-            name: 'T',
-            key: Keys.T,
-          },
-        },
-      ]
-    }
-
-    if (memberMarket === Market.Denmark) {
-      return [
-        {
-          value: ContractType.DanishHomeContent,
-          hotkey: {
-            name: 'D',
-            key: Keys.D,
-          },
-        },
-        {
-          value: ContractType.DanishTravel,
-          hotkey: {
-            name: 'S',
-            key: Keys.S,
-          },
-        },
-        {
-          value: ContractType.DanishAccident,
-          hotkey: {
-            name: 'R',
-            key: Keys.R,
-          },
-        },
-      ]
-    }
-
-    return []
-  }
-
-  const shouldShowInContractTypeSubSection = (
-    quote: Quote,
-    contractType,
-  ): boolean => {
-    if (quote.productType === QuoteProductType.Apartment) {
-      return contractType === ContractType.SwedishApartment
-    }
-    if (quote.productType === QuoteProductType.House) {
-      return contractType === ContractType.SwedishHouse
-    }
-    if (quote.productType === QuoteProductType.HomeContent) {
-      return (
-        contractType === ContractType.NorwegianHomeContent ||
-        contractType === ContractType.DanishHomeContent
-      )
-    }
-    if (quote.productType === QuoteProductType.Travel) {
-      return (
-        contractType === ContractType.NorwegianTravel ||
-        contractType === ContractType.DanishTravel
-      )
-    }
-    if (quote.productType === QuoteProductType.Accident) {
-      return (
-        contractType === ContractType.DanishAccident ||
-        contractType === ContractType.SwedishAccident
-      )
-    }
-
-    return false
-  }
+    contractMarket?.market ?? PickedLocaleMarket[pickedLocale!]
 
   const getCategorisedQuotesBasedOnContractType = (
     contractType: string,
-  ): Quote[] => {
-    return quotes.filter((quote) =>
-      shouldShowInContractTypeSubSection(quote, contractType),
+  ): Quote[] =>
+    quotes.filter(
+      (quote) =>
+        !!quote.productType &&
+        QuoteProductTypeContractMap[quote.productType].includes(contractType),
     )
-  }
 
   return (
     <>
       <Tabs
         style={{ marginBottom: '2em' }}
-        list={getUniqueContractTypes().map((type, index) => ({
-          active: type.value === activeTab,
-          title: getTextFromEnumValue(type.value, true),
-          action: () => setActiveTab(type.value),
-          key: index,
-          hotkey: type.hotkey,
-        }))}
+        list={
+          memberMarket
+            ? ContractMarketTypes[memberMarket].map((type, index) => ({
+                active: type === activeTab,
+                title: convertEnumToTitle(type),
+                action: () => setActiveTab(type),
+                key: index,
+              }))
+            : []
+        }
       />
       {!!quotes.length && (
         <QuotesSubSection

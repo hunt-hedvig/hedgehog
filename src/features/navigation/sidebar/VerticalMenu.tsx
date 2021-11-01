@@ -1,9 +1,11 @@
 import styled, { StyledComponent } from '@emotion/styled'
 import { Hotkey } from '@hedvig-ui'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
 import { colorsV3 } from '@hedviginsurance/brand'
-import React, { useContext, useRef, useState } from 'react'
+import { useCommandLine } from 'features/commands/command-line-hook'
+import { useMe } from 'features/user/hooks/use-me'
+import React, { useRef, useState } from 'react'
 import {
   ArrowUpRight,
   BoxArrowLeft,
@@ -22,9 +24,7 @@ import {
 import MediaQuery from 'react-media'
 import { matchPath, useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
-import { forceLogOut } from 'utils/auth'
-import { DarkmodeContext } from 'utils/darkmode-context'
-import { useInsecurePersistentState } from 'utils/state'
+import { UserSettingKey } from 'types/generated/graphql'
 import { Logo, LogoIcon } from './elements'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
@@ -246,16 +246,16 @@ interface LatestClaim {
 export const VerticalMenu: React.FC<any & { history: History }> = ({
   history,
 }) => {
+  const { settings } = useMe()
   const { pathname } = useLocation()
   const [isCollapsed, setCollapsed] = useState(
     () => localStorage.getItem('hedvig:menu:collapse') === 'true',
   )
   const [locations, setLocations] = useState<string[]>([])
   const latestClaim = useRef<LatestClaim | null>(null)
-  const { isDarkmode, setIsDarkmode } = useContext(DarkmodeContext)
-  const [conversationsEnabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
+  const { isDarkmode, setIsDarkmode } = useDarkmode()
+  const [conversationsEnabled] = useState<boolean>(
+    settings[UserSettingKey.FeatureFlags]?.conversations || false,
   )
 
   const { registerActions, isHintingOption } = useCommandLine()
@@ -503,7 +503,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
               <MenuItem
                 onClick={(e) => {
                   e.preventDefault()
-                  forceLogOut()
+                  window.location.pathname = '/login/logout'
                 }}
                 to="#"
                 transparent

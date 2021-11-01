@@ -12,13 +12,12 @@ import {
   Spacing,
   StandaloneMessage,
 } from '@hedvig-ui'
+import { Market, PickedLocaleMarket } from 'features/config/constants'
 import { WhitelistMemberButton } from 'features/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
 import { useGetPerson } from 'graphql/use-get-person'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import { Market } from 'types/enums'
-import { getMarketFromPickedLocale } from 'utils/member'
 
 export const DebtTab: React.FC<{
   memberId: string
@@ -42,7 +41,8 @@ export const DebtTab: React.FC<{
 
   // FIXME: We should not make market specific features like this, should use "have debt" or "don't have debt" instead
   const memberMarket =
-    contractMarketInfo?.market ?? getMarketFromPickedLocale(pickedLocale!)
+    contractMarketInfo?.market ?? PickedLocaleMarket[pickedLocale!]
+
   if (memberMarket !== Market.Sweden) {
     return (
       <StandaloneMessage paddingTop="10vh">

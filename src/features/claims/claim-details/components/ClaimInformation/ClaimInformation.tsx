@@ -25,7 +25,7 @@ import {
   Paragraph,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
 import { ContractDropdown } from 'features/claims/claim-details/components/ClaimInformation/components/ContractDropdown'
 import { OutcomeDropdown } from 'features/claims/claim-details/components/ClaimType/components/OutcomeDropdown'

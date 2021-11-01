@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import { Checkbox, Flex, Label, lightTheme, TextDatePicker } from '@hedvig-ui'
-import { ColorBadge } from 'features/questions/filter'
+import { range } from '@hedvig-ui/utils/range'
+import { Market, MarketFlags } from 'features/config/constants'
+import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
-import { Market } from 'types/enums'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-import { range } from 'utils/array'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 interface FiltersProps {
   filters: ClaimsFiltersType
@@ -92,12 +92,6 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
     setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: dateString }))
   }
 
-  const marketIcons = {
-    Sweden: '🇸🇪',
-    Norway: '🇳🇴',
-    Denmark: '🇩🇰',
-  }
-
   const complexityIcons = {
     Simple: '📱',
     Complex: '🌊',
@@ -124,7 +118,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
                 setFilterHandler(ClaimState[key], 'filterClaimStates')
               }
             />
-            <ColorBadge
+            <MemberGroupColorBadge
               style={{
                 height: '0.7em',
                 width: '0.7em',
@@ -175,7 +169,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
                 setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
               }
             />
-            <ColorBadge
+            <MemberGroupColorBadge
               filter={filterNumber}
               style={{ height: '0.7em', width: '0.7em' }}
             />
@@ -192,7 +186,9 @@ export const Filters: React.FC<FiltersProps> = ({ filters, setFilters }) => {
               checked={isFilterExist(Market[key], 'filterMarkets') || false}
               onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
             />
-            <span style={{ marginLeft: '0.5rem' }}>{marketIcons[key]}</span>
+            <span style={{ marginLeft: '0.5rem' }}>
+              {MarketFlags[key.toUpperCase()]}
+            </span>
           </Flex>
         ))}
       </FilterElement>

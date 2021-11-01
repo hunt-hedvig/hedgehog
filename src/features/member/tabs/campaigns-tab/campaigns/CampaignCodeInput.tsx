@@ -1,5 +1,5 @@
 import { Button, Flex, Input, Spacing, TextDatePicker } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useManualRedeemCampaignMutation } from 'types/generated/graphql'

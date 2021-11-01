@@ -24,10 +24,10 @@ import {
 } from '@hedvig-ui'
 import { ArrayElement } from '@hedvig-ui/utils/array-element'
 import copy from 'copy-to-clipboard'
+import { Market } from 'features/config/constants'
 import React, { useState } from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { Market } from 'types/enums'
 import { ClaimPayment } from './ClaimPayment'
 
 const ScrollX = styled.div`

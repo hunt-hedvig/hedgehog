@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { RadioGroup } from '@hedvig-ui'
-import { totalNumberMemberGroups } from 'features/questions/filter'
+import { range } from '@hedvig-ui/utils/range'
+import { MemberGroups } from 'features/config/constants'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
-import { range } from 'utils/array'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
 
 const Group = styled.div`
   display: flex;
@@ -14,14 +14,14 @@ const Group = styled.div`
   }
 `
 
-const numberMemberGroupsOptions = range(totalNumberMemberGroups - 1).map(
-  (numberMemberGroups) => {
-    return {
-      value: numberMemberGroups + 2,
-      label: (numberMemberGroups + 2).toString(),
-    }
-  },
-)
+const numberMemberGroupsOptions = range(
+  Object.keys(MemberGroups).length - 1,
+).map((numberMemberGroups) => {
+  return {
+    value: numberMemberGroups + 2,
+    label: (numberMemberGroups + 2).toString(),
+  }
+})
 
 export const NumberMemberGroupsRadioButtons: React.FC = () => {
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()

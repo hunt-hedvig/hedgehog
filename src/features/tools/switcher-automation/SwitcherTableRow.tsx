@@ -13,21 +13,20 @@ import {
   TableRow,
   TextDatePicker,
 } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/utils/key-press-hook'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
+import { TerminationReason } from 'features/member/tabs/contracts-tab/contract/termination-date'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
-import { SwitcherEmailStatus, TerminationReason } from 'types/enums'
 import {
   Contract,
   GetSwitcherEmailsDocument,
   SwitchableSwitcherEmail,
   useMarkSwitcherEmailAsRemindedMutation,
 } from 'types/generated/graphql'
-import { convertEnumToTitle } from 'utils/text'
 
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
 
@@ -39,6 +38,14 @@ const StatusTableRow = styled(TableRow)`
 const SubText = styled.p`
   font-size: 0.9rem;
 `
+
+export enum SwitcherEmailStatus {
+  Prepared = '👩‍🍳 Prepared',
+  Sent = '💌 Sent',
+  Reminded = '👋 Reminded',
+  InProgress = '🤝 In Progress',
+  PastCancellationDate = '⌛️ Past Cancellation Date',
+}
 
 const UPDATE_INFO = gql`
   mutation UpdateSwitcherEmailInfo(
@@ -330,7 +337,7 @@ export const SwitcherEmailRow: React.FC<Pick<
                           setTerminationReason(TerminationReason[reason])
                         }
                       >
-                        {getTextFromEnumValue(TerminationReason[reason])}
+                        {convertEnumToTitle(TerminationReason[reason])}
                       </DropdownOption>
                     ))}
                   </Dropdown>

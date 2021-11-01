@@ -6,8 +6,11 @@ import {
   HotkeyStyled,
   MainHeadline,
 } from '@hedvig-ui'
-import { useCommandLine } from '@hedvig-ui/utils/command-line-hook'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useCommandLine } from 'features/commands/command-line-hook'
 import React from 'react'
 import { useHistory } from 'react-router'
 
@@ -77,13 +80,6 @@ const ToolsPage: React.FC = () => {
       },
     },
     {
-      label: 'Go to Norwegian Price Engine "Gripen"',
-      keys: [Keys.Control, Keys.Four],
-      onResolve: () => {
-        history.push('/tools/norwegian-tariff-creator')
-      },
-    },
-    {
       label: 'Go to Campaign Codes',
       keys: [Keys.Control, Keys.Five],
       onResolve: () => {
@@ -124,11 +120,6 @@ const ToolsPage: React.FC = () => {
             <Icon>📝</Icon>
             {isControlPressed && <Hotkey dark>3</Hotkey>}
             Perils Editor
-          </Card>
-          <Card to="/tools/norwegian-tariff-creator" span={4}>
-            <Icon>🛩</Icon>
-            {isControlPressed && <Hotkey dark>4</Hotkey>}
-            Norwegian Price Engine "Gripen"
           </Card>
         </Row>
 

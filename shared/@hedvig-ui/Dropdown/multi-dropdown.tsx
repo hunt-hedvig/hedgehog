@@ -2,8 +2,8 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import { X } from 'react-bootstrap-icons'
-import { useClickOutside } from '../utils/click-outside'
-import { Keys } from '../utils/key-press-hook'
+import { Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { useClickOutside } from '../hooks/use-click-outside'
 
 const show = keyframes`
   from {

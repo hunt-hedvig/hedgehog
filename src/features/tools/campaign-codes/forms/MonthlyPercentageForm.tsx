@@ -6,9 +6,13 @@ import {
   Spacing,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { PartnerDropdown } from 'features/tools/campaign-codes/forms/PartnerDropdown'
-import { getCodeTypeOptions } from 'features/tools/campaign-codes/utils'
+import {
+  getCodeTypeOptions,
+  numberOfMonthsOptions,
+  percentageDiscountOptions,
+} from 'features/tools/campaign-codes/utils'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -16,10 +20,6 @@ import {
   Scalars,
   useAssignCampaignToPartnerPercentageDiscountMutation,
 } from 'types/generated/graphql'
-import {
-  numberOfMonthsOptions,
-  percentageDiscountOptions,
-} from 'utils/campaignCodes'
 import { DateRangeWrapper } from './FreeMonthsForm'
 
 const initialFormData: MonthlyPercentageFormData = {

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, { InputHTMLAttributes } from 'react'
 import { Check as CheckIcon } from 'react-bootstrap-icons'
-import { Keys } from '../utils/key-press-hook'
+import { Keys } from '../hooks/keyboard/use-key-is-pressed'
 
 const Check = styled.label`
   display: flex;

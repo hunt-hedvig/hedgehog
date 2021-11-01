@@ -10,7 +10,8 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { formatMoney } from '@hedvig-ui/utils/money'
 import { format, parseISO } from 'date-fns'
 import React from 'react'
 import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
@@ -20,7 +21,6 @@ import {
   MonthlyEntry,
   useRemoveMonthlyEntryMutation,
 } from 'types/generated/graphql'
-import { formatMoney } from 'utils/money'
 
 const StyledTable = styled(Table)`
   overflow: visible !important;

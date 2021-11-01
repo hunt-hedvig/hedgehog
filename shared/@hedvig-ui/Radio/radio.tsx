@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React, { InputHTMLAttributes } from 'react'
-import { Keys } from '../utils/key-press-hook'
+import { Keys } from '../hooks/keyboard/use-key-is-pressed'
 
 const RadioLabel = styled.div<{ checked?: boolean; disabled?: boolean }>`
   display: flex;
@@ -60,7 +60,7 @@ const RadioLabel = styled.div<{ checked?: boolean; disabled?: boolean }>`
 
   &:focus {
     & label::before {
-      box-shadow: 0px 0px 5px 1px rgba(34, 60, 80, 0.4);
+      box-shadow: 0 0 5px 1px rgba(34, 60, 80, 0.4);
     }
   }
 

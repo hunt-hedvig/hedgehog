@@ -13,14 +13,14 @@ import {
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
+import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import {
   DashboardNumbers,
   useGetDashboardNumbersQuery,
-  useGetMeQuery,
+  UserSettingKey,
 } from 'types/generated/graphql'
-import { useInsecurePersistentState } from 'utils/state'
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,31 +65,23 @@ const MutedText = styled.div`
 `
 
 const DashboardPage: React.FC = () => {
-  const { data } = useGetMeQuery()
-
   const { data: dashboardData } = useGetDashboardNumbersQuery({
     pollInterval: 1000 * 5,
   })
+
+  const { settings, me } = useMe()
 
   const dashboardNumbers = dashboardData?.dashboardNumbers as
     | DashboardNumbers
     | undefined
 
-  const [conversationsEnabled] = useInsecurePersistentState<boolean>(
-    'conversations:enabled',
-    false,
-  )
-
   return (
     <Wrapper>
       <Spacing bottom>
-        {data?.me && (
+        {me && (
           <MainHeadline>
             Hi there{' '}
-            <Capitalized>
-              {getLowercaseNameFromEmail(data?.me.user.email)}
-            </Capitalized>
-            !
+            <Capitalized>{getLowercaseNameFromEmail(me?.email)}</Capitalized>!
           </MainHeadline>
         )}
       </Spacing>
@@ -102,7 +94,7 @@ const DashboardPage: React.FC = () => {
               </MetricNumber>
               <MetricName>claims</MetricName>
             </Metric>
-            {conversationsEnabled ? (
+            {settings[UserSettingKey.FeatureFlags]?.conversations ? (
               <Metric to="/conversations">
                 <MetricNumber>
                   {dashboardNumbers?.numberOfQuestions || 0}

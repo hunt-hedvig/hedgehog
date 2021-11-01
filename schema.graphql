@@ -132,10 +132,6 @@ type MutationType {
     request: ChangeTerminationDateInput
   ): Contract!
   revertTermination(contractId: ID!): Contract!
-  createNorwegianGripenPriceEngine(
-    request: CreateNorwegianGripenInput
-  ): Boolean!
-  addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): Contract!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): Contract!
   safelyEdit(agreementId: ID!, request: SafelyEditAgreementInput): Contract!
@@ -1020,26 +1016,6 @@ type Question {
   id: ID!
   timestamp: Instant!
   messageJsonString: String!
-}
-
-input CreateNorwegianGripenInput {
-  baseFactorString: String
-  factors: [NorwegianGripenFactorInput!]!
-}
-
-input NorwegianGripenFactorInput {
-  factorType: NorwegianGripenFactorType!
-  factorString: String!
-}
-
-enum NorwegianGripenFactorType {
-  AGE
-  CENTRALITY_GROUP
-  ECONOMY_OF_MUNICIPALITY
-  NUMBER_OF_PEOPLE
-  SQUARE_METERS
-  HOUSEHOLD_TYPE
-  DEDUCTIBLE
 }
 
 type ChatMessage {

@@ -8,7 +8,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -69,7 +69,7 @@ export const RelationsTable: React.FC<{ filter: string }> = ({ filter }) => {
         .map((relation) => (
           <TableRow key={relation.id}>
             <NonClickableColumn>
-              {getTextFromEnumValue(relation.claimType)}
+              {convertEnumToTitle(relation.claimType)}
             </NonClickableColumn>
             <NonClickableColumn>{relation.property.name}</NonClickableColumn>
             <NonClickableColumn>

@@ -8,7 +8,6 @@ import {
   Quote,
   useSignQuoteForNewContractMutation,
 } from 'types/generated/graphql'
-import { noopFunction } from 'utils'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
 
 export const QuoteContractCreation: React.FC<{
@@ -19,8 +18,8 @@ export const QuoteContractCreation: React.FC<{
 }> = ({
   quote,
   memberId,
-  onSubmitted = noopFunction,
-  onWipChange = noopFunction,
+  onSubmitted = () => void 0,
+  onWipChange = () => void 0,
 }) => {
   const [activeFrom, setActiveFrom] = React.useState(() => new Date())
   const [signQuote, setSignQuoteMutation] = useSignQuoteForNewContractMutation()

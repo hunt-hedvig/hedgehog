@@ -4,7 +4,7 @@ import {
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import React from 'react'
@@ -34,7 +34,7 @@ export const CreateCampaignCode: React.FC = () => {
     (value) => {
       return {
         value: value as string,
-        label: getTextFromEnumValue(value as string),
+        label: convertEnumToTitle(value as string),
       }
     },
   )

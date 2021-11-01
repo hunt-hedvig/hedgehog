@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Checkbox, RadioGroup } from '@hedvig-ui'
+import * as types from 'features/member/messages/message-types'
 import PropTypes from 'prop-types'
 import React from 'react'
-import * as types from 'utils/messageTypes'
 
 const List = styled.div`
   margin-top: 0.5em;

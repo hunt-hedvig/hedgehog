@@ -8,18 +8,47 @@ import {
   TextArea,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
-import { getTextFromEnumValue } from '@hedvig-ui/utils/text'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { TerminationReason } from 'types/enums'
 import {
   Contract,
   useChangeTerminationDateMutation,
   useRevertTerminationMutation,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
+
+export enum TerminationReason {
+  NoFeedback = 'NO_FEEDBACK',
+  DissatisfiedWithService = 'DISSATISFIED_WITH_SERVICE',
+  DissatisfiedWithApp = 'DISSATISFIED_WITH_APP',
+  DissatisfiedWithHedvig = 'DISSATISFIED_WITH_HEDVIG',
+  DissatisfiedWithOther = 'DISSATISFIED_WITH_OTHER',
+  AlreadyHaveInsurance = 'ALREADY_HAVE_INSURANCE',
+  CoveredByPartnersInsurance = 'COVERED_BY_PARTNERS_INSURANCE',
+  PartnerAlreadyHasHedvigInsurance = 'PARTNER_ALREADY_HAS_HEDVIG_INSURANCE',
+  GotOfferFromJobOrUnionOrSimilar = 'GOT_OFFER_FROM_JOB_OR_UNION_OR_SIMILAR',
+  WantToKeepOldInsurance = 'WANT_TO_KEEP_OLD_INSURANCE',
+  StuckWithOldInsurance = 'STUCK_WITH_OLD_INSURANCE',
+  DontNeedInsurance = 'DONT_NEED_INSURANCE',
+  WantedOtherTypeOfInsurance = 'WANTED_OTHER_TYPE_OF_INSURANCE',
+  RegretByRightToWithraw = 'REGRET_BY_RIGHT_TO_WITHRAW',
+  Moved = 'MOVED',
+  MovedAbroad = 'MOVED_ABROAD',
+  MovedInWithParents = 'MOVED_IN_WITH_PARENTS',
+  Price = 'PRICE',
+  MissedPayments = 'MISSED_PAYMENTS',
+  MissedPaymentsBadRisk = 'MISSED_PAYMENTS_BAD_RISK',
+  PaymentIssues = 'PAYMENT_ISSUES',
+  DiscountPeriodOver = 'DISCOUNT_PERIOD_OVER',
+  ConfirmedFraud = 'CONFIRMED_FRAUD',
+  SuspectedFraud = 'SUSPECTED_FRAUD',
+  SignedByMistake = 'SIGNED_BY_MISTAKE',
+  Other = 'OTHER',
+  Unknown = 'UNKNOWN',
+}
 
 const initialTerminationDate = (contract: Contract): Date =>
   contract.terminationDate ? new Date(contract.terminationDate) : new Date()
@@ -184,7 +213,7 @@ export const TerminationDate: React.FC<{
                 selected={terminationReason === TerminationReason[key]}
                 onClick={() => setTerminationReason(TerminationReason[key])}
               >
-                {getTextFromEnumValue(TerminationReason[key])}
+                {convertEnumToTitle(TerminationReason[key])}
               </DropdownOption>
             ))}
           </Dropdown>

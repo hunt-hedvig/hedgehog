@@ -1,8 +1,8 @@
 import { Checkbox, JsonSchemaForm } from '@hedvig-ui'
+import { ContractType } from 'features/config/constants'
 import { useSchemaForContractType } from 'graphql/use-get-schema-for-contract-type'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { ContractType } from 'types/enums'
 import {
   GetQuotesDocument,
   useCreateQuoteForMemberBySchemaMutation,

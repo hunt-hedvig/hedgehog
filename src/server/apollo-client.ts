@@ -9,7 +9,6 @@ import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { forceLogOut } from 'utils/auth'
 
 const setItemWithExpiry = (key, value, ttl) =>
   localStorage.setItem(
@@ -86,7 +85,7 @@ export const apolloClient = (() => {
         refreshAccessToken().catch((e) => {
           console.error('Failed to refresh access token', e)
           toast.loading('Authentication failed')
-          forceLogOut()
+          window.location.pathname = '/login/logout'
         })
       }),
       addTimezoneOffsetHeader,

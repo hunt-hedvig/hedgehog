@@ -1,6 +1,9 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
 import { GearFill, PeopleFill } from 'react-bootstrap-icons'

@@ -10,17 +10,20 @@ import {
   TablePageSelect,
   TableRow,
 } from '@hedvig-ui'
-import { Keys, useKeyIsPressed } from '@hedvig-ui/utils/key-press-hook'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
+import { getMemberIdColor } from 'features/member/utils'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { useListClaims } from 'graphql/use-list-claims'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
-import { getMemberIdColor } from 'utils/member'
-import { useNumberMemberGroups } from 'utils/number-member-groups-context'
-import { convertEnumToTitle } from 'utils/text'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;

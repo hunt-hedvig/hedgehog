@@ -6,21 +6,62 @@ import {
   TableHeader,
   TableHeaderColumn,
 } from '@hedvig-ui'
-import { format } from 'date-fns'
-import { SwitcherEmailRow } from 'features/tools/switcher-automation/SwitcherTableRow'
+import { sleep } from '@hedvig-ui/utils/sleep'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { format, isPast, parseISO } from 'date-fns'
+import { Market, MarketFlags } from 'features/config/constants'
+import {
+  SwitcherEmailRow,
+  SwitcherEmailStatus,
+} from 'features/tools/switcher-automation/SwitcherTableRow'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { Market, SwitcherEmailStatus, SwitcherTypeMarket } from 'types/enums'
 import {
   Contract,
   Member,
+  SwitchableSwitcherEmail,
   useActivatePendingAgreementMutation,
   useGetSwitcherEmailsQuery,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
-import { sleep } from 'utils/sleep'
-import { getSwitcherEmailStatus } from 'utils/switcher-emails'
-import { convertEnumToTitle, getFlagFromMarket } from 'utils/text'
+
+export enum SwitcherTypes {
+  SwedishHouse = 'SWEDISH_HOUSE',
+  SwedishApartment = 'SWEDISH_APARTMENT',
+  NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
+  NorwegianTravel = 'NORWEGIAN_TRAVEL',
+}
+
+export const SwitcherTypeMarket: Record<SwitcherTypes, Market> = {
+  [SwitcherTypes.SwedishHouse]: Market.Sweden,
+  [SwitcherTypes.SwedishApartment]: Market.Sweden,
+  [SwitcherTypes.NorwegianHomeContent]: Market.Norway,
+  [SwitcherTypes.NorwegianTravel]: Market.Norway,
+}
+
+export const getSwitcherEmailStatus = (
+  switcherEmail: Pick<
+    SwitchableSwitcherEmail,
+    'cancellationDate' | 'note' | 'sentAt' | 'remindedAt'
+  >,
+): SwitcherEmailStatus => {
+  if (
+    switcherEmail.cancellationDate &&
+    isPast(parseISO(switcherEmail.cancellationDate))
+  ) {
+    return SwitcherEmailStatus.PastCancellationDate
+  }
+  if (switcherEmail.note) {
+    return SwitcherEmailStatus.InProgress
+  }
+  if (switcherEmail.remindedAt) {
+    return SwitcherEmailStatus.Reminded
+  }
+  if (switcherEmail.sentAt) {
+    return SwitcherEmailStatus.Sent
+  }
+  return SwitcherEmailStatus.Prepared
+}
 
 const SwitcherAutomationPage: React.FC = () => {
   const switchers = useGetSwitcherEmailsQuery()
@@ -53,9 +94,7 @@ const SwitcherAutomationPage: React.FC = () => {
             return (
               <div key={market}>
                 <Checkbox
-                  label={`${convertEnumToTitle(market)} ${getFlagFromMarket(
-                    market,
-                  )}`}
+                  label={`${convertEnumToTitle(market)} ${MarketFlags[market]}`}
                   checked={selectedMarket === market}
                   onChange={() =>
                     setSelectedMarket((current) =>

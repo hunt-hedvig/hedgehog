@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Button, StandaloneMessage, ThirdLevelHeadline } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/utils/modal-hook'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { isExpired } from 'features/member/tabs/quote-tab/utils'
 import { useQuotes } from 'graphql/use-get-quotes'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -11,7 +12,6 @@ import {
   GetQuotesDocument,
   useCreateQuoteFromAgreementMutation,
 } from 'types/generated/graphql'
-import { isExpired } from 'utils/quote'
 
 const QuoteMessage = styled(StandaloneMessage)`
   font-size: 1.1rem;

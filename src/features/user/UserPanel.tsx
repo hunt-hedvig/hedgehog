@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
-import { useClickOutside } from '@hedvig-ui/utils/click-outside'
+import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import chroma from 'chroma-js'
 import { differenceInMinutes, parseISO } from 'date-fns'

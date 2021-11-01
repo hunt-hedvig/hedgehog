@@ -3,13 +3,13 @@ import {
   MutationTuple,
   OperationVariables,
 } from '@apollo/client'
+import { sleep } from '@hedvig-ui/utils/sleep'
 import { useState } from 'react'
 import {
   Contract,
   GetContractsQueryHookResult,
   useGetContractsQuery,
 } from 'types/generated/graphql'
-import { sleep } from 'utils/sleep'
 
 type DelayedRefetch = () => Promise<void>
 type DelayedRefetchResultTuple = [DelayedRefetch, boolean]

@@ -10,13 +10,13 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useGetMemberClaims } from 'graphql/use-get-member-claims'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
-import { convertEnumToTitle } from 'utils/text'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;

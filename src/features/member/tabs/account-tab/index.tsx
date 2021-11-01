@@ -16,6 +16,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui/utils/money'
 import { AccountEntryTable } from 'features/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'features/member/tabs/account-tab/AddEntryForm'
 import { AddMonthlyEntryForm } from 'features/member/tabs/account-tab/AddMonthlyEntryForm'
@@ -24,7 +25,6 @@ import { MonthlyEntriesTable } from 'features/member/tabs/account-tab/MonthlyEnt
 import { useGetAccount } from 'graphql/use-get-account'
 import React, { useState } from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import { formatMoney } from 'utils/money'
 import { RefreshButton } from '../shared/refresh-button'
 
 const moneyOptions = {

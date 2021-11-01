@@ -9,10 +9,10 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { sleep } from '@hedvig-ui/utils/sleep'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { ClaimFileUpload, useClaimPageQuery } from 'types/generated/graphql'
-import { sleep } from 'utils/sleep'
 import { FileUpload } from '../FileUpload'
 import { FileRow } from './FileRow'
 

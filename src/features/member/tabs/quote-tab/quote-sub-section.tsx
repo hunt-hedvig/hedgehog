@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { Button, Card, CardsWrapper, MainHeadline } from '@hedvig-ui'
+import { ContractType, TypeOfContractType } from 'features/config/constants'
 import { CreateQuoteForm } from 'features/member/tabs/quote-tab/create-quote-form'
+import { isSignedOrExpired } from 'features/member/tabs/quote-tab/utils'
 import { useContracts } from 'graphql/use-contracts'
 import React from 'react'
-import { ContractType, TypeOfContractType } from 'types/enums'
 import { Quote } from 'types/generated/graphql'
-import { isSignedOrExpired } from 'utils/quote'
 import { ActionsWrapper, Muted } from './common'
 import { QuoteListItem } from './quote-list-item'
 

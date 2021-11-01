@@ -1,6 +1,6 @@
+import { formatMoney } from '@hedvig-ui/utils/money'
 import React from 'react'
 import { MonetaryAmountV2 } from 'types/generated/graphql'
-import { formatMoney } from 'utils/money'
 
 export const AddEntryInformation: React.FC<{
   amount: MonetaryAmountV2
