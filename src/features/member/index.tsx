@@ -15,6 +15,7 @@ import {
 import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useEffect } from 'react'
+import { Clipboard } from 'react-bootstrap-icons'
 import { Route, RouteComponentProps, useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
 
@@ -22,6 +23,12 @@ const MemberPageWrapper = styled('div')({
   display: 'flex',
   flexDirection: 'row',
 })
+
+const CopyIcon = styled(Clipboard)`
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+`
 
 const MemberPageContainer = styled('div')`
   display: flex;
@@ -60,6 +67,8 @@ const Flag = styled('div')`
 `
 
 const MemberDetails = styled.div`
+  display: flex;
+  align-items: center;
   color: ${({ theme }) => theme.mutedText};
   padding-bottom: 4rem;
 `
@@ -137,7 +146,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
               {member.phoneNumber}
             </MemberDetailLink>
           )}
-          <Popover contents="Click to copy">
+          <Popover contents="Click to copy Link">
             <MemberDetailLink
               href={`${window.location.protocol}//${window.location.host}${history.location.pathname}`}
               onClick={(e) => {
@@ -153,8 +162,18 @@ export const MemberTabs: React.FC<RouteComponentProps<{
               {memberId}
             </MemberDetailLink>
           </Popover>
+          <Popover contents="Click to copy Id">
+            <CopyIcon
+              onClick={() => {
+                copy(memberId, {
+                  format: 'text/plain',
+                })
+              }}
+            />
+          </Popover>
+
           {member?.pickedLocale && (
-            <MemberDetail>
+            <MemberDetail style={{ paddingLeft: '1rem' }}>
               Language: {PickedLocaleFlag[member.pickedLocale]}
             </MemberDetail>
           )}
