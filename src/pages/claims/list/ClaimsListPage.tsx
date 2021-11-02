@@ -48,6 +48,24 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   )
 
   useEffect(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search)
+      const filterId = params.get('filter')
+      if (filterId) {
+        const templateFilter = JSON.parse(
+          localStorage.getItem('hvg:claims:template-filters') || '',
+        )
+        const filter = templateFilter.filters[filterId]
+
+        if (filter) {
+          delete filter.name
+          setFilters(filter)
+        }
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     const from = (location?.state as { from?: string })?.from
 
     if (from === 'menu') {

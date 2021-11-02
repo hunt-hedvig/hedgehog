@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { gql } from '@apollo/client/core'
+import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
   Badge,
@@ -12,13 +13,18 @@ import {
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useMe } from 'features/user/hooks/use-me'
-import React from 'react'
+import React, { useState } from 'react'
+import { Plus } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
+import { ClaimsFiltersType } from '../claims/list/ClaimsListPage'
+import CreateFilterForm from './CreateFilterForm'
+import FilteredMetric from './FilteredMetric'
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,27 +34,64 @@ const Wrapper = styled.div`
 const MetricsWrapper = styled.div({
   display: 'flex',
 })
-const Metric = styled(Link)`
+
+export const metricStyles = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.accentContrast} !important;
-  background: ${({ theme }) => theme.accent};
+  color: ${theme.accentContrast} !important;
+  background: ${theme.accent};
   padding: 1.5rem;
   border-radius: 0.5rem;
   margin-right: 1rem;
   min-width: 200px;
+
   &:hover,
   &focus {
-    color: ${({ theme }) => theme.accentContrast}!important;
+    color: ${theme.accentContrast}!important;
   }
 `
 
-const MetricNumber = styled.span`
+const Metric = styled(Link)`
+  ${({ theme }) => metricStyles(theme)}
+`
+
+const AddMetric = styled.div`
+  ${({ theme }) => metricStyles(theme)}
+  transition: all 0.3s;
+  background-color: transparent;
+  border: 2px dotted ${({ theme }) => theme.border};
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+
+  & svg {
+    width: 2em;
+    height: 2em;
+    color: ${({ theme }) => theme.border};
+    transition: none;
+  }
+
+  & span {
+    color: ${({ theme }) => theme.accentLight};
+  }
+
+  &:hover,
+  &:focus {
+    border-color: ${({ theme }) => theme.accent};
+
+    & svg,
+    & span {
+      color: ${({ theme }) => theme.accent};
+    }
+  }
+`
+
+export const MetricNumber = styled.span`
   display: block;
   font-size: 2rem;
   padding-bottom: 0.25rem;
 `
-const MetricName = styled.span`
+export const MetricName = styled.span`
   opacity: 0.66;
 `
 
@@ -71,9 +114,23 @@ const GET_DASHBOARD_NUMBERS = gql`
   }
 `
 
+export interface ClaimsFiltersTypeWithName extends ClaimsFiltersType {
+  name?: string
+}
+
+interface TemplateFiltersType {
+  filters: ClaimsFiltersTypeWithName[] | []
+}
+
 const DashboardPage: React.FC = () => {
   const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
     pollInterval: 1000 * 5,
+  })
+  const [createFilter, setCreateFilter] = useState(false)
+  const [templateFilters, setTemplateFilters] = useInsecurePersistentState<
+    TemplateFiltersType
+  >('claims:template-filters', {
+    filters: [],
   })
 
   const { settings, me } = useMe()
@@ -81,6 +138,26 @@ const DashboardPage: React.FC = () => {
   const dashboardNumbers = dashboardData?.dashboardNumbers as
     | DashboardNumbers
     | undefined
+
+  const setTemplateFilterHandler = (_: number, filter: ClaimsFiltersType) => {
+    setTemplateFilters((prev) => ({
+      filters: [...prev.filters, { ...filter }],
+    }))
+  }
+
+  const editTemplateFilterHandler = (id: number, filter: ClaimsFiltersType) => {
+    console.log(id, filter)
+  }
+
+  const removeTemplateFilterHandler = (id: number) => {
+    const newFilters = templateFilters.filters.filter(
+      (_, index) => index !== id,
+    )
+    console.log(newFilters)
+    setTemplateFilters({
+      filters: newFilters,
+    })
+  }
 
   return (
     <Wrapper>
@@ -116,6 +193,21 @@ const DashboardPage: React.FC = () => {
                 <MetricName>questions</MetricName>
               </Metric>
             )}
+
+            {templateFilters.filters.map((filter, index) => (
+              <FilteredMetric
+                removeFilter={removeTemplateFilterHandler}
+                key={index + templateFilters.filters.length}
+                id={index}
+                filter={filter}
+                editFilterHandler={editTemplateFilterHandler}
+              />
+            ))}
+
+            <AddMetric tabIndex={0} onClick={() => setCreateFilter(true)}>
+              <Plus />
+              <MetricName>Add Filtered Claims</MetricName>
+            </AddMetric>
           </MetricsWrapper>
         </FadeIn>
       )}
@@ -163,6 +255,13 @@ const DashboardPage: React.FC = () => {
           })}
         </ChangeLogWrapper>
       </Spacing>
+      {createFilter && (
+        <CreateFilterForm
+          close={() => setCreateFilter(false)}
+          createFilter={setTemplateFilterHandler}
+          id={templateFilters.filters.length}
+        />
+      )}
     </Wrapper>
   )
 }

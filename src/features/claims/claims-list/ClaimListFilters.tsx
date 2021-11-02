@@ -107,8 +107,8 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   }
 
   return (
-    <FilterWrapper>
-      <FilterElement>
+    <FilterWrapper className="claims__filter-wrapper">
+      <FilterElement className="claims__filter-item">
         <Label>States</Label>
         {Object.keys(ClaimState).map((key) => (
           <Flex key={key} direction="row" align="center">
@@ -132,7 +132,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement>
+      <FilterElement className="claims__filter-item">
         <Label>Complexities</Label>
         {Object.keys(ClaimComplexity).map((key) => (
           <Flex key={key} direction="row" align="center">
@@ -151,14 +151,14 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement>
+      <FilterElement className="claims__filter-item">
         <Label>Number of member groups</Label>
         <div style={{ display: 'flex' }}>
           <NumberMemberGroupsRadioButtons />
         </div>
       </FilterElement>
 
-      <FilterElement>
+      <FilterElement className="claims__filter-item">
         <Label>Groups</Label>
         {range(numberMemberGroups).map((filterNumber) => (
           <Flex key={filterNumber} direction="row" align="center">
@@ -180,7 +180,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement>
+      <FilterElement className="claims__filter-item">
         <Label>Markets</Label>
         {Object.keys(Market).map((key) => (
           <Flex key={key} direction="row" align="center">
@@ -196,7 +196,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement>
+      <FilterElement className="claims__filter-item">
         <Label>Date up until</Label>
         <TextDatePicker
           value={

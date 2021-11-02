@@ -17,7 +17,7 @@ import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useMe } from 'features/user/hooks/use-me'
-import { getLowercaseNameFromEmail } from 'pages/DashboardPage'
+import { getLowercaseNameFromEmail } from 'pages/dashboard/DashboardPage'
 import React from 'react'
 import { useHistory } from 'react-router'
 
