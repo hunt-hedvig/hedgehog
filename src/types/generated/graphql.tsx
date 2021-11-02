@@ -772,6 +772,7 @@ export type MutationType = {
   updateUser: User
   upsertUserSettings: Array<UserSetting>
   restrictClaimAccess: UserClaimAccess
+  releaseClaimAccess: Scalars['Boolean']
   grantClaimAccess: UserClaimAccess
 }
 
@@ -1107,6 +1108,10 @@ export type MutationTypeUpsertUserSettingsArgs = {
 }
 
 export type MutationTypeRestrictClaimAccessArgs = {
+  claimId: Scalars['ID']
+}
+
+export type MutationTypeReleaseClaimAccessArgs = {
   claimId: Scalars['ID']
 }
 
@@ -2096,6 +2101,15 @@ export type MarkClaimFileAsDeletedMutationVariables = Exact<{
 export type MarkClaimFileAsDeletedMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'markClaimFileAsDeleted'>
+
+export type ReleaseClaimAccessMutationVariables = Exact<{
+  claimId: Scalars['ID']
+}>
+
+export type ReleaseClaimAccessMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'releaseClaimAccess'
+>
 
 export type SetClaimFileCategoryMutationVariables = Exact<{
   claimId: Scalars['ID']
@@ -4848,6 +4862,55 @@ export type MarkClaimFileAsDeletedMutationResult = ApolloReactCommon.MutationRes
 export type MarkClaimFileAsDeletedMutationOptions = ApolloReactCommon.BaseMutationOptions<
   MarkClaimFileAsDeletedMutation,
   MarkClaimFileAsDeletedMutationVariables
+>
+export const ReleaseClaimAccessDocument = gql`
+  mutation ReleaseClaimAccess($claimId: ID!) {
+    releaseClaimAccess(claimId: $claimId)
+  }
+`
+export type ReleaseClaimAccessMutationFn = ApolloReactCommon.MutationFunction<
+  ReleaseClaimAccessMutation,
+  ReleaseClaimAccessMutationVariables
+>
+
+/**
+ * __useReleaseClaimAccessMutation__
+ *
+ * To run a mutation, you first call `useReleaseClaimAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReleaseClaimAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [releaseClaimAccessMutation, { data, loading, error }] = useReleaseClaimAccessMutation({
+ *   variables: {
+ *      claimId: // value for 'claimId'
+ *   },
+ * });
+ */
+export function useReleaseClaimAccessMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ReleaseClaimAccessMutation,
+    ReleaseClaimAccessMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    ReleaseClaimAccessMutation,
+    ReleaseClaimAccessMutationVariables
+  >(ReleaseClaimAccessDocument, options)
+}
+export type ReleaseClaimAccessMutationHookResult = ReturnType<
+  typeof useReleaseClaimAccessMutation
+>
+export type ReleaseClaimAccessMutationResult = ApolloReactCommon.MutationResult<
+  ReleaseClaimAccessMutation
+>
+export type ReleaseClaimAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ReleaseClaimAccessMutation,
+  ReleaseClaimAccessMutationVariables
 >
 export const SetClaimFileCategoryDocument = gql`
   mutation SetClaimFileCategory(

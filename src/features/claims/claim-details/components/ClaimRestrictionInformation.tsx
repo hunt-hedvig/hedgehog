@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Flex, Modal, Shadowed, Tabs } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import chroma from 'chroma-js'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
@@ -11,6 +12,7 @@ import {
   ClaimRestriction,
   useGrantClaimAccessMutation,
   User,
+  useReleaseClaimAccessMutation,
   useUsersQuery,
 } from 'types/generated/graphql'
 
@@ -203,6 +205,39 @@ export const ClaimRestrictionInformation: React.FC<{
   claimId: string
 }> = ({ restriction, claimId }) => {
   const [showModal, setShowModal] = useState(false)
+  const { confirm } = useConfirmDialog()
+  const [releaseClaimAccess] = useReleaseClaimAccessMutation()
+
+  const handleReleaseAccess = () => {
+    toast.promise(
+      releaseClaimAccess({
+        variables: { claimId },
+        update: (cache) => {
+          const cachedData = cache.readQuery({
+            query: ClaimPageDocument,
+            variables: {
+              claimId,
+            },
+          }) as ClaimPageQuery
+
+          cache.writeQuery({
+            query: ClaimPageDocument,
+            data: {
+              claim: {
+                ...cachedData.claim,
+                restriction: null,
+              },
+            },
+          })
+        },
+      }),
+      {
+        loading: 'Removing restriction',
+        success: 'Restriction removed',
+        error: 'Could not remove restriction',
+      },
+    )
+  }
 
   return (
     <>
@@ -235,7 +270,22 @@ export const ClaimRestrictionInformation: React.FC<{
             </div>
           </Flex>
           <div>
-            <Button onClick={() => setShowModal(true)}>Show users</Button>
+            <Button variant="secondary" onClick={() => setShowModal(true)}>
+              Manage access
+            </Button>
+            <Button
+              variant="tertiary"
+              onClick={() => {
+                confirm(
+                  'Are you sure you want to remove the restriction? Everybody will be able to see this claim',
+                ).then(() => {
+                  handleReleaseAccess()
+                })
+              }}
+              style={{ marginLeft: '1em' }}
+            >
+              Remove restriction
+            </Button>
           </div>
         </Flex>
       </Flex>

@@ -204,6 +204,7 @@ type MutationType {
   upsertUserSettings(settings: [UpsertUserSettingInput!]!): [UserSetting!]!
 
   restrictClaimAccess(claimId: ID!): UserClaimAccess!
+  releaseClaimAccess(claimId: ID!): Boolean!
   grantClaimAccess(claimId: ID!, email: String!): UserClaimAccess!
 }
 
@@ -535,7 +536,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
