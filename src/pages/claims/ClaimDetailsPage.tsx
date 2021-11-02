@@ -4,6 +4,7 @@ import {
   Card,
   CardsWrapper,
   FadeIn,
+  Flex,
   HotkeyStyled,
   LoadingMessage,
   MainHeadline,
@@ -26,8 +27,13 @@ import { ChatPane } from 'features/member/tabs/ChatPane'
 import { getCarrierText } from 'features/member/tabs/contracts-tab/utils'
 import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import React, { useEffect, useState } from 'react'
+import { ShieldLockFill } from 'react-bootstrap-icons'
 import { Prompt, RouteComponentProps } from 'react-router'
-import { ClaimState, useClaimPageQuery } from 'types/generated/graphql'
+import {
+  ClaimState,
+  useClaimPageQuery,
+  useUserThatRestrictedClaimQuery,
+} from 'types/generated/graphql'
 
 const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
@@ -95,6 +101,32 @@ const FOCUSES: { [section: string]: Focus } = {
   },
 }
 
+const RestrictedClaimMessage: React.FC<{ claimId: string }> = ({ claimId }) => {
+  const { data } = useUserThatRestrictedClaimQuery({
+    variables: { claimId },
+  })
+
+  if (!data) {
+    return null
+  }
+
+  const user = data.userThatRestrictedClaim
+
+  return (
+    <StandaloneMessage opacity={0.5}>
+      <Flex align="center" justify="center" direction="column">
+        <div style={{ fontSize: '2em' }}>
+          <ShieldLockFill />
+        </div>
+        <div>This claim is restricted</div>
+        <div style={{ fontSize: '0.7em' }}>
+          Contact <Shadowed>{user.fullName}</Shadowed> if you want access
+        </div>
+      </Flex>
+    </StandaloneMessage>
+  )
+}
+
 const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
 }>> = ({ match }) => {
@@ -114,7 +146,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
     })),
   )
 
-  const { data: claimPageData } = useClaimPageQuery({
+  const { data: claimPageData, error } = useClaimPageQuery({
     variables: { claimId },
   })
 
@@ -127,6 +159,14 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
 
     pushToMemberHistory(memberId)
   }, [memberId])
+
+  if (error) {
+    if (error.message.includes('Claim is restricted')) {
+      return <RestrictedClaimMessage claimId={claimId} />
+    }
+
+    return <StandaloneMessage>Claim not found</StandaloneMessage>
+  }
 
   if (!memberId) {
     return <LoadingMessage paddingTop="25vh" />

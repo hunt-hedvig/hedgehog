@@ -1,0 +1,8 @@
+query UserThatRestrictedClaim($claimId: ID!) {
+  userThatRestrictedClaim(claimId: $claimId) {
+    id
+    email
+    fullName
+  }
+}
+
