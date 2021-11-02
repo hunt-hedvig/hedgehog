@@ -96,7 +96,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
 
   useEffect(() => {
     pushToMemberHistory(memberId)
-    navigateToTab('contracts')
+    navigateToTab(path || 'contracts')
   }, [])
 
   const { numberMemberGroups } = useNumberMemberGroups()
