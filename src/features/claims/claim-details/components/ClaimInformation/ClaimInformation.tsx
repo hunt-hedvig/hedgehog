@@ -1,10 +1,13 @@
 import styled from '@emotion/styled'
 import {
+  ClaimPageDocument,
+  ClaimPageQuery,
   ClaimState,
   Contract,
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
+  useRestrictClaimAccessMutation,
   useSetClaimDateMutation,
   useSetContractForClaimMutation,
   useSetCoveringEmployeeMutation,
@@ -12,6 +15,7 @@ import {
 } from 'types/generated/graphql'
 
 import {
+  Button,
   CardContent,
   CardsWrapper,
   CardTitle,
@@ -110,10 +114,12 @@ export const ClaimInformation: React.FC<{
   claimId: string
   memberId: string
   focus: boolean
-}> = ({ claimId, memberId, focus }) => {
+  restricted: boolean
+}> = ({ claimId, memberId, focus, restricted }) => {
   const [creatingCoInsured, setCreatingCoInsured] = useState(false)
   const { confirm } = useConfirmDialog()
   const deleteCoInsured = useDeleteCoInsured({ claimId })
+  const [restrictClaimAccess] = useRestrictClaimAccessMutation()
   const {
     data,
     error: queryError,
@@ -183,6 +189,44 @@ export const ClaimInformation: React.FC<{
         },
       },
     })
+  }
+
+  const handleRestrictAccess = () => {
+    toast.promise(
+      restrictClaimAccess({
+        variables: { claimId },
+        update: (cache, { data: response }) => {
+          if (!response?.restrictClaimAccess) {
+            return
+          }
+
+          const cachedData = cache.readQuery({
+            query: ClaimPageDocument,
+            variables: {
+              claimId,
+            },
+          }) as ClaimPageQuery
+
+          cache.writeQuery({
+            query: ClaimPageDocument,
+            data: {
+              claim: {
+                ...cachedData.claim,
+                restriction: {
+                  restrictedBy: response.restrictClaimAccess.grantedBy,
+                  grantedAccess: [response.restrictClaimAccess.grantedBy],
+                },
+              },
+            },
+          })
+        },
+      }),
+      {
+        loading: 'Restricting access',
+        success: 'Access restricted',
+        error: 'Could not restrict access',
+      },
+    )
   }
 
   const coverEmployeeOptions = [
@@ -363,6 +407,21 @@ export const ClaimInformation: React.FC<{
               the MX tech team.
             </DangerCard>
           </CardsWrapper>
+        )}
+        {!restricted && (
+          <SelectWrapper>
+            <Button
+              variant="tertiary"
+              style={{ width: '100%' }}
+              onClick={() =>
+                confirm('Are you sure you want to restrict access?').then(() =>
+                  handleRestrictAccess(),
+                )
+              }
+            >
+              Restrict claim access
+            </Button>
+          </SelectWrapper>
         )}
       </Loadable>
     </CardContent>

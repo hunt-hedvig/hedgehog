@@ -1,0 +1,18 @@
+mutation RestrictClaimAccess($claimId: ID!) {
+  restrictClaimAccess(claimId: $claimId) {
+    id
+    claim {
+      id
+    }
+    grantedBy {
+      id
+      email
+      fullName
+    }
+    grantedTo {
+      id
+      email
+      fullName
+    }
+  }
+}

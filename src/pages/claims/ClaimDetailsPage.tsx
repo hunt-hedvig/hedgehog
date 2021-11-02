@@ -210,6 +210,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
                 focus={focus === 'claimInfo'}
                 claimId={claimId}
                 memberId={memberId}
+                restricted={!!claimPageData?.claim?.restriction}
               />
             </Card>
             <Card span={3}>
