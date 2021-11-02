@@ -72,6 +72,15 @@ export const ClaimPayment: React.FC<{
 
   const form = useForm()
 
+  const clearFormHandler = () => {
+    form.setValue('amount', '')
+    form.setValue('deductible', '')
+    form.setValue('note', '')
+    setIsExGratia(false)
+    form.setValue('type', 'Automatic')
+    form.reset()
+  }
+
   const isPotentiallySanctioned =
     sanctionStatus === SanctionStatus.Undetermined ||
     sanctionStatus === SanctionStatus.PartialHit
@@ -245,7 +254,7 @@ export const ClaimPayment: React.FC<{
           <PaymentConfirmationModal
             onClose={() => {
               setIsConfirming(false)
-              form.reset()
+              clearFormHandler()
             }}
             onSubmit={createPaymentHandler}
             amount={form.getValues().amount}
