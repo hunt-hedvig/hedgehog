@@ -187,6 +187,7 @@ export type Claim = {
   agreement?: Maybe<GenericAgreement>
   propertySelections: Array<ClaimPropertySelection>
   coInsured?: Maybe<CoInsured>
+  restriction?: Maybe<ClaimRestriction>
 }
 
 export enum ClaimComplexity {
@@ -283,6 +284,12 @@ export type ClaimPropertyTemplate = {
   propertyId: Scalars['ID']
   name: Scalars['String']
   options: Array<ClaimPropertyOption>
+}
+
+export type ClaimRestriction = {
+  __typename?: 'ClaimRestriction'
+  restrictedBy: User
+  grantedAccess: Array<User>
 }
 
 export enum ClaimSource {
@@ -1808,6 +1815,17 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'outcome'
       | 'reserves'
     > & {
+        restriction?: Maybe<
+          { __typename?: 'ClaimRestriction' } & {
+            restrictedBy: { __typename?: 'User' } & Pick<
+              User,
+              'id' | 'email' | 'fullName'
+            >
+            grantedAccess: Array<
+              { __typename?: 'User' } & Pick<User, 'id' | 'email' | 'fullName'>
+            >
+          }
+        >
         propertySelections: Array<
           { __typename?: 'ClaimPropertySelection' } & Pick<
             ClaimPropertySelection,
@@ -2046,6 +2064,28 @@ export type CreateSwishClaimPaymentMutation = {
         >
       }
   >
+}
+
+export type GrantClaimAccessMutationVariables = Exact<{
+  claimId: Scalars['ID']
+  email: Scalars['String']
+}>
+
+export type GrantClaimAccessMutation = { __typename?: 'MutationType' } & {
+  grantClaimAccess: { __typename?: 'UserClaimAccess' } & Pick<
+    UserClaimAccess,
+    'id'
+  > & {
+      claim: { __typename?: 'Claim' } & Pick<Claim, 'id'>
+      grantedBy: { __typename?: 'User' } & Pick<
+        User,
+        'id' | 'email' | 'fullName'
+      >
+      grantedTo: { __typename?: 'User' } & Pick<
+        User,
+        'id' | 'email' | 'fullName'
+      >
+    }
 }
 
 export type MarkClaimFileAsDeletedMutationVariables = Exact<{
@@ -4206,6 +4246,18 @@ export const ClaimPageDocument = gql`
       claimType
       dateOfOccurrence
       outcome
+      restriction {
+        restrictedBy {
+          id
+          email
+          fullName
+        }
+        grantedAccess {
+          id
+          email
+          fullName
+        }
+      }
       propertySelections {
         claimType
         property {
@@ -4681,6 +4733,71 @@ export type CreateSwishClaimPaymentMutationResult = ApolloReactCommon.MutationRe
 export type CreateSwishClaimPaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateSwishClaimPaymentMutation,
   CreateSwishClaimPaymentMutationVariables
+>
+export const GrantClaimAccessDocument = gql`
+  mutation GrantClaimAccess($claimId: ID!, $email: String!) {
+    grantClaimAccess(claimId: $claimId, email: $email) {
+      id
+      claim {
+        id
+      }
+      grantedBy {
+        id
+        email
+        fullName
+      }
+      grantedTo {
+        id
+        email
+        fullName
+      }
+    }
+  }
+`
+export type GrantClaimAccessMutationFn = ApolloReactCommon.MutationFunction<
+  GrantClaimAccessMutation,
+  GrantClaimAccessMutationVariables
+>
+
+/**
+ * __useGrantClaimAccessMutation__
+ *
+ * To run a mutation, you first call `useGrantClaimAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGrantClaimAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [grantClaimAccessMutation, { data, loading, error }] = useGrantClaimAccessMutation({
+ *   variables: {
+ *      claimId: // value for 'claimId'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useGrantClaimAccessMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    GrantClaimAccessMutation,
+    GrantClaimAccessMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    GrantClaimAccessMutation,
+    GrantClaimAccessMutationVariables
+  >(GrantClaimAccessDocument, options)
+}
+export type GrantClaimAccessMutationHookResult = ReturnType<
+  typeof useGrantClaimAccessMutation
+>
+export type GrantClaimAccessMutationResult = ApolloReactCommon.MutationResult<
+  GrantClaimAccessMutation
+>
+export type GrantClaimAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  GrantClaimAccessMutation,
+  GrantClaimAccessMutationVariables
 >
 export const MarkClaimFileAsDeletedDocument = gql`
   mutation MarkClaimFileAsDeleted($claimId: ID!, $claimFileId: ID!) {

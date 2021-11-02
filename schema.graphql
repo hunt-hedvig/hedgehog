@@ -898,6 +898,12 @@ type Claim {
   agreement: GenericAgreement
   propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured
+  restriction: ClaimRestriction
+}
+
+type ClaimRestriction {
+  restrictedBy: User!
+  grantedAccess: [User!]!
 }
 
 type CoInsured {

@@ -19,6 +19,7 @@ import { ClaimInformation } from 'features/claims/claim-details/components/Claim
 import { ClaimNotes } from 'features/claims/claim-details/components/ClaimNotes'
 import { ClaimPayments } from 'features/claims/claim-details/components/ClaimPayments/ClaimPayments'
 import { ClaimReserve } from 'features/claims/claim-details/components/ClaimReserve'
+import { ClaimRestrictionInformation } from 'features/claims/claim-details/components/ClaimRestrictionInformation'
 import { ClaimTranscriptions } from 'features/claims/claim-details/components/ClaimTranscriptions'
 import { ClaimType } from 'features/claims/claim-details/components/ClaimType/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
@@ -185,6 +186,16 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
       <ChatPane memberId={memberId} />
       <FadeIn>
         <ChatPaneAdjustedContainer>
+          {claimPageData?.claim?.restriction && (
+            <CardsWrapper>
+              <Card>
+                <ClaimRestrictionInformation
+                  restriction={claimPageData.claim.restriction}
+                  claimId={claimId}
+                />
+              </Card>
+            </CardsWrapper>
+          )}
           <CardsWrapper contentWrap="noWrap">
             <Card span={3}>
               <MemberInformation claimId={claimId} memberId={memberId} />

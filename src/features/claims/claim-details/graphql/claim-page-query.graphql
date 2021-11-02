@@ -8,6 +8,18 @@ query ClaimPage($claimId: ID!) {
     claimType
     dateOfOccurrence
     outcome
+    restriction {
+      restrictedBy {
+        id
+        email
+        fullName
+      }
+      grantedAccess {
+        id
+        email
+        fullName
+      }
+    }
     propertySelections {
       claimType
       property {
