@@ -3,6 +3,7 @@ import {
   LoadingMessage,
   StandaloneMessage,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -32,17 +33,19 @@ const MemberFileTable: React.FC<{
       <TableHeaderColumn>Time Stamp</TableHeaderColumn>
       <TableHeaderColumn>File Type</TableHeaderColumn>
     </TableHeader>
-    {[...memberFiles].sort(sortFileDate).map((memberFile) => (
-      <TableRow border key={memberFile.fileUploadUrl}>
-        <TableColumn>
-          <Image src={memberFile.fileUploadUrl} />
-        </TableColumn>
-        <TableColumn>
-          {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
-        </TableColumn>
-        <TableColumn>{memberFile.mimeType}</TableColumn>
-      </TableRow>
-    ))}
+    <TableBody>
+      {[...memberFiles].sort(sortFileDate).map((memberFile) => (
+        <TableRow border key={memberFile.fileUploadUrl}>
+          <TableColumn>
+            <Image src={memberFile.fileUploadUrl} />
+          </TableColumn>
+          <TableColumn>
+            {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
+          </TableColumn>
+          <TableColumn>{memberFile.mimeType}</TableColumn>
+        </TableRow>
+      ))}
+    </TableBody>
   </Table>
 )
 

@@ -56,7 +56,7 @@ export const AccountTab: React.FC<{
     <FadeIn>
       <MainHeadline>
         Account
-        <RefreshButton onClick={() => refetch()} loading={loading}>
+        <RefreshButton onClick={() => refetch()} isloading={loading}>
           <ArrowRepeat />
         </RefreshButton>
       </MainHeadline>

@@ -233,6 +233,10 @@ export const Button = styled(
   ${border};
   ${padding};
   ${fontSize};
+
+  &:focus {
+    opacity: 0.8;
+  }
 `
 
 export const ButtonsGroup = styled.div`

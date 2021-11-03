@@ -49,10 +49,6 @@ export const ExtraInstruction = styled('div')({
   animationDelay: '1000ms',
 })
 
-export const ListWrapper = styled('div')({
-  paddingLeft: '1rem',
-})
-
 export const Group = styled('div')<{ pushLeft?: boolean }>(({ pushLeft }) => ({
   paddingBottom: '1rem',
   paddingLeft: pushLeft ? '1rem' : 0,
@@ -73,9 +69,9 @@ export const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
   }),
 )
 
-export const EscapeButton = styled(Button)<{ visible: boolean }>(
+export const EscapeButton = styled(Button)<{ visible: number }>(
   ({ visible }) => ({
-    opacity: visible ? 1 : 0,
+    opacity: visible,
     transition: 'opacity 300ms',
     marginLeft: '4rem',
   }),

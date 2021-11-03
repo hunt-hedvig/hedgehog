@@ -1,5 +1,6 @@
 import {
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -23,15 +24,17 @@ export const TypesTable: React.FC<{ filter: string }> = ({ filter }) => {
         <TableHeaderColumn>Name</TableHeaderColumn>
       </TableHeader>
 
-      {claimTypes
-        .filter((type) =>
-          filter ? type.toLowerCase().includes(filter.toLowerCase()) : true,
-        )
-        .map((type) => (
-          <TableRow key={type}>
-            <TableColumn>{convertEnumToTitle(type)}</TableColumn>
-          </TableRow>
-        ))}
+      <TableBody>
+        {claimTypes
+          .filter((type) =>
+            filter ? type.toLowerCase().includes(filter.toLowerCase()) : true,
+          )
+          .map((type) => (
+            <TableRow key={type}>
+              <TableColumn>{convertEnumToTitle(type)}</TableColumn>
+            </TableRow>
+          ))}
+      </TableBody>
     </Table>
   )
 }
