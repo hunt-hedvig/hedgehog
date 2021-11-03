@@ -40,6 +40,7 @@ const TextareaAutosizeStyled = styled(TextareaAutosize)<{
 export interface TextAreaProps
   extends React.HTMLAttributes<HTMLTextAreaElement> {
   value?: string
+  name?: string
   maxHeight?: string
   resize?: boolean
   focus?: boolean
@@ -56,9 +57,11 @@ export const TextArea: React.FC<TextAreaProps> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
-    if (focus && textareaRef.current) {
-      textareaRef.current.focus()
-    }
+    setTimeout(() => {
+      if (focus && textareaRef.current) {
+        textareaRef.current.focus()
+      }
+    }, 0)
   }, [focus])
 
   return autoResize ? (
@@ -72,6 +75,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
       resize={props.resize}
       onFocus={props.onFocus}
       onBlur={props.onBlur}
+      name={props.name}
     />
   ) : (
     <TextAreaStyled
