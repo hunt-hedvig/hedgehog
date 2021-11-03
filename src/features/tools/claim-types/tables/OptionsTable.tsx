@@ -2,6 +2,7 @@ import {
   Button,
   Flex,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -114,47 +115,49 @@ export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
         <TableHeaderColumn>Name</TableHeaderColumn>
       </TableHeader>
 
-      {claimPropertyOptions
-        .filter((type) =>
-          filter
-            ? type.name.toLowerCase().includes(filter.toLowerCase())
-            : true,
-        )
-        .map((option) => (
-          <TableRow
-            key={option.id}
-            onClick={() => option.id !== editing && setEditing(option.id)}
-          >
-            <TableColumn>
-              {editing === option.id ? (
-                <Flex align="center">
-                  <UpdateNameInput
-                    initial={convertCamelcaseToTitle(option.name)}
-                    disabled={updateLoading || deprecateLoading}
-                    onSubmit={(value) => handleUpdateOption(value, option)}
-                  />
-                  <Button
-                    onClick={() => handleDeprecateOption(option)}
-                    status="danger"
-                    style={{ marginLeft: '1em' }}
-                    disabled={deprecateLoading}
-                  >
-                    Deprecate
-                  </Button>
-                  <Button
-                    onClick={() => setEditing(null)}
-                    variant="tertiary"
-                    style={{ marginLeft: '1em' }}
-                  >
-                    Cancel
-                  </Button>
-                </Flex>
-              ) : (
-                convertCamelcaseToTitle(option.name)
-              )}
-            </TableColumn>
-          </TableRow>
-        ))}
+      <TableBody>
+        {claimPropertyOptions
+          .filter((type) =>
+            filter
+              ? type.name.toLowerCase().includes(filter.toLowerCase())
+              : true,
+          )
+          .map((option) => (
+            <TableRow
+              key={option.id}
+              onClick={() => option.id !== editing && setEditing(option.id)}
+            >
+              <TableColumn>
+                {editing === option.id ? (
+                  <Flex align="center">
+                    <UpdateNameInput
+                      initial={convertCamelcaseToTitle(option.name)}
+                      disabled={updateLoading || deprecateLoading}
+                      onSubmit={(value) => handleUpdateOption(value, option)}
+                    />
+                    <Button
+                      onClick={() => handleDeprecateOption(option)}
+                      status="danger"
+                      style={{ marginLeft: '1em' }}
+                      disabled={deprecateLoading}
+                    >
+                      Deprecate
+                    </Button>
+                    <Button
+                      onClick={() => setEditing(null)}
+                      variant="tertiary"
+                      style={{ marginLeft: '1em' }}
+                    >
+                      Cancel
+                    </Button>
+                  </Flex>
+                ) : (
+                  convertCamelcaseToTitle(option.name)
+                )}
+              </TableColumn>
+            </TableRow>
+          ))}
+      </TableBody>
     </Table>
   )
 }

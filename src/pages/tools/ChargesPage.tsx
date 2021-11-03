@@ -5,6 +5,7 @@ import {
   LoadingMessage,
   MainHeadline,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -149,31 +150,33 @@ const ChargesPage: React.FC = () => {
           <TableHeaderColumn>Member Premium</TableHeaderColumn>
           <TableHeaderColumn>Charge Amount</TableHeaderColumn>
         </TableHeader>
-        <Row
-          paymentSchedule={data.paymentSchedule!.map((schedule) => {
-            if (!schedule) {
-              throw Error('Schedule not present when it should')
-            }
-            return {
-              id: schedule!.id!,
-              member: {
-                memberId: schedule.member?.memberId!,
-                firstName: schedule.member?.firstName!,
-                lastName: schedule.member?.lastName!,
-                monthlySubscription: {
-                  amount: schedule.member?.monthlySubscription
-                    ?.amount! as MonetaryAmountV2,
+        <TableBody>
+          <Row
+            paymentSchedule={data.paymentSchedule!.map((schedule) => {
+              if (!schedule) {
+                throw Error('Schedule not present when it should')
+              }
+              return {
+                id: schedule!.id!,
+                member: {
+                  memberId: schedule.member?.memberId!,
+                  firstName: schedule.member?.firstName!,
+                  lastName: schedule.member?.lastName!,
+                  monthlySubscription: {
+                    amount: schedule.member?.monthlySubscription
+                      ?.amount! as MonetaryAmountV2,
+                  },
+                  account: {
+                    currentBalance: schedule.member?.account!
+                      ?.currentBalance! as MonetaryAmountV2,
+                  },
                 },
-                account: {
-                  currentBalance: schedule.member?.account!
-                    ?.currentBalance! as MonetaryAmountV2,
-                },
-              },
-              status: schedule.status,
-              amount: schedule.amount! as MonetaryAmountV2,
-            }
-          })}
-        />
+                status: schedule.status,
+                amount: schedule.amount! as MonetaryAmountV2,
+              }
+            })}
+          />
+        </TableBody>
       </Table>
       <ButtonWrapper>
         <Mutation

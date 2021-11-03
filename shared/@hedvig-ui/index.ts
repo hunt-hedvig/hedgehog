@@ -25,6 +25,7 @@ export {
   TableHeaderColumn,
   TablePageSelect,
   TableRow,
+  TableBody,
 } from './Table/table'
 
 export type ButtonProps = _ButtonProps

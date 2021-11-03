@@ -6,6 +6,7 @@ import {
   SearchableDropdown,
   StandaloneMessage,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -76,7 +77,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
             Code Type
           </HeaderCenteredCell>
         </TableHeader>
-        <>
+        <TableBody>
           {partnerCampaigns.map((campaign) => {
             const {
               id,
@@ -135,7 +136,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
               </TableRow>
             )
           })}
-        </>
+        </TableBody>
       </Table>
     </Card>
   )

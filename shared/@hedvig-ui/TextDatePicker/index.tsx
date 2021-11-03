@@ -142,10 +142,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       <Input
         error={error}
         icon={
-          <CalendarIcon
-            focus={showOldDatepicker}
-            onClick={() => setShowOldDatepicker((prev) => !prev)}
-          />
+          <CalendarIcon onClick={() => setShowOldDatepicker((prev) => !prev)} />
         }
         onBlur={() => {
           setDateHandler()

@@ -16,6 +16,7 @@ import {
   Spacing,
   StandaloneMessage,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -236,44 +237,46 @@ export const ClaimPayments: React.FC<{
                 <TableHeaderColumn>Type</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableHeader>
-              {payments.sort(sortHandler).map((payment) => (
-                <TableRow
-                  key={payment.id}
-                  onClick={() => {
-                    copy(payment.id!, {
-                      format: 'text/plain',
-                    })
-                    toast.success('Copied payment ID')
-                  }}
-                >
-                  <TableColumn>
-                    <Monetary amount={payment.amount} />
-                  </TableColumn>
-                  <TableColumn>
-                    <Monetary amount={payment.deductible} />
-                  </TableColumn>
-                  <TableColumn>
-                    <FlexVertically>
-                      {format(parseISO(payment.timestamp), 'yyyy-MM-dd')}
-                      <TableColumnSubtext>
-                        {format(parseISO(payment.timestamp), 'HH:mm:ss')}
-                      </TableColumnSubtext>
-                    </FlexVertically>
-                  </TableColumn>
-                  <TableColumn>
-                    {payment.exGratia ? (
-                      <ExGratiaTag status="success">Yes</ExGratiaTag>
-                    ) : (
-                      <ExGratiaTag status="danger">No</ExGratiaTag>
-                    )}
-                  </TableColumn>
-                  <TableColumn>{payment.note}</TableColumn>
-                  <TableColumn>{payment.type}</TableColumn>
-                  <TableColumn>
-                    <Capitalized>{payment.status}</Capitalized>
-                  </TableColumn>
-                </TableRow>
-              ))}
+              <TableBody>
+                {payments.sort(sortHandler).map((payment) => (
+                  <TableRow
+                    key={payment.id}
+                    onClick={() => {
+                      copy(payment.id!, {
+                        format: 'text/plain',
+                      })
+                      toast.success('Copied payment ID')
+                    }}
+                  >
+                    <TableColumn>
+                      <Monetary amount={payment.amount} />
+                    </TableColumn>
+                    <TableColumn>
+                      <Monetary amount={payment.deductible} />
+                    </TableColumn>
+                    <TableColumn>
+                      <FlexVertically>
+                        {format(parseISO(payment.timestamp), 'yyyy-MM-dd')}
+                        <TableColumnSubtext>
+                          {format(parseISO(payment.timestamp), 'HH:mm:ss')}
+                        </TableColumnSubtext>
+                      </FlexVertically>
+                    </TableColumn>
+                    <TableColumn>
+                      {payment.exGratia ? (
+                        <ExGratiaTag status="success">Yes</ExGratiaTag>
+                      ) : (
+                        <ExGratiaTag status="danger">No</ExGratiaTag>
+                      )}
+                    </TableColumn>
+                    <TableColumn>{payment.note}</TableColumn>
+                    <TableColumn>{payment.type}</TableColumn>
+                    <TableColumn>
+                      <Capitalized>{payment.status}</Capitalized>
+                    </TableColumn>
+                  </TableRow>
+                ))}
+              </TableBody>
             </Table>
           </ScrollX>
           <PaymentTableFooter>

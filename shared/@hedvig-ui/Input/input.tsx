@@ -34,7 +34,7 @@ const InputStyled = styled.input<{
   error?: boolean
   disabled?: boolean
   muted?: boolean
-  loading?: boolean
+  isLoading?: boolean
   inputSize?: InputSize
   withIcon?: boolean
 }>`
@@ -70,8 +70,8 @@ const InputStyled = styled.input<{
   background-color: ${({ muted, theme }) =>
     !muted ? theme.backgroundLight : theme.accentBackground};
 
-  ${({ disabled, loading }) =>
-    (disabled || loading) &&
+  ${({ disabled, isLoading }) =>
+    (disabled || isLoading) &&
     `
   pointer-events: none;
   user-focus: none;
@@ -97,25 +97,25 @@ const iconStyles = (size?: InputSize, affix?: boolean) => `
 
 const SuccessIcon = styled(CheckCircleFill)<{
   size?: InputSize
-  affix?: boolean
+  affix?: number
 }>`
-  ${({ size, affix }) => iconStyles(size, affix)}
+  ${({ size, affix }) => iconStyles(size, affix && affix > 0 ? true : false)}
   color: ${({ theme }) => theme.success};
 `
 
 const ErrorIcon = styled(ExclamationCircleFill)<{
   size?: InputSize
-  affix?: boolean
+  affix?: number
 }>`
-  ${({ size, affix }) => iconStyles(size, affix)}
+  ${({ size, affix }) => iconStyles(size, affix && affix > 0 ? true : false)}
   color: ${({ theme }) => theme.danger};
 `
 
 const Loading = styled(Spinner)<{
   size?: InputSize
-  affix?: boolean
+  affix?: number
 }>`
-  ${({ size, affix }) => iconStyles(size, affix)}
+  ${({ size, affix }) => iconStyles(size, affix && affix > 0 ? true : false)}
   width: ${({ size }) => iconWidth[size || 'medium']};
   height: ${({ size }) => iconWidth[size || 'medium']};
 `
@@ -215,16 +215,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           inputSize={size}
           success={success}
           error={error}
-          loading={loading}
+          isLoading={loading}
           muted={muted}
           disabled={disabled}
           placeholder={props.placeholder}
           {...props}
         />
         {affix && affix.content && <Affix size={size}>{affix.content}</Affix>}
-        {loading && <Loading affix={isAffix} size={size} />}
-        {isSuccess && <SuccessIcon affix={isAffix} size={size} />}
-        {isError && <ErrorIcon affix={isAffix} size={size} />}
+        {loading && <Loading affix={isAffix ? 1 : 0} size={size} />}
+        {isSuccess && <SuccessIcon affix={isAffix ? 1 : 0} size={size} />}
+        {isError && <ErrorIcon affix={isAffix ? 1 : 0} size={size} />}
       </InputWrapper>
     )
   },

@@ -9,6 +9,7 @@ import {
   Modal,
   SubmitButton,
   Table,
+  TableBody,
   TableColumn,
   TableRow,
 } from '@hedvig-ui'
@@ -150,49 +151,51 @@ export const MemberTab: React.FC<{
   return memberInfoWithoutSsn ? (
     <FadeIn>
       <Table>
-        {Object.keys(memberInfoWithoutSsn).map((field, id) => {
-          const formatter = memberFieldFormatters[field]
-          return (
-            <TableRow key={id} border>
-              <TableColumn>{getFieldName(field)}</TableColumn>
-              <TableColumn>
-                {formatter
-                  ? formatter(memberInfoWithoutSsn[field])
-                  : getFieldValue(memberInfoWithoutSsn[field])}
-              </TableColumn>
-            </TableRow>
-          )
-        })}
-        <FraudulentStatusEdit
-          getFraudStatusInfo={() => ({
-            status: fraudStatus || fraudulentStatus,
-            description: fraudDescription || fraudulentStatusDescription,
-          })}
-          setState={(val, fs, desc) => {
-            setEditFraud(val)
-            setFraudStatus(fs)
-            setFraudDescription(desc)
-          }}
-          getState={() => editingFraud}
-          action={(newFraudulentStatus, newFraudulentStatusDescription) => {
-            toast.promise(
-              setFraudulentStatus({
-                variables: {
-                  memberId: memberInfo.memberId,
-                  request: {
-                    fraudulentStatus: newFraudulentStatus,
-                    fraudulentStatusDescription: newFraudulentStatusDescription,
-                  },
-                },
-              }),
-              {
-                loading: 'Updating fraudulent status',
-                success: 'Fraudulent status updated',
-                error: 'Could not update fraudulent status',
-              },
+        <TableBody>
+          {Object.keys(memberInfoWithoutSsn).map((field, id) => {
+            const formatter = memberFieldFormatters[field]
+            return (
+              <TableRow key={id} border>
+                <TableColumn>{getFieldName(field)}</TableColumn>
+                <TableColumn>
+                  {formatter
+                    ? formatter(memberInfoWithoutSsn[field])
+                    : getFieldValue(memberInfoWithoutSsn[field])}
+                </TableColumn>
+              </TableRow>
             )
-          }}
-        />
+          })}
+          <FraudulentStatusEdit
+            getFraudStatusInfo={() => ({
+              status: fraudStatus || fraudulentStatus,
+              description: fraudDescription || fraudulentStatusDescription,
+            })}
+            setState={(val, fs, desc) => {
+              setEditFraud(val)
+              setFraudStatus(fs)
+              setFraudDescription(desc)
+            }}
+            getState={() => editingFraud}
+            action={(newFraudulentStatus, newFraudulentStatusDescription) => {
+              toast.promise(
+                setFraudulentStatus({
+                  variables: {
+                    memberId: memberInfo.memberId,
+                    request: {
+                      fraudulentStatus: newFraudulentStatus,
+                      fraudulentStatusDescription: newFraudulentStatusDescription,
+                    },
+                  },
+                }),
+                {
+                  loading: 'Updating fraudulent status',
+                  success: 'Fraudulent status updated',
+                  error: 'Could not update fraudulent status',
+                },
+              )
+            }}
+          />
+        </TableBody>
       </Table>
 
       <ButtonWrapper style={{ display: 'flex', justifyContent: 'flex-end' }}>
