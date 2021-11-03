@@ -24,6 +24,7 @@ import {
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
+import { QuestionGroup } from 'types/generated/graphql'
 
 const FadeGrid = styled(Fade)`
   height: 100%;
@@ -51,17 +52,25 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     [],
   )
 
+  console.log(filters)
+
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 
-  const filteredGroups = useMemo(
-    () =>
-      questionGroups
-        .filter(doMemberGroupFilter(numberMemberGroups)(filters))
-        .filter(doMarketFilter(filters))
-        .filter(doClaimFilter(filters)),
-    [questionGroups, filters, numberMemberGroups],
-  )
+  const [filteredGroups, setFilteredGroups] = useState<QuestionGroup[]>([])
+
+  useEffect(() => {
+    if (filters.length > 0) {
+      setFilteredGroups(
+        questionGroups
+          .filter(doMemberGroupFilter(numberMemberGroups)(filters))
+          .filter(doMarketFilter(filters))
+          .filter(doClaimFilter(filters)),
+      )
+    } else {
+      setFilteredGroups([...questionGroups])
+    }
+  }, [filters])
 
   const currentQuestionOrder = useMemo(
     () => filteredGroups.findIndex((group) => group.memberId === memberId),
