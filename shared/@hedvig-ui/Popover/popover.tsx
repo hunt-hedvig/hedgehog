@@ -62,8 +62,8 @@ export const Popover: React.FC<PopoverProps> = ({
   disable,
   onOpen,
   onClose,
-  style,
   children,
+  ...props
 }) => {
   return (
     <PopoverWrapper
@@ -72,7 +72,7 @@ export const Popover: React.FC<PopoverProps> = ({
       onMouseLeave={() => onClose?.()}
       disableHover={!!disable}
     >
-      <Contents style={style}>
+      <Contents {...props}>
         {contents}
         <Triangle />
       </Contents>
