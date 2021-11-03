@@ -74,12 +74,16 @@ export const InsuranceCertificate: React.FC<{
           Regenerate
         </Button>
         <Dropzone onDrop={(files) => onUpload(files, agreement.id)}>
-          {({ getRootProps, getInputProps }) => (
-            <Button variant="secondary" {...(getRootProps() as any)}>
-              <input {...getInputProps()} />
-              Upload New
-            </Button>
-          )}
+          {({ getRootProps, getInputProps }) => {
+            const { ref, ...props } = getRootProps()
+
+            return (
+              <Button variant="secondary" {...props}>
+                <input {...getInputProps()} />
+                Upload New
+              </Button>
+            )
+          }}
         </Dropzone>
       </ButtonsGroup>
     </>
