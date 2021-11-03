@@ -1,0 +1,21 @@
+mutation GrantResourceAccess(
+  $resourceId: ID!
+  $grantHolder: String!
+  $grantHolderType: GrantHolderType!
+) {
+  grantResourceAccess(
+    resourceId: $resourceId
+    grantHolder: $grantHolder
+    grantHolderType: $grantHolderType
+  ) {
+    id
+    resourceId
+    grantHolder
+    grantHolderType
+    grantedBy {
+      id
+      email
+      fullName
+    }
+  }
+}

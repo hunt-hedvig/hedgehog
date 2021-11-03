@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, Flex, Modal, Shadowed, Tabs } from '@hedvig-ui'
+import { Button, Flex, Label, Modal, Shadowed, Spacing, Tabs } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import chroma from 'chroma-js'
 import { useMe } from 'features/user/hooks/use-me'
@@ -10,9 +10,10 @@ import {
   ClaimPageDocument,
   ClaimPageQuery,
   ClaimRestriction,
-  useGrantClaimAccessMutation,
+  GrantHolderType,
+  useGrantResourceAccessMutation,
   User,
-  useReleaseClaimAccessMutation,
+  useReleaseResourceAccessMutation,
   useUsersQuery,
 } from 'types/generated/graphql'
 
@@ -27,27 +28,27 @@ const Subtext = styled.span`
 
 const UserItem = styled.div<{ access?: boolean }>`
   font-size: 1rem;
-  margin-top: 0.5rem;
   background-color: ${({ theme, access = false }) =>
     access ? theme.accentLighter : theme.backgroundTransparent};
   color: ${({ theme, access }) => (access ? theme.accent : theme.foreground)};
   padding: 0.5em 0.9em;
   border-radius: 6px;
   width: 100%;
-
-  :first-of-type {
-    margin-top: 0;
-  }
+  margin-top: 0;
 `
 
-const ClaimRestrictionModal: React.FC<{
+const ModalLabel = styled(Label)`
+  font-size: 0.8rem;
+`
+
+const ResourceAccessModal: React.FC<{
   onClose: () => void
   restriction: ClaimRestriction
-  claimId: string
-}> = ({ onClose, restriction, claimId }) => {
-  const [activeTab, setActiveTab] = useState<'access' | 'no_access'>('access')
+  restrictionId: string
+}> = ({ onClose, restriction, restrictionId }) => {
+  const [activeTab, setActiveTab] = useState<'users' | 'roles'>('users')
   const { data } = useUsersQuery()
-  const [grantClaimAccess] = useGrantClaimAccessMutation()
+  const [grantClaimAccess] = useGrantResourceAccessMutation()
   const { me } = useMe()
 
   const isUserThatRestricted = restriction.restrictedBy.email === me.email
@@ -64,20 +65,18 @@ const ClaimRestrictionModal: React.FC<{
   const handleGrantAccess = (user: User) => {
     toast.promise(
       grantClaimAccess({
-        variables: { claimId, email: user.email },
+        variables: {
+          resourceId: restrictionId,
+          grantHolder: user.id,
+          grantHolderType: GrantHolderType.User,
+        },
         optimisticResponse: {
-          grantClaimAccess: {
-            __typename: 'UserClaimAccess',
+          grantResourceAccess: {
+            __typename: 'ResourceAccessGrant',
             id: 'temp-id',
-            claim: {
-              id: claimId,
-            },
-            grantedTo: {
-              __typename: 'User',
-              id: user.id,
-              email: user.email,
-              fullName: user.fullName,
-            },
+            resourceId: restrictionId,
+            grantHolder: user.id,
+            grantHolderType: GrantHolderType.User,
             grantedBy: {
               __typename: 'User',
               id: 'temp-me-id',
@@ -87,14 +86,14 @@ const ClaimRestrictionModal: React.FC<{
           },
         },
         update: (cache, { data: response }) => {
-          if (!response?.grantClaimAccess) {
+          if (!response?.grantResourceAccess) {
             return
           }
 
           const cachedData = cache.readQuery({
             query: ClaimPageDocument,
             variables: {
-              claimId,
+              restrictionId,
             },
           }) as ClaimPageQuery
 
@@ -111,7 +110,7 @@ const ClaimRestrictionModal: React.FC<{
                   ...cachedData.claim.restriction,
                   grantedAccess: [
                     ...cachedData.claim.restriction.grantedAccess,
-                    response.grantClaimAccess.grantedTo,
+                    user,
                   ],
                 },
               },
@@ -133,19 +132,19 @@ const ClaimRestrictionModal: React.FC<{
         style={{ margin: '1rem 0', padding: '0rem 1rem' }}
         list={[
           {
-            title: 'Users with access',
+            title: 'Users',
             action: () => {
-              setActiveTab('access')
+              setActiveTab('users')
             },
-            active: activeTab === 'access',
+            active: activeTab === 'users',
           },
 
           {
-            title: 'Users without access',
+            title: 'Roles',
             action: () => {
-              setActiveTab('no_access')
+              setActiveTab('roles')
             },
-            active: activeTab === 'no_access',
+            active: activeTab === 'roles',
           },
         ]}
       />
@@ -158,30 +157,46 @@ const ClaimRestrictionModal: React.FC<{
         }}
         direction="column"
       >
-        {activeTab === 'access' &&
-          restriction.grantedAccess.map((user) => (
-            <UserItem access key={user.id}>
-              {user.fullName}
-            </UserItem>
-          ))}
-
-        {activeTab === 'no_access' &&
-          usersWithoutAccess.map((user) => (
-            <UserItem key={user.id}>
-              <Flex align="center" justify="space-between">
-                {user.fullName}
-                {isUserThatRestricted && (
-                  <Button
-                    size="small"
-                    variant="tertiary"
-                    onClick={() => handleGrantAccess(user)}
-                  >
-                    Grant access
-                  </Button>
-                )}
-              </Flex>
-            </UserItem>
-          ))}
+        {activeTab === 'users' && (
+          <>
+            {!!restriction.grantedAccess.length && (
+              <ModalLabel>Access</ModalLabel>
+            )}
+            {restriction.grantedAccess.map((user, index) => (
+              <UserItem
+                access
+                key={user.id}
+                style={{ marginTop: !!index ? '0.5rem' : 0 }}
+              >
+                <Flex align="center" justify="space-between">
+                  {user.fullName}
+                  <span>{user.role}</span>
+                </Flex>
+              </UserItem>
+            ))}
+            <Spacing top />
+            {!!usersWithoutAccess.length && <ModalLabel>No access</ModalLabel>}
+            {usersWithoutAccess.map((user, index) => (
+              <UserItem
+                key={user.id}
+                style={{ marginTop: !!index ? '0.5rem' : 0 }}
+              >
+                <Flex align="center" justify="space-between">
+                  {user.fullName}
+                  {isUserThatRestricted && (
+                    <Button
+                      size="small"
+                      variant="tertiary"
+                      onClick={() => handleGrantAccess(user)}
+                    >
+                      Grant access
+                    </Button>
+                  )}
+                </Flex>
+              </UserItem>
+            ))}
+          </>
+        )}
       </Flex>
       {!isUserThatRestricted && (
         <Flex
@@ -206,12 +221,12 @@ export const ClaimRestrictionInformation: React.FC<{
 }> = ({ restriction, claimId }) => {
   const [showModal, setShowModal] = useState(false)
   const { confirm } = useConfirmDialog()
-  const [releaseClaimAccess] = useReleaseClaimAccessMutation()
+  const [releaseResourceAccess] = useReleaseResourceAccessMutation()
 
   const handleReleaseAccess = () => {
     toast.promise(
-      releaseClaimAccess({
-        variables: { claimId },
+      releaseResourceAccess({
+        variables: { resourceId: claimId },
         update: (cache) => {
           const cachedData = cache.readQuery({
             query: ClaimPageDocument,
@@ -242,10 +257,10 @@ export const ClaimRestrictionInformation: React.FC<{
   return (
     <>
       {showModal && (
-        <ClaimRestrictionModal
+        <ResourceAccessModal
           restriction={restriction}
           onClose={() => setShowModal(false)}
-          claimId={claimId}
+          restrictionId={claimId}
         />
       )}
       <Flex direction="row" align="center">
@@ -263,8 +278,8 @@ export const ClaimRestrictionInformation: React.FC<{
                   <Shadowed>{restriction.restrictedBy.fullName}</Shadowed>
                 </span>
                 <Subtext>
-                  Only users that have been granted access will be able to see
-                  this claim
+                  Only users or roles that have been granted access will be able
+                  to see this claim
                 </Subtext>
               </Flex>
             </div>

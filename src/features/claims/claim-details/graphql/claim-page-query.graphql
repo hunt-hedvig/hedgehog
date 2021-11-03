@@ -13,11 +13,13 @@ query ClaimPage($claimId: ID!) {
         id
         email
         fullName
+        role
       }
       grantedAccess {
         id
         email
         fullName
+        role
       }
     }
     propertySelections {

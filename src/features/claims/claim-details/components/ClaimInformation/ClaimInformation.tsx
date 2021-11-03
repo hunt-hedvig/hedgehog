@@ -7,7 +7,7 @@ import {
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
-  useRestrictClaimAccessMutation,
+  useRestrictResourceAccessMutation,
   useSetClaimDateMutation,
   useSetContractForClaimMutation,
   useSetCoveringEmployeeMutation,
@@ -119,7 +119,7 @@ export const ClaimInformation: React.FC<{
   const [creatingCoInsured, setCreatingCoInsured] = useState(false)
   const { confirm } = useConfirmDialog()
   const deleteCoInsured = useDeleteCoInsured({ claimId })
-  const [restrictClaimAccess] = useRestrictClaimAccessMutation()
+  const [restrictResourceAccess] = useRestrictResourceAccessMutation()
   const {
     data,
     error: queryError,
@@ -193,10 +193,10 @@ export const ClaimInformation: React.FC<{
 
   const handleRestrictAccess = () => {
     toast.promise(
-      restrictClaimAccess({
-        variables: { claimId },
+      restrictResourceAccess({
+        variables: { resourceId: claimId },
         update: (cache, { data: response }) => {
-          if (!response?.restrictClaimAccess) {
+          if (!response?.restrictResourceAccess) {
             return
           }
 
@@ -213,8 +213,8 @@ export const ClaimInformation: React.FC<{
               claim: {
                 ...cachedData.claim,
                 restriction: {
-                  restrictedBy: response.restrictClaimAccess.grantedBy,
-                  grantedAccess: [response.restrictClaimAccess.grantedBy],
+                  restrictedBy: response.restrictResourceAccess.grantedBy,
+                  grantedAccess: [response.restrictResourceAccess.grantedBy],
                 },
               },
             },

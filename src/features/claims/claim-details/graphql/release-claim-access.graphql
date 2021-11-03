@@ -1,3 +1,0 @@
-mutation ReleaseClaimAccess($claimId: ID!) {
-  releaseClaimAccess(claimId: $claimId)
-}

@@ -519,6 +519,11 @@ export type GenericAgreement = {
   createdAt: Scalars['Instant']
 }
 
+export enum GrantHolderType {
+  User = 'USER',
+  Role = 'ROLE',
+}
+
 export type Identity = {
   __typename?: 'Identity'
   nationalIdentification: NationalIdentification
@@ -771,9 +776,9 @@ export type MutationType = {
   deleteCoInsured: Scalars['Boolean']
   updateUser: User
   upsertUserSettings: Array<UserSetting>
-  restrictClaimAccess: UserClaimAccess
-  releaseClaimAccess: Scalars['Boolean']
-  grantClaimAccess: UserClaimAccess
+  restrictResourceAccess: ResourceAccessGrant
+  releaseResourceAccess: Scalars['Boolean']
+  grantResourceAccess: ResourceAccessGrant
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1107,17 +1112,18 @@ export type MutationTypeUpsertUserSettingsArgs = {
   settings: Array<UpsertUserSettingInput>
 }
 
-export type MutationTypeRestrictClaimAccessArgs = {
-  claimId: Scalars['ID']
+export type MutationTypeRestrictResourceAccessArgs = {
+  resourceId: Scalars['ID']
 }
 
-export type MutationTypeReleaseClaimAccessArgs = {
-  claimId: Scalars['ID']
+export type MutationTypeReleaseResourceAccessArgs = {
+  resourceId: Scalars['ID']
 }
 
-export type MutationTypeGrantClaimAccessArgs = {
-  claimId: Scalars['ID']
-  email: Scalars['String']
+export type MutationTypeGrantResourceAccessArgs = {
+  resourceId: Scalars['ID']
+  grantHolder: Scalars['String']
+  grantHolderType: GrantHolderType
 }
 
 export type NationalIdentification = {
@@ -1236,7 +1242,7 @@ export type QueryType = {
   claimPropertyOption: ClaimPropertyOption
   user?: Maybe<User>
   users: Array<User>
-  userThatRestrictedClaim: User
+  userThatRestrictedResource: User
 }
 
 export type QueryTypeMemberArgs = {
@@ -1288,8 +1294,8 @@ export type QueryTypeUserArgs = {
   email: Scalars['String']
 }
 
-export type QueryTypeUserThatRestrictedClaimArgs = {
-  claimId: Scalars['ID']
+export type QueryTypeUserThatRestrictedResourceArgs = {
+  resourceId: Scalars['ID']
 }
 
 export type Question = {
@@ -1367,6 +1373,15 @@ export type Renewal = {
   renewalDate: Scalars['LocalDate']
   draftCertificateUrl?: Maybe<Scalars['String']>
   draftOfAgreementId?: Maybe<Scalars['ID']>
+}
+
+export type ResourceAccessGrant = {
+  __typename?: 'ResourceAccessGrant'
+  id: Scalars['ID']
+  resourceId: Scalars['ID']
+  grantHolder: Scalars['String']
+  grantHolderType: GrantHolderType
+  grantedBy: User
 }
 
 export type SafelyEditAgreementInput = {
@@ -1506,17 +1521,10 @@ export type User = {
   __typename?: 'User'
   id: Scalars['ID']
   email: Scalars['String']
+  role: Scalars['String']
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
-}
-
-export type UserClaimAccess = {
-  __typename?: 'UserClaimAccess'
-  id: Scalars['ID']
-  claim: Claim
-  grantedTo: User
-  grantedBy: User
 }
 
 export type UserSetting = {
@@ -1824,10 +1832,13 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
           { __typename?: 'ClaimRestriction' } & {
             restrictedBy: { __typename?: 'User' } & Pick<
               User,
-              'id' | 'email' | 'fullName'
+              'id' | 'email' | 'fullName' | 'role'
             >
             grantedAccess: Array<
-              { __typename?: 'User' } & Pick<User, 'id' | 'email' | 'fullName'>
+              { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'email' | 'fullName' | 'role'
+              >
             >
           }
         >
@@ -2071,22 +2082,18 @@ export type CreateSwishClaimPaymentMutation = {
   >
 }
 
-export type GrantClaimAccessMutationVariables = Exact<{
-  claimId: Scalars['ID']
-  email: Scalars['String']
+export type GrantResourceAccessMutationVariables = Exact<{
+  resourceId: Scalars['ID']
+  grantHolder: Scalars['String']
+  grantHolderType: GrantHolderType
 }>
 
-export type GrantClaimAccessMutation = { __typename?: 'MutationType' } & {
-  grantClaimAccess: { __typename?: 'UserClaimAccess' } & Pick<
-    UserClaimAccess,
-    'id'
+export type GrantResourceAccessMutation = { __typename?: 'MutationType' } & {
+  grantResourceAccess: { __typename?: 'ResourceAccessGrant' } & Pick<
+    ResourceAccessGrant,
+    'id' | 'resourceId' | 'grantHolder' | 'grantHolderType'
   > & {
-      claim: { __typename?: 'Claim' } & Pick<Claim, 'id'>
       grantedBy: { __typename?: 'User' } & Pick<
-        User,
-        'id' | 'email' | 'fullName'
-      >
-      grantedTo: { __typename?: 'User' } & Pick<
         User,
         'id' | 'email' | 'fullName'
       >
@@ -2102,30 +2109,24 @@ export type MarkClaimFileAsDeletedMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'markClaimFileAsDeleted'>
 
-export type ReleaseClaimAccessMutationVariables = Exact<{
-  claimId: Scalars['ID']
+export type ReleaseResourceAccessMutationVariables = Exact<{
+  resourceId: Scalars['ID']
 }>
 
-export type ReleaseClaimAccessMutation = { __typename?: 'MutationType' } & Pick<
-  MutationType,
-  'releaseClaimAccess'
->
+export type ReleaseResourceAccessMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'releaseResourceAccess'>
 
-export type RestrictClaimAccessMutationVariables = Exact<{
-  claimId: Scalars['ID']
+export type RestrictResourceAccessMutationVariables = Exact<{
+  resourceId: Scalars['ID']
 }>
 
-export type RestrictClaimAccessMutation = { __typename?: 'MutationType' } & {
-  restrictClaimAccess: { __typename?: 'UserClaimAccess' } & Pick<
-    UserClaimAccess,
-    'id'
+export type RestrictResourceAccessMutation = { __typename?: 'MutationType' } & {
+  restrictResourceAccess: { __typename?: 'ResourceAccessGrant' } & Pick<
+    ResourceAccessGrant,
+    'id' | 'resourceId' | 'grantHolder' | 'grantHolderType'
   > & {
-      claim: { __typename?: 'Claim' } & Pick<Claim, 'id'>
       grantedBy: { __typename?: 'User' } & Pick<
-        User,
-        'id' | 'email' | 'fullName'
-      >
-      grantedTo: { __typename?: 'User' } & Pick<
         User,
         'id' | 'email' | 'fullName'
       >
@@ -2203,12 +2204,12 @@ export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
   >
 }
 
-export type UserThatRestrictedClaimQueryVariables = Exact<{
-  claimId: Scalars['ID']
+export type UserThatRestrictedResourceQueryVariables = Exact<{
+  resourceId: Scalars['ID']
 }>
 
-export type UserThatRestrictedClaimQuery = { __typename?: 'QueryType' } & {
-  userThatRestrictedClaim: { __typename?: 'User' } & Pick<
+export type UserThatRestrictedResourceQuery = { __typename?: 'QueryType' } & {
+  userThatRestrictedResource: { __typename?: 'User' } & Pick<
     User,
     'id' | 'email' | 'fullName'
   >
@@ -3753,7 +3754,7 @@ export type UsersQuery = { __typename?: 'QueryType' } & {
   users: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'fullName' | 'email' | 'latestPresence'
+      'id' | 'fullName' | 'role' | 'email' | 'latestPresence'
     >
   >
 }
@@ -4286,11 +4287,13 @@ export const ClaimPageDocument = gql`
           id
           email
           fullName
+          role
         }
         grantedAccess {
           id
           email
           fullName
+          role
         }
       }
       propertySelections {
@@ -4769,19 +4772,22 @@ export type CreateSwishClaimPaymentMutationOptions = ApolloReactCommon.BaseMutat
   CreateSwishClaimPaymentMutation,
   CreateSwishClaimPaymentMutationVariables
 >
-export const GrantClaimAccessDocument = gql`
-  mutation GrantClaimAccess($claimId: ID!, $email: String!) {
-    grantClaimAccess(claimId: $claimId, email: $email) {
+export const GrantResourceAccessDocument = gql`
+  mutation GrantResourceAccess(
+    $resourceId: ID!
+    $grantHolder: String!
+    $grantHolderType: GrantHolderType!
+  ) {
+    grantResourceAccess(
+      resourceId: $resourceId
+      grantHolder: $grantHolder
+      grantHolderType: $grantHolderType
+    ) {
       id
-      claim {
-        id
-      }
+      resourceId
+      grantHolder
+      grantHolderType
       grantedBy {
-        id
-        email
-        fullName
-      }
-      grantedTo {
         id
         email
         fullName
@@ -4789,50 +4795,51 @@ export const GrantClaimAccessDocument = gql`
     }
   }
 `
-export type GrantClaimAccessMutationFn = ApolloReactCommon.MutationFunction<
-  GrantClaimAccessMutation,
-  GrantClaimAccessMutationVariables
+export type GrantResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
+  GrantResourceAccessMutation,
+  GrantResourceAccessMutationVariables
 >
 
 /**
- * __useGrantClaimAccessMutation__
+ * __useGrantResourceAccessMutation__
  *
- * To run a mutation, you first call `useGrantClaimAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useGrantClaimAccessMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useGrantResourceAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGrantResourceAccessMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [grantClaimAccessMutation, { data, loading, error }] = useGrantClaimAccessMutation({
+ * const [grantResourceAccessMutation, { data, loading, error }] = useGrantResourceAccessMutation({
  *   variables: {
- *      claimId: // value for 'claimId'
- *      email: // value for 'email'
+ *      resourceId: // value for 'resourceId'
+ *      grantHolder: // value for 'grantHolder'
+ *      grantHolderType: // value for 'grantHolderType'
  *   },
  * });
  */
-export function useGrantClaimAccessMutation(
+export function useGrantResourceAccessMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    GrantClaimAccessMutation,
-    GrantClaimAccessMutationVariables
+    GrantResourceAccessMutation,
+    GrantResourceAccessMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
-    GrantClaimAccessMutation,
-    GrantClaimAccessMutationVariables
-  >(GrantClaimAccessDocument, options)
+    GrantResourceAccessMutation,
+    GrantResourceAccessMutationVariables
+  >(GrantResourceAccessDocument, options)
 }
-export type GrantClaimAccessMutationHookResult = ReturnType<
-  typeof useGrantClaimAccessMutation
+export type GrantResourceAccessMutationHookResult = ReturnType<
+  typeof useGrantResourceAccessMutation
 >
-export type GrantClaimAccessMutationResult = ApolloReactCommon.MutationResult<
-  GrantClaimAccessMutation
+export type GrantResourceAccessMutationResult = ApolloReactCommon.MutationResult<
+  GrantResourceAccessMutation
 >
-export type GrantClaimAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  GrantClaimAccessMutation,
-  GrantClaimAccessMutationVariables
+export type GrantResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  GrantResourceAccessMutation,
+  GrantResourceAccessMutationVariables
 >
 export const MarkClaimFileAsDeletedDocument = gql`
   mutation MarkClaimFileAsDeleted($claimId: ID!, $claimFileId: ID!) {
@@ -4884,68 +4891,63 @@ export type MarkClaimFileAsDeletedMutationOptions = ApolloReactCommon.BaseMutati
   MarkClaimFileAsDeletedMutation,
   MarkClaimFileAsDeletedMutationVariables
 >
-export const ReleaseClaimAccessDocument = gql`
-  mutation ReleaseClaimAccess($claimId: ID!) {
-    releaseClaimAccess(claimId: $claimId)
+export const ReleaseResourceAccessDocument = gql`
+  mutation ReleaseResourceAccess($resourceId: ID!) {
+    releaseResourceAccess(resourceId: $resourceId)
   }
 `
-export type ReleaseClaimAccessMutationFn = ApolloReactCommon.MutationFunction<
-  ReleaseClaimAccessMutation,
-  ReleaseClaimAccessMutationVariables
+export type ReleaseResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
+  ReleaseResourceAccessMutation,
+  ReleaseResourceAccessMutationVariables
 >
 
 /**
- * __useReleaseClaimAccessMutation__
+ * __useReleaseResourceAccessMutation__
  *
- * To run a mutation, you first call `useReleaseClaimAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useReleaseClaimAccessMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useReleaseResourceAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReleaseResourceAccessMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [releaseClaimAccessMutation, { data, loading, error }] = useReleaseClaimAccessMutation({
+ * const [releaseResourceAccessMutation, { data, loading, error }] = useReleaseResourceAccessMutation({
  *   variables: {
- *      claimId: // value for 'claimId'
+ *      resourceId: // value for 'resourceId'
  *   },
  * });
  */
-export function useReleaseClaimAccessMutation(
+export function useReleaseResourceAccessMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    ReleaseClaimAccessMutation,
-    ReleaseClaimAccessMutationVariables
+    ReleaseResourceAccessMutation,
+    ReleaseResourceAccessMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
-    ReleaseClaimAccessMutation,
-    ReleaseClaimAccessMutationVariables
-  >(ReleaseClaimAccessDocument, options)
+    ReleaseResourceAccessMutation,
+    ReleaseResourceAccessMutationVariables
+  >(ReleaseResourceAccessDocument, options)
 }
-export type ReleaseClaimAccessMutationHookResult = ReturnType<
-  typeof useReleaseClaimAccessMutation
+export type ReleaseResourceAccessMutationHookResult = ReturnType<
+  typeof useReleaseResourceAccessMutation
 >
-export type ReleaseClaimAccessMutationResult = ApolloReactCommon.MutationResult<
-  ReleaseClaimAccessMutation
+export type ReleaseResourceAccessMutationResult = ApolloReactCommon.MutationResult<
+  ReleaseResourceAccessMutation
 >
-export type ReleaseClaimAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ReleaseClaimAccessMutation,
-  ReleaseClaimAccessMutationVariables
+export type ReleaseResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ReleaseResourceAccessMutation,
+  ReleaseResourceAccessMutationVariables
 >
-export const RestrictClaimAccessDocument = gql`
-  mutation RestrictClaimAccess($claimId: ID!) {
-    restrictClaimAccess(claimId: $claimId) {
+export const RestrictResourceAccessDocument = gql`
+  mutation RestrictResourceAccess($resourceId: ID!) {
+    restrictResourceAccess(resourceId: $resourceId) {
       id
-      claim {
-        id
-      }
+      resourceId
+      grantHolder
+      grantHolderType
       grantedBy {
-        id
-        email
-        fullName
-      }
-      grantedTo {
         id
         email
         fullName
@@ -4953,49 +4955,49 @@ export const RestrictClaimAccessDocument = gql`
     }
   }
 `
-export type RestrictClaimAccessMutationFn = ApolloReactCommon.MutationFunction<
-  RestrictClaimAccessMutation,
-  RestrictClaimAccessMutationVariables
+export type RestrictResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
+  RestrictResourceAccessMutation,
+  RestrictResourceAccessMutationVariables
 >
 
 /**
- * __useRestrictClaimAccessMutation__
+ * __useRestrictResourceAccessMutation__
  *
- * To run a mutation, you first call `useRestrictClaimAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRestrictClaimAccessMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useRestrictResourceAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRestrictResourceAccessMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [restrictClaimAccessMutation, { data, loading, error }] = useRestrictClaimAccessMutation({
+ * const [restrictResourceAccessMutation, { data, loading, error }] = useRestrictResourceAccessMutation({
  *   variables: {
- *      claimId: // value for 'claimId'
+ *      resourceId: // value for 'resourceId'
  *   },
  * });
  */
-export function useRestrictClaimAccessMutation(
+export function useRestrictResourceAccessMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    RestrictClaimAccessMutation,
-    RestrictClaimAccessMutationVariables
+    RestrictResourceAccessMutation,
+    RestrictResourceAccessMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
-    RestrictClaimAccessMutation,
-    RestrictClaimAccessMutationVariables
-  >(RestrictClaimAccessDocument, options)
+    RestrictResourceAccessMutation,
+    RestrictResourceAccessMutationVariables
+  >(RestrictResourceAccessDocument, options)
 }
-export type RestrictClaimAccessMutationHookResult = ReturnType<
-  typeof useRestrictClaimAccessMutation
+export type RestrictResourceAccessMutationHookResult = ReturnType<
+  typeof useRestrictResourceAccessMutation
 >
-export type RestrictClaimAccessMutationResult = ApolloReactCommon.MutationResult<
-  RestrictClaimAccessMutation
+export type RestrictResourceAccessMutationResult = ApolloReactCommon.MutationResult<
+  RestrictResourceAccessMutation
 >
-export type RestrictClaimAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RestrictClaimAccessMutation,
-  RestrictClaimAccessMutationVariables
+export type RestrictResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RestrictResourceAccessMutation,
+  RestrictResourceAccessMutationVariables
 >
 export const SetClaimFileCategoryDocument = gql`
   mutation SetClaimFileCategory(
@@ -5287,9 +5289,9 @@ export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOpti
   UpdateClaimStateMutation,
   UpdateClaimStateMutationVariables
 >
-export const UserThatRestrictedClaimDocument = gql`
-  query UserThatRestrictedClaim($claimId: ID!) {
-    userThatRestrictedClaim(claimId: $claimId) {
+export const UserThatRestrictedResourceDocument = gql`
+  query UserThatRestrictedResource($resourceId: ID!) {
+    userThatRestrictedResource(resourceId: $resourceId) {
       id
       email
       fullName
@@ -5298,54 +5300,54 @@ export const UserThatRestrictedClaimDocument = gql`
 `
 
 /**
- * __useUserThatRestrictedClaimQuery__
+ * __useUserThatRestrictedResourceQuery__
  *
- * To run a query within a React component, call `useUserThatRestrictedClaimQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserThatRestrictedClaimQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUserThatRestrictedResourceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserThatRestrictedResourceQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserThatRestrictedClaimQuery({
+ * const { data, loading, error } = useUserThatRestrictedResourceQuery({
  *   variables: {
- *      claimId: // value for 'claimId'
+ *      resourceId: // value for 'resourceId'
  *   },
  * });
  */
-export function useUserThatRestrictedClaimQuery(
+export function useUserThatRestrictedResourceQuery(
   baseOptions: ApolloReactHooks.QueryHookOptions<
-    UserThatRestrictedClaimQuery,
-    UserThatRestrictedClaimQueryVariables
+    UserThatRestrictedResourceQuery,
+    UserThatRestrictedResourceQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
-    UserThatRestrictedClaimQuery,
-    UserThatRestrictedClaimQueryVariables
-  >(UserThatRestrictedClaimDocument, options)
+    UserThatRestrictedResourceQuery,
+    UserThatRestrictedResourceQueryVariables
+  >(UserThatRestrictedResourceDocument, options)
 }
-export function useUserThatRestrictedClaimLazyQuery(
+export function useUserThatRestrictedResourceLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    UserThatRestrictedClaimQuery,
-    UserThatRestrictedClaimQueryVariables
+    UserThatRestrictedResourceQuery,
+    UserThatRestrictedResourceQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
-    UserThatRestrictedClaimQuery,
-    UserThatRestrictedClaimQueryVariables
-  >(UserThatRestrictedClaimDocument, options)
+    UserThatRestrictedResourceQuery,
+    UserThatRestrictedResourceQueryVariables
+  >(UserThatRestrictedResourceDocument, options)
 }
-export type UserThatRestrictedClaimQueryHookResult = ReturnType<
-  typeof useUserThatRestrictedClaimQuery
+export type UserThatRestrictedResourceQueryHookResult = ReturnType<
+  typeof useUserThatRestrictedResourceQuery
 >
-export type UserThatRestrictedClaimLazyQueryHookResult = ReturnType<
-  typeof useUserThatRestrictedClaimLazyQuery
+export type UserThatRestrictedResourceLazyQueryHookResult = ReturnType<
+  typeof useUserThatRestrictedResourceLazyQuery
 >
-export type UserThatRestrictedClaimQueryResult = ApolloReactCommon.QueryResult<
-  UserThatRestrictedClaimQuery,
-  UserThatRestrictedClaimQueryVariables
+export type UserThatRestrictedResourceQueryResult = ApolloReactCommon.QueryResult<
+  UserThatRestrictedResourceQuery,
+  UserThatRestrictedResourceQueryVariables
 >
 export const ListClaimsDocument = gql`
   query ListClaims($options: ListClaimsOptions!) {
@@ -10377,6 +10379,7 @@ export const UsersDocument = gql`
     users {
       id
       fullName
+      role
       email
       latestPresence
     }

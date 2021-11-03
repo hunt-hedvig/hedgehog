@@ -712,11 +712,11 @@
             "deprecationReason": null
           },
           {
-            "name": "userThatRestrictedClaim",
+            "name": "userThatRestrictedResource",
             "description": null,
             "args": [
               {
-                "name": "claimId",
+                "name": "resourceId",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -4934,6 +4934,22 @@
           },
           {
             "name": "email",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "role",
             "description": null,
             "args": [],
             "type": {
@@ -10379,11 +10395,11 @@
             "deprecationReason": null
           },
           {
-            "name": "restrictClaimAccess",
+            "name": "restrictResourceAccess",
             "description": null,
             "args": [
               {
-                "name": "claimId",
+                "name": "resourceId",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -10402,7 +10418,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UserClaimAccess",
+                "name": "ResourceAccessGrant",
                 "ofType": null
               }
             },
@@ -10410,11 +10426,11 @@
             "deprecationReason": null
           },
           {
-            "name": "releaseClaimAccess",
+            "name": "releaseResourceAccess",
             "description": null,
             "args": [
               {
-                "name": "claimId",
+                "name": "resourceId",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -10441,11 +10457,11 @@
             "deprecationReason": null
           },
           {
-            "name": "grantClaimAccess",
+            "name": "grantResourceAccess",
             "description": null,
             "args": [
               {
-                "name": "claimId",
+                "name": "resourceId",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -10459,7 +10475,7 @@
                 "defaultValue": null
               },
               {
-                "name": "email",
+                "name": "grantHolder",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -10471,6 +10487,20 @@
                   }
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "grantHolderType",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "GrantHolderType",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
               }
             ],
             "type": {
@@ -10478,7 +10508,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UserClaimAccess",
+                "name": "ResourceAccessGrant",
                 "ofType": null
               }
             },
@@ -12417,7 +12447,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "UserClaimAccess",
+        "name": "ResourceAccessGrant",
         "description": null,
         "fields": [
           {
@@ -12437,15 +12467,15 @@
             "deprecationReason": null
           },
           {
-            "name": "claim",
+            "name": "resourceId",
             "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "Claim",
+                "kind": "SCALAR",
+                "name": "ID",
                 "ofType": null
               }
             },
@@ -12453,15 +12483,31 @@
             "deprecationReason": null
           },
           {
-            "name": "grantedTo",
+            "name": "grantHolder",
             "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "User",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "grantHolderType",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "GrantHolderType",
                 "ofType": null
               }
             },
@@ -12488,6 +12534,29 @@
         "inputFields": null,
         "interfaces": [],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "GrantHolderType",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "USER",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ROLE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {

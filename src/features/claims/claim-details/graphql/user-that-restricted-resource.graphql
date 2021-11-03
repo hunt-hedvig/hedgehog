@@ -1,0 +1,7 @@
+query UserThatRestrictedResource($resourceId: ID!) {
+  userThatRestrictedResource(resourceId: $resourceId) {
+    id
+    email
+    fullName
+  }
+}
