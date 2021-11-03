@@ -29,23 +29,21 @@ const ConversationsSettingsPage: React.FC<{}> = () => {
           }
         }}
       />
-      {!!filters.length && (
-        <FadeIn style={{ width: '100%' }}>
-          <Flex
-            direction="column"
-            justify="center"
-            align="center"
-            style={{ marginTop: '4.0em' }}
+      <FadeIn style={{ width: '100%' }}>
+        <Flex
+          direction="column"
+          justify="center"
+          align="center"
+          style={{ marginTop: '4.0em' }}
+        >
+          <Button
+            onClick={() => history.push('/conversations')}
+            style={{ marginBottom: '0.5em', width: '300px' }}
           >
-            <Button
-              onClick={() => history.push('/conversations')}
-              style={{ marginBottom: '0.5em', width: '300px' }}
-            >
-              Done
-            </Button>
-          </Flex>
-        </FadeIn>
-      )}
+            Done
+          </Button>
+        </Flex>
+      </FadeIn>
     </>
   )
 }
