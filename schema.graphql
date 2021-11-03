@@ -211,7 +211,11 @@ type MutationType {
 
   restrictResourceAccess(resourceId: ID!): ResourceAccessGrant!
   releaseResourceAccess(resourceId: ID!): Boolean!
-  grantResourceAccess(resourceId: ID!, grantHolder: String!, grantHolderType: GrantHolderType!): ResourceAccessGrant!
+  grantResourceAccess(
+    resourceId: ID!
+    grantHolder: String!
+    grantHolderType: GrantHolderType!
+  ): ResourceAccessGrant!
 }
 
 enum GrantHolderType {
@@ -548,7 +552,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

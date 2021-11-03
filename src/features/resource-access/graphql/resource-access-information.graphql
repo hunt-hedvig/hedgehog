@@ -1,5 +1,5 @@
 query ResourceAccessInformation($resourceId: String!) {
-  resourceAccess(resourceId: $resourceId)  {
+  resourceAccess(resourceId: $resourceId) {
     restrictedBy {
       id
       email
