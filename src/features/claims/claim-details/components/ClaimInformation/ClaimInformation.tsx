@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import {
   ClaimPageDocument,
-  ClaimPageQuery,
   ClaimState,
   Contract,
   GenericAgreement,
@@ -192,31 +191,21 @@ export const ClaimInformation: React.FC<{
   }
 
   const handleRestrictAccess = () => {
+    if (!data) {
+      return
+    }
+
     toast.promise(
       restrictResourceAccess({
         variables: { resourceId: claimId },
         update: (cache, { data: response }) => {
-          if (!response?.restrictResourceAccess) {
-            return
-          }
-
-          const cachedData = cache.readQuery({
-            query: ClaimPageDocument,
-            variables: {
-              claimId,
-            },
-          }) as ClaimPageQuery
-
           cache.writeQuery({
             query: ClaimPageDocument,
             data: {
               claim: {
-                ...cachedData.claim,
-                restriction: {
-                  restrictedBy: response.restrictResourceAccess.grantedBy,
-                  usersGranted: [response.restrictResourceAccess.grantedBy],
-                  rolesGranted: [],
-                },
+                __typename: 'Claim',
+                ...data.claim,
+                restriction: response,
               },
             },
           })

@@ -35,7 +35,7 @@ type QueryType {
 
   user(email: String!): User
   users: [User!]!
-  resourceAccess(resourceId: String): ResourceAccessInformation
+  resourceAccess(resourceId: String!): ResourceAccessInformation
 }
 
 type ResourceAccessInformation {
@@ -210,26 +210,18 @@ type MutationType {
   updateUser(input: UpdateUserInput!): User!
   upsertUserSettings(settings: [UpsertUserSettingInput!]!): [UserSetting!]!
 
-  restrictResourceAccess(resourceId: ID!): ResourceAccessGrant!
+  restrictResourceAccess(resourceId: ID!): ResourceAccessInformation!
   releaseResourceAccess(resourceId: ID!): Boolean!
   grantResourceAccess(
     resourceId: ID!
     grantHolder: String!
     grantHolderType: GrantHolderType!
-  ): ResourceAccessGrant!
+  ): ResourceAccessInformation!
 }
 
 enum GrantHolderType {
   USER
   ROLE
-}
-
-type ResourceAccessGrant {
-  id: ID!
-  resourceId: ID!
-  grantHolder: String!
-  grantHolderType: GrantHolderType!
-  grantedBy: User!
 }
 
 input UpsertCoInsuredInput {
@@ -553,7 +545,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

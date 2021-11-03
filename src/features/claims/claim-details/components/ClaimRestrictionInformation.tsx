@@ -37,20 +37,26 @@ export const ClaimRestrictionInformation: React.FC<{
         update: (cache) => {
           const cachedData = cache.readQuery({
             query: ClaimPageDocument,
-            variables: {
-              claimId,
-            },
+            variables: { claimId },
           }) as ClaimPageQuery
 
           cache.writeQuery({
             query: ClaimPageDocument,
             data: {
               claim: {
+                __typename: 'Claim',
                 ...cachedData.claim,
                 restriction: null,
               },
             },
           })
+
+          console.log(
+            cache.readQuery({
+              query: ClaimPageDocument,
+              variables: { claimId },
+            }) as ClaimPageQuery,
+          )
         },
       }),
       {

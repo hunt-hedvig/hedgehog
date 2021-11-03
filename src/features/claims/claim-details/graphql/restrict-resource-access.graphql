@@ -1,13 +1,12 @@
 mutation RestrictResourceAccess($resourceId: ID!) {
   restrictResourceAccess(resourceId: $resourceId) {
-    id
     resourceId
-    grantHolder
-    grantHolderType
-    grantedBy {
+    usersGranted {
       id
       email
       fullName
+      role
     }
+    rolesGranted
   }
 }

@@ -8,14 +8,13 @@ mutation GrantResourceAccess(
     grantHolder: $grantHolder
     grantHolderType: $grantHolderType
   ) {
-    id
     resourceId
-    grantHolder
-    grantHolderType
-    grantedBy {
+    usersGranted {
       id
       email
       fullName
+      role
     }
+    rolesGranted
   }
 }

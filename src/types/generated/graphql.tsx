@@ -770,9 +770,9 @@ export type MutationType = {
   deleteCoInsured: Scalars['Boolean']
   updateUser: User
   upsertUserSettings: Array<UserSetting>
-  restrictResourceAccess: ResourceAccessGrant
+  restrictResourceAccess: ResourceAccessInformation
   releaseResourceAccess: Scalars['Boolean']
-  grantResourceAccess: ResourceAccessGrant
+  grantResourceAccess: ResourceAccessInformation
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1289,7 +1289,7 @@ export type QueryTypeUserArgs = {
 }
 
 export type QueryTypeResourceAccessArgs = {
-  resourceId?: Maybe<Scalars['String']>
+  resourceId: Scalars['String']
 }
 
 export type Question = {
@@ -1367,15 +1367,6 @@ export type Renewal = {
   renewalDate: Scalars['LocalDate']
   draftCertificateUrl?: Maybe<Scalars['String']>
   draftOfAgreementId?: Maybe<Scalars['ID']>
-}
-
-export type ResourceAccessGrant = {
-  __typename?: 'ResourceAccessGrant'
-  id: Scalars['ID']
-  resourceId: Scalars['ID']
-  grantHolder: Scalars['String']
-  grantHolderType: GrantHolderType
-  grantedBy: User
 }
 
 export type ResourceAccessInformation = {
@@ -2101,13 +2092,15 @@ export type RestrictResourceAccessMutationVariables = Exact<{
 }>
 
 export type RestrictResourceAccessMutation = { __typename?: 'MutationType' } & {
-  restrictResourceAccess: { __typename?: 'ResourceAccessGrant' } & Pick<
-    ResourceAccessGrant,
-    'id' | 'resourceId' | 'grantHolder' | 'grantHolderType'
+  restrictResourceAccess: { __typename?: 'ResourceAccessInformation' } & Pick<
+    ResourceAccessInformation,
+    'resourceId' | 'rolesGranted'
   > & {
-      grantedBy: { __typename?: 'User' } & Pick<
-        User,
-        'id' | 'email' | 'fullName'
+      usersGranted: Array<
+        { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
       >
     }
 }
@@ -3203,13 +3196,15 @@ export type GrantResourceAccessMutationVariables = Exact<{
 }>
 
 export type GrantResourceAccessMutation = { __typename?: 'MutationType' } & {
-  grantResourceAccess: { __typename?: 'ResourceAccessGrant' } & Pick<
-    ResourceAccessGrant,
-    'id' | 'resourceId' | 'grantHolder' | 'grantHolderType'
+  grantResourceAccess: { __typename?: 'ResourceAccessInformation' } & Pick<
+    ResourceAccessInformation,
+    'resourceId' | 'rolesGranted'
   > & {
-      grantedBy: { __typename?: 'User' } & Pick<
-        User,
-        'id' | 'email' | 'fullName'
+      usersGranted: Array<
+        { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
       >
     }
 }
@@ -4845,15 +4840,14 @@ export type MarkClaimFileAsDeletedMutationOptions = ApolloReactCommon.BaseMutati
 export const RestrictResourceAccessDocument = gql`
   mutation RestrictResourceAccess($resourceId: ID!) {
     restrictResourceAccess(resourceId: $resourceId) {
-      id
       resourceId
-      grantHolder
-      grantHolderType
-      grantedBy {
+      usersGranted {
         id
         email
         fullName
+        role
       }
+      rolesGranted
     }
   }
 `
@@ -8204,15 +8198,14 @@ export const GrantResourceAccessDocument = gql`
       grantHolder: $grantHolder
       grantHolderType: $grantHolderType
     ) {
-      id
       resourceId
-      grantHolder
-      grantHolderType
-      grantedBy {
+      usersGranted {
         id
         email
         fullName
+        role
       }
+      rolesGranted
     }
   }
 `

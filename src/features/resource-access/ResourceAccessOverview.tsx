@@ -5,8 +5,6 @@ import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
-  ClaimPageDocument,
-  ClaimPageQuery,
   GrantHolderType,
   ResourceAccessInformation,
   useGrantResourceAccessMutation,
@@ -47,7 +45,6 @@ const UserList: React.FC<{
 }> = ({ resourceId, resourceAccessInformation, canGrant }) => {
   const [grantClaimAccess] = useGrantResourceAccessMutation()
   const { data } = useUsersQuery()
-  const { me } = useMe()
 
   const users = data?.users ?? []
   const usersWithoutAccess = users.filter(
@@ -67,50 +64,9 @@ const UserList: React.FC<{
         },
         optimisticResponse: {
           grantResourceAccess: {
-            __typename: 'ResourceAccessGrant',
-            id: 'temp-id',
-            resourceId,
-            grantHolder: user.id,
-            grantHolderType: GrantHolderType.User,
-            grantedBy: {
-              __typename: 'User',
-              id: 'temp-me-id',
-              email: me.email,
-              fullName: me.fullName,
-            },
+            ...resourceAccessInformation,
+            usersGranted: [...resourceAccessInformation.usersGranted, user],
           },
-        },
-        update: (cache, { data: response }) => {
-          if (!response?.grantResourceAccess) {
-            return
-          }
-
-          const cachedData = cache.readQuery({
-            query: ClaimPageDocument,
-            variables: {
-              claimId: resourceId,
-            },
-          }) as ClaimPageQuery
-
-          if (!cachedData.claim?.restriction?.usersGranted) {
-            return
-          }
-
-          cache.writeQuery({
-            query: ClaimPageDocument,
-            data: {
-              claim: {
-                ...cachedData.claim,
-                restriction: {
-                  ...cachedData.claim.restriction,
-                  usersGranted: [
-                    ...cachedData.claim.restriction.usersGranted,
-                    user,
-                  ],
-                },
-              },
-            },
-          })
         },
       }),
       {
