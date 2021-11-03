@@ -97,25 +97,25 @@ const iconStyles = (size?: InputSize, affix?: boolean) => `
 
 const SuccessIcon = styled(CheckCircleFill)<{
   size?: InputSize
-  affix?: boolean
+  affix?: number
 }>`
-  ${({ size, affix }) => iconStyles(size, affix)}
+  ${({ size, affix }) => iconStyles(size, affix && affix > 0 ? true : false)}
   color: ${({ theme }) => theme.success};
 `
 
 const ErrorIcon = styled(ExclamationCircleFill)<{
   size?: InputSize
-  affix?: boolean
+  affix?: number
 }>`
-  ${({ size, affix }) => iconStyles(size, affix)}
+  ${({ size, affix }) => iconStyles(size, affix && affix > 0 ? true : false)}
   color: ${({ theme }) => theme.danger};
 `
 
 const Loading = styled(Spinner)<{
   size?: InputSize
-  affix?: boolean
+  affix?: number
 }>`
-  ${({ size, affix }) => iconStyles(size, affix)}
+  ${({ size, affix }) => iconStyles(size, affix && affix > 0 ? true : false)}
   width: ${({ size }) => iconWidth[size || 'medium']};
   height: ${({ size }) => iconWidth[size || 'medium']};
 `
@@ -222,9 +222,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {affix && affix.content && <Affix size={size}>{affix.content}</Affix>}
-        {loading && <Loading affix={isAffix} size={size} />}
-        {isSuccess && <SuccessIcon affix={isAffix} size={size} />}
-        {isError && <ErrorIcon affix={isAffix} size={size} />}
+        {loading && <Loading affix={isAffix ? 1 : 0} size={size} />}
+        {isSuccess && <SuccessIcon affix={isAffix ? 1 : 0} size={size} />}
+        {isError && <ErrorIcon affix={isAffix ? 1 : 0} size={size} />}
       </InputWrapper>
     )
   },

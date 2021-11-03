@@ -86,11 +86,11 @@ const TableHeaderColumnStyled = styled.th<{ withSort?: boolean }>`
   }
 `
 
-const SortIcon = styled(CaretUpFill)<{ desc?: boolean }>`
+const SortIcon = styled(CaretUpFill)<{ desc: number }>`
   position: absolute;
   right: 15px;
   top: 8px;
-  transform: ${({ desc }) => (desc ? 'rotate(180deg)' : 'none')};
+  transform: rotate(${({ desc }) => desc}deg);
 `
 
 interface TableHeaderColumnProps
@@ -110,7 +110,7 @@ export const TableHeaderColumn: React.FC<TableHeaderColumnProps> = ({
   return (
     <TableHeaderColumnStyled withSort={withSort} {...props}>
       {children}
-      {sorting && <SortIcon desc={desc} />}
+      {sorting && <SortIcon desc={desc ? 180 : 0} />}
     </TableHeaderColumnStyled>
   )
 }

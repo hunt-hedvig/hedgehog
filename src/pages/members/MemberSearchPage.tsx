@@ -29,7 +29,7 @@ const MemberSearchPage: React.FC = () => {
 
   React.useEffect(() => {
     if ((members.length && luckySearch) || members.length === 1) {
-      history.push(`/members/${members[0].memberId}`)
+      history.push(`/members/${members[0].memberId}/contracts`)
     }
   }, [members])
 

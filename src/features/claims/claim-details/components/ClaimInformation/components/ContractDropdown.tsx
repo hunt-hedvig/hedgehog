@@ -99,6 +99,7 @@ export const ContractDropdown: React.FC<{
     <Dropdown placeholder="None selected">
       {contracts.map((contract) => (
         <DropdownOption
+          key={contract.id}
           selected={contract.id === selectedContract?.id || false}
           onClick={() => onChange(contract.id)}
         >
