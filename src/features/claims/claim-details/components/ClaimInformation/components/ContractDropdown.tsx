@@ -94,21 +94,27 @@ export const ContractDropdown: React.FC<{
   selectedContract?: Contract
   selectedAgreement?: GenericAgreement
   onChange: (value: string) => void
-}> = ({ contracts, selectedContract, onChange }) => {
+}> = ({ contracts, selectedContract, selectedAgreement, onChange }) => {
   return (
     <Dropdown placeholder="None selected">
-      {contracts.map((contract) => (
-        <DropdownOption
-          key={contract.id}
-          selected={contract.id === selectedContract?.id || false}
-          onClick={() => onChange(contract.id)}
-        >
-          <ContractItem
-            contract={contract}
-            agreement={currentAgreementForContract(contract)}
-          />
-        </DropdownOption>
-      ))}
+      {contracts.map((contract) => {
+        return (
+          <DropdownOption
+            key={contract.id}
+            selected={contract.id === selectedContract?.id}
+            onClick={() => onChange(contract.id)}
+          >
+            <ContractItem
+              contract={contract}
+              agreement={
+                contract.id === selectedContract?.id
+                  ? selectedAgreement
+                  : currentAgreementForContract(contract)
+              }
+            />
+          </DropdownOption>
+        )
+      })}
     </Dropdown>
   )
 }
