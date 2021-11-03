@@ -9,6 +9,7 @@ query ClaimPage($claimId: ID!) {
     dateOfOccurrence
     outcome
     restriction {
+      resourceId
       restrictedBy {
         id
         email

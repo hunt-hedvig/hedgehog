@@ -1380,6 +1380,7 @@ export type ResourceAccessGrant = {
 
 export type ResourceAccessInformation = {
   __typename?: 'ResourceAccessInformation'
+  resourceId: Scalars['ID']
   restrictedBy: User
   usersGranted: Array<User>
   rolesGranted: Array<Scalars['String']>
@@ -1832,7 +1833,7 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
         restriction?: Maybe<
           { __typename?: 'ResourceAccessInformation' } & Pick<
             ResourceAccessInformation,
-            'rolesGranted'
+            'resourceId' | 'rolesGranted'
           > & {
               restrictedBy: { __typename?: 'User' } & Pick<
                 User,
@@ -3229,7 +3230,7 @@ export type ResourceAccessInformationQuery = { __typename?: 'QueryType' } & {
   resourceAccess?: Maybe<
     { __typename?: 'ResourceAccessInformation' } & Pick<
       ResourceAccessInformation,
-      'rolesGranted'
+      'resourceId' | 'rolesGranted'
     > & {
         restrictedBy: { __typename?: 'User' } & Pick<
           User,
@@ -4300,6 +4301,7 @@ export const ClaimPageDocument = gql`
       dateOfOccurrence
       outcome
       restriction {
+        resourceId
         restrictedBy {
           id
           email
@@ -8312,6 +8314,7 @@ export type ReleaseResourceAccessMutationOptions = ApolloReactCommon.BaseMutatio
 export const ResourceAccessInformationDocument = gql`
   query ResourceAccessInformation($resourceId: String!) {
     resourceAccess(resourceId: $resourceId) {
+      resourceId
       restrictedBy {
         id
         email
