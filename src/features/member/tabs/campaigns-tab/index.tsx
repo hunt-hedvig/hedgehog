@@ -35,7 +35,7 @@ export const CampaignsTab: React.FC<{
     <FadeIn>
       <MainHeadline>
         Campaigns
-        <RefreshButton onClick={() => refetch()} loading={loading}>
+        <RefreshButton onClick={() => refetch()} isloading={loading}>
           <ArrowRepeat />
         </RefreshButton>
       </MainHeadline>

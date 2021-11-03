@@ -78,7 +78,7 @@ export const DebtTab: React.FC<{
     <FadeIn>
       <MainHeadline>
         Debt
-        <RefreshButton onClick={() => refetch()} loading={loading}>
+        <RefreshButton onClick={() => refetch()} isloading={loading}>
           <ArrowRepeat />
         </RefreshButton>
       </MainHeadline>
