@@ -1,0 +1,17 @@
+query ResourceAccessInformation($resourceId: String!) {
+  resourceAccess(resourceId: $resourceId)  {
+    restrictedBy {
+      id
+      email
+      fullName
+      role
+    }
+    usersGranted {
+      id
+      email
+      fullName
+      role
+    }
+    rolesGranted
+  }
+}

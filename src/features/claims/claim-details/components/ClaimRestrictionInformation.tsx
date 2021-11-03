@@ -9,8 +9,8 @@ import { toast } from 'react-hot-toast'
 import {
   ClaimPageDocument,
   ClaimPageQuery,
-  ClaimRestriction,
   GrantHolderType,
+  ResourceAccessInformation,
   useGrantResourceAccessMutation,
   User,
   useReleaseResourceAccessMutation,
@@ -43,9 +43,9 @@ const ModalLabel = styled(Label)`
 
 const ResourceAccessModal: React.FC<{
   onClose: () => void
-  restriction: ClaimRestriction
-  restrictionId: string
-}> = ({ onClose, restriction, restrictionId }) => {
+  restriction: ResourceAccessInformation
+  resourceId: string
+}> = ({ onClose, restriction, resourceId }) => {
   const [activeTab, setActiveTab] = useState<'users' | 'roles'>('users')
   const { data } = useUsersQuery()
   const [grantClaimAccess] = useGrantResourceAccessMutation()
@@ -57,7 +57,7 @@ const ResourceAccessModal: React.FC<{
 
   const usersWithoutAccess = users.filter(
     (user) =>
-      !restriction.grantedAccess.some(
+      !restriction.usersGranted.some(
         (grantedUser) => grantedUser.email === user.email,
       ),
   )
@@ -66,7 +66,7 @@ const ResourceAccessModal: React.FC<{
     toast.promise(
       grantClaimAccess({
         variables: {
-          resourceId: restrictionId,
+          resourceId,
           grantHolder: user.id,
           grantHolderType: GrantHolderType.User,
         },
@@ -74,7 +74,7 @@ const ResourceAccessModal: React.FC<{
           grantResourceAccess: {
             __typename: 'ResourceAccessGrant',
             id: 'temp-id',
-            resourceId: restrictionId,
+            resourceId,
             grantHolder: user.id,
             grantHolderType: GrantHolderType.User,
             grantedBy: {
@@ -93,11 +93,11 @@ const ResourceAccessModal: React.FC<{
           const cachedData = cache.readQuery({
             query: ClaimPageDocument,
             variables: {
-              restrictionId,
+              claimId: resourceId,
             },
           }) as ClaimPageQuery
 
-          if (!cachedData.claim?.restriction?.grantedAccess) {
+          if (!cachedData.claim?.restriction?.usersGranted) {
             return
           }
 
@@ -108,8 +108,8 @@ const ResourceAccessModal: React.FC<{
                 ...cachedData.claim,
                 restriction: {
                   ...cachedData.claim.restriction,
-                  grantedAccess: [
-                    ...cachedData.claim.restriction.grantedAccess,
+                  usersGranted: [
+                    ...cachedData.claim.restriction.usersGranted,
                     user,
                   ],
                 },
@@ -159,10 +159,10 @@ const ResourceAccessModal: React.FC<{
       >
         {activeTab === 'users' && (
           <>
-            {!!restriction.grantedAccess.length && (
+            {!!restriction.usersGranted.length && (
               <ModalLabel>Access</ModalLabel>
             )}
-            {restriction.grantedAccess.map((user, index) => (
+            {restriction.usersGranted.map((user, index) => (
               <UserItem
                 access
                 key={user.id}
@@ -170,7 +170,6 @@ const ResourceAccessModal: React.FC<{
               >
                 <Flex align="center" justify="space-between">
                   {user.fullName}
-                  <span>{user.role}</span>
                 </Flex>
               </UserItem>
             ))}
@@ -216,7 +215,7 @@ const ResourceAccessModal: React.FC<{
 }
 
 export const ClaimRestrictionInformation: React.FC<{
-  restriction: ClaimRestriction
+  restriction: ResourceAccessInformation
   claimId: string
 }> = ({ restriction, claimId }) => {
   const [showModal, setShowModal] = useState(false)
@@ -260,7 +259,7 @@ export const ClaimRestrictionInformation: React.FC<{
         <ResourceAccessModal
           restriction={restriction}
           onClose={() => setShowModal(false)}
-          restrictionId={claimId}
+          resourceId={claimId}
         />
       )}
       <Flex direction="row" align="center">

@@ -35,8 +35,13 @@ type QueryType {
 
   user(email: String!): User
   users: [User!]!
+  resourceAccess(resourceId: String): ResourceAccessInformation
+}
 
-  userThatRestrictedResource(resourceId: ID!): User!
+type ResourceAccessInformation {
+  restrictedBy: User!
+  usersGranted: [User!]!
+  rolesGranted: [String!]!
 }
 
 type Me {
@@ -906,12 +911,7 @@ type Claim {
   agreement: GenericAgreement
   propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured
-  restriction: ClaimRestriction
-}
-
-type ClaimRestriction {
-  restrictedBy: User!
-  grantedAccess: [User!]!
+  restriction: ResourceAccessInformation
 }
 
 type CoInsured {

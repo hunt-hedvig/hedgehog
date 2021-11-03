@@ -15,12 +15,13 @@ query ClaimPage($claimId: ID!) {
         fullName
         role
       }
-      grantedAccess {
+      usersGranted {
         id
         email
         fullName
         role
       }
+      rolesGranted
     }
     propertySelections {
       claimType

@@ -712,32 +712,24 @@
             "deprecationReason": null
           },
           {
-            "name": "userThatRestrictedResource",
+            "name": "resourceAccess",
             "description": null,
             "args": [
               {
                 "name": "resourceId",
                 "description": null,
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  }
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
                 },
                 "defaultValue": null
               }
             ],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "User",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "ResourceAccessInformation",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -4193,7 +4185,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "ClaimRestriction",
+              "name": "ResourceAccessInformation",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4862,7 +4854,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "ClaimRestriction",
+        "name": "ResourceAccessInformation",
         "description": null,
         "fields": [
           {
@@ -4882,7 +4874,7 @@
             "deprecationReason": null
           },
           {
-            "name": "grantedAccess",
+            "name": "usersGranted",
             "description": null,
             "args": [],
             "type": {
@@ -4897,6 +4889,30 @@
                   "ofType": {
                     "kind": "OBJECT",
                     "name": "User",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "rolesGranted",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   }
                 }

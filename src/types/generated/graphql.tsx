@@ -187,7 +187,7 @@ export type Claim = {
   agreement?: Maybe<GenericAgreement>
   propertySelections: Array<ClaimPropertySelection>
   coInsured?: Maybe<CoInsured>
-  restriction?: Maybe<ClaimRestriction>
+  restriction?: Maybe<ResourceAccessInformation>
 }
 
 export enum ClaimComplexity {
@@ -284,12 +284,6 @@ export type ClaimPropertyTemplate = {
   propertyId: Scalars['ID']
   name: Scalars['String']
   options: Array<ClaimPropertyOption>
-}
-
-export type ClaimRestriction = {
-  __typename?: 'ClaimRestriction'
-  restrictedBy: User
-  grantedAccess: Array<User>
 }
 
 export enum ClaimSource {
@@ -1242,7 +1236,7 @@ export type QueryType = {
   claimPropertyOption: ClaimPropertyOption
   user?: Maybe<User>
   users: Array<User>
-  userThatRestrictedResource: User
+  resourceAccess?: Maybe<ResourceAccessInformation>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1294,8 +1288,8 @@ export type QueryTypeUserArgs = {
   email: Scalars['String']
 }
 
-export type QueryTypeUserThatRestrictedResourceArgs = {
-  resourceId: Scalars['ID']
+export type QueryTypeResourceAccessArgs = {
+  resourceId?: Maybe<Scalars['String']>
 }
 
 export type Question = {
@@ -1382,6 +1376,13 @@ export type ResourceAccessGrant = {
   grantHolder: Scalars['String']
   grantHolderType: GrantHolderType
   grantedBy: User
+}
+
+export type ResourceAccessInformation = {
+  __typename?: 'ResourceAccessInformation'
+  restrictedBy: User
+  usersGranted: Array<User>
+  rolesGranted: Array<Scalars['String']>
 }
 
 export type SafelyEditAgreementInput = {
@@ -1829,18 +1830,21 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'reserves'
     > & {
         restriction?: Maybe<
-          { __typename?: 'ClaimRestriction' } & {
-            restrictedBy: { __typename?: 'User' } & Pick<
-              User,
-              'id' | 'email' | 'fullName' | 'role'
-            >
-            grantedAccess: Array<
-              { __typename?: 'User' } & Pick<
+          { __typename?: 'ResourceAccessInformation' } & Pick<
+            ResourceAccessInformation,
+            'rolesGranted'
+          > & {
+              restrictedBy: { __typename?: 'User' } & Pick<
                 User,
                 'id' | 'email' | 'fullName' | 'role'
               >
-            >
-          }
+              usersGranted: Array<
+                { __typename?: 'User' } & Pick<
+                  User,
+                  'id' | 'email' | 'fullName' | 'role'
+                >
+              >
+            }
         >
         propertySelections: Array<
           { __typename?: 'ClaimPropertySelection' } & Pick<
@@ -2117,6 +2121,30 @@ export type ReleaseResourceAccessMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'releaseResourceAccess'>
 
+export type ResourceAccessInformationQueryVariables = Exact<{
+  resourceId: Scalars['String']
+}>
+
+export type ResourceAccessInformationQuery = { __typename?: 'QueryType' } & {
+  resourceAccess?: Maybe<
+    { __typename?: 'ResourceAccessInformation' } & Pick<
+      ResourceAccessInformation,
+      'rolesGranted'
+    > & {
+        restrictedBy: { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
+        usersGranted: Array<
+          { __typename?: 'User' } & Pick<
+            User,
+            'id' | 'email' | 'fullName' | 'role'
+          >
+        >
+      }
+  >
+}
+
 export type RestrictResourceAccessMutationVariables = Exact<{
   resourceId: Scalars['ID']
 }>
@@ -2201,17 +2229,6 @@ export type UpdateClaimStateMutation = { __typename?: 'MutationType' } & {
           { __typename?: 'ClaimEvent' } & Pick<ClaimEvent, 'text' | 'date'>
         >
       }
-  >
-}
-
-export type UserThatRestrictedResourceQueryVariables = Exact<{
-  resourceId: Scalars['ID']
-}>
-
-export type UserThatRestrictedResourceQuery = { __typename?: 'QueryType' } & {
-  userThatRestrictedResource: { __typename?: 'User' } & Pick<
-    User,
-    'id' | 'email' | 'fullName'
   >
 }
 
@@ -4289,12 +4306,13 @@ export const ClaimPageDocument = gql`
           fullName
           role
         }
-        grantedAccess {
+        usersGranted {
           id
           email
           fullName
           role
         }
+        rolesGranted
       }
       propertySelections {
         claimType
@@ -4940,6 +4958,76 @@ export type ReleaseResourceAccessMutationOptions = ApolloReactCommon.BaseMutatio
   ReleaseResourceAccessMutation,
   ReleaseResourceAccessMutationVariables
 >
+export const ResourceAccessInformationDocument = gql`
+  query ResourceAccessInformation($resourceId: String!) {
+    resourceAccess(resourceId: $resourceId) {
+      restrictedBy {
+        id
+        email
+        fullName
+        role
+      }
+      usersGranted {
+        id
+        email
+        fullName
+        role
+      }
+      rolesGranted
+    }
+  }
+`
+
+/**
+ * __useResourceAccessInformationQuery__
+ *
+ * To run a query within a React component, call `useResourceAccessInformationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useResourceAccessInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useResourceAccessInformationQuery({
+ *   variables: {
+ *      resourceId: // value for 'resourceId'
+ *   },
+ * });
+ */
+export function useResourceAccessInformationQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >(ResourceAccessInformationDocument, options)
+}
+export function useResourceAccessInformationLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >(ResourceAccessInformationDocument, options)
+}
+export type ResourceAccessInformationQueryHookResult = ReturnType<
+  typeof useResourceAccessInformationQuery
+>
+export type ResourceAccessInformationLazyQueryHookResult = ReturnType<
+  typeof useResourceAccessInformationLazyQuery
+>
+export type ResourceAccessInformationQueryResult = ApolloReactCommon.QueryResult<
+  ResourceAccessInformationQuery,
+  ResourceAccessInformationQueryVariables
+>
 export const RestrictResourceAccessDocument = gql`
   mutation RestrictResourceAccess($resourceId: ID!) {
     restrictResourceAccess(resourceId: $resourceId) {
@@ -5288,66 +5376,6 @@ export type UpdateClaimStateMutationResult = ApolloReactCommon.MutationResult<
 export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateClaimStateMutation,
   UpdateClaimStateMutationVariables
->
-export const UserThatRestrictedResourceDocument = gql`
-  query UserThatRestrictedResource($resourceId: ID!) {
-    userThatRestrictedResource(resourceId: $resourceId) {
-      id
-      email
-      fullName
-    }
-  }
-`
-
-/**
- * __useUserThatRestrictedResourceQuery__
- *
- * To run a query within a React component, call `useUserThatRestrictedResourceQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserThatRestrictedResourceQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUserThatRestrictedResourceQuery({
- *   variables: {
- *      resourceId: // value for 'resourceId'
- *   },
- * });
- */
-export function useUserThatRestrictedResourceQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    UserThatRestrictedResourceQuery,
-    UserThatRestrictedResourceQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    UserThatRestrictedResourceQuery,
-    UserThatRestrictedResourceQueryVariables
-  >(UserThatRestrictedResourceDocument, options)
-}
-export function useUserThatRestrictedResourceLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    UserThatRestrictedResourceQuery,
-    UserThatRestrictedResourceQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    UserThatRestrictedResourceQuery,
-    UserThatRestrictedResourceQueryVariables
-  >(UserThatRestrictedResourceDocument, options)
-}
-export type UserThatRestrictedResourceQueryHookResult = ReturnType<
-  typeof useUserThatRestrictedResourceQuery
->
-export type UserThatRestrictedResourceLazyQueryHookResult = ReturnType<
-  typeof useUserThatRestrictedResourceLazyQuery
->
-export type UserThatRestrictedResourceQueryResult = ApolloReactCommon.QueryResult<
-  UserThatRestrictedResourceQuery,
-  UserThatRestrictedResourceQueryVariables
 >
 export const ListClaimsDocument = gql`
   query ListClaims($options: ListClaimsOptions!) {

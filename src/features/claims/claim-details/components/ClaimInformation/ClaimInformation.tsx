@@ -214,7 +214,8 @@ export const ClaimInformation: React.FC<{
                 ...cachedData.claim,
                 restriction: {
                   restrictedBy: response.restrictResourceAccess.grantedBy,
-                  grantedAccess: [response.restrictResourceAccess.grantedBy],
+                  usersGranted: [response.restrictResourceAccess.grantedBy],
+                  rolesGranted: [],
                 },
               },
             },

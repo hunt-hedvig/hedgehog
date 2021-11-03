@@ -33,7 +33,7 @@ import { Prompt, RouteComponentProps } from 'react-router'
 import {
   ClaimState,
   useClaimPageQuery,
-  useUserThatRestrictedResourceQuery,
+  useResourceAccessInformationQuery,
 } from 'types/generated/graphql'
 
 const ChatPaneAdjustedContainer = styled.div`
@@ -103,15 +103,15 @@ const FOCUSES: { [section: string]: Focus } = {
 }
 
 const RestrictedClaimMessage: React.FC<{ claimId: string }> = ({ claimId }) => {
-  const { data } = useUserThatRestrictedResourceQuery({
+  const { data } = useResourceAccessInformationQuery({
     variables: { resourceId: claimId },
   })
 
-  if (!data) {
+  if (!data?.resourceAccess?.restrictedBy) {
     return null
   }
 
-  const user = data.userThatRestrictedResource
+  const user = data.resourceAccess.restrictedBy
 
   return (
     <StandaloneMessage opacity={0.5}>
