@@ -1,17 +1,19 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
 import React, { useRef } from 'react'
 import {
   BoxArrowLeft,
   GearFill,
-  PeopleFill,
+  Moon,
   PersonFill,
+  Sun,
 } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { CircleButton } from './TopBar'
 
-const SettingsWrapper = styled.div`
+const MenuWrapper = styled.div`
   position: relative;
 `
 
@@ -67,22 +69,18 @@ const Option = styled.li`
   }
 `
 
-interface SettingsProps {
-  me?: any
-  setShowUsers?: any
-}
-
-const SettingsList: React.FC<SettingsProps> = ({ setShowUsers }) => {
+const UserMenu = () => {
   const history = useHistory()
   const listRef = useRef(null)
   const [view, setView] = React.useState(false)
+  const { isDarkmode, setIsDarkmode } = useDarkmode()
 
   const close = () => setView(false)
 
   useClickOutside(listRef, close)
 
   return (
-    <SettingsWrapper>
+    <MenuWrapper>
       <CircleButton onClick={() => setView((prev) => !prev)}>
         <PersonFill />
       </CircleButton>
@@ -99,12 +97,12 @@ const SettingsList: React.FC<SettingsProps> = ({ setShowUsers }) => {
             </Option>
             <Option
               onClick={() => {
-                setShowUsers((prev) => !prev)
+                setIsDarkmode(!isDarkmode)
                 close()
               }}
             >
-              <PeopleFill />
-              <span>Users Online</span>
+              {isDarkmode ? <Sun /> : <Moon />}{' '}
+              <span>{isDarkmode ? 'Light mode' : 'Dark mode'}</span>
             </Option>
             <Option
               onClick={() => {
@@ -118,8 +116,8 @@ const SettingsList: React.FC<SettingsProps> = ({ setShowUsers }) => {
           </FadeIn>
         </List>
       )}
-    </SettingsWrapper>
+    </MenuWrapper>
   )
 }
 
-export default SettingsList
+export default UserMenu

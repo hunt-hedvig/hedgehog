@@ -1,31 +1,13 @@
-import styled from '@emotion/styled'
-import {
-  Button,
-  Flex,
-  Input,
-  Label,
-  MainHeadline,
-  SecondLevelHeadline,
-  Spacing,
-} from '@hedvig-ui'
-import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
+import { Button, Flex, Input, Label, MainHeadline, Spacing } from '@hedvig-ui'
 import React, { useEffect, useState } from 'react'
-import { Moon, Sun } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
-
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 2rem;
-`
 
 const ProfilePage: React.FC = () => {
   const { data } = useGetMeQuery()
   const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState<null | string>('')
   const [updateUser] = useUpdateUserMutation()
-  const { isDarkmode, setIsDarkmode } = useDarkmode()
 
   const handleSaveChanges = () => {
     if (!data) {
@@ -73,7 +55,7 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <Wrapper>
+    <>
       <div>
         <MainHeadline>Profile</MainHeadline>
         <Spacing top />
@@ -124,19 +106,7 @@ const ProfilePage: React.FC = () => {
           </form>
         </Flex>
       </div>
-      <div>
-        <SecondLevelHeadline>Dark mode:</SecondLevelHeadline>
-        <Button
-          variant="secondary"
-          onClick={() => setIsDarkmode(!isDarkmode)}
-          icon={isDarkmode ? <Sun /> : <Moon />}
-        >
-          <span style={{ marginLeft: '0.8rem' }}>
-            Set {isDarkmode ? 'Dark' : 'Light'} mode
-          </span>
-        </Button>
-      </div>
-    </Wrapper>
+    </>
   )
 }
 

@@ -6,8 +6,8 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
-import { Me } from 'types/generated/graphql'
-import SettingsList from './SettingsList'
+import { PeopleFill } from 'react-bootstrap-icons'
+import UserMenu from './UserMenu'
 
 const Wrapper = styled.div`
   display: flex;
@@ -46,16 +46,12 @@ export const CircleButton = styled.div`
 `
 
 const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
-  display: flex;
-  align-items: center;
-
   transition: margin-right 400ms;
   margin-right: ${({ pushLeft }) => (pushLeft ? '300px' : '0')};
 `
 
-export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
+export const TopBar = () => {
   const [showUsers, setShowUsers] = useState(false)
-
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
@@ -76,7 +72,14 @@ export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
         justify="flex-end"
         align="center"
       >
-        <SettingsList me={me} setShowUsers={setShowUsers} />
+        <UserMenu />
+
+        <CircleButton
+          onClick={() => setShowUsers(true)}
+          style={{ marginLeft: '1em' }}
+        >
+          <PeopleFill />
+        </CircleButton>
       </TopBarContainer>
     </Wrapper>
   )
