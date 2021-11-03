@@ -7,6 +7,7 @@ import {
   LoadingMessage,
   StandaloneMessage,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -92,7 +93,7 @@ export const EmployeeTable: React.FC<{
           <TableHeaderColumn>First granted at</TableHeaderColumn>
           <TableHeaderColumn>Actions</TableHeaderColumn>
         </TableHeader>
-        <>
+        <TableBody>
           {employees.filter(filterEmployee).map((employee) => {
             const { id, email, role, firstGrantedAt } = employee
 
@@ -102,21 +103,20 @@ export const EmployeeTable: React.FC<{
                 <TableColumn>
                   {scopes.includes('employees:manage') ? (
                     <Dropdown placeholder={role}>
-                      {options.map((opt) => {
-                        return (
-                          <DropdownOption
-                            onClick={() => {
-                              setSelectedRoles({
-                                ...selectedRoles,
-                                [id]: opt.value,
-                              })
-                            }}
-                            selected={selectedRoles[id] === opt.value}
-                          >
-                            {opt.text || role}
-                          </DropdownOption>
-                        )
-                      })}
+                      {options.map((opt) => (
+                        <DropdownOption
+                          key={opt.key}
+                          onClick={() => {
+                            setSelectedRoles({
+                              ...selectedRoles,
+                              [id]: opt.value,
+                            })
+                          }}
+                          selected={selectedRoles[id] === opt.value}
+                        >
+                          {opt.text || role}
+                        </DropdownOption>
+                      ))}
                     </Dropdown>
                   ) : (
                     role
@@ -181,7 +181,7 @@ export const EmployeeTable: React.FC<{
               </TableRow>
             )
           })}
-        </>
+        </TableBody>
       </Table>
     </Card>
   )

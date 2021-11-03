@@ -5,6 +5,7 @@ import {
   Capitalized,
   Popover,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -58,86 +59,88 @@ export const MonthlyEntriesTable: React.FC<{
         </TableHeaderColumn>
         <TableHeaderColumn style={{ width: 43 }} />
       </TableHeader>
-      {monthlyEntries.map((monthlyEntry) => {
-        return (
-          <TableRow key={monthlyEntry.id} border>
-            <TableColumn>{monthlyEntry.externalId ?? 'None'}</TableColumn>
-            <TableColumn>
-              <Capitalized>{monthlyEntry.source}</Capitalized>
-            </TableColumn>
-            <TableColumn>
-              <Capitalized>{monthlyEntry.title}</Capitalized>
-            </TableColumn>
-            <TableColumn>
-              <Capitalized>{monthlyEntry.type}</Capitalized>
-            </TableColumn>
-            <TableColumn>{formatMoney(monthlyEntry.amount)}</TableColumn>
-            <TableColumn style={{ textAlign: 'center', width: 90 }}>
-              <Popover
-                contents={
-                  <>
-                    <PopoverItem>
-                      <Bold>ID:</Bold>
-                      {monthlyEntry.id}
-                    </PopoverItem>
+      <TableBody>
+        {monthlyEntries.map((monthlyEntry) => {
+          return (
+            <TableRow key={monthlyEntry.id} border>
+              <TableColumn>{monthlyEntry.externalId ?? 'None'}</TableColumn>
+              <TableColumn>
+                <Capitalized>{monthlyEntry.source}</Capitalized>
+              </TableColumn>
+              <TableColumn>
+                <Capitalized>{monthlyEntry.title}</Capitalized>
+              </TableColumn>
+              <TableColumn>
+                <Capitalized>{monthlyEntry.type}</Capitalized>
+              </TableColumn>
+              <TableColumn>{formatMoney(monthlyEntry.amount)}</TableColumn>
+              <TableColumn style={{ textAlign: 'center', width: 90 }}>
+                <Popover
+                  contents={
+                    <>
+                      <PopoverItem>
+                        <Bold>ID:</Bold>
+                        {monthlyEntry.id}
+                      </PopoverItem>
 
-                    <PopoverItem>
-                      <Bold>Added At:</Bold>
-                      {format(
-                        parseISO(monthlyEntry.addedAt),
-                        'yyyy-MM-dd HH:mm:ss',
-                      )}
-                    </PopoverItem>
+                      <PopoverItem>
+                        <Bold>Added At:</Bold>
+                        {format(
+                          parseISO(monthlyEntry.addedAt),
+                          'yyyy-MM-dd HH:mm:ss',
+                        )}
+                      </PopoverItem>
 
-                    <PopoverItem>
-                      <Bold>Added By:</Bold>
-                      {monthlyEntry.addedBy}
-                    </PopoverItem>
+                      <PopoverItem>
+                        <Bold>Added By:</Bold>
+                        {monthlyEntry.addedBy}
+                      </PopoverItem>
 
-                    <PopoverItem>
-                      <Bold>Comment:</Bold>
-                      {monthlyEntry.comment}
-                    </PopoverItem>
-                  </>
-                }
-              >
-                <InfoCircleFill />
-              </Popover>
-            </TableColumn>
-            <TableColumn style={{ width: 43 }}>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  confirm(
-                    `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,
-                  ).then(() => {
-                    toast.promise(
-                      removeMonthlyEntry({
-                        variables: {
-                          id: monthlyEntry.id,
-                        },
-                        refetchQueries: [
-                          {
-                            query: GetAccountDocument,
-                            variables: { memberId },
+                      <PopoverItem>
+                        <Bold>Comment:</Bold>
+                        {monthlyEntry.comment}
+                      </PopoverItem>
+                    </>
+                  }
+                >
+                  <InfoCircleFill />
+                </Popover>
+              </TableColumn>
+              <TableColumn style={{ width: 43 }}>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    confirm(
+                      `Are you sure you want delete the monthly entry titled "${monthlyEntry.title} (id=${monthlyEntry.id})?"`,
+                    ).then(() => {
+                      toast.promise(
+                        removeMonthlyEntry({
+                          variables: {
+                            id: monthlyEntry.id,
                           },
-                        ],
-                      }),
-                      {
-                        loading: 'Removing monthly entry',
-                        success: 'Monthly entry removed',
-                        error: 'Could not remove monthly entry',
-                      },
-                    )
-                  })
-                }}
-              >
-                <TrashIcon />
-              </Button>
-            </TableColumn>
-          </TableRow>
-        )
-      })}
+                          refetchQueries: [
+                            {
+                              query: GetAccountDocument,
+                              variables: { memberId },
+                            },
+                          ],
+                        }),
+                        {
+                          loading: 'Removing monthly entry',
+                          success: 'Monthly entry removed',
+                          error: 'Could not remove monthly entry',
+                        },
+                      )
+                    })
+                  }}
+                >
+                  <TrashIcon />
+                </Button>
+              </TableColumn>
+            </TableRow>
+          )
+        })}
+      </TableBody>
     </StyledTable>
   )
 }

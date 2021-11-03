@@ -5,6 +5,7 @@ import {
   Placeholder,
   StandaloneMessage,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -62,71 +63,73 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
 
   return (
     <>
-      <Table
-        onPerformNavigation={(index) => {
-          const claimId = claims[index].id
-
-          if (!claimId || !memberId) {
-            return
-          }
-
-          history.push(`/claims/${claimId}`)
-        }}
-      >
+      <Table>
         <TableHeader>
           <TableHeaderColumn>Date Registered</TableHeaderColumn>
           <TableHeaderColumn>Claim Type</TableHeaderColumn>
           <TableHeaderColumn>Claim State</TableHeaderColumn>
           <TableHeaderColumn>Claim Reserves</TableHeaderColumn>
         </TableHeader>
-        {claims.map((claim) => {
-          const registrationDateString = formatDate(
-            parseISO(claim.registrationDate),
-            'dd MMMM, yyyy',
-          )
-          const registrationDateTimeString = formatDate(
-            parseISO(claim.registrationDate),
-            'HH:mm',
-          )
+        <TableBody
+          onPerformNavigation={(index) => {
+            const claimId = claims[index].id
 
-          return (
-            <TableRow
-              key={claim.id}
-              onClick={() => history.push(`/claims/${claim.id}`)}
-            >
-              <TableColumn>
-                <FlexVertically>
-                  {registrationDateString}
-                  <TableColumnSubtext>
-                    {registrationDateTimeString}
-                  </TableColumnSubtext>
-                </FlexVertically>
-              </TableColumn>
+            if (!claimId || !memberId) {
+              return
+            }
 
-              <TableColumn>
-                {claim.claimType ? (
-                  convertEnumToTitle(claim.claimType)
-                ) : (
-                  <Placeholder>Not specified</Placeholder>
-                )}
-              </TableColumn>
+            history.push(`/claims/${claimId}`)
+          }}
+        >
+          {claims.map((claim) => {
+            const registrationDateString = formatDate(
+              parseISO(claim.registrationDate),
+              'dd MMMM, yyyy',
+            )
+            const registrationDateTimeString = formatDate(
+              parseISO(claim.registrationDate),
+              'HH:mm',
+            )
 
-              <TableColumn>
-                <ClaimStateBadge state={claim.state}>
-                  {convertEnumToTitle(claim.state)}
-                </ClaimStateBadge>
-              </TableColumn>
+            return (
+              <TableRow
+                key={claim.id}
+                onClick={() => history.push(`/claims/${claim.id}`)}
+              >
+                <TableColumn>
+                  <FlexVertically>
+                    {registrationDateString}
+                    <TableColumnSubtext>
+                      {registrationDateTimeString}
+                    </TableColumnSubtext>
+                  </FlexVertically>
+                </TableColumn>
 
-              <TableColumn>
-                {claim.reserves ? (
-                  <Monetary amount={claim.reserves} />
-                ) : (
-                  <Placeholder>Not specified</Placeholder>
-                )}
-              </TableColumn>
-            </TableRow>
-          )
-        })}
+                <TableColumn>
+                  {claim.claimType ? (
+                    convertEnumToTitle(claim.claimType)
+                  ) : (
+                    <Placeholder>Not specified</Placeholder>
+                  )}
+                </TableColumn>
+
+                <TableColumn>
+                  <ClaimStateBadge state={claim.state}>
+                    {convertEnumToTitle(claim.state)}
+                  </ClaimStateBadge>
+                </TableColumn>
+
+                <TableColumn>
+                  {claim.reserves ? (
+                    <Monetary amount={claim.reserves} />
+                  ) : (
+                    <Placeholder>Not specified</Placeholder>
+                  )}
+                </TableColumn>
+              </TableRow>
+            )
+          })}
+        </TableBody>
       </Table>
     </>
   )

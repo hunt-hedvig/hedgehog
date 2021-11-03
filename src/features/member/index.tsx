@@ -187,8 +187,9 @@ export const MemberTabs: React.FC<RouteComponentProps<{
           }))}
         />
         <div style={{ marginTop: '4rem' }}>
-          {panes.map((pane) => (
+          {panes.map((pane, id) => (
             <Route
+              key={`${pane.tabName}-${id}`}
               path={`${match.path}/${pane.tabName}`}
               component={pane.component}
             />

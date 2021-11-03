@@ -5,7 +5,7 @@ const spin = keyframes`
   from{transform: rotate(0deg)}
   to{transform: rotate(360deg)}
 `
-export const RefreshButton = styled.button<{ loading?: boolean }>`
+export const RefreshButton = styled.button<{ isloading?: boolean }>`
   background: transparent;
   font-size: 0.875em;
   color: ${({ theme }) => theme.mutedText};
@@ -16,8 +16,8 @@ export const RefreshButton = styled.button<{ loading?: boolean }>`
   align-items: center;
   cursor: pointer;
   transition: transform 500ms;
-  ${({ loading }) =>
-    loading &&
+  ${({ isloading }) =>
+    isloading &&
     css`
       animation: ${spin} 500ms linear infinite;
     `};

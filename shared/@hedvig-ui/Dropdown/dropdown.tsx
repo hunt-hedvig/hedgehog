@@ -100,16 +100,16 @@ const Placeholder = styled.span`
   color: ${({ theme }) => theme.placeholderColor};
 `
 
-const TriangleIcon = styled(TriangleFill)<{ active }>`
+const TriangleIcon = styled(TriangleFill)<{ active: number }>`
   transition: all 0.2s;
   position: absolute;
   right: 15px;
   top: 40%;
   width: 10px;
   height: 10px;
-  transform: ${({ active }) => (!active ? 'scaleY(-1)' : 'scaleY(1)')};
+  transform: scaleY(${({ active }) => active});
   color: ${({ active, theme }) =>
-    !active ? theme.placeholderColor : theme.accent};
+    active < 0 ? theme.placeholderColor : theme.accent};
 `
 
 interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
@@ -209,7 +209,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         </OptionsList>
       )}
 
-      <TriangleIcon active={active} />
+      <TriangleIcon active={active ? 1 : -1} />
     </DropdownStyled>
   )
 }
