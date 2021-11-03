@@ -2,6 +2,7 @@ import {
   Button,
   Flex,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -114,47 +115,51 @@ export const PropertiesTable: React.FC<{ filter: string }> = ({ filter }) => {
         <TableHeaderColumn>Name</TableHeaderColumn>
       </TableHeader>
 
-      {claimProperties
-        .filter((type) =>
-          filter
-            ? type.name.toLowerCase().includes(filter.toLowerCase())
-            : true,
-        )
-        .map((property) => (
-          <TableRow
-            key={property.id}
-            onClick={() => property.id !== editing && setEditing(property.id)}
-          >
-            <TableColumn>
-              {editing === property.id ? (
-                <Flex align="center">
-                  <UpdateNameInput
-                    initial={convertCamelcaseToTitle(property.name)}
-                    disabled={updateLoading || deprecateLoading}
-                    onSubmit={(value) => handleUpdateProperty(value, property)}
-                  />
-                  <Button
-                    onClick={() => handleDeprecateProperty(property)}
-                    status="danger"
-                    style={{ marginLeft: '1em' }}
-                    disabled={deprecateLoading}
-                  >
-                    Deprecate
-                  </Button>
-                  <Button
-                    onClick={() => setEditing(null)}
-                    variant="tertiary"
-                    style={{ marginLeft: '1em' }}
-                  >
-                    Cancel
-                  </Button>
-                </Flex>
-              ) : (
-                convertCamelcaseToTitle(property.name)
-              )}
-            </TableColumn>
-          </TableRow>
-        ))}
+      <TableBody>
+        {claimProperties
+          .filter((type) =>
+            filter
+              ? type.name.toLowerCase().includes(filter.toLowerCase())
+              : true,
+          )
+          .map((property) => (
+            <TableRow
+              key={property.id}
+              onClick={() => property.id !== editing && setEditing(property.id)}
+            >
+              <TableColumn>
+                {editing === property.id ? (
+                  <Flex align="center">
+                    <UpdateNameInput
+                      initial={convertCamelcaseToTitle(property.name)}
+                      disabled={updateLoading || deprecateLoading}
+                      onSubmit={(value) =>
+                        handleUpdateProperty(value, property)
+                      }
+                    />
+                    <Button
+                      onClick={() => handleDeprecateProperty(property)}
+                      status="danger"
+                      style={{ marginLeft: '1em' }}
+                      disabled={deprecateLoading}
+                    >
+                      Deprecate
+                    </Button>
+                    <Button
+                      onClick={() => setEditing(null)}
+                      variant="tertiary"
+                      style={{ marginLeft: '1em' }}
+                    >
+                      Cancel
+                    </Button>
+                  </Flex>
+                ) : (
+                  convertCamelcaseToTitle(property.name)
+                )}
+              </TableColumn>
+            </TableRow>
+          ))}
+      </TableBody>
     </Table>
   )
 }

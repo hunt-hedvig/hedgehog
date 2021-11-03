@@ -3,24 +3,25 @@ import {
   Placeholder,
   Spacing,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import {
   getFirstMasterInception,
   getLastTerminationDate,
 } from 'features/member/tabs/contracts-tab/utils'
-import {
-  getMemberFlag,
-  getMemberIdColor,
-  MemberAge,
-} from 'features/member/utils'
-import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
+import { getMemberFlag, MemberAge } from 'features/member/utils'
 import React from 'react'
+import { useHistory } from 'react-router'
 import { Contract, ContractStatus, Member } from 'types/generated/graphql'
 
 type CircleVariation =
@@ -76,18 +77,6 @@ const MemberAgeWrapper = styled.span`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-const MemberIdCell = styled(TableColumn)<{
-  memberId: string
-  numberMemberGroups: number
-}>`
-  border-left: 7px solid
-    ${({ memberId, numberMemberGroups }) =>
-      getMemberIdColor(memberId, numberMemberGroups)};
-
-  padding-left: 1em;
-  height: 100%;
-`
-
 type NumberOfContracts = {
   [key in ContractStatus]?: number
 }
@@ -109,10 +98,20 @@ const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
 
 export const MembersList: React.FC<{
   members: Member[]
-  navigationStep?: number
-  redirectMemberHandler: (id: string) => void
-}> = ({ members, navigationStep, redirectMemberHandler }) => {
-  const { numberMemberGroups } = useNumberMemberGroups()
+}> = ({ members }) => {
+  const history = useHistory()
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
+
+  const redirectMemberHandler = (id: string) => {
+    const link = `/members/${id}/contracts`
+
+    if (isCommandPressed) {
+      window.open(link, '_blank')
+      return
+    }
+
+    history.push(link)
+  }
 
   return (
     <>
@@ -125,28 +124,31 @@ export const MembersList: React.FC<{
           <TableHeaderColumn>Last Termination Date</TableHeaderColumn>
           <TableHeaderColumn>Contracts</TableHeaderColumn>
         </TableHeader>
-        {members.map((member, index) => {
-          const {
-            ACTIVE_IN_FUTURE: activeInFutureContracts = 0,
-            ACTIVE: activeContracts = 0,
-            PENDING: pendingContracts = 0,
-            TERMINATED: terminatedContracts = 0,
-          } = countContractsByStatus(member.contracts)
+        <TableBody
+          onPerformNavigation={(index) => {
+            const memberId = members[index].memberId
 
-          return (
-            <TableRow
-              key={member.memberId}
-              active={navigationStep === index}
-              onClick={() => redirectMemberHandler(member.memberId)}
-            >
-              <div>
-                <MemberIdCell
-                  numberMemberGroups={numberMemberGroups}
-                  memberId={member.memberId}
-                  style={{
-                    maxWidth: '250px',
-                  }}
-                >
+            if (!memberId) {
+              return
+            }
+
+            redirectMemberHandler(memberId)
+          }}
+        >
+          {members.map((member) => {
+            const {
+              ACTIVE_IN_FUTURE: activeInFutureContracts = 0,
+              ACTIVE: activeContracts = 0,
+              PENDING: pendingContracts = 0,
+              TERMINATED: terminatedContracts = 0,
+            } = countContractsByStatus(member.contracts)
+
+            return (
+              <TableRow
+                key={member.memberId}
+                onClick={() => redirectMemberHandler(member.memberId)}
+              >
+                <TableColumn>
                   <FlexVertically>
                     {member.firstName} {member.lastName}{' '}
                     {getMemberFlag(member.contractMarketInfo)}
@@ -157,79 +159,82 @@ export const MembersList: React.FC<{
                       </MemberAgeWrapper>
                     </FlexHorizontally>
                   </FlexVertically>
-                </MemberIdCell>
-              </div>
-              <TableColumn>
-                {member.signedOn && (
-                  <FlexVertically>
-                    {formatDate(parseISO(member.signedOn), 'dd MMMM, yyyy')}
-                    <TableColumnSubtext>
-                      {formatDate(parseISO(member.signedOn), 'HH:mm')}
-                    </TableColumnSubtext>
-                  </FlexVertically>
-                )}
-              </TableColumn>
-              <TableColumn>
-                {getFirstMasterInception(member.contracts)}
-              </TableColumn>
-              <TableColumn>
-                {getLastTerminationDate(member.contracts) ?? (
-                  <Placeholder>Not specified</Placeholder>
-                )}
-              </TableColumn>
-              <TableColumn>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <ContractCountWrapper>
-                    <ContractCountNumber
-                      variation={
-                        pendingContracts ? 'warning' : 'placeholderColor'
-                      }
-                    >
-                      {pendingContracts}
-                    </ContractCountNumber>
-                    <ContractCountLabel>Pending</ContractCountLabel>
-                  </ContractCountWrapper>
-                  <ContractCountWrapper>
-                    <ContractCountNumber
-                      variation={
-                        activeInFutureContracts ? 'accent' : 'placeholderColor'
-                      }
-                    >
-                      {activeInFutureContracts}
-                    </ContractCountNumber>
-                    <ContractCountLabel>Active in future</ContractCountLabel>
-                  </ContractCountWrapper>
-                  <ContractCountWrapper>
-                    <ContractCountNumber
-                      variation={
-                        activeContracts ? 'success' : 'placeholderColor'
-                      }
-                    >
-                      {activeContracts}
-                    </ContractCountNumber>
-                    <ContractCountLabel>Active</ContractCountLabel>
-                  </ContractCountWrapper>
-                  <ContractCountWrapper>
-                    <ContractCountNumber
-                      variation={
-                        terminatedContracts ? 'danger' : 'placeholderColor'
-                      }
-                    >
-                      {terminatedContracts}
-                    </ContractCountNumber>
-                    <ContractCountLabel>Terminated</ContractCountLabel>
-                  </ContractCountWrapper>
-                </div>
-              </TableColumn>
-            </TableRow>
-          )
-        })}
+                </TableColumn>
+
+                <TableColumn>
+                  {member.signedOn && (
+                    <FlexVertically>
+                      {formatDate(parseISO(member.signedOn), 'dd MMMM, yyyy')}
+                      <TableColumnSubtext>
+                        {formatDate(parseISO(member.signedOn), 'HH:mm')}
+                      </TableColumnSubtext>
+                    </FlexVertically>
+                  )}
+                </TableColumn>
+                <TableColumn>
+                  {getFirstMasterInception(member.contracts)}
+                </TableColumn>
+                <TableColumn>
+                  {getLastTerminationDate(member.contracts) ?? (
+                    <Placeholder>Not specified</Placeholder>
+                  )}
+                </TableColumn>
+                <TableColumn>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <ContractCountWrapper>
+                      <ContractCountNumber
+                        variation={
+                          pendingContracts ? 'warning' : 'placeholderColor'
+                        }
+                      >
+                        {pendingContracts}
+                      </ContractCountNumber>
+                      <ContractCountLabel>Pending</ContractCountLabel>
+                    </ContractCountWrapper>
+                    <ContractCountWrapper>
+                      <ContractCountNumber
+                        variation={
+                          activeInFutureContracts
+                            ? 'accent'
+                            : 'placeholderColor'
+                        }
+                      >
+                        {activeInFutureContracts}
+                      </ContractCountNumber>
+                      <ContractCountLabel>Active in future</ContractCountLabel>
+                    </ContractCountWrapper>
+                    <ContractCountWrapper>
+                      <ContractCountNumber
+                        variation={
+                          activeContracts ? 'success' : 'placeholderColor'
+                        }
+                      >
+                        {activeContracts}
+                      </ContractCountNumber>
+                      <ContractCountLabel>Active</ContractCountLabel>
+                    </ContractCountWrapper>
+                    <ContractCountWrapper>
+                      <ContractCountNumber
+                        variation={
+                          terminatedContracts ? 'danger' : 'placeholderColor'
+                        }
+                      >
+                        {terminatedContracts}
+                      </ContractCountNumber>
+                      <ContractCountLabel>Terminated</ContractCountLabel>
+                    </ContractCountWrapper>
+                  </div>
+                </TableColumn>
+              </TableRow>
+            )
+          })}
+        </TableBody>
       </Table>
     </>
   )

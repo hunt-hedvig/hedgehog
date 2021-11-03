@@ -122,7 +122,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   <>
     {options.map((opt, idx) => (
       <Radio
-        key={opt.value}
+        key={`${opt.value}` + idx}
         id={`${opt.value}` + idx}
         value={opt.value}
         label={opt.label}

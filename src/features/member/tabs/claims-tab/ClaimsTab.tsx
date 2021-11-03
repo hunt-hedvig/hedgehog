@@ -55,6 +55,7 @@ export const ClaimsTab: React.FC<{
             <Dropdown placeholder="Source">
               {Object.keys(ClaimSource).map((source) => (
                 <DropdownOption
+                  key={source}
                   selected={claimSource === ClaimSource[source] || false}
                   onClick={() => setClaimSource(ClaimSource[source])}
                 >
