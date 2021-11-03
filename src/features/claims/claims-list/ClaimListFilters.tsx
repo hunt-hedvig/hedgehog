@@ -59,10 +59,13 @@ const StyledLabel = styled(Label)`
   }
 `
 
-const LabelWithPropower = ({ label, propover }) => (
+const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
+  label,
+  popover,
+}) => (
   <StyledLabel>
     <span>{label}</span>
-    <Popover style={{ width: 250 }} contents={propover}>
+    <Popover style={{ width: 250 }} contents={popover}>
       <InfoCircle />
     </Popover>
   </StyledLabel>
@@ -168,9 +171,9 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       </FilterElement>
 
       <FilterElement>
-        <LabelWithPropower
+        <LabelWithPopover
           label="Complexities"
-          propover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
+          popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
         />
         {Object.keys(ClaimComplexity).map((key) => (
           <Flex key={key} direction="row" align="center">
@@ -235,9 +238,9 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       </FilterElement>
 
       <FilterElement>
-        <LabelWithPropower
+        <LabelWithPopover
           label="Date up until"
-          propover="The claim was registered either before or on this date."
+          popover="The claim was registered either before or on this date."
         />
         <TextDatePicker
           value={
