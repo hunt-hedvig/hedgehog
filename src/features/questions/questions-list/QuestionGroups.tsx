@@ -17,13 +17,20 @@ const ListContainer = styled.div`
 
 export const QuestionGroups = ({ selectedFilters, questionGroups }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
+
   return (
     <ListContainer>
       <FilteredQuestionGroups
-        filterQuestionGroups={questionGroups
-          .filter(doMemberGroupFilter(numberMemberGroups)(selectedFilters))
-          .filter(doMarketFilter(selectedFilters))
-          .filter(doClaimFilter(selectedFilters))}
+        filterQuestionGroups={
+          selectedFilters.length > 0
+            ? questionGroups
+                .filter(
+                  doMemberGroupFilter(numberMemberGroups)(selectedFilters),
+                )
+                .filter(doMarketFilter(selectedFilters))
+                .filter(doClaimFilter(selectedFilters))
+            : questionGroups
+        }
       />
     </ListContainer>
   )
