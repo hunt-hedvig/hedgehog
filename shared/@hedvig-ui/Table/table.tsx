@@ -9,9 +9,16 @@ const range = (start, end) =>
     ? Array.from({ length: end - start }, (_v, k) => k + start)
     : []
 
-export const Table: React.FC<{
+export const Table = styled.table`
+  border-collapse: collapse;
+  font-weight: normal;
+  text-align: left;
+  width: 100%;
+`
+
+export const TableBody: React.FC<{
   onPerformNavigation?: (index) => void
-} & TableHTMLAttributes<HTMLTableElement>> = ({
+} & TableHTMLAttributes<HTMLTableSectionElement>> = ({
   onPerformNavigation,
   children,
   ...props
@@ -28,25 +35,25 @@ export const Table: React.FC<{
   })
 
   return (
-    <StyledTable
+    <StyledTableBody
       activeRow={onPerformNavigation ? navigationStep : -1}
       {...props}
     >
       {children}
-    </StyledTable>
+    </StyledTableBody>
   )
 }
 
-const StyledTable = styled.table<{ activeRow: number }>`
+const StyledTableBody = styled.tbody<{ activeRow: number }>`
+  border-collapse: collapse;
   font-weight: normal;
   text-align: left;
   width: 100%;
-  border-collapse: collapse;
 
   ${({ activeRow, theme }) => {
     if (activeRow !== -1) {
       return css`
-        tr:nth-of-type(${activeRow + 2}) {
+        tr:nth-of-type(${activeRow + 1}) td {
           background-color: ${theme.accentLight};
         }
       `
@@ -118,15 +125,25 @@ export const TableRow = styled.tr<{ active?: boolean; border?: boolean }>`
   }
   :hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.accentSaturated};
+
+    &,
+    & td {
+      background-color: ${({ theme }) => theme.accentSaturated};
+    }
   }
 
   :focus {
-    background-color: ${({ theme }) => theme.accentLight};
+    &,
+    & td {
+      background-color: ${({ theme }) => theme.accentLight};
+    }
   }
 
-  background-color: ${({ theme, active }) =>
-    active ? theme.accentLight : theme.accentLighter};
+  &,
+  & td {
+    background-color: ${({ theme, active }) =>
+      active ? theme.accentLight : theme.accentLighter};
+  }
 
   :last-of-type {
     border-radius: 0 0 8px 8px;
@@ -141,9 +158,11 @@ export const TableRow = styled.tr<{ active?: boolean; border?: boolean }>`
   }
 `
 
-export const TableHeader = styled.tr`
-  width: 100%;
-`
+export const TableHeader = ({ children }) => (
+  <thead style={{ width: '100%' }}>
+    <tr style={{ width: '100%' }}>{children}</tr>
+  </thead>
+)
 
 const PageLink = styled.span<{ disabled: boolean }>`
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};

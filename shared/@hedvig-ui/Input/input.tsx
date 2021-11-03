@@ -34,7 +34,7 @@ const InputStyled = styled.input<{
   error?: boolean
   disabled?: boolean
   muted?: boolean
-  loading?: boolean
+  isLoading?: boolean
   inputSize?: InputSize
   withIcon?: boolean
 }>`
@@ -70,8 +70,8 @@ const InputStyled = styled.input<{
   background-color: ${({ muted, theme }) =>
     !muted ? theme.backgroundLight : theme.accentBackground};
 
-  ${({ disabled, loading }) =>
-    (disabled || loading) &&
+  ${({ disabled, isLoading }) =>
+    (disabled || isLoading) &&
     `
   pointer-events: none;
   user-focus: none;
@@ -215,7 +215,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           inputSize={size}
           success={success}
           error={error}
-          loading={loading}
+          isLoading={loading}
           muted={muted}
           disabled={disabled}
           placeholder={props.placeholder}
