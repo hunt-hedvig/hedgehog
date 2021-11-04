@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Button, Flex, Shadowed } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import chroma from 'chroma-js'
-import { ResourceAccessOverview } from 'features/resource-access/ResourceAccessOverview'
+import { ResourceAccessOverview } from 'features/resource-access/overview/ResourceAccessOverview'
 import React, { useState } from 'react'
 import { ShieldLockFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
@@ -50,13 +50,6 @@ export const ClaimRestrictionInformation: React.FC<{
               },
             },
           })
-
-          console.log(
-            cache.readQuery({
-              query: ClaimPageDocument,
-              variables: { claimId },
-            }) as ClaimPageQuery,
-          )
         },
       }),
       {

@@ -1,26 +1,13 @@
 import styled from '@emotion/styled'
-import { Button, Flex, Label, Modal, Shadowed, Spacing, Tabs } from '@hedvig-ui'
-import chroma from 'chroma-js'
-import { useMe } from 'features/user/hooks/use-me'
-import React, { useState } from 'react'
+import { Button, Flex, Label, Spacing } from '@hedvig-ui'
+import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
   GrantHolderType,
   ResourceAccessInformation,
   useGrantResourceAccessMutation,
   User,
-  useResourceAccessInformationQuery,
 } from 'types/generated/graphql'
-
-const Footer = styled(Flex)`
-  font-size: 0.85rem;
-  margin-top: 0.2rem;
-  padding: 1rem;
-  color: ${({ theme }) =>
-    chroma(theme.foreground)
-      .alpha(0.7)
-      .hex()};
-`
 
 const UserItem = styled.div<{ access?: boolean }>`
   font-size: 1rem;
@@ -37,7 +24,7 @@ const ModalLabel = styled(Label)`
   font-size: 0.8rem;
 `
 
-const UserList: React.FC<{
+export const UserAccessList: React.FC<{
   resourceId: string
   resourceAccessInformation: ResourceAccessInformation
   canGrant: boolean
@@ -58,7 +45,7 @@ const UserList: React.FC<{
             usersGranted: [...resourceAccessInformation.usersGranted, user],
             usersRestricted: [
               ...resourceAccessInformation.usersRestricted.filter(
-                (restrictedUser) => restrictedUser.id === user.id,
+                (restrictedUser) => restrictedUser.id !== user.id,
               ),
             ],
           },
@@ -88,7 +75,8 @@ const UserList: React.FC<{
           </Flex>
         </UserItem>
       ))}
-      <Spacing top />
+      {!!resourceAccessInformation.usersGranted.length && <Spacing top />}
+
       {!!resourceAccessInformation.usersRestricted.length && (
         <ModalLabel>No access</ModalLabel>
       )}
@@ -109,75 +97,5 @@ const UserList: React.FC<{
         </UserItem>
       ))}
     </>
-  )
-}
-
-export const ResourceAccessOverview: React.FC<{
-  onClose: () => void
-  resourceId: string
-}> = ({ onClose, resourceId }) => {
-  const { data } = useResourceAccessInformationQuery({
-    variables: { resourceId },
-  })
-  const [activeTab, setActiveTab] = useState<'users' | 'roles'>('users')
-
-  const { me } = useMe()
-
-  if (!data?.resourceAccess) {
-    return null
-  }
-
-  const isUserThatRestricted =
-    data.resourceAccess?.restrictedBy.email === me.email
-
-  return (
-    <Modal withoutHeader onClose={onClose}>
-      <Tabs
-        style={{ margin: '1rem 0', padding: '0rem 1rem' }}
-        list={[
-          {
-            title: 'Users',
-            action: () => {
-              setActiveTab('users')
-            },
-            active: activeTab === 'users',
-          },
-
-          {
-            title: 'Roles',
-            action: () => {
-              setActiveTab('roles')
-            },
-            active: activeTab === 'roles',
-          },
-        ]}
-      />
-      <Flex
-        style={{
-          width: '500px',
-          height: '400px',
-          padding: '0rem 1rem',
-          overflowY: 'scroll',
-        }}
-        direction="column"
-      >
-        {activeTab === 'users' && (
-          <UserList
-            canGrant={isUserThatRestricted}
-            resourceAccessInformation={data.resourceAccess}
-            resourceId={resourceId}
-          />
-        )}
-      </Flex>
-      {!isUserThatRestricted && (
-        <Footer justify="center" align="center">
-          Only{' '}
-          <Shadowed style={{ margin: '0 0.2rem' }}>
-            {data.resourceAccess.restrictedBy.fullName}
-          </Shadowed>{' '}
-          can grant access to new users
-        </Footer>
-      )}
-    </Modal>
   )
 }

@@ -2096,9 +2096,15 @@ export type RestrictResourceAccessMutationVariables = Exact<{
 export type RestrictResourceAccessMutation = { __typename?: 'MutationType' } & {
   restrictResourceAccess: { __typename?: 'ResourceAccessInformation' } & Pick<
     ResourceAccessInformation,
-    'resourceId' | 'rolesGranted'
+    'resourceId' | 'rolesGranted' | 'rolesRestricted'
   > & {
       usersGranted: Array<
+        { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
+      >
+      usersRestricted: Array<
         { __typename?: 'User' } & Pick<
           User,
           'id' | 'email' | 'fullName' | 'role'
@@ -3191,6 +3197,14 @@ export type SendMessageMutation = { __typename?: 'MutationType' } & {
       >)
 }
 
+export type ReleaseResourceAccessMutationVariables = Exact<{
+  resourceId: Scalars['ID']
+}>
+
+export type ReleaseResourceAccessMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'releaseResourceAccess'>
+
 export type GrantResourceAccessMutationVariables = Exact<{
   resourceId: Scalars['ID']
   grantHolder: Scalars['String']
@@ -3216,14 +3230,6 @@ export type GrantResourceAccessMutation = { __typename?: 'MutationType' } & {
       >
     }
 }
-
-export type ReleaseResourceAccessMutationVariables = Exact<{
-  resourceId: Scalars['ID']
-}>
-
-export type ReleaseResourceAccessMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'releaseResourceAccess'>
 
 export type ResourceAccessInformationQueryVariables = Exact<{
   resourceId: Scalars['String']
@@ -4861,7 +4867,14 @@ export const RestrictResourceAccessDocument = gql`
         fullName
         role
       }
+      usersRestricted {
+        id
+        email
+        fullName
+        role
+      }
       rolesGranted
+      rolesRestricted
     }
   }
 `
@@ -8201,6 +8214,55 @@ export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SendMessageMutation,
   SendMessageMutationVariables
 >
+export const ReleaseResourceAccessDocument = gql`
+  mutation ReleaseResourceAccess($resourceId: ID!) {
+    releaseResourceAccess(resourceId: $resourceId)
+  }
+`
+export type ReleaseResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
+  ReleaseResourceAccessMutation,
+  ReleaseResourceAccessMutationVariables
+>
+
+/**
+ * __useReleaseResourceAccessMutation__
+ *
+ * To run a mutation, you first call `useReleaseResourceAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReleaseResourceAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [releaseResourceAccessMutation, { data, loading, error }] = useReleaseResourceAccessMutation({
+ *   variables: {
+ *      resourceId: // value for 'resourceId'
+ *   },
+ * });
+ */
+export function useReleaseResourceAccessMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ReleaseResourceAccessMutation,
+    ReleaseResourceAccessMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    ReleaseResourceAccessMutation,
+    ReleaseResourceAccessMutationVariables
+  >(ReleaseResourceAccessDocument, options)
+}
+export type ReleaseResourceAccessMutationHookResult = ReturnType<
+  typeof useReleaseResourceAccessMutation
+>
+export type ReleaseResourceAccessMutationResult = ApolloReactCommon.MutationResult<
+  ReleaseResourceAccessMutation
+>
+export type ReleaseResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ReleaseResourceAccessMutation,
+  ReleaseResourceAccessMutationVariables
+>
 export const GrantResourceAccessDocument = gql`
   mutation GrantResourceAccess(
     $resourceId: ID!
@@ -8275,55 +8337,6 @@ export type GrantResourceAccessMutationResult = ApolloReactCommon.MutationResult
 export type GrantResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
   GrantResourceAccessMutation,
   GrantResourceAccessMutationVariables
->
-export const ReleaseResourceAccessDocument = gql`
-  mutation ReleaseResourceAccess($resourceId: ID!) {
-    releaseResourceAccess(resourceId: $resourceId)
-  }
-`
-export type ReleaseResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
-  ReleaseResourceAccessMutation,
-  ReleaseResourceAccessMutationVariables
->
-
-/**
- * __useReleaseResourceAccessMutation__
- *
- * To run a mutation, you first call `useReleaseResourceAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useReleaseResourceAccessMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [releaseResourceAccessMutation, { data, loading, error }] = useReleaseResourceAccessMutation({
- *   variables: {
- *      resourceId: // value for 'resourceId'
- *   },
- * });
- */
-export function useReleaseResourceAccessMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    ReleaseResourceAccessMutation,
-    ReleaseResourceAccessMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    ReleaseResourceAccessMutation,
-    ReleaseResourceAccessMutationVariables
-  >(ReleaseResourceAccessDocument, options)
-}
-export type ReleaseResourceAccessMutationHookResult = ReturnType<
-  typeof useReleaseResourceAccessMutation
->
-export type ReleaseResourceAccessMutationResult = ApolloReactCommon.MutationResult<
-  ReleaseResourceAccessMutation
->
-export type ReleaseResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ReleaseResourceAccessMutation,
-  ReleaseResourceAccessMutationVariables
 >
 export const ResourceAccessInformationDocument = gql`
   query ResourceAccessInformation($resourceId: String!) {
