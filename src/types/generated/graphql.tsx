@@ -1834,13 +1834,19 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
         restriction?: Maybe<
           { __typename?: 'ResourceAccessInformation' } & Pick<
             ResourceAccessInformation,
-            'resourceId' | 'rolesGranted'
+            'resourceId' | 'restrictedByMe' | 'rolesGranted' | 'rolesRestricted'
           > & {
               restrictedBy: { __typename?: 'User' } & Pick<
                 User,
                 'id' | 'email' | 'fullName' | 'role'
               >
               usersGranted: Array<
+                { __typename?: 'User' } & Pick<
+                  User,
+                  'id' | 'email' | 'fullName' | 'role'
+                >
+              >
+              usersRestricted: Array<
                 { __typename?: 'User' } & Pick<
                   User,
                   'id' | 'email' | 'fullName' | 'role'
@@ -3760,7 +3766,7 @@ export type GetMeQuery = { __typename?: 'QueryType' } & {
   me: { __typename?: 'Me' } & Pick<Me, 'scopes' | 'role'> & {
       user: { __typename?: 'User' } & Pick<
         User,
-        'id' | 'email' | 'fullName' | 'phoneNumber'
+        'id' | 'email' | 'fullName' | 'phoneNumber' | 'role'
       >
       settings: Array<
         { __typename?: 'UserSetting' } & Pick<UserSetting, 'key' | 'value'>
@@ -4325,6 +4331,7 @@ export const ClaimPageDocument = gql`
       outcome
       restriction {
         resourceId
+        restrictedByMe
         restrictedBy {
           id
           email
@@ -4337,7 +4344,14 @@ export const ClaimPageDocument = gql`
           fullName
           role
         }
+        usersRestricted {
+          id
+          email
+          fullName
+          role
+        }
         rolesGranted
+        rolesRestricted
       }
       propertySelections {
         claimType
@@ -10288,6 +10302,7 @@ export const GetMeDocument = gql`
         email
         fullName
         phoneNumber
+        role
       }
       settings {
         key

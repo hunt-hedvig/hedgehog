@@ -10,6 +10,7 @@ query ClaimPage($claimId: ID!) {
     outcome
     restriction {
       resourceId
+      restrictedByMe
       restrictedBy {
         id
         email
@@ -22,7 +23,14 @@ query ClaimPage($claimId: ID!) {
         fullName
         role
       }
+      usersRestricted {
+        id
+        email
+        fullName
+        role
+      }
       rolesGranted
+      rolesRestricted
     }
     propertySelections {
       claimType
