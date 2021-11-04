@@ -10,7 +10,6 @@ import {
   useGrantResourceAccessMutation,
   User,
   useResourceAccessInformationQuery,
-  useUsersQuery,
 } from 'types/generated/graphql'
 
 const Footer = styled(Flex)`
@@ -44,15 +43,6 @@ const UserList: React.FC<{
   canGrant: boolean
 }> = ({ resourceId, resourceAccessInformation, canGrant }) => {
   const [grantClaimAccess] = useGrantResourceAccessMutation()
-  const { data } = useUsersQuery()
-
-  const users = data?.users ?? []
-  const usersWithoutAccess = users.filter(
-    (user) =>
-      !resourceAccessInformation.usersGranted.some(
-        (grantedUser) => grantedUser.email === user.email,
-      ),
-  )
 
   const handleGrantAccess = (user: User) => {
     toast.promise(
@@ -66,6 +56,11 @@ const UserList: React.FC<{
           grantResourceAccess: {
             ...resourceAccessInformation,
             usersGranted: [...resourceAccessInformation.usersGranted, user],
+            usersRestricted: [
+              ...resourceAccessInformation.usersRestricted.filter(
+                (restrictedUser) => restrictedUser.id === user.id,
+              ),
+            ],
           },
         },
       }),
@@ -94,8 +89,10 @@ const UserList: React.FC<{
         </UserItem>
       ))}
       <Spacing top />
-      {!!usersWithoutAccess.length && <ModalLabel>No access</ModalLabel>}
-      {usersWithoutAccess.map((user, index) => (
+      {!!resourceAccessInformation.usersRestricted.length && (
+        <ModalLabel>No access</ModalLabel>
+      )}
+      {resourceAccessInformation.usersRestricted.map((user, index) => (
         <UserItem key={user.id} style={{ marginTop: !!index ? '0.5rem' : 0 }}>
           <Flex align="center" justify="space-between">
             {user.fullName}

@@ -42,7 +42,9 @@ type ResourceAccessInformation {
   resourceId: ID!
   restrictedBy: User!
   usersGranted: [User!]!
+  usersRestricted: [User!]!
   rolesGranted: [String!]!
+  rolesRestricted: [String!]!
 }
 
 type Me {

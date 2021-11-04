@@ -1374,7 +1374,9 @@ export type ResourceAccessInformation = {
   resourceId: Scalars['ID']
   restrictedBy: User
   usersGranted: Array<User>
+  usersRestricted: Array<User>
   rolesGranted: Array<Scalars['String']>
+  rolesRestricted: Array<Scalars['String']>
 }
 
 export type SafelyEditAgreementInput = {
@@ -3198,9 +3200,15 @@ export type GrantResourceAccessMutationVariables = Exact<{
 export type GrantResourceAccessMutation = { __typename?: 'MutationType' } & {
   grantResourceAccess: { __typename?: 'ResourceAccessInformation' } & Pick<
     ResourceAccessInformation,
-    'resourceId' | 'rolesGranted'
+    'resourceId' | 'rolesGranted' | 'rolesRestricted'
   > & {
       usersGranted: Array<
+        { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
+      >
+      usersRestricted: Array<
         { __typename?: 'User' } & Pick<
           User,
           'id' | 'email' | 'fullName' | 'role'
@@ -3225,13 +3233,19 @@ export type ResourceAccessInformationQuery = { __typename?: 'QueryType' } & {
   resourceAccess?: Maybe<
     { __typename?: 'ResourceAccessInformation' } & Pick<
       ResourceAccessInformation,
-      'resourceId' | 'rolesGranted'
+      'resourceId' | 'rolesGranted' | 'rolesRestricted'
     > & {
         restrictedBy: { __typename?: 'User' } & Pick<
           User,
           'id' | 'email' | 'fullName' | 'role'
         >
         usersGranted: Array<
+          { __typename?: 'User' } & Pick<
+            User,
+            'id' | 'email' | 'fullName' | 'role'
+          >
+        >
+        usersRestricted: Array<
           { __typename?: 'User' } & Pick<
             User,
             'id' | 'email' | 'fullName' | 'role'
@@ -8205,7 +8219,14 @@ export const GrantResourceAccessDocument = gql`
         fullName
         role
       }
+      usersRestricted {
+        id
+        email
+        fullName
+        role
+      }
       rolesGranted
+      rolesRestricted
     }
   }
 `
@@ -8320,7 +8341,14 @@ export const ResourceAccessInformationDocument = gql`
         fullName
         role
       }
+      usersRestricted {
+        id
+        email
+        fullName
+        role
+      }
       rolesGranted
+      rolesRestricted
     }
   }
 `
