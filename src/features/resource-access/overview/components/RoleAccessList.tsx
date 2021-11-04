@@ -13,6 +13,20 @@ const ModalLabel = styled(Label)`
   font-size: 0.8rem;
 `
 
+const roleMap: Record<string, string> = {
+  IEX: 'IEX',
+  IEX_EXTENDED: 'IEX Extended',
+  DEV: 'Developer',
+}
+
+const UserRoleDisplayName = (role: string) => {
+  if (!Object.keys(roleMap).includes(role)) {
+    return role
+  }
+
+  return roleMap[role]
+}
+
 export const RoleAccessList: React.FC<{
   resourceAccessInformation: ResourceAccessInformation
 }> = ({ resourceAccessInformation }) => {
@@ -55,7 +69,7 @@ export const RoleAccessList: React.FC<{
       )}
       {resourceAccessInformation.rolesGranted.map((role, index) => (
         <AccessListItem key={role} access spacing={index !== 0}>
-          {role}
+          {UserRoleDisplayName(role)}
         </AccessListItem>
       ))}
 
@@ -71,7 +85,7 @@ export const RoleAccessList: React.FC<{
           canGrant={restrictedByMe}
           onGrant={() => handleGrantAccess(role)}
         >
-          {role}
+          {UserRoleDisplayName(role)}
         </AccessListItem>
       ))}
     </>
