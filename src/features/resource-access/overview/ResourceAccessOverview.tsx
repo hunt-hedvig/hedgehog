@@ -73,7 +73,7 @@ export const ResourceAccessOverview: React.FC<{
           <Shadowed style={{ margin: '0 0.2rem' }}>
             {data.resourceAccess.restrictedBy.fullName}
           </Shadowed>{' '}
-          can grant access to new users
+          can grant access
         </Footer>
       )}
     </Modal>

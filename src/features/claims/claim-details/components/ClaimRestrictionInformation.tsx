@@ -91,21 +91,23 @@ export const ClaimRestrictionInformation: React.FC<{
           </Flex>
           <div>
             <Button variant="secondary" onClick={() => setShowModal(true)}>
-              Manage access
+              {restriction.restrictedByMe ? 'Manage access' : 'Access overview'}
             </Button>
-            <Button
-              variant="tertiary"
-              onClick={() => {
-                confirm(
-                  'Are you sure you want to remove the restriction? Everybody will be able to see this claim',
-                ).then(() => {
-                  handleReleaseAccess()
-                })
-              }}
-              style={{ marginLeft: '1em' }}
-            >
-              Remove restriction
-            </Button>
+            {restriction.restrictedByMe && (
+              <Button
+                variant="tertiary"
+                onClick={() => {
+                  confirm(
+                    'Are you sure you want to remove the restriction? Everybody will be able to see this claim',
+                  ).then(() => {
+                    handleReleaseAccess()
+                  })
+                }}
+                style={{ marginLeft: '1em' }}
+              >
+                Remove restriction
+              </Button>
+            )}
           </div>
         </Flex>
       </Flex>
