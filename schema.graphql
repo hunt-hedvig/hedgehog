@@ -55,7 +55,14 @@ type Me {
 }
 
 enum UserSettingKey {
+  DARK_MODE
   FEATURE_FLAGS
+  NUMBER_OF_MEMBER_GROUPS
+  CLAIM_COMPLEXITY_FILTER
+  CLAIM_STATES_FILTER
+  MEMBER_GROUPS_FILTER
+  MARKET_FILTER
+  NUMBER_OF_CLAIMS_FILTER
 }
 
 input UserSettingsFilter {
@@ -547,7 +554,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

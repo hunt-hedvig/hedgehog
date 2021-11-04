@@ -7,10 +7,10 @@ import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useRef } from 'react'
 import { ChevronDoubleDown } from 'react-bootstrap-icons'
 
-const ChevronDoubleIcon = styled(ChevronDoubleDown)<{ visible: boolean }>`
+const ChevronDoubleIcon = styled(ChevronDoubleDown)<{ visible: number }>`
   height: 100%;
   width: 20px;
-  transform: ${({ visible }) => (visible ? 'scaleY(-1)' : 'scaleY(1)')};
+  transform: scaleY(${({ visible }) => visible});
 `
 
 const ChatContainer = styled.div`
@@ -36,7 +36,7 @@ const ClosedChatContainer = styled(ChatContainer)`
   height: 40px;
 `
 
-const ChatHeaderStyle = styled.div<{ visible: boolean }>`
+const ChatHeaderStyle = styled.div`
   height: 40px;
   color: ${({ theme }) => theme.foreground};
   padding: 10px;
@@ -119,8 +119,8 @@ const ChatHeader: React.FC<{
   isHinting: boolean
   onResizeClick: () => void
 }> = ({ visible, isHinting, onResizeClick }) => (
-  <ChatHeaderStyle onClick={onResizeClick} visible={visible}>
+  <ChatHeaderStyle onClick={onResizeClick}>
     <h4>Chat</h4>
-    {isHinting ? '(W)' : <ChevronDoubleIcon visible={visible} />}
+    {isHinting ? '(W)' : <ChevronDoubleIcon visible={visible ? -1 : 1} />}
   </ChatHeaderStyle>
 )

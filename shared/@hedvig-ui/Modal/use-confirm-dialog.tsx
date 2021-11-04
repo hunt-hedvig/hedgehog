@@ -51,7 +51,7 @@ export const ConfirmDialogComponent: React.FC<{
       <div>
         <h3>{content}</h3>
         <ConfirmButtons>
-          <Button status="success" onClick={confirm}>
+          <Button status="success" onClick={confirm} autoFocus>
             Confirm
           </Button>
           <Button variant="tertiary" onClick={close}>

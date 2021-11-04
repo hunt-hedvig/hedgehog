@@ -56,10 +56,12 @@ const ConversationsPage: React.FC<RouteComponentProps<{
 
   const filteredGroups = useMemo(
     () =>
-      questionGroups
-        .filter(doMemberGroupFilter(numberMemberGroups)(filters))
-        .filter(doMarketFilter(filters))
-        .filter(doClaimFilter(filters)),
+      filters.length > 0
+        ? questionGroups
+            .filter(doMemberGroupFilter(numberMemberGroups)(filters))
+            .filter(doMarketFilter(filters))
+            .filter(doClaimFilter(filters))
+        : [...questionGroups],
     [questionGroups, filters, numberMemberGroups],
   )
 

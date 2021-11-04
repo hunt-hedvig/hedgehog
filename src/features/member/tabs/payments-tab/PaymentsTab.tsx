@@ -12,6 +12,7 @@ import {
   Shadowed,
   StandaloneMessage,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -100,24 +101,26 @@ const MemberTransactionsTable: React.FC<{
       <TableHeaderColumn>Type</TableHeaderColumn>
       <TableHeaderColumn>Status</TableHeaderColumn>
     </TableHeader>
-    {transactions.map((transaction) => (
-      <TableRowColored
-        border
-        key={transaction.id}
-        status={transaction.status!}
-        type={transaction.type!}
-      >
-        <TableColumn>{transaction.id}</TableColumn>
-        <TableColumn>
-          <strong>{formatMoney(transaction.amount!)}</strong>
-        </TableColumn>
-        <TableColumn>
-          {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-        </TableColumn>
-        <TableColumn>{transaction.type}</TableColumn>
-        <TableColumn>{transaction.status}</TableColumn>
-      </TableRowColored>
-    ))}
+    <TableBody>
+      {transactions.map((transaction) => (
+        <TableRowColored
+          border
+          key={transaction.id}
+          status={transaction.status!}
+          type={transaction.type!}
+        >
+          <TableColumn>{transaction.id}</TableColumn>
+          <TableColumn>
+            <strong>{formatMoney(transaction.amount!)}</strong>
+          </TableColumn>
+          <TableColumn>
+            {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
+          </TableColumn>
+          <TableColumn>{transaction.type}</TableColumn>
+          <TableColumn>{transaction.status}</TableColumn>
+        </TableRowColored>
+      ))}
+    </TableBody>
   </Table>
 )
 

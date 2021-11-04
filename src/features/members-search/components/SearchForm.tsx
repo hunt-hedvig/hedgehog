@@ -15,7 +15,7 @@ import React, { useState } from 'react'
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
-  onFocus: () => void
+  onFocus?: () => void
   loading: boolean
   query: string
   includeAll: boolean
@@ -72,7 +72,9 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             ref={searchFieldRef}
             onFocus={() => {
               setTextFieldFocused(true)
-              onFocus()
+              if (onFocus) {
+                onFocus()
+              }
             }}
             onBlur={() => setTextFieldFocused(false)}
             onKeyDown={(e) => {
@@ -98,7 +100,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
 
         <EscapeButton
           size="small"
-          visible={!query && currentResultSize > 0}
+          visible={!query && currentResultSize > 0 ? 1 : 0}
           onClick={() => onSubmit('', false)}
         >
           Clear

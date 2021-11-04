@@ -259,6 +259,7 @@ const PerilsEditorPage: React.FC = () => {
                   {PerilIconOptions.map((opt) => {
                     return (
                       <DropdownOption
+                        key={opt.key}
                         selected={peril.iconName === opt.value}
                         onClick={() => {
                           updateField('iconName')(opt.value)

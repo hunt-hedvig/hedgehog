@@ -187,7 +187,6 @@ export type Claim = {
   agreement?: Maybe<GenericAgreement>
   propertySelections: Array<ClaimPropertySelection>
   coInsured?: Maybe<CoInsured>
-  restriction?: Maybe<ResourceAccessInformation>
 }
 
 export enum ClaimComplexity {
@@ -513,11 +512,6 @@ export type GenericAgreement = {
   createdAt: Scalars['Instant']
 }
 
-export enum GrantHolderType {
-  User = 'USER',
-  Role = 'ROLE',
-}
-
 export type Identity = {
   __typename?: 'Identity'
   nationalIdentification: NationalIdentification
@@ -770,9 +764,6 @@ export type MutationType = {
   deleteCoInsured: Scalars['Boolean']
   updateUser: User
   upsertUserSettings: Array<UserSetting>
-  restrictResourceAccess: ResourceAccessInformation
-  releaseResourceAccess: Scalars['Boolean']
-  grantResourceAccess: ResourceAccessInformation
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1106,20 +1097,6 @@ export type MutationTypeUpsertUserSettingsArgs = {
   settings: Array<UpsertUserSettingInput>
 }
 
-export type MutationTypeRestrictResourceAccessArgs = {
-  resourceId: Scalars['ID']
-}
-
-export type MutationTypeReleaseResourceAccessArgs = {
-  resourceId: Scalars['ID']
-}
-
-export type MutationTypeGrantResourceAccessArgs = {
-  resourceId: Scalars['ID']
-  grantHolder: Scalars['String']
-  grantHolderType: GrantHolderType
-}
-
 export type NationalIdentification = {
   __typename?: 'NationalIdentification'
   identification: Scalars['String']
@@ -1236,7 +1213,6 @@ export type QueryType = {
   claimPropertyOption: ClaimPropertyOption
   user?: Maybe<User>
   users: Array<User>
-  resourceAccess?: Maybe<ResourceAccessInformation>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1286,10 +1262,6 @@ export type QueryTypeClaimPropertyOptionArgs = {
 
 export type QueryTypeUserArgs = {
   email: Scalars['String']
-}
-
-export type QueryTypeResourceAccessArgs = {
-  resourceId: Scalars['String']
 }
 
 export type Question = {
@@ -1367,16 +1339,6 @@ export type Renewal = {
   renewalDate: Scalars['LocalDate']
   draftCertificateUrl?: Maybe<Scalars['String']>
   draftOfAgreementId?: Maybe<Scalars['ID']>
-}
-
-export type ResourceAccessInformation = {
-  __typename?: 'ResourceAccessInformation'
-  resourceId: Scalars['ID']
-  restrictedBy: User
-  usersGranted: Array<User>
-  usersRestricted: Array<User>
-  rolesGranted: Array<Scalars['String']>
-  rolesRestricted: Array<Scalars['String']>
 }
 
 export type SafelyEditAgreementInput = {
@@ -1516,7 +1478,6 @@ export type User = {
   __typename?: 'User'
   id: Scalars['ID']
   email: Scalars['String']
-  role: Scalars['String']
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
@@ -1529,7 +1490,14 @@ export type UserSetting = {
 }
 
 export enum UserSettingKey {
+  DarkMode = 'DARK_MODE',
   FeatureFlags = 'FEATURE_FLAGS',
+  NumberOfMemberGroups = 'NUMBER_OF_MEMBER_GROUPS',
+  ClaimComplexityFilter = 'CLAIM_COMPLEXITY_FILTER',
+  ClaimStatesFilter = 'CLAIM_STATES_FILTER',
+  MemberGroupsFilter = 'MEMBER_GROUPS_FILTER',
+  MarketFilter = 'MARKET_FILTER',
+  NumberOfClaimsFilter = 'NUMBER_OF_CLAIMS_FILTER',
 }
 
 export type UserSettingsFilter = {
@@ -1823,23 +1791,6 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'outcome'
       | 'reserves'
     > & {
-        restriction?: Maybe<
-          { __typename?: 'ResourceAccessInformation' } & Pick<
-            ResourceAccessInformation,
-            'resourceId' | 'rolesGranted'
-          > & {
-              restrictedBy: { __typename?: 'User' } & Pick<
-                User,
-                'id' | 'email' | 'fullName' | 'role'
-              >
-              usersGranted: Array<
-                { __typename?: 'User' } & Pick<
-                  User,
-                  'id' | 'email' | 'fullName' | 'role'
-                >
-              >
-            }
-        >
         propertySelections: Array<
           { __typename?: 'ClaimPropertySelection' } & Pick<
             ClaimPropertySelection,
@@ -2088,30 +2039,6 @@ export type MarkClaimFileAsDeletedMutationVariables = Exact<{
 export type MarkClaimFileAsDeletedMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'markClaimFileAsDeleted'>
-
-export type RestrictResourceAccessMutationVariables = Exact<{
-  resourceId: Scalars['ID']
-}>
-
-export type RestrictResourceAccessMutation = { __typename?: 'MutationType' } & {
-  restrictResourceAccess: { __typename?: 'ResourceAccessInformation' } & Pick<
-    ResourceAccessInformation,
-    'resourceId' | 'rolesGranted' | 'rolesRestricted'
-  > & {
-      usersGranted: Array<
-        { __typename?: 'User' } & Pick<
-          User,
-          'id' | 'email' | 'fullName' | 'role'
-        >
-      >
-      usersRestricted: Array<
-        { __typename?: 'User' } & Pick<
-          User,
-          'id' | 'email' | 'fullName' | 'role'
-        >
-      >
-    }
-}
 
 export type SetClaimFileCategoryMutationVariables = Exact<{
   claimId: Scalars['ID']
@@ -3197,70 +3124,6 @@ export type SendMessageMutation = { __typename?: 'MutationType' } & {
       >)
 }
 
-export type ReleaseResourceAccessMutationVariables = Exact<{
-  resourceId: Scalars['ID']
-}>
-
-export type ReleaseResourceAccessMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'releaseResourceAccess'>
-
-export type GrantResourceAccessMutationVariables = Exact<{
-  resourceId: Scalars['ID']
-  grantHolder: Scalars['String']
-  grantHolderType: GrantHolderType
-}>
-
-export type GrantResourceAccessMutation = { __typename?: 'MutationType' } & {
-  grantResourceAccess: { __typename?: 'ResourceAccessInformation' } & Pick<
-    ResourceAccessInformation,
-    'resourceId' | 'rolesGranted' | 'rolesRestricted'
-  > & {
-      usersGranted: Array<
-        { __typename?: 'User' } & Pick<
-          User,
-          'id' | 'email' | 'fullName' | 'role'
-        >
-      >
-      usersRestricted: Array<
-        { __typename?: 'User' } & Pick<
-          User,
-          'id' | 'email' | 'fullName' | 'role'
-        >
-      >
-    }
-}
-
-export type ResourceAccessInformationQueryVariables = Exact<{
-  resourceId: Scalars['String']
-}>
-
-export type ResourceAccessInformationQuery = { __typename?: 'QueryType' } & {
-  resourceAccess?: Maybe<
-    { __typename?: 'ResourceAccessInformation' } & Pick<
-      ResourceAccessInformation,
-      'resourceId' | 'rolesGranted' | 'rolesRestricted'
-    > & {
-        restrictedBy: { __typename?: 'User' } & Pick<
-          User,
-          'id' | 'email' | 'fullName' | 'role'
-        >
-        usersGranted: Array<
-          { __typename?: 'User' } & Pick<
-            User,
-            'id' | 'email' | 'fullName' | 'role'
-          >
-        >
-        usersRestricted: Array<
-          { __typename?: 'User' } & Pick<
-            User,
-            'id' | 'email' | 'fullName' | 'role'
-          >
-        >
-      }
-  >
-}
-
 export type AssignCampaignToPartnerFreeMonthsMutationVariables = Exact<{
   request?: Maybe<AssignVoucherFreeMonths>
 }>
@@ -3787,7 +3650,7 @@ export type UsersQuery = { __typename?: 'QueryType' } & {
   users: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'fullName' | 'role' | 'email' | 'latestPresence'
+      'id' | 'fullName' | 'email' | 'latestPresence'
     >
   >
 }
@@ -4315,22 +4178,6 @@ export const ClaimPageDocument = gql`
       claimType
       dateOfOccurrence
       outcome
-      restriction {
-        resourceId
-        restrictedBy {
-          id
-          email
-          fullName
-          role
-        }
-        usersGranted {
-          id
-          email
-          fullName
-          role
-        }
-        rolesGranted
-      }
       propertySelections {
         claimType
         property {
@@ -4856,71 +4703,6 @@ export type MarkClaimFileAsDeletedMutationResult = ApolloReactCommon.MutationRes
 export type MarkClaimFileAsDeletedMutationOptions = ApolloReactCommon.BaseMutationOptions<
   MarkClaimFileAsDeletedMutation,
   MarkClaimFileAsDeletedMutationVariables
->
-export const RestrictResourceAccessDocument = gql`
-  mutation RestrictResourceAccess($resourceId: ID!) {
-    restrictResourceAccess(resourceId: $resourceId) {
-      resourceId
-      usersGranted {
-        id
-        email
-        fullName
-        role
-      }
-      usersRestricted {
-        id
-        email
-        fullName
-        role
-      }
-      rolesGranted
-      rolesRestricted
-    }
-  }
-`
-export type RestrictResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
-  RestrictResourceAccessMutation,
-  RestrictResourceAccessMutationVariables
->
-
-/**
- * __useRestrictResourceAccessMutation__
- *
- * To run a mutation, you first call `useRestrictResourceAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRestrictResourceAccessMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [restrictResourceAccessMutation, { data, loading, error }] = useRestrictResourceAccessMutation({
- *   variables: {
- *      resourceId: // value for 'resourceId'
- *   },
- * });
- */
-export function useRestrictResourceAccessMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    RestrictResourceAccessMutation,
-    RestrictResourceAccessMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    RestrictResourceAccessMutation,
-    RestrictResourceAccessMutationVariables
-  >(RestrictResourceAccessDocument, options)
-}
-export type RestrictResourceAccessMutationHookResult = ReturnType<
-  typeof useRestrictResourceAccessMutation
->
-export type RestrictResourceAccessMutationResult = ApolloReactCommon.MutationResult<
-  RestrictResourceAccessMutation
->
-export type RestrictResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RestrictResourceAccessMutation,
-  RestrictResourceAccessMutationVariables
 >
 export const SetClaimFileCategoryDocument = gql`
   mutation SetClaimFileCategory(
@@ -8214,208 +7996,6 @@ export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SendMessageMutation,
   SendMessageMutationVariables
 >
-export const ReleaseResourceAccessDocument = gql`
-  mutation ReleaseResourceAccess($resourceId: ID!) {
-    releaseResourceAccess(resourceId: $resourceId)
-  }
-`
-export type ReleaseResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
-  ReleaseResourceAccessMutation,
-  ReleaseResourceAccessMutationVariables
->
-
-/**
- * __useReleaseResourceAccessMutation__
- *
- * To run a mutation, you first call `useReleaseResourceAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useReleaseResourceAccessMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [releaseResourceAccessMutation, { data, loading, error }] = useReleaseResourceAccessMutation({
- *   variables: {
- *      resourceId: // value for 'resourceId'
- *   },
- * });
- */
-export function useReleaseResourceAccessMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    ReleaseResourceAccessMutation,
-    ReleaseResourceAccessMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    ReleaseResourceAccessMutation,
-    ReleaseResourceAccessMutationVariables
-  >(ReleaseResourceAccessDocument, options)
-}
-export type ReleaseResourceAccessMutationHookResult = ReturnType<
-  typeof useReleaseResourceAccessMutation
->
-export type ReleaseResourceAccessMutationResult = ApolloReactCommon.MutationResult<
-  ReleaseResourceAccessMutation
->
-export type ReleaseResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ReleaseResourceAccessMutation,
-  ReleaseResourceAccessMutationVariables
->
-export const GrantResourceAccessDocument = gql`
-  mutation GrantResourceAccess(
-    $resourceId: ID!
-    $grantHolder: String!
-    $grantHolderType: GrantHolderType!
-  ) {
-    grantResourceAccess(
-      resourceId: $resourceId
-      grantHolder: $grantHolder
-      grantHolderType: $grantHolderType
-    ) {
-      resourceId
-      usersGranted {
-        id
-        email
-        fullName
-        role
-      }
-      usersRestricted {
-        id
-        email
-        fullName
-        role
-      }
-      rolesGranted
-      rolesRestricted
-    }
-  }
-`
-export type GrantResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
-  GrantResourceAccessMutation,
-  GrantResourceAccessMutationVariables
->
-
-/**
- * __useGrantResourceAccessMutation__
- *
- * To run a mutation, you first call `useGrantResourceAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useGrantResourceAccessMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [grantResourceAccessMutation, { data, loading, error }] = useGrantResourceAccessMutation({
- *   variables: {
- *      resourceId: // value for 'resourceId'
- *      grantHolder: // value for 'grantHolder'
- *      grantHolderType: // value for 'grantHolderType'
- *   },
- * });
- */
-export function useGrantResourceAccessMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    GrantResourceAccessMutation,
-    GrantResourceAccessMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<
-    GrantResourceAccessMutation,
-    GrantResourceAccessMutationVariables
-  >(GrantResourceAccessDocument, options)
-}
-export type GrantResourceAccessMutationHookResult = ReturnType<
-  typeof useGrantResourceAccessMutation
->
-export type GrantResourceAccessMutationResult = ApolloReactCommon.MutationResult<
-  GrantResourceAccessMutation
->
-export type GrantResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  GrantResourceAccessMutation,
-  GrantResourceAccessMutationVariables
->
-export const ResourceAccessInformationDocument = gql`
-  query ResourceAccessInformation($resourceId: String!) {
-    resourceAccess(resourceId: $resourceId) {
-      resourceId
-      restrictedBy {
-        id
-        email
-        fullName
-        role
-      }
-      usersGranted {
-        id
-        email
-        fullName
-        role
-      }
-      usersRestricted {
-        id
-        email
-        fullName
-        role
-      }
-      rolesGranted
-      rolesRestricted
-    }
-  }
-`
-
-/**
- * __useResourceAccessInformationQuery__
- *
- * To run a query within a React component, call `useResourceAccessInformationQuery` and pass it any options that fit your needs.
- * When your component renders, `useResourceAccessInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useResourceAccessInformationQuery({
- *   variables: {
- *      resourceId: // value for 'resourceId'
- *   },
- * });
- */
-export function useResourceAccessInformationQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    ResourceAccessInformationQuery,
-    ResourceAccessInformationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<
-    ResourceAccessInformationQuery,
-    ResourceAccessInformationQueryVariables
-  >(ResourceAccessInformationDocument, options)
-}
-export function useResourceAccessInformationLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ResourceAccessInformationQuery,
-    ResourceAccessInformationQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<
-    ResourceAccessInformationQuery,
-    ResourceAccessInformationQueryVariables
-  >(ResourceAccessInformationDocument, options)
-}
-export type ResourceAccessInformationQueryHookResult = ReturnType<
-  typeof useResourceAccessInformationQuery
->
-export type ResourceAccessInformationLazyQueryHookResult = ReturnType<
-  typeof useResourceAccessInformationLazyQuery
->
-export type ResourceAccessInformationQueryResult = ApolloReactCommon.QueryResult<
-  ResourceAccessInformationQuery,
-  ResourceAccessInformationQueryVariables
->
 export const AssignCampaignToPartnerFreeMonthsDocument = gql`
   mutation AssignCampaignToPartnerFreeMonths(
     $request: AssignVoucherFreeMonths
@@ -10444,7 +10024,6 @@ export const UsersDocument = gql`
     users {
       id
       fullName
-      role
       email
       latestPresence
     }

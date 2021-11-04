@@ -50,7 +50,7 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
         value={confirmAmount}
         onChange={(e) => setConfirmAmount(e.currentTarget.value)}
         onKeyDown={(e) => {
-          if (e.keyCode === Keys.Enter.code) {
+          if (e.keyCode === Keys.Enter.code && confirmAmount === amount) {
             e.preventDefault()
             confirmHandler()
           }
