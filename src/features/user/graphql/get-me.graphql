@@ -1,5 +1,5 @@
-query GetMe {
-  me {
+query GetMe($tracking: UserTrackingData) {
+  me(tracking: $tracking) {
     scopes
     role
     user {

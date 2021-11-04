@@ -1,5 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import { HotApp } from 'App'
+import { TrackingProvider } from 'features/tracking/use-tracking'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -14,7 +15,9 @@ const appElement = document.getElementById('react-root')
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={apolloClient!}>
-      <HotApp />
+      <TrackingProvider>
+        <HotApp />
+      </TrackingProvider>
     </ApolloProvider>
   </BrowserRouter>,
   appElement,

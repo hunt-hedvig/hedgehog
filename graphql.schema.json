@@ -101,7 +101,18 @@
           {
             "name": "me",
             "description": null,
-            "args": [],
+            "args": [
+              {
+                "name": "tracking",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserTrackingData",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -5973,6 +5984,27 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserTrackingData",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "location",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
