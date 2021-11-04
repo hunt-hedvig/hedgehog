@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-11-04',
+    change:
+      'Claims can be marked as restricted, limiting access to others in Hope 🔒',
+  },
+  {
     date: '2021-10-21',
     change:
       "Who's online in hope right now? Press the top right button to find out!",
