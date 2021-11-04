@@ -1,3 +1,4 @@
+import { useTracking } from 'features/tracking/hooks/use-tracking'
 import { useEffect, useState } from 'react'
 import { Me, useGetMeQuery } from 'types/generated/graphql'
 
@@ -9,10 +10,15 @@ interface UseAuthenticateResult {
 export const useAuthenticate = (): UseAuthenticateResult => {
   const maxRefetchAttempts = 5
 
+  const tracking = useTracking()
+
   const [refetchAttempt, setRefetchAttempt] = useState(0)
   const { data, loading } = useGetMeQuery({
     fetchPolicy: 'no-cache',
     pollInterval: 3000,
+    variables: {
+      tracking: tracking.data,
+    },
   })
 
   useEffect(() => {

@@ -11,6 +11,7 @@ import { history } from 'clientEntry'
 import { CommandLineProvider } from 'features/commands/command-line-hook'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
+import { Tracker } from 'features/tracking/Tracker'
 import { useAuthenticate } from 'features/user/hooks/use-authenticate'
 import { MeProvider } from 'features/user/hooks/use-me'
 import { MemberHistoryProvider } from 'features/user/hooks/use-member-history'
@@ -119,6 +120,7 @@ const App: React.FC = () => {
                 <ConfirmDialogProvider>
                   <Layout>
                     <MeProvider me={me}>
+                      <Tracker />
                       {!history.location.pathname.startsWith('/login') && (
                         <VerticalMenu history={history} />
                       )}
