@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from 'react'
 import { UserTrackingData } from 'types/generated/graphql'
 
 interface TrackingContextProps {
-  update: (current: UserTrackingData) => void
+  update: (data: UserTrackingData) => void
   flush: () => void
   data: UserTrackingData | null
 }
