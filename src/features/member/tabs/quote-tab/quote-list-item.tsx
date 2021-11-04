@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Button, ErrorText, ThirdLevelHeadline } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
+import { Market } from 'features/config/constants'
 import { UpdateQuoteForm } from 'features/member/tabs/quote-tab/update-quote-form'
 import { getSchemaDataInfo } from 'features/member/tabs/quote-tab/utils'
 import React from 'react'
@@ -86,7 +87,8 @@ export const QuoteListItem: React.FC<{
   quote: Quote
   inactionable?: boolean
   memberId: string
-}> = ({ contracts, quote, inactionable, memberId }) => {
+  market: Market
+}> = ({ contracts, market, quote, inactionable, memberId }) => {
   const [action, setAction] = React.useState<Action | null>(null)
   const [isWip, setIsWip] = React.useState(false)
 
@@ -124,6 +126,11 @@ export const QuoteListItem: React.FC<{
     )
   }
 
+  const hasSignedContract = quote.isReadyToSign && contracts.length > 0
+  const allowHighRiskBypass =
+    market === Market.Norway &&
+    quote.breachedUnderwritingGuidelines?.includes('DEBT_CHECK')
+
   return (
     <OuterWrapper>
       <QuoteWrapper>
@@ -138,14 +145,14 @@ export const QuoteListItem: React.FC<{
                 <Button onClick={toggleState(Action.ACTIVATE)}>Activate</Button>
               </BottomSpacerWrapper>
             )}
-            {quote.isReadyToSign && contracts.length > 0 && (
-              <BottomSpacerWrapper>
-                <Button onClick={toggleState(Action.SIGN)}>Sign</Button>
-              </BottomSpacerWrapper>
-            )}
-            {quote.isReadyToSign && contracts.length === 0 && (
-              <ErrorText>Member has to sign first contract</ErrorText>
-            )}
+            {quote.isReadyToSign &&
+              (hasSignedContract || allowHighRiskBypass ? (
+                <BottomSpacerWrapper>
+                  <Button onClick={toggleState(Action.SIGN)}>Sign</Button>
+                </BottomSpacerWrapper>
+              ) : (
+                <ErrorText>Member has to sign first contract</ErrorText>
+              ))}
           </ActionsButtonsWrapper>
         )}
       </QuoteWrapper>

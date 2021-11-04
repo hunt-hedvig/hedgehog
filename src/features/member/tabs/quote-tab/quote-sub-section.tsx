@@ -1,6 +1,10 @@
 import styled from '@emotion/styled'
 import { Button, Card, CardsWrapper, MainHeadline } from '@hedvig-ui'
-import { ContractType, TypeOfContractType } from 'features/config/constants'
+import {
+  ContractType,
+  Market,
+  TypeOfContractType,
+} from 'features/config/constants'
 import { useContracts } from 'features/member/tabs/contracts-tab/hooks/use-contracts'
 import { CreateQuoteForm } from 'features/member/tabs/quote-tab/create-quote-form'
 import { isSignedOrExpired } from 'features/member/tabs/quote-tab/utils'
@@ -15,7 +19,8 @@ export const QuotesSubSection: React.FC<{
   memberId: string
   contractType: ContractType
   quotes: ReadonlyArray<Quote>
-}> = ({ memberId, contractType, quotes }) => {
+  market: Market
+}> = ({ memberId, contractType, quotes, market }) => {
   const [isWip, setIsWip] = React.useState(false)
   const activeQuotes = quotes.filter((quote) => !isSignedOrExpired(quote))
   const [contracts, { loading }] = useContracts(memberId)
@@ -56,6 +61,7 @@ export const QuotesSubSection: React.FC<{
             <QuoteListItem
               quote={quote}
               memberId={memberId}
+              market={market}
               contracts={contracts}
             />
           </Card>
