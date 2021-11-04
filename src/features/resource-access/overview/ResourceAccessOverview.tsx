@@ -3,7 +3,6 @@ import { Flex, Modal, Shadowed, Tabs } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { RoleAccessList } from 'features/resource-access/overview/components/RoleAccessList'
 import { UserAccessList } from 'features/resource-access/overview/components/UserAccessList'
-import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { useResourceAccessInformationQuery } from 'types/generated/graphql'
 
@@ -17,6 +16,13 @@ const Footer = styled(Flex)`
       .hex()};
 `
 
+const Container = styled(Flex)`
+  width: 500px;
+  height: 400px;
+  padding: 0 1rem;
+  overflow-y: scroll;
+`
+
 export const ResourceAccessOverview: React.FC<{
   onClose: () => void
   resourceId: string
@@ -26,14 +32,9 @@ export const ResourceAccessOverview: React.FC<{
   })
   const [activeTab, setActiveTab] = useState<'users' | 'roles'>('users')
 
-  const { me } = useMe()
-
   if (!data?.resourceAccess) {
     return null
   }
-
-  const isUserThatRestricted =
-    data.resourceAccess?.restrictedBy.email === me.email
 
   return (
     <Modal withoutHeader onClose={onClose}>
@@ -57,32 +58,16 @@ export const ResourceAccessOverview: React.FC<{
           },
         ]}
       />
-      <Flex
-        style={{
-          width: '500px',
-          height: '400px',
-          padding: '0rem 1rem',
-          overflowY: 'scroll',
-        }}
-        direction="column"
-      >
+      <Container direction="column">
         {activeTab === 'users' && (
-          <UserAccessList
-            canGrant={isUserThatRestricted}
-            resourceAccessInformation={data.resourceAccess}
-            resourceId={resourceId}
-          />
+          <UserAccessList resourceAccessInformation={data.resourceAccess} />
         )}
         {activeTab === 'roles' && (
-          <RoleAccessList
-            canGrant={isUserThatRestricted}
-            resourceAccessInformation={data.resourceAccess}
-            resourceId={resourceId}
-          />
+          <RoleAccessList resourceAccessInformation={data.resourceAccess} />
         )}
-      </Flex>
+      </Container>
 
-      {!isUserThatRestricted && (
+      {!data.resourceAccess.restrictedByMe && (
         <Footer justify="center" align="center">
           Only{' '}
           <Shadowed style={{ margin: '0 0.2rem' }}>

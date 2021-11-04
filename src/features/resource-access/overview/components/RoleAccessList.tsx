@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { Button, Flex, Label, Spacing } from '@hedvig-ui'
-import { AccessListItem } from 'features/resource-access/overview/components/AccessListItem'
+import { Label, Spacing } from '@hedvig-ui'
+import { AccessListItem } from 'features/resource-access/overview/components/Wrapper'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -14,11 +14,11 @@ const ModalLabel = styled(Label)`
 `
 
 export const RoleAccessList: React.FC<{
-  resourceId: string
   resourceAccessInformation: ResourceAccessInformation
-  canGrant: boolean
-}> = ({ resourceId, resourceAccessInformation, canGrant }) => {
+}> = ({ resourceAccessInformation }) => {
   const [grantClaimAccess] = useGrantResourceAccessMutation()
+
+  const { resourceId, restrictedByMe } = resourceAccessInformation
 
   const handleGrantAccess = (role: string) => {
     toast.promise(
@@ -54,16 +54,11 @@ export const RoleAccessList: React.FC<{
         <ModalLabel>Access</ModalLabel>
       )}
       {resourceAccessInformation.rolesGranted.map((role, index) => (
-        <AccessListItem
-          access
-          key={role}
-          style={{ marginTop: !!index ? '0.5rem' : 0 }}
-        >
-          <Flex align="center" justify="space-between">
-            {role}
-          </Flex>
+        <AccessListItem key={role} access spacing={index !== 0}>
+          {role}
         </AccessListItem>
       ))}
+
       {!!resourceAccessInformation.rolesGranted.length && <Spacing top />}
 
       {!!resourceAccessInformation.rolesRestricted.length && (
@@ -72,20 +67,11 @@ export const RoleAccessList: React.FC<{
       {resourceAccessInformation.rolesRestricted.map((role, index) => (
         <AccessListItem
           key={role}
-          style={{ marginTop: !!index ? '0.5rem' : 0 }}
+          spacing={index !== 0}
+          canGrant={restrictedByMe}
+          onGrant={() => handleGrantAccess(role)}
         >
-          <Flex align="center" justify="space-between">
-            {role}
-            {canGrant && (
-              <Button
-                size="small"
-                variant="tertiary"
-                onClick={() => handleGrantAccess(role)}
-              >
-                Grant access
-              </Button>
-            )}
-          </Flex>
+          {role}
         </AccessListItem>
       ))}
     </>

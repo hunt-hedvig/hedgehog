@@ -41,8 +41,11 @@ type QueryType {
 type ResourceAccessInformation {
   resourceId: ID!
   restrictedBy: User!
+  restrictedByMe: Boolean!
+
   usersGranted: [User!]!
   usersRestricted: [User!]!
+
   rolesGranted: [String!]!
   rolesRestricted: [String!]!
 }

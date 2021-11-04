@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { Button, Flex, Label, Spacing } from '@hedvig-ui'
+import { Label, Spacing } from '@hedvig-ui'
+import { AccessListItem } from 'features/resource-access/overview/components/Wrapper'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -9,27 +10,16 @@ import {
   User,
 } from 'types/generated/graphql'
 
-const UserItem = styled.div<{ access?: boolean }>`
-  font-size: 1rem;
-  background-color: ${({ theme, access = false }) =>
-    access ? theme.accentLighter : theme.backgroundTransparent};
-  color: ${({ theme, access }) => (access ? theme.accent : theme.foreground)};
-  padding: 0.5em 0.9em;
-  border-radius: 6px;
-  width: 100%;
-  margin-top: 0;
-`
-
 const ModalLabel = styled(Label)`
   font-size: 0.8rem;
 `
 
 export const UserAccessList: React.FC<{
-  resourceId: string
   resourceAccessInformation: ResourceAccessInformation
-  canGrant: boolean
-}> = ({ resourceId, resourceAccessInformation, canGrant }) => {
+}> = ({ resourceAccessInformation }) => {
   const [grantClaimAccess] = useGrantResourceAccessMutation()
+
+  const { resourceId, restrictedByMe } = resourceAccessInformation
 
   const handleGrantAccess = (user: User) => {
     toast.promise(
@@ -65,36 +55,26 @@ export const UserAccessList: React.FC<{
         <ModalLabel>Access</ModalLabel>
       )}
       {resourceAccessInformation.usersGranted.map((user, index) => (
-        <UserItem
-          access
-          key={user.id}
-          style={{ marginTop: !!index ? '0.5rem' : 0 }}
-        >
-          <Flex align="center" justify="space-between">
-            {user.fullName}
-          </Flex>
-        </UserItem>
+        <AccessListItem key={user.id} access spacing={index !== 0}>
+          {user.fullName}
+        </AccessListItem>
       ))}
+
       {!!resourceAccessInformation.usersGranted.length && <Spacing top />}
 
       {!!resourceAccessInformation.usersRestricted.length && (
         <ModalLabel>No access</ModalLabel>
       )}
+
       {resourceAccessInformation.usersRestricted.map((user, index) => (
-        <UserItem key={user.id} style={{ marginTop: !!index ? '0.5rem' : 0 }}>
-          <Flex align="center" justify="space-between">
-            {user.fullName}
-            {canGrant && (
-              <Button
-                size="small"
-                variant="tertiary"
-                onClick={() => handleGrantAccess(user)}
-              >
-                Grant access
-              </Button>
-            )}
-          </Flex>
-        </UserItem>
+        <AccessListItem
+          key={user.id}
+          spacing={index !== 0}
+          canGrant={restrictedByMe}
+          onGrant={() => handleGrantAccess(user)}
+        >
+          {user.fullName}
+        </AccessListItem>
       ))}
     </>
   )
