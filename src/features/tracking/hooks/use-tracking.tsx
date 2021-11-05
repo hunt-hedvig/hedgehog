@@ -1,5 +1,9 @@
-import React, { createContext, useContext, useState } from 'react'
-import { UserTrackingData } from 'types/generated/graphql'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { useCookies } from 'react-cookie'
+
+interface UserTrackingData {
+  location?: string
+}
 
 interface TrackingContextProps {
   update: (data: UserTrackingData) => void
@@ -18,15 +22,28 @@ export const useTracking = () => useContext(TrackingContext)
 export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const TRACKING_COOKIE_NAME = '_hvg_payload'
+  const [_, setCookie] = useCookies([TRACKING_COOKIE_NAME])
   const [trackingData, setTrackingData] = useState<UserTrackingData | null>(
     null,
   )
+
+  useEffect(() => {
+    if (!trackingData) {
+      return
+    }
+
+    setCookie(TRACKING_COOKIE_NAME, JSON.stringify(trackingData))
+  }, [trackingData])
 
   const update = (data: UserTrackingData) => {
     setTrackingData(data)
   }
 
-  const flush = () => setTrackingData(null)
+  const flush = () => {
+    setTrackingData(null)
+    setCookie(TRACKING_COOKIE_NAME, null)
+  }
 
   return (
     <TrackingContext.Provider value={{ data: trackingData, update, flush }}>

@@ -7,7 +7,7 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
-  me(tracking: UserTrackingData): Me!
+  me: Me!
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
@@ -35,10 +35,6 @@ type QueryType {
 
   user(email: String!): User
   users: [User!]!
-}
-
-input UserTrackingData {
-  location: String
 }
 
 type Me {
@@ -534,7 +530,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

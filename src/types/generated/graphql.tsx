@@ -1227,10 +1227,6 @@ export type QueryTypePaymentScheduleArgs = {
   status: ChargeStatus
 }
 
-export type QueryTypeMeArgs = {
-  tracking?: Maybe<UserTrackingData>
-}
-
 export type QueryTypeMessageHistoryArgs = {
   memberId: Scalars['ID']
 }
@@ -1506,10 +1502,6 @@ export enum UserSettingKey {
 
 export type UserSettingsFilter = {
   keys: Array<UserSettingKey>
-}
-
-export type UserTrackingData = {
-  location?: Maybe<Scalars['String']>
 }
 
 export type VisibleNoDiscount = {
@@ -3617,9 +3609,7 @@ export type MarkSwitcherEmailAsRemindedMutation = {
   } & Pick<SwitchableSwitcherEmail, 'id'>
 }
 
-export type GetMeQueryVariables = Exact<{
-  tracking?: Maybe<UserTrackingData>
-}>
+export type GetMeQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetMeQuery = { __typename?: 'QueryType' } & {
   me: { __typename?: 'Me' } & Pick<Me, 'scopes' | 'role'> & {
@@ -9860,8 +9850,8 @@ export type MarkSwitcherEmailAsRemindedMutationOptions = ApolloReactCommon.BaseM
   MarkSwitcherEmailAsRemindedMutationVariables
 >
 export const GetMeDocument = gql`
-  query GetMe($tracking: UserTrackingData) {
-    me(tracking: $tracking) {
+  query GetMe {
+    me {
       scopes
       role
       user {
@@ -9890,7 +9880,6 @@ export const GetMeDocument = gql`
  * @example
  * const { data, loading, error } = useGetMeQuery({
  *   variables: {
- *      tracking: // value for 'tracking'
  *   },
  * });
  */
