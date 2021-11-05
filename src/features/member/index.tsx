@@ -84,7 +84,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
 }> = ({ match, member }) => {
   const history = useHistory()
   const pathname = history.location.pathname.split('/')
-  const path = pathname[pathname.length - 1]
+  const path = pathname.length === 4 ? pathname[pathname.length - 1] : null
   const memberId = match.params.memberId
 
   const panes = memberPagePanes(memberId, member)
