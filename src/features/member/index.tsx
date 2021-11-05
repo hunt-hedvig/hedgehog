@@ -84,7 +84,8 @@ export const MemberTabs: React.FC<RouteComponentProps<{
 }> = ({ match, member }) => {
   const history = useHistory()
   const pathname = history.location.pathname.split('/')
-  const path = pathname.length === 4 ? pathname[pathname.length - 1] : null
+  const path =
+    pathname.length === 4 ? pathname[pathname.length - 1] : 'contracts'
   const memberId = match.params.memberId
 
   const panes = memberPagePanes(memberId, member)
@@ -96,7 +97,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
 
   useEffect(() => {
     pushToMemberHistory(memberId)
-    navigateToTab(path || 'contracts')
+    navigateToTab(path)
   }, [])
 
   const { numberMemberGroups } = useNumberMemberGroups()
