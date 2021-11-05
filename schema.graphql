@@ -35,6 +35,8 @@ type QueryType {
 
   user(email: String!): User
   users: [User!]!
+
+  usersOnPath(path: String!): [User!]!
 }
 
 type Me {

@@ -4,6 +4,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { UsersOnPath } from 'features/navigation/topbar/components/UsersOnPath'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
 import { GearFill, PeopleFill } from 'react-bootstrap-icons'
@@ -79,6 +80,7 @@ export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
         justify="flex-end"
         align="center"
       >
+        <UsersOnPath />
         <div>
           <Username
             direction="row"
