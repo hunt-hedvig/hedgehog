@@ -68,6 +68,7 @@ type User {
   fullName: String!
   phoneNumber: String
   latestPresence: Instant
+  latestLocation: String
 }
 
 type UserSetting {

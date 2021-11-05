@@ -730,7 +730,7 @@ export type MutationType = {
   createQuoteFromAgreement: Quote
   markSwitchableSwitcherEmailAsReminded: SwitchableSwitcherEmail
   updateSwitcherEmailInfo: SwitchableSwitcherEmail
-  updateEdiSwitcherNote?: Maybe<EdiSwitcher>
+  updateEdiSwitcherNote: EdiSwitcher
   terminateContract: Contract
   activatePendingAgreement: Contract
   changeTerminationDate: Contract
@@ -911,7 +911,7 @@ export type MutationTypeUpdateSwitcherEmailInfoArgs = {
 
 export type MutationTypeUpdateEdiSwitcherNoteArgs = {
   id: Scalars['ID']
-  request?: Maybe<UpdateSwitcherNoteInput>
+  request: UpdateSwitcherNoteInput
 }
 
 export type MutationTypeTerminateContractArgs = {
@@ -1503,6 +1503,7 @@ export type User = {
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
+  latestLocation?: Maybe<Scalars['String']>
 }
 
 export type UserSetting = {
@@ -3685,7 +3686,7 @@ export type UsersQuery = { __typename?: 'QueryType' } & {
   users: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'fullName' | 'email' | 'latestPresence'
+      'id' | 'fullName' | 'email' | 'latestPresence' | 'latestLocation'
     >
   >
 }
@@ -10120,6 +10121,7 @@ export const UsersDocument = gql`
       fullName
       email
       latestPresence
+      latestLocation
     }
   }
 `

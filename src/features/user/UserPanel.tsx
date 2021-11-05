@@ -5,7 +5,9 @@ import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import chroma from 'chroma-js'
 import { differenceInMinutes, differenceInSeconds, parseISO } from 'date-fns'
+import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useRef } from 'react'
+import { useHistory } from 'react-router'
 import { useUsersQuery } from 'types/generated/graphql'
 
 const Container = styled.div<{ visible: boolean }>`
@@ -127,8 +129,11 @@ export const UserPanel: React.FC<{
   visible: boolean
   onClickOutside: () => void
 }> = ({ visible, onClickOutside }) => {
+  const history = useHistory()
   const panelRef = useRef<HTMLDivElement>(null)
   const { data, startPolling, stopPolling } = useUsersQuery()
+
+  const { me } = useMe()
 
   useClickOutside(panelRef, onClickOutside)
 
@@ -174,9 +179,19 @@ export const UserPanel: React.FC<{
             parseISO(user.latestPresence),
           )
 
+          const hasCurrentLocation =
+            !!user.latestLocation &&
+            differenceLatestPresenceSeconds < 60 &&
+            user.email !== me.email
+
           return (
             <UserItem
-              active={differenceLatestPresenceSeconds < 60}
+              onClick={() =>
+                hasCurrentLocation &&
+                user.latestLocation &&
+                history.push(user.latestLocation)
+              }
+              active={hasCurrentLocation}
               key={user.id}
             >
               <Flex direction="column">
