@@ -4,7 +4,7 @@ import { Flex } from '@hedvig-ui'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import chroma from 'chroma-js'
-import { differenceInMinutes, parseISO } from 'date-fns'
+import { differenceInMinutes, differenceInSeconds, parseISO } from 'date-fns'
 import React, { useEffect, useRef } from 'react'
 import { useUsersQuery } from 'types/generated/graphql'
 
@@ -48,7 +48,7 @@ const UserItemContainer = styled.div`
   }
 `
 
-const UserItem = styled.div<{ online?: boolean }>`
+const UserItem = styled.div<{ active?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -70,8 +70,8 @@ const UserItem = styled.div<{ online?: boolean }>`
     display: inline-block;
   }
 
-  ${({ online, theme }) =>
-    online &&
+  ${({ active, theme }) =>
+    active &&
     css`
       cursor: pointer;
       transition: background-color 200ms;
@@ -164,20 +164,28 @@ export const UserPanel: React.FC<{
       <Label>Users online</Label>
       <UserItemContainer>
         {usersOnline.map((user) => {
-          const differenceLatestPresence = differenceInMinutes(
+          const differenceLatestPresenceMinutes = differenceInMinutes(
+            now,
+            parseISO(user.latestPresence),
+          )
+
+          const differenceLatestPresenceSeconds = differenceInSeconds(
             now,
             parseISO(user.latestPresence),
           )
 
           return (
-            <UserItem online key={user.id}>
+            <UserItem
+              active={differenceLatestPresenceSeconds < 60}
+              key={user.id}
+            >
               <Flex direction="column">
                 <UserName>{user.fullName}</UserName>
                 <LatestSeenLabel>
                   <span className="navigate-label">Go to location</span>
                   <span className="time-label">
-                    {user.latestPresence && differenceLatestPresence > 0
-                      ? `${differenceLatestPresence} min ago`
+                    {user.latestPresence && differenceLatestPresenceMinutes > 0
+                      ? `${differenceLatestPresenceMinutes} min ago`
                       : 'Active now'}
                   </span>
                 </LatestSeenLabel>
