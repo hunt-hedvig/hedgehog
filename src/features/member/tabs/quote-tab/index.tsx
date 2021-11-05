@@ -66,7 +66,6 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
         <QuotesSubSection
           memberId={memberId}
           contractType={activeTab}
-          market={memberMarket}
           quotes={getCategorisedQuotesBasedOnContractType(activeTab)}
         />
       )}

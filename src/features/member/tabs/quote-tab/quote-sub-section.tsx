@@ -19,8 +19,7 @@ export const QuotesSubSection: React.FC<{
   memberId: string
   contractType: ContractType
   quotes: ReadonlyArray<Quote>
-  market: Market
-}> = ({ memberId, contractType, quotes, market }) => {
+}> = ({ memberId, contractType, quotes }) => {
   const [isWip, setIsWip] = React.useState(false)
   const activeQuotes = quotes.filter((quote) => !isSignedOrExpired(quote))
   const [contracts, { loading }] = useContracts(memberId)
@@ -61,7 +60,6 @@ export const QuotesSubSection: React.FC<{
             <QuoteListItem
               quote={quote}
               memberId={memberId}
-              market={market}
               contracts={contracts}
             />
           </Card>

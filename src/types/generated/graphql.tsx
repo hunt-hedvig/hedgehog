@@ -1300,6 +1300,7 @@ export type Quote = {
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
   isReadyToSign?: Maybe<Scalars['Boolean']>
+  allowSignWithoutActiveContract?: Maybe<Scalars['Boolean']>
 }
 
 export type RedeemedCampaign = {

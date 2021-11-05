@@ -87,8 +87,7 @@ export const QuoteListItem: React.FC<{
   quote: Quote
   inactionable?: boolean
   memberId: string
-  market: Market
-}> = ({ contracts, market, quote, inactionable, memberId }) => {
+}> = ({ contracts, quote, inactionable, memberId }) => {
   const [action, setAction] = React.useState<Action | null>(null)
   const [isWip, setIsWip] = React.useState(false)
 
@@ -126,10 +125,9 @@ export const QuoteListItem: React.FC<{
     )
   }
 
-  const hasSignedContract = quote.isReadyToSign && contracts.length > 0
-  const allowHighRiskBypass =
-    market === Market.Norway &&
-    quote.breachedUnderwritingGuidelines?.includes('DEBT_CHECK')
+  const showSignButton =
+    quote.isReadyToSign &&
+    (contracts.length > 0 || quote.allowSignWithoutActiveContract)
 
   return (
     <OuterWrapper>
@@ -146,7 +144,7 @@ export const QuoteListItem: React.FC<{
               </BottomSpacerWrapper>
             )}
             {quote.isReadyToSign &&
-              (hasSignedContract || allowHighRiskBypass ? (
+              (showSignButton ? (
                 <BottomSpacerWrapper>
                   <Button onClick={toggleState(Action.SIGN)}>Sign</Button>
                 </BottomSpacerWrapper>
