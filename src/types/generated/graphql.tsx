@@ -1213,6 +1213,7 @@ export type QueryType = {
   claimPropertyOption: ClaimPropertyOption
   user?: Maybe<User>
   users: Array<User>
+  usersOnPath: Array<User>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1262,6 +1263,10 @@ export type QueryTypeClaimPropertyOptionArgs = {
 
 export type QueryTypeUserArgs = {
   email: Scalars['String']
+}
+
+export type QueryTypeUsersOnPathArgs = {
+  path: Scalars['String']
 }
 
 export type Question = {
@@ -3641,6 +3646,19 @@ export type UpdateUserMutation = { __typename?: 'MutationType' } & {
   updateUser: { __typename?: 'User' } & Pick<
     User,
     'id' | 'fullName' | 'email' | 'phoneNumber'
+  >
+}
+
+export type UsersOnPathQueryVariables = Exact<{
+  path: Scalars['String']
+}>
+
+export type UsersOnPathQuery = { __typename?: 'QueryType' } & {
+  usersOnPath: Array<
+    { __typename?: 'User' } & Pick<
+      User,
+      'id' | 'fullName' | 'email' | 'latestPresence'
+    >
   >
 }
 
@@ -10018,6 +10036,65 @@ export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<
 export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
+>
+export const UsersOnPathDocument = gql`
+  query UsersOnPath($path: String!) {
+    usersOnPath(path: $path) {
+      id
+      fullName
+      email
+      latestPresence
+    }
+  }
+`
+
+/**
+ * __useUsersOnPathQuery__
+ *
+ * To run a query within a React component, call `useUsersOnPathQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersOnPathQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersOnPathQuery({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useUsersOnPathQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<UsersOnPathQuery, UsersOnPathQueryVariables>(
+    UsersOnPathDocument,
+    options,
+  )
+}
+export function useUsersOnPathLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >(UsersOnPathDocument, options)
+}
+export type UsersOnPathQueryHookResult = ReturnType<typeof useUsersOnPathQuery>
+export type UsersOnPathLazyQueryHookResult = ReturnType<
+  typeof useUsersOnPathLazyQuery
+>
+export type UsersOnPathQueryResult = ApolloReactCommon.QueryResult<
+  UsersOnPathQuery,
+  UsersOnPathQueryVariables
 >
 export const UsersDocument = gql`
   query Users {
