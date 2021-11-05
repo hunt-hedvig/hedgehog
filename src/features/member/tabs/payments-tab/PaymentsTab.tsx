@@ -70,19 +70,21 @@ const TableRowColored = styled(TableRow)<{
   status: Transaction['status']
   type: Transaction['type']
 }>`
-  background-color: ${({ theme, status, type }) => {
-    if (type === 'PAYOUT') {
-      return theme.accentLighter
-    }
-    switch (status) {
-      case 'INITIATED':
-        return theme.lightWarning
-      case 'COMPLETED':
-        return theme.lightSuccess
-      case 'FAILED':
-        return theme.lightDanger
-    }
-  }} !important;
+  td {
+    background-color: ${({ theme, status, type }) => {
+      if (type === 'PAYOUT') {
+        return theme.accentLighter
+      }
+      switch (status) {
+        case 'INITIATED':
+          return theme.lightWarning
+        case 'COMPLETED':
+          return theme.lightSuccess
+        case 'FAILED':
+          return theme.lightDanger
+      }
+    }} !important;
+  }
 `
 
 const ChargeNotAvailableMessage = styled(StandaloneMessage)`

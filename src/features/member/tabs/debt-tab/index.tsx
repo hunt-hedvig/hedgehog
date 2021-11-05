@@ -7,7 +7,6 @@ import {
   InfoText,
   LoadingMessage,
   MainHeadline,
-  OrbFlagsType,
   OrbIndicator,
   Spacing,
   StandaloneMessage,
@@ -89,10 +88,7 @@ export const DebtTab: React.FC<{
               Member flag
               <InfoText>
                 {person?.status?.flag && (
-                  <OrbIndicator
-                    flag={person.status.flag.toLowerCase() as OrbFlagsType}
-                    size="14px"
-                  />
+                  <OrbIndicator flag={person.status.flag} size="14px" />
                 )}
               </InfoText>
             </InfoRow>
