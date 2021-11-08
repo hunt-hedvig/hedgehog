@@ -116,13 +116,11 @@ export const LargeClaimsList: React.FC<{
     return (
       <EmptyWrapper>
         <SecondLevelHeadline>
-          <Placeholder>
-            Sorry, it seems that we haven't got claims here.
-          </Placeholder>
+          <Placeholder>Sorry, no claims to be found here</Placeholder>
         </SecondLevelHeadline>
         <Button
           style={{ marginTop: '1em' }}
-          variant="primary"
+          variant="secondary"
           onClick={() => history.push('/claims/list/1')}
         >
           Go to first page
