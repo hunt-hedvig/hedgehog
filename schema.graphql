@@ -78,7 +78,7 @@ input UserSettingsFilter {
 type User {
   id: ID!
   email: String!
-  role: String!
+  role: String
   fullName: String!
   phoneNumber: String
   latestPresence: Instant
@@ -567,7 +567,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

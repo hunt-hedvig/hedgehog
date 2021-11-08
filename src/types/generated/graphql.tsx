@@ -1539,7 +1539,7 @@ export type User = {
   __typename?: 'User'
   id: Scalars['ID']
   email: Scalars['String']
-  role: Scalars['String']
+  role?: Maybe<Scalars['String']>
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
