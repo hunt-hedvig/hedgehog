@@ -5,8 +5,8 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 
 const UNSIGN_MEMBER = gql`
-  mutation UnsignMember($ssn: String!) {
-    unsignMember(ssn: $ssn)
+  mutation UnsignMember($ssn: String, $email: String) {
+    unsignMember(ssn: $ssn, email: $email)
   }
 `
 
