@@ -1,5 +1,12 @@
 import styled from '@emotion/styled'
-import { Checkbox, Flex, Label, lightTheme, TextDatePicker } from '@hedvig-ui'
+import {
+  Checkbox,
+  Flex,
+  Label,
+  lightTheme,
+  Popover,
+  TextDatePicker,
+} from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
 import { Market, MarketFlags } from 'features/config/constants'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
@@ -7,6 +14,7 @@ import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
+import { InfoCircle } from 'react-bootstrap-icons'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
 interface FiltersProps {
@@ -32,6 +40,36 @@ const FilterElement = styled.div`
     margin: 0;
   }
 `
+
+const StyledLabel = styled(Label)`
+  display: flex;
+  align-items: center;
+
+  & span {
+    margin-right: 1em;
+  }
+
+  & svg {
+    width: 15px;
+    height: 15px;
+
+    &:hover {
+      cursor: help;
+    }
+  }
+`
+
+const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
+  label,
+  popover,
+}) => (
+  <StyledLabel>
+    <span>{label}</span>
+    <Popover style={{ width: 250 }} contents={popover}>
+      <InfoCircle />
+    </Popover>
+  </StyledLabel>
+)
 
 export enum FilterGroupState {
   First,
@@ -133,7 +171,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       </FilterElement>
 
       <FilterElement>
-        <Label>Complexities</Label>
+        <LabelWithPopover
+          label="Complexities"
+          popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
+        />
         {Object.keys(ClaimComplexity).map((key) => (
           <Flex key={key} direction="row" align="center">
             <Checkbox
@@ -197,7 +238,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       </FilterElement>
 
       <FilterElement>
-        <Label>Date up until</Label>
+        <LabelWithPopover
+          label="Date up until"
+          popover="The claim was registered either before or on this date."
+        />
         <TextDatePicker
           value={
             filters.filterCreatedBeforeOrOnDate
