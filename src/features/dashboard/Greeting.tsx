@@ -29,6 +29,6 @@ export const getNameFromEmail = (email: string) => {
 
 export const Greeting: React.FC<{ userName: string }> = ({ userName }) => (
   <MainHeadline>
-    {GREETINGS(getNameFromEmail(userName))[Math.floor(Math.random() * 4)]}
+    {GREETINGS(userName)[Math.floor(Math.random() * 4)]}
   </MainHeadline>
 )
