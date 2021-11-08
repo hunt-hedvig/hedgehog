@@ -48,10 +48,7 @@ export enum SwitcherEmailStatus {
 }
 
 const UPDATE_INFO = gql`
-  mutation UpdateSwitcherEmailInfo(
-    $id: ID!
-    $input: UpdateSwitcherEmailInfoInput
-  ) {
+  mutation UpdateSwitcherEmailInfo($id: ID!, $input: UpdateSwitcherNoteInput) {
     updateSwitcherEmailInfo(id: $id, request: $input) {
       id
       note
