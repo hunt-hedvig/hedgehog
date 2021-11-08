@@ -97,6 +97,9 @@ export const apolloClient = (() => {
         Member: {
           keyFields: ['memberId'],
         },
+        ResourceAccessInformation: {
+          keyFields: ['resourceId'],
+        },
         Renewal: {
           keyFields: ['draftOfAgreementId'],
         },
