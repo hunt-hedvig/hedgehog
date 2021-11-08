@@ -421,6 +421,16 @@ export type DirectDebitStatus = {
   activated?: Maybe<Scalars['Boolean']>
 }
 
+export type EdiSwitcher = {
+  __typename?: 'EdiSwitcher'
+  id: Scalars['ID']
+  memberId: Scalars['String']
+  contractId: Scalars['ID']
+  switcherCompany: Scalars['String']
+  cancellationRequestedAt?: Maybe<Scalars['Instant']>
+  note?: Maybe<Scalars['String']>
+}
+
 export type EditMemberInfoInput = {
   memberId: Scalars['String']
   firstName?: Maybe<Scalars['String']>
@@ -720,6 +730,7 @@ export type MutationType = {
   createQuoteFromAgreement: Quote
   markSwitchableSwitcherEmailAsReminded: SwitchableSwitcherEmail
   updateSwitcherEmailInfo: SwitchableSwitcherEmail
+  updateEdiSwitcherNote: EdiSwitcher
   terminateContract: Contract
   activatePendingAgreement: Contract
   changeTerminationDate: Contract
@@ -895,7 +906,12 @@ export type MutationTypeMarkSwitchableSwitcherEmailAsRemindedArgs = {
 
 export type MutationTypeUpdateSwitcherEmailInfoArgs = {
   id: Scalars['ID']
-  request?: Maybe<UpdateSwitcherEmailInfoInput>
+  request?: Maybe<UpdateSwitcherNoteInput>
+}
+
+export type MutationTypeUpdateEdiSwitcherNoteArgs = {
+  id: Scalars['ID']
+  request: UpdateSwitcherNoteInput
 }
 
 export type MutationTypeTerminateContractArgs = {
@@ -1192,6 +1208,7 @@ export type QueryType = {
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
   me: Me
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  ediSwitchers: Array<EdiSwitcher>
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
   findPartnerCampaigns: Array<VoucherCampaign>
@@ -1213,6 +1230,7 @@ export type QueryType = {
   claimPropertyOption: ClaimPropertyOption
   user?: Maybe<User>
   users: Array<User>
+  usersOnPath: Array<User>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1262,6 +1280,10 @@ export type QueryTypeClaimPropertyOptionArgs = {
 
 export type QueryTypeUserArgs = {
   email: Scalars['String']
+}
+
+export type QueryTypeUsersOnPathArgs = {
+  path: Scalars['String']
 }
 
 export type Question = {
@@ -1453,7 +1475,7 @@ export type UnknownIncentive = {
   _?: Maybe<Scalars['Boolean']>
 }
 
-export type UpdateSwitcherEmailInfoInput = {
+export type UpdateSwitcherNoteInput = {
   note?: Maybe<Scalars['String']>
 }
 
@@ -1481,6 +1503,7 @@ export type User = {
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
+  latestLocation?: Maybe<Scalars['String']>
 }
 
 export type UserSetting = {
@@ -3644,13 +3667,26 @@ export type UpdateUserMutation = { __typename?: 'MutationType' } & {
   >
 }
 
+export type UsersOnPathQueryVariables = Exact<{
+  path: Scalars['String']
+}>
+
+export type UsersOnPathQuery = { __typename?: 'QueryType' } & {
+  usersOnPath: Array<
+    { __typename?: 'User' } & Pick<
+      User,
+      'id' | 'fullName' | 'email' | 'latestPresence'
+    >
+  >
+}
+
 export type UsersQueryVariables = Exact<{ [key: string]: never }>
 
 export type UsersQuery = { __typename?: 'QueryType' } & {
   users: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'fullName' | 'email' | 'latestPresence'
+      'id' | 'fullName' | 'email' | 'latestPresence' | 'latestLocation'
     >
   >
 }
@@ -10019,6 +10055,65 @@ export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
 >
+export const UsersOnPathDocument = gql`
+  query UsersOnPath($path: String!) {
+    usersOnPath(path: $path) {
+      id
+      fullName
+      email
+      latestPresence
+    }
+  }
+`
+
+/**
+ * __useUsersOnPathQuery__
+ *
+ * To run a query within a React component, call `useUsersOnPathQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersOnPathQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersOnPathQuery({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useUsersOnPathQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<UsersOnPathQuery, UsersOnPathQueryVariables>(
+    UsersOnPathDocument,
+    options,
+  )
+}
+export function useUsersOnPathLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >(UsersOnPathDocument, options)
+}
+export type UsersOnPathQueryHookResult = ReturnType<typeof useUsersOnPathQuery>
+export type UsersOnPathLazyQueryHookResult = ReturnType<
+  typeof useUsersOnPathLazyQuery
+>
+export type UsersOnPathQueryResult = ApolloReactCommon.QueryResult<
+  UsersOnPathQuery,
+  UsersOnPathQueryVariables
+>
 export const UsersDocument = gql`
   query Users {
     users {
@@ -10026,6 +10121,7 @@ export const UsersDocument = gql`
       fullName
       email
       latestPresence
+      latestLocation
     }
   }
 `

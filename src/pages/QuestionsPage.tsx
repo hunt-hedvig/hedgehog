@@ -86,7 +86,7 @@ const QuestionsPage: React.FC = () => {
         <FadeIn>
           <Spacing bottom>
             <ThirdLevelHeadline>
-              <strong>Number of member groups:</strong>
+              <strong>Number of member groups</strong>
             </ThirdLevelHeadline>
             <NumberMemberGroupsRadioButtons />
           </Spacing>
