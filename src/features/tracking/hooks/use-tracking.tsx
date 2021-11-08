@@ -33,7 +33,7 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({
       return
     }
 
-    setCookie(TRACKING_COOKIE_NAME, JSON.stringify(trackingData))
+    setCookie(TRACKING_COOKIE_NAME, JSON.stringify(trackingData), { path: '/' })
   }, [trackingData])
 
   const update = (data: UserTrackingData) => {
@@ -42,7 +42,7 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const flush = () => {
     setTrackingData(null)
-    setCookie(TRACKING_COOKIE_NAME, null)
+    setCookie(TRACKING_COOKIE_NAME, null, { path: '/' })
   }
 
   return (
