@@ -19,7 +19,7 @@
     "@visx/drag": "^2.1.0",
     "@visx/network": "^2.1.0",
     "@visx/zoom": "^2.1.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "chroma-js": "^2.1.2",
     "compromise": "^13.11.4",
     "compromise-dates": "^2.2.1",
