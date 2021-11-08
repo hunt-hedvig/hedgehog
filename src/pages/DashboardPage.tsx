@@ -83,7 +83,9 @@ const DashboardPage: React.FC = () => {
 
   return (
     <Wrapper>
-      <Spacing bottom>{me && <Greeting email={me?.email} />}</Spacing>
+      <Spacing bottom>
+        <Greeting userName={me?.fullName.split(' ')[0]} />
+      </Spacing>
       {dashboardNumbers && (
         <FadeIn>
           <MetricsWrapper>

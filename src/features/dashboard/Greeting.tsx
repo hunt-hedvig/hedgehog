@@ -27,8 +27,8 @@ export const getNameFromEmail = (email: string) => {
   return `${userName.charAt(0).toUpperCase()}${userName.slice(1)}`
 }
 
-export const Greeting: React.FC<{ email: string }> = ({ email }) => (
+export const Greeting: React.FC<{ userName: string }> = ({ userName }) => (
   <MainHeadline>
-    {GREETINGS(getNameFromEmail(email))[Math.floor(Math.random() * 4)]}
+    {GREETINGS(getNameFromEmail(userName))[Math.floor(Math.random() * 4)]}
   </MainHeadline>
 )
