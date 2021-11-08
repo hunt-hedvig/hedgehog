@@ -421,6 +421,16 @@ export type DirectDebitStatus = {
   activated?: Maybe<Scalars['Boolean']>
 }
 
+export type EdiSwitcher = {
+  __typename?: 'EdiSwitcher'
+  id: Scalars['ID']
+  memberId: Scalars['String']
+  contractId: Scalars['ID']
+  switcherCompany: Scalars['String']
+  cancellationRequestedAt?: Maybe<Scalars['Instant']>
+  note?: Maybe<Scalars['String']>
+}
+
 export type EditMemberInfoInput = {
   memberId: Scalars['String']
   firstName?: Maybe<Scalars['String']>
@@ -720,6 +730,7 @@ export type MutationType = {
   createQuoteFromAgreement: Quote
   markSwitchableSwitcherEmailAsReminded: SwitchableSwitcherEmail
   updateSwitcherEmailInfo: SwitchableSwitcherEmail
+  updateEdiSwitcherNote: EdiSwitcher
   terminateContract: Contract
   activatePendingAgreement: Contract
   changeTerminationDate: Contract
@@ -895,7 +906,12 @@ export type MutationTypeMarkSwitchableSwitcherEmailAsRemindedArgs = {
 
 export type MutationTypeUpdateSwitcherEmailInfoArgs = {
   id: Scalars['ID']
-  request?: Maybe<UpdateSwitcherEmailInfoInput>
+  request?: Maybe<UpdateSwitcherNoteInput>
+}
+
+export type MutationTypeUpdateEdiSwitcherNoteArgs = {
+  id: Scalars['ID']
+  request: UpdateSwitcherNoteInput
 }
 
 export type MutationTypeTerminateContractArgs = {
@@ -1192,6 +1208,7 @@ export type QueryType = {
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
   me: Me
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  ediSwitchers: Array<EdiSwitcher>
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
   findPartnerCampaigns: Array<VoucherCampaign>
@@ -1458,7 +1475,7 @@ export type UnknownIncentive = {
   _?: Maybe<Scalars['Boolean']>
 }
 
-export type UpdateSwitcherEmailInfoInput = {
+export type UpdateSwitcherNoteInput = {
   note?: Maybe<Scalars['String']>
 }
 
@@ -1486,6 +1503,7 @@ export type User = {
   fullName: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
+  latestLocation?: Maybe<Scalars['String']>
 }
 
 export type UserSetting = {
@@ -3668,7 +3686,7 @@ export type UsersQuery = { __typename?: 'QueryType' } & {
   users: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'fullName' | 'email' | 'latestPresence'
+      'id' | 'fullName' | 'email' | 'latestPresence' | 'latestLocation'
     >
   >
 }
@@ -10103,6 +10121,7 @@ export const UsersDocument = gql`
       fullName
       email
       latestPresence
+      latestLocation
     }
   }
 `
