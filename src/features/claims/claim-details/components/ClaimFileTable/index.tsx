@@ -4,6 +4,7 @@ import {
   CardTitle,
   Spinner,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -78,34 +79,36 @@ export const ClaimFileTable: React.FC<{
             <TableHeaderColumn>Uploaded At</TableHeaderColumn>
             <TableHeaderColumn />
           </TableHeader>
+          <TableBody>
+            {loading && (
+              <TableRow>
+                <TableColumn>
+                  <Spinner />
+                </TableColumn>
+              </TableRow>
+            )}
 
-          {loading && (
-            <TableRow>
-              <TableColumn>
-                <Spinner />
-              </TableColumn>
-            </TableRow>
-          )}
-
-          {!claimFiles && !loading ? (
-            <TableRow>
-              <TableColumn>
-                <NoClaimFiles>
-                  No claim documents have been uploaded for this claim
-                </NoClaimFiles>
-              </TableColumn>
-            </TableRow>
-          ) : (
-            [...claimFiles]
-              .sort(sortClaimFileDate)
-              .map((claimFile) => (
-                <FileRow
-                  claimId={claimId}
-                  claimFile={claimFile}
-                  refetch={refetch}
-                />
-              ))
-          )}
+            {!claimFiles && !loading ? (
+              <TableRow>
+                <TableColumn>
+                  <NoClaimFiles>
+                    No claim documents have been uploaded for this claim
+                  </NoClaimFiles>
+                </TableColumn>
+              </TableRow>
+            ) : (
+              [...claimFiles]
+                .sort(sortClaimFileDate)
+                .map((claimFile) => (
+                  <FileRow
+                    key={claimId}
+                    claimId={claimId}
+                    claimFile={claimFile}
+                    refetch={refetch}
+                  />
+                ))
+            )}
+          </TableBody>
         </TableWithOverflow>
       )}
     </CardContent>

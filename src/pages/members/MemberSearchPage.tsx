@@ -1,9 +1,4 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
 import { SearchForm } from 'features/members-search/components/SearchForm'
@@ -11,29 +6,11 @@ import { useMemberSearch } from 'features/members-search/hooks/use-member-search
 import {
   ExtraInstruction,
   Instructions,
-  ListWrapper,
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'features/members-search/styles'
 import React, { useRef } from 'react'
-import { findDOMNode } from 'react-dom'
 import { useHistory } from 'react-router'
-
-/**
- * Semantic UI haven't implemented refs corretly or they collide with react-emotion or something.
- * See https://github.com/Semantic-Org/Semantic-UI-React/issues/3819
- */
-const findInputFieldDomElementHackishly = (
-  instance: React.ReactElement,
-): HTMLInputElement | null => {
-  const wrapper = findDOMNode(instance as any) as HTMLInputElement | null
-
-  if (!wrapper) {
-    return null
-  }
-
-  return wrapper.querySelector('input') ?? null
-}
 
 const MemberSearchPage: React.FC = () => {
   const [query, setQuery] = React.useState('')
@@ -42,60 +19,17 @@ const MemberSearchPage: React.FC = () => {
   const history = useHistory()
   const searchField = useRef<React.ReactElement>()
 
-  const isCommandPressed = useKeyIsPressed(Keys.Command)
-
   const [
     { members, totalPages, page },
     memberSearch,
     { loading },
   ] = useMemberSearch()
 
-  const redirectMemberHandler = (id: string) => {
-    const link = `/members/${id}`
-
-    if (isCommandPressed) {
-      window.open(link, '_blank')
-      return
-    }
-
-    history.push(link)
-  }
-
-  const [
-    currentKeyboardNavigationStep,
-    resetKeyboardNavigationStep,
-  ] = useVerticalKeyboardNavigation({
-    maxStep: members.length - 1,
-    onNavigationStep: () => {
-      const input =
-        searchField.current &&
-        findInputFieldDomElementHackishly(searchField.current)
-      if (input) {
-        input.blur()
-      }
-    },
-    onPerformNavigation: (index) => {
-      redirectMemberHandler(members[index].memberId)
-    },
-    onExit: () => {
-      const input =
-        searchField.current &&
-        findInputFieldDomElementHackishly(searchField.current)
-      if (input) {
-        input.focus()
-      }
-    },
-  })
-
   const noMembersFound = members.length === 0 && query && !loading
 
   React.useEffect(() => {
-    resetKeyboardNavigationStep()
-  }, [query])
-
-  React.useEffect(() => {
     if ((members.length && luckySearch) || members.length === 1) {
-      history.push(`/members/${members[0].memberId}`)
+      history.push(`/members/${members[0].memberId}/contracts`)
     }
   }, [members])
 
@@ -119,23 +53,18 @@ const MemberSearchPage: React.FC = () => {
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
         setLuckySearch={setLuckySearch}
-        onFocus={resetKeyboardNavigationStep}
       />
       {members.length > 0 && (
-        <ListWrapper>
+        <>
           <FadeIn>
-            <MembersList
-              navigationStep={currentKeyboardNavigationStep}
-              members={members}
-              redirectMemberHandler={redirectMemberHandler}
-            />
+            <MembersList members={members} />
             <TablePageSelect
               currentPage={page}
               totalPages={totalPages}
               onSelect={pageSelectHandler}
             />
           </FadeIn>
-        </ListWrapper>
+        </>
       )}
       {members.length === 0 && !query && (
         <>

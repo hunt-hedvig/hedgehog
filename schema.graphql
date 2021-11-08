@@ -9,6 +9,7 @@ type QueryType {
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   me: Me!
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  ediSwitchers: [EdiSwitcher!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
@@ -35,6 +36,8 @@ type QueryType {
 
   user(email: String!): User
   users: [User!]!
+
+  usersOnPath(path: String!): [User!]!
 }
 
 type Me {
@@ -65,6 +68,7 @@ type User {
   fullName: String!
   phoneNumber: String
   latestPresence: Instant
+  latestLocation: String
 }
 
 type UserSetting {
@@ -125,10 +129,16 @@ type MutationType {
 
   createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): SwitchableSwitcherEmail!
+
   updateSwitcherEmailInfo(
     id: ID!
-    request: UpdateSwitcherEmailInfoInput
+    request: UpdateSwitcherNoteInput
   ): SwitchableSwitcherEmail!
+  updateEdiSwitcherNote(
+    id: ID!
+    request: UpdateSwitcherNoteInput!
+  ): EdiSwitcher!
+
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
   activatePendingAgreement(
     contractId: ID!
@@ -530,7 +540,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -984,7 +994,16 @@ type SwitchableSwitcherEmail {
   note: String
 }
 
-input UpdateSwitcherEmailInfoInput {
+type EdiSwitcher {
+  id: ID!
+  memberId: String!
+  contractId: ID!
+  switcherCompany: String!
+  cancellationRequestedAt: Instant
+  note: String
+}
+
+input UpdateSwitcherNoteInput {
   note: String
 }
 

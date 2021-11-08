@@ -3,6 +3,7 @@ import {
   MainHeadline,
   SecondLevelHeadline,
   Table,
+  TableBody,
   TableHeader,
   TableHeaderColumn,
 } from '@hedvig-ui'
@@ -130,83 +131,87 @@ const SwitcherAutomationPage: React.FC = () => {
               <TableHeaderColumn>Status</TableHeaderColumn>
               <TableHeaderColumn>Contract</TableHeaderColumn>
             </TableHeader>
-            {switchers.data?.switchableSwitcherEmails
-              ?.filter((email) => {
-                if (!email.switcherType) {
-                  return true
-                }
-                if (!SwitcherTypeMarket[email.switcherType]) {
-                  return true
-                }
-                const status = getSwitcherEmailStatus(email)
-                return (
-                  (!selectedMarket ||
-                    SwitcherTypeMarket[email.switcherType] ===
-                      selectedMarket) &&
-                  (!selectedStatus || selectedStatus === status)
-                )
-              })
-              .map((email) => (
-                <SwitcherEmailRow
-                  key={email.id}
-                  {...email}
-                  status={getSwitcherEmailStatus(email)}
-                  member={email.member as Member}
-                  contract={email.contract as Contract}
-                  loading={activateContractLoading || terminateContractLoading}
-                  onActivate={async (contract, activeFrom) => {
-                    await toast.promise(
-                      activateContract({
-                        variables: {
-                          contractId: contract.id,
-                          request: {
-                            pendingAgreementId: contract.currentAgreementId,
-                            fromDate: format(activeFrom, 'yyyy-MM-dd'),
+            <TableBody>
+              {switchers.data?.switchableSwitcherEmails
+                ?.filter((email) => {
+                  if (!email.switcherType) {
+                    return true
+                  }
+                  if (!SwitcherTypeMarket[email.switcherType]) {
+                    return true
+                  }
+                  const status = getSwitcherEmailStatus(email)
+                  return (
+                    (!selectedMarket ||
+                      SwitcherTypeMarket[email.switcherType] ===
+                        selectedMarket) &&
+                    (!selectedStatus || selectedStatus === status)
+                  )
+                })
+                .map((email) => (
+                  <SwitcherEmailRow
+                    key={email.id}
+                    {...email}
+                    status={getSwitcherEmailStatus(email)}
+                    member={email.member as Member}
+                    contract={email.contract as Contract}
+                    loading={
+                      activateContractLoading || terminateContractLoading
+                    }
+                    onActivate={async (contract, activeFrom) => {
+                      await toast.promise(
+                        activateContract({
+                          variables: {
+                            contractId: contract.id,
+                            request: {
+                              pendingAgreementId: contract.currentAgreementId,
+                              fromDate: format(activeFrom, 'yyyy-MM-dd'),
+                            },
                           },
+                        }),
+                        {
+                          loading: 'Activating contract',
+                          success: 'Contract activated',
+                          error: 'Could not activate contract',
                         },
-                      }),
-                      {
-                        loading: 'Activating contract',
-                        success: 'Contract activated',
-                        error: 'Could not activate contract',
-                      },
-                    )
+                      )
 
-                    await sleep(1000)
-                    await switchers.refetch()
-                  }}
-                  onTerminate={async (
-                    contract,
-                    terminationDate,
-                    terminationReason,
-                    comment,
-                  ) => {
-                    await toast.promise(
-                      terminateContract({
-                        variables: {
-                          contractId: contract.id,
-                          request: {
-                            terminationDate: format(
-                              terminationDate,
-                              'yyyy-MM-dd',
-                            ),
-                            terminationReason: terminationReason!,
-                            comment,
+                      await sleep(1000)
+                      await switchers.refetch()
+                    }}
+                    onTerminate={async (
+                      contract,
+                      terminationDate,
+                      terminationReason,
+                      comment,
+                    ) => {
+                      await toast.promise(
+                        terminateContract({
+                          variables: {
+                            contractId: contract.id,
+                            request: {
+                              terminationDate: format(
+                                terminationDate,
+                                'yyyy-MM-dd',
+                              ),
+                              terminationReason: terminationReason!,
+                              comment,
+                            },
                           },
+                        }),
+                        {
+                          loading: 'Terminating contract',
+                          success: 'Contract terminated',
+                          error: 'Could not terminate contract',
                         },
-                      }),
-                      {
-                        loading: 'Terminating contract',
-                        success: 'Contract terminated',
-                        error: 'Could not terminate contract',
-                      },
-                    )
+                      )
 
-                    await sleep(1000)
-                    await switchers.refetch()
-                  }}
-                />
-              )) ?? null}
+                      await sleep(1000)
+                      await switchers.refetch()
+                    }}
+                  />
+                )) ?? null}
+            </TableBody>
           </Table>
         </>
       )}

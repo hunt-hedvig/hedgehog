@@ -1,9 +1,12 @@
 import styled from '@emotion/styled'
 import {
+  Button,
   LoadingMessage,
   Monetary,
   Placeholder,
+  SecondLevelHeadline,
   Table,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -47,15 +50,29 @@ const FlexVertically = styled.div`
   flex-direction: column;
 `
 
-const MemberIdCell = styled(TableColumn)<{
+const StatusLine = styled.div<{
   memberId: string
   numberMemberGroups: number
 }>`
-  border-left: 7px solid
-    ${({ memberId, numberMemberGroups }) =>
-      getMemberIdColor(memberId, numberMemberGroups)} !important;
+  position: absolute;
+  width: 7px;
+  height: calc(100% + 1px);
 
-  padding-left: 1em;
+  left: 0;
+  top: 0;
+
+  background-color: ${({ memberId, numberMemberGroups }) =>
+    getMemberIdColor(memberId, numberMemberGroups)} !important;
+`
+
+const EmptyWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 5em;
+
+  width: 100%;
   height: 100%;
 `
 
@@ -95,19 +112,26 @@ export const LargeClaimsList: React.FC<{
     history.push(link)
   }
 
+  if (!loading && claims.length === 0) {
+    return (
+      <EmptyWrapper>
+        <SecondLevelHeadline>
+          <Placeholder>Sorry, no claims to be found here</Placeholder>
+        </SecondLevelHeadline>
+        <Button
+          style={{ marginTop: '1em' }}
+          variant="secondary"
+          onClick={() => history.push('/claims/list/1')}
+        >
+          Go to first page
+        </Button>
+      </EmptyWrapper>
+    )
+  }
+
   return (
     <>
-      <Table
-        onPerformNavigation={(index) => {
-          const claimId = claims[index].id
-
-          if (!claimId) {
-            return
-          }
-
-          redirectClaimHandler(claimId)
-        }}
-      >
+      <Table>
         <TableHeader>
           <TableHeaderColumn>Member</TableHeaderColumn>
           <TableHeaderColumn>Date Registered</TableHeaderColumn>
@@ -115,84 +139,95 @@ export const LargeClaimsList: React.FC<{
           <TableHeaderColumn>State</TableHeaderColumn>
           <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
-        {claims.map((claim) => {
-          const registrationDateString = formatDate(
-            parseISO(claim.registrationDate),
-            'dd MMMM, yyyy',
-          )
-          const registrationDateTimeString = formatDate(
-            parseISO(claim.registrationDate),
-            'HH:mm',
-          )
+        <TableBody
+          onPerformNavigation={(index) => {
+            const claimId = claims[index].id
 
-          return (
-            <TableRow
-              key={claim.id}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.keyCode === Keys.Enter.code) {
-                  e.preventDefault()
-                  history.push(`/claims/${claim.id}`)
-                }
-              }}
-              onClick={() => redirectClaimHandler(claim.id)}
-            >
-              <div>
-                <MemberIdCell
-                  numberMemberGroups={numberMemberGroups}
-                  memberId={claim.member.memberId}
-                >
-                  <FlexVertically>
+            if (!claimId) {
+              return
+            }
+
+            redirectClaimHandler(claimId)
+          }}
+        >
+          {claims.map((claim) => {
+            const registrationDateString = formatDate(
+              parseISO(claim.registrationDate),
+              'dd MMMM, yyyy',
+            )
+            const registrationDateTimeString = formatDate(
+              parseISO(claim.registrationDate),
+              'HH:mm',
+            )
+
+            return (
+              <TableRow
+                key={claim.id}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.keyCode === Keys.Enter.code) {
+                    e.preventDefault()
+                    history.push(`/claims/${claim.id}`)
+                  }
+                }}
+                onClick={() => redirectClaimHandler(claim.id)}
+              >
+                <TableColumn style={{ position: 'relative' }}>
+                  <FlexVertically style={{ paddingLeft: '7px' }}>
                     {claim.member.firstName} {claim.member.lastName}{' '}
                     <TableColumnSubtext>
                       {claim.member.memberId}
                     </TableColumnSubtext>
                   </FlexVertically>
-                </MemberIdCell>
-              </div>
+                  <StatusLine
+                    numberMemberGroups={numberMemberGroups}
+                    memberId={claim.member.memberId}
+                  />
+                </TableColumn>
 
-              <TableColumn>
-                <FlexVertically>
-                  {registrationDateString}
-                  <TableColumnSubtext>
-                    {registrationDateTimeString}
-                  </TableColumnSubtext>
-                </FlexVertically>
-              </TableColumn>
+                <TableColumn>
+                  <FlexVertically>
+                    {registrationDateString}
+                    <TableColumnSubtext>
+                      {registrationDateTimeString}
+                    </TableColumnSubtext>
+                  </FlexVertically>
+                </TableColumn>
 
-              <TableColumn>
-                <FlexVertically>
-                  {claim.claimType ? (
-                    convertEnumToTitle(claim.claimType)
-                  ) : (
-                    <Placeholder>Type not specified</Placeholder>
-                  )}
-                  <TableColumnSubtext>
-                    {claim.outcome ? (
-                      convertEnumToTitle(claim.outcome)
+                <TableColumn>
+                  <FlexVertically>
+                    {claim.claimType ? (
+                      convertEnumToTitle(claim.claimType)
                     ) : (
-                      <Placeholder>Outcome not specified</Placeholder>
+                      <Placeholder>Type not specified</Placeholder>
                     )}
-                  </TableColumnSubtext>
-                </FlexVertically>
-              </TableColumn>
+                    <TableColumnSubtext>
+                      {claim.outcome ? (
+                        convertEnumToTitle(claim.outcome)
+                      ) : (
+                        <Placeholder>Outcome not specified</Placeholder>
+                      )}
+                    </TableColumnSubtext>
+                  </FlexVertically>
+                </TableColumn>
 
-              <TableColumn>
-                <ClaimStateBadge state={claim.state}>
-                  {convertEnumToTitle(claim.state)}
-                </ClaimStateBadge>
-              </TableColumn>
+                <TableColumn>
+                  <ClaimStateBadge state={claim.state}>
+                    {convertEnumToTitle(claim.state)}
+                  </ClaimStateBadge>
+                </TableColumn>
 
-              <TableColumn>
-                {claim.reserves ? (
-                  <Monetary amount={claim.reserves} />
-                ) : (
-                  <Placeholder>Not specified</Placeholder>
-                )}
-              </TableColumn>
-            </TableRow>
-          )
-        })}
+                <TableColumn>
+                  {claim.reserves ? (
+                    <Monetary amount={claim.reserves} />
+                  ) : (
+                    <Placeholder>Not specified</Placeholder>
+                  )}
+                </TableColumn>
+              </TableRow>
+            )
+          })}
+        </TableBody>
       </Table>
       <TablePageSelect
         currentPage={currentPage}
