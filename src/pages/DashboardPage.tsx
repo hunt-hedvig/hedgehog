@@ -6,17 +6,16 @@ import {
   CasualList,
   CasualListItem,
   FadeIn,
-  MainHeadline,
   SecondLevelHeadline,
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
+import { Greeting } from 'features/dashboard/Greeting'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 
@@ -62,27 +61,6 @@ const MutedText = styled.div`
   font-size: 0.9rem;
 `
 
-const getDayPartGreeting = (name: string) => {
-  const hours = new Date().getHours()
-  if (hours >= 0 && hours < 6) {
-    return `Good night ${name}! Shouldn’t you be asleep?`
-  } else if (hours >= 6 && hours < 12) {
-    return `Good morning ${name}! Have a nice day!`
-  } else if (hours >= 12 && hours < 18) {
-    return `Good afternoon ${name}!`
-  } else if (hours >= 18 && hours <= 23) {
-    return `Good evening ${name}!`
-  }
-}
-
-const GREETINGS = (name: string) => ({
-  0: `Hi there, ${name}!`,
-  1: `Hello, ${name}!`,
-  2: getDayPartGreeting(name),
-  3: `Welcome again, ${name}!`,
-  4: `How do you do, ${name}?`,
-})
-
 const GET_DASHBOARD_NUMBERS = gql`
   query GetDashboardNumbers {
     dashboardNumbers {
@@ -97,40 +75,15 @@ const DashboardPage: React.FC = () => {
     pollInterval: 1000 * 5,
   })
 
-  const [greetingNum, setGreetingNum] = useInsecurePersistentState<number>(
-    'dashboard:greeting',
-    0,
-  )
-
   const { settings, me } = useMe()
 
   const dashboardNumbers = dashboardData?.dashboardNumbers as
     | DashboardNumbers
     | undefined
 
-  useEffect(() => {
-    setGreetingNum((prev) => {
-      if (prev >= 4) {
-        return 0
-      }
-      return prev + 1
-    })
-  }, [])
-
-  const getUppercaseName = (email: string) =>
-    getLowercaseNameFromEmail(email)
-      .charAt(0)
-      .toUpperCase() + getLowercaseNameFromEmail(email).slice(1)
-
   return (
     <Wrapper>
-      <Spacing bottom>
-        {me && (
-          <MainHeadline>
-            {GREETINGS(getUppercaseName(me?.email))[greetingNum]}
-          </MainHeadline>
-        )}
-      </Spacing>
+      <Spacing bottom>{me && <Greeting email={me?.email} />}</Spacing>
       {dashboardNumbers && (
         <FadeIn>
           <MetricsWrapper>
@@ -205,8 +158,5 @@ const DashboardPage: React.FC = () => {
     </Wrapper>
   )
 }
-
-export const getLowercaseNameFromEmail = (email: string) =>
-  email.split(/[^\w]/)[0].toLowerCase()
 
 export default DashboardPage
