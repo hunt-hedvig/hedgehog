@@ -79,9 +79,8 @@ const GREETINGS = (name: string) => ({
   0: `Hi there, ${name}!`,
   1: `Hello, ${name}!`,
   2: getDayPartGreeting(name),
-  3: `It's nice to meet you, ${name}!`,
-  4: `Welcome again, ${name}!`,
-  5: `How do you do, ${name}?`,
+  3: `Welcome again, ${name}!`,
+  4: `How do you do, ${name}?`,
 })
 
 const GET_DASHBOARD_NUMBERS = gql`
@@ -111,23 +110,25 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     setGreetingNum((prev) => {
-      if (prev >= 5) {
+      if (prev >= 4) {
         return 0
       }
       return prev + 1
     })
   }, [])
 
-  const upperCaseName =
-    getLowercaseNameFromEmail(me?.email)
+  const getUppercaseName = (email: string) =>
+    getLowercaseNameFromEmail(email)
       .charAt(0)
-      .toUpperCase() + getLowercaseNameFromEmail(me?.email).slice(1)
+      .toUpperCase() + getLowercaseNameFromEmail(email).slice(1)
 
   return (
     <Wrapper>
       <Spacing bottom>
         {me && (
-          <MainHeadline>{GREETINGS(upperCaseName)[greetingNum]}</MainHeadline>
+          <MainHeadline>
+            {GREETINGS(getUppercaseName(me?.email))[greetingNum]}
+          </MainHeadline>
         )}
       </Spacing>
       {dashboardNumbers && (
