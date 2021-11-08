@@ -37,8 +37,6 @@ const MemberSearchPage: React.FC = () => {
     memberSearch(query || '%', { page: nextPage - 1 ?? 0 })
   }
 
-  console.log('render')
-
   return (
     <>
       <SearchForm
