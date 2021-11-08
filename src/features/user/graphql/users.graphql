@@ -2,6 +2,7 @@ query Users {
   users {
     id
     fullName
+    role
     email
     latestPresence
     latestLocation
