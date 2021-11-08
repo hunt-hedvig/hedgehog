@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
 import {
+  Button,
   LoadingMessage,
   Monetary,
   Placeholder,
+  SecondLevelHeadline,
   Table,
   TableBody,
   TableColumn,
@@ -63,6 +65,17 @@ const StatusLine = styled.div<{
     getMemberIdColor(memberId, numberMemberGroups)} !important;
 `
 
+const EmptyWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 5em;
+
+  width: 100%;
+  height: 100%;
+`
+
 export const LargeClaimsList: React.FC<{
   page: number
   filters: ClaimsFiltersType
@@ -97,6 +110,25 @@ export const LargeClaimsList: React.FC<{
     }
 
     history.push(link)
+  }
+
+  if (!loading && claims.length === 0) {
+    return (
+      <EmptyWrapper>
+        <SecondLevelHeadline>
+          <Placeholder>
+            Sorry, it seems that we haven't got claims here.
+          </Placeholder>
+        </SecondLevelHeadline>
+        <Button
+          style={{ marginTop: '1em' }}
+          variant="primary"
+          onClick={() => history.push('/claims/list/1')}
+        >
+          Go to first page
+        </Button>
+      </EmptyWrapper>
+    )
   }
 
   return (
