@@ -110,10 +110,9 @@ export const CommandLineComponent: React.FC<{
   const [searchValue, setSearchValue] = useState('')
   const [searchResult, setSearchResult] = useState<CommandLineAction[]>([])
 
-  // TODO: This is to evaluate production bug with TextArea
-  const isUpPressed = false
-  const isDownPressed = false
-  const isEnterPressed = false
+  const isUpPressed = useKeyIsPressed(Keys.Up)
+  const isDownPressed = useKeyIsPressed(Keys.Down)
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
 
   const maxActions = 10
   const [selectedActionIndex, setSelectedActionIndex] = useState(0)
