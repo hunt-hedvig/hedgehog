@@ -85,6 +85,7 @@ export const DateTimePickerWrapper = styled.div`
 export enum CreatableIncentiveTypes {
   MonthlyPercentageDiscountFixedPeriod = 'Monthly Percentage',
   FreeMonths = 'Free Months',
+  NoDiscount = 'No Discount',
   VisibleNoDiscount = 'Visible No Discount',
 }
 
