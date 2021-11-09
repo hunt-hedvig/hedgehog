@@ -76,12 +76,20 @@ export const TextArea: React.FC<TextAreaProps> = ({
       onFocus={props.onFocus}
       onBlur={props.onBlur}
       name={props.name}
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck="false"
     />
   ) : (
     <TextAreaStyled
       ref={textareaRef}
       onChange={onChange}
       value={value || ''}
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck="false"
       {...props}
     />
   )
