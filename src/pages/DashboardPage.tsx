@@ -13,8 +13,7 @@ import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'features/dashboard/Greeting'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect } from 'react'
-import { hotjar } from 'react-hotjar'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 
@@ -73,10 +72,6 @@ const DashboardPage: React.FC = () => {
   const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
     pollInterval: 1000 * 5,
   })
-
-  useEffect(() => {
-    hotjar.initialize(2692591, 6)
-  }, [])
 
   const { settings, me } = useMe()
 
