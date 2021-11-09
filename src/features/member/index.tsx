@@ -1,12 +1,9 @@
 import styled from '@emotion/styled'
-import { Capitalized, Popover, Tabs } from '@hedvig-ui'
-import copy from 'copy-to-clipboard'
-import { PickedLocaleFlag } from 'features/config/constants'
+import { Capitalized, Tabs } from '@hedvig-ui'
 import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import { FraudulentStatus } from 'features/member/tabs/member-tab/FraudulentStatus'
 import {
-  formatSsn,
   getMemberFlag,
   getMemberGroupName,
   getMemberIdColor,
@@ -15,20 +12,14 @@ import {
 import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useEffect } from 'react'
-import { Clipboard } from 'react-bootstrap-icons'
 import { Route, RouteComponentProps, useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
+import { MemberDetails } from './MemberDetails'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
   flexDirection: 'row',
 })
-
-const CopyIcon = styled(Clipboard)`
-  height: 15px;
-  width: 15px;
-  cursor: pointer;
-`
 
 const MemberPageContainer = styled('div')`
   display: flex;
@@ -65,17 +56,6 @@ const Flag = styled('div')`
   font-size: 3rem;
   margin-left: 0.5rem;
 `
-
-const MemberDetails = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.mutedText};
-  padding-bottom: 4rem;
-`
-const MemberDetail = styled.span`
-  padding-right: 1rem;
-`
-const MemberDetailLink = MemberDetail.withComponent('a')
 
 export const MemberTabs: React.FC<RouteComponentProps<{
   memberId: string
@@ -133,52 +113,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
             </>
           )}
         </Header>
-        <MemberDetails>
-          {member?.signedOn && member?.personalNumber && (
-            <MemberDetail>{formatSsn(member.personalNumber)}</MemberDetail>
-          )}
-          {member?.email && (
-            <MemberDetailLink href={`mailto:${member.email}`}>
-              {member.email}
-            </MemberDetailLink>
-          )}
-          {member?.phoneNumber && (
-            <MemberDetailLink href={`tel:${member.phoneNumber}`}>
-              {member.phoneNumber}
-            </MemberDetailLink>
-          )}
-          <Popover contents="Click to copy Link">
-            <MemberDetailLink
-              href={`${window.location.protocol}//${window.location.host}${history.location.pathname}`}
-              onClick={(e) => {
-                e.preventDefault()
-                copy(
-                  `${window.location.protocol}//${window.location.host}${history.location.pathname}`,
-                  {
-                    format: 'text/plain',
-                  },
-                )
-              }}
-            >
-              {memberId}
-            </MemberDetailLink>
-          </Popover>
-          <Popover contents="Click to copy Id">
-            <CopyIcon
-              onClick={() => {
-                copy(memberId, {
-                  format: 'text/plain',
-                })
-              }}
-            />
-          </Popover>
-
-          {member?.pickedLocale && (
-            <MemberDetail style={{ paddingLeft: '1rem' }}>
-              Language: {PickedLocaleFlag[member.pickedLocale]}
-            </MemberDetail>
-          )}
-        </MemberDetails>
+        <MemberDetails memberId={memberId} member={member} />
         <Tabs
           list={panes.map((pane) => ({
             title: pane.tabTitle,
