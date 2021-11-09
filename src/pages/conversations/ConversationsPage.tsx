@@ -10,20 +10,20 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import { FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'features/questions/utils'
+import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
+import { UserSettingKey } from 'types/generated/graphql'
 
 const FadeGrid = styled(Fade)`
   height: 100%;
@@ -45,11 +45,13 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const [questionGroups] = useQuestionGroups(3000)
   const [chatFocused, setChatFocused] = useState(false)
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
+  const { settings } = useMe()
 
-  const [filters] = useInsecurePersistentState<ReadonlyArray<FilterStateType>>(
-    'questions:filters',
-    [],
+  const [filters] = useState(
+    settings[UserSettingKey.FeatureFlags]?.questions_filters || [],
   )
+
+  console.log(settings)
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)

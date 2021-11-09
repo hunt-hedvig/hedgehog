@@ -1,18 +1,27 @@
 import { Button, FadeIn, Flex } from '@hedvig-ui'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import {
-  FilterSelect,
-  FilterState,
-  FilterStateType,
-} from 'features/questions/FilterSelect'
-import React from 'react'
+import { FilterSelect } from 'features/questions/FilterSelect'
+import { useMe } from 'features/user/hooks/use-me'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
+import { UserSettingKey } from 'types/generated/graphql'
 
 const ConversationsSettingsPage: React.FC<{}> = () => {
   const history = useHistory()
-  const [filters, setFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterStateType>
-  >('questions:filters', [FilterState.HasOpenClaim, FilterState.NoOpenClaim])
+  const { settings, updateSetting } = useMe()
+  const [filters, setFilters] = useState(
+    settings[UserSettingKey.FeatureFlags]?.questions_filters || [],
+  )
+
+  useEffect(() => {
+    if (settings[UserSettingKey.FeatureFlags]?.questions_filters) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
+        questions_filters: [...filters],
+      })
+    }
+  }, [filters])
+
+  console.log(settings)
 
   return (
     <>

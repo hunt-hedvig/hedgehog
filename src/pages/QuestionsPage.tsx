@@ -7,19 +7,15 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { getNameFromEmail } from 'features/dashboard/Greeting'
-import {
-  FilterSelect,
-  FilterState,
-  FilterStateType,
-} from 'features/questions/FilterSelect'
+import { FilterSelect, FilterState } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useMe } from 'features/user/hooks/use-me'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
+import { UserSettingKey } from 'types/generated/graphql'
 
 const ListPage = styled.div`
   display: flex;
@@ -46,12 +42,41 @@ const ConversationsMessage = styled.div`
 
 const QuestionsPage: React.FC = () => {
   const history = useHistory()
-  const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterStateType>
-  >('questions:filters', [FilterState.HasOpenClaim, FilterState.NoOpenClaim])
+  const { me, settings, updateSetting } = useMe()
+
+  const [selectedFilters, setSelectedFilters] = useState(
+    settings[UserSettingKey.FeatureFlags]?.questions_filters || [
+      FilterState.HasOpenClaim,
+      FilterState.NoOpenClaim,
+    ],
+  )
 
   const [questionGroups, { loading }] = useQuestionGroups()
-  const { me } = useMe()
+
+  useEffect(() => {
+    if (settings[UserSettingKey.FeatureFlags]?.conversations) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
+        conversations: false,
+      })
+    }
+    if (!settings[UserSettingKey.FeatureFlags]?.questions_filters) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
+        questions_filters: [FilterState.HasOpenClaim, FilterState.NoOpenClaim],
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (settings[UserSettingKey.FeatureFlags]?.questions_filters) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        questions_filters: [...selectedFilters],
+      })
+    }
+  }, [selectedFilters])
+
+  console.log(settings)
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -67,20 +92,18 @@ const QuestionsPage: React.FC = () => {
 
   return (
     <ListPage>
-      {me && (
-        <ConversationsMessage
-          onClick={() => {
-            history.push('/conversations/onboarding')
-          }}
-        >
-          Hey there <Capitalized>{getNameFromEmail(me.email)}</Capitalized>
-          !
-          <br />
-          <span style={{ fontSize: '0.9em' }}>
-            We're testing a new version of the question page, want to try it?
-          </span>
-        </ConversationsMessage>
-      )}
+      <ConversationsMessage
+        onClick={() => {
+          history.push('/conversations/onboarding')
+        }}
+      >
+        Hey there <Capitalized>{getNameFromEmail(me.email)}</Capitalized>
+        !
+        <br />
+        <span style={{ fontSize: '0.9em' }}>
+          We're testing a new version of the question page, want to try it?
+        </span>
+      </ConversationsMessage>
       <Spacing bottom="large" top="large">
         <FadeIn>
           <Spacing bottom>

@@ -54,6 +54,7 @@ export const ConversationsOverview: React.FC<{
   useEffect(() => {
     if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
       updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
         conversations: true,
       })
       history.go(0)
@@ -75,6 +76,7 @@ export const ConversationsOverview: React.FC<{
               confirm('Do you want to go back to the questions tab?').then(
                 () => {
                   updateSetting(UserSettingKey.FeatureFlags, {
+                    ...settings[UserSettingKey.FeatureFlags],
                     conversations: false,
                   })
                   history.replace('/questions')

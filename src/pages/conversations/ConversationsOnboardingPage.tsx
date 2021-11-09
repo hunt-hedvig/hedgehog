@@ -8,8 +8,7 @@ import {
   Paragraph,
   useFadeAnimation,
 } from '@hedvig-ui'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
+import { FilterSelect } from 'features/questions/FilterSelect'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
@@ -27,18 +26,34 @@ const ConversationsOnboardingPage: React.FC = () => {
 
   const history = useHistory()
 
-  const [filters, setFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterStateType>
-  >('questions:filters', [])
+  const [selectedFilters, setSelectedFilters] = useState(
+    settings[UserSettingKey.FeatureFlags]?.questions_filters || [],
+  )
 
   useEffect(() => {
     if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
       updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
         conversations: true,
       })
       history.go(0)
     }
+    if (!settings[UserSettingKey.FeatureFlags]?.questions_filters) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
+        questions_filters: [],
+      })
+    }
   }, [])
+
+  useEffect(() => {
+    if (settings[UserSettingKey.FeatureFlags]?.questions_filters) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
+        questions_filters: [...selectedFilters],
+      })
+    }
+  }, [selectedFilters])
 
   useEffect(() => {
     fade('up', 'in').then(() => {
@@ -106,16 +121,18 @@ const ConversationsOnboardingPage: React.FC = () => {
         </FadeIn>
       </Flex>
       <FilterSelect
-        filters={filters}
+        filters={selectedFilters}
         onToggle={(filter) => {
-          if (filters.includes(filter)) {
-            setFilters(filters.filter((prevFilter) => filter !== prevFilter))
+          if (selectedFilters.includes(filter)) {
+            setSelectedFilters(
+              selectedFilters.filter((prevFilter) => filter !== prevFilter),
+            )
           } else {
-            setFilters([...filters, filter])
+            setSelectedFilters([...selectedFilters, filter])
           }
         }}
       />
-      {!!filters.length && (
+      {!!selectedFilters.length && (
         <FadeIn style={{ width: '100%' }}>
           <Flex
             direction="column"
