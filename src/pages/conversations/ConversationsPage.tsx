@@ -51,8 +51,6 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     settings[UserSettingKey.FeatureFlags]?.questions_filters || [],
   )
 
-  console.log(settings)
-
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 

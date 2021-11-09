@@ -71,12 +71,11 @@ const QuestionsPage: React.FC = () => {
   useEffect(() => {
     if (settings[UserSettingKey.FeatureFlags]?.questions_filters) {
       updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
         questions_filters: [...selectedFilters],
       })
     }
   }, [selectedFilters])
-
-  console.log(settings)
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />

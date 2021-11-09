@@ -21,8 +21,6 @@ const ConversationsSettingsPage: React.FC<{}> = () => {
     }
   }, [filters])
 
-  console.log(settings)
-
   return (
     <>
       <div style={{ marginTop: '25vh' }} />

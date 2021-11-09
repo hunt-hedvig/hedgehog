@@ -1,11 +1,15 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { ClaimListFilters } from 'features/claims/claims-list/ClaimListFilters'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
-import React, { useEffect } from 'react'
+import { useMe } from 'features/user/hooks/use-me'
+import React, { useEffect, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
-import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
+import {
+  ClaimComplexity,
+  ClaimState,
+  UserSettingKey,
+} from 'types/generated/graphql'
 
 const ListPage = styled.div`
   display: flex;
@@ -14,6 +18,16 @@ const ListPage = styled.div`
   align-items: flex-start;
   margin: 0;
 `
+
+const EMPTY_FILTERS = {
+  filterClaimStates: null,
+  filterCreatedBeforeOrOnDate: null,
+  filterComplexities: null,
+  filterNumberOfMemberGroups: null,
+  filterSelectedMemberGroups: null,
+  filterMarkets: null,
+  filterTypesOfContract: null,
+}
 
 export interface ClaimsFiltersType {
   filterClaimStates: ClaimState[] | null
@@ -33,21 +47,20 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   },
 }) => {
   const location = useLocation()
+  const { settings, updateSetting } = useMe()
 
-  const [filters, setFilters] = useInsecurePersistentState<ClaimsFiltersType>(
-    'claims:filters',
-    {
-      filterClaimStates: null,
-      filterCreatedBeforeOrOnDate: null,
-      filterComplexities: null,
-      filterNumberOfMemberGroups: null,
-      filterSelectedMemberGroups: null,
-      filterMarkets: null,
-      filterTypesOfContract: null,
-    },
+  const [filters, setFilters] = useState(
+    settings[UserSettingKey.FeatureFlags]?.claims_filters || EMPTY_FILTERS,
   )
 
   useEffect(() => {
+    if (!settings[UserSettingKey.FeatureFlags]?.claims_filters) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
+        claims_filters: EMPTY_FILTERS,
+      })
+    }
+
     const from = (location?.state as { from?: string })?.from
 
     if (from === 'menu') {
@@ -59,6 +72,15 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 
     window.history.replaceState({}, document.title)
   }, [])
+
+  useEffect(() => {
+    if (settings[UserSettingKey.FeatureFlags]?.claims_filters) {
+      updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
+        claims_filters: filters,
+      })
+    }
+  }, [filters])
 
   const selectedPage = parseInt(page, 10)
 
