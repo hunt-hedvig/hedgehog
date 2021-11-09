@@ -6,6 +6,7 @@ import { PickedLocaleFlag } from 'features/config/constants'
 import { formatSsn } from 'features/member/utils'
 import React from 'react'
 import { Clipboard } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
 import { useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
 import { useCommandLine } from '../commands/command-line-hook'
@@ -51,28 +52,34 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
 
   registerActions([
     {
-      label: 'Copy Email',
+      label: 'Copy email',
       keys: [Keys.Control, Keys.E],
-      onResolve: () =>
+      onResolve: () => {
         copy(member.email || '', {
           format: 'text/plain',
-        }),
+        })
+        toast.success('Email copied')
+      },
     },
     {
-      label: 'Copy Phone number',
+      label: 'Copy phone number',
       keys: [Keys.Control, Keys.N],
-      onResolve: () =>
+      onResolve: () => {
         copy(member.phoneNumber || '', {
           format: 'text/plain',
-        }),
+        })
+        toast.success('Phone number copied')
+      },
     },
     {
-      label: 'Copy Id',
+      label: 'Copy ID',
       keys: [Keys.Control, Keys.M],
-      onResolve: () =>
+      onResolve: () => {
         copy(memberId, {
           format: 'text/plain',
-        }),
+        })
+        toast.success('ID copied')
+      },
     },
   ])
 
@@ -93,7 +100,7 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
           {isHintingControl && <Hotkey dark>N</Hotkey>}
         </MemberDetailLink>
       )}
-      <Popover contents="Click to copy Link">
+      <Popover contents="Click to copy member link">
         <MemberDetailLink
           href={`${window.location.protocol}//${window.location.host}${history.location.pathname}`}
           onClick={(e) => {
@@ -104,18 +111,20 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
                 format: 'text/plain',
               },
             )
+            toast.success('Member link copied')
           }}
         >
           {memberId}
           {isHintingControl && <Hotkey dark>M</Hotkey>}
         </MemberDetailLink>
       </Popover>
-      <Popover contents="Click to copy Id">
+      <Popover contents="Click to copy ID">
         <CopyIcon
           onClick={() => {
             copy(memberId, {
               format: 'text/plain',
             })
+            toast.success('Member ID copied')
           }}
         />
       </Popover>
