@@ -70,17 +70,7 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
           <TableHeaderColumn>Claim State</TableHeaderColumn>
           <TableHeaderColumn>Claim Reserves</TableHeaderColumn>
         </TableHeader>
-        <TableBody
-          onPerformNavigation={(index) => {
-            const claimId = claims[index].id
-
-            if (!claimId || !memberId) {
-              return
-            }
-
-            history.push(`/claims/${claimId}`)
-          }}
-        >
+        <TableBody>
           {claims.map((claim) => {
             const registrationDateString = formatDate(
               parseISO(claim.registrationDate),

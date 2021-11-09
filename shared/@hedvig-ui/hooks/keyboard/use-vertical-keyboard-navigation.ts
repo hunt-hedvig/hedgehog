@@ -23,13 +23,14 @@ export const useVerticalKeyboardNavigation = ({
   onNavigationStep,
   onPerformNavigation,
   onExit,
+  isActive = false,
 }: UseVerticalKeyboardNavigationProps): [number, () => void] => {
   const [navigationIndex, setNavigationIndex] = useState(-1)
   const reset = () => {
     setNavigationIndex(-1)
   }
 
-  useKeyboardListener(true, (e) => {
+  useKeyboardListener(isActive, (e) => {
     if (navigationIndex !== -1 && e.key === 'Enter' && onPerformNavigation) {
       e.preventDefault()
       onPerformNavigation(navigationIndex)

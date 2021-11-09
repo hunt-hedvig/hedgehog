@@ -32,6 +32,7 @@ export const TableBody: React.FC<{
         onPerformNavigation(index)
       }
     },
+    isActive: !!onPerformNavigation,
   })
 
   return (
