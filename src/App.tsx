@@ -11,6 +11,8 @@ import { history } from 'clientEntry'
 import { CommandLineProvider } from 'features/commands/command-line-hook'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
+import { TrackingProvider } from 'features/tracking/hooks/use-tracking'
+import { Tracker } from 'features/tracking/Tracker'
 import { useAuthenticate } from 'features/user/hooks/use-authenticate'
 import { MeProvider } from 'features/user/hooks/use-me'
 import { MemberHistoryProvider } from 'features/user/hooks/use-member-history'
@@ -111,43 +113,46 @@ const App: React.FC = () => {
       }}
     >
       <Global styles={globalCss} />
-      <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
-        <MemberHistoryProvider>
-          <NumberMemberGroupsProvider>
-            <Router history={history}>
-              <CommandLineProvider>
-                <ConfirmDialogProvider>
-                  <Layout>
-                    <MeProvider me={me}>
-                      {!history.location.pathname.startsWith('/login') && (
-                        <VerticalMenu history={history} />
-                      )}
-                      <Main
-                        dark={history.location.pathname.startsWith('/login')}
-                      >
-                        <TopBar />
-                        <MainContent>
-                          <Switch>
-                            <Routes />
-                          </Switch>
-                          <Toaster
-                            position="top-center"
-                            toastOptions={{
-                              style: {
-                                padding: '20px 25px',
-                              },
-                            }}
-                          />
-                        </MainContent>
-                      </Main>
-                    </MeProvider>
-                  </Layout>
-                </ConfirmDialogProvider>
-              </CommandLineProvider>
-            </Router>
-          </NumberMemberGroupsProvider>
-        </MemberHistoryProvider>
-      </ThemeProvider>
+      <TrackingProvider>
+        <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
+          <MemberHistoryProvider>
+            <NumberMemberGroupsProvider>
+              <Router history={history}>
+                <CommandLineProvider>
+                  <ConfirmDialogProvider>
+                    <Layout>
+                      <MeProvider me={me}>
+                        <Tracker />
+                        {!history.location.pathname.startsWith('/login') && (
+                          <VerticalMenu history={history} />
+                        )}
+                        <Main
+                          dark={history.location.pathname.startsWith('/login')}
+                        >
+                          <TopBar />
+                          <MainContent>
+                            <Switch>
+                              <Routes />
+                            </Switch>
+                            <Toaster
+                              position="top-center"
+                              toastOptions={{
+                                style: {
+                                  padding: '20px 25px',
+                                },
+                              }}
+                            />
+                          </MainContent>
+                        </Main>
+                      </MeProvider>
+                    </Layout>
+                  </ConfirmDialogProvider>
+                </CommandLineProvider>
+              </Router>
+            </NumberMemberGroupsProvider>
+          </MemberHistoryProvider>
+        </ThemeProvider>
+      </TrackingProvider>
     </UseDarkmode.Provider>
   )
 }

@@ -3,17 +3,16 @@ import { gql } from '@apollo/client/core'
 import styled from '@emotion/styled'
 import {
   Badge,
-  Capitalized,
   CasualList,
   CasualListItem,
   FadeIn,
-  MainHeadline,
   SecondLevelHeadline,
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
+import { Greeting } from 'features/dashboard/Greeting'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
@@ -85,12 +84,7 @@ const DashboardPage: React.FC = () => {
   return (
     <Wrapper>
       <Spacing bottom>
-        {me && (
-          <MainHeadline>
-            Hi there{' '}
-            <Capitalized>{getLowercaseNameFromEmail(me?.email)}</Capitalized>!
-          </MainHeadline>
-        )}
+        <Greeting userName={me.fullName.split(' ')[0]} />
       </Spacing>
       {dashboardNumbers && (
         <FadeIn>
@@ -166,8 +160,5 @@ const DashboardPage: React.FC = () => {
     </Wrapper>
   )
 }
-
-export const getLowercaseNameFromEmail = (email: string) =>
-  email.split(/[^\w]/)[0].toLowerCase()
 
 export default DashboardPage

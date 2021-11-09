@@ -48,7 +48,7 @@ const Triangle = styled.div`
   border-top: 0.5rem solid ${({ theme }) => theme.foreground};
 `
 
-interface PopoverProps {
+interface PopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   contents: React.ReactNode
   className?: string
   disable?: boolean
@@ -63,6 +63,7 @@ export const Popover: React.FC<PopoverProps> = ({
   onOpen,
   onClose,
   children,
+  ...props
 }) => {
   return (
     <PopoverWrapper
@@ -71,7 +72,7 @@ export const Popover: React.FC<PopoverProps> = ({
       onMouseLeave={() => onClose?.()}
       disableHover={!!disable}
     >
-      <Contents>
+      <Contents {...props}>
         {contents}
         <Triangle />
       </Contents>
