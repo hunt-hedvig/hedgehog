@@ -26,6 +26,10 @@ interface SearchFieldProps {
   setLuckySearch: (luckySearch: boolean) => void
 }
 
+const stagingToolsAvailable = () => {
+  return (window as any).HOPE_FEATURES?.stagingSpecificTools ?? false
+}
+
 export const SearchForm: React.FC<SearchFieldProps> = ({
   onSubmit,
   onFocus,
@@ -78,7 +82,11 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             }}
             onBlur={() => setTextFieldFocused(false)}
             onKeyDown={(e) => {
-              if (isMetaKey(e) && e.keyCode === Keys.Enter.code && query) {
+              if (
+                isMetaKey(e) &&
+                e.keyCode === Keys.Enter.code &&
+                (query || (stagingToolsAvailable() && !query))
+              ) {
                 setLuckySearch(true)
                 onSubmit(query, includeAll)
               } else {
