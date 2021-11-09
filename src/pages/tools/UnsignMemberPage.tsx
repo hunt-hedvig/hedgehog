@@ -39,11 +39,17 @@ const UnsignMemberPage: React.FC = () => {
       <Spacing top="small" />
       <Button
         variant="primary"
-        disabled={loading || ssn === ''}
+        disabled={loading || (ssn === '' && email === '')}
         onClick={() => {
-          confirm(
-            `Are you sure you want to unsign members with SSN ${ssn} and/or email ${email}?`,
-          ).then(() => {
+          let confirmMessage = ''
+          if (ssn !== '' && email !== '') {
+            confirmMessage = `Are you sure you want to unsign members with SSN ${ssn} and/or email ${email}?`
+          } else if (ssn !== '') {
+            confirmMessage = `Are you sure you want to unsign members with SSN ${ssn}`
+          } else if (email !== '') {
+            confirmMessage = `Are you sure you want to unsign members with email ${email}?`
+          }
+          confirm(confirmMessage).then(() => {
             toast.promise(
               useUnsignMember({
                 variables: {
