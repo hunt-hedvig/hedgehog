@@ -129,7 +129,7 @@ const App: React.FC = () => {
                         <Main
                           dark={history.location.pathname.startsWith('/login')}
                         >
-                          <TopBar me={me} />
+                          <TopBar />
                           <MainContent>
                             <Switch>
                               <Routes />

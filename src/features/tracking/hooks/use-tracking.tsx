@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
+import { usePageVisibility } from 'react-page-visibility'
 
 interface UserTrackingData {
   location?: string
@@ -23,18 +24,20 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const TRACKING_COOKIE_NAME = '_hvg_payload'
+
+  const isPageVisible = usePageVisibility()
   const [_, setCookie] = useCookies([TRACKING_COOKIE_NAME])
   const [trackingData, setTrackingData] = useState<UserTrackingData | null>(
     null,
   )
 
   useEffect(() => {
-    if (!trackingData) {
+    if (!trackingData || !isPageVisible) {
       return
     }
 
     setCookie(TRACKING_COOKIE_NAME, JSON.stringify(trackingData), { path: '/' })
-  }, [trackingData])
+  }, [trackingData, isPageVisible])
 
   const update = (data: UserTrackingData) => {
     setTrackingData(data)
