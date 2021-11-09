@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Chat,
   ChevronLeft,
@@ -16,7 +16,7 @@ import {
   Tools,
 } from 'react-bootstrap-icons'
 import MediaQuery from 'react-media'
-import { matchPath, useLocation } from 'react-router'
+import { useLocation } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
@@ -158,12 +158,6 @@ const routes = {
   foss: 'https://foss.finansnorge.no/#/account/login',
 }
 
-interface LatestClaim {
-  memberId: string
-  claimId: string
-  location: string
-}
-
 export const VerticalMenu: React.FC<any & { history: History }> = ({
   history,
 }) => {
@@ -173,7 +167,6 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
     () => localStorage.getItem('hedvig:menu:collapse') === 'true',
   )
   const [locations, setLocations] = useState<string[]>([])
-  const latestClaim = useRef<LatestClaim | null>(null)
   const [conversationsEnabled] = useState<boolean>(
     settings[UserSettingKey.FeatureFlags]?.conversations || false,
   )
@@ -184,29 +177,6 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
     )
     setLocations(latestLocations)
   }, [pathname])
-
-  React.useEffect(() => {
-    for (const location of locations) {
-      const match = matchPath(location, {
-        path: '/claims/:claimId',
-        exact: true,
-        strict: false,
-      })
-
-      if (!match) {
-        continue
-      }
-
-      const { memberId, claimId } = match.params as LatestClaim
-
-      latestClaim.current = {
-        memberId,
-        claimId,
-        location,
-      }
-      break
-    }
-  }, [locations])
 
   const toggleOpen = () => {
     setCollapsed(!isCollapsed)
@@ -299,8 +269,6 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
       hotkeyHandler: () => history.push(routes.foss),
     },
   ]
-
-  console.log('render')
 
   return (
     <MediaQuery query="(max-width: 1300px)">
