@@ -2,19 +2,27 @@ import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
+import { useMe } from 'features/user/hooks/use-me'
 import React, { useRef } from 'react'
 import {
   BoxArrowLeft,
   GearFill,
   Moon,
-  PersonFill,
   Sun,
+  ThreeDots,
 } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { CircleButton } from './TopBar'
 
 const MenuWrapper = styled.div`
   position: relative;
+  display: flex;
+  align-items: center;
+`
+
+const Username = styled.span`
+  margin-right: 1.5rem;
+  cursor: pointer;
 `
 
 const List = styled.ul`
@@ -74,6 +82,8 @@ const UserMenu = () => {
   const listRef = useRef(null)
   const [view, setView] = React.useState(false)
   const { isDarkmode, setIsDarkmode } = useDarkmode()
+  const { me } = useMe()
+  console.log(me)
 
   const close = () => setView(false)
 
@@ -81,8 +91,11 @@ const UserMenu = () => {
 
   return (
     <MenuWrapper>
+      <Username onClick={() => history.push('/profile')}>
+        {me.fullName}
+      </Username>
       <CircleButton onClick={() => setView((prev) => !prev)}>
-        <PersonFill />
+        <ThreeDots />
       </CircleButton>
       {view && (
         <List ref={listRef}>
