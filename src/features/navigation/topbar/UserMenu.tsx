@@ -36,6 +36,7 @@ const List = styled.ul`
   }
 
   position: absolute;
+  z-index: 1000;
   top: 45px;
   right: 0;
 
