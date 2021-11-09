@@ -1,13 +1,9 @@
-import styled, { StyledComponent } from '@emotion/styled'
-import { Hotkey } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import styled from '@emotion/styled'
 import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { useCommandLine } from 'features/commands/command-line-hook'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useRef, useState } from 'react'
 import {
-  ArrowUpRight,
   BoxArrowLeft,
   Chat,
   ChevronLeft,
@@ -23,9 +19,9 @@ import {
 } from 'react-bootstrap-icons'
 import MediaQuery from 'react-media'
 import { matchPath, useLocation } from 'react-router'
-import { NavLink, NavLinkProps } from 'react-router-dom'
 import { UserSettingKey } from 'types/generated/graphql'
 import { Logo, LogoIcon } from './elements'
+import { ExternalMenuItem, MenuItem } from './MenuItem'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
   ({ collapsed, theme }) => ({
@@ -129,55 +125,6 @@ const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
   }),
 )
 
-const MenuGroup = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  flexShrink: 0,
-  width: '100%',
-  paddingBottom: '4rem',
-})
-
-interface WithTransparent {
-  transparent?: boolean
-}
-const MenuItem = styled<React.ComponentType<NavLinkProps & WithTransparent>>(
-  ({ transparent: _transparent, ...rest }) => <NavLink {...rest} />,
-)<WithTransparent>(({ theme, transparent = false }) => ({
-  display: 'inline-flex',
-  flexShrink: 0,
-  alignItems: 'center',
-  padding: '0.5rem 1rem',
-  margin: '0.5rem 0',
-  color: '#fff !important',
-  borderRadius: '0.5rem',
-  transition: 'background 500ms, font-size 300ms, width 300ms',
-
-  '&:hover, &:focus, &.active': {
-    color: colorsV3.gray100 + ' !important',
-    textDecoration: 'none',
-    background: theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray700,
-  },
-  '&:hover:not(.active), &:focus:not(.active)': {
-    background: colorsV3.gray900,
-  },
-
-  opacity: transparent ? 0.5 : 1,
-
-  svg: {
-    fill: colorsV3.gray100,
-    marginRight: 16,
-    textAlign: 'center',
-    transition: 'width 300ms, weight 300ms, margin 300ms',
-    flexShrink: 0,
-  },
-}))
-const MenuItemExternalLink = MenuItem.withComponent('a') as StyledComponent<
-  React.DetailedHTMLProps<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    HTMLAnchorElement
-  >
->
-
 const Menu = styled('div')({
   display: 'flex',
   flexDirection: 'column',
@@ -258,86 +205,6 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
     settings[UserSettingKey.FeatureFlags]?.conversations || false,
   )
 
-  const { registerActions, isHintingOption } = useCommandLine()
-
-  registerActions([
-    {
-      label: 'Claims list',
-      keys: [Keys.Option, Keys.C],
-      onResolve: () => {
-        history.push(routes.claims)
-      },
-    },
-    {
-      label: 'Tools',
-      keys: [Keys.Option, Keys.T],
-      onResolve: () => {
-        history.push(routes.tools)
-      },
-    },
-    {
-      label: 'Questions',
-      keys: [Keys.Option, Keys.Q],
-      onResolve: () => {
-        history.push(
-          conversationsEnabled ? routes.conversations : routes.questions,
-        )
-      },
-    },
-    {
-      label: 'Member search',
-      keys: [Keys.Option, Keys.S],
-      onResolve: () => {
-        history.push(routes.search)
-      },
-    },
-    {
-      label: 'Dashborad',
-      keys: [Keys.Option, Keys.D],
-      onResolve: () => {
-        history.push(routes.dashborad)
-      },
-    },
-    {
-      label: 'Trustly',
-      keys: [Keys.Option, Keys.R],
-      onResolve: () => {
-        window.open(routes.trustly)
-      },
-    },
-    {
-      label: 'Adyen',
-      keys: [Keys.Option, Keys.A],
-      onResolve: () => {
-        window.open(routes.adyen)
-      },
-    },
-    {
-      label: 'GSR',
-      keys: [Keys.Option, Keys.G],
-      onResolve: () => {
-        window.open(routes.gsr)
-      },
-    },
-    {
-      label: 'FOSS',
-      keys: [Keys.Option, Keys.F],
-      onResolve: () => {
-        window.open(routes.foss)
-      },
-    },
-    {
-      label: 'Latest claim',
-      keys: [Keys.Option, Keys.L],
-      onResolve: () => {
-        if (!latestClaim.current) {
-          return
-        }
-        history.push(latestClaim.current.location)
-      },
-    },
-  ])
-
   React.useEffect(() => {
     const latestLocations = [pathname, ...locations].filter(
       (_, index) => index < 10,
@@ -376,6 +243,95 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
     setIsDarkmode(!isDarkmode)
   }
 
+  const MenuItemsList = [
+    {
+      route: routes.dashborad,
+      icon: House,
+      hotkey: 'D',
+      title: 'Dashborad',
+      single: true,
+      external: false,
+      hotkeyHandler: () => history.push(routes.dashborad),
+    },
+    {
+      route: routes.search,
+      icon: Search,
+      hotkey: 'S',
+      title: 'Member Search',
+      single: true,
+      external: false,
+      hotkeyHandler: () => history.push(routes.search),
+    },
+    {
+      route: conversationsEnabled ? routes.conversations : routes.questions,
+      icon: conversationsEnabled ? Chat : Inbox,
+      hotkey: 'Q',
+      title: conversationsEnabled ? 'Conversations' : 'Questions',
+      single: false,
+      external: false,
+      hotkeyHandler: () =>
+        history.push(
+          conversationsEnabled ? routes.conversations : routes.questions,
+        ),
+    },
+    {
+      route: routes.claims,
+      icon: ShieldShaded,
+      hotkey: 'C',
+      title: 'Claims',
+      single: true,
+      external: false,
+      hotkeyHandler: () => history.push(routes.claims),
+    },
+    {
+      route: routes.tools,
+      icon: Tools,
+      hotkey: 'T',
+      title: 'Tools',
+      single: true,
+      external: false,
+      hotkeyHandler: () => history.push(routes.tools),
+    },
+    {
+      route: routes.trustly,
+      icon: CreditCard,
+      hotkey: 'R',
+      title: 'Trustly',
+      single: false,
+      external: true,
+      hotkeyHandler: () => history.push(routes.trustly),
+    },
+    {
+      route: routes.adyen,
+      icon: CreditCard2Front,
+      hotkey: 'A',
+      title: 'Adyen',
+      single: false,
+      external: true,
+      hotkeyHandler: () => history.push(routes.adyen),
+    },
+    {
+      route: routes.gsr,
+      icon: PersonBoundingBox,
+      hotkey: 'G',
+      title: 'GSR',
+      single: false,
+      external: true,
+      hotkeyHandler: () => history.push(routes.gsr),
+    },
+    {
+      route: routes.foss,
+      icon: PersonSquare,
+      hotkey: 'F',
+      title: 'FOSS',
+      single: true,
+      external: true,
+      hotkeyHandler: () => history.push(routes.foss),
+    },
+  ]
+
+  console.log('render')
+
   return (
     <MediaQuery query="(max-width: 1300px)">
       {(shouldAlwaysCollapse) => (
@@ -394,102 +350,34 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
             </Header>
 
             <Menu>
-              <MenuGroup>
-                <MenuItem
-                  to="/dashborad"
-                  isActive={(_match, location) =>
-                    location.pathname.startsWith('/dashborad')
-                  }
-                >
-                  <House />
-                  <Hotkey hotkey="D" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) && 'Dashborad'}
-                  </Hotkey>
-                </MenuItem>
-              </MenuGroup>
-              <MenuGroup>
-                <MenuItem
-                  to="/members"
-                  isActive={(_match, location) =>
-                    location.pathname.startsWith('/members')
-                  }
-                >
-                  <Search />
-                  <Hotkey hotkey="S" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) && 'Member Search'}
-                  </Hotkey>
-                </MenuItem>
-              </MenuGroup>
-              <MenuGroup>
-                <MenuItem
-                  to={
-                    conversationsEnabled
-                      ? routes.conversations
-                      : routes.questions
-                  }
-                  isActive={(_match, location) =>
-                    location.pathname.startsWith(
-                      conversationsEnabled ? '/conversations' : '/questions',
-                    )
-                  }
-                >
-                  {conversationsEnabled ? <Chat /> : <Inbox />}
-                  <Hotkey hotkey="Q" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) &&
-                      (conversationsEnabled ? 'Conversations' : 'Questions')}
-                  </Hotkey>
-                </MenuItem>
-                <MenuItem
-                  to={{ pathname: routes.claims, state: { from: 'menu' } }}
-                  isActive={(_match, location) =>
-                    location.pathname.startsWith('/claims')
-                  }
-                >
-                  <ShieldShaded />
-                  <Hotkey hotkey="C" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) && 'Claims'}
-                  </Hotkey>
-                </MenuItem>
-              </MenuGroup>
-              <MenuGroup>
-                <MenuItem to={routes.tools}>
-                  <Tools />
-                  <Hotkey hotkey="T" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) && 'Tools'}
-                  </Hotkey>
-                </MenuItem>
-              </MenuGroup>
-
-              <MenuGroup>
-                <MenuItemExternalLink href={routes.trustly} target="_blank">
-                  {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
-                  <CreditCard />
-                  <Hotkey hotkey="R" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) && 'Trustly'}
-                  </Hotkey>
-                </MenuItemExternalLink>
-                <MenuItemExternalLink href={routes.adyen} target="_blank">
-                  {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
-                  <CreditCard2Front />
-                  <Hotkey hotkey="A" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) && 'Adyen'}
-                  </Hotkey>
-                </MenuItemExternalLink>
-                <MenuItemExternalLink href={routes.gsr} target="_blank">
-                  {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
-                  <PersonBoundingBox />
-                  <Hotkey hotkey="G" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) && 'GSR'}
-                  </Hotkey>
-                </MenuItemExternalLink>
-                <MenuItemExternalLink href={routes.foss} target="_blank">
-                  {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
-                  <PersonSquare />
-                  <Hotkey hotkey="F" hinting={isHintingOption}>
-                    {!(shouldAlwaysCollapse || isCollapsed) && 'FOSS'}
-                  </Hotkey>
-                </MenuItemExternalLink>
-              </MenuGroup>
+              {MenuItemsList.map((item) =>
+                !item.external ? (
+                  <MenuItem
+                    key={item.route}
+                    style={{ marginBottom: item.single ? '4rem' : 0 }}
+                    isActive={(_match, location) =>
+                      location.pathname.startsWith(item.route)
+                    }
+                    to={
+                      item.route !== routes.claims
+                        ? item.route
+                        : { pathname: routes.claims, state: { from: 'menu' } }
+                    }
+                    shouldAlwaysCollapse={shouldAlwaysCollapse}
+                    isCollapsed={isCollapsed}
+                    {...item}
+                  />
+                ) : (
+                  <ExternalMenuItem
+                    key={item.route}
+                    style={{ marginBottom: item.single ? '4rem' : 0 }}
+                    href={item.route}
+                    shouldAlwaysCollapse={shouldAlwaysCollapse}
+                    isCollapsed={isCollapsed}
+                    {...item}
+                  />
+                ),
+              )}
             </Menu>
 
             <BottomSection>
@@ -501,18 +389,20 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 {isDarkmode ? '🌞' : '🌚'}
               </DarkmodeSwitch>
               <MenuItem
+                hotkeyHandler={() =>
+                  (window.location.pathname = '/login/logout')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   window.location.pathname = '/login/logout'
                 }}
                 to="#"
-                transparent
-              >
-                <BoxArrowLeft />
-                <Hotkey hotkey="L" hinting={isHintingOption}>
-                  {!isCollapsed && 'Logout'}
-                </Hotkey>
-              </MenuItem>
+                icon={BoxArrowLeft}
+                hotkey="L"
+                shouldAlwaysCollapse={shouldAlwaysCollapse}
+                isCollapsed={isCollapsed}
+                title="Logout"
+              />
             </BottomSection>
           </InnerWrapper>
         </Wrapper>
