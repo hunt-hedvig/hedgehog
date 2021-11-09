@@ -207,7 +207,7 @@ type MutationType {
     memberId: ID!
     request: ManualUnRedeemCampaignInput!
   ): Member!
-  unsignMember(ssn: String!): Boolean!
+  unsignMember(ssn: String, email: String): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Member!
   setFraudulentStatus(
     memberId: ID!
