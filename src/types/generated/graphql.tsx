@@ -100,6 +100,14 @@ export type AssignVoucherFreeMonths = {
   codeType?: Maybe<Scalars['String']>
 }
 
+export type AssignVoucherNoDiscount = {
+  partnerId: Scalars['String']
+  code: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validUntil?: Maybe<Scalars['Instant']>
+  codeType?: Maybe<Scalars['String']>
+}
+
 export type AssignVoucherPercentageDiscount = {
   partnerId: Scalars['String']
   numberOfMonths: Scalars['Int']
@@ -757,6 +765,7 @@ export type MutationType = {
   createCampaignPartner: Scalars['Boolean']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   assignCampaignToPartnerFreeMonths: Scalars['Boolean']
+  assignCampaignToPartnerNoDiscount: Scalars['Boolean']
   assignCampaignToPartnerVisibleNoDiscount: Scalars['Boolean']
   setCampaignCodeType?: Maybe<VoucherCampaign>
   setContractForClaim: Claim
@@ -1014,6 +1023,10 @@ export type MutationTypeAssignCampaignToPartnerPercentageDiscountArgs = {
 
 export type MutationTypeAssignCampaignToPartnerFreeMonthsArgs = {
   request?: Maybe<AssignVoucherFreeMonths>
+}
+
+export type MutationTypeAssignCampaignToPartnerNoDiscountArgs = {
+  request?: Maybe<AssignVoucherNoDiscount>
 }
 
 export type MutationTypeAssignCampaignToPartnerVisibleNoDiscountArgs = {
@@ -3305,6 +3318,14 @@ export type AssignCampaignToPartnerFreeMonthsMutationVariables = Exact<{
 export type AssignCampaignToPartnerFreeMonthsMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'assignCampaignToPartnerFreeMonths'>
+
+export type AssignCampaignToPartnerNoDiscountMutationVariables = Exact<{
+  request?: Maybe<AssignVoucherNoDiscount>
+}>
+
+export type AssignCampaignToPartnerNoDiscountMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerNoDiscount'>
 
 export type AssignCampaignToPartnerPercentageDiscountMutationVariables = Exact<{
   request?: Maybe<AssignVoucherPercentageDiscount>
@@ -8525,6 +8546,57 @@ export type AssignCampaignToPartnerFreeMonthsMutationResult = ApolloReactCommon.
 export type AssignCampaignToPartnerFreeMonthsMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AssignCampaignToPartnerFreeMonthsMutation,
   AssignCampaignToPartnerFreeMonthsMutationVariables
+>
+export const AssignCampaignToPartnerNoDiscountDocument = gql`
+  mutation AssignCampaignToPartnerNoDiscount(
+    $request: AssignVoucherNoDiscount
+  ) {
+    assignCampaignToPartnerNoDiscount(request: $request)
+  }
+`
+export type AssignCampaignToPartnerNoDiscountMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerNoDiscountMutation,
+  AssignCampaignToPartnerNoDiscountMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerNoDiscountMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerNoDiscountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerNoDiscountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerNoDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerNoDiscountMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerNoDiscountMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerNoDiscountMutation,
+    AssignCampaignToPartnerNoDiscountMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerNoDiscountMutation,
+    AssignCampaignToPartnerNoDiscountMutationVariables
+  >(AssignCampaignToPartnerNoDiscountDocument, options)
+}
+export type AssignCampaignToPartnerNoDiscountMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerNoDiscountMutation
+>
+export type AssignCampaignToPartnerNoDiscountMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerNoDiscountMutation
+>
+export type AssignCampaignToPartnerNoDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerNoDiscountMutation,
+  AssignCampaignToPartnerNoDiscountMutationVariables
 >
 export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
   mutation AssignCampaignToPartnerPercentageDiscount(
