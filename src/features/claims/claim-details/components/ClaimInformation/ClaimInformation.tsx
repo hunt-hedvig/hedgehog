@@ -1,10 +1,12 @@
 import styled from '@emotion/styled'
 import {
+  ClaimPageDocument,
   ClaimState,
   Contract,
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
+  useRestrictResourceAccessMutation,
   useSetClaimDateMutation,
   useSetContractForClaimMutation,
   useSetCoveringEmployeeMutation,
@@ -12,6 +14,7 @@ import {
 } from 'types/generated/graphql'
 
 import {
+  Button,
   CardContent,
   CardsWrapper,
   CardTitle,
@@ -110,10 +113,12 @@ export const ClaimInformation: React.FC<{
   claimId: string
   memberId: string
   focus: boolean
-}> = ({ claimId, memberId, focus }) => {
+  restricted: boolean
+}> = ({ claimId, memberId, focus, restricted }) => {
   const [creatingCoInsured, setCreatingCoInsured] = useState(false)
   const { confirm } = useConfirmDialog()
   const deleteCoInsured = useDeleteCoInsured({ claimId })
+  const [restrictResourceAccess] = useRestrictResourceAccessMutation()
   const {
     data,
     error: queryError,
@@ -183,6 +188,35 @@ export const ClaimInformation: React.FC<{
         },
       },
     })
+  }
+
+  const handleRestrictAccess = () => {
+    if (!data) {
+      return
+    }
+
+    toast.promise(
+      restrictResourceAccess({
+        variables: { resourceId: claimId },
+        update: (cache, { data: response }) => {
+          cache.writeQuery({
+            query: ClaimPageDocument,
+            data: {
+              claim: {
+                __typename: 'Claim',
+                ...data.claim,
+                restriction: response,
+              },
+            },
+          })
+        },
+      }),
+      {
+        loading: 'Restricting access',
+        success: 'Access restricted',
+        error: 'Could not restrict access',
+      },
+    )
   }
 
   const coverEmployeeOptions = [
@@ -363,6 +397,21 @@ export const ClaimInformation: React.FC<{
               the MX tech team.
             </DangerCard>
           </CardsWrapper>
+        )}
+        {!restricted && (
+          <SelectWrapper>
+            <Button
+              variant="tertiary"
+              style={{ width: '100%' }}
+              onClick={() =>
+                confirm('Are you sure you want to restrict access?').then(() =>
+                  handleRestrictAccess(),
+                )
+              }
+            >
+              Restrict claim access
+            </Button>
+          </SelectWrapper>
         )}
       </Loadable>
     </CardContent>
