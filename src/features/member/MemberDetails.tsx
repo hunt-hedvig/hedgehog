@@ -68,7 +68,7 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
     },
     {
       label: 'Copy Id',
-      keys: [Keys.Control, Keys.I],
+      keys: [Keys.Control, Keys.M],
       onResolve: () =>
         copy(memberId, {
           format: 'text/plain',
@@ -107,7 +107,7 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
           }}
         >
           {memberId}
-          {isHintingControl && <Hotkey dark>I</Hotkey>}
+          {isHintingControl && <Hotkey dark>M</Hotkey>}
         </MemberDetailLink>
       </Popover>
       <Popover contents="Click to copy Id">
