@@ -83,7 +83,6 @@ const UserMenu = () => {
   const [view, setView] = React.useState(false)
   const { isDarkmode, setIsDarkmode } = useDarkmode()
   const { me } = useMe()
-  console.log(me)
 
   const close = () => setView(false)
 
