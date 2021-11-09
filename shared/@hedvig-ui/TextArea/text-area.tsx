@@ -78,11 +78,6 @@ export const TextArea: React.FC<TextAreaProps> = ({
       name={props.name}
     />
   ) : (
-    <TextAreaStyled
-      ref={textareaRef}
-      onChange={onChange}
-      value={value || ''}
-      {...props}
-    />
+    <TextAreaStyled onChange={onChange} value={value || ''} {...props} />
   )
 }
