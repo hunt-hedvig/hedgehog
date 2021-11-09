@@ -369,7 +369,6 @@ export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
 export const useKeyIsPressed = (key: Key): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
-  /*
   const handleKeydown = (e) => {
     if (e.keyCode === key.code) {
       setKeyPressed(true)
@@ -388,7 +387,6 @@ export const useKeyIsPressed = (key: Key): boolean => {
     }
   }
 
-
   useEffect(() => {
     window.addEventListener('keydown', handleKeydown)
     window.addEventListener('keyup', handleKeyup)
@@ -399,7 +397,6 @@ export const useKeyIsPressed = (key: Key): boolean => {
       document.removeEventListener('visibilitychange', handleVisibility)
     }
   }, [])
-   */
 
   return keyPressed
 }
