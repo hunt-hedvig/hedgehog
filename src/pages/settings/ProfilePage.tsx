@@ -56,54 +56,56 @@ const ProfilePage: React.FC = () => {
 
   return (
     <>
-      <MainHeadline>Profile</MainHeadline>
-      <Spacing top />
-      <Flex direction="column">
-        <form
-          style={{ width: '100%', maxWidth: '350px' }}
-          onSubmit={(e) => {
-            e.preventDefault()
-            handleSaveChanges()
-          }}
-        >
-          <Label>Full name</Label>
-          <Input
-            placeholder="Your full name"
-            value={fullName}
-            onChange={(e) => setFullName(e.currentTarget.value)}
-          />
-          <Spacing top="small" />
-          <Label>Phone</Label>
-          <Input
-            placeholder="+46701234567"
-            value={phoneNumber ?? ''}
-            onChange={(e) => setPhoneNumber(e.currentTarget.value)}
-          />
-          <Spacing top="small" />
-          <Label>E-mail</Label>
-          <Input
-            disabled
-            muted={true}
-            value={data.me.user.email}
-            placeholder="example@hedvig.com"
-          />
-          <Spacing top="medium" />
-          <Flex direction="row">
-            <Button type="submit" disabled={!changes || !fullName}>
-              Save changes
-            </Button>
-            {changes && (
-              <Button
-                variant="tertiary"
-                style={{ marginLeft: '1em' }}
-                onClick={reset}
-              >
-                Reset
+      <div>
+        <MainHeadline>Profile</MainHeadline>
+        <Spacing top />
+        <Flex direction="column">
+          <form
+            style={{ width: '100%', maxWidth: '350px' }}
+            onSubmit={(e) => {
+              e.preventDefault()
+              handleSaveChanges()
+            }}
+          >
+            <Label>Full name</Label>
+            <Input
+              placeholder="Your full name"
+              value={fullName}
+              onChange={(e) => setFullName(e.currentTarget.value)}
+            />
+            <Spacing top="small" />
+            <Label>Phone</Label>
+            <Input
+              placeholder="+46701234567"
+              value={phoneNumber ?? ''}
+              onChange={(e) => setPhoneNumber(e.currentTarget.value)}
+            />
+            <Spacing top="small" />
+            <Label>E-mail</Label>
+            <Input
+              disabled
+              muted={true}
+              value={data.me.user.email}
+              placeholder="example@hedvig.com"
+            />
+            <Spacing top="medium" />
+            <Flex direction="row">
+              <Button type="submit" disabled={!changes || !fullName}>
+                Save changes
               </Button>
-            )}
-          </Flex>
-        </form>
-      </Flex>
+              {changes && (
+                <Button
+                  variant="tertiary"
+                  style={{ marginLeft: '1em' }}
+                  onClick={reset}
+                >
+                  Reset
+                </Button>
+              )}
+            </Flex>
+          </form>
+        </Flex>
+      </div>
     </>
   )
 }
