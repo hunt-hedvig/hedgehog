@@ -5,13 +5,14 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 
 const UNSIGN_MEMBER = gql`
-  mutation UnsignMember($ssn: String!) {
-    unsignMember(ssn: $ssn)
+  mutation UnsignMember($ssn: String, $email: String) {
+    unsignMember(ssn: $ssn, email: $email)
   }
 `
 
 const UnsignMemberPage: React.FC = () => {
   const [ssn, setSsn] = React.useState('')
+  const [email, setEmail] = React.useState('')
   const [useUnsignMember, { loading }] = useMutation(UNSIGN_MEMBER)
   const { confirm } = useConfirmDialog()
 
@@ -26,18 +27,28 @@ const UnsignMemberPage: React.FC = () => {
         placeholder="Social Security Number"
         style={{ width: '300px' }}
       />
+      <Input
+        value={email}
+        onChange={({ target: { value } }) => {
+          setEmail(value)
+        }}
+        placeholder="Email"
+        style={{ width: '300px' }}
+      />
+
       <Spacing top="small" />
       <Button
         variant="primary"
         disabled={loading || ssn === ''}
         onClick={() => {
           confirm(
-            `Are you sure you want to unsign member with SSN ${ssn}?`,
+            `Are you sure you want to unsign members with SSN ${ssn} and/or email ${email}?`,
           ).then(() => {
             toast.promise(
               useUnsignMember({
                 variables: {
                   ssn,
+                  email,
                 },
               }),
               {
