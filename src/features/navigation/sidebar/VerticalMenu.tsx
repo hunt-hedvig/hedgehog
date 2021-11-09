@@ -1,14 +1,14 @@
 import styled, { StyledComponent } from '@emotion/styled'
 import { Hotkey } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
+// import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useCommandLine } from 'features/commands/command-line-hook'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useRef, useState } from 'react'
 import {
   ArrowUpRight,
-  BoxArrowLeft,
+  // BoxArrowLeft,
   Chat,
   ChevronLeft,
   CreditCard,
@@ -200,29 +200,29 @@ const BottomSection = styled('div')({
   padding: '0 2rem 2rem 2rem',
 })
 
-const DarkmodeSwitch = styled('label')(({ theme }) => ({
-  position: 'relative',
-  display: 'inline-flex',
-  justifyContent: 'center',
-  flexShrink: 0,
-  alignItems: 'center',
-  marginTop: '1rem',
-  padding: '0.75rem',
-  fontSize: '1rem',
-  lineHeight: 1,
-  width: '3rem',
-  borderRadius: 8,
-  color: theme.background,
-  backgroundColor: theme.foreground,
-  border: theme.type === 'dark' ? '1px solid transparent' : '1px solid #fff',
-  cursor: 'pointer',
-}))
-const DarkmodeInnerSwitch = styled('input')({
-  position: 'absolute',
-  width: 0,
-  height: 0,
-  visibility: 'hidden',
-})
+// const DarkmodeSwitch = styled('label')(({ theme }) => ({
+//   position: 'relative',
+//   display: 'inline-flex',
+//   justifyContent: 'center',
+//   flexShrink: 0,
+//   alignItems: 'center',
+//   marginTop: '1rem',
+//   padding: '0.75rem',
+//   fontSize: '1rem',
+//   lineHeight: 1,
+//   width: '3rem',
+//   borderRadius: 8,
+//   color: theme.background,
+//   backgroundColor: theme.foreground,
+//   border: theme.type === 'dark' ? '1px solid transparent' : '1px solid #fff',
+//   cursor: 'pointer',
+// }))
+// const DarkmodeInnerSwitch = styled('input')({
+//   position: 'absolute',
+//   width: 0,
+//   height: 0,
+//   visibility: 'hidden',
+// })
 
 const routes = {
   dashborad: '/dashborad',
@@ -253,7 +253,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   )
   const [locations, setLocations] = useState<string[]>([])
   const latestClaim = useRef<LatestClaim | null>(null)
-  const { isDarkmode, setIsDarkmode } = useDarkmode()
+  // const { isDarkmode, setIsDarkmode } = useDarkmode()
   const [conversationsEnabled] = useState<boolean>(
     settings[UserSettingKey.FeatureFlags]?.conversations || false,
   )
@@ -372,9 +372,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
     setCollapsed(!isCollapsed)
     localStorage.setItem('hedvig:menu:collapse', JSON.stringify(!isCollapsed))
   }
-  const toggleDarkmode = () => {
-    setIsDarkmode(!isDarkmode)
-  }
+  // const toggleDarkmode = () => {
+  //   setIsDarkmode(!isDarkmode)
+  // }
 
   return (
     <MediaQuery query="(max-width: 1300px)">
@@ -492,7 +492,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
               </MenuGroup>
             </Menu>
 
-            <BottomSection>
+            {/* <BottomSection>
               <DarkmodeSwitch>
                 <DarkmodeInnerSwitch
                   type="checkbox"
@@ -513,7 +513,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   {!isCollapsed && 'Logout'}
                 </Hotkey>
               </MenuItem>
-            </BottomSection>
+            </BottomSection> */}
           </InnerWrapper>
         </Wrapper>
       )}
