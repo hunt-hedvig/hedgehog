@@ -95,13 +95,15 @@ export const LargeClaimsList: React.FC<{
     listClaims({
       page: page - 1 ?? 0,
       filterCreatedBeforeOrOnDate: date,
-      filterClaimStates: settings[UserSettingKey.ClaimStatesFilter].claims,
-      filterComplexities: settings[UserSettingKey.ClaimComplexityFilter].claims,
+      filterClaimStates:
+        settings[UserSettingKey.ClaimStatesFilter].claims || null,
+      filterComplexities:
+        settings[UserSettingKey.ClaimComplexityFilter].claims || null,
       filterNumberOfMemberGroups:
-        settings[UserSettingKey.NumberOfMemberGroups].value,
+        settings[UserSettingKey.NumberOfMemberGroups].value || null,
       filterSelectedMemberGroups:
-        settings[UserSettingKey.MemberGroupsFilter].claims,
-      filterMarkets: settings[UserSettingKey.MarketFilter].claims,
+        settings[UserSettingKey.MemberGroupsFilter].claims || null,
+      filterMarkets: settings[UserSettingKey.MarketFilter].claims || null,
       filterTypesOfContract: null,
     })
   }, [page, date, settings])
