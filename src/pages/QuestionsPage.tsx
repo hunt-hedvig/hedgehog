@@ -7,7 +7,6 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { getNameFromEmail } from 'features/dashboard/Greeting'
 import { FilterSelect, FilterState } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
@@ -96,7 +95,7 @@ const QuestionsPage: React.FC = () => {
           history.push('/conversations/onboarding')
         }}
       >
-        Hey there <Capitalized>{getNameFromEmail(me.email)}</Capitalized>
+        Hey there <Capitalized>{me.fullName.split(' ')[0]}</Capitalized>
         !
         <br />
         <span style={{ fontSize: '0.9em' }}>

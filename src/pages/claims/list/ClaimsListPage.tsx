@@ -50,13 +50,13 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   const { settings, updateSetting } = useMe()
 
   const [filters, setFilters] = useState(
-    settings[UserSettingKey.FeatureFlags]?.claims_filters || EMPTY_FILTERS,
+    settings[UserSettingKey.ClaimStatesFilter]?.claims_filters || EMPTY_FILTERS,
   )
 
   useEffect(() => {
-    if (!settings[UserSettingKey.FeatureFlags]?.claims_filters) {
-      updateSetting(UserSettingKey.FeatureFlags, {
-        ...settings[UserSettingKey.FeatureFlags],
+    if (!settings[UserSettingKey.ClaimStatesFilter]?.claims_filters) {
+      updateSetting(UserSettingKey.ClaimStatesFilter, {
+        ...settings[UserSettingKey.ClaimStatesFilter],
         claims_filters: EMPTY_FILTERS,
       })
     }
@@ -74,9 +74,9 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   }, [])
 
   useEffect(() => {
-    if (settings[UserSettingKey.FeatureFlags]?.claims_filters) {
-      updateSetting(UserSettingKey.FeatureFlags, {
-        ...settings[UserSettingKey.FeatureFlags],
+    if (settings[UserSettingKey.ClaimStatesFilter]?.claims_filters) {
+      updateSetting(UserSettingKey.ClaimStatesFilter, {
+        ...settings[UserSettingKey.ClaimStatesFilter],
         claims_filters: filters,
       })
     }
