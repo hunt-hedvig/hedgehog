@@ -41,6 +41,13 @@ const FormCheckbox = styled(Checkbox)`
   }
 `
 
+interface CategoryOptionsType {
+  key: number
+  value: string
+  text: string
+  disabled?: boolean
+}
+
 export const ClaimPayment: React.FC<{
   focus: boolean
   sanctionStatus?: SanctionStatus | null
@@ -56,7 +63,7 @@ export const ClaimPayment: React.FC<{
   const [isExGratia, setIsExGratia] = useState(false)
   const [isOverridden, setIsOverridden] = useState(false)
 
-  const categoryOptions = [
+  const categoryOptions: CategoryOptionsType[] = [
     ...Object.keys(ClaimPaymentType).map((paymentType, index) => ({
       key: index + 1,
       value: paymentType,
@@ -200,6 +207,9 @@ export const ClaimPayment: React.FC<{
         <FormDropdown
           placeholder="Type"
           options={categoryOptions.filter((opt) => {
+            if (opt.disabled) {
+              return false
+            }
             if (opt.value === 'AutomaticSwish') {
               return (
                 areSwishPayoutsEnabled() &&
