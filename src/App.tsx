@@ -1,6 +1,6 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
 import styled from '@emotion/styled'
-import { BaseStyle, darkTheme, lightTheme } from '@hedvig-ui'
+import { BaseStyle, darkTheme, lightTheme, StandaloneMessage } from '@hedvig-ui'
 import {
   getDefaultIsDarkmode,
   UseDarkmode,
@@ -9,6 +9,7 @@ import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
 import { CommandLineProvider } from 'features/commands/command-line-hook'
+import { Logo, LogoIcon } from 'features/navigation/sidebar/elements'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
 import { TrackingProvider } from 'features/tracking/hooks/use-tracking'
@@ -74,14 +75,34 @@ const globalCss = css`
   }
 `
 
+const HopeLogo = styled(Logo)`
+  width: 7rem;
+  fill: ${colorsV3.gray800};
+`
+
+const HopeLogoIcon = styled(LogoIcon)`
+  width: 1rem;
+  fill: ${colorsV3.gray800};
+  margin-bottom: 2rem;
+`
+
 const App: React.FC = () => {
   const [isDarkmode, setIsDarkmode] = useState(getDefaultIsDarkmode())
-  const { me } = useAuthenticate()
+  const { me, loading } = useAuthenticate()
 
   const redirectToLogin = () => {
     window.location.href = `${(window as any).GATEKEEPER_HOST}/sso?redirect=${
       window.location.protocol
     }//${window.location.host}/login/callback`
+  }
+
+  if (loading) {
+    return (
+      <StandaloneMessage paddingTop="45vh" opacity={1}>
+        <HopeLogo />
+        <HopeLogoIcon />
+      </StandaloneMessage>
+    )
   }
 
   if (!me) {
