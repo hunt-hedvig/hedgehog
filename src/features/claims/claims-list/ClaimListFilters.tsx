@@ -112,14 +112,17 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({ date, setDate }) => {
     setEmptyFilter(UserSettingKey.MarketFilter)
   }, [])
 
-  const updateFilterHandler = (field, value) => {
-    updateSetting(UserSettingKey[field], {
-      ...settings[UserSettingKey[field]],
-      claims: settings[UserSettingKey[field]].claims.includes(value)
-        ? settings[UserSettingKey[field]].claims.filter(
+  const updateFilterHandler = (
+    field: UserSettingKey,
+    value: string | number,
+  ) => {
+    updateSetting(field, {
+      ...settings[field],
+      claims: settings[field].claims.includes(value)
+        ? settings[field].claims.filter(
             (currentValue) => currentValue !== value,
           )
-        : [...settings[UserSettingKey[field]].claims, value],
+        : [...settings[field].claims, value],
     })
   }
 
@@ -147,7 +150,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({ date, setDate }) => {
                 UserSettingKey.ClaimStatesFilter
               ].claims.includes(ClaimState[key])}
               onChange={() => {
-                updateFilterHandler('ClaimStatesFilter', ClaimState[key])
+                updateFilterHandler(
+                  UserSettingKey.ClaimStatesFilter,
+                  ClaimState[key],
+                )
               }}
             />
             <MemberGroupColorBadge
@@ -175,7 +181,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({ date, setDate }) => {
               ].claims.includes(ClaimComplexity[key])}
               onChange={() => {
                 updateFilterHandler(
-                  'ClaimComplexityFilter',
+                  UserSettingKey.ClaimComplexityFilter,
                   ClaimComplexity[key],
                 )
               }}
@@ -202,7 +208,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({ date, setDate }) => {
                 UserSettingKey.MemberGroupsFilter
               ].claims.includes(filterNumber)}
               onChange={() => {
-                updateFilterHandler('MemberGroupsFilter', filterNumber)
+                updateFilterHandler(
+                  UserSettingKey.MemberGroupsFilter,
+                  filterNumber,
+                )
               }}
             />
             <MemberGroupColorBadge
@@ -223,7 +232,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({ date, setDate }) => {
                 Market[key],
               )}
               onChange={() => {
-                updateFilterHandler('MarketFilter', Market[key])
+                updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
               }}
             />
             <span style={{ marginLeft: '0.5rem' }}>

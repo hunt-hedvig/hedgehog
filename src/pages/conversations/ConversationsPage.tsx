@@ -47,9 +47,12 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
   const { settings } = useMe()
 
-  const [filters] = useState(
-    settings[UserSettingKey.FeatureFlags]?.questions_filters || [],
-  )
+  const [filters] = useState<number[]>([
+    ...settings[UserSettingKey.ClaimStatesFilter].questions,
+    ...settings[UserSettingKey.MemberGroupsFilter].questions,
+    ...settings[UserSettingKey.ClaimComplexityFilter].questions,
+    ...settings[UserSettingKey.MarketFilter].questions,
+  ])
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)

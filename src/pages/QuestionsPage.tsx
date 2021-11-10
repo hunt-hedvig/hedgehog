@@ -50,6 +50,8 @@ const QuestionsPage: React.FC = () => {
     ...settings[UserSettingKey.MarketFilter].questions,
   ])
 
+  console.log(settings)
+
   const [questionGroups, { loading }] = useQuestionGroups()
 
   const setEmptyFilter = (field) => {
@@ -82,7 +84,7 @@ const QuestionsPage: React.FC = () => {
 
   const toggleFilterHandler = (
     filter: FilterStateType,
-    settingField: UserSettingKey | undefined,
+    settingField?: UserSettingKey,
   ) => {
     if (settingField) {
       updateSetting(settingField, {

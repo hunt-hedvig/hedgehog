@@ -8,7 +8,7 @@ import {
   Paragraph,
   useFadeAnimation,
 } from '@hedvig-ui'
-import { FilterSelect } from 'features/questions/FilterSelect'
+import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
@@ -26,11 +26,28 @@ const ConversationsOnboardingPage: React.FC = () => {
 
   const history = useHistory()
 
-  const [selectedFilters, setSelectedFilters] = useState(
-    settings[UserSettingKey.FeatureFlags]?.questions_filters || [],
-  )
+  const [selectedFilters, setSelectedFilters] = useState<number[]>([
+    ...settings[UserSettingKey.ClaimStatesFilter].questions,
+    ...settings[UserSettingKey.MemberGroupsFilter].questions,
+    ...settings[UserSettingKey.ClaimComplexityFilter].questions,
+    ...settings[UserSettingKey.MarketFilter].questions,
+  ])
+
+  const setEmptyFilter = (field) => {
+    if (!settings[field].questions) {
+      updateSetting(field, {
+        ...settings[field],
+        questions: [],
+      })
+    }
+  }
 
   useEffect(() => {
+    setEmptyFilter(UserSettingKey.ClaimStatesFilter)
+    setEmptyFilter(UserSettingKey.MemberGroupsFilter)
+    setEmptyFilter(UserSettingKey.ClaimComplexityFilter)
+    setEmptyFilter(UserSettingKey.MarketFilter)
+
     if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
       updateSetting(UserSettingKey.FeatureFlags, {
         ...settings[UserSettingKey.FeatureFlags],
@@ -38,22 +55,7 @@ const ConversationsOnboardingPage: React.FC = () => {
       })
       history.go(0)
     }
-    if (!settings[UserSettingKey.FeatureFlags]?.questions_filters) {
-      updateSetting(UserSettingKey.FeatureFlags, {
-        ...settings[UserSettingKey.FeatureFlags],
-        questions_filters: [],
-      })
-    }
   }, [])
-
-  useEffect(() => {
-    if (settings[UserSettingKey.FeatureFlags]?.questions_filters) {
-      updateSetting(UserSettingKey.FeatureFlags, {
-        ...settings[UserSettingKey.FeatureFlags],
-        questions_filters: [...selectedFilters],
-      })
-    }
-  }, [selectedFilters])
 
   useEffect(() => {
     fade('up', 'in').then(() => {
@@ -63,6 +65,30 @@ const ConversationsOnboardingPage: React.FC = () => {
 
   if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
     return null
+  }
+
+  const toggleFilterHandler = (
+    filter: FilterStateType,
+    settingField?: UserSettingKey,
+  ) => {
+    if (settingField) {
+      updateSetting(settingField, {
+        ...settings[settingField],
+        questions: settings[settingField].questions.includes(filter)
+          ? settings[settingField].questions.filter(
+              (prevFilter) => filter !== prevFilter,
+            )
+          : [...settings[settingField].questions, filter],
+      })
+    }
+
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(
+        selectedFilters.filter((prevFilter) => filter !== prevFilter),
+      )
+    } else {
+      setSelectedFilters([...selectedFilters, filter])
+    }
   }
 
   if (onboardingStep === 0) {
@@ -120,18 +146,7 @@ const ConversationsOnboardingPage: React.FC = () => {
           </Paragraph>
         </FadeIn>
       </Flex>
-      <FilterSelect
-        filters={selectedFilters}
-        onToggle={(filter) => {
-          if (selectedFilters.includes(filter)) {
-            setSelectedFilters(
-              selectedFilters.filter((prevFilter) => filter !== prevFilter),
-            )
-          } else {
-            setSelectedFilters([...selectedFilters, filter])
-          }
-        }}
-      />
+      <FilterSelect filters={selectedFilters} onToggle={toggleFilterHandler} />
       {!!selectedFilters.length && (
         <FadeIn style={{ width: '100%' }}>
           <Flex
