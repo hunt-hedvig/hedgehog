@@ -219,6 +219,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           muted={muted}
           disabled={disabled}
           placeholder={props.placeholder}
+          onWheel={(e) => {
+            if (props.type === 'number') {
+              e.currentTarget.blur()
+            } else if (props.onWheel) {
+              props.onWheel(e)
+            }
+          }}
           {...props}
         />
         {affix && affix.content && <Affix size={size}>{affix.content}</Affix>}
