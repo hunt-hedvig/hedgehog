@@ -11,11 +11,16 @@ import { range } from '@hedvig-ui/utils/range'
 import { Market, MarketFlags } from 'features/config/constants'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
+import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { InfoCircle } from 'react-bootstrap-icons'
-import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
+import {
+  ClaimComplexity,
+  ClaimState,
+  UserSettingKey,
+} from 'types/generated/graphql'
 
 interface FiltersProps {
   filters: ClaimsFiltersType
@@ -82,11 +87,26 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   setFilters,
 }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
+  const { settings, updateSetting } = useMe()
 
   const isFilterExist = (state, field) =>
     filters[field] && !!filters[field].filter((st) => st === state).length
 
-  const setFilterHandler = (state: string | number, field) => {
+  const setFilterHandler = (state: string | number, field, settingField) => {
+    if (Object.values(UserSettingKey).includes(settingField)) {
+      if (!!settings[settingField].claims.filter((st) => st === state).length) {
+        updateSetting(settingField, {
+          claims: settings[settingField].claims.filter((st) => st !== state),
+        })
+      } else {
+        updateSetting(settingField, {
+          claims: settings[settingField].claims
+            ? [...settings[settingField].claims, state]
+            : [state],
+        })
+      }
+    }
+
     if (isFilterExist(state, field)) {
       setFilters((prev) => ({
         ...prev,
@@ -105,19 +125,19 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   React.useEffect(() => {
     if (
       numberMemberGroups === 2 &&
-      filters.filterSelectedMemberGroups &&
-      filters.filterSelectedMemberGroups.length > 2
+      filters.filterSelectedMemberGroups?.includes(2)
     ) {
       setFilters((prev) => ({
         ...prev,
-        filterNumberOfMemberGroups: numberMemberGroups,
-        filterSelectedMemberGroups: [0, 1],
+        filterSelectedMemberGroups: filters.filterSelectedMemberGroups?.filter(
+          (num) => num !== 2,
+        ),
       }))
-    } else {
-      setFilters((prev) => ({
-        ...prev,
-        filterNumberOfMemberGroups: numberMemberGroups,
-      }))
+      updateSetting(UserSettingKey.MemberGroupsFilter, {
+        claims: settings[UserSettingKey.MemberGroupsFilter].claims.filter(
+          (num) => num !== 2,
+        ),
+      })
     }
   }, [numberMemberGroups])
 
@@ -156,7 +176,11 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
                 isFilterExist(ClaimState[key], 'filterClaimStates') || false
               }
               onChange={() =>
-                setFilterHandler(ClaimState[key], 'filterClaimStates')
+                setFilterHandler(
+                  ClaimState[key],
+                  'filterClaimStates',
+                  UserSettingKey.ClaimStatesFilter,
+                )
               }
             />
             <MemberGroupColorBadge
@@ -184,7 +208,11 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
                 false
               }
               onChange={() =>
-                setFilterHandler(ClaimComplexity[key], 'filterComplexities')
+                setFilterHandler(
+                  ClaimComplexity[key],
+                  'filterComplexities',
+                  UserSettingKey.ClaimComplexityFilter,
+                )
               }
             />
             <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
@@ -210,7 +238,11 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
                 false
               }
               onChange={() =>
-                setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
+                setFilterHandler(
+                  filterNumber,
+                  'filterSelectedMemberGroups',
+                  UserSettingKey.MemberGroupsFilter,
+                )
               }
             />
             <MemberGroupColorBadge
@@ -228,7 +260,13 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
             <Checkbox
               label={key}
               checked={isFilterExist(Market[key], 'filterMarkets') || false}
-              onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
+              onChange={() =>
+                setFilterHandler(
+                  Market[key],
+                  'filterMarkets',
+                  UserSettingKey.MarketFilter,
+                )
+              }
             />
             <span style={{ marginLeft: '0.5rem' }}>
               {MarketFlags[key.toUpperCase()]}

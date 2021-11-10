@@ -19,16 +19,6 @@ const ListPage = styled.div`
   margin: 0;
 `
 
-const EMPTY_FILTERS = {
-  filterClaimStates: null,
-  filterCreatedBeforeOrOnDate: null,
-  filterComplexities: null,
-  filterNumberOfMemberGroups: null,
-  filterSelectedMemberGroups: null,
-  filterMarkets: null,
-  filterTypesOfContract: null,
-}
-
 export interface ClaimsFiltersType {
   filterClaimStates: ClaimState[] | null
   filterCreatedBeforeOrOnDate: string | null
@@ -49,17 +39,36 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   const location = useLocation()
   const { settings, updateSetting } = useMe()
 
-  const [filters, setFilters] = useState(
-    settings[UserSettingKey.ClaimStatesFilter]?.claims_filters || EMPTY_FILTERS,
-  )
+  const [filters, setFilters] = useState<ClaimsFiltersType>({
+    filterClaimStates: settings[UserSettingKey.ClaimStatesFilter].claims,
+    filterComplexities: settings[UserSettingKey.ClaimComplexityFilter].claims,
+    filterNumberOfMemberGroups:
+      settings[UserSettingKey.NumberOfMemberGroups].value,
+    filterSelectedMemberGroups:
+      settings[UserSettingKey.MemberGroupsFilter].claims,
+    filterMarkets: settings[UserSettingKey.MarketFilter].claims,
+    filterCreatedBeforeOrOnDate: null,
+    filterTypesOfContract: null,
+  })
 
   useEffect(() => {
-    if (!settings[UserSettingKey.ClaimStatesFilter]?.claims_filters) {
-      updateSetting(UserSettingKey.ClaimStatesFilter, {
-        ...settings[UserSettingKey.ClaimStatesFilter],
-        claims_filters: EMPTY_FILTERS,
+    updateSetting(UserSettingKey.FeatureFlags, { conversations: false })
+  })
+
+  const setEmptyFilter = (field) => {
+    if (!settings[field].claims) {
+      updateSetting(field, {
+        ...settings[field],
+        claims: [],
       })
     }
+  }
+
+  useEffect(() => {
+    setEmptyFilter(UserSettingKey.ClaimStatesFilter)
+    setEmptyFilter(UserSettingKey.MemberGroupsFilter)
+    setEmptyFilter(UserSettingKey.ClaimComplexityFilter)
+    setEmptyFilter(UserSettingKey.MarketFilter)
 
     const from = (location?.state as { from?: string })?.from
 
@@ -72,15 +81,6 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 
     window.history.replaceState({}, document.title)
   }, [])
-
-  useEffect(() => {
-    if (settings[UserSettingKey.ClaimStatesFilter]?.claims_filters) {
-      updateSetting(UserSettingKey.ClaimStatesFilter, {
-        ...settings[UserSettingKey.ClaimStatesFilter],
-        claims_filters: filters,
-      })
-    }
-  }, [filters])
 
   const selectedPage = parseInt(page, 10)
 
