@@ -48,6 +48,7 @@ export enum TerminationReason {
   SignedByMistake = 'SIGNED_BY_MISTAKE',
   Other = 'OTHER',
   Unknown = 'UNKNOWN',
+  RenewalPrice = 'RENEWAL_PRICE',
 }
 
 const initialTerminationDate = (contract: Contract): Date =>
