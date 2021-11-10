@@ -32,9 +32,9 @@ const TextAreaStyled = styled.textarea<{
 
 const TextareaAutosizeStyled = styled(TextareaAutosize)<{
   resize?: boolean
-  maxiheight?: string
+  maxHeight?: string
 }>`
-  ${({ theme, resize, maxiheight }) => styles(theme, resize, maxiheight)}
+  ${({ theme, resize, maxHeight }) => styles(theme, resize, maxHeight)}
 `
 
 export interface TextAreaProps
@@ -68,7 +68,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
     <TextareaAutosizeStyled
       ref={textareaRef}
       value={value || ''}
-      maxiheight={props.maxHeight}
+      maxHeight={props.maxHeight}
       onKeyDown={props.onKeyDown}
       onChange={onChange}
       placeholder={props.placeholder}
