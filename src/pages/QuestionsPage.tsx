@@ -50,8 +50,6 @@ const QuestionsPage: React.FC = () => {
     ...settings[UserSettingKey.MarketFilter].questions,
   ])
 
-  console.log(settings)
-
   const [questionGroups, { loading }] = useQuestionGroups()
 
   const setEmptyFilter = (field) => {
