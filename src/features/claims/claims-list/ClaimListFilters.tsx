@@ -96,10 +96,12 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     if (Object.values(UserSettingKey).includes(settingField)) {
       if (!!settings[settingField].claims.filter((st) => st === state).length) {
         updateSetting(settingField, {
+          ...settings[settingField],
           claims: settings[settingField].claims.filter((st) => st !== state),
         })
       } else {
         updateSetting(settingField, {
+          ...settings[settingField],
           claims: settings[settingField].claims
             ? [...settings[settingField].claims, state]
             : [state],

@@ -51,10 +51,6 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     filterTypesOfContract: null,
   })
 
-  useEffect(() => {
-    updateSetting(UserSettingKey.FeatureFlags, { conversations: false })
-  })
-
   const setEmptyFilter = (field) => {
     if (!settings[field].claims) {
       updateSetting(field, {

@@ -7,7 +7,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { FilterSelect, FilterState } from 'features/questions/FilterSelect'
+import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
@@ -43,38 +43,30 @@ const QuestionsPage: React.FC = () => {
   const history = useHistory()
   const { me, settings, updateSetting } = useMe()
 
-  const [selectedFilters, setSelectedFilters] = useState(
-    settings[UserSettingKey.FeatureFlags]?.questions_filters || [
-      FilterState.HasOpenClaim,
-      FilterState.NoOpenClaim,
-    ],
-  )
+  const [selectedFilters, setSelectedFilters] = useState<number[]>([
+    ...settings[UserSettingKey.ClaimStatesFilter].questions,
+    ...settings[UserSettingKey.MemberGroupsFilter].questions,
+    ...settings[UserSettingKey.ClaimComplexityFilter].questions,
+    ...settings[UserSettingKey.MarketFilter].questions,
+  ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
 
-  useEffect(() => {
-    if (settings[UserSettingKey.FeatureFlags]?.conversations) {
-      updateSetting(UserSettingKey.FeatureFlags, {
-        ...settings[UserSettingKey.FeatureFlags],
-        conversations: false,
+  const setEmptyFilter = (field) => {
+    if (!settings[field].questions) {
+      updateSetting(field, {
+        ...settings[field],
+        questions: [],
       })
     }
-    if (!settings[UserSettingKey.FeatureFlags]?.questions_filters) {
-      updateSetting(UserSettingKey.FeatureFlags, {
-        ...settings[UserSettingKey.FeatureFlags],
-        questions_filters: [FilterState.HasOpenClaim, FilterState.NoOpenClaim],
-      })
-    }
-  }, [])
+  }
 
   useEffect(() => {
-    if (settings[UserSettingKey.FeatureFlags]?.questions_filters) {
-      updateSetting(UserSettingKey.FeatureFlags, {
-        ...settings[UserSettingKey.FeatureFlags],
-        questions_filters: [...selectedFilters],
-      })
-    }
-  }, [selectedFilters])
+    setEmptyFilter(UserSettingKey.ClaimStatesFilter)
+    setEmptyFilter(UserSettingKey.MemberGroupsFilter)
+    setEmptyFilter(UserSettingKey.ClaimComplexityFilter)
+    setEmptyFilter(UserSettingKey.MarketFilter)
+  }, [])
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -86,6 +78,30 @@ const QuestionsPage: React.FC = () => {
         Something went wrong!
       </StandaloneMessage>
     )
+  }
+
+  const toggleFilterHandler = (
+    filter: FilterStateType,
+    settingField: UserSettingKey | undefined,
+  ) => {
+    if (settingField) {
+      updateSetting(settingField, {
+        ...settings[settingField],
+        questions: settings[settingField].questions.includes(filter)
+          ? settings[settingField].questions.filter(
+              (prevFilter) => filter !== prevFilter,
+            )
+          : [...settings[settingField].questions, filter],
+      })
+    }
+
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(
+        selectedFilters.filter((prevFilter) => filter !== prevFilter),
+      )
+    } else {
+      setSelectedFilters([...selectedFilters, filter])
+    }
   }
 
   return (
@@ -115,15 +131,7 @@ const QuestionsPage: React.FC = () => {
             pushLeft
             animationDelay={0}
             animationItemDelay={20}
-            onToggle={(filter) => {
-              if (selectedFilters.includes(filter)) {
-                setSelectedFilters(
-                  selectedFilters.filter((prevFilter) => filter !== prevFilter),
-                )
-              } else {
-                setSelectedFilters([...selectedFilters, filter])
-              }
-            }}
+            onToggle={toggleFilterHandler}
           />
         </FadeIn>
       </Spacing>
