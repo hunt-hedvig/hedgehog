@@ -5,6 +5,7 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { UsersOnPath } from 'features/navigation/topbar/components/UsersOnPath'
+import { useMe } from 'features/user/hooks/use-me'
 import { NotificationsModal } from 'features/user/notifications/NotificationsModal'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
@@ -66,10 +67,14 @@ const NewNotificationsOrb = styled.div`
 const NotificationsButton: React.FC<{ onClick: () => void }> = ({
   onClick,
 }) => {
+  const { me } = useMe()
+
   return (
     <CircleButton onClick={onClick} style={{ marginLeft: '1em' }}>
       <BellFill />
-      <NewNotificationsOrb />
+      {me.notifications.some((notification) => !notification.read) && (
+        <NewNotificationsOrb />
+      )}
     </CircleButton>
   )
 }

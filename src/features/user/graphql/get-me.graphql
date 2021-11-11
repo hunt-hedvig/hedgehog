@@ -8,6 +8,17 @@ query GetMe {
       fullName
       phoneNumber
       role
+      notifications {
+        id
+        message
+        url
+        createdAt
+        read
+        user {
+          id
+          fullName
+        }
+      }
     }
     settings {
       key

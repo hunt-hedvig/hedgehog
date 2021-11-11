@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
-import { Bold, Button, Flex, Modal, ThirdLevelHeadline } from '@hedvig-ui'
+import { Button, Flex, Modal, ThirdLevelHeadline } from '@hedvig-ui'
 import chroma from 'chroma-js'
+import { formatDistanceToNowStrict, parseISO } from 'date-fns'
+import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
 
 const NotificationItem = styled(Flex)<{ read?: boolean }>`
@@ -63,15 +65,16 @@ const NotificationTimestamp = styled.div`
 export const NotificationsModal: React.FC<{
   onClose: () => void
 }> = ({ onClose }) => {
+  const { me } = useMe()
   return (
     <Modal
       onClose={onClose}
       withoutHeader={true}
       width="400px"
-      height="83vh"
+      height="80vh"
       side="right"
       position="top"
-      padding="7rem 3rem"
+      padding="7rem 3rem 0rem"
       dimBackground={false}
     >
       <Flex style={{ padding: '1rem' }} direction="column">
@@ -85,34 +88,23 @@ export const NotificationsModal: React.FC<{
           </div>
           <Button variant="tertiary">View all</Button>
         </Flex>
-        <NotificationItem align="center">
-          <UserCircle>RG</UserCircle>
-          <Flex direction="column">
-            <NotificationMessage>
-              <Bold>Rasmus</Bold> mentioned you in a claim
-            </NotificationMessage>
-            <NotificationTimestamp>2 hours ago</NotificationTimestamp>
-          </Flex>
-        </NotificationItem>
-        <NotificationItem align="center">
-          <UserCircle>EG</UserCircle>
-          <Flex direction="column">
-            <NotificationMessage>
-              <Bold>Elvin</Bold> just gave you access to a restricted claim
-            </NotificationMessage>
-            <NotificationTimestamp>2 hours ago</NotificationTimestamp>
-          </Flex>
-        </NotificationItem>
-
-        <NotificationItem align="center" read>
-          <UserCircle>CP</UserCircle>
-          <Flex direction="column">
-            <NotificationMessage>
-              Why is <Bold>Carl</Bold> acting like a silly goose?
-            </NotificationMessage>
-            <NotificationTimestamp>2 hours ago</NotificationTimestamp>
-          </Flex>
-        </NotificationItem>
+        {me.notifications.map((notification) => (
+          <NotificationItem
+            key={notification.id}
+            align="center"
+            read={notification.read}
+          >
+            <UserCircle>TT</UserCircle>
+            <Flex direction="column">
+              <NotificationMessage>{notification.message}</NotificationMessage>
+              <NotificationTimestamp>
+                {formatDistanceToNowStrict(parseISO(notification.createdAt), {
+                  addSuffix: true,
+                })}
+              </NotificationTimestamp>
+            </Flex>
+          </NotificationItem>
+        ))}
       </Flex>
     </Modal>
   )

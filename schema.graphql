@@ -60,6 +60,10 @@ type Me {
   settings(filters: UserSettingsFilter): [UserSetting!]!
 }
 
+input UserSettingsFilter {
+  keys: [UserSettingKey!]!
+}
+
 enum UserSettingKey {
   DARK_MODE
   FEATURE_FLAGS
@@ -71,10 +75,6 @@ enum UserSettingKey {
   NUMBER_OF_CLAIMS_FILTER
 }
 
-input UserSettingsFilter {
-  keys: [UserSettingKey!]!
-}
-
 type User {
   id: ID!
   email: String!
@@ -82,14 +82,23 @@ type User {
   fullName: String!
   phoneNumber: String
   latestPresence: Instant
+  latestReadNotifications: Instant
   latestLocation: String
-  notifications: [UserNotification!]!
+  notifications(filters: UserNotificationsFilter): [UserNotification!]!
+}
+
+input UserNotificationsFilter {
+  before: Instant
+  after: Instant
 }
 
 type UserNotification {
   id: ID!
   message: String!
+  createdAt: Instant!
   url: String!
+  read: Boolean!
+  user: User!
 }
 
 type UserSetting {
@@ -247,6 +256,8 @@ type MutationType {
     grantHolder: String!
     grantHolderType: GrantHolderType!
   ): ResourceAccessInformation!
+
+  markNotificationsAsRead: Boolean!
 }
 
 enum GrantHolderType {
