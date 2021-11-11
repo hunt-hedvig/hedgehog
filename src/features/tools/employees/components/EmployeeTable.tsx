@@ -13,9 +13,10 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Employee,
@@ -73,9 +74,7 @@ export const EmployeeTable: React.FC<{
     )
   }
 
-  useEffect(() => {
-    document.title = 'Tools | Employees'
-  }, [])
+  useTitle('Tools | Employees')
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />

@@ -11,11 +11,12 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { formatMoney } from '@hedvig-ui/utils/money'
 import { colors } from '@hedviginsurance/brand'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import {
@@ -131,9 +132,7 @@ const ChargesPage: React.FC = () => {
     },
   })
 
-  useEffect(() => {
-    document.title = 'Tools | Approve Charges'
-  }, [])
+  useTitle('Tools | Approve Charges')
 
   if (error) {
     return (

@@ -17,6 +17,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
@@ -84,6 +85,8 @@ export const LargeClaimsList: React.FC<{
   const { numberMemberGroups } = useNumberMemberGroups()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
 
+  useTitle('Claims')
+
   const [
     { claims, page: currentPage, totalPages },
     listClaims,
@@ -96,10 +99,6 @@ export const LargeClaimsList: React.FC<{
       ...filters,
     })
   }, [page, filters])
-
-  useEffect(() => {
-    document.title = 'Claims'
-  }, [])
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />

@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableHeaderColumn,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { sleep } from '@hedvig-ui/utils/sleep'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, isPast, parseISO } from 'date-fns'
@@ -15,7 +16,7 @@ import {
   SwitcherEmailRow,
   SwitcherEmailStatus,
 } from 'features/tools/switcher-automation/SwitcherTableRow'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Contract,
@@ -83,9 +84,7 @@ const SwitcherAutomationPage: React.FC = () => {
     { loading: terminateContractLoading },
   ] = useTerminateContractMutation()
 
-  useEffect(() => {
-    document.title = 'Tools | Switcher Automation'
-  }, [])
+  useTitle('Tools | Switcher Automation')
 
   return (
     <>

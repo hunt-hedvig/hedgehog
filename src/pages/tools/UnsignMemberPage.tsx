@@ -1,5 +1,6 @@
 import { gql, useMutation } from '@apollo/client'
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -16,9 +17,7 @@ const UnsignMemberPage: React.FC = () => {
   const [useUnsignMember, { loading }] = useMutation(UNSIGN_MEMBER)
   const { confirm } = useConfirmDialog()
 
-  React.useEffect(() => {
-    document.title = 'Tools | Unsign Member'
-  }, [])
+  useTitle('Tools | Unsign Member')
 
   return (
     <>

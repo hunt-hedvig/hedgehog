@@ -3,6 +3,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import React, { useEffect, useState } from 'react'
 import { QuestionGroup } from 'types/generated/graphql'
 import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'
@@ -23,13 +24,14 @@ export const FilteredQuestionGroups: React.FC<{
   const isCommandPressed = useKeyIsPressed(Keys.Command)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
-  useEffect(() => {
-    document.title = `Questions${
+  useTitle(
+    `Questions${
       filterQuestionGroups && filterQuestionGroups.length
         ? ` (${filterQuestionGroups.length})`
         : ''
-    }`
-  }, [filterQuestionGroups])
+    }`,
+    [filterQuestionGroups],
+  )
 
   useEffect(() => {
     const length = filterQuestionGroups.length

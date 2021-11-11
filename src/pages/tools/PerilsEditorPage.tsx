@@ -7,6 +7,7 @@ import {
   SecondLevelHeadline,
   TextArea,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { OnBlurChangeInput } from 'features/tools/perils-editor/inputs'
 import { PerilIconOptions } from 'features/tools/perils-editor/peril-icons'
 import React from 'react'
@@ -74,9 +75,7 @@ const PerilsEditorPage: React.FC = () => {
     localStorage.setItem(PERIL_CONTENTS_KEY, JSON.stringify(perils))
   }
 
-  React.useEffect(() => {
-    document.title = 'Tools | Perils Editor'
-  }, [])
+  useTitle('Tools | Perils Editor')
 
   React.useEffect(() => {
     if (!contents) {

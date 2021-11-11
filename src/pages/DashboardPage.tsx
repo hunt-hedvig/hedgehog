@@ -9,11 +9,12 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'features/dashboard/Greeting'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 
@@ -79,9 +80,7 @@ const DashboardPage: React.FC = () => {
     | DashboardNumbers
     | undefined
 
-  useEffect(() => {
-    document.title = 'Dashboard'
-  }, [])
+  useTitle('Dashboard')
 
   return (
     <Wrapper>

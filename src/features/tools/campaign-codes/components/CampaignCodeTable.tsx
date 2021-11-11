@@ -12,6 +12,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { usePartnerCampaigns } from 'features/tools/campaign-codes/hooks/use-partner-campaigns'
 import {
   getCodeTypeOptions,
@@ -44,9 +45,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
     { loading: loadingSetCodeType },
   ] = useSetCampaignCodeTypeMutation()
 
-  React.useEffect(() => {
-    document.title = 'Tools | Campaign Codes'
-  }, [])
+  useTitle('Tools | Campaign Codes')
 
   if (loading) {
     return (

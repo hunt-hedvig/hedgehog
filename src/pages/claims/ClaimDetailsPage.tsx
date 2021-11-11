@@ -13,6 +13,7 @@ import {
   StandaloneMessage,
 } from '@hedvig-ui'
 import { Key, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation/ClaimInformation'
@@ -137,9 +138,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
   const { registerActions, isHintingControl } = useCommandLine()
   const [focus, setFocus] = useState<string | null>(null)
 
-  useEffect(() => {
-    document.title = 'Claim Details'
-  }, [])
+  useTitle('Claim Details')
 
   registerActions(
     Object.keys(FOCUSES).map((section) => ({
