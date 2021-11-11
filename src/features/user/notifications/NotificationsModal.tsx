@@ -70,6 +70,8 @@ export const NotificationsModal: React.FC<{
       width="400px"
       height="83vh"
       side="right"
+      position="top"
+      padding="7rem 3rem"
       dimBackground={false}
     >
       <Flex style={{ padding: '1rem' }} direction="column">

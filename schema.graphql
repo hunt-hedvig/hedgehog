@@ -83,6 +83,13 @@ type User {
   phoneNumber: String
   latestPresence: Instant
   latestLocation: String
+  notifications: [UserNotification!]!
+}
+
+type UserNotification {
+  id: ID!
+  message: String!
+  url: String!
 }
 
 type UserSetting {
@@ -191,9 +198,7 @@ type MutationType {
     request: AssignVoucherPercentageDiscount
   ): Boolean!
   assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
-  assignCampaignToPartnerNoDiscount(
-    request: AssignVoucherNoDiscount
-  ): Boolean!
+  assignCampaignToPartnerNoDiscount(request: AssignVoucherNoDiscount): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -579,7 +584,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -773,6 +778,7 @@ type Quote {
   signedProductId: ID
   originatingProductId: ID
   isReadyToSign: Boolean
+  allowOverrideSignFromHope: Boolean
 }
 
 input CampaignFilter {

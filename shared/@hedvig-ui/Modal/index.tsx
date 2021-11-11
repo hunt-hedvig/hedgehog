@@ -9,6 +9,7 @@ import { useClickOutside } from '../hooks/use-click-outside'
 const ModalWrapperStyled = styled.div<{
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
+  padding?: string
   dim: boolean
 }>`
   width: 100vw;
@@ -34,7 +35,7 @@ const ModalWrapperStyled = styled.div<{
       : 'center'};
   justify-content: ${({ side }) =>
     side === 'left' ? 'flex-start' : side === 'right' ? 'flex-end' : 'center'};
-  padding: 50px;
+  padding: ${({ padding }) => padding ?? ' 50px'};
 `
 
 const ModalContent = styled.div<{
@@ -97,6 +98,7 @@ export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   disableClickOutside?: boolean
   onClose: () => void
   dimBackground?: boolean
+  padding?: string
 }
 
 export const Modal = (props: ModalProps) => {
@@ -118,6 +120,7 @@ export const Modal = (props: ModalProps) => {
         position={props.position}
         side={props.side}
         dim={props.dimBackground ?? true}
+        padding={props.padding}
       >
         <FadeIn duration={250}>
           <ModalContent
