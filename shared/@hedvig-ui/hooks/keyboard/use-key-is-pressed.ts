@@ -38,7 +38,7 @@ export const Keys: { [name: string]: Key } = {
     hint: 'Control ⌃',
   },
   Option: {
-    key: 'Option',
+    key: 'Alt',
     code: 18,
     hint: 'Option ⌥',
   },
