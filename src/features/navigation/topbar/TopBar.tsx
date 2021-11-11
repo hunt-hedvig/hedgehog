@@ -5,9 +5,10 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { UsersOnPath } from 'features/navigation/topbar/components/UsersOnPath'
+import { NotificationsModal } from 'features/user/notifications/NotificationsModal'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
-import { PeopleFill } from 'react-bootstrap-icons'
+import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
 
 const Wrapper = styled.div`
@@ -53,6 +54,7 @@ const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
 
 export const TopBar = () => {
   const [showUsers, setShowUsers] = useState(false)
+  const [showUserNotifications, setShowUserNotifications] = useState(false)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
@@ -63,6 +65,10 @@ export const TopBar = () => {
 
   return (
     <Wrapper>
+      {showUserNotifications && (
+        <NotificationsModal onClose={() => setShowUserNotifications(false)} />
+      )}
+
       <UserPanel
         visible={showUsers}
         onClickOutside={() => setShowUsers(false)}
@@ -76,6 +82,13 @@ export const TopBar = () => {
         <UsersOnPath />
 
         <UserMenu />
+
+        <CircleButton
+          onClick={() => setShowUserNotifications(true)}
+          style={{ marginLeft: '1em' }}
+        >
+          <BellFill />
+        </CircleButton>
 
         <CircleButton
           onClick={() => setShowUsers(true)}
