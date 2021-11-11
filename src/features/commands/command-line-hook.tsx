@@ -246,7 +246,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const commandLine = useRef<HTMLInputElement>(null)
   const [showCommandLine, setShowCommandLine] = useState(false)
   const actions = useRef<CommandLineAction[]>([])
-  const actionKeyCodes = useRef<number[][]>([])
+  const actionKeys = useRef<string[][]>([])
 
   const isOptionPressed = useKeyIsPressed(Keys.Option)
   const isControlPressed = useKeyIsPressed(Keys.Control)
@@ -284,12 +284,12 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const addAction = (newActions: CommandLineAction[]) => {
     useEffect(() => {
       actions.current = [...newActions, ...actions.current]
-      updateActionKeyCodes()
+      updateActionKeys()
       return () => {
         newActions.forEach((newAction) => {
           removeAction(newAction.label)
         })
-        updateActionKeyCodes()
+        updateActionKeys()
       }
     }, [])
   }
@@ -298,26 +298,26 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     actions.current = actions.current.filter((action) => action.label !== label)
   }
 
-  const updateActionKeyCodes = () => {
-    actionKeyCodes.current = actions.current.map((action) =>
-      action.keys.map((key) => key.code),
+  const updateActionKeys = () => {
+    actionKeys.current = actions.current.map((action) =>
+      action.keys.map((key) => key.key || key.hint),
     )
   }
 
   // tslint:disable:no-unused-expression
   const handleKeyDown = (e: KeyboardEvent) => {
-    const modifiers: number[] = []
-    e.shiftKey && modifiers.push(Keys.Shift.code)
-    e.ctrlKey && modifiers.push(Keys.Control.code)
-    e.altKey && modifiers.push(Keys.Option.code)
-    e.metaKey && modifiers.push(Keys.Command.code)
-    if (modifiers.includes(e.keyCode) || modifiers.length === 0) {
+    const modifiers: string[] = []
+    e.shiftKey && modifiers.push(Keys.Shift.key)
+    e.ctrlKey && modifiers.push(Keys.Control.key)
+    e.altKey && modifiers.push(Keys.Option.key)
+    e.metaKey && modifiers.push(Keys.Command.key)
+    if (modifiers.includes(e.key) || modifiers.length === 0) {
       return
     }
-    const keys = modifiers.concat(e.keyCode)
+    const keys = modifiers.concat(e.key)
 
-    const matchIndex = actionKeyCodes.current.findIndex((keyCodes) => {
-      return keyCodes.every((keyCode, index) => keyCode === keys[index])
+    const matchIndex = actionKeys.current.findIndex((currentKeys) => {
+      return currentKeys.every((key, index) => key === keys[index])
     })
 
     if (matchIndex > -1) {
