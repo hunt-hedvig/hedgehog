@@ -1,21 +1,25 @@
 import styled from '@emotion/styled'
-import { Bold, Flex, Modal, ThirdLevelHeadline } from '@hedvig-ui'
+import { Bold, Button, Flex, Modal, ThirdLevelHeadline } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import React from 'react'
 
-const NotificationItem = styled(Flex)`
+const NotificationItem = styled(Flex)<{ read?: boolean }>`
   :first-of-type {
-    margin-top: 0;
+    margin-top: 0.5rem;
   }
 
   margin-top: 1rem;
 
   border-radius: 8px;
-  background-color: ${({ theme }) =>
-    chroma(theme.accent)
-      .brighten(2)
-      .alpha(0.1)
-      .hex()};
+  background-color: ${({ theme, read }) =>
+    read
+      ? chroma(theme.backgroundTransparent)
+          .alpha(0.03)
+          .hex()
+      : chroma(theme.accent)
+          .brighten(2)
+          .alpha(0.1)
+          .hex()};
   padding: 1rem;
   cursor: pointer;
 `
@@ -44,7 +48,6 @@ const UserCircle = styled.div`
 const NotificationMessage = styled.div`
   padding-left: 1rem;
   font-size: 1rem;
-  text-overflow: ellipsis;
 `
 
 const NotificationTimestamp = styled.div`
@@ -70,7 +73,16 @@ export const NotificationsModal: React.FC<{
       dimBackground={false}
     >
       <Flex style={{ padding: '1rem' }} direction="column">
-        <ThirdLevelHeadline>Notifications</ThirdLevelHeadline>
+        <Flex
+          justify="space-between"
+          align="center"
+          style={{ marginTop: '-0.5rem' }}
+        >
+          <div>
+            <ThirdLevelHeadline>Notifications</ThirdLevelHeadline>
+          </div>
+          <Button variant="tertiary">View all</Button>
+        </Flex>
         <NotificationItem align="center">
           <UserCircle>RG</UserCircle>
           <Flex direction="column">
@@ -85,6 +97,16 @@ export const NotificationsModal: React.FC<{
           <Flex direction="column">
             <NotificationMessage>
               <Bold>Elvin</Bold> just gave you access to a restricted claim
+            </NotificationMessage>
+            <NotificationTimestamp>2 hours ago</NotificationTimestamp>
+          </Flex>
+        </NotificationItem>
+
+        <NotificationItem align="center" read>
+          <UserCircle>CP</UserCircle>
+          <Flex direction="column">
+            <NotificationMessage>
+              Why is <Bold>Carl</Bold> acting like a silly goose?
             </NotificationMessage>
             <NotificationTimestamp>2 hours ago</NotificationTimestamp>
           </Flex>
