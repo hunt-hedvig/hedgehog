@@ -17,7 +17,7 @@ const UnsignMemberPage: React.FC = () => {
   const { confirm } = useConfirmDialog()
 
   React.useEffect(() => {
-    document.title = 'Unsign Member'
+    document.title = 'Tools | Unsign Member'
   }, [])
 
   return (

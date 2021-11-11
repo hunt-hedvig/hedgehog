@@ -43,7 +43,7 @@ const ClaimTypesPage: React.FC = () => {
   const [filter, setFilter] = useState('')
 
   React.useEffect(() => {
-    document.title = 'Claim Types'
+    document.title = 'Tools | Claim Types'
   }, [])
 
   return (

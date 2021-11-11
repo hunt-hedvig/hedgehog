@@ -38,9 +38,7 @@ const MemberSearchPage: React.FC = () => {
   }
 
   useEffect(() => {
-    document.title = `Members${
-      members.length ? ` (${members.length * totalPages})` : ''
-    }`
+    document.title = 'Members'
   }, [members])
 
   return (

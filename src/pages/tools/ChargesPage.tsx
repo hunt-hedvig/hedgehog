@@ -132,11 +132,7 @@ const ChargesPage: React.FC = () => {
   })
 
   useEffect(() => {
-    document.title = `ApproveCharges${
-      data?.paymentSchedule && data?.paymentSchedule.length
-        ? ` (${data.paymentSchedule.length})`
-        : ''
-    }`
+    document.title = 'Tools | Approve Charges'
   }, [])
 
   if (error) {

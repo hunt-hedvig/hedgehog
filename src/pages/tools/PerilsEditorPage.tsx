@@ -75,7 +75,7 @@ const PerilsEditorPage: React.FC = () => {
   }
 
   React.useEffect(() => {
-    document.title = 'Perils Editor'
+    document.title = 'Tools | Perils Editor'
   }, [])
 
   React.useEffect(() => {

@@ -45,12 +45,8 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
   ] = useSetCampaignCodeTypeMutation()
 
   React.useEffect(() => {
-    document.title = `Campaign Codes${
-      partnerCampaigns && partnerCampaigns.length
-        ? ` (${partnerCampaigns.length})`
-        : ''
-    }`
-  }, [partnerCampaigns])
+    document.title = 'Tools | Campaign Codes'
+  }, [])
 
   if (loading) {
     return (

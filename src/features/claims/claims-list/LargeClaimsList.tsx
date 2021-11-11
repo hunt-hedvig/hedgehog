@@ -98,10 +98,8 @@ export const LargeClaimsList: React.FC<{
   }, [page, filters])
 
   useEffect(() => {
-    document.title = `Claims${
-      claims && claims.length ? ` (${claims.length * totalPages})` : ''
-    }`
-  }, [claims])
+    document.title = 'Claims'
+  }, [])
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />

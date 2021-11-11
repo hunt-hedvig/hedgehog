@@ -84,7 +84,7 @@ const SwitcherAutomationPage: React.FC = () => {
   ] = useTerminateContractMutation()
 
   useEffect(() => {
-    document.title = 'Switcher Automation'
+    document.title = 'Tools | Switcher Automation'
   }, [])
 
   return (
