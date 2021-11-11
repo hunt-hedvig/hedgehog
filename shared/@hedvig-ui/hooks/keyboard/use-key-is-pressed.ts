@@ -1,64 +1,79 @@
 import { useEffect, useState } from 'react'
 
 export interface Key {
+  key?: string
   code: number
   hint: string
 }
 
 export const Keys: { [name: string]: Key } = {
   Escape: {
+    key: 'Escape',
     code: 27,
     hint: 'Esc',
   },
   Backspace: {
+    key: 'Backspace',
     code: 8,
     hint: 'Backspace ⌫',
   },
   Tab: {
+    key: 'Tab',
     code: 9,
     hint: 'Tab ⇥',
   },
   Enter: {
+    key: 'Enter',
     code: 13,
     hint: 'Enter ↩',
   },
   Shift: {
+    key: 'Shift',
     code: 16,
     hint: 'Shift ⇧',
   },
   Control: {
+    key: 'Control',
     code: 17,
     hint: 'Control ⌃',
   },
   Option: {
+    key: 'Option',
     code: 18,
     hint: 'Option ⌥',
   },
   CapsLock: {
+    key: 'CapsLock',
     code: 20,
     hint: 'Caps ⇪',
   },
   Command: {
+    key: 'Command',
     code: 91,
     hint: 'Command ⌘',
   },
   Space: {
+    key: 'Space',
     code: 32,
     hint: 'Space ␣',
   },
   Left: {
+    key: 'ArrowLeft',
     code: 37,
     hint: 'Left ←',
   },
   Up: {
+    key: 'ArrowUp',
     code: 38,
     hint: 'Up ↑',
   },
   Right: {
+    key: 'ArrowRight',
     code: 39,
     hint: 'Right →',
   },
   Down: {
+    key: 'ArrowDown',
     code: 40,
     hint: 'Down ↓',
   },

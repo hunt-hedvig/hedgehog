@@ -165,7 +165,7 @@ export const LargeClaimsList: React.FC<{
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.keyCode === Keys.Enter.code) {
+                  if (e.key === Keys.Enter.key) {
                     e.preventDefault()
                     history.push(`/claims/${claim.id}`)
                   }

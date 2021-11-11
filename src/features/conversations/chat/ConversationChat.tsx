@@ -67,7 +67,7 @@ export const ConversationChat: React.FC<{
   }, [memberId])
 
   const handleOnKeyDown = (e) => {
-    if (isMetaKey(e) && e.keyCode === Keys.Enter.code && !loading && message) {
+    if (isMetaKey(e) && e.key === Keys.Enter.key && !loading && message) {
       toast.promise(
         sendMessage({
           variables: {
@@ -93,7 +93,7 @@ export const ConversationChat: React.FC<{
 
     if (
       isMetaKey(e) &&
-      e.keyCode === Keys.Enter.code &&
+      e.key === Keys.Enter.key &&
       e.shiftKey &&
       !loading &&
       !message

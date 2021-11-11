@@ -129,7 +129,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
         disabled={opt.disabled || false}
         onChange={() => onChange && onChange(opt.value)}
         onKeyDown={(e) => {
-          if (e.keyCode === Keys.Enter.code) {
+          if (e.key === Keys.Enter.key) {
             onChange(opt.value)
             return
           }

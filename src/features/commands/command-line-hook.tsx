@@ -185,7 +185,7 @@ export const CommandLineComponent: React.FC<{
           value={searchValue}
           size="large"
           onKeyDown={(e) => {
-            if (e.keyCode === Keys.Down.code || e.keyCode === Keys.Up.code) {
+            if (e.key === Keys.Down.key || e.key === Keys.Up.key) {
               e.preventDefault()
             }
           }}

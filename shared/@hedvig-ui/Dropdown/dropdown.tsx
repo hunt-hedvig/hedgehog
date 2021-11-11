@@ -170,8 +170,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
       ref={dropdownRef}
       isActive={active}
       onKeyDown={(e) => {
-        if (e.keyCode === Keys.Escape.code || e.keyCode === Keys.Enter.code) {
+        if (e.key === Keys.Enter.key) {
           toggleDropdown()
+          return
+        }
+        if (e.key === Keys.Escape.key) {
+          closeDropdown()
           return
         }
       }}
@@ -228,7 +232,7 @@ export const Option: React.FC<OptionProps> = ({
   <OptionStyled
     tabIndex={0}
     onKeyDown={(e) => {
-      if (e.keyCode === Keys.Enter.code) {
+      if (e.key === Keys.Enter.key) {
         onClick()
         return
       }
