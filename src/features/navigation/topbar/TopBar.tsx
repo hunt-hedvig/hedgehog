@@ -52,6 +52,28 @@ const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
   margin-right: ${({ pushLeft }) => (pushLeft ? '300px' : '0')};
 `
 
+const NewNotificationsOrb = styled.div`
+  position: relative;
+  margin-top: -24px;
+  margin-right: -14px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+
+  background-color: rgb(255, 0, 77);
+`
+
+const NotificationsButton: React.FC<{ onClick: () => void }> = ({
+  onClick,
+}) => {
+  return (
+    <CircleButton onClick={onClick} style={{ marginLeft: '1em' }}>
+      <BellFill />
+      <NewNotificationsOrb />
+    </CircleButton>
+  )
+}
+
 export const TopBar = () => {
   const [showUsers, setShowUsers] = useState(false)
   const [showUserNotifications, setShowUserNotifications] = useState(false)
@@ -83,12 +105,7 @@ export const TopBar = () => {
 
         <UserMenu />
 
-        <CircleButton
-          onClick={() => setShowUserNotifications(true)}
-          style={{ marginLeft: '1em' }}
-        >
-          <BellFill />
-        </CircleButton>
+        <NotificationsButton onClick={() => setShowUserNotifications(true)} />
 
         <CircleButton
           onClick={() => setShowUsers(true)}
