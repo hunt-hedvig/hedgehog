@@ -46,6 +46,10 @@ const ProfilePage: React.FC = () => {
 
   useEffect(reset, [data])
 
+  useEffect(() => {
+    document.title = 'Profile'
+  }, [])
+
   const changes =
     fullName !== data?.me.user.fullName ||
     phoneNumber !== data.me.user.phoneNumber

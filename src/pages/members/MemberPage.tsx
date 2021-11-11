@@ -9,6 +9,12 @@ const MemberPage: React.FC<RouteComponentProps<{
   const memberId = props.match.params.memberId
   const [member] = useGetMemberInfo(memberId)
 
+  React.useEffect(() => {
+    document.title = member
+      ? `${member.firstName} ${member.lastName}`
+      : 'Member'
+  }, [member])
+
   if (!member) {
     return null
   }

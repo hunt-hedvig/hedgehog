@@ -44,6 +44,14 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
     { loading: loadingSetCodeType },
   ] = useSetCampaignCodeTypeMutation()
 
+  React.useEffect(() => {
+    document.title = `Campaign Codes${
+      partnerCampaigns && partnerCampaigns.length
+        ? ` (${partnerCampaigns.length})`
+        : ''
+    }`
+  }, [partnerCampaigns])
+
   if (loading) {
     return (
       <Card span={1}>

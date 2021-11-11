@@ -137,6 +137,10 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
   const { registerActions, isHintingControl } = useCommandLine()
   const [focus, setFocus] = useState<string | null>(null)
 
+  useEffect(() => {
+    document.title = 'Claim Details'
+  }, [])
+
   registerActions(
     Object.keys(FOCUSES).map((section) => ({
       label: `Focus on ${FOCUSES[section].title}`,

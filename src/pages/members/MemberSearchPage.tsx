@@ -9,7 +9,7 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'features/members-search/styles'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 
 const MemberSearchPage: React.FC = () => {
@@ -36,6 +36,12 @@ const MemberSearchPage: React.FC = () => {
   const pageSelectHandler = (nextPage: number) => {
     memberSearch(query || '%', { page: nextPage - 1 ?? 0 })
   }
+
+  useEffect(() => {
+    document.title = `Members${
+      members.length ? ` (${members.length * totalPages})` : ''
+    }`
+  }, [members])
 
   return (
     <>

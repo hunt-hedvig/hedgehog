@@ -24,6 +24,14 @@ export const FilteredQuestionGroups: React.FC<{
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
+    document.title = `Questions${
+      filterQuestionGroups && filterQuestionGroups.length
+        ? ` (${filterQuestionGroups.length})`
+        : ''
+    }`
+  }, [filterQuestionGroups])
+
+  useEffect(() => {
     const length = filterQuestionGroups.length
 
     if (!focusedInsideItem && isDownPressed && focusedItem < length) {

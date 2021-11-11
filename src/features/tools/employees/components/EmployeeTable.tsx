@@ -35,6 +35,8 @@ export const EmployeeTable: React.FC<{
 
   const employees = data?.employees ?? []
 
+  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([])
+
   const [
     updateRole,
     { loading: updateRoleLoading },
@@ -73,6 +75,20 @@ export const EmployeeTable: React.FC<{
     )
   }
 
+  React.useEffect(() => {
+    if (employees && employees.length) {
+      setFilteredEmployees(employees.filter(filterEmployee))
+    }
+  }, [employees, filter])
+
+  React.useEffect(() => {
+    document.title = `Employees${
+      filteredEmployees && filteredEmployees.length
+        ? ` (${filteredEmployees.length})`
+        : ''
+    }`
+  }, [filteredEmployees])
+
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
   }
@@ -94,7 +110,7 @@ export const EmployeeTable: React.FC<{
           <TableHeaderColumn>Actions</TableHeaderColumn>
         </TableHeader>
         <TableBody>
-          {employees.filter(filterEmployee).map((employee) => {
+          {filteredEmployees.map((employee) => {
             const { id, email, role, firstGrantedAt } = employee
 
             return (

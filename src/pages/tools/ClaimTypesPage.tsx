@@ -42,6 +42,10 @@ const ClaimTypesPage: React.FC = () => {
   >('types')
   const [filter, setFilter] = useState('')
 
+  React.useEffect(() => {
+    document.title = 'Claim Types'
+  }, [])
+
   return (
     <>
       <Flex direction="row" justify={'space-between'}>

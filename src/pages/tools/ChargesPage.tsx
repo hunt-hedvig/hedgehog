@@ -15,7 +15,7 @@ import { formatMoney } from '@hedvig-ui/utils/money'
 import { colors } from '@hedviginsurance/brand'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import {
@@ -130,6 +130,15 @@ const ChargesPage: React.FC = () => {
       month: format(new Date(), 'yyyy-MM'),
     },
   })
+
+  useEffect(() => {
+    document.title = `ApproveCharges${
+      data?.paymentSchedule && data?.paymentSchedule.length
+        ? ` (${data.paymentSchedule.length})`
+        : ''
+    }`
+  }, [])
+
   if (error) {
     return (
       <TableRow>

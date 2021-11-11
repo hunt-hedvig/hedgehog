@@ -16,6 +16,10 @@ const UnsignMemberPage: React.FC = () => {
   const [useUnsignMember, { loading }] = useMutation(UNSIGN_MEMBER)
   const { confirm } = useConfirmDialog()
 
+  React.useEffect(() => {
+    document.title = 'Unsign Member'
+  }, [])
+
   return (
     <>
       <MainHeadline>Unsign member</MainHeadline>

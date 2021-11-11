@@ -15,7 +15,7 @@ import {
   SwitcherEmailRow,
   SwitcherEmailStatus,
 } from 'features/tools/switcher-automation/SwitcherTableRow'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Contract,
@@ -82,6 +82,10 @@ const SwitcherAutomationPage: React.FC = () => {
     terminateContract,
     { loading: terminateContractLoading },
   ] = useTerminateContractMutation()
+
+  useEffect(() => {
+    document.title = 'Switcher Automation'
+  }, [])
 
   return (
     <>
