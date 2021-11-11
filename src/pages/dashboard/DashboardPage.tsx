@@ -9,13 +9,11 @@ import {
   FadeIn,
   SecondLevelHeadline,
   Spacing,
-  ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'features/dashboard/Greeting'
-import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
@@ -205,12 +203,6 @@ const DashboardPage: React.FC = () => {
           </MetricsWrapper>
         </FadeIn>
       )}
-      <Spacing top bottom>
-        <ThirdLevelHeadline>
-          <strong>Number of member groups:</strong>
-        </ThirdLevelHeadline>
-        <NumberMemberGroupsRadioButtons />
-      </Spacing>
       <Spacing top="large">
         <SecondLevelHeadline>Recent changes from Tech</SecondLevelHeadline>
         <Spacing bottom>
