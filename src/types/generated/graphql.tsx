@@ -577,6 +577,7 @@ export type ListClaimsResult = {
   claims: Array<Claim>
   totalPages: Scalars['Int']
   page: Scalars['Int']
+  totalClaims: Scalars['Int']
 }
 
 export type ManualRedeemCampaignInput = {
@@ -1053,7 +1054,8 @@ export type MutationTypeManualUnRedeemCampaignArgs = {
 }
 
 export type MutationTypeUnsignMemberArgs = {
-  ssn: Scalars['String']
+  ssn?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
 }
 
 export type MutationTypeEditMemberInfoArgs = {
