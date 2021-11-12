@@ -1,4 +1,5 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
 import { SearchForm } from 'features/members-search/components/SearchForm'
@@ -36,6 +37,8 @@ const MemberSearchPage: React.FC = () => {
   const pageSelectHandler = (nextPage: number) => {
     memberSearch(query || '%', { page: nextPage - 1 ?? 0 })
   }
+
+  useTitle('Members')
 
   return (
     <>
