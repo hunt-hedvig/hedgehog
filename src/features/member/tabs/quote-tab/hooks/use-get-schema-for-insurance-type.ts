@@ -1,5 +1,5 @@
+import { InsuranceType } from 'features/config/constants'
 import { JSONSchema7 } from 'json-schema'
-import { InsuranceType } from 'types/enums'
 import {
   GetSchemaForInsuranceTypeQueryHookResult,
   useGetSchemaForInsuranceTypeQuery,
