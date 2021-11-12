@@ -30,8 +30,8 @@ const Wrapper = styled.div`
   overflow: hidden;
 
   display: grid;
-  grid-template-columns: 0.7fr 1fr 0.7fr;
-  column-gap: 32px;
+  grid-template-columns: 0.6fr 1fr 0.7fr;
+  column-gap: 1em;
 `
 
 const FadeWrapper = styled(Fade)`
