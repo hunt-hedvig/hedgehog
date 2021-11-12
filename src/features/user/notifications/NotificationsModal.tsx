@@ -4,6 +4,7 @@ import chroma from 'chroma-js'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
+import { ChatFill } from 'react-bootstrap-icons'
 
 const NotificationItem = styled(Flex)<{ read?: boolean }>`
   :first-of-type {
@@ -20,10 +21,22 @@ const NotificationItem = styled(Flex)<{ read?: boolean }>`
           .hex()
       : chroma(theme.accent)
           .brighten(2)
-          .alpha(0.1)
+          .alpha(0.15)
           .hex()};
   padding: 1rem;
   cursor: pointer;
+`
+
+const UnreadCircle = styled.div`
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  margin-right: 1rem;
+
+  background-color: ${({ theme }) =>
+    chroma(theme.accent)
+      .brighten(1)
+      .hex()};
 `
 
 const NotificationCircle = styled.div<{ user?: boolean }>`
@@ -101,7 +114,9 @@ export const NotificationsModal: React.FC<{
                 {notification.from.signature}
               </NotificationCircle>
             ) : (
-              <NotificationCircle />
+              <NotificationCircle>
+                <ChatFill />
+              </NotificationCircle>
             )}
             <Flex direction="column">
               <NotificationMessage>{notification.message}</NotificationMessage>
@@ -111,6 +126,7 @@ export const NotificationsModal: React.FC<{
                 })}
               </NotificationTimestamp>
             </Flex>
+            {!notification.read && <UnreadCircle />}
           </NotificationItem>
         ))}
       </Flex>
