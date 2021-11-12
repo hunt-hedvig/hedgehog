@@ -26,7 +26,7 @@ export const TableBody: React.FC<{
   const numberOfRows = React.Children.count(children)
 
   const [navigationStep] = useVerticalKeyboardNavigation({
-    maxStep: numberOfRows - 2,
+    maxStep: numberOfRows - 1,
     onPerformNavigation: (index) => {
       if (onPerformNavigation) {
         onPerformNavigation(index)
@@ -210,8 +210,6 @@ export const TablePageSelect: React.FC<{
           key={id}
           disabled={currentPage === page}
           onClick={() => {
-            console.log(page)
-            console.log(totalPages)
             onSelect(page + 1)
           }}
         >
