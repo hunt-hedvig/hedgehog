@@ -11,6 +11,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { formatMoney } from '@hedvig-ui/utils/money'
 import { colors } from '@hedviginsurance/brand'
 import { format } from 'date-fns'
@@ -130,6 +131,9 @@ const ChargesPage: React.FC = () => {
       month: format(new Date(), 'yyyy-MM'),
     },
   })
+
+  useTitle('Tools | Approve Charges')
+
   if (error) {
     return (
       <TableRow>
