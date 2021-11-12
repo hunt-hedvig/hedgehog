@@ -30,6 +30,8 @@ const EmployeesPage = lazy(() => import('./tools/EmployeesPage'))
 const CampaignCodesPage = lazy(() => import('./tools/CampaignCodesPage'))
 const UnsignMemberPage = lazy(() => import('./tools/UnsignMemberPage'))
 
+const NotificationsPage = lazy(() => import('./NotificationsPage'))
+
 export const Routes: React.FC = () => {
   return (
     <Suspense fallback={<div />}>
@@ -38,6 +40,7 @@ export const Routes: React.FC = () => {
         <Route path="/profile" component={ProfilePage} />
         <Route path="/dashborad" component={DashboardPage} />
         <Route path="/questions" component={QuestionsPage} />
+        <Route path="/notifications" component={NotificationsPage} />
         <Route
           path="/conversations/onboarding"
           component={ConversationsOnboardingPage}

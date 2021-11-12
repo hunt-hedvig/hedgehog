@@ -1,0 +1,47 @@
+import { Flex, Input, MainHeadline, Spacing } from '@hedvig-ui'
+import { useMe } from 'features/user/hooks/use-me'
+import { NotificationItem } from 'features/user/notifications/components/NotificationItem'
+import React, { useMemo, useState } from 'react'
+
+const NotificationsPage: React.FC = () => {
+  const [filter, setFilter] = useState('')
+  const { me } = useMe()
+
+  const notifications = useMemo(
+    () =>
+      me.notifications.filter(({ message }) =>
+        message.toLowerCase().includes(filter.toLowerCase()),
+      ),
+    [me.notifications, filter],
+  )
+
+  return (
+    <>
+      <MainHeadline>Notifications</MainHeadline>
+      <Flex
+        direction="column"
+        justify="flex-start"
+        style={{ maxWidth: '800px' }}
+      >
+        <Input
+          muted
+          size="large"
+          value={filter}
+          onChange={(e) => setFilter(e.currentTarget.value)}
+          placeholder="Your filter goes here..."
+        />
+        <Spacing top="small" />
+        {notifications.map((notification) => (
+          <div style={{ width: '100%' }}>
+            <NotificationItem
+              key={notification.id}
+              notification={notification}
+            />
+          </div>
+        ))}
+      </Flex>
+    </>
+  )
+}
+
+export default NotificationsPage
