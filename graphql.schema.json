@@ -325,11 +325,11 @@
             "deprecationReason": null
           },
           {
-            "name": "quoteSchemaForContractType",
+            "name": "quoteSchemaForInsuranceType",
             "description": null,
             "args": [
               {
-                "name": "contractType",
+                "name": "insuranceType",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
