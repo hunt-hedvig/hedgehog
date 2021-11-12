@@ -26,7 +26,7 @@ const NotificationItem = styled(Flex)<{ read?: boolean }>`
   cursor: pointer;
 `
 
-const UserCircle = styled.div`
+const NotificationCircle = styled.div<{ user?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,10 +41,12 @@ const UserCircle = styled.div`
   font-weight: bold;
   font-size: 1.2rem;
 
-  background-color: ${({ theme }) =>
-    chroma(theme.accent)
-      .brighten(1)
-      .hex()};
+  background-color: ${({ theme, user = false }) =>
+    user
+      ? chroma(theme.accent)
+          .brighten(1)
+          .hex()
+      : theme.highlight};
 `
 
 const NotificationMessage = styled.div`
@@ -94,7 +96,13 @@ export const NotificationsModal: React.FC<{
             align="center"
             read={notification.read}
           >
-            <UserCircle>{notification.user.signature}</UserCircle>
+            {notification.from ? (
+              <NotificationCircle user>
+                {notification.from.signature}
+              </NotificationCircle>
+            ) : (
+              <NotificationCircle />
+            )}
             <Flex direction="column">
               <NotificationMessage>{notification.message}</NotificationMessage>
               <NotificationTimestamp>

@@ -1578,6 +1578,7 @@ export type UserNotification = {
   url: Scalars['String']
   read: Scalars['Boolean']
   user: User
+  from?: Maybe<User>
 }
 
 export type UserNotificationsFilter = {
@@ -3843,9 +3844,11 @@ export type GetMeQuery = { __typename?: 'QueryType' } & {
               UserNotification,
               'id' | 'message' | 'url' | 'createdAt' | 'read'
             > & {
-                user: { __typename?: 'User' } & Pick<
-                  User,
-                  'id' | 'signature' | 'fullName'
+                from?: Maybe<
+                  { __typename?: 'User' } & Pick<
+                    User,
+                    'id' | 'signature' | 'fullName'
+                  >
                 >
               }
           >
@@ -10464,7 +10467,7 @@ export const GetMeDocument = gql`
           url
           createdAt
           read
-          user {
+          from {
             id
             signature
             fullName
