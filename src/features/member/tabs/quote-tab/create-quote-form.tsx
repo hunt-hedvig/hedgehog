@@ -1,6 +1,6 @@
 import { Checkbox, JsonSchemaForm } from '@hedvig-ui'
-import { ContractType } from 'features/config/constants'
-import { useSchemaForContractType } from 'features/member/tabs/quote-tab/hooks/use-get-schema-for-contract-type'
+import { InsuranceType } from 'features/config/constants'
+import { useSchemaForInsuranceType } from 'features/member/tabs/quote-tab/hooks/use-get-schema-for-insurance-type'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -10,12 +10,12 @@ import {
 
 export const CreateQuoteForm: React.FC<{
   memberId: string
-  contractType: ContractType
+  insuranceType: InsuranceType
   onSubmitted: () => void
-}> = ({ memberId, contractType, onSubmitted }) => {
+}> = ({ memberId, insuranceType, onSubmitted }) => {
   const [bypassUwgl, setBypassUwgl] = useState(false)
 
-  const [schema, { loading }] = useSchemaForContractType(contractType)
+  const [schema, { loading }] = useSchemaForInsuranceType(insuranceType)
 
   const [createQuoteForMember] = useCreateQuoteForMemberBySchemaMutation()
 

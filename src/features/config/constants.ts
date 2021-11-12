@@ -51,7 +51,7 @@ export const MemberGroupColors: Record<string, string> = {
   [MemberGroups.Third]: lightTheme.highlight,
 }
 
-export enum ContractType {
+export enum InsuranceType {
   SwedishApartment = 'SWEDISH_APARTMENT',
   SwedishHouse = 'SWEDISH_HOUSE',
   SwedishAccident = 'SWEDISH_ACCIDENT',
@@ -73,36 +73,36 @@ export enum QuoteProductType {
 
 export const QuoteProductTypeContractMap: Record<
   QuoteProductType,
-  ContractType[]
+  InsuranceType[]
 > = {
   [QuoteProductType.HomeContent]: [
-    ContractType.NorwegianHomeContent,
-    ContractType.DanishHomeContent,
+    InsuranceType.NorwegianHomeContent,
+    InsuranceType.DanishHomeContent,
   ],
-  [QuoteProductType.Apartment]: [ContractType.SwedishApartment],
+  [QuoteProductType.Apartment]: [InsuranceType.SwedishApartment],
   [QuoteProductType.Accident]: [
-    ContractType.DanishAccident,
-    ContractType.SwedishAccident,
+    InsuranceType.DanishAccident,
+    InsuranceType.SwedishAccident,
   ],
-  [QuoteProductType.House]: [ContractType.SwedishHouse],
+  [QuoteProductType.House]: [InsuranceType.SwedishHouse],
   [QuoteProductType.Object]: [],
   [QuoteProductType.Travel]: [
-    ContractType.NorwegianTravel,
-    ContractType.DanishTravel,
+    InsuranceType.NorwegianTravel,
+    InsuranceType.DanishTravel,
   ],
 }
 
-export const ContractMarketTypes: Record<Market, ContractType[]> = {
+export const ContractMarketTypes: Record<Market, InsuranceType[]> = {
   SWEDEN: [
-    ContractType.SwedishHouse,
-    ContractType.SwedishApartment,
-    ContractType.SwedishAccident,
+    InsuranceType.SwedishHouse,
+    InsuranceType.SwedishApartment,
+    InsuranceType.SwedishAccident,
   ],
-  NORWAY: [ContractType.NorwegianHomeContent, ContractType.NorwegianTravel],
+  NORWAY: [InsuranceType.NorwegianHomeContent, InsuranceType.NorwegianTravel],
   DENMARK: [
-    ContractType.DanishHomeContent,
-    ContractType.DanishTravel,
-    ContractType.DanishAccident,
+    InsuranceType.DanishHomeContent,
+    InsuranceType.DanishTravel,
+    InsuranceType.DanishAccident,
   ],
 }
 
@@ -130,26 +130,26 @@ export enum TypeOfContract {
   DkTravelStudent = 'DK_TRAVEL_STUDENT',
 }
 
-export const TypeOfContractType: Record<TypeOfContract, ContractType> = {
-  [TypeOfContract.SeHouse]: ContractType.SwedishHouse,
-  [TypeOfContract.SeApartmentBrf]: ContractType.SwedishApartment,
-  [TypeOfContract.SeApartmentRent]: ContractType.SwedishApartment,
-  [TypeOfContract.SeApartmentStudentBrf]: ContractType.SwedishApartment,
-  [TypeOfContract.SeApartmentStudentRent]: ContractType.SwedishApartment,
-  [TypeOfContract.SeAccident]: ContractType.SwedishAccident,
-  [TypeOfContract.SeAccidentStudent]: ContractType.SwedishAccident,
-  [TypeOfContract.NoHomeContentOwn]: ContractType.NorwegianHomeContent,
-  [TypeOfContract.NoHomeContentRent]: ContractType.NorwegianHomeContent,
-  [TypeOfContract.NoHomeContentYouthOwn]: ContractType.NorwegianHomeContent,
-  [TypeOfContract.NoHomeContentYouthRent]: ContractType.NorwegianHomeContent,
-  [TypeOfContract.NoTravel]: ContractType.NorwegianTravel,
-  [TypeOfContract.NoTravelYouth]: ContractType.NorwegianTravel,
-  [TypeOfContract.DkHomeContentOwn]: ContractType.DanishHomeContent,
-  [TypeOfContract.DkHomeContentRent]: ContractType.DanishHomeContent,
-  [TypeOfContract.DkHomeContentStudentOwn]: ContractType.DanishHomeContent,
-  [TypeOfContract.DkHomeContentStudentRent]: ContractType.DanishHomeContent,
-  [TypeOfContract.DkAccident]: ContractType.DanishAccident,
-  [TypeOfContract.DkAccidentStudent]: ContractType.DanishAccident,
-  [TypeOfContract.DkTravel]: ContractType.DanishTravel,
-  [TypeOfContract.DkTravelStudent]: ContractType.DanishTravel,
+export const TypeOfContractType: Record<TypeOfContract, InsuranceType> = {
+  [TypeOfContract.SeHouse]: InsuranceType.SwedishHouse,
+  [TypeOfContract.SeApartmentBrf]: InsuranceType.SwedishApartment,
+  [TypeOfContract.SeApartmentRent]: InsuranceType.SwedishApartment,
+  [TypeOfContract.SeApartmentStudentBrf]: InsuranceType.SwedishApartment,
+  [TypeOfContract.SeApartmentStudentRent]: InsuranceType.SwedishApartment,
+  [TypeOfContract.SeAccident]: InsuranceType.SwedishAccident,
+  [TypeOfContract.SeAccidentStudent]: InsuranceType.SwedishAccident,
+  [TypeOfContract.NoHomeContentOwn]: InsuranceType.NorwegianHomeContent,
+  [TypeOfContract.NoHomeContentRent]: InsuranceType.NorwegianHomeContent,
+  [TypeOfContract.NoHomeContentYouthOwn]: InsuranceType.NorwegianHomeContent,
+  [TypeOfContract.NoHomeContentYouthRent]: InsuranceType.NorwegianHomeContent,
+  [TypeOfContract.NoTravel]: InsuranceType.NorwegianTravel,
+  [TypeOfContract.NoTravelYouth]: InsuranceType.NorwegianTravel,
+  [TypeOfContract.DkHomeContentOwn]: InsuranceType.DanishHomeContent,
+  [TypeOfContract.DkHomeContentRent]: InsuranceType.DanishHomeContent,
+  [TypeOfContract.DkHomeContentStudentOwn]: InsuranceType.DanishHomeContent,
+  [TypeOfContract.DkHomeContentStudentRent]: InsuranceType.DanishHomeContent,
+  [TypeOfContract.DkAccident]: InsuranceType.DanishAccident,
+  [TypeOfContract.DkAccidentStudent]: InsuranceType.DanishAccident,
+  [TypeOfContract.DkTravel]: InsuranceType.DanishTravel,
+  [TypeOfContract.DkTravelStudent]: InsuranceType.DanishTravel,
 }
