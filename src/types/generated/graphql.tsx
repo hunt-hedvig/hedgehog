@@ -2243,7 +2243,7 @@ export type ListClaimsQueryVariables = Exact<{
 export type ListClaimsQuery = { __typename?: 'QueryType' } & {
   listClaims: { __typename?: 'ListClaimsResult' } & Pick<
     ListClaimsResult,
-    'page' | 'totalPages'
+    'page' | 'totalPages' | 'totalClaims'
   > & {
       claims: Array<
         { __typename?: 'Claim' } & Pick<
@@ -5311,6 +5311,7 @@ export const ListClaimsDocument = gql`
       }
       page
       totalPages
+      totalClaims
     }
   }
 `
