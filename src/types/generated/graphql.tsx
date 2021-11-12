@@ -1558,6 +1558,7 @@ export type User = {
   email: Scalars['String']
   role?: Maybe<Scalars['String']>
   fullName: Scalars['String']
+  signature: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
   latestReadNotifications?: Maybe<Scalars['Instant']>
@@ -3835,14 +3836,17 @@ export type GetMeQuery = { __typename?: 'QueryType' } & {
   me: { __typename?: 'Me' } & Pick<Me, 'scopes' | 'role'> & {
       user: { __typename?: 'User' } & Pick<
         User,
-        'id' | 'email' | 'fullName' | 'phoneNumber' | 'role'
+        'id' | 'email' | 'fullName' | 'signature' | 'phoneNumber' | 'role'
       > & {
           notifications: Array<
             { __typename?: 'UserNotification' } & Pick<
               UserNotification,
               'id' | 'message' | 'url' | 'createdAt' | 'read'
             > & {
-                user: { __typename?: 'User' } & Pick<User, 'id' | 'fullName'>
+                user: { __typename?: 'User' } & Pick<
+                  User,
+                  'id' | 'signature' | 'fullName'
+                >
               }
           >
         }
@@ -10451,6 +10455,7 @@ export const GetMeDocument = gql`
         id
         email
         fullName
+        signature
         phoneNumber
         role
         notifications {
@@ -10461,6 +10466,7 @@ export const GetMeDocument = gql`
           read
           user {
             id
+            signature
             fullName
           }
         }

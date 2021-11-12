@@ -6,6 +6,7 @@ query GetMe {
       id
       email
       fullName
+      signature
       phoneNumber
       role
       notifications {
@@ -16,6 +17,7 @@ query GetMe {
         read
         user {
           id
+          signature
           fullName
         }
       }

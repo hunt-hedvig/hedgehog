@@ -94,7 +94,7 @@ export const NotificationsModal: React.FC<{
             align="center"
             read={notification.read}
           >
-            <UserCircle>TT</UserCircle>
+            <UserCircle>{notification.user.signature}</UserCircle>
             <Flex direction="column">
               <NotificationMessage>{notification.message}</NotificationMessage>
               <NotificationTimestamp>
