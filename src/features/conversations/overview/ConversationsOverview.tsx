@@ -3,6 +3,7 @@ import { Flex } from '@hedvig-ui'
 import { Button } from '@hedvig-ui/Button/button'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { ConversationsRemaining } from 'features/conversations/overview/ConversationsRemaining'
+import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
@@ -10,7 +11,7 @@ import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 import { ConversationItem } from './ConversationItem'
 
 const ConversationWrapper = styled.div`
-  margin-top: 1em;
+  margin-top: 2em;
   overflow-y: scroll;
   width: 100%;
   height: 324px;
@@ -24,7 +25,15 @@ export const ConversationsOverview: React.FC<{
   filteredGroups: QuestionGroup[]
   currentMemberId?: string
   currentQuestionOrder: number
-}> = ({ filteredGroups, currentMemberId, currentQuestionOrder }) => {
+  filters: ReadonlyArray<FilterStateType>
+  setFilters: any
+}> = ({
+  filteredGroups,
+  currentMemberId,
+  currentQuestionOrder,
+  filters,
+  setFilters,
+}) => {
   const { settings, updateSetting } = useMe()
 
   const history = useHistory()
@@ -40,11 +49,30 @@ export const ConversationsOverview: React.FC<{
   }, [])
 
   return (
-    <div>
-      <Flex direction="column" align="center" style={{ marginTop: '1em' }}>
-        <ConversationsRemaining count={filteredGroups.length} />
+    <Flex direction="column">
+      <Flex direction="column" flex="0" style={{ marginBottom: '1em' }}>
+        <FilterSelect
+          small
+          push="right"
+          filters={filters}
+          animationDelay={200}
+          animationItemDelay={20}
+          onToggle={(filter) => {
+            if (filters.includes(filter)) {
+              setFilters(filters.filter((prevFilter) => filter !== prevFilter))
+            } else {
+              setFilters([...filters, filter])
+            }
+          }}
+        />
       </Flex>
-      <Flex direction="column" justify="center" style={{ marginTop: '0.5em' }}>
+      <ConversationsRemaining count={filteredGroups.length} />
+      <Flex
+        direction="column"
+        flex="0"
+        justify="center"
+        style={{ marginTop: '0.5em' }}
+      >
         <Flex direction="row" justify="center">
           <Button
             style={{ marginLeft: '-0.5em' }}
@@ -64,14 +92,6 @@ export const ConversationsOverview: React.FC<{
           >
             Back to questions
           </Button>
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={() => history.push('/conversations/settings')}
-            style={{ marginLeft: '1em' }}
-          >
-            Change filters
-          </Button>
         </Flex>
 
         <ConversationWrapper>
@@ -84,6 +104,6 @@ export const ConversationsOverview: React.FC<{
           ))}
         </ConversationWrapper>
       </Flex>
-    </div>
+    </Flex>
   )
 }

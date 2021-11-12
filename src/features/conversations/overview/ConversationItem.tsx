@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
+import { StatusLine } from 'features/claims/claims-list/LargeClaimsList'
+import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup } from 'types/generated/graphql'
@@ -8,7 +10,9 @@ const Item = styled(Flex)<{ selected: boolean }>`
   background-color: ${({ theme, selected }) =>
     selected ? theme.accent : theme.backgroundTransparent};
 
-  padding: 0 0.8em;
+  overflow: hidden;
+
+  padding: 0 1em;
   margin-top: 0.5em;
   border-radius: 8px;
   max-width: 100%;
@@ -54,6 +58,8 @@ export const ConversationItem: React.FC<ItemProps> = ({
   group,
   currentMemberId,
 }) => {
+  const { numberMemberGroups } = useNumberMemberGroups()
+
   const history = useHistory()
 
   const ref = useRef<HTMLDivElement>(null)
@@ -75,6 +81,10 @@ export const ConversationItem: React.FC<ItemProps> = ({
       <span>
         {group.member?.firstName ?? ''} {group.member?.lastName ?? ' '}
       </span>
+      <StatusLine
+        numberMemberGroups={numberMemberGroups}
+        memberId={group.memberId}
+      />
     </Item>
   )
 }
