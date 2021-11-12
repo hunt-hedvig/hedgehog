@@ -210,6 +210,8 @@ export const TablePageSelect: React.FC<{
           key={id}
           disabled={currentPage === page}
           onClick={() => {
+            console.log(page)
+            console.log(totalPages)
             onSelect(page + 1)
           }}
         >
@@ -220,7 +222,7 @@ export const TablePageSelect: React.FC<{
       <PageLink
         disabled={currentPage === totalPages - 1}
         onClick={() => {
-          onSelect(totalPages - 1)
+          onSelect(totalPages)
         }}
       >
         Last
