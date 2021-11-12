@@ -70,8 +70,9 @@ const MemberGroupTag = styled(Tag)<{ color: string }>`
 `
 
 const MemberSummaryWrapper = styled.div`
+  padding-right: 1em;
   max-height: 100%;
-  overflow-y: scroll;
+  width: 100%;
 
   ::-webkit-scrollbar-track {
     background: transparent;
@@ -79,12 +80,12 @@ const MemberSummaryWrapper = styled.div`
 `
 
 const AdditionalInfo = styled.div`
-  overflow-y: scroll;
+  overflow-y: auto;
   width: 100%;
 
   ::-webkit-scrollbar-track {
     border-radius: 8px;
-    background-color: ${({ theme }) => theme.backgroundTransparent};
+    background: transparent;
   }
 `
 

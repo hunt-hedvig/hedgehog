@@ -4,22 +4,36 @@ import { Button } from '@hedvig-ui/Button/button'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { ConversationsRemaining } from 'features/conversations/overview/ConversationsRemaining'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 
-const ConversationItem = styled(Flex)<{ selected: boolean }>`
+const Item = styled(Flex)<{ selected: boolean }>`
   background-color: ${({ theme, selected }) =>
     selected ? theme.accent : theme.backgroundTransparent};
-  color: ${({ theme, selected }) =>
-    selected ? theme.accentContrast : theme.semiStrongForeground};
-  padding: 0.5em 0.8em;
+
+  padding: 0 0.8em;
   margin-top: 0.5em;
   border-radius: 8px;
-  font-size: 0.8em;
+  max-width: 100%;
   width: 100%;
+  height: 2em;
+
   cursor: pointer;
+
   transition: all 300ms;
+
+  display: flex;
+  align-items: center;
+
+  & span {
+    font-size: 0.8em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: ${({ theme, selected }) =>
+      selected ? theme.accentContrast : theme.semiStrongForeground};
+  }
 
   :first-of-type {
     margin-top: 0.2em;
@@ -31,12 +45,29 @@ const ConversationItem = styled(Flex)<{ selected: boolean }>`
   }
 `
 
+interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  focus?: boolean
+  selected: boolean
+}
+
+const ConversationItem: React.FC<ItemProps> = ({ focus, ...props }) => {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (focus && ref && ref.current) {
+      ref.current.focus()
+    }
+  }, [focus])
+
+  return <Item ref={ref} {...props} />
+}
+
 const ConversationWrapper = styled.div`
   margin-top: 1em;
   overflow-y: scroll;
   width: 100%;
   height: 324px;
-  padding: 1em;
+  padding: 0 1em;
   ::-webkit-scrollbar-track {
     background: transparent;
   }
@@ -45,7 +76,8 @@ const ConversationWrapper = styled.div`
 export const ConversationsOverview: React.FC<{
   filteredGroups: QuestionGroup[]
   currentMemberId?: string
-}> = ({ filteredGroups, currentMemberId }) => {
+  currentQuestionOrder: number
+}> = ({ filteredGroups, currentMemberId, currentQuestionOrder }) => {
   const { settings, updateSetting } = useMe()
 
   const history = useHistory()
@@ -96,13 +128,17 @@ export const ConversationsOverview: React.FC<{
         </Flex>
 
         <ConversationWrapper>
-          {filteredGroups.map((group) => (
+          {filteredGroups.map((group, index) => (
             <ConversationItem
               key={group.memberId}
+              tabIndex={0}
+              focus={currentQuestionOrder === index}
               onClick={() => history.push(`/conversations/${group.memberId}`)}
               selected={group.memberId === currentMemberId}
             >
-              {group.member?.firstName ?? ''} {group.member?.lastName ?? ''}
+              <span>
+                {group.member?.firstName ?? ''} {group.member?.lastName ?? ' '}
+              </span>
             </ConversationItem>
           ))}
         </ConversationWrapper>

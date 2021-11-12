@@ -27,6 +27,7 @@ import { RouteComponentProps, useHistory } from 'react-router'
 
 const FadeGrid = styled(Fade)`
   height: 100%;
+  overflow: hidden;
 
   & > div {
     height: 100%;
@@ -44,7 +45,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups] = useQuestionGroups(3000)
   const [chatFocused, setChatFocused] = useState(false)
-  const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
+  const { fade, props: fadeProps } = useFadeAnimation({ duration: 150 })
 
   const [filters] = useInsecurePersistentState<ReadonlyArray<FilterStateType>>(
     'questions:filters',
@@ -150,6 +151,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
             }
           />
           <ConversationsOverview
+            currentQuestionOrder={currentQuestionOrder}
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
           />
@@ -161,6 +163,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
           </StandaloneMessage>
           <Spacing top="large" />
           <ConversationsOverview
+            currentQuestionOrder={currentQuestionOrder}
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
           />
