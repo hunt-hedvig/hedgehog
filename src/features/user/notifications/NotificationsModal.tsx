@@ -5,6 +5,11 @@ import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
 import { ChatFill } from 'react-bootstrap-icons'
+import {
+  GetMeDocument,
+  GetMeQuery,
+  useMarkNotificationsAsReadMutation,
+} from 'types/generated/graphql'
 
 const NotificationItem = styled(Flex)<{ read?: boolean }>`
   :first-of-type {
@@ -81,9 +86,40 @@ export const NotificationsModal: React.FC<{
   onClose: () => void
 }> = ({ onClose }) => {
   const { me } = useMe()
+  const [markNotificationsAsRead] = useMarkNotificationsAsReadMutation()
+
   return (
     <Modal
-      onClose={onClose}
+      onClose={() => {
+        markNotificationsAsRead({
+          optimisticResponse: { markNotificationsAsRead: true },
+          update: (cache, { data: response }) => {
+            if (!response?.markNotificationsAsRead) {
+              return
+            }
+
+            const cachedData = cache.readQuery({
+              query: GetMeDocument,
+            }) as GetMeQuery
+
+            cache.writeQuery({
+              query: GetMeDocument,
+              data: {
+                me: {
+                  ...cachedData.me,
+                  user: {
+                    ...cachedData.me.user,
+                    notifications: cachedData.me.user.notifications.map(
+                      (notification) => ({ ...notification, read: true }),
+                    ),
+                  },
+                },
+              },
+            })
+          },
+        })
+        onClose()
+      }}
       withoutHeader={true}
       width="400px"
       height="80vh"
@@ -103,7 +139,7 @@ export const NotificationsModal: React.FC<{
           </div>
           <Button variant="tertiary">View all</Button>
         </Flex>
-        {me.notifications.map((notification) => (
+        {me.notifications.slice(0, 10).map((notification) => (
           <NotificationItem
             key={notification.id}
             align="center"

@@ -93,7 +93,11 @@ export const TopBar = () => {
   return (
     <Wrapper>
       {showUserNotifications && (
-        <NotificationsModal onClose={() => setShowUserNotifications(false)} />
+        <NotificationsModal
+          onClose={() => {
+            setShowUserNotifications(false)
+          }}
+        />
       )}
 
       <UserPanel
