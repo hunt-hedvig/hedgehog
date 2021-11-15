@@ -115,13 +115,14 @@ export const MemberInformation: React.FC<{
   ])
 
   const nameEndsOnS =
-    member?.firstName?.split('')[member?.firstName?.length - 1] === 's'
+    member?.firstName &&
+    member?.firstName[member?.firstName?.length - 1] === 's'
 
   useTitle(
     member && member.firstName
       ? !nameEndsOnS
-        ? `${member?.firstName}’s Claim`
-        : `${member?.firstName}' Claim`
+        ? `${member?.firstName}’s claim`
+        : `${member?.firstName}' claim`
       : `Claim Details`,
     [member],
   )
