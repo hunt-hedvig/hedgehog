@@ -11,6 +11,7 @@ import {
   Spacing,
 } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'features/dashboard/Greeting'
@@ -150,11 +151,12 @@ const DashboardPage: React.FC = () => {
     const newFilters = templateFilters.filters.filter(
       (_, index) => index !== id,
     )
-    console.log(newFilters)
     setTemplateFilters({
       filters: newFilters,
     })
   }
+
+  useTitle('Dashboard')
 
   return (
     <Wrapper>

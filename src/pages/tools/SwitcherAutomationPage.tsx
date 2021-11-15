@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableHeaderColumn,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { sleep } from '@hedvig-ui/utils/sleep'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, isPast, parseISO } from 'date-fns'
@@ -82,6 +83,8 @@ const SwitcherAutomationPage: React.FC = () => {
     terminateContract,
     { loading: terminateContractLoading },
   ] = useTerminateContractMutation()
+
+  useTitle('Tools | Switcher Automation')
 
   return (
     <>

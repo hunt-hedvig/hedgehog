@@ -1253,7 +1253,7 @@ export type QueryType = {
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
   availableCampaignCodeTypes: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
-  quoteSchemaForContractType?: Maybe<Scalars['JSON']>
+  quoteSchemaForInsuranceType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
   employees: Array<Employee>
@@ -1292,8 +1292,8 @@ export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
 }
 
-export type QueryTypeQuoteSchemaForContractTypeArgs = {
-  contractType: Scalars['String']
+export type QueryTypeQuoteSchemaForInsuranceTypeArgs = {
+  insuranceType: Scalars['String']
 }
 
 export type QueryTypeMemberSearchArgs = {
@@ -3086,14 +3086,13 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetSchemaForContractTypeQueryVariables = Exact<{
-  contractType: Scalars['String']
+export type GetSchemaForInsuranceTypeQueryVariables = Exact<{
+  insuranceType: Scalars['String']
 }>
 
-export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
-  QueryType,
-  'quoteSchemaForContractType'
->
+export type GetSchemaForInsuranceTypeQuery = {
+  __typename?: 'QueryType'
+} & Pick<QueryType, 'quoteSchemaForInsuranceType'>
 
 export type OverrideQuotePriceMutationVariables = Exact<{
   input: OverrideQuotePriceInput
@@ -7700,61 +7699,61 @@ export type GetQuotesQueryResult = ApolloReactCommon.QueryResult<
   GetQuotesQuery,
   GetQuotesQueryVariables
 >
-export const GetSchemaForContractTypeDocument = gql`
-  query GetSchemaForContractType($contractType: String!) {
-    quoteSchemaForContractType(contractType: $contractType)
+export const GetSchemaForInsuranceTypeDocument = gql`
+  query GetSchemaForInsuranceType($insuranceType: String!) {
+    quoteSchemaForInsuranceType(insuranceType: $insuranceType)
   }
 `
 
 /**
- * __useGetSchemaForContractTypeQuery__
+ * __useGetSchemaForInsuranceTypeQuery__
  *
- * To run a query within a React component, call `useGetSchemaForContractTypeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSchemaForContractTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetSchemaForInsuranceTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchemaForInsuranceTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetSchemaForContractTypeQuery({
+ * const { data, loading, error } = useGetSchemaForInsuranceTypeQuery({
  *   variables: {
- *      contractType: // value for 'contractType'
+ *      insuranceType: // value for 'insuranceType'
  *   },
  * });
  */
-export function useGetSchemaForContractTypeQuery(
+export function useGetSchemaForInsuranceTypeQuery(
   baseOptions: ApolloReactHooks.QueryHookOptions<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
-  >(GetSchemaForContractTypeDocument, options)
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
+  >(GetSchemaForInsuranceTypeDocument, options)
 }
-export function useGetSchemaForContractTypeLazyQuery(
+export function useGetSchemaForInsuranceTypeLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
-  >(GetSchemaForContractTypeDocument, options)
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
+  >(GetSchemaForInsuranceTypeDocument, options)
 }
-export type GetSchemaForContractTypeQueryHookResult = ReturnType<
-  typeof useGetSchemaForContractTypeQuery
+export type GetSchemaForInsuranceTypeQueryHookResult = ReturnType<
+  typeof useGetSchemaForInsuranceTypeQuery
 >
-export type GetSchemaForContractTypeLazyQueryHookResult = ReturnType<
-  typeof useGetSchemaForContractTypeLazyQuery
+export type GetSchemaForInsuranceTypeLazyQueryHookResult = ReturnType<
+  typeof useGetSchemaForInsuranceTypeLazyQuery
 >
-export type GetSchemaForContractTypeQueryResult = ApolloReactCommon.QueryResult<
-  GetSchemaForContractTypeQuery,
-  GetSchemaForContractTypeQueryVariables
+export type GetSchemaForInsuranceTypeQueryResult = ApolloReactCommon.QueryResult<
+  GetSchemaForInsuranceTypeQuery,
+  GetSchemaForInsuranceTypeQueryVariables
 >
 export const OverrideQuotePriceDocument = gql`
   mutation OverrideQuotePrice($input: OverrideQuotePriceInput!) {

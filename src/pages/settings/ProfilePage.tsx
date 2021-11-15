@@ -1,4 +1,5 @@
 import { Button, Flex, Input, Label, MainHeadline, Spacing } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
@@ -45,6 +46,8 @@ const ProfilePage: React.FC = () => {
   }
 
   useEffect(reset, [data])
+
+  useTitle('Profile')
 
   const changes =
     fullName !== data?.me.user.fullName ||
