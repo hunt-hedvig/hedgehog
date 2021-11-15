@@ -26,7 +26,7 @@ export const ConversationsOverview: React.FC<{
   currentMemberId?: string
   currentQuestionOrder: number
   filters: ReadonlyArray<FilterStateType>
-  setFilters: any
+  setFilters: (filter: ReadonlyArray<FilterStateType>) => void
 }> = ({
   filteredGroups,
   currentMemberId,

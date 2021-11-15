@@ -12,12 +12,12 @@ const Item = styled(Flex)<{ selected: boolean }>`
 
   overflow: hidden;
 
-  padding: 0 1em;
+  padding: 0.5em 1em;
   margin-top: 0.5em;
   border-radius: 8px;
   max-width: 100%;
   width: 100%;
-  height: 2em;
+  outline: none;
 
   position: relative;
 
@@ -47,13 +47,13 @@ const Item = styled(Flex)<{ selected: boolean }>`
   }
 `
 
-interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ConversationItemProps extends React.HTMLAttributes<HTMLDivElement> {
   focus?: boolean
   group: QuestionGroup
   currentMemberId?: string
 }
 
-export const ConversationItem: React.FC<ItemProps> = ({
+export const ConversationItem: React.FC<ConversationItemProps> = ({
   focus,
   group,
   currentMemberId,
@@ -79,7 +79,9 @@ export const ConversationItem: React.FC<ItemProps> = ({
       selected={group.memberId === currentMemberId}
     >
       <span>
-        {group.member?.firstName ?? ''} {group.member?.lastName ?? ' '}
+        {group.member?.firstName && group.member.lastName
+          ? group.member?.firstName + ' ' + group.member.lastName
+          : 'Name not available'}
       </span>
       <StatusLine
         numberMemberGroups={numberMemberGroups}
