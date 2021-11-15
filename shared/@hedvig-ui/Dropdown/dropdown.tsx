@@ -196,7 +196,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
       tabIndex={0}
       ref={dropdownRef}
       isActive={active}
-      onBlur={closeDropdown}
       onKeyDown={(e) => {
         if (e.key === Keys.Enter.key) {
           toggleDropdown()
