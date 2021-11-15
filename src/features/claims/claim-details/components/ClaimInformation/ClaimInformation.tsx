@@ -294,7 +294,6 @@ export const ClaimInformation: React.FC<{
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
           <TextDatePicker
-            tabIndex={-1}
             value={
               (data?.claim?.dateOfOccurrence &&
                 parseISO(data.claim.dateOfOccurrence)) ??
