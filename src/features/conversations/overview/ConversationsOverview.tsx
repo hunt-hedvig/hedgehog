@@ -4,40 +4,19 @@ import { Button } from '@hedvig-ui/Button/button'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { ConversationsRemaining } from 'features/conversations/overview/ConversationsRemaining'
+import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
-
-const ConversationItem = styled(Flex)<{ selected: boolean }>`
-  background-color: ${({ theme, selected }) =>
-    selected ? theme.accent : theme.backgroundTransparent};
-  color: ${({ theme, selected }) =>
-    selected ? theme.accentContrast : theme.semiStrongForeground};
-  padding: 0.5em 0.8em;
-  margin-top: 0.5em;
-  border-radius: 8px;
-  font-size: 0.8em;
-  width: 100%;
-  cursor: pointer;
-  transition: all 300ms;
-
-  :first-of-type {
-    margin-top: 0.2em;
-  }
-
-  :hover {
-    background-color: ${({ theme }) => theme.accentLight};
-    color: ${({ theme }) => theme.accent};
-  }
-`
+import { ConversationItem } from './ConversationItem'
 
 const ConversationWrapper = styled.div`
-  margin-top: 1em;
+  margin-top: 2em;
   overflow-y: scroll;
   width: 100%;
   height: 324px;
-  padding: 1em;
+  padding-right: 1em;
   ::-webkit-scrollbar-track {
     background: transparent;
   }
@@ -46,7 +25,16 @@ const ConversationWrapper = styled.div`
 export const ConversationsOverview: React.FC<{
   filteredGroups: QuestionGroup[]
   currentMemberId?: string
-}> = ({ filteredGroups, currentMemberId }) => {
+  currentQuestionOrder: number
+  filters: ReadonlyArray<FilterStateType>
+  setFilters: (filter: ReadonlyArray<FilterStateType>) => void
+}> = ({
+  filteredGroups,
+  currentMemberId,
+  currentQuestionOrder,
+  filters,
+  setFilters,
+}) => {
   const { settings, updateSetting } = useMe()
   const history = useHistory()
   const { confirm } = useConfirmDialog()
@@ -69,11 +57,30 @@ export const ConversationsOverview: React.FC<{
   }, [])
 
   return (
-    <div>
-      <Flex direction="column" align="center" style={{ marginTop: '1em' }}>
-        <ConversationsRemaining count={filteredGroups.length} />
+    <Flex direction="column">
+      <Flex direction="column" flex="0" style={{ marginBottom: '1em' }}>
+        <FilterSelect
+          small
+          push="right"
+          filters={filters}
+          animationDelay={200}
+          animationItemDelay={20}
+          onToggle={(filter) => {
+            if (filters.includes(filter)) {
+              setFilters(filters.filter((prevFilter) => filter !== prevFilter))
+            } else {
+              setFilters([...filters, filter])
+            }
+          }}
+        />
       </Flex>
-      <Flex direction="column" justify="center" style={{ marginTop: '0.5em' }}>
+      <ConversationsRemaining count={filteredGroups.length} />
+      <Flex
+        direction="column"
+        flex="0"
+        justify="center"
+        style={{ marginTop: '0.5em' }}
+      >
         <Flex direction="row" justify="center">
           <Button
             style={{ marginLeft: '-0.5em' }}
@@ -93,28 +100,18 @@ export const ConversationsOverview: React.FC<{
           >
             Back to questions
           </Button>
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={() => history.push('/conversations/settings')}
-            style={{ marginLeft: '1em' }}
-          >
-            Change filters
-          </Button>
         </Flex>
 
         <ConversationWrapper>
-          {filteredGroups.map((group) => (
+          {filteredGroups.map((group, index) => (
             <ConversationItem
-              key={group.memberId}
-              onClick={() => history.push(`/conversations/${group.memberId}`)}
-              selected={group.memberId === currentMemberId}
-            >
-              {group.member?.firstName ?? ''} {group.member?.lastName ?? ''}
-            </ConversationItem>
+              group={group}
+              currentMemberId={currentMemberId}
+              focus={currentQuestionOrder === index}
+            />
           ))}
         </ConversationWrapper>
       </Flex>
-    </div>
+    </Flex>
   )
 }
