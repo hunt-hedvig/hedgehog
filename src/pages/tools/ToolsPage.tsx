@@ -10,6 +10,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useCommandLine } from 'features/commands/command-line-hook'
 import React from 'react'
 import { useHistory } from 'react-router'
@@ -56,6 +57,8 @@ const ToolsPage: React.FC = () => {
   const history = useHistory()
   const isControlPressed = useKeyIsPressed(Keys.Control)
   const { registerActions } = useCommandLine()
+
+  useTitle('Tools')
 
   registerActions([
     {

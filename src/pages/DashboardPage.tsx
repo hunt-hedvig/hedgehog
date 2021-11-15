@@ -9,6 +9,7 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'features/dashboard/Greeting'
@@ -78,6 +79,8 @@ const DashboardPage: React.FC = () => {
   const dashboardNumbers = dashboardData?.dashboardNumbers as
     | DashboardNumbers
     | undefined
+
+  useTitle('Dashboard')
 
   return (
     <Wrapper>

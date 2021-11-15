@@ -16,7 +16,7 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   availableCampaignCodeTypes: [String!]!
   dashboardNumbers: DashboardNumbers
-  quoteSchemaForContractType(contractType: String!): JSON
+  quoteSchemaForInsuranceType(insuranceType: String!): JSON
   memberSearch(
     query: String!
     options: MemberSearchOptions!
@@ -327,6 +327,7 @@ type ListClaimsResult {
   claims: [Claim!]!
   totalPages: Int!
   page: Int!
+  totalClaims: Int!
 }
 
 input ListClaimsOptions {

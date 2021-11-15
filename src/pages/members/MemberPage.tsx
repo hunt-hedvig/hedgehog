@@ -1,3 +1,4 @@
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MemberTabs } from 'features/member'
 import { useGetMemberInfo } from 'features/member/tabs/member-tab/hooks/use-get-member-info'
 import React from 'react'
@@ -8,6 +9,8 @@ const MemberPage: React.FC<RouteComponentProps<{
 }>> = (props) => {
   const memberId = props.match.params.memberId
   const [member] = useGetMemberInfo(memberId)
+
+  useTitle(member ? `${member?.firstName} ${member?.lastName}` : 'Loading...')
 
   if (!member) {
     return null
