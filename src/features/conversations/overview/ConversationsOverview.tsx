@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { Button } from '@hedvig-ui/Button/button'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { ConversationsRemaining } from 'features/conversations/overview/ConversationsRemaining'
 import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
@@ -35,10 +36,17 @@ export const ConversationsOverview: React.FC<{
   setFilters,
 }) => {
   const { settings, updateSetting } = useMe()
-
   const history = useHistory()
   const { confirm } = useConfirmDialog()
 
+  useTitle(
+    `Conversations${
+      filteredGroups && filteredGroups.length
+        ? ` (${filteredGroups.length})`
+        : ''
+    }`,
+    [filteredGroups],
+  )
   useEffect(() => {
     if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
       updateSetting(UserSettingKey.FeatureFlags, {
