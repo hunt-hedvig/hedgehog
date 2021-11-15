@@ -143,8 +143,15 @@ const DashboardPage: React.FC = () => {
     }))
   }
 
-  const editTemplateFilterHandler = (id: number, filter: ClaimsFiltersType) => {
-    console.log(id, filter)
+  const editTemplateFilterHandler = (
+    id: number,
+    newFilter: ClaimsFiltersType,
+  ) => {
+    setTemplateFilters((prev) => ({
+      filters: prev.filters.map((filter, index) =>
+        index !== id ? filter : newFilter,
+      ),
+    }))
   }
 
   const removeTemplateFilterHandler = (id: number) => {

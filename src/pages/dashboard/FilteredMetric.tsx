@@ -59,7 +59,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
     listClaims({
       ...filter,
     })
-  }, [])
+  }, [filter])
 
   return (
     <Metric
