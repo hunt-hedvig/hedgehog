@@ -191,9 +191,7 @@ type MutationType {
     request: AssignVoucherPercentageDiscount
   ): Boolean!
   assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
-  assignCampaignToPartnerNoDiscount(
-    request: AssignVoucherNoDiscount
-  ): Boolean!
+  assignCampaignToPartnerNoDiscount(request: AssignVoucherNoDiscount): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -579,7 +577,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

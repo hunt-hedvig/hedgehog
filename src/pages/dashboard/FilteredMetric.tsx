@@ -45,7 +45,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
   const [edit, setEdit] = useState(false)
   const [hover, setHover] = useState(false)
 
-  const [{ claims, totalPages, totalClaims }, listClaims] = useListClaims()
+  const [{ totalClaims }, listClaims] = useListClaims()
 
   const clickHandler = (e) => {
     if (e.currentTarget !== e.target) {
@@ -73,9 +73,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
         }
       }}
     >
-      <MetricNumber onClick={clickHandler}>
-        {claims.length * totalPages || 0}
-      </MetricNumber>
+      <MetricNumber onClick={clickHandler}>{totalClaims || 0}</MetricNumber>
       <MetricName onClick={clickHandler}>
         {filter.name || 'Filtered Claims'}
       </MetricName>
