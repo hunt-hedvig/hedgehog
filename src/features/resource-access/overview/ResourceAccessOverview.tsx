@@ -4,7 +4,10 @@ import chroma from 'chroma-js'
 import { RoleAccessList } from 'features/resource-access/overview/components/RoleAccessList'
 import { UserAccessList } from 'features/resource-access/overview/components/UserAccessList'
 import React, { useState } from 'react'
-import { useResourceAccessInformationQuery } from 'types/generated/graphql'
+import {
+  ResourceAccessInformation,
+  useResourceAccessInformationQuery,
+} from 'types/generated/graphql'
 
 const Footer = styled(Flex)`
   font-size: 0.85rem;
@@ -60,10 +63,18 @@ export const ResourceAccessOverview: React.FC<{
       />
       <Container direction="column">
         {activeTab === 'users' && (
-          <UserAccessList resourceAccessInformation={data.resourceAccess} />
+          <UserAccessList
+            resourceAccessInformation={
+              data.resourceAccess as ResourceAccessInformation
+            }
+          />
         )}
         {activeTab === 'roles' && (
-          <RoleAccessList resourceAccessInformation={data.resourceAccess} />
+          <RoleAccessList
+            resourceAccessInformation={
+              data.resourceAccess as ResourceAccessInformation
+            }
+          />
         )}
       </Container>
 

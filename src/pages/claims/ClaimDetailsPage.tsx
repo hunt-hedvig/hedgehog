@@ -32,6 +32,7 @@ import { ShieldLockFill } from 'react-bootstrap-icons'
 import { Prompt, RouteComponentProps } from 'react-router'
 import {
   ClaimState,
+  ResourceAccessInformation,
   useClaimPageQuery,
   useResourceAccessInformationQuery,
 } from 'types/generated/graphql'
@@ -190,7 +191,9 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
             <CardsWrapper>
               <Card>
                 <ClaimRestrictionInformation
-                  restriction={claimPageData.claim.restriction}
+                  restriction={
+                    claimPageData.claim.restriction as ResourceAccessInformation
+                  }
                   claimId={claimId}
                 />
               </Card>
