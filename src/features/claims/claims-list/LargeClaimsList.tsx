@@ -25,7 +25,7 @@ import { useListClaims } from 'features/claims/claims-list/graphql/use-list-clai
 import { getMemberIdColor } from 'features/member/utils'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 
@@ -84,6 +84,7 @@ export const LargeClaimsList: React.FC<{
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
+  const [activeRow, setActiveRow] = useState<number | null>(null)
 
   useTitle('Claims')
 
@@ -143,6 +144,7 @@ export const LargeClaimsList: React.FC<{
           <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
         <TableBody
+          setActiveRow={(num) => setActiveRow(num)}
           onPerformNavigation={(index) => {
             const claimId = claims[index].id
 
@@ -153,7 +155,7 @@ export const LargeClaimsList: React.FC<{
             redirectClaimHandler(claimId)
           }}
         >
-          {claims.map((claim) => {
+          {claims.map((claim, index) => {
             const registrationDateString = formatDate(
               parseISO(claim.registrationDate),
               'dd MMMM, yyyy',
@@ -165,6 +167,7 @@ export const LargeClaimsList: React.FC<{
 
             return (
               <TableRow
+                active={activeRow === index}
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
