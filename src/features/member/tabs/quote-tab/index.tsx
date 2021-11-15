@@ -2,7 +2,7 @@ import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
   ContractMarketTypes,
-  ContractType,
+  InsuranceType,
   PickedLocaleMarket,
   QuoteProductTypeContractMap,
 } from 'features/config/constants'
@@ -13,7 +13,7 @@ import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [activeTab, setActiveTab] = React.useState(
-    ContractType.SwedishApartment,
+    InsuranceType.SwedishApartment,
   )
   const [{ quotes, contractMarket, pickedLocale }, { loading }] = useQuotes(
     memberId,
@@ -38,13 +38,13 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   const memberMarket =
     contractMarket?.market ?? PickedLocaleMarket[pickedLocale!]
 
-  const getCategorisedQuotesBasedOnContractType = (
-    contractType: string,
+  const getCategorisedQuotesBasedOnInsuranceType = (
+    insuranceType: string,
   ): Quote[] =>
     quotes.filter(
       (quote) =>
         !!quote.productType &&
-        QuoteProductTypeContractMap[quote.productType].includes(contractType),
+        QuoteProductTypeContractMap[quote.productType].includes(insuranceType),
     )
 
   return (
@@ -65,8 +65,8 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
       {!!quotes.length && (
         <QuotesSubSection
           memberId={memberId}
-          contractType={activeTab}
-          quotes={getCategorisedQuotesBasedOnContractType(activeTab)}
+          insuranceType={activeTab}
+          quotes={getCategorisedQuotesBasedOnInsuranceType(activeTab)}
         />
       )}
     </>
