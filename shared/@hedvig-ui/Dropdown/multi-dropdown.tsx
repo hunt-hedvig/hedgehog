@@ -132,11 +132,11 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
       active={active}
       onClick={() => !value.length && setActive(true)}
       onKeyDown={(e) => {
-        if (e.keyCode === Keys.Enter.code && !value.length) {
+        if (e.key === Keys.Enter.key && !value.length) {
           setActive(true)
           return
         }
-        if (e.keyCode === Keys.Escape.code) {
+        if (e.key === Keys.Escape.key) {
           setActive(false)
           return
         }
@@ -166,7 +166,7 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
                 onChange(opt)
               }}
               onKeyDown={(e) => {
-                if (e.keyCode === Keys.Enter.code) {
+                if (e.key === Keys.Enter.key) {
                   onChange(opt)
                   return
                 }

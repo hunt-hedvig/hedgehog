@@ -94,7 +94,7 @@ export const Tab: React.FC<TabProps> = ({
       active={active}
       tabIndex={0}
       onClick={action}
-      onKeyDown={(e) => e.keyCode === Keys.Enter.code && action()}
+      onKeyDown={(e) => e.key === Keys.Enter.key && action()}
       {...props}
     >
       {title}{' '}
