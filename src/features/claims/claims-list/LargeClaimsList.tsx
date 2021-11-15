@@ -17,6 +17,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
@@ -24,7 +25,7 @@ import { useListClaims } from 'features/claims/claims-list/graphql/use-list-clai
 import { getMemberIdColor } from 'features/member/utils'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 
@@ -50,7 +51,7 @@ const FlexVertically = styled.div`
   flex-direction: column;
 `
 
-const StatusLine = styled.div<{
+export const StatusLine = styled.div<{
   memberId: string
   numberMemberGroups: number
 }>`
@@ -83,6 +84,9 @@ export const LargeClaimsList: React.FC<{
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
+  const [activeRow, setActiveRow] = useState<number | null>(null)
+
+  useTitle('Claims')
 
   const [
     { claims, page: currentPage, totalPages },
@@ -140,6 +144,7 @@ export const LargeClaimsList: React.FC<{
           <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
         <TableBody
+          setActiveRow={(num) => setActiveRow(num)}
           onPerformNavigation={(index) => {
             const claimId = claims[index].id
 
@@ -150,7 +155,7 @@ export const LargeClaimsList: React.FC<{
             redirectClaimHandler(claimId)
           }}
         >
-          {claims.map((claim) => {
+          {claims.map((claim, index) => {
             const registrationDateString = formatDate(
               parseISO(claim.registrationDate),
               'dd MMMM, yyyy',
@@ -162,10 +167,11 @@ export const LargeClaimsList: React.FC<{
 
             return (
               <TableRow
+                active={activeRow === index}
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.keyCode === Keys.Enter.code) {
+                  if (e.key === Keys.Enter.key) {
                     e.preventDefault()
                     history.push(`/claims/${claim.id}`)
                   }

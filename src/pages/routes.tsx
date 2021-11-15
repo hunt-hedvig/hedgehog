@@ -8,9 +8,6 @@ const QuestionsPage = lazy(() => import('./QuestionsPage'))
 const ConversationsOnboardingPage = lazy(() =>
   import('./conversations/ConversationsOnboardingPage'),
 )
-const ConversationsSettingsPage = lazy(() =>
-  import('./conversations/ConversationsSettingsPage'),
-)
 const ConversationsPage = lazy(() =>
   import('./conversations/ConversationsPage'),
 )
@@ -44,10 +41,6 @@ export const Routes: React.FC = () => {
         <Route
           path="/conversations/onboarding"
           component={ConversationsOnboardingPage}
-        />
-        <Route
-          path="/conversations/settings"
-          component={ConversationsSettingsPage}
         />
         <Route path="/conversations/:memberId?" component={ConversationsPage} />
         <Route path="/claims/list/:page?" exact component={ClaimsListPage} />

@@ -13,6 +13,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import React, { useState } from 'react'
@@ -72,6 +73,8 @@ export const EmployeeTable: React.FC<{
       (!filter.role || filter.role === employee.role)
     )
   }
+
+  useTitle('Tools | Employees')
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />

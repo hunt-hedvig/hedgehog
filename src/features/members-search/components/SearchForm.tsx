@@ -84,7 +84,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             onKeyDown={(e) => {
               if (
                 isMetaKey(e) &&
-                e.keyCode === Keys.Enter.code &&
+                e.key === Keys.Enter.key &&
                 (query || (stagingToolsAvailable() && !query))
               ) {
                 setLuckySearch(true)

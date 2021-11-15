@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Card, CardsWrapper, MainHeadline } from '@hedvig-ui'
-import { ContractType, TypeOfContractType } from 'features/config/constants'
+import { InsuranceType, TypeOfContractType } from 'features/config/constants'
 import { useContracts } from 'features/member/tabs/contracts-tab/hooks/use-contracts'
 import { CreateQuoteForm } from 'features/member/tabs/quote-tab/create-quote-form'
 import { isSignedOrExpired } from 'features/member/tabs/quote-tab/utils'
@@ -13,9 +13,9 @@ const Wrapper = styled('div')({})
 
 export const QuotesSubSection: React.FC<{
   memberId: string
-  contractType: ContractType
+  insuranceType: InsuranceType
   quotes: ReadonlyArray<Quote>
-}> = ({ memberId, contractType, quotes }) => {
+}> = ({ memberId, insuranceType, quotes }) => {
   const [isWip, setIsWip] = React.useState(false)
   const activeQuotes = quotes.filter((quote) => !isSignedOrExpired(quote))
   const [contracts, { loading }] = useContracts(memberId)
@@ -27,7 +27,7 @@ export const QuotesSubSection: React.FC<{
   const hasActiveContracts =
     contracts.filter(
       (contract) =>
-        TypeOfContractType[contract.typeOfContract] === contractType &&
+        TypeOfContractType[contract.typeOfContract] === insuranceType &&
         !contract.terminationDate,
     ).length > 0
 
@@ -42,7 +42,7 @@ export const QuotesSubSection: React.FC<{
         <ActionsWrapper>
           <CreateQuoteForm
             memberId={memberId}
-            contractType={contractType}
+            insuranceType={insuranceType}
             onSubmitted={() => {
               setIsWip(false)
             }}
