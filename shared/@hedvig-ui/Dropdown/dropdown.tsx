@@ -1,4 +1,4 @@
-import { keyframes } from '@emotion/react'
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, {
   HTMLAttributes,
@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import { TriangleFill } from 'react-bootstrap-icons'
 import { Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { useVerticalKeyboardNavigation } from '../hooks/keyboard/use-vertical-keyboard-navigation'
 import { useClickOutside } from '../hooks/use-click-outside'
 
 const show = keyframes`
@@ -52,7 +53,7 @@ const DropdownStyled = styled.div<{ isActive: boolean }>`
   }
 `
 
-const OptionsList = styled.ul`
+const OptionsList = styled.ul<{ activeOption: number }>`
   margin: 0;
   padding-left: 0;
 
@@ -72,6 +73,16 @@ const OptionsList = styled.ul`
   & li:last-of-type {
     border-radius: 0 0 0.3rem 0.3rem;
   }
+
+  ${({ activeOption, theme }) => {
+    if (activeOption !== -1) {
+      return css`
+        li:nth-of-type(${activeOption + 1}) {
+          background-color: ${theme.accentLighter};
+        }
+      `
+    }
+  }}
 `
 
 const OptionStyled = styled.li<{ selected: boolean }>`
@@ -124,10 +135,20 @@ export const Dropdown: React.FC<DropdownProps> = ({
   children,
   ...props
 }) => {
+  const numberOfOptions = React.Children.count(children)
+
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const [selectedIdx, setSelectedIdx] = React.useState(0)
   const [active, setActive] = React.useState(false)
+
+  const [navigationStep] = useVerticalKeyboardNavigation({
+    maxStep: numberOfOptions - 1,
+    onPerformNavigation: (index) => {
+      children[index].props.onClick()
+    },
+    isActive: active,
+  })
 
   const closeDropdown = async () => {
     setActive(false)
@@ -164,11 +185,18 @@ export const Dropdown: React.FC<DropdownProps> = ({
     }
   }, [children])
 
+  useEffect(() => {
+    if (navigationStep === -1) {
+      setActive(false)
+    }
+  }, [navigationStep])
+
   return (
     <DropdownStyled
       tabIndex={0}
       ref={dropdownRef}
       isActive={active}
+      onBlur={closeDropdown}
       onKeyDown={(e) => {
         if (e.key === Keys.Enter.key) {
           toggleDropdown()
@@ -199,11 +227,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
       )}
 
       {active && (
-        <OptionsList>
+        <OptionsList activeOption={navigationStep}>
           {children.map((el) => ({
             ...el,
             props: {
               ...el.props,
+              tabIndex: -1,
               onClick: () => {
                 el.props.onClick()
                 toggleDropdown()

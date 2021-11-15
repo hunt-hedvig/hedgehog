@@ -20,7 +20,7 @@ import {
   getLastTerminationDate,
 } from 'features/member/tabs/contracts-tab/utils'
 import { getMemberFlag, MemberAge } from 'features/member/utils'
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { Contract, ContractStatus, Member } from 'types/generated/graphql'
 
@@ -99,6 +99,7 @@ const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
 export const MembersList: React.FC<{
   members: Member[]
 }> = ({ members }) => {
+  const [activeRow, setActiveRow] = useState<number | null>(null)
   const history = useHistory()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
 
@@ -125,6 +126,7 @@ export const MembersList: React.FC<{
           <TableHeaderColumn>Contracts</TableHeaderColumn>
         </TableHeader>
         <TableBody
+          setActiveRow={(num) => setActiveRow(num)}
           onPerformNavigation={(index) => {
             const memberId = members[index].memberId
 
@@ -135,7 +137,7 @@ export const MembersList: React.FC<{
             redirectMemberHandler(memberId)
           }}
         >
-          {members.map((member) => {
+          {members.map((member, index) => {
             const {
               ACTIVE_IN_FUTURE: activeInFutureContracts = 0,
               ACTIVE: activeContracts = 0,
@@ -146,6 +148,8 @@ export const MembersList: React.FC<{
             return (
               <TableRow
                 key={member.memberId}
+                tabIndex={0}
+                active={activeRow === index}
                 onClick={() => redirectMemberHandler(member.memberId)}
               >
                 <TableColumn>
