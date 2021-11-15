@@ -53,7 +53,7 @@ export const Keys: { [name: string]: Key } = {
     hint: 'Command ⌘',
   },
   Space: {
-    key: 'Space',
+    key: ' ',
     code: 32,
     hint: 'Space ␣',
   },
@@ -364,11 +364,12 @@ const IllegalCharacters = new Set([
 
 export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
 
-export const useKeyIsPressed = (key: Key): boolean => {
+export const useKeyIsPressed = (key: Key, callback?: (e) => void): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
   const handleKeydown = (e) => {
     if (e.key === key.key) {
+      callback?.(e)
       setKeyPressed(true)
     }
   }

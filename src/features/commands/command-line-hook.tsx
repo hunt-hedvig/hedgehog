@@ -35,8 +35,7 @@ const CharacterBadge = styled.div`
 `
 
 const ResultItemWrapper = styled.div<{ selected: boolean }>`
-  padding: 1em 3.5em;
-  padding-right: 1em;
+  padding: 1em 1em 1em 3.5em;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -247,11 +246,41 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const [showCommandLine, setShowCommandLine] = useState(false)
   const actions = useRef<CommandLineAction[]>([])
   const actionKeyCodes = useRef<number[][]>([])
+  const [keyPressCount, setKeyPressCount] = useState(0)
+
+  useEffect(() => {
+    if (keyPressCount >= 2) {
+      setShowCommandLine(true)
+    }
+  }, [keyPressCount])
 
   const isOptionPressed = useKeyIsPressed(Keys.Option)
+
+  useKeyIsPressed(Keys.Space, () => {
+    if (showCommandLine) {
+      return
+    }
+
+    setKeyPressCount((prev) => prev + 1)
+
+    if (keyPressCount >= 1) {
+      setShowCommandLine(true)
+      setKeyPressCount(0)
+      return
+    }
+
+    if (keyPressCount === 0) {
+      setTimeout(() => {
+        setKeyPressCount(0)
+      }, 200)
+    }
+  })
+
   const isControlPressed = useKeyIsPressed(Keys.Control)
-  const isSpacePressed = useKeyIsPressed(Keys.Space)
-  const isEscapePressed = useKeyIsPressed(Keys.Escape)
+
+  useKeyIsPressed(Keys.Escape, () => {
+    setShowCommandLine(false)
+  })
 
   const onMouseDown = (event) => {
     if (commandLine.current && commandLine.current.contains(event.target)) {
@@ -267,19 +296,6 @@ export const CommandLineProvider: React.FC = ({ children }) => {
       document.removeEventListener('mousedown', onMouseDown)
     }
   }, [])
-
-  useEffect(() => {
-    if (showCommandLine) {
-      return
-    }
-    if (isOptionPressed && isSpacePressed) {
-      setShowCommandLine(true)
-    }
-  }, [isOptionPressed, isSpacePressed])
-
-  useEffect(() => {
-    setShowCommandLine(false)
-  }, [isEscapePressed])
 
   const addAction = (newActions: CommandLineAction[]) => {
     useEffect(() => {
