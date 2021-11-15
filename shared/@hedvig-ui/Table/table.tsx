@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
-import React, { TableHTMLAttributes } from 'react'
+import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
 
 const range = (start, end) =>
@@ -18,9 +18,11 @@ export const Table = styled.table`
 
 export const TableBody: React.FC<{
   onPerformNavigation?: (index) => void
+  setActiveRow?: (n: number) => void
 } & TableHTMLAttributes<HTMLTableSectionElement>> = ({
   onPerformNavigation,
   children,
+  setActiveRow,
   ...props
 }) => {
   const numberOfRows = React.Children.count(children)
@@ -34,6 +36,12 @@ export const TableBody: React.FC<{
     },
     isActive: !!onPerformNavigation,
   })
+
+  useEffect(() => {
+    if (setActiveRow) {
+      setActiveRow(navigationStep)
+    }
+  }, [navigationStep])
 
   return (
     <StyledTableBody
@@ -116,9 +124,10 @@ export const TableHeaderColumn: React.FC<TableHeaderColumnProps> = ({
   )
 }
 
-export const TableRow = styled.tr<{ active?: boolean; border?: boolean }>`
+export const TableRowStyled = styled.tr<{ active?: boolean; border?: boolean }>`
   width: 100%;
   transition: all 150ms;
+  outline: none;
 
   &:not(:last-of-type) {
     border-bottom: ${({ border, theme }) =>
@@ -158,6 +167,23 @@ export const TableRow = styled.tr<{ active?: boolean; border?: boolean }>`
     }
   }
 `
+
+interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  active?: boolean
+  border?: boolean
+}
+
+export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
+  const rowRef = useRef<HTMLTableRowElement>(null)
+
+  useEffect(() => {
+    if (active && rowRef && rowRef.current) {
+      rowRef.current.focus()
+    }
+  }, [active])
+
+  return <TableRowStyled ref={rowRef} active={active} {...props} />
+}
 
 export const TableHeader = ({ children }) => (
   <thead style={{ width: '100%' }}>
