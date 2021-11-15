@@ -32,11 +32,8 @@ const NotificationsPage: React.FC = () => {
         />
         <Spacing top="small" />
         {notifications.map((notification) => (
-          <div style={{ width: '100%' }}>
-            <NotificationItem
-              key={notification.id}
-              notification={notification}
-            />
+          <div key={notification.id} style={{ width: '100%' }}>
+            <NotificationItem notification={notification} />
           </div>
         ))}
       </Flex>

@@ -3115,10 +3115,9 @@ export type GetSchemaForInsuranceTypeQueryVariables = Exact<{
   insuranceType: Scalars['String']
 }>
 
-export type GetSchemaForInsuranceTypeQuery = { __typename?: 'QueryType' } & Pick<
-  QueryType,
-  'quoteSchemaForInsuranceType'
->
+export type GetSchemaForInsuranceTypeQuery = {
+  __typename?: 'QueryType'
+} & Pick<QueryType, 'quoteSchemaForInsuranceType'>
 
 export type OverrideQuotePriceMutationVariables = Exact<{
   input: OverrideQuotePriceInput
