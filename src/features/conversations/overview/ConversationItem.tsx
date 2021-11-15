@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { StatusLine } from 'features/claims/claims-list/LargeClaimsList'
@@ -47,6 +48,14 @@ const Item = styled(Flex)<{ selected: boolean }>`
   }
 `
 
+const MemberName = styled.span<{ isPlaceholder: boolean }>`
+  ${({ isPlaceholder, theme }) =>
+    isPlaceholder &&
+    css`
+      color: ${theme.placeholderColor} !important;
+    `};
+`
+
 interface ConversationItemProps extends React.HTMLAttributes<HTMLDivElement> {
   focus?: boolean
   group: QuestionGroup
@@ -70,6 +79,8 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
     }
   }, [focus])
 
+  const nameAvailable = group.member?.firstName && group.member.lastName
+
   return (
     <Item
       ref={ref}
@@ -78,11 +89,11 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
       onClick={() => history.push(`/conversations/${group.memberId}`)}
       selected={group.memberId === currentMemberId}
     >
-      <span>
-        {group.member?.firstName && group.member.lastName
-          ? group.member?.firstName + ' ' + group.member.lastName
+      <MemberName isPlaceholder={!nameAvailable}>
+        {nameAvailable
+          ? group.member?.firstName + ' ' + group.member?.lastName
           : 'Name not available'}
-      </span>
+      </MemberName>
       <StatusLine
         numberMemberGroups={numberMemberGroups}
         memberId={group.memberId}
