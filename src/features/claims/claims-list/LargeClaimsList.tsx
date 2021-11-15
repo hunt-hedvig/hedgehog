@@ -51,7 +51,7 @@ const FlexVertically = styled.div`
   flex-direction: column;
 `
 
-const StatusLine = styled.div<{
+export const StatusLine = styled.div<{
   memberId: string
   numberMemberGroups: number
 }>`

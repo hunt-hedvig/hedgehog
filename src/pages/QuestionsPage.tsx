@@ -91,7 +91,7 @@ const QuestionsPage: React.FC = () => {
           </Spacing>
           <FilterSelect
             filters={selectedFilters}
-            pushLeft
+            push="left"
             animationDelay={0}
             animationItemDelay={20}
             onToggle={(filter) => {
