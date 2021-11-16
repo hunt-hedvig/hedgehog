@@ -96,7 +96,16 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
             form.reset()
             return 'Payout created'
           },
-          error: 'Could not create payout',
+          error: (e) => {
+            if (
+              e.message ===
+              'Exception while fetching data (/payoutMember) : Payouts are restricted'
+            ) {
+              return 'Payouts are restricted'
+            }
+
+            return 'Could not create payout'
+          },
         },
       )
     })
