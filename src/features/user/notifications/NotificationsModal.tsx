@@ -17,7 +17,7 @@ const ModalContainer = styled(Flex)`
 // noinspection CssInvalidPropertyValue
 const NotificationContainer = styled(Flex)`
   margin-top: 0.5rem;
-  max-height: calc(80vh - 2rem - 4rem - 0.5rem);
+  max-height: calc(80vh - 6.5rem);
   overflow-y: scroll;
   overflow: overlay;
 

@@ -55,10 +55,10 @@ const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
 
 const NewNotificationsOrb = styled.div`
   position: relative;
-  margin-top: -24px;
-  margin-right: -14px;
-  width: 14px;
-  height: 14px;
+  margin-top: -1.5rem;
+  margin-right: -1rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 50%;
 
   background-color: rgb(255, 0, 77);
@@ -75,6 +75,7 @@ const NotificationsButton: React.FC<{ onClick: () => void }> = ({
       {me.notifications.some((notification) => !notification.read) && (
         <NewNotificationsOrb />
       )}
+      <NewNotificationsOrb />
     </CircleButton>
   )
 }
