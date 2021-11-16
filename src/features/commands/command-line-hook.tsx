@@ -246,37 +246,20 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const [showCommandLine, setShowCommandLine] = useState(false)
   const actions = useRef<CommandLineAction[]>([])
   const actionKeyCodes = useRef<number[][]>([])
-  const [keyPressCount, setKeyPressCount] = useState(0)
-
-  useEffect(() => {
-    if (keyPressCount >= 2) {
-      setShowCommandLine(true)
-    }
-  }, [keyPressCount])
 
   const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isSpacePressed = useKeyIsPressed(Keys.Space)
+  const isControlPressed = useKeyIsPressed(Keys.Control)
 
-  useKeyIsPressed(Keys.Space, () => {
+  useEffect(() => {
     if (showCommandLine) {
       return
     }
 
-    setKeyPressCount((prev) => prev + 1)
-
-    if (keyPressCount >= 1) {
+    if (isSpacePressed && isOptionPressed) {
       setShowCommandLine(true)
-      setKeyPressCount(0)
-      return
     }
-
-    if (keyPressCount === 0) {
-      setTimeout(() => {
-        setKeyPressCount(0)
-      }, 200)
-    }
-  })
-
-  const isControlPressed = useKeyIsPressed(Keys.Control)
+  }, [isOptionPressed, isSpacePressed])
 
   useKeyIsPressed(Keys.Escape, () => {
     setShowCommandLine(false)
