@@ -740,7 +740,6 @@ export type MutationType = {
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
   setClaimFileCategory?: Maybe<ClaimFileUpload>
-  activateQuote: Quote
   addAgreementFromQuote: Quote
   createQuoteFromAgreement: Quote
   markSwitchableSwitcherEmailAsReminded: SwitchableSwitcherEmail
@@ -899,12 +898,6 @@ export type MutationTypeSetClaimFileCategoryArgs = {
   claimId: Scalars['ID']
   claimFileId: Scalars['ID']
   category?: Maybe<Scalars['String']>
-}
-
-export type MutationTypeActivateQuoteArgs = {
-  id: Scalars['ID']
-  activationDate: Scalars['LocalDate']
-  terminationDate?: Maybe<Scalars['LocalDate']>
 }
 
 export type MutationTypeAddAgreementFromQuoteArgs = {
@@ -1254,6 +1247,7 @@ export type QueryType = {
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
   availableCampaignCodeTypes: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
+  quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   quoteSchemaForInsuranceType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
@@ -1291,6 +1285,10 @@ export type QueryTypeMessageHistoryArgs = {
 
 export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
+}
+
+export type QueryTypeQuoteSchemaForContractTypeArgs = {
+  contractType: Scalars['String']
 }
 
 export type QueryTypeQuoteSchemaForInsuranceTypeArgs = {
@@ -1561,7 +1559,6 @@ export type User = {
   signature: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
-  latestReadNotifications?: Maybe<Scalars['Instant']>
   latestLocation?: Maybe<Scalars['String']>
   notifications: Array<UserNotification>
 }
@@ -3887,7 +3884,7 @@ export type UsersOnPathQuery = { __typename?: 'QueryType' } & {
   usersOnPath: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'fullName' | 'email' | 'latestPresence'
+      'id' | 'fullName' | 'email' | 'latestPresence' | 'signature'
     >
   >
 }
@@ -10639,6 +10636,7 @@ export const UsersOnPathDocument = gql`
       fullName
       email
       latestPresence
+      signature
     }
   }
 `
