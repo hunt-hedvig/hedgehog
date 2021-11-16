@@ -75,7 +75,6 @@ const NotificationsButton: React.FC<{ onClick: () => void }> = ({
       {me.notifications.some((notification) => !notification.read) && (
         <NewNotificationsOrb />
       )}
-      <NewNotificationsOrb />
     </CircleButton>
   )
 }
