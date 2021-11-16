@@ -97,10 +97,7 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
             return 'Payout created'
           },
           error: (e) => {
-            if (
-              e.message ===
-              'Exception while fetching data (/payoutMember) : Payouts are restricted'
-            ) {
+            if (e.message.split(': ').includes('Payouts are restricted')) {
               return 'Payouts are restricted'
             }
 
