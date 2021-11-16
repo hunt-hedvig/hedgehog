@@ -4,11 +4,7 @@ import { useMe } from 'features/user/hooks/use-me'
 import { NotificationItem } from 'features/user/notifications/components/NotificationItem'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import {
-  GetMeDocument,
-  GetMeQuery,
-  useMarkNotificationsAsReadMutation,
-} from 'types/generated/graphql'
+import { useMarkNotificationsAsReadMutation } from 'types/generated/graphql'
 
 const ModalContainer = styled(Flex)`
   padding: 1rem;
@@ -37,30 +33,7 @@ export const NotificationsModal: React.FC<{
   useEffect(() => {
     markNotificationsAsRead({
       optimisticResponse: { markNotificationsAsRead: true },
-      update: (cache, { data: response }) => {
-        if (!response?.markNotificationsAsRead) {
-          return
-        }
-
-        const cachedData = cache.readQuery({
-          query: GetMeDocument,
-        }) as GetMeQuery
-
-        cache.writeQuery({
-          query: GetMeDocument,
-          data: {
-            me: {
-              ...cachedData.me,
-              user: {
-                ...cachedData.me.user,
-                notifications: cachedData.me.user.notifications.map(
-                  (notification) => ({ ...notification, read: true }),
-                ),
-              },
-            },
-          },
-        })
-      },
+      refetchQueries: ['GetMe'],
     })
   }, [])
 
