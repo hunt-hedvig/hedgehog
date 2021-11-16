@@ -7,8 +7,8 @@ import React, { useRef } from 'react'
 import {
   BoxArrowLeft,
   GearFill,
-  Moon,
-  Sun,
+  MoonFill,
+  SunFill,
   ThreeDots,
 } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
@@ -114,7 +114,7 @@ const UserMenu = () => {
                 close()
               }}
             >
-              {isDarkmode ? <Sun /> : <Moon />}{' '}
+              {isDarkmode ? <SunFill /> : <MoonFill />}{' '}
               <span>{isDarkmode ? 'Light mode' : 'Dark mode'}</span>
             </Option>
             <Option
