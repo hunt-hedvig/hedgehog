@@ -5,9 +5,11 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { UsersOnPath } from 'features/navigation/topbar/components/UsersOnPath'
+import { useMe } from 'features/user/hooks/use-me'
+import { NotificationsModal } from 'features/user/notifications/NotificationsModal'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
-import { PeopleFill } from 'react-bootstrap-icons'
+import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
 
 const Wrapper = styled.div`
@@ -51,8 +53,35 @@ const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
   margin-right: ${({ pushLeft }) => (pushLeft ? '300px' : '0')};
 `
 
+const NewNotificationsOrb = styled.div`
+  position: relative;
+  margin-top: -1.5rem;
+  margin-right: -1rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+
+  background-color: rgb(255, 0, 77);
+`
+
+const NotificationsButton: React.FC<{ onClick: () => void }> = ({
+  onClick,
+}) => {
+  const { me } = useMe()
+
+  return (
+    <CircleButton onClick={onClick} style={{ marginLeft: '1em' }}>
+      <BellFill />
+      {me.notifications.some((notification) => !notification.read) && (
+        <NewNotificationsOrb />
+      )}
+    </CircleButton>
+  )
+}
+
 export const TopBar = () => {
   const [showUsers, setShowUsers] = useState(false)
+  const [showUserNotifications, setShowUserNotifications] = useState(false)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
@@ -63,6 +92,14 @@ export const TopBar = () => {
 
   return (
     <Wrapper>
+      {showUserNotifications && (
+        <NotificationsModal
+          onClose={() => {
+            setShowUserNotifications(false)
+          }}
+        />
+      )}
+
       <UserPanel
         visible={showUsers}
         onClickOutside={() => setShowUsers(false)}
@@ -76,6 +113,8 @@ export const TopBar = () => {
         <UsersOnPath />
 
         <UserMenu />
+
+        <NotificationsButton onClick={() => setShowUserNotifications(true)} />
 
         <CircleButton
           onClick={() => setShowUsers(true)}
