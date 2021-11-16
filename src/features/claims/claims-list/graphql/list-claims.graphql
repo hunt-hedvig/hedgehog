@@ -7,6 +7,9 @@ query ListClaims($options: ListClaimsOptions!) {
         firstName
         lastName
       }
+      payments {
+        amount
+      }
       registrationDate
       claimType
       outcome

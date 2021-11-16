@@ -2259,6 +2259,9 @@ export type ListClaimsQuery = { __typename?: 'QueryType' } & {
               Member,
               'memberId' | 'firstName' | 'lastName'
             >
+            payments: Array<
+              { __typename?: 'ClaimPayment' } & Pick<ClaimPayment, 'amount'>
+            >
           }
       >
     }
@@ -3090,10 +3093,9 @@ export type GetSchemaForInsuranceTypeQueryVariables = Exact<{
   insuranceType: Scalars['String']
 }>
 
-export type GetSchemaForInsuranceTypeQuery = { __typename?: 'QueryType' } & Pick<
-  QueryType,
-  'quoteSchemaForInsuranceType'
->
+export type GetSchemaForInsuranceTypeQuery = {
+  __typename?: 'QueryType'
+} & Pick<QueryType, 'quoteSchemaForInsuranceType'>
 
 export type OverrideQuotePriceMutationVariables = Exact<{
   input: OverrideQuotePriceInput
@@ -5302,6 +5304,9 @@ export const ListClaimsDocument = gql`
           memberId
           firstName
           lastName
+        }
+        payments {
+          amount
         }
         registrationDate
         claimType

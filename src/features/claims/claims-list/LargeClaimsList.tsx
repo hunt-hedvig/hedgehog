@@ -4,6 +4,7 @@ import {
   LoadingMessage,
   Monetary,
   Placeholder,
+  Popover,
   SecondLevelHeadline,
   Table,
   TableBody,
@@ -141,6 +142,7 @@ export const LargeClaimsList: React.FC<{
           <TableHeaderColumn>Date Registered</TableHeaderColumn>
           <TableHeaderColumn>Type & Outcome</TableHeaderColumn>
           <TableHeaderColumn>State</TableHeaderColumn>
+          <TableHeaderColumn>Paid Amount</TableHeaderColumn>
           <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
         <TableBody
@@ -164,6 +166,15 @@ export const LargeClaimsList: React.FC<{
               parseISO(claim.registrationDate),
               'HH:mm',
             )
+
+            const totalPaidAmount = {
+              amount: 0,
+              currency: '',
+            }
+            claim.payments.forEach((p) => {
+              totalPaidAmount.amount += +p.amount.amount
+              totalPaidAmount.currency = p.amount.currency
+            })
 
             return (
               <TableRow
@@ -221,6 +232,30 @@ export const LargeClaimsList: React.FC<{
                   <ClaimStateBadge state={claim.state}>
                     {convertEnumToTitle(claim.state)}
                   </ClaimStateBadge>
+                </TableColumn>
+
+                <TableColumn>
+                  {totalPaidAmount.amount > 0 ? (
+                    <Popover
+                      style={{
+                        width: 150,
+                      }}
+                      contents={claim.payments.map((p) => (
+                        <div>
+                          <Monetary amount={p.amount} />
+                        </div>
+                      ))}
+                    >
+                      <Monetary
+                        amount={{
+                          amount: totalPaidAmount.amount.toString(),
+                          currency: totalPaidAmount.currency,
+                        }}
+                      />
+                    </Popover>
+                  ) : (
+                    <Placeholder>Not specified</Placeholder>
+                  )}
                 </TableColumn>
 
                 <TableColumn>
