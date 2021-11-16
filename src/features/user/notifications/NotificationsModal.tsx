@@ -4,7 +4,7 @@ import { useMe } from 'features/user/hooks/use-me'
 import { NotificationItem } from 'features/user/notifications/components/NotificationItem'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { useMarkNotificationsAsReadMutation } from 'types/generated/graphql'
+import { useMarkAllNotificationsAsReadMutation } from 'types/generated/graphql'
 
 const ModalContainer = styled(Flex)`
   padding: 1rem;
@@ -27,12 +27,12 @@ export const NotificationsModal: React.FC<{
   onClose: () => void
 }> = ({ onClose }) => {
   const { me } = useMe()
-  const [markNotificationsAsRead] = useMarkNotificationsAsReadMutation()
+  const [markAllNotificationsAsRead] = useMarkAllNotificationsAsReadMutation()
   const history = useHistory()
 
   useEffect(() => {
-    markNotificationsAsRead({
-      optimisticResponse: { markNotificationsAsRead: true },
+    markAllNotificationsAsRead({
+      optimisticResponse: { markAllNotificationsAsRead: true },
       refetchQueries: ['GetMe'],
     })
   }, [])
