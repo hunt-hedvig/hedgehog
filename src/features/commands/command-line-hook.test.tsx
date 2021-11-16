@@ -10,7 +10,7 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { key: Keys.Option.key }),
+        new KeyboardEvent('keydown', { key: Keys.Space.key }),
       )
     })
 
