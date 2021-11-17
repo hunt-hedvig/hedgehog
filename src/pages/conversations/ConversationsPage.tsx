@@ -77,8 +77,6 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     setEmptyFilter(UserSettingKey.MarketFilter)
   }, [])
 
-  console.log(settings)
-
   const toggleFilterHandler = (
     filter: FilterStateType,
     settingField?: UserSettingKey,
