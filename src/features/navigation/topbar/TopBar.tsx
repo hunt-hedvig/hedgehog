@@ -7,6 +7,9 @@ import {
 import { UsersOnPath } from 'features/navigation/topbar/components/UsersOnPath'
 import { useMe } from 'features/user/hooks/use-me'
 import { NotificationsModal } from 'features/user/notifications/NotificationsModal'
+import { ShareIcon } from 'features/user/share/components/ShareIcon'
+import { ShareModal } from 'features/user/share/ShareModal'
+import { VerboseNotificationListener } from 'features/user/share/VerboseNotificationListener'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
 import { BellFill, PeopleFill } from 'react-bootstrap-icons'
@@ -70,7 +73,7 @@ const NotificationsButton: React.FC<{ onClick: () => void }> = ({
   const { me } = useMe()
 
   return (
-    <CircleButton onClick={onClick} style={{ marginLeft: '1em' }}>
+    <CircleButton onClick={onClick} style={{ marginLeft: '1rem' }}>
       <BellFill />
       {me.notifications.some((notification) => !notification.read) && (
         <NewNotificationsOrb />
@@ -82,6 +85,7 @@ const NotificationsButton: React.FC<{ onClick: () => void }> = ({
 export const TopBar = () => {
   const [showUsers, setShowUsers] = useState(false)
   const [showUserNotifications, setShowUserNotifications] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
@@ -92,12 +96,17 @@ export const TopBar = () => {
 
   return (
     <Wrapper>
+      <VerboseNotificationListener />
       {showUserNotifications && (
         <NotificationsModal
           onClose={() => {
             setShowUserNotifications(false)
           }}
         />
+      )}
+
+      {showShareModal && (
+        <ShareModal onClose={() => setShowShareModal(false)} />
       )}
 
       <UserPanel
@@ -114,11 +123,18 @@ export const TopBar = () => {
 
         <UserMenu />
 
+        <CircleButton
+          onClick={() => setShowShareModal(true)}
+          style={{ marginLeft: '1rem' }}
+        >
+          <ShareIcon />
+        </CircleButton>
+
         <NotificationsButton onClick={() => setShowUserNotifications(true)} />
 
         <CircleButton
           onClick={() => setShowUsers(true)}
-          style={{ marginLeft: '1em' }}
+          style={{ marginLeft: '1rem' }}
         >
           <PeopleFill />
         </CircleButton>
