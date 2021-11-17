@@ -288,11 +288,11 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
             </Header>
 
             <Menu>
-              {MenuItemsList.map((item) =>
-                !item.external ? (
+              {MenuItemsList.map(({ external, single, ...item }) =>
+                !external ? (
                   <MenuItem
                     key={item.route}
-                    style={{ marginBottom: item.single ? '4rem' : 0 }}
+                    style={{ marginBottom: single ? '4rem' : 0 }}
                     isActive={(_match, location) =>
                       location.pathname.startsWith(item.route)
                     }
@@ -308,7 +308,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 ) : (
                   <ExternalMenuItem
                     key={item.route}
-                    style={{ marginBottom: item.single ? '4rem' : 0 }}
+                    style={{ marginBottom: single ? '4rem' : 0 }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}

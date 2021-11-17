@@ -2,14 +2,14 @@ import { useEffect, useRef } from 'react'
 
 export const useTitle = (
   title: string,
-  dependencies?: any[],
+  dependencies: any[] = [],
   retainOnUnmount: boolean = false,
 ) => {
   const defaultTitle = useRef(document.title)
 
   useEffect(() => {
     document.title = title
-  }, [title, ...[dependencies ?? []]])
+  }, [title, ...dependencies])
 
   useEffect(() => {
     return () => {

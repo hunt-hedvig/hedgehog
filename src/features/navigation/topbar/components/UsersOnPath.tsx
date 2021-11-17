@@ -86,20 +86,14 @@ export const UsersOnPath: React.FC<{}> = () => {
 
   return (
     <Flex direction="row">
-      {users.map((user, index) => {
-        const signature = user.fullName
-          .split(' ')
-          .map((name) => name[0].toUpperCase())
-
-        return (
-          <CircleContainer key={user.email}>
-            <UserCircle delay={`${index * 40}ms`} duration={300}>
-              {signature}
-            </UserCircle>
-            <UserInfo className="user-info">{user.email}</UserInfo>
-          </CircleContainer>
-        )
-      })}
+      {users.map((user, index) => (
+        <CircleContainer key={user.email}>
+          <UserCircle delay={`${index * 40}ms`} duration={300}>
+            {user.signature}
+          </UserCircle>
+          <UserInfo className="user-info">{user.email}</UserInfo>
+        </CircleContainer>
+      ))}
     </Flex>
   )
 }
