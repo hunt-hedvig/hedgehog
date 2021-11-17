@@ -3850,7 +3850,7 @@ export type GetMeQuery = { __typename?: 'QueryType' } & {
           notifications: Array<
             { __typename?: 'UserNotification' } & Pick<
               UserNotification,
-              'id' | 'message' | 'url' | 'createdAt' | 'read'
+              'id' | 'message' | 'url' | 'createdAt' | 'read' | 'verbose'
             > & {
                 from?: Maybe<
                   { __typename?: 'User' } & Pick<
@@ -10483,10 +10483,12 @@ export const GetMeDocument = gql`
           url
           createdAt
           read
+          verbose
           from {
             id
             signature
             fullName
+            signature
           }
         }
       }

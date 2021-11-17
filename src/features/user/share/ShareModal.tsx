@@ -70,7 +70,9 @@ export const ShareModal: React.FC<{
         return false
       }
 
-      return !filter ? true : user.fullName.includes(filter)
+      return !filter
+        ? true
+        : user.fullName.toLowerCase().includes(filter.toLowerCase())
     }) ?? []
 
   const handleShare = (user: Omit<User, 'notifications' | 'signature'>) => {

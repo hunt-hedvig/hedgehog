@@ -15,6 +15,7 @@ export const useQuestionGroups = (
   const queryResult = useGetQuestionsGroupsQuery({
     pollInterval: pollInterval ?? 10000,
   })
+
   const questionGroups = (queryResult.data?.questionGroups ??
     []) as ReadonlyArray<QuestionGroup>
   return [questionGroups, queryResult]
