@@ -7,6 +7,7 @@ import {
 import { UsersOnPath } from 'features/navigation/topbar/components/UsersOnPath'
 import { useMe } from 'features/user/hooks/use-me'
 import { NotificationsModal } from 'features/user/notifications/NotificationsModal'
+import { VerboseNotificationListener } from 'features/user/notifications/VerboseNotificationListener'
 import { ShareIcon } from 'features/user/share/components/ShareIcon'
 import { ShareModal } from 'features/user/share/ShareModal'
 import { UserPanel } from 'features/user/UserPanel'
@@ -95,6 +96,7 @@ export const TopBar = () => {
 
   return (
     <Wrapper>
+      <VerboseNotificationListener />
       {showUserNotifications && (
         <NotificationsModal
           onClose={() => {

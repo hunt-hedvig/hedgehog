@@ -125,11 +125,7 @@ type MutationType {
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
   createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
   updateClaimState(id: ID!, state: ClaimState!): Claim
-  createClaim(
-    memberId: ID!
-    date: LocalDateTime!
-    source: ClaimSource!
-  ): Claim
+  createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): Claim
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
   createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
@@ -173,10 +169,7 @@ type MutationType {
     request: UpdateSwitcherNoteInput!
   ): EdiSwitcher!
 
-  terminateContract(
-    contractId: ID!
-    request: TerminateContractInput
-  ): Contract!
+  terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
   activatePendingAgreement(
     contractId: ID!
     request: ActivatePendingAgreementInput
@@ -213,12 +206,8 @@ type MutationType {
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
-  assignCampaignToPartnerFreeMonths(
-    request: AssignVoucherFreeMonths
-  ): Boolean!
-  assignCampaignToPartnerNoDiscount(
-    request: AssignVoucherNoDiscount
-  ): Boolean!
+  assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
+  assignCampaignToPartnerNoDiscount(request: AssignVoucherNoDiscount): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -607,7 +596,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
