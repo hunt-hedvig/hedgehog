@@ -32,7 +32,6 @@ export const NotificationsModal: React.FC<{
 
   useEffect(() => {
     markAllNotificationsAsRead({
-      optimisticResponse: { markAllNotificationsAsRead: true },
       refetchQueries: ['GetMe'],
     })
   }, [])

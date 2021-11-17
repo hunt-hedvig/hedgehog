@@ -3,11 +3,7 @@ import { Button, FadeIn, Flex } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import {
-  GetMeDocument,
-  GetMeQuery,
-  useMarkNotificationAsReadMutation,
-} from 'types/generated/graphql'
+import { useMarkNotificationAsReadMutation } from 'types/generated/graphql'
 
 const UserCircle = styled.div`
   display: flex;
@@ -63,34 +59,11 @@ export const VerboseNotification: React.FC<{
     markNotificationAsRead({
       variables: { notificationId },
       optimisticResponse: {
-        markNotificationAsRead: true,
-      },
-      update: (cache) => {
-        const cachedData = cache.readQuery({
-          query: GetMeDocument,
-        }) as GetMeQuery
-
-        const previousNotification = cachedData.me.user.notifications.find(
-          (notification) => notification.id === notificationId,
-        )
-
-        cache.writeQuery({
-          query: GetMeDocument,
-          data: {
-            me: {
-              ...cachedData.me,
-              user: {
-                ...cachedData.me.user,
-                notifications: [
-                  ...cachedData.me.user.notifications.filter(
-                    (notification) => notification.id === notificationId,
-                  ),
-                  { ...previousNotification, read: true },
-                ],
-              },
-            },
-          },
-        })
+        markNotificationAsRead: {
+          __typename: 'UserNotification',
+          id: notificationId,
+          read: true,
+        },
       },
     })
   }

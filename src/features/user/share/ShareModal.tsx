@@ -79,9 +79,11 @@ export const ShareModal: React.FC<{
         return false
       }
 
-      return !filter
-        ? true
-        : user.fullName.toLowerCase().includes(filter.toLowerCase())
+      if (!filter) {
+        return true
+      }
+
+      return user.fullName.toLowerCase().includes(filter.toLowerCase())
     }) ?? []
 
   const handleShare = (user: Omit<User, 'notifications' | 'signature'>) => {
@@ -90,7 +92,7 @@ export const ShareModal: React.FC<{
       sharePath({ variables: { path: location.pathname, userId: user.id } }),
       {
         loading: 'Sharing page',
-        success: 'Page shared',
+        success: `Page shared with ${user.fullName.split(' ')[0]}`,
         error: 'Could not share page',
       },
     )

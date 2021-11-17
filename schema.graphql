@@ -256,8 +256,8 @@ type MutationType {
     grantHolderType: GrantHolderType!
   ): ResourceAccessInformation!
 
-  markNotificationAsRead(notificationId: ID!): Boolean!
-  markAllNotificationsAsRead: Boolean!
+  markNotificationAsRead(notificationId: ID!): UserNotification!
+  markAllNotificationsAsRead: [UserNotification!]!
 
   sharePath(path: String!, userId: ID!): Boolean!
 }
@@ -597,7 +597,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

@@ -124,10 +124,7 @@ export const TopBar = () => {
         <UserMenu />
 
         <CircleButton
-          onClick={() => {
-            setShowShareModal(true)
-            console.log(showShareModal)
-          }}
+          onClick={() => setShowShareModal(true)}
           style={{ marginLeft: '1rem' }}
         >
           <ShareIcon />

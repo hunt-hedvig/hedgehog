@@ -793,8 +793,8 @@ export type MutationType = {
   restrictResourceAccess: ResourceAccessInformation
   releaseResourceAccess: Scalars['Boolean']
   grantResourceAccess: ResourceAccessInformation
-  markNotificationAsRead: Scalars['Boolean']
-  markAllNotificationsAsRead: Scalars['Boolean']
+  markNotificationAsRead: UserNotification
+  markAllNotificationsAsRead: Array<UserNotification>
   sharePath: Scalars['Boolean']
 }
 
@@ -3918,15 +3918,22 @@ export type MarkAllNotificationsAsReadMutationVariables = Exact<{
 
 export type MarkAllNotificationsAsReadMutation = {
   __typename?: 'MutationType'
-} & Pick<MutationType, 'markAllNotificationsAsRead'>
+} & {
+  markAllNotificationsAsRead: Array<
+    { __typename?: 'UserNotification' } & Pick<UserNotification, 'id' | 'read'>
+  >
+}
 
 export type MarkNotificationAsReadMutationVariables = Exact<{
   notificationId: Scalars['ID']
 }>
 
-export type MarkNotificationAsReadMutation = {
-  __typename?: 'MutationType'
-} & Pick<MutationType, 'markNotificationAsRead'>
+export type MarkNotificationAsReadMutation = { __typename?: 'MutationType' } & {
+  markNotificationAsRead: { __typename?: 'UserNotification' } & Pick<
+    UserNotification,
+    'id' | 'read'
+  >
+}
 
 export type SharePathMutationVariables = Exact<{
   path: Scalars['String']
@@ -10781,7 +10788,10 @@ export type UsersQueryResult = ApolloReactCommon.QueryResult<
 >
 export const MarkAllNotificationsAsReadDocument = gql`
   mutation MarkAllNotificationsAsRead {
-    markAllNotificationsAsRead
+    markAllNotificationsAsRead {
+      id
+      read
+    }
   }
 `
 export type MarkAllNotificationsAsReadMutationFn = ApolloReactCommon.MutationFunction<
@@ -10829,7 +10839,10 @@ export type MarkAllNotificationsAsReadMutationOptions = ApolloReactCommon.BaseMu
 >
 export const MarkNotificationAsReadDocument = gql`
   mutation MarkNotificationAsRead($notificationId: ID!) {
-    markNotificationAsRead(notificationId: $notificationId)
+    markNotificationAsRead(notificationId: $notificationId) {
+      id
+      read
+    }
   }
 `
 export type MarkNotificationAsReadMutationFn = ApolloReactCommon.MutationFunction<
