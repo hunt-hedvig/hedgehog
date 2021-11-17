@@ -740,7 +740,6 @@ export type MutationType = {
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
   setClaimFileCategory?: Maybe<ClaimFileUpload>
-  activateQuote: Quote
   addAgreementFromQuote: Quote
   createQuoteFromAgreement: Quote
   markSwitchableSwitcherEmailAsReminded: SwitchableSwitcherEmail
@@ -794,6 +793,7 @@ export type MutationType = {
   restrictResourceAccess: ResourceAccessInformation
   releaseResourceAccess: Scalars['Boolean']
   grantResourceAccess: ResourceAccessInformation
+  markNotificationsAsRead: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -898,12 +898,6 @@ export type MutationTypeSetClaimFileCategoryArgs = {
   claimId: Scalars['ID']
   claimFileId: Scalars['ID']
   category?: Maybe<Scalars['String']>
-}
-
-export type MutationTypeActivateQuoteArgs = {
-  id: Scalars['ID']
-  activationDate: Scalars['LocalDate']
-  terminationDate?: Maybe<Scalars['LocalDate']>
 }
 
 export type MutationTypeAddAgreementFromQuoteArgs = {
@@ -1253,6 +1247,7 @@ export type QueryType = {
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
   availableCampaignCodeTypes: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
+  quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   quoteSchemaForInsuranceType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
@@ -1290,6 +1285,10 @@ export type QueryTypeMessageHistoryArgs = {
 
 export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
+}
+
+export type QueryTypeQuoteSchemaForContractTypeArgs = {
+  contractType: Scalars['String']
 }
 
 export type QueryTypeQuoteSchemaForInsuranceTypeArgs = {
@@ -1365,6 +1364,7 @@ export type Quote = {
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
   isReadyToSign?: Maybe<Scalars['Boolean']>
+  allowOverrideSignFromHope?: Maybe<Scalars['Boolean']>
 }
 
 export type RedeemedCampaign = {
@@ -1556,9 +1556,31 @@ export type User = {
   email: Scalars['String']
   role?: Maybe<Scalars['String']>
   fullName: Scalars['String']
+  signature: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
   latestLocation?: Maybe<Scalars['String']>
+  notifications: Array<UserNotification>
+}
+
+export type UserNotificationsArgs = {
+  filters?: Maybe<UserNotificationsFilter>
+}
+
+export type UserNotification = {
+  __typename?: 'UserNotification'
+  id: Scalars['ID']
+  message: Scalars['String']
+  createdAt: Scalars['Instant']
+  url: Scalars['String']
+  read: Scalars['Boolean']
+  user: User
+  from?: Maybe<User>
+}
+
+export type UserNotificationsFilter = {
+  before?: Maybe<Scalars['Instant']>
+  after?: Maybe<Scalars['Instant']>
 }
 
 export type UserSetting = {
@@ -3811,8 +3833,22 @@ export type GetMeQuery = { __typename?: 'QueryType' } & {
   me: { __typename?: 'Me' } & Pick<Me, 'scopes' | 'role'> & {
       user: { __typename?: 'User' } & Pick<
         User,
-        'id' | 'email' | 'fullName' | 'phoneNumber' | 'role'
-      >
+        'id' | 'email' | 'fullName' | 'signature' | 'phoneNumber' | 'role'
+      > & {
+          notifications: Array<
+            { __typename?: 'UserNotification' } & Pick<
+              UserNotification,
+              'id' | 'message' | 'url' | 'createdAt' | 'read'
+            > & {
+                from?: Maybe<
+                  { __typename?: 'User' } & Pick<
+                    User,
+                    'id' | 'signature' | 'fullName'
+                  >
+                >
+              }
+          >
+        }
       settings: Array<
         { __typename?: 'UserSetting' } & Pick<UserSetting, 'key' | 'value'>
       >
@@ -3848,7 +3884,7 @@ export type UsersOnPathQuery = { __typename?: 'QueryType' } & {
   usersOnPath: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'fullName' | 'email' | 'latestPresence'
+      'id' | 'fullName' | 'email' | 'latestPresence' | 'signature'
     >
   >
 }
@@ -3863,6 +3899,14 @@ export type UsersQuery = { __typename?: 'QueryType' } & {
     >
   >
 }
+
+export type MarkNotificationsAsReadMutationVariables = Exact<{
+  [key: string]: never
+}>
+
+export type MarkNotificationsAsReadMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'markNotificationsAsRead'>
 
 export const SetClaimDateDocument = gql`
   mutation SetClaimDate($id: ID!, $date: LocalDate!) {
@@ -10411,8 +10455,21 @@ export const GetMeDocument = gql`
         id
         email
         fullName
+        signature
         phoneNumber
         role
+        notifications {
+          id
+          message
+          url
+          createdAt
+          read
+          from {
+            id
+            signature
+            fullName
+          }
+        }
       }
       settings {
         key
@@ -10580,6 +10637,7 @@ export const UsersOnPathDocument = gql`
       fullName
       email
       latestPresence
+      signature
     }
   }
 `
@@ -10689,6 +10747,54 @@ export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>
 export type UsersQueryResult = ApolloReactCommon.QueryResult<
   UsersQuery,
   UsersQueryVariables
+>
+export const MarkNotificationsAsReadDocument = gql`
+  mutation MarkNotificationsAsRead {
+    markNotificationsAsRead
+  }
+`
+export type MarkNotificationsAsReadMutationFn = ApolloReactCommon.MutationFunction<
+  MarkNotificationsAsReadMutation,
+  MarkNotificationsAsReadMutationVariables
+>
+
+/**
+ * __useMarkNotificationsAsReadMutation__
+ *
+ * To run a mutation, you first call `useMarkNotificationsAsReadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkNotificationsAsReadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markNotificationsAsReadMutation, { data, loading, error }] = useMarkNotificationsAsReadMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMarkNotificationsAsReadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    MarkNotificationsAsReadMutation,
+    MarkNotificationsAsReadMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    MarkNotificationsAsReadMutation,
+    MarkNotificationsAsReadMutationVariables
+  >(MarkNotificationsAsReadDocument, options)
+}
+export type MarkNotificationsAsReadMutationHookResult = ReturnType<
+  typeof useMarkNotificationsAsReadMutation
+>
+export type MarkNotificationsAsReadMutationResult = ApolloReactCommon.MutationResult<
+  MarkNotificationsAsReadMutation
+>
+export type MarkNotificationsAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  MarkNotificationsAsReadMutation,
+  MarkNotificationsAsReadMutationVariables
 >
 
 export interface PossibleTypesResultData {

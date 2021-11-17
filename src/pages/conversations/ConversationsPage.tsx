@@ -14,7 +14,7 @@ import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persis
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import { FilterStateType } from 'features/questions/FilterSelect'
+import { FilterState, FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import {
   doClaimFilter,
@@ -25,14 +25,20 @@ import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-gro
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 
-const FadeGrid = styled(Fade)`
+const Wrapper = styled.div`
   height: 100%;
+  overflow: hidden;
 
+  display: grid;
+  grid-template-columns: 0.6fr 1fr 0.7fr;
+  column-gap: 1em;
+`
+
+const FadeWrapper = styled(Fade)`
+  &,
   & > div {
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1.5fr 0.9fr;
-    column-gap: 32px;
+    flex: 1;
   }
 `
 
@@ -44,12 +50,11 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups] = useQuestionGroups(3000)
   const [chatFocused, setChatFocused] = useState(false)
-  const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
+  const { fade, props: fadeProps } = useFadeAnimation({ duration: 150 })
 
-  const [filters] = useInsecurePersistentState<ReadonlyArray<FilterStateType>>(
-    'questions:filters',
-    [],
-  )
+  const [filters, setFilters] = useInsecurePersistentState<
+    ReadonlyArray<FilterStateType>
+  >('questions:filters', [FilterState.HasOpenClaim, FilterState.NoOpenClaim])
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
@@ -67,7 +72,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
 
   const currentQuestionOrder = useMemo(
     () => filteredGroups.findIndex((group) => group.memberId === memberId),
-    [filteredGroups, memberId],
+    [filteredGroups, memberId, filters],
   )
 
   useEffect(() => {
@@ -119,41 +124,58 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     <>
       <MainHeadline>Conversations</MainHeadline>
       {memberId ? (
-        <FadeGrid {...fadeProps}>
-          <MemberSummary memberId={memberId} />
-          <ConversationChat
-            memberId={memberId}
-            onFocus={() => setChatFocused(true)}
-            onBlur={() => setChatFocused(false)}
-            onResolve={() =>
-              fade('up', 'out').then(() => {
-                if (currentQuestionOrder === 0) {
-                  history.push('/conversations')
-                }
+        <Wrapper>
+          {currentQuestionOrder !== -1 ? (
+            <>
+              <FadeWrapper {...fadeProps}>
+                <MemberSummary memberId={memberId} />
+              </FadeWrapper>
+              <FadeWrapper {...fadeProps}>
+                <ConversationChat
+                  memberId={memberId}
+                  onFocus={() => setChatFocused(true)}
+                  onBlur={() => setChatFocused(false)}
+                  onResolve={() =>
+                    fade('up', 'out').then(() => {
+                      if (currentQuestionOrder === 0) {
+                        history.push('/conversations')
+                      }
 
-                if (currentQuestionOrder < filteredGroups.length - 1) {
-                  history.push(
-                    `/conversations/${
-                      filteredGroups[currentQuestionOrder + 1].memberId
-                    }`,
-                  )
-                }
+                      if (currentQuestionOrder < filteredGroups.length - 1) {
+                        history.push(
+                          `/conversations/${
+                            filteredGroups[currentQuestionOrder + 1].memberId
+                          }`,
+                        )
+                      }
 
-                if (currentQuestionOrder === filteredGroups.length - 1) {
-                  history.push(
-                    `/conversations/${
-                      filteredGroups[currentQuestionOrder - 1].memberId
-                    }`,
-                  )
-                }
-              })
-            }
-          />
+                      if (currentQuestionOrder === filteredGroups.length - 1) {
+                        history.push(
+                          `/conversations/${
+                            filteredGroups[currentQuestionOrder - 1].memberId
+                          }`,
+                        )
+                      }
+                    })
+                  }
+                />
+              </FadeWrapper>
+            </>
+          ) : (
+            <>
+              <div />
+              <div />
+            </>
+          )}
+
           <ConversationsOverview
+            currentQuestionOrder={currentQuestionOrder}
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
+            filters={filters}
+            setFilters={setFilters}
           />
-        </FadeGrid>
+        </Wrapper>
       ) : (
         <div>
           <StandaloneMessage paddingTop="15vh">
@@ -161,8 +183,11 @@ const ConversationsPage: React.FC<RouteComponentProps<{
           </StandaloneMessage>
           <Spacing top="large" />
           <ConversationsOverview
+            currentQuestionOrder={currentQuestionOrder}
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
+            filters={filters}
+            setFilters={setFilters}
           />
         </div>
       )}

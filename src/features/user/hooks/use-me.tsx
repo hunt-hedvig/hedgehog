@@ -4,6 +4,7 @@ import {
   GetMeDocument,
   GetMeQuery,
   Me as _Me,
+  UserNotification,
   UserSettingKey,
   useUpdateUserSettingsMutation,
 } from 'types/generated/graphql'
@@ -11,6 +12,7 @@ import {
 interface PartialMe {
   email: string
   fullName: string
+  notifications: UserNotification[]
 }
 
 interface MeContextProps {
@@ -48,6 +50,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
   const partialMe = {
     email: me.user.email,
     fullName: me.user.fullName,
+    notifications: me.user.notifications,
   }
 
   const updateSetting = (

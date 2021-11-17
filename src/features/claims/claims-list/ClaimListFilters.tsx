@@ -15,12 +15,8 @@ import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-gro
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { InfoCircle } from 'react-bootstrap-icons'
+import { useHistory } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-
-interface FiltersProps {
-  filters: ClaimsFiltersType
-  setFilters: any
-}
 
 const FilterWrapper = styled.div`
   width: 100%;
@@ -77,10 +73,18 @@ export enum FilterGroupState {
   Third,
 }
 
+interface FiltersProps {
+  filters: ClaimsFiltersType
+  setFilters: any
+  page?: string
+}
+
 export const ClaimListFilters: React.FC<FiltersProps> = ({
   filters,
   setFilters,
+  page,
 }) => {
+  const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
 
   const isFilterExist = (state, field) =>
@@ -93,6 +97,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         [field]: prev[field].filter((st) => st !== state),
       }))
 
+      if (page && page !== '1') {
+        history.push(`/claims/list/1`)
+      }
+
       return
     }
 
@@ -100,6 +108,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       ...prev,
       [field]: prev[field] ? [...prev[field], state] : [state],
     }))
+
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
+    }
   }
 
   React.useEffect(() => {

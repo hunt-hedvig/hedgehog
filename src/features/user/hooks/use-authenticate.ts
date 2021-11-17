@@ -29,7 +29,7 @@ export const useAuthenticate = (): UseAuthenticateResult => {
   }
 
   if (data?.me) {
-    return { me: data.me, loading: false }
+    return { me: data.me as Me, loading: false }
   }
 
   return { loading: false }

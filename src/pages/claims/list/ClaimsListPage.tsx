@@ -86,7 +86,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         <MainHeadline>Claims</MainHeadline>
       </FadeIn>
 
-      <ClaimListFilters filters={filters} setFilters={setFilters} />
+      <ClaimListFilters filters={filters} setFilters={setFilters} page={page} />
 
       <LargeClaimsList page={selectedPage} filters={filters} />
     </ListPage>

@@ -13,6 +13,7 @@ import {
   Popover,
 } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { formatMoney } from '@hedvig-ui/utils/money'
 import {
   convertCamelcaseToTitle,
@@ -112,6 +113,19 @@ export const MemberInformation: React.FC<{
       },
     },
   ])
+
+  const nameEndsOnS =
+    member?.firstName &&
+    member?.firstName[member?.firstName?.length - 1] === 's'
+
+  useTitle(
+    member && member.firstName
+      ? !nameEndsOnS
+        ? `${member?.firstName}’s claim`
+        : `${member?.firstName}' claim`
+      : `Claim Details`,
+    [member],
+  )
 
   return (
     <CardContent>

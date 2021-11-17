@@ -71,7 +71,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       className="checkbox__input"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.keyCode === Keys.Enter.code) {
+        if (e.key === Keys.Enter.key) {
           e.preventDefault()
           // @ts-ignore
           onChange(e)
