@@ -103,6 +103,8 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   const { settings, updateSetting } = useMe()
   const { numberMemberGroups } = useNumberMemberGroups()
 
+  const checkSetting = (field: UserSettingKey) => !!settings[field].claims
+
   const setEmptyFilter = (field) => {
     if (!settings[field].claims) {
       updateSetting(field, {
@@ -123,14 +125,21 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     field: UserSettingKey,
     value: string | number,
   ) => {
-    updateSetting(field, {
-      ...settings[field],
-      claims: settings[field].claims.includes(value)
-        ? settings[field].claims.filter(
-            (currentValue) => currentValue !== value,
-          )
-        : [...settings[field].claims, value],
-    })
+    if (settings[field].claims) {
+      updateSetting(field, {
+        ...settings[field],
+        claims: settings[field].claims.includes(value)
+          ? settings[field].claims.filter(
+              (currentValue) => currentValue !== value,
+            )
+          : [...settings[field].claims, value],
+      })
+    } else {
+      updateSetting(field, {
+        ...settings[field],
+        claims: [value],
+      })
+    }
 
     if (page && page !== '1') {
       history.push(`/claims/list/1`)
@@ -157,9 +166,13 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={settings[
-                UserSettingKey.ClaimStatesFilter
-              ].claims.includes(ClaimState[key])}
+              checked={
+                checkSetting(UserSettingKey.ClaimStatesFilter)
+                  ? settings[UserSettingKey.ClaimStatesFilter].claims.includes(
+                      ClaimState[key],
+                    )
+                  : false
+              }
               onChange={() => {
                 updateFilterHandler(
                   UserSettingKey.ClaimStatesFilter,
@@ -187,9 +200,13 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={settings[
-                UserSettingKey.ClaimComplexityFilter
-              ].claims.includes(ClaimComplexity[key])}
+              checked={
+                checkSetting(UserSettingKey.ClaimComplexityFilter)
+                  ? settings[
+                      UserSettingKey.ClaimComplexityFilter
+                    ].claims.includes(ClaimComplexity[key])
+                  : false
+              }
               onChange={() => {
                 updateFilterHandler(
                   UserSettingKey.ClaimComplexityFilter,
@@ -215,9 +232,13 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={filterNumber} direction="row" align="center">
             <Checkbox
               label={FilterGroupState[filterNumber]}
-              checked={settings[
-                UserSettingKey.MemberGroupsFilter
-              ].claims.includes(filterNumber)}
+              checked={
+                checkSetting(UserSettingKey.MemberGroupsFilter)
+                  ? settings[UserSettingKey.MemberGroupsFilter].claims.includes(
+                      filterNumber,
+                    )
+                  : false
+              }
               onChange={() => {
                 updateFilterHandler(
                   UserSettingKey.MemberGroupsFilter,
@@ -239,9 +260,13 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={settings[UserSettingKey.MarketFilter].claims.includes(
-                Market[key],
-              )}
+              checked={
+                checkSetting(UserSettingKey.MarketFilter)
+                  ? settings[UserSettingKey.MarketFilter].claims.includes(
+                      Market[key],
+                    )
+                  : false
+              }
               onChange={() => {
                 updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
               }}
