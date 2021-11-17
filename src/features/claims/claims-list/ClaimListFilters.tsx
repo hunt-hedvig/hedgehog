@@ -15,6 +15,7 @@ import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useEffect } from 'react'
 import { InfoCircle } from 'react-bootstrap-icons'
+import { useHistory } from 'react-router'
 import {
   ClaimComplexity,
   ClaimState,
@@ -90,9 +91,15 @@ export enum FilterGroupState {
 interface FiltersProps {
   date: string | null
   setDate: (date: string) => void
+  page?: string
 }
 
-export const ClaimListFilters: React.FC<FiltersProps> = ({ date, setDate }) => {
+export const ClaimListFilters: React.FC<FiltersProps> = ({
+  date,
+  setDate,
+  page,
+}) => {
+  const history = useHistory()
   const { settings, updateSetting } = useMe()
   const { numberMemberGroups } = useNumberMemberGroups()
 
@@ -124,6 +131,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({ date, setDate }) => {
           )
         : [...settings[field].claims, value],
     })
+
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
+    }
   }
 
   const setDateHandler = (newDate: Date | null) => {

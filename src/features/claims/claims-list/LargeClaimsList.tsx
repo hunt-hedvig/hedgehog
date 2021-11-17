@@ -25,7 +25,7 @@ import { useListClaims } from 'features/claims/claims-list/graphql/use-list-clai
 import { getMemberIdColor } from 'features/member/utils'
 import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState, UserSettingKey } from 'types/generated/graphql'
 
@@ -51,7 +51,7 @@ const FlexVertically = styled.div`
   flex-direction: column;
 `
 
-const StatusLine = styled.div<{
+export const StatusLine = styled.div<{
   memberId: string
   numberMemberGroups: number
 }>`
@@ -85,6 +85,7 @@ export const LargeClaimsList: React.FC<{
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
+  const [activeRow, setActiveRow] = useState<number | null>(null)
 
   useTitle('Claims')
 
@@ -154,6 +155,7 @@ export const LargeClaimsList: React.FC<{
           <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
         <TableBody
+          setActiveRow={(num) => setActiveRow(num)}
           onPerformNavigation={(index) => {
             const claimId = claims[index].id
 
@@ -164,7 +166,7 @@ export const LargeClaimsList: React.FC<{
             redirectClaimHandler(claimId)
           }}
         >
-          {claims.map((claim) => {
+          {claims.map((claim, index) => {
             const registrationDateString = formatDate(
               parseISO(claim.registrationDate),
               'dd MMMM, yyyy',
@@ -176,10 +178,11 @@ export const LargeClaimsList: React.FC<{
 
             return (
               <TableRow
+                active={activeRow === index}
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.keyCode === Keys.Enter.code) {
+                  if (e.key === Keys.Enter.key) {
                     e.preventDefault()
                     history.push(`/claims/${claim.id}`)
                   }

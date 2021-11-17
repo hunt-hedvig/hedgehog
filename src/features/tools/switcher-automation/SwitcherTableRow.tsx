@@ -181,14 +181,14 @@ export const SwitcherEmailRow: React.FC<Pick<
               value={newNote}
               onChange={(e) => setNewNote(e.target.value)}
               onKeyDown={(e) => {
-                if (e.keyCode === Keys.Escape.code) {
+                if (e.key === Keys.Escape.key) {
                   if (note) {
                     setEditNote(false)
                     setNewNote(note || '')
                   }
                   return
                 }
-                if (e.keyCode !== Keys.Enter.code) {
+                if (e.key !== Keys.Enter.key) {
                   return
                 }
                 if (!newNote) {

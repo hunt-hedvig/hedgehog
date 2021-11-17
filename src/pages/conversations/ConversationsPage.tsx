@@ -13,6 +13,7 @@ import {
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
+import { FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import {
   doClaimFilter,
@@ -25,14 +26,20 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 
-const FadeGrid = styled(Fade)`
+const Wrapper = styled.div`
   height: 100%;
+  overflow: hidden;
 
+  display: grid;
+  grid-template-columns: 0.6fr 1fr 0.7fr;
+  column-gap: 1em;
+`
+
+const FadeWrapper = styled(Fade)`
+  &,
   & > div {
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1.5fr 0.9fr;
-    column-gap: 32px;
+    flex: 1;
   }
 `
 
@@ -45,14 +52,52 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const [questionGroups] = useQuestionGroups(3000)
   const [chatFocused, setChatFocused] = useState(false)
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
-  const { settings } = useMe()
+  const { settings, updateSetting } = useMe()
 
-  const [filters] = useState<number[]>([
+  const [filters, setFilters] = useState<number[]>([
     ...settings[UserSettingKey.ClaimStatesFilter].questions,
     ...settings[UserSettingKey.MemberGroupsFilter].questions,
     ...settings[UserSettingKey.ClaimComplexityFilter].questions,
     ...settings[UserSettingKey.MarketFilter].questions,
   ])
+
+  const setEmptyFilter = (field) => {
+    if (!settings[field].questions) {
+      updateSetting(field, {
+        ...settings[field],
+        questions: [],
+      })
+    }
+  }
+
+  useEffect(() => {
+    setEmptyFilter(UserSettingKey.ClaimStatesFilter)
+    setEmptyFilter(UserSettingKey.MemberGroupsFilter)
+    setEmptyFilter(UserSettingKey.ClaimComplexityFilter)
+    setEmptyFilter(UserSettingKey.MarketFilter)
+  }, [])
+
+  const toggleFilterHandler = (
+    filter: FilterStateType,
+    settingField?: UserSettingKey,
+  ) => {
+    if (settingField) {
+      updateSetting(settingField, {
+        ...settings[settingField],
+        questions: settings[settingField].questions.includes(filter)
+          ? settings[settingField].questions.filter(
+              (prevFilter) => filter !== prevFilter,
+            )
+          : [...settings[settingField].questions, filter],
+      })
+    }
+
+    if (filters.includes(filter)) {
+      setFilters(filters.filter((prevFilter) => filter !== prevFilter))
+    } else {
+      setFilters([...filters, filter])
+    }
+  }
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
@@ -70,7 +115,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
 
   const currentQuestionOrder = useMemo(
     () => filteredGroups.findIndex((group) => group.memberId === memberId),
-    [filteredGroups, memberId],
+    [filteredGroups, memberId, filters],
   )
 
   useEffect(() => {
@@ -122,41 +167,58 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     <>
       <MainHeadline>Conversations</MainHeadline>
       {memberId ? (
-        <FadeGrid {...fadeProps}>
-          <MemberSummary memberId={memberId} />
-          <ConversationChat
-            memberId={memberId}
-            onFocus={() => setChatFocused(true)}
-            onBlur={() => setChatFocused(false)}
-            onResolve={() =>
-              fade('up', 'out').then(() => {
-                if (currentQuestionOrder === 0) {
-                  history.push('/conversations')
-                }
+        <Wrapper>
+          {currentQuestionOrder !== -1 ? (
+            <>
+              <FadeWrapper {...fadeProps}>
+                <MemberSummary memberId={memberId} />
+              </FadeWrapper>
+              <FadeWrapper {...fadeProps}>
+                <ConversationChat
+                  memberId={memberId}
+                  onFocus={() => setChatFocused(true)}
+                  onBlur={() => setChatFocused(false)}
+                  onResolve={() =>
+                    fade('up', 'out').then(() => {
+                      if (currentQuestionOrder === 0) {
+                        history.push('/conversations')
+                      }
 
-                if (currentQuestionOrder < filteredGroups.length - 1) {
-                  history.push(
-                    `/conversations/${
-                      filteredGroups[currentQuestionOrder + 1].memberId
-                    }`,
-                  )
-                }
+                      if (currentQuestionOrder < filteredGroups.length - 1) {
+                        history.push(
+                          `/conversations/${
+                            filteredGroups[currentQuestionOrder + 1].memberId
+                          }`,
+                        )
+                      }
 
-                if (currentQuestionOrder === filteredGroups.length - 1) {
-                  history.push(
-                    `/conversations/${
-                      filteredGroups[currentQuestionOrder - 1].memberId
-                    }`,
-                  )
-                }
-              })
-            }
-          />
+                      if (currentQuestionOrder === filteredGroups.length - 1) {
+                        history.push(
+                          `/conversations/${
+                            filteredGroups[currentQuestionOrder - 1].memberId
+                          }`,
+                        )
+                      }
+                    })
+                  }
+                />
+              </FadeWrapper>
+            </>
+          ) : (
+            <>
+              <div />
+              <div />
+            </>
+          )}
+
           <ConversationsOverview
+            currentQuestionOrder={currentQuestionOrder}
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
+            filters={filters}
+            setFilters={toggleFilterHandler}
           />
-        </FadeGrid>
+        </Wrapper>
       ) : (
         <div>
           <StandaloneMessage paddingTop="15vh">
@@ -164,8 +226,11 @@ const ConversationsPage: React.FC<RouteComponentProps<{
           </StandaloneMessage>
           <Spacing top="large" />
           <ConversationsOverview
+            currentQuestionOrder={currentQuestionOrder}
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
+            filters={filters}
+            setFilters={toggleFilterHandler}
           />
         </div>
       )}

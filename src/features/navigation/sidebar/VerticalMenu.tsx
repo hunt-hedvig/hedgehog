@@ -239,7 +239,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
       title: 'Trustly',
       single: false,
       external: true,
-      hotkeyHandler: () => history.push(routes.trustly),
+      hotkeyHandler: () => window.open(routes.trustly),
     },
     {
       route: routes.adyen,
@@ -248,7 +248,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
       title: 'Adyen',
       single: false,
       external: true,
-      hotkeyHandler: () => history.push(routes.adyen),
+      hotkeyHandler: () => window.open(routes.adyen),
     },
     {
       route: routes.gsr,
@@ -257,7 +257,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
       title: 'GSR',
       single: false,
       external: true,
-      hotkeyHandler: () => history.push(routes.gsr),
+      hotkeyHandler: () => window.open(routes.gsr),
     },
     {
       route: routes.foss,
@@ -266,7 +266,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
       title: 'FOSS',
       single: true,
       external: true,
-      hotkeyHandler: () => history.push(routes.foss),
+      hotkeyHandler: () => window.open(routes.foss),
     },
   ]
 
@@ -288,11 +288,11 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
             </Header>
 
             <Menu>
-              {MenuItemsList.map((item) =>
-                !item.external ? (
+              {MenuItemsList.map(({ external, single, ...item }) =>
+                !external ? (
                   <MenuItem
                     key={item.route}
-                    style={{ marginBottom: item.single ? '4rem' : 0 }}
+                    style={{ marginBottom: single ? '4rem' : 0 }}
                     isActive={(_match, location) =>
                       location.pathname.startsWith(item.route)
                     }
@@ -308,7 +308,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 ) : (
                   <ExternalMenuItem
                     key={item.route}
-                    style={{ marginBottom: item.single ? '4rem' : 0 }}
+                    style={{ marginBottom: single ? '4rem' : 0 }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}

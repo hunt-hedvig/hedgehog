@@ -13,7 +13,6 @@ import {
   StandaloneMessage,
 } from '@hedvig-ui'
 import { Key, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { ClaimEvents } from 'features/claims/claim-details/components/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/components/ClaimFileTable'
 import { ClaimInformation } from 'features/claims/claim-details/components/ClaimInformation/ClaimInformation'
@@ -33,6 +32,7 @@ import { ShieldLockFill } from 'react-bootstrap-icons'
 import { Prompt, RouteComponentProps } from 'react-router'
 import {
   ClaimState,
+  ResourceAccessInformation,
   useClaimPageQuery,
   useResourceAccessInformationQuery,
 } from 'types/generated/graphql'
@@ -138,8 +138,6 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
   const { registerActions, isHintingControl } = useCommandLine()
   const [focus, setFocus] = useState<string | null>(null)
 
-  useTitle('Claim Details')
-
   registerActions(
     Object.keys(FOCUSES).map((section) => ({
       label: `Focus on ${FOCUSES[section].title}`,
@@ -193,7 +191,9 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
             <CardsWrapper>
               <Card>
                 <ClaimRestrictionInformation
-                  restriction={claimPageData.claim.restriction}
+                  restriction={
+                    claimPageData.claim.restriction as ResourceAccessInformation
+                  }
                   claimId={claimId}
                 />
               </Card>

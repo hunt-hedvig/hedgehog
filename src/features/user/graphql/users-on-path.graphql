@@ -4,5 +4,6 @@ query UsersOnPath($path: String!) {
     fullName
     email
     latestPresence
+    signature
   }
 }

@@ -34,12 +34,12 @@ export const FilterState = {
 
 export type FilterStateType = number
 
-const FilterButton = styled.button<{ selected: boolean }>`
+const FilterButton = styled.button<{ selected: boolean; small?: boolean }>`
   border: none;
   display: inline-flex;
   background-color: ${({ theme, selected }) =>
     selected ? theme.accent : theme.backgroundTransparent};
-  padding: 0.4em 0.7em;
+  padding: ${({ small }) => (!small ? '0.4em 0.7em' : '0.3em 0.6em')};
   border-radius: 6px;
   transition: all 200ms;
   cursor: pointer;
@@ -47,6 +47,7 @@ const FilterButton = styled.button<{ selected: boolean }>`
   color: ${({ theme, selected }) =>
     selected ? theme.accentContrast : theme.semiStrongForeground};
   font-family: inherit;
+  font-size: ${({ small }) => (!small ? '16px' : '14px')};
 
   :hover {
     background-color: ${({ theme, selected }) =>
@@ -83,19 +84,18 @@ const CountBadge = styled.div<{ selected: boolean }>`
 
 export const FilterSelect: React.FC<{
   filters: ReadonlyArray<FilterStateType>
-  onToggle: (
-    filter: FilterStateType,
-    settingField: UserSettingKey | undefined,
-  ) => void
+  onToggle: (filter: FilterStateType, settingField?: UserSettingKey) => void
   animationDelay?: number
   animationItemDelay?: number
-  pushLeft?: boolean
+  push?: 'left' | 'right'
+  small?: boolean
 }> = ({
   filters,
   onToggle,
   animationDelay = 700,
   animationItemDelay = 70,
-  pushLeft,
+  push,
+  small,
 }) => {
   const [questionGroups] = useQuestionGroups()
 
@@ -112,7 +112,7 @@ export const FilterSelect: React.FC<{
 
   return (
     <>
-      <ButtonsGroup style={{ justifyContent: pushLeft ? 'left' : 'center' }}>
+      <ButtonsGroup style={{ justifyContent: push ? push : 'center' }}>
         {range(numberMemberGroups).map((memberGroup) => {
           return (
             <FadeIn
@@ -120,6 +120,7 @@ export const FilterSelect: React.FC<{
               key={memberGroup}
             >
               <FilterButton
+                small={small}
                 onClick={() =>
                   onToggle(memberGroup, UserSettingKey.MemberGroupsFilter)
                 }
@@ -131,7 +132,7 @@ export const FilterSelect: React.FC<{
                 group{' '}
                 <GroupIcon
                   filter={memberGroup as FilterStateType}
-                  style={{ marginLeft: '0.5em' }}
+                  style={{ marginLeft: !small ? '0.5em' : '0.3em' }}
                 />
                 <CountBadge selected={filters.includes(memberGroup)}>
                   <div>
@@ -148,8 +149,8 @@ export const FilterSelect: React.FC<{
       </ButtonsGroup>
       <ButtonsGroup
         style={{
-          justifyContent: pushLeft ? 'left' : 'center',
-          marginTop: '1.0em',
+          justifyContent: push ? push : 'center',
+          marginTop: !small ? '1.0em' : '0.6em',
         }}
       >
         {Object.keys(Market).map((market) => {
@@ -160,13 +161,14 @@ export const FilterSelect: React.FC<{
               key={market}
             >
               <FilterButton
+                small={small}
                 selected={filters.includes(FilterState[market])}
                 onClick={() =>
                   onToggle(FilterState[market], UserSettingKey.MarketFilter)
                 }
               >
                 {convertEnumToTitle(market)}{' '}
-                <span style={{ marginLeft: '0.5em' }}>
+                <span style={{ marginLeft: !small ? '0.5em' : '0.3em' }}>
                   {MarketFlags[market.toUpperCase()]}
                 </span>
                 <CountBadge selected={filters.includes(FilterState[market])}>
@@ -181,8 +183,8 @@ export const FilterSelect: React.FC<{
       </ButtonsGroup>
       <ButtonsGroup
         style={{
-          justifyContent: pushLeft ? 'left' : 'center',
-          marginTop: '1.0em',
+          justifyContent: push ? push : 'center',
+          marginTop: !small ? '1.0em' : '0.6em',
         }}
       >
         <FadeIn
@@ -190,6 +192,7 @@ export const FilterSelect: React.FC<{
             animationItemDelay * (numberMemberGroups + 4)}ms`}
         >
           <FilterButton
+            small={small}
             selected={filters.includes(FilterState.HasOpenClaim)}
             onClick={() =>
               onToggle(
@@ -198,7 +201,8 @@ export const FilterSelect: React.FC<{
               )
             }
           >
-            Open claims <ShieldShaded style={{ marginLeft: '0.5rem' }} />
+            Open claims{' '}
+            <ShieldShaded style={{ marginLeft: !small ? '0.5em' : '0.3em' }} />
             <CountBadge selected={filters.includes(FilterState.HasOpenClaim)}>
               <div>
                 {getCountByFilter(FilterState.HasOpenClaim, doClaimFilter)}
@@ -211,6 +215,7 @@ export const FilterSelect: React.FC<{
             animationItemDelay * (numberMemberGroups + 5)}ms`}
         >
           <FilterButton
+            small={small}
             selected={filters.includes(FilterState.NoOpenClaim)}
             onClick={() =>
               onToggle(
@@ -219,7 +224,8 @@ export const FilterSelect: React.FC<{
               )
             }
           >
-            No claims <Shield style={{ marginLeft: '0.5rem' }} />
+            No claims{' '}
+            <Shield style={{ marginLeft: !small ? '0.5em' : '0.3em' }} />
             <CountBadge selected={filters.includes(FilterState.NoOpenClaim)}>
               <div>
                 {getCountByFilter(FilterState.NoOpenClaim, doClaimFilter)}

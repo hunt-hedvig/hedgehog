@@ -53,7 +53,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         <MainHeadline>Claims</MainHeadline>
       </FadeIn>
 
-      <ClaimListFilters date={date} setDate={setDate} />
+      <ClaimListFilters date={date} setDate={setDate} page={page} />
 
       <LargeClaimsList page={selectedPage} date={date} />
     </ListPage>

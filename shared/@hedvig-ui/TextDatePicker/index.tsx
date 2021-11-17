@@ -150,7 +150,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
         value={textValue || ''}
         onChange={(e) => setTextValue(e.target.value)}
         onKeyDown={(e) => {
-          if (e.keyCode === Keys.Enter.code && textValue) {
+          if (e.key === Keys.Enter.key && textValue) {
             setDateHandler()
           }
         }}

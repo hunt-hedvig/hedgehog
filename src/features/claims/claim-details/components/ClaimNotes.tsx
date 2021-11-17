@@ -173,12 +173,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {
-          if (
-            isMetaKey(e) &&
-            e.keyCode === Keys.Enter.code &&
-            !submitting &&
-            note
-          ) {
+          if (isMetaKey(e) && e.key === Keys.Enter.key && !submitting && note) {
             handleSubmitNote()
           }
         }}
