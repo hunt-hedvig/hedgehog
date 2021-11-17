@@ -48,12 +48,12 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
 }) => {
   const history = useHistory()
 
-  const { registerActions, isHintingControl } = useCommandLine()
+  const { registerActions, isHintingOption } = useCommandLine()
 
   registerActions([
     {
       label: 'Copy email',
-      keys: [Keys.Control, Keys.E],
+      keys: [Keys.Option, Keys.E],
       onResolve: () => {
         copy(member.email || '', {
           format: 'text/plain',
@@ -63,7 +63,7 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
     },
     {
       label: 'Copy phone number',
-      keys: [Keys.Control, Keys.N],
+      keys: [Keys.Option, Keys.N],
       onResolve: () => {
         copy(member.phoneNumber || '', {
           format: 'text/plain',
@@ -73,7 +73,7 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
     },
     {
       label: 'Copy ID',
-      keys: [Keys.Control, Keys.M],
+      keys: [Keys.Option, Keys.M],
       onResolve: () => {
         copy(memberId, {
           format: 'text/plain',
@@ -91,13 +91,13 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
       {member?.email && (
         <MemberDetailLink href={`mailto:${member.email}`}>
           {member.email}
-          {isHintingControl && <Hotkey dark>E</Hotkey>}
+          {isHintingOption && <Hotkey dark>E</Hotkey>}
         </MemberDetailLink>
       )}
       {member?.phoneNumber && (
         <MemberDetailLink href={`tel:${member.phoneNumber}`}>
           {member.phoneNumber}
-          {isHintingControl && <Hotkey dark>N</Hotkey>}
+          {isHintingOption && <Hotkey dark>N</Hotkey>}
         </MemberDetailLink>
       )}
       <Popover contents="Click to copy member link">
@@ -115,7 +115,7 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
           }}
         >
           {memberId}
-          {isHintingControl && <Hotkey dark>M</Hotkey>}
+          {isHintingOption && <Hotkey dark>M</Hotkey>}
         </MemberDetailLink>
       </Popover>
       <Popover contents="Click to copy ID">
