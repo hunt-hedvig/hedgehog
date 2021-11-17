@@ -795,6 +795,7 @@ export type MutationType = {
   grantResourceAccess: ResourceAccessInformation
   markNotificationAsRead: Scalars['Boolean']
   markAllNotificationsAsRead: Scalars['Boolean']
+  sharePath: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1150,6 +1151,11 @@ export type MutationTypeMarkNotificationAsReadArgs = {
   notificationId: Scalars['ID']
 }
 
+export type MutationTypeSharePathArgs = {
+  path: Scalars['String']
+  userId: Scalars['ID']
+}
+
 export type NationalIdentification = {
   __typename?: 'NationalIdentification'
   identification: Scalars['String']
@@ -1269,7 +1275,6 @@ export type QueryType = {
   user?: Maybe<User>
   users: Array<User>
   usersOnPath: Array<User>
-  sharePath: Scalars['Boolean']
   resourceAccess?: Maybe<ResourceAccessInformation>
 }
 
@@ -1328,11 +1333,6 @@ export type QueryTypeUserArgs = {
 
 export type QueryTypeUsersOnPathArgs = {
   path: Scalars['String']
-}
-
-export type QueryTypeSharePathArgs = {
-  path: Scalars['String']
-  user: Scalars['String']
 }
 
 export type QueryTypeResourceAccessArgs = {
@@ -3927,6 +3927,16 @@ export type MarkNotificationAsReadMutationVariables = Exact<{
 export type MarkNotificationAsReadMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'markNotificationAsRead'>
+
+export type SharePathMutationVariables = Exact<{
+  path: Scalars['String']
+  userId: Scalars['ID']
+}>
+
+export type SharePathMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'sharePath'
+>
 
 export const SetClaimDateDocument = gql`
   mutation SetClaimDate($id: ID!, $date: LocalDate!) {
@@ -10865,6 +10875,56 @@ export type MarkNotificationAsReadMutationResult = ApolloReactCommon.MutationRes
 export type MarkNotificationAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   MarkNotificationAsReadMutation,
   MarkNotificationAsReadMutationVariables
+>
+export const SharePathDocument = gql`
+  mutation SharePath($path: String!, $userId: ID!) {
+    sharePath(path: $path, userId: $userId)
+  }
+`
+export type SharePathMutationFn = ApolloReactCommon.MutationFunction<
+  SharePathMutation,
+  SharePathMutationVariables
+>
+
+/**
+ * __useSharePathMutation__
+ *
+ * To run a mutation, you first call `useSharePathMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSharePathMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sharePathMutation, { data, loading, error }] = useSharePathMutation({
+ *   variables: {
+ *      path: // value for 'path'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useSharePathMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SharePathMutation,
+    SharePathMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SharePathMutation,
+    SharePathMutationVariables
+  >(SharePathDocument, options)
+}
+export type SharePathMutationHookResult = ReturnType<
+  typeof useSharePathMutation
+>
+export type SharePathMutationResult = ApolloReactCommon.MutationResult<
+  SharePathMutation
+>
+export type SharePathMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SharePathMutation,
+  SharePathMutationVariables
 >
 
 export interface PossibleTypesResultData {

@@ -39,7 +39,6 @@ type QueryType {
   users: [User!]!
 
   usersOnPath(path: String!): [User!]!
-  sharePath(path: String!, user: String!): Boolean!
 
   resourceAccess(resourceId: String!): ResourceAccessInformation
 }
@@ -259,6 +258,8 @@ type MutationType {
 
   markNotificationAsRead(notificationId: ID!): Boolean!
   markAllNotificationsAsRead: Boolean!
+
+  sharePath(path: String!, userId: ID!): Boolean!
 }
 
 enum GrantHolderType {

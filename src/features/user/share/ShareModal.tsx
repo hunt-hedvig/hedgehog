@@ -8,7 +8,12 @@ import chroma from 'chroma-js'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { User, useUsersQuery } from 'types/generated/graphql'
+import { useLocation } from 'react-router'
+import {
+  User,
+  useSharePathMutation,
+  useUsersQuery,
+} from 'types/generated/graphql'
 
 const Container = styled.div`
   padding: 1rem;
@@ -62,6 +67,10 @@ export const ShareModal: React.FC<{
   const { data } = useUsersQuery()
   const [sharedWith, setSharedWith] = useState<string[]>([])
 
+  const [sharePath] = useSharePathMutation()
+
+  const location = useLocation()
+
   useKeyIsPressed(Keys.Escape, onClose)
 
   const users =
@@ -76,8 +85,15 @@ export const ShareModal: React.FC<{
     }) ?? []
 
   const handleShare = (user: Omit<User, 'notifications' | 'signature'>) => {
-    toast.success(`Shared page with ${user.fullName}`)
     setSharedWith((prev) => [...prev, user.id])
+    toast.promise(
+      sharePath({ variables: { path: location.pathname, userId: user.id } }),
+      {
+        loading: 'Sharing page',
+        success: 'Page shared',
+        error: 'Could not share page',
+      },
+    )
   }
 
   return (

@@ -1,6 +1,6 @@
 import { differenceInSeconds, parseISO } from 'date-fns'
 import { useMe } from 'features/user/hooks/use-me'
-import { VerboseNotification } from 'features/user/notifications/components/VerboseNotification'
+import { VerboseNotification } from 'features/user/share/components/VerboseNotification'
 import React, { useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 
