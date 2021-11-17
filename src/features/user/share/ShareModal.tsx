@@ -27,7 +27,7 @@ const UserList = styled.div`
   overflow: overlay;
 
   ::-webkit-scrollbar-track {
-    border-radius: 8px;
+    border-radius: 0.5rem;
     background-color: transparent;
   }
 `
