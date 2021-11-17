@@ -24,7 +24,7 @@ export const VerboseNotificationListener: React.FC = () => {
         () => (
           <VerboseNotification
             notificationId={notification.id}
-            signature={notification.from.signature}
+            signature={notification?.from?.signature ?? ''}
             message={notification.message}
             toastId={notification.id}
             path={notification.url}
