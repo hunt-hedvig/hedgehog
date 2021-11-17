@@ -44,10 +44,10 @@ const QuestionsPage: React.FC = () => {
   const { me, settings, updateSetting } = useMe()
 
   const [selectedFilters, setSelectedFilters] = useState<number[]>([
-    ...settings[UserSettingKey.ClaimStatesFilter].questions,
-    ...settings[UserSettingKey.MemberGroupsFilter].questions,
-    ...settings[UserSettingKey.ClaimComplexityFilter].questions,
-    ...settings[UserSettingKey.MarketFilter].questions,
+    ...(settings[UserSettingKey.ClaimStatesFilter].questions || []),
+    ...(settings[UserSettingKey.MemberGroupsFilter].questions || []),
+    ...(settings[UserSettingKey.ClaimComplexityFilter].questions || []),
+    ...(settings[UserSettingKey.MarketFilter].questions || []),
   ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
@@ -85,14 +85,21 @@ const QuestionsPage: React.FC = () => {
     settingField?: UserSettingKey,
   ) => {
     if (settingField) {
-      updateSetting(settingField, {
-        ...settings[settingField],
-        questions: settings[settingField].questions.includes(filter)
-          ? settings[settingField].questions.filter(
-              (prevFilter) => filter !== prevFilter,
-            )
-          : [...settings[settingField].questions, filter],
-      })
+      if (settings[settingField].questions) {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: settings[settingField].questions.includes(filter)
+            ? settings[settingField].questions.filter(
+                (prevFilter) => filter !== prevFilter,
+              )
+            : [...settings[settingField].questions, filter],
+        })
+      } else {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: [filter],
+        })
+      }
     }
 
     if (selectedFilters.includes(filter)) {
