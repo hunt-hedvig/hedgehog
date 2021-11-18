@@ -142,7 +142,7 @@ export const PaymentsTab: React.FC<{
     variables: { id: memberId },
   })
 
-  const [manualAmount, setManualAmount] = useState<string>('0')
+  const [manualAmount, setManualAmount] = useState('0')
 
   const { data: quotesData } = useGetQuotesQuery({
     variables: {
