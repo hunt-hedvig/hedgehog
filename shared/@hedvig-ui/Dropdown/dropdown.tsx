@@ -217,6 +217,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
           ...children[selectedIdx - 1],
           props: {
             ...children[selectedIdx - 1].props,
+            tabIndex: -1,
             selected: false,
             onClick: () => {
               toggleDropdown()
