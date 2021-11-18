@@ -208,7 +208,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       }}
       {...props}
     >
-      {!selectedIdx ? (
+      {!selectedIdx || !children[selectedIdx - 1] ? (
         <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
           <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
         </OptionStyled>
