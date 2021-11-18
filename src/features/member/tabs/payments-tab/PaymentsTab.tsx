@@ -39,6 +39,8 @@ import {
 } from 'types/generated/graphql'
 import { PayoutDetails } from './PayoutDetails'
 
+const numberRegex = /^\d+$/
+
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
   const bDate = new Date(b.timestamp)
@@ -53,8 +55,16 @@ const transactionDateSorter = (a, b) => {
 }
 
 const CHARGE_MEMBER_MUTATION = gql`
-  mutation ChargeMember($id: ID!, $amount: MonetaryAmount!) {
-    chargeMember(id: $id, amount: $amount) {
+  mutation ChargeMember(
+    $id: ID!
+    $amount: MonetaryAmount!
+    $allowManualCharge: Boolean
+  ) {
+    chargeMember(
+      id: $id
+      amount: $amount
+      allowManualCharge: $allowManualCharge
+    ) {
       memberId
       transactions {
         id
@@ -143,6 +153,7 @@ export const PaymentsTab: React.FC<{
   })
 
   const [manualAmount, setManualAmount] = useState('0')
+  console.log('manualAmount', manualAmount)
 
   const { data: quotesData } = useGetQuotesQuery({
     variables: {
@@ -170,14 +181,14 @@ export const PaymentsTab: React.FC<{
   const { confirm } = useConfirmDialog()
 
   const handleChargeSubmit = () => {
-    const chargeBalance = allowManualCharge
+    const chargeAmount = allowManualCharge
       ? {
           ...account?.currentBalance!,
           amount: manualAmount,
         }
       : account?.currentBalance!
     const confirmMessage = `Are you sure you want to charge ${formatMoney(
-      chargeBalance,
+      chargeAmount,
     )}?`
     confirm(confirmMessage).then(() => {
       toast
@@ -185,13 +196,16 @@ export const PaymentsTab: React.FC<{
           chargeMemberMutation({
             variables: {
               id: memberId,
-              amount: chargeBalance.amount,
+              amount: chargeAmount,
               allowManualCharge,
             },
           }),
           {
             loading: 'Charging member',
-            success: 'Member charged',
+            success: () => {
+              setManualAmount('0')
+              return 'Member charged'
+            },
             error: 'Could not charge member',
           },
         )
@@ -291,11 +305,20 @@ export const PaymentsTab: React.FC<{
                   <Input
                     name="manualAmount"
                     placeholder="Amount"
-                    type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     onFocus={() => manualAmount === '0' && setManualAmount('')}
                     onBlur={() => !manualAmount && setManualAmount('0')}
                     value={manualAmount}
-                    onChange={(e) => setManualAmount(e.currentTarget.value)}
+                    title="Only numbers are allowed"
+                    onChange={(e) => {
+                      if (
+                        e.target.value.match(numberRegex) ||
+                        !e.target.value
+                      ) {
+                        setManualAmount(e.currentTarget.value)
+                      }
+                    }}
                   />
                   <Spacing left="small" width="auto">
                     <Button
