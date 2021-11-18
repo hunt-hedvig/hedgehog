@@ -14,15 +14,15 @@ import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persis
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
+import CreateFilterForm from 'features/claims/claim-templates/CreateFilterForm'
+import FilteredMetric from 'features/claims/claim-templates/FilteredMetric'
 import { Greeting } from 'features/dashboard/Greeting'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
-import { ClaimsFiltersType } from '../claims/list/ClaimsListPage'
-import CreateFilterForm from './CreateFilterForm'
-import FilteredMetric from './FilteredMetric'
+import { ClaimsFiltersType } from './claims/list/ClaimsListPage'
 
 const Wrapper = styled.div`
   display: flex;

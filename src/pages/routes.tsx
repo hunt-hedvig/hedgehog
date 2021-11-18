@@ -2,7 +2,7 @@ import { StandaloneMessage } from '@hedvig-ui'
 import React, { lazy, Suspense } from 'react'
 import { Redirect, Route, Switch } from 'react-router'
 
-const DashboardPage = lazy(() => import('./dashboard/DashboardPage'))
+const DashboardPage = lazy(() => import('./DashboardPage'))
 const ProfilePage = lazy(() => import('./settings/ProfilePage'))
 const QuestionsPage = lazy(() => import('./QuestionsPage'))
 const ConversationsOnboardingPage = lazy(() =>

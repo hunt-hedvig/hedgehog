@@ -1,16 +1,16 @@
 import styled from '@emotion/styled'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
-import React, { useEffect, useState } from 'react'
-import { PencilSquare } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
-import CreateFilterForm from './CreateFilterForm'
 import {
   ClaimsFiltersTypeWithName,
   MetricName,
   MetricNumber,
   metricStyles,
-} from './DashboardPage'
+} from 'pages/DashboardPage'
+import React, { useEffect, useState } from 'react'
+import { PencilSquare } from 'react-bootstrap-icons'
+import { useHistory } from 'react-router'
+import CreateFilterForm from './CreateFilterForm'
 
 const IconWrapper = styled.div`
   position: absolute;

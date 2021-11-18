@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Button, Input, Modal } from '@hedvig-ui'
 import { ClaimListFilters } from 'features/claims/claims-list/ClaimListFilters'
+import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
+import { ClaimsFiltersTypeWithName } from 'pages/DashboardPage'
 import React, { useState } from 'react'
-import { ClaimsFiltersType } from '../claims/list/ClaimsListPage'
-import { ClaimsFiltersTypeWithName } from './DashboardPage'
 
 const FiltersWrapper = styled.div`
   .claims__filter-wrapper {
