@@ -1,5 +1,5 @@
 import { Input } from '@hedvig-ui'
-import { isKey, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -24,11 +24,11 @@ export const EditStreetInput: React.FC<{
       value={newStreet}
       onChange={(e) => setNewStreet(e.currentTarget.value)}
       onKeyDown={(e) => {
-        if (isKey(e, Keys.Escape)) {
+        if (isPressing(e, Keys.Escape)) {
           closeEdit()
           return
         }
-        if (!isKey(e, Keys.Escape)) {
+        if (!isPressing(e, Keys.Escape)) {
           return
         }
         if (street.trim() === newStreet.trim()) {

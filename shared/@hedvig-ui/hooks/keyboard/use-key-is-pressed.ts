@@ -306,23 +306,64 @@ const IllegalCharacters = new Set([
 
 export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
 
-export const isKey = (
+export const isPressing = (
   e: KeyboardEvent | React.KeyboardEvent<any>,
-  key: Key,
-): boolean => e.code === key.code || e.code === key.codeAlternative
+  key: Key | ReadonlyArray<Key> | ReadonlyArray<string>,
+): boolean => {
+  if ('length' in key) {
+    if (typeof key[0] === 'string') {
+      return isPressingKeys(e, key as ReadonlyArray<string>)
+    } else {
+      return isPressingKeys(
+        e,
+        (key as ReadonlyArray<Key>).map((k) => k.code),
+      )
+    }
+  }
+  return isPressingKey(e, key.code, key.codeAlternative)
+}
+
+const isPressingKey = (
+  e: KeyboardEvent | React.KeyboardEvent<any>,
+  code: string,
+  codeAlternative?: string,
+): boolean => e.code === code || e.code === codeAlternative
+
+// tslint:disable:no-unused-expression
+const isPressingKeys = (
+  e: KeyboardEvent | React.KeyboardEvent<any>,
+  keys: ReadonlyArray<string>,
+): boolean => {
+  if (keys.length <= 1) {
+    throw Error(
+      'Illegal to use isPressingKeys with single key, use isPressing instead',
+    )
+  }
+  const modifiers: string[] = []
+  e.shiftKey && modifiers.push(Keys.Shift.code)
+  e.ctrlKey && modifiers.push(Keys.Control.code)
+  e.altKey && modifiers.push(Keys.Option.code)
+  e.metaKey && modifiers.push(Keys.Command.code)
+  if (modifiers.length !== keys.length - 1) {
+    return false
+  }
+  return keys.reduce<boolean>((prev, current) => {
+    return prev && (isPressingKey(e, current) || modifiers.includes(current))
+  }, true)
+}
 
 export const useKeyIsPressed = (key: Key, callback?: (e) => void): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
   const handleKeydown = (e: KeyboardEvent) => {
-    if (isKey(e, key)) {
+    if (isPressing(e, key)) {
       callback?.(e)
       setKeyPressed(true)
     }
   }
 
   const handleKeyup = (e: KeyboardEvent) => {
-    if (isKey(e, key)) {
+    if (isPressing(e, key)) {
       setKeyPressed(false)
     }
   }

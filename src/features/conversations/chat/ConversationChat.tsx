@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
-import { isKey, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
 import { MessagesList } from 'features/member/messages/MessagesList'
@@ -67,7 +67,7 @@ export const ConversationChat: React.FC<{
   }, [memberId])
 
   const handleOnKeyDown = (e) => {
-    if (isMetaKey(e) && isKey(e, Keys.Enter) && !loading && message) {
+    if (isMetaKey(e) && isPressing(e, Keys.Enter) && !loading && message) {
       toast.promise(
         sendMessage({
           variables: {
@@ -93,7 +93,7 @@ export const ConversationChat: React.FC<{
 
     if (
       isMetaKey(e) &&
-      isKey(e, Keys.Enter) &&
+      isPressing(e, Keys.Enter) &&
       e.shiftKey &&
       !loading &&
       !message

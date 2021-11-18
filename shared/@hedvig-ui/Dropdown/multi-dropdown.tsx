@@ -2,7 +2,7 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import { X } from 'react-bootstrap-icons'
-import { isKey, Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '../hooks/use-click-outside'
 
 const show = keyframes`
@@ -132,11 +132,11 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
       active={active}
       onClick={() => !value.length && setActive(true)}
       onKeyDown={(e) => {
-        if (isKey(e, Keys.Enter) && !value.length) {
+        if (isPressing(e, Keys.Enter) && !value.length) {
           setActive(true)
           return
         }
-        if (isKey(e, Keys.Escape)) {
+        if (isPressing(e, Keys.Escape)) {
           setActive(false)
           return
         }
@@ -166,7 +166,7 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
                 onChange(opt)
               }}
               onKeyDown={(e) => {
-                if (isKey(e, Keys.Enter)) {
+                if (isPressing(e, Keys.Enter)) {
                   onChange(opt)
                   return
                 }

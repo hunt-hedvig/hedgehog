@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn, FourthLevelHeadline, Input, Paragraph } from '@hedvig-ui'
 import {
-  isKey,
+  isPressing,
   Key,
   Keys,
   useKeyIsPressed,
@@ -185,7 +185,7 @@ export const CommandLineComponent: React.FC<{
           value={searchValue}
           size="large"
           onKeyDown={(e) => {
-            if (isKey(e, Keys.Down) || isKey(e, Keys.Up)) {
+            if (isPressing(e, Keys.Down) || isPressing(e, Keys.Up)) {
               e.preventDefault()
             }
           }}
@@ -252,8 +252,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const isOptionPressed = useKeyIsPressed(Keys.Option)
 
   const onKeyDownShowCommandLine = (e: KeyboardEvent) => {
-    console.log(e)
-    if (!isKey(e, Keys.Space)) {
+    if (!isPressing(e, Keys.Space)) {
       return
     }
     if (e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
@@ -312,19 +311,16 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }
 
   // tslint:disable:no-unused-expression
-  const handleKeyDown = (e: KeyboardEvent) => {
-    const modifiers: string[] = []
-    e.shiftKey && modifiers.push(Keys.Shift.code)
-    e.ctrlKey && modifiers.push(Keys.Control.code)
-    e.altKey && modifiers.push(Keys.Option.code)
-    e.metaKey && modifiers.push(Keys.Command.code)
-    if (modifiers.includes(e.code) || modifiers.length === 0) {
+  const handleKeyDown = async (e: KeyboardEvent) => {
+    if (e.getModifierState(e.key)) {
       return
     }
-    const keys = modifiers.concat(e.code)
+    if (!(e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)) {
+      return
+    }
 
     const matchIndex = actionKeyCodes.current.findIndex((keyCodes) => {
-      return keyCodes.every((keyCode, index) => keyCode === keys[index])
+      return isPressing(e, keyCodes)
     })
 
     if (matchIndex > -1) {
