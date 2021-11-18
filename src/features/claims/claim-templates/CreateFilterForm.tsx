@@ -5,14 +5,12 @@ import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import { ClaimsFiltersTypeWithName } from 'pages/DashboardPage'
 import React, { useState } from 'react'
 
-const FiltersWrapper = styled.div`
-  .claims__filter-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    column-gap: 1em;
-    row-gap: 1em;
-  }
-`
+const filtersStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  columnGap: '1em',
+  rowGap: '1em',
+}
 
 const Body = styled.div`
   height: 100%;
@@ -86,9 +84,11 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
             setName(e.currentTarget.value)
           }}
         />
-        <FiltersWrapper>
-          <ClaimListFilters filters={filters} setFilters={setFilters} />
-        </FiltersWrapper>
+        <ClaimListFilters
+          filters={filters}
+          setFilters={setFilters}
+          style={filtersStyle}
+        />
         <ButtonsWrapper>
           <Button onClick={createFilterHandler}>
             {!editFilter ? 'Create' : 'Edit'}

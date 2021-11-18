@@ -73,7 +73,7 @@ export enum FilterGroupState {
   Third,
 }
 
-interface FiltersProps {
+interface FiltersProps extends React.HTMLAttributes<HTMLDivElement> {
   filters: ClaimsFiltersType
   setFilters: any
   page?: string
@@ -83,6 +83,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   filters,
   setFilters,
   page,
+  ...props
 }) => {
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -157,8 +158,8 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   }
 
   return (
-    <FilterWrapper className="claims__filter-wrapper">
-      <FilterElement className="claims__filter-item">
+    <FilterWrapper {...props}>
+      <FilterElement>
         <Label>States</Label>
         {Object.keys(ClaimState).map((key) => (
           <Flex key={key} direction="row" align="center">
@@ -182,7 +183,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement className="claims__filter-item">
+      <FilterElement>
         <LabelWithPopover
           label="Complexities"
           popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
@@ -204,14 +205,14 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement className="claims__filter-item">
+      <FilterElement>
         <Label>Number of member groups</Label>
         <div style={{ display: 'flex' }}>
           <NumberMemberGroupsRadioButtons />
         </div>
       </FilterElement>
 
-      <FilterElement className="claims__filter-item">
+      <FilterElement>
         <Label>Groups</Label>
         {range(numberMemberGroups).map((filterNumber) => (
           <Flex key={filterNumber} direction="row" align="center">
@@ -233,7 +234,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement className="claims__filter-item">
+      <FilterElement>
         <Label>Markets</Label>
         {Object.keys(Market).map((key) => (
           <Flex key={key} direction="row" align="center">
@@ -249,7 +250,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement className="claims__filter-item">
+      <FilterElement>
         <LabelWithPopover
           label="Date up until"
           popover="The claim was registered either before or on this date."
