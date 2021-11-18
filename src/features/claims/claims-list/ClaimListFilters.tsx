@@ -13,7 +13,7 @@ import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { InfoCircle } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import {
@@ -107,22 +107,6 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     !!settings[field] && !!settings[field].claims
       ? settings[field].claims.includes(value)
       : false
-
-  const setEmptyFilter = (field) => {
-    if (!settings[field].claims) {
-      updateSetting(field, {
-        ...settings[field],
-        claims: [],
-      })
-    }
-  }
-
-  useEffect(() => {
-    setEmptyFilter(UserSettingKey.ClaimStatesFilter)
-    setEmptyFilter(UserSettingKey.MemberGroupsFilter)
-    setEmptyFilter(UserSettingKey.ClaimComplexityFilter)
-    setEmptyFilter(UserSettingKey.MarketFilter)
-  }, [])
 
   const updateFilterHandler = (
     field: UserSettingKey,

@@ -61,22 +61,6 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     ...(settings[UserSettingKey.MarketFilter].questions || []),
   ])
 
-  const setEmptyFilter = (field) => {
-    if (!settings[field].questions) {
-      updateSetting(field, {
-        ...settings[field],
-        questions: [],
-      })
-    }
-  }
-
-  useEffect(() => {
-    setEmptyFilter(UserSettingKey.ClaimStatesFilter)
-    setEmptyFilter(UserSettingKey.MemberGroupsFilter)
-    setEmptyFilter(UserSettingKey.ClaimComplexityFilter)
-    setEmptyFilter(UserSettingKey.MarketFilter)
-  }, [])
-
   const toggleFilterHandler = (
     filter: FilterStateType,
     settingField?: UserSettingKey,

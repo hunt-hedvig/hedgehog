@@ -12,7 +12,7 @@ import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 
@@ -51,22 +51,6 @@ const QuestionsPage: React.FC = () => {
   ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
-
-  const setEmptyFilter = (field) => {
-    if (!settings[field].questions) {
-      updateSetting(field, {
-        ...settings[field],
-        questions: [],
-      })
-    }
-  }
-
-  useEffect(() => {
-    setEmptyFilter(UserSettingKey.ClaimStatesFilter)
-    setEmptyFilter(UserSettingKey.MemberGroupsFilter)
-    setEmptyFilter(UserSettingKey.ClaimComplexityFilter)
-    setEmptyFilter(UserSettingKey.MarketFilter)
-  }, [])
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
