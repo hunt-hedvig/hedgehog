@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from 'react'
 import { TriangleFill } from 'react-bootstrap-icons'
-import { isKeyPressed, Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { isKey, Keys } from '../hooks/keyboard/use-key-is-pressed'
 import { useVerticalKeyboardNavigation } from '../hooks/keyboard/use-vertical-keyboard-navigation'
 import { useClickOutside } from '../hooks/use-click-outside'
 
@@ -197,11 +197,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
       ref={dropdownRef}
       isActive={active}
       onKeyDown={(e) => {
-        if (isKeyPressed(e, Keys.Enter)) {
+        if (isKey(e, Keys.Enter)) {
           toggleDropdown()
           return
         }
-        if (isKeyPressed(e, Keys.Enter)) {
+        if (isKey(e, Keys.Enter)) {
           closeDropdown()
           return
         }
@@ -261,7 +261,7 @@ export const Option: React.FC<OptionProps> = ({
   <OptionStyled
     tabIndex={0}
     onKeyDown={(e) => {
-      if (isKeyPressed(e, Keys.Enter)) {
+      if (isKey(e, Keys.Enter)) {
         onClick()
         return
       }

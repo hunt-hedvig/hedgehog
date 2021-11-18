@@ -9,7 +9,7 @@ import {
   TextArea,
 } from '@hedvig-ui'
 import {
-  isKeyPressed,
+  isKey,
   Keys,
   shouldIgnoreInput,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
@@ -192,7 +192,7 @@ export const ChatPanel = ({ memberId }) => {
           onFocus={() => setTextFieldFocused(true)}
           onBlur={() => setTextFieldFocused(false)}
           onKeyDown={(e) => {
-            if (isMetaKey(e) && isKeyPressed(e, Keys.Enter) && currentMessage) {
+            if (isMetaKey(e) && isKey(e, Keys.Enter) && currentMessage) {
               handleSubmit()
             }
           }}

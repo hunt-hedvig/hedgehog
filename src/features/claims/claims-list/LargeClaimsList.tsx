@@ -14,7 +14,7 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import {
-  isKeyPressed,
+  isKey,
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
@@ -172,7 +172,7 @@ export const LargeClaimsList: React.FC<{
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (isKeyPressed(e, Keys.Enter)) {
+                  if (isKey(e, Keys.Enter)) {
                     e.preventDefault()
                     history.push(`/claims/${claim.id}`)
                   }

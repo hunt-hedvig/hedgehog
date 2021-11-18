@@ -306,7 +306,7 @@ const IllegalCharacters = new Set([
 
 export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
 
-export const isKeyPressed = (
+export const isKey = (
   e: KeyboardEvent | React.KeyboardEvent<any>,
   key: Key,
 ): boolean => e.code === key.code || e.code === key.codeAlternative
@@ -315,14 +315,14 @@ export const useKeyIsPressed = (key: Key, callback?: (e) => void): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
   const handleKeydown = (e: KeyboardEvent) => {
-    if (isKeyPressed(e, key)) {
+    if (isKey(e, key)) {
       callback?.(e)
       setKeyPressed(true)
     }
   }
 
   const handleKeyup = (e: KeyboardEvent) => {
-    if (isKeyPressed(e, key)) {
+    if (isKey(e, key)) {
       setKeyPressed(false)
     }
   }

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn, FourthLevelHeadline, Input, Paragraph } from '@hedvig-ui'
 import {
-  isKeyPressed,
+  isKey,
   Key,
   Keys,
   useKeyIsPressed,
@@ -185,7 +185,7 @@ export const CommandLineComponent: React.FC<{
           value={searchValue}
           size="large"
           onKeyDown={(e) => {
-            if (isKeyPressed(e, Keys.Down) || isKeyPressed(e, Keys.Up)) {
+            if (isKey(e, Keys.Down) || isKey(e, Keys.Up)) {
               e.preventDefault()
             }
           }}
@@ -253,7 +253,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
 
   const onKeyDownShowCommandLine = (e: KeyboardEvent) => {
     console.log(e)
-    if (!isKeyPressed(e, Keys.Space)) {
+    if (!isKey(e, Keys.Space)) {
       return
     }
     if (e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {

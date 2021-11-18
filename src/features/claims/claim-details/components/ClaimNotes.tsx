@@ -21,10 +21,7 @@ import {
   Spinner,
   TextArea,
 } from '@hedvig-ui'
-import {
-  isKeyPressed,
-  Keys,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isKey, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useMe } from 'features/user/hooks/use-me'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
@@ -176,12 +173,7 @@ const ClaimNotes: React.FC<{ claimId: string; focus: boolean }> = ({
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {
-          if (
-            isMetaKey(e) &&
-            isKeyPressed(e, Keys.Enter) &&
-            !submitting &&
-            note
-          ) {
+          if (isMetaKey(e) && isKey(e, Keys.Enter) && !submitting && note) {
             handleSubmitNote()
           }
         }}
