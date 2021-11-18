@@ -25,6 +25,12 @@ export interface ClaimsFiltersType {
   filterTypesOfContract: string[] | null
 }
 
+const useQuery = () => {
+  const { search } = useLocation()
+
+  return React.useMemo(() => new URLSearchParams(search), [search])
+}
+
 const ClaimsListPage: React.FC<RouteComponentProps<{
   page?: string
 }>> = ({
@@ -32,6 +38,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     params: { page = '1' },
   },
 }) => {
+  const filterQuery = useQuery().get('filter')
   const location = useLocation()
 
   const [filters, setFilters] = useInsecurePersistentState<ClaimsFiltersType>(
@@ -48,22 +55,18 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   )
 
   useEffect(() => {
-    if (location.search) {
-      const params = new URLSearchParams(location.search)
-      const filterId = params.get('filter')
-      if (filterId) {
-        const templateFilter = JSON.parse(
-          localStorage.getItem('hvg:claims:template-filters') || '',
-        )
-        const filter = templateFilter.filters[filterId]
+    if (filterQuery) {
+      const templateFilter = JSON.parse(
+        localStorage.getItem('hvg:claims:template-filters') || '',
+      )
+      const filter = templateFilter.filters[filterQuery]
 
-        if (filter) {
-          delete filter.name
-          setFilters(filter)
-        }
+      if (filter) {
+        delete filter.name
+        setFilters(filter)
       }
     }
-  }, [])
+  }, [filterQuery])
 
   useEffect(() => {
     const from = (location?.state as { from?: string })?.from
