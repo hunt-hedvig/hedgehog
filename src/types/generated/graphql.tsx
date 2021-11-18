@@ -793,7 +793,9 @@ export type MutationType = {
   restrictResourceAccess: ResourceAccessInformation
   releaseResourceAccess: Scalars['Boolean']
   grantResourceAccess: ResourceAccessInformation
-  markNotificationsAsRead: Scalars['Boolean']
+  markNotificationAsRead: UserNotification
+  markAllNotificationsAsRead: Array<UserNotification>
+  sharePath: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -1143,6 +1145,15 @@ export type MutationTypeGrantResourceAccessArgs = {
   resourceId: Scalars['ID']
   grantHolder: Scalars['String']
   grantHolderType: GrantHolderType
+}
+
+export type MutationTypeMarkNotificationAsReadArgs = {
+  notificationId: Scalars['ID']
+}
+
+export type MutationTypeSharePathArgs = {
+  path: Scalars['String']
+  userId: Scalars['ID']
 }
 
 export type NationalIdentification = {
@@ -1576,6 +1587,7 @@ export type UserNotification = {
   read: Scalars['Boolean']
   user: User
   from?: Maybe<User>
+  verbose: Scalars['Boolean']
 }
 
 export type UserNotificationsFilter = {
@@ -3838,7 +3850,7 @@ export type GetMeQuery = { __typename?: 'QueryType' } & {
           notifications: Array<
             { __typename?: 'UserNotification' } & Pick<
               UserNotification,
-              'id' | 'message' | 'url' | 'createdAt' | 'read'
+              'id' | 'message' | 'url' | 'createdAt' | 'read' | 'verbose'
             > & {
                 from?: Maybe<
                   { __typename?: 'User' } & Pick<
@@ -3900,13 +3912,38 @@ export type UsersQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type MarkNotificationsAsReadMutationVariables = Exact<{
+export type MarkAllNotificationsAsReadMutationVariables = Exact<{
   [key: string]: never
 }>
 
-export type MarkNotificationsAsReadMutation = {
+export type MarkAllNotificationsAsReadMutation = {
   __typename?: 'MutationType'
-} & Pick<MutationType, 'markNotificationsAsRead'>
+} & {
+  markAllNotificationsAsRead: Array<
+    { __typename?: 'UserNotification' } & Pick<UserNotification, 'id' | 'read'>
+  >
+}
+
+export type MarkNotificationAsReadMutationVariables = Exact<{
+  notificationId: Scalars['ID']
+}>
+
+export type MarkNotificationAsReadMutation = { __typename?: 'MutationType' } & {
+  markNotificationAsRead: { __typename?: 'UserNotification' } & Pick<
+    UserNotification,
+    'id' | 'read'
+  >
+}
+
+export type SharePathMutationVariables = Exact<{
+  path: Scalars['String']
+  userId: Scalars['ID']
+}>
+
+export type SharePathMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'sharePath'
+>
 
 export const SetClaimDateDocument = gql`
   mutation SetClaimDate($id: ID!, $date: LocalDate!) {
@@ -10463,10 +10500,12 @@ export const GetMeDocument = gql`
           url
           createdAt
           read
+          verbose
           from {
             id
             signature
             fullName
+            signature
           }
         }
       }
@@ -10747,53 +10786,158 @@ export type UsersQueryResult = ApolloReactCommon.QueryResult<
   UsersQuery,
   UsersQueryVariables
 >
-export const MarkNotificationsAsReadDocument = gql`
-  mutation MarkNotificationsAsRead {
-    markNotificationsAsRead
+export const MarkAllNotificationsAsReadDocument = gql`
+  mutation MarkAllNotificationsAsRead {
+    markAllNotificationsAsRead {
+      id
+      read
+    }
   }
 `
-export type MarkNotificationsAsReadMutationFn = ApolloReactCommon.MutationFunction<
-  MarkNotificationsAsReadMutation,
-  MarkNotificationsAsReadMutationVariables
+export type MarkAllNotificationsAsReadMutationFn = ApolloReactCommon.MutationFunction<
+  MarkAllNotificationsAsReadMutation,
+  MarkAllNotificationsAsReadMutationVariables
 >
 
 /**
- * __useMarkNotificationsAsReadMutation__
+ * __useMarkAllNotificationsAsReadMutation__
  *
- * To run a mutation, you first call `useMarkNotificationsAsReadMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useMarkNotificationsAsReadMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useMarkAllNotificationsAsReadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkAllNotificationsAsReadMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [markNotificationsAsReadMutation, { data, loading, error }] = useMarkNotificationsAsReadMutation({
+ * const [markAllNotificationsAsReadMutation, { data, loading, error }] = useMarkAllNotificationsAsReadMutation({
  *   variables: {
  *   },
  * });
  */
-export function useMarkNotificationsAsReadMutation(
+export function useMarkAllNotificationsAsReadMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    MarkNotificationsAsReadMutation,
-    MarkNotificationsAsReadMutationVariables
+    MarkAllNotificationsAsReadMutation,
+    MarkAllNotificationsAsReadMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useMutation<
-    MarkNotificationsAsReadMutation,
-    MarkNotificationsAsReadMutationVariables
-  >(MarkNotificationsAsReadDocument, options)
+    MarkAllNotificationsAsReadMutation,
+    MarkAllNotificationsAsReadMutationVariables
+  >(MarkAllNotificationsAsReadDocument, options)
 }
-export type MarkNotificationsAsReadMutationHookResult = ReturnType<
-  typeof useMarkNotificationsAsReadMutation
+export type MarkAllNotificationsAsReadMutationHookResult = ReturnType<
+  typeof useMarkAllNotificationsAsReadMutation
 >
-export type MarkNotificationsAsReadMutationResult = ApolloReactCommon.MutationResult<
-  MarkNotificationsAsReadMutation
+export type MarkAllNotificationsAsReadMutationResult = ApolloReactCommon.MutationResult<
+  MarkAllNotificationsAsReadMutation
 >
-export type MarkNotificationsAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  MarkNotificationsAsReadMutation,
-  MarkNotificationsAsReadMutationVariables
+export type MarkAllNotificationsAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  MarkAllNotificationsAsReadMutation,
+  MarkAllNotificationsAsReadMutationVariables
+>
+export const MarkNotificationAsReadDocument = gql`
+  mutation MarkNotificationAsRead($notificationId: ID!) {
+    markNotificationAsRead(notificationId: $notificationId) {
+      id
+      read
+    }
+  }
+`
+export type MarkNotificationAsReadMutationFn = ApolloReactCommon.MutationFunction<
+  MarkNotificationAsReadMutation,
+  MarkNotificationAsReadMutationVariables
+>
+
+/**
+ * __useMarkNotificationAsReadMutation__
+ *
+ * To run a mutation, you first call `useMarkNotificationAsReadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkNotificationAsReadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markNotificationAsReadMutation, { data, loading, error }] = useMarkNotificationAsReadMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useMarkNotificationAsReadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    MarkNotificationAsReadMutation,
+    MarkNotificationAsReadMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    MarkNotificationAsReadMutation,
+    MarkNotificationAsReadMutationVariables
+  >(MarkNotificationAsReadDocument, options)
+}
+export type MarkNotificationAsReadMutationHookResult = ReturnType<
+  typeof useMarkNotificationAsReadMutation
+>
+export type MarkNotificationAsReadMutationResult = ApolloReactCommon.MutationResult<
+  MarkNotificationAsReadMutation
+>
+export type MarkNotificationAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  MarkNotificationAsReadMutation,
+  MarkNotificationAsReadMutationVariables
+>
+export const SharePathDocument = gql`
+  mutation SharePath($path: String!, $userId: ID!) {
+    sharePath(path: $path, userId: $userId)
+  }
+`
+export type SharePathMutationFn = ApolloReactCommon.MutationFunction<
+  SharePathMutation,
+  SharePathMutationVariables
+>
+
+/**
+ * __useSharePathMutation__
+ *
+ * To run a mutation, you first call `useSharePathMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSharePathMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sharePathMutation, { data, loading, error }] = useSharePathMutation({
+ *   variables: {
+ *      path: // value for 'path'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useSharePathMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SharePathMutation,
+    SharePathMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SharePathMutation,
+    SharePathMutationVariables
+  >(SharePathDocument, options)
+}
+export type SharePathMutationHookResult = ReturnType<
+  typeof useSharePathMutation
+>
+export type SharePathMutationResult = ApolloReactCommon.MutationResult<
+  SharePathMutation
+>
+export type SharePathMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SharePathMutation,
+  SharePathMutationVariables
 >
 
 export interface PossibleTypesResultData {
